@@ -228,7 +228,7 @@ export const TlvWiFiInterfaceScanResultStruct = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.8.5.6
  */
 export const TlvThreadInterfaceScanResultStruct = TlvObject({
-    panId: TlvOptionalField(0, TlvUInt16.bound({ min: 0, max: 65534 })),
+    panId: TlvOptionalField(0, TlvUInt16.bound({ max: 65534 })),
     extendedPanId: TlvOptionalField(1, TlvUInt64),
     networkName: TlvOptionalField(2, TlvString.bound({ minLength: 1, maxLength: 16 })),
     channel: TlvOptionalField(3, TlvUInt16),
@@ -597,7 +597,7 @@ export const NetworkCommissioningBase = BaseClusterComponent({
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.1
          */
         maxNetworks: FixedAttribute(
-            0,
+            0x0,
             TlvUInt8.bound({ min: 1 }),
             { readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
         ),
@@ -623,7 +623,7 @@ export const NetworkCommissioningBase = BaseClusterComponent({
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.2
          */
         networks: Attribute(
-            1,
+            0x1,
             TlvArray(TlvNetworkInfoStruct),
             { default: [], readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
         ),
@@ -648,7 +648,7 @@ export const NetworkCommissioningBase = BaseClusterComponent({
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.5
          */
         interfaceEnabled: WritableAttribute(
-            4,
+            0x4,
             TlvBoolean,
             { persistent: true, default: true, writeAcl: AccessLevel.Administer }
         ),
@@ -665,7 +665,7 @@ export const NetworkCommissioningBase = BaseClusterComponent({
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.6
          */
         lastNetworkingStatus: Attribute(
-            5,
+            0x5,
             TlvNullable(TlvEnum<NetworkCommissioningStatus>()),
             { default: null, readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
         ),
@@ -685,7 +685,7 @@ export const NetworkCommissioningBase = BaseClusterComponent({
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.7
          */
         lastNetworkId: Attribute(
-            6,
+            0x6,
             TlvNullable(TlvByteString.bound({ minLength: 1, maxLength: 32 })),
             { default: null, readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
         ),
@@ -705,7 +705,7 @@ export const NetworkCommissioningBase = BaseClusterComponent({
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.8
          */
         lastConnectErrorValue: Attribute(
-            7,
+            0x7,
             TlvNullable(TlvInt32),
             { default: null, readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
         )
@@ -726,7 +726,7 @@ export const WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent = ClusterComp
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.3
          */
-        scanMaxTimeSeconds: FixedAttribute(2, TlvUInt8),
+        scanMaxTimeSeconds: FixedAttribute(0x2, TlvUInt8),
 
         /**
          * This attribute shall indicate the maximum duration taken, in seconds, by the network interface on this
@@ -736,7 +736,7 @@ export const WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent = ClusterComp
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.6.4
          */
-        connectMaxTimeSeconds: FixedAttribute(3, TlvUInt8)
+        connectMaxTimeSeconds: FixedAttribute(0x3, TlvUInt8)
     },
 
     commands: {
@@ -769,7 +769,7 @@ export const WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent = ClusterComp
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.1
          */
-        scanNetworks: Command(0, TlvScanNetworksRequest, 1, TlvScanNetworksResponse),
+        scanNetworks: Command(0x0, TlvScanNetworksRequest, 1, TlvScanNetworksResponse),
 
         /**
          * This command shall remove the network configuration from the Cluster if there was already a network
@@ -794,7 +794,7 @@ export const WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent = ClusterComp
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.7
          */
-        removeNetwork: Command(4, TlvRemoveNetworkRequest, 5, TlvNetworkConfigResponse),
+        removeNetwork: Command(0x4, TlvRemoveNetworkRequest, 5, TlvNetworkConfigResponse),
 
         /**
          * This command shall attempt to connect to a network whose configuration was previously added by either the
@@ -865,7 +865,7 @@ export const WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent = ClusterComp
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.9
          */
-        connectNetwork: Command(6, TlvConnectNetworkRequest, 7, TlvConnectNetworkResponse),
+        connectNetwork: Command(0x6, TlvConnectNetworkRequest, 7, TlvConnectNetworkResponse),
 
         /**
          * This command shall set the specific order of the network configuration selected by its NetworkID in the
@@ -928,7 +928,7 @@ export const WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent = ClusterComp
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.11
          */
-        reorderNetwork: Command(8, TlvReorderNetworkRequest, 5, TlvNetworkConfigResponse)
+        reorderNetwork: Command(0x8, TlvReorderNetworkRequest, 5, TlvNetworkConfigResponse)
     }
 });
 
@@ -954,7 +954,7 @@ export const WiFiNetworkInterfaceComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.3
          */
-        addOrUpdateWiFiNetwork: Command(2, TlvAddOrUpdateWiFiNetworkRequest, 5, TlvNetworkConfigResponse)
+        addOrUpdateWiFiNetwork: Command(0x2, TlvAddOrUpdateWiFiNetworkRequest, 5, TlvNetworkConfigResponse)
     }
 });
 
@@ -981,7 +981,7 @@ export const ThreadNetworkInterfaceComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.4
          */
-        addOrUpdateThreadNetwork: Command(3, TlvAddOrUpdateThreadNetworkRequest, 5, TlvNetworkConfigResponse)
+        addOrUpdateThreadNetwork: Command(0x3, TlvAddOrUpdateThreadNetworkRequest, 5, TlvNetworkConfigResponse)
     }
 });
 

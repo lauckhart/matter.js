@@ -232,14 +232,14 @@ export const WiFiNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.1
          */
-        bssid: Attribute(0, TlvNullable(TlvByteString.bound({ length: 6 })), { default: null }),
+        bssid: Attribute(0x0, TlvNullable(TlvByteString.bound({ length: 6 })), { default: null }),
 
         /**
          * The SecurityType attribute shall indicate the current type of Wi-Fi security used.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.2
          */
-        securityType: Attribute(1, TlvNullable(TlvEnum<SecurityType>()), { default: null }),
+        securityType: Attribute(0x1, TlvNullable(TlvEnum<SecurityType>()), { default: null }),
 
         /**
          * The WiFiVersion attribute shall indicate the current 802.11 standard version in use by the Node, per the
@@ -247,21 +247,21 @@ export const WiFiNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.3
          */
-        wiFiVersion: Attribute(2, TlvNullable(TlvEnum<WiFiVersion>()), { default: null }),
+        wiFiVersion: Attribute(0x2, TlvNullable(TlvEnum<WiFiVersion>()), { default: null }),
 
         /**
          * The ChannelNumber attribute shall indicate the channel that Wi-Fi communication is currently operating on.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.4
          */
-        channelNumber: Attribute(3, TlvNullable(TlvUInt16), { default: 0 }),
+        channelNumber: Attribute(0x3, TlvNullable(TlvUInt16), { default: 0 }),
 
         /**
          * The RSSI attribute shall indicate the current RSSI of the Node’s Wi-Fi radio in dBm.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.5
          */
-        rssi: Attribute(4, TlvNullable(TlvInt8.bound({ min: -120, max: 0 })), { omitChanges: true, default: null }),
+        rssi: Attribute(0x4, TlvNullable(TlvInt8.bound({ min: -120, max: 0 })), { omitChanges: true, default: null }),
 
         /**
          * The CurrentMaxRate attribute shall indicate the current maximum PHY rate of transfer of data in
@@ -269,7 +269,7 @@ export const WiFiNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.12
          */
-        currentMaxRate: OptionalAttribute(11, TlvNullable(TlvUInt64), { omitChanges: true, default: 0 })
+        currentMaxRate: OptionalAttribute(0xb, TlvNullable(TlvUInt64), { omitChanges: true, default: 0 })
     },
 
     events: {
@@ -279,7 +279,7 @@ export const WiFiNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.8.1
          */
-        disconnection: OptionalEvent(0, EventPriority.Info, TlvDisconnectionEvent),
+        disconnection: OptionalEvent(0x0, EventPriority.Info, TlvDisconnectionEvent),
 
         /**
          * The AssociationFailure event shall indicate that a Node has attempted to connect, or reconnect, to a Wi-Fi
@@ -288,7 +288,7 @@ export const WiFiNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.8.2
          */
-        associationFailure: OptionalEvent(1, EventPriority.Info, TlvAssociationFailureEvent),
+        associationFailure: OptionalEvent(0x1, EventPriority.Info, TlvAssociationFailureEvent),
 
         /**
          * The ConnectionStatus Event shall indicate that a Node’s connection status to a Wi-Fi network has changed.
@@ -297,7 +297,7 @@ export const WiFiNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.8.3
          */
-        connectionStatus: OptionalEvent(2, EventPriority.Info, TlvConnectionStatusEvent)
+        connectionStatus: OptionalEvent(0x2, EventPriority.Info, TlvConnectionStatusEvent)
     }
 });
 
@@ -313,7 +313,7 @@ export const ErrorCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.6
          */
-        beaconLostCount: Attribute(5, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
+        beaconLostCount: Attribute(0x5, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
 
         /**
          * The OverrunCount attribute shall indicate the number of packets dropped either at ingress or egress, due to
@@ -322,7 +322,7 @@ export const ErrorCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.13
          */
-        overrunCount: Attribute(12, TlvNullable(TlvUInt64), { omitChanges: true, default: 0 })
+        overrunCount: Attribute(0xc, TlvNullable(TlvUInt64), { omitChanges: true, default: 0 })
     },
 
     commands: {
@@ -345,7 +345,7 @@ export const ErrorCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.7.1
          */
-        resetCounts: Command(0, TlvNoArguments, 0, TlvNoResponse)
+        resetCounts: Command(0x0, TlvNoArguments, 0x0, TlvNoResponse)
     }
 });
 
@@ -362,7 +362,7 @@ export const PacketCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.7
          */
-        beaconRxCount: Attribute(6, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
+        beaconRxCount: Attribute(0x6, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
 
         /**
          * The PacketMulticastRxCount attribute shall indicate the number of multicast packets received by
@@ -371,28 +371,28 @@ export const PacketCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.8
          */
-        packetMulticastRxCount: Attribute(7, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
+        packetMulticastRxCount: Attribute(0x7, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
 
         /**
          * The PacketMulticastTxCount attribute shall indicate the number of multicast packets transmitted by the Node.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.9
          */
-        packetMulticastTxCount: Attribute(8, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
+        packetMulticastTxCount: Attribute(0x8, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
 
         /**
          * The PacketUnicastRxCount attribute shall indicate the number of unicast packets received by the Node.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.10
          */
-        packetUnicastRxCount: Attribute(9, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
+        packetUnicastRxCount: Attribute(0x9, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
 
         /**
          * The PacketUnicastTxCount attribute shall indicate the number of unicast packets transmitted by the Node.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.11
          */
-        packetUnicastTxCount: Attribute(10, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 })
+        packetUnicastTxCount: Attribute(0xa, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 })
     }
 });
 

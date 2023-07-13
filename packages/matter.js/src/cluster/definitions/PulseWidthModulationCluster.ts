@@ -28,7 +28,7 @@ export const Options = { executeIfOff: BitFlag(0), coupleColorTempToLevel: BitFl
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.1
  */
 export const TlvMoveToLevelRequest = TlvObject({
-    level: TlvField(0, TlvUInt8.bound({ min: 0, max: 254 })),
+    level: TlvField(0, TlvUInt8.bound({ max: 254 })),
     transitionTime: TlvField(1, TlvNullable(TlvUInt16)),
     optionsMask: TlvField(2, TlvUInt8),
     optionsOverride: TlvField(3, TlvUInt8)
@@ -235,21 +235,21 @@ export const PulseWidthModulationBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.1
          */
-        currentLevel: Attribute(0, TlvNullable(TlvUInt8), { scene: true, persistent: true, default: null }),
+        currentLevel: Attribute(0x0, TlvNullable(TlvUInt8), { scene: true, persistent: true, default: null }),
 
         /**
          * The MinLevel attribute indicates the minimum value of CurrentLevel that is capable of being assigned.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.3
          */
-        minLevel: OptionalAttribute(2, TlvUInt8),
+        minLevel: OptionalAttribute(0x2, TlvUInt8),
 
         /**
          * The MaxLevel attribute indicates the maximum value of CurrentLevel that is capable of being assigned.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.4
          */
-        maxLevel: OptionalAttribute(3, TlvUInt8.bound({ max: 254 }), { default: 254 }),
+        maxLevel: OptionalAttribute(0x3, TlvUInt8.bound({ max: 254 }), { default: 254 }),
 
         /**
          * The Options attribute is meant to be changed only during commissioning. The Options attribute is a bitmap
@@ -265,7 +265,7 @@ export const PulseWidthModulationBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.8
          */
-        options: WritableAttribute(15, TlvBitmap(TlvUInt8, Options)),
+        options: WritableAttribute(0xf, TlvBitmap(TlvUInt8, Options)),
 
         /**
          * The OnOffTransitionTime attribute represents the time taken to move to or from the target level when On or
@@ -277,7 +277,7 @@ export const PulseWidthModulationBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.9
          */
-        onOffTransitionTime: OptionalWritableAttribute(16, TlvUInt16, { default: 0 }),
+        onOffTransitionTime: OptionalWritableAttribute(0x10, TlvUInt16, { default: 0 }),
 
         /**
          * The OnLevel attribute determines the value that the CurrentLevel attribute is set to when the OnOff
@@ -287,7 +287,7 @@ export const PulseWidthModulationBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.10
          */
-        onLevel: WritableAttribute(17, TlvNullable(TlvUInt8), { default: null }),
+        onLevel: WritableAttribute(0x11, TlvNullable(TlvUInt8), { default: null }),
 
         /**
          * The OnTransitionTime attribute represents the time taken to move the current level from the minimum level to
@@ -297,7 +297,7 @@ export const PulseWidthModulationBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.11
          */
-        onTransitionTime: OptionalWritableAttribute(18, TlvNullable(TlvUInt16), { default: null }),
+        onTransitionTime: OptionalWritableAttribute(0x12, TlvNullable(TlvUInt16), { default: null }),
 
         /**
          * The OffTransitionTime attribute represents the time taken to move the current level from the maximum level
@@ -307,7 +307,7 @@ export const PulseWidthModulationBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.12
          */
-        offTransitionTime: OptionalWritableAttribute(19, TlvNullable(TlvUInt16), { default: null }),
+        offTransitionTime: OptionalWritableAttribute(0x13, TlvNullable(TlvUInt16), { default: null }),
 
         /**
          * The DefaultMoveRate attribute determines the movement rate, in units per second, when a Move command is
@@ -315,19 +315,19 @@ export const PulseWidthModulationBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.13
          */
-        defaultMoveRate: OptionalWritableAttribute(20, TlvNullable(TlvUInt8))
+        defaultMoveRate: OptionalWritableAttribute(0x14, TlvNullable(TlvUInt8))
     },
 
     commands: {
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.1
          */
-        moveToLevel: Command(0, TlvMoveToLevelRequest, 0, TlvNoResponse),
+        moveToLevel: Command(0x0, TlvMoveToLevelRequest, 0x0, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.2
          */
-        move: Command(1, TlvMoveRequest, 1, TlvNoResponse),
+        move: Command(0x1, TlvMoveRequest, 0x1, TlvNoResponse),
 
         /**
          * The StepMode field shall be one of the non-reserved values in Values of the StepMode Field.
@@ -341,32 +341,32 @@ export const PulseWidthModulationBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.3
          */
-        step: Command(2, TlvStepRequest, 2, TlvNoResponse),
+        step: Command(0x2, TlvStepRequest, 0x2, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.4
          */
-        stop: Command(3, TlvStopRequest, 3, TlvNoResponse),
+        stop: Command(0x3, TlvStopRequest, 0x3, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6
          */
-        moveToLevelWithOnOff: Command(4, TlvNoArguments, 4, TlvNoResponse),
+        moveToLevelWithOnOff: Command(0x4, TlvNoArguments, 0x4, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6
          */
-        moveWithOnOff: Command(5, TlvNoArguments, 5, TlvNoResponse),
+        moveWithOnOff: Command(0x5, TlvNoArguments, 0x5, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6
          */
-        stepWithOnOff: Command(6, TlvNoArguments, 6, TlvNoResponse),
+        stepWithOnOff: Command(0x6, TlvNoArguments, 0x6, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6
          */
-        stopWithOnOff: Command(7, TlvNoArguments, 7, TlvNoResponse)
+        stopWithOnOff: Command(0x7, TlvNoArguments, 0x7, TlvNoResponse)
     }
 });
 
@@ -381,7 +381,7 @@ export const LightingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.2
          */
-        remainingTime: Attribute(1, TlvUInt16, { default: 0 }),
+        remainingTime: Attribute(0x1, TlvUInt16, { default: 0 }),
 
         /**
          * The StartUpCurrentLevel attribute shall define the desired startup level for a device when it is supplied
@@ -396,7 +396,7 @@ export const LightingComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.14
          */
         startUpCurrentLevel: WritableAttribute(
-            16384,
+            0x4000,
             TlvNullable(TlvUInt8),
             { persistent: true, writeAcl: AccessLevel.Manage }
         )
@@ -414,7 +414,7 @@ export const FrequencyComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.5
          */
-        currentFrequency: Attribute(4, TlvUInt16, { scene: true, default: 0 }),
+        currentFrequency: Attribute(0x4, TlvUInt16, { scene: true, default: 0 }),
 
         /**
          * The MinFrequency attribute indicates the minimum value of CurrentFrequency that is capable of being
@@ -422,7 +422,7 @@ export const FrequencyComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.6
          */
-        minFrequency: Attribute(5, TlvUInt16.bound({ min: 0 }), { default: 0 }),
+        minFrequency: Attribute(0x5, TlvUInt16, { default: 0 }),
 
         /**
          * The MaxFrequency attribute indicates the maximum value of CurrentFrequency that is capable of being
@@ -430,14 +430,14 @@ export const FrequencyComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.7
          */
-        maxFrequency: Attribute(6, TlvUInt16, { default: 0 })
+        maxFrequency: Attribute(0x6, TlvUInt16, { default: 0 })
     },
 
     commands: {
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.5
          */
-        moveToClosestFrequency: Command(8, TlvMoveToClosestFrequencyRequest, 8, TlvNoResponse)
+        moveToClosestFrequency: Command(0x8, TlvMoveToClosestFrequencyRequest, 0x8, TlvNoResponse)
     }
 });
 

@@ -110,6 +110,12 @@ class MergeTraversal<S> extends ModelVariantTraversal<S> {
                 continue;
             }
 
+            if (sourceName === variantPriorities[0]) {
+                // Always prefer highest priority variant which is presumably
+                // a hand edit
+                return variant;
+            }
+
             if (!type) {
                 type = variant;
                 if (type instanceof ValueModel) {

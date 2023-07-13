@@ -135,7 +135,7 @@ export const TimeFormatLocalizationBase = BaseClusterComponent({
          * @see {@link MatterCoreSpecificationV1_1} § 11.4.6.1
          */
         hourFormat: WritableAttribute(
-            0,
+            0x0,
             TlvNullable(TlvEnum<HourFormat>()),
             { persistent: true, default: null, writeAcl: AccessLevel.Manage }
         )
@@ -155,7 +155,7 @@ export const CalendarFormatComponent = ClusterComponent({
          * @see {@link MatterCoreSpecificationV1_1} § 11.4.6.2
          */
         activeCalendarType: WritableAttribute(
-            1,
+            0x1,
             TlvNullable(TlvEnum<CalendarType>()),
             { persistent: true, default: null, writeAcl: AccessLevel.Manage }
         ),
@@ -168,7 +168,7 @@ export const CalendarFormatComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.4.6.3
          */
-        supportedCalendarTypes: FixedAttribute(2, TlvArray(TlvEnum<CalendarType>()), { default: [] })
+        supportedCalendarTypes: FixedAttribute(0x2, TlvArray(TlvEnum<CalendarType>()), { default: [] })
     }
 });
 

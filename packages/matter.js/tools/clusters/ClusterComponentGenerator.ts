@@ -23,6 +23,10 @@ import { ClusterFile } from "./ClusterFile.js";
 import { DefaultValueGenerator } from "./DefaultValueGenerator.js";
 import { TlvGenerator } from "./TlvGenerator.js";
 
+function hex(n: number) {
+    return `0x${n.toString(16)}`;
+}
+
 /** Generates cluster attributes, commands and events */
 export class ClusterComponentGenerator {
     private tlv: TlvGenerator;
@@ -74,7 +78,7 @@ export class ClusterComponentGenerator {
             const tlvType = this.tlv.reference(model);
 
             const block = add(factory);
-            block.atom(model.id);
+            block.atom(hex(model.id));
             block.atom(tlvType);
 
             const options = block.expressions("{", "}");
@@ -127,7 +131,7 @@ export class ClusterComponentGenerator {
             this.file.addImport("cluster/Cluster", factory);
 
             const block = add(factory);
-            block.atom(model.id);
+            block.atom(hex(model.id));
             block.atom(this.tlv.reference(model));
 
             // Note - we end up mapping "status" response type to TlvNoResponse.
@@ -143,7 +147,7 @@ export class ClusterComponentGenerator {
                 block.atom(this.tlv.reference(responseModel));
             } else {
                 this.file.addImport("cluster/Cluster", "TlvNoResponse");
-                block.atom(model.id);
+                block.atom(hex(model.id));
                 block.atom("TlvNoResponse");
             }
         });
@@ -161,7 +165,7 @@ export class ClusterComponentGenerator {
             const priority = camelize(model.priority ?? EventElement.Priority.Debug);
 
             const block = add(factory);
-            block.atom(model.id);
+            block.atom(hex(model.id));
             block.atom(`EventPriority.${priority}`);
             block.atom(this.tlv.reference(model));
         });

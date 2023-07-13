@@ -6,7 +6,8 @@
 
 import { FieldValue, Metatype, ValueModel } from "../../src/model/index.js";
 import { camelize, serialize } from "../../src/util/String.js";
-import { NestedConstantMap as WrappedConstantKeys, TlvGenerator } from "./TlvGenerator.js";
+import { WrappedConstantKeys } from "./NumberConstants.js";
+import { TlvGenerator } from "./TlvGenerator.js";
 
 /**
  * Generates a default value for fields based on model definitions.

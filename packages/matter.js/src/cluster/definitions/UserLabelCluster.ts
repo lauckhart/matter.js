@@ -33,11 +33,11 @@ export const UserLabelCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 9.9.4.1
          */
         labelList: WritableAttribute(
-            0,
+            0x0,
             TlvArray(TlvLabelStruct, { minLength: 4 }),
             { persistent: true, default: [], writeAcl: AccessLevel.Manage }
         ),
 
-        clusterRevision: Attribute(65533, TlvUInt16, { default: 1 })
+        clusterRevision: Attribute(0xfffd, TlvUInt16, { default: 1 })
     }
 });

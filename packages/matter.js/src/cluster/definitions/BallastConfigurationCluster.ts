@@ -47,7 +47,7 @@ export const BallastConfigurationCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.6.1
          */
-        physicalMinLevel: Attribute(0, TlvUInt8.bound({ min: 1, max: 254 }), { default: 1 }),
+        physicalMinLevel: Attribute(0x0, TlvUInt8.bound({ min: 1, max: 254 }), { default: 1 }),
 
         /**
          * The PhysicalMaxLevel attribute specifies the maximum light output the ballast can achieve according to the
@@ -55,7 +55,7 @@ export const BallastConfigurationCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.6.2
          */
-        physicalMaxLevel: Attribute(1, TlvUInt8.bound({ min: 1, max: 254 }), { default: 0 }),
+        physicalMaxLevel: Attribute(0x1, TlvUInt8.bound({ min: 1, max: 254 }), { default: 0 }),
 
         /**
          * The BallastStatus attribute specifies the activity status of the ballast functions. The usage of the bits is
@@ -64,7 +64,7 @@ export const BallastConfigurationCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.6.3
          */
-        ballastStatus: OptionalAttribute(2, TlvBitmap(TlvUInt8, BallastStatus)),
+        ballastStatus: OptionalAttribute(0x2, TlvBitmap(TlvUInt8, BallastStatus)),
 
         /**
          * The MinLevel attribute specifies the light output of the ballast according to the dimming light curve (see
@@ -77,7 +77,11 @@ export const BallastConfigurationCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.7.1
          */
-        minLevel: WritableAttribute(16, TlvUInt8.bound({ min: 1, max: 254 }), { default: 1, writeAcl: AccessLevel.Manage }),
+        minLevel: WritableAttribute(
+            0x10,
+            TlvUInt8.bound({ min: 1, max: 254 }),
+            { default: 1, writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * The MaxLevel attribute specifies the light output of the ballast according to the dimming light curve (see
@@ -90,7 +94,11 @@ export const BallastConfigurationCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.7.2
          */
-        maxLevel: WritableAttribute(17, TlvUInt8.bound({ min: 1, max: 254 }), { default: 0, writeAcl: AccessLevel.Manage }),
+        maxLevel: WritableAttribute(
+            0x11,
+            TlvUInt8.bound({ min: 1, max: 254 }),
+            { default: 0, writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * The IntrinsicBallastFactor attribute specifies as a percentage the ballast factor of the ballast/lamp
@@ -100,7 +108,7 @@ export const BallastConfigurationCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.7.3
          */
-        intrinsicBallastFactor: OptionalWritableAttribute(20, TlvNullable(TlvUInt8), { writeAcl: AccessLevel.Manage }),
+        intrinsicBallastFactor: OptionalWritableAttribute(0x14, TlvNullable(TlvUInt8), { writeAcl: AccessLevel.Manage }),
 
         /**
          * The BallastFactorAdjustment attribute specifies the multiplication factor, as a percentage, to be applied to
@@ -118,7 +126,7 @@ export const BallastConfigurationCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.7.4
          */
         ballastFactorAdjustment: OptionalWritableAttribute(
-            21,
+            0x15,
             TlvNullable(TlvUInt8.bound({ min: 100 })),
             { default: 0, writeAcl: AccessLevel.Manage }
         ),
@@ -130,7 +138,7 @@ export const BallastConfigurationCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.8.1
          */
-        lampQuantity: Attribute(32, TlvUInt8),
+        lampQuantity: Attribute(0x20, TlvUInt8),
 
         /**
          * The LampType attribute specifies the type of lamps (including their wattage) connected to the ballast.
@@ -138,7 +146,7 @@ export const BallastConfigurationCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.9.1
          */
         lampType: OptionalWritableAttribute(
-            48,
+            0x30,
             TlvString.bound({ maxLength: 16 }),
             { default: "emptystring", writeAcl: AccessLevel.Manage }
         ),
@@ -149,7 +157,7 @@ export const BallastConfigurationCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.9.2
          */
         lampManufacturer: OptionalWritableAttribute(
-            49,
+            0x31,
             TlvString.bound({ maxLength: 16 }),
             { default: "emptystring", writeAcl: AccessLevel.Manage }
         ),
@@ -162,7 +170,11 @@ export const BallastConfigurationCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.9.3
          */
-        lampRatedHours: OptionalWritableAttribute(50, TlvNullable(TlvUInt24), { default: 0, writeAcl: AccessLevel.Manage }),
+        lampRatedHours: OptionalWritableAttribute(
+            0x32,
+            TlvNullable(TlvUInt24),
+            { default: 0, writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * The LampBurnHours attribute specifies the length of time, in hours, the currently connected lamps have been
@@ -175,7 +187,7 @@ export const BallastConfigurationCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.9.4
          */
-        lampBurnHours: OptionalWritableAttribute(51, TlvNullable(TlvUInt24), { default: 0, writeAcl: AccessLevel.Manage }),
+        lampBurnHours: OptionalWritableAttribute(0x33, TlvNullable(TlvUInt24), { default: 0, writeAcl: AccessLevel.Manage }),
 
         /**
          * The LampAlarmMode attribute specifies which attributes may cause an alarm notification to be generated, as
@@ -184,7 +196,7 @@ export const BallastConfigurationCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.9.5
          */
-        lampAlarmMode: OptionalWritableAttribute(52, TlvBitmap(TlvUInt8, LampAlarmMode), { writeAcl: AccessLevel.Manage }),
+        lampAlarmMode: OptionalWritableAttribute(0x34, TlvBitmap(TlvUInt8, LampAlarmMode), { writeAcl: AccessLevel.Manage }),
 
         /**
          * The LampBurnHoursTripPoint attribute specifies the number of hours the LampBurnHours attribute may reach
@@ -200,7 +212,7 @@ export const BallastConfigurationCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.3.9.6
          */
         lampBurnHoursTripPoint: OptionalWritableAttribute(
-            53,
+            0x35,
             TlvNullable(TlvUInt24),
             { default: 0, writeAcl: AccessLevel.Manage }
         )

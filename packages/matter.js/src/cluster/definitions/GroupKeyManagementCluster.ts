@@ -37,7 +37,7 @@ export const TlvGroupKeyMapStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.3.2
      */
-    groupKeySetId: TlvField(2, TlvUInt16.bound({ min: 1, max: 65535 }))
+    groupKeySetId: TlvField(2, TlvUInt16.bound({ min: 1 }))
 });
 
 /**
@@ -280,7 +280,7 @@ export const GroupKeyManagementCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.1
          */
         groupKeyMap: WritableFabricScopedAttribute(
-            0,
+            0x0,
             TlvArray(TlvGroupKeyMapStruct),
             { persistent: true, default: [], writeAcl: AccessLevel.Manage }
         ),
@@ -297,7 +297,7 @@ export const GroupKeyManagementCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.2
          */
-        groupTable: FabricScopedAttribute(1, TlvArray(TlvGroupInfoMapStruct), { default: [] }),
+        groupTable: FabricScopedAttribute(0x1, TlvArray(TlvGroupInfoMapStruct), { default: [] }),
 
         /**
          * This attribute shall indicate the maximum number of groups that this node supports per fabric. The value of
@@ -307,7 +307,7 @@ export const GroupKeyManagementCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.3
          */
-        maxGroupsPerFabric: FixedAttribute(2, TlvUInt16, { default: 0 }),
+        maxGroupsPerFabric: FixedAttribute(0x2, TlvUInt16, { default: 0 }),
 
         /**
          * This attribute shall indicate the maximum number of group key sets this node supports per fabric. The value
@@ -316,7 +316,7 @@ export const GroupKeyManagementCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.4
          */
-        maxGroupKeysPerFabric: FixedAttribute(3, TlvUInt16.bound({ min: 1, max: 65535 }), { default: 1 })
+        maxGroupKeysPerFabric: FixedAttribute(0x3, TlvUInt16.bound({ min: 1 }), { default: 1 })
     },
 
     commands: {
@@ -360,7 +360,7 @@ export const GroupKeyManagementCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.1
          */
-        keySetWrite: Command(0, TlvKeySetWriteRequest, 0, TlvNoResponse),
+        keySetWrite: Command(0x0, TlvKeySetWriteRequest, 0x0, TlvNoResponse),
 
         /**
          * This command is used by Administrators to read the state of a given Group Key Set.
@@ -376,7 +376,7 @@ export const GroupKeyManagementCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.2
          */
-        keySetRead: Command(1, TlvKeySetReadRequest, 2, TlvKeySetReadResponse),
+        keySetRead: Command(0x1, TlvKeySetReadRequest, 2, TlvKeySetReadResponse),
 
         /**
          * This command is used by Administrators to remove all state of a given Group Key Set.
@@ -400,7 +400,7 @@ export const GroupKeyManagementCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.4
          */
-        keySetRemove: Command(3, TlvKeySetRemoveRequest, 3, TlvNoResponse),
+        keySetRemove: Command(0x3, TlvKeySetRemoveRequest, 0x3, TlvNoResponse),
 
         /**
          * This command is used by Administrators to query a list of all Group Key Sets associated with the accessing
@@ -414,6 +414,6 @@ export const GroupKeyManagementCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.5
          */
-        keySetReadAllIndices: Command(4, TlvKeySetReadAllIndicesRequest, 5, TlvKeySetReadAllIndicesResponse)
+        keySetReadAllIndices: Command(0x4, TlvKeySetReadAllIndicesRequest, 5, TlvKeySetReadAllIndicesResponse)
     }
 });

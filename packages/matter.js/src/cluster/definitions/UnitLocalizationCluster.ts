@@ -78,7 +78,7 @@ export const TemperatureUnitComponent = ClusterComponent({
          * @see {@link MatterCoreSpecificationV1_1} § 11.5.6.1
          */
         temperatureUnit: WritableAttribute(
-            0,
+            0x0,
             TlvNullable(TlvEnum<TempUnit>()),
             { persistent: true, default: null, writeAcl: AccessLevel.Manage }
         )

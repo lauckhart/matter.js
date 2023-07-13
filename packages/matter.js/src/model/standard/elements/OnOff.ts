@@ -184,7 +184,7 @@ Matter.children.push({
                     xref: { document: "cluster", section: "1.5.7.6.1" },
                     children: [
                         { tag: "datatype", name: "AcceptOnlyWhenOn", constraint: "0" },
-                        { tag: "datatype", name: "Reserved", constraint: "1" }
+                        { tag: "datatype", name: "Reserved", constraint: "1 to 8" }
                     ]
                 },
 

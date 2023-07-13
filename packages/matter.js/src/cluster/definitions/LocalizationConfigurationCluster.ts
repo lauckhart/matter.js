@@ -42,7 +42,7 @@ export const LocalizationConfigurationCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 11.3.4.1
          */
         activeLocale: WritableAttribute(
-            0,
+            0x0,
             TlvString.bound({ maxLength: 35 }),
             { persistent: true, writeAcl: AccessLevel.Manage }
         ),
@@ -54,6 +54,6 @@ export const LocalizationConfigurationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.3.4.2
          */
-        supportedLocales: FixedAttribute(1, TlvArray(TlvString, { maxLength: 32 }), { default: [] })
+        supportedLocales: FixedAttribute(0x1, TlvArray(TlvString, { maxLength: 32 }), { default: [] })
     }
 });

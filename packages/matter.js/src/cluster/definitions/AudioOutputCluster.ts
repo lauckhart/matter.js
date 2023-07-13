@@ -113,21 +113,21 @@ export const AudioOutputBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.3.1
          */
-        outputList: Attribute(0, TlvArray(TlvOutputInfoStruct), { default: [] }),
+        outputList: Attribute(0x0, TlvArray(TlvOutputInfoStruct), { default: [] }),
 
         /**
          * This field contains the value of the index field of the currently selected OutputInfoStruct.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.3.2
          */
-        currentOutput: Attribute(1, TlvUInt8, { default: 0 })
+        currentOutput: Attribute(0x1, TlvUInt8, { default: 0 })
     },
 
     commands: {
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.4
          */
-        selectOutput: Command(0, TlvSelectOutputRequest, 0, TlvNoResponse)
+        selectOutput: Command(0x0, TlvSelectOutputRequest, 0x0, TlvNoResponse)
     }
 });
 
@@ -144,7 +144,7 @@ export const NameUpdatesComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.4.2
          */
-        renameOutput: Command(1, TlvRenameOutputRequest, 1, TlvNoResponse)
+        renameOutput: Command(0x1, TlvRenameOutputRequest, 0x1, TlvNoResponse)
     }
 });
 

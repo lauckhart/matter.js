@@ -172,7 +172,7 @@ export const OtaSoftwareUpdateProviderCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.1
          */
-        queryImage: Command(0, TlvQueryImageRequest, 1, TlvQueryImageResponse),
+        queryImage: Command(0x0, TlvQueryImageRequest, 1, TlvQueryImageResponse),
 
         /**
          * This field shall contain the UpdateToken as specified in Section 11.19.3.6.1, “UpdateToken usage”. This
@@ -181,7 +181,7 @@ export const OtaSoftwareUpdateProviderCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.18
          */
-        applyUpdateRequest: Command(2, TlvApplyUpdateRequestRequest, 3, TlvApplyUpdateResponse),
+        applyUpdateRequest: Command(0x2, TlvApplyUpdateRequestRequest, 3, TlvApplyUpdateResponse),
 
         /**
          * This field shall contain the UpdateToken as specified in Section 11.19.3.6.1, “UpdateToken usage”.
@@ -217,6 +217,6 @@ export const OtaSoftwareUpdateProviderCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.22
          */
-        notifyUpdateApplied: Command(4, TlvNotifyUpdateAppliedRequest, 4, TlvNoResponse)
+        notifyUpdateApplied: Command(0x4, TlvNotifyUpdateAppliedRequest, 0x4, TlvNoResponse)
     }
 });

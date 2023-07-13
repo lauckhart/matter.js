@@ -169,8 +169,8 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "DoorState", id: 0x3, type: "enum8", access: "R V", conformance: "DPS",
-            constraint: "desc", quality: "X P",
+            tag: "attribute", name: "DoorState", id: 0x3, type: "DoorStateEnum", access: "R V",
+            conformance: "DPS", constraint: "desc", quality: "X P",
             details: "The current door state as defined in DoorStateEnum." +
                      "\n" +
                      "This attribute shall be null only if an internal error prevents the retrieval of the current door " +
@@ -353,7 +353,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "OperatingMode", id: 0x25, type: "enum8", access: "R[W] VM",
+            tag: "attribute", name: "OperatingMode", id: 0x25, type: "OperatingModeEnum", access: "R[W] VM",
             conformance: "M", constraint: "desc", default: 0, quality: "P",
             details: "The current operating mode of the lock (see OperatingModeEnum).",
             xref: { document: "cluster", section: "5.2.3.23" }
@@ -658,11 +658,11 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.2.3.44" },
 
             children: [
-                { tag: "datatype", name: "UnknownOrManufacturerSpecificKeypadProgrammingEvent", constraint: "0" },
-                { tag: "datatype", name: "ProgrammingPinCodeChangedSourceKeypad", constraint: "1" },
-                { tag: "datatype", name: "PinAddedSourceKeypad", constraint: "2" },
-                { tag: "datatype", name: "PinClearedSourceKeypad", constraint: "3" },
-                { tag: "datatype", name: "PinChangedSourceKeypad", constraint: "4" }
+                { tag: "datatype", name: "Unknown", constraint: "0" },
+                { tag: "datatype", name: "PinCodeChanged", constraint: "1" },
+                { tag: "datatype", name: "PinAdded", constraint: "2" },
+                { tag: "datatype", name: "PinCleared", constraint: "3" },
+                { tag: "datatype", name: "PinChanged", constraint: "4" }
             ]
         },
 
@@ -677,19 +677,28 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.2.3.45" },
 
             children: [
-                { tag: "datatype", name: "UnknownOrManufacturerSpecificRemoteProgrammingEvent", constraint: "0" },
-                { tag: "datatype", name: "PinAddedSourceRemote", constraint: "2" },
-                { tag: "datatype", name: "PinClearedSourceRemote", constraint: "3" },
-                { tag: "datatype", name: "PinChangedSourceRemote", constraint: "4" },
-                { tag: "datatype", name: "RfidCodeAddedSourceRemote", constraint: "5" },
-                { tag: "datatype", name: "RfidCodeClearedSourceRemote", constraint: "6" }
+                { tag: "datatype", name: "Unknown", constraint: "0" },
+                { tag: "datatype", name: "PinAdded", constraint: "2" },
+                { tag: "datatype", name: "PinCleared", constraint: "3" },
+                { tag: "datatype", name: "PinChanged", constraint: "4" },
+                { tag: "datatype", name: "RfidCodeAdded", constraint: "5" },
+                { tag: "datatype", name: "RfidCodeCleared", constraint: "6" }
             ]
         },
 
         {
-            tag: "attribute", name: "RfidPro", id: 0x47, type: "map16", access: "RW VA",
+            tag: "attribute", name: "RfidProgrammingEventMask", id: 0x47, type: "map16", access: "RW VA",
             conformance: "[NOT & RID]", default: 65535, quality: "P",
-            xref: { document: "cluster", section: "5.2.3" }
+            details: "Event mask used to turn on and off RFID programming events. This mask DOES NOT apply to the storing " +
+                     "of events in the event log. This mask only applies to the Programming Event Notification Command." +
+                     "\n" +
+                     "This mask DOES NOT apply to the Events mechanism of this cluster.",
+            xref: { document: "cluster", section: "5.2.3.46" },
+            children: [
+                { tag: "datatype", name: "Unknown", constraint: "0" },
+                { tag: "datatype", name: "IdAdded", constraint: "5" },
+                { tag: "datatype", name: "IdCleared", constraint: "6" }
+            ]
         },
 
         {

@@ -88,7 +88,7 @@ export const ApplicationBasicCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.1
          */
-        vendorName: OptionalFixedAttribute(0, TlvString.bound({ maxLength: 32 }), { default: "" }),
+        vendorName: OptionalFixedAttribute(0x0, TlvString.bound({ maxLength: 32 }), { default: "" }),
 
         /**
          * This attribute, if present, shall specify the Connectivity Standards Alliance assigned Vendor ID for the
@@ -96,7 +96,7 @@ export const ApplicationBasicCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.2
          */
-        vendorId: OptionalFixedAttribute(1, TlvVendorId, { default: { id: 0 } }),
+        vendorId: OptionalFixedAttribute(0x1, TlvVendorId, { default: { id: 0 } }),
 
         /**
          * This attribute shall specify a human readable (displayable) name of the Content App assigned by the vendor.
@@ -105,7 +105,7 @@ export const ApplicationBasicCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.3
          */
-        applicationName: FixedAttribute(2, TlvString),
+        applicationName: FixedAttribute(0x2, TlvString),
 
         /**
          * This attribute, if present, shall specify a numeric ID assigned by the vendor to identify a specific Content
@@ -114,21 +114,21 @@ export const ApplicationBasicCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.4
          */
-        productId: OptionalFixedAttribute(3, TlvUInt16, { default: 0 }),
+        productId: OptionalFixedAttribute(0x3, TlvUInt16, { default: 0 }),
 
         /**
          * This attribute shall specify a Content App which consists of an Application ID using a specified catalog.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.5
          */
-        application: FixedAttribute(4, TlvApplicationStruct),
+        application: FixedAttribute(0x4, TlvApplicationStruct),
 
         /**
          * This attribute shall specify the current running status of the application.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.6
          */
-        status: Attribute(5, TlvEnum<ApplicationStatus>(), { default: ApplicationStatus.ActiveVisibleFocus }),
+        status: Attribute(0x5, TlvEnum<ApplicationStatus>(), { default: ApplicationStatus.ActiveVisibleFocus }),
 
         /**
          * This attribute shall specify a human readable (displayable) version of the Content App assigned by the
@@ -136,7 +136,7 @@ export const ApplicationBasicCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.7
          */
-        applicationVersion: FixedAttribute(6, TlvString.bound({ maxLength: 32 })),
+        applicationVersion: FixedAttribute(0x6, TlvString.bound({ maxLength: 32 })),
 
         /**
          * This is a list of vendor IDs. Each entry is a vendor-id.
@@ -144,7 +144,7 @@ export const ApplicationBasicCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.8
          */
         allowedVendorList: FixedAttribute(
-            7,
+            0x7,
             TlvArray(TlvVendorId),
             { default: [], readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
         )

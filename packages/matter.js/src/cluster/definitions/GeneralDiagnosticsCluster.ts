@@ -412,7 +412,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.1
          */
-        networkInterfaces: Attribute(0, TlvArray(TlvNetworkInterface, { maxLength: 8 }), { default: [] }),
+        networkInterfaces: Attribute(0x0, TlvArray(TlvNetworkInterface, { maxLength: 8 }), { default: [] }),
 
         /**
          * The RebootCount attribute shall indicate a best-effort count of the number of times the Node has rebooted.
@@ -422,7 +422,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.2
          */
-        rebootCount: Attribute(1, TlvUInt16, { persistent: true, default: 0 }),
+        rebootCount: Attribute(0x1, TlvUInt16, { persistent: true, default: 0 }),
 
         /**
          * The UpTime attribute shall indicate a best-effort assessment of the length of time, in seconds, since the
@@ -431,7 +431,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.3
          */
-        upTime: OptionalAttribute(2, TlvUInt64, { omitChanges: true, default: 0 }),
+        upTime: OptionalAttribute(0x2, TlvUInt64, { omitChanges: true, default: 0 }),
 
         /**
          * The TotalOperationalHours attribute shall indicate a best-effort attempt at tracking the length of time, in
@@ -442,14 +442,14 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.4
          */
-        totalOperationalHours: OptionalAttribute(3, TlvUInt32, { persistent: true, omitChanges: true, default: 0 }),
+        totalOperationalHours: OptionalAttribute(0x3, TlvUInt32, { persistent: true, omitChanges: true, default: 0 }),
 
         /**
          * The BootReason attribute shall indicate the reason for the Node’s most recent boot.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.5
          */
-        bootReason: OptionalAttribute(4, TlvEnum<BootReason>()),
+        bootReason: OptionalAttribute(0x4, TlvEnum<BootReason>()),
 
         /**
          * The ActiveHardwareFaults attribute shall indicate the set of faults currently detected by the Node. When the
@@ -462,7 +462,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.6
          */
-        activeHardwareFaults: OptionalAttribute(5, TlvArray(TlvEnum<HardwareFault>(), { maxLength: 11 }), { default: [] }),
+        activeHardwareFaults: OptionalAttribute(0x5, TlvArray(TlvEnum<HardwareFault>(), { maxLength: 11 }), { default: [] }),
 
         /**
          * The ActiveRadioFaults attribute shall indicate the set of faults currently detected by the Node. When the
@@ -475,7 +475,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.7
          */
-        activeRadioFaults: OptionalAttribute(6, TlvArray(TlvEnum<RadioFault>(), { maxLength: 7 }), { default: [] }),
+        activeRadioFaults: OptionalAttribute(0x6, TlvArray(TlvEnum<RadioFault>(), { maxLength: 7 }), { default: [] }),
 
         /**
          * The ActiveNetworkFaults attribute shall indicate the set of faults currently detected by the Node. When the
@@ -488,7 +488,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.8
          */
-        activeNetworkFaults: OptionalAttribute(7, TlvArray(TlvEnum<NetworkFault>(), { maxLength: 4 }), { default: [] }),
+        activeNetworkFaults: OptionalAttribute(0x7, TlvArray(TlvEnum<NetworkFault>(), { maxLength: 4 }), { default: [] }),
 
         /**
          * The TestEventTriggersEnabled attribute shall indicate whether the Node has any TestEventTrigger configured.
@@ -500,7 +500,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.9
          */
-        testEventTriggersEnabled: Attribute(8, TlvBoolean)
+        testEventTriggersEnabled: Attribute(0x8, TlvBoolean)
     },
 
     commands: {
@@ -514,7 +514,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.7.1
          */
-        testEventTrigger: Command(0, TlvTestEventTriggerRequest, 0, TlvNoResponse)
+        testEventTrigger: Command(0x0, TlvTestEventTriggerRequest, 0x0, TlvNoResponse)
     },
 
     events: {
@@ -524,7 +524,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.1
          */
-        hardwareFaultChange: OptionalEvent(0, EventPriority.Critical, TlvHardwareFaultChangeEvent),
+        hardwareFaultChange: OptionalEvent(0x0, EventPriority.Critical, TlvHardwareFaultChangeEvent),
 
         /**
          * The RadioFaultChange Event shall indicate a change in the set of radio faults currently detected by the Node.
@@ -536,7 +536,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.2
          */
-        radioFaultChange: OptionalEvent(1, EventPriority.Critical, TlvRadioFaultChangeEvent),
+        radioFaultChange: OptionalEvent(0x1, EventPriority.Critical, TlvRadioFaultChangeEvent),
 
         /**
          * The NetworkFaultChange Event shall indicate a change in the set of network faults currently detected by the
@@ -550,13 +550,13 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.3
          */
-        networkFaultChange: OptionalEvent(2, EventPriority.Critical, TlvNetworkFaultChangeEvent),
+        networkFaultChange: OptionalEvent(0x2, EventPriority.Critical, TlvNetworkFaultChangeEvent),
 
         /**
          * The BootReason Event shall indicate the reason that caused the device to start-up.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.4
          */
-        bootReason: Event(3, EventPriority.Critical, TlvBootReasonEvent)
+        bootReason: Event(0x3, EventPriority.Critical, TlvBootReasonEvent)
     }
 });

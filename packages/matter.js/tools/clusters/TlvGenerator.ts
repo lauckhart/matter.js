@@ -23,43 +23,7 @@ import { camelize, serialize } from "../../src/util/String.js";
 import { Entry } from "../util/TsFile.js";
 import { asObjectKey } from "../util/string.js";
 import { ClusterFile } from "./ClusterFile.js";
-
-const SpecializedNumbers: { [name: string]: [string, string] } = {
-    [Globals.actionId.name]: ["datatype", "TlvAttributeId"],
-    [Globals.clusterId.name]: ["datatype", "TlvClusterId"],
-    [Globals.commandId.name]: ["datatype", "TlvCommandId"],
-    [Globals.deviceTypeId.name]: ["datatype", "TlvDeviceTypeId"],
-    [Globals.endpointNo.name]: ["datatype", "TlvEndpointNumber"],
-    [Globals.eventId.name]: ["datatype", "TlvEventId"],
-    [Globals.fabricId.name]: ["datatype", "TlvFabricId"],
-    [Globals.fabricIdx.name]: ["datatype", "TlvFabricIndex"],
-    [Globals.groupId.name]: ["datatype", "TlvGroupId"],
-    [Globals.nodeId.name]: ["datatype", "TlvNodeId"],
-    [Globals.SubjectId.name]: ["datatype", "TlvSubjectId"],
-    [Globals.vendorId.name]: ["datatype", "TlvVendorId"],
-    [Globals.percent.name]: ["number", "TlvPercent"],
-    [Globals.percent100ths.name]: ["number", "TlvPercent100ths"],
-    [Globals.epochUs.name]: ["number", "TlvEpochUs"],
-    [Globals.epochS.name]: ["number", "TlvEpochS"],
-    [Globals.posixMs.name]: ["number", "TlvPosixMs"],
-    [Globals.systimeUs.name]: ["number", "TlvSysTimeUs"],
-    [Globals.systimeMs.name]: ["number", "TlvSysTimeMS"]
-};
-
-export const NestedConstantMap = {
-    [Globals.actionId.name]: "id",
-    [Globals.clusterId.name]: "id",
-    [Globals.commandId.name]: "id",
-    [Globals.deviceTypeId.name]: "id",
-    [Globals.endpointNo.name]: "number",
-    [Globals.eventId.name]: "id",
-    [Globals.fabricId.name]: "id",
-    [Globals.fabricIdx.name]: "index",
-    [Globals.groupId.name]: "id",
-    [Globals.nodeId.name]: "id",
-    [Globals.SubjectId.name]: "id",
-    [Globals.vendorId.name]: "id"
-}
+import { NumericRanges, SpecializedNumbers, WrappedConstantKeys } from "./NumberConstants.js";
 
 /**
  * Adds TLV structures for ValueModels to a ClusterFile
@@ -272,7 +236,7 @@ export class TlvGenerator {
             this.importTlv("number", tlv);
         }
 
-        if (!NestedConstantMap[globalBase as any]) {
+        if (!WrappedConstantKeys[globalBase as any]) {
             const bounds = this.createNumberBounds(model);
             if (bounds) {
                 tlv = `${tlv}.bound(${serialize(bounds)})`;
@@ -504,8 +468,17 @@ export class TlvGenerator {
     }
 
     private createRangeBounds(constraint: Constraint, minKey: string, maxKey: string, type?: string) {
-        const min = FieldValue.numericValue(constraint.min, type);
-        const max = FieldValue.numericValue(constraint.max, type);
+        let min = FieldValue.numericValue(constraint.min, type);
+        let max = FieldValue.numericValue(constraint.max, type);
+
+        if (min === (NumericRanges as any)[type as any]?.min) {
+            min = undefined;
+        }
+
+        if (max === (NumericRanges as any)[type as any]?.max) {
+            max = undefined;
+        }
+
         if (min === undefined && max === undefined) {
             return;
         }

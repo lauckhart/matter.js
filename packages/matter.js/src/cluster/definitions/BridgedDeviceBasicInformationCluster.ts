@@ -106,23 +106,23 @@ export const BridgedDeviceBasicInformationCluster = Cluster({
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        vendorName: OptionalFixedAttribute(1, TlvString.bound({ maxLength: 32 })),
+        vendorName: OptionalFixedAttribute(0x1, TlvString.bound({ maxLength: 32 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        vendorId: OptionalFixedAttribute(2, TlvVendorId),
+        vendorId: OptionalFixedAttribute(0x2, TlvVendorId),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        productName: OptionalFixedAttribute(3, TlvString.bound({ maxLength: 32 })),
+        productName: OptionalFixedAttribute(0x3, TlvString.bound({ maxLength: 32 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
         nodeLabel: OptionalWritableAttribute(
-            5,
+            0x5,
             TlvString.bound({ maxLength: 32 }),
             { persistent: true, default: "", writeAcl: AccessLevel.Manage }
         ),
@@ -130,77 +130,77 @@ export const BridgedDeviceBasicInformationCluster = Cluster({
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        hardwareVersion: OptionalFixedAttribute(7, TlvUInt16, { default: 0 }),
+        hardwareVersion: OptionalFixedAttribute(0x7, TlvUInt16, { default: 0 }),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        hardwareVersionString: OptionalFixedAttribute(8, TlvString.bound({ minLength: 1, maxLength: 64 })),
+        hardwareVersionString: OptionalFixedAttribute(0x8, TlvString.bound({ minLength: 1, maxLength: 64 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        softwareVersion: OptionalFixedAttribute(9, TlvUInt32, { default: 0 }),
+        softwareVersion: OptionalFixedAttribute(0x9, TlvUInt32, { default: 0 }),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        softwareVersionString: OptionalFixedAttribute(10, TlvString.bound({ minLength: 1, maxLength: 64 })),
+        softwareVersionString: OptionalFixedAttribute(0xa, TlvString.bound({ minLength: 1, maxLength: 64 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        manufacturingDate: OptionalFixedAttribute(11, TlvString.bound({ minLength: 8, maxLength: 16 })),
+        manufacturingDate: OptionalFixedAttribute(0xb, TlvString.bound({ minLength: 8, maxLength: 16 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        partNumber: OptionalFixedAttribute(12, TlvString.bound({ maxLength: 32 })),
+        partNumber: OptionalFixedAttribute(0xc, TlvString.bound({ maxLength: 32 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        productUrl: OptionalFixedAttribute(13, TlvString.bound({ maxLength: 256 })),
+        productUrl: OptionalFixedAttribute(0xd, TlvString.bound({ maxLength: 256 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        productLabel: OptionalFixedAttribute(14, TlvString.bound({ maxLength: 64 })),
+        productLabel: OptionalFixedAttribute(0xe, TlvString.bound({ maxLength: 64 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        serialNumber: OptionalFixedAttribute(15, TlvString.bound({ maxLength: 32 })),
+        serialNumber: OptionalFixedAttribute(0xf, TlvString.bound({ maxLength: 32 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        reachable: Attribute(17, TlvBoolean, { default: true }),
+        reachable: Attribute(0x11, TlvBoolean, { default: true }),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        uniqueId: OptionalFixedAttribute(18, TlvString.bound({ maxLength: 32 })),
+        uniqueId: OptionalFixedAttribute(0x12, TlvString.bound({ maxLength: 32 })),
 
-        productAppearance: OptionalAttribute(20, TlvProductAppearanceStruct),
-        clusterRevision: Attribute(65533, TlvUInt16, { default: 1 })
+        productAppearance: OptionalAttribute(0x14, TlvProductAppearanceStruct),
+        clusterRevision: Attribute(0xfffd, TlvUInt16, { default: 1 })
     },
 
     events: {
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.5
          */
-        startUp: OptionalEvent(0, EventPriority.Critical, TlvStartUpEvent),
+        startUp: OptionalEvent(0x0, EventPriority.Critical, TlvStartUpEvent),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.5
          */
-        shutDown: OptionalEvent(1, EventPriority.Critical, TlvNoArguments),
+        shutDown: OptionalEvent(0x1, EventPriority.Critical, TlvNoArguments),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.5
          */
-        leave: OptionalEvent(2, EventPriority.Info, TlvNoArguments),
+        leave: OptionalEvent(0x2, EventPriority.Info, TlvNoArguments),
 
         /**
          * This event shall be generated when there is a change in the Reachable attribute. Its purpose is to provide
@@ -211,6 +211,6 @@ export const BridgedDeviceBasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.5.1
          */
-        reachableChanged: Event(3, EventPriority.Info, TlvReachableChangedEvent)
+        reachableChanged: Event(0x3, EventPriority.Info, TlvReachableChangedEvent)
     }
 });

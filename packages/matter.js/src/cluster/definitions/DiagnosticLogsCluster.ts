@@ -251,6 +251,6 @@ export const DiagnosticLogsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.1
          */
-        retrieveLogsRequest: Command(0, TlvRetrieveLogsRequestRequest, 1, TlvRetrieveLogsResponse)
+        retrieveLogsRequest: Command(0x0, TlvRetrieveLogsRequestRequest, 1, TlvRetrieveLogsResponse)
     }
 });

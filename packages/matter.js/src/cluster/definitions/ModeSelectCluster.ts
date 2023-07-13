@@ -134,7 +134,7 @@ export const ModeSelectBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.1
          */
-        description: FixedAttribute(0, TlvString.bound({ maxLength: 64 })),
+        description: FixedAttribute(0x0, TlvString.bound({ maxLength: 64 })),
 
         /**
          * This attribute, when not null, shall indicate a single standard namespace for any standard semantic tag
@@ -145,7 +145,7 @@ export const ModeSelectBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.2
          */
-        standardNamespace: FixedAttribute(1, TlvNullable(TlvUInt16), { default: null }),
+        standardNamespace: FixedAttribute(0x1, TlvNullable(TlvUInt16), { default: null }),
 
         /**
          * This attribute is the list of supported modes that may be selected for the CurrentMode attribute. Each item
@@ -154,7 +154,7 @@ export const ModeSelectBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.3
          */
-        supportedModes: FixedAttribute(2, TlvArray(TlvModeOptionStruct, { maxLength: 255 }), { default: [] }),
+        supportedModes: FixedAttribute(0x2, TlvArray(TlvModeOptionStruct, { maxLength: 255 }), { default: [] }),
 
         /**
          * This attribute represents the current mode of the server.
@@ -165,7 +165,7 @@ export const ModeSelectBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.4
          */
-        currentMode: Attribute(3, TlvUInt8, { scene: true, persistent: true }),
+        currentMode: Attribute(0x3, TlvUInt8, { scene: true, persistent: true }),
 
         /**
          * The StartUpMode attribute value indicates the desired startup mode for the server when it is supplied with
@@ -185,7 +185,7 @@ export const ModeSelectBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.5
          */
-        startUpMode: OptionalWritableAttribute(4, TlvNullable(TlvUInt8), { persistent: true })
+        startUpMode: OptionalWritableAttribute(0x4, TlvNullable(TlvUInt8), { persistent: true })
     },
 
     commands: {
@@ -197,7 +197,7 @@ export const ModeSelectBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.6.1
          */
-        changeToMode: Command(0, TlvChangeToModeRequest, 0, TlvNoResponse)
+        changeToMode: Command(0x0, TlvChangeToModeRequest, 0x0, TlvNoResponse)
     }
 });
 
@@ -215,7 +215,7 @@ export const OnOffComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.6
          */
-        onMode: WritableAttribute(5, TlvNullable(TlvUInt8), { persistent: true, default: null })
+        onMode: WritableAttribute(0x5, TlvNullable(TlvUInt8), { persistent: true, default: null })
     }
 });
 

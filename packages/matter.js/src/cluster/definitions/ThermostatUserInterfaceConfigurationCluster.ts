@@ -105,7 +105,7 @@ export const ThermostatUserInterfaceConfigurationCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.1
          */
         temperatureDisplayMode: WritableAttribute(
-            0,
+            0x0,
             TlvEnum<TemperatureDisplayMode>(),
             { default: TemperatureDisplayMode.Celsius }
         ),
@@ -121,7 +121,7 @@ export const ThermostatUserInterfaceConfigurationCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.2
          */
         keypadLockout: WritableAttribute(
-            1,
+            0x1,
             TlvEnum<KeypadLockout>(),
             { default: KeypadLockout.NoLockout, writeAcl: AccessLevel.Manage }
         ),
@@ -141,7 +141,7 @@ export const ThermostatUserInterfaceConfigurationCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.3
          */
         scheduleProgrammingVisibility: OptionalWritableAttribute(
-            2,
+            0x2,
             TlvEnum<ScheduleProgrammingVisibility>(),
             { default: ScheduleProgrammingVisibility.ScheduleProgrammingPermitted, writeAcl: AccessLevel.Manage }
         )

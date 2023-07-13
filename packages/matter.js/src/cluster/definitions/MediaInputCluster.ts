@@ -134,14 +134,14 @@ export const MediaInputBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.3.1
          */
-        inputList: Attribute(0, TlvArray(TlvInputInfoStruct), { default: [] }),
+        inputList: Attribute(0x0, TlvArray(TlvInputInfoStruct), { default: [] }),
 
         /**
          * This field contains the value of the index field of the currently selected InputInfoStruct.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.3.2
          */
-        currentInput: Attribute(1, TlvUInt8, { default: 0 })
+        currentInput: Attribute(0x1, TlvUInt8, { default: 0 })
     },
 
     commands: {
@@ -151,21 +151,21 @@ export const MediaInputBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.1
          */
-        selectInput: Command(0, TlvSelectInputRequest, 0, TlvNoResponse),
+        selectInput: Command(0x0, TlvSelectInputRequest, 0x0, TlvNoResponse),
 
         /**
          * Upon receipt, this shall display the active status of the input list on screen.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.2
          */
-        showInputStatus: Command(1, TlvNoArguments, 1, TlvNoResponse),
+        showInputStatus: Command(0x1, TlvNoArguments, 0x1, TlvNoResponse),
 
         /**
          * Upon receipt, this shall hide the input list from the screen.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.3
          */
-        hideInputStatus: Command(2, TlvNoArguments, 2, TlvNoResponse)
+        hideInputStatus: Command(0x2, TlvNoArguments, 0x2, TlvNoResponse)
     }
 });
 
@@ -180,7 +180,7 @@ export const NameUpdatesComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.4.4
          */
-        renameInput: Command(3, TlvRenameInputRequest, 3, TlvNoResponse)
+        renameInput: Command(0x3, TlvRenameInputRequest, 0x3, TlvNoResponse)
     }
 });
 

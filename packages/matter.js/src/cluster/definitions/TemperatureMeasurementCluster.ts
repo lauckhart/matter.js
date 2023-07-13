@@ -36,7 +36,7 @@ export const TemperatureMeasurementCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3.4.1
          */
-        measuredValue: Attribute(0, TlvNullable(TlvInt16)),
+        measuredValue: Attribute(0x0, TlvNullable(TlvInt16)),
 
         /**
          * The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that is capable of being
@@ -46,7 +46,7 @@ export const TemperatureMeasurementCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3.4.2
          */
-        minMeasuredValue: Attribute(1, TlvNullable(TlvInt16.bound({ min: -27315 })), { default: 32768 }),
+        minMeasuredValue: Attribute(0x1, TlvNullable(TlvInt16.bound({ min: -27315 })), { default: 32768 }),
 
         /**
          * The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that is capable of being
@@ -56,13 +56,13 @@ export const TemperatureMeasurementCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3.4.3
          */
-        maxMeasuredValue: Attribute(2, TlvNullable(TlvInt16.bound({ max: 32767 })), { default: 32768 }),
+        maxMeasuredValue: Attribute(0x2, TlvNullable(TlvInt16), { default: 32768 }),
 
         /**
          * See Measured Value.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.3.4.4
          */
-        tolerance: OptionalAttribute(3, TlvUInt16.bound({ min: 0, max: 2048 }), { default: 0 })
+        tolerance: OptionalAttribute(0x3, TlvUInt16.bound({ max: 2048 }), { default: 0 })
     }
 });

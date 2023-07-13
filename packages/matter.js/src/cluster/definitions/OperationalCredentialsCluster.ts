@@ -506,7 +506,7 @@ export const OperationalCredentialsCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.1
          */
         noCs: FabricScopedAttribute(
-            0,
+            0x0,
             TlvArray(TlvNOCStruct),
 
             {
@@ -528,7 +528,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.2
          */
-        fabrics: FabricScopedAttribute(1, TlvArray(TlvFabricDescriptorStruct), { persistent: true, default: [] }),
+        fabrics: FabricScopedAttribute(0x1, TlvArray(TlvFabricDescriptorStruct), { persistent: true, default: [] }),
 
         /**
          * This attribute contains the number of Fabrics that are supported by the device. This value is fixed for a
@@ -536,7 +536,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.3
          */
-        supportedFabrics: FixedAttribute(2, TlvUInt8.bound({ min: 5, max: 254 })),
+        supportedFabrics: FixedAttribute(0x2, TlvUInt8.bound({ min: 5, max: 254 })),
 
         /**
          * This attribute contains the number of Fabrics to which the device is currently commissioned. This attribute
@@ -550,7 +550,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.4
          */
-        commissionedFabrics: Attribute(3, TlvUInt8, { persistent: true }),
+        commissionedFabrics: Attribute(0x3, TlvUInt8, { persistent: true }),
 
         /**
          * This attribute shall contain a read-only list of Trusted Root CA Certificates installed on the Node, as
@@ -570,7 +570,11 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.5
          */
-        trustedRootCertificates: Attribute(4, TlvArray(TlvByteString), { persistent: true, omitChanges: true, default: [] }),
+        trustedRootCertificates: Attribute(
+            0x4,
+            TlvArray(TlvByteString),
+            { persistent: true, omitChanges: true, default: [] }
+        ),
 
         /**
          * This attribute shall contain accessing fabric index.
@@ -580,7 +584,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.6
          */
-        currentFabricIndex: Attribute(5, TlvUInt8, { default: 0 })
+        currentFabricIndex: Attribute(0x5, TlvUInt8, { default: 0 })
     },
 
     commands: {
@@ -593,7 +597,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.1
          */
-        attestationRequest: Command(0, TlvAttestationRequestRequest, 1, TlvAttestationResponse),
+        attestationRequest: Command(0x0, TlvAttestationRequestRequest, 1, TlvAttestationResponse),
 
         /**
          * If the CertificateType is not a valid value per CertificateChainTypeEnum then the command shall fail with a
@@ -601,7 +605,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.3
          */
-        certificateChainRequest: Command(2, TlvCertificateChainRequestRequest, 3, TlvCertificateChainResponse),
+        certificateChainRequest: Command(0x2, TlvCertificateChainRequestRequest, 3, TlvCertificateChainResponse),
 
         /**
          * This command shall be generated to execute the Node Operational CSR Procedure and subsequently return the
@@ -631,7 +635,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.5
          */
-        csrRequest: Command(4, TlvCsrRequestRequest, 5, TlvCsrResponse),
+        csrRequest: Command(0x4, TlvCsrRequestRequest, 5, TlvCsrResponse),
 
         /**
          * This command shall add a new NOC chain to the device and commission a new Fabric association upon successful
@@ -646,7 +650,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.8
          */
-        addNoc: Command(6, TlvAddNocRequest, 8, TlvNocResponse),
+        addNoc: Command(0x6, TlvAddNocRequest, 8, TlvNocResponse),
 
         /**
          * This command shall replace the NOC and optional associated ICAC (if present) scoped under the accessing
@@ -705,7 +709,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.9
          */
-        updateNoc: Command(7, TlvUpdateNocRequest, 8, TlvNocResponse),
+        updateNoc: Command(0x7, TlvUpdateNocRequest, 8, TlvNocResponse),
 
         /**
          * This command shall be used by an Administrator to set the user-visible Label field for a given Fabric, as
@@ -733,7 +737,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.11
          */
-        updateFabricLabel: Command(9, TlvUpdateFabricLabelRequest, 8, TlvNocResponse),
+        updateFabricLabel: Command(0x9, TlvUpdateFabricLabelRequest, 8, TlvNocResponse),
 
         /**
          * This command is used by Administrators to remove a given Fabric and delete all associated fabric-scoped data.
@@ -791,7 +795,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.12
          */
-        removeFabric: Command(10, TlvRemoveFabricRequest, 8, TlvNocResponse),
+        removeFabric: Command(0xa, TlvRemoveFabricRequest, 8, TlvNocResponse),
 
         /**
          * This command shall add a Trusted Root CA Certificate, provided as its Matter Certificate Encoding
@@ -820,6 +824,6 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.13
          */
-        addTrustedRootCertificate: Command(11, TlvAddTrustedRootCertificateRequest, 11, TlvNoResponse)
+        addTrustedRootCertificate: Command(0xb, TlvAddTrustedRootCertificateRequest, 0xb, TlvNoResponse)
     }
 });

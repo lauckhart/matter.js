@@ -240,7 +240,18 @@ Matter.children.push({
 
             children: [
                 { tag: "datatype", name: "StartTime", type: "uint32", conformance: "M" },
-                { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
+
+                {
+                    tag: "datatype", name: "Status", type: "enum8", conformance: "M",
+
+                    children: [
+                        { tag: "datatype", name: "UpdateAvailable", id: 0x0, conformance: "M" },
+                        { tag: "datatype", name: "Busy", id: 0x1, conformance: "M" },
+                        { tag: "datatype", name: "NotAvailable", id: 0x2, conformance: "M" },
+                        { tag: "datatype", name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M" }
+                    ]
+                },
+
                 { tag: "datatype", name: "ProfileIntervalPeriod", type: "enum8", conformance: "M" },
                 { tag: "datatype", name: "NumberOfIntervalsDelivered", type: "uint8", conformance: "M" },
                 { tag: "datatype", name: "AttributeId", type: "uint16", conformance: "M" },

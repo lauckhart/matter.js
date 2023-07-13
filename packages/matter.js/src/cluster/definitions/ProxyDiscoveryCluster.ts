@@ -29,6 +29,6 @@ export const ProxyDiscoveryCluster = Cluster({
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.15.13.5
          */
-        proxyDiscoverRequest: Command(0, TlvNoArguments, 0, TlvNoResponse)
+        proxyDiscoverRequest: Command(0x0, TlvNoArguments, 0x0, TlvNoResponse)
     }
 });

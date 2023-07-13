@@ -326,7 +326,7 @@ export const AccessControlCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.3
          */
         acl: WritableFabricScopedAttribute(
-            0,
+            0x0,
             TlvArray(TlvAccessControlEntryStruct),
             { default: [], readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
         ),
@@ -340,7 +340,7 @@ export const AccessControlCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.4
          */
         extension: OptionalWritableFabricScopedAttribute(
-            1,
+            0x1,
             TlvArray(TlvAccessControlExtensionStruct),
             { default: [], readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
         ),
@@ -355,7 +355,7 @@ export const AccessControlCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.5
          */
-        subjectsPerAccessControlEntry: FixedAttribute(2, TlvUInt16.bound({ min: 4 }), { default: 4 }),
+        subjectsPerAccessControlEntry: FixedAttribute(0x2, TlvUInt16.bound({ min: 4 }), { default: 4 }),
 
         /**
          * This attribute shall provide the minimum number of Targets per entry that are supported by this server.
@@ -367,7 +367,7 @@ export const AccessControlCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.6
          */
-        targetsPerAccessControlEntry: FixedAttribute(3, TlvUInt16.bound({ min: 3 }), { default: 3 }),
+        targetsPerAccessControlEntry: FixedAttribute(0x3, TlvUInt16.bound({ min: 3 }), { default: 3 }),
 
         /**
          * This attribute shall provide the minimum number of ACL Entries per fabric that are supported by this server.
@@ -379,7 +379,7 @@ export const AccessControlCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.10.5.7
          */
-        accessControlEntriesPerFabric: FixedAttribute(4, TlvUInt16.bound({ min: 4 }), { default: 4 })
+        accessControlEntriesPerFabric: FixedAttribute(0x4, TlvUInt16.bound({ min: 4 }), { default: 4 })
     },
 
     events: {
@@ -395,7 +395,7 @@ export const AccessControlCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.1
          */
-        accessControlEntryChanged: Event(0, EventPriority.Info, TlvAccessControlEntryChangedEvent),
+        accessControlEntryChanged: Event(0x0, EventPriority.Info, TlvAccessControlEntryChangedEvent),
 
         /**
          * The cluster shall send AccessControlExtensionChanged events whenever its extension attribute data is changed
@@ -427,6 +427,6 @@ export const AccessControlCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.10.7.2
          */
-        accessControlExtensionChanged: Event(1, EventPriority.Info, TlvAccessControlExtensionChangedEvent)
+        accessControlExtensionChanged: Event(0x1, EventPriority.Info, TlvAccessControlExtensionChangedEvent)
     }
 });

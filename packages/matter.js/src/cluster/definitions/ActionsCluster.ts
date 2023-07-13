@@ -562,14 +562,14 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.5.1
          */
-        actionList: Attribute(0, TlvArray(TlvActionStruct, { maxLength: 256 }), { default: [] }),
+        actionList: Attribute(0x0, TlvArray(TlvActionStruct, { maxLength: 256 }), { default: [] }),
 
         /**
          * The EndpointLists attribute holds the list of endpoint lists. Each entry shall have an unique EndpointListID.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.5.2
          */
-        endpointLists: Attribute(1, TlvArray(TlvEndpointListStruct, { maxLength: 256 }), { default: [] }),
+        endpointLists: Attribute(0x1, TlvArray(TlvEndpointListStruct, { maxLength: 256 }), { default: [] }),
 
         /**
          * The SetupURL attribute (when provided) shall indicate a URL; its syntax shall follow the syntax as specified
@@ -595,7 +595,7 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.5.3
          */
-        setupUrl: OptionalAttribute(2, TlvString.bound({ maxLength: 512 }), { default: "" })
+        setupUrl: OptionalAttribute(0x2, TlvString.bound({ maxLength: 512 }), { default: "" })
     },
 
     commands: {
@@ -607,7 +607,7 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.1
          */
-        instantAction: OptionalCommand(0, TlvInstantActionRequest, 0, TlvNoResponse),
+        instantAction: OptionalCommand(0x0, TlvInstantActionRequest, 0x0, TlvNoResponse),
 
         /**
          * It is recommended that, where possible (e.g., it is not possible for attributes with Boolean data type), a
@@ -622,7 +622,7 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.2
          */
-        instantActionWithTransition: OptionalCommand(1, TlvInstantActionWithTransitionRequest, 1, TlvNoResponse),
+        instantActionWithTransition: OptionalCommand(0x1, TlvInstantActionWithTransitionRequest, 0x1, TlvNoResponse),
 
         /**
          * This command triggers the commencement of an action on the involved endpoints. Afterwards, the action’s
@@ -636,7 +636,7 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.3
          */
-        startAction: OptionalCommand(2, TlvStartActionRequest, 2, TlvNoResponse),
+        startAction: OptionalCommand(0x2, TlvStartActionRequest, 0x2, TlvNoResponse),
 
         /**
          * This command triggers the commencement of an action on the involved endpoints, and shall change the action’s
@@ -648,7 +648,7 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.4
          */
-        startActionWithDuration: OptionalCommand(3, TlvStartActionWithDurationRequest, 3, TlvNoResponse),
+        startActionWithDuration: OptionalCommand(0x3, TlvStartActionWithDurationRequest, 0x3, TlvNoResponse),
 
         /**
          * This command stops the ongoing action on the involved endpoints. Afterwards, the action’s state shall be
@@ -658,7 +658,7 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.5
          */
-        stopAction: OptionalCommand(4, TlvStopActionRequest, 4, TlvNoResponse),
+        stopAction: OptionalCommand(0x4, TlvStopActionRequest, 0x4, TlvNoResponse),
 
         /**
          * This command pauses an ongoing action, and shall change the action’s state to Paused.
@@ -668,7 +668,7 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.6
          */
-        pauseAction: OptionalCommand(5, TlvPauseActionRequest, 5, TlvNoResponse),
+        pauseAction: OptionalCommand(0x5, TlvPauseActionRequest, 0x5, TlvNoResponse),
 
         /**
          * This command pauses an ongoing action, and shall change the action’s state to Paused. After the specified
@@ -687,7 +687,7 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.7
          */
-        pauseActionWithDuration: OptionalCommand(6, TlvPauseActionWithDurationRequest, 6, TlvNoResponse),
+        pauseActionWithDuration: OptionalCommand(0x6, TlvPauseActionWithDurationRequest, 0x6, TlvNoResponse),
 
         /**
          * This command resumes a previously paused action, and shall change the action’s state to Active.
@@ -700,7 +700,7 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.8
          */
-        resumeAction: OptionalCommand(7, TlvResumeActionRequest, 7, TlvNoResponse),
+        resumeAction: OptionalCommand(0x7, TlvResumeActionRequest, 0x7, TlvNoResponse),
 
         /**
          * This command enables a certain action or automation. Afterwards, the action’s state shall be Active.
@@ -709,7 +709,7 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.9
          */
-        enableAction: OptionalCommand(8, TlvEnableActionRequest, 8, TlvNoResponse),
+        enableAction: OptionalCommand(0x8, TlvEnableActionRequest, 0x8, TlvNoResponse),
 
         /**
          * This command enables a certain action or automation, and shall change the action’s state to be Active. After
@@ -723,7 +723,7 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.10
          */
-        enableActionWithDuration: OptionalCommand(9, TlvEnableActionWithDurationRequest, 9, TlvNoResponse),
+        enableActionWithDuration: OptionalCommand(0x9, TlvEnableActionWithDurationRequest, 0x9, TlvNoResponse),
 
         /**
          * This command disables a certain action or automation, and shall change the action’s state to Inactive.
@@ -732,7 +732,7 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.11
          */
-        disableAction: OptionalCommand(10, TlvDisableActionRequest, 10, TlvNoResponse),
+        disableAction: OptionalCommand(0xa, TlvDisableActionRequest, 0xa, TlvNoResponse),
 
         /**
          * This command disables a certain action or automation, and shall change the action’s state to Disabled. After
@@ -747,7 +747,7 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.6.12
          */
-        disableActionWithDuration: OptionalCommand(11, TlvDisableActionWithDurationRequest, 11, TlvNoResponse)
+        disableActionWithDuration: OptionalCommand(0xb, TlvDisableActionWithDurationRequest, 0xb, TlvNoResponse)
     },
 
     events: {
@@ -768,7 +768,7 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.7.1
          */
-        stateChanged: Event(0, EventPriority.Info, TlvStateChangedEvent),
+        stateChanged: Event(0x0, EventPriority.Info, TlvStateChangedEvent),
 
         /**
          * This event shall be generated when there is some error which prevents the action from its normal planned
@@ -806,6 +806,6 @@ export const ActionsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.14.7.2
          */
-        actionFailed: Event(1, EventPriority.Info, TlvActionFailedEvent)
+        actionFailed: Event(0x1, EventPriority.Info, TlvActionFailedEvent)
     }
 });

@@ -168,11 +168,11 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "CoolingStage",
+                    tag: "datatype", name: "CoolingStage", constraint: "0 to 2",
                     description: "00 – Cool Stage 101 – Cool Stage 210 – Cool Stage 311 – Reserved"
                 },
                 {
-                    tag: "datatype", name: "HeatingStage",
+                    tag: "datatype", name: "HeatingStage", constraint: "2 to 4",
                     description: "00 – Heat Stage 101 – Heat Stage 210 – Heat Stage 311 – Reserved"
                 },
                 { tag: "datatype", name: "HeatingType", constraint: "4", description: "0 – Conventional1 – Heat Pump" },

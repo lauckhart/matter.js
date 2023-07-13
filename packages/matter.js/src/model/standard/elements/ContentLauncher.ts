@@ -46,8 +46,15 @@ Matter.children.push({
         {
             tag: "attribute", name: "SupportedStreamingProtocols", id: 0x1, type: "map32", access: "R V",
             conformance: "UP", default: 0, quality: "N",
-            details: "This attribute provides information about supported streaming protocols.",
-            xref: { document: "cluster", section: "6.7.3.2" }
+            xref: { document: "cluster", section: "6.7.3.2.1" },
+
+            children: [
+                {
+                    tag: "datatype", name: "Dash", constraint: "0",
+                    description: "Device supports Dynamic Adaptive Streaming over HTTP (DASH)"
+                },
+                { tag: "datatype", name: "Hls", constraint: "1", description: "Device supports HTTP Live Streaming (HLS)" }
+            ]
         },
 
         {

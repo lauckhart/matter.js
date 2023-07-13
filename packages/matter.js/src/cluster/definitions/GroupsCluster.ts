@@ -9,7 +9,7 @@
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { Cluster, FixedAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
-import { TlvUInt8, TlvBitmap } from "../../tlv/TlvNumber.js";
+import { TlvUInt8, TlvBitmap, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvGroupId } from "../../datatype/GroupId.js";
 import { TlvString } from "../../tlv/TlvString.js";
@@ -39,12 +39,19 @@ export const TlvAddGroupRequest = TlvObject({
     groupName: TlvField(1, TlvString.bound({ maxLength: 16 }))
 });
 
+export const enum Status {
+    UpdateAvailable = 0,
+    Busy = 1,
+    NotAvailable = 2,
+    DownloadProtocolNotSupported = 3
+}
+
 /**
  * The AddGroupResponse is sent by the Groups cluster server in response to an AddGroup command.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.7
  */
-export const TlvAddGroupResponse = TlvObject({ status: TlvField(0, TlvUInt8), groupId: TlvField(1, TlvGroupId) });
+export const TlvAddGroupResponse = TlvObject({ status: TlvField(0, TlvEnum<Status>()), groupId: TlvField(1, TlvGroupId) });
 
 /**
  * Input to the Groups viewGroup command
@@ -59,7 +66,7 @@ export const TlvViewGroupRequest = TlvObject({ groupId: TlvField(0, TlvGroupId) 
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.8
  */
 export const TlvViewGroupResponse = TlvObject({
-    status: TlvField(0, TlvUInt8),
+    status: TlvField(0, TlvEnum<Status>()),
     groupId: TlvField(1, TlvGroupId),
     groupName: TlvField(2, TlvString.bound({ maxLength: 16 }))
 });
@@ -115,7 +122,7 @@ export const TlvRemoveGroupRequest = TlvObject({ groupId: TlvField(0, TlvGroupId
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.10
  */
-export const TlvRemoveGroupResponse = TlvObject({ status: TlvField(0, TlvUInt8), groupId: TlvField(1, TlvGroupId) });
+export const TlvRemoveGroupResponse = TlvObject({ status: TlvField(0, TlvEnum<Status>()), groupId: TlvField(1, TlvGroupId) });
 
 /**
  * Input to the Groups addGroupIfIdentifying command
@@ -183,7 +190,7 @@ export const GroupsCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.6.1
          */
-        nameSupport: FixedAttribute(0, TlvBitmap(TlvUInt8, NameSupport))
+        nameSupport: FixedAttribute(0x0, TlvBitmap(TlvUInt8, NameSupport))
     },
 
     commands: {
@@ -192,7 +199,7 @@ export const GroupsCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.1
          */
-        addGroup: Command(0, TlvAddGroupRequest, 0, TlvAddGroupResponse),
+        addGroup: Command(0x0, TlvAddGroupRequest, 0, TlvAddGroupResponse),
 
         /**
          * The ViewGroup command allows a client to request that the server responds with a ViewGroupResponse command
@@ -200,7 +207,7 @@ export const GroupsCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.2
          */
-        viewGroup: Command(1, TlvViewGroupRequest, 1, TlvViewGroupResponse),
+        viewGroup: Command(0x1, TlvViewGroupRequest, 1, TlvViewGroupResponse),
 
         /**
          * The GetGroupMembership command allows a client to inquire about the group membership of the server endpoint,
@@ -208,7 +215,7 @@ export const GroupsCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.3
          */
-        getGroupMembership: Command(2, TlvGetGroupMembershipRequest, 2, TlvGetGroupMembershipResponse),
+        getGroupMembership: Command(0x2, TlvGetGroupMembershipRequest, 2, TlvGetGroupMembershipResponse),
 
         /**
          * The RemoveGroup command allows a client to request that the server removes the membership for the server
@@ -216,7 +223,7 @@ export const GroupsCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.4
          */
-        removeGroup: Command(3, TlvRemoveGroupRequest, 3, TlvRemoveGroupResponse),
+        removeGroup: Command(0x3, TlvRemoveGroupRequest, 3, TlvRemoveGroupResponse),
 
         /**
          * The RemoveAllGroups command allows a client to direct the server to remove all group associations for the
@@ -226,7 +233,7 @@ export const GroupsCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.5
          */
-        removeAllGroups: Command(4, TlvNoArguments, 4, TlvNoResponse),
+        removeAllGroups: Command(0x4, TlvNoArguments, 0x4, TlvNoResponse),
 
         /**
          * The AddGroupIfIdentifying command allows a client to add group membership in a particular group for the
@@ -237,6 +244,6 @@ export const GroupsCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.6
          */
-        addGroupIfIdentifying: Command(5, TlvAddGroupIfIdentifyingRequest, 5, TlvNoResponse)
+        addGroupIfIdentifying: Command(0x5, TlvAddGroupIfIdentifyingRequest, 0x5, TlvNoResponse)
     }
 });

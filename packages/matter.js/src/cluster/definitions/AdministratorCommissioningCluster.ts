@@ -63,7 +63,7 @@ export const TlvOpenCommissioningWindowRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.18.8.1.3
      */
-    discriminator: TlvField(2, TlvUInt16.bound({ min: 0, max: 4095 })),
+    discriminator: TlvField(2, TlvUInt16.bound({ max: 4095 })),
 
     /**
      * This field shall be used by the Node as the PAKE iteration count associated with the ephemeral PAKE passcode
@@ -144,7 +144,7 @@ export const AdministratorCommissioningBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.18.7.1
          */
-        windowStatus: Attribute(0, TlvEnum<CommissioningWindowStatus>()),
+        windowStatus: Attribute(0x0, TlvEnum<CommissioningWindowStatus>()),
 
         /**
          * When the WindowStatus attribute is not set to WindowNotOpen, this attribute shall indicate the FabricIndex
@@ -158,7 +158,7 @@ export const AdministratorCommissioningBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.18.7.2
          */
-        adminFabricIndex: Attribute(1, TlvNullable(TlvFabricIndex)),
+        adminFabricIndex: Attribute(0x1, TlvNullable(TlvFabricIndex)),
 
         /**
          * When the WindowStatus attribute is not set to WindowNotOpen, this attribute shall indicate the Vendor ID
@@ -171,7 +171,7 @@ export const AdministratorCommissioningBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.18.7.3
          */
-        adminVendorId: Attribute(2, TlvNullable(TlvVendorId))
+        adminVendorId: Attribute(0x2, TlvNullable(TlvVendorId))
     },
 
     commands: {
@@ -206,7 +206,7 @@ export const AdministratorCommissioningBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.18.8.1
          */
-        openCommissioningWindow: Command(0, TlvOpenCommissioningWindowRequest, 0, TlvNoResponse),
+        openCommissioningWindow: Command(0x0, TlvOpenCommissioningWindowRequest, 0x0, TlvNoResponse),
 
         /**
          * This command is used by a current Administrator to instruct a Node to revoke any active Open Commissioning
@@ -220,7 +220,7 @@ export const AdministratorCommissioningBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.18.8.3
          */
-        revokeCommissioning: Command(2, TlvNoArguments, 2, TlvNoResponse)
+        revokeCommissioning: Command(0x2, TlvNoArguments, 0x2, TlvNoResponse)
     }
 });
 
@@ -261,7 +261,7 @@ export const BasicComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.18.8.2
          */
-        openBasicCommissioningWindow: Command(1, TlvOpenBasicCommissioningWindowRequest, 1, TlvNoResponse)
+        openBasicCommissioningWindow: Command(0x1, TlvOpenBasicCommissioningWindowRequest, 0x1, TlvNoResponse)
     }
 });
 

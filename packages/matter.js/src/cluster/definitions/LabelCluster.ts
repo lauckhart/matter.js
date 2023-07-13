@@ -45,6 +45,6 @@ export const LabelBase = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.7.5.1
          */
-        labelList: Attribute(0, TlvArray(TlvLabelStruct), { default: [] })
+        labelList: Attribute(0x0, TlvArray(TlvLabelStruct), { default: [] })
     }
 });

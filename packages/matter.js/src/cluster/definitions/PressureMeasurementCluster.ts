@@ -54,7 +54,7 @@ export const PressureMeasurementBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.1
          */
-        measuredValue: Attribute(0, TlvNullable(TlvInt16)),
+        measuredValue: Attribute(0x0, TlvNullable(TlvInt16)),
 
         /**
          * This attribute indicates the minimum value of MeasuredValue that can be measured. See Measured Value for
@@ -64,7 +64,7 @@ export const PressureMeasurementBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.2
          */
-        minMeasuredValue: Attribute(1, TlvNullable(TlvInt16.bound({ min: -32767 }))),
+        minMeasuredValue: Attribute(0x1, TlvNullable(TlvInt16.bound({ min: -32767 }))),
 
         /**
          * This attribute indicates the maximum value of MeasuredValue that can be measured. See Measured Value for
@@ -74,7 +74,7 @@ export const PressureMeasurementBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.3
          */
-        maxMeasuredValue: Attribute(2, TlvNullable(TlvInt16.bound({ max: 32767 }))),
+        maxMeasuredValue: Attribute(0x2, TlvNullable(TlvInt16)),
 
         /**
          * This attribute indicates the magnitude of the possible error that is associated with ScaledValue.
@@ -83,7 +83,7 @@ export const PressureMeasurementBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.4
          */
-        tolerance: OptionalAttribute(3, TlvUInt16.bound({ min: 0, max: 2048 }), { default: 0 })
+        tolerance: OptionalAttribute(0x3, TlvUInt16.bound({ max: 2048 }), { default: 0 })
     }
 });
 
@@ -101,7 +101,7 @@ export const ExtendedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.5
          */
-        scaledValue: Attribute(16, TlvNullable(TlvInt16), { default: 0 }),
+        scaledValue: Attribute(0x10, TlvNullable(TlvInt16), { default: 0 }),
 
         /**
          * The MinScaledValue attribute indicates the minimum value of ScaledValue that can be measured. The null value
@@ -109,7 +109,7 @@ export const ExtendedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.6
          */
-        minScaledValue: Attribute(17, TlvNullable(TlvInt16.bound({ min: -32767 })), { default: 0 }),
+        minScaledValue: Attribute(0x11, TlvNullable(TlvInt16.bound({ min: -32767 })), { default: 0 }),
 
         /**
          * This attribute indicates the maximum value of ScaledValue that can be measured. MaxScaledValue shall be
@@ -119,7 +119,7 @@ export const ExtendedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.7
          */
-        maxScaledValue: Attribute(18, TlvNullable(TlvInt16.bound({ max: 32767 })), { default: 0 }),
+        maxScaledValue: Attribute(0x12, TlvNullable(TlvInt16), { default: 0 }),
 
         /**
          * This attribute indicates the magnitude of the possible error that is associated with ScaledValue. The true
@@ -129,14 +129,14 @@ export const ExtendedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.8
          */
-        scaledTolerance: OptionalAttribute(19, TlvUInt16.bound({ min: 0, max: 2048 }), { default: 0 }),
+        scaledTolerance: OptionalAttribute(0x13, TlvUInt16.bound({ max: 2048 }), { default: 0 }),
 
         /**
          * This attribute indicates the base 10 exponent used to obtain ScaledValue (see ScaledValue Attribute).
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.9
          */
-        scale: Attribute(20, TlvInt8.bound({ min: -127, max: 127 }), { default: 0 })
+        scale: Attribute(0x14, TlvInt8.bound({ min: -127 }), { default: 0 })
     }
 });
 

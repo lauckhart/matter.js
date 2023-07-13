@@ -120,7 +120,7 @@ export const SoftwareDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.12.6.1
          */
-        threadMetrics: OptionalAttribute(0, TlvArray(TlvThreadMetricsStruct, { maxLength: 64 }), { default: [] }),
+        threadMetrics: OptionalAttribute(0x0, TlvArray(TlvThreadMetricsStruct, { maxLength: 64 }), { default: [] }),
 
         /**
          * The CurrentHeapFree attribute shall indicate the current amount of heap memory, in bytes, that are free for
@@ -128,14 +128,14 @@ export const SoftwareDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.12.6.2
          */
-        currentHeapFree: OptionalAttribute(1, TlvUInt64, { default: 0 }),
+        currentHeapFree: OptionalAttribute(0x1, TlvUInt64, { default: 0 }),
 
         /**
          * The CurrentHeapUsed attribute shall indicate the current amount of heap memory, in bytes, that is being used.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.12.6.3
          */
-        currentHeapUsed: OptionalAttribute(2, TlvUInt64, { default: 0 })
+        currentHeapUsed: OptionalAttribute(0x2, TlvUInt64, { default: 0 })
     },
 
     events: {
@@ -149,7 +149,7 @@ export const SoftwareDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.12.8.1
          */
-        softwareFault: OptionalEvent(0, EventPriority.Info, TlvSoftwareFaultEvent)
+        softwareFault: OptionalEvent(0x0, EventPriority.Info, TlvSoftwareFaultEvent)
     }
 });
 
@@ -165,7 +165,7 @@ export const WatermarksComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.12.6.4
          */
-        currentHeapHighWatermark: Attribute(3, TlvUInt64, { default: 0 })
+        currentHeapHighWatermark: Attribute(0x3, TlvUInt64, { default: 0 })
     },
 
     commands: {
@@ -188,7 +188,7 @@ export const WatermarksComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.12.7.1
          */
-        resetWatermarks: Command(0, TlvNoArguments, 0, TlvNoResponse)
+        resetWatermarks: Command(0x0, TlvNoArguments, 0x0, TlvNoResponse)
     }
 });
 

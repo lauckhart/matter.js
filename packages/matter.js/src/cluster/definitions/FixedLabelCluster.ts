@@ -37,8 +37,8 @@ export const FixedLabelCluster = Cluster({
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.8.4
          */
-        labelList: Attribute(0, TlvArray(TlvLabelStruct), { persistent: true, default: [] }),
+        labelList: Attribute(0x0, TlvArray(TlvLabelStruct), { persistent: true, default: [] }),
 
-        clusterRevision: Attribute(65533, TlvUInt16, { default: 1 })
+        clusterRevision: Attribute(0xfffd, TlvUInt16, { default: 1 })
     }
 });

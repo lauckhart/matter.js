@@ -66,16 +66,22 @@ Matter.children.push({
             xref: { document: "cluster", section: "1.2.5.2" },
 
             children: [
-                { tag: "datatype", name: "None", id: 0x0, description: "No presentation." },
-                { tag: "datatype", name: "LightOutput", id: 0x1, description: "Light output of a lighting product." },
-                { tag: "datatype", name: "VisibleIndicator", id: 0x2, description: "Typically a small LED." },
-                { tag: "datatype", name: "AudibleBeep", id: 0x3 },
+                { tag: "datatype", name: "None", id: 0x0, conformance: "M", description: "No presentation." },
                 {
-                    tag: "datatype", name: "Display", id: 0x4,
+                    tag: "datatype", name: "LightOutput", id: 0x1, conformance: "M",
+                    description: "Light output of a lighting product."
+                },
+                {
+                    tag: "datatype", name: "VisibleIndicator", id: 0x2, conformance: "M",
+                    description: "Typically a small LED."
+                },
+                { tag: "datatype", name: "AudibleBeep", id: 0x3, conformance: "M" },
+                {
+                    tag: "datatype", name: "Display", id: 0x4, conformance: "M",
                     description: "Presentation will be visible on display screen."
                 },
                 {
-                    tag: "datatype", name: "Actuator", id: 0x5,
+                    tag: "datatype", name: "Actuator", id: 0x5, conformance: "M",
                     description: "Presentation will be conveyed by actuator functionality such as through a window blind operation or in-wall relay."
                 }
             ]

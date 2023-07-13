@@ -287,7 +287,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "ColorCapabilities", id: 0x400a, type: "map16", access: "R V",
+            tag: "attribute", name: "ColorCapabilities", id: 0x400a, type: "FeatureMap", access: "R V",
             conformance: "M", constraint: "0 to 31", default: 0,
             details: "Bits 0-4 of the ColorCapabilities attribute shall have the same values as the corresponding bits of " +
                      "the FeatureMap attribute. All other bits in ColorCapabilities shall be 0.",
@@ -1114,7 +1114,7 @@ Matter.children.push({
                         { tag: "datatype", name: "UpdateDirection", constraint: "1" },
                         { tag: "datatype", name: "UpdateTime", constraint: "2" },
                         { tag: "datatype", name: "UpdateStartHue", constraint: "3" },
-                        { tag: "datatype", name: "Reserved", constraint: "4" }
+                        { tag: "datatype", name: "Reserved", constraint: "4 to 8" }
                     ]
                 },
 

@@ -202,7 +202,7 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.5.1
          */
-        breadcrumb: WritableAttribute(0, TlvUInt64, { default: 0, writeAcl: AccessLevel.Administer }),
+        breadcrumb: WritableAttribute(0x0, TlvUInt64, { default: 0, writeAcl: AccessLevel.Administer }),
 
         /**
          * This attribute shall describe critical parameters needed at the beginning of commissioning flow. See
@@ -210,7 +210,7 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.5.2
          */
-        basicCommissioningInfo: FixedAttribute(1, TlvBasicCommissioningInfo),
+        basicCommissioningInfo: FixedAttribute(0x1, TlvBasicCommissioningInfo),
 
         /**
          * This attribute shall indicate the regulatory configuration for the product.
@@ -220,7 +220,7 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.5.3
          */
-        regulatoryConfig: Attribute(2, TlvEnum<RegulatoryLocationType>()),
+        regulatoryConfig: Attribute(0x2, TlvEnum<RegulatoryLocationType>()),
 
         /**
          * LocationCapability is statically set by the manufacturer and indicates if this Node needs to be told an
@@ -238,7 +238,7 @@ export const GeneralCommissioningCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.5.4
          */
         locationCapability: FixedAttribute(
-            3,
+            0x3,
             TlvEnum<RegulatoryLocationType>(),
             { default: RegulatoryLocationType.IndoorOutdoor }
         ),
@@ -250,7 +250,7 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.5.5
          */
-        supportsConcurrentConnection: FixedAttribute(4, TlvBoolean, { default: true })
+        supportsConcurrentConnection: FixedAttribute(0x4, TlvBoolean, { default: true })
     },
 
     commands: {
@@ -372,7 +372,7 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.2
          */
-        armFailSafe: Command(0, TlvArmFailSafeRequest, 1, TlvArmFailSafeResponse),
+        armFailSafe: Command(0x0, TlvArmFailSafeRequest, 1, TlvArmFailSafeResponse),
 
         /**
          * This shall add or update the regulatory configuration in the RegulatoryConfig Attribute to the value
@@ -407,7 +407,7 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.4
          */
-        setRegulatoryConfig: Command(2, TlvSetRegulatoryConfigRequest, 3, TlvSetRegulatoryConfigResponse),
+        setRegulatoryConfig: Command(0x2, TlvSetRegulatoryConfigRequest, 3, TlvSetRegulatoryConfigResponse),
 
         /**
          * This command has no data.
@@ -464,6 +464,6 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.6
          */
-        commissioningComplete: Command(4, TlvNoArguments, 5, TlvCommissioningCompleteResponse)
+        commissioningComplete: Command(0x4, TlvNoArguments, 5, TlvCommissioningCompleteResponse)
     }
 });

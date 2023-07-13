@@ -175,7 +175,7 @@ export const TlvVersionAppliedEvent = TlvObject({
 export const TlvDownloadErrorEvent = TlvObject({
     softwareVersion: TlvField(0, TlvUInt32),
     bytesDownloaded: TlvField(1, TlvUInt64),
-    progressPercent: TlvField(2, TlvNullable(TlvUInt8.bound({ min: 0, max: 100 }))),
+    progressPercent: TlvField(2, TlvNullable(TlvUInt8.bound({ max: 100 }))),
     platformCode: TlvField(3, TlvNullable(TlvInt64))
 });
 
@@ -207,7 +207,7 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.1
          */
         defaultOtaProviders: WritableFabricScopedAttribute(
-            0,
+            0x0,
             TlvArray(TlvProviderLocationStruct),
             { default: [], writeAcl: AccessLevel.Administer }
         ),
@@ -220,7 +220,7 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.2
          */
-        updatePossible: Attribute(1, TlvBoolean, { default: true }),
+        updatePossible: Attribute(0x1, TlvBoolean, { default: true }),
 
         /**
          * This field shall reflect the current state of the OTA Requestor with regards to obtaining software updates.
@@ -230,7 +230,7 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.3
          */
-        updateState: Attribute(2, TlvEnum<UpdateState>(), { default: UpdateState.Unknown }),
+        updateState: Attribute(0x2, TlvEnum<UpdateState>(), { default: UpdateState.Unknown }),
 
         /**
          * This field shall reflect the percentage value of progress, relative to the current UpdateState, if
@@ -245,7 +245,7 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.4
          */
-        updateStateProgress: Attribute(3, TlvNullable(TlvUInt8.bound({ min: 0, max: 100 })), { default: null })
+        updateStateProgress: Attribute(0x3, TlvNullable(TlvUInt8.bound({ max: 100 })), { default: null })
     },
 
     commands: {
@@ -261,7 +261,7 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.6.1
          */
-        announceOtaProvider: OptionalCommand(0, TlvAnnounceOtaProviderRequest, 0, TlvNoResponse)
+        announceOtaProvider: OptionalCommand(0x0, TlvAnnounceOtaProviderRequest, 0x0, TlvNoResponse)
     },
 
     events: {
@@ -271,7 +271,7 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.7.1
          */
-        stateTransition: Event(0, EventPriority.Info, TlvStateTransitionEvent),
+        stateTransition: Event(0x0, EventPriority.Info, TlvStateTransitionEvent),
 
         /**
          * This event shall be generated whenever a new version starts executing after being applied due to a software
@@ -280,7 +280,7 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.7.6
          */
-        versionApplied: Event(1, EventPriority.Critical, TlvVersionAppliedEvent),
+        versionApplied: Event(0x1, EventPriority.Critical, TlvVersionAppliedEvent),
 
         /**
          * This event shall be generated whenever an error occurs during OTA Requestor download operation.
@@ -290,6 +290,6 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.7.9
          */
-        downloadError: Event(2, EventPriority.Info, TlvDownloadErrorEvent)
+        downloadError: Event(0x2, EventPriority.Info, TlvDownloadErrorEvent)
     }
 });

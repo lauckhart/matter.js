@@ -304,7 +304,7 @@ export const TimeSyncBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.1
          */
-        utcTime: Attribute(0, TlvNullable(TlvEpochUs), { omitChanges: true, default: null }),
+        utcTime: Attribute(0x0, TlvNullable(TlvEpochUs), { omitChanges: true, default: null }),
 
         /**
          * The granularity of the error that the server is willing to guarantee on the time synchronization. It is of
@@ -312,7 +312,7 @@ export const TimeSyncBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.2
          */
-        granularity: Attribute(1, TlvEnum<Granularity>(), { default: Granularity.NoTimeGranularity }),
+        granularity: Attribute(0x1, TlvEnum<Granularity>(), { default: Granularity.NoTimeGranularity }),
 
         /**
          * The server’s time source. This attribute indicates what method the server is using to sync, whether the
@@ -324,7 +324,7 @@ export const TimeSyncBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.3
          */
-        timeSource: OptionalAttribute(2, TlvEnum<TimeSource>(), { default: TimeSource.None }),
+        timeSource: OptionalAttribute(0x2, TlvEnum<TimeSource>(), { default: TimeSource.None }),
 
         /**
          * The Node ID of a trusted Time Cluster. The TrustedTimeNodeId Node is used as a check on external time sync
@@ -335,7 +335,11 @@ export const TimeSyncBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.5
          */
-        trustedTimeNodeId: WritableAttribute(3, TlvNullable(TlvNodeId), { default: null, writeAcl: AccessLevel.Administer })
+        trustedTimeNodeId: WritableAttribute(
+            0x3,
+            TlvNullable(TlvNodeId),
+            { default: null, writeAcl: AccessLevel.Administer }
+        )
     },
 
     commands: {
@@ -358,7 +362,7 @@ export const TimeSyncBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.9.1
          */
-        setUtcTime: Command(0, TlvSetUtcTimeRequest, 0, TlvNoResponse)
+        setUtcTime: Command(0x0, TlvSetUtcTimeRequest, 0x0, TlvNoResponse)
     }
 });
 
@@ -377,7 +381,7 @@ export const NtpClientComponent = ClusterComponent({
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.4
          */
         defaultNtp: WritableAttribute(
-            4,
+            0x4,
             TlvNullable(TlvString.bound({ maxLength: 128 })),
             { default: null, writeAcl: AccessLevel.Administer }
         )
@@ -421,7 +425,7 @@ export const TimeZoneComponent = ClusterComponent({
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.6
          */
         timeZone: WritableAttribute(
-            5,
+            0x5,
             TlvArray(TlvTimeZoneStruct, { minLength: 1, maxLength: 2 }),
             { writeAcl: AccessLevel.Manage }
         ),
@@ -446,7 +450,7 @@ export const TimeZoneComponent = ClusterComponent({
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.7
          */
         dstOffset: WritableAttribute(
-            6,
+            0x6,
             TlvArray(TlvDSTOffsetStruct, { maxLength: 20 }),
             { default: [], writeAcl: AccessLevel.Manage }
         ),
@@ -460,7 +464,7 @@ export const TimeZoneComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.8
          */
-        localTime: Attribute(7, TlvNullable(TlvEpochUs), { omitChanges: true, default: 0 }),
+        localTime: Attribute(0x7, TlvNullable(TlvEpochUs), { omitChanges: true, default: 0 }),
 
         /**
          * Indicates whether the server has access to a time zone database. Nodes with a time zone database may update
@@ -469,7 +473,7 @@ export const TimeZoneComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.9
          */
-        timeZoneDatabase: FixedAttribute(8, TlvBoolean, { default: true })
+        timeZoneDatabase: FixedAttribute(0x8, TlvBoolean, { default: true })
     },
 
     events: {
@@ -481,7 +485,7 @@ export const TimeZoneComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.10.1
          */
-        dstTableEmpty: Event(0, EventPriority.Info, TlvNoArguments),
+        dstTableEmpty: Event(0x0, EventPriority.Info, TlvNoArguments),
 
         /**
          * This event shall be generated when the server starts or stops applying a DST offset.
@@ -492,7 +496,7 @@ export const TimeZoneComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.10.2
          */
-        dstStatus: Event(1, EventPriority.Info, TlvNoArguments),
+        dstStatus: Event(0x1, EventPriority.Info, TlvNoArguments),
 
         /**
          * This event shall be generated when the server changes its time zone offset or name. It shall NOT be sent for
@@ -507,7 +511,7 @@ export const TimeZoneComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.10.3
          */
-        timeZoneStatus: Event(2, EventPriority.Info, TlvTimeZoneStatusEvent)
+        timeZoneStatus: Event(0x2, EventPriority.Info, TlvTimeZoneStatusEvent)
     }
 });
 
@@ -525,7 +529,7 @@ export const NtpServerComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.10
          */
-        ntpServerPort: Attribute(9, TlvNullable(TlvUInt16), { default: null })
+        ntpServerPort: Attribute(0x9, TlvNullable(TlvUInt16), { default: null })
     }
 });
 

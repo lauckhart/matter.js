@@ -394,7 +394,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.1
          */
-        type: FixedAttribute(0, TlvEnum<WindowCoveringType>(), { default: WindowCoveringType.Rollershade }),
+        type: FixedAttribute(0x0, TlvEnum<WindowCoveringType>(), { default: WindowCoveringType.Rollershade }),
 
         /**
          * The ConfigStatus attribute makes configuration and status information available. To change settings, devices
@@ -404,7 +404,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.8
          */
         configStatus: Attribute(
-            7,
+            0x7,
             TlvBitmap(TlvUInt8, ConfigStatus),
             { persistent: true, default: BitsFromPartial(ConfigStatus, { operational: true, onlineReserved: true }) }
         ),
@@ -415,7 +415,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.15
          */
-        operationalStatus: Attribute(10, TlvBitmap(TlvUInt8, OperationalStatus)),
+        operationalStatus: Attribute(0xa, TlvBitmap(TlvUInt8, OperationalStatus)),
 
         /**
          * The EndProductType attribute identifies the product type in complement of the main category indicated by the
@@ -423,7 +423,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.16
          */
-        endProductType: FixedAttribute(13, TlvEnum<EndProductType>(), { default: EndProductType.RollerShade }),
+        endProductType: FixedAttribute(0xd, TlvEnum<EndProductType>(), { default: EndProductType.RollerShade }),
 
         /**
          * The Mode attribute allows configuration of the Window Covering, such as: reversing the motor direction,
@@ -437,7 +437,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.21
          */
-        mode: WritableAttribute(23, TlvBitmap(TlvUInt8, Mode), { persistent: true, writeAcl: AccessLevel.Manage }),
+        mode: WritableAttribute(0x17, TlvBitmap(TlvUInt8, Mode), { persistent: true, writeAcl: AccessLevel.Manage }),
 
         /**
          * The SafetyStatus attribute reflects the state of the safety sensors and the common issues preventing
@@ -447,7 +447,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.22
          */
-        safetyStatus: OptionalAttribute(26, TlvBitmap(TlvUInt16, SafetyStatus))
+        safetyStatus: OptionalAttribute(0x1a, TlvBitmap(TlvUInt16, SafetyStatus))
     },
 
     commands: {
@@ -481,7 +481,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.1
          */
-        upOrOpen: Command(0, TlvNoArguments, 0, TlvNoResponse),
+        upOrOpen: Command(0x0, TlvNoArguments, 0x0, TlvNoResponse),
 
         /**
          * Upon receipt of this command, the Window Covering will adjust its position so the physical lift/slide and
@@ -513,7 +513,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.2
          */
-        downOrClose: Command(1, TlvNoArguments, 1, TlvNoResponse),
+        downOrClose: Command(0x1, TlvNoArguments, 0x1, TlvNoResponse),
 
         /**
          * Upon receipt of this command, the Window Covering will stop any adjusting to the physical tilt and
@@ -527,7 +527,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.3
          */
-        stopMotion: Command(2, TlvNoArguments, 2, TlvNoResponse)
+        stopMotion: Command(0x2, TlvNoArguments, 0x2, TlvNoResponse)
     }
 });
 
@@ -542,7 +542,7 @@ export const LiftAndPositionAwareLiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.2
          */
-        physicalClosedLimitLift: OptionalFixedAttribute(1, TlvUInt16, { default: 0 }),
+        physicalClosedLimitLift: OptionalFixedAttribute(0x1, TlvUInt16, { default: 0 }),
 
         /**
          * The CurrentPositionLift attribute identifies the actual Lift position (in centimeters) of the window
@@ -550,7 +550,7 @@ export const LiftAndPositionAwareLiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.4
          */
-        currentPositionLift: OptionalAttribute(3, TlvNullable(TlvUInt16), { persistent: true, default: null }),
+        currentPositionLift: OptionalAttribute(0x3, TlvNullable(TlvUInt16), { persistent: true, default: null }),
 
         /**
          * The CurrentPositionLiftPercentage attribute identifies the actual position as a percentage from 0% to 100%
@@ -559,7 +559,7 @@ export const LiftAndPositionAwareLiftComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.11
          */
         currentPositionLiftPercentage: OptionalAttribute(
-            8,
+            0x8,
             TlvNullable(TlvPercent.bound({ min: 0, max: 100 })),
             { scene: true, persistent: true, default: null }
         )
@@ -585,7 +585,7 @@ export const LiftAndPositionAwareLiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.5
          */
-        goToLiftPercentage: Command(5, TlvGoToLiftPercentageRequest, 5, TlvNoResponse)
+        goToLiftPercentage: Command(0x5, TlvGoToLiftPercentageRequest, 0x5, TlvNoResponse)
     }
 });
 
@@ -600,7 +600,7 @@ export const TiltAndPositionAwareTiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.3
          */
-        physicalClosedLimitTilt: OptionalFixedAttribute(2, TlvUInt16, { default: 0 }),
+        physicalClosedLimitTilt: OptionalFixedAttribute(0x2, TlvUInt16, { default: 0 }),
 
         /**
          * The CurrentPositionTilt attribute identifies the actual Tilt position (in tenth of an degree) of the window
@@ -608,7 +608,7 @@ export const TiltAndPositionAwareTiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.5
          */
-        currentPositionTilt: OptionalAttribute(4, TlvNullable(TlvUInt16), { persistent: true, default: null }),
+        currentPositionTilt: OptionalAttribute(0x4, TlvNullable(TlvUInt16), { persistent: true, default: null }),
 
         /**
          * The CurrentPositionTiltPercentage attribute identifies the actual position as a percentage from 0% to 100%
@@ -617,7 +617,7 @@ export const TiltAndPositionAwareTiltComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.12
          */
         currentPositionTiltPercentage: OptionalAttribute(
-            9,
+            0x9,
             TlvNullable(TlvPercent.bound({ min: 0, max: 100 })),
             { scene: true, persistent: true, default: null }
         )
@@ -644,7 +644,7 @@ export const TiltAndPositionAwareTiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.7
          */
-        goToTiltPercentage: Command(8, TlvGoToTiltPercentageRequest, 8, TlvNoResponse)
+        goToTiltPercentage: Command(0x8, TlvGoToTiltPercentageRequest, 0x8, TlvNoResponse)
     }
 });
 
@@ -659,7 +659,7 @@ export const LiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.6
          */
-        numberOfActuationsLift: OptionalAttribute(5, TlvUInt16, { persistent: true, default: 0 }),
+        numberOfActuationsLift: OptionalAttribute(0x5, TlvUInt16, { persistent: true, default: 0 }),
 
         /**
          * The TargetPositionLiftPercent100ths attribute identifies the position where the Window Covering Lift will go
@@ -668,7 +668,7 @@ export const LiftComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.13
          */
         targetPositionLiftPercent100Ths: OptionalAttribute(
-            11,
+            0xb,
             TlvNullable(TlvPercent100ths.bound({ min: 0, max: 10000 })),
             { scene: true, default: null }
         ),
@@ -680,7 +680,7 @@ export const LiftComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.9
          */
         currentPositionLiftPercent100Ths: OptionalAttribute(
-            14,
+            0xe,
             TlvNullable(TlvPercent100ths.bound({ min: 0, max: 10000 })),
             { persistent: true, default: null }
         ),
@@ -691,11 +691,7 @@ export const LiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.17
          */
-        installedOpenLimitLift: OptionalAttribute(
-            16,
-            TlvUInt16.bound({ min: 0, max: 65534 }),
-            { persistent: true, default: 0 }
-        ),
+        installedOpenLimitLift: OptionalAttribute(0x10, TlvUInt16.bound({ max: 65534 }), { persistent: true, default: 0 }),
 
         /**
          * The InstalledClosedLimitLift attribute identifies the Closed Limit for Lifting the Window Covering whether
@@ -703,11 +699,7 @@ export const LiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.18
          */
-        installedClosedLimitLift: OptionalAttribute(
-            17,
-            TlvUInt16.bound({ min: 0, max: 65534 }),
-            { persistent: true, default: 0 }
-        )
+        installedClosedLimitLift: OptionalAttribute(0x11, TlvUInt16.bound({ max: 65534 }), { persistent: true, default: 0 })
     },
 
     commands: {
@@ -730,7 +722,7 @@ export const LiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.5
          */
-        goToLiftPercentage: OptionalCommand(5, TlvGoToLiftPercentageRequest, 5, TlvNoResponse)
+        goToLiftPercentage: OptionalCommand(0x5, TlvGoToLiftPercentageRequest, 0x5, TlvNoResponse)
     }
 });
 
@@ -745,7 +737,7 @@ export const TiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.7
          */
-        numberOfActuationsTilt: OptionalAttribute(6, TlvUInt16, { persistent: true, default: 0 }),
+        numberOfActuationsTilt: OptionalAttribute(0x6, TlvUInt16, { persistent: true, default: 0 }),
 
         /**
          * The TargetPositionTiltPercent100ths attribute identifies the position where the Window Covering Tilt will go
@@ -754,7 +746,7 @@ export const TiltComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.14
          */
         targetPositionTiltPercent100Ths: OptionalAttribute(
-            12,
+            0xc,
             TlvNullable(TlvPercent100ths.bound({ min: 0, max: 10000 })),
             { scene: true, default: null }
         ),
@@ -766,7 +758,7 @@ export const TiltComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.10
          */
         currentPositionTiltPercent100Ths: OptionalAttribute(
-            15,
+            0xf,
             TlvNullable(TlvPercent100ths.bound({ min: 0, max: 10000 })),
             { persistent: true, default: null }
         ),
@@ -777,11 +769,7 @@ export const TiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.19
          */
-        installedOpenLimitTilt: OptionalAttribute(
-            18,
-            TlvUInt16.bound({ min: 0, max: 65534 }),
-            { persistent: true, default: 0 }
-        ),
+        installedOpenLimitTilt: OptionalAttribute(0x12, TlvUInt16.bound({ max: 65534 }), { persistent: true, default: 0 }),
 
         /**
          * The InstalledClosedLimitTilt attribute identifies the Closed Limit for Tilting the Window Covering whether
@@ -789,11 +777,7 @@ export const TiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.20
          */
-        installedClosedLimitTilt: OptionalAttribute(
-            19,
-            TlvUInt16.bound({ min: 0, max: 65534 }),
-            { persistent: true, default: 0 }
-        )
+        installedClosedLimitTilt: OptionalAttribute(0x13, TlvUInt16.bound({ max: 65534 }), { persistent: true, default: 0 })
     },
 
     commands: {
@@ -817,7 +801,7 @@ export const TiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.7
          */
-        goToTiltPercentage: OptionalCommand(8, TlvGoToTiltPercentageRequest, 8, TlvNoResponse)
+        goToTiltPercentage: OptionalCommand(0x8, TlvGoToTiltPercentageRequest, 0x8, TlvNoResponse)
     }
 });
 
@@ -835,7 +819,7 @@ export const LiftAndAbsolutePositionComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.4
          */
-        goToLiftValue: OptionalCommand(4, TlvGoToLiftValueRequest, 4, TlvNoResponse)
+        goToLiftValue: OptionalCommand(0x4, TlvGoToLiftValueRequest, 0x4, TlvNoResponse)
     }
 });
 
@@ -853,7 +837,7 @@ export const TiltAndAbsolutePositionComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.6
          */
-        goToTiltValue: OptionalCommand(7, TlvGoToTiltValueRequest, 7, TlvNoResponse)
+        goToTiltValue: OptionalCommand(0x7, TlvGoToTiltValueRequest, 0x7, TlvNoResponse)
     }
 });
 

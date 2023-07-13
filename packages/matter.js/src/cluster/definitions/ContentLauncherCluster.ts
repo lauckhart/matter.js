@@ -12,9 +12,26 @@ import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/Bitmap
 import { Attribute, Command, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
-import { TlvUInt32, TlvDouble, TlvEnum } from "../../tlv/TlvNumber.js";
+import { TlvUInt32, TlvBitmap, TlvDouble, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
+
+/**
+ * The value of the ContentLauncher supportedStreamingProtocols attribute
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.2.1
+ */
+export const SupportedStreamingProtocols = {
+    /**
+     * Device supports Dynamic Adaptive Streaming over HTTP (DASH)
+     */
+    dash: BitFlag(0),
+
+    /**
+     * Device supports HTTP Live Streaming (HLS)
+     */
+    hls: BitFlag(1)
+};
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.9
@@ -466,14 +483,12 @@ export const UrlPlaybackComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.1
          */
-        acceptHeader: Attribute(0, TlvArray(TlvString, { maxLength: 100 }), { persistent: true, default: [] }),
+        acceptHeader: Attribute(0x0, TlvArray(TlvString, { maxLength: 100 }), { persistent: true, default: [] }),
 
         /**
-         * This attribute provides information about supported streaming protocols.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.2
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.2.1
          */
-        supportedStreamingProtocols: Attribute(1, TlvUInt32, { persistent: true })
+        supportedStreamingProtocols: Attribute(0x1, TlvBitmap(TlvUInt32, SupportedStreamingProtocols), { persistent: true })
     },
 
     commands: {
@@ -487,7 +502,7 @@ export const UrlPlaybackComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.2
          */
-        launchUrl: Command(1, TlvLaunchUrlRequest, 2, TlvLauncherResponse)
+        launchUrl: Command(0x1, TlvLaunchUrlRequest, 2, TlvLauncherResponse)
     }
 });
 
@@ -502,7 +517,7 @@ export const ContentSearchComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.1
          */
-        launchContent: Command(0, TlvLaunchContentRequest, 2, TlvLauncherResponse)
+        launchContent: Command(0x0, TlvLaunchContentRequest, 2, TlvLauncherResponse)
     }
 });
 

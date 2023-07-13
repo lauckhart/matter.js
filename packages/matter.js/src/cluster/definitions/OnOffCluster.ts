@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitField, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { Attribute, Command, TlvNoResponse, WritableAttribute, AccessLevel, Cluster } from "../../cluster/Cluster.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -141,7 +141,7 @@ export const TlvOffWithEffectRequest = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.6.1
  */
-export const OnOffControl = { acceptOnlyWhenOn: BitFlag(0), reserved: BitFlag(1) };
+export const OnOffControl = { acceptOnlyWhenOn: BitFlag(0), reserved: BitField(1, 7) };
 
 /**
  * Input to the OnOff onWithTimedOff command
@@ -215,7 +215,7 @@ export const OnOffBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.6.1
          */
-        onOff: Attribute(0, TlvBoolean, { scene: true, persistent: true, default: true })
+        onOff: Attribute(0x0, TlvBoolean, { scene: true, persistent: true, default: true })
     },
 
     commands: {
@@ -224,21 +224,21 @@ export const OnOffBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.1
          */
-        off: Command(0, TlvNoArguments, 0, TlvNoResponse),
+        off: Command(0x0, TlvNoArguments, 0x0, TlvNoResponse),
 
         /**
          * This command does not have any data fields.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.2
          */
-        on: Command(1, TlvNoArguments, 1, TlvNoResponse),
+        on: Command(0x1, TlvNoArguments, 0x1, TlvNoResponse),
 
         /**
          * This command does not have any data fields.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.3
          */
-        toggle: Command(2, TlvNoArguments, 2, TlvNoResponse)
+        toggle: Command(0x2, TlvNoArguments, 0x2, TlvNoResponse)
     }
 });
 
@@ -265,7 +265,7 @@ export const LevelControlForLightingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.6.2
          */
-        globalSceneControl: Attribute(16384, TlvBoolean, { default: true }),
+        globalSceneControl: Attribute(0x4000, TlvBoolean, { default: true }),
 
         /**
          * The OnTime attribute specifies the length of time (in 1/10ths second) that the ‘On’ state shall be
@@ -275,7 +275,7 @@ export const LevelControlForLightingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.6.3
          */
-        onTime: WritableAttribute(16385, TlvNullable(TlvUInt16), { default: 0 }),
+        onTime: WritableAttribute(0x4001, TlvNullable(TlvUInt16), { default: 0 }),
 
         /**
          * The OffWaitTime attribute specifies the length of time (in 1/10ths second) that the ‘Off’ state shall be
@@ -287,7 +287,7 @@ export const LevelControlForLightingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.6.4
          */
-        offWaitTime: WritableAttribute(16386, TlvNullable(TlvUInt16), { default: 0 }),
+        offWaitTime: WritableAttribute(0x4002, TlvNullable(TlvUInt16), { default: 0 }),
 
         /**
          * The StartUpOnOff attribute shall define the desired startup behavior of a device when it is supplied with
@@ -300,7 +300,7 @@ export const LevelControlForLightingComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.6.5
          */
         startUpOnOff: WritableAttribute(
-            16387,
+            0x4003,
             TlvNullable(TlvEnum<StartUpOnOff>()),
             { persistent: true, writeAcl: AccessLevel.Manage }
         )
@@ -312,7 +312,7 @@ export const LevelControlForLightingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.4
          */
-        offWithEffect: Command(64, TlvOffWithEffectRequest, 64, TlvNoResponse),
+        offWithEffect: Command(0x40, TlvOffWithEffectRequest, 0x40, TlvNoResponse),
 
         /**
          * The OnWithRecallGlobalScene command allows the recall of the settings when the device was turned off.
@@ -321,7 +321,7 @@ export const LevelControlForLightingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.5
          */
-        onWithRecallGlobalScene: Command(65, TlvNoArguments, 65, TlvNoResponse),
+        onWithRecallGlobalScene: Command(0x41, TlvNoArguments, 0x41, TlvNoResponse),
 
         /**
          * The OnWithTimedOff command allows devices to be turned on for a specific duration with a guarded off
@@ -333,7 +333,7 @@ export const LevelControlForLightingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.6
          */
-        onWithTimedOff: Command(66, TlvOnWithTimedOffRequest, 66, TlvNoResponse)
+        onWithTimedOff: Command(0x42, TlvOnWithTimedOffRequest, 0x42, TlvNoResponse)
     }
 });
 

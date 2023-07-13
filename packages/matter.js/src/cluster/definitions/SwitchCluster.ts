@@ -19,7 +19,7 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.6
  */
 export const TlvMultiPressOngoingEvent = TlvObject({
-    newPosition: TlvField(0, TlvUInt8.bound({ min: 0 })),
+    newPosition: TlvField(0, TlvUInt8),
     currentNumberOfPressesCounted: TlvField(1, TlvUInt8.bound({ min: 2 }))
 });
 
@@ -29,7 +29,7 @@ export const TlvMultiPressOngoingEvent = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.7
  */
 export const TlvMultiPressCompleteEvent = TlvObject({
-    previousPosition: TlvField(0, TlvUInt8.bound({ min: 0 })),
+    previousPosition: TlvField(0, TlvUInt8),
     totalNumberOfPressesCounted: TlvField(1, TlvUInt8.bound({ min: 1 }))
 });
 
@@ -38,35 +38,35 @@ export const TlvMultiPressCompleteEvent = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.1
  */
-export const TlvSwitchLatchedEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8.bound({ min: 0 })) });
+export const TlvSwitchLatchedEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8) });
 
 /**
  * Body of the Switch initialPress event
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.2
  */
-export const TlvInitialPressEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8.bound({ min: 0 })) });
+export const TlvInitialPressEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8) });
 
 /**
  * Body of the Switch longPress event
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.3
  */
-export const TlvLongPressEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8.bound({ min: 0 })) });
+export const TlvLongPressEvent = TlvObject({ newPosition: TlvField(0, TlvUInt8) });
 
 /**
  * Body of the Switch longRelease event
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.5
  */
-export const TlvLongReleaseEvent = TlvObject({ previousPosition: TlvField(0, TlvUInt8.bound({ min: 0 })) });
+export const TlvLongReleaseEvent = TlvObject({ previousPosition: TlvField(0, TlvUInt8) });
 
 /**
  * Body of the Switch shortRelease event
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.4
  */
-export const TlvShortReleaseEvent = TlvObject({ previousPosition: TlvField(0, TlvUInt8.bound({ min: 0 })) });
+export const TlvShortReleaseEvent = TlvObject({ previousPosition: TlvField(0, TlvUInt8) });
 
 /**
  * These are optional features supported by SwitchCluster.
@@ -142,7 +142,7 @@ export const SwitchBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.5.1
          */
-        numberOfPositions: FixedAttribute(0, TlvUInt8.bound({ min: 2 }), { default: 2 }),
+        numberOfPositions: FixedAttribute(0x0, TlvUInt8.bound({ min: 2 }), { default: 2 }),
 
         /**
          * This attribute shall indicate the position of the switch. The valid range is zero to NumberOfPositions-1.
@@ -151,7 +151,7 @@ export const SwitchBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.5.2
          */
-        currentPosition: Attribute(1, TlvUInt8.bound({ min: 0 }), { persistent: true, default: 0 })
+        currentPosition: Attribute(0x1, TlvUInt8, { persistent: true, default: 0 })
     }
 });
 
@@ -167,7 +167,7 @@ export const MomentarySwitchMultiPressComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.5.3
          */
-        multiPressMax: FixedAttribute(2, TlvUInt8.bound({ min: 2 }), { default: 2 })
+        multiPressMax: FixedAttribute(0x2, TlvUInt8.bound({ min: 2 }), { default: 2 })
     },
 
     events: {
@@ -187,7 +187,7 @@ export const MomentarySwitchMultiPressComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.6
          */
-        multiPressOngoing: Event(5, EventPriority.Info, TlvMultiPressOngoingEvent),
+        multiPressOngoing: Event(0x5, EventPriority.Info, TlvMultiPressOngoingEvent),
 
         /**
          * This event shall be generated to indicate how many times the momentary switch has been pressed in a
@@ -212,7 +212,7 @@ export const MomentarySwitchMultiPressComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.7
          */
-        multiPressComplete: Event(6, EventPriority.Info, TlvMultiPressCompleteEvent)
+        multiPressComplete: Event(0x6, EventPriority.Info, TlvMultiPressCompleteEvent)
     }
 });
 
@@ -229,7 +229,7 @@ export const LatchingSwitchComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.1
          */
-        switchLatched: Event(0, EventPriority.Info, TlvSwitchLatchedEvent)
+        switchLatched: Event(0x0, EventPriority.Info, TlvSwitchLatchedEvent)
     }
 });
 
@@ -245,7 +245,7 @@ export const MomentarySwitchComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.2
          */
-        initialPress: Event(1, EventPriority.Info, TlvInitialPressEvent)
+        initialPress: Event(0x1, EventPriority.Info, TlvInitialPressEvent)
     }
 });
 
@@ -262,7 +262,7 @@ export const MomentarySwitchLongPressComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.3
          */
-        longPress: Event(2, EventPriority.Info, TlvLongPressEvent),
+        longPress: Event(0x2, EventPriority.Info, TlvLongPressEvent),
 
         /**
          * This event shall be generated, when the momentary switch has been released (after debouncing) and after
@@ -275,7 +275,7 @@ export const MomentarySwitchLongPressComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.5
          */
-        longRelease: Event(4, EventPriority.Info, TlvLongReleaseEvent)
+        longRelease: Event(0x4, EventPriority.Info, TlvLongReleaseEvent)
     }
 });
 
@@ -300,7 +300,7 @@ export const MomentarySwitchReleaseComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.4
          */
-        shortRelease: Event(3, EventPriority.Info, TlvShortReleaseEvent)
+        shortRelease: Event(0x3, EventPriority.Info, TlvShortReleaseEvent)
     }
 });
 

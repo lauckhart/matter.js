@@ -599,6 +599,29 @@ Matter.children.push({
         },
 
         {
+            tag: "datatype", name: "ConfigStatus", type: "map8", conformance: "M",
+
+            children: [
+                { tag: "datatype", name: "Operational", constraint: "0" },
+                { tag: "datatype", name: "OnlineReserved", constraint: "1" },
+                { tag: "datatype", name: "LiftMovementReversed", constraint: "2" },
+                { tag: "datatype", name: "LiftPositionAware", constraint: "3" },
+                { tag: "datatype", name: "TiltPositionAware", constraint: "4" },
+                { tag: "datatype", name: "LiftEncoderControlled", constraint: "5" },
+                { tag: "datatype", name: "TiltEncoderControlled", constraint: "6" }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "OperationalStatus", type: "map8", conformance: "M",
+            children: [
+                { tag: "datatype", name: "Global", constraint: "0 to 2" },
+                { tag: "datatype", name: "Lift", constraint: "2 to 4" },
+                { tag: "datatype", name: "Tilt", constraint: "4 to 6" }
+            ]
+        },
+
+        {
             tag: "datatype", name: "MovementStatus", type: "enum8",
             details: "Values for OperationalStatus attribute fields.",
             children: [

@@ -244,7 +244,7 @@ export const ChannelBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.3.3
          */
-        currentChannel: OptionalAttribute(2, TlvNullable(TlvChannelInfoStruct), { default: null })
+        currentChannel: OptionalAttribute(0x2, TlvNullable(TlvChannelInfoStruct), { default: null })
     },
 
     commands: {
@@ -253,7 +253,7 @@ export const ChannelBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.3
          */
-        changeChannelByNumber: Command(2, TlvChangeChannelByNumberRequest, 2, TlvNoResponse),
+        changeChannelByNumber: Command(0x2, TlvChangeChannelByNumberRequest, 0x2, TlvNoResponse),
 
         /**
          * This command provides channel up and channel down functionality, but allows channel index jumps of size
@@ -266,7 +266,7 @@ export const ChannelBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.4
          */
-        skipChannel: Command(3, TlvSkipChannelRequest, 3, TlvNoResponse)
+        skipChannel: Command(0x3, TlvSkipChannelRequest, 0x3, TlvNoResponse)
     }
 });
 
@@ -280,7 +280,7 @@ export const ChannelListComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.3.1
          */
-        channelList: Attribute(0, TlvArray(TlvChannelInfoStruct), { default: [] })
+        channelList: Attribute(0x0, TlvArray(TlvChannelInfoStruct), { default: [] })
     }
 });
 
@@ -294,7 +294,7 @@ export const LineupInfoComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.3.2
          */
-        lineup: Attribute(1, TlvNullable(TlvLineupInfoStruct), { default: null })
+        lineup: Attribute(0x1, TlvNullable(TlvLineupInfoStruct), { default: null })
     }
 });
 
@@ -315,7 +315,7 @@ export const ChannelListOrLineupInfoComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.1
          */
-        changeChannel: Command(0, TlvChangeChannelRequest, 1, TlvChangeChannelResponse)
+        changeChannel: Command(0x0, TlvChangeChannelRequest, 1, TlvChangeChannelResponse)
     }
 });
 

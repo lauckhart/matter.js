@@ -30,7 +30,7 @@ function applyPatches(subref: HtmlReference, clusterRef: HtmlReference) {
     if (isCluster(clusterRef, Specification.Core, "General Commissioning")) {
         if (isSection(subref, "11.9.6") && subref.name === "Commands" && !subref.table) {
             // In 1.1 spec, command table is not here...
-            subref.name = "Ignored";
+            subref.ignore = true;
         } else if (isSection(subref, "11.9.6.1") && subref.name === "Common fields in General Commissioning cluster responses" && subref.table) {
             // ...but here
             subref.name = "Commands";
@@ -38,6 +38,14 @@ function applyPatches(subref: HtmlReference, clusterRef: HtmlReference) {
         }
     } else if (isCluster(clusterRef, Specification.Cluster, "Thermostat") && isSection(subref, "4.3.9.6", "4.3.9.7")) {
         subref.ignore = true;
+    } else if (isCluster(clusterRef, Specification.Cluster, "Content Launcher")) {
+        if (isSection(subref, "6.7.3.2")) {
+            // In 1.1. spec, SupportedStreamingProtocols bitmap is not here...
+            subref.ignore = true;
+        } else if (isSection(subref, "6.7.3.2.1")) {
+            // ...but here
+            subref.name = "SupportedStreamingProtocols Attribute";
+        }
     }
 }
 

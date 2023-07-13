@@ -8,7 +8,7 @@ import { Logger } from "../../../src/log/Logger.js";
 import { AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals, Metatype } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
 import { addDocumentation } from "./add-documentation.js";
-import { Code, Identifier, Integer, LowerIdentifier, NoSpace, Str, UpperIdentifier } from "./html-translators.js";
+import { Bits, Code, Identifier, Integer, LowerIdentifier, NoSpace, Str, UpperIdentifier } from "./html-translators.js";
 import { ClusterReference, HtmlReference } from "./spec-types.js";
 import { translateTable, Optional, Alias, translateRecordsToMatter, Children, chooseIdentityAliases } from "./translate-table.js";
 
@@ -384,22 +384,18 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
                 // We extract bits, description and conformance but just
                 // leave a placeholder for the name
                 const records = translateTable("bit", definition, {
-                    bit: Str,
+                    bit: Bits,
                     description: Str,
                     conformance: Optional(Alias(Str, "M"))
                 });
+
                 return translateRecordsToMatter("wc bit", records, (r) => {
-                    const bits = r.bit.split("..").map(b => Number.parseInt(b));
-                    if (bits.findIndex(Number.isNaN) !== -1) {
-                        return;
-                    }
-                    let name, constraint;
-                    if (bits.length === 1) {
-                        constraint = bits[0];
-                        name = `Bit${bits[0]}`;
-                    } else if (bits.length === 2) {
-                        constraint = { min: bits[0], max: bits[1] + 1 };
-                        name = `Bits${bits[0]}To${bits[1]}`;
+                    const constraint = r.bit;
+                    let name;
+                    if (typeof constraint === "number") {
+                        name = `Bit${constraint}`;
+                    } else if (typeof constraint === "object") {
+                        name = `Bits${constraint.min}To${constraint.max - 1}`;
                     }
                     if (name) {
                         return DatatypeElement({
@@ -418,7 +414,7 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
             // but this was only a partial list.  Auto-detection makes more sense
             const { ids, names } = chooseIdentityAliases(definition, ["bit", "id"], ["name", "eventdescription"]);
             const records = translateTable("bit", definition, {
-                constraint: Alias(Str, ...ids),
+                constraint: Alias(Bits, ...ids),
                 name: Alias(Identifier, ...names),
                 description: Optional(Alias(Str, "summary"))
             });

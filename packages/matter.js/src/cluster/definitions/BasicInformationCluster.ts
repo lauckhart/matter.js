@@ -146,21 +146,21 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.1
          */
-        dataModelRevision: FixedAttribute(0, TlvUInt16),
+        dataModelRevision: FixedAttribute(0x0, TlvUInt16),
 
         /**
          * This attribute shall specify a human readable (displayable) name of the vendor for the Node.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.2
          */
-        vendorName: FixedAttribute(1, TlvString.bound({ maxLength: 32 })),
+        vendorName: FixedAttribute(0x1, TlvString.bound({ maxLength: 32 })),
 
         /**
          * This attribute shall specify the Vendor ID.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.3
          */
-        vendorId: FixedAttribute(2, TlvVendorId),
+        vendorId: FixedAttribute(0x2, TlvVendorId),
 
         /**
          * This attribute shall specify a human readable (displayable) name of the model for the Node such as the model
@@ -168,7 +168,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.4
          */
-        productName: FixedAttribute(3, TlvString.bound({ maxLength: 32 })),
+        productName: FixedAttribute(0x3, TlvString.bound({ maxLength: 32 })),
 
         /**
          * This attribute shall specify the Product ID assigned by the vendor that is unique to the specific product of
@@ -176,7 +176,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.5
          */
-        productId: FixedAttribute(4, TlvUInt16),
+        productId: FixedAttribute(0x4, TlvUInt16),
 
         /**
          * This attribute shall represent a user defined name for the Node. This attribute SHOULD be set during initial
@@ -185,7 +185,7 @@ export const BasicInformationCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.6
          */
         nodeLabel: WritableAttribute(
-            5,
+            0x5,
             TlvString.bound({ maxLength: 32 }),
             { persistent: true, default: "", writeAcl: AccessLevel.Manage }
         ),
@@ -204,7 +204,7 @@ export const BasicInformationCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.7
          */
         location: WritableAttribute(
-            6,
+            0x6,
             TlvString.bound({ length: 2 }),
             { persistent: true, default: "XX", writeAcl: AccessLevel.Administer }
         ),
@@ -215,7 +215,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.8
          */
-        hardwareVersion: FixedAttribute(7, TlvUInt16, { default: 0 }),
+        hardwareVersion: FixedAttribute(0x7, TlvUInt16, { default: 0 }),
 
         /**
          * This attribute shall specify the version number of the hardware of the Node. The meaning of its value, and
@@ -224,7 +224,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.9
          */
-        hardwareVersionString: FixedAttribute(8, TlvString.bound({ minLength: 1, maxLength: 64 })),
+        hardwareVersionString: FixedAttribute(0x8, TlvString.bound({ minLength: 1, maxLength: 64 })),
 
         /**
          * This attribute shall contain the current version number for the software running on this Node. The version
@@ -235,7 +235,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.10
          */
-        softwareVersion: FixedAttribute(9, TlvUInt32, { default: 0 }),
+        softwareVersion: FixedAttribute(0x9, TlvUInt32, { default: 0 }),
 
         /**
          * This attribute shall contain a current human-readable representation for the software running on the Node.
@@ -247,7 +247,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.11
          */
-        softwareVersionString: FixedAttribute(10, TlvString.bound({ minLength: 1, maxLength: 64 })),
+        softwareVersionString: FixedAttribute(0xa, TlvString.bound({ minLength: 1, maxLength: 64 })),
 
         /**
          * This attribute shall specify the date that the Node was manufactured. The first 8 characters shall specify
@@ -259,7 +259,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.12
          */
-        manufacturingDate: OptionalFixedAttribute(11, TlvString.bound({ minLength: 8, maxLength: 16 })),
+        manufacturingDate: OptionalFixedAttribute(0xb, TlvString.bound({ minLength: 8, maxLength: 16 })),
 
         /**
          * This attribute shall specify a human-readable (displayable) vendor assigned part number for the Node whose
@@ -271,7 +271,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.13
          */
-        partNumber: OptionalFixedAttribute(12, TlvString.bound({ maxLength: 32 })),
+        partNumber: OptionalFixedAttribute(0xc, TlvString.bound({ maxLength: 32 })),
 
         /**
          * This attribute shall specify a link to a product specific web page. The syntax of the ProductURL attribute
@@ -281,7 +281,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.14
          */
-        productUrl: OptionalFixedAttribute(13, TlvString.bound({ maxLength: 256 })),
+        productUrl: OptionalFixedAttribute(0xd, TlvString.bound({ maxLength: 256 })),
 
         /**
          * This attribute shall specify a vendor specific human readable (displayable) product label. The ProductLabel
@@ -291,14 +291,14 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.15
          */
-        productLabel: OptionalFixedAttribute(14, TlvString.bound({ maxLength: 64 })),
+        productLabel: OptionalFixedAttribute(0xe, TlvString.bound({ maxLength: 64 })),
 
         /**
          * This attributes shall specify a human readable (displayable) serial number.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.16
          */
-        serialNumber: OptionalFixedAttribute(15, TlvString.bound({ maxLength: 32 })),
+        serialNumber: OptionalFixedAttribute(0xf, TlvString.bound({ maxLength: 32 })),
 
         /**
          * This attribute shall allow a local Node configuration to be disabled. When this attribute is set to True the
@@ -309,7 +309,7 @@ export const BasicInformationCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.17
          */
         localConfigDisabled: OptionalWritableAttribute(
-            16,
+            0x10,
             TlvBoolean,
             { persistent: true, default: true, writeAcl: AccessLevel.Manage }
         ),
@@ -323,7 +323,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.18
          */
-        reachable: OptionalAttribute(17, TlvBoolean, { default: true }),
+        reachable: OptionalAttribute(0x11, TlvBoolean, { default: true }),
 
         /**
          * This attribute (when used) shall indicate a unique identifier for the device, which is constructed in a
@@ -343,7 +343,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.19
          */
-        uniqueId: OptionalFixedAttribute(18, TlvString.bound({ maxLength: 32 })),
+        uniqueId: OptionalFixedAttribute(0x12, TlvString.bound({ maxLength: 32 })),
 
         /**
          * This attribute shall provide the minimum guaranteed value for some system-wide resource capabilities that
@@ -362,12 +362,12 @@ export const BasicInformationCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.20
          */
         capabilityMinima: FixedAttribute(
-            19,
+            0x13,
             TlvCapabilityMinimaStruct,
             { default: { caseSessionsPerFabric: 3, subscriptionsPerFabric: 3 } }
         ),
 
-        productAppearance: OptionalAttribute(20, TlvProductAppearanceStruct)
+        productAppearance: OptionalAttribute(0x14, TlvProductAppearanceStruct)
     },
 
     events: {
@@ -378,7 +378,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.1
          */
-        startUp: Event(0, EventPriority.Critical, TlvStartUpEvent),
+        startUp: Event(0x0, EventPriority.Critical, TlvStartUpEvent),
 
         /**
          * The ShutDown event SHOULD be generated by a Node prior to any orderly shutdown sequence on a best-effort
@@ -388,7 +388,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.2
          */
-        shutDown: OptionalEvent(1, EventPriority.Critical, TlvNoArguments),
+        shutDown: OptionalEvent(0x1, EventPriority.Critical, TlvNoArguments),
 
         /**
          * The Leave event SHOULD be generated by a Node prior to permanently leaving a given Fabric, such as when the
@@ -402,7 +402,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.3
          */
-        leave: OptionalEvent(2, EventPriority.Info, TlvLeaveEvent),
+        leave: OptionalEvent(0x2, EventPriority.Info, TlvLeaveEvent),
 
         /**
          * This event shall be supported if and only if the Reachable attribute is supported.
@@ -413,6 +413,6 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.4
          */
-        reachableChanged: OptionalEvent(3, EventPriority.Info, TlvReachableChangedEvent)
+        reachableChanged: OptionalEvent(0x3, EventPriority.Info, TlvReachableChangedEvent)
     }
 });

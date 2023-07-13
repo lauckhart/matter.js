@@ -624,7 +624,7 @@ export const SpecMatter: MatterElement = {
                             xref: { document: "cluster", section: "1.4.9.11.1" },
                             children: [
                                 { tag: "datatype", name: "CopyAllScenes", constraint: "0" },
-                                { tag: "datatype", name: "Reserved", constraint: "1" }
+                                { tag: "datatype", name: "Reserved", constraint: "1 to 8" }
                             ]
                         },
 
@@ -1037,7 +1037,7 @@ export const SpecMatter: MatterElement = {
                             xref: { document: "cluster", section: "1.5.7.6.1" },
                             children: [
                                 { tag: "datatype", name: "AcceptOnlyWhenOn", constraint: "0" },
-                                { tag: "datatype", name: "Reserved", constraint: "1" }
+                                { tag: "datatype", name: "Reserved", constraint: "1 to 8" }
                             ]
                         },
 
@@ -3971,7 +3971,7 @@ export const SpecMatter: MatterElement = {
                                 { tag: "datatype", name: "UpdateDirection", constraint: "1" },
                                 { tag: "datatype", name: "UpdateTime", constraint: "2" },
                                 { tag: "datatype", name: "UpdateStartHue", constraint: "3" },
-                                { tag: "datatype", name: "Reserved", constraint: "4" }
+                                { tag: "datatype", name: "Reserved", constraint: "4 to 8" }
                             ]
                         },
 
@@ -5199,11 +5199,11 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "CoolingStage",
+                            tag: "datatype", name: "CoolingStage", constraint: "0 to 2",
                             description: "00 – Cool Stage 101 – Cool Stage 210 – Cool Stage 311 – Reserved"
                         },
                         {
-                            tag: "datatype", name: "HeatingStage",
+                            tag: "datatype", name: "HeatingStage", constraint: "2 to 4",
                             description: "00 – Heat Stage 101 – Heat Stage 210 – Heat Stage 311 – Reserved"
                         },
                         {
@@ -7090,10 +7090,16 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         { tag: "datatype", name: "UnknownOrManufacturerSpecificKeypadProgrammingEvent", constraint: "0" },
-                        { tag: "datatype", name: "ProgrammingPinCodeChangedSourceKeypad", constraint: "1" },
-                        { tag: "datatype", name: "PinAddedSourceKeypad", constraint: "2" },
-                        { tag: "datatype", name: "PinClearedSourceKeypad", constraint: "3" },
-                        { tag: "datatype", name: "PinChangedSourceKeypad", constraint: "4" }
+                        {
+                            tag: "datatype", name: "ProgrammingPinCodeChangedSourceKeypadUserIdProgrammingUserId",
+                            constraint: "1"
+                        },
+                        { tag: "datatype", name: "PinAddedSourceKeypadUserIdUserIdThatWasAdded", constraint: "2" },
+                        { tag: "datatype", name: "PinClearedSourceKeypadUserIdUserIdThatWasCleared", constraint: "3" },
+                        {
+                            tag: "datatype", name: "PinChangedSourceKeypadUserIdUserIdThatWasChangedPinCodeThatWasChanged",
+                            constraint: "4"
+                        }
                     ]
                 },
 
@@ -7109,18 +7115,27 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         { tag: "datatype", name: "UnknownOrManufacturerSpecificRemoteProgrammingEvent", constraint: "0" },
-                        { tag: "datatype", name: "PinAddedSourceRemote", constraint: "2" },
-                        { tag: "datatype", name: "PinClearedSourceRemote", constraint: "3" },
-                        { tag: "datatype", name: "PinChangedSourceRemote", constraint: "4" },
+                        { tag: "datatype", name: "PinAddedSourceRemoteSameAsKeypadSourceAbove", constraint: "2" },
+                        { tag: "datatype", name: "PinClearedSourceRemoteSameAsKeypadSourceAbove", constraint: "3" },
+                        { tag: "datatype", name: "PinChangedSourceRemoteSameAsKeypadSourceabove", constraint: "4" },
                         { tag: "datatype", name: "RfidCodeAddedSourceRemote", constraint: "5" },
                         { tag: "datatype", name: "RfidCodeClearedSourceRemote", constraint: "6" }
                     ]
                 },
 
                 {
-                    tag: "attribute", name: "RfidPro", id: 0x47, type: "map16", access: "RW VA",
+                    tag: "attribute", name: "RfidProgrammingEventMask", id: 0x47, type: "map16", access: "RW VA",
                     conformance: "[NOT & RID]", default: 65535, quality: "P",
-                    xref: { document: "cluster", section: "5.2.3" }
+                    details: "Event mask used to turn on and off RFID programming events. This mask DOES NOT apply to the storing " +
+                             "of events in the event log. This mask only applies to the Programming Event Notification Command." +
+                             "\n" +
+                             "This mask DOES NOT apply to the Events mechanism of this cluster.",
+                    xref: { document: "cluster", section: "5.2.3.46" },
+                    children: [
+                        { tag: "datatype", name: "UnknownOrManufacturerSpecificKeypadProgrammingEvent", constraint: "0" },
+                        { tag: "datatype", name: "IdAddedSourceRfidUserIdUserIdThatWasAdded", constraint: "5" },
+                        { tag: "datatype", name: "IdClearedSourceRfidUserIdUserIdThatWasCleared", constraint: "6" }
+                    ]
                 },
 
                 {
@@ -9423,8 +9438,18 @@ export const SpecMatter: MatterElement = {
                 {
                     tag: "attribute", name: "SupportedStreamingProtocols", id: 0x1, type: "map32", access: "R V",
                     conformance: "UP", default: 0, quality: "N",
-                    details: "This attribute provides information about supported streaming protocols.",
-                    xref: { document: "cluster", section: "6.7.3.2" }
+                    xref: { document: "cluster", section: "6.7.3.2.1" },
+
+                    children: [
+                        {
+                            tag: "datatype", name: "Dash", constraint: "0",
+                            description: "Device supports Dynamic Adaptive Streaming over HTTP (DASH)"
+                        },
+                        {
+                            tag: "datatype", name: "Hls", constraint: "1",
+                            description: "Device supports HTTP Live Streaming (HLS)"
+                        }
+                    ]
                 },
 
                 {

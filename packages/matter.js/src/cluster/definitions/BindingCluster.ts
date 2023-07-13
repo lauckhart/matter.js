@@ -98,7 +98,7 @@ export const BindingCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 9.6.6.1
          */
         binding: WritableFabricScopedAttribute(
-            0,
+            0x0,
             TlvArray(TlvTargetStruct),
             { persistent: true, default: [], writeAcl: AccessLevel.Manage }
         )

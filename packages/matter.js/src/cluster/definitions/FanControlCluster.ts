@@ -207,7 +207,7 @@ export const FanControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.1
          */
-        fanMode: WritableAttribute(0, TlvEnum<FanMode>(), { persistent: true, default: FanMode.Off }),
+        fanMode: WritableAttribute(0x0, TlvEnum<FanMode>(), { persistent: true, default: FanMode.Off }),
 
         /**
          * This indicates the fan speed ranges that shall be supported.
@@ -215,7 +215,7 @@ export const FanControlBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.2
          */
         fanModeSequence: WritableAttribute(
-            1,
+            0x1,
             TlvEnum<FanModeSequence>(),
             { persistent: true, default: FanModeSequence.OffLowMedHighAuto }
         ),
@@ -227,7 +227,7 @@ export const FanControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.3
          */
-        percentSetting: WritableAttribute(2, TlvNullable(TlvUInt8.bound({ min: 0, max: 100 })), { default: 0 }),
+        percentSetting: WritableAttribute(0x2, TlvNullable(TlvUInt8.bound({ max: 100 })), { default: 0 }),
 
         /**
          * This attribute shall indicate the actual currently operating fan speed, or zero to indicate that the fan is
@@ -235,7 +235,7 @@ export const FanControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.4
          */
-        percentCurrent: Attribute(3, TlvUInt8.bound({ min: 0, max: 100 }), { default: 0 })
+        percentCurrent: Attribute(0x3, TlvUInt8.bound({ max: 100 }), { default: 0 })
     }
 });
 
@@ -250,7 +250,7 @@ export const MultiSpeedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.5
          */
-        speedMax: FixedAttribute(4, TlvUInt8.bound({ min: 1, max: 100 }), { default: 1 }),
+        speedMax: FixedAttribute(0x4, TlvUInt8.bound({ min: 1, max: 100 }), { default: 1 }),
 
         /**
          * This attribute shall indicate the speed setting for the fan. This attribute may be written by the client to
@@ -260,7 +260,7 @@ export const MultiSpeedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.6
          */
-        speedSetting: WritableAttribute(5, TlvNullable(TlvUInt8.bound({ min: 0 })), { default: 0 }),
+        speedSetting: WritableAttribute(0x5, TlvNullable(TlvUInt8), { default: 0 }),
 
         /**
          * This attribute shall indicate the actual currently operating fan speed, or zero to indicate that the fan is
@@ -268,7 +268,7 @@ export const MultiSpeedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.7
          */
-        speedCurrent: Attribute(6, TlvUInt8.bound({ min: 0 }), { default: 0 })
+        speedCurrent: Attribute(0x6, TlvUInt8, { default: 0 })
     }
 });
 
@@ -283,7 +283,7 @@ export const RockingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.8
          */
-        rockSupport: FixedAttribute(7, TlvBitmap(TlvUInt8, RockSupport)),
+        rockSupport: FixedAttribute(0x7, TlvBitmap(TlvUInt8, RockSupport)),
 
         /**
          * This attribute is a bitmap that indicates the current active fan rocking motion settings. Each bit shall
@@ -301,7 +301,7 @@ export const RockingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.9
          */
-        rockSetting: WritableAttribute(8, TlvBitmap(TlvUInt8, RockSetting))
+        rockSetting: WritableAttribute(0x8, TlvBitmap(TlvUInt8, RockSetting))
     }
 });
 
@@ -316,7 +316,7 @@ export const WindComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.10
          */
-        windSupport: FixedAttribute(9, TlvBitmap(TlvUInt8, WindSupport)),
+        windSupport: FixedAttribute(0x9, TlvBitmap(TlvUInt8, WindSupport)),
 
         /**
          * This attribute is a bitmap that indicates the current active fan wind feature settings. Each bit shall only
@@ -334,7 +334,7 @@ export const WindComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.11
          */
-        windSetting: WritableAttribute(10, TlvBitmap(TlvUInt8, WindSetting))
+        windSetting: WritableAttribute(0xa, TlvBitmap(TlvUInt8, WindSetting))
     }
 });
 

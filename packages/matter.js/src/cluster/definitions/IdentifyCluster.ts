@@ -332,7 +332,7 @@ export const IdentifyBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.1
          */
-        identifyTime: WritableAttribute(0, TlvUInt16, { default: 0 }),
+        identifyTime: WritableAttribute(0x0, TlvUInt16, { default: 0 }),
 
         /**
          * This attribute specifies how the identification state is presented to the user. This field shall contain one
@@ -342,7 +342,7 @@ export const IdentifyBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.2
          */
-        identifyType: Attribute(1, TlvEnum<IdentifyType>(), { default: IdentifyType.None })
+        identifyType: Attribute(0x1, TlvEnum<IdentifyType>(), { default: IdentifyType.None })
     },
 
     commands: {
@@ -351,7 +351,7 @@ export const IdentifyBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.1
          */
-        identify: Command(0, TlvIdentifyRequest, 0, TlvNoResponse),
+        identify: Command(0x0, TlvIdentifyRequest, 0x0, TlvNoResponse),
 
         /**
          * This command allows the support of feedback to the user, such as a certain light effect. It is used to allow
@@ -362,7 +362,7 @@ export const IdentifyBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3
          */
-        triggerEffect: OptionalCommand(64, TlvTriggerEffectRequest, 64, TlvNoResponse)
+        triggerEffect: OptionalCommand(0x40, TlvTriggerEffectRequest, 0x40, TlvNoResponse)
     }
 });
 
@@ -379,7 +379,7 @@ export const QueryComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.2
          */
-        identifyQuery: Command(1, TlvNoArguments, 0, TlvIdentifyQueryResponse)
+        identifyQuery: Command(0x1, TlvNoArguments, 0, TlvIdentifyQueryResponse)
     }
 });
 

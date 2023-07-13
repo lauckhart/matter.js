@@ -105,6 +105,59 @@ export const enum LockType {
 }
 
 /**
+ * The OperatingMode enumeration shall indicate the lock operating mode.
+ *
+ * The table below shows the operating mode and which interfaces are enabled, if supported, for each mode.
+ *
+ * Note: For modes that disable the remote interface, the door lock shall respond to Lock, Unlock, Toggle, and Unlock
+ * with Timeout commands with a response status Failure and not take the action requested by those commands. The door
+ * lock shall NOT disable the radio or otherwise unbind or leave the network. It shall still respond to all other
+ * commands and requests.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.12
+ */
+export const enum OperatingMode {
+    /**
+     * The lock operates normally. All interfaces are enabled.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.12.1
+     */
+    Normal = 0,
+
+    /**
+     * Only remote interaction is enabled. The keypad shall only be operable by the master user.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.12.2
+     */
+    Vacation = 1,
+
+    /**
+     * This mode is only possible if the door is locked. Manual unlocking changes the mode to Normal operating mode.
+     * All external interaction with the door lock is disabled. This mode is intended to be used so that users,
+     * presumably inside the property, will have control over the entrance.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.12.3
+     */
+    Privacy = 2,
+
+    /**
+     * This mode only disables remote interaction with the lock. This does not apply to any remote proprietary means of
+     * communication. It specifically applies to the Lock, Unlock, Toggle, and Unlock with Timeout Commands.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.12.4
+     */
+    NoRemoteLockUnlock = 3,
+
+    /**
+     * The lock is open or can be opened or closed at will without the use of a Keypad or other means of user
+     * validation (e.g. a lock for a business during work hours).
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.12.5
+     */
+    Passage = 4
+}
+
+/**
  * The value of the DoorLock supportedOperatingModes attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.24
@@ -978,59 +1031,6 @@ export const TlvClearYearDayScheduleRequest = TlvObject({
 });
 
 /**
- * The OperatingMode enumeration shall indicate the lock operating mode.
- *
- * The table below shows the operating mode and which interfaces are enabled, if supported, for each mode.
- *
- * Note: For modes that disable the remote interface, the door lock shall respond to Lock, Unlock, Toggle, and Unlock
- * with Timeout commands with a response status Failure and not take the action requested by those commands. The door
- * lock shall NOT disable the radio or otherwise unbind or leave the network. It shall still respond to all other
- * commands and requests.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.12
- */
-export const enum OperatingMode {
-    /**
-     * The lock operates normally. All interfaces are enabled.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.12.1
-     */
-    Normal = 0,
-
-    /**
-     * Only remote interaction is enabled. The keypad shall only be operable by the master user.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.12.2
-     */
-    Vacation = 1,
-
-    /**
-     * This mode is only possible if the door is locked. Manual unlocking changes the mode to Normal operating mode.
-     * All external interaction with the door lock is disabled. This mode is intended to be used so that users,
-     * presumably inside the property, will have control over the entrance.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.12.3
-     */
-    Privacy = 2,
-
-    /**
-     * This mode only disables remote interaction with the lock. This does not apply to any remote proprietary means of
-     * communication. It specifically applies to the Lock, Unlock, Toggle, and Unlock with Timeout Commands.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.12.4
-     */
-    NoRemoteLockUnlock = 3,
-
-    /**
-     * The lock is open or can be opened or closed at will without the use of a Keypad or other means of user
-     * validation (e.g. a lock for a business during work hours).
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.6.12.5
-     */
-    Passage = 4
-}
-
-/**
  * Input to the DoorLock setHolidaySchedule command
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
@@ -1089,11 +1089,11 @@ export const KeypadOperationEventMask = {
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.44
  */
 export const KeypadProgrammingEventMask = {
-    unknownOrManufacturerSpecificKeypadProgrammingEvent: BitFlag(0),
-    programmingPinCodeChangedSourceKeypad: BitFlag(1),
-    pinAddedSourceKeypad: BitFlag(2),
-    pinClearedSourceKeypad: BitFlag(3),
-    pinChangedSourceKeypad: BitFlag(4)
+    unknown: BitFlag(0),
+    pinCodeChanged: BitFlag(1),
+    pinAdded: BitFlag(2),
+    pinCleared: BitFlag(3),
+    pinChanged: BitFlag(4)
 };
 
 /**
@@ -1136,12 +1136,12 @@ export const ManualOperationEventMask = {
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.45
  */
 export const RemoteProgrammingEventMask = {
-    unknownOrManufacturerSpecificRemoteProgrammingEvent: BitFlag(0),
-    pinAddedSourceRemote: BitFlag(2),
-    pinClearedSourceRemote: BitFlag(3),
-    pinChangedSourceRemote: BitFlag(4),
-    rfidCodeAddedSourceRemote: BitFlag(5),
-    rfidCodeClearedSourceRemote: BitFlag(6)
+    unknown: BitFlag(0),
+    pinAdded: BitFlag(2),
+    pinCleared: BitFlag(3),
+    pinChanged: BitFlag(4),
+    rfidCodeAdded: BitFlag(5),
+    rfidCodeCleared: BitFlag(6)
 };
 
 /**
@@ -1158,6 +1158,13 @@ export const RfidOperationEventMask = {
     unlockSourceRfidErrorInvalidRfidId: BitFlag(5),
     unlockSourceRfidErrorInvalidSchedule: BitFlag(6)
 };
+
+/**
+ * The value of the DoorLock rfidProgrammingEventMask attribute
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.46
+ */
+export const RfidProgrammingEventMask = { unknown: BitFlag(0), idAdded: BitFlag(5), idCleared: BitFlag(6) };
 
 /**
  * These are optional features supported by DoorLockCluster.
@@ -1369,12 +1376,12 @@ export const DoorLockBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.1
          */
-        lockState: Attribute(0, TlvNullable(TlvEnum<LockState>()), { scene: true }),
+        lockState: Attribute(0x0, TlvNullable(TlvEnum<LockState>()), { scene: true }),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.2
          */
-        lockType: Attribute(1, TlvEnum<LockType>()),
+        lockType: Attribute(0x1, TlvEnum<LockType>()),
 
         /**
          * The ActuatorEnabled attribute indicates if the lock is currently able to (Enabled) or not able to (Disabled)
@@ -1382,7 +1389,7 @@ export const DoorLockBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.3
          */
-        actuatorEnabled: Attribute(2, TlvBoolean),
+        actuatorEnabled: Attribute(0x2, TlvBoolean),
 
         /**
          * Modifies the language for the on-screen or audible user interface using a 2-byte language code from
@@ -1390,14 +1397,14 @@ export const DoorLockBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.22
          */
-        language: OptionalWritableAttribute(33, TlvString.bound({ maxLength: 3 }), { writeAcl: AccessLevel.Manage }),
+        language: OptionalWritableAttribute(0x21, TlvString.bound({ maxLength: 3 }), { writeAcl: AccessLevel.Manage }),
 
         /**
          * The settings for the LED support three different modes
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.25
          */
-        ledSettings: OptionalWritableAttribute(34, TlvUInt8, { default: 0, writeAcl: AccessLevel.Manage }),
+        ledSettings: OptionalWritableAttribute(0x22, TlvUInt8, { default: 0, writeAcl: AccessLevel.Manage }),
 
         /**
          * The number of seconds to wait after unlocking a lock before it automatically locks again. 0=disabled. If
@@ -1406,21 +1413,25 @@ export const DoorLockBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.26
          */
-        autoRelockTime: OptionalWritableAttribute(35, TlvUInt32, { writeAcl: AccessLevel.Manage }),
+        autoRelockTime: OptionalWritableAttribute(0x23, TlvUInt32, { writeAcl: AccessLevel.Manage }),
 
         /**
          * The sound volume on a door lock has four possible settings: silent, low, high and medium volumes
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.27
          */
-        soundVolume: OptionalWritableAttribute(36, TlvUInt8, { default: 0, writeAcl: AccessLevel.Manage }),
+        soundVolume: OptionalWritableAttribute(0x24, TlvUInt8, { default: 0, writeAcl: AccessLevel.Manage }),
 
         /**
          * The current operating mode of the lock (see OperatingModeEnum).
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.23
          */
-        operatingMode: WritableAttribute(37, TlvUInt8, { default: 0, writeAcl: AccessLevel.Manage }),
+        operatingMode: WritableAttribute(
+            0x25,
+            TlvEnum<OperatingMode>(),
+            { default: OperatingMode.Normal, writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * This bitmap contains all operating bits of the Operating Mode Attribute supported by the lock. All operating
@@ -1430,7 +1441,7 @@ export const DoorLockBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.24
          */
         supportedOperatingModes: FixedAttribute(
-            38,
+            0x26,
             TlvBitmap(TlvUInt16, SupportedOperatingModes),
             { default: BitsFromPartial(SupportedOperatingModes, { vacation: true, privacy: true, passage: true }) }
         ),
@@ -1454,7 +1465,7 @@ export const DoorLockBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.28
          */
-        defaultConfigurationRegister: OptionalAttribute(39, TlvBitmap(TlvUInt16, DefaultConfigurationRegister)),
+        defaultConfigurationRegister: OptionalAttribute(0x27, TlvBitmap(TlvUInt16, DefaultConfigurationRegister)),
 
         /**
          * Enable/disable local programming on the door lock of certain features (see LocalProgrammingFeatures
@@ -1465,7 +1476,7 @@ export const DoorLockBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.29
          */
         enableLocalProgramming: OptionalWritableAttribute(
-            40,
+            0x28,
             TlvBoolean,
             { default: true, writeAcl: AccessLevel.Administer }
         ),
@@ -1475,14 +1486,14 @@ export const DoorLockBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.30
          */
-        enableOneTouchLocking: OptionalWritableAttribute(41, TlvBoolean, { default: true, writeAcl: AccessLevel.Manage }),
+        enableOneTouchLocking: OptionalWritableAttribute(0x29, TlvBoolean, { default: true, writeAcl: AccessLevel.Manage }),
 
         /**
          * Enable/disable an inside LED that allows the user to see at a glance if the door is locked.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.31
          */
-        enableInsideStatusLed: OptionalWritableAttribute(42, TlvBoolean, { default: true, writeAcl: AccessLevel.Manage }),
+        enableInsideStatusLed: OptionalWritableAttribute(0x2a, TlvBoolean, { default: true, writeAcl: AccessLevel.Manage }),
 
         /**
          * Enable/disable a button inside the door that is used to put the lock into privacy mode. When the lock is in
@@ -1490,7 +1501,11 @@ export const DoorLockBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.32
          */
-        enablePrivacyModeButton: OptionalWritableAttribute(43, TlvBoolean, { default: true, writeAcl: AccessLevel.Manage }),
+        enablePrivacyModeButton: OptionalWritableAttribute(
+            0x2b,
+            TlvBoolean,
+            { default: true, writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * The local programming features that will be disabled when EnableLocalProgramming attribute is set to False.
@@ -1503,7 +1518,7 @@ export const DoorLockBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.33
          */
         localProgrammingFeatures: OptionalWritableAttribute(
-            44,
+            0x2c,
             TlvBitmap(TlvUInt8, LocalProgrammingFeatures),
             { writeAcl: AccessLevel.Administer }
         ),
@@ -1519,7 +1534,7 @@ export const DoorLockBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.39
          */
         alarmMask: OptionalWritableAttribute(
-            64,
+            0x40,
             TlvBitmap(TlvUInt16, AlarmMask),
             {
                 default: BitsFromPartial(AlarmMask, { lockingMechanismJammed: true, lockResetToFactoryDefaults: true, reserved: true, rfModulePowerCycled: true, tamperAlarmWrongCodeEntryLimit: true, tamperAlarmFrontEscutcheonRemovedFromMain: true, forcedDoorOpenUnderDoorLockedCondition: true }),
@@ -1532,17 +1547,17 @@ export const DoorLockBase = BaseClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        lockDoor: Command(0, TlvLockDoorRequest, 0, TlvNoResponse),
+        lockDoor: Command(0x0, TlvLockDoorRequest, 0x0, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        unlockDoor: Command(1, TlvUnlockDoorRequest, 1, TlvNoResponse),
+        unlockDoor: Command(0x1, TlvUnlockDoorRequest, 0x1, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        unlockWithTimeout: OptionalCommand(3, TlvUnlockWithTimeoutRequest, 3, TlvNoResponse)
+        unlockWithTimeout: OptionalCommand(0x3, TlvUnlockWithTimeoutRequest, 0x3, TlvNoResponse)
     },
 
     events: {
@@ -1552,7 +1567,7 @@ export const DoorLockBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.1
          */
-        doorLockAlarm: Event(0, EventPriority.Critical, TlvDoorLockAlarmEvent),
+        doorLockAlarm: Event(0x0, EventPriority.Critical, TlvDoorLockAlarmEvent),
 
         /**
          * The door lock server sends out a LockOperation event when the event is triggered by the various lock
@@ -1560,14 +1575,14 @@ export const DoorLockBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.3
          */
-        lockOperation: Event(2, EventPriority.Critical, TlvLockOperationEvent),
+        lockOperation: Event(0x2, EventPriority.Critical, TlvLockOperationEvent),
 
         /**
          * The door lock server sends out a LockOperationError event when a lock operation fails for various reasons.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.4
          */
-        lockOperationError: Event(3, EventPriority.Critical, TlvLockOperationErrorEvent)
+        lockOperationError: Event(0x3, EventPriority.Critical, TlvLockOperationErrorEvent)
     }
 });
 
@@ -1583,21 +1598,21 @@ export const DoorPositionSensorComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.4
          */
-        doorState: Attribute(3, TlvNullable(TlvUInt8)),
+        doorState: Attribute(0x3, TlvNullable(TlvEnum<DoorState>())),
 
         /**
          * This attribute holds the number of door open events that have occurred since it was last zeroed.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.5
          */
-        doorOpenEvents: OptionalWritableAttribute(4, TlvUInt32, { writeAcl: AccessLevel.Manage }),
+        doorOpenEvents: OptionalWritableAttribute(0x4, TlvUInt32, { writeAcl: AccessLevel.Manage }),
 
         /**
          * This attribute holds the number of door closed events that have occurred since it was last zeroed.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.6
          */
-        doorClosedEvents: OptionalWritableAttribute(5, TlvUInt32, { writeAcl: AccessLevel.Manage }),
+        doorClosedEvents: OptionalWritableAttribute(0x5, TlvUInt32, { writeAcl: AccessLevel.Manage }),
 
         /**
          * This attribute holds the number of minutes the door has been open since the last time it transitioned from
@@ -1605,7 +1620,7 @@ export const DoorPositionSensorComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.7
          */
-        openPeriod: OptionalWritableAttribute(6, TlvUInt16, { writeAcl: AccessLevel.Manage })
+        openPeriod: OptionalWritableAttribute(0x6, TlvUInt16, { writeAcl: AccessLevel.Manage })
     },
 
     events: {
@@ -1614,7 +1629,7 @@ export const DoorPositionSensorComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.2
          */
-        doorStateChange: Event(1, EventPriority.Critical, TlvDoorStateChangeEvent)
+        doorStateChange: Event(0x1, EventPriority.Critical, TlvDoorStateChangeEvent)
     }
 });
 
@@ -1628,7 +1643,7 @@ export const LoggingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.8
          */
-        numberOfLogRecordsSupported: FixedAttribute(16, TlvUInt16, { default: 0 }),
+        numberOfLogRecordsSupported: FixedAttribute(0x10, TlvUInt16, { default: 0 }),
 
         /**
          * Enable/disable event logging. When event logging is enabled, all event messages are stored on the lock for
@@ -1638,14 +1653,14 @@ export const LoggingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.21
          */
-        enableLogging: WritableAttribute(32, TlvBoolean, { default: true, writeAcl: AccessLevel.Administer })
+        enableLogging: WritableAttribute(0x20, TlvBoolean, { default: true, writeAcl: AccessLevel.Administer })
     },
 
     commands: {
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getLogRecord: Command(4, TlvNoArguments, 4, TlvNoArguments)
+        getLogRecord: Command(0x4, TlvNoArguments, 4, TlvNoArguments)
     }
 });
 
@@ -1659,7 +1674,7 @@ export const UserComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.9
          */
-        numberOfTotalUsersSupported: FixedAttribute(17, TlvUInt16, { default: 0 }),
+        numberOfTotalUsersSupported: FixedAttribute(0x11, TlvUInt16, { default: 0 }),
 
         /**
          * This bitmap contains a bit for every value of CredentialRuleEnum supported on this device.
@@ -1667,7 +1682,7 @@ export const UserComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.19
          */
         credentialRulesSupport: FixedAttribute(
-            27,
+            0x1b,
             TlvBitmap(TlvUInt8, CredentialRulesSupport),
             { default: BitsFromPartial(CredentialRulesSupport, { single: true }) }
         ),
@@ -1685,7 +1700,7 @@ export const UserComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.20
          */
-        numberOfCredentialsSupportedPerUser: FixedAttribute(28, TlvUInt8, { default: 0 }),
+        numberOfCredentialsSupportedPerUser: FixedAttribute(0x1c, TlvUInt8, { default: 0 }),
 
         /**
          * Number of minutes a PIN, RFID, Fingerprint, or other credential associated with a user of type ExpiringUser
@@ -1695,7 +1710,7 @@ export const UserComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.38
          */
         expiringUserTimeout: OptionalWritableAttribute(
-            53,
+            0x35,
             TlvUInt16.bound({ min: 1, max: 2880 }),
             { writeAcl: AccessLevel.Administer }
         )
@@ -1705,32 +1720,32 @@ export const UserComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        setUser: Command(26, TlvSetUserRequest, 26, TlvNoResponse),
+        setUser: Command(0x1a, TlvSetUserRequest, 0x1a, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getUser: Command(27, TlvGetUserRequest, 28, TlvGetUserResponse),
+        getUser: Command(0x1b, TlvGetUserRequest, 28, TlvGetUserResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        clearUser: Command(29, TlvClearUserRequest, 29, TlvNoResponse),
+        clearUser: Command(0x1d, TlvClearUserRequest, 0x1d, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        setCredential: Command(34, TlvSetCredentialRequest, 35, TlvSetCredentialResponse),
+        setCredential: Command(0x22, TlvSetCredentialRequest, 35, TlvSetCredentialResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getCredentialStatus: Command(36, TlvGetCredentialStatusRequest, 37, TlvGetCredentialStatusResponse),
+        getCredentialStatus: Command(0x24, TlvGetCredentialStatusRequest, 37, TlvGetCredentialStatusResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        clearCredential: Command(38, TlvClearCredentialRequest, 38, TlvNoResponse)
+        clearCredential: Command(0x26, TlvClearCredentialRequest, 0x26, TlvNoResponse)
     },
 
     events: {
@@ -1740,7 +1755,7 @@ export const UserComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.5.5
          */
-        lockUserChange: Event(4, EventPriority.Info, TlvLockUserChangeEvent)
+        lockUserChange: Event(0x4, EventPriority.Info, TlvLockUserChangeEvent)
     }
 });
 
@@ -1754,21 +1769,21 @@ export const PinCredentialComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.10
          */
-        numberOfPinUsersSupported: FixedAttribute(18, TlvUInt16, { default: 0 }),
+        numberOfPinUsersSupported: FixedAttribute(0x12, TlvUInt16, { default: 0 }),
 
         /**
          * An 8 bit value indicates the maximum length in bytes of a PIN Code on this device.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.15
          */
-        maxPinCodeLength: FixedAttribute(23, TlvUInt8),
+        maxPinCodeLength: FixedAttribute(0x17, TlvUInt8),
 
         /**
          * An 8 bit value indicates the minimum length in bytes of a PIN Code on this device.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.16
          */
-        minPinCodeLength: FixedAttribute(24, TlvUInt8),
+        minPinCodeLength: FixedAttribute(0x18, TlvUInt8),
 
         /**
          * Boolean set to True if it is ok for the door lock server to send PINs over the air. This attribute
@@ -1784,7 +1799,7 @@ export const PinCredentialComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.36
          */
-        sendPinOverTheAir: OptionalWritableAttribute(50, TlvBoolean, { default: true, writeAcl: AccessLevel.Administer })
+        sendPinOverTheAir: OptionalWritableAttribute(0x32, TlvBoolean, { default: true, writeAcl: AccessLevel.Administer })
     }
 });
 
@@ -1798,7 +1813,7 @@ export const RfidCredentialComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.11
          */
-        numberOfRfidUsersSupported: FixedAttribute(19, TlvUInt16, { default: 0 }),
+        numberOfRfidUsersSupported: FixedAttribute(0x13, TlvUInt16, { default: 0 }),
 
         /**
          * An 8 bit value indicates the maximum length in bytes of a RFID Code on this device. The value depends on the
@@ -1807,7 +1822,7 @@ export const RfidCredentialComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.17
          */
-        maxRfidCodeLength: FixedAttribute(25, TlvUInt8),
+        maxRfidCodeLength: FixedAttribute(0x19, TlvUInt8),
 
         /**
          * An 8 bit value indicates the minimum length in bytes of a RFID Code on this device. The value depends on the
@@ -1816,7 +1831,7 @@ export const RfidCredentialComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.18
          */
-        minRfidCodeLength: FixedAttribute(26, TlvUInt8)
+        minRfidCodeLength: FixedAttribute(0x1a, TlvUInt8)
     }
 });
 
@@ -1830,24 +1845,24 @@ export const WeekDayAccessSchedulesComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.12
          */
-        numberOfWeekDaySchedulesSupportedPerUser: FixedAttribute(20, TlvUInt8, { default: 0 })
+        numberOfWeekDaySchedulesSupportedPerUser: FixedAttribute(0x14, TlvUInt8, { default: 0 })
     },
 
     commands: {
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        setWeekDaySchedule: Command(11, TlvSetWeekDayScheduleRequest, 11, TlvNoResponse),
+        setWeekDaySchedule: Command(0xb, TlvSetWeekDayScheduleRequest, 0xb, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getWeekDaySchedule: Command(12, TlvGetWeekDayScheduleRequest, 12, TlvGetWeekDayScheduleResponse),
+        getWeekDaySchedule: Command(0xc, TlvGetWeekDayScheduleRequest, 12, TlvGetWeekDayScheduleResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        clearWeekDaySchedule: Command(13, TlvClearWeekDayScheduleRequest, 13, TlvNoResponse)
+        clearWeekDaySchedule: Command(0xd, TlvClearWeekDayScheduleRequest, 0xd, TlvNoResponse)
     }
 });
 
@@ -1861,24 +1876,24 @@ export const YearDayAccessSchedulesComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.13
          */
-        numberOfYearDaySchedulesSupportedPerUser: FixedAttribute(21, TlvUInt8, { default: 0 })
+        numberOfYearDaySchedulesSupportedPerUser: FixedAttribute(0x15, TlvUInt8, { default: 0 })
     },
 
     commands: {
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        setYearDaySchedule: Command(14, TlvSetYearDayScheduleRequest, 14, TlvNoResponse),
+        setYearDaySchedule: Command(0xe, TlvSetYearDayScheduleRequest, 0xe, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getYearDaySchedule: Command(15, TlvGetYearDayScheduleRequest, 15, TlvGetYearDayScheduleResponse),
+        getYearDaySchedule: Command(0xf, TlvGetYearDayScheduleRequest, 15, TlvGetYearDayScheduleResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        clearYearDaySchedule: Command(16, TlvClearYearDayScheduleRequest, 16, TlvNoResponse)
+        clearYearDaySchedule: Command(0x10, TlvClearYearDayScheduleRequest, 0x10, TlvNoResponse)
     }
 });
 
@@ -1892,24 +1907,24 @@ export const HolidaySchedulesComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.14
          */
-        numberOfHolidaySchedulesSupported: FixedAttribute(22, TlvUInt8, { default: 0 })
+        numberOfHolidaySchedulesSupported: FixedAttribute(0x16, TlvUInt8, { default: 0 })
     },
 
     commands: {
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        setHolidaySchedule: Command(17, TlvSetHolidayScheduleRequest, 17, TlvNoResponse),
+        setHolidaySchedule: Command(0x11, TlvSetHolidayScheduleRequest, 0x11, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getHolidaySchedule: Command(18, TlvGetHolidayScheduleRequest, 18, TlvGetHolidayScheduleResponse),
+        getHolidaySchedule: Command(0x12, TlvGetHolidayScheduleRequest, 18, TlvGetHolidayScheduleResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        clearHolidaySchedule: Command(19, TlvClearHolidayScheduleRequest, 19, TlvNoResponse)
+        clearHolidaySchedule: Command(0x13, TlvClearHolidayScheduleRequest, 0x13, TlvNoResponse)
     }
 });
 
@@ -1932,11 +1947,7 @@ export const PinCredentialOrRfidCredentialComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.34
          */
-        wrongCodeEntryLimit: WritableAttribute(
-            48,
-            TlvUInt8.bound({ min: 1, max: 255 }),
-            { writeAcl: AccessLevel.Administer }
-        ),
+        wrongCodeEntryLimit: WritableAttribute(0x30, TlvUInt8.bound({ min: 1 }), { writeAcl: AccessLevel.Administer }),
 
         /**
          * The number of seconds that the lock shuts down following wrong code entry. Valid range is 1-255 seconds.
@@ -1947,8 +1958,8 @@ export const PinCredentialOrRfidCredentialComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.35
          */
         userCodeTemporaryDisableTime: WritableAttribute(
-            49,
-            TlvUInt8.bound({ min: 1, max: 255 }),
+            0x31,
+            TlvUInt8.bound({ min: 1 }),
             { writeAcl: AccessLevel.Administer }
         )
     }
@@ -1966,7 +1977,7 @@ export const CredentialOverTheAirAccessComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.37
          */
         requirePiNforRemoteOperation: OptionalWritableAttribute(
-            51,
+            0x33,
             TlvBoolean,
             { default: true, writeAcl: AccessLevel.Administer }
         )
@@ -1987,7 +1998,7 @@ export const NotificationAndPinCredentialComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.40
          */
         keypadOperationEventMask: OptionalWritableAttribute(
-            65,
+            0x41,
             TlvBitmap(TlvUInt16, KeypadOperationEventMask),
             {
                 default: BitsFromPartial(KeypadOperationEventMask, { unknownOrManufacturerSpecificKeypadOperationEvent: true, lockSourceKeypad: true, unlockSourceKeypad: true, lockSourceKeypadErrorInvalidPin: true, lockSourceKeypadErrorInvalidSchedule: true, unlockSourceKeypadErrorInvalidCode: true, unlockSourceKeypadErrorInvalidSchedule: true, nonAccessUserOperationEventSourceKeypad: true }),
@@ -2004,10 +2015,10 @@ export const NotificationAndPinCredentialComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.44
          */
         keypadProgrammingEventMask: OptionalWritableAttribute(
-            69,
+            0x45,
             TlvBitmap(TlvUInt16, KeypadProgrammingEventMask),
             {
-                default: BitsFromPartial(KeypadProgrammingEventMask, { unknownOrManufacturerSpecificKeypadProgrammingEvent: true, programmingPinCodeChangedSourceKeypad: true, pinAddedSourceKeypad: true, pinClearedSourceKeypad: true, pinChangedSourceKeypad: true }),
+                default: BitsFromPartial(KeypadProgrammingEventMask, { unknown: true, pinCodeChanged: true, pinAdded: true, pinCleared: true, pinChanged: true }),
                 writeAcl: AccessLevel.Administer
             }
         )
@@ -2030,7 +2041,7 @@ export const NotificationComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.41
          */
         remoteOperationEventMask: OptionalWritableAttribute(
-            66,
+            0x42,
             TlvBitmap(TlvUInt16, RemoteOperationEventMask),
             {
                 default: BitsFromPartial(RemoteOperationEventMask, { unknownOrManufacturerSpecificRemoteOperationEvent: true, lockSourceRemote: true, unlockSourceRemote: true, lockSourceRemoteErrorInvalidCode: true, lockSourceRemoteErrorInvalidSchedule: true, unlockSourceRemoteErrorInvalidCode: true, unlockSourceRemoteErrorInvalidSchedule: true }),
@@ -2047,7 +2058,7 @@ export const NotificationComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.42
          */
         manualOperationEventMask: OptionalWritableAttribute(
-            67,
+            0x43,
             TlvBitmap(TlvUInt16, ManualOperationEventMask),
             {
                 default: BitsFromPartial(ManualOperationEventMask, { unknownOrManufacturerSpecificManualOperationEvent: true, thumbturnLock: true, thumbturnUnlock: true, oneTouchLock: true, keyLock: true, keyUnlock: true, autoLock: true, scheduleLock: true, scheduleUnlock: true, manualLock: true, manualUnlock: true }),
@@ -2064,10 +2075,10 @@ export const NotificationComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.45
          */
         remoteProgrammingEventMask: OptionalWritableAttribute(
-            70,
+            0x46,
             TlvBitmap(TlvUInt16, RemoteProgrammingEventMask),
             {
-                default: BitsFromPartial(RemoteProgrammingEventMask, { unknownOrManufacturerSpecificRemoteProgrammingEvent: true, pinAddedSourceRemote: true, pinClearedSourceRemote: true, pinChangedSourceRemote: true, rfidCodeAddedSourceRemote: true, rfidCodeClearedSourceRemote: true }),
+                default: BitsFromPartial(RemoteProgrammingEventMask, { unknown: true, pinAdded: true, pinCleared: true, pinChanged: true, rfidCodeAdded: true, rfidCodeCleared: true }),
                 writeAcl: AccessLevel.Administer
             }
         )
@@ -2088,7 +2099,7 @@ export const NotificationAndRfidCredentialComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.43
          */
         rfidOperationEventMask: OptionalWritableAttribute(
-            68,
+            0x44,
             TlvBitmap(TlvUInt16, RfidOperationEventMask),
             {
                 default: BitsFromPartial(RfidOperationEventMask, { unknownOrManufacturerSpecificKeypadOperationEvent: true, lockSourceRfid: true, unlockSourceRfid: true, lockSourceRfidErrorInvalidRfidId: true, lockSourceRfidErrorInvalidSchedule: true, unlockSourceRfidErrorInvalidRfidId: true, unlockSourceRfidErrorInvalidSchedule: true }),
@@ -2097,9 +2108,21 @@ export const NotificationAndRfidCredentialComponent = ClusterComponent({
         ),
 
         /**
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3
+         * Event mask used to turn on and off RFID programming events. This mask DOES NOT apply to the storing of
+         * events in the event log. This mask only applies to the Programming Event Notification Command.
+         *
+         * This mask DOES NOT apply to the Events mechanism of this cluster.
+         *
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.46
          */
-        rfidPro: OptionalWritableAttribute(71, TlvUInt16, { writeAcl: AccessLevel.Administer })
+        rfidProgrammingEventMask: OptionalWritableAttribute(
+            0x47,
+            TlvBitmap(TlvUInt16, RfidProgrammingEventMask),
+            {
+                default: BitsFromPartial(RfidProgrammingEventMask, { unknown: true, idAdded: true, idCleared: true }),
+                writeAcl: AccessLevel.Administer
+            }
+        )
     }
 });
 
@@ -2111,22 +2134,22 @@ export const PinCredentialNotUserComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        setPinCode: Command(5, TlvNoArguments, 5, TlvNoResponse),
+        setPinCode: Command(0x5, TlvNoArguments, 0x5, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getPinCode: Command(6, TlvNoArguments, 6, TlvNoArguments),
+        getPinCode: Command(0x6, TlvNoArguments, 6, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        clearPinCode: Command(7, TlvNoArguments, 7, TlvNoResponse),
+        clearPinCode: Command(0x7, TlvNoArguments, 0x7, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        clearAllPinCodes: Command(8, TlvNoArguments, 8, TlvNoResponse)
+        clearAllPinCodes: Command(0x8, TlvNoArguments, 0x8, TlvNoResponse)
     }
 });
 
@@ -2139,22 +2162,22 @@ export const PinCredentialAndRfidCredentialNotUserComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        setUserStatus: OptionalCommand(9, TlvNoArguments, 9, TlvNoResponse),
+        setUserStatus: OptionalCommand(0x9, TlvNoArguments, 0x9, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getUserStatus: OptionalCommand(10, TlvNoArguments, 10, TlvNoArguments),
+        getUserStatus: OptionalCommand(0xa, TlvNoArguments, 10, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        setUserType: OptionalCommand(20, TlvNoArguments, 20, TlvNoResponse),
+        setUserType: OptionalCommand(0x14, TlvNoArguments, 0x14, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getUserType: OptionalCommand(21, TlvNoArguments, 21, TlvNoArguments)
+        getUserType: OptionalCommand(0x15, TlvNoArguments, 21, TlvNoArguments)
     }
 });
 
@@ -2171,22 +2194,22 @@ export const RfidCredentialNotUserComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        setRfidCode: Command(22, TlvNoArguments, 22, TlvNoResponse),
+        setRfidCode: Command(0x16, TlvNoArguments, 0x16, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getRfidCode: Command(23, TlvNoArguments, 23, TlvNoArguments),
+        getRfidCode: Command(0x17, TlvNoArguments, 23, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        clearRfidCode: Command(24, TlvNoArguments, 24, TlvNoResponse),
+        clearRfidCode: Command(0x18, TlvNoArguments, 0x18, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        clearAllRfidCodes: Command(25, TlvNoArguments, 25, TlvNoResponse)
+        clearAllRfidCodes: Command(0x19, TlvNoArguments, 0x19, TlvNoResponse)
     }
 });
 

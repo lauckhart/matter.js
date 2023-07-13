@@ -397,10 +397,26 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "AlarmMask", id: 0x22, type: "map16", access: "R V", conformance: "D",
+            tag: "attribute", name: "AlarmMask", id: 0x1d, type: "map16", access: "R V", conformance: "D",
             constraint: "desc", default: 0, quality: "N",
-            xref: { document: "cluster", section: "4.2.7" }
+            xref: { document: "cluster", section: "4.2.7" },
+
+            children: [
+                {
+                    tag: "datatype", name: "InitializationFailure", constraint: "0",
+                    details: "The device failed to complete initialization at powerup"
+                },
+                {
+                    tag: "datatype", name: "HardwareFailure", constraint: "1",
+                    details: "The device has detected a hardware fault"
+                },
+                {
+                    tag: "datatype", name: "SelfCalibrationFailure", constraint: "2",
+                    details: "The device was unable to complete self calibration"
+                }
+            ]
         },
+
         {
             tag: "event", name: "SupplyVoltageLow", id: 0x0, access: "V", conformance: "O", priority: "info",
             xref: { document: "cluster", section: "4.2.8" }

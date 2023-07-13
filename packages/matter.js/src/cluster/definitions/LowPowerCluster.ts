@@ -29,6 +29,6 @@ export const LowPowerCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.9.3.1
          */
-        sleep: Command(0, TlvNoArguments, 0, TlvNoResponse)
+        sleep: Command(0x0, TlvNoArguments, 0x0, TlvNoResponse)
     }
 });

@@ -930,7 +930,7 @@ export const PowerSourceBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.1
          */
-        status: Attribute(0, TlvEnum<PowerSourceStatus>()),
+        status: Attribute(0x0, TlvEnum<PowerSourceStatus>()),
 
         /**
          * This attribute shall indicate the relative preference with which the Node will select this source to provide
@@ -941,7 +941,7 @@ export const PowerSourceBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.2
          */
-        order: Attribute(1, TlvUInt8, { persistent: true }),
+        order: Attribute(0x1, TlvUInt8, { persistent: true }),
 
         /**
          * This attribute shall provide a user-facing description of this source, used to distinguish it from other
@@ -950,7 +950,7 @@ export const PowerSourceBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.3
          */
-        description: FixedAttribute(2, TlvString.bound({ maxLength: 60 }))
+        description: FixedAttribute(0x2, TlvString.bound({ maxLength: 60 }))
     }
 });
 
@@ -967,7 +967,7 @@ export const WiredComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.4
          */
-        wiredAssessedInputVoltage: OptionalAttribute(3, TlvNullable(TlvUInt32), { omitChanges: true }),
+        wiredAssessedInputVoltage: OptionalAttribute(0x3, TlvNullable(TlvUInt32), { omitChanges: true }),
 
         /**
          * This attribute shall indicate the assessed frequency of the voltage, currently provided by the hard-wired
@@ -977,7 +977,7 @@ export const WiredComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.5
          */
-        wiredAssessedInputFrequency: OptionalAttribute(4, TlvNullable(TlvUInt16), { omitChanges: true }),
+        wiredAssessedInputFrequency: OptionalAttribute(0x4, TlvNullable(TlvUInt16), { omitChanges: true }),
 
         /**
          * This attribute shall indicate the type of current the Node expects to be provided by the hard- wired source
@@ -985,7 +985,7 @@ export const WiredComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.6
          */
-        wiredCurrentType: FixedAttribute(5, TlvEnum<WiredCurrentType>()),
+        wiredCurrentType: FixedAttribute(0x5, TlvEnum<WiredCurrentType>()),
 
         /**
          * This attribute shall indicate the assessed instantaneous current draw of the Node on the hard- wired source,
@@ -995,7 +995,7 @@ export const WiredComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.7
          */
-        wiredAssessedCurrent: OptionalAttribute(6, TlvNullable(TlvUInt32), { omitChanges: true }),
+        wiredAssessedCurrent: OptionalAttribute(0x6, TlvNullable(TlvUInt32), { omitChanges: true }),
 
         /**
          * This attribute shall indicate the nominal voltage, printed as part of the Node’s regulatory compliance label
@@ -1003,7 +1003,7 @@ export const WiredComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.8
          */
-        wiredNominalVoltage: OptionalFixedAttribute(7, TlvUInt32),
+        wiredNominalVoltage: OptionalFixedAttribute(0x7, TlvUInt32),
 
         /**
          * This attribute shall indicate the maximum current, printed as part of the Node’s regulatory compliance label
@@ -1011,14 +1011,14 @@ export const WiredComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.9
          */
-        wiredMaximumCurrent: OptionalFixedAttribute(8, TlvUInt32),
+        wiredMaximumCurrent: OptionalFixedAttribute(0x8, TlvUInt32),
 
         /**
          * This attribute shall indicate if the Node detects that the hard-wired power source is properly connected.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.10
          */
-        wiredPresent: OptionalAttribute(9, TlvBoolean),
+        wiredPresent: OptionalAttribute(0x9, TlvBoolean),
 
         /**
          * This attribute shall indicate the set of wired faults currently detected by the Node on this power source.
@@ -1032,7 +1032,7 @@ export const WiredComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.11
          */
-        activeWiredFaults: OptionalAttribute(10, TlvArray(TlvEnum<WiredFault>(), { length: 8 }), { default: [] })
+        activeWiredFaults: OptionalAttribute(0xa, TlvArray(TlvEnum<WiredFault>(), { length: 8 }), { default: [] })
     },
 
     events: {
@@ -1042,7 +1042,7 @@ export const WiredComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.7.1
          */
-        wiredFaultChange: OptionalEvent(0, EventPriority.Info, TlvWiredFaultChangeEvent)
+        wiredFaultChange: OptionalEvent(0x0, EventPriority.Info, TlvWiredFaultChangeEvent)
     }
 });
 
@@ -1057,7 +1057,7 @@ export const BatteryComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.12
          */
-        batVoltage: OptionalAttribute(11, TlvNullable(TlvUInt32), { omitChanges: true }),
+        batVoltage: OptionalAttribute(0xb, TlvNullable(TlvUInt32), { omitChanges: true }),
 
         /**
          * This attribute shall indicate the estimated percentage of battery charge remaining until the battery will no
@@ -1067,7 +1067,7 @@ export const BatteryComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.13
          */
-        batPercentRemaining: OptionalAttribute(12, TlvNullable(TlvUInt8.bound({ min: 0, max: 200 })), { omitChanges: true }),
+        batPercentRemaining: OptionalAttribute(0xc, TlvNullable(TlvUInt8.bound({ max: 200 })), { omitChanges: true }),
 
         /**
          * This attribute shall indicate the estimated time in seconds before the battery will no longer be able to
@@ -1075,7 +1075,7 @@ export const BatteryComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.14
          */
-        batTimeRemaining: OptionalAttribute(13, TlvNullable(TlvUInt32), { omitChanges: true }),
+        batTimeRemaining: OptionalAttribute(0xd, TlvNullable(TlvUInt32), { omitChanges: true }),
 
         /**
          * This attribute shall indicate a coarse ranking of the charge level of the battery, used to indicate when
@@ -1083,7 +1083,7 @@ export const BatteryComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.15
          */
-        batChargeLevel: Attribute(14, TlvEnum<BatChargeLevel>()),
+        batChargeLevel: Attribute(0xe, TlvEnum<BatChargeLevel>()),
 
         /**
          * This attribute shall indicate if the battery needs to be replaced. Replacement may be simple routine
@@ -1092,21 +1092,21 @@ export const BatteryComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.16
          */
-        batReplacementNeeded: Attribute(15, TlvBoolean),
+        batReplacementNeeded: Attribute(0xf, TlvBoolean),
 
         /**
          * This attribute shall indicate the replaceability of the battery as specified in BatReplaceabilityEnum.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.17
          */
-        batReplaceability: FixedAttribute(16, TlvEnum<BatReplaceability>()),
+        batReplaceability: FixedAttribute(0x10, TlvEnum<BatReplaceability>()),
 
         /**
          * This attribute shall indicate whether the Node detects that the batteries are properly installed.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.18
          */
-        batPresent: OptionalAttribute(17, TlvBoolean),
+        batPresent: OptionalAttribute(0x11, TlvBoolean),
 
         /**
          * This attribute shall indicate the set of battery faults currently detected by the Node on this power source.
@@ -1120,7 +1120,7 @@ export const BatteryComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.19
          */
-        activeBatFaults: OptionalAttribute(18, TlvArray(TlvEnum<BatFault>(), { length: 8 }), { default: [] })
+        activeBatFaults: OptionalAttribute(0x12, TlvArray(TlvEnum<BatFault>(), { length: 8 }), { default: [] })
     },
 
     events: {
@@ -1136,7 +1136,7 @@ export const BatteryComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.7.2
          */
-        batFaultChange: OptionalEvent(1, EventPriority.Info, TlvBatFaultChangeEvent)
+        batFaultChange: OptionalEvent(0x1, EventPriority.Info, TlvBatFaultChangeEvent)
     }
 });
 
@@ -1151,7 +1151,7 @@ export const ReplaceableComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.20
          */
-        batReplacementDescription: FixedAttribute(19, TlvString.bound({ maxLength: 60 })),
+        batReplacementDescription: FixedAttribute(0x13, TlvString.bound({ maxLength: 60 })),
 
         /**
          * This attribute shall indicate the ID of the common or colloquial designation of the battery, as specified in
@@ -1159,7 +1159,7 @@ export const ReplaceableComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.21
          */
-        batCommonDesignation: OptionalFixedAttribute(20, TlvEnum<BatCommonDesignation>()),
+        batCommonDesignation: OptionalFixedAttribute(0x14, TlvEnum<BatCommonDesignation>()),
 
         /**
          * This attribute shall indicate the string representing the ANSI designation for the battery as specified in
@@ -1167,7 +1167,7 @@ export const ReplaceableComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.22
          */
-        batAnsiDesignation: OptionalFixedAttribute(21, TlvString.bound({ maxLength: 20 })),
+        batAnsiDesignation: OptionalFixedAttribute(0x15, TlvString.bound({ maxLength: 20 })),
 
         /**
          * This attribute shall indicate the string representing the IEC designation for the battery as specified in
@@ -1175,7 +1175,7 @@ export const ReplaceableComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.23
          */
-        batIecDesignation: OptionalFixedAttribute(22, TlvString.bound({ maxLength: 20 })),
+        batIecDesignation: OptionalFixedAttribute(0x16, TlvString.bound({ maxLength: 20 })),
 
         /**
          * This attribute shall indicate the ID of the preferred chemistry of the battery source as specified in
@@ -1183,7 +1183,7 @@ export const ReplaceableComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.24
          */
-        batApprovedChemistry: OptionalFixedAttribute(23, TlvEnum<BatApprovedChemistry>()),
+        batApprovedChemistry: OptionalFixedAttribute(0x17, TlvEnum<BatApprovedChemistry>()),
 
         /**
          * This attribute shall indicate the preferred minimum charge capacity rating in mAh of individual, user- or
@@ -1191,7 +1191,7 @@ export const ReplaceableComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.25
          */
-        batCapacity: OptionalFixedAttribute(24, TlvUInt32),
+        batCapacity: OptionalFixedAttribute(0x18, TlvUInt32),
 
         /**
          * This attribute shall indicate the quantity of individual, user- or factory-serviceable battery cells or
@@ -1199,7 +1199,7 @@ export const ReplaceableComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.26
          */
-        batQuantity: FixedAttribute(25, TlvUInt8)
+        batQuantity: FixedAttribute(0x19, TlvUInt8)
     }
 });
 
@@ -1214,7 +1214,7 @@ export const RechargeableComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.27
          */
-        batChargeState: Attribute(26, TlvEnum<BatChargeState>()),
+        batChargeState: Attribute(0x1a, TlvEnum<BatChargeState>()),
 
         /**
          * This attribute shall indicate the estimated time in seconds before the battery source will be at full
@@ -1222,14 +1222,14 @@ export const RechargeableComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.28
          */
-        batTimeToFullCharge: OptionalAttribute(27, TlvNullable(TlvUInt32), { omitChanges: true }),
+        batTimeToFullCharge: OptionalAttribute(0x1b, TlvNullable(TlvUInt32), { omitChanges: true }),
 
         /**
          * This attribute shall indicate whether the Node can remain operational while the battery source is charging.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.29
          */
-        batFunctionalWhileCharging: Attribute(28, TlvBoolean),
+        batFunctionalWhileCharging: Attribute(0x1c, TlvBoolean),
 
         /**
          * This attribute shall indicate assessed current in mA (milliamps) presently supplied to charge the battery
@@ -1237,7 +1237,7 @@ export const RechargeableComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.30
          */
-        batChargingCurrent: OptionalAttribute(29, TlvNullable(TlvUInt32), { omitChanges: true }),
+        batChargingCurrent: OptionalAttribute(0x1d, TlvNullable(TlvUInt32), { omitChanges: true }),
 
         /**
          * This attribute shall indicate the set of charge faults currently detected by the Node on this power source.
@@ -1251,7 +1251,7 @@ export const RechargeableComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.31
          */
-        activeBatChargeFaults: OptionalAttribute(30, TlvArray(TlvEnum<BatChargeFault>(), { length: 16 }), { default: [] })
+        activeBatChargeFaults: OptionalAttribute(0x1e, TlvArray(TlvEnum<BatChargeFault>(), { length: 16 }), { default: [] })
     },
 
     events: {
@@ -1269,7 +1269,7 @@ export const RechargeableComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.7.3
          */
-        batChargeFaultChange: OptionalEvent(2, EventPriority.Info, TlvBatChargeFaultChangeEvent)
+        batChargeFaultChange: OptionalEvent(0x2, EventPriority.Info, TlvBatChargeFaultChangeEvent)
     }
 });
 

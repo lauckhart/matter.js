@@ -61,7 +61,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "StandardNamespace", id: 0x1, type: "enum16", access: "R V",
+            tag: "attribute", name: "StandardNamespace", id: 0x1, type: "uint16", access: "R V",
             conformance: "M", constraint: "desc", default: null, quality: "X F",
             details: "This attribute, when not null, shall indicate a single standard namespace for any standard semantic " +
                      "tag value supported in this or any other cluster instance with the same value of this attribute. A " +
