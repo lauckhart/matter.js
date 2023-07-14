@@ -48,7 +48,7 @@ LocalMatter.children.push({
                 { tag: "datatype", name: "TiltPositionAware", constraint: "4" },
                 { tag: "datatype", name: "LiftEncoderControlled", constraint: "5" },
                 { tag: "datatype", name: "TiltEncoderControlled", constraint: "6" }
-            ]            
+            ]
         },
 
         // Set the name, type and description of the OperationalStatus config

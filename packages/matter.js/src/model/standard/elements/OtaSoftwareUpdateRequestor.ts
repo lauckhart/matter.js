@@ -22,14 +22,14 @@ Matter.children.push({
             conformance: "M", constraint: "desc", default: [],
 
             details: "This field is a list of ProviderLocationStruct whose entries shall be set by Administrators, either " +
-                     "during Commissioning or at a later time, to set the Provider Location for the default OTA Provider " +
-                     "Node to use for software updates on a given Fabric." +
-                     "\n" +
-                     "There shall NOT be more than one entry per Fabric. On a list update that would introduce more than " +
-                     "one entry per fabric, the write shall fail with CONSTRAINT_ERROR status code." +
-                     "\n" +
-                     "Provider Locations obtained using the AnnounceOTAProvider command shall NOT overwrite values set in " +
-                     "the DefaultOTAProviders attribute.",
+                "during Commissioning or at a later time, to set the Provider Location for the default OTA Provider " +
+                "Node to use for software updates on a given Fabric." +
+                "\n" +
+                "There shall NOT be more than one entry per Fabric. On a list update that would introduce more than " +
+                "one entry per fabric, the write shall fail with CONSTRAINT_ERROR status code." +
+                "\n" +
+                "Provider Locations obtained using the AnnounceOTAProvider command shall NOT overwrite values set in " +
+                "the DefaultOTAProviders attribute.",
 
             xref: { document: "core", section: "11.19.7.5.1" },
             children: [{ tag: "datatype", name: "entry", type: "ProviderLocationStruct" }]
@@ -39,9 +39,9 @@ Matter.children.push({
             tag: "attribute", name: "UpdatePossible", id: 0x1, type: "bool", access: "R V", conformance: "M",
             default: true,
             details: "This field shall be set to True if the OTA Requestor is currently able to be updated. Otherwise, it " +
-                     "shall be set to False in case of any condition preventing update being possible, such as " +
-                     "insufficient capacity of an internal battery. This field is merely informational for diagnostics " +
-                     "purposes and shall NOT affect the responses provided by an OTA Provider to an OTA Requestor.",
+                "shall be set to False in case of any condition preventing update being possible, such as " +
+                "insufficient capacity of an internal battery. This field is merely informational for diagnostics " +
+                "purposes and shall NOT affect the responses provided by an OTA Provider to an OTA Requestor.",
             xref: { document: "core", section: "11.19.7.5.2" }
         },
 
@@ -49,9 +49,9 @@ Matter.children.push({
             tag: "attribute", name: "UpdateState", id: 0x2, type: "UpdateStateEnum", access: "R V",
             conformance: "M", default: 0,
             details: "This field shall reflect the current state of the OTA Requestor with regards to obtaining software " +
-                     "updates. See Section 11.19.7.4.2, “UpdateStateEnum” for possible values." +
-                     "\n" +
-                     "This field SHOULD be updated in a timely manner whenever OTA Requestor internal state updates.",
+                "updates. See Section 11.19.7.4.2, “UpdateStateEnum” for possible values." +
+                "\n" +
+                "This field SHOULD be updated in a timely manner whenever OTA Requestor internal state updates.",
             xref: { document: "core", section: "11.19.7.5.3" }
         },
 
@@ -60,15 +60,15 @@ Matter.children.push({
             conformance: "M", constraint: "0 to 100", default: null, quality: "X",
 
             details: "This field shall reflect the percentage value of progress, relative to the current UpdateState, if " +
-                     "applicable to the state." +
-                     "\n" +
-                     "The value of this field shall be null if a progress indication does not apply to the current state." +
-                     "\n" +
-                     "A value of 0 shall indicate that the beginning has occurred. A value of 100 shall indicate " +
-                     "completion." +
-                     "\n" +
-                     "This field may be updated infrequently. Some care SHOULD be taken by Nodes to avoid over- reporting " +
-                     "progress when this attribute is part of a subscription.",
+                "applicable to the state." +
+                "\n" +
+                "The value of this field shall be null if a progress indication does not apply to the current state." +
+                "\n" +
+                "A value of 0 shall indicate that the beginning has occurred. A value of 100 shall indicate " +
+                "completion." +
+                "\n" +
+                "This field may be updated infrequently. Some care SHOULD be taken by Nodes to avoid over- reporting " +
+                "progress when this attribute is part of a subscription.",
 
             xref: { document: "core", section: "11.19.7.5.4" }
         },
@@ -76,7 +76,7 @@ Matter.children.push({
         {
             tag: "event", name: "StateTransition", id: 0x0, access: "V", conformance: "M", priority: "info",
             details: "This event shall be generated when a change of the UpdateState attribute occurs due to an OTA " +
-                     "Requestor moving through the states necessary to query for updates.",
+                "Requestor moving through the states necessary to query for updates.",
             xref: { document: "core", section: "11.19.7.7.1" },
 
             children: [
@@ -93,8 +93,8 @@ Matter.children.push({
         {
             tag: "event", name: "VersionApplied", id: 0x1, access: "V", conformance: "M", priority: "critical",
             details: "This event shall be generated whenever a new version starts executing after being applied due to a " +
-                     "software update. This event SHOULD be generated even if a software update was done using means " +
-                     "outside of this cluster.",
+                "software update. This event SHOULD be generated even if a software update was done using means " +
+                "outside of this cluster.",
             xref: { document: "core", section: "11.19.7.7.6" },
             children: [
                 { tag: "datatype", name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" },
@@ -105,9 +105,9 @@ Matter.children.push({
         {
             tag: "event", name: "DownloadError", id: 0x2, access: "V", conformance: "M", priority: "info",
             details: "This event shall be generated whenever an error occurs during OTA Requestor download operation." +
-                     "\n" +
-                     "This field shall be set to the value of the SoftwareVersion being downloaded, matching the " +
-                     "SoftwareVersion field of the QueryImageResponse that caused the failing download to take place.",
+                "\n" +
+                "This field shall be set to the value of the SoftwareVersion being downloaded, matching the " +
+                "SoftwareVersion field of the QueryImageResponse that caused the failing download to take place.",
             xref: { document: "core", section: "11.19.7.7.9" },
 
             children: [
@@ -129,13 +129,13 @@ Matter.children.push({
             direction: "request", response: "status",
 
             details: "This command may be invoked by Administrators to announce the presence of a particular OTA Provider." +
-                     "\n" +
-                     "This command shall be scoped to the accessing fabric." +
-                     "\n" +
-                     "If the accessing fabric index is 0, this command shall fail with an UNSUPPORTED_ACCESS status code." +
-                     "\n" +
-                     "This field shall contain the Node ID of a Node implementing the OTA Provider cluster server, on the " +
-                     "accessing fabric.",
+                "\n" +
+                "This command shall be scoped to the accessing fabric." +
+                "\n" +
+                "If the accessing fabric index is 0, this command shall fail with an UNSUPPORTED_ACCESS status code." +
+                "\n" +
+                "This field shall contain the Node ID of a Node implementing the OTA Provider cluster server, on the " +
+                "accessing fabric.",
 
             xref: { document: "core", section: "11.19.7.6.1" },
 

@@ -9,7 +9,7 @@ import { LocalMatter } from "../local.js";
 LocalMatter.children.push({
     tag: "cluster",
     name: "GroupKeyManagement",
-    
+
     children: [
         {
             tag: "command", id: 0x4, name: "KeySetReadAllIndices",

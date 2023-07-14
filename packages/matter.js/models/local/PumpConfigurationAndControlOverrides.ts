@@ -9,7 +9,7 @@ import { LocalMatter } from "../local.js";
 LocalMatter.children.push({
     tag: "cluster",
     name: "PumpConfigurationAndControl",
-    
+
     children: [
         // The spec only defines long-form names for these bits in a
         // non-standard table we don't bother parsing because it contains

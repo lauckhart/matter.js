@@ -27,8 +27,8 @@ Matter.children.push({
         {
             tag: "event", name: "StateChange", id: 0x0, access: "V", conformance: "O", priority: "info",
             details: "This event shall be generated when the StateValue attribute changes." +
-                     "\n" +
-                     "The StateValue field shall indicate the new value of the StateValue attribute.",
+                "\n" +
+                "The StateValue field shall indicate the new value of the StateValue attribute.",
             xref: { document: "cluster", section: "1.7.5.1" },
             children: [{ tag: "datatype", name: "StateValue", id: 0x0, type: "bool", conformance: "M" }]
         }

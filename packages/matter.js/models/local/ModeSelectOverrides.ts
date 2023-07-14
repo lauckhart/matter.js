@@ -9,7 +9,7 @@ import { LocalMatter } from "../local.js";
 LocalMatter.children.push({
     tag: "cluster",
     name: "ModeSelect",
-    
+
     children: [
         // Change type from enum16 to uint16.  The only reason for this is to
         // get rid of the the CHILDLESS_ENUM validation error.  It's absolutely

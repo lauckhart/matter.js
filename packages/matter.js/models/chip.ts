@@ -15,8 +15,8 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "AccessControl", id: 0x1f, description: "Access Control",
             details: "The Access Control Cluster exposes a data model view of a Node's Access Control List (ACL), which " +
-                     "codifies the rules used to manage and enforce Access Control for the Node's endpoints and their " +
-                     "associated cluster instances.",
+                "codifies the rules used to manage and enforce Access Control for the Node's endpoints and their " +
+                "associated cluster instances.",
 
             children: [
                 {
@@ -149,9 +149,9 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "AccountLogin", id: 0x50e, description: "Account Login",
             details: "This cluster provides commands that facilitate user account login on a Content App or a node. For " +
-                     "example, a Content App running on a Video Player device, which is represented as an endpoint (see " +
-                     "[TV Architecture]), can use this cluster to help make the user account on the Content App match the " +
-                     "user account on the Client.",
+                "example, a Content App running on a Video Player device, which is represented as an endpoint (see " +
+                "[TV Architecture]), can use this cluster to help make the user account on the Content App match the " +
+                "user account on the Client.",
 
             children: [
                 {
@@ -179,7 +179,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "Actions", id: 0x25, description: "Actions",
             details: "This cluster provides a standardized way for a Node (typically a Bridge, but could be any Node) to " +
-                     "expose action information.",
+                "expose action information.",
 
             children: [
                 {
@@ -448,7 +448,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "ApplicationBasic", id: 0x50d, description: "Application Basic",
             details: "This cluster provides information about an application running on a TV or media player device which " +
-                     "is represented as an endpoint.",
+                "is represented as an endpoint.",
 
             children: [
                 { tag: "attribute", name: "ApplicationVendorName", id: 0x0, type: "string", conformance: "O", default: "" },
@@ -490,7 +490,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "ApplicationLauncher", id: 0x50c, description: "Application Launcher",
             details: "This cluster provides an interface for launching content on a media player device such as a TV or " +
-                     "Speaker.",
+                "Speaker.",
 
             children: [
                 {
@@ -658,9 +658,9 @@ export const ChipMatter: MatterElement = {
             tag: "cluster", name: "BasicInformation", id: 0x28, description: "Basic Information",
             singleton: true,
             details: "This cluster provides attributes and events for determining basic information about Nodes, which " +
-                     "supports both Commissioning and operational determination of Node characteristics, such as Vendor " +
-                     "ID, Product ID and serial number, which apply to the whole Node. Also allows setting user device " +
-                     "information such as location.",
+                "supports both Commissioning and operational determination of Node characteristics, such as Vendor " +
+                "ID, Product ID and serial number, which apply to the whole Node. Also allows setting user device " +
+                "information such as location.",
 
             children: [
                 { tag: "attribute", name: "DataModelRevision", id: 0x0, type: "uint16", conformance: "M" },
@@ -772,7 +772,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "Binding", id: 0x1e, description: "Binding",
             details: "The Binding Cluster is meant to replace the support from the Zigbee Device Object (ZDO) for " +
-                     "supporting the binding table.",
+                "supporting the binding table.",
 
             children: [
                 {
@@ -810,10 +810,10 @@ export const ChipMatter: MatterElement = {
             tag: "cluster", name: "BridgedDeviceBasicInformation", id: 0x39,
             description: "Bridged Device Basic Information",
             details: "This Cluster serves two purposes towards a Node communicating with a Bridge: indicate that the " +
-                     "functionality on the Endpoint where it is placed (and its Parts) is bridged from a non-CHIP " +
-                     "technology; and provide a centralized collection of attributes that the Node MAY collect to aid in " +
-                     "conveying information regarding the Bridged Device to a user, such as the vendor name, the model " +
-                     "name, or user-assigned name.",
+                "functionality on the Endpoint where it is placed (and its Parts) is bridged from a non-CHIP " +
+                "technology; and provide a centralized collection of attributes that the Node MAY collect to aid in " +
+                "conveying information regarding the Bridged Device to a user, such as the vendor name, the model " +
+                "name, or user-assigned name.",
 
             children: [
                 { tag: "attribute", name: "VendorName", id: 0x1, type: "string", conformance: "O" },
@@ -1188,7 +1188,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "ClientMonitoring", id: 0x1046, description: "Client Monitoring",
             details: "Client Monitoring allows for ensuring that listed clients meet the required monitoring conditions " +
-                     "on the server.",
+                "on the server.",
 
             children: [
                 { tag: "attribute", name: "IdleModeInterval", id: 0x0, type: "uint32", conformance: "M", default: 18 },
@@ -1536,7 +1536,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "ContentLauncher", id: 0x50a, description: "Content Launcher",
             details: "This cluster provides an interface for launching content on a media player device such as a TV or " +
-                     "Speaker.",
+                "Speaker.",
 
             children: [
                 {
@@ -1675,7 +1675,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "Descriptor", id: 0x1d, description: "Descriptor",
             details: "The Descriptor Cluster is meant to replace the support from the Zigbee Device Object (ZDO) for " +
-                     "describing a node, its endpoints and clusters.",
+                "describing a node, its endpoints and clusters.",
 
             children: [
                 {
@@ -1708,7 +1708,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "DiagnosticLogs", id: 0x32, description: "Diagnostic Logs",
             details: "The cluster provides commands for retrieving unstructured diagnostic logs from a Node that may be " +
-                     "used to aid in diagnostics.",
+                "used to aid in diagnostics.",
 
             children: [
                 {
@@ -2458,8 +2458,8 @@ export const ChipMatter: MatterElement = {
             tag: "cluster", name: "EthernetNetworkDiagnostics", id: 0x37,
             description: "Ethernet Network Diagnostics",
             details: "The Ethernet Network Diagnostics Cluster provides a means to acquire standardized diagnostics " +
-                     "metrics that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential " +
-                     "problems.",
+                "metrics that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential " +
+                "problems.",
 
             children: [
                 { tag: "attribute", name: "PhyRate", id: 0x0, type: "PhyRateEnum", conformance: "O", quality: "X" },
@@ -2577,7 +2577,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "FaultInjection", id: 0xfff1fc06, description: "Fault Injection",
             details: "The Fault Injection Cluster provide a means for a test harness to configure faults(for example " +
-                     "triggering a fault in the system).",
+                "triggering a fault in the system).",
 
             children: [
                 {
@@ -2619,7 +2619,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "FixedLabel", id: 0x40, description: "Fixed Label",
             details: "The Fixed Label Cluster provides a feature for the device to tag an endpoint with zero or more read " +
-                     "only labels.",
+                "only labels.",
 
             children: [
                 {
@@ -2753,8 +2753,8 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "GeneralDiagnostics", id: 0x33, description: "General Diagnostics",
             details: "The General Diagnostics Cluster, along with other diagnostics clusters, provide a means to acquire " +
-                     "standardized diagnostics metrics that MAY be used by a Node to assist a user or Administrative Node " +
-                     "in diagnosing potential problems.",
+                "standardized diagnostics metrics that MAY be used by a Node to assist a user or Administrative Node " +
+                "in diagnosing potential problems.",
 
             children: [
                 {
@@ -3157,7 +3157,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "IlluminanceMeasurement", id: 0x400, description: "Illuminance Measurement",
             details: "Attributes and commands for configuring the measurement of illuminance, and reporting illuminance " +
-                     "measurements.",
+                "measurements.",
 
             children: [
                 {
@@ -3177,7 +3177,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "KeypadInput", id: 0x509, description: "Keypad Input",
             details: "This cluster provides an interface for controlling a device like a TV using action commands such as " +
-                     "UP, DOWN, and SELECT.",
+                "UP, DOWN, and SELECT.",
 
             children: [
                 {
@@ -3297,7 +3297,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "LevelControl", id: 0x8, description: "Level Control",
             details: "Attributes and commands for controlling devices that can be set to a level between fully 'On' and " +
-                     "fully 'Off.'",
+                "fully 'Off.'",
 
             children: [
                 {
@@ -3458,9 +3458,9 @@ export const ChipMatter: MatterElement = {
             tag: "cluster", name: "LocalizationConfiguration", id: 0x2b,
             description: "Localization Configuration",
             details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
-                     "may have differing common languages, units of measurements, and numerical formatting standards. As " +
-                     "such, Nodes that visually or audibly convey information need a mechanism by which they can be " +
-                     "configured to use a user’s preferred language, units, etc",
+                "may have differing common languages, units of measurements, and numerical formatting standards. As " +
+                "such, Nodes that visually or audibly convey information need a mechanism by which they can be " +
+                "configured to use a user’s preferred language, units, etc",
 
             children: [
                 { tag: "attribute", name: "ActiveLocale", id: 0x0, type: "string", access: "RW", conformance: "M" },
@@ -3480,7 +3480,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "MediaInput", id: 0x507, description: "Media Input",
             details: "This cluster provides an interface for controlling the Input Selector on a media device such as a " +
-                     "TV.",
+                "TV.",
 
             children: [
                 {
@@ -3538,7 +3538,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "MediaPlayback", id: 0x506, description: "Media Playback",
             details: "This cluster provides an interface for controlling Media Playback (PLAY, PAUSE, etc) on a media " +
-                     "device such as a TV or Speaker.",
+                "device such as a TV or Speaker.",
 
             children: [
                 {
@@ -4036,7 +4036,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "OperationalCredentials", id: 0x3e, description: "Operational Credentials",
             details: "This cluster is used to add or remove Operational Credentials on a Commissionee or Node, as well as " +
-                     "manage the associated Fabrics.",
+                "manage the associated Fabrics.",
 
             children: [
                 {
@@ -4199,7 +4199,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "PowerSource", id: 0x2f, description: "Power Source",
             details: "This cluster is used to describe the configuration and capabilities of a physical power source that " +
-                     "provides power to the Node.",
+                "provides power to the Node.",
 
             children: [
                 { tag: "attribute", name: "PowerSourceStatus", id: 0x0, type: "PowerSourceStatusEnum", conformance: "M" },
@@ -4542,7 +4542,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "PressureMeasurement", id: 0x403, description: "Pressure Measurement",
             details: "Attributes and commands for configuring the measurement of pressure, and reporting pressure " +
-                     "measurements.",
+                "measurements.",
 
             children: [
                 {
@@ -4704,7 +4704,7 @@ export const ChipMatter: MatterElement = {
             tag: "cluster", name: "RelativeHumidityMeasurement", id: 0x405,
             description: "Relative Humidity Measurement",
             details: "Attributes and commands for configuring the measurement of relative humidity, and reporting " +
-                     "relative humidity measurements.",
+                "relative humidity measurements.",
 
             children: [
                 {
@@ -4960,7 +4960,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "SoftwareDiagnostics", id: 0x34, description: "Software Diagnostics",
             details: "The Software Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that " +
-                     "MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems.",
+                "MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems.",
 
             children: [
                 {
@@ -5002,12 +5002,12 @@ export const ChipMatter: MatterElement = {
             tag: "cluster", name: "Switch", id: 0x3b, description: "Switch",
 
             details: "This cluster exposes interactions with a switch device, for the purpose of using those interactions " +
-                     "by other devices. Two types of switch devices are supported: latching switch (e.g. rocker switch) " +
-                     "and momentary switch (e.g. push button), distinguished with their feature flags. Interactions with " +
-                     "the switch device are exposed as attributes (for the latching switch) and as events (for both types " +
-                     "of switches). An interested party MAY subscribe to these attributes/events and thus be informed of " +
-                     "the interactions, and can perform actions based on this, for example by sending commands to perform " +
-                     "an action such as controlling a light or a window shade.",
+                "by other devices. Two types of switch devices are supported: latching switch (e.g. rocker switch) " +
+                "and momentary switch (e.g. push button), distinguished with their feature flags. Interactions with " +
+                "the switch device are exposed as attributes (for the latching switch) and as events (for both types " +
+                "of switches). An interested party MAY subscribe to these attributes/events and thus be informed of " +
+                "the interactions, and can perform actions based on this, for example by sending commands to perform " +
+                "an action such as controlling a light or a window shade.",
 
             children: [
                 { tag: "attribute", name: "NumberOfPositions", id: 0x0, type: "uint8", conformance: "M", default: 2 },
@@ -5055,7 +5055,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "TargetNavigator", id: 0x505, description: "Target Navigator",
             details: "This cluster provides an interface for UX navigation within a set of targets on a device or " +
-                     "endpoint.",
+                "endpoint.",
 
             children: [
                 {
@@ -5106,7 +5106,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "TemperatureMeasurement", id: 0x402, description: "Temperature Measurement",
             details: "Attributes and commands for configuring the measurement of temperature, and reporting temperature " +
-                     "measurements.",
+                "measurements.",
 
             children: [
                 { tag: "attribute", name: "TempMeasuredValue", id: 0x0, type: "int16", conformance: "M", quality: "X" },
@@ -5433,7 +5433,7 @@ export const ChipMatter: MatterElement = {
             tag: "cluster", name: "ThermostatUserInterfaceConfiguration", id: 0x204,
             description: "Thermostat User Interface Configuration",
             details: "An interface for configuring the user interface of a thermostat (which may be remote from the " +
-                     "thermostat).",
+                "thermostat).",
 
             children: [
                 {
@@ -5470,7 +5470,7 @@ export const ChipMatter: MatterElement = {
             tag: "cluster", name: "ThreadNetworkDiagnostics", id: 0x35,
             description: "Thread Network Diagnostics",
             details: "The Thread Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics " +
-                     "that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems",
+                "that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems",
 
             children: [
                 { tag: "attribute", name: "Channel", id: 0x0, type: "uint16", conformance: "M", quality: "X" },
@@ -5698,9 +5698,9 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "TimeFormatLocalization", id: 0x2c, description: "Time Format Localization",
             details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
-                     "may have differing preferences for how dates and times are conveyed. As such, Nodes that visually " +
-                     "or audibly convey time information need a mechanism by which they can be configured to use a user’s " +
-                     "preferred format.",
+                "may have differing preferences for how dates and times are conveyed. As such, Nodes that visually " +
+                "or audibly convey time information need a mechanism by which they can be configured to use a user’s " +
+                "preferred format.",
 
             children: [
                 { tag: "attribute", name: "HourFormat", id: 0x0, type: "HourFormatEnum", access: "RW", conformance: "M" },
@@ -5745,7 +5745,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "TimeSynchronization", id: 0x38, description: "Time Synchronization",
             details: "Accurate time is required for a number of reasons, including scheduling, display and validating " +
-                     "security materials.",
+                "security materials.",
 
             children: [
                 { tag: "attribute", name: "UtcTime", id: 0x0, type: "epoch-us", conformance: "M", quality: "X" },
@@ -5842,9 +5842,9 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "UnitLocalization", id: 0x2d, description: "Unit Localization",
             details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
-                     "may have differing preferences for the units in which values are conveyed in communication to a " +
-                     "user. As such, Nodes that visually or audibly convey measurable values to the user need a mechanism " +
-                     "by which they can be configured to use a user’s preferred unit.",
+                "may have differing preferences for the units in which values are conveyed in communication to a " +
+                "user. As such, Nodes that visually or audibly convey measurable values to the user need a mechanism " +
+                "by which they can be configured to use a user’s preferred unit.",
 
             children: [
                 { tag: "attribute", name: "TemperatureUnit", id: 0x0, type: "TempUnitEnum", access: "RW", conformance: "O" },
@@ -5883,14 +5883,14 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "WakeOnLan", id: 0x503, description: "Wake on LAN",
             details: "This cluster provides an interface for managing low power mode on a device that supports the Wake " +
-                     "On LAN protocol.",
+                "On LAN protocol.",
             children: [{ tag: "attribute", name: "WakeOnLanMacAddress", id: 0x0, type: "string", conformance: "O" }]
         },
 
         {
             tag: "cluster", name: "WiFiNetworkDiagnostics", id: 0x36, description: "WiFi Network Diagnostics",
             details: "The Wi-Fi Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics " +
-                     "that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems.",
+                "that MAY be used by a Node to assist a user or Administrative Node in diagnosing potential problems.",
 
             children: [
                 { tag: "attribute", name: "Bssid", id: 0x0, type: "octstr", conformance: "M", quality: "X" },
@@ -6254,8 +6254,8 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "ElectricalMeasurement", id: 0xb04, description: "Electrical Measurement",
             details: "Attributes related to the electrical properties of a device. This cluster is used by power outlets " +
-                     "and other devices that need to provide instantaneous data as opposed to metrology data which should " +
-                     "be retrieved from the metering cluster..",
+                "and other devices that need to provide instantaneous data as opposed to metrology data which should " +
+                "be retrieved from the metering cluster..",
 
             children: [
                 { tag: "attribute", name: "MeasurementType", id: 0x0, type: "map32", conformance: "O", default: 0 },
@@ -6636,7 +6636,7 @@ export const ChipMatter: MatterElement = {
         {
             tag: "cluster", name: "BinaryInputBasic", id: 0xf, description: "Binary Input (Basic)",
             details: "An interface for reading the value of a binary measurement and accessing various characteristics of " +
-                     "that measurement.",
+                "that measurement.",
 
             children: [
                 {

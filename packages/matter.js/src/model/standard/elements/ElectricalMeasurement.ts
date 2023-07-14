@@ -11,8 +11,8 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "ElectricalMeasurement", id: 0xb04, description: "Electrical Measurement",
     details: "Attributes related to the electrical properties of a device. This cluster is used by power outlets " +
-             "and other devices that need to provide instantaneous data as opposed to metrology data which should " +
-             "be retrieved from the metering cluster..",
+        "and other devices that need to provide instantaneous data as opposed to metrology data which should " +
+        "be retrieved from the metering cluster..",
 
     children: [
         { tag: "attribute", name: "MeasurementType", id: 0x0, type: "map32", conformance: "O", default: 0 },

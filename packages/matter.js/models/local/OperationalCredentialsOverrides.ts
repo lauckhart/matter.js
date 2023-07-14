@@ -9,7 +9,7 @@ import { LocalMatter } from "../local.js";
 LocalMatter.children.push({
     tag: "cluster",
     name: "OperationalCredentials",
-    
+
     children: [
         {
             tag: "command", name: "AttestationResponse", id: 0x1,

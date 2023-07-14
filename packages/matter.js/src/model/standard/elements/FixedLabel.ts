@@ -13,16 +13,16 @@ Matter.children.push({
     description: "Fixed Label",
 
     details: "This cluster provides a feature for the device to tag an endpoint with zero or more read only " +
-             "labels. Examples:" +
-             "\n" +
-             "  • A bridge can use this to indicate grouping of bridged devices. For example: All bridged devices " +
-             "    whose endpoints have an entry in their LabelList \"room\":\"bedroom 2\" are in the same (bed)room." +
-             "\n" +
-             "  • A manufacturer can use this to identify a characteristic of an endpoint. For example to " +
-             "    identify the endpoints of a luminaire, one pointing up, the other pointing down, one of the " +
-             "    endpoints would have a LabelList entry \"orientation\":\"up\" while the other would have " +
-             "    \"orientation\":\"down\". Using such indication, the user interface of a Node controlling this " +
-             "    luminaire knows which of the endpoints is which of the lights.",
+        "labels. Examples:" +
+        "\n" +
+        "  • A bridge can use this to indicate grouping of bridged devices. For example: All bridged devices " +
+        "    whose endpoints have an entry in their LabelList \"room\":\"bedroom 2\" are in the same (bed)room." +
+        "\n" +
+        "  • A manufacturer can use this to identify a characteristic of an endpoint. For example to " +
+        "    identify the endpoints of a luminaire, one pointing up, the other pointing down, one of the " +
+        "    endpoints would have a LabelList entry \"orientation\":\"up\" while the other would have " +
+        "    \"orientation\":\"down\". Using such indication, the user interface of a Node controlling this " +
+        "    luminaire knows which of the endpoints is which of the lights.",
 
     xref: { document: "core", section: "9.8" },
 

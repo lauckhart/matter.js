@@ -52,9 +52,9 @@ Matter.children.push({
             tag: "command", name: "RenameOutput", id: 0x1, access: "M", conformance: "NU", direction: "request",
             response: "status",
             details: "Upon receipt, this shall rename the output at a specific index in the Output List." +
-                     "\n" +
-                     "Updates to the output name shall appear in the device’s settings menus. Name updates may " +
-                     "automatically be sent to the actual device to which the output connects.",
+                "\n" +
+                "Updates to the output name shall appear in the device’s settings menus. Name updates may " +
+                "automatically be sent to the actual device to which the output connects.",
             xref: { document: "cluster", section: "6.5.4.2" },
             children: [
                 { tag: "datatype", name: "Index", id: 0x0, type: "uint8", conformance: "M" },
@@ -84,7 +84,7 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Name", id: 0x2, type: "string", conformance: "M",
                     details: "The device defined and user editable output name, such as “Soundbar”, “Speakers”. This field may be " +
-                             "blank, but SHOULD be provided when known.",
+                        "blank, but SHOULD be provided when known.",
                     xref: { document: "cluster", section: "6.5.5.1.3" }
                 }
             ]

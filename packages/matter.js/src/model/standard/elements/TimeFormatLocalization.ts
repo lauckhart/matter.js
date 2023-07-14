@@ -13,13 +13,13 @@ Matter.children.push({
     description: "Time Format Localization",
 
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
-             "may have differing preferences for how dates and times are conveyed. As such, Nodes that visually " +
-             "or audibly convey time information need a mechanism by which they can be configured to use a user’s " +
-             "preferred format." +
-             "\n" +
-             "This cluster supports an interface to a Node. It provides attributes for determining and " +
-             "configuring time and date formatting information that a Node shall utilize when conveying values to " +
-             "a user.",
+        "may have differing preferences for how dates and times are conveyed. As such, Nodes that visually " +
+        "or audibly convey time information need a mechanism by which they can be configured to use a user’s " +
+        "preferred format." +
+        "\n" +
+        "This cluster supports an interface to a Node. It provides attributes for determining and " +
+        "configuring time and date formatting information that a Node shall utilize when conveying values to " +
+        "a user.",
 
     xref: { document: "core", section: "11.4" },
 
@@ -39,9 +39,9 @@ Matter.children.push({
             tag: "attribute", name: "HourFormat", id: 0x0, type: "HourFormatEnum", access: "RW VM",
             conformance: "M", default: null, quality: "X N",
             details: "The HourFormat attribute shall represent the format that the Node is currently configured to use " +
-                     "when conveying the hour unit of time. If provided, this value shall take priority over any unit" +
-                     "\n" +
-                     "implied through the ActiveLocale Attribute.",
+                "when conveying the hour unit of time. If provided, this value shall take priority over any unit" +
+                "\n" +
+                "implied through the ActiveLocale Attribute.",
             xref: { document: "core", section: "11.4.6.1" }
         },
 
@@ -49,8 +49,8 @@ Matter.children.push({
             tag: "attribute", name: "ActiveCalendarType", id: 0x1, type: "CalendarTypeEnum", access: "RW VM",
             conformance: "CALFMT", default: null, quality: "X N",
             details: "The ActiveCalendarType attribute shall represent the calendar format that the Node is currently " +
-                     "configured to use when conveying dates. If provided, this value shall take priority over any unit " +
-                     "implied through the ActiveLocale Attribute.",
+                "configured to use when conveying dates. If provided, this value shall take priority over any unit " +
+                "implied through the ActiveLocale Attribute.",
             xref: { document: "core", section: "11.4.6.2" }
         },
 
@@ -58,9 +58,9 @@ Matter.children.push({
             tag: "attribute", name: "SupportedCalendarTypes", id: 0x2, type: "list", access: "R V",
             conformance: "CALFMT", constraint: "desc", quality: "F",
             details: "The SupportedCalendarTypes attribute shall represent a list of CalendarTypeEnum values that are " +
-                     "supported by the Node. The list shall NOT contain any duplicate entries. The ordering of items " +
-                     "within the list SHOULD NOT express any meaning. The maximum length of the SupportedCalendarTypes " +
-                     "list shall be equivalent to the number of enumerations within CalendarTypeEnum.",
+                "supported by the Node. The list shall NOT contain any duplicate entries. The ordering of items " +
+                "within the list SHOULD NOT express any meaning. The maximum length of the SupportedCalendarTypes " +
+                "list shall be equivalent to the number of enumerations within CalendarTypeEnum.",
             xref: { document: "core", section: "11.4.6.3" },
             children: [{ tag: "datatype", name: "entry", type: "CalendarTypeEnum" }]
         },

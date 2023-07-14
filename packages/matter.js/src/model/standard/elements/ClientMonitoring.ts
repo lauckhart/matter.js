@@ -11,7 +11,7 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "ClientMonitoring", id: 0x1046, description: "Client Monitoring",
     details: "Client Monitoring allows for ensuring that listed clients meet the required monitoring conditions " +
-             "on the server.",
+        "on the server.",
 
     children: [
         { tag: "attribute", name: "IdleModeInterval", id: 0x0, type: "uint32", conformance: "M", default: 18 },

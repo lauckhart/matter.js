@@ -11,7 +11,7 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "ValidProxies", id: 0x44, classification: "node", description: "Proxy Valid",
     details: "This cluster provides a means for a device to be told of the valid set of possible proxies that can " +
-             "proxy subscriptions on its behalf as per Section 9.15.7, “Proxy Discovery & Assignment Flow”.",
+        "proxy subscriptions on its behalf as per Section 9.15.7, “Proxy Discovery & Assignment Flow”.",
     xref: { document: "core", section: "9.15.15" },
 
     children: [

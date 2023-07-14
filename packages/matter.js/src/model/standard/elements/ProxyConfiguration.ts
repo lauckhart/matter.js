@@ -29,14 +29,14 @@ Matter.children.push({
             tag: "datatype", name: "ConfigurationStruct", type: "struct",
 
             details: "ProxyAllNodes" +
-                     "\n" +
-                     "This field shall be set to to 'true' to indicate to the proxy that it shall proxy all nodes. When " +
-                     "'true', the SourceList attribute is ignored." +
-                     "\n" +
-                     "SourceList" +
-                     "\n" +
-                     "When ProxyAllNodes is 'false', this list contains the set of NodeIds of sources that this proxy " +
-                     "shall specifically proxy.",
+                "\n" +
+                "This field shall be set to to 'true' to indicate to the proxy that it shall proxy all nodes. When " +
+                "'true', the SourceList attribute is ignored." +
+                "\n" +
+                "SourceList" +
+                "\n" +
+                "When ProxyAllNodes is 'false', this list contains the set of NodeIds of sources that this proxy " +
+                "shall specifically proxy.",
 
             xref: { document: "core", section: "9.15.14.4.1" },
 

@@ -12,7 +12,7 @@ Matter.children.push({
     tag: "cluster", name: "ApplicationBasic", id: 0x50d, classification: "application",
     description: "Application Basic",
     details: "This cluster provides information about a Content App running on a Video Player device which is " +
-             "represented as an endpoint (see Device Type Library document).",
+        "represented as an endpoint (see Device Type Library document).",
     xref: { document: "cluster", section: "6.3" },
 
     children: [
@@ -29,7 +29,7 @@ Matter.children.push({
             tag: "attribute", name: "VendorId", id: 0x1, type: "vendor-id", access: "R V", conformance: "O",
             default: 0, quality: "F",
             details: "This attribute, if present, shall specify the Connectivity Standards Alliance assigned Vendor ID " +
-                     "for the Content App.",
+                "for the Content App.",
             xref: { document: "cluster", section: "6.3.3.2" }
         },
 
@@ -37,8 +37,8 @@ Matter.children.push({
             tag: "attribute", name: "ApplicationName", id: 0x2, type: "string", access: "R V", conformance: "M",
             constraint: "desc", quality: "F",
             details: "This attribute shall specify a human readable (displayable) name of the Content App assigned by the " +
-                     "vendor. For example, \"NPR On Demand\". The maximum length of the ApplicationName attribute is 256 " +
-                     "bytes of UTF-8 characters.",
+                "vendor. For example, \"NPR On Demand\". The maximum length of the ApplicationName attribute is 256 " +
+                "bytes of UTF-8 characters.",
             xref: { document: "cluster", section: "6.3.3.3" }
         },
 
@@ -46,8 +46,8 @@ Matter.children.push({
             tag: "attribute", name: "ProductId", id: 0x3, type: "uint16", access: "R V", conformance: "O",
             default: 0, quality: "F",
             details: "This attribute, if present, shall specify a numeric ID assigned by the vendor to identify a " +
-                     "specific Content App made by them. If the Content App is certified by the Connectivity Standards " +
-                     "Alliance, then this would be the Product ID as specified by the vendor for the certification.",
+                "specific Content App made by them. If the Content App is certified by the Connectivity Standards " +
+                "Alliance, then this would be the Product ID as specified by the vendor for the certification.",
             xref: { document: "cluster", section: "6.3.3.4" }
         },
 
@@ -55,7 +55,7 @@ Matter.children.push({
             tag: "attribute", name: "Application", id: 0x4, type: "ApplicationStruct", access: "R V",
             conformance: "M", constraint: "desc", quality: "F",
             details: "This attribute shall specify a Content App which consists of an Application ID using a specified " +
-                     "catalog.",
+                "catalog.",
             xref: { document: "cluster", section: "6.3.3.5" }
         },
 
@@ -70,7 +70,7 @@ Matter.children.push({
             tag: "attribute", name: "ApplicationVersion", id: 0x6, type: "string", access: "R V",
             conformance: "M", constraint: "max 32", quality: "F",
             details: "This attribute shall specify a human readable (displayable) version of the Content App assigned by " +
-                     "the vendor. The maximum length of the ApplicationVersion attribute is 32 bytes of UTF-8 characters.",
+                "the vendor. The maximum length of the ApplicationVersion attribute is 32 bytes of UTF-8 characters.",
             xref: { document: "cluster", section: "6.3.3.7" }
         },
 
@@ -92,11 +92,11 @@ Matter.children.push({
                     tag: "datatype", name: "CatalogVendorId", id: 0x0, type: "uint16", conformance: "M",
 
                     details: "This shall indicate the Connectivity Standards Alliance issued vendor ID for the catalog. The DIAL " +
-                             "registry shall use value 0x0000." +
-                             "\n" +
-                             "It is assumed that Content App Platform providers (see Video Player Architecture section in " +
-                             "[MatterDevLib] ) will have their own catalog vendor ID (set to their own Vendor ID) and will assign " +
-                             "an ApplicationID to each Content App.",
+                        "registry shall use value 0x0000." +
+                        "\n" +
+                        "It is assumed that Content App Platform providers (see Video Player Architecture section in " +
+                        "[MatterDevLib] ) will have their own catalog vendor ID (set to their own Vendor ID) and will assign " +
+                        "an ApplicationID to each Content App.",
 
                     xref: { document: "cluster", section: "6.3.4.1.1" }
                 },
@@ -104,9 +104,9 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "ApplicationId", id: 0x1, type: "string", conformance: "M",
                     details: "This shall indicate the application identifier, expressed as a string, such as \"123456-5433\", " +
-                             "\"PruneVideo\" or \"Company X\". This field shall be unique within a catalog." +
-                             "\n" +
-                             "For the DIAL registry catalog, this value shall be the DIAL prefix.",
+                        "\"PruneVideo\" or \"Company X\". This field shall be unique within a catalog." +
+                        "\n" +
+                        "For the DIAL registry catalog, this value shall be the DIAL prefix.",
                     xref: { document: "cluster", section: "6.3.4.1.2" }
                 }
             ]

@@ -9,7 +9,7 @@ import { LocalMatter } from "../local.js";
 LocalMatter.children.push({
     tag: "cluster",
     name: "ColorControl",
-    
+
     children: [
         // Override primary conformance using our ">" extension to conformance syntax
         { tag: "attribute", id: 0x11, name: "Primary1X", conformance: "NumberOfPrimaries > 0" },

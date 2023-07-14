@@ -12,7 +12,7 @@ Matter.children.push({
     tag: "cluster", name: "WindowCovering", id: 0x102, classification: "application",
     description: "Window Covering",
     details: "The window covering cluster provides an interface for controlling and adjusting automatic window " +
-             "coverings such as drapery motors, automatic shades, curtains and blinds.",
+        "coverings such as drapery motors, automatic shades, curtains and blinds.",
     xref: { document: "cluster", section: "5.3" },
 
     children: [
@@ -50,7 +50,7 @@ Matter.children.push({
             tag: "attribute", name: "Type", id: 0x0, type: "enum8", access: "R V", conformance: "M",
             constraint: "desc", default: 0, quality: "F",
             details: "The Type attribute identifies the type of window covering being controlled by this endpoint and " +
-                     "shall be set to one of the non-reserved values in the table below.",
+                "shall be set to one of the non-reserved values in the table below.",
             xref: { document: "cluster", section: "5.3.5.1" },
 
             children: [
@@ -72,7 +72,7 @@ Matter.children.push({
             tag: "attribute", name: "PhysicalClosedLimitLift", id: 0x1, type: "uint16", access: "R V",
             conformance: "[LF & PA_LF]", default: 0, quality: "F",
             details: "The PhysicalClosedLimitLift attribute identifies the maximum possible encoder position possible (in " +
-                     "centimeters) to position the height of the window covering Lift.",
+                "centimeters) to position the height of the window covering Lift.",
             xref: { document: "cluster", section: "5.3.5.2" }
         },
 
@@ -80,7 +80,7 @@ Matter.children.push({
             tag: "attribute", name: "PhysicalClosedLimitTilt", id: 0x2, type: "uint16", access: "R V",
             conformance: "[TL & PA_TL]", default: 0, quality: "F",
             details: "The PhysicalClosedLimitTilt attribute identifies the maximum possible encoder position possible " +
-                     "(tenth of a degrees) to position the angle of the window covering Tilt.",
+                "(tenth of a degrees) to position the angle of the window covering Tilt.",
             xref: { document: "cluster", section: "5.3.5.3" }
         },
 
@@ -89,7 +89,7 @@ Matter.children.push({
             conformance: "[LF & PA_LF]", constraint: "InstalledOpenLimitLift to InstalledClosedLimitLift",
             default: null, quality: "X N",
             details: "The CurrentPositionLift attribute identifies the actual Lift position (in centimeters) of the " +
-                     "window covering from the fully-open position.",
+                "window covering from the fully-open position.",
             xref: { document: "cluster", section: "5.3.5.4" }
         },
 
@@ -98,7 +98,7 @@ Matter.children.push({
             conformance: "[TL & PA_TL]", constraint: "InstalledOpenLimitTilt to InstalledClosedLimitTilt",
             default: null, quality: "X N",
             details: "The CurrentPositionTilt attribute identifies the actual Tilt position (in tenth of an degree) of " +
-                     "the window covering from the fully-open position.",
+                "the window covering from the fully-open position.",
             xref: { document: "cluster", section: "5.3.5.5" }
         },
 
@@ -106,7 +106,7 @@ Matter.children.push({
             tag: "attribute", name: "NumberOfActuationsLift", id: 0x5, type: "uint16", access: "R V",
             conformance: "[LF]", default: 0, quality: "N",
             details: "The NumberOfActuationsLift attribute identifies the total number of lift/slide actuations applied " +
-                     "to the Window Covering since the device was installed.",
+                "to the Window Covering since the device was installed.",
             xref: { document: "cluster", section: "5.3.5.6" }
         },
 
@@ -114,7 +114,7 @@ Matter.children.push({
             tag: "attribute", name: "NumberOfActuationsTilt", id: 0x6, type: "uint16", access: "R V",
             conformance: "[TL]", default: 0, quality: "N",
             details: "The NumberOfActuationsTilt attribute identifies the total number of tilt actuations applied to the " +
-                     "Window Covering since the device was installed.",
+                "Window Covering since the device was installed.",
             xref: { document: "cluster", section: "5.3.5.7" }
         },
 
@@ -122,9 +122,9 @@ Matter.children.push({
             tag: "attribute", name: "ConfigStatus", id: 0x7, type: "map8", access: "R V", conformance: "M",
             constraint: "desc", default: 3, quality: "N",
             details: "The ConfigStatus attribute makes configuration and status information available. To change " +
-                     "settings, devices shall write to the Mode attribute of the Window Covering Settings Attribute Set. " +
-                     "The behavior causing the setting or clearing of each bit is vendor specific. See table below for " +
-                     "details on each bit.",
+                "settings, devices shall write to the Mode attribute of the Window Covering Settings Attribute Set. " +
+                "The behavior causing the setting or clearing of each bit is vendor specific. See table below for " +
+                "details on each bit.",
             xref: { document: "cluster", section: "5.3.5.8" },
 
             children: [
@@ -160,8 +160,8 @@ Matter.children.push({
             tag: "attribute", name: "CurrentPositionLiftPercentage", id: 0x8, type: "percent", access: "R V",
             conformance: "[LF & PA_LF]", constraint: "0 to 100", default: null, quality: "X N S P",
             details: "The CurrentPositionLiftPercentage attribute identifies the actual position as a percentage from 0% " +
-                     "to 100% with 1% default step. This attribute is equal to CurrentPositionLiftPercent100ths attribute " +
-                     "divided by 100.",
+                "to 100% with 1% default step. This attribute is equal to CurrentPositionLiftPercent100ths attribute " +
+                "divided by 100.",
             xref: { document: "cluster", section: "5.3.5.11" }
         },
 
@@ -169,8 +169,8 @@ Matter.children.push({
             tag: "attribute", name: "CurrentPositionTiltPercentage", id: 0x9, type: "percent", access: "R V",
             conformance: "[TL & PA_TL]", constraint: "0 to 100", default: null, quality: "X N S P",
             details: "The CurrentPositionTiltPercentage attribute identifies the actual position as a percentage from 0% " +
-                     "to 100% with 1% default step. This attribute is equal to CurrentPositionTiltPercent100ths attribute " +
-                     "divided by 100.",
+                "to 100% with 1% default step. This attribute is equal to CurrentPositionTiltPercent100ths attribute " +
+                "divided by 100.",
             xref: { document: "cluster", section: "5.3.5.12" }
         },
 
@@ -178,7 +178,7 @@ Matter.children.push({
             tag: "attribute", name: "OperationalStatus", id: 0xa, type: "map8", access: "R V", conformance: "M",
             default: 0, quality: "P",
             details: "The OperationalStatus attribute keeps track of currently ongoing operations and applies to all type " +
-                     "of devices. See below for details about the meaning of individual bits.",
+                "of devices. See below for details about the meaning of individual bits.",
             xref: { document: "cluster", section: "5.3.5.15" },
 
             children: [
@@ -201,7 +201,7 @@ Matter.children.push({
             tag: "attribute", name: "TargetPositionLiftPercent100Ths", id: 0xb, type: "percent100ths",
             access: "R V", conformance: "LF & PA_LF", constraint: "0 to 10000", default: null, quality: "X S P",
             details: "The TargetPositionLiftPercent100ths attribute identifies the position where the Window Covering " +
-                     "Lift will go or is moving to as a percentage.",
+                "Lift will go or is moving to as a percentage.",
             xref: { document: "cluster", section: "5.3.5.13" }
         },
 
@@ -209,7 +209,7 @@ Matter.children.push({
             tag: "attribute", name: "TargetPositionTiltPercent100Ths", id: 0xc, type: "percent100ths",
             access: "R V", conformance: "TL & PA_TL", constraint: "0 to 10000", default: null, quality: "X S P",
             details: "The TargetPositionTiltPercent100ths attribute identifies the position where the Window Covering " +
-                     "Tilt will go or is moving to as a percentage.",
+                "Tilt will go or is moving to as a percentage.",
             xref: { document: "cluster", section: "5.3.5.14" }
         },
 
@@ -217,8 +217,8 @@ Matter.children.push({
             tag: "attribute", name: "EndProductType", id: 0xd, type: "enum8", access: "R V", conformance: "M",
             constraint: "desc", default: 0, quality: "F",
             details: "The EndProductType attribute identifies the product type in complement of the main category " +
-                     "indicated by the Type attribute. The window covering shall set this value to one of the values in " +
-                     "the table below.",
+                "indicated by the Type attribute. The window covering shall set this value to one of the values in " +
+                "the table below.",
             xref: { document: "cluster", section: "5.3.5.16" },
 
             children: [
@@ -254,7 +254,7 @@ Matter.children.push({
             tag: "attribute", name: "CurrentPositionLiftPercent100Ths", id: 0xe, type: "percent100ths",
             access: "R V", conformance: "LF & PA_LF", constraint: "0 to 10000", default: null, quality: "X N P",
             details: "The CurrentPositionLiftPercent100ths attribute identifies the actual position as a percentage with " +
-                     "a minimal step of 0.01%. E.g Max 10000 equals 100.00%.",
+                "a minimal step of 0.01%. E.g Max 10000 equals 100.00%.",
             xref: { document: "cluster", section: "5.3.5.9" }
         },
 
@@ -262,7 +262,7 @@ Matter.children.push({
             tag: "attribute", name: "CurrentPositionTiltPercent100Ths", id: 0xf, type: "percent100ths",
             access: "R V", conformance: "TL & PA_TL", constraint: "0 to 10000", default: null, quality: "X N P",
             details: "The CurrentPositionTiltPercent100ths attribute identifies the actual position as a percentage with " +
-                     "a minimal step of 0.01%. E.g Max 10000 equals 100.00%.",
+                "a minimal step of 0.01%. E.g Max 10000 equals 100.00%.",
             xref: { document: "cluster", section: "5.3.5.10" }
         },
 
@@ -270,7 +270,7 @@ Matter.children.push({
             tag: "attribute", name: "InstalledOpenLimitLift", id: 0x10, type: "uint16", access: "R V",
             conformance: "LF & PA_LF", constraint: "0 to 65534", default: 0, quality: "N",
             details: "The InstalledOpenLimitLift attribute identifies the Open Limit for Lifting the Window Covering " +
-                     "whether position (in centimeters) is encoded or timed.",
+                "whether position (in centimeters) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.17" }
         },
 
@@ -278,7 +278,7 @@ Matter.children.push({
             tag: "attribute", name: "InstalledClosedLimitLift", id: 0x11, type: "uint16", access: "R V",
             conformance: "LF & PA_LF", constraint: "0 to 65534", default: 65534, quality: "N",
             details: "The InstalledClosedLimitLift attribute identifies the Closed Limit for Lifting the Window Covering " +
-                     "whether position (in centimeters) is encoded or timed.",
+                "whether position (in centimeters) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.18" }
         },
 
@@ -286,7 +286,7 @@ Matter.children.push({
             tag: "attribute", name: "InstalledOpenLimitTilt", id: 0x12, type: "uint16", access: "R V",
             conformance: "TL & PA_TL", constraint: "0 to 65534", default: 0, quality: "N",
             details: "The InstalledOpenLimitTilt attribute identifies the Open Limit for Tilting the Window Covering " +
-                     "whether position (in tenth of a degree) is encoded or timed.",
+                "whether position (in tenth of a degree) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.19" }
         },
 
@@ -294,7 +294,7 @@ Matter.children.push({
             tag: "attribute", name: "InstalledClosedLimitTilt", id: 0x13, type: "uint16", access: "R V",
             conformance: "TL & PA_TL", constraint: "0 to 65534", default: 65534, quality: "N",
             details: "The InstalledClosedLimitTilt attribute identifies the Closed Limit for Tilting the Window Covering " +
-                     "whether position (in tenth of a degree) is encoded or timed.",
+                "whether position (in tenth of a degree) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.20" }
         },
 
@@ -316,13 +316,13 @@ Matter.children.push({
             default: 0, quality: "N",
 
             details: "The Mode attribute allows configuration of the Window Covering, such as: reversing the motor " +
-                     "direction, placing the Window Covering into calibration mode, placing the motor into maintenance " +
-                     "mode, disabling the network, and disabling status LEDs. See below for details." +
-                     "\n" +
-                     "In the case a device does not support or implement a specific mode, e.g. the device has a specific " +
-                     "installation method and reversal is not relevant or the device does not include a maintenance mode, " +
-                     "any write interaction to the Mode attribute, with an unsupported mode bit or any out of bounds bits " +
-                     "set, must be ignored and a response containing the status of CONSTRAINT_ERROR will be returned.",
+                "direction, placing the Window Covering into calibration mode, placing the motor into maintenance " +
+                "mode, disabling the network, and disabling status LEDs. See below for details." +
+                "\n" +
+                "In the case a device does not support or implement a specific mode, e.g. the device has a specific " +
+                "installation method and reversal is not relevant or the device does not include a maintenance mode, " +
+                "any write interaction to the Mode attribute, with an unsupported mode bit or any out of bounds bits " +
+                "set, must be ignored and a response containing the status of CONSTRAINT_ERROR will be returned.",
 
             xref: { document: "cluster", section: "5.3.5.21" },
 
@@ -356,9 +356,9 @@ Matter.children.push({
             tag: "attribute", name: "SafetyStatus", id: 0x1a, type: "map16", access: "R V", conformance: "O",
             constraint: "desc", default: 0, quality: "P",
             details: "The SafetyStatus attribute reflects the state of the safety sensors and the common issues " +
-                     "preventing movements. By default for nominal operation all flags are cleared (0). A device might " +
-                     "support none, one or several bit flags from this attribute (all optional). See below for details " +
-                     "about the meaning of individual bits.",
+                "preventing movements. By default for nominal operation all flags are cleared (0). A device might " +
+                "support none, one or several bit flags from this attribute (all optional). See below for details " +
+                "about the meaning of individual bits.",
             xref: { document: "cluster", section: "5.3.5.22" },
 
             children: [
@@ -415,31 +415,31 @@ Matter.children.push({
             response: "status",
 
             details: "Upon receipt of this command, the Window Covering will adjust its position so the physical " +
-                     "lift/slide and tilt is at the maximum open/up position. This will happen as fast as possible. The " +
-                     "server attributes shall be updated as follows:" +
-                     "\n" +
-                     "if Position Aware feature is supported:" +
-                     "\n" +
-                     "  • TargetPositionLiftPercent100ths attribute shall be set to 0.00%." +
-                     "\n" +
-                     "  • TargetPositionTiltPercent100ths attribute shall be set to 0.00%." +
-                     "\n" +
-                     "The server positioning attributes will follow the movements, once the movement has successfully " +
-                     "finished, the server attributes shall be updated as follows:" +
-                     "\n" +
-                     "if Position Aware feature is supported:" +
-                     "\n" +
-                     "  • CurrentPositionLiftPercent100ths attribute shall be 0.00%." +
-                     "\n" +
-                     "  • CurrentPositionLiftPercentage attribute shall be 0%." +
-                     "\n" +
-                     "  • CurrentPositionTiltPercent100ths attribute shall be 0.00%." +
-                     "\n" +
-                     "  • CurrentPositionTiltPercentage attribute shall be 0%. if Absolute Position feature is supported:" +
-                     "\n" +
-                     "  • CurrentPositionLift attribute shall be equal to the InstalledOpenLimitLift attribute." +
-                     "\n" +
-                     "  • CurrentPositionTilt attribute shall be equal to the InstalledOpenLimitTilt attribute.",
+                "lift/slide and tilt is at the maximum open/up position. This will happen as fast as possible. The " +
+                "server attributes shall be updated as follows:" +
+                "\n" +
+                "if Position Aware feature is supported:" +
+                "\n" +
+                "  • TargetPositionLiftPercent100ths attribute shall be set to 0.00%." +
+                "\n" +
+                "  • TargetPositionTiltPercent100ths attribute shall be set to 0.00%." +
+                "\n" +
+                "The server positioning attributes will follow the movements, once the movement has successfully " +
+                "finished, the server attributes shall be updated as follows:" +
+                "\n" +
+                "if Position Aware feature is supported:" +
+                "\n" +
+                "  • CurrentPositionLiftPercent100ths attribute shall be 0.00%." +
+                "\n" +
+                "  • CurrentPositionLiftPercentage attribute shall be 0%." +
+                "\n" +
+                "  • CurrentPositionTiltPercent100ths attribute shall be 0.00%." +
+                "\n" +
+                "  • CurrentPositionTiltPercentage attribute shall be 0%. if Absolute Position feature is supported:" +
+                "\n" +
+                "  • CurrentPositionLift attribute shall be equal to the InstalledOpenLimitLift attribute." +
+                "\n" +
+                "  • CurrentPositionTilt attribute shall be equal to the InstalledOpenLimitTilt attribute.",
 
             xref: { document: "cluster", section: "5.3.6.1" }
         },
@@ -449,32 +449,32 @@ Matter.children.push({
             response: "status",
 
             details: "Upon receipt of this command, the Window Covering will adjust its position so the physical " +
-                     "lift/slide and tilt is at the maximum closed/down position. This will happen as fast as possible. " +
-                     "The server attributes supported shall be updated as follows:" +
-                     "\n" +
-                     "if Position Aware feature is supported:" +
-                     "\n" +
-                     "  • TargetPositionLiftPercent100ths attribute shall be set to 100.00%." +
-                     "\n" +
-                     "  • TargetPositionTiltPercent100ths attribute shall be set to 100.00%." +
-                     "\n" +
-                     "The server positioning attributes will follow the movements, once the movement has successfully " +
-                     "finished, the server attributes shall be updated as follows:" +
-                     "\n" +
-                     "if Position Aware feature is supported:" +
-                     "\n" +
-                     "  • CurrentPositionLiftPercent100ths attribute shall be 100.00%." +
-                     "\n" +
-                     "  • CurrentPositionLiftPercentage attribute shall be 100%." +
-                     "\n" +
-                     "  • CurrentPositionTiltPercent100ths attribute shall be 100.00%." +
-                     "\n" +
-                     "  • CurrentPositionTiltPercentage attribute shall be 100%. if Absolute Position feature is " +
-                     "    supported:" +
-                     "\n" +
-                     "  • CurrentPositionLift attribute shall be equal to the InstalledClosedLimitLift attribute." +
-                     "\n" +
-                     "  • CurrentPositionTilt attribute shall be equal to the InstalledClosedLimitTilt attribute.",
+                "lift/slide and tilt is at the maximum closed/down position. This will happen as fast as possible. " +
+                "The server attributes supported shall be updated as follows:" +
+                "\n" +
+                "if Position Aware feature is supported:" +
+                "\n" +
+                "  • TargetPositionLiftPercent100ths attribute shall be set to 100.00%." +
+                "\n" +
+                "  • TargetPositionTiltPercent100ths attribute shall be set to 100.00%." +
+                "\n" +
+                "The server positioning attributes will follow the movements, once the movement has successfully " +
+                "finished, the server attributes shall be updated as follows:" +
+                "\n" +
+                "if Position Aware feature is supported:" +
+                "\n" +
+                "  • CurrentPositionLiftPercent100ths attribute shall be 100.00%." +
+                "\n" +
+                "  • CurrentPositionLiftPercentage attribute shall be 100%." +
+                "\n" +
+                "  • CurrentPositionTiltPercent100ths attribute shall be 100.00%." +
+                "\n" +
+                "  • CurrentPositionTiltPercentage attribute shall be 100%. if Absolute Position feature is " +
+                "    supported:" +
+                "\n" +
+                "  • CurrentPositionLift attribute shall be equal to the InstalledClosedLimitLift attribute." +
+                "\n" +
+                "  • CurrentPositionTilt attribute shall be equal to the InstalledClosedLimitTilt attribute.",
 
             xref: { document: "cluster", section: "5.3.6.2" }
         },
@@ -484,13 +484,13 @@ Matter.children.push({
             response: "status",
 
             details: "Upon receipt of this command, the Window Covering will stop any adjusting to the physical tilt and " +
-                     "lift/slide that is currently occurring. The server attributes supported shall be updated as follows:" +
-                     "\n" +
-                     "  • TargetPositionLiftPercent100ths attribute will be set to CurrentPositionLiftPercent100ths " +
-                     "    attribute value." +
-                     "\n" +
-                     "  • TargetPositionTiltPercent100ths attribute will be set to CurrentPositionTiltPercent100ths " +
-                     "    attribute value.",
+                "lift/slide that is currently occurring. The server attributes supported shall be updated as follows:" +
+                "\n" +
+                "  • TargetPositionLiftPercent100ths attribute will be set to CurrentPositionLiftPercent100ths " +
+                "    attribute value." +
+                "\n" +
+                "  • TargetPositionTiltPercent100ths attribute will be set to CurrentPositionTiltPercent100ths " +
+                "    attribute value.",
 
             xref: { document: "cluster", section: "5.3.6.3" }
         },
@@ -500,11 +500,11 @@ Matter.children.push({
             direction: "request", response: "status",
 
             details: "Upon receipt of this command, the Window Covering will adjust the window so the physical lift/slide " +
-                     "is at the value specified in the payload of this command as long as that value is not larger than " +
-                     "InstalledOpenLimitLift attribute and not smaller than InstalledClosedLimitLift attribute. Once the " +
-                     "command is received the TargetPositionLiftPercent100ths attribute will update its value " +
-                     "accordingly. If the value is out of bounds a response containing the status of CONSTRAINT_ERROR " +
-                     "will be returned.",
+                "is at the value specified in the payload of this command as long as that value is not larger than " +
+                "InstalledOpenLimitLift attribute and not smaller than InstalledClosedLimitLift attribute. Once the " +
+                "command is received the TargetPositionLiftPercent100ths attribute will update its value " +
+                "accordingly. If the value is out of bounds a response containing the status of CONSTRAINT_ERROR " +
+                "will be returned.",
 
             xref: { document: "cluster", section: "5.3.6.4" },
             children: [
@@ -517,20 +517,20 @@ Matter.children.push({
             direction: "request", response: "status",
 
             details: "Upon receipt of this command, the server will adjust the window covering to the lift/slide " +
-                     "percentage specified in the payload of this command." +
-                     "\n" +
-                     "If the command includes LiftPercent100thsValue, then TargetPositionLiftPercent100ths attribute " +
-                     "shall be set to LiftPercent100thsValue. Otherwise the TargetPositionLiftPercent100ths attribute " +
-                     "shall be set to LiftPercentageValue * 100." +
-                     "\n" +
-                     "If a client includes LiftPercent100thsValue in the command, the LiftPercentageValue shall be set to " +
-                     "to LiftPercent100thsValue / 100, so a legacy server which only supports LiftPercentageValue (not " +
-                     "LiftPercent100thsValue) has a value to set the target position." +
-                     "\n" +
-                     "If the server does not support the Position Aware feature, then a zero percentage shall be treated " +
-                     "as a UpOrOpen command and a non-zero percentage shall be treated as an DownOrClose command. If the " +
-                     "device is only a tilt control device, then the command SHOULD be ignored and a UNSUPPORTED_COMMAND " +
-                     "status SHOULD be returned.",
+                "percentage specified in the payload of this command." +
+                "\n" +
+                "If the command includes LiftPercent100thsValue, then TargetPositionLiftPercent100ths attribute " +
+                "shall be set to LiftPercent100thsValue. Otherwise the TargetPositionLiftPercent100ths attribute " +
+                "shall be set to LiftPercentageValue * 100." +
+                "\n" +
+                "If a client includes LiftPercent100thsValue in the command, the LiftPercentageValue shall be set to " +
+                "to LiftPercent100thsValue / 100, so a legacy server which only supports LiftPercentageValue (not " +
+                "LiftPercent100thsValue) has a value to set the target position." +
+                "\n" +
+                "If the server does not support the Position Aware feature, then a zero percentage shall be treated " +
+                "as a UpOrOpen command and a non-zero percentage shall be treated as an DownOrClose command. If the " +
+                "device is only a tilt control device, then the command SHOULD be ignored and a UNSUPPORTED_COMMAND " +
+                "status SHOULD be returned.",
 
             xref: { document: "cluster", section: "5.3.6.5" },
 
@@ -551,11 +551,11 @@ Matter.children.push({
             direction: "request", response: "status",
 
             details: "Upon receipt of this command, the Window Covering will adjust the window so the physical tilt is at " +
-                     "the tilt value specified in the payload of this command as long as that value is not larger than " +
-                     "InstalledOpenLimitTilt attribute and not smaller than InstalledClosedLimitTilt attribute. Once the " +
-                     "command is received the TargetPositionTiltPercent100ths attribute will update its value " +
-                     "accordingly. If the tilt value is out of bounds a response containing the status of " +
-                     "CONSTRAINT_ERROR will be returned.",
+                "the tilt value specified in the payload of this command as long as that value is not larger than " +
+                "InstalledOpenLimitTilt attribute and not smaller than InstalledClosedLimitTilt attribute. Once the " +
+                "command is received the TargetPositionTiltPercent100ths attribute will update its value " +
+                "accordingly. If the tilt value is out of bounds a response containing the status of " +
+                "CONSTRAINT_ERROR will be returned.",
 
             xref: { document: "cluster", section: "5.3.6.6" },
             children: [
@@ -568,21 +568,21 @@ Matter.children.push({
             direction: "request", response: "status",
 
             details: "Upon receipt of this command, the server will adjust the window covering to the tilt percentage " +
-                     "specified in the payload of this command." +
-                     "\n" +
-                     "If the command includes TiltPercent100thsValue, then TargetPositionTiltPercent100ths attribute" +
-                     "\n" +
-                     "shall be set to TiltPercent100thsValue. Otherwise the TargetPositionTiltPercent100ths attribute " +
-                     "shall be set to TiltPercentageValue * 100." +
-                     "\n" +
-                     "If a client includes TiltPercent100thsValue in the command, the TiltPercentageValue shall be set to " +
-                     "to TiltPercent100thsValue / 100, so a legacy server which only supports TiltPercentageValue (not " +
-                     "TiltPercent100thsValue) has a value to set the target position." +
-                     "\n" +
-                     "If the server does not support the Position Aware feature, then a zero percentage shall be treated " +
-                     "as a UpOrOpen command and a non-zero percentage shall be treated as an DownOrClose command. If the " +
-                     "device is only a tilt control device, then the command SHOULD be ignored and a UNSUPPORTED_COMMAND " +
-                     "status SHOULD be returned.",
+                "specified in the payload of this command." +
+                "\n" +
+                "If the command includes TiltPercent100thsValue, then TargetPositionTiltPercent100ths attribute" +
+                "\n" +
+                "shall be set to TiltPercent100thsValue. Otherwise the TargetPositionTiltPercent100ths attribute " +
+                "shall be set to TiltPercentageValue * 100." +
+                "\n" +
+                "If a client includes TiltPercent100thsValue in the command, the TiltPercentageValue shall be set to " +
+                "to TiltPercent100thsValue / 100, so a legacy server which only supports TiltPercentageValue (not " +
+                "TiltPercent100thsValue) has a value to set the target position." +
+                "\n" +
+                "If the server does not support the Position Aware feature, then a zero percentage shall be treated " +
+                "as a UpOrOpen command and a non-zero percentage shall be treated as an DownOrClose command. If the " +
+                "device is only a tilt control device, then the command SHOULD be ignored and a UNSUPPORTED_COMMAND " +
+                "status SHOULD be returned.",
 
             xref: { document: "cluster", section: "5.3.6.7" },
 

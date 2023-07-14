@@ -12,7 +12,7 @@ Matter.children.push({
     tag: "cluster", name: "MediaInput", id: 0x507, classification: "application",
     description: "Media Input",
     details: "This cluster provides an interface for controlling the Input Selector on a media device such as a " +
-             "Video Player.",
+        "Video Player.",
     xref: { document: "cluster", section: "6.9" },
 
     children: [
@@ -45,13 +45,13 @@ Matter.children.push({
             tag: "command", name: "SelectInput", id: 0x0, access: "O", conformance: "M", direction: "request",
             response: "status",
             details: "Upon receipt, this shall change the media input on the device to the input at a specific index in " +
-                     "the Input List.",
+                "the Input List.",
             xref: { document: "cluster", section: "6.9.4.1" },
 
             children: [{
                 tag: "datatype", name: "Index", id: 0x0, type: "uint8", conformance: "M",
                 details: "This shall indicate the index field of the InputInfoStruct from the InputList attribute in which to " +
-                         "change to.",
+                    "change to.",
                 xref: { document: "cluster", section: "6.9.4.1.1" }
             }]
         },
@@ -74,7 +74,7 @@ Matter.children.push({
             tag: "command", name: "RenameInput", id: 0x3, access: "M", conformance: "NU", direction: "request",
             response: "status",
             details: "Upon receipt, this shall rename the input at a specific index in the Input List. Updates to the " +
-                     "input name shall appear in the device’s settings menus.",
+                "input name shall appear in the device’s settings menus.",
             xref: { document: "cluster", section: "6.9.4.4" },
             children: [
                 { tag: "datatype", name: "Index", id: 0x0, type: "uint8", conformance: "M" },
@@ -104,14 +104,14 @@ Matter.children.push({
                 {
                     tag: "datatype", name: "Name", id: 0x2, type: "string", conformance: "M",
                     details: "This shall indicate the input name, such as “HDMI 1”. This field may be blank, but SHOULD be " +
-                             "provided when known.",
+                        "provided when known.",
                     xref: { document: "cluster", section: "6.9.5.1.3" }
                 },
 
                 {
                     tag: "datatype", name: "Description", id: 0x3, type: "string", conformance: "M",
                     details: "This shall indicate the user editable input description, such as “Living room Playstation”. This " +
-                             "field may be blank, but SHOULD be provided when known.",
+                        "field may be blank, but SHOULD be provided when known.",
                     xref: { document: "cluster", section: "6.9.5.1.4" }
                 }
             ]

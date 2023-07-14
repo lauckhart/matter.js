@@ -9,7 +9,7 @@ import { LocalMatter } from "../local.js";
 LocalMatter.children.push({
     tag: "cluster",
     name: "DoorLock",
-    
+
     children: [
         // The spec doesn't really define names for these bits, just long-form
         // descriptions that make ugly identifiers.  Strangely, CHIP defines
