@@ -197,8 +197,6 @@ export function BitsFromPartial<S extends BitSchema, P extends TypeFromPartialBi
         const value = bits[k];
         if (value !== undefined) {
             result[k] = value;
-        } else if (schema[k] instanceof BitFlag) {
-            result[k] = false;
         } else {
             result[k] = 0;
         }
