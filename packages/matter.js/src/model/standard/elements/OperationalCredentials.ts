@@ -139,7 +139,7 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "AttestationElements", id: 0x0, type: "octstr", conformance: "M",
-                    constraint: "max RespMax",
+                    constraint: "max 900",
                     details: "This field shall contain the octet string of the serialized attestation_elements_message.",
                     xref: { document: "core", section: "11.17.6.2.1" }
                 },
@@ -235,7 +235,7 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "NocsrElements", id: 0x0, type: "octstr", conformance: "M",
-                    constraint: "max RespMax",
+                    constraint: "max 900",
                     details: "This field shall contain the octet string of the serialized nocsr_elements_message." +
                              "\n" +
                              "This field shall contain the octet string of the necessary attestation_signature as described in " +

@@ -20,3 +20,4 @@ import "./PumpConfigurationAndControlOverrides.js";
 import "./ModeSelectOverrides.ts";
 import "./GroupKeyManagementOverrides.ts";
 import "./IlluminanceMeasurementOverrides.ts";
+import "./OperationalCredentialsOverrides.ts";

@@ -121,7 +121,7 @@ export const TlvAttestationResponse = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.2.1
      */
-    attestationElements: TlvField(0, TlvByteString),
+    attestationElements: TlvField(0, TlvByteString.bound({ maxLength: 900 })),
 
     /**
      * This field shall contain the octet string of the necessary attestation_signature as described in Section
@@ -201,7 +201,7 @@ export const TlvCsrResponse = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.6.1
      */
-    nocsrElements: TlvField(0, TlvByteString),
+    nocsrElements: TlvField(0, TlvByteString.bound({ maxLength: 900 })),
 
     attestationSignature: TlvField(1, TlvByteString.bound({ length: 64 }))
 });
