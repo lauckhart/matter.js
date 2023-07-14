@@ -60,7 +60,7 @@ export class Constraint extends Aspect<Constraint.Definition> implements Constra
         if (this.value === value) {
             return true;
         }
-        
+
         if (this.value !== undefined || value === null) {
             return false;
         }

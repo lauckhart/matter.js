@@ -188,7 +188,7 @@ export class TlvGenerator {
             return;
         }
 
-        const defining: ValueModel = model.definingModel ?? model;        
+        const defining: ValueModel = model.definingModel ?? model;
         let name = defining.name;
 
         // If there is a name collision, prefix the name with the parent's name
@@ -334,7 +334,7 @@ export class TlvGenerator {
 
         for (const child of model.children) {
             let type: string | undefined;
-            
+
             const constraint = child.effectiveConstraint;
             if (typeof constraint.value === "number") {
                 // Single bit

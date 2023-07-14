@@ -13,11 +13,11 @@ import { TlvGenerator } from "./TlvGenerator.js";
  * Generates a default value for fields based on model definitions.
  */
 export class DefaultValueGenerator {
-    constructor(private tlv: TlvGenerator) {}
+    constructor(private tlv: TlvGenerator) { }
 
     create(model: ValueModel) {
         const metatype = model.effectiveMetatype;
-        
+
         let defaultValue = model.effectiveDefault;
 
         if (defaultValue === undefined) {

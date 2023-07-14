@@ -231,7 +231,7 @@ export class ModelTraversal {
      * Find a child in the parent's inheritance hierarchy with the same tag
      * and ID/name.
      */
-    findShadow(model: Model | undefined ) {
+    findShadow(model: Model | undefined) {
         if (model === undefined) {
             return undefined;
         }
@@ -240,12 +240,12 @@ export class ModelTraversal {
         this.operationWithDismissal(model, () => {
             this.visitInheritance(this.findBase(model?.parent), (parent) => {
                 if (model.id !== undefined) {
-                    shadow = this.findLocal(parent, model.id, [ model.tag ]);
+                    shadow = this.findLocal(parent, model.id, [model.tag]);
                     if (shadow) {
                         return false;
                     }
                 }
-                shadow = this.findLocal(parent, model.name, [ model.tag ]);
+                shadow = this.findLocal(parent, model.name, [model.tag]);
                 if (shadow) {
                     return false;
                 }
@@ -329,7 +329,7 @@ export class ModelTraversal {
                         return c;
                     }
                 }
-                
+
                 scope = this.findBase(scope);
             }
         })

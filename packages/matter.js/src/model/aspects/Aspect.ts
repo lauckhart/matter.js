@@ -55,7 +55,7 @@ export class Aspect<D> {
         ]
 
         const definition = {} as { [name: string]: any };
-        for (const [ name, descriptor ] of descriptors) {
+        for (const [name, descriptor] of descriptors) {
             if (name === "definition" || name === "errors" || descriptor.value === undefined) {
                 continue;
             }

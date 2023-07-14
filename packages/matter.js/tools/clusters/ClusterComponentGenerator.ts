@@ -100,7 +100,7 @@ export class ClusterComponentGenerator {
             if (def !== undefined) {
                 options.value(def, "default: ");
             }
-            
+
             // View is the default
             const access = model.effectiveAccess;
             if (access.readPriv && access.readPriv != Access.Privilege.View) {

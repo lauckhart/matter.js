@@ -295,7 +295,7 @@ export namespace MergeModels {
             conformance: ["local", "spec", "chip"],
             constraint: ["local", "spec", "chip"],
             quality: ["local", "spec", "chip"],
-            access: ["local", "spec", "chip" ],
+            access: ["local", "spec", "chip"],
 
             // Prefer spec for element names
             name: ["local", "spec", "chip"],
@@ -304,10 +304,10 @@ export namespace MergeModels {
             type: ["local", "spec", "chip"],
 
             // Prefer spec for detailed documentation
-            details: [ "local", "spec", "chip" ],
+            details: ["local", "spec", "chip"],
 
             // Prefer spec for default values
-            default: [ "local", "spec", "chip" ]
+            default: ["local", "spec", "chip"]
         }
     }
 }

@@ -237,7 +237,7 @@ export class Block extends Entry {
                 return this;
             }
         }
-        
+
         this.entries.push(...entries);
         return this;
     }

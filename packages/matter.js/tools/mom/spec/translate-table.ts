@@ -204,7 +204,7 @@ function installPreciseDetails(
             || lookup[`${r.name.toLowerCase()}`];
         if (detail) {
             r.xref = detail.xref;
-            
+
             addDocumentation(r, detail);
 
             if (r.details && r.details.indexOf("SHALL indicate the of the") !== -1) {

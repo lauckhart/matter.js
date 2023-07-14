@@ -81,7 +81,7 @@ export function generateCluster(file: ClusterFile) {
             .document(
                 cluster,
                 `Per the Matter specification you cannot use ${file.clusterName} without enabling certain feature combinations.  `
-                    + `You must use the ${file.clusterName}.with factory method to obtain a working cluster.`
+                + `You must use the ${file.clusterName}.with factory method to obtain a working cluster.`
             );
         generateFactory(instance, variance, featureNames, illegal);
     } else {

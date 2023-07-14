@@ -103,7 +103,7 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
             // various junk that also appears in links but isn't a heading
             if (text.match(/^[^(.:]*$/)) {
                 looksLikeHeading = true;
-            }            
+            }
         }
 
         // Extract text
@@ -124,7 +124,7 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
             paragraphs.push(text);
         }
     }
-    
+
     if (paragraphs) {
         mergeSplitParagraphs(paragraphs);
         target.details = paragraphs.join("\n");
