@@ -8,18 +8,8 @@
 
 import { Cluster, Attribute, OptionalAttribute } from "../../cluster/Cluster.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
+import { TlvUInt16, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
-
-/**
- * The value of the IlluminanceMeasurement lightSensorType attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.5
- */
-export const enum LightSensorType {
-    Photodiode = 0,
-    Cmos = 1
-}
 
 /**
  * Illuminance Measurement
@@ -84,6 +74,6 @@ export const IlluminanceMeasurementCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.5
          */
-        lightSensorType: OptionalAttribute(0x4, TlvNullable(TlvEnum<LightSensorType>()), { default: 255 })
+        lightSensorType: OptionalAttribute(0x4, TlvNullable(TlvUInt8), { default: null })
     }
 });

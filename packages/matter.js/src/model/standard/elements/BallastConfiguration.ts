@@ -27,7 +27,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PhysicalMaxLevel", id: 0x1, type: "uint8", access: "R V", conformance: "M",
-            constraint: "1 to 254", default: 0,
+            constraint: "1 to 254", default: 254,
             details: "The PhysicalMaxLevel attribute specifies the maximum light output the ballast can achieve according " +
                      "to the dimming light curve (see The Dimming Light Curve).",
             xref: { document: "cluster", section: "3.3.6.2" }
@@ -49,7 +49,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MinLevel", id: 0x10, type: "uint8", access: "RW VM", conformance: "M",
-            constraint: "1 to 254", default: 1,
+            constraint: "1 to 254", default: { type: "reference", name: "PhysicalMinLevel" },
 
             details: "The MinLevel attribute specifies the light output of the ballast according to the dimming light " +
                      "curve (see The Dimming Light Curve) when the Level Control Cluster’s CurrentLevel attribute equals " +
@@ -65,7 +65,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxLevel", id: 0x11, type: "uint8", access: "RW VM", conformance: "M",
-            constraint: "1 to 254", default: 0,
+            constraint: "1 to 254", default: { type: "reference", name: "PhysicalMaxLevel" },
 
             details: "The MaxLevel attribute specifies the light output of the ballast according to the dimming light " +
                      "curve (see The Dimming Light Curve) when the Level Control Cluster’s CurrentLevel attribute equals " +
@@ -102,7 +102,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "BallastFactorAdjustment", id: 0x15, type: "uint8", access: "RW VM",
-            conformance: "O", constraint: "100 to Ms", default: 0, quality: "X",
+            conformance: "O", constraint: "100 to Ms", default: null, quality: "X",
 
             details: "The BallastFactorAdjustment attribute specifies the multiplication factor, as a percentage, to be " +
                      "applied to the configured light output of the lamps. A typical usage of this mechanism is to " +
@@ -146,7 +146,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "LampRatedHours", id: 0x32, type: "uint24", access: "RW VM",
-            conformance: "O", default: 0, quality: "X",
+            conformance: "O", default: null, quality: "X",
             details: "The LampRatedHours attribute specifies the number of hours of use the lamps are rated for by the " +
                      "manufacturer." +
                      "\n" +
@@ -183,7 +183,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "LampBurnHoursTripPoint", id: 0x35, type: "uint24", access: "RW VM",
-            conformance: "O", default: 0, quality: "X",
+            conformance: "O", default: null, quality: "X",
 
             details: "The LampBurnHoursTripPoint attribute specifies the number of hours the LampBurnHours attribute may " +
                      "reach before an alarm is generated." +

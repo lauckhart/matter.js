@@ -186,7 +186,7 @@ Matter.children.push({
                      "values from those structs.",
 
             xref: { document: "core", section: "11.2.8.5" },
-            children: [{ tag: "datatype", name: "GroupKeySetIDs", type: "uint16", conformance: "M" }]
+            children: [{ tag: "datatype", name: "GroupKeySetIDs", id: 0x1, type: "uint16", conformance: "X" }]
         },
 
         {

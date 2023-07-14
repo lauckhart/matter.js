@@ -142,7 +142,14 @@ export class ModelTraversal {
             }
             const type = this.getTypeName(model);
             if (type !== undefined) {
-                return this.findType(model.parent, type, model.allowedBaseTags);
+                // Allowed tags represent a priority so search each tag
+                // independently
+                for (const tag of model.allowedBaseTags) {
+                    const found = this.findType(model.parent, type, tag);
+                    if (found) {
+                        return found;
+                    }
+                }
             }
         });
     }
@@ -331,7 +338,7 @@ export class ModelTraversal {
     /**
      * Search inherited and structural type scope for a named type.
      */
-    findType(scope: Model | undefined, name: string, allowedTags: ElementTag[]): Model | undefined {
+    findType(scope: Model | undefined, name: string, tag: ElementTag): Model | undefined {
         return this.operation(() => {
             if (!scope) {
                 return;
@@ -339,7 +346,7 @@ export class ModelTraversal {
             const queue = Array<Model>(scope);
             for (scope = queue.shift(); scope; scope = queue.shift()) {
                 if (scope.isTypeScope) {
-                    const result = this.findLocal(scope, name, allowedTags);
+                    const result = this.findLocal(scope, name, [tag]);
                     if (result) {
                         return result;
                     }
@@ -364,7 +371,7 @@ export class ModelTraversal {
      */
     findResponse(command: CommandModel) {
         if (command.response && command.response !== "status") {
-            return new ModelTraversal().findType(command, command.response, [ElementTag.Command]);
+            return new ModelTraversal().findType(command, command.response, ElementTag.Command);
         }
     }
 

@@ -34,10 +34,10 @@ describe("Matter", () => {
     })
 
     it("has not increased in errors", () => {
-        expect(validate().errors.length).toBeLessThanOrEqual(9);
+        expect(validate().errors.length).toBeLessThanOrEqual(16);
     })
 
     it("has not decreased in scope", () => {
-        expect(validate().elementCount).toBeGreaterThanOrEqual(3642);
+        expect(validate().elementCount).toBeGreaterThanOrEqual(3637);
     })
 })

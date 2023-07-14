@@ -131,7 +131,7 @@ export const TargetNavigatorCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.3.2
          */
-        currentTarget: OptionalAttribute(0x1, TlvNullable(TlvUInt8), { default: 0 })
+        currentTarget: OptionalAttribute(0x1, TlvNullable(TlvUInt8), { default: null })
     },
 
     commands: {

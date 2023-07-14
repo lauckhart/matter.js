@@ -93,7 +93,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "AbsMinHeatSetpointLimit", id: 0x3, type: "temperature", access: "R V",
-            conformance: "[HEAT]", constraint: "desc", default: 700, quality: "F",
+            conformance: "[HEAT]", constraint: "desc", default: { type: "celsius", value: 7 }, quality: "F",
             details: "This attribute specifies the absolute minimum level that the heating setpoint may be set to. This " +
                      "is a limitation imposed by the manufacturer." +
                      "\n" +
@@ -103,7 +103,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "AbsMaxHeatSetpointLimit", id: 0x4, type: "temperature", access: "R V",
-            conformance: "[HEAT]", constraint: "desc", default: 3000, quality: "F",
+            conformance: "[HEAT]", constraint: "desc", default: { type: "celsius", value: 30 }, quality: "F",
             details: "This attribute specifies the absolute maximum level that the heating setpoint may be set to. This " +
                      "is a limitation imposed by the manufacturer." +
                      "\n" +
@@ -113,7 +113,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "AbsMinCoolSetpointLimit", id: 0x5, type: "temperature", access: "R V",
-            conformance: "[COOL]", constraint: "desc", default: 1600, quality: "F",
+            conformance: "[COOL]", constraint: "desc", default: { type: "celsius", value: 16 }, quality: "F",
             details: "This attribute specifies the absolute minimum level that the cooling setpoint may be set to. This " +
                      "is a limitation imposed by the manufacturer." +
                      "\n" +
@@ -123,7 +123,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "AbsMaxCoolSetpointLimit", id: 0x6, type: "temperature", access: "R V",
-            conformance: "[COOL]", constraint: "desc", default: 3200, quality: "F",
+            conformance: "[COOL]", constraint: "desc", default: { type: "celsius", value: 32 }, quality: "F",
             details: "This attribute specifies the absolute maximum level that the cooling setpoint may be set to. This " +
                      "is a limitation imposed by the manufacturer." +
                      "\n" +
@@ -182,7 +182,8 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "LocalTemperatureCalibration", id: 0x10, type: "temp-s8", access: "RW VM",
-            conformance: "[!LTNE]", constraint: "-2.5°C to 2.5°C", default: 0, quality: "N",
+            conformance: "[!LTNE]", constraint: "-2.5°C to 2.5°C", default: { type: "celsius", value: 0 },
+            quality: "N",
 
             details: "This attribute specifies the offset the Thermostat server shall make to the measured temperature " +
                      "(locally or remotely) to adjust the LocalTemperature Value prior to using, displaying or reporting " +
@@ -202,7 +203,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "OccupiedCoolingSetpoint", id: 0x11, type: "temperature", access: "RW VO",
-            conformance: "COOL", constraint: "desc", default: 2600, quality: "N S",
+            conformance: "COOL", constraint: "desc", default: { type: "celsius", value: 26 }, quality: "N S",
 
             details: "This attribute specifies the cooling mode setpoint when the room is occupied." +
                      "\n" +
@@ -217,7 +218,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "OccupiedHeatingSetpoint", id: 0x12, type: "temperature", access: "RW VO",
-            conformance: "HEAT", constraint: "desc", default: 2000, quality: "N S",
+            conformance: "HEAT", constraint: "desc", default: { type: "celsius", value: 20 }, quality: "N S",
 
             details: "This attribute specifies the heating mode setpoint when the room is occupied." +
                      "\n" +
@@ -232,7 +233,8 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "UnoccupiedCoolingSetpoint", id: 0x13, type: "temperature", access: "RW VO",
-            conformance: "COOL & OCC", constraint: "desc", default: 2600, quality: "N",
+            conformance: "COOL & OCC", constraint: "desc", default: { type: "celsius", value: 26 },
+            quality: "N",
 
             details: "This attribute specifies the cooling mode setpoint when the room is unoccupied." +
                      "\n" +
@@ -246,7 +248,8 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "UnoccupiedHeatingSetpoint", id: 0x14, type: "temperature", access: "RW VO",
-            conformance: "HEAT & OCC", constraint: "desc", default: 2000, quality: "N",
+            conformance: "HEAT & OCC", constraint: "desc", default: { type: "celsius", value: 20 },
+            quality: "N",
 
             details: "This attribute specifies the heating mode setpoint when the room is unoccupied." +
                      "\n" +
@@ -260,7 +263,8 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MinHeatSetpointLimit", id: 0x15, type: "temperature", access: "RW VM",
-            conformance: "[HEAT]", constraint: "desc", default: 700, quality: "N",
+            conformance: "[HEAT]", constraint: "desc",
+            default: { type: "reference", name: "AbsMinHeatSetpointLimit" }, quality: "N",
 
             details: "This attribute specifies the minimum level that the heating setpoint may be set to." +
                      "\n" +
@@ -279,7 +283,8 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxHeatSetpointLimit", id: 0x16, type: "temperature", access: "RW VM",
-            conformance: "[HEAT]", constraint: "desc", default: 3000, quality: "N",
+            conformance: "[HEAT]", constraint: "desc",
+            default: { type: "reference", name: "AbsMaxHeatSetpointLimit" }, quality: "N",
 
             details: "This attribute specifies the maximum level that the heating setpoint may be set to." +
                      "\n" +
@@ -294,7 +299,8 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MinCoolSetpointLimit", id: 0x17, type: "temperature", access: "RW VM",
-            conformance: "[COOL]", constraint: "desc", default: 1600, quality: "N",
+            conformance: "[COOL]", constraint: "desc",
+            default: { type: "reference", name: "AbsMinCoolSetpointLimit" }, quality: "N",
 
             details: "This attribute specifies the minimum level that the cooling setpoint may be set to." +
                      "\n" +
@@ -309,7 +315,8 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxCoolSetpointLimit", id: 0x18, type: "temperature", access: "RW VM",
-            conformance: "[COOL]", constraint: "desc", default: 3200, quality: "N",
+            conformance: "[COOL]", constraint: "desc",
+            default: { type: "reference", name: "AbsMaxCoolSetpointLimit" }, quality: "N",
 
             details: "This attribute specifies the maximum level that the cooling setpoint may be set to." +
                      "\n" +
@@ -326,7 +333,8 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MinSetpointDeadBand", id: 0x19, type: "temp-s8", access: "R[W] VM",
-            conformance: "AUTO", constraint: "0°C to 2.5°C", default: 25, quality: "N",
+            conformance: "AUTO", constraint: "0°C to 2.5°C", default: { type: "celsius", value: 2 },
+            quality: "N",
 
             details: "On devices which support the AUTO feature, this attribute specifies the minimum difference between " +
                      "the Heat Setpoint and the Cool Setpoint." +
@@ -568,7 +576,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TemperatureSetpointHoldDuration", id: 0x24, type: "uint16",
-            access: "RW VM", conformance: "O", constraint: "0 to 1440", default: 0, quality: "X N",
+            access: "RW VM", conformance: "O", constraint: "0 to 1440", default: null, quality: "X N",
             details: "This attribute sets the period in minutes for which a setpoint hold is active. Thermostats that " +
                      "support hold for a specified duration SHOULD implement this attribute. The null value indicates the " +
                      "field is unused. All other values are reserved.",
@@ -663,7 +671,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "SetpointChangeAmount", id: 0x31, type: "temp-diff", access: "R V",
-            conformance: "O", default: 32768, quality: "X",
+            conformance: "O", default: null, quality: "X",
 
             details: "This attribute specifies the delta between the current active OccupiedCoolingSetpoint or " +
                      "OccupiedHeatingSetpoint and the previous active setpoint. This attribute is meant to accompany the " +
@@ -927,7 +935,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "AcCoilTemperature", id: 0x46, type: "temperature", access: "R V",
-            conformance: "O", default: 32768, quality: "X",
+            conformance: "O", default: null, quality: "X",
             details: "This attribute represents the temperature of the AC coil, as measured locally or remotely (over the " +
                      "network).",
             xref: { document: "cluster", section: "4.3.7.50" }

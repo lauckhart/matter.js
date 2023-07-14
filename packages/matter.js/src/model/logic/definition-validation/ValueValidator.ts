@@ -6,7 +6,6 @@
 
 import { Access, Conformance, Constraint, Quality } from "../../aspects/index.js";
 import { DefinitionError, FieldValue, Metatype } from "../../definitions/index.js";
-import { CommandElement, DatatypeElement } from "../../elements/index.js";
 import { ClusterModel, ValueModel } from "../../models/index.js";
 import { ModelValidator } from "./ModelValidator.js";
 
@@ -150,14 +149,14 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
             case Metatype.enum:
             case Metatype.bitmap:
                 if (!this.model.children.length && !this.model.global) {
-                    if (
-                        this.model.parent?.tag === CommandElement.Tag
-                        || this.model.parent?.tag === DatatypeElement.Tag
-                    ) {
-                        // The specification defines some fields as enums without specific values, so
-                        // allow this under command and datatype fields
-                        break;
-                    }
+                    // if (
+                    //     this.model.parent?.tag === CommandElement.Tag
+                    //     || this.model.parent?.tag === DatatypeElement.Tag
+                    // ) {
+                    //     // The specification defines some fields as enums without specific values, so
+                    //     // allow this under command and datatype fields
+                    //     break;
+                    // }
 
                     this.error(
                         `CHILDLESS_${metatype.toUpperCase()}`,

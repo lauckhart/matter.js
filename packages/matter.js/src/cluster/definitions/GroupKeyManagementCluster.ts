@@ -16,6 +16,7 @@ import { TlvUInt16, TlvEnum, TlvEpochUs } from "../../tlv/TlvNumber.js";
 import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
+import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.3
@@ -183,7 +184,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.8
      */
-    groupKeyMulticastPolicy: TlvOptionalField(8, TlvEnum<GroupKeyMulticastPolicy>())
+    groupKeyMulticastPolicy: TlvField(8, TlvEnum<GroupKeyMulticastPolicy>())
 });
 
 /**
@@ -215,13 +216,6 @@ export const TlvKeySetReadResponse = TlvObject({ groupKeySet: TlvField(0, TlvGro
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.4
  */
 export const TlvKeySetRemoveRequest = TlvObject({ groupKeySetId: TlvField(0, TlvUInt16) });
-
-/**
- * Input to the GroupKeyManagement keySetReadAllIndices command
- *
- * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.5
- */
-export const TlvKeySetReadAllIndicesRequest = TlvObject({ groupKeySetIDs: TlvField(0, TlvUInt16) });
 
 /**
  * This command shall be generated in response to KeySetReadAllIndices and it shall contain the list of GroupKeySetID
@@ -414,6 +408,6 @@ export const GroupKeyManagementCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.5
          */
-        keySetReadAllIndices: Command(0x4, TlvKeySetReadAllIndicesRequest, 5, TlvKeySetReadAllIndicesResponse)
+        keySetReadAllIndices: Command(0x4, TlvNoArguments, 5, TlvKeySetReadAllIndicesResponse)
     }
 });

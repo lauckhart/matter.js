@@ -46,7 +46,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "StartTime", id: 0x1, type: "epoch-us", access: "R V", conformance: "AS",
-            constraint: "desc", default: 0, quality: "X",
+            constraint: "desc", default: null, quality: "X",
             details: "This shall indicate the start time of the media, in case the media has a fixed start time (for " +
                      "example, live stream or television broadcast), or null when start time does not apply to the current" +
                      "\n" +
@@ -57,7 +57,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Duration", id: 0x2, type: "uint64", access: "R V", conformance: "AS",
-            constraint: "desc", default: 0, quality: "X",
+            constraint: "desc", default: null, quality: "X",
             details: "This shall indicate the duration, in milliseconds, of the current media being played back or null " +
                      "when duration is not applicable (for example, in live streaming content with no known duration). " +
                      "This attribute shall never be 0.",

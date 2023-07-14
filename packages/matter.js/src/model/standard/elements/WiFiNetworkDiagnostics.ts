@@ -63,7 +63,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ChannelNumber", id: 0x3, type: "uint16", access: "R V", conformance: "M",
-            default: 0, quality: "X",
+            default: null, quality: "X",
             details: "The ChannelNumber attribute shall indicate the channel that Wi-Fi communication is currently " +
                      "operating on.",
             xref: { document: "core", section: "11.14.6.4" }

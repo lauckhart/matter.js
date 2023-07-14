@@ -8,7 +8,6 @@ import { InternalError } from "../../src/common/InternalError.js";
 import {
     ClusterModel,
     CommandModel,
-    Conformance,
     Constraint,
     DatatypeModel,
     ElementTag,
@@ -301,20 +300,32 @@ export class TlvGenerator {
 
     private defineStruct(name: string, model: ValueModel) {
         this.importTlv("tlv", "TlvObject");
+
         const struct = this.file.types.expressions(`export const ${name} = TlvObject({`, "})");
         this.file.types.insertingBefore(struct, () => {
             model.children.forEach(field => {
+                if (field.disallowed || field.deprecated) {
+                    return;
+                }
+
                 let tlv: string;
-                if (field.conformance.type === Conformance.Flag.Mandatory) {
+                if (field.mandatory) {
                     tlv = "TlvField";
                 } else {
-                    tlv = "TlvOptionalField"
+                    tlv = "TlvOptionalField";
                 }
+
                 this.importTlv("tlv/TlvObject", tlv);
                 struct.atom(camelize(field.name, false), `${tlv}(${field.effectiveId}, ${this.reference(field)})`)
                     .document(field);
             });
         });
+
+        if (!struct.entries.length) {
+            struct.remove();
+            return;
+        }
+
         return struct;
     }
 
@@ -394,7 +405,7 @@ export class TlvGenerator {
         }
 
         // Define the type
-        let definition: Entry;
+        let definition: Entry | undefined;
         switch (model.effectiveMetatype) {
             case Metatype.enum:
                 definition = this.defineEnum(name, model);
@@ -410,6 +421,12 @@ export class TlvGenerator {
 
             default:
                 throw new InternalError(`${model.path}: Top-level ${model.effectiveMetatype} is unsupported`);
+        }
+
+        // If all object fields are omitted (disallowed or deprecated) then
+        // no object is defined
+        if (!definition) {
+            return;
         }
 
         // Document the type.  For standalone definitions documentation is

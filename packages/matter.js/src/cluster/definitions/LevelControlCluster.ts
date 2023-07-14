@@ -29,8 +29,8 @@ export const Options = { executeIfOff: BitFlag(0), coupleColorTempToLevel: BitFl
 export const TlvMoveToLevelRequest = TlvObject({
     level: TlvField(0, TlvUInt8.bound({ max: 254 })),
     transitionTime: TlvField(1, TlvNullable(TlvUInt16)),
-    optionsMask: TlvField(2, TlvUInt8),
-    optionsOverride: TlvField(3, TlvUInt8)
+    optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
 });
 
 export const enum MoveMode {
@@ -63,8 +63,8 @@ export const TlvMoveRequest = TlvObject({
      */
     rate: TlvField(1, TlvNullable(TlvUInt8)),
 
-    optionsMask: TlvField(2, TlvUInt8),
-    optionsOverride: TlvField(3, TlvUInt8)
+    optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
 });
 
 export const enum StepMode {
@@ -81,8 +81,8 @@ export const TlvStepRequest = TlvObject({
     stepMode: TlvField(0, TlvEnum<StepMode>()),
     stepSize: TlvField(1, TlvUInt8),
     transitionTime: TlvField(2, TlvNullable(TlvUInt16)),
-    optionsMask: TlvField(3, TlvUInt8),
-    optionsOverride: TlvField(4, TlvUInt8)
+    optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -90,9 +90,10 @@ export const TlvStepRequest = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.4
  */
-export const TlvStopRequest = TlvObject({ optionsMask: TlvField(0, TlvUInt8), optionsOverride: TlvField(1, TlvUInt8) });
-
-export const LevelControlOptions = { executeIfOff: BitFlag(0), coupleColorTempToLevel: BitFlag(1) };
+export const TlvStopRequest = TlvObject({
+    optionsMask: TlvField(0, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(1, TlvBitmap(TlvUInt8, Options))
+});
 
 /**
  * Input to the LevelControl moveToLevelWithOnOff command
@@ -102,8 +103,8 @@ export const LevelControlOptions = { executeIfOff: BitFlag(0), coupleColorTempTo
 export const TlvMoveToLevelWithOnOffRequest = TlvObject({
     level: TlvField(0, TlvUInt8),
     transitionTime: TlvField(1, TlvNullable(TlvUInt16)),
-    optionsMask: TlvField(2, TlvBitmap(TlvUInt8, LevelControlOptions)),
-    optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, LevelControlOptions))
+    optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -114,8 +115,8 @@ export const TlvMoveToLevelWithOnOffRequest = TlvObject({
 export const TlvMoveWithOnOffRequest = TlvObject({
     moveMode: TlvField(0, TlvEnum<MoveMode>()),
     rate: TlvField(1, TlvNullable(TlvUInt8)),
-    optionsMask: TlvField(2, TlvBitmap(TlvUInt8, LevelControlOptions)),
-    optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, LevelControlOptions))
+    optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -127,8 +128,8 @@ export const TlvStepWithOnOffRequest = TlvObject({
     stepMode: TlvField(0, TlvEnum<StepMode>()),
     stepSize: TlvField(1, TlvUInt8),
     transitionTime: TlvField(2, TlvNullable(TlvUInt16)),
-    optionsMask: TlvField(3, TlvBitmap(TlvUInt8, LevelControlOptions)),
-    optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, LevelControlOptions))
+    optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -137,8 +138,8 @@ export const TlvStepWithOnOffRequest = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6
  */
 export const TlvStopWithOnOffRequest = TlvObject({
-    optionsMask: TlvField(0, TlvBitmap(TlvUInt8, LevelControlOptions)),
-    optionsOverride: TlvField(1, TlvBitmap(TlvUInt8, LevelControlOptions))
+    optionsMask: TlvField(0, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(1, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -215,7 +216,7 @@ export const LevelControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.1
          */
-        currentLevel: Attribute(0x0, TlvNullable(TlvUInt8), { scene: true, persistent: true, default: 0 }),
+        currentLevel: Attribute(0x0, TlvNullable(TlvUInt8), { scene: true, persistent: true, default: null }),
 
         /**
          * The MinLevel attribute indicates the minimum value of CurrentLevel that is capable of being assigned.
@@ -229,7 +230,7 @@ export const LevelControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.4
          */
-        maxLevel: OptionalAttribute(0x3, TlvUInt8.bound({ max: 254 }), { default: 0 }),
+        maxLevel: OptionalAttribute(0x3, TlvUInt8.bound({ max: 254 }), { default: 254 }),
 
         /**
          * The Options attribute is meant to be changed only during commissioning. The Options attribute is a bitmap

@@ -18,4 +18,5 @@ import "./AdministratorCommissioningClusterOverrides.ts";
 import "./DoorLockOverrides.ts";
 import "./PumpConfigurationAndControlOverrides.js";
 import "./ModeSelectOverrides.ts";
-
+import "./GroupKeyManagementOverrides.ts";
+import "./IlluminanceMeasurementOverrides.ts";

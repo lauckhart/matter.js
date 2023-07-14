@@ -102,8 +102,8 @@ export const TlvMoveToHueRequest = TlvObject({
      */
     transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
 
-    optionsMask: TlvField(3, TlvUInt8),
-    optionsOverride: TlvField(4, TlvUInt8)
+    optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -139,8 +139,8 @@ export const TlvMoveHueRequest = TlvObject({
      */
     rate: TlvField(1, TlvUInt8),
 
-    optionsMask: TlvField(2, TlvUInt8),
-    optionsOverride: TlvField(3, TlvUInt8)
+    optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -184,8 +184,8 @@ export const TlvStepHueRequest = TlvObject({
      */
     transitionTime: TlvField(2, TlvUInt8),
 
-    optionsMask: TlvField(3, TlvUInt8),
-    optionsOverride: TlvField(4, TlvUInt8)
+    optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -196,8 +196,8 @@ export const TlvStepHueRequest = TlvObject({
 export const TlvMoveToSaturationRequest = TlvObject({
     saturation: TlvField(0, TlvUInt8.bound({ max: 254 })),
     transitionTime: TlvField(1, TlvUInt16.bound({ max: 65534 })),
-    optionsMask: TlvField(2, TlvUInt8),
-    optionsOverride: TlvField(3, TlvUInt8)
+    optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -225,8 +225,8 @@ export const TlvMoveSaturationRequest = TlvObject({
      */
     rate: TlvField(1, TlvUInt8),
 
-    optionsMask: TlvField(2, TlvUInt8),
-    optionsOverride: TlvField(3, TlvUInt8)
+    optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -260,8 +260,8 @@ export const TlvStepSaturationRequest = TlvObject({
      */
     transitionTime: TlvField(2, TlvUInt8),
 
-    optionsMask: TlvField(3, TlvUInt8),
-    optionsOverride: TlvField(4, TlvUInt8)
+    optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -273,8 +273,8 @@ export const TlvMoveToHueAndSaturationRequest = TlvObject({
     hue: TlvField(0, TlvUInt8.bound({ max: 254 })),
     saturation: TlvField(1, TlvUInt8.bound({ max: 254 })),
     transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
-    optionsMask: TlvField(3, TlvUInt8),
-    optionsOverride: TlvField(4, TlvUInt8)
+    optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -286,8 +286,8 @@ export const TlvMoveToColorRequest = TlvObject({
     colorX: TlvField(0, TlvUInt16.bound({ max: 65279 })),
     colorY: TlvField(1, TlvUInt16.bound({ max: 65279 })),
     transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
-    optionsMask: TlvField(3, TlvUInt8),
-    optionsOverride: TlvField(4, TlvUInt8)
+    optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -312,8 +312,8 @@ export const TlvMoveColorRequest = TlvObject({
      */
     rateY: TlvField(1, TlvInt16),
 
-    optionsMask: TlvField(2, TlvUInt8),
-    optionsOverride: TlvField(3, TlvUInt8)
+    optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -333,8 +333,8 @@ export const TlvStepColorRequest = TlvObject({
      */
     transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
 
-    optionsMask: TlvField(3, TlvUInt8),
-    optionsOverride: TlvField(4, TlvUInt8)
+    optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -345,8 +345,8 @@ export const TlvStepColorRequest = TlvObject({
 export const TlvMoveToColorTemperatureRequest = TlvObject({
     colorTemperatureMireds: TlvField(0, TlvUInt16.bound({ max: 65279 })),
     transitionTime: TlvField(1, TlvUInt16.bound({ max: 65534 })),
-    optionsMask: TlvField(2, TlvUInt8),
-    optionsOverride: TlvField(3, TlvUInt8)
+    optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -404,8 +404,8 @@ export const TlvMoveColorTemperatureRequest = TlvObject({
      */
     colorTemperatureMaximumMireds: TlvField(3, TlvUInt16.bound({ max: 65279 })),
 
-    optionsMask: TlvField(4, TlvUInt8),
-    optionsOverride: TlvField(5, TlvUInt8)
+    optionsMask: TlvField(4, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(5, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -468,8 +468,8 @@ export const TlvStepColorTemperatureRequest = TlvObject({
      */
     colorTemperatureMaximumMireds: TlvField(4, TlvUInt16.bound({ max: 65279 })),
 
-    optionsMask: TlvField(5, TlvUInt8),
-    optionsOverride: TlvField(6, TlvUInt8)
+    optionsMask: TlvField(5, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(6, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -501,8 +501,8 @@ export const TlvEnhancedMoveToHueRequest = TlvObject({
      */
     transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
 
-    optionsMask: TlvField(3, TlvUInt8),
-    optionsOverride: TlvField(4, TlvUInt8)
+    optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -529,8 +529,8 @@ export const TlvEnhancedMoveHueRequest = TlvObject({
      */
     rate: TlvField(1, TlvUInt16),
 
-    optionsMask: TlvField(2, TlvUInt8),
-    optionsOverride: TlvField(3, TlvUInt8)
+    optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -566,8 +566,8 @@ export const TlvEnhancedStepHueRequest = TlvObject({
      */
     transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
 
-    optionsMask: TlvField(3, TlvUInt8),
-    optionsOverride: TlvField(4, TlvUInt8)
+    optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -599,8 +599,8 @@ export const TlvEnhancedMoveToHueAndSaturationRequest = TlvObject({
      */
     transitionTime: TlvField(2, TlvUInt16.bound({ max: 65534 })),
 
-    optionsMask: TlvField(3, TlvUInt8),
-    optionsOverride: TlvField(4, TlvUInt8)
+    optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -901,8 +901,8 @@ export const TlvColorLoopSetRequest = TlvObject({
     time: TlvField(3, TlvUInt16),
 
     startHue: TlvField(4, TlvUInt16),
-    optionsMask: TlvField(5, TlvUInt8),
-    optionsOverride: TlvField(6, TlvUInt8)
+    optionsMask: TlvField(5, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(6, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -911,8 +911,8 @@ export const TlvColorLoopSetRequest = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.20
  */
 export const TlvStopMoveStepRequest = TlvObject({
-    optionsMask: TlvField(0, TlvUInt8),
-    optionsOverride: TlvField(1, TlvUInt8)
+    optionsMask: TlvField(0, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(1, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -1383,7 +1383,7 @@ export const XyComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.4
          */
-        currentX: Attribute(0x3, TlvUInt16.bound({ max: 65279 }), { scene: true, persistent: true, default: 1558 }),
+        currentX: Attribute(0x3, TlvUInt16.bound({ max: 65279 }), { scene: true, persistent: true, default: 24939 }),
 
         /**
          * The CurrentY attribute contains the current value of the normalized chromaticity value y, as defined in the
@@ -1394,7 +1394,7 @@ export const XyComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.5
          */
-        currentY: Attribute(0x4, TlvUInt16.bound({ max: 65279 }), { scene: true, persistent: true, default: 1543 })
+        currentY: Attribute(0x4, TlvUInt16.bound({ max: 65279 }), { scene: true, persistent: true, default: 24701 })
     },
 
     commands: {
@@ -1438,7 +1438,7 @@ export const ColorTemperatureComponent = ClusterComponent({
         colorTemperatureMireds: Attribute(
             0x7,
             TlvUInt16.bound({ max: 65279 }),
-            { scene: true, persistent: true, default: 0 }
+            { scene: true, persistent: true, default: 250 }
         ),
 
         /**

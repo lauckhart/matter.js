@@ -276,7 +276,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "InstalledClosedLimitLift", id: 0x11, type: "uint16", access: "R V",
-            conformance: "LF & PA_LF", constraint: "0 to 65534", default: 0, quality: "N",
+            conformance: "LF & PA_LF", constraint: "0 to 65534", default: 65534, quality: "N",
             details: "The InstalledClosedLimitLift attribute identifies the Closed Limit for Lifting the Window Covering " +
                      "whether position (in centimeters) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.18" }
@@ -292,7 +292,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "InstalledClosedLimitTilt", id: 0x13, type: "uint16", access: "R V",
-            conformance: "TL & PA_TL", constraint: "0 to 65534", default: 0, quality: "N",
+            conformance: "TL & PA_TL", constraint: "0 to 65534", default: 65534, quality: "N",
             details: "The InstalledClosedLimitTilt attribute identifies the Closed Limit for Tilting the Window Covering " +
                      "whether position (in tenth of a degree) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.20" }

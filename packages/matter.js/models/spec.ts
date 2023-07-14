@@ -325,7 +325,7 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "1.3.7.7" },
 
                     children: [
-                        { tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" },
+                        { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                         {
                             tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1"
                         }
@@ -339,7 +339,7 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "1.3.7.8" },
 
                     children: [
-                        { tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" },
+                        { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                         {
                             tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1"
                         },
@@ -398,7 +398,7 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "1.3.7.10" },
 
                     children: [
-                        { tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" },
+                        { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                         {
                             tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1"
                         }
@@ -666,7 +666,7 @@ export const SpecMatter: MatterElement = {
                     tag: "command", name: "AddSceneResponse", id: 0x0, conformance: "M", direction: "response",
                     xref: { document: "cluster", section: "1.4.9.12" },
                     children: [
-                        { tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" },
+                        { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                         { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneId", id: 0x2, type: "uint8", conformance: "M" }
                     ]
@@ -677,7 +677,7 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "1.4.9.13" },
 
                     children: [
-                        { tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" },
+                        { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                         { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneId", id: 0x2, type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", id: 0x3, type: "uint16", conformance: "desc" },
@@ -696,7 +696,7 @@ export const SpecMatter: MatterElement = {
                     tag: "command", name: "RemoveSceneResponse", id: 0x2, conformance: "M", direction: "response",
                     xref: { document: "cluster", section: "1.4.9.14" },
                     children: [
-                        { tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" },
+                        { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                         { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneId", id: 0x2, type: "uint8", conformance: "M" }
                     ]
@@ -706,7 +706,7 @@ export const SpecMatter: MatterElement = {
                     tag: "command", name: "RemoveAllScenesResponse", id: 0x3, conformance: "M", direction: "response",
                     xref: { document: "cluster", section: "1.4.9.15" },
                     children: [
-                        { tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" },
+                        { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                         { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M" }
                     ]
                 },
@@ -715,7 +715,7 @@ export const SpecMatter: MatterElement = {
                     tag: "command", name: "StoreSceneResponse", id: 0x4, conformance: "M", direction: "response",
                     xref: { document: "cluster", section: "1.4.9.16" },
                     children: [
-                        { tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" },
+                        { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                         { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneId", id: 0x2, type: "uint8", conformance: "M" }
                     ]
@@ -754,7 +754,7 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "1.4.9.17" },
 
                     children: [
-                        { tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" },
+                        { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                         { tag: "datatype", name: "Capacity", id: 0x1, type: "uint8", conformance: "M", quality: "X" },
                         { tag: "datatype", name: "GroupId", id: 0x2, type: "group-id", conformance: "M" },
                         {
@@ -795,7 +795,7 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "Status", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
+                            tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
                             details: "The Status field contains the status of the copy scene attempt. This field shall be set to one of " +
                                      "the non-reserved values listed in Values of the Status Field of the CopySceneResponse Command.",
                             xref: { document: "cluster", section: "1.4.9.20.1" }
@@ -1264,11 +1264,11 @@ export const SpecMatter: MatterElement = {
                         { tag: "datatype", name: "Level", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254" },
                         { tag: "datatype", name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", quality: "X" },
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -1304,11 +1304,11 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -1334,11 +1334,11 @@ export const SpecMatter: MatterElement = {
                         { tag: "datatype", name: "StepSize", id: 0x1, type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", quality: "X" },
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -1351,11 +1351,11 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x0, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x0, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x1, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x1, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -1581,11 +1581,11 @@ export const SpecMatter: MatterElement = {
                         { tag: "datatype", name: "Level", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254" },
                         { tag: "datatype", name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", quality: "X" },
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -1621,11 +1621,11 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -1651,11 +1651,11 @@ export const SpecMatter: MatterElement = {
                         { tag: "datatype", name: "StepSize", id: 0x1, type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", quality: "X" },
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -1668,11 +1668,11 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x0, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x0, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x1, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x1, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -3438,11 +3438,11 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -3472,11 +3472,11 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -3513,11 +3513,11 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -3538,11 +3538,11 @@ export const SpecMatter: MatterElement = {
                             constraint: "0 to 65534"
                         },
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -3576,11 +3576,11 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -3614,11 +3614,11 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -3640,11 +3640,11 @@ export const SpecMatter: MatterElement = {
                             constraint: "0 to 65534"
                         },
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -3669,11 +3669,11 @@ export const SpecMatter: MatterElement = {
                             constraint: "0 to 65534"
                         },
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -3700,11 +3700,11 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -3728,11 +3728,11 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -3753,11 +3753,11 @@ export const SpecMatter: MatterElement = {
                             constraint: "0 to 65534"
                         },
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -3794,11 +3794,11 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -3831,11 +3831,11 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x2, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -3878,11 +3878,11 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -3920,11 +3920,11 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -4015,11 +4015,11 @@ export const SpecMatter: MatterElement = {
 
                         { tag: "datatype", name: "StartHue", id: 0x4, type: "uint16", conformance: "M" },
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x5, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x5, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x6, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x6, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -4036,11 +4036,11 @@ export const SpecMatter: MatterElement = {
 
                     children: [
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x0, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x0, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x1, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x1, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -4108,11 +4108,11 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x4, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x4, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x5, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x5, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]
@@ -4184,11 +4184,11 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "OptionsMask", id: 0x5, type: "map8", conformance: "M", constraint: "desc",
-                            default: 0
+                            tag: "datatype", name: "OptionsMask", id: 0x5, type: "Options", conformance: "M",
+                            constraint: "desc", default: 0
                         },
                         {
-                            tag: "datatype", name: "OptionsOverride", id: 0x6, type: "map8", conformance: "M",
+                            tag: "datatype", name: "OptionsOverride", id: 0x6, type: "Options", conformance: "M",
                             constraint: "desc", default: 0
                         }
                     ]

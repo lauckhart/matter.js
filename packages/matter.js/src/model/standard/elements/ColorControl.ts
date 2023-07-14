@@ -81,7 +81,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentX", id: 0x3, type: "uint16", access: "R V", conformance: "XY",
-            constraint: "0 to 65279", default: 1558, quality: "N S P",
+            constraint: "0 to 65279", default: 24939, quality: "N S P",
 
             details: "The CurrentX attribute contains the current value of the normalized chromaticity value x, as " +
                      "defined in the CIE xyY Color Space. It is updated as fast as practical during commands that change " +
@@ -95,7 +95,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentY", id: 0x4, type: "uint16", access: "R V", conformance: "XY",
-            constraint: "0 to 65279", default: 1543, quality: "N S P",
+            constraint: "0 to 65279", default: 24701, quality: "N S P",
 
             details: "The CurrentY attribute contains the current value of the normalized chromaticity value y, as " +
                      "defined in the CIE xyY Color Space. It is updated as fast as practical during commands that change " +
@@ -135,7 +135,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ColorTemperatureMireds", id: 0x7, type: "uint16", access: "R V",
-            conformance: "CT", constraint: "0 to 65279", default: 0, quality: "N S P",
+            conformance: "CT", constraint: "0 to 65279", default: 250, quality: "N S P",
 
             details: "The ColorTemperatureMireds attribute contains a scaled inverse of the current value of the color " +
                      "temperature. The unit of ColorTemperatureMireds is the mired (micro reciprocal degree), AKA mirek " +
@@ -593,11 +593,11 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -627,11 +627,11 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x2, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -668,11 +668,11 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -690,11 +690,11 @@ Matter.children.push({
                     constraint: "0 to 65534"
                 },
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x2, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -728,11 +728,11 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x2, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -766,11 +766,11 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -789,11 +789,11 @@ Matter.children.push({
                     constraint: "0 to 65534"
                 },
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -812,11 +812,11 @@ Matter.children.push({
                     constraint: "0 to 65534"
                 },
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -843,11 +843,11 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x2, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -871,11 +871,11 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -896,11 +896,11 @@ Matter.children.push({
                     constraint: "0 to 65534"
                 },
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x2, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -937,11 +937,11 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -974,11 +974,11 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x2, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x2, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -1021,11 +1021,11 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -1063,11 +1063,11 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x3, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -1158,11 +1158,11 @@ Matter.children.push({
 
                 { tag: "datatype", name: "StartHue", id: 0x4, type: "uint16", conformance: "M" },
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x5, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x5, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x6, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x6, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -1179,11 +1179,11 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x0, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x0, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x1, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x1, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -1251,11 +1251,11 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x4, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x4, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x5, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x5, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]
@@ -1327,11 +1327,11 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "OptionsMask", id: 0x5, type: "map8", conformance: "M", constraint: "desc",
-                    default: 0
+                    tag: "datatype", name: "OptionsMask", id: 0x5, type: "Options", conformance: "M",
+                    constraint: "desc", default: 0
                 },
                 {
-                    tag: "datatype", name: "OptionsOverride", id: 0x6, type: "map8", conformance: "M",
+                    tag: "datatype", name: "OptionsOverride", id: 0x6, type: "Options", conformance: "M",
                     constraint: "desc", default: 0
                 }
             ]

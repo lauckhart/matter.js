@@ -699,7 +699,11 @@ export const LiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.18
          */
-        installedClosedLimitLift: OptionalAttribute(0x11, TlvUInt16.bound({ max: 65534 }), { persistent: true, default: 0 })
+        installedClosedLimitLift: OptionalAttribute(
+            0x11,
+            TlvUInt16.bound({ max: 65534 }),
+            { persistent: true, default: 65534 }
+        )
     },
 
     commands: {
@@ -777,7 +781,11 @@ export const TiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.20
          */
-        installedClosedLimitTilt: OptionalAttribute(0x13, TlvUInt16.bound({ max: 65534 }), { persistent: true, default: 0 })
+        installedClosedLimitTilt: OptionalAttribute(
+            0x13,
+            TlvUInt16.bound({ max: 65534 }),
+            { persistent: true, default: 65534 }
+        )
     },
 
     commands: {

@@ -3345,8 +3345,8 @@ export const ChipMatter: MatterElement = {
                     children: [
                         { tag: "datatype", name: "Level", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M" },
-                        { tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M" }
+                        { tag: "datatype", name: "OptionsMask", type: "Options", conformance: "M" },
+                        { tag: "datatype", name: "OptionsOverride", type: "Options", conformance: "M" }
                     ]
                 },
 
@@ -3356,8 +3356,8 @@ export const ChipMatter: MatterElement = {
                     children: [
                         { tag: "datatype", name: "MoveMode", type: "MoveMode", conformance: "M" },
                         { tag: "datatype", name: "Rate", type: "uint8", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M" },
-                        { tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M" }
+                        { tag: "datatype", name: "OptionsMask", type: "Options", conformance: "M" },
+                        { tag: "datatype", name: "OptionsOverride", type: "Options", conformance: "M" }
                     ]
                 },
 
@@ -3368,16 +3368,16 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "StepMode", type: "StepMode", conformance: "M" },
                         { tag: "datatype", name: "StepSize", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M" },
-                        { tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M" }
+                        { tag: "datatype", name: "OptionsMask", type: "Options", conformance: "M" },
+                        { tag: "datatype", name: "OptionsOverride", type: "Options", conformance: "M" }
                     ]
                 },
 
                 {
                     tag: "command", name: "Stop", id: 0x3, conformance: "M", direction: "request",
                     children: [
-                        { tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M" },
-                        { tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M" }
+                        { tag: "datatype", name: "OptionsMask", type: "Options", conformance: "M" },
+                        { tag: "datatype", name: "OptionsOverride", type: "Options", conformance: "M" }
                     ]
                 },
 
@@ -3387,8 +3387,8 @@ export const ChipMatter: MatterElement = {
                     children: [
                         { tag: "datatype", name: "Level", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M" },
-                        { tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M" }
+                        { tag: "datatype", name: "OptionsMask", type: "Options", conformance: "M" },
+                        { tag: "datatype", name: "OptionsOverride", type: "Options", conformance: "M" }
                     ]
                 },
 
@@ -3398,8 +3398,8 @@ export const ChipMatter: MatterElement = {
                     children: [
                         { tag: "datatype", name: "MoveMode", type: "MoveMode", conformance: "M" },
                         { tag: "datatype", name: "Rate", type: "uint8", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M" },
-                        { tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M" }
+                        { tag: "datatype", name: "OptionsMask", type: "Options", conformance: "M" },
+                        { tag: "datatype", name: "OptionsOverride", type: "Options", conformance: "M" }
                     ]
                 },
 
@@ -3410,16 +3410,16 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "StepMode", type: "StepMode", conformance: "M" },
                         { tag: "datatype", name: "StepSize", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M" },
-                        { tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M" }
+                        { tag: "datatype", name: "OptionsMask", type: "Options", conformance: "M" },
+                        { tag: "datatype", name: "OptionsOverride", type: "Options", conformance: "M" }
                     ]
                 },
 
                 {
                     tag: "command", name: "StopWithOnOff", id: 0x7, conformance: "M", direction: "request",
                     children: [
-                        { tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M" },
-                        { tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M" }
+                        { tag: "datatype", name: "OptionsMask", type: "Options", conformance: "M" },
+                        { tag: "datatype", name: "OptionsOverride", type: "Options", conformance: "M" }
                     ]
                 },
 

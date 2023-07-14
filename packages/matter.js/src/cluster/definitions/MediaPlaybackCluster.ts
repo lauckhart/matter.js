@@ -317,7 +317,7 @@ export const AdvancedSeekComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.3.2
          */
-        startTime: Attribute(0x1, TlvNullable(TlvEpochUs), { default: 0 }),
+        startTime: Attribute(0x1, TlvNullable(TlvEpochUs), { default: null }),
 
         /**
          * This shall indicate the duration, in milliseconds, of the current media being played back or null when
@@ -326,7 +326,7 @@ export const AdvancedSeekComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.3.3
          */
-        duration: Attribute(0x2, TlvNullable(TlvUInt64), { default: 0 }),
+        duration: Attribute(0x2, TlvNullable(TlvUInt64), { default: null }),
 
         /**
          * This shall indicate the position of playback (Position field) at the time (UpdateAt field) specified in the

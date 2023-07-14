@@ -254,7 +254,7 @@ export const WiFiNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.4
          */
-        channelNumber: Attribute(0x3, TlvNullable(TlvUInt16), { default: 0 }),
+        channelNumber: Attribute(0x3, TlvNullable(TlvUInt16), { default: null }),
 
         /**
          * The RSSI attribute shall indicate the current RSSI of the Node’s Wi-Fi radio in dBm.

@@ -30,8 +30,8 @@ export const Options = { executeIfOff: BitFlag(0), coupleColorTempToLevel: BitFl
 export const TlvMoveToLevelRequest = TlvObject({
     level: TlvField(0, TlvUInt8.bound({ max: 254 })),
     transitionTime: TlvField(1, TlvNullable(TlvUInt16)),
-    optionsMask: TlvField(2, TlvUInt8),
-    optionsOverride: TlvField(3, TlvUInt8)
+    optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -137,8 +137,8 @@ export const TlvMoveRequest = TlvObject({
      */
     rate: TlvField(1, TlvNullable(TlvUInt8)),
 
-    optionsMask: TlvField(2, TlvUInt8),
-    optionsOverride: TlvField(3, TlvUInt8)
+    optionsMask: TlvField(2, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(3, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -150,8 +150,8 @@ export const TlvStepRequest = TlvObject({
     stepMode: TlvField(0, TlvUInt8),
     stepSize: TlvField(1, TlvUInt8),
     transitionTime: TlvField(2, TlvNullable(TlvUInt16)),
-    optionsMask: TlvField(3, TlvUInt8),
-    optionsOverride: TlvField(4, TlvUInt8)
+    optionsMask: TlvField(3, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(4, TlvBitmap(TlvUInt8, Options))
 });
 
 /**
@@ -159,7 +159,10 @@ export const TlvStepRequest = TlvObject({
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.6.4
  */
-export const TlvStopRequest = TlvObject({ optionsMask: TlvField(0, TlvUInt8), optionsOverride: TlvField(1, TlvUInt8) });
+export const TlvStopRequest = TlvObject({
+    optionsMask: TlvField(0, TlvBitmap(TlvUInt8, Options)),
+    optionsOverride: TlvField(1, TlvBitmap(TlvUInt8, Options))
+});
 
 /**
  * Input to the PulseWidthModulation moveToClosestFrequency command

@@ -64,12 +64,11 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "LightSensorType", id: 0x4, type: "enum8", access: "R V", conformance: "O",
-            default: 255, quality: "X",
+            tag: "attribute", name: "LightSensorType", id: 0x4, type: "uint8", access: "R V", conformance: "O",
+            default: null, quality: "X",
             details: "The LightSensorType attribute specifies the electronic type of the light sensor. This attribute " +
                      "shall be set to one of the non-reserved values listed in Values of the LightSensorType Attribute.",
-            xref: { document: "cluster", section: "2.2.5.5" },
-            children: [{ tag: "datatype", name: "Photodiode", id: 0x0 }, { tag: "datatype", name: "Cmos", id: 0x1 }]
+            xref: { document: "cluster", section: "2.2.5.5" }
         }
     ]
 });
