@@ -69,75 +69,7 @@ export const TlvOffWithEffectRequest = TlvObject({
 });
 
 /**
- * The value of nameFor(model) {
- *
- * var _a;
- *
- * if (!(model instanceof ValueModel)) {
- *
- * return;
- *
- * }
- *
- * const defining = (_a = model.definingModel) !== null && _a !== void 0 ? _a : model;
- *
- * let name = defining.name;
- *
- * // If there is a name collision, prefix the name with the parent's name
- *
- * if (this.scopedNames.has(name) && defining.parent && !(defining instanceof ClusterModel)) {
- *
- * name = `${defining.parent.name}${name}`;
- *
- * }
- *
- * // Specialize the name based on the model type
- *
- * if (defining instanceof CommandModel && defining.isRequest) {
- *
- * name += "Request";
- *
- * }
- *
- * if (defining instanceof EventModel) {
- *
- * name += "Event";
- *
- * }
- *
- * // For enums and bitmaps we create a TypeScript value object, for other
- *
- * // types we create a TLV definition
- *
- * if (defining.effectiveMetatype === Metatype.enum) {
- *
- * if (name.endsWith("Enum")) {
- *
- * // This seems a bit redundant
- *
- * name = name.substring(0, name.length - 4);
- *
- * }
- *
- * }
- *
- * else if (defining.effectiveMetatype !== Metatype.bitmap) {
- *
- * name = "Tlv" + name;
- *
- * }
- *
- * // We reserve the name "Type". Plus it's kind of ambiguous
- *
- * if (name == "Type") {
- *
- * name = `${this.cluster.name}Type`;
- *
- * }
- *
- * return name;
- *
- * }.onOffControl
+ * The value of OnOff.onOffControl
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.6.1
  */

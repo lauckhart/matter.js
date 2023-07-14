@@ -328,7 +328,7 @@ const translators: { [name: string]: Translator } = {
                 throw new Error("Empty bitmask");
             }
 
-            let msb = undefined, lsb = undefined;
+            let msb: number | undefined, lsb: number | undefined;
             let bit = 1;
             for (let i = 0; mask >= bit; i++) {
                 if (mask & bit) {

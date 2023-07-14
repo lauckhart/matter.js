@@ -201,7 +201,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
     }
 
     private validateBitFields() {
-        const ranges = Array<{ name: String, min: number, max: number }>();
+        const ranges = Array<{ name: string, min: number, max: number }>();
         for (const c of this.model.children) {
             let min, max;
 

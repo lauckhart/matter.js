@@ -303,7 +303,7 @@ export class ModelTraversal {
                 if (allowedTags.indexOf(child.tag) !== -1) {
                     members.push(child);
                 }
-            };
+            }
         });
 
         return members;

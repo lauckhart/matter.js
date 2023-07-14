@@ -490,7 +490,7 @@ class ExpressionBlock extends NestedBlock {
             case ExpressionLayout.SingleNested:
                 {
                     // Need to reserialize with reduced padding
-                    let line = this.entries[0].toString(linePrefix).trim();
+                    const line = this.entries[0].toString(linePrefix).trim();
                     return `${linePrefix}${this.prefix}${line}${this.suffix}`;
                 }
 

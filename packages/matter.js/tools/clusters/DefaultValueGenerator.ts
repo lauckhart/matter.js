@@ -17,8 +17,7 @@ export class DefaultValueGenerator {
 
     create(model: ValueModel) {
         const metatype = model.effectiveMetatype;
-
-        let defaultValue = model.effectiveDefault;
+        const defaultValue = model.effectiveDefault;
 
         if (defaultValue === undefined) {
             if (metatype === Metatype.object) {
@@ -77,7 +76,7 @@ export class DefaultValueGenerator {
         if (typeof defaultValue == "number" || typeof defaultValue == "string") {
             const value = model.member(defaultValue);
             if (value) {
-                let enumName = this.tlv.nameFor(value.parent);
+                const enumName = this.tlv.nameFor(value.parent);
                 if (enumName) {
                     return serialize.asIs(`${enumName}.${value.name}`);
                 }

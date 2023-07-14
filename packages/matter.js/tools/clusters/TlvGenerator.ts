@@ -456,7 +456,7 @@ export class TlvGenerator {
                     // Standalone
                     definition.document(model);
                 } else {
-                    definition.document({ details: `The value of ${this.nameFor}.${camelize(model.name, false)}`, xref: model.xref });
+                    definition.document({ details: `The value of ${this.cluster.name}.${camelize(model.name, false)}`, xref: model.xref });
                 }
                 break;
         }
@@ -500,7 +500,7 @@ export class TlvGenerator {
             return;
         }
 
-        let bounds = {} as { [key: string]: number }
+        const bounds = {} as { [key: string]: number }
         if (min !== undefined) {
             bounds[minKey] = min;
         }

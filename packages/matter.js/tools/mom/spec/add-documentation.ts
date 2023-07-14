@@ -78,7 +78,7 @@ function mergeSplitParagraphs(paragraphs: string[]) {
  * pipeline.
  */
 export function addDocumentation(target: { details?: string }, definition: HtmlReference) {
-    let prose = definition.prose;
+    const prose = definition.prose;
     if (!prose) {
         return;
     }
