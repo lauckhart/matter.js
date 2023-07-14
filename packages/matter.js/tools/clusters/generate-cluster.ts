@@ -16,6 +16,8 @@ import { FeatureNames, translateBitmap } from "../../src/model/logic/cluster-var
 import { conditionToBitmaps } from "../../src/model/logic/cluster-variance/VarianceCondition.js";
 import { IllegalFeatureCombinations } from "../../src/model/logic/cluster-variance/IllegalFeatureCombinations.js";
 import { Block } from "../util/TsFile.js";
+import { DefaultValueGenerator } from "./DefaultValueGenerator.js";
+import { TlvGenerator } from "./TlvGenerator.js";
 
 const logger = Logger.get("generate-cluster");
 
@@ -32,33 +34,21 @@ export function generateCluster(file: ClusterFile) {
     const variance = ClusterVariance(cluster);
     const illegal = variance.illegal.map(bitmap => translateBitmap(bitmap, featureNames));
 
-    // Generate feature enum
-    if (features.length) {
-        const featureEnum = file.expressions(`export enum ${cluster.name}Feature {`, "}")
-            .document({ description: `These are optional features supported by ${file.clusterName}.`, xref: cluster.featureMap.xref });
-        for (const f of features) {
-            const name = camelize(f.description || f.name);
-            featureEnum.atom(`${name} = ${serialize(name)}`)
-                .document(f);
-        }
-    }
-
     // Generate the base component
-    let base
+    let base;
     if (cluster.id === undefined) {
+        // Base cluster
         file.addImport("cluster/ClusterFactory", "ClusterComponent");
         base = file.expressions(`export const ${cluster.name}Base = ClusterComponent({`, "})")
             .document(`${cluster.name} is a derived cluster, not to be used directly.  These elements are present in all clusters derived from ${cluster.name}.`);
-    } else if (!variance.componentized) {
+    } else if (!features.length) {
+        // Non-extensible cluster
         file.addImport("cluster/Cluster", "Cluster");
         base = file.expressions(`export const ${file.clusterName} = Cluster({`, "})")
             .document(cluster);
         generateMetadata(base, cluster);
     } else {
-        file.addImport("cluster/ClusterFactory", "BaseClusterComponent");
-        base = file.expressions(`export const ${cluster.name}Base = BaseClusterComponent({`, "})")
-            .document(`These elements and properties are present in all ${cluster.name} clusters.`);
-        generateMetadata(base, cluster);
+        base = generateExtensibleCluster(file, featureNames);
     }
     const gen = new ClusterComponentGenerator(file, cluster);
     gen.populateComponent(variance.base, base);
@@ -115,6 +105,36 @@ function withArticle(what: string) {
         default:
             return `a ${what}`;
     }
+}
+
+function generateExtensibleCluster(file: ClusterFile, featureNames: FeatureNames) {
+    // Feature enum
+    const featureEnum = file.expressions(`export enum ${file.cluster.name}Feature {`, "}")
+        .document({ description: `These are optional features supported by ${file.clusterName}.`, xref: file.cluster.featureMap.xref });
+    for (const f of file.cluster.features) {
+        featureEnum.atom(`${featureNames[f.name]} = ${serialize(featureNames[f.name])}`)
+            .document(f);
+    }
+
+    // Base component
+    file.addImport("cluster/ClusterFactory", "BaseClusterComponent");
+    const base = file.expressions(`export const ${file.cluster.name}Base = BaseClusterComponent({`, "})")
+        .document(`These elements and properties are present in all ${file.cluster.name} clusters.`);
+    generateMetadata(base, file.cluster);
+
+    // Features
+    const features = file.cluster.features;
+    if (features.length) {
+        const featureBlock = base.expressions("features: {", "}");
+        base.file.addImport("schema/BitmapSchema", "BitFlag");
+        features.forEach(feature => {
+            const name = camelize(feature.description || feature.name, false);
+            featureBlock.atom(name, `BitFlag(${feature.effectiveId})`)
+                .document(feature);
+        });
+    }
+
+    return base;
 }
 
 function generateFactory(base: Block, variance: ClusterVariance, featureNames: FeatureNames, illegal: IllegalFeatureCombinations) {
@@ -197,17 +217,6 @@ function generateMetadata(base: Block, cluster: ClusterModel) {
     base.atom("id", `0x${cluster.id.toString(16)}`);
     base.atom("name", `${JSON.stringify(cluster.name)}`);
     base.atom("revision", `${JSON.stringify(cluster.revision)}`);
-
-    const featureBlock = base.expressions("features: {", "}");
-    const features = cluster.features;
-    if (features.length) {
-        base.file.addImport("schema/BitmapSchema", "BitFlag");
-        features.forEach(feature => {
-            const name = camelize(feature.description || feature.name, false);
-            featureBlock.atom(name, `BitFlag(${feature.effectiveId})`)
-                .document(feature);
-        });
-    }
 }
 
 function generateExhaustive(file: ClusterFile, variance: ClusterVariance) {

@@ -20,8 +20,12 @@ export class DefaultValueGenerator {
         const defaultValue = model.effectiveDefault;
 
         if (defaultValue === undefined) {
-            if (metatype === Metatype.object) {
-                return this.createObject(model);
+            switch (metatype) {
+                case Metatype.object:
+                    return this.buildObject(model);
+
+                case Metatype.bitmap:
+                    return this.buildBitmap(model);
             }
             return;
         }
@@ -47,6 +51,9 @@ export class DefaultValueGenerator {
 
             case Metatype.bitmap:
                 return this.createBitmap(defaultValue, model);
+
+            case Metatype.object:
+                return FieldValue.objectValue(defaultValue);
 
             default:
                 return defaultValue;
@@ -144,7 +151,7 @@ export class DefaultValueGenerator {
      * Object defaults, if not specified explicitly, are built from field
      * defaults.
      */
-    private createObject(model: ValueModel) {
+    private buildObject(model: ValueModel) {
         let result: { [key: string]: any } | undefined;
 
         for (const child of model.members) {
@@ -164,5 +171,34 @@ export class DefaultValueGenerator {
         }
 
         return result;
+    }
+
+    /**
+     * Bitmap defaults, if not expressed numerically
+     */
+    private buildBitmap(model: ValueModel) {
+        let result = {} as { [key: string]: number | boolean };
+
+        // Convert the default value for each bit
+        for (const m of model.members) {
+            const defaultValue = FieldValue.numericValue(m.default, "uint8");
+            if (defaultValue === undefined) {
+                continue;
+            }
+            const name = camelize(m.description ?? m.name, false);
+            if (typeof m.constraint.value === "number") {
+                result[name] = !!defaultValue;
+            } else if (typeof m.constraint.min === "number" && typeof m.constraint.max === "number") {
+                result[name] = defaultValue;
+            }
+        }
+
+        // Only return a value if there are non-zero fields.  We add zero
+        // values above because this allows derived bitmaps to override fields
+        // from 1 -> 0
+        const entries = Object.entries(result).filter(([, v]) => !!v);
+        if (entries.length) {
+            return Object.fromEntries(entries);
+        }
     }
 }

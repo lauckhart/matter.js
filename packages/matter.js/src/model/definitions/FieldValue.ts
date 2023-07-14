@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { serialize as stringSerialize } from "../../util/String.js";
+
 /**
  * A FieldValue represents a concrete value for a datatype.  Most values are
  * primitives but some values we encode with specialized typed objects so we
@@ -17,10 +19,10 @@ export type FieldValue =
     | boolean
     | Date
     | []
+    | FieldValue.Properties
     | FieldValue.Reference
     | FieldValue.Percent
-    | FieldValue.Celsius
-    | FieldValue.Flags;
+    | FieldValue.Celsius;
 
 export namespace FieldValue {
     // Typing with constants should be just as type safe as using an enum but
@@ -35,14 +37,14 @@ export namespace FieldValue {
     export const reference = "reference";
     export type reference = typeof reference;
 
-    export const flags = "flags";
-    export type flags = typeof flags;
+    export const properties = "properties";
+    export type properties = typeof properties;
 
     /**
      * If a field value isn't a primitive type, it's an object with a type
      * field indicating one of these types.
      */
-    export type Type = percent | celsius | reference | flags;
+    export type Type = percent | celsius | reference | properties;
 
     /**
      * Test for one of the special placeholder types.
@@ -95,15 +97,11 @@ export namespace FieldValue {
     }
 
     /**
-     * A set of feature flags.
+     * A set of struct property values keyed by name.
      */
-    export type Flags = {
-        type: flags,
-        flags: string[]
-    }
-
-    export function Flags(flags: string[]): Flags {
-        return { type: FieldValue.flags, flags };
+    export type Properties = {
+        type: properties,
+        properties: { [name: string]: FieldValue }
     }
 
     /**
@@ -122,8 +120,8 @@ export namespace FieldValue {
         if (is(value, percent)) {
             return `${(value as Percent).value}%';`
         }
-        if (is(value, flags)) {
-            return `[ ${(value as Flags).flags.map(f => JSON.stringify(f)).join(", ")} ]`;
+        if (is(value, properties)) {
+            return stringSerialize((value as Properties).properties);
         }
         return value.toString();
     }
@@ -133,6 +131,10 @@ export namespace FieldValue {
      * number.
      */
     export function numericValue(value: FieldValue | undefined, typeName: string | undefined) {
+        if (typeof value === "boolean") {
+            return value ? 1 : 0;
+        }
+
         if (typeof value === "number") {
             return value;
         }
@@ -160,6 +162,15 @@ export namespace FieldValue {
                 default:
                     return (value as Percent).value;
             }
+        }
+    }
+
+    /**
+     * Extract object properties from the value.
+     */
+    export function objectValue(value: FieldValue | undefined) {
+        if (is(value, properties)) {
+            return (value as Properties).properties;
         }
     }
 }

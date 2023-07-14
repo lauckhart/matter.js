@@ -200,12 +200,10 @@ export namespace Metatype {
                 if (value === "null") {
                     return null;
                 }
-                if (typeof value !== "object") {
-                    return FieldValue.Invalid;
+                if (FieldValue.is(value, FieldValue.properties)) {
+                    return value;
                 }
-
-                // No literal object types supported
-                return FieldValue.Invalid;
+                break;
 
             case Metatype.bytes:
                 if (value === "empty") {
