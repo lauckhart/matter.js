@@ -12,10 +12,11 @@ import { BitFlag } from "../../schema/BitmapSchema.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvGroupId } from "../../datatype/GroupId.js";
-import { TlvUInt16, TlvEnum, TlvUInt64 } from "../../tlv/TlvNumber.js";
+import { TlvUInt16, TlvEnum, TlvEpochUs } from "../../tlv/TlvNumber.js";
 import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
+import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 
 /**
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.3
@@ -37,7 +38,7 @@ export const TlvGroupKeyMapStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.3.2
      */
-    groupKeySetId: TlvField(2, TlvUInt16.bound({ min: 1, max: 65535 }))
+    groupKeySetId: TlvField(2, TlvUInt16.bound({ min: 1 }))
 });
 
 /**
@@ -53,7 +54,7 @@ export const TlvGroupInfoMapStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.5.1
      */
-    endpoints: TlvField(2, TlvArray(TlvEndpointNumber)),
+    endpoints: TlvField(2, TlvArray(TlvEndpointNumber, { minLength: 1 })),
 
     /**
      * This field provides a name for the group. This field shall contain the last GroupName written for a given
@@ -68,7 +69,14 @@ export const TlvGroupInfoMapStruct = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.1
  */
 export const enum GroupKeySecurityPolicy {
+    /**
+     * Message counter synchronization using trust-first
+     */
     TrustFirst = 0,
+
+    /**
+     * Message counter synchronization using cache-and-sync
+     */
     CacheAndSync = 1
 }
 
@@ -77,6 +85,8 @@ export const enum GroupKeySecurityPolicy {
  */
 export const enum GroupKeyMulticastPolicy {
     /**
+     * Indicates filtering of multicast messages for a specific Group ID
+     *
      * The 16-bit Group Identifier of the Multicast Address shall be the Group ID of the group.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.2.1
@@ -84,6 +94,8 @@ export const enum GroupKeyMulticastPolicy {
     PerGroupId = 0,
 
     /**
+     * Indicates not filtering of multicast messages
+     *
      * The 16-bit Group Identifier of the Multicast Address shall be 0xFFFF.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.2.2
@@ -116,7 +128,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.2
      */
-    epochKey0: TlvField(2, TlvNullable(TlvByteString.bound({ minLength: 16, maxLength: 16 }))),
+    epochKey0: TlvField(2, TlvNullable(TlvByteString.bound({ length: 16 }))),
 
     /**
      * This field, if not null, shall define when EpochKey0 becomes valid as specified by Section 4.15.3, “Epoch Keys”.
@@ -124,7 +136,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.3
      */
-    epochStartTime0: TlvField(3, TlvNullable(TlvUInt64)),
+    epochStartTime0: TlvField(3, TlvNullable(TlvEpochUs)),
 
     /**
      * This field, if not null, shall be the root credential used in the derivation of an operational group key for
@@ -132,7 +144,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.4
      */
-    epochKey1: TlvField(4, TlvNullable(TlvByteString.bound({ minLength: 16, maxLength: 16 }))),
+    epochKey1: TlvField(4, TlvNullable(TlvByteString.bound({ length: 16 }))),
 
     /**
      * This field, if not null, shall define when EpochKey1 becomes valid as specified by Section 4.15.3, “Epoch Keys”.
@@ -140,7 +152,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.5
      */
-    epochStartTime1: TlvField(5, TlvNullable(TlvUInt64)),
+    epochStartTime1: TlvField(5, TlvNullable(TlvEpochUs)),
 
     /**
      * This field, if not null, shall be the root credential used in the derivation of an operational group key for
@@ -148,7 +160,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.6
      */
-    epochKey2: TlvField(6, TlvNullable(TlvByteString.bound({ minLength: 16, maxLength: 16 }))),
+    epochKey2: TlvField(6, TlvNullable(TlvByteString.bound({ length: 16 }))),
 
     /**
      * This field, if not null, shall define when EpochKey2 becomes valid as specified by Section 4.15.3, “Epoch Keys”.
@@ -156,7 +168,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.7
      */
-    epochStartTime2: TlvField(7, TlvNullable(TlvUInt64)),
+    epochStartTime2: TlvField(7, TlvNullable(TlvEpochUs)),
 
     /**
      * This field specifies how the IPv6 Multicast Address shall be formed for groups using this operational group key
@@ -172,7 +184,7 @@ export const TlvGroupKeySetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.2.6.4.8
      */
-    groupKeyMulticastPolicy: TlvOptionalField(8, TlvEnum<GroupKeyMulticastPolicy>())
+    groupKeyMulticastPolicy: TlvField(8, TlvEnum<GroupKeyMulticastPolicy>())
 });
 
 /**
@@ -204,13 +216,6 @@ export const TlvKeySetReadResponse = TlvObject({ groupKeySet: TlvField(0, TlvGro
  * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.4
  */
 export const TlvKeySetRemoveRequest = TlvObject({ groupKeySetId: TlvField(0, TlvUInt16) });
-
-/**
- * Input to the GroupKeyManagement keySetReadAllIndices command
- *
- * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.5
- */
-export const TlvKeySetReadAllIndicesRequest = TlvObject({ groupKeySetIDs: TlvField(0, TlvUInt16) });
 
 /**
  * This command shall be generated in response to KeySetReadAllIndices and it shall contain the list of GroupKeySetID
@@ -269,7 +274,7 @@ export const GroupKeyManagementCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.1
          */
         groupKeyMap: WritableFabricScopedAttribute(
-            0,
+            0x0,
             TlvArray(TlvGroupKeyMapStruct),
             { persistent: true, default: [], writeAcl: AccessLevel.Manage }
         ),
@@ -286,7 +291,7 @@ export const GroupKeyManagementCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.2
          */
-        groupTable: FabricScopedAttribute(1, TlvArray(TlvGroupInfoMapStruct), { default: [] }),
+        groupTable: FabricScopedAttribute(0x1, TlvArray(TlvGroupInfoMapStruct), { default: [] }),
 
         /**
          * This attribute shall indicate the maximum number of groups that this node supports per fabric. The value of
@@ -296,7 +301,7 @@ export const GroupKeyManagementCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.3
          */
-        maxGroupsPerFabric: FixedAttribute(2, TlvUInt16, { default: 0 }),
+        maxGroupsPerFabric: FixedAttribute(0x2, TlvUInt16, { default: 0 }),
 
         /**
          * This attribute shall indicate the maximum number of group key sets this node supports per fabric. The value
@@ -305,7 +310,7 @@ export const GroupKeyManagementCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.4
          */
-        maxGroupKeysPerFabric: FixedAttribute(3, TlvUInt16.bound({ min: 1, max: 65535 }), { default: 1 })
+        maxGroupKeysPerFabric: FixedAttribute(0x3, TlvUInt16.bound({ min: 1 }), { default: 1 })
     },
 
     commands: {
@@ -349,7 +354,7 @@ export const GroupKeyManagementCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.1
          */
-        keySetWrite: Command(0, TlvKeySetWriteRequest, 0, TlvNoResponse),
+        keySetWrite: Command(0x0, TlvKeySetWriteRequest, 0x0, TlvNoResponse),
 
         /**
          * This command is used by Administrators to read the state of a given Group Key Set.
@@ -365,7 +370,7 @@ export const GroupKeyManagementCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.2
          */
-        keySetRead: Command(1, TlvKeySetReadRequest, 2, TlvKeySetReadResponse),
+        keySetRead: Command(0x1, TlvKeySetReadRequest, 2, TlvKeySetReadResponse),
 
         /**
          * This command is used by Administrators to remove all state of a given Group Key Set.
@@ -389,7 +394,7 @@ export const GroupKeyManagementCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.4
          */
-        keySetRemove: Command(3, TlvKeySetRemoveRequest, 3, TlvNoResponse),
+        keySetRemove: Command(0x3, TlvKeySetRemoveRequest, 0x3, TlvNoResponse),
 
         /**
          * This command is used by Administrators to query a list of all Group Key Sets associated with the accessing
@@ -403,6 +408,6 @@ export const GroupKeyManagementCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.5
          */
-        keySetReadAllIndices: Command(4, TlvKeySetReadAllIndicesRequest, 5, TlvKeySetReadAllIndicesResponse)
+        keySetReadAllIndices: Command(0x4, TlvNoArguments, 5, TlvKeySetReadAllIndicesResponse)
     }
 });

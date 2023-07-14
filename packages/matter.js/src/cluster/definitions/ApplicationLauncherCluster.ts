@@ -190,7 +190,7 @@ export const ApplicationLauncherBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.3.2
          */
-        currentApp: OptionalAttribute(1, TlvNullable(TlvApplicationEPStruct), { default: null })
+        currentApp: OptionalAttribute(0x1, TlvNullable(TlvApplicationEPStruct), { default: null })
     },
 
     commands: {
@@ -205,14 +205,14 @@ export const ApplicationLauncherBase = BaseClusterComponent({
          * The endpoint shall launch and bring to foreground the requisite application if the application is not
          * already launched and in foreground. The Status attribute shall be updated to ACTIVE_VISIBLE_FOCUS on the
          * Application Basic cluster of the Endpoint corresponding to the launched application. The Status attribute
-         * shall be updated on any other application whose Status MAY have changed as a result of this command. The
+         * shall be updated on any other application whose Status may have changed as a result of this command. The
          * CurrentApp attribute, if supported, shall be updated to reflect the new application in the foreground.
          *
          * This command returns a Launcher Response.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.1
          */
-        launchApp: Command(0, TlvLaunchAppRequest, 3, TlvLauncherResponse),
+        launchApp: Command(0x0, TlvLaunchAppRequest, 3, TlvLauncherResponse),
 
         /**
          * Upon receipt of this command, the server shall stop the application if it is running. The application shall
@@ -224,13 +224,13 @@ export const ApplicationLauncherBase = BaseClusterComponent({
          *
          * The Status attribute shall be updated to STOPPED on the Application Basic cluster of the Endpoint
          * corresponding to the stopped application. The Status attribute shall be updated on any other application
-         * whose Status MAY have changed as a result of this command.
+         * whose Status may have changed as a result of this command.
          *
          * This command returns a Launcher Response.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.2
          */
-        stopApp: Command(1, TlvStopAppRequest, 3, TlvLauncherResponse),
+        stopApp: Command(0x1, TlvStopAppRequest, 3, TlvLauncherResponse),
 
         /**
          * Upon receipt of this command, the server shall hide the application. The application shall be either
@@ -239,17 +239,17 @@ export const ApplicationLauncherBase = BaseClusterComponent({
          *
          *   • otherwise the application corresponding to the endpoint.
          *
-         * The endpoint MAY decide to stop the application based on manufacturer specific behavior or resource
+         * The endpoint may decide to stop the application based on manufacturer specific behavior or resource
          * constraints if any. The Status attribute shall be updated to ACTIVE_HIDDEN or STOPPED, depending on the
          * action taken, on the Application Basic cluster of the Endpoint corresponding to the application on which the
-         * action was taken. The Status attribute shall be updated on any other application whose Status MAY have
+         * action was taken. The Status attribute shall be updated on any other application whose Status may have
          * changed as a result of this command.
          *
          * This command returns a Launcher Response.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.3
          */
-        hideApp: Command(2, TlvHideAppRequest, 3, TlvLauncherResponse)
+        hideApp: Command(0x2, TlvHideAppRequest, 3, TlvLauncherResponse)
     }
 });
 
@@ -267,7 +267,7 @@ export const ApplicationPlatformComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.3.1
          */
-        catalogList: Attribute(0, TlvArray(TlvUInt16), { persistent: true, default: [] })
+        catalogList: Attribute(0x0, TlvArray(TlvUInt16), { persistent: true, default: [] })
     }
 });
 

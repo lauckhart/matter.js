@@ -16,8 +16,7 @@ export const Str = (el: HTMLElement) => {
         }
     }
 
-    const text = el.textContent
-
+    const text = el.textContent;
     if (!text) {
         return "";
     }
@@ -99,15 +98,6 @@ export const Code = (el: HTMLElement) => {
 export const Identifier = (el: HTMLElement) => {
     let str = Code(el);
 
-    // If there are multiple paragraphs, only use the first if there is space
-    // in the string
-    if (str.indexOf(" ") !== -1 && el.childNodes.length > 1) {
-        const limited = Str(el.firstChild as HTMLElement);
-        if (limited.length) {
-            str = limited;
-        }
-    }
-
     // Strip everything following a subset of characters known to be inside
     // what is properly a "key"
     str = str.replace(/^([a-z0-9 _:,/\-$]+).*/i, "$1");
@@ -120,3 +110,17 @@ export const LowerIdentifier = (el: HTMLElement) => Identifier(el).toLowerCase()
 
 /** Identifier, all uppercase.  Used for naming so "_" left in */
 export const UpperIdentifier = (el: HTMLElement) => Code(el).toUpperCase();
+
+/** Bits of the form "1", "1 - 2" or "1..2" into constraint definition */
+export const Bits = (el: HTMLElement) => {
+    const bits = Str(el).split(/\s*(?:\.\.|-|–)\s*/).map(b => Number.parseInt(b));
+    if (bits.findIndex(Number.isNaN) !== -1) {
+        return;
+    }
+    if (bits.length == 1) {
+        return bits[0];
+    }
+    if (bits.length == 2) {
+        return { min: bits[0], max: bits[1] + 1 };
+    }
+}

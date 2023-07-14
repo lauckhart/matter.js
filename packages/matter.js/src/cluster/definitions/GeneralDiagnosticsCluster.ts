@@ -19,10 +19,29 @@ import { TlvEnum, TlvUInt16, TlvUInt64, TlvUInt32 } from "../../tlv/TlvNumber.js
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.4
  */
 export const enum InterfaceType {
+    /**
+     * Indicates an interface of an unspecified type.
+     */
     Unspecified = 0,
+
+    /**
+     * Indicates a Wi-Fi interface.
+     */
     WiFi = 1,
+
+    /**
+     * Indicates a Ethernet interface.
+     */
     Ethernet = 2,
+
+    /**
+     * Indicates a Cellular interface.
+     */
     Cellular = 3,
+
+    /**
+     * Indicates a Thread interface.
+     */
     Thread = 4
 }
 
@@ -78,7 +97,7 @@ export const TlvNetworkInterface = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.6.6
      */
-    iPv4Addresses: TlvField(5, TlvArray(TlvByteString)),
+    iPv4Addresses: TlvField(5, TlvArray(TlvByteString, { maxLength: 4 })),
 
     /**
      * This field shall provide a list of the unicast IPv6 addresses that are currently assigned to the network
@@ -87,7 +106,7 @@ export const TlvNetworkInterface = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.6.7
      */
-    iPv6Addresses: TlvField(6, TlvArray(TlvByteString)),
+    iPv6Addresses: TlvField(6, TlvArray(TlvByteString, { maxLength: 8 })),
 
     /**
      * This field shall indicate the type of the interface using the InterfaceTypeEnum.
@@ -101,12 +120,39 @@ export const TlvNetworkInterface = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.5
  */
 export const enum BootReason {
+    /**
+     * The Node is unable to identify the Power-On reason as one of the other provided enumeration values.
+     */
     Unspecified = 0,
+
+    /**
+     * The Node has booted as the result of physical interaction with the device resulting in a reboot.
+     */
     PowerOnReboot = 1,
+
+    /**
+     * The Node has rebooted as the result of a brown-out of the Node’s power supply.
+     */
     BrownOutReset = 2,
+
+    /**
+     * The Node has rebooted as the result of a software watchdog timer.
+     */
     SoftwareWatchdogReset = 3,
+
+    /**
+     * The Node has rebooted as the result of a hardware watchdog timer.
+     */
     HardwareWatchdogReset = 4,
+
+    /**
+     * The Node has rebooted as the result of a completed software update.
+     */
     SoftwareUpdateCompleted = 5,
+
+    /**
+     * The Node has rebooted as the result of a software initiated reboot.
+     */
     SoftwareReset = 6
 }
 
@@ -114,16 +160,59 @@ export const enum BootReason {
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.1
  */
 export const enum HardwareFault {
+    /**
+     * The Node has encountered an unspecified fault.
+     */
     Unspecified = 0,
+
+    /**
+     * The Node has encountered a fault with at least one of its radios.
+     */
     Radio = 1,
+
+    /**
+     * The Node has encountered a fault with at least one of its sensors.
+     */
     Sensor = 2,
+
+    /**
+     * The Node has encountered an over-temperature fault that is resettable.
+     */
     ResettableOverTemp = 3,
+
+    /**
+     * The Node has encountered an over-temperature fault that is not resettable.
+     */
     NonResettableOverTemp = 4,
+
+    /**
+     * The Node has encountered a fault with at least one of its power sources.
+     */
     PowerSource = 5,
+
+    /**
+     * The Node has encountered a fault with at least one of its visual displays.
+     */
     VisualDisplayFault = 6,
+
+    /**
+     * The Node has encountered a fault with at least one of its audio outputs.
+     */
     AudioOutputFault = 7,
+
+    /**
+     * The Node has encountered a fault with at least one of its user interfaces.
+     */
     UserInterfaceFault = 8,
+
+    /**
+     * The Node has encountered a fault with its non-volatile memory.
+     */
     NonVolatileMemoryError = 9,
+
+    /**
+     * The Node has encountered disallowed physical tampering.
+     */
     TamperDetected = 10
 }
 
@@ -131,12 +220,39 @@ export const enum HardwareFault {
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.2
  */
 export const enum RadioFault {
+    /**
+     * The Node has encountered an unspecified radio fault.
+     */
     Unspecified = 0,
+
+    /**
+     * The Node has encountered a fault with its Wi-Fi radio.
+     */
     WiFiFault = 1,
+
+    /**
+     * The Node has encountered a fault with its cellular radio.
+     */
     CellularFault = 2,
+
+    /**
+     * The Node has encountered a fault with its802.15.4 radio.
+     */
     ThreadFault = 3,
+
+    /**
+     * The Node has encountered a fault with its NFC radio.
+     */
     NfcFault = 4,
+
+    /**
+     * The Node has encountered a fault with its BLE radio.
+     */
     BleFault = 5,
+
+    /**
+     * The Node has encountered a fault with its Ethernet controller.
+     */
     EthernetFault = 6
 }
 
@@ -144,9 +260,24 @@ export const enum RadioFault {
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.3
  */
 export const enum NetworkFault {
+    /**
+     * The Node has encountered an unspecified fault.
+     */
     Unspecified = 0,
+
+    /**
+     * The Node has encountered a network fault as a result of a hardware failure.
+     */
     HardwareFailure = 1,
+
+    /**
+     * The Node has encountered a network fault as a result of a jammed network.
+     */
     NetworkJammed = 2,
+
+    /**
+     * The Node has encountered a network fault as a result of a failure to establish a connection.
+     */
     ConnectionFailed = 3
 }
 
@@ -173,7 +304,7 @@ export const TlvTestEventTriggerRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.7.1.1
      */
-    enableKey: TlvField(0, TlvByteString.bound({ minLength: 16, maxLength: 16 })),
+    enableKey: TlvField(0, TlvByteString.bound({ length: 16 })),
 
     /**
      * This field shall indicate the test or test mode which the client wants to trigger.
@@ -193,7 +324,7 @@ export const TlvTestEventTriggerRequest = TlvObject({
      * expected trigger action.
      *
      * If no specific test event triggers are required to be supported by certification test requirements for the
-     * features that a given product will be certified against, this command MAY always fail with the INVALID_COMMAND
+     * features that a given product will be certified against, this command may always fail with the INVALID_COMMAND
      * status, equivalent to the situation of receiving an unknown EventTrigger, for all possible EventTrigger values.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.7.1.2
@@ -212,7 +343,7 @@ export const TlvHardwareFaultChangeEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.1.1
      */
-    current: TlvField(0, TlvArray(TlvEnum<HardwareFault>())),
+    current: TlvField(0, TlvArray(TlvEnum<HardwareFault>(), { maxLength: 11 })),
 
     /**
      * This field shall represent the set of faults detected prior to this change event, as per Section
@@ -221,7 +352,7 @@ export const TlvHardwareFaultChangeEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.1.2
      */
-    previous: TlvField(1, TlvArray(TlvEnum<HardwareFault>()))
+    previous: TlvField(1, TlvArray(TlvEnum<HardwareFault>(), { maxLength: 11 }))
 });
 
 /**
@@ -230,8 +361,8 @@ export const TlvHardwareFaultChangeEvent = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.2
  */
 export const TlvRadioFaultChangeEvent = TlvObject({
-    current: TlvField(0, TlvArray(TlvEnum<RadioFault>())),
-    previous: TlvField(1, TlvArray(TlvEnum<RadioFault>()))
+    current: TlvField(0, TlvArray(TlvEnum<RadioFault>(), { maxLength: 7 })),
+    previous: TlvField(1, TlvArray(TlvEnum<RadioFault>(), { maxLength: 7 }))
 });
 
 /**
@@ -240,8 +371,8 @@ export const TlvRadioFaultChangeEvent = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.3
  */
 export const TlvNetworkFaultChangeEvent = TlvObject({
-    current: TlvField(0, TlvArray(TlvEnum<NetworkFault>())),
-    previous: TlvField(1, TlvArray(TlvEnum<NetworkFault>()))
+    current: TlvField(0, TlvArray(TlvEnum<NetworkFault>(), { maxLength: 4 })),
+    previous: TlvField(1, TlvArray(TlvEnum<NetworkFault>(), { maxLength: 4 }))
 });
 
 /**
@@ -262,7 +393,7 @@ export const TlvBootReasonEvent = TlvObject({
  * General Diagnostics
  *
  * The General Diagnostics Cluster, along with other diagnostics clusters, provide a means to acquire standardized
- * diagnostics metrics that MAY be used by a Node to assist a user or Administrator in diagnosing potential problems.
+ * diagnostics metrics that may be used by a Node to assist a user or Administrator in diagnosing potential problems.
  * The General Diagnostics Cluster attempts to centralize all metrics that are broadly relevant to the majority of
  * Nodes.
  *
@@ -281,7 +412,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.1
          */
-        networkInterfaces: Attribute(0, TlvArray(TlvNetworkInterface), { default: [] }),
+        networkInterfaces: Attribute(0x0, TlvArray(TlvNetworkInterface, { maxLength: 8 }), { default: [] }),
 
         /**
          * The RebootCount attribute shall indicate a best-effort count of the number of times the Node has rebooted.
@@ -291,7 +422,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.2
          */
-        rebootCount: Attribute(1, TlvUInt16, { persistent: true, default: 0 }),
+        rebootCount: Attribute(0x1, TlvUInt16, { persistent: true, default: 0 }),
 
         /**
          * The UpTime attribute shall indicate a best-effort assessment of the length of time, in seconds, since the
@@ -300,7 +431,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.3
          */
-        upTime: OptionalAttribute(2, TlvUInt64, { omitChanges: true, default: 0 }),
+        upTime: OptionalAttribute(0x2, TlvUInt64, { omitChanges: true, default: 0 }),
 
         /**
          * The TotalOperationalHours attribute shall indicate a best-effort attempt at tracking the length of time, in
@@ -311,14 +442,14 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.4
          */
-        totalOperationalHours: OptionalAttribute(3, TlvUInt32, { persistent: true, omitChanges: true, default: 0 }),
+        totalOperationalHours: OptionalAttribute(0x3, TlvUInt32, { persistent: true, omitChanges: true, default: 0 }),
 
         /**
          * The BootReason attribute shall indicate the reason for the Node’s most recent boot.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.5
          */
-        bootReason: OptionalAttribute(4, TlvEnum<BootReason>()),
+        bootReason: OptionalAttribute(0x4, TlvEnum<BootReason>()),
 
         /**
          * The ActiveHardwareFaults attribute shall indicate the set of faults currently detected by the Node. When the
@@ -327,11 +458,11 @@ export const GeneralDiagnosticsCluster = Cluster({
          * detects that all conditions contributing to a fault has been cleared, the corresponding HardwareFaultEnum
          * value shall be removed from this list. An empty list shall indicate there are currently no active faults.
          * The order of this list SHOULD have no significance. Clients interested in monitoring changes in active
-         * faults MAY subscribe to this attribute, or they MAY subscribe to HardwareFaultChange.
+         * faults may subscribe to this attribute, or they may subscribe to HardwareFaultChange.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.6
          */
-        activeHardwareFaults: OptionalAttribute(5, TlvArray(TlvEnum<HardwareFault>()), { default: [] }),
+        activeHardwareFaults: OptionalAttribute(0x5, TlvArray(TlvEnum<HardwareFault>(), { maxLength: 11 }), { default: [] }),
 
         /**
          * The ActiveRadioFaults attribute shall indicate the set of faults currently detected by the Node. When the
@@ -339,12 +470,12 @@ export const GeneralDiagnosticsCluster = Cluster({
          * list shall NOT contain more than one instance of a specific RadioFaultEnum value. When the Node detects that
          * all conditions contributing to a fault has been cleared, the corresponding RadioFaultEnum value shall be
          * removed from this list. An empty list shall indicate there are currently no active faults. The order of this
-         * list SHOULD have no significance. Clients interested in monitoring changes in active faults MAY subscribe to
-         * this attribute, or they MAY subscribe to RadioFaultChange.
+         * list SHOULD have no significance. Clients interested in monitoring changes in active faults may subscribe to
+         * this attribute, or they may subscribe to RadioFaultChange.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.7
          */
-        activeRadioFaults: OptionalAttribute(6, TlvArray(TlvEnum<RadioFault>()), { default: [] }),
+        activeRadioFaults: OptionalAttribute(0x6, TlvArray(TlvEnum<RadioFault>(), { maxLength: 7 }), { default: [] }),
 
         /**
          * The ActiveNetworkFaults attribute shall indicate the set of faults currently detected by the Node. When the
@@ -353,11 +484,11 @@ export const GeneralDiagnosticsCluster = Cluster({
          * detects that all conditions contributing to a fault has been cleared, the corresponding NetworkFaultEnum
          * value shall be removed from this list. An empty list shall indicate there are currently no active faults.
          * The order of this list SHOULD have no significance. Clients interested in monitoring changes in active
-         * faults MAY subscribe to this attribute, or they MAY subscribe to NetworkFaultChange.
+         * faults may subscribe to this attribute, or they may subscribe to NetworkFaultChange.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.8
          */
-        activeNetworkFaults: OptionalAttribute(7, TlvArray(TlvEnum<NetworkFault>()), { default: [] }),
+        activeNetworkFaults: OptionalAttribute(0x7, TlvArray(TlvEnum<NetworkFault>(), { maxLength: 4 }), { default: [] }),
 
         /**
          * The TestEventTriggersEnabled attribute shall indicate whether the Node has any TestEventTrigger configured.
@@ -369,7 +500,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.6.9
          */
-        testEventTriggersEnabled: Attribute(8, TlvBoolean)
+        testEventTriggersEnabled: Attribute(0x8, TlvBoolean)
     },
 
     commands: {
@@ -383,7 +514,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.7.1
          */
-        testEventTrigger: Command(0, TlvTestEventTriggerRequest, 0, TlvNoResponse)
+        testEventTrigger: Command(0x0, TlvTestEventTriggerRequest, 0x0, TlvNoResponse)
     },
 
     events: {
@@ -393,7 +524,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.1
          */
-        hardwareFaultChange: OptionalEvent(0, EventPriority.Critical, TlvHardwareFaultChangeEvent),
+        hardwareFaultChange: OptionalEvent(0x0, EventPriority.Critical, TlvHardwareFaultChangeEvent),
 
         /**
          * The RadioFaultChange Event shall indicate a change in the set of radio faults currently detected by the Node.
@@ -405,7 +536,7 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.2
          */
-        radioFaultChange: OptionalEvent(1, EventPriority.Critical, TlvRadioFaultChangeEvent),
+        radioFaultChange: OptionalEvent(0x1, EventPriority.Critical, TlvRadioFaultChangeEvent),
 
         /**
          * The NetworkFaultChange Event shall indicate a change in the set of network faults currently detected by the
@@ -419,13 +550,13 @@ export const GeneralDiagnosticsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.3
          */
-        networkFaultChange: OptionalEvent(2, EventPriority.Critical, TlvNetworkFaultChangeEvent),
+        networkFaultChange: OptionalEvent(0x2, EventPriority.Critical, TlvNetworkFaultChangeEvent),
 
         /**
          * The BootReason Event shall indicate the reason that caused the device to start-up.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.11.8.4
          */
-        bootReason: Event(3, EventPriority.Critical, TlvBootReasonEvent)
+        bootReason: Event(0x3, EventPriority.Critical, TlvBootReasonEvent)
     }
 });

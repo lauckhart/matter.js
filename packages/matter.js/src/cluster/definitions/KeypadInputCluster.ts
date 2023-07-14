@@ -223,6 +223,6 @@ export const KeypadInputCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.1
          */
-        sendKey: Command(0, TlvSendKeyRequest, 1, TlvSendKeyResponse)
+        sendKey: Command(0x0, TlvSendKeyRequest, 1, TlvSendKeyResponse)
     }
 });

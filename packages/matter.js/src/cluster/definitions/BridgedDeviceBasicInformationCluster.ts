@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Cluster, OptionalAttribute, OptionalWritableAttribute, Attribute, OptionalEvent, EventPriority, Event } from "../../cluster/Cluster.js";
+import { Cluster, OptionalFixedAttribute, OptionalWritableAttribute, AccessLevel, Attribute, OptionalAttribute, OptionalEvent, EventPriority, Event } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvVendorId } from "../../datatype/VendorId.js";
@@ -76,7 +76,7 @@ export const TlvReachableChangedEvent = TlvObject({ reachableNewValue: TlvField(
  *   • Indicate that the functionality on the Endpoint where it is placed (and its Parts) is bridged from a non-Matter
  *     technology, and
  *
- *   • Provide a centralized collection of attributes that the Node MAY collect to aid in conveying information
+ *   • Provide a centralized collection of attributes that the Node may collect to aid in conveying information
  *     regarding the Bridged Device to a user, such as the vendor name, the model name, or user-assigned name.
  *
  * This cluster shall be exposed by a Bridge on the Endpoint representing each Bridged Device. When the functionality
@@ -106,106 +106,111 @@ export const BridgedDeviceBasicInformationCluster = Cluster({
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        vendorName: OptionalAttribute(1, TlvString),
+        vendorName: OptionalFixedAttribute(0x1, TlvString.bound({ maxLength: 32 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        vendorId: OptionalAttribute(2, TlvVendorId),
+        vendorId: OptionalFixedAttribute(0x2, TlvVendorId),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        productName: OptionalAttribute(3, TlvString),
+        productName: OptionalFixedAttribute(0x3, TlvString.bound({ maxLength: 32 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        nodeLabel: OptionalWritableAttribute(5, TlvString, { default: "" }),
+        nodeLabel: OptionalWritableAttribute(
+            0x5,
+            TlvString.bound({ maxLength: 32 }),
+            { persistent: true, default: "", writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        hardwareVersion: OptionalAttribute(7, TlvUInt16, { default: 0 }),
+        hardwareVersion: OptionalFixedAttribute(0x7, TlvUInt16, { default: 0 }),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        hardwareVersionString: OptionalAttribute(8, TlvString),
+        hardwareVersionString: OptionalFixedAttribute(0x8, TlvString.bound({ minLength: 1, maxLength: 64 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        softwareVersion: OptionalAttribute(9, TlvUInt32, { default: 0 }),
+        softwareVersion: OptionalFixedAttribute(0x9, TlvUInt32, { default: 0 }),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        softwareVersionString: OptionalAttribute(10, TlvString),
+        softwareVersionString: OptionalFixedAttribute(0xa, TlvString.bound({ minLength: 1, maxLength: 64 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        manufacturingDate: OptionalAttribute(11, TlvString),
+        manufacturingDate: OptionalFixedAttribute(0xb, TlvString.bound({ minLength: 8, maxLength: 16 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        partNumber: OptionalAttribute(12, TlvString),
+        partNumber: OptionalFixedAttribute(0xc, TlvString.bound({ maxLength: 32 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        productUrl: OptionalAttribute(13, TlvString),
+        productUrl: OptionalFixedAttribute(0xd, TlvString.bound({ maxLength: 256 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        productLabel: OptionalAttribute(14, TlvString),
+        productLabel: OptionalFixedAttribute(0xe, TlvString.bound({ maxLength: 64 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        serialNumber: OptionalAttribute(15, TlvString),
+        serialNumber: OptionalFixedAttribute(0xf, TlvString.bound({ maxLength: 32 })),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        reachable: Attribute(17, TlvBoolean, { default: true }),
+        reachable: Attribute(0x11, TlvBoolean, { default: true }),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.4
          */
-        uniqueId: OptionalAttribute(18, TlvString),
+        uniqueId: OptionalFixedAttribute(0x12, TlvString.bound({ maxLength: 32 })),
 
-        productAppearance: OptionalAttribute(20, TlvProductAppearanceStruct)
+        productAppearance: OptionalAttribute(0x14, TlvProductAppearanceStruct),
+        clusterRevision: Attribute(0xfffd, TlvUInt16, { default: 1 })
     },
 
     events: {
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.5
          */
-        startUp: OptionalEvent(0, EventPriority.Critical, TlvStartUpEvent),
+        startUp: OptionalEvent(0x0, EventPriority.Critical, TlvStartUpEvent),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.5
          */
-        shutDown: OptionalEvent(1, EventPriority.Critical, TlvNoArguments),
+        shutDown: OptionalEvent(0x1, EventPriority.Critical, TlvNoArguments),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.5
          */
-        leave: OptionalEvent(2, EventPriority.Info, TlvNoArguments),
+        leave: OptionalEvent(0x2, EventPriority.Info, TlvNoArguments),
 
         /**
          * This event shall be generated when there is a change in the Reachable attribute. Its purpose is to provide
          * an indication towards interested parties that the reachability of a bridged device (over the non-Matter
-         * network) has changed, so they MAY take appropriate action.
+         * network) has changed, so they may take appropriate action.
          *
-         * After (re)start of a bridge this event MAY be generated.
+         * After (re)start of a bridge this event may be generated.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.13.5.1
          */
-        reachableChanged: Event(3, EventPriority.Info, TlvReachableChangedEvent)
+        reachableChanged: Event(0x3, EventPriority.Info, TlvReachableChangedEvent)
     }
 });

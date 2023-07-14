@@ -6,10 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Cluster, WritableAttribute, AccessLevel } from "../../cluster/Cluster.js";
+import { Cluster, WritableAttribute, AccessLevel, Attribute } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvLabelStruct } from "../../cluster/definitions/LabelCluster.js";
+import { TlvUInt16 } from "../../tlv/TlvNumber.js";
 
 /**
  * User Label
@@ -32,9 +33,11 @@ export const UserLabelCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 9.9.4.1
          */
         labelList: WritableAttribute(
-            0,
-            TlvArray(TlvLabelStruct),
+            0x0,
+            TlvArray(TlvLabelStruct, { minLength: 4 }),
             { persistent: true, default: [], writeAcl: AccessLevel.Manage }
-        )
+        ),
+
+        clusterRevision: Attribute(0xfffd, TlvUInt16, { default: 1 })
     }
 });

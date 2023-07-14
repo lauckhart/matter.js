@@ -5,9 +5,10 @@
  */
 
 import { InternalError } from "../../common/InternalError.js";
-import { ElementTag, FieldValue } from "../definitions/index.js";
+import { Aspect } from "../aspects/index.js";
+import { ElementTag, FieldValue, Metatype } from "../definitions/index.js";
 import { AnyElement, Globals } from "../elements/index.js";
-import { type Model, type ValueModel, type DatatypeModel, CommandModel } from "../models/index.js";
+import { type Model, type ValueModel, CommandModel } from "../models/index.js";
 
 const OPERATION_DEPTH_LIMIT = 20;
 
@@ -141,7 +142,14 @@ export class ModelTraversal {
             }
             const type = this.getTypeName(model);
             if (type !== undefined) {
-                return this.findType(model.parent, type, model.allowedBaseTags);
+                // Allowed tags represent a priority so search each tag
+                // independently
+                for (const tag of model.allowedBaseTags) {
+                    const found = this.findType(model.parent, type, tag);
+                    if (found) {
+                        return found;
+                    }
+                }
             }
         });
     }
@@ -206,28 +214,67 @@ export class ModelTraversal {
      * Find the model this model derives from that has children, if any.
      */
     findDefiningModel(model: ValueModel | undefined): ValueModel | undefined {
-        return this.operation(() => {
-            while (model) {
-                if (model.children.length) {
-                    return model;
-                }
-                model = model.base;
+        let result: ValueModel | undefined;
+        this.visitInheritance(model, (model) => {
+            if (!model.isType) {
+                return false;
             }
-        })
+            if (model.children.length) {
+                result = model as ValueModel;
+                return false;
+            }
+        });
+        return result;
     }
 
     /**
-     * Find the model defining array entry type, if any.
+     * Find a child in the parent's inheritance hierarchy with the same tag
+     * and ID/name.
      */
-    findListEntry(model: ValueModel | undefined): DatatypeModel | undefined {
-        return this.operation(() => {
-            while (model) {
-                const entry = this.findMember(model, "entry", [ElementTag.Datatype]);
-                if (entry) {
-                    return entry as DatatypeModel;
+    findShadow(model: Model | undefined) {
+        if (model === undefined) {
+            return undefined;
+        }
+
+        let shadow: Model | undefined;
+        this.operationWithDismissal(model, () => {
+            this.visitInheritance(this.findBase(model?.parent), (parent) => {
+                if (model.id !== undefined) {
+                    shadow = this.findLocal(parent, model.id, [model.tag]);
+                    if (shadow) {
+                        return false;
+                    }
                 }
+                shadow = this.findLocal(parent, model.name, [model.tag]);
+                if (shadow) {
+                    return false;
+                }
+            });
+        });
+        return shadow;
+    }
+
+    /**
+     * Get an aspect that reflects extension of any shadowed aspects.  Note
+     * that this searches the *parent's* inheritance hierarchy as aspects are
+     * inherited by replacing properties.
+     */
+    findAspect(model: Model | undefined, symbol: symbol): Aspect<any> | undefined {
+        let result: Aspect<any> | undefined;
+        this.operation(() => {
+            while (model) {
+                const aspect = (model as any)[symbol] as Aspect<any>;
+                if (aspect && !aspect.empty) {
+                    if (result) {
+                        result = aspect.extend(result);
+                    } else {
+                        result = aspect;
+                    }
+                }
+                model = this.findShadow(model);
             }
         })
+        return result;
     }
 
     /**
@@ -246,9 +293,52 @@ export class ModelTraversal {
     }
 
     /**
+     * Retrieve all children of a specific type, inherited or otherwise.
+     */
+    findMembers(scope: Model, allowedTags: ElementTag[]) {
+        const members = Array<Model>();
+
+        this.visitInheritance(scope, model => {
+            for (const child of model.children) {
+                if (allowedTags.indexOf(child.tag) !== -1) {
+                    members.push(child);
+                }
+            }
+        });
+
+        return members;
+    }
+
+    /**
+     * Search inherited scope for a bit definition.
+     */
+    findBitDefinition(scope: Model | undefined, bit: number) {
+        return this.operation(() => {
+            while (scope) {
+                if (!scope.isType) {
+                    return;
+                }
+
+                if ((scope as ValueModel).effectiveMetatype !== Metatype.bitmap) {
+                    scope = scope.parent;
+                    continue;
+                }
+
+                for (const c of (scope as ValueModel).children) {
+                    if (c.constraint.test(bit)) {
+                        return c;
+                    }
+                }
+
+                scope = this.findBase(scope);
+            }
+        })
+    }
+
+    /**
      * Search inherited and structural type scope for a named type.
      */
-    findType(scope: Model | undefined, name: string, allowedTags: ElementTag[]): Model | undefined {
+    findType(scope: Model | undefined, name: string, tag: ElementTag): Model | undefined {
         return this.operation(() => {
             if (!scope) {
                 return;
@@ -256,7 +346,7 @@ export class ModelTraversal {
             const queue = Array<Model>(scope);
             for (scope = queue.shift(); scope; scope = queue.shift()) {
                 if (scope.isTypeScope) {
-                    const result = this.findLocal(scope, name, allowedTags);
+                    const result = this.findLocal(scope, name, [tag]);
                     if (result) {
                         return result;
                     }
@@ -281,7 +371,7 @@ export class ModelTraversal {
      */
     findResponse(command: CommandModel) {
         if (command.response && command.response !== "status") {
-            return new ModelTraversal().findType(command, command.response, [ElementTag.Command]);
+            return new ModelTraversal().findType(command, command.response, ElementTag.Command);
         }
     }
 
@@ -368,7 +458,7 @@ export class ModelTraversal {
     }
 
     /**
-     * Visit all nodes in the inheritance hierarchy.
+     * Visit all nodes in the inheritance hierarchy until the visitor returns false.
      */
     visitInheritance(model: Model | undefined, visitor: (model: Model) => boolean | void): boolean | undefined {
         return this.operation(() => {

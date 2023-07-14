@@ -8,18 +8,8 @@
 
 import { Cluster, Attribute, OptionalAttribute } from "../../cluster/Cluster.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
+import { TlvUInt16, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
-
-/**
- * The value of the IlluminanceMeasurement lightSensorType attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.5
- */
-export const enum LightSensorType {
-    Photodiode = 0,
-    Cmos = 1
-}
 
 /**
  * Illuminance Measurement
@@ -31,7 +21,7 @@ export const enum LightSensorType {
 export const IlluminanceMeasurementCluster = Cluster({
     id: 0x400,
     name: "IlluminanceMeasurement",
-    revision: 1,
+    revision: 3,
     features: {},
 
     attributes: {
@@ -53,7 +43,7 @@ export const IlluminanceMeasurementCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.1
          */
-        measuredValue: Attribute(0, TlvNullable(TlvUInt16), { default: 0 }),
+        measuredValue: Attribute(0x0, TlvNullable(TlvUInt16), { default: 0 }),
 
         /**
          * The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. A value of
@@ -61,7 +51,7 @@ export const IlluminanceMeasurementCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.2
          */
-        minMeasuredValue: Attribute(1, TlvNullable(TlvUInt16.bound({ min: 1 }))),
+        minMeasuredValue: Attribute(0x1, TlvNullable(TlvUInt16.bound({ min: 1 }))),
 
         /**
          * The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. A value of
@@ -69,14 +59,14 @@ export const IlluminanceMeasurementCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.3
          */
-        maxMeasuredValue: Attribute(2, TlvNullable(TlvUInt16.bound({ max: 65534 }))),
+        maxMeasuredValue: Attribute(0x2, TlvNullable(TlvUInt16.bound({ max: 65534 }))),
 
         /**
          * See Measured Value.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.4
          */
-        tolerance: OptionalAttribute(3, TlvUInt16.bound({ max: 2048 })),
+        tolerance: OptionalAttribute(0x3, TlvUInt16.bound({ max: 2048 })),
 
         /**
          * The LightSensorType attribute specifies the electronic type of the light sensor. This attribute shall be set
@@ -84,6 +74,6 @@ export const IlluminanceMeasurementCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.2.5.5
          */
-        lightSensorType: OptionalAttribute(4, TlvNullable(TlvEnum<LightSensorType>()), { default: 255 })
+        lightSensorType: OptionalAttribute(0x4, TlvNullable(TlvUInt8), { default: null })
     }
 });

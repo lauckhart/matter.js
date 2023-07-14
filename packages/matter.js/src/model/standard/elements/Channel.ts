@@ -14,6 +14,8 @@ Matter.children.push({
     xref: { document: "cluster", section: "6.6" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "6.6.2" },
@@ -35,7 +37,7 @@ Matter.children.push({
             constraint: "None", default: [],
             details: "This optional list provides the channels supported.",
             xref: { document: "cluster", section: "6.6.3.1" },
-            children: [ { tag: "datatype", name: "entry", type: "ChannelInfoStruct" } ]
+            children: [{ tag: "datatype", name: "entry", type: "ChannelInfoStruct" }]
         },
 
         {
@@ -49,7 +51,7 @@ Matter.children.push({
             tag: "attribute", name: "CurrentChannel", id: 0x2, type: "ChannelInfoStruct", access: "R V",
             conformance: "O", constraint: "desc", default: null, quality: "X",
             details: "This optional field contains the current channel. When supported but a channel is not currently " +
-                     "tuned to (if a content application is in foreground), the value of the field shall be null.",
+                "tuned to (if a content application is in foreground), the value of the field shall be null.",
             xref: { document: "cluster", section: "6.6.3.3" }
         },
 
@@ -58,20 +60,20 @@ Matter.children.push({
             direction: "request", response: "ChangeChannelResponse",
 
             details: "Change the channel to the channel case-insensitive exact matching the value passed as an argument." +
-                     "\n" +
-                     "The match priority order shall be: AffiliateCallSign (\"KCTS\"), CallSign (\"PBS\"), Name (\"Comedy " +
-                     "Central\"), Number (\"13.1\")" +
-                     "\n" +
-                     "Upon receipt, this shall generate a ChangeChannelResponse command." +
-                     "\n" +
-                     "Upon success, the CurrentChannel attribute, if supported, shall be updated to reflect the change.",
+                "\n" +
+                "The match priority order shall be: AffiliateCallSign (\"KCTS\"), CallSign (\"PBS\"), Name (\"Comedy " +
+                "Central\"), Number (\"13.1\")" +
+                "\n" +
+                "Upon receipt, this shall generate a ChangeChannelResponse command." +
+                "\n" +
+                "Upon success, the CurrentChannel attribute, if supported, shall be updated to reflect the change.",
 
             xref: { document: "cluster", section: "6.6.4.1" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "Match", id: 0x0, type: "string", conformance: "M",
                 details: "This shall contain a user-input string to match in order to identify the target channel.",
                 xref: { document: "cluster", section: "6.6.4.1.1" }
-            } ]
+            }]
         },
 
         {
@@ -119,67 +121,66 @@ Matter.children.push({
             response: "status",
 
             details: "This command provides channel up and channel down functionality, but allows channel index jumps of " +
-                     "size Count." +
-                     "\n" +
-                     "When the value of the increase or decrease is larger than the number of channels remaining in the " +
-                     "given direction, then the behavior shall be to return to the beginning (or end) of the channel list " +
-                     "and continue. For example, if the current channel is at index 0 and count value of -1 is given, " +
-                     "then the current channel should change to the last channel.",
+                "size Count." +
+                "\n" +
+                "When the value of the increase or decrease is larger than the number of channels remaining in the " +
+                "given direction, then the behavior shall be to return to the beginning (or end) of the channel list " +
+                "and continue. For example, if the current channel is at index 0 and count value of -1 is given, " +
+                "then the current channel should change to the last channel.",
 
             xref: { document: "cluster", section: "6.6.4.4" },
 
-            children: [ {
+            children: [{
                 tag: "datatype", name: "Count", id: 0x0, type: "int16", conformance: "M",
                 details: "This shall indicate the number of steps to increase (Count is positive) or decrease (Count is " +
-                         "negative) the current channel.",
+                    "negative) the current channel.",
                 xref: { document: "cluster", section: "6.6.4.4.1" }
-            } ]
+            }]
         },
 
         {
             tag: "datatype", name: "ChannelInfoStruct", type: "struct", conformance: "M",
             details: "This indicates a channel in a channel lineup." +
-                     "\n" +
-                     "While the major and minor numbers in the ChannelInfoStruct support use of ATSC channel format, a " +
-                     "lineup MAY use other formats which can map into these numeric values.",
+                "\n" +
+                "While the major and minor numbers in the ChannelInfoStruct support use of ATSC channel format, a " +
+                "lineup may use other formats which can map into these numeric values.",
             xref: { document: "cluster", section: "6.6.5.1" },
 
             children: [
                 {
                     tag: "datatype", name: "MajorNumber", id: 0x0, type: "uint16", conformance: "M",
                     details: "This shall indicate the channel major number value (for example, using ATSC format). When the " +
-                             "channel number is expressed as a string, such as \"13.1\" or \"256\", the major number would be 13 or " +
-                             "256, respectively.",
+                        "channel number is expressed as a string, such as \"13.1\" or \"256\", the major number would be 13 or " +
+                        "256, respectively.",
                     xref: { document: "cluster", section: "6.6.5.1.1" }
                 },
 
                 {
                     tag: "datatype", name: "MinorNumber", id: 0x1, type: "uint16", conformance: "M",
                     details: "This shall indicate the channel minor number value (for example, using ATSC format). When the " +
-                             "channel number is expressed as a string, such as \"13.1\" or \"256\", the minor number would be 1 or 0, " +
-                             "respectively.",
+                        "channel number is expressed as a string, such as \"13.1\" or \"256\", the minor number would be 1 or 0, " +
+                        "respectively.",
                     xref: { document: "cluster", section: "6.6.5.1.2" }
                 },
 
                 {
-                    tag: "datatype", name: "Name", id: 0x2, type: "string", conformance: "O", default: "empty",
+                    tag: "datatype", name: "Name", id: 0x2, type: "string", conformance: "O", default: "",
                     details: "This shall indicate the marketing name for the channel, such as “The CW\" or \"Comedy Central\". This " +
-                             "field is optional, but SHOULD be provided when known.",
+                        "field is optional, but SHOULD be provided when known.",
                     xref: { document: "cluster", section: "6.6.5.1.3" }
                 },
 
                 {
-                    tag: "datatype", name: "CallSign", id: 0x3, type: "string", conformance: "O", default: "empty",
+                    tag: "datatype", name: "CallSign", id: 0x3, type: "string", conformance: "O", default: "",
                     details: "This shall indicate the call sign of the channel, such as \"PBS\". This field is optional, but SHOULD " +
-                             "be provided when known.",
+                        "be provided when known.",
                     xref: { document: "cluster", section: "6.6.5.1.4" }
                 },
 
                 {
-                    tag: "datatype", name: "AffiliateCallSign", id: 0x4, type: "string", conformance: "O",
-                    default: "empty",
+                    tag: "datatype", name: "AffiliateCallSign", id: 0x4, type: "string", conformance: "O", default: "",
                     details: "This shall indicate the local affiliate call sign, such as \"KCTS\". This field is optional, but " +
-                             "SHOULD be provided when known.",
+                        "SHOULD be provided when known.",
                     xref: { document: "cluster", section: "6.6.5.1.5" }
                 }
             ]
@@ -188,7 +189,7 @@ Matter.children.push({
         {
             tag: "datatype", name: "LineupInfoStruct", type: "struct", conformance: "M",
             details: "The Lineup Info allows references to external lineup sources like Gracenote. The combination of " +
-                     "OperatorName, LineupName, and PostalCode MUST uniquely identify a lineup.",
+                "OperatorName, LineupName, and PostalCode MUST uniquely identify a lineup.",
             xref: { document: "cluster", section: "6.6.5.2" },
 
             children: [
@@ -212,7 +213,7 @@ Matter.children.push({
         {
             tag: "datatype", name: "LineupInfoTypeEnum", type: "enum8", conformance: "M",
             xref: { document: "cluster", section: "6.6.5.3" },
-            children: [ { tag: "datatype", name: "Mso", id: 0x0, conformance: "M", description: "MultiSystemOperator" } ]
+            children: [{ tag: "datatype", name: "Mso", id: 0x0, conformance: "M", description: "MultiSystemOperator" }]
         },
 
         {

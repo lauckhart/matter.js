@@ -37,7 +37,7 @@ export const BooleanStateCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.7.4.1
          */
-        stateValue: Attribute(0, TlvBoolean)
+        stateValue: Attribute(0x0, TlvBoolean)
     },
 
     events: {
@@ -48,6 +48,6 @@ export const BooleanStateCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.7.5.1
          */
-        stateChange: OptionalEvent(0, EventPriority.Info, TlvStateChangeEvent)
+        stateChange: OptionalEvent(0x0, EventPriority.Info, TlvStateChangeEvent)
     }
 });

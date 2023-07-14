@@ -81,7 +81,7 @@ export function generateCluster(file: ClusterFile) {
             .document(
                 cluster,
                 `Per the Matter specification you cannot use ${file.clusterName} without enabling certain feature combinations.  `
-                    + `You must use the ${file.clusterName}.with factory method to obtain a working cluster.`
+                + `You must use the ${file.clusterName}.with factory method to obtain a working cluster.`
             );
         generateFactory(instance, variance, featureNames, illegal);
     } else {
@@ -119,8 +119,7 @@ function withArticle(what: string) {
 
 function generateFactory(base: Block, variance: ClusterVariance, featureNames: FeatureNames, illegal: IllegalFeatureCombinations) {
     const file = base.file as ClusterFile;
-    let factoryFunction;
-    factoryFunction = base.statements(`factory: <T extends \`\${${file.cluster.name}Feature}\`[]>(...features: [...T]) => {`, "}")
+    const factoryFunction = base.statements(`factory: <T extends \`\${${file.cluster.name}Feature}\`[]>(...features: [...T]) => {`, "}")
         .document(
             [
                 `Use this factory method to create ${withArticle(file.cluster.name)} cluster with support for optional features.  Include each {@link ${file.cluster.name}Feature} you wish to support.`,
@@ -164,11 +163,10 @@ function generateFactory(base: Block, variance: ClusterVariance, featureNames: F
 }
 
 function generateExtensionType(file: ClusterFile, variance: ClusterVariance, featureNames: FeatureNames, illegal: IllegalFeatureCombinations) {
-    let factoryType;
-
     file.addImport("cluster/ClusterFactory", "ClusterForBaseCluster");
     file.addImport("schema/BitmapSchema", "TypeFromPartialBitSchema");
-    factoryType = Array<string>(
+    
+    const factoryType = Array<string>(
         `export type ${file.cluster.name}Extension<SF extends TypeFromPartialBitSchema<typeof ${file.cluster.name}Base.features>> =`,
         `    ClusterForBaseCluster<typeof ${file.cluster.name}Base, SF>`,
         `    & { supportedFeatures: SF }`

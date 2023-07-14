@@ -7,8 +7,8 @@
 import { Logger } from "../../../src/log/Logger.js";
 import { AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals, Metatype } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
-import { addDetails } from "./extract-details.js";
-import { Code, Identifier, Integer, LowerIdentifier, NoSpace, Str, UpperIdentifier } from "./html-translators.js";
+import { addDocumentation } from "./add-documentation.js";
+import { Bits, Code, Identifier, Integer, LowerIdentifier, NoSpace, Str, UpperIdentifier } from "./html-translators.js";
 import { ClusterReference, HtmlReference } from "./spec-types.js";
 import { translateTable, Optional, Alias, translateRecordsToMatter, Children, chooseIdentityAliases } from "./translate-table.js";
 
@@ -45,7 +45,7 @@ export function* translateCluster(definition: ClusterReference) {
 
     for (const [id, name] of metadata.ids.entries()) {
         const idStr = id === undefined ? "(no ID)" : `0x${id.toString(16)}`;
-        logger.debug(`0x${idStr} ${name}`, Logger.dict({ rev: metadata.revision, cls: metadata.classification }));
+        logger.debug(`${idStr} ${name}`, Logger.dict({ rev: metadata.revision, cls: metadata.classification }));
         const cluster = ClusterElement({
             id: id,
             name: name,
@@ -55,7 +55,7 @@ export function* translateCluster(definition: ClusterReference) {
             xref: definition.xref
         });
 
-        addDetails(cluster, definition);
+        addDocumentation(cluster, definition);
 
         yield cluster;
     }
@@ -164,7 +164,13 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
             revision = 1;
         }
 
-        children.push({ ...Globals.ClusterRevision, default: revision });
+        children.push({
+            tag: Globals.ClusterRevision.tag,
+            id: Globals.ClusterRevision.id,
+            name: Globals.ClusterRevision.name,
+            type: "ClusterRevision",
+            default: revision
+        });
 
         return revision;
     }
@@ -363,7 +369,7 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
                 id: Alias(Integer, ...ids),
                 name: Alias(Identifier, ...names),
                 conformance: Optional(Code),
-                description: Optional(Alias(Str, "notes")),
+                description: Optional(Alias(Str, "summary", "notes")),
                 meaning: Optional(Str)
             });
 
@@ -373,26 +379,45 @@ function translateValueChildren(tag: string, parent: undefined | { type?: string
         }
 
         case Metatype.bitmap: {
-            let records: { id?: number, name: string }[];
-
             if (hasColumn(definition, "meaning")) {
                 // Window covering cluster just plain made up their own format.
-                // Implemented a parser but maintaining is more work than just
-                // defining manually so tossed it
-                logger.warn("Ignoring weird window covering bitmasks");
-                return [];
-            } else {
-                // Standard(ish) bitmap table
-                //
-                // Previously had identified aliases as "mappedprotocol", "statebit", "function", "relatedattribute"
-                // but this was only a partial list.  Auto-detection makes more sense
-                const { ids, names } = chooseIdentityAliases(definition, ["bit", "id"], ["name", "eventdescription"]);
-                records = translateTable("bit", definition, {
-                    id: Alias(Integer, ...ids),
-                    name: Alias(Identifier, ...names),
-                    description: Optional(Alias(Str, "summary"))
+                // We extract bits, description and conformance but just
+                // leave a placeholder for the name
+                const records = translateTable("bit", definition, {
+                    bit: Bits,
+                    description: Str,
+                    conformance: Optional(Alias(Str, "M"))
+                });
+
+                return translateRecordsToMatter("wc bit", records, (r) => {
+                    const constraint = r.bit;
+                    let name;
+                    if (typeof constraint === "number") {
+                        name = `Bit${constraint}`;
+                    } else if (typeof constraint === "object") {
+                        name = `Bits${constraint.min}To${constraint.max - 1}`;
+                    }
+                    if (name) {
+                        return DatatypeElement({
+                            name,
+                            constraint,
+                            description: r.description,
+                            conformance: r.conformance
+                        });
+                    }
                 });
             }
+
+            // Standard(ish) bitmap table
+            //
+            // Previously had identified aliases as "mappedprotocol", "statebit", "function", "relatedattribute"
+            // but this was only a partial list.  Auto-detection makes more sense
+            const { ids, names } = chooseIdentityAliases(definition, ["bit", "id"], ["name", "eventdescription"]);
+            const records = translateTable("bit", definition, {
+                constraint: Alias(Bits, ...ids),
+                name: Alias(Identifier, ...names),
+                description: Optional(Alias(Str, "summary"))
+            });
 
             return translateRecordsToMatter("bit", records, DatatypeElement);
         }
@@ -529,7 +554,7 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
         Logger.nest(() => {
             const child = translateDatatype(datatype);
             if (child) {
-                addDetails(child, datatype);
+                addDocumentation(child, datatype);
                 children.push(child);
             }
         });

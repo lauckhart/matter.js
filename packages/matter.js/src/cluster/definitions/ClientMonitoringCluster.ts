@@ -43,15 +43,15 @@ export const ClientMonitoringCluster = Cluster({
     features: {},
 
     attributes: {
-        idleModeInterval: Attribute(0, TlvUInt32, { default: 18 }),
-        activeModeInterval: Attribute(1, TlvUInt32, { default: 18 }),
-        activeModeThreshold: Attribute(2, TlvUInt16, { default: 0 }),
-        expectedClients: Attribute(3, TlvArray(TlvMonitoringRegistration), { default: [] })
+        idleModeInterval: Attribute(0x0, TlvUInt32, { default: 18 }),
+        activeModeInterval: Attribute(0x1, TlvUInt32, { default: 18 }),
+        activeModeThreshold: Attribute(0x2, TlvUInt16, { default: 0 }),
+        expectedClients: Attribute(0x3, TlvArray(TlvMonitoringRegistration), { default: [] })
     },
 
     commands: {
-        registerClientMonitoring: Command(0, TlvRegisterClientMonitoringRequest, 0, TlvNoResponse),
-        unregisterClientMonitoring: Command(1, TlvUnregisterClientMonitoringRequest, 1, TlvNoResponse),
-        stayAwakeRequest: OptionalCommand(2, TlvNoArguments, 2, TlvNoResponse)
+        registerClientMonitoring: Command(0x0, TlvRegisterClientMonitoringRequest, 0x0, TlvNoResponse),
+        unregisterClientMonitoring: Command(0x1, TlvUnregisterClientMonitoringRequest, 0x1, TlvNoResponse),
+        stayAwakeRequest: OptionalCommand(0x2, TlvNoArguments, 0x2, TlvNoResponse)
     }
 });

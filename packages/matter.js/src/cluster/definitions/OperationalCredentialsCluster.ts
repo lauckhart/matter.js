@@ -18,6 +18,7 @@ import { TlvNodeId } from "../../datatype/NodeId.js";
 import { TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvSubjectId } from "../../datatype/SubjectId.js";
+import { TlvFabricIndex } from "../../datatype/FabricIndex.js";
 
 /**
  * This encodes a fabric sensitive NOC chain, underpinning a commissioned Operational Identity for a given Node.
@@ -58,7 +59,7 @@ export const TlvFabricDescriptorStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.5.1
      */
-    rootPublicKey: TlvField(1, TlvByteString.bound({ minLength: 65, maxLength: 65 })),
+    rootPublicKey: TlvField(1, TlvByteString.bound({ length: 65 })),
 
     /**
      * This field shall contain the value of AdminVendorID provided in the AddNOC command that led to the creation of
@@ -102,9 +103,7 @@ export const TlvFabricDescriptorStruct = TlvObject({
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.1
  */
-export const TlvAttestationRequestRequest = TlvObject({
-    attestationNonce: TlvField(0, TlvByteString.bound({ minLength: 32, maxLength: 32 }))
-});
+export const TlvAttestationRequestRequest = TlvObject({ attestationNonce: TlvField(0, TlvByteString.bound({ length: 32 })) });
 
 /**
  * This command shall be generated in response to an Attestation Request command.
@@ -122,7 +121,7 @@ export const TlvAttestationResponse = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.2.1
      */
-    attestationElements: TlvField(0, TlvByteString),
+    attestationElements: TlvField(0, TlvByteString.bound({ maxLength: 900 })),
 
     /**
      * This field shall contain the octet string of the necessary attestation_signature as described in Section
@@ -130,7 +129,7 @@ export const TlvAttestationResponse = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.2.2
      */
-    attestationSignature: TlvField(1, TlvByteString.bound({ minLength: 64, maxLength: 64 }))
+    attestationSignature: TlvField(1, TlvByteString.bound({ length: 64 }))
 });
 
 /**
@@ -140,7 +139,14 @@ export const TlvAttestationResponse = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.2
  */
 export const enum CertificateChainType {
+    /**
+     * Request the DER- encoded DAC certificate
+     */
     DacCertificate = 1,
+
+    /**
+     * Request the DER- encoded PAI certificate
+     */
     PaiCertificate = 2
 }
 
@@ -172,7 +178,7 @@ export const TlvCertificateChainResponse = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.5
  */
 export const TlvCsrRequestRequest = TlvObject({
-    csrNonce: TlvField(0, TlvByteString.bound({ minLength: 32, maxLength: 32 })),
+    csrNonce: TlvField(0, TlvByteString.bound({ length: 32 })),
     isForUpdateNoc: TlvOptionalField(1, TlvBoolean)
 });
 
@@ -195,9 +201,9 @@ export const TlvCsrResponse = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.6.1
      */
-    nocsrElements: TlvField(0, TlvByteString),
+    nocsrElements: TlvField(0, TlvByteString.bound({ maxLength: 900 })),
 
-    attestationSignature: TlvField(1, TlvByteString.bound({ minLength: 64, maxLength: 64 }))
+    attestationSignature: TlvField(1, TlvByteString.bound({ length: 64 }))
 });
 
 /**
@@ -222,7 +228,7 @@ export const TlvAddNocRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.8.1
      */
-    ipkValue: TlvField(2, TlvByteString.bound({ minLength: 16, maxLength: 16 })),
+    ipkValue: TlvField(2, TlvByteString.bound({ length: 16 })),
 
     /**
      * If the AddNOC command succeeds according to the semantics of the following subsections, then the
@@ -300,7 +306,7 @@ export const TlvAddNocRequest = TlvObject({
      *       new Fabric Scope, along with the RootCACertificate provided with the prior successful
      *       AddTrustedRootCertificate command invoked in the same fail-safe period.
      *
-     *     a. Implementation of certificate chain storage MAY separate or otherwise encode the components of the array
+     *     a. Implementation of certificate chain storage may separate or otherwise encode the components of the array
      *        in implementation-specific ways, as long as they follow the correct format when being read from the NOCs
      *        list or used within other protocols such as CASE.
      *
@@ -347,15 +353,54 @@ export const TlvAddNocRequest = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.4.3
  */
 export const enum NodeOperationalCertStatus {
+    /**
+     * OK, no error
+     */
     Ok = 0,
+
+    /**
+     * Public Key in the NOC does not match the public key in the NOCSR
+     */
     InvalidPublicKey = 1,
+
+    /**
+     * The Node Operational ID in the NOC is not formatted correctly.
+     */
     InvalidNodeOpId = 2,
+
+    /**
+     * Any other validation error in NOC chain
+     */
     InvalidNoc = 3,
+
+    /**
+     * No record of prior CSR for which this NOC could match
+     */
     MissingCsr = 4,
+
+    /**
+     * NOCs table full, cannot add another one
+     */
     TableFull = 5,
+
+    /**
+     * Invalid CaseAdminSubject field for an AddNOC command.
+     */
     InvalidAdminSubject = 6,
+
+    /**
+     * Trying to AddNOC instead of UpdateNOC against an existing Fabric.
+     */
     FabricConflict = 9,
+
+    /**
+     * Label already exists on another Fabric.
+     */
     LabelConflict = 10,
+
+    /**
+     * FabricIndex argument is invalid.
+     */
     InvalidFabricIndex = 11
 }
 
@@ -388,12 +433,12 @@ export const TlvNocResponse = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.10.2
      */
-    fabricIndex: TlvOptionalField(1, TlvUInt8.bound({ min: 1, max: 254 })),
+    fabricIndex: TlvOptionalField(1, TlvFabricIndex),
 
     /**
-     * This field MAY contain debugging textual information from the cluster implementation, which SHOULD NOT be
+     * This field may contain debugging textual information from the cluster implementation, which SHOULD NOT be
      * presented to user interfaces in any way. Its purpose is to help developers in troubleshooting errors and the
-     * contents MAY go into logs or crash reports.
+     * contents may go into logs or crash reports.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.10.3
      */
@@ -422,7 +467,7 @@ export const TlvUpdateFabricLabelRequest = TlvObject({ label: TlvField(0, TlvStr
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.12
  */
-export const TlvRemoveFabricRequest = TlvObject({ fabricIndex: TlvField(0, TlvUInt8.bound({ min: 1, max: 254 })) });
+export const TlvRemoveFabricRequest = TlvObject({ fabricIndex: TlvField(0, TlvFabricIndex) });
 
 /**
  * Input to the OperationalCredentials addTrustedRootCertificate command
@@ -461,7 +506,7 @@ export const OperationalCredentialsCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.1
          */
         noCs: FabricScopedAttribute(
-            0,
+            0x0,
             TlvArray(TlvNOCStruct),
 
             {
@@ -475,7 +520,7 @@ export const OperationalCredentialsCluster = Cluster({
 
         /**
          * This attribute describes all fabrics to which this Node is commissioned, encoded as a read-only list of
-         * FabricDescriptorStruct. This information MAY be computed directly from the NOCs attribute.
+         * FabricDescriptorStruct. This information may be computed directly from the NOCs attribute.
          *
          * Upon Factory Data Reset, this attribute shall be set to a default value of an empty list.
          *
@@ -483,7 +528,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.2
          */
-        fabrics: FabricScopedAttribute(1, TlvArray(TlvFabricDescriptorStruct), { persistent: true, default: [] }),
+        fabrics: FabricScopedAttribute(0x1, TlvArray(TlvFabricDescriptorStruct), { persistent: true, default: [] }),
 
         /**
          * This attribute contains the number of Fabrics that are supported by the device. This value is fixed for a
@@ -491,7 +536,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.3
          */
-        supportedFabrics: FixedAttribute(2, TlvUInt8.bound({ min: 5, max: 254 })),
+        supportedFabrics: FixedAttribute(0x2, TlvUInt8.bound({ min: 5, max: 254 })),
 
         /**
          * This attribute contains the number of Fabrics to which the device is currently commissioned. This attribute
@@ -505,7 +550,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.4
          */
-        commissionedFabrics: Attribute(3, TlvUInt8, { persistent: true }),
+        commissionedFabrics: Attribute(0x3, TlvUInt8, { persistent: true }),
 
         /**
          * This attribute shall contain a read-only list of Trusted Root CA Certificates installed on the Node, as
@@ -516,7 +561,7 @@ export const OperationalCredentialsCluster = Cluster({
          * Depending on the method of storage employed by the server, either shared storage for identical root
          * certificates shared by many fabrics, or individually stored root certificate per fabric, multiple
          *
-         * identical root certificates MAY legally appear within the list.
+         * identical root certificates may legally appear within the list.
          *
          * To match a root with a given fabric, the root certificate’s subject and subject public key need to be
          * cross-referenced with the NOC or ICAC certificates that appear in the NOCs attribute for a given fabric.
@@ -525,7 +570,11 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.5
          */
-        trustedRootCertificates: Attribute(4, TlvArray(TlvByteString), { persistent: true, omitChanges: true, default: [] }),
+        trustedRootCertificates: Attribute(
+            0x4,
+            TlvArray(TlvByteString),
+            { persistent: true, omitChanges: true, default: [] }
+        ),
 
         /**
          * This attribute shall contain accessing fabric index.
@@ -535,7 +584,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.6
          */
-        currentFabricIndex: Attribute(5, TlvUInt8, { default: 0 })
+        currentFabricIndex: Attribute(0x5, TlvUInt8, { default: 0 })
     },
 
     commands: {
@@ -548,7 +597,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.1
          */
-        attestationRequest: Command(0, TlvAttestationRequestRequest, 1, TlvAttestationResponse),
+        attestationRequest: Command(0x0, TlvAttestationRequestRequest, 1, TlvAttestationResponse),
 
         /**
          * If the CertificateType is not a valid value per CertificateChainTypeEnum then the command shall fail with a
@@ -556,7 +605,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.3
          */
-        certificateChainRequest: Command(2, TlvCertificateChainRequestRequest, 3, TlvCertificateChainResponse),
+        certificateChainRequest: Command(0x2, TlvCertificateChainRequestRequest, 3, TlvCertificateChainResponse),
 
         /**
          * This command shall be generated to execute the Node Operational CSR Procedure and subsequently return the
@@ -586,7 +635,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.5
          */
-        csrRequest: Command(4, TlvCsrRequestRequest, 5, TlvCsrResponse),
+        csrRequest: Command(0x4, TlvCsrRequestRequest, 5, TlvCsrResponse),
 
         /**
          * This command shall add a new NOC chain to the device and commission a new Fabric association upon successful
@@ -601,7 +650,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.8
          */
-        addNoc: Command(6, TlvAddNocRequest, 8, TlvNocResponse),
+        addNoc: Command(0x6, TlvAddNocRequest, 8, TlvNocResponse),
 
         /**
          * This command shall replace the NOC and optional associated ICAC (if present) scoped under the accessing
@@ -660,7 +709,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.9
          */
-        updateNoc: Command(7, TlvUpdateNocRequest, 8, TlvNocResponse),
+        updateNoc: Command(0x7, TlvUpdateNocRequest, 8, TlvNocResponse),
 
         /**
          * This command shall be used by an Administrator to set the user-visible Label field for a given Fabric, as
@@ -688,7 +737,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.11
          */
-        updateFabricLabel: Command(9, TlvUpdateFabricLabelRequest, 8, TlvNocResponse),
+        updateFabricLabel: Command(0x9, TlvUpdateFabricLabelRequest, 8, TlvNocResponse),
 
         /**
          * This command is used by Administrators to remove a given Fabric and delete all associated fabric-scoped data.
@@ -746,7 +795,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.12
          */
-        removeFabric: Command(10, TlvRemoveFabricRequest, 8, TlvNocResponse),
+        removeFabric: Command(0xa, TlvRemoveFabricRequest, 8, TlvNocResponse),
 
         /**
          * This command shall add a Trusted Root CA Certificate, provided as its Matter Certificate Encoding
@@ -775,6 +824,6 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.13
          */
-        addTrustedRootCertificate: Command(11, TlvAddTrustedRootCertificateRequest, 11, TlvNoResponse)
+        addTrustedRootCertificate: Command(0xb, TlvAddTrustedRootCertificateRequest, 0xb, TlvNoResponse)
     }
 });

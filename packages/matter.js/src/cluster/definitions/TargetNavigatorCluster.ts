@@ -119,7 +119,7 @@ export const TargetNavigatorCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.3.1
          */
-        targetList: Attribute(0, TlvArray(TlvTargetInfoStruct), { default: [] }),
+        targetList: Attribute(0x0, TlvArray(TlvTargetInfoStruct), { default: [] }),
 
         /**
          * The CurrentTarget attribute shall represent the Identifier for the target which is currently in foreground
@@ -131,7 +131,7 @@ export const TargetNavigatorCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.3.2
          */
-        currentTarget: OptionalAttribute(1, TlvNullable(TlvUInt8), { default: 0 })
+        currentTarget: OptionalAttribute(0x1, TlvNullable(TlvUInt8), { default: null })
     },
 
     commands: {
@@ -140,6 +140,6 @@ export const TargetNavigatorCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1
          */
-        navigateTarget: Command(0, TlvNavigateTargetRequest, 1, TlvNavigateTargetResponse)
+        navigateTarget: Command(0x0, TlvNavigateTargetRequest, 1, TlvNavigateTargetResponse)
     }
 });

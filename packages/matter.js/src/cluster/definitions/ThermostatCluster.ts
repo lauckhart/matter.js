@@ -8,7 +8,7 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, preventCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { Attribute, OptionalAttribute, OptionalWritableAttribute, AccessLevel, WritableAttribute, Command, TlvNoResponse, OptionalCommand, OptionalFixedAttribute, FixedAttribute, Cluster } from "../../cluster/Cluster.js";
 import { TlvInt16, TlvUInt8, TlvBitmap, TlvEnum, TlvUInt16, TlvUInt32, TlvInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -16,11 +16,11 @@ import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 
 /**
- * Bit definitions for TlvRemoteSensing
+ * The value of the Thermostat remoteSensing attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.22
  */
-export const RemoteSensingBits = {
+export const RemoteSensing = {
     /**
      * When set, LocalTemperature Value is derived from a remote node
      */
@@ -36,13 +36,6 @@ export const RemoteSensingBits = {
      */
     occupancy: BitFlag(2)
 };
-
-/**
- * The value of the Thermostat remoteSensing attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.22
- */
-export const TlvRemoteSensing = TlvBitmap(TlvUInt8, RemoteSensingBits);
 
 /**
  * The value of the Thermostat controlSequenceOfOperation attribute
@@ -123,22 +116,15 @@ export const enum SystemMode {
 }
 
 /**
- * Bit definitions for TlvAlarmMask
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.25
- */
-export const AlarmMaskBits = {
-    initializationFailure: BitFlag(0),
-    hardwareFailure: BitFlag(1),
-    selfCalibrationFailure: BitFlag(2)
-};
-
-/**
  * The value of the Thermostat alarmMask attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.25
  */
-export const TlvAlarmMask = TlvBitmap(TlvUInt8, AlarmMaskBits);
+export const AlarmMask = {
+    initializationFailure: BitFlag(0),
+    hardwareFailure: BitFlag(1),
+    selfCalibrationFailure: BitFlag(2)
+};
 
 /**
  * The value of the Thermostat temperatureSetpointHold attribute
@@ -158,11 +144,11 @@ export const enum TemperatureSetpointHold {
 }
 
 /**
- * Bit definitions for TlvThermostatProgrammingOperationMode
+ * The value of the Thermostat thermostatProgrammingOperationMode attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.32
  */
-export const ThermostatProgrammingOperationModeBits = {
+export const ThermostatProgrammingOperationMode = {
     /**
      * Schedule programming mode. This enables any programmed weekly schedule configurations.
      */
@@ -180,18 +166,11 @@ export const ThermostatProgrammingOperationModeBits = {
 };
 
 /**
- * The value of the Thermostat thermostatProgrammingOperationMode attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.32
- */
-export const TlvThermostatProgrammingOperationMode = TlvBitmap(TlvUInt8, ThermostatProgrammingOperationModeBits);
-
-/**
- * Bit definitions for TlvThermostatRunningState
+ * The value of the Thermostat thermostatRunningState attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.33
  */
-export const ThermostatRunningStateBits = {
+export const ThermostatRunningState = {
     /**
      * Heat State On
      */
@@ -225,20 +204,8 @@ export const ThermostatRunningStateBits = {
     /**
      * Fan 3rd Stage Stage On
      */
-    fanStage3: BitFlag(6),
-
-    heatSecondStageStateOn: BitFlag(8),
-    coolSecondStageStateOn: BitFlag(16),
-    fanSecondStageStateOn: BitFlag(32),
-    fanThirdStageStateOn: BitFlag(64)
+    fanStage3: BitFlag(6)
 };
-
-/**
- * The value of the Thermostat thermostatRunningState attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.33
- */
-export const TlvThermostatRunningState = TlvBitmap(TlvUInt16, ThermostatRunningStateBits);
 
 /**
  * The value of the Thermostat setpointChangeSource attribute
@@ -349,11 +316,11 @@ export const enum AcCompressorType {
 }
 
 /**
- * Bit definitions for TlvAcErrorCode
+ * The value of the Thermostat acErrorCode attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.48
  */
-export const AcErrorCodeBits = {
+export const AcErrorCode = {
     /**
      * Compressor Failure or Refrigerant Leakage
      */
@@ -379,13 +346,6 @@ export const AcErrorCodeBits = {
      */
     fanFail: BitFlag(4)
 };
-
-/**
- * The value of the Thermostat acErrorCode attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.48
- */
-export const TlvAcErrorCode = TlvBitmap(TlvUInt32, AcErrorCodeBits);
 
 /**
  * The value of the Thermostat acLouverPosition attribute
@@ -448,18 +408,11 @@ export const TlvSetpointRaiseLowerRequest = TlvObject({
 });
 
 /**
- * Bit definitions for TlvOccupancy
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.4
- */
-export const OccupancyBits = { occupied: BitFlag(1) };
-
-/**
  * The value of the Thermostat occupancy attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.4
  */
-export const TlvOccupancy = TlvBitmap(TlvUInt8, OccupancyBits);
+export const Occupancy = { occupied: BitFlag(0) };
 
 /**
  * The value of the Thermostat thermostatRunningMode attribute
@@ -487,28 +440,18 @@ export const enum StartOfWeek {
     Saturday = 6
 }
 
-/**
- * Bit definitions for TlvDayOfWeek
- */
-export const DayOfWeekBits = {
-    sunday: BitFlag(1),
-    monday: BitFlag(2),
-    tuesday: BitFlag(4),
-    wednesday: BitFlag(8),
-    thursday: BitFlag(16),
-    friday: BitFlag(32),
-    saturday: BitFlag(64),
-    away: BitFlag(128)
+export const DayOfWeek = {
+    sunday: BitFlag(0),
+    monday: BitFlag(1),
+    tuesday: BitFlag(2),
+    wednesday: BitFlag(3),
+    thursday: BitFlag(4),
+    friday: BitFlag(5),
+    saturday: BitFlag(6),
+    away: BitFlag(7)
 };
 
-export const TlvDayOfWeek = TlvBitmap(TlvUInt8, DayOfWeekBits);
-
-/**
- * Bit definitions for TlvModeForSequence
- */
-export const ModeForSequenceBits = { heatSetpointPresent: BitFlag(1), coolSetpointPresent: BitFlag(2) };
-
-export const TlvModeForSequence = TlvBitmap(TlvUInt8, ModeForSequenceBits);
+export const ModeForSequence = { heatSetpointPresent: BitFlag(0), coolSetpointPresent: BitFlag(1) };
 
 /**
  * This represents a single transition in a Thermostat schedule
@@ -536,8 +479,8 @@ export const TlvThermostatScheduleTransition = TlvObject({
  */
 export const TlvSetWeeklyScheduleRequest = TlvObject({
     numberOfTransitionsForSequence: TlvField(0, TlvUInt8),
-    dayOfWeekForSequence: TlvField(1, TlvDayOfWeek),
-    modeForSequence: TlvField(2, TlvModeForSequence),
+    dayOfWeekForSequence: TlvField(1, TlvBitmap(TlvUInt8, DayOfWeek)),
+    modeForSequence: TlvField(2, TlvBitmap(TlvUInt8, ModeForSequence)),
     transitions: TlvField(3, TlvThermostatScheduleTransition)
 });
 
@@ -547,8 +490,8 @@ export const TlvSetWeeklyScheduleRequest = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
  */
 export const TlvGetWeeklyScheduleRequest = TlvObject({
-    daysToReturn: TlvField(0, TlvDayOfWeek),
-    modeToReturn: TlvField(1, TlvModeForSequence)
+    daysToReturn: TlvField(0, TlvBitmap(TlvUInt8, DayOfWeek)),
+    modeToReturn: TlvField(1, TlvBitmap(TlvUInt8, ModeForSequence))
 });
 
 /**
@@ -556,8 +499,8 @@ export const TlvGetWeeklyScheduleRequest = TlvObject({
  */
 export const TlvGetWeeklyScheduleResponse = TlvObject({
     numberOfTransitionsForSequence: TlvField(0, TlvUInt8),
-    dayOfWeekForSequence: TlvField(1, TlvDayOfWeek),
-    modeForSequence: TlvField(2, TlvModeForSequence),
+    dayOfWeekForSequence: TlvField(1, TlvBitmap(TlvUInt8, DayOfWeek)),
+    modeForSequence: TlvField(2, TlvBitmap(TlvUInt8, ModeForSequence)),
     transitions: TlvField(3, TlvThermostatScheduleTransition)
 });
 
@@ -623,7 +566,7 @@ export enum ThermostatFeature {
 export const ThermostatBase = BaseClusterComponent({
     id: 0x201,
     name: "Thermostat",
-    revision: 1,
+    revision: 6,
 
     features: {
         /**
@@ -692,14 +635,14 @@ export const ThermostatBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.2
          */
-        localTemperature: Attribute(0, TlvNullable(TlvInt16), { default: null }),
+        localTemperature: Attribute(0x0, TlvNullable(TlvInt16), { default: null }),
 
         /**
          * This attribute represents the outdoor temperature, as measured locally or remotely (over the network).
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.3
          */
-        outdoorTemperature: OptionalAttribute(1, TlvNullable(TlvInt16), { default: null }),
+        outdoorTemperature: OptionalAttribute(0x1, TlvNullable(TlvInt16), { default: null }),
 
         /**
          * This attribute indicates when the local temperature, outdoor temperature and occupancy are being sensed by
@@ -717,7 +660,11 @@ export const ThermostatBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.22
          */
-        remoteSensing: OptionalWritableAttribute(26, TlvRemoteSensing, { persistent: true, writeAcl: AccessLevel.Manage }),
+        remoteSensing: OptionalWritableAttribute(
+            0x1a,
+            TlvBitmap(TlvUInt8, RemoteSensing),
+            { persistent: true, writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * This attribute specifies the overall operating environment of the thermostat, and thus the possible system
@@ -738,7 +685,7 @@ export const ThermostatBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.23
          */
         controlSequenceOfOperation: WritableAttribute(
-            27,
+            0x1b,
             TlvEnum<ControlSequenceOfOperation>(),
             { persistent: true, default: ControlSequenceOfOperation.CoolingAndHeating, writeAcl: AccessLevel.Manage }
         ),
@@ -754,7 +701,7 @@ export const ThermostatBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.24
          */
         systemMode: WritableAttribute(
-            28,
+            0x1c,
             TlvEnum<SystemMode>(),
             { scene: true, persistent: true, default: SystemMode.Auto, writeAcl: AccessLevel.Manage }
         ),
@@ -771,7 +718,7 @@ export const ThermostatBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.25
          */
-        alarmMask: OptionalAttribute(29, TlvAlarmMask),
+        alarmMask: OptionalAttribute(0x1d, TlvBitmap(TlvUInt8, AlarmMask)),
 
         /**
          * This attribute specifies the temperature hold status on the thermostat. If hold status is on, the thermostat
@@ -785,7 +732,7 @@ export const ThermostatBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.30
          */
         temperatureSetpointHold: OptionalWritableAttribute(
-            35,
+            0x23,
             TlvEnum<TemperatureSetpointHold>(),
             { persistent: true, default: TemperatureSetpointHold.SetpointHoldOff, writeAcl: AccessLevel.Manage }
         ),
@@ -798,19 +745,19 @@ export const ThermostatBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.31
          */
         temperatureSetpointHoldDuration: OptionalWritableAttribute(
-            36,
+            0x24,
             TlvNullable(TlvUInt16.bound({ max: 1440 })),
-            { persistent: true, default: 0, writeAcl: AccessLevel.Manage }
+            { persistent: true, default: null, writeAcl: AccessLevel.Manage }
         ),
 
         /**
          * This attribute determines the operational state of the thermostat’s programming. The thermostat shall modify
          * its programming operation when this attribute is modified by a client and update this attribute when its
-         * programming operation is modified locally by a user. The thermostat MAY support more than one active
-         * ThermostatProgrammingOperationMode. For example, the thermostat MAY operate simultaneously in Schedule
+         * programming operation is modified locally by a user. The thermostat may support more than one active
+         * ThermostatProgrammingOperationMode. For example, the thermostat may operate simultaneously in Schedule
          * Programming Mode and Recovery Mode.
          *
-         * Thermostats which contain a schedule MAY use this attribute to control how that schedule is used, even if
+         * Thermostats which contain a schedule may use this attribute to control how that schedule is used, even if
          * they do not support the Schedule Configuration feature.
          *
          * Table 79. ThermostatProgrammingOperationMode Attribute Values
@@ -824,8 +771,8 @@ export const ThermostatBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.32
          */
         thermostatProgrammingOperationMode: OptionalWritableAttribute(
-            37,
-            TlvThermostatProgrammingOperationMode,
+            0x25,
+            TlvBitmap(TlvUInt8, ThermostatProgrammingOperationMode),
             { writeAcl: AccessLevel.Manage }
         ),
 
@@ -838,7 +785,7 @@ export const ThermostatBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.33
          */
-        thermostatRunningState: OptionalAttribute(41, TlvThermostatRunningState),
+        thermostatRunningState: OptionalAttribute(0x29, TlvBitmap(TlvUInt16, ThermostatRunningState)),
 
         /**
          * This attribute specifies the source of the current active OccupiedCoolingSetpoint or OccupiedHeatingSetpoint
@@ -846,7 +793,7 @@ export const ThermostatBase = BaseClusterComponent({
          *
          * This attribute enables service providers to determine whether changes to setpoints were initiated due to
          * occupant comfort, scheduled programming or some other source (e.g., electric utility or other service
-         * provider). Because automation services MAY initiate frequent setpoint changes, this attribute clearly
+         * provider). Because automation services may initiate frequent setpoint changes, this attribute clearly
          * differentiates the source of setpoint changes made at the thermostat.
          *
          * Table 81. SetpointChangeSource Values
@@ -854,7 +801,7 @@ export const ThermostatBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.34
          */
         setpointChangeSource: OptionalAttribute(
-            48,
+            0x30,
             TlvEnum<SetpointChangeSource>(),
             { default: SetpointChangeSource.Manual }
         ),
@@ -869,7 +816,7 @@ export const ThermostatBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.35
          */
-        setpointChangeAmount: OptionalAttribute(49, TlvNullable(TlvInt16), { default: 32768 }),
+        setpointChangeAmount: OptionalAttribute(0x31, TlvNullable(TlvInt16), { default: null }),
 
         /**
          * This attribute specifies the time in UTC at which the SetpointChangeSourceAmount attribute change was
@@ -877,7 +824,7 @@ export const ThermostatBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.36
          */
-        setpointChangeSourceTimestamp: OptionalAttribute(50, TlvUInt32, { default: 0 }),
+        setpointChangeSourceTimestamp: OptionalAttribute(0x32, TlvUInt32, { default: 0 }),
 
         /**
          * This attribute specifies the delta between the LocalTemperature Value and the OccupiedHeatingSetpoint or
@@ -908,7 +855,7 @@ export const ThermostatBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.43
          */
         emergencyHeatDelta: OptionalWritableAttribute(
-            58,
+            0x3a,
             TlvUInt8,
             { persistent: true, default: 250, writeAcl: AccessLevel.Manage }
         ),
@@ -922,7 +869,7 @@ export const ThermostatBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.44
          */
         acType: OptionalWritableAttribute(
-            64,
+            0x40,
             TlvEnum<AcType>(),
             { persistent: true, default: AcType.Unknown, writeAcl: AccessLevel.Manage }
         ),
@@ -933,7 +880,11 @@ export const ThermostatBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.45
          */
-        acCapacity: OptionalWritableAttribute(65, TlvUInt16, { persistent: true, default: 0, writeAcl: AccessLevel.Manage }),
+        acCapacity: OptionalWritableAttribute(
+            0x41,
+            TlvUInt16,
+            { persistent: true, default: 0, writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * This attribute indicates type of refrigerant used within the Mini Split AC.
@@ -943,7 +894,7 @@ export const ThermostatBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.46
          */
         acRefrigerantType: OptionalWritableAttribute(
-            66,
+            0x42,
             TlvEnum<AcRefrigerantType>(),
             { persistent: true, default: AcRefrigerantType.Unknown, writeAcl: AccessLevel.Manage }
         ),
@@ -956,7 +907,7 @@ export const ThermostatBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.47
          */
         acCompressorType: OptionalWritableAttribute(
-            67,
+            0x43,
             TlvEnum<AcCompressorType>(),
             { persistent: true, default: AcCompressorType.Unknown, writeAcl: AccessLevel.Manage }
         ),
@@ -969,7 +920,7 @@ export const ThermostatBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.48
          */
-        acErrorCode: OptionalWritableAttribute(68, TlvAcErrorCode, { writeAcl: AccessLevel.Manage }),
+        acErrorCode: OptionalWritableAttribute(0x44, TlvBitmap(TlvUInt32, AcErrorCode), { writeAcl: AccessLevel.Manage }),
 
         /**
          * This attribute indicates the position of Louver on the AC.
@@ -979,7 +930,7 @@ export const ThermostatBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.49
          */
         acLouverPosition: OptionalWritableAttribute(
-            69,
+            0x45,
             TlvEnum<AcLouverPosition>(),
             { persistent: true, default: 0, writeAcl: AccessLevel.Manage }
         ),
@@ -989,7 +940,7 @@ export const ThermostatBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.50
          */
-        acCoilTemperature: OptionalAttribute(70, TlvNullable(TlvInt16), { default: 32768 }),
+        acCoilTemperature: OptionalAttribute(0x46, TlvNullable(TlvInt16), { default: null }),
 
         /**
          * This attribute specifies the format for the ACCapacity attribute.
@@ -999,7 +950,7 @@ export const ThermostatBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.51
          */
         acCapacityFormat: OptionalWritableAttribute(
-            71,
+            0x47,
             TlvEnum<AcCapacityFormat>(),
             { persistent: true, default: AcCapacityFormat.BtUh, writeAcl: AccessLevel.Manage }
         )
@@ -1009,12 +960,12 @@ export const ThermostatBase = BaseClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
          */
-        setpointRaiseLower: Command(0, TlvSetpointRaiseLowerRequest, 0, TlvNoResponse),
+        setpointRaiseLower: Command(0x0, TlvSetpointRaiseLowerRequest, 0x0, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
          */
-        getRelayStatusLog: OptionalCommand(4, TlvNoArguments, 1, TlvNoArguments)
+        getRelayStatusLog: OptionalCommand(0x4, TlvNoArguments, 1, TlvNoArguments)
     }
 });
 
@@ -1029,7 +980,11 @@ export const OccupancyComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.4
          */
-        occupancy: Attribute(2, TlvOccupancy, { default: BitFlags(OccupancyBits, "Occupied") })
+        occupancy: Attribute(
+            0x2,
+            TlvBitmap(TlvUInt8, Occupancy),
+            { default: BitsFromPartial(Occupancy, { occupied: true }) }
+        )
     }
 });
 
@@ -1039,34 +994,34 @@ export const OccupancyComponent = ClusterComponent({
 export const HeatingComponent = ClusterComponent({
     attributes: {
         /**
-         * This attribute specifies the absolute minimum level that the heating setpoint MAY be set to. This is a
+         * This attribute specifies the absolute minimum level that the heating setpoint may be set to. This is a
          * limitation imposed by the manufacturer.
          *
          * Refer to Setpoint Limits for constraints
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.5
          */
-        absMinHeatSetpointLimit: OptionalFixedAttribute(3, TlvInt16, { default: 700 }),
+        absMinHeatSetpointLimit: OptionalFixedAttribute(0x3, TlvInt16, { default: 700 }),
 
         /**
-         * This attribute specifies the absolute maximum level that the heating setpoint MAY be set to. This is a
+         * This attribute specifies the absolute maximum level that the heating setpoint may be set to. This is a
          * limitation imposed by the manufacturer.
          *
          * Refer to Setpoint Limits for constraints
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.6
          */
-        absMaxHeatSetpointLimit: OptionalFixedAttribute(4, TlvInt16, { default: 3000 }),
+        absMaxHeatSetpointLimit: OptionalFixedAttribute(0x4, TlvInt16, { default: 3000 }),
 
         /**
          * This attribute specifies the level of heating demanded by the PI loop in percent. This value is 0 when the
          * thermostat is in “off” or “cooling” mode.
          *
-         * This attribute is reported regularly and MAY be used to control a heating device.
+         * This attribute is reported regularly and may be used to control a heating device.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.10
          */
-        piHeatingDemand: OptionalAttribute(8, TlvUInt8.bound({ max: 100 })),
+        piHeatingDemand: OptionalAttribute(0x8, TlvUInt8.bound({ max: 100 })),
 
         /**
          * This attribute specifies the heating mode setpoint when the room is occupied.
@@ -1078,7 +1033,7 @@ export const HeatingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.14
          */
-        occupiedHeatingSetpoint: WritableAttribute(18, TlvInt16, { scene: true, persistent: true, default: 2000 }),
+        occupiedHeatingSetpoint: WritableAttribute(0x12, TlvInt16, { scene: true, persistent: true, default: 2000 }),
 
         /**
          * This attribute specifies the heating mode setpoint when the room is unoccupied.
@@ -1090,10 +1045,10 @@ export const HeatingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.16
          */
-        unoccupiedHeatingSetpoint: OptionalWritableAttribute(20, TlvInt16, { persistent: true, default: 2000 }),
+        unoccupiedHeatingSetpoint: OptionalWritableAttribute(0x14, TlvInt16, { persistent: true, default: 2000 }),
 
         /**
-         * This attribute specifies the minimum level that the heating setpoint MAY be set to.
+         * This attribute specifies the minimum level that the heating setpoint may be set to.
          *
          * This attribute, and the following three attributes, allow the user to define setpoint limits more
          * constrictive than the manufacturer imposed ones. Limiting users (e.g., in a commercial building) to such
@@ -1107,14 +1062,10 @@ export const HeatingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.17
          */
-        minHeatSetpointLimit: OptionalWritableAttribute(
-            21,
-            TlvInt16,
-            { persistent: true, default: 700, writeAcl: AccessLevel.Manage }
-        ),
+        minHeatSetpointLimit: OptionalWritableAttribute(0x15, TlvInt16, { persistent: true, writeAcl: AccessLevel.Manage }),
 
         /**
-         * This attribute specifies the maximum level that the heating setpoint MAY be set to.
+         * This attribute specifies the maximum level that the heating setpoint may be set to.
          *
          * Refer to Setpoint Limits for constraints. If an attempt is made to set this attribute to a value which
          * conflicts with setpoint values then those setpoints shall be adjusted by the minimum amount to permit this
@@ -1124,11 +1075,7 @@ export const HeatingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.18
          */
-        maxHeatSetpointLimit: OptionalWritableAttribute(
-            22,
-            TlvInt16,
-            { persistent: true, default: 3000, writeAcl: AccessLevel.Manage }
-        )
+        maxHeatSetpointLimit: OptionalWritableAttribute(0x16, TlvInt16, { persistent: true, writeAcl: AccessLevel.Manage })
     }
 });
 
@@ -1138,34 +1085,34 @@ export const HeatingComponent = ClusterComponent({
 export const CoolingComponent = ClusterComponent({
     attributes: {
         /**
-         * This attribute specifies the absolute minimum level that the cooling setpoint MAY be set to. This is a
+         * This attribute specifies the absolute minimum level that the cooling setpoint may be set to. This is a
          * limitation imposed by the manufacturer.
          *
          * Refer to Setpoint Limits for constraints
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.7
          */
-        absMinCoolSetpointLimit: OptionalFixedAttribute(5, TlvInt16, { default: 1600 }),
+        absMinCoolSetpointLimit: OptionalFixedAttribute(0x5, TlvInt16, { default: 1600 }),
 
         /**
-         * This attribute specifies the absolute maximum level that the cooling setpoint MAY be set to. This is a
+         * This attribute specifies the absolute maximum level that the cooling setpoint may be set to. This is a
          * limitation imposed by the manufacturer.
          *
          * Refer to Setpoint Limits for constraints
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.8
          */
-        absMaxCoolSetpointLimit: OptionalFixedAttribute(6, TlvInt16, { default: 3200 }),
+        absMaxCoolSetpointLimit: OptionalFixedAttribute(0x6, TlvInt16, { default: 3200 }),
 
         /**
          * This attribute specifies the level of cooling demanded by the PI (proportional integral) control loop in use
          * by the thermostat (if any), in percent. This value is 0 when the thermostat is in “off” or “heating” mode.
          *
-         * This attribute is reported regularly and MAY be used to control a cooling device.
+         * This attribute is reported regularly and may be used to control a cooling device.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.9
          */
-        piCoolingDemand: OptionalAttribute(7, TlvUInt8.bound({ max: 100 })),
+        piCoolingDemand: OptionalAttribute(0x7, TlvUInt8.bound({ max: 100 })),
 
         /**
          * This attribute specifies the cooling mode setpoint when the room is occupied.
@@ -1177,7 +1124,7 @@ export const CoolingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.13
          */
-        occupiedCoolingSetpoint: WritableAttribute(17, TlvInt16, { scene: true, persistent: true, default: 2600 }),
+        occupiedCoolingSetpoint: WritableAttribute(0x11, TlvInt16, { scene: true, persistent: true, default: 2600 }),
 
         /**
          * This attribute specifies the cooling mode setpoint when the room is unoccupied.
@@ -1189,10 +1136,10 @@ export const CoolingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.15
          */
-        unoccupiedCoolingSetpoint: OptionalWritableAttribute(19, TlvInt16, { persistent: true, default: 2600 }),
+        unoccupiedCoolingSetpoint: OptionalWritableAttribute(0x13, TlvInt16, { persistent: true, default: 2600 }),
 
         /**
-         * This attribute specifies the minimum level that the cooling setpoint MAY be set to.
+         * This attribute specifies the minimum level that the cooling setpoint may be set to.
          *
          * Refer to Setpoint Limits for constraints. If an attempt is made to set this attribute to a value which
          * conflicts with setpoint values then those setpoints shall be adjusted by the minimum amount to permit this
@@ -1202,14 +1149,10 @@ export const CoolingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.19
          */
-        minCoolSetpointLimit: OptionalWritableAttribute(
-            23,
-            TlvInt16,
-            { persistent: true, default: 1600, writeAcl: AccessLevel.Manage }
-        ),
+        minCoolSetpointLimit: OptionalWritableAttribute(0x17, TlvInt16, { persistent: true, writeAcl: AccessLevel.Manage }),
 
         /**
-         * This attribute specifies the maximum level that the cooling setpoint MAY be set to.
+         * This attribute specifies the maximum level that the cooling setpoint may be set to.
          *
          * Refer to Setpoint Limits for constraints. If an attempt is made to set this attribute to a value which
          * conflicts with setpoint values then those setpoints shall be adjusted by the minimum amount to permit this
@@ -1220,11 +1163,7 @@ export const CoolingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.20
          */
-        maxCoolSetpointLimit: OptionalWritableAttribute(
-            24,
-            TlvInt16,
-            { persistent: true, default: 3200, writeAcl: AccessLevel.Manage }
-        )
+        maxCoolSetpointLimit: OptionalWritableAttribute(0x18, TlvInt16, { persistent: true, writeAcl: AccessLevel.Manage })
     }
 });
 
@@ -1248,7 +1187,7 @@ export const NotLocalTemperatureNotExposedComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.12
          */
         localTemperatureCalibration: OptionalWritableAttribute(
-            16,
+            0x10,
             TlvInt8.bound({ min: -25, max: 25 }),
             { persistent: true, default: 0, writeAcl: AccessLevel.Manage }
         )
@@ -1273,16 +1212,16 @@ export const AutoModeComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.21
          */
         minSetpointDeadBand: WritableAttribute(
-            25,
-            TlvInt8.bound({ max: 25 }),
-            { persistent: true, default: 25, writeAcl: AccessLevel.Manage }
+            0x19,
+            TlvInt8.bound({ min: 0, max: 25 }),
+            { persistent: true, default: 20, writeAcl: AccessLevel.Manage }
         ),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7
          */
         thermostatRunningMode: OptionalAttribute(
-            30,
+            0x1e,
             TlvEnum<ThermostatRunningMode>(),
             { default: ThermostatRunningMode.Off }
         )
@@ -1300,43 +1239,43 @@ export const ScheduleConfigurationComponent = ClusterComponent({
          *
          * Table 77. StartofWeek Values
          *
-         * This attribute MAY be able to be used as the base to determine if the device supports weekly scheduling by
+         * This attribute may be able to be used as the base to determine if the device supports weekly scheduling by
          * reading the attribute. Successful response means that the weekly scheduling is supported.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.27
          */
-        startOfWeek: FixedAttribute(32, TlvEnum<StartOfWeek>()),
+        startOfWeek: FixedAttribute(0x20, TlvEnum<StartOfWeek>()),
 
         /**
          * This attribute determines how many weekly schedule transitions the thermostat is capable of handling.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.28
          */
-        numberOfWeeklyTransitions: FixedAttribute(33, TlvUInt8, { default: 0 }),
+        numberOfWeeklyTransitions: FixedAttribute(0x21, TlvUInt8, { default: 0 }),
 
         /**
          * This attribute determines how many daily schedule transitions the thermostat is capable of handling.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.29
          */
-        numberOfDailyTransitions: FixedAttribute(34, TlvUInt8, { default: 0 })
+        numberOfDailyTransitions: FixedAttribute(0x22, TlvUInt8, { default: 0 })
     },
 
     commands: {
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
          */
-        setWeeklySchedule: Command(1, TlvSetWeeklyScheduleRequest, 1, TlvNoResponse),
+        setWeeklySchedule: Command(0x1, TlvSetWeeklyScheduleRequest, 0x1, TlvNoResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
          */
-        getWeeklySchedule: Command(2, TlvGetWeeklyScheduleRequest, 0, TlvGetWeeklyScheduleResponse),
+        getWeeklySchedule: Command(0x2, TlvGetWeeklyScheduleRequest, 0, TlvGetWeeklyScheduleResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
          */
-        clearWeeklySchedule: Command(3, TlvNoArguments, 3, TlvNoResponse)
+        clearWeeklySchedule: Command(0x3, TlvNoArguments, 0x3, TlvNoResponse)
     }
 });
 
@@ -1370,7 +1309,7 @@ export const SetbackComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.37
          */
         occupiedSetback: WritableAttribute(
-            52,
+            0x34,
             TlvNullable(TlvUInt8),
             { persistent: true, default: null, writeAcl: AccessLevel.Manage }
         ),
@@ -1383,7 +1322,7 @@ export const SetbackComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.38
          */
-        occupiedSetbackMin: FixedAttribute(53, TlvNullable(TlvUInt8), { default: null }),
+        occupiedSetbackMin: FixedAttribute(0x35, TlvNullable(TlvUInt8.bound({ min: 0 })), { default: null }),
 
         /**
          * This attribute specifies the maximum value that the Thermostat server will allow the OccupiedSetback
@@ -1393,7 +1332,7 @@ export const SetbackComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.39
          */
-        occupiedSetbackMax: FixedAttribute(54, TlvNullable(TlvUInt8.bound({ max: 254 })), { default: null }),
+        occupiedSetbackMax: FixedAttribute(0x36, TlvNullable(TlvUInt8.bound({ max: 254 })), { default: null }),
 
         /**
          * This attribute specifies the amount that the Thermostat server will allow the LocalTemperature Value to
@@ -1419,7 +1358,7 @@ export const SetbackComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.40
          */
         unoccupiedSetback: OptionalWritableAttribute(
-            55,
+            0x37,
             TlvNullable(TlvUInt8),
             { persistent: true, default: null, writeAcl: AccessLevel.Manage }
         ),
@@ -1432,7 +1371,7 @@ export const SetbackComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.41
          */
-        unoccupiedSetbackMin: OptionalFixedAttribute(56, TlvNullable(TlvUInt8), { default: null }),
+        unoccupiedSetbackMin: OptionalFixedAttribute(0x38, TlvNullable(TlvUInt8.bound({ min: 0 })), { default: null }),
 
         /**
          * This attribute specifies the maximum value that the Thermostat server will allow the UnoccupiedSetback
@@ -1442,7 +1381,7 @@ export const SetbackComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.42
          */
-        unoccupiedSetbackMax: OptionalFixedAttribute(57, TlvNullable(TlvUInt8.bound({ max: 254 })), { default: null })
+        unoccupiedSetbackMax: OptionalFixedAttribute(0x39, TlvNullable(TlvUInt8.bound({ max: 254 })), { default: null })
     }
 });
 

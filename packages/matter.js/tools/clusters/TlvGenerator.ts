@@ -8,7 +8,7 @@ import { InternalError } from "../../src/common/InternalError.js";
 import {
     ClusterModel,
     CommandModel,
-    Conformance,
+    Constraint,
     DatatypeModel,
     ElementTag,
     EventModel,
@@ -22,20 +22,7 @@ import { camelize, serialize } from "../../src/util/String.js";
 import { Entry } from "../util/TsFile.js";
 import { asObjectKey } from "../util/string.js";
 import { ClusterFile } from "./ClusterFile.js";
-
-const IntegerGlobalMap: { [name: string]: [string, string] } = {
-    [Globals.actionId.name]: ["datatype", "TlvAttributeId"],
-    [Globals.clusterId.name]: ["datatype", "TlvClusterId"],
-    [Globals.commandId.name]: ["datatype", "TlvCommandId"],
-    [Globals.deviceTypeId.name]: ["datatype", "TlvDeviceTypeId"],
-    [Globals.endpointNo.name]: ["datatype", "TlvEndpointNumber"],
-    [Globals.eventId.name]: ["datatype", "TlvEventId"],
-    [Globals.fabricId.name]: ["datatype", "TlvFabricId"],
-    [Globals.groupId.name]: ["datatype", "TlvGroupId"],
-    [Globals.nodeId.name]: ["datatype", "TlvNodeId"],
-    [Globals.SubjectId.name]: ["datatype", "TlvSubjectId"],
-    [Globals.vendorId.name]: ["datatype", "TlvVendorId"]
-};
+import { NumericRanges, SpecializedNumbers, WrappedConstantKeys } from "./NumberConstants.js";
 
 /**
  * Adds TLV structures for ValueModels to a ClusterFile
@@ -43,13 +30,16 @@ const IntegerGlobalMap: { [name: string]: [string, string] } = {
 export class TlvGenerator {
     private definedDatatypes = new Set<Model>();
     private scopedNames = new Set<string>();
+    private cluster: ClusterModel;
 
-    constructor(private file: ClusterFile, private cluster: ClusterModel) {
+    constructor(public file: ClusterFile) {
+        this.cluster = file.cluster;
+
         // Find datatype names that conflict at top-level module scope.
         // Datatypes at cluster level get to use their own name but for nested
         // structures we prepend the parent name
         const names = new Set<string>();
-        cluster.visit((model) => {
+        this.cluster.visit((model) => {
             if (model instanceof DatatypeModel && model.children.length) {
                 const metatype = model.effectiveMetatype;
                 switch (metatype) {
@@ -74,6 +64,8 @@ export class TlvGenerator {
             fileOrDirectory = `${fileOrDirectory}/${name.replace(/^Tlv/, "")}`;
         } else if (fileOrDirectory === "tlv") {
             fileOrDirectory = `${fileOrDirectory}/${name}`;
+        } else if (fileOrDirectory === "number") {
+            fileOrDirectory = `tlv/TlvNumber`;
         }
         this.file.addImport(fileOrDirectory, name);
         return name;
@@ -84,7 +76,7 @@ export class TlvGenerator {
      * 
      * @return the referencing TS expression as a string
      */
-    reference(model: ValueModel, scope: ClusterModel): string {
+    reference(model: ValueModel): string {
         const metabase = model.metabase;
         if (!metabase) {
             throw new InternalError(`${model.path}: No root type for ${model.type}`);
@@ -102,7 +94,7 @@ export class TlvGenerator {
                 } else {
                     tlv = "TlvDouble";
                 }
-                this.importTlv("tlv/TlvNumber", tlv);
+                this.importTlv("number", tlv);
                 break;
 
             case Metatype.integer:
@@ -115,27 +107,33 @@ export class TlvGenerator {
 
             case Metatype.bytes:
             case Metatype.string:
-                tlv = this.importTlv("tlv/TlvString", metabase.name === Globals.octstr.name ? "TlvByteString" : "TlvString");
-                const bounds = this.createBounds(model, "minLength", "maxLength");
-                if (bounds) {
-                    tlv = `${tlv}.bound(${serialize(bounds)})`;
+                {
+                    tlv = this.importTlv("tlv/TlvString", metabase.name === Globals.octstr.name ? "TlvByteString" : "TlvString");
+                    const bounds = this.createLengthBounds(model);
+                    if (bounds) {
+                        tlv = `${tlv}.bound(${serialize(bounds)})`;
+                    }
                 }
                 break;
 
             case Metatype.array:
-                this.importTlv("tlv", "TlvArray");
-                const entry = model.listEntry;
-                if (!entry) {
-                    throw new InternalError(`${model.path}: No list entry type`);
+                {
+                    this.importTlv("tlv", "TlvArray");
+                    const entry = model.listEntry;
+                    if (!entry) {
+                        throw new InternalError(`${model.path}: No list entry type`);
+                    }
+                    const bounds = this.createLengthBounds(model);
+                    const boundsStr = bounds ? `, ${serialize(bounds)}` : "";
+                    tlv = `TlvArray(${this.reference(entry)}${boundsStr})`;
                 }
-                tlv = `TlvArray(${this.reference(entry, scope)})`;
                 break;
 
             case Metatype.bitmap:
                 {
-                    const dt = this.defineDatatype(model, scope);
+                    const dt = this.defineDatatype(model);
                     if (dt) {
-                        tlv = dt;
+                        tlv = this.bitmapTlv(dt, model);
                     } else {
                         // No fields; revert to the primitive type the bitmap
                         // derives from
@@ -146,9 +144,9 @@ export class TlvGenerator {
 
             case Metatype.enum:
                 {
-                    const dt = this.defineDatatype(model, scope);
+                    const dt = this.defineDatatype(model);
                     if (dt) {
-                        this.importTlv("tlv/TlvNumber", "TlvEnum");
+                        this.importTlv("number", "TlvEnum");
                         tlv = `TlvEnum<${dt}>()`;
                     } else {
                         // No fields; revert to the primitive type the enum
@@ -160,7 +158,7 @@ export class TlvGenerator {
 
             case Metatype.object:
                 {
-                    const dt = this.defineDatatype(model, scope);
+                    const dt = this.defineDatatype(model);
                     if (dt) {
                         tlv = dt;
                     } else {
@@ -183,25 +181,65 @@ export class TlvGenerator {
     }
 
     /**
-     * Determine whether an integer type is one of our "object wrapped ID"
-     * things.
+     * Determine the TypeScript name we'll use for a model.
      */
-    isSpecializedId(model: ValueModel) {
-        return !!IntegerGlobalMap[model.globalBase?.name as any];
+    nameFor(model?: Model) {
+        if (!(model instanceof ValueModel)) {
+            return;
+        }
+
+        const defining: ValueModel = model.definingModel ?? model;
+        let name = defining.name;
+
+        // If there is a name collision, prefix the name with the parent's name
+        if (this.scopedNames.has(name) && defining.parent && !(defining instanceof ClusterModel)) {
+            name = `${defining.parent.name}${name}`;
+        }
+
+        // Specialize the name based on the model type
+        if (defining instanceof CommandModel && defining.isRequest) {
+            name += "Request";
+        }
+        if (defining instanceof EventModel) {
+            name += "Event";
+        }
+
+        // For enums and bitmaps we create a TypeScript value object, for other
+        // types we create a TLV definition
+        if (defining.effectiveMetatype === Metatype.enum) {
+            if (name.endsWith("Enum")) {
+                // This seems a bit redundant
+                name = name.substring(0, name.length - 4);
+            }
+        } else if (defining.effectiveMetatype !== Metatype.bitmap) {
+            name = "Tlv" + name;
+        }
+
+        // We reserve the name "Type".  Plus it's kind of ambiguous
+        if (name == "Type") {
+            name = `${this.cluster.name}Type`;
+        }
+
+        return name;
     }
 
     private integerTlv(metabase: ValueModel, model: ValueModel) {
-        const globalMapping = IntegerGlobalMap[model.globalBase?.name as any];
+        const globalBase = model.globalBase?.name;
+        const globalMapping = SpecializedNumbers[globalBase as any];
+
+        let tlv;
         if (globalMapping) {
-            return this.importTlv(...globalMapping);
+            tlv = this.importTlv(...globalMapping);
+        } else {
+            tlv = camelize(`tlv ${metabase.name}`).replace("Uint", "UInt");
+            this.importTlv("number", tlv);
         }
 
-        let tlv = camelize(`tlv ${metabase.name}`).replace("Uint", "UInt");
-        this.importTlv("tlv/TlvNumber", tlv);
-
-        const bounds = this.createBounds(model, "min", "max");
-        if (bounds) {
-            tlv = `${tlv}.bound(${serialize(bounds)})`;
+        if (!WrappedConstantKeys[globalBase as any]) {
+            const bounds = this.createNumberBounds(model);
+            if (bounds) {
+                tlv = `${tlv}.bound(${serialize(bounds)})`;
+            }
         }
 
         return tlv;
@@ -215,42 +253,7 @@ export class TlvGenerator {
         return this.integerTlv(primitive, model);
     }
 
-    private defineEnum(name: string, model: ValueModel) {
-        const block = this.file.types.expressions(`export const enum ${name} {`, "}");
-        this.file.types.insertingBefore(block, () => {
-            model.children.forEach(child => {
-                let name = child.name;
-                if (name.match(/^\d+$/)) {
-                    // Typescript doesn't allow numeric enum keys
-                    name = `E${name}`;
-                }
-                block.atom(`${asObjectKey(name)} = ${child.id}`)
-                    .document(child);
-            });
-        });
-        return block;
-    }
-
-    private defineStruct(name: string, model: ValueModel, scope: ClusterModel) {
-        this.importTlv("tlv", "TlvObject");
-        const block = this.file.types.expressions(`export const ${name} = TlvObject({`, "})");
-        this.file.types.insertingBefore(block, () => {
-            model.children.forEach(field => {
-                let tlv: string;
-                if (field.conformance.type === Conformance.Flag.Mandatory) {
-                    tlv = "TlvField";
-                } else {
-                    tlv = "TlvOptionalField"
-                }
-                this.importTlv("tlv/TlvObject", tlv);
-                block.atom(camelize(field.name, false), `${tlv}(${field.effectiveId}, ${this.reference(field, scope)})`)
-                    .document(field);
-            });
-        });
-        return block;
-    }
-
-    private defineBitmap(name: string, model: ValueModel) {
+    private bitmapTlv(name: string, model: ValueModel) {
         let tlvNum;
         switch (model.metabase?.name) {
             case "map8":
@@ -273,27 +276,100 @@ export class TlvGenerator {
                 throw new InternalError(`${model.path}: Could not determine numeric type for ${model.type}`);
         }
 
-        this.importTlv("tlv/TlvNumber", tlvNum);
-        this.importTlv("tlv/TlvNumber", "TlvBitmap");
-        this.importTlv("schema/BitmapSchema", "BitFlag");
+        this.importTlv("number", tlvNum);
+        this.importTlv("number", "TlvBitmap");
 
-        const enumName = `${name.replace(/^Tlv/, "")}Bits`;
-        this.file.nameDefined(enumName);
+        return `TlvBitmap(${tlvNum}, ${name})`;
+    }
 
-        const block = this.file.types.expressions(`export const ${enumName} = {`, "}")
-            .document({ details: `Bit definitions for ${name}`, xref: model.xref });
-
-        this.file.types.insertingBefore(block, () => {
+    private defineEnum(name: string, model: ValueModel) {
+        const enumBlock = this.file.types.expressions(`export const enum ${name} {`, "}");
+        this.file.types.insertingBefore(enumBlock, () => {
             model.children.forEach(child => {
-                block.atom(camelize(child.name, false), `BitFlag(${child.id})`)
+                let name = child.name;
+                if (name.match(/^\d+$/)) {
+                    // Typescript doesn't allow numeric enum keys
+                    name = `E${name}`;
+                }
+                enumBlock.atom(`${asObjectKey(name)} = ${child.id}`)
                     .document(child);
             });
         });
-
-        return this.file.types.atom(`export const ${name} = TlvBitmap(${tlvNum}, ${enumName})`);
+        return enumBlock;
     }
 
-    private defineDatatype(model: ValueModel, scope: ClusterModel) {
+    private defineStruct(name: string, model: ValueModel) {
+        this.importTlv("tlv", "TlvObject");
+
+        const struct = this.file.types.expressions(`export const ${name} = TlvObject({`, "})");
+        this.file.types.insertingBefore(struct, () => {
+            model.children.forEach(field => {
+                if (field.disallowed || field.deprecated) {
+                    return;
+                }
+
+                let tlv: string;
+                if (field.mandatory) {
+                    tlv = "TlvField";
+                } else {
+                    tlv = "TlvOptionalField";
+                }
+
+                this.importTlv("tlv/TlvObject", tlv);
+                struct.atom(camelize(field.name, false), `${tlv}(${field.effectiveId}, ${this.reference(field)})`)
+                    .document(field);
+            });
+        });
+
+        if (!struct.entries.length) {
+            struct.remove();
+            return;
+        }
+
+        return struct;
+    }
+
+    private defineBitmap(name: string, model: ValueModel) {
+        const bitmap = this.file.types.expressions(`export const ${name} = {`, "}");
+
+        for (const child of model.children) {
+            let type: string | undefined;
+
+            const constraint = child.effectiveConstraint;
+            if (typeof constraint.value === "number") {
+                // Single bit
+                this.importTlv("schema/BitmapSchema", "BitFlag");
+                type = `BitFlag(${constraint.value})`;
+            } else if (typeof constraint.min === "number" && typeof constraint.max === "number") {
+                if (child.effectiveMetatype === Metatype.enum) {
+                    const enumName = this.defineDatatype(child);
+                    if (enumName) {
+                        // Bit range with enum definition
+                        this.importTlv("schema/BitmapSchema", "BitFieldEnum");
+                        type = `BitFieldEnum<${enumName}>`;
+                    }
+                }
+
+                if (!type) {
+                    // Raw bit range
+                    this.importTlv("schema/BitmapSchema", "BitField");
+                    type = `BitField`
+                }
+
+                type = `${type}(${constraint.min}, ${constraint.max - constraint.min})`;
+            } else {
+                // Can't do anything without a property constrained definition
+                continue;
+            }
+
+            bitmap.atom(camelize(child.name, false), type)
+                .document(child);
+        }
+
+        return bitmap;
+    }
+
+    private defineDatatype(model: ValueModel) {
         // Obtain the defining model.  This is the actual datatype definition
         const defining = model.definingModel;
         if (defining) {
@@ -305,33 +381,10 @@ export class TlvGenerator {
             return;
         }
 
-        // If there is a name collision, prefix the name with the parent's name
-        let name = model.name;
-        if (this.scopedNames.has(name) && model.parent && !(model instanceof ClusterModel)) {
-            name = `${model.parent.name}${name}`;
-        }
-
-        // Specialize the name based on the model type
-        if (model instanceof CommandModel && model.isRequest) {
-            name += "Request";
-        }
-        if (model instanceof EventModel) {
-            name += "Event";
-        }
-
-        // For enums we create a typescript enum, for other types we create a TLV definition
-        if (model.effectiveMetatype === Metatype.enum) {
-            if (name.endsWith("Enum")) {
-                // This seems a bit redundant
-                name = name.substring(0, name.length - 4);
-            }
-        } else {
-            name = "Tlv" + name;
-        }
-
-        // We reserve the name "Type".  Plus it's kind of ambiguous
-        if (name == "Type") {
-            name = `${this.cluster.name}Type`;
+        // Determine what we'll call this thing.  Name should be defined
+        const name = this.nameFor(model);
+        if (name === undefined) {
+            return;
         }
 
         // If the type is already defined we reference the existing definition
@@ -341,26 +394,25 @@ export class TlvGenerator {
 
         // Record name usage
         this.definedDatatypes.add(model);
-        this.file.nameDefined(name);
 
         // If the type is defined in a different cluster, load the cluster type
         // rather than defining.  This will fail if the other cluster does not
         // actually use the type.  Currently not an issue.
         const definingScope = defining.owner(ClusterModel);
-        if (definingScope && scope !== definingScope) {
+        if (definingScope && definingScope !== this.cluster) {
             this.file.addImport(`cluster/definitions/${definingScope.name}Cluster`, name);
             return name;
         }
 
         // Define the type
-        let definition: Entry;
+        let definition: Entry | undefined;
         switch (model.effectiveMetatype) {
             case Metatype.enum:
                 definition = this.defineEnum(name, model);
                 break;
 
             case Metatype.object:
-                definition = this.defineStruct(name, model, scope);
+                definition = this.defineStruct(name, model);
                 break;
 
             case Metatype.bitmap:
@@ -371,13 +423,19 @@ export class TlvGenerator {
                 throw new InternalError(`${model.path}: Top-level ${model.effectiveMetatype} is unsupported`);
         }
 
+        // If all object fields are omitted (disallowed or deprecated) then
+        // no object is defined
+        if (!definition) {
+            return;
+        }
+
         // Document the type.  For standalone definitions documentation is
         // present on the model.  For other definitions the documentation is
         // associated with the defining location, so just leave a comment
         // referencing that
         switch (model.tag) {
             case ElementTag.Attribute:
-                definition.document({ details: `The value of the ${scope.name} ${camelize(model.name, false)} attribute`, xref: model.xref });
+                definition.document({ details: `The value of the ${this.cluster.name} ${camelize(model.name, false)} attribute`, xref: model.xref });
                 break;
 
             case ElementTag.Command:
@@ -385,12 +443,12 @@ export class TlvGenerator {
                     // Responses do not appear in the commands field
                     definition.document(model);
                 } else {
-                    definition.document({ details: `Input to the ${scope.name} ${camelize(model.name, false)} command`, xref: model.xref });
+                    definition.document({ details: `Input to the ${this.cluster.name} ${camelize(model.name, false)} command`, xref: model.xref });
                 }
                 break;
 
             case ElementTag.Event:
-                definition.document({ details: `Body of the ${scope.name} ${camelize(model.name, false)} event`, xref: model.xref });
+                definition.document({ details: `Body of the ${this.cluster.name} ${camelize(model.name, false)} event`, xref: model.xref });
                 break;
 
             default:
@@ -398,7 +456,7 @@ export class TlvGenerator {
                     // Standalone
                     definition.document(model);
                 } else {
-                    definition.document({ details: `The value of ${model.parent?.name}.${camelize(model.name, false)}`, xref: model.xref });
+                    definition.document({ details: `The value of ${this.cluster.name}.${camelize(model.name, false)}`, xref: model.xref });
                 }
                 break;
         }
@@ -406,19 +464,47 @@ export class TlvGenerator {
         return name;
     }
 
-    private createBounds<MIN extends string, MAX extends string>(model: ValueModel, minKey: MIN, maxKey: MAX): { [key in MIN | MAX]: number } | undefined {
-        const bounds = {} as any;
+    private createLengthBounds(model: ValueModel) {
+        const constraint = model.effectiveConstraint;
+        const value = FieldValue.numericValue(constraint.value, model.type);
+        if (value !== undefined) {
+            return { length: value };
+        }
 
-        const min = FieldValue.numericValue(model.constraint.min, model.type);
-        const max = FieldValue.numericValue(model.constraint.max, model.type);
-        if (!(min || max)) {
+        return this.createRangeBounds(constraint, "minLength", "maxLength")
+    }
+
+    private createNumberBounds(model: ValueModel) {
+        const constraint = model.effectiveConstraint;
+        const value = FieldValue.numericValue(constraint.value, model.type);
+        if (value !== undefined) {
+            return { min: value, max: value + 1 };
+        }
+
+        return this.createRangeBounds(constraint, "min", "max", model.type);
+    }
+
+    private createRangeBounds(constraint: Constraint, minKey: string, maxKey: string, type?: string) {
+        let min = FieldValue.numericValue(constraint.min, type);
+        let max = FieldValue.numericValue(constraint.max, type);
+
+        if (min === (NumericRanges as any)[type as any]?.min) {
+            min = undefined;
+        }
+
+        if (max === (NumericRanges as any)[type as any]?.max) {
+            max = undefined;
+        }
+
+        if (min === undefined && max === undefined) {
             return;
         }
 
-        if (min) {
+        const bounds = {} as { [key: string]: number }
+        if (min !== undefined) {
             bounds[minKey] = min;
         }
-        if (max) {
+        if (max !== undefined) {
             bounds[maxKey] = max;
         }
 

@@ -12,11 +12,13 @@ Matter.children.push({
     tag: "cluster", name: "KeypadInput", id: 0x509, classification: "application",
     description: "Keypad Input",
     details: "This cluster provides an interface for key code based input and control on a device like a Video " +
-             "Player or an endpoint like a Content App. This may include text or action commands such as UP, " +
-             "DOWN, and SELECT.",
+        "Player or an endpoint like a Content App. This may include text or action commands such as UP, " +
+        "DOWN, and SELECT.",
     xref: { document: "cluster", section: "6.8" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
         {
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "6.8.2" },
@@ -38,27 +40,27 @@ Matter.children.push({
             tag: "command", name: "SendKey", id: 0x0, access: "O", conformance: "M", direction: "request",
             response: "SendKeyResponse",
             details: "Upon receipt, this shall process a keycode as input to the media device." +
-                     "\n" +
-                     "If a second SendKey request with the same KeyCode value is received within 200ms, then the endpoint " +
-                     "will consider the first key press to be a press and hold. When such a repeat KeyCode value is not " +
-                     "received within 200ms, then the endpoint will consider the last key press to be a release.",
+                "\n" +
+                "If a second SendKey request with the same KeyCode value is received within 200ms, then the endpoint " +
+                "will consider the first key press to be a press and hold. When such a repeat KeyCode value is not " +
+                "received within 200ms, then the endpoint will consider the last key press to be a release.",
             xref: { document: "cluster", section: "6.8.3.1" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "KeyCode", id: 0x0, type: "CecKeyCode", conformance: "M",
                 details: "This shall indicate the key code to process.",
                 xref: { document: "cluster", section: "6.8.3.1.1" }
-            } ]
+            }]
         },
 
         {
             tag: "command", name: "SendKeyResponse", id: 0x1, conformance: "M", direction: "response",
             details: "This command shall be generated in response to a SendKey command.",
             xref: { document: "cluster", section: "6.8.3.2" },
-            children: [ {
+            children: [{
                 tag: "datatype", name: "Status", id: 0x0, type: "StatusEnum", conformance: "M",
                 details: "This shall indicate the of the command.",
                 xref: { document: "cluster", section: "6.8.3.2.1" }
-            } ]
+            }]
         },
 
         {

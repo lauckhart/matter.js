@@ -345,18 +345,18 @@ export const ChipMatter: MatterElement = {
                     tag: "datatype", name: "CommandBits", type: "map16", conformance: "M",
 
                     children: [
-                        { tag: "datatype", name: "InstantAction", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "InstantActionWithTransition", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "StartAction", id: 0x4, conformance: "M" },
-                        { tag: "datatype", name: "StartActionWithDuration", id: 0x8, conformance: "M" },
-                        { tag: "datatype", name: "StopAction", id: 0x10, conformance: "M" },
-                        { tag: "datatype", name: "PauseAction", id: 0x20, conformance: "M" },
-                        { tag: "datatype", name: "PauseActionWithDuration", id: 0x40, conformance: "M" },
-                        { tag: "datatype", name: "ResumeAction", id: 0x80, conformance: "M" },
-                        { tag: "datatype", name: "EnableAction", id: 0x100, conformance: "M" },
-                        { tag: "datatype", name: "EnableActionWithDuration", id: 0x200, conformance: "M" },
-                        { tag: "datatype", name: "DisableAction", id: 0x400, conformance: "M" },
-                        { tag: "datatype", name: "DisableActionWithDuration", id: 0x800, conformance: "M" }
+                        { tag: "datatype", name: "InstantAction", constraint: "0" },
+                        { tag: "datatype", name: "InstantActionWithTransition", constraint: "1" },
+                        { tag: "datatype", name: "StartAction", constraint: "2" },
+                        { tag: "datatype", name: "StartActionWithDuration", constraint: "3" },
+                        { tag: "datatype", name: "StopAction", constraint: "4" },
+                        { tag: "datatype", name: "PauseAction", constraint: "5" },
+                        { tag: "datatype", name: "PauseActionWithDuration", constraint: "6" },
+                        { tag: "datatype", name: "ResumeAction", constraint: "7" },
+                        { tag: "datatype", name: "EnableAction", constraint: "8" },
+                        { tag: "datatype", name: "EnableActionWithDuration", constraint: "9" },
+                        { tag: "datatype", name: "DisableAction", constraint: "10" },
+                        { tag: "datatype", name: "DisableActionWithDuration", constraint: "11" }
                     ]
                 },
 
@@ -616,8 +616,8 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "attribute", name: "BallastStatus", id: 0x2, type: "map8", conformance: "O", default: 0,
                     children: [
-                        { tag: "datatype", name: "NonOperational", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "LampNotInSocket", id: 0x2, conformance: "M" }
+                        { tag: "datatype", name: "NonOperational", constraint: "0" },
+                        { tag: "datatype", name: "LampNotInSocket", constraint: "1" }
                     ]
                 },
 
@@ -645,7 +645,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "attribute", name: "LampAlarmMode", id: 0x34, type: "map8", access: "RW", conformance: "O",
                     default: 0,
-                    children: [{ tag: "datatype", name: "LampBurnHours", id: 0x1, conformance: "M" }]
+                    children: [{ tag: "datatype", name: "lampBurnHours", constraint: "0" }]
                 },
                 {
                     tag: "attribute", name: "LampBurnHoursTripPoint", id: 0x35, type: "uint24", access: "RW",
@@ -1796,7 +1796,7 @@ export const ChipMatter: MatterElement = {
                 { tag: "attribute", name: "MinRfidCodeLength", id: 0x1a, type: "uint8", conformance: "O" },
                 {
                     tag: "attribute", name: "CredentialRulesSupport", id: 0x1b, type: "DlCredentialRuleMask",
-                    conformance: "O", default: { type: "flags", flags: ["Single"] }
+                    conformance: "O", default: 1
                 },
                 {
                     tag: "attribute", name: "NumCredentialsSupportedPerUser", id: 0x1c, type: "uint8", conformance: "O",
@@ -1824,7 +1824,7 @@ export const ChipMatter: MatterElement = {
                 },
                 {
                     tag: "attribute", name: "SupportedOperatingModes", id: 0x26, type: "DlSupportedOperatingModes",
-                    conformance: "M", default: { type: "flags", flags: ["Vacation", "Privacy", "Passage"] }
+                    conformance: "M", default: 65526
                 },
                 {
                     tag: "attribute", name: "DefaultConfigurationRegister", id: 0x27,
@@ -2232,9 +2232,9 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "datatype", name: "DlCredentialRuleMask", type: "map8", conformance: "M",
                     children: [
-                        { tag: "datatype", name: "Single", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Dual", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "Tri", id: 0x4, conformance: "M" }
+                        { tag: "datatype", name: "Single", constraint: "0" },
+                        { tag: "datatype", name: "Dual", constraint: "1" },
+                        { tag: "datatype", name: "Tri", constraint: "2" }
                     ]
                 },
 
@@ -2254,11 +2254,11 @@ export const ChipMatter: MatterElement = {
                     tag: "datatype", name: "DlSupportedOperatingModes", type: "map16", conformance: "M",
 
                     children: [
-                        { tag: "datatype", name: "Normal", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Vacation", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "Privacy", id: 0x4, conformance: "M" },
-                        { tag: "datatype", name: "NoRemoteLockUnlock", id: 0x8, conformance: "M" },
-                        { tag: "datatype", name: "Passage", id: 0x10, conformance: "M" }
+                        { tag: "datatype", name: "Normal", constraint: "0" },
+                        { tag: "datatype", name: "Vacation", constraint: "1" },
+                        { tag: "datatype", name: "Privacy", constraint: "2" },
+                        { tag: "datatype", name: "NoRemoteLockUnlock", constraint: "3" },
+                        { tag: "datatype", name: "Passage", constraint: "4" }
                     ]
                 },
 
@@ -2266,12 +2266,12 @@ export const ChipMatter: MatterElement = {
                     tag: "datatype", name: "DlDefaultConfigurationRegister", type: "map16", conformance: "M",
 
                     children: [
-                        { tag: "datatype", name: "EnableLocalProgrammingEnabled", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "KeypadInterfaceDefaultAccessEnabled", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "RemoteInterfaceDefaultAccessIsEnabled", id: 0x4, conformance: "M" },
-                        { tag: "datatype", name: "SoundEnabled", id: 0x20, conformance: "M" },
-                        { tag: "datatype", name: "AutoRelockTimeSet", id: 0x40, conformance: "M" },
-                        { tag: "datatype", name: "LedSettingsSet", id: 0x80, conformance: "M" }
+                        { tag: "datatype", name: "EnableLocalProgrammingEnabled", constraint: "0" },
+                        { tag: "datatype", name: "KeypadInterfaceDefaultAccessEnabled", constraint: "1" },
+                        { tag: "datatype", name: "RemoteInterfaceDefaultAccessIsEnabled", constraint: "2" },
+                        { tag: "datatype", name: "SoundEnabled", constraint: "5" },
+                        { tag: "datatype", name: "AutoRelockTimeSet", constraint: "6" },
+                        { tag: "datatype", name: "LEDSettingsSet", constraint: "7" }
                     ]
                 },
 
@@ -2279,10 +2279,10 @@ export const ChipMatter: MatterElement = {
                     tag: "datatype", name: "DlLocalProgrammingFeatures", type: "map8", conformance: "M",
 
                     children: [
-                        { tag: "datatype", name: "AddUsersCredentialsSchedulesLocally", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "ModifyUsersCredentialsSchedulesLocally", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "ClearUsersCredentialsSchedulesLocally", id: 0x4, conformance: "M" },
-                        { tag: "datatype", name: "AdjustLockSettingsLocally", id: 0x8, conformance: "M" }
+                        { tag: "datatype", name: "AddUsersCredentialsSchedulesLocally", constraint: "0" },
+                        { tag: "datatype", name: "ModifyUsersCredentialsSchedulesLocally", constraint: "1" },
+                        { tag: "datatype", name: "ClearUsersCredentialsSchedulesLocally", constraint: "2" },
+                        { tag: "datatype", name: "AdjustLockSettingsLocally", constraint: "3" }
                     ]
                 },
 
@@ -2290,13 +2290,13 @@ export const ChipMatter: MatterElement = {
                     tag: "datatype", name: "DaysMaskMap", type: "map8", conformance: "M",
 
                     children: [
-                        { tag: "datatype", name: "Sunday", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Monday", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "Tuesday", id: 0x4, conformance: "M" },
-                        { tag: "datatype", name: "Wednesday", id: 0x8, conformance: "M" },
-                        { tag: "datatype", name: "Thursday", id: 0x10, conformance: "M" },
-                        { tag: "datatype", name: "Friday", id: 0x20, conformance: "M" },
-                        { tag: "datatype", name: "Saturday", id: 0x40, conformance: "M" }
+                        { tag: "datatype", name: "Sunday", constraint: "0" },
+                        { tag: "datatype", name: "Monday", constraint: "1" },
+                        { tag: "datatype", name: "Tuesday", constraint: "2" },
+                        { tag: "datatype", name: "Wednesday", constraint: "3" },
+                        { tag: "datatype", name: "Thursday", constraint: "4" },
+                        { tag: "datatype", name: "Friday", constraint: "5" },
+                        { tag: "datatype", name: "Saturday", constraint: "6" }
                     ]
                 },
 
@@ -2516,10 +2516,34 @@ export const ChipMatter: MatterElement = {
                     default: 0, quality: "X"
                 },
                 { tag: "attribute", name: "SpeedCurrent", id: 0x6, type: "uint8", conformance: "O", default: 0 },
-                { tag: "attribute", name: "RockSupport", id: 0x7, type: "map8", conformance: "O", default: 0 },
+
+                {
+                    tag: "attribute", name: "RockSupport", id: 0x7, type: "map8", conformance: "O", default: 0,
+                    children: [
+                        { tag: "datatype", name: "RockLeftRight", constraint: "0" },
+                        { tag: "datatype", name: "RockUpDown", constraint: "1" },
+                        { tag: "datatype", name: "RockRound", constraint: "2" }
+                    ]
+                },
+
                 { tag: "attribute", name: "RockSetting", id: 0x8, type: "map8", access: "RW", conformance: "O", default: 0 },
-                { tag: "attribute", name: "WindSupport", id: 0x9, type: "map8", conformance: "O", default: 0 },
-                { tag: "attribute", name: "WindSetting", id: 0xa, type: "map8", access: "RW", conformance: "O", default: 0 },
+
+                {
+                    tag: "attribute", name: "WindSupport", id: 0x9, type: "map8", conformance: "O", default: 0,
+                    children: [
+                        { tag: "datatype", name: "Sleep Wind", constraint: "0" },
+                        { tag: "datatype", name: "Natural Wind", constraint: "1" }
+                    ]
+                },
+
+                {
+                    tag: "attribute", name: "WindSetting", id: 0xa, type: "map8", access: "RW", conformance: "O",
+                    default: 0,
+                    children: [
+                        { tag: "datatype", name: "Sleep Wind", constraint: "0" },
+                        { tag: "datatype", name: "Natural Wind", constraint: "1" }
+                    ]
+                },
 
                 {
                     tag: "datatype", name: "FanModeType", type: "enum8", conformance: "M",
@@ -3029,7 +3053,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "AddGroupResponse", id: 0x0, conformance: "M", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" }
                     ]
                 },
@@ -3037,7 +3061,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "ViewGroupResponse", id: 0x1, conformance: "M", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "GroupName", type: "string", conformance: "M" }
                     ]
@@ -3055,8 +3079,19 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "RemoveGroupResponse", id: 0x3, conformance: "M", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" }
+                    ]
+                },
+
+                {
+                    tag: "datatype", name: "Status", type: "enum8",
+
+                    children: [
+                        { tag: "datatype", name: "UpdateAvailable", id: 0x0, conformance: "M" },
+                        { tag: "datatype", name: "Busy", id: 0x1, conformance: "M" },
+                        { tag: "datatype", name: "NotAvailable", id: 0x2, conformance: "M" },
+                        { tag: "datatype", name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M" }
                     ]
                 }
             ]
@@ -3071,7 +3106,20 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "IdentifyTime", id: 0x0, type: "uint16", access: "RW", conformance: "M",
                     default: 0
                 },
-                { tag: "attribute", name: "IdentifyType", id: 0x1, type: "enum8", conformance: "M", default: 0 },
+
+                {
+                    tag: "attribute", name: "IdentifyType", id: 0x1, type: "enum8", conformance: "M", default: 0,
+
+                    children: [
+                        { tag: "datatype", name: "None", id: 0x0, conformance: "M" },
+                        { tag: "datatype", name: "VisibleLight", id: 0x1, conformance: "M" },
+                        { tag: "datatype", name: "VisibleLed", id: 0x2, conformance: "M" },
+                        { tag: "datatype", name: "AudibleBeep", id: 0x3, conformance: "M" },
+                        { tag: "datatype", name: "Display", id: 0x4, conformance: "M" },
+                        { tag: "datatype", name: "Actuator", id: 0x5, conformance: "M" }
+                    ]
+                },
+
                 {
                     tag: "command", name: "Identify", id: 0x0, access: "R M", conformance: "M", direction: "request",
                     children: [{ tag: "datatype", name: "IdentifyTime", type: "uint16", conformance: "M" }]
@@ -3297,8 +3345,8 @@ export const ChipMatter: MatterElement = {
                     children: [
                         { tag: "datatype", name: "Level", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M" },
-                        { tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M" }
+                        { tag: "datatype", name: "OptionsMask", type: "Options", conformance: "M" },
+                        { tag: "datatype", name: "OptionsOverride", type: "Options", conformance: "M" }
                     ]
                 },
 
@@ -3308,8 +3356,8 @@ export const ChipMatter: MatterElement = {
                     children: [
                         { tag: "datatype", name: "MoveMode", type: "MoveMode", conformance: "M" },
                         { tag: "datatype", name: "Rate", type: "uint8", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M" },
-                        { tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M" }
+                        { tag: "datatype", name: "OptionsMask", type: "Options", conformance: "M" },
+                        { tag: "datatype", name: "OptionsOverride", type: "Options", conformance: "M" }
                     ]
                 },
 
@@ -3320,16 +3368,16 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "StepMode", type: "StepMode", conformance: "M" },
                         { tag: "datatype", name: "StepSize", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M" },
-                        { tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M" }
+                        { tag: "datatype", name: "OptionsMask", type: "Options", conformance: "M" },
+                        { tag: "datatype", name: "OptionsOverride", type: "Options", conformance: "M" }
                     ]
                 },
 
                 {
                     tag: "command", name: "Stop", id: 0x3, conformance: "M", direction: "request",
                     children: [
-                        { tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M" },
-                        { tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M" }
+                        { tag: "datatype", name: "OptionsMask", type: "Options", conformance: "M" },
+                        { tag: "datatype", name: "OptionsOverride", type: "Options", conformance: "M" }
                     ]
                 },
 
@@ -3339,8 +3387,8 @@ export const ChipMatter: MatterElement = {
                     children: [
                         { tag: "datatype", name: "Level", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M" },
-                        { tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M" }
+                        { tag: "datatype", name: "OptionsMask", type: "Options", conformance: "M" },
+                        { tag: "datatype", name: "OptionsOverride", type: "Options", conformance: "M" }
                     ]
                 },
 
@@ -3350,8 +3398,8 @@ export const ChipMatter: MatterElement = {
                     children: [
                         { tag: "datatype", name: "MoveMode", type: "MoveMode", conformance: "M" },
                         { tag: "datatype", name: "Rate", type: "uint8", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M" },
-                        { tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M" }
+                        { tag: "datatype", name: "OptionsMask", type: "Options", conformance: "M" },
+                        { tag: "datatype", name: "OptionsOverride", type: "Options", conformance: "M" }
                     ]
                 },
 
@@ -3362,16 +3410,16 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "StepMode", type: "StepMode", conformance: "M" },
                         { tag: "datatype", name: "StepSize", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M" },
-                        { tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M" }
+                        { tag: "datatype", name: "OptionsMask", type: "Options", conformance: "M" },
+                        { tag: "datatype", name: "OptionsOverride", type: "Options", conformance: "M" }
                     ]
                 },
 
                 {
                     tag: "command", name: "StopWithOnOff", id: 0x7, conformance: "M", direction: "request",
                     children: [
-                        { tag: "datatype", name: "OptionsMask", type: "LevelControlOptions", conformance: "M" },
-                        { tag: "datatype", name: "OptionsOverride", type: "LevelControlOptions", conformance: "M" }
+                        { tag: "datatype", name: "OptionsMask", type: "Options", conformance: "M" },
+                        { tag: "datatype", name: "OptionsOverride", type: "Options", conformance: "M" }
                     ]
                 },
 
@@ -3383,8 +3431,8 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "datatype", name: "LevelControlOptions", type: "map8", conformance: "M",
                     children: [
-                        { tag: "datatype", name: "ExecuteIfOff", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "CoupleColorTempToLevel", id: 0x2, conformance: "M" }
+                        { tag: "datatype", name: "ExecuteIfOff", constraint: "0" },
+                        { tag: "datatype", name: "CoupleColorTempToLevel", constraint: "1" }
                     ]
                 },
 
@@ -3808,11 +3856,11 @@ export const ChipMatter: MatterElement = {
                     tag: "datatype", name: "WiFiSecurity", type: "map8", conformance: "M",
 
                     children: [
-                        { tag: "datatype", name: "Unencrypted", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Wep", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "WpaPersonal", id: 0x4, conformance: "M" },
-                        { tag: "datatype", name: "Wpa2Personal", id: 0x8, conformance: "M" },
-                        { tag: "datatype", name: "Wpa3Personal", id: 0x10, conformance: "M" }
+                        { tag: "datatype", name: "Unencrypted", constraint: "0" },
+                        { tag: "datatype", name: "WEP", constraint: "1" },
+                        { tag: "datatype", name: "WPA-PERSONAL", constraint: "2" },
+                        { tag: "datatype", name: "WPA2-PERSONAL", constraint: "3" },
+                        { tag: "datatype", name: "WPA3-PERSONAL", constraint: "4" }
                     ]
                 },
 
@@ -3897,7 +3945,7 @@ export const ChipMatter: MatterElement = {
                 },
                 {
                     tag: "datatype", name: "OccupancyBitmap", type: "map8", conformance: "M",
-                    children: [{ tag: "datatype", name: "Occupied", id: 0x1, conformance: "M" }]
+                    children: [{ tag: "datatype", name: "Occupied", constraint: "0" }]
                 },
 
                 {
@@ -3914,9 +3962,9 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "datatype", name: "OccupancySensorTypeBitmap", type: "map8", conformance: "M",
                     children: [
-                        { tag: "datatype", name: "Pir", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Ultrasonic", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "PhysicalContact", id: 0x4, conformance: "M" }
+                        { tag: "datatype", name: "PIR", constraint: "0" },
+                        { tag: "datatype", name: "Ultrasonic", constraint: "1" },
+                        { tag: "datatype", name: "PhysicalContact", constraint: "2" }
                     ]
                 }
             ]
@@ -3980,7 +4028,7 @@ export const ChipMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "OnOffControl", type: "map8", conformance: "M",
-                    children: [{ tag: "datatype", name: "AcceptOnlyWhenOn", id: 0x1, conformance: "M" }]
+                    children: [{ tag: "datatype", name: "AcceptOnlyWhenOn", constraint: "0" }]
                 }
             ]
         },
@@ -4609,15 +4657,15 @@ export const ChipMatter: MatterElement = {
                     tag: "datatype", name: "PumpStatusBitmap", type: "map16", conformance: "M",
 
                     children: [
-                        { tag: "datatype", name: "DeviceFault", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Supplyfault", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "SpeedLow", id: 0x4, conformance: "M" },
-                        { tag: "datatype", name: "SpeedHigh", id: 0x8, conformance: "M" },
-                        { tag: "datatype", name: "LocalOverride", id: 0x10, conformance: "M" },
-                        { tag: "datatype", name: "Running", id: 0x20, conformance: "M" },
-                        { tag: "datatype", name: "RemotePressure", id: 0x40, conformance: "M" },
-                        { tag: "datatype", name: "RemoteFlow", id: 0x80, conformance: "M" },
-                        { tag: "datatype", name: "RemoteTemperature", id: 0x100, conformance: "M" }
+                        { tag: "datatype", name: "DeviceFault", constraint: "0" },
+                        { tag: "datatype", name: "Supplyfault", constraint: "1" },
+                        { tag: "datatype", name: "SpeedLow", constraint: "2" },
+                        { tag: "datatype", name: "SpeedHigh", constraint: "3" },
+                        { tag: "datatype", name: "LocalOverride", constraint: "4" },
+                        { tag: "datatype", name: "Running", constraint: "5" },
+                        { tag: "datatype", name: "RemotePressure", constraint: "6" },
+                        { tag: "datatype", name: "RemoteFlow", constraint: "7" },
+                        { tag: "datatype", name: "remoteTemperature", constraint: "8" }
                     ]
                 },
 
@@ -4786,7 +4834,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "AddSceneResponse", id: 0x0, conformance: "M", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" }
                     ]
@@ -4796,7 +4844,7 @@ export const ChipMatter: MatterElement = {
                     tag: "command", name: "ViewSceneResponse", id: 0x1, conformance: "M", direction: "response",
 
                     children: [
-                        { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "O" },
@@ -4808,7 +4856,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "RemoveSceneResponse", id: 0x2, conformance: "M", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" }
                     ]
@@ -4817,7 +4865,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "RemoveAllScenesResponse", id: 0x3, conformance: "M", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" }
                     ]
                 },
@@ -4825,7 +4873,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "StoreSceneResponse", id: 0x4, conformance: "M", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" }
                     ]
@@ -4836,7 +4884,7 @@ export const ChipMatter: MatterElement = {
                     direction: "response",
 
                     children: [
-                        { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
                         { tag: "datatype", name: "Capacity", type: "uint8", conformance: "M", quality: "X" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneList", type: "uint8", conformance: "O" }
@@ -4846,7 +4894,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "EnhancedAddSceneResponse", id: 0x40, conformance: "O", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" }
                     ]
@@ -4857,7 +4905,7 @@ export const ChipMatter: MatterElement = {
                     direction: "response",
 
                     children: [
-                        { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "O" },
@@ -4869,7 +4917,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "CopySceneResponse", id: 0x42, conformance: "O", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
                         { tag: "datatype", name: "GroupIdentifierFrom", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneIdentifierFrom", type: "uint8", conformance: "M" }
                     ]
@@ -4893,7 +4941,18 @@ export const ChipMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "ScenesCopyMode", type: "map8", conformance: "M",
-                    children: [{ tag: "datatype", name: "CopyAllScenes", id: 0x1, conformance: "M" }]
+                    children: [{ tag: "datatype", name: "CopyAllScenes", constraint: "0" }]
+                },
+
+                {
+                    tag: "datatype", name: "Status", type: "enum8",
+
+                    children: [
+                        { tag: "datatype", name: "UpdateAvailable", id: 0x0, conformance: "M" },
+                        { tag: "datatype", name: "Busy", id: 0x1, conformance: "M" },
+                        { tag: "datatype", name: "NotAvailable", id: 0x2, conformance: "M" },
+                        { tag: "datatype", name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M" }
+                    ]
                 }
             ]
         },
@@ -5071,9 +5130,8 @@ export const ChipMatter: MatterElement = {
                 { tag: "attribute", name: "LocalTemperature", id: 0x0, type: "int16", conformance: "M", quality: "X P" },
                 { tag: "attribute", name: "OutdoorTemperature", id: 0x1, type: "int16", conformance: "O", quality: "X" },
                 {
-                    tag: "attribute", name: "ThermostatOccupancy", id: 0x2, type: "map8", conformance: "O",
-                    default: { type: "flags", flags: ["Occupied"] },
-                    children: [{ tag: "datatype", name: "Occupied", id: 0x1, conformance: "M" }]
+                    tag: "attribute", name: "ThermostatOccupancy", id: 0x2, type: "map8", conformance: "O", default: 1,
+                    children: [{ tag: "datatype", name: "occupied", constraint: "0" }]
                 },
                 {
                     tag: "attribute", name: "AbsMinHeatSetpointLimit", id: 0x3, type: "int16", conformance: "O",
@@ -5145,9 +5203,22 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "ControlSequenceOfOperation", id: 0x1b, type: "ThermostatControlSequence",
                     access: "RW VM", conformance: "M", default: 4
                 },
+
                 {
                     tag: "attribute", name: "SystemMode", id: 0x1c, type: "enum8", access: "RW VM", conformance: "M",
-                    default: 1
+                    default: 1,
+
+                    children: [
+                        { tag: "datatype", name: "Off", id: 0x0, conformance: "M" },
+                        { tag: "datatype", name: "Auto", id: 0x1, conformance: "M" },
+                        { tag: "datatype", name: "Cool", id: 0x3, conformance: "M" },
+                        { tag: "datatype", name: "Heat", id: 0x4, conformance: "M" },
+                        { tag: "datatype", name: "EmergencyHeat", id: 0x5, conformance: "M" },
+                        { tag: "datatype", name: "Precooling", id: 0x6, conformance: "M" },
+                        { tag: "datatype", name: "FanOnly", id: 0x7, conformance: "M" },
+                        { tag: "datatype", name: "Dry", id: 0x8, conformance: "M" },
+                        { tag: "datatype", name: "Sleep", id: 0x9, conformance: "M" }
+                    ]
                 },
 
                 {
@@ -5198,13 +5269,13 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "ThermostatRunningState", id: 0x29, type: "map16", conformance: "O",
 
                     children: [
-                        { tag: "datatype", name: "HeatStateOn", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "CoolStateOn", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "FanStateOn", id: 0x4, conformance: "M" },
-                        { tag: "datatype", name: "HeatSecondStageStateOn", id: 0x8, conformance: "M" },
-                        { tag: "datatype", name: "CoolSecondStageStateOn", id: 0x10, conformance: "M" },
-                        { tag: "datatype", name: "FanSecondStageStateOn", id: 0x20, conformance: "M" },
-                        { tag: "datatype", name: "FanThirdStageStateOn", id: 0x40, conformance: "M" }
+                        { tag: "datatype", name: "HeatStateOn", constraint: "0" },
+                        { tag: "datatype", name: "CoolStateOn", constraint: "1" },
+                        { tag: "datatype", name: "FanStateOn", constraint: "2" },
+                        { tag: "datatype", name: "HeatSecondStageStateOn", constraint: "3" },
+                        { tag: "datatype", name: "CoolSecondStageStateOn", constraint: "4" },
+                        { tag: "datatype", name: "FanSecondStageStateOn", constraint: "5" },
+                        { tag: "datatype", name: "FanThirdStageStateOn", constraint: "6" }
                     ]
                 },
 
@@ -5328,22 +5399,22 @@ export const ChipMatter: MatterElement = {
                     tag: "datatype", name: "DayOfWeek", type: "map8", conformance: "M",
 
                     children: [
-                        { tag: "datatype", name: "Sunday", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "Monday", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "Tuesday", id: 0x4, conformance: "M" },
-                        { tag: "datatype", name: "Wednesday", id: 0x8, conformance: "M" },
-                        { tag: "datatype", name: "Thursday", id: 0x10, conformance: "M" },
-                        { tag: "datatype", name: "Friday", id: 0x20, conformance: "M" },
-                        { tag: "datatype", name: "Saturday", id: 0x40, conformance: "M" },
-                        { tag: "datatype", name: "Away", id: 0x80, conformance: "M" }
+                        { tag: "datatype", name: "Sunday", constraint: "0" },
+                        { tag: "datatype", name: "Monday", constraint: "1" },
+                        { tag: "datatype", name: "Tuesday", constraint: "2" },
+                        { tag: "datatype", name: "Wednesday", constraint: "3" },
+                        { tag: "datatype", name: "Thursday", constraint: "4" },
+                        { tag: "datatype", name: "Friday", constraint: "5" },
+                        { tag: "datatype", name: "Saturday", constraint: "6" },
+                        { tag: "datatype", name: "Away", constraint: "7" }
                     ]
                 },
 
                 {
                     tag: "datatype", name: "ModeForSequence", type: "map8", conformance: "M",
                     children: [
-                        { tag: "datatype", name: "HeatSetpointPresent", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "CoolSetpointPresent", id: 0x2, conformance: "M" }
+                        { tag: "datatype", name: "HeatSetpointPresent", constraint: "0" },
+                        { tag: "datatype", name: "CoolSetpointPresent", constraint: "1" }
                     ]
                 },
 
@@ -5959,10 +6030,7 @@ export const ChipMatter: MatterElement = {
                     tag: "attribute", name: "WcNumberOfActuationsTilt", id: 0x6, type: "uint16", conformance: "O",
                     default: 0
                 },
-                {
-                    tag: "attribute", name: "WcConfigStatus", id: 0x7, type: "ConfigStatus", conformance: "M",
-                    default: { type: "flags", flags: ["Operational", "OnlineReserved"] }
-                },
+                { tag: "attribute", name: "WcConfigStatus", id: 0x7, type: "ConfigStatus", conformance: "M", default: 3 },
                 {
                     tag: "attribute", name: "WcCurrentPositionLiftPercentage", id: 0x8, type: "percent",
                     conformance: "O", quality: "X P"
@@ -6065,22 +6133,22 @@ export const ChipMatter: MatterElement = {
                     tag: "datatype", name: "ConfigStatus", type: "map8", conformance: "M",
 
                     children: [
-                        { tag: "datatype", name: "Operational", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "OnlineReserved", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "LiftMovementReversed", id: 0x4, conformance: "M" },
-                        { tag: "datatype", name: "LiftPositionAware", id: 0x8, conformance: "M" },
-                        { tag: "datatype", name: "TiltPositionAware", id: 0x10, conformance: "M" },
-                        { tag: "datatype", name: "LiftEncoderControlled", id: 0x20, conformance: "M" },
-                        { tag: "datatype", name: "TiltEncoderControlled", id: 0x40, conformance: "M" }
+                        { tag: "datatype", name: "Operational", constraint: "0" },
+                        { tag: "datatype", name: "OnlineReserved", constraint: "1" },
+                        { tag: "datatype", name: "LiftMovementReversed", constraint: "2" },
+                        { tag: "datatype", name: "LiftPositionAware", constraint: "3" },
+                        { tag: "datatype", name: "TiltPositionAware", constraint: "4" },
+                        { tag: "datatype", name: "LiftEncoderControlled", constraint: "5" },
+                        { tag: "datatype", name: "TiltEncoderControlled", constraint: "6" }
                     ]
                 },
 
                 {
                     tag: "datatype", name: "OperationalStatus", type: "map8", conformance: "M",
                     children: [
-                        { tag: "datatype", name: "Global", id: 0x3, conformance: "M" },
-                        { tag: "datatype", name: "Lift", id: 0xc, conformance: "M" },
-                        { tag: "datatype", name: "Tilt", id: 0x30, conformance: "M" }
+                        { tag: "datatype", name: "Global", constraint: "0 to 2" },
+                        { tag: "datatype", name: "Lift", constraint: "2 to 4" },
+                        { tag: "datatype", name: "Tilt", constraint: "4 to 6" }
                     ]
                 },
 
@@ -6120,10 +6188,10 @@ export const ChipMatter: MatterElement = {
                     tag: "datatype", name: "Mode", type: "map8", conformance: "M",
 
                     children: [
-                        { tag: "datatype", name: "MotorDirectionReversed", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "CalibrationMode", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "MaintenanceMode", id: 0x4, conformance: "M" },
-                        { tag: "datatype", name: "LedFeedback", id: 0x8, conformance: "M" }
+                        { tag: "datatype", name: "MotorDirectionReversed", constraint: "0" },
+                        { tag: "datatype", name: "CalibrationMode", constraint: "1" },
+                        { tag: "datatype", name: "MaintenanceMode", constraint: "2" },
+                        { tag: "datatype", name: "LedFeedback", constraint: "3" }
                     ]
                 },
 
@@ -6131,18 +6199,18 @@ export const ChipMatter: MatterElement = {
                     tag: "datatype", name: "SafetyStatus", type: "map16", conformance: "M",
 
                     children: [
-                        { tag: "datatype", name: "RemoteLockout", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "TamperDetection", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "FailedCommunication", id: 0x4, conformance: "M" },
-                        { tag: "datatype", name: "PositionFailure", id: 0x8, conformance: "M" },
-                        { tag: "datatype", name: "ThermalProtection", id: 0x10, conformance: "M" },
-                        { tag: "datatype", name: "ObstacleDetected", id: 0x20, conformance: "M" },
-                        { tag: "datatype", name: "Power", id: 0x40, conformance: "M" },
-                        { tag: "datatype", name: "StopInput", id: 0x80, conformance: "M" },
-                        { tag: "datatype", name: "MotorJammed", id: 0x100, conformance: "M" },
-                        { tag: "datatype", name: "HardwareFailure", id: 0x200, conformance: "M" },
-                        { tag: "datatype", name: "ManualOperation", id: 0x400, conformance: "M" },
-                        { tag: "datatype", name: "Protection", id: 0x800, conformance: "M" }
+                        { tag: "datatype", name: "RemoteLockout", constraint: "0" },
+                        { tag: "datatype", name: "TamperDetection", constraint: "1" },
+                        { tag: "datatype", name: "FailedCommunication", constraint: "2" },
+                        { tag: "datatype", name: "PositionFailure", constraint: "3" },
+                        { tag: "datatype", name: "ThermalProtection", constraint: "4" },
+                        { tag: "datatype", name: "ObstacleDetected", constraint: "5" },
+                        { tag: "datatype", name: "Power", constraint: "6" },
+                        { tag: "datatype", name: "StopInput", constraint: "7" },
+                        { tag: "datatype", name: "MotorJammed", constraint: "8" },
+                        { tag: "datatype", name: "HardwareFailure", constraint: "9" },
+                        { tag: "datatype", name: "ManualOperation", constraint: "10" },
+                        { tag: "datatype", name: "Protection", constraint: "11" }
                     ]
                 }
             ]
@@ -6532,7 +6600,18 @@ export const ChipMatter: MatterElement = {
 
                     children: [
                         { tag: "datatype", name: "StartTime", type: "uint32", conformance: "M" },
-                        { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
+
+                        {
+                            tag: "datatype", name: "Status", type: "enum8", conformance: "M",
+
+                            children: [
+                                { tag: "datatype", name: "UpdateAvailable", id: 0x0, conformance: "M" },
+                                { tag: "datatype", name: "Busy", id: 0x1, conformance: "M" },
+                                { tag: "datatype", name: "NotAvailable", id: 0x2, conformance: "M" },
+                                { tag: "datatype", name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M" }
+                            ]
+                        },
+
                         { tag: "datatype", name: "ProfileIntervalPeriod", type: "enum8", conformance: "M" },
                         { tag: "datatype", name: "NumberOfIntervalsDelivered", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "AttributeId", type: "uint16", conformance: "M" },

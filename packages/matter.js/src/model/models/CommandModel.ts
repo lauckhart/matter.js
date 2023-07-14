@@ -28,6 +28,14 @@ export class CommandModel extends ValueModel implements CommandElement {
         return new ModelTraversal().findResponse(this);
     }
 
+    /**
+     * Commands may re-use the ID for request and response so identification
+     * requires the ID in conjunction with the direction.
+     */
+    override get key() {
+        return `${super.key}:${this.direction}`;
+    }
+
     constructor(definition: CommandElement.Properties) {
         super(definition);
     }

@@ -67,12 +67,12 @@ export const TlvModeOptionStruct = TlvObject({
     mode: TlvField(1, TlvUInt8),
 
     /**
-     * This field is a list of semantic tags that map to the mode option. This MAY be used by clients to determine the
+     * This field is a list of semantic tags that map to the mode option. This may be used by clients to determine the
      * meaning of the mode option as defined in a standard or manufacturer specific namespace. Semantic tags can help
      * clients look for options that meet certain criteria. A semantic tag shall be either a standard tag or
      * manufacturer specific tag as defined in each SemanticTagStruct list entry.
      *
-     * A mode option MAY have more than one semantic tag. A mode option MAY be mapped to a mixture of standard and
+     * A mode option may have more than one semantic tag. A mode option may be mapped to a mixture of standard and
      * manufacturer specific semantic tags.
      *
      * All standard semantic tags are from a single namespace indicated by the StandardNamespace attribute.
@@ -82,7 +82,7 @@ export const TlvModeOptionStruct = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.8.1.3
      */
-    semanticTags: TlvField(2, TlvArray(TlvSemanticTagStruct))
+    semanticTags: TlvField(2, TlvArray(TlvSemanticTagStruct, { maxLength: 64 }))
 });
 
 /**
@@ -134,7 +134,7 @@ export const ModeSelectBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.1
          */
-        description: FixedAttribute(0, TlvString.bound({ maxLength: 64 })),
+        description: FixedAttribute(0x0, TlvString.bound({ maxLength: 64 })),
 
         /**
          * This attribute, when not null, shall indicate a single standard namespace for any standard semantic tag
@@ -145,7 +145,7 @@ export const ModeSelectBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.2
          */
-        standardNamespace: FixedAttribute(1, TlvNullable(TlvUInt16), { default: null }),
+        standardNamespace: FixedAttribute(0x1, TlvNullable(TlvUInt16), { default: null }),
 
         /**
          * This attribute is the list of supported modes that may be selected for the CurrentMode attribute. Each item
@@ -154,7 +154,7 @@ export const ModeSelectBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.3
          */
-        supportedModes: FixedAttribute(2, TlvArray(TlvModeOptionStruct), { default: [] }),
+        supportedModes: FixedAttribute(0x2, TlvArray(TlvModeOptionStruct, { maxLength: 255 }), { default: [] }),
 
         /**
          * This attribute represents the current mode of the server.
@@ -165,7 +165,7 @@ export const ModeSelectBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.4
          */
-        currentMode: Attribute(3, TlvUInt8, { scene: true, persistent: true }),
+        currentMode: Attribute(0x3, TlvUInt8, { scene: true, persistent: true }),
 
         /**
          * The StartUpMode attribute value indicates the desired startup mode for the server when it is supplied with
@@ -185,7 +185,7 @@ export const ModeSelectBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.5
          */
-        startUpMode: OptionalWritableAttribute(4, TlvNullable(TlvUInt8), { persistent: true })
+        startUpMode: OptionalWritableAttribute(0x4, TlvNullable(TlvUInt8), { persistent: true })
     },
 
     commands: {
@@ -197,7 +197,7 @@ export const ModeSelectBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.6.1
          */
-        changeToMode: Command(0, TlvChangeToModeRequest, 0, TlvNoResponse)
+        changeToMode: Command(0x0, TlvChangeToModeRequest, 0x0, TlvNoResponse)
     }
 });
 
@@ -215,7 +215,7 @@ export const OnOffComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.8.5.6
          */
-        onMode: WritableAttribute(5, TlvNullable(TlvUInt8), { persistent: true, default: null })
+        onMode: WritableAttribute(0x5, TlvNullable(TlvUInt8), { persistent: true, default: null })
     }
 });
 

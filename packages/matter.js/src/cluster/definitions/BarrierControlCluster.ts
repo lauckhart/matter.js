@@ -28,20 +28,20 @@ export const BarrierControlCluster = Cluster({
     features: {},
 
     attributes: {
-        barrierMovingState: Attribute(1, TlvUInt8),
-        barrierSafetyStatus: Attribute(2, TlvUInt16),
-        barrierCapabilities: Attribute(3, TlvUInt8),
-        barrierOpenEvents: OptionalWritableAttribute(4, TlvUInt16, { default: 0 }),
-        barrierCloseEvents: OptionalWritableAttribute(5, TlvUInt16, { default: 0 }),
-        barrierCommandOpenEvents: OptionalWritableAttribute(6, TlvUInt16, { default: 0 }),
-        barrierCommandCloseEvents: OptionalWritableAttribute(7, TlvUInt16, { default: 0 }),
-        barrierOpenPeriod: OptionalWritableAttribute(8, TlvUInt16),
-        barrierClosePeriod: OptionalWritableAttribute(9, TlvUInt16),
-        barrierPosition: Attribute(10, TlvUInt8)
+        barrierMovingState: Attribute(0x1, TlvUInt8),
+        barrierSafetyStatus: Attribute(0x2, TlvUInt16),
+        barrierCapabilities: Attribute(0x3, TlvUInt8),
+        barrierOpenEvents: OptionalWritableAttribute(0x4, TlvUInt16, { default: 0 }),
+        barrierCloseEvents: OptionalWritableAttribute(0x5, TlvUInt16, { default: 0 }),
+        barrierCommandOpenEvents: OptionalWritableAttribute(0x6, TlvUInt16, { default: 0 }),
+        barrierCommandCloseEvents: OptionalWritableAttribute(0x7, TlvUInt16, { default: 0 }),
+        barrierOpenPeriod: OptionalWritableAttribute(0x8, TlvUInt16),
+        barrierClosePeriod: OptionalWritableAttribute(0x9, TlvUInt16),
+        barrierPosition: Attribute(0xa, TlvUInt8)
     },
 
     commands: {
-        barrierControlGoToPercent: Command(0, TlvBarrierControlGoToPercentRequest, 0, TlvNoResponse),
-        barrierControlStop: Command(1, TlvNoArguments, 1, TlvNoResponse)
+        barrierControlGoToPercent: Command(0x0, TlvBarrierControlGoToPercentRequest, 0x0, TlvNoResponse),
+        barrierControlStop: Command(0x1, TlvNoArguments, 0x1, TlvNoResponse)
     }
 });

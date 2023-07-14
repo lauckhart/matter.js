@@ -8,13 +8,14 @@
 
 import { Cluster, FixedAttribute, WritableAttribute, AccessLevel, OptionalFixedAttribute, OptionalWritableAttribute, OptionalAttribute, Event, EventPriority, OptionalEvent } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { TlvUInt16, TlvUInt32, TlvEnum, TlvUInt8 } from "../../tlv/TlvNumber.js";
+import { TlvUInt16, TlvUInt32, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvVendorId } from "../../datatype/VendorId.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
+import { TlvFabricIndex } from "../../datatype/FabricIndex.js";
 
 /**
  * This structure provides constant values related to overall global capabilities of this Node, that are not
@@ -107,7 +108,7 @@ export const TlvLeaveEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.3.1
      */
-    fabricIndex: TlvField(0, TlvUInt8.bound({ min: 1, max: 254 }))
+    fabricIndex: TlvField(0, TlvFabricIndex)
 });
 
 /**
@@ -145,21 +146,21 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.1
          */
-        dataModelRevision: FixedAttribute(0, TlvUInt16),
+        dataModelRevision: FixedAttribute(0x0, TlvUInt16),
 
         /**
          * This attribute shall specify a human readable (displayable) name of the vendor for the Node.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.2
          */
-        vendorName: FixedAttribute(1, TlvString.bound({ maxLength: 32 })),
+        vendorName: FixedAttribute(0x1, TlvString.bound({ maxLength: 32 })),
 
         /**
          * This attribute shall specify the Vendor ID.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.3
          */
-        vendorId: FixedAttribute(2, TlvVendorId),
+        vendorId: FixedAttribute(0x2, TlvVendorId),
 
         /**
          * This attribute shall specify a human readable (displayable) name of the model for the Node such as the model
@@ -167,7 +168,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.4
          */
-        productName: FixedAttribute(3, TlvString.bound({ maxLength: 32 })),
+        productName: FixedAttribute(0x3, TlvString.bound({ maxLength: 32 })),
 
         /**
          * This attribute shall specify the Product ID assigned by the vendor that is unique to the specific product of
@@ -175,16 +176,16 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.5
          */
-        productId: FixedAttribute(4, TlvUInt16),
+        productId: FixedAttribute(0x4, TlvUInt16),
 
         /**
          * This attribute shall represent a user defined name for the Node. This attribute SHOULD be set during initial
-         * commissioning and MAY be updated by further reconfigurations.
+         * commissioning and may be updated by further reconfigurations.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.6
          */
         nodeLabel: WritableAttribute(
-            5,
+            0x5,
             TlvString.bound({ maxLength: 32 }),
             { persistent: true, default: "", writeAcl: AccessLevel.Manage }
         ),
@@ -192,8 +193,8 @@ export const BasicInformationCluster = Cluster({
         /**
          * This attribute shall be an ISO 3166-1 alpha-2 code to represent the country, dependent territory, or special
          * area of geographic interest in which the Node is located at the time of the attribute being set. This
-         * attribute shall be set during initial commissioning (unless already set) and MAY be updated by further
-         * reconfigurations. This attribute MAY affect some regulatory aspects of the Node’s operation, such as radio
+         * attribute shall be set during initial commissioning (unless already set) and may be updated by further
+         * reconfigurations. This attribute may affect some regulatory aspects of the Node’s operation, such as radio
          * transmission power levels in given spectrum allocation bands if technologies where this is applicable are
          * used. The Location’s region code shall be interpreted in a case-insensitive manner. If the Node cannot
          * understand the location code with which it was configured, or the location code has not yet been configured,
@@ -203,8 +204,8 @@ export const BasicInformationCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.7
          */
         location: WritableAttribute(
-            6,
-            TlvString.bound({ minLength: 2, maxLength: 2 }),
+            0x6,
+            TlvString.bound({ length: 2 }),
             { persistent: true, default: "XX", writeAcl: AccessLevel.Administer }
         ),
 
@@ -214,7 +215,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.8
          */
-        hardwareVersion: FixedAttribute(7, TlvUInt16, { default: 0 }),
+        hardwareVersion: FixedAttribute(0x7, TlvUInt16, { default: 0 }),
 
         /**
          * This attribute shall specify the version number of the hardware of the Node. The meaning of its value, and
@@ -223,22 +224,22 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.9
          */
-        hardwareVersionString: FixedAttribute(8, TlvString.bound({ minLength: 1, maxLength: 64 })),
+        hardwareVersionString: FixedAttribute(0x8, TlvString.bound({ minLength: 1, maxLength: 64 })),
 
         /**
          * This attribute shall contain the current version number for the software running on this Node. The version
          * number can be compared using a total ordering to determine if a version is logically newer than another one.
          * A larger value of SoftwareVersion is newer than a lower value, from the perspective of software updates (see
-         * Section 11.19.3.3, “Availability of Software Images”). Nodes MAY query this field to determine the currently
+         * Section 11.19.3.3, “Availability of Software Images”). Nodes may query this field to determine the currently
          * running version of software on another given Node.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.10
          */
-        softwareVersion: FixedAttribute(9, TlvUInt32, { default: 0 }),
+        softwareVersion: FixedAttribute(0x9, TlvUInt32, { default: 0 }),
 
         /**
          * This attribute shall contain a current human-readable representation for the software running on the Node.
-         * This version information MAY be conveyed to users. The maximum length of the SoftwareVersionString attribute
+         * This version information may be conveyed to users. The maximum length of the SoftwareVersionString attribute
          * is 64 bytes of UTF-8 characters. The contents SHOULD only use simple 7-bit ASCII alphanumeric and
          * punctuation characters, so as to simplify the conveyance of the value to a variety of cultures.
          *
@@ -246,19 +247,19 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.11
          */
-        softwareVersionString: FixedAttribute(10, TlvString.bound({ minLength: 1, maxLength: 64 })),
+        softwareVersionString: FixedAttribute(0xa, TlvString.bound({ minLength: 1, maxLength: 64 })),
 
         /**
          * This attribute shall specify the date that the Node was manufactured. The first 8 characters shall specify
          * the date of manufacture of the Node in international date notation according to ISO 8601, i.e., YYYYMMDD,
-         * e.g., 20060814. The final 8 characters MAY include country, factory, line, shift or other related
+         * e.g., 20060814. The final 8 characters may include country, factory, line, shift or other related
          * information at the option of the vendor. The format of this information is vendor
          *
          * defined.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.12
          */
-        manufacturingDate: OptionalFixedAttribute(11, TlvString.bound({ minLength: 8, maxLength: 16 })),
+        manufacturingDate: OptionalFixedAttribute(0xb, TlvString.bound({ minLength: 8, maxLength: 16 })),
 
         /**
          * This attribute shall specify a human-readable (displayable) vendor assigned part number for the Node whose
@@ -270,7 +271,7 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.13
          */
-        partNumber: OptionalFixedAttribute(12, TlvString.bound({ maxLength: 32 })),
+        partNumber: OptionalFixedAttribute(0xc, TlvString.bound({ maxLength: 32 })),
 
         /**
          * This attribute shall specify a link to a product specific web page. The syntax of the ProductURL attribute
@@ -280,24 +281,24 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.14
          */
-        productUrl: OptionalFixedAttribute(13, TlvString.bound({ maxLength: 256 })),
+        productUrl: OptionalFixedAttribute(0xd, TlvString.bound({ maxLength: 256 })),
 
         /**
          * This attribute shall specify a vendor specific human readable (displayable) product label. The ProductLabel
-         * attribute MAY be used to provide a more user-friendly value than that represented by the ProductName
+         * attribute may be used to provide a more user-friendly value than that represented by the ProductName
          * attribute. The ProductLabel attribute SHOULD NOT include the name of the vendor as defined within the
          * VendorName attribute.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.15
          */
-        productLabel: OptionalFixedAttribute(14, TlvString.bound({ maxLength: 64 })),
+        productLabel: OptionalFixedAttribute(0xe, TlvString.bound({ maxLength: 64 })),
 
         /**
          * This attributes shall specify a human readable (displayable) serial number.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.16
          */
-        serialNumber: OptionalFixedAttribute(15, TlvString.bound({ maxLength: 32 })),
+        serialNumber: OptionalFixedAttribute(0xf, TlvString.bound({ maxLength: 32 })),
 
         /**
          * This attribute shall allow a local Node configuration to be disabled. When this attribute is set to True the
@@ -308,7 +309,7 @@ export const BasicInformationCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.17
          */
         localConfigDisabled: OptionalWritableAttribute(
-            16,
+            0x10,
             TlvBoolean,
             { persistent: true, default: true, writeAcl: AccessLevel.Manage }
         ),
@@ -322,13 +323,13 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.18
          */
-        reachable: OptionalAttribute(17, TlvBoolean, { default: true }),
+        reachable: OptionalAttribute(0x11, TlvBoolean, { default: true }),
 
         /**
          * This attribute (when used) shall indicate a unique identifier for the device, which is constructed in a
          * manufacturer specific manner.
          *
-         * It MAY be constructed using a permanent device identifier (such as device MAC address) as basis. In order to
+         * It may be constructed using a permanent device identifier (such as device MAC address) as basis. In order to
          * prevent tracking,
          *
          *   • it SHOULD NOT be identical to (or easily derived from) such permanent device identifier
@@ -342,27 +343,31 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.19
          */
-        uniqueId: OptionalFixedAttribute(18, TlvString.bound({ maxLength: 32 })),
+        uniqueId: OptionalFixedAttribute(0x12, TlvString.bound({ maxLength: 32 })),
 
         /**
          * This attribute shall provide the minimum guaranteed value for some system-wide resource capabilities that
-         * are not otherwise cluster-specific and do not appear elsewhere. This attribute MAY be used by clients to
+         * are not otherwise cluster-specific and do not appear elsewhere. This attribute may be used by clients to
          * optimize communication with Nodes by allowing them to use more than the strict minimum values required by
          * this specification, wherever available.
          *
-         * The values supported by the server in reality MAY be larger than the values provided in this attribute, such
+         * The values supported by the server in reality may be larger than the values provided in this attribute, such
          * as if a server is not resource-constrained at all. However, clients SHOULD only rely on the amounts provided
          * in this attribute.
          *
-         * Note that since the fixed values within this attribute MAY change over time, both increasing and decreasing,
+         * Note that since the fixed values within this attribute may change over time, both increasing and decreasing,
          * as software versions change for a given Node, clients SHOULD take care not to assume forever unchanging
          * values and SHOULD NOT cache this value permanently at Commissioning time.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.5.20
          */
-        capabilityMinima: FixedAttribute(19, TlvCapabilityMinimaStruct),
+        capabilityMinima: FixedAttribute(
+            0x13,
+            TlvCapabilityMinimaStruct,
+            { default: { caseSessionsPerFabric: 3, subscriptionsPerFabric: 3 } }
+        ),
 
-        productAppearance: OptionalAttribute(20, TlvProductAppearanceStruct)
+        productAppearance: OptionalAttribute(0x14, TlvProductAppearanceStruct)
     },
 
     events: {
@@ -373,17 +378,17 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.1
          */
-        startUp: Event(0, EventPriority.Critical, TlvStartUpEvent),
+        startUp: Event(0x0, EventPriority.Critical, TlvStartUpEvent),
 
         /**
          * The ShutDown event SHOULD be generated by a Node prior to any orderly shutdown sequence on a best-effort
          * basis. When a ShutDown event is generated, it SHOULD be the last Data Model event recorded by the Node. This
          * event SHOULD be delivered urgently to current subscribers on a best- effort basis. Any subsequent incoming
-         * interactions to the Node MAY be dropped until the completion of a future boot or reboot process.
+         * interactions to the Node may be dropped until the completion of a future boot or reboot process.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.2
          */
-        shutDown: OptionalEvent(1, EventPriority.Critical, TlvNoArguments),
+        shutDown: OptionalEvent(0x1, EventPriority.Critical, TlvNoArguments),
 
         /**
          * The Leave event SHOULD be generated by a Node prior to permanently leaving a given Fabric, such as when the
@@ -392,12 +397,12 @@ export const BasicInformationCluster = Cluster({
          * SHOULD be assumed that the fabric recorded in the event is no longer usable, and subsequent interactions
          * targeting that fabric will most likely fail.
          *
-         * Upon receipt of Leave Event on a subscription, the receiving Node MAY update other nodes in the fabric by
+         * Upon receipt of Leave Event on a subscription, the receiving Node may update other nodes in the fabric by
          * removing related bindings, access control list entries and other data referencing the leaving Node.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.3
          */
-        leave: OptionalEvent(2, EventPriority.Info, TlvLeaveEvent),
+        leave: OptionalEvent(0x2, EventPriority.Info, TlvLeaveEvent),
 
         /**
          * This event shall be supported if and only if the Reachable attribute is supported.
@@ -408,6 +413,6 @@ export const BasicInformationCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.1.6.4
          */
-        reachableChanged: OptionalEvent(3, EventPriority.Info, TlvReachableChangedEvent)
+        reachableChanged: OptionalEvent(0x3, EventPriority.Info, TlvReachableChangedEvent)
     }
 });

@@ -17,8 +17,19 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.5.5.1
  */
 export const enum TempUnit {
+    /**
+     * Temperature conveyed in Fahrenheit
+     */
     Fahrenheit = 0,
+
+    /**
+     * Temperature conveyed in Celsius
+     */
     Celsius = 1,
+
+    /**
+     * Temperature conveyed in Kelvin
+     */
     Kelvin = 2
 }
 
@@ -67,7 +78,7 @@ export const TemperatureUnitComponent = ClusterComponent({
          * @see {@link MatterCoreSpecificationV1_1} § 11.5.6.1
          */
         temperatureUnit: WritableAttribute(
-            0,
+            0x0,
             TlvNullable(TlvEnum<TempUnit>()),
             { persistent: true, default: null, writeAcl: AccessLevel.Manage }
         )

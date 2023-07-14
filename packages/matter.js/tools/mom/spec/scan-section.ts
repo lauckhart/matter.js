@@ -159,7 +159,7 @@ export function* scanSection(ref: HtmlReference) {
                     break;
 
                 case "P":
-                    const text = element.textContent?.trim().replace(/(\s\u200c)+/, "");
+                    const text = element.textContent?.trim().replace(/(\s\u200c)+/, "").replace(/\s*\([^)]+\)\s*/g, " ");
 
                     // Sometimes heading is just in a P so we have to guess as to
                     // "headingness"

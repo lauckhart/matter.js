@@ -38,7 +38,7 @@ export const OnOffSwitchConfigurationCluster = Cluster({
     revision: 1,
     features: {},
     attributes: {
-        switchType: Attribute(0, TlvEnum<SwitchType>()),
-        switchActions: WritableAttribute(16, TlvEnum<SwitchActions>(), { default: SwitchActions.On })
+        switchType: Attribute(0x0, TlvEnum<SwitchType>()),
+        switchActions: WritableAttribute(0x10, TlvEnum<SwitchActions>(), { default: SwitchActions.On })
     }
 });

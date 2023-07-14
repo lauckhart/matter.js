@@ -14,15 +14,15 @@ export class AttributeModel extends ValueModel implements AttributeElement {
     override id!: Mei;
 
     get writable() {
-        return this.access.writable;
+        return this.effectiveAccess.writable;
     }
 
     get fabricScoped() {
-        return !!this.access.fabric;
+        return !!this.effectiveAccess.fabric;
     }
 
     get fixed() {
-        return !!this.quality.fixed;
+        return !!this.effectiveQuality.fixed;
     }
 
     constructor(definition: AttributeElement.Properties) {

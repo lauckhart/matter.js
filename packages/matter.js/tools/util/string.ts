@@ -151,7 +151,7 @@ function detectStructure(text: string): TextStructure {
 
         return structure;
     }
-    
+
     return processLevel();
 }
 

@@ -11,8 +11,8 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "cluster", name: "ElectricalMeasurement", id: 0xb04, description: "Electrical Measurement",
     details: "Attributes related to the electrical properties of a device. This cluster is used by power outlets " +
-             "and other devices that need to provide instantaneous data as opposed to metrology data which should " +
-             "be retrieved from the metering cluster..",
+        "and other devices that need to provide instantaneous data as opposed to metrology data which should " +
+        "be retrieved from the metering cluster..",
 
     children: [
         { tag: "attribute", name: "MeasurementType", id: 0x0, type: "map32", conformance: "O", default: 0 },
@@ -240,7 +240,18 @@ Matter.children.push({
 
             children: [
                 { tag: "datatype", name: "StartTime", type: "uint32", conformance: "M" },
-                { tag: "datatype", name: "Status", type: "enum8", conformance: "M" },
+
+                {
+                    tag: "datatype", name: "Status", type: "enum8", conformance: "M",
+
+                    children: [
+                        { tag: "datatype", name: "UpdateAvailable", id: 0x0, conformance: "M" },
+                        { tag: "datatype", name: "Busy", id: 0x1, conformance: "M" },
+                        { tag: "datatype", name: "NotAvailable", id: 0x2, conformance: "M" },
+                        { tag: "datatype", name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M" }
+                    ]
+                },
+
                 { tag: "datatype", name: "ProfileIntervalPeriod", type: "enum8", conformance: "M" },
                 { tag: "datatype", name: "NumberOfIntervalsDelivered", type: "uint8", conformance: "M" },
                 { tag: "datatype", name: "AttributeId", type: "uint16", conformance: "M" },

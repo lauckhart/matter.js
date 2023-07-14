@@ -47,4 +47,22 @@ export class Aspect<D> {
             message
         });
     }
+
+    extend(other: Aspect<D>) {
+        const descriptors = [
+            ...Object.entries(Object.getOwnPropertyDescriptors(this)),
+            ...Object.entries(Object.getOwnPropertyDescriptors(other))
+        ]
+
+        const definition = {} as { [name: string]: any };
+        for (const [name, descriptor] of descriptors) {
+            if (name === "definition" || name === "errors" || descriptor.value === undefined) {
+                continue;
+            }
+            definition[name] = descriptor.value;
+        }
+
+        const constructor = this.constructor as new (definition: any) => Aspect<D>;
+        return new constructor(definition);
+    }
 }

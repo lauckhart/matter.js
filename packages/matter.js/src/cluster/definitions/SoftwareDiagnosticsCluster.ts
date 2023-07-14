@@ -74,7 +74,7 @@ export const TlvSoftwareFaultEvent = TlvObject({
 
     /**
      * The FaultRecording field shall be a manufacturer-specified payload intended to convey information to assist in
-     * further diagnosing or debugging a software fault. The FaultRecording field MAY be used to convey information
+     * further diagnosing or debugging a software fault. The FaultRecording field may be used to convey information
      * such as, but not limited to, thread backtraces or register contents.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.12.8.1.1
@@ -120,22 +120,22 @@ export const SoftwareDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.12.6.1
          */
-        threadMetrics: OptionalAttribute(0, TlvArray(TlvThreadMetricsStruct), { default: [] }),
+        threadMetrics: OptionalAttribute(0x0, TlvArray(TlvThreadMetricsStruct, { maxLength: 64 }), { default: [] }),
 
         /**
          * The CurrentHeapFree attribute shall indicate the current amount of heap memory, in bytes, that are free for
-         * allocation. The effective amount MAY be smaller due to heap fragmentation or other reasons.
+         * allocation. The effective amount may be smaller due to heap fragmentation or other reasons.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.12.6.2
          */
-        currentHeapFree: OptionalAttribute(1, TlvUInt64, { default: 0 }),
+        currentHeapFree: OptionalAttribute(0x1, TlvUInt64, { default: 0 }),
 
         /**
          * The CurrentHeapUsed attribute shall indicate the current amount of heap memory, in bytes, that is being used.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.12.6.3
          */
-        currentHeapUsed: OptionalAttribute(2, TlvUInt64, { default: 0 })
+        currentHeapUsed: OptionalAttribute(0x2, TlvUInt64, { default: 0 })
     },
 
     events: {
@@ -149,7 +149,7 @@ export const SoftwareDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.12.8.1
          */
-        softwareFault: OptionalEvent(0, EventPriority.Info, TlvSoftwareFaultEvent)
+        softwareFault: OptionalEvent(0x0, EventPriority.Info, TlvSoftwareFaultEvent)
     }
 });
 
@@ -165,7 +165,7 @@ export const WatermarksComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.12.6.4
          */
-        currentHeapHighWatermark: Attribute(3, TlvUInt64, { default: 0 })
+        currentHeapHighWatermark: Attribute(0x3, TlvUInt64, { default: 0 })
     },
 
     commands: {
@@ -188,14 +188,14 @@ export const WatermarksComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.12.7.1
          */
-        resetWatermarks: Command(0, TlvNoArguments, 0, TlvNoResponse)
+        resetWatermarks: Command(0x0, TlvNoArguments, 0x0, TlvNoResponse)
     }
 });
 
 /**
  * Software Diagnostics
  *
- * The Software Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that MAY be used by a
+ * The Software Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that may be used by a
  * Node to assist a user or Administrator in diagnosing potential problems. The Software Diagnostics Cluster attempts
  * to centralize all metrics that are relevant to the software that may be running on a Node.
  *

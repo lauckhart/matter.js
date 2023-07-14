@@ -12,31 +12,37 @@ import {
     ElementTag,
     EventElement,
     EventModel,
-    FieldValue,
-    Metatype,
     Model,
     ValueModel
 } from "../../src/model/index.js";
 import { InferredComponent } from "../../src/model/logic/cluster-variance/InferredComponents.js";
 import { NamedComponent } from "../../src/model/logic/cluster-variance/NamedComponents.js";
-import { serialize, camelize } from "../../src/util/String.js";
+import { camelize } from "../../src/util/String.js";
 import { Block } from "../util/TsFile.js";
 import { ClusterFile } from "./ClusterFile.js";
+import { DefaultValueGenerator } from "./DefaultValueGenerator.js";
 import { TlvGenerator } from "./TlvGenerator.js";
+
+function hex(n: number) {
+    return `0x${n.toString(16)}`;
+}
 
 /** Generates cluster attributes, commands and events */
 export class ClusterComponentGenerator {
     private tlv: TlvGenerator;
+    private defaults: DefaultValueGenerator;
     private file: ClusterFile;
 
     constructor(private target: Block, private cluster: ClusterModel) {
         this.file = target.file as ClusterFile;
-        this.tlv = new TlvGenerator(this.file, cluster);
+        this.tlv = new TlvGenerator(this.file);
+        this.defaults = new DefaultValueGenerator(this.tlv);
     }
 
     defineComponent(component: NamedComponent) {
-        this.target.file.addImport("cluster/ClusterFactory", "ClusterComponent");
-        const block = this.target.expressions(`export const ${component.name}Component = ClusterComponent({`, `})`)
+        this.file.addImport("cluster/ClusterFactory", "ClusterComponent");
+        const name = `${component.name}Component`;
+        const block = this.target.expressions(`export const ${name} = ClusterComponent({`, `})`)
             .document(component.documentation);
         return this.populateComponent(component, block);
     }
@@ -69,39 +75,41 @@ export class ClusterComponentGenerator {
             const factory = factoryParts.join("");
             this.file.addImport("cluster/Cluster", factory);
 
-            const tlvType = this.tlv.reference(model, this.cluster);
+            const tlvType = this.tlv.reference(model);
 
             const block = add(factory);
-            block.atom(model.id);
+            block.atom(hex(model.id));
             block.atom(tlvType);
 
             const options = block.expressions("{", "}");
-            if (model.quality.scene) {
+            const quality = model.effectiveQuality;
+            if (quality.scene) {
                 options.atom("scene", true);
             }
-            if (model.quality.nonvolatile) {
+            if (quality.nonvolatile) {
                 options.atom("persistent", true);
             }
-            if (model.quality.changesOmitted) {
+            if (quality.changesOmitted) {
                 options.atom("omitChanges", true);
             }
 
             // TODO - don't currently have a way to express "this field should
             // default to the value of another field" as indicated by
             // model.default.reference
-            const def = this.createDefaultValue(model, tlvType);
+            const def = this.defaults.create(model);
             if (def !== undefined) {
                 options.value(def, "default: ");
             }
-            
+
             // View is the default
-            if (model.access.readPriv && model.access.readPriv != Access.Privilege.View) {
-                options.atom("readAcl", this.mapPrivilege(model.access.readPriv));
+            const access = model.effectiveAccess;
+            if (access.readPriv && access.readPriv != Access.Privilege.View) {
+                options.atom("readAcl", this.mapPrivilege(access.readPriv));
             }
 
             // Operate is the default
-            if (model.access.writePriv && model.access.writePriv != Access.Privilege.Operate) {
-                options.atom("writeAcl", this.mapPrivilege(model.access.writePriv));
+            if (access.writePriv && access.writePriv != Access.Privilege.Operate) {
+                options.atom("writeAcl", this.mapPrivilege(access.writePriv));
             }
 
             if (!options.length) {
@@ -123,8 +131,8 @@ export class ClusterComponentGenerator {
             this.file.addImport("cluster/Cluster", factory);
 
             const block = add(factory);
-            block.atom(model.id);
-            block.atom(this.tlv.reference(model, this.cluster));
+            block.atom(hex(model.id));
+            block.atom(this.tlv.reference(model));
 
             // Note - we end up mapping "status" response type to TlvNoResponse.
             // Technically "no response" and "status response" are different things
@@ -136,10 +144,10 @@ export class ClusterComponentGenerator {
             }
             if (responseModel) {
                 block.atom(responseModel.id);
-                block.atom(this.tlv.reference(responseModel, this.cluster));
+                block.atom(this.tlv.reference(responseModel));
             } else {
                 this.file.addImport("cluster/Cluster", "TlvNoResponse");
-                block.atom(model.id);
+                block.atom(hex(model.id));
                 block.atom("TlvNoResponse");
             }
         });
@@ -157,9 +165,9 @@ export class ClusterComponentGenerator {
             const priority = camelize(model.priority ?? EventElement.Priority.Debug);
 
             const block = add(factory);
-            block.atom(model.id);
+            block.atom(hex(model.id));
             block.atom(`EventPriority.${priority}`);
-            block.atom(this.tlv.reference(model, this.cluster));
+            block.atom(this.tlv.reference(model));
         });
 
         return block;
@@ -188,65 +196,5 @@ export class ClusterComponentGenerator {
         if (!definitions.length) {
             definitions.remove();
         }
-    }
-
-    private createDefaultValue(model: AttributeModel, tlvType: string) {
-        let def = model.effectiveDefault;
-        if (def === undefined || def === null) {
-            return def;
-        }
-
-        // TODO - don't currently have a way to express "this field should
-        // default to the value of another field" as indicated by
-        // model.default.reference
-        if (FieldValue.is(def, FieldValue.reference)) {
-            return;
-        }
-
-        const metatype = model.effectiveMetatype;
-
-        switch (metatype) {
-            case Metatype.enum:
-                if (typeof def == "number" || typeof def == "string") {
-                    const value = model.member(def);
-                    if (value) {
-                        let enumName = value.parent?.name;
-                        if (enumName) {
-                            if (enumName.endsWith("Enum")) {
-                                enumName = enumName.substring(0, enumName.length - 4);
-                            }
-                            if (enumName == "Type") {
-                                enumName = `${this.cluster.name}Type`;
-                            }
-                            def = serialize.asIs(`${enumName}.${value.name}`);
-                        }
-                    }
-                }
-                break;
-
-            case Metatype.integer:
-            case Metatype.float:
-                const id = FieldValue.numericValue(def, model.type);
-                if (id !== undefined && this.tlv.isSpecializedId(model)) {
-                    return { id };
-                }
-                return id;
-
-            case Metatype.bitmap:
-                if (!FieldValue.is(def, FieldValue.flags)) {
-                    // TLV doesn't understand anything other than an object
-                    // as the default value.  To create said object we need
-                    // named references
-                    return;
-                }
-
-                this.file.addImport("schema/BitmapSchema", "BitFlags");
-                const flags = (def as FieldValue.Flags).flags.map(f => serialize(camelize(f, true)));
-                def = serialize.asIs(`BitFlags(${tlvType.replace(/^Tlv/, "")}Bits, ${flags.join(", ")})`);
-
-                break;
-        }
-
-        return def;
     }
 }

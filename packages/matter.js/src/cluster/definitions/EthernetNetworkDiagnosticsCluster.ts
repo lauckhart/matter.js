@@ -19,15 +19,54 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.15.5.1
  */
 export const enum PHYRate {
+    /**
+     * PHY rate is 10Mbps
+     */
     Rate10M = 0,
+
+    /**
+     * PHY rate is 100Mbps
+     */
     Rate100M = 1,
+
+    /**
+     * PHY rate is 1Gbps
+     */
     Rate1G = 2,
+
+    /**
+     * PHY rate is 2.5Gbps
+     */
     Rate25G = 3,
+
+    /**
+     * PHY rate is 5Gbps
+     */
     Rate5G = 4,
+
+    /**
+     * PHY rate is 10Gbps
+     */
     Rate10G = 5,
+
+    /**
+     * PHY rate is 40Gbps
+     */
     Rate40G = 6,
+
+    /**
+     * PHY rate is 100Gbps
+     */
     Rate100G = 7,
+
+    /**
+     * PHY rate is 200Gbps
+     */
     Rate200G = 8,
+
+    /**
+     * PHY rate is 400Gbps
+     */
     Rate400G = 9
 }
 
@@ -85,7 +124,7 @@ export const EthernetNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.15.6.1
          */
-        phyRate: OptionalAttribute(0, TlvNullable(TlvEnum<PHYRate>()), { default: null }),
+        phyRate: OptionalAttribute(0x0, TlvNullable(TlvEnum<PHYRate>()), { default: null }),
 
         /**
          * The FullDuplex attribute shall indicate if the Node is currently utilizing the full-duplex operating mode. A
@@ -93,7 +132,7 @@ export const EthernetNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.15.6.2
          */
-        fullDuplex: OptionalAttribute(1, TlvNullable(TlvBoolean), { default: null }),
+        fullDuplex: OptionalAttribute(0x1, TlvNullable(TlvBoolean), { default: null }),
 
         /**
          * The CarrierDetect attribute shall indicate the value of the Carrier Detect control signal present on the
@@ -102,12 +141,12 @@ export const EthernetNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.15.6.8
          */
-        carrierDetect: OptionalAttribute(7, TlvNullable(TlvBoolean), { omitChanges: true, default: null }),
+        carrierDetect: OptionalAttribute(0x7, TlvNullable(TlvBoolean), { omitChanges: true, default: null }),
 
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 11.15.6
          */
-        timeSinceReset: OptionalAttribute(8, TlvUInt64, { omitChanges: true, default: 0 })
+        timeSinceReset: OptionalAttribute(0x8, TlvUInt64, { omitChanges: true, default: 0 })
     }
 });
 
@@ -122,7 +161,7 @@ export const PacketCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.15.6.3
          */
-        packetRxCount: Attribute(2, TlvUInt64, { default: 0 }),
+        packetRxCount: Attribute(0x2, TlvUInt64, { default: 0 }),
 
         /**
          * The PacketTxCount attribute shall indicate the number of packets that have been successfully transferred on
@@ -130,7 +169,7 @@ export const PacketCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.15.6.4
          */
-        packetTxCount: Attribute(3, TlvUInt64, { omitChanges: true, default: 0 })
+        packetTxCount: Attribute(0x3, TlvUInt64, { omitChanges: true, default: 0 })
     }
 });
 
@@ -145,7 +184,7 @@ export const ErrorCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.15.6.5
          */
-        txErrCount: Attribute(4, TlvUInt64, { omitChanges: true, default: 0 }),
+        txErrCount: Attribute(0x4, TlvUInt64, { omitChanges: true, default: 0 }),
 
         /**
          * The CollisionCount attribute shall indicate the number of collisions that have occurred while attempting to
@@ -154,7 +193,7 @@ export const ErrorCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.15.6.6
          */
-        collisionCount: Attribute(5, TlvUInt64, { omitChanges: true, default: 0 }),
+        collisionCount: Attribute(0x5, TlvUInt64, { omitChanges: true, default: 0 }),
 
         /**
          * The OverrunCount attribute shall indicate the number of packets dropped either at ingress or egress, due to
@@ -163,7 +202,7 @@ export const ErrorCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.15.6.7
          */
-        overrunCount: Attribute(6, TlvUInt64, { omitChanges: true, default: 0 })
+        overrunCount: Attribute(0x6, TlvUInt64, { omitChanges: true, default: 0 })
     }
 });
 
@@ -189,14 +228,14 @@ export const PacketCountsOrErrorCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.15.7.1
          */
-        resetCounts: Command(0, TlvNoArguments, 0, TlvNoResponse)
+        resetCounts: Command(0x0, TlvNoArguments, 0x0, TlvNoResponse)
     }
 });
 
 /**
  * Ethernet Network Diagnostics
  *
- * The Ethernet Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that MAY be
+ * The Ethernet Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that may be
  * used by a Node to assist a user or Administrator in diagnosing potential problems. The Ethernet Network Diagnostics
  * Cluster attempts to centralize all metrics that are relevant to a potential Ethernet connection to a Node.
  *

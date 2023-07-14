@@ -20,11 +20,34 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.14.5.1
  */
 export const enum SecurityType {
+    /**
+     * Indicate the usage of an unspecified Wi-Fi security type
+     */
     Unspecified = 0,
+
+    /**
+     * Indicate the usage of no Wi-Fi security
+     */
     None = 1,
+
+    /**
+     * Indicate the usage of WEP Wi-Fi security
+     */
     Wep = 2,
+
+    /**
+     * Indicate the usage of WPA Wi-Fi security
+     */
     Wpa = 3,
+
+    /**
+     * Indicate the usage of WPA2 Wi-Fi security
+     */
     Wpa2 = 4,
+
+    /**
+     * Indicate the usage of WPA3 Wi-Fi security
+     */
     Wpa3 = 5
 }
 
@@ -32,11 +55,34 @@ export const enum SecurityType {
  * @see {@link MatterCoreSpecificationV1_1} § 11.14.5.2
  */
 export const enum WiFiVersion {
+    /**
+     * Indicate the network interface is currently using 802.11a against the wireless access point.
+     */
     A = 0,
+
+    /**
+     * Indicate the network interface is currently using 802.11b against the wireless access point.
+     */
     B = 1,
+
+    /**
+     * Indicate the network interface is currently using 802.11g against the wireless access point.
+     */
     G = 2,
+
+    /**
+     * Indicate the network interface is currently using 802.11n against the wireless access point.
+     */
     N = 3,
+
+    /**
+     * Indicate the network interface is currently using 802.11ac against the wireless access point.
+     */
     Ac = 4,
+
+    /**
+     * Indicate the network interface is currently using 802.11ax against the wireless access point.
+     */
     Ax = 5
 }
 
@@ -59,9 +105,24 @@ export const TlvDisconnectionEvent = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.14.5.3
  */
 export const enum AssociationFailureCause {
+    /**
+     * The reason for the failure is unknown.
+     */
     Unknown = 0,
+
+    /**
+     * An error occurred during association.
+     */
     AssociationFailed = 1,
+
+    /**
+     * An error occurred during authentication.
+     */
     AuthenticationFailed = 2,
+
+    /**
+     * The specified SSID could not be found.
+     */
     SsidNotFound = 3
 }
 
@@ -100,7 +161,14 @@ export const TlvAssociationFailureEvent = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.14.5.4
  */
 export const enum ConnectionStatus {
+    /**
+     * Indicate the node is connected
+     */
     Connected = 0,
+
+    /**
+     * Indicate the node is not connected
+     */
     NotConnected = 1
 }
 
@@ -164,14 +232,14 @@ export const WiFiNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.1
          */
-        bssid: Attribute(0, TlvNullable(TlvByteString.bound({ minLength: 6, maxLength: 6 })), { default: null }),
+        bssid: Attribute(0x0, TlvNullable(TlvByteString.bound({ length: 6 })), { default: null }),
 
         /**
          * The SecurityType attribute shall indicate the current type of Wi-Fi security used.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.2
          */
-        securityType: Attribute(1, TlvNullable(TlvEnum<SecurityType>()), { default: null }),
+        securityType: Attribute(0x1, TlvNullable(TlvEnum<SecurityType>()), { default: null }),
 
         /**
          * The WiFiVersion attribute shall indicate the current 802.11 standard version in use by the Node, per the
@@ -179,21 +247,21 @@ export const WiFiNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.3
          */
-        wiFiVersion: Attribute(2, TlvNullable(TlvEnum<WiFiVersion>()), { default: null }),
+        wiFiVersion: Attribute(0x2, TlvNullable(TlvEnum<WiFiVersion>()), { default: null }),
 
         /**
          * The ChannelNumber attribute shall indicate the channel that Wi-Fi communication is currently operating on.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.4
          */
-        channelNumber: Attribute(3, TlvNullable(TlvUInt16), { default: 0 }),
+        channelNumber: Attribute(0x3, TlvNullable(TlvUInt16), { default: null }),
 
         /**
          * The RSSI attribute shall indicate the current RSSI of the Node’s Wi-Fi radio in dBm.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.5
          */
-        rssi: Attribute(4, TlvNullable(TlvInt8.bound({ min: -120 })), { omitChanges: true, default: null }),
+        rssi: Attribute(0x4, TlvNullable(TlvInt8.bound({ min: -120, max: 0 })), { omitChanges: true, default: null }),
 
         /**
          * The CurrentMaxRate attribute shall indicate the current maximum PHY rate of transfer of data in
@@ -201,7 +269,7 @@ export const WiFiNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.12
          */
-        currentMaxRate: OptionalAttribute(11, TlvNullable(TlvUInt64), { omitChanges: true, default: 0 })
+        currentMaxRate: OptionalAttribute(0xb, TlvNullable(TlvUInt64), { omitChanges: true, default: 0 })
     },
 
     events: {
@@ -211,7 +279,7 @@ export const WiFiNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.8.1
          */
-        disconnection: OptionalEvent(0, EventPriority.Info, TlvDisconnectionEvent),
+        disconnection: OptionalEvent(0x0, EventPriority.Info, TlvDisconnectionEvent),
 
         /**
          * The AssociationFailure event shall indicate that a Node has attempted to connect, or reconnect, to a Wi-Fi
@@ -220,7 +288,7 @@ export const WiFiNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.8.2
          */
-        associationFailure: OptionalEvent(1, EventPriority.Info, TlvAssociationFailureEvent),
+        associationFailure: OptionalEvent(0x1, EventPriority.Info, TlvAssociationFailureEvent),
 
         /**
          * The ConnectionStatus Event shall indicate that a Node’s connection status to a Wi-Fi network has changed.
@@ -229,7 +297,7 @@ export const WiFiNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.8.3
          */
-        connectionStatus: OptionalEvent(2, EventPriority.Info, TlvConnectionStatusEvent)
+        connectionStatus: OptionalEvent(0x2, EventPriority.Info, TlvConnectionStatusEvent)
     }
 });
 
@@ -240,12 +308,12 @@ export const ErrorCountsComponent = ClusterComponent({
     attributes: {
         /**
          * The BeaconLostCount attribute shall indicate the count of the number of missed beacons the Node has
-         * detected. If the Node does not have an ability to count beacons expected and not received, this value MAY
+         * detected. If the Node does not have an ability to count beacons expected and not received, this value may
          * remain set to zero.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.6
          */
-        beaconLostCount: Attribute(5, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
+        beaconLostCount: Attribute(0x5, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
 
         /**
          * The OverrunCount attribute shall indicate the number of packets dropped either at ingress or egress, due to
@@ -254,7 +322,7 @@ export const ErrorCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.13
          */
-        overrunCount: Attribute(12, TlvNullable(TlvUInt64), { omitChanges: true, default: 0 })
+        overrunCount: Attribute(0xc, TlvNullable(TlvUInt64), { omitChanges: true, default: 0 })
     },
 
     commands: {
@@ -277,7 +345,7 @@ export const ErrorCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.7.1
          */
-        resetCounts: Command(0, TlvNoArguments, 0, TlvNoResponse)
+        resetCounts: Command(0x0, TlvNoArguments, 0x0, TlvNoResponse)
     }
 });
 
@@ -290,11 +358,11 @@ export const PacketCountsComponent = ClusterComponent({
          * The BeaconRxCount attribute shall indicate the count of the number of received beacons. The total number of
          * expected beacons that could have been received during the interval since association SHOULD match the sum of
          * BeaconRxCount and BeaconLostCount. If the Node does not have an ability to report count of beacons received,
-         * this value MAY remain set to zero.
+         * this value may remain set to zero.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.7
          */
-        beaconRxCount: Attribute(6, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
+        beaconRxCount: Attribute(0x6, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
 
         /**
          * The PacketMulticastRxCount attribute shall indicate the number of multicast packets received by
@@ -303,35 +371,35 @@ export const PacketCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.8
          */
-        packetMulticastRxCount: Attribute(7, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
+        packetMulticastRxCount: Attribute(0x7, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
 
         /**
          * The PacketMulticastTxCount attribute shall indicate the number of multicast packets transmitted by the Node.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.9
          */
-        packetMulticastTxCount: Attribute(8, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
+        packetMulticastTxCount: Attribute(0x8, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
 
         /**
          * The PacketUnicastRxCount attribute shall indicate the number of unicast packets received by the Node.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.10
          */
-        packetUnicastRxCount: Attribute(9, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
+        packetUnicastRxCount: Attribute(0x9, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 }),
 
         /**
          * The PacketUnicastTxCount attribute shall indicate the number of unicast packets transmitted by the Node.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.14.6.11
          */
-        packetUnicastTxCount: Attribute(10, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 })
+        packetUnicastTxCount: Attribute(0xa, TlvNullable(TlvUInt32), { omitChanges: true, default: 0 })
     }
 });
 
 /**
  * WiFi Network Diagnostics
  *
- * The Wi-Fi Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that MAY be used
+ * The Wi-Fi Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that may be used
  * by a Node to assist a user or Administrator in diagnosing potential problems. The Wi-Fi Network Diagnostics Cluster
  * attempts to centralize all metrics that are relevant to a potential Wi-Fi radio running on a Node.
  *

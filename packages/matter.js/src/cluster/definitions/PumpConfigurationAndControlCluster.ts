@@ -15,15 +15,13 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 
 /**
- * Bit definitions for TlvPumpStatusBitmap
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1
  */
-export const PumpStatusBitmapBits = {
+export const PumpStatusBitmap = {
     /**
      * A fault related to the system or pump device is detected.
      *
-     * If this bit is set, it MAY correspond to an event in the range 2-16, see Events.
+     * If this bit is set, it may correspond to an event in the range 2-16, see Events.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1.1
      */
@@ -32,7 +30,7 @@ export const PumpStatusBitmapBits = {
     /**
      * A fault related to the supply to the pump is detected.
      *
-     * If this bit is set, it MAY correspond to an event in the range 0-1 or 13, see Events.
+     * If this bit is set, it may correspond to an event in the range 0-1 or 13, see Events.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1.2
      */
@@ -57,12 +55,12 @@ export const PumpStatusBitmapBits = {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1.3
      */
-    localOverride: BitFlag(16),
+    localOverride: BitFlag(4),
 
     /**
      * Pump is currently running
      */
-    running: BitFlag(32),
+    running: BitFlag(5),
 
     /**
      * A remote pressure sensor is used as the sensor for the regulation of the pump.
@@ -72,7 +70,7 @@ export const PumpStatusBitmapBits = {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1.4
      */
-    remotePressure: BitFlag(64),
+    remotePressure: BitFlag(6),
 
     /**
      * A remote flow sensor is used as the sensor for the regulation of the pump.
@@ -82,7 +80,7 @@ export const PumpStatusBitmapBits = {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1.5
      */
-    remoteFlow: BitFlag(128),
+    remoteFlow: BitFlag(7),
 
     /**
      * A remote temperature sensor is used as the sensor for the regulation of the pump.
@@ -92,28 +90,36 @@ export const PumpStatusBitmapBits = {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1.6
      */
-    remoteTemperature: BitFlag(256)
+    remoteTemperature: BitFlag(8)
 };
-
-/**
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.1
- */
-export const TlvPumpStatusBitmap = TlvBitmap(TlvUInt16, PumpStatusBitmapBits);
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.2
  */
 export const enum OperationMode {
     /**
-     * If the pump is running in this operation mode the setpoint is an internal variable which MAY be controlled
+     * The pump is controlled by a setpoint, as defined by a connected remote sensor or by the ControlMode attribute.
+     *
+     * If the pump is running in this operation mode the setpoint is an internal variable which may be controlled
      * between 0% and 100%, e.g., by means of the Level Control cluster
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.6.2.1
      */
     Normal = 0,
 
+    /**
+     * This value sets the pump to run at the minimum possible speed it can without being stopped.
+     */
     Minimum = 1,
+
+    /**
+     * This value sets the pump to run at its maximum possible speed.
+     */
     Maximum = 2,
+
+    /**
+     * This value sets the pump to run with the local settings of the pump, regardless of what these are.
+     */
     Local = 3
 }
 
@@ -122,6 +128,8 @@ export const enum OperationMode {
  */
 export const enum ControlMode {
     /**
+     * The pump is running at a constant speed.
+     *
      * The setpoint is interpreted as a percentage of the range derived from the [MinConstSpeed – MaxConstSpeed]
      * attributes.
      *
@@ -130,6 +138,8 @@ export const enum ControlMode {
     ConstantSpeed = 0,
 
     /**
+     * The pump will regulate its speed to maintain a constant differential pressure over its flanges.
+     *
      * The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. In case of
      * the internal pressure sensor, this will be the range derived from the [MinConstPressure – MaxConstPressure]
      * attributes. In case of a remote pressure sensor, this will be the range derived from the [MinMeasuredValue –
@@ -140,6 +150,8 @@ export const enum ControlMode {
     ConstantPressure = 1,
 
     /**
+     * The pump will regulate its speed to maintain a constant differential pressure over its flanges.
+     *
      * The setpoint is interpreted as a percentage of the range derived of the [MinCompPressure – MaxCompPressure]
      * attributes. The internal setpoint will be lowered (compensated) dependent on the flow in the pump (lower flow ⇒
      * lower internal setpoint).
@@ -149,6 +161,8 @@ export const enum ControlMode {
     ProportionalPressure = 2,
 
     /**
+     * The pump will regulate its speed to maintain a constant flow through the pump.
+     *
      * The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. In case of
      * the internal flow sensor, this will be the range derived from the [MinConstFlow – MaxConstFlow] attributes. In
      * case of a remote flow sensor, this will be the range derived from the [MinMeasuredValue – MaxMeasuredValue]
@@ -159,6 +173,8 @@ export const enum ControlMode {
     ConstantFlow = 3,
 
     /**
+     * The pump will regulate its speed to maintain a constant temperature.
+     *
      * The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. In case of
      * the internal temperature sensor, this will be the range derived from the [MinConstTemp – MaxConstTemp]
      * attributes. In case of a remote temperature sensor, this will be the range derived from the [MinMeasuredValue –
@@ -169,6 +185,9 @@ export const enum ControlMode {
     ConstantTemperature = 5,
 
     /**
+     * The operation of the pump is automatically optimized to provide the most suitable performance with respect to
+     * comfort and energy savings.
+     *
      * This behavior is manufacturer defined. The pump can be stopped by setting the setpoint of the level control
      * cluster to 0, or by using the On/Off cluster. If the pump is started (at any setpoint), the speed of the pump is
      * entirely determined by the pump.
@@ -240,7 +259,7 @@ export enum PumpConfigurationAndControlFeature {
 export const PumpConfigurationAndControlBase = BaseClusterComponent({
     id: 0x200,
     name: "PumpConfigurationAndControl",
-    revision: 1,
+    revision: 4,
 
     features: {
         /**
@@ -303,7 +322,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.1
          */
-        maxPressure: FixedAttribute(0, TlvNullable(TlvInt16), { default: null }),
+        maxPressure: FixedAttribute(0x0, TlvNullable(TlvInt16), { default: null }),
 
         /**
          * This attribute specifies the maximum speed the pump can achieve. It is a physical limit, and does not apply
@@ -313,7 +332,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.2
          */
-        maxSpeed: FixedAttribute(1, TlvNullable(TlvUInt16), { default: null }),
+        maxSpeed: FixedAttribute(0x1, TlvNullable(TlvUInt16), { default: null }),
 
         /**
          * This attribute specifies the maximum flow the pump can achieve. It is a physical limit, and does not apply
@@ -323,7 +342,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.3
          */
-        maxFlow: FixedAttribute(2, TlvNullable(TlvUInt16), { default: null }),
+        maxFlow: FixedAttribute(0x2, TlvNullable(TlvUInt16), { default: null }),
 
         /**
          * This attribute specifies the activity status of the pump functions as listed in PumpStatusBitmap. Where a
@@ -332,7 +351,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.14
          */
-        pumpStatus: OptionalAttribute(16, TlvPumpStatusBitmap),
+        pumpStatus: OptionalAttribute(0x10, TlvBitmap(TlvUInt16, PumpStatusBitmap)),
 
         /**
          * This attribute specifies current effective operation mode of the pump as defined in OperationModeEnum.
@@ -349,7 +368,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.15
          */
-        effectiveOperationMode: Attribute(17, TlvEnum<OperationMode>(), { persistent: true }),
+        effectiveOperationMode: Attribute(0x11, TlvEnum<OperationMode>(), { persistent: true }),
 
         /**
          * This attribute specifies the current effective control mode of the pump as defined in ControlModeEnum.
@@ -373,7 +392,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.16
          */
-        effectiveControlMode: Attribute(18, TlvEnum<ControlMode>(), { persistent: true }),
+        effectiveControlMode: Attribute(0x12, TlvEnum<ControlMode>(), { persistent: true }),
 
         /**
          * This attribute specifies the actual capacity of the pump as a percentage of the effective maximum setpoint
@@ -387,7 +406,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.17
          */
-        capacity: Attribute(19, TlvNullable(TlvInt16), { default: null }),
+        capacity: Attribute(0x13, TlvNullable(TlvInt16), { default: null }),
 
         /**
          * This attribute specifies the actual speed of the pump measured in RPM. It is updated dynamically as the
@@ -400,7 +419,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.18
          */
-        speed: OptionalAttribute(20, TlvNullable(TlvUInt16), { default: null }),
+        speed: OptionalAttribute(0x14, TlvNullable(TlvUInt16), { default: null }),
 
         /**
          * This attribute specifies the accumulated number of hours that the pump has been powered and the motor has
@@ -414,7 +433,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.19
          */
         lifetimeRunningHours: OptionalWritableAttribute(
-            21,
+            0x15,
             TlvNullable(TlvUInt24),
             { persistent: true, default: 0, writeAcl: AccessLevel.Manage }
         ),
@@ -430,7 +449,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.20
          */
-        power: OptionalAttribute(22, TlvNullable(TlvUInt24), { default: null }),
+        power: OptionalAttribute(0x16, TlvNullable(TlvUInt24), { default: null }),
 
         /**
          * This attribute specifies the accumulated energy consumption of the pump through the entire lifetime of the
@@ -447,7 +466,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.21
          */
         lifetimeEnergyConsumed: OptionalWritableAttribute(
-            23,
+            0x17,
             TlvNullable(TlvUInt32),
             { persistent: true, default: 0, writeAcl: AccessLevel.Manage }
         ),
@@ -471,7 +490,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          * If this attribute is Normal and no remote sensor is connected, the control mode of the pump is decided by
          * the ControlMode attribute.
          *
-         * OperationMode MAY be changed at any time, even when the pump is running. The behavior of the pump at the
+         * OperationMode may be changed at any time, even when the pump is running. The behavior of the pump at the
          * point of changing the value of this attribute is vendor-specific.
          *
          * In the case a device does not support a specific operation mode, the write interaction to this attribute
@@ -481,7 +500,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.22
          */
         operationMode: WritableAttribute(
-            32,
+            0x20,
             TlvEnum<OperationMode>(),
             { persistent: true, default: OperationMode.Normal, writeAcl: AccessLevel.Manage }
         ),
@@ -493,7 +512,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * pump.
          *
-         * ControlMode MAY be changed at any time, even when the pump is running. The behavior of the pump at the point
+         * ControlMode may be changed at any time, even when the pump is running. The behavior of the pump at the point
          * of changing is vendor-specific.
          *
          * In the case a device does not support a specific control mode, the write interaction to this attribute with
@@ -503,7 +522,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.23
          */
         controlMode: OptionalWritableAttribute(
-            33,
+            0x21,
             TlvEnum<ControlMode>(),
             { persistent: true, default: ControlMode.ConstantSpeed, writeAcl: AccessLevel.Manage }
         )
@@ -513,87 +532,87 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        supplyVoltageLow: OptionalEvent(0, EventPriority.Info, TlvNoArguments),
+        supplyVoltageLow: OptionalEvent(0x0, EventPriority.Info, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        supplyVoltageHigh: OptionalEvent(1, EventPriority.Info, TlvNoArguments),
+        supplyVoltageHigh: OptionalEvent(0x1, EventPriority.Info, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        powerMissingPhase: OptionalEvent(2, EventPriority.Info, TlvNoArguments),
+        powerMissingPhase: OptionalEvent(0x2, EventPriority.Info, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        systemPressureLow: OptionalEvent(3, EventPriority.Info, TlvNoArguments),
+        systemPressureLow: OptionalEvent(0x3, EventPriority.Info, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        systemPressureHigh: OptionalEvent(4, EventPriority.Info, TlvNoArguments),
+        systemPressureHigh: OptionalEvent(0x4, EventPriority.Info, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        dryRunning: OptionalEvent(5, EventPriority.Critical, TlvNoArguments),
+        dryRunning: OptionalEvent(0x5, EventPriority.Critical, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        motorTemperatureHigh: OptionalEvent(6, EventPriority.Info, TlvNoArguments),
+        motorTemperatureHigh: OptionalEvent(0x6, EventPriority.Info, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        pumpMotorFatalFailure: OptionalEvent(7, EventPriority.Critical, TlvNoArguments),
+        pumpMotorFatalFailure: OptionalEvent(0x7, EventPriority.Critical, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        electronicTemperatureHigh: OptionalEvent(8, EventPriority.Info, TlvNoArguments),
+        electronicTemperatureHigh: OptionalEvent(0x8, EventPriority.Info, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        pumpBlocked: OptionalEvent(9, EventPriority.Critical, TlvNoArguments),
+        pumpBlocked: OptionalEvent(0x9, EventPriority.Critical, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        sensorFailure: OptionalEvent(10, EventPriority.Info, TlvNoArguments),
+        sensorFailure: OptionalEvent(0xa, EventPriority.Info, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        electronicNonFatalFailure: OptionalEvent(11, EventPriority.Info, TlvNoArguments),
+        electronicNonFatalFailure: OptionalEvent(0xb, EventPriority.Info, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        electronicFatalFailure: OptionalEvent(12, EventPriority.Critical, TlvNoArguments),
+        electronicFatalFailure: OptionalEvent(0xc, EventPriority.Critical, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        generalFault: OptionalEvent(13, EventPriority.Info, TlvNoArguments),
+        generalFault: OptionalEvent(0xd, EventPriority.Info, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        leakage: OptionalEvent(14, EventPriority.Info, TlvNoArguments),
+        leakage: OptionalEvent(0xe, EventPriority.Info, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        airDetection: OptionalEvent(15, EventPriority.Info, TlvNoArguments),
+        airDetection: OptionalEvent(0xf, EventPriority.Info, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.8
          */
-        turbineOperation: OptionalEvent(16, EventPriority.Info, TlvNoArguments)
+        turbineOperation: OptionalEvent(0x10, EventPriority.Info, TlvNoArguments)
     }
 });
 
@@ -611,7 +630,7 @@ export const ConstantPressureComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.4
          */
-        minConstPressure: FixedAttribute(3, TlvNullable(TlvInt16), { default: null }),
+        minConstPressure: FixedAttribute(0x3, TlvNullable(TlvInt16), { default: null }),
 
         /**
          * This attribute specifies the maximum pressure the pump can achieve when it is working with the ControlMode
@@ -622,7 +641,7 @@ export const ConstantPressureComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.5
          */
-        maxConstPressure: FixedAttribute(4, TlvNullable(TlvInt16), { default: null })
+        maxConstPressure: FixedAttribute(0x4, TlvNullable(TlvInt16), { default: null })
     }
 });
 
@@ -640,7 +659,7 @@ export const AutomaticComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.4
          */
-        minConstPressure: OptionalFixedAttribute(3, TlvNullable(TlvInt16), { default: null }),
+        minConstPressure: OptionalFixedAttribute(0x3, TlvNullable(TlvInt16), { default: null }),
 
         /**
          * This attribute specifies the maximum pressure the pump can achieve when it is working with the ControlMode
@@ -651,7 +670,7 @@ export const AutomaticComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.5
          */
-        maxConstPressure: OptionalFixedAttribute(4, TlvNullable(TlvInt16), { default: null }),
+        maxConstPressure: OptionalFixedAttribute(0x4, TlvNullable(TlvInt16), { default: null }),
 
         /**
          * This attribute specifies the minimum compensated pressure the pump can achieve when it is working with the
@@ -662,7 +681,7 @@ export const AutomaticComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.6
          */
-        minCompPressure: OptionalFixedAttribute(5, TlvNullable(TlvInt16), { default: null }),
+        minCompPressure: OptionalFixedAttribute(0x5, TlvNullable(TlvInt16), { default: null }),
 
         /**
          * This attribute specifies the maximum compensated pressure the pump can achieve when it is working with the
@@ -673,7 +692,7 @@ export const AutomaticComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.7
          */
-        maxCompPressure: OptionalFixedAttribute(6, TlvNullable(TlvInt16), { default: null }),
+        maxCompPressure: OptionalFixedAttribute(0x6, TlvNullable(TlvInt16), { default: null }),
 
         /**
          * This attribute specifies the minimum speed the pump can achieve when it is working with the ControlMode
@@ -683,7 +702,7 @@ export const AutomaticComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.8
          */
-        minConstSpeed: OptionalFixedAttribute(7, TlvNullable(TlvUInt16), { default: null }),
+        minConstSpeed: OptionalFixedAttribute(0x7, TlvNullable(TlvUInt16), { default: null }),
 
         /**
          * This attribute specifies the maximum speed the pump can achieve when it is working with the ControlMode
@@ -693,7 +712,7 @@ export const AutomaticComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.9
          */
-        maxConstSpeed: OptionalFixedAttribute(8, TlvNullable(TlvUInt16), { default: null }),
+        maxConstSpeed: OptionalFixedAttribute(0x8, TlvNullable(TlvUInt16), { default: null }),
 
         /**
          * This attribute specifies the minimum flow the pump can achieve when it is working with the Con
@@ -704,7 +723,7 @@ export const AutomaticComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.10
          */
-        minConstFlow: OptionalFixedAttribute(9, TlvNullable(TlvUInt16), { default: null }),
+        minConstFlow: OptionalFixedAttribute(0x9, TlvNullable(TlvUInt16), { default: null }),
 
         /**
          * This attribute specifies the maximum flow the pump can achieve when it is working with the ControlMode
@@ -714,7 +733,7 @@ export const AutomaticComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.11
          */
-        maxConstFlow: OptionalFixedAttribute(10, TlvNullable(TlvUInt16), { default: null }),
+        maxConstFlow: OptionalFixedAttribute(0xa, TlvNullable(TlvUInt16), { default: null }),
 
         /**
          * This attribute specifies the minimum temperature the pump can maintain in the system when it is working with
@@ -725,7 +744,7 @@ export const AutomaticComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.12
          */
-        minConstTemp: OptionalFixedAttribute(11, TlvNullable(TlvInt16.bound({ min: -27315 })), { default: null }),
+        minConstTemp: OptionalFixedAttribute(0xb, TlvNullable(TlvInt16.bound({ min: -27315 })), { default: null }),
 
         /**
          * This attribute specifies the maximum temperature the pump can maintain in the system when it is working with
@@ -738,7 +757,7 @@ export const AutomaticComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.13
          */
-        maxConstTemp: OptionalFixedAttribute(12, TlvNullable(TlvInt16.bound({ min: -27315 })), { default: null })
+        maxConstTemp: OptionalFixedAttribute(0xc, TlvNullable(TlvInt16.bound({ min: -27315 })), { default: null })
     }
 });
 
@@ -756,7 +775,7 @@ export const CompensatedPressureComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.6
          */
-        minCompPressure: FixedAttribute(5, TlvNullable(TlvInt16), { default: null }),
+        minCompPressure: FixedAttribute(0x5, TlvNullable(TlvInt16), { default: null }),
 
         /**
          * This attribute specifies the maximum compensated pressure the pump can achieve when it is working with the
@@ -767,7 +786,7 @@ export const CompensatedPressureComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.7
          */
-        maxCompPressure: FixedAttribute(6, TlvNullable(TlvInt16), { default: null })
+        maxCompPressure: FixedAttribute(0x6, TlvNullable(TlvInt16), { default: null })
     }
 });
 
@@ -784,7 +803,7 @@ export const ConstantSpeedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.8
          */
-        minConstSpeed: FixedAttribute(7, TlvNullable(TlvUInt16), { default: null }),
+        minConstSpeed: FixedAttribute(0x7, TlvNullable(TlvUInt16), { default: null }),
 
         /**
          * This attribute specifies the maximum speed the pump can achieve when it is working with the ControlMode
@@ -794,7 +813,7 @@ export const ConstantSpeedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.9
          */
-        maxConstSpeed: FixedAttribute(8, TlvNullable(TlvUInt16), { default: null })
+        maxConstSpeed: FixedAttribute(0x8, TlvNullable(TlvUInt16), { default: null })
     }
 });
 
@@ -812,7 +831,7 @@ export const ConstantFlowComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.10
          */
-        minConstFlow: FixedAttribute(9, TlvNullable(TlvUInt16), { default: null }),
+        minConstFlow: FixedAttribute(0x9, TlvNullable(TlvUInt16), { default: null }),
 
         /**
          * This attribute specifies the maximum flow the pump can achieve when it is working with the ControlMode
@@ -822,7 +841,7 @@ export const ConstantFlowComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.11
          */
-        maxConstFlow: FixedAttribute(10, TlvNullable(TlvUInt16), { default: null })
+        maxConstFlow: FixedAttribute(0xa, TlvNullable(TlvUInt16), { default: null })
     }
 });
 
@@ -840,7 +859,7 @@ export const ConstantTemperatureComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.12
          */
-        minConstTemp: FixedAttribute(11, TlvNullable(TlvInt16.bound({ min: -27315 })), { default: null }),
+        minConstTemp: FixedAttribute(0xb, TlvNullable(TlvInt16.bound({ min: -27315 })), { default: null }),
 
         /**
          * This attribute specifies the maximum temperature the pump can maintain in the system when it is working with
@@ -853,7 +872,7 @@ export const ConstantTemperatureComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.13
          */
-        maxConstTemp: FixedAttribute(12, TlvNullable(TlvInt16.bound({ min: -27315 })), { default: null })
+        maxConstTemp: FixedAttribute(0xc, TlvNullable(TlvInt16.bound({ min: -27315 })), { default: null })
     }
 });
 

@@ -14,17 +14,8 @@
     "include": ["packages/**/*.ts"],
     "exclude": [
         "packages/*/dist",
-        
-        // These are generated and really slow things down
-        "packages/matter.js/models/*",
 
-        // This is formatted like a table and I should remain that way
-        "packages/matter.js/src/model/elements/Globals.ts",
-
-        // tsfmt and TsFile are going to agree to disagree.  tsfmt makes the
-        // definitions extremely verbose and generally stomps on the carefully
-        // crafted generated code formatting
-        "packages/matter.js/src/model/standard/elements/**.ts",
-        "packages/matter.js/src/cluster/definitions/**.ts"
+        // This is formatted like a table and should remain that way
+        "packages/matter.js/src/model/elements/Globals.ts"
     ]
 }

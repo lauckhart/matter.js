@@ -8,9 +8,9 @@
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, preventCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
-import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial, BitFieldEnum, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { FixedAttribute, Attribute, WritableAttribute, AccessLevel, OptionalAttribute, Command, TlvNoResponse, OptionalFixedAttribute, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
-import { TlvEnum, TlvUInt8, TlvBitmap, TlvUInt16 } from "../../tlv/TlvNumber.js";
+import { TlvEnum, TlvUInt8, TlvBitmap, TlvUInt16, TlvPercent, TlvPercent100ths } from "../../tlv/TlvNumber.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvOptionalField, TlvField } from "../../tlv/TlvObject.js";
@@ -35,40 +35,93 @@ export const enum WindowCoveringType {
 }
 
 /**
- * Bit definitions for TlvConfigStatus
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.8
- */
-export const ConfigStatusBits = {
-    operational: BitFlag(1),
-    onlineReserved: BitFlag(2),
-    liftMovementReversed: BitFlag(4),
-    liftPositionAware: BitFlag(8),
-    tiltPositionAware: BitFlag(16),
-    liftEncoderControlled: BitFlag(32),
-    tiltEncoderControlled: BitFlag(64)
-};
-
-/**
  * The value of the WindowCovering configStatus attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.8
  */
-export const TlvConfigStatus = TlvBitmap(TlvUInt8, ConfigStatusBits);
+export const ConfigStatus = {
+    /**
+     * Operational: This status bit defines if the Window Covering is operational.The SafetyStatus & Mode attributes
+     * might affect this bit
+     */
+    operational: BitFlag(0),
 
-/**
- * Bit definitions for TlvOperationalStatus
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.15
- */
-export const OperationalStatusBits = { global: BitFlag(3), lift: BitFlag(12), tilt: BitFlag(48) };
+    /**
+     * deprecated
+     */
+    onlineReserved: BitFlag(1),
+
+    /**
+     * Reversal: This status bit identifies if the directions of the lift/slide movements have been reversed in order
+     * for commands (e.g: Open, Close, GoTos) to match the physical installation conditionsThis bit can be adjusted by
+     * setting the appropriate reversal bit value in the Mode attribute
+     */
+    liftMovementReversed: BitFlag(2),
+
+    /**
+     * Control - Lift: This status bit identifies if the window covering supports the Position Aware Lift Control
+     */
+    liftPositionAware: BitFlag(3),
+
+    /**
+     * Control - Tilt: This status bit identifies if the window covering supports the Position Aware Tilt Control
+     */
+    tiltPositionAware: BitFlag(4),
+
+    /**
+     * Encoder - Lift: This status bit identifies if a Position Aware Controlled Window Covering is employing an
+     * encoder for positioning the height of the window covering.
+     */
+    liftEncoderControlled: BitFlag(5),
+
+    /**
+     * Encoder - Tilt: This status bit identifies if a Position Aware Controlled Window Covering is employing an
+     * encoder for tilting the window covering.
+     */
+    tiltEncoderControlled: BitFlag(6)
+};
 
 /**
  * The value of the WindowCovering operationalStatus attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.15
  */
-export const TlvOperationalStatus = TlvBitmap(TlvUInt8, OperationalStatusBits);
+export const OperationalStatus = {
+    /**
+     * Movement status of the cover
+     */
+    global: BitFieldEnum<MovementStatus>(0, 2),
+
+    /**
+     * Movement status of the cover's lift function
+     */
+    lift: BitFieldEnum<MovementStatus>(2, 2),
+
+    /**
+     * Movement status of the cover's tilt function
+     */
+    tilt: BitFieldEnum<MovementStatus>(4, 2)
+};
+
+/**
+ * Values for OperationalStatus attribute fields.
+ */
+export const enum MovementStatus {
+    /**
+     * Covering is not moving
+     */
+    Stopped = 0,
+
+    /**
+     * Covering is moving from closed to open
+     */
+    Opening = 1,
+
+    /**
+     * Covering is moving from open to closed
+     */
+    Closing = 2
+}
 
 /**
  * The value of the WindowCovering endProductType attribute
@@ -104,30 +157,56 @@ export const enum EndProductType {
 }
 
 /**
- * Bit definitions for TlvMode
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.21
- */
-export const ModeBits = {
-    motorDirectionReversed: BitFlag(1),
-    calibrationMode: BitFlag(2),
-    maintenanceMode: BitFlag(4),
-    ledFeedback: BitFlag(8)
-};
-
-/**
  * The value of the WindowCovering mode attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.21
  */
-export const TlvMode = TlvBitmap(TlvUInt8, ModeBits);
+export const Mode = {
+    /**
+     * Disables (0) or Enables (1) Lift reversal
+     */
+    bit0: BitFlag(0),
+
+    /**
+     * Disabled (0) or Enabled (1) placing the Window Covering into calibration Mode where limits are either setup
+     * using tools or learned by the Window Covering by doing self-calibration.If in calibration mode, all commands
+     * (e.g: UpOrOpen, DownOrClose, GoTos) that can result in movement, could be accepted and result in a
+     * self-calibration being initiated before the command is executed. In case the Window Covering does not have the
+     * ability or is not able to perform a self-calibration, the command SHOULD be ignored and a FAILURE status SHOULD
+     * be returned.In a write interaction, setting this bit to 0, while the device is in calibration mode, is not
+     * allowed and SHALL generate a FAILURE error status. In order to leave calibration mode, the device must perform
+     * its calibration routine, either as a self- calibration or assisted by external tool(s), depending on the
+     * device/manufacturer implementation.A manufacturer might choose to set the operational bit to its not operational
+     * value, if applicable during calibration mode
+     */
+    bit1: BitFlag(1),
+
+    /**
+     * Disables (0) or Enables (1) placing the Window Covering into Maintenance Mode where it cannot be moved over the
+     * network or by a switch connected to a Local Switch Input.While in maintenance mode, all commands (e.g: UpOrOpen,
+     * DownOrClose, GoTos) that can result in movement, must be ignored and respond with a BUSY status. Additionally,
+     * the operational bit of the ConfigStatus attribute should be set to its not operational value.
+     */
+    bit2: BitFlag(2),
+
+    /**
+     * Disables (0) or Enables (1) the display of any feedback LEDs resident especially on the packaging of an endpoint
+     * where they may cause distraction to the occupant.
+     */
+    bit3: BitFlag(3)
+};
 
 /**
- * Bit definitions for TlvSafetyStatus
+ * The value of the WindowCovering safetyStatus attribute
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.22
  */
-export const SafetyStatusBits = {
+export const SafetyStatus = {
+    /**
+     * Movement commands are ignored (locked out). e.g. not granted authorization, outside some time/date range.
+     */
+    remoteLockout: BitFlag(0),
+
     /**
      * Tampering detected on sensors or any other safety equipment. Ex: a device has been forcedly moved without its
      * actuator(s).
@@ -148,51 +227,44 @@ export const SafetyStatusBits = {
     /**
      * Motor(s) and/or electric circuit thermal protection activated.
      */
-    thermalProtection: BitFlag(16),
+    thermalProtection: BitFlag(4),
 
     /**
      * An obstacle is preventing actuator movement.
      */
-    obstacleDetected: BitFlag(32),
+    obstacleDetected: BitFlag(5),
 
     /**
      * Device has power related issue or limitation e.g. device is running w/ the help of a backup battery or power
      * might not be fully available at the moment.
      */
-    power: BitFlag(64),
+    power: BitFlag(6),
 
     /**
      * Local safety sensor (not a direct obstacle) is preventing movements (e.g. Safety EU Standard EN60335).
      */
-    stopInput: BitFlag(128),
+    stopInput: BitFlag(7),
 
     /**
      * Mechanical problem related to the motor(s) detected.
      */
-    motorJammed: BitFlag(256),
+    motorJammed: BitFlag(8),
 
     /**
      * PCB, fuse and other electrics problems.
      */
-    hardwareFailure: BitFlag(512),
+    hardwareFailure: BitFlag(9),
 
     /**
      * Actuator is manually operated and is preventing actuator movement (e.g. actuator is disengaged/decoupled).
      */
-    manualOperation: BitFlag(1024),
+    manualOperation: BitFlag(10),
 
     /**
      * Protection is activated.
      */
-    protection: BitFlag(2048)
+    protection: BitFlag(11)
 };
-
-/**
- * The value of the WindowCovering safetyStatus attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.22
- */
-export const TlvSafetyStatus = TlvBitmap(TlvUInt16, SafetyStatusBits);
 
 /**
  * Input to the WindowCovering goToLiftPercentage command
@@ -200,8 +272,8 @@ export const TlvSafetyStatus = TlvBitmap(TlvUInt16, SafetyStatusBits);
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.5
  */
 export const TlvGoToLiftPercentageRequest = TlvObject({
-    liftPercentageValue: TlvOptionalField(0, TlvUInt8),
-    liftPercent100ThsValue: TlvOptionalField(1, TlvUInt16)
+    liftPercentageValue: TlvOptionalField(0, TlvPercent),
+    liftPercent100ThsValue: TlvOptionalField(1, TlvPercent100ths)
 });
 
 /**
@@ -210,8 +282,8 @@ export const TlvGoToLiftPercentageRequest = TlvObject({
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.7
  */
 export const TlvGoToTiltPercentageRequest = TlvObject({
-    tiltPercentageValue: TlvOptionalField(0, TlvUInt8),
-    tiltPercent100ThsValue: TlvOptionalField(1, TlvUInt16)
+    tiltPercentageValue: TlvOptionalField(0, TlvPercent),
+    tiltPercent100ThsValue: TlvOptionalField(1, TlvPercent100ths)
 });
 
 /**
@@ -276,7 +348,7 @@ export enum WindowCoveringFeature {
 export const WindowCoveringBase = BaseClusterComponent({
     id: 0x102,
     name: "WindowCovering",
-    revision: 1,
+    revision: 5,
 
     features: {
         /**
@@ -322,7 +394,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.1
          */
-        type: FixedAttribute(0, TlvEnum<WindowCoveringType>(), { default: WindowCoveringType.Rollershade }),
+        type: FixedAttribute(0x0, TlvEnum<WindowCoveringType>(), { default: WindowCoveringType.Rollershade }),
 
         /**
          * The ConfigStatus attribute makes configuration and status information available. To change settings, devices
@@ -332,9 +404,9 @@ export const WindowCoveringBase = BaseClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.8
          */
         configStatus: Attribute(
-            7,
-            TlvConfigStatus,
-            { persistent: true, default: BitFlags(ConfigStatusBits, "Operational", "OnlineReserved") }
+            0x7,
+            TlvBitmap(TlvUInt8, ConfigStatus),
+            { persistent: true, default: BitsFromPartial(ConfigStatus, { operational: true, onlineReserved: true }) }
         ),
 
         /**
@@ -343,7 +415,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.15
          */
-        operationalStatus: Attribute(10, TlvOperationalStatus),
+        operationalStatus: Attribute(0xa, TlvBitmap(TlvUInt8, OperationalStatus)),
 
         /**
          * The EndProductType attribute identifies the product type in complement of the main category indicated by the
@@ -351,7 +423,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.16
          */
-        endProductType: FixedAttribute(13, TlvEnum<EndProductType>(), { default: EndProductType.RollerShade }),
+        endProductType: FixedAttribute(0xd, TlvEnum<EndProductType>(), { default: EndProductType.RollerShade }),
 
         /**
          * The Mode attribute allows configuration of the Window Covering, such as: reversing the motor direction,
@@ -365,7 +437,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.21
          */
-        mode: WritableAttribute(23, TlvMode, { persistent: true, writeAcl: AccessLevel.Manage }),
+        mode: WritableAttribute(0x17, TlvBitmap(TlvUInt8, Mode), { persistent: true, writeAcl: AccessLevel.Manage }),
 
         /**
          * The SafetyStatus attribute reflects the state of the safety sensors and the common issues preventing
@@ -375,7 +447,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.22
          */
-        safetyStatus: OptionalAttribute(26, TlvSafetyStatus)
+        safetyStatus: OptionalAttribute(0x1a, TlvBitmap(TlvUInt16, SafetyStatus))
     },
 
     commands: {
@@ -409,7 +481,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.1
          */
-        upOrOpen: Command(0, TlvNoArguments, 0, TlvNoResponse),
+        upOrOpen: Command(0x0, TlvNoArguments, 0x0, TlvNoResponse),
 
         /**
          * Upon receipt of this command, the Window Covering will adjust its position so the physical lift/slide and
@@ -441,7 +513,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.2
          */
-        downOrClose: Command(1, TlvNoArguments, 1, TlvNoResponse),
+        downOrClose: Command(0x1, TlvNoArguments, 0x1, TlvNoResponse),
 
         /**
          * Upon receipt of this command, the Window Covering will stop any adjusting to the physical tilt and
@@ -455,7 +527,7 @@ export const WindowCoveringBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.3
          */
-        stopMotion: Command(2, TlvNoArguments, 2, TlvNoResponse)
+        stopMotion: Command(0x2, TlvNoArguments, 0x2, TlvNoResponse)
     }
 });
 
@@ -470,7 +542,7 @@ export const LiftAndPositionAwareLiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.2
          */
-        physicalClosedLimitLift: OptionalFixedAttribute(1, TlvUInt16, { default: 0 }),
+        physicalClosedLimitLift: OptionalFixedAttribute(0x1, TlvUInt16, { default: 0 }),
 
         /**
          * The CurrentPositionLift attribute identifies the actual Lift position (in centimeters) of the window
@@ -478,7 +550,7 @@ export const LiftAndPositionAwareLiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.4
          */
-        currentPositionLift: OptionalAttribute(3, TlvNullable(TlvUInt16), { persistent: true, default: null }),
+        currentPositionLift: OptionalAttribute(0x3, TlvNullable(TlvUInt16), { persistent: true, default: null }),
 
         /**
          * The CurrentPositionLiftPercentage attribute identifies the actual position as a percentage from 0% to 100%
@@ -487,8 +559,8 @@ export const LiftAndPositionAwareLiftComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.11
          */
         currentPositionLiftPercentage: OptionalAttribute(
-            8,
-            TlvNullable(TlvUInt8.bound({ max: 100 })),
+            0x8,
+            TlvNullable(TlvPercent.bound({ min: 0, max: 100 })),
             { scene: true, persistent: true, default: null }
         )
     },
@@ -513,7 +585,7 @@ export const LiftAndPositionAwareLiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.5
          */
-        goToLiftPercentage: Command(5, TlvGoToLiftPercentageRequest, 5, TlvNoResponse)
+        goToLiftPercentage: Command(0x5, TlvGoToLiftPercentageRequest, 0x5, TlvNoResponse)
     }
 });
 
@@ -528,7 +600,7 @@ export const TiltAndPositionAwareTiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.3
          */
-        physicalClosedLimitTilt: OptionalFixedAttribute(2, TlvUInt16, { default: 0 }),
+        physicalClosedLimitTilt: OptionalFixedAttribute(0x2, TlvUInt16, { default: 0 }),
 
         /**
          * The CurrentPositionTilt attribute identifies the actual Tilt position (in tenth of an degree) of the window
@@ -536,7 +608,7 @@ export const TiltAndPositionAwareTiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.5
          */
-        currentPositionTilt: OptionalAttribute(4, TlvNullable(TlvUInt16), { persistent: true, default: null }),
+        currentPositionTilt: OptionalAttribute(0x4, TlvNullable(TlvUInt16), { persistent: true, default: null }),
 
         /**
          * The CurrentPositionTiltPercentage attribute identifies the actual position as a percentage from 0% to 100%
@@ -545,8 +617,8 @@ export const TiltAndPositionAwareTiltComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.12
          */
         currentPositionTiltPercentage: OptionalAttribute(
-            9,
-            TlvNullable(TlvUInt8.bound({ max: 100 })),
+            0x9,
+            TlvNullable(TlvPercent.bound({ min: 0, max: 100 })),
             { scene: true, persistent: true, default: null }
         )
     },
@@ -572,7 +644,7 @@ export const TiltAndPositionAwareTiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.7
          */
-        goToTiltPercentage: Command(8, TlvGoToTiltPercentageRequest, 8, TlvNoResponse)
+        goToTiltPercentage: Command(0x8, TlvGoToTiltPercentageRequest, 0x8, TlvNoResponse)
     }
 });
 
@@ -587,7 +659,7 @@ export const LiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.6
          */
-        numberOfActuationsLift: OptionalAttribute(5, TlvUInt16, { persistent: true, default: 0 }),
+        numberOfActuationsLift: OptionalAttribute(0x5, TlvUInt16, { persistent: true, default: 0 }),
 
         /**
          * The TargetPositionLiftPercent100ths attribute identifies the position where the Window Covering Lift will go
@@ -596,8 +668,8 @@ export const LiftComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.13
          */
         targetPositionLiftPercent100Ths: OptionalAttribute(
-            11,
-            TlvNullable(TlvUInt16.bound({ max: 10000 })),
+            0xb,
+            TlvNullable(TlvPercent100ths.bound({ min: 0, max: 10000 })),
             { scene: true, default: null }
         ),
 
@@ -608,8 +680,8 @@ export const LiftComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.9
          */
         currentPositionLiftPercent100Ths: OptionalAttribute(
-            14,
-            TlvNullable(TlvUInt16.bound({ max: 10000 })),
+            0xe,
+            TlvNullable(TlvPercent100ths.bound({ min: 0, max: 10000 })),
             { persistent: true, default: null }
         ),
 
@@ -619,7 +691,7 @@ export const LiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.17
          */
-        installedOpenLimitLift: OptionalAttribute(16, TlvUInt16.bound({ max: 65534 }), { persistent: true, default: 0 }),
+        installedOpenLimitLift: OptionalAttribute(0x10, TlvUInt16.bound({ max: 65534 }), { persistent: true, default: 0 }),
 
         /**
          * The InstalledClosedLimitLift attribute identifies the Closed Limit for Lifting the Window Covering whether
@@ -627,7 +699,11 @@ export const LiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.18
          */
-        installedClosedLimitLift: OptionalAttribute(17, TlvUInt16.bound({ max: 65534 }), { persistent: true, default: 0 })
+        installedClosedLimitLift: OptionalAttribute(
+            0x11,
+            TlvUInt16.bound({ max: 65534 }),
+            { persistent: true, default: 65534 }
+        )
     },
 
     commands: {
@@ -650,7 +726,7 @@ export const LiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.5
          */
-        goToLiftPercentage: OptionalCommand(5, TlvGoToLiftPercentageRequest, 5, TlvNoResponse)
+        goToLiftPercentage: OptionalCommand(0x5, TlvGoToLiftPercentageRequest, 0x5, TlvNoResponse)
     }
 });
 
@@ -665,7 +741,7 @@ export const TiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.7
          */
-        numberOfActuationsTilt: OptionalAttribute(6, TlvUInt16, { persistent: true, default: 0 }),
+        numberOfActuationsTilt: OptionalAttribute(0x6, TlvUInt16, { persistent: true, default: 0 }),
 
         /**
          * The TargetPositionTiltPercent100ths attribute identifies the position where the Window Covering Tilt will go
@@ -674,8 +750,8 @@ export const TiltComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.14
          */
         targetPositionTiltPercent100Ths: OptionalAttribute(
-            12,
-            TlvNullable(TlvUInt16.bound({ max: 10000 })),
+            0xc,
+            TlvNullable(TlvPercent100ths.bound({ min: 0, max: 10000 })),
             { scene: true, default: null }
         ),
 
@@ -686,8 +762,8 @@ export const TiltComponent = ClusterComponent({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.10
          */
         currentPositionTiltPercent100Ths: OptionalAttribute(
-            15,
-            TlvNullable(TlvUInt16.bound({ max: 10000 })),
+            0xf,
+            TlvNullable(TlvPercent100ths.bound({ min: 0, max: 10000 })),
             { persistent: true, default: null }
         ),
 
@@ -697,7 +773,7 @@ export const TiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.19
          */
-        installedOpenLimitTilt: OptionalAttribute(18, TlvUInt16.bound({ max: 65534 }), { persistent: true, default: 0 }),
+        installedOpenLimitTilt: OptionalAttribute(0x12, TlvUInt16.bound({ max: 65534 }), { persistent: true, default: 0 }),
 
         /**
          * The InstalledClosedLimitTilt attribute identifies the Closed Limit for Tilting the Window Covering whether
@@ -705,7 +781,11 @@ export const TiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.20
          */
-        installedClosedLimitTilt: OptionalAttribute(19, TlvUInt16.bound({ max: 65534 }), { persistent: true, default: 0 })
+        installedClosedLimitTilt: OptionalAttribute(
+            0x13,
+            TlvUInt16.bound({ max: 65534 }),
+            { persistent: true, default: 65534 }
+        )
     },
 
     commands: {
@@ -729,7 +809,7 @@ export const TiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.7
          */
-        goToTiltPercentage: OptionalCommand(8, TlvGoToTiltPercentageRequest, 8, TlvNoResponse)
+        goToTiltPercentage: OptionalCommand(0x8, TlvGoToTiltPercentageRequest, 0x8, TlvNoResponse)
     }
 });
 
@@ -747,7 +827,7 @@ export const LiftAndAbsolutePositionComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.4
          */
-        goToLiftValue: OptionalCommand(4, TlvGoToLiftValueRequest, 4, TlvNoResponse)
+        goToLiftValue: OptionalCommand(0x4, TlvGoToLiftValueRequest, 0x4, TlvNoResponse)
     }
 });
 
@@ -765,7 +845,7 @@ export const TiltAndAbsolutePositionComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.6
          */
-        goToTiltValue: OptionalCommand(7, TlvGoToTiltValueRequest, 7, TlvNoResponse)
+        goToTiltValue: OptionalCommand(0x7, TlvGoToTiltValueRequest, 0x7, TlvNoResponse)
     }
 });
 

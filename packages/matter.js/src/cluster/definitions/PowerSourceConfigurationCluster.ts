@@ -33,11 +33,11 @@ export const PowerSourceConfigurationCluster = Cluster({
          *
          * The order of power sources on a Node is defined by the Order attribute of its associated Power Source
          * cluster provided on the endpoint. List entries shall be sorted in increasing order, that is, an entry with a
-         * lower order shall have a lower index than any entry with a higher order. Multiple entries MAY have the same
+         * lower order shall have a lower index than any entry with a higher order. Multiple entries may have the same
          * order, there are no restrictions on their relative sorting.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.6.4.1
          */
-        sources: Attribute(0, TlvArray(TlvEndpointNumber), { persistent: true, default: [] })
+        sources: Attribute(0x0, TlvArray(TlvEndpointNumber, { maxLength: 6 }), { persistent: true, default: [] })
     }
 });

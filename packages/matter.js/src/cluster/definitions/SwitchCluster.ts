@@ -142,7 +142,7 @@ export const SwitchBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.5.1
          */
-        numberOfPositions: FixedAttribute(0, TlvUInt8.bound({ min: 2 }), { default: 2 }),
+        numberOfPositions: FixedAttribute(0x0, TlvUInt8.bound({ min: 2 }), { default: 2 }),
 
         /**
          * This attribute shall indicate the position of the switch. The valid range is zero to NumberOfPositions-1.
@@ -151,7 +151,7 @@ export const SwitchBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.5.2
          */
-        currentPosition: Attribute(1, TlvUInt8, { persistent: true, default: 0 })
+        currentPosition: Attribute(0x1, TlvUInt8, { persistent: true, default: 0 })
     }
 });
 
@@ -167,7 +167,7 @@ export const MomentarySwitchMultiPressComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.5.3
          */
-        multiPressMax: FixedAttribute(2, TlvUInt8.bound({ min: 2 }), { default: 2 })
+        multiPressMax: FixedAttribute(0x2, TlvUInt8.bound({ min: 2 }), { default: 2 })
     },
 
     events: {
@@ -187,7 +187,7 @@ export const MomentarySwitchMultiPressComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.6
          */
-        multiPressOngoing: Event(5, EventPriority.Info, TlvMultiPressOngoingEvent),
+        multiPressOngoing: Event(0x5, EventPriority.Info, TlvMultiPressOngoingEvent),
 
         /**
          * This event shall be generated to indicate how many times the momentary switch has been pressed in a
@@ -212,7 +212,7 @@ export const MomentarySwitchMultiPressComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.7
          */
-        multiPressComplete: Event(6, EventPriority.Info, TlvMultiPressCompleteEvent)
+        multiPressComplete: Event(0x6, EventPriority.Info, TlvMultiPressCompleteEvent)
     }
 });
 
@@ -222,14 +222,14 @@ export const MomentarySwitchMultiPressComponent = ClusterComponent({
 export const LatchingSwitchComponent = ClusterComponent({
     events: {
         /**
-         * This event shall be generated, when the latching switch is moved to a new position. It MAY have been delayed
+         * This event shall be generated, when the latching switch is moved to a new position. It may have been delayed
          * by debouncing within the switch.
          *
          * The NewPosition field shall indicate the new value of the CurrentPosition attribute, i.e. after the move.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.1
          */
-        switchLatched: Event(0, EventPriority.Info, TlvSwitchLatchedEvent)
+        switchLatched: Event(0x0, EventPriority.Info, TlvSwitchLatchedEvent)
     }
 });
 
@@ -245,7 +245,7 @@ export const MomentarySwitchComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.2
          */
-        initialPress: Event(1, EventPriority.Info, TlvInitialPressEvent)
+        initialPress: Event(0x1, EventPriority.Info, TlvInitialPressEvent)
     }
 });
 
@@ -262,7 +262,7 @@ export const MomentarySwitchLongPressComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.3
          */
-        longPress: Event(2, EventPriority.Info, TlvLongPressEvent),
+        longPress: Event(0x2, EventPriority.Info, TlvLongPressEvent),
 
         /**
          * This event shall be generated, when the momentary switch has been released (after debouncing) and after
@@ -275,7 +275,7 @@ export const MomentarySwitchLongPressComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.5
          */
-        longRelease: Event(4, EventPriority.Info, TlvLongReleaseEvent)
+        longRelease: Event(0x4, EventPriority.Info, TlvLongReleaseEvent)
     }
 });
 
@@ -300,7 +300,7 @@ export const MomentarySwitchReleaseComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11.7.4
          */
-        shortRelease: Event(3, EventPriority.Info, TlvShortReleaseEvent)
+        shortRelease: Event(0x3, EventPriority.Info, TlvShortReleaseEvent)
     }
 });
 
@@ -315,7 +315,7 @@ export const MomentarySwitchReleaseComponent = ClusterComponent({
  * Interactions with the switch device are exposed as attributes (for the latching switch) and as events (for both
  * types of switches).
  *
- * An interested client MAY subscribe to these attributes/events and thus be informed of the interactions, and can
+ * An interested client may subscribe to these attributes/events and thus be informed of the interactions, and can
  * perform actions based on this, for example by sending commands to perform an action such as controlling a light or a
  * window shade.
  *

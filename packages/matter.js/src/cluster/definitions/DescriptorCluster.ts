@@ -73,21 +73,21 @@ export const DescriptorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.5.5.1
          */
-        deviceTypeList: FixedAttribute(0, TlvArray(TlvDeviceTypeStruct), { default: [] }),
+        deviceTypeList: FixedAttribute(0x0, TlvArray(TlvDeviceTypeStruct, { minLength: 1 })),
 
         /**
          * This attribute shall list each cluster ID for the server clusters present on the endpoint instance.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.5.5.2
          */
-        serverList: FixedAttribute(1, TlvArray(TlvClusterId), { default: [] }),
+        serverList: FixedAttribute(0x1, TlvArray(TlvClusterId), { default: [] }),
 
         /**
          * This attribute shall list each cluster ID for the client clusters present on the endpoint instance.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.5.5.3
          */
-        clientList: FixedAttribute(2, TlvArray(TlvClusterId), { default: [] }),
+        clientList: FixedAttribute(0x2, TlvArray(TlvClusterId), { default: [] }),
 
         /**
          * This attribute indicates composition of the device type instance. Device type instance composition shall
@@ -96,6 +96,6 @@ export const DescriptorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.5.5.4
          */
-        partsList: Attribute(3, TlvArray(TlvEndpointNumber), { default: [] })
+        partsList: Attribute(0x3, TlvArray(TlvEndpointNumber), { default: [] })
     }
 });

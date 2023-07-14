@@ -5,13 +5,15 @@
  */
 
 import { Logger } from "../../src/log/Logger.js";
-import { ClusterModel, DatatypeModel, MatterModel, Metatype, ValidateModel, ValueModel } from "../../src/model/index.js";
+import { AttributeModel, ClusterModel, CommandModel, DatatypeModel, Globals, MatterModel, Metatype, ValidateModel, ValueModel } from "../../src/model/index.js";
 import { isDeepEqual } from "../../src/util/DeepEqual.js";
 
 const logger = Logger.get("create-model");
 
-// Get the properties of children without xrefs so we can compare types using
-// isDeepEqual
+/**
+ * Get the properties of children without xrefs so we can compare types using
+ * isDeepEqual
+ */
 function childrenIdentity(model: ValueModel) {
     return model.children.map(child => {
         const properties = child.valueOf();
@@ -21,9 +23,11 @@ function childrenIdentity(model: ValueModel) {
     })
 }
 
-// Some enum definitions are left hanging that we can fix with a quick scan
-// comparing names.  I believe this only affects enums in ColorControlCluster
-// from the spec but the logic is generic and safe so applying to all clusters
+/**
+ * Some enum definitions are left hanging that we can fix with a quick scan
+ * comparing names.  I believe this only affects enums in ColorControlCluster
+ * from the spec but the logic is generic and safe so applying to all clusters
+ */
 function patchClusterTypes(cluster: ClusterModel) {
     // First gather existing datatypes so we treat them as canonical
     const datatypes = {} as { [name: string]: ValueModel };
@@ -100,11 +104,64 @@ function patchClusterTypes(cluster: ClusterModel) {
     })
 }
 
-/** Create and validate the final model for export */
+/**
+ * The optionsMask/OptionsOverrides pattern defined by LevelControl is used
+ * by a number of clusters.  These usually specify their type as "map8" rather
+ * than the appropriate type.  This function fixes this.
+ */
+function patchOptionsTypes(cluster: ClusterModel) {
+    for (const element of cluster.children) {
+        if (!(element instanceof CommandModel)) {
+            continue;
+        }
+
+        if (!cluster.get(AttributeModel, "Options")) {
+            return;
+        }
+
+        const mask = element.get(DatatypeModel, "OptionsMask");
+        if (mask) {
+            mask.type = "Options";
+        }
+        const overrides = element.get(DatatypeModel, "OptionsOverride");
+        if (overrides) {
+            overrides.type = "Options";
+        }
+    }
+}
+
+/**
+ * Dangling enum8s called "Status" are status codes.
+ */
+function patchStatusTypes(cluster: ClusterModel) {
+    for (const element of cluster.children) {
+        if (!(element instanceof CommandModel)) {
+            continue;
+        }
+
+        const status = element.get(DatatypeModel, "Status");
+        if (!status || status.type !== "enum8") {
+            continue;
+        }
+
+        const defining = status.definingModel;
+        if (defining) {
+            continue;
+        }
+
+        status.type = Globals.status.name;
+    }
+}
+
+/**
+ * Create and validate the final model for export
+ **/
 export function finalizeModel(matter: MatterModel) {
     matter.children.forEach(c => {
         if (c instanceof ClusterModel) {
-            patchClusterTypes(c)
+            patchClusterTypes(c);
+            patchOptionsTypes(c);
+            patchStatusTypes(c);
         }
     });
 

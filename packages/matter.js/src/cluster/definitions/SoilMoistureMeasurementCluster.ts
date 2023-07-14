@@ -21,7 +21,7 @@ import { TlvNullable } from "../../tlv/TlvNullable.js";
 export const SoilMoistureMeasurementCluster = Cluster({
     id: 0x408,
     name: "SoilMoistureMeasurement",
-    revision: 1,
+    revision: 3,
     features: {},
 
     attributes: {
@@ -42,7 +42,7 @@ export const SoilMoistureMeasurementCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.6.4.1
          */
-        measuredValue: Attribute(0, TlvNullable(TlvUInt16)),
+        measuredValue: Attribute(0x0, TlvNullable(TlvUInt16)),
 
         /**
          * The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. The null
@@ -50,7 +50,7 @@ export const SoilMoistureMeasurementCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.6.4.2
          */
-        minMeasuredValue: Attribute(1, TlvNullable(TlvUInt16)),
+        minMeasuredValue: Attribute(0x1, TlvNullable(TlvUInt16)),
 
         /**
          * The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. The null
@@ -58,13 +58,13 @@ export const SoilMoistureMeasurementCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.6.4.3
          */
-        maxMeasuredValue: Attribute(2, TlvNullable(TlvUInt16.bound({ max: 10000 }))),
+        maxMeasuredValue: Attribute(0x2, TlvNullable(TlvUInt16.bound({ max: 10000 }))),
 
         /**
          * See Measured Value.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.6.4.4
          */
-        tolerance: OptionalAttribute(3, TlvUInt16.bound({ max: 2048 }))
+        tolerance: OptionalAttribute(0x3, TlvUInt16.bound({ max: 2048 }))
     }
 });

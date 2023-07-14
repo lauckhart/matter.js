@@ -40,7 +40,7 @@ export async function loadChip(): Promise<ClusterElement[]> {
 
 // CHIP tool has a single global datatype namespace.  This doesn't match Matter
 // semantics but there are few enough duplicate type names in Matter that it
-// works.  This routine installs datatypes into proper cluster scope.
+// works.  This routine installs datatypes into proper cluster scope
 function installDatatypes(elements: AnyElement[]) {
     const globals = {} as { [name: string]: AnyElement };
     Object.values(Globals).forEach(g => globals[g.name] = g);
@@ -52,6 +52,24 @@ function installDatatypes(elements: AnyElement[]) {
         }
     });
 
+    // Attempt to find a datatype based on an element name.  We first search
+    // using the direct name, then using the name as a suffix because CHIP
+    // uses a variety of naming conventions
+    function findType(name: string) {
+        let result = datatypes[name];
+
+        if (!result) {
+            for (const key in datatypes) {
+                if (key.endsWith(name)) {
+                    result = datatypes[key];
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
     // CHIP tool sometimes defines enums and bitmaps without values, instead
     // defining them somewhere else.  If we can find them, copy them over
     function installChildren(type: string, element: AnyElement) {
@@ -61,13 +79,13 @@ function installDatatypes(elements: AnyElement[]) {
         let source: AnyElement | undefined;
         switch ((globals[type] as DatatypeElement).metatype) {
             case Metatype.enum:
-                source = datatypes[element.name];
+                source = findType(element.name);
                 break;
 
             case Metatype.bitmap:
-                source = datatypes[element.name];
+                source = findType(element.name);
                 if (!source) {
-                    source = globals[`${element.name}Mask`];
+                    source = findType(`${element.name}Mask`);
                 }
                 break;
         }

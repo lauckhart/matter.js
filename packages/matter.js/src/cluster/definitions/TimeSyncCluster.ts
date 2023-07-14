@@ -10,7 +10,7 @@ import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { BaseClusterComponent, ClusterComponent, ExtensibleCluster, validateFeatureSelection, extendCluster, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
 import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
 import { Attribute, OptionalAttribute, WritableAttribute, AccessLevel, Command, TlvNoResponse, FixedAttribute, Event, EventPriority, Cluster } from "../../cluster/Cluster.js";
-import { TlvUInt64, TlvEnum, TlvInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
+import { TlvEpochUs, TlvEnum, TlvInt32, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNodeId } from "../../datatype/NodeId.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
@@ -23,10 +23,35 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.1
  */
 export const enum Granularity {
+    /**
+     * This indicates that the server is not currently synchronized with a UTC Time source and its clock is based on
+     * the Last Known Good UTC Time only.
+     */
     NoTimeGranularity = 0,
+
+    /**
+     * This indicates the server was synchronized to an upstream source in the past, but sufficient clock drift has
+     * occurred such that the clock error is now > 5 seconds.
+     */
     MinutesGranularity = 1,
+
+    /**
+     * This indicates the server is synchronized to an upstream source using a low resolution protocol. UTC Time is
+     * accurate to ± 5 seconds.
+     */
     SecondsGranularity = 2,
+
+    /**
+     * This indicates the server is synchronized to an upstream source using high resolution time-synchronization
+     * protocol such as NTP, or has built-in GNSS with some amount of jitter applying its GNSS timestamp. UTC Time is
+     * accurate to ± 50ms.
+     */
     MillisecondsGranularity = 3,
+
+    /**
+     * This indicates the server is synchronized to an upstream source using a highly precise time-synchronization
+     * protocol such as PTP, or has built-in GNSS. UTC time is accurate to ± 10 μs.
+     */
     MicrosecondsGranularity = 4
 }
 
@@ -132,7 +157,7 @@ export const TlvSetUtcTimeRequest = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.16.9.1.1
      */
-    utcTime: TlvField(0, TlvUInt64),
+    utcTime: TlvField(0, TlvEpochUs),
 
     /**
      * This shall give the Client’s Granularity, as described in Section 11.16.8.2, “Granularity Attribute”.
@@ -165,7 +190,7 @@ export const TlvTimeZoneStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.3.2
      */
-    validAt: TlvField(1, TlvUInt64),
+    validAt: TlvField(1, TlvEpochUs),
 
     /**
      * The time zone name SHOULD provide a human-readable time zone name and it SHOULD use the country/city format
@@ -173,7 +198,7 @@ export const TlvTimeZoneStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.3.3
      */
-    name: TlvOptionalField(2, TlvString.bound({ maxLength: 64 }))
+    name: TlvOptionalField(2, TlvString.bound({ minLength: 0, maxLength: 64 }))
 });
 
 /**
@@ -190,14 +215,14 @@ export const TlvDSTOffsetStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.4.1
      */
-    validStarting: TlvField(1, TlvUInt64),
+    validStarting: TlvField(1, TlvEpochUs),
 
     /**
      * The UTC time when the offset shall stop being applied. This value shall be larger than the ValidStarting time.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.16.6.4.2
      */
-    validUntil: TlvField(2, TlvUInt64)
+    validUntil: TlvField(2, TlvEpochUs)
 });
 
 /**
@@ -207,7 +232,7 @@ export const TlvDSTOffsetStruct = TlvObject({
  */
 export const TlvTimeZoneStatusEvent = TlvObject({
     offset: TlvField(0, TlvInt32.bound({ min: -43200, max: 50400 })),
-    name: TlvOptionalField(1, TlvString.bound({ maxLength: 64 }))
+    name: TlvOptionalField(1, TlvString.bound({ minLength: 0, maxLength: 64 }))
 });
 
 /**
@@ -274,12 +299,12 @@ export const TimeSyncBase = BaseClusterComponent({
          * If the server has achieved time synchronization, this shall indicate the current time as a UTC epoch-us
          * (Epoch Time in Microseconds).
          *
-         * If the server has not achieved time synchronization, this shall be null. This attribute MAY be set when a
+         * If the server has not achieved time synchronization, this shall be null. This attribute may be set when a
          * Section 11.16.9.1, “SetUtcTime Command” is received.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.1
          */
-        utcTime: Attribute(0, TlvNullable(TlvUInt64), { omitChanges: true, default: null }),
+        utcTime: Attribute(0x0, TlvNullable(TlvEpochUs), { omitChanges: true, default: null }),
 
         /**
          * The granularity of the error that the server is willing to guarantee on the time synchronization. It is of
@@ -287,11 +312,11 @@ export const TimeSyncBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.2
          */
-        granularity: Attribute(1, TlvEnum<Granularity>(), { default: Granularity.NoTimeGranularity }),
+        granularity: Attribute(0x1, TlvEnum<Granularity>(), { default: Granularity.NoTimeGranularity }),
 
         /**
          * The server’s time source. This attribute indicates what method the server is using to sync, whether the
-         * source uses NTS or not and whether the source is internal or external to the Fabric. This attribute MAY be
+         * source uses NTS or not and whether the source is internal or external to the Fabric. This attribute may be
          * used by a client to determine its level of trust in the UTCTime. It is of type TimeSourceEnum.
          *
          * If a server is unsure if the selected NTP server is within the Fabric, it SHOULD indicate the server is
@@ -299,26 +324,30 @@ export const TimeSyncBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.3
          */
-        timeSource: OptionalAttribute(2, TlvEnum<TimeSource>(), { default: TimeSource.None }),
+        timeSource: OptionalAttribute(0x2, TlvEnum<TimeSource>(), { default: TimeSource.None }),
 
         /**
          * The Node ID of a trusted Time Cluster. The TrustedTimeNodeId Node is used as a check on external time sync
-         * sources and MAY be used as the primary time source if other time sources are unavailable. See Section
+         * sources and may be used as the primary time source if other time sources are unavailable. See Section
          * 11.16.13, “Time source prioritization”. This attribute is writeable only by an Administrator. It SHOULD be
          * set by the Commissioner during commissioning. If no appropriate TrustedTimeNodeId is available, the
-         * commissioner MAY set this value to null.
+         * commissioner may set this value to null.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.5
          */
-        trustedTimeNodeId: WritableAttribute(3, TlvNullable(TlvNodeId), { default: null, writeAcl: AccessLevel.Administer })
+        trustedTimeNodeId: WritableAttribute(
+            0x3,
+            TlvNullable(TlvNodeId),
+            { default: null, writeAcl: AccessLevel.Administer }
+        )
     },
 
     commands: {
         /**
-         * This command MAY be issued by Administrator to set the time. If the Commissioner does not have a valid time
-         * source, it MAY send a Granularity of NoTimeGranularity.
+         * This command may be issued by Administrator to set the time. If the Commissioner does not have a valid time
+         * source, it may send a Granularity of NoTimeGranularity.
          *
-         * Upon receipt of this command, the server MAY update its UTCTime attribute to match the time specified in the
+         * Upon receipt of this command, the server may update its UTCTime attribute to match the time specified in the
          * command, if the stated Granularity and TimeSource are acceptable. The server shall update its UTCTime
          * attribute if its current Granularity is NoTimeGranularity.
          *
@@ -333,7 +362,7 @@ export const TimeSyncBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.9.1
          */
-        setUtcTime: Command(0, TlvSetUtcTimeRequest, 0, TlvNoResponse)
+        setUtcTime: Command(0x0, TlvSetUtcTimeRequest, 0x0, TlvNoResponse)
     }
 });
 
@@ -347,12 +376,12 @@ export const NtpClientComponent = ClusterComponent({
          * contain a domain name or a static IPv6 address in text format as specified in RFC 5952
          * [https://tools.ietf.org/html/rfc5952]. See Section 11.16.13, “Time source prioritization”. This attribute is
          * writeable only by an Administrator. It SHOULD be set by the Commissioner during commissioning. If no default
-         * NTP is available, the Commissioner MAY set this value to null.
+         * NTP is available, the Commissioner may set this value to null.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.4
          */
         defaultNtp: WritableAttribute(
-            4,
+            0x4,
             TlvNullable(TlvString.bound({ maxLength: 128 })),
             { default: null, writeAcl: AccessLevel.Administer }
         )
@@ -373,9 +402,9 @@ export const TimeZoneComponent = ClusterComponent({
          * The first entry shall have a ValidAt entry of 0. If there is a second entry, it shall have a non-zero
          * ValidAt time.
          *
-         * If a server supports a TimeZoneDatabase, the server MAY update its own DSTOffset list (Section 11.16.8.7,
+         * If a server supports a TimeZoneDatabase, the server may update its own DSTOffset list (Section 11.16.8.7,
          * “DSTOffset Attribute”) to add new DST change times as required, based on the Name fields of the
-         * TimeZoneStruct. Administrators MAY add additional entries to the DSTOffset of other Nodes with the same time
+         * TimeZoneStruct. Administrators may add additional entries to the DSTOffset of other Nodes with the same time
          * zone, if required.
          *
          * If a server does not support a TimeZoneDatabase, the Name field of the TimeZoneStruct is only applicable for
@@ -395,7 +424,11 @@ export const TimeZoneComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.6
          */
-        timeZone: WritableAttribute(5, TlvArray(TlvTimeZoneStruct), { default: [], writeAcl: AccessLevel.Manage }),
+        timeZone: WritableAttribute(
+            0x5,
+            TlvArray(TlvTimeZoneStruct, { minLength: 1, maxLength: 2 }),
+            { writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * A list of offsets to apply for daylight savings time, and their validity period. List entries shall be
@@ -406,17 +439,21 @@ export const TimeZoneComponent = ClusterComponent({
          *
          * Upon writing this attribute, the server shall recompute its LocalTime.
          *
-         * This list MAY hold up to 20 entries. If a server does not have sufficient storage for 20 entries, it MAY
+         * This list may hold up to 20 entries. If a server does not have sufficient storage for 20 entries, it may
          * truncate the list by removing entries with the largest ValidStarting times. The server shall reserve
          * sufficient storage for at least one entry.
          *
          * Over time, the server SHOULD remove any entries which are no longer active from the list.
          *
-         * Over time, if the server supports a TimeZoneDatabase, it MAY update its own list to add additional entries.
+         * Over time, if the server supports a TimeZoneDatabase, it may update its own list to add additional entries.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.7
          */
-        dstOffset: WritableAttribute(6, TlvArray(TlvDSTOffsetStruct), { default: [], writeAcl: AccessLevel.Manage }),
+        dstOffset: WritableAttribute(
+            0x6,
+            TlvArray(TlvDSTOffsetStruct, { maxLength: 20 }),
+            { default: [], writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * The computed current local time of the server as a epoch-us (Epoch Time in Microseconds). The local time
@@ -427,16 +464,16 @@ export const TimeZoneComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.8
          */
-        localTime: Attribute(7, TlvNullable(TlvUInt64), { omitChanges: true, default: 0 }),
+        localTime: Attribute(0x7, TlvNullable(TlvEpochUs), { omitChanges: true, default: 0 }),
 
         /**
-         * Indicates whether the server has access to a time zone database. Nodes with a time zone database MAY update
-         * their own DSTOffset attribute to add new entries and MAY push DSTOffset updates to other Nodes in the same
+         * Indicates whether the server has access to a time zone database. Nodes with a time zone database may update
+         * their own DSTOffset attribute to add new entries and may push DSTOffset updates to other Nodes in the same
          * time zone as required.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.9
          */
-        timeZoneDatabase: FixedAttribute(8, TlvBoolean, { default: true })
+        timeZoneDatabase: FixedAttribute(0x8, TlvBoolean, { default: true })
     },
 
     events: {
@@ -448,7 +485,7 @@ export const TimeZoneComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.10.1
          */
-        dstTableEmpty: Event(0, EventPriority.Info, TlvNoArguments),
+        dstTableEmpty: Event(0x0, EventPriority.Info, TlvNoArguments),
 
         /**
          * This event shall be generated when the server starts or stops applying a DST offset.
@@ -459,7 +496,7 @@ export const TimeZoneComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.10.2
          */
-        dstStatus: Event(1, EventPriority.Info, TlvNoArguments),
+        dstStatus: Event(0x1, EventPriority.Info, TlvNoArguments),
 
         /**
          * This event shall be generated when the server changes its time zone offset or name. It shall NOT be sent for
@@ -474,7 +511,7 @@ export const TimeZoneComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.10.3
          */
-        timeZoneStatus: Event(2, EventPriority.Info, TlvTimeZoneStatusEvent)
+        timeZoneStatus: Event(0x2, EventPriority.Info, TlvTimeZoneStatusEvent)
     }
 });
 
@@ -492,7 +529,7 @@ export const NtpServerComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.16.8.10
          */
-        ntpServerPort: Attribute(9, TlvNullable(TlvUInt16), { default: null })
+        ntpServerPort: Attribute(0x9, TlvNullable(TlvUInt16), { default: null })
     }
 });
 

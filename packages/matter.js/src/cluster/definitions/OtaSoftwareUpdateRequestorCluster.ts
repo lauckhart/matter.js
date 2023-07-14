@@ -32,14 +32,49 @@ export const TlvProviderLocationStruct = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.4.5
  */
 export const enum UpdateState {
+    /**
+     * Current state is not yet determined.
+     */
     Unknown = 0,
+
+    /**
+     * Indicate a Node not yet in the process of software update.
+     */
     Idle = 1,
+
+    /**
+     * Indicate a Node in the process of querying an OTA Provider.
+     */
     Querying = 2,
+
+    /**
+     * Indicate a Node waiting after a Busy response.
+     */
     DelayedOnQuery = 3,
+
+    /**
+     * Indicate a Node currently in the process of downloading a software update.
+     */
     Downloading = 4,
+
+    /**
+     * Indicate a Node currently in the process of verifying and applying a software update.
+     */
     Applying = 5,
+
+    /**
+     * Indicate a Node waiting caused by AwaitNextAction response.
+     */
     DelayedOnApply = 6,
+
+    /**
+     * Indicate a Node in the process of recovering to a previous version.
+     */
     RollingBack = 7,
+
+    /**
+     * Indicate a Node is capable of user consent.
+     */
     DelayedOnUserConsent = 8
 }
 
@@ -47,8 +82,21 @@ export const enum UpdateState {
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.4.1
  */
 export const enum AnnouncementReason {
+    /**
+     * An OTA Provider is announcing its presence.
+     */
     SimpleAnnouncement = 0,
+
+    /**
+     * An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be
+     * available.
+     */
     UpdateAvailable = 1,
+
+    /**
+     * An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be
+     * available, which contains an update that needs to be applied urgently.
+     */
     UrgentUpdateAvailable = 2
 }
 
@@ -71,10 +119,29 @@ export const TlvAnnounceOtaProviderRequest = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.4.15
  */
 export const enum ChangeReason {
+    /**
+     * The reason for a state change is unknown.
+     */
     Unknown = 0,
+
+    /**
+     * The reason for a state change is the success of a prior operation.
+     */
     Success = 1,
+
+    /**
+     * The reason for a state change is the failure of a prior operation.
+     */
     Failure = 2,
+
+    /**
+     * The reason for a state change is a time-out.
+     */
     TimeOut = 3,
+
+    /**
+     * The reason for a state change is a request by the OTA Provider to wait.
+     */
     DelayByProvider = 4
 }
 
@@ -140,7 +207,7 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.1
          */
         defaultOtaProviders: WritableFabricScopedAttribute(
-            0,
+            0x0,
             TlvArray(TlvProviderLocationStruct),
             { default: [], writeAcl: AccessLevel.Administer }
         ),
@@ -153,7 +220,7 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.2
          */
-        updatePossible: Attribute(1, TlvBoolean, { default: true }),
+        updatePossible: Attribute(0x1, TlvBoolean, { default: true }),
 
         /**
          * This field shall reflect the current state of the OTA Requestor with regards to obtaining software updates.
@@ -163,7 +230,7 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.3
          */
-        updateState: Attribute(2, TlvEnum<UpdateState>(), { default: UpdateState.Unknown }),
+        updateState: Attribute(0x2, TlvEnum<UpdateState>(), { default: UpdateState.Unknown }),
 
         /**
          * This field shall reflect the percentage value of progress, relative to the current UpdateState, if
@@ -173,17 +240,17 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          *
          * A value of 0 shall indicate that the beginning has occurred. A value of 100 shall indicate completion.
          *
-         * This field MAY be updated infrequently. Some care SHOULD be taken by Nodes to avoid over- reporting progress
+         * This field may be updated infrequently. Some care SHOULD be taken by Nodes to avoid over- reporting progress
          * when this attribute is part of a subscription.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.5.4
          */
-        updateStateProgress: Attribute(3, TlvNullable(TlvUInt8.bound({ max: 100 })), { default: null })
+        updateStateProgress: Attribute(0x3, TlvNullable(TlvUInt8.bound({ max: 100 })), { default: null })
     },
 
     commands: {
         /**
-         * This command MAY be invoked by Administrators to announce the presence of a particular OTA Provider.
+         * This command may be invoked by Administrators to announce the presence of a particular OTA Provider.
          *
          * This command shall be scoped to the accessing fabric.
          *
@@ -194,7 +261,7 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.6.1
          */
-        announceOtaProvider: OptionalCommand(0, TlvAnnounceOtaProviderRequest, 0, TlvNoResponse)
+        announceOtaProvider: OptionalCommand(0x0, TlvAnnounceOtaProviderRequest, 0x0, TlvNoResponse)
     },
 
     events: {
@@ -204,7 +271,7 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.7.1
          */
-        stateTransition: Event(0, EventPriority.Info, TlvStateTransitionEvent),
+        stateTransition: Event(0x0, EventPriority.Info, TlvStateTransitionEvent),
 
         /**
          * This event shall be generated whenever a new version starts executing after being applied due to a software
@@ -213,7 +280,7 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.7.6
          */
-        versionApplied: Event(1, EventPriority.Critical, TlvVersionAppliedEvent),
+        versionApplied: Event(0x1, EventPriority.Critical, TlvVersionAppliedEvent),
 
         /**
          * This event shall be generated whenever an error occurs during OTA Requestor download operation.
@@ -223,6 +290,6 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.19.7.7.9
          */
-        downloadError: Event(2, EventPriority.Info, TlvDownloadErrorEvent)
+        downloadError: Event(0x2, EventPriority.Info, TlvDownloadErrorEvent)
     }
 });

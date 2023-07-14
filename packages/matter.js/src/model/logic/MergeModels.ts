@@ -25,6 +25,15 @@ export function MergeModels(
             reparentToCanonicalParent(priority, variants);
         }
 
+        // Special case for datatype models -- if we downgraded from enum8 to
+        // uint8, ignore children.  Limited to enum8 to be conservative but
+        // will want to extend if this ever happens for other types
+        if (merged instanceof ValueModel && merged.type === "uint8") {
+            if (Object.values(variants.map).find(v => v?.type === "enum8")) {
+                return merged;
+            }
+        }
+
         merged.children = recurse();
 
         return merged;
@@ -108,6 +117,12 @@ class MergeTraversal<S> extends ModelVariantTraversal<S> {
             const variant = variants.map[sourceName];
             if (!variant) {
                 continue;
+            }
+
+            if (sourceName === variantPriorities[0]) {
+                // Always prefer highest priority variant which is presumably
+                // a hand edit
+                return variant;
             }
 
             if (!type) {
@@ -267,6 +282,9 @@ export namespace MergeModels {
 
     /**
      * A default set of priorities for the variants included with matter.js.
+     * We currently have "chip" as preferred over "spec" by default, but then
+     * have overridden to reverse this for a lot of fields.  Should probably
+     * revisit the default at some point.
      */
     export const DefaultPriorities: Priorities = {
         "*": {
@@ -274,19 +292,22 @@ export namespace MergeModels {
 
             // Prefer spec for elements that are insufficiently defined in
             // chip
-            "conformance": ["local", "spec", "chip"],
-            "constraint": ["local", "spec", "chip"],
-            "quality": ["local", "spec", "chip"],
-            "access": ["local", "spec", "chip"],
+            conformance: ["local", "spec", "chip"],
+            constraint: ["local", "spec", "chip"],
+            quality: ["local", "spec", "chip"],
+            access: ["local", "spec", "chip"],
 
             // Prefer spec for element names
-            "name": ["local", "spec", "chip"],
+            name: ["local", "spec", "chip"],
 
             // Prefer spec for datatype names (must match element names)
-            "type": ["local", "spec", "chip"],
+            type: ["local", "spec", "chip"],
 
             // Prefer spec for detailed documentation
-            "details": [ "local", "spec", "chip" ]
+            details: ["local", "spec", "chip"],
+
+            // Prefer spec for default values
+            default: ["local", "spec", "chip"]
         }
     }
 }

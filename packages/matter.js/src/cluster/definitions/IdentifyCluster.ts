@@ -57,7 +57,7 @@ export const enum IdentifyType {
 export const TlvIdentifyRequest = TlvObject({ identifyTime: TlvField(0, TlvUInt16) });
 
 /**
- * The value of TriggerEffect.effectIdentifier
+ * The value of Identify.effectIdentifier
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3.1
  */
@@ -96,7 +96,7 @@ export const enum EffectIdentifier {
 }
 
 /**
- * The value of TriggerEffect.effectVariant
+ * The value of Identify.effectVariant
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3.2
  */
@@ -112,7 +112,7 @@ export const enum EffectVariant {
 export const TlvTriggerEffectRequest = TlvObject({
     /**
      * This field specifies the identify effect to use. All values of the EffectIdentifier shall be supported.
-     * Implementors MAY deviate from the example light effects in the table below, but they SHOULD indicate during
+     * Implementors may deviate from the example light effects in the table below, but they SHOULD indicate during
      * testing how they handle each effect.
      *
      * This field shall contain one of the non-reserved values listed below.
@@ -171,7 +171,7 @@ export enum IdentifyFeature {
 export const IdentifyBase = BaseClusterComponent({
     id: 0x3,
     name: "Identify",
-    revision: 1,
+    revision: 4,
 
     features: {
         /**
@@ -196,7 +196,7 @@ export const IdentifyBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.1
          */
-        identifyTime: WritableAttribute(0, TlvUInt16, { default: 0 }),
+        identifyTime: WritableAttribute(0x0, TlvUInt16, { default: 0 }),
 
         /**
          * This attribute specifies how the identification state is presented to the user. This field shall contain one
@@ -206,7 +206,7 @@ export const IdentifyBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.5.2
          */
-        identifyType: Attribute(1, TlvEnum<IdentifyType>(), { default: IdentifyType.None })
+        identifyType: Attribute(0x1, TlvEnum<IdentifyType>(), { default: IdentifyType.None })
     },
 
     commands: {
@@ -215,7 +215,7 @@ export const IdentifyBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.1
          */
-        identify: Command(0, TlvIdentifyRequest, 0, TlvNoResponse),
+        identify: Command(0x0, TlvIdentifyRequest, 0x0, TlvNoResponse),
 
         /**
          * This command allows the support of feedback to the user, such as a certain light effect. It is used to allow
@@ -226,7 +226,7 @@ export const IdentifyBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3
          */
-        triggerEffect: OptionalCommand(64, TlvTriggerEffectRequest, 64, TlvNoResponse)
+        triggerEffect: OptionalCommand(0x40, TlvTriggerEffectRequest, 0x40, TlvNoResponse)
     }
 });
 
@@ -243,7 +243,7 @@ export const QueryComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.2
          */
-        identifyQuery: Command(1, TlvNoArguments, 0, TlvIdentifyQueryResponse)
+        identifyQuery: Command(0x1, TlvNoArguments, 0, TlvIdentifyQueryResponse)
     }
 });
 
@@ -254,7 +254,7 @@ export const QueryComponent = ClusterComponent({
  * (e.g., an installer) which of several nodes and/or endpoints it is. It also supports a multicast request that any
  * endpoint that is identifying itself to respond to the initiator.
  *
- * The state of this cluster MAY be shared on more than one endpoint on a node.
+ * The state of this cluster may be shared on more than one endpoint on a node.
  *
  * For Example: Two endpoints on a single node, one a temperature sensor, and one a humidity sensor, may both share the
  * same cluster instance and therefore identification state (e.g. single LED on the node).

@@ -12,17 +12,19 @@ Matter.children.push({
     tag: "cluster", name: "ThermostatUserInterfaceConfiguration", id: 0x204,
     classification: "application", description: "Thermostat User Interface Configuration",
     details: "This cluster provides an interface to allow configuration of the user interface for a thermostat, " +
-             "or a thermostat controller device, that supports a keypad and LCD screen.",
+        "or a thermostat controller device, that supports a keypad and LCD screen.",
     xref: { document: "cluster", section: "4.5" },
 
     children: [
+        { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 },
+
         {
             tag: "attribute", name: "TemperatureDisplayMode", id: 0x0, type: "enum8", access: "RW VO",
             conformance: "M", constraint: "desc", default: 0,
             details: "The TemperatureDisplayMode attribute specifies the units of the temperature displayed on the " +
-                     "thermostat screen." +
-                     "\n" +
-                     "Table 92. DisplayMode Attribute Values",
+                "thermostat screen." +
+                "\n" +
+                "Table 92. DisplayMode Attribute Values",
             xref: { document: "cluster", section: "4.5.5.1" },
 
             children: [
@@ -39,11 +41,11 @@ Matter.children.push({
             constraint: "desc", default: 0,
 
             details: "The KeypadLockout attribute specifies the level of functionality that is available to the user via " +
-                     "the keypad." +
-                     "\n" +
-                     "Table 93. KeypadLockout Attribute Values" +
-                     "\n" +
-                     "The interpretation of the various levels is device-dependent.",
+                "the keypad." +
+                "\n" +
+                "Table 93. KeypadLockout Attribute Values" +
+                "\n" +
+                "The interpretation of the various levels is device-dependent.",
 
             xref: { document: "cluster", section: "4.5.5.2" },
 
@@ -80,15 +82,15 @@ Matter.children.push({
             conformance: "O", constraint: "desc", default: 0,
 
             details: "The ScheduleProgrammingVisibility attribute is used to hide the weekly schedule programming " +
-                     "functionality or menu on a thermostat from a user to prevent local user programming of the weekly " +
-                     "schedule. The schedule programming MAY still be performed via a remote interface, and the " +
-                     "thermostat MAY operate in schedule programming mode." +
-                     "\n" +
-                     "This attribute is designed to prevent local tampering with or disabling of schedules that MAY have " +
-                     "been programmed by users or service providers via a more capable remote interface. The programming " +
-                     "schedule shall continue to run even though it is not visible to the user locally at the thermostat." +
-                     "\n" +
-                     "Table 94. ScheduleProgrammingVisibility Attribute Values",
+                "functionality or menu on a thermostat from a user to prevent local user programming of the weekly " +
+                "schedule. The schedule programming may still be performed via a remote interface, and the " +
+                "thermostat may operate in schedule programming mode." +
+                "\n" +
+                "This attribute is designed to prevent local tampering with or disabling of schedules that may have " +
+                "been programmed by users or service providers via a more capable remote interface. The programming " +
+                "schedule shall continue to run even though it is not visible to the user locally at the thermostat." +
+                "\n" +
+                "Table 94. ScheduleProgrammingVisibility Attribute Values",
 
             xref: { document: "cluster", section: "4.5.5.3" },
 

@@ -22,12 +22,40 @@ import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.3
  */
 export const enum RoutingRole {
+    /**
+     * Unspecified routing role.
+     */
     Unspecified = 0,
+
+    /**
+     * The Node does not currently have a role as a result of the Thread interface not currently being configured or
+     * operational.
+     */
     Unassigned = 1,
+
+    /**
+     * The Node acts as a Sleepy End Device with RX-off-when-idle sleepy radio behavior.
+     */
     SleepyEndDevice = 2,
+
+    /**
+     * The Node acts as an End Device without RX- off-when-idle sleepy radio behavior.
+     */
     EndDevice = 3,
+
+    /**
+     * The Node acts as an Router Eligible End Device.
+     */
     Reed = 4,
+
+    /**
+     * The Node acts as a Router Device.
+     */
     Router = 5,
+
+    /**
+     * The Node acts as a Leader Device.
+     */
     Leader = 6
 }
 
@@ -79,7 +107,7 @@ export const TlvNeighborTableStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.4.6
      */
-    lqi: TlvField(5, TlvUInt8.bound({ max: 255 })),
+    lqi: TlvField(5, TlvUInt8),
 
     /**
      * This field SHOULD specify the average RSSI across all received frames from the neighboring Node since the
@@ -89,7 +117,7 @@ export const TlvNeighborTableStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.4.7
      */
-    averageRssi: TlvField(6, TlvNullable(TlvInt8.bound({ min: -128 }))),
+    averageRssi: TlvField(6, TlvNullable(TlvInt8.bound({ max: 0 }))),
 
     /**
      * This field shall specify the RSSI of the most recently received frame from the neighboring Node. If there is no
@@ -98,7 +126,7 @@ export const TlvNeighborTableStruct = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.4.8
      */
-    lastRssi: TlvField(7, TlvNullable(TlvInt8.bound({ min: -128 }))),
+    lastRssi: TlvField(7, TlvNullable(TlvInt8.bound({ max: 0 }))),
 
     /**
      * This field shall specify the percentage of received frames from the neighboring Node that have resulted in
@@ -332,9 +360,24 @@ export const TlvOperationalDatasetComponents = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.1
  */
 export const enum NetworkFault {
+    /**
+     * Indicates an unspecified fault.
+     */
     Unspecified = 0,
+
+    /**
+     * Indicates the Thread link is down.
+     */
     LinkDown = 1,
+
+    /**
+     * Indicates there has been Thread hardware failure.
+     */
     HardwareFailure = 2,
+
+    /**
+     * Indicates the Thread network is jammed.
+     */
     NetworkJammed = 3
 }
 
@@ -342,7 +385,14 @@ export const enum NetworkFault {
  * @see {@link MatterCoreSpecificationV1_1} § 11.13.5.2
  */
 export const enum ConnectionStatus {
+    /**
+     * Node is connected
+     */
     Connected = 0,
+
+    /**
+     * Node is not connected
+     */
     NotConnected = 1
 }
 
@@ -364,7 +414,7 @@ export const TlvNetworkFaultChangeEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.13.8.1.1
      */
-    current: TlvField(0, TlvArray(TlvEnum<NetworkFault>())),
+    current: TlvField(0, TlvArray(TlvEnum<NetworkFault>(), { maxLength: 4 })),
 
     /**
      * This field shall represent the set of faults detected prior to this change event, as per Section 11.13.5.1,
@@ -372,7 +422,7 @@ export const TlvNetworkFaultChangeEvent = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.13.8.1.2
      */
-    previous: TlvField(1, TlvArray(TlvEnum<NetworkFault>()))
+    previous: TlvField(1, TlvArray(TlvEnum<NetworkFault>(), { maxLength: 4 }))
 });
 
 /**
@@ -458,7 +508,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.1
          */
-        channel: Attribute(0, TlvNullable(TlvUInt16)),
+        channel: Attribute(0x0, TlvNullable(TlvUInt16)),
 
         /**
          * The RoutingRole attribute shall indicate the role that this Node has within the routing of messages through
@@ -467,7 +517,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.2
          */
-        routingRole: Attribute(1, TlvNullable(TlvEnum<RoutingRole>())),
+        routingRole: Attribute(0x1, TlvNullable(TlvEnum<RoutingRole>())),
 
         /**
          * The NetworkName attribute shall indicate a human-readable (displayable) name for the Thread network that the
@@ -476,7 +526,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.3
          */
-        networkName: Attribute(2, TlvNullable(TlvString.bound({ maxLength: 16 })), { default: "" }),
+        networkName: Attribute(0x2, TlvNullable(TlvString.bound({ maxLength: 16 })), { default: "" }),
 
         /**
          * The PanId attribute shall indicate the 16-bit identifier of the Node on the Thread network. A value of null
@@ -484,7 +534,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.4
          */
-        panId: Attribute(3, TlvNullable(TlvUInt16), { default: 0 }),
+        panId: Attribute(0x3, TlvNullable(TlvUInt16), { default: 0 }),
 
         /**
          * The ExtendedPanId attribute shall indicate the unique 64-bit identifier of the Node on the Thread network. A
@@ -492,7 +542,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.5
          */
-        extendedPanId: Attribute(4, TlvNullable(TlvUInt64), { default: 0 }),
+        extendedPanId: Attribute(0x4, TlvNullable(TlvUInt64), { default: 0 }),
 
         /**
          * The MeshLocalPrefix attribute shall indicate the mesh-local IPv6 prefix for the Thread network that the Node
@@ -501,7 +551,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.6
          */
-        meshLocalPrefix: Attribute(5, TlvNullable(TlvByteString)),
+        meshLocalPrefix: Attribute(0x5, TlvNullable(TlvByteString)),
 
         /**
          * The NeighborTable attribute shall indicate the current list of Nodes that comprise the neighbor table on the
@@ -509,7 +559,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.8
          */
-        neighborTable: Attribute(7, TlvArray(TlvNeighborTableStruct), { default: [] }),
+        neighborTable: Attribute(0x7, TlvArray(TlvNeighborTableStruct), { default: [] }),
 
         /**
          * The RouteTable attribute shall indicate the current list of router capable Nodes for which routes have been
@@ -517,7 +567,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.9
          */
-        routeTable: Attribute(8, TlvArray(TlvRouteTableStruct), { default: [] }),
+        routeTable: Attribute(0x8, TlvArray(TlvRouteTableStruct), { default: [] }),
 
         /**
          * The PartitionId attribute shall indicate the Thread Leader Partition Id for the Thread network to which the
@@ -525,7 +575,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.10
          */
-        partitionId: Attribute(9, TlvNullable(TlvUInt32)),
+        partitionId: Attribute(0x9, TlvNullable(TlvUInt32)),
 
         /**
          * The Weighting attribute shall indicate the Thread Leader Weight used when operating in the Leader role. This
@@ -533,7 +583,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.11
          */
-        weighting: Attribute(10, TlvNullable(TlvUInt8)),
+        weighting: Attribute(0xa, TlvNullable(TlvUInt8)),
 
         /**
          * The DataVersion attribute shall indicate the full Network Data Version the Node currently uses. This
@@ -541,7 +591,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.12
          */
-        dataVersion: Attribute(11, TlvNullable(TlvUInt8)),
+        dataVersion: Attribute(0xb, TlvNullable(TlvUInt8)),
 
         /**
          * The StableDataVersion attribute shall indicate the Network Data Version for the stable subset of
@@ -550,7 +600,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.13
          */
-        stableDataVersion: Attribute(12, TlvNullable(TlvUInt8)),
+        stableDataVersion: Attribute(0xc, TlvNullable(TlvUInt8)),
 
         /**
          * The LeaderRouterId attribute shall indicate the 8-bit LeaderRouterId the Node shall attempt to utilize upon
@@ -559,28 +609,28 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.14
          */
-        leaderRouterId: Attribute(13, TlvNullable(TlvUInt8)),
+        leaderRouterId: Attribute(0xd, TlvNullable(TlvUInt8)),
 
         /**
          * This attribute shall be null when there is no dataset configured.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.57
          */
-        activeTimestamp: OptionalAttribute(56, TlvNullable(TlvUInt64), { default: 0 }),
+        activeTimestamp: OptionalAttribute(0x38, TlvNullable(TlvUInt64), { default: 0 }),
 
         /**
          * This attribute shall be null when there is no dataset configured.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.58
          */
-        pendingTimestamp: OptionalAttribute(57, TlvNullable(TlvUInt64), { default: 0 }),
+        pendingTimestamp: OptionalAttribute(0x39, TlvNullable(TlvUInt64), { default: 0 }),
 
         /**
          * This attribute shall be null when there is no dataset configured.
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.59
          */
-        delay: OptionalAttribute(58, TlvNullable(TlvUInt32), { default: 0 }),
+        delay: OptionalAttribute(0x3a, TlvNullable(TlvUInt32), { default: 0 }),
 
         /**
          * The SecurityPolicy attribute indicates the current security policies for the Thread partition to which a
@@ -588,7 +638,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.60
          */
-        securityPolicy: Attribute(59, TlvNullable(TlvSecurityPolicy)),
+        securityPolicy: Attribute(0x3b, TlvNullable(TlvSecurityPolicy)),
 
         /**
          * The ChannelPage0Mask attribute indicates the channels within channel page 0, in the 2.4GHz ISM band. The
@@ -599,7 +649,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.61
          */
-        channelPage0Mask: Attribute(60, TlvNullable(TlvByteString.bound({ minLength: 4, maxLength: 4 }))),
+        channelPage0Mask: Attribute(0x3c, TlvNullable(TlvByteString.bound({ length: 4 }))),
 
         /**
          * The OperationalDatasetComponents attribute is a collection of flags to indicate the presence of various
@@ -607,7 +657,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.62
          */
-        operationalDatasetComponents: Attribute(61, TlvNullable(TlvOperationalDatasetComponents)),
+        operationalDatasetComponents: Attribute(0x3d, TlvNullable(TlvOperationalDatasetComponents)),
 
         /**
          * The ActiveNetworkFaults attribute shall indicate the set of faults currently detected by the Node.
@@ -617,11 +667,11 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          * detects that all conditions contributing to a fault has been cleared, the corresponding NetworkFaultEnum
          * value shall be removed from this list. An empty list shall indicate there are currently no active faults.
          * The order of this list SHOULD have no significance. Clients interested in monitoring changes in active
-         * faults MAY subscribe to this attribute, or they MAY subscribe to NetworkFaultChange
+         * faults may subscribe to this attribute, or they may subscribe to NetworkFaultChange
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.63
          */
-        activeNetworkFaults: Attribute(62, TlvArray(TlvEnum<NetworkFault>()), { default: [] })
+        activeNetworkFaults: Attribute(0x3e, TlvArray(TlvEnum<NetworkFault>(), { maxLength: 4 }), { default: [] })
     },
 
     events: {
@@ -630,7 +680,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.8.2
          */
-        connectionStatus: OptionalEvent(0, EventPriority.Info, TlvConnectionStatusEvent),
+        connectionStatus: OptionalEvent(0x0, EventPriority.Info, TlvConnectionStatusEvent),
 
         /**
          * The NetworkFaultChange Event shall indicate a change in the set of network faults currently detected by the
@@ -638,7 +688,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.8.1
          */
-        networkFaultChange: OptionalEvent(1, EventPriority.Info, TlvNetworkFaultChangeEvent)
+        networkFaultChange: OptionalEvent(0x1, EventPriority.Info, TlvNetworkFaultChangeEvent)
     }
 });
 
@@ -654,7 +704,7 @@ export const ErrorCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.7
          */
-        overrunCount: Attribute(6, TlvUInt64, { omitChanges: true, default: 0 })
+        overrunCount: Attribute(0x6, TlvUInt64, { omitChanges: true, default: 0 })
     },
 
     commands: {
@@ -668,7 +718,7 @@ export const ErrorCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.7.1
          */
-        resetCounts: Command(0, TlvNoArguments, 0, TlvNoResponse)
+        resetCounts: Command(0x0, TlvNoArguments, 0x0, TlvNoResponse)
     }
 });
 
@@ -684,7 +734,7 @@ export const MleCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.15
          */
-        detachedRoleCount: OptionalAttribute(14, TlvUInt16, { omitChanges: true, default: 0 }),
+        detachedRoleCount: OptionalAttribute(0xe, TlvUInt16, { omitChanges: true, default: 0 }),
 
         /**
          * The ChildRoleCount attribute shall indicate the number of times the Node entered the OT_DEVICE_ROLE_CHILD
@@ -692,7 +742,7 @@ export const MleCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.16
          */
-        childRoleCount: OptionalAttribute(15, TlvUInt16, { omitChanges: true, default: 0 }),
+        childRoleCount: OptionalAttribute(0xf, TlvUInt16, { omitChanges: true, default: 0 }),
 
         /**
          * The RouterRoleCount attribute shall indicate the number of times the Node entered the OT_DEVICE_ROLE_ROUTER
@@ -700,7 +750,7 @@ export const MleCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.17
          */
-        routerRoleCount: OptionalAttribute(16, TlvUInt16, { omitChanges: true, default: 0 }),
+        routerRoleCount: OptionalAttribute(0x10, TlvUInt16, { omitChanges: true, default: 0 }),
 
         /**
          * The LeaderRoleCount attribute shall indicate the number of times the Node entered the OT_DEVICE_ROLE_LEADER
@@ -708,7 +758,7 @@ export const MleCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.18
          */
-        leaderRoleCount: OptionalAttribute(17, TlvUInt16, { omitChanges: true, default: 0 }),
+        leaderRoleCount: OptionalAttribute(0x11, TlvUInt16, { omitChanges: true, default: 0 }),
 
         /**
          * The AttachAttemptCount attribute shall indicate the number of attempts that have been made to attach to a
@@ -717,7 +767,7 @@ export const MleCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.19
          */
-        attachAttemptCount: OptionalAttribute(18, TlvUInt16, { omitChanges: true, default: 0 }),
+        attachAttemptCount: OptionalAttribute(0x12, TlvUInt16, { omitChanges: true, default: 0 }),
 
         /**
          * The PartitionIdChangeCount attribute shall indicate the number of times that the Thread network that the
@@ -725,7 +775,7 @@ export const MleCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.20
          */
-        partitionIdChangeCount: OptionalAttribute(19, TlvUInt16, { omitChanges: true, default: 0 }),
+        partitionIdChangeCount: OptionalAttribute(0x13, TlvUInt16, { omitChanges: true, default: 0 }),
 
         /**
          * The BetterPartitionAttachAttemptCount attribute shall indicate the number of times a Node has attempted to
@@ -734,7 +784,7 @@ export const MleCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.21
          */
-        betterPartitionAttachAttemptCount: OptionalAttribute(20, TlvUInt16, { omitChanges: true, default: 0 }),
+        betterPartitionAttachAttemptCount: OptionalAttribute(0x14, TlvUInt16, { omitChanges: true, default: 0 }),
 
         /**
          * The ParentChangeCount attribute shall indicate the number of times a Node has changed its parent. This value
@@ -742,7 +792,7 @@ export const MleCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.22
          */
-        parentChangeCount: OptionalAttribute(21, TlvUInt16, { omitChanges: true, default: 0 })
+        parentChangeCount: OptionalAttribute(0x15, TlvUInt16, { omitChanges: true, default: 0 })
     }
 });
 
@@ -759,7 +809,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.23
          */
-        txTotalCount: OptionalAttribute(22, TlvUInt32, { omitChanges: true, default: 0 }),
+        txTotalCount: OptionalAttribute(0x16, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The TxUnicastCount attribute shall indicate the total number of unique unicast MAC frame transmission
@@ -769,7 +819,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.24
          */
-        txUnicastCount: OptionalAttribute(23, TlvUInt32, { omitChanges: true, default: 0 }),
+        txUnicastCount: OptionalAttribute(0x17, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The TxBroadcastCount attribute shall indicate the total number of unique broadcast MAC frame transmission
@@ -779,7 +829,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.25
          */
-        txBroadcastCount: OptionalAttribute(24, TlvUInt32, { omitChanges: true, default: 0 }),
+        txBroadcastCount: OptionalAttribute(0x18, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The TxAckRequestedCount attribute shall indicate the total number of unique MAC frame transmission requests
@@ -789,7 +839,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.26
          */
-        txAckRequestedCount: OptionalAttribute(25, TlvUInt32, { omitChanges: true, default: 0 }),
+        txAckRequestedCount: OptionalAttribute(0x19, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The TxAckedCount attribute shall indicate the total number of unique MAC frame transmission requests that
@@ -799,7 +849,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.27
          */
-        txAckedCount: OptionalAttribute(26, TlvUInt32, { omitChanges: true, default: 0 }),
+        txAckedCount: OptionalAttribute(0x1a, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The TxNoAckRequestedCount attribute shall indicate the total number of unique MAC frame transmission
@@ -809,7 +859,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.28
          */
-        txNoAckRequestedCount: OptionalAttribute(27, TlvUInt32, { omitChanges: true, default: 0 }),
+        txNoAckRequestedCount: OptionalAttribute(0x1b, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The TxDataCount attribute shall indicate the total number of unique MAC Data frame transmission requests.
@@ -819,7 +869,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.29
          */
-        txDataCount: OptionalAttribute(28, TlvUInt32, { omitChanges: true, default: 0 }),
+        txDataCount: OptionalAttribute(0x1c, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The TxDataPollCount attribute shall indicate the total number of unique MAC Data Poll frame transmission
@@ -829,7 +879,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.30
          */
-        txDataPollCount: OptionalAttribute(29, TlvUInt32, { omitChanges: true, default: 0 }),
+        txDataPollCount: OptionalAttribute(0x1d, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The TxBeaconCount attribute shall indicate the total number of unique MAC Beacon frame transmission
@@ -838,7 +888,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.31
          */
-        txBeaconCount: OptionalAttribute(30, TlvUInt32, { omitChanges: true, default: 0 }),
+        txBeaconCount: OptionalAttribute(0x1e, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The TxBeaconRequestCount attribute shall indicate the total number of unique MAC Beacon Request frame
@@ -848,7 +898,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.32
          */
-        txBeaconRequestCount: OptionalAttribute(31, TlvUInt32, { omitChanges: true, default: 0 }),
+        txBeaconRequestCount: OptionalAttribute(0x1f, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The TxOtherCount attribute shall indicate the total number of unique MAC frame transmission requests that
@@ -858,7 +908,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.33
          */
-        txOtherCount: OptionalAttribute(32, TlvUInt32, { omitChanges: true, default: 0 }),
+        txOtherCount: OptionalAttribute(0x20, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The TxRetryCount attribute shall indicate the total number of MAC retransmission attempts. The TxRetryCount
@@ -868,7 +918,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.34
          */
-        txRetryCount: OptionalAttribute(33, TlvUInt32, { omitChanges: true, default: 0 }),
+        txRetryCount: OptionalAttribute(0x21, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The TxDirectMaxRetryExpiryCount attribute shall indicate the total number of unique MAC transmission packets
@@ -878,7 +928,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.35
          */
-        txDirectMaxRetryExpiryCount: OptionalAttribute(34, TlvUInt32, { omitChanges: true, default: 0 }),
+        txDirectMaxRetryExpiryCount: OptionalAttribute(0x22, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The TxIndirectMaxRetryExpiryCount attribute shall indicate the total number of unique MAC transmission
@@ -888,7 +938,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.36
          */
-        txIndirectMaxRetryExpiryCount: OptionalAttribute(35, TlvUInt32, { omitChanges: true, default: 0 }),
+        txIndirectMaxRetryExpiryCount: OptionalAttribute(0x23, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The TxErrCcaCount attribute shall indicate the total number of CCA failures. The TxErrCcaCount attribute
@@ -897,7 +947,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.37
          */
-        txErrCcaCount: OptionalAttribute(36, TlvUInt32, { omitChanges: true, default: 0 }),
+        txErrCcaCount: OptionalAttribute(0x24, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The TxErrAbortCount attribute shall indicate the total number of unique MAC transmission request failures
@@ -906,7 +956,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.38
          */
-        txErrAbortCount: OptionalAttribute(37, TlvUInt32, { omitChanges: true, default: 0 }),
+        txErrAbortCount: OptionalAttribute(0x25, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The TxErrBusyChannelCount attribute shall indicate the total number of unique MAC transmission request
@@ -916,7 +966,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.39
          */
-        txErrBusyChannelCount: OptionalAttribute(38, TlvUInt32, { omitChanges: true, default: 0 }),
+        txErrBusyChannelCount: OptionalAttribute(0x26, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxTotalCount attribute shall indicate the total number of received unique MAC frames. This value shall
@@ -924,7 +974,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.40
          */
-        rxTotalCount: OptionalAttribute(39, TlvUInt32, { omitChanges: true, default: 0 }),
+        rxTotalCount: OptionalAttribute(0x27, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxUnicastCount attribute shall indicate the total number of received unique unicast MAC frames. This
@@ -932,7 +982,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.41
          */
-        rxUnicastCount: OptionalAttribute(40, TlvUInt32, { omitChanges: true, default: 0 }),
+        rxUnicastCount: OptionalAttribute(0x28, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxBroadcastCount attribute shall indicate the total number of received unique broadcast MAC frames. This
@@ -940,7 +990,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.42
          */
-        rxBroadcastCount: OptionalAttribute(41, TlvUInt32, { omitChanges: true, default: 0 }),
+        rxBroadcastCount: OptionalAttribute(0x29, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxDataCount attribute shall indicate the total number of received unique MAC Data frames. This value
@@ -948,7 +998,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.43
          */
-        rxDataCount: OptionalAttribute(42, TlvUInt32, { omitChanges: true, default: 0 }),
+        rxDataCount: OptionalAttribute(0x2a, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxDataPollCount attribute shall indicate the total number of received unique MAC Data Poll frames. This
@@ -956,7 +1006,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.44
          */
-        rxDataPollCount: OptionalAttribute(43, TlvUInt32, { omitChanges: true, default: 0 }),
+        rxDataPollCount: OptionalAttribute(0x2b, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxBeaconCount attribute shall indicate the total number of received unique MAC Beacon frames. This value
@@ -964,7 +1014,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.45
          */
-        rxBeaconCount: OptionalAttribute(44, TlvUInt32, { omitChanges: true, default: 0 }),
+        rxBeaconCount: OptionalAttribute(0x2c, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxBeaconRequestCount attribute shall indicate the total number of received unique MAC Beacon Request
@@ -972,7 +1022,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.46
          */
-        rxBeaconRequestCount: OptionalAttribute(45, TlvUInt32, { omitChanges: true, default: 0 }),
+        rxBeaconRequestCount: OptionalAttribute(0x2d, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxOtherCount attribute shall indicate the total number of received unique MAC frame requests that are
@@ -980,7 +1030,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.47
          */
-        rxOtherCount: OptionalAttribute(46, TlvUInt32, { omitChanges: true, default: 0 }),
+        rxOtherCount: OptionalAttribute(0x2e, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxAddressFilteredCount attribute shall indicate the total number of received unique MAC frame requests
@@ -988,7 +1038,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.48
          */
-        rxAddressFilteredCount: OptionalAttribute(47, TlvUInt32, { omitChanges: true, default: 0 }),
+        rxAddressFilteredCount: OptionalAttribute(0x2f, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxDestAddrFilteredCount attribute shall indicate the total number of received unique MAC frame requests
@@ -997,7 +1047,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.49
          */
-        rxDestAddrFilteredCount: OptionalAttribute(48, TlvUInt32, { omitChanges: true, default: 0 }),
+        rxDestAddrFilteredCount: OptionalAttribute(0x30, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxDuplicatedCount attribute shall indicate the total number of received MAC frame requests that have
@@ -1006,7 +1056,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.50
          */
-        rxDuplicatedCount: OptionalAttribute(49, TlvUInt32, { omitChanges: true, default: 0 }),
+        rxDuplicatedCount: OptionalAttribute(0x31, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxErrNoFrameCount attribute shall indicate the total number of received unique MAC frame requests that
@@ -1015,7 +1065,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.51
          */
-        rxErrNoFrameCount: OptionalAttribute(50, TlvUInt32, { omitChanges: true, default: 0 }),
+        rxErrNoFrameCount: OptionalAttribute(0x32, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxErrUnknownNeighborCount attribute shall indicate the total number of received unique MAC frame
@@ -1024,7 +1074,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.52
          */
-        rxErrUnknownNeighborCount: OptionalAttribute(51, TlvUInt32, { omitChanges: true, default: 0 }),
+        rxErrUnknownNeighborCount: OptionalAttribute(0x33, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxErrInvalidScrAddrCount attribute shall indicate the total number of received unique MAC frame requests
@@ -1033,7 +1083,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.53
          */
-        rxErrInvalidScrAddrCount: OptionalAttribute(52, TlvUInt32, { omitChanges: true, default: 0 }),
+        rxErrInvalidScrAddrCount: OptionalAttribute(0x34, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxErrSecCount attribute shall indicate the total number of received unique MAC frame requests that have
@@ -1042,7 +1092,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.54
          */
-        rxErrSecCount: OptionalAttribute(53, TlvUInt32, { omitChanges: true, default: 0 }),
+        rxErrSecCount: OptionalAttribute(0x35, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxErrFcsCount attribute shall indicate the total number of received unique MAC frame requests that have
@@ -1051,7 +1101,7 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.55
          */
-        rxErrFcsCount: OptionalAttribute(54, TlvUInt32, { omitChanges: true, default: 0 }),
+        rxErrFcsCount: OptionalAttribute(0x36, TlvUInt32, { omitChanges: true, default: 0 }),
 
         /**
          * The RxErrOtherCount attribute shall indicate the total number of received unique MAC frame requests that
@@ -1060,14 +1110,14 @@ export const MacCountsComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.56
          */
-        rxErrOtherCount: OptionalAttribute(55, TlvUInt32, { omitChanges: true, default: 0 })
+        rxErrOtherCount: OptionalAttribute(0x37, TlvUInt32, { omitChanges: true, default: 0 })
     }
 });
 
 /**
  * Thread Network Diagnostics
  *
- * The Thread Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that MAY be used
+ * The Thread Network Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that may be used
  * by a Node to assist a user or Administrator in diagnosing potential problems. The Thread Network Diagnostics Cluster
  * attempts to centralize all metrics that are relevant to a potential Thread radio running on a Node.
  *

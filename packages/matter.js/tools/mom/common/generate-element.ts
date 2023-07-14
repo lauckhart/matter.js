@@ -66,7 +66,7 @@ export function generateElement(target: Block, element: AnyElement, prefix = "",
         const lines = wordWrap(element.details, 100);
         for (let i = 0; i < lines.length; i++) {
             const prefix = i
-                ? "         "
+                ? "    "
                 : "details: ";
             const suffix = i < lines.length - 1 ? " +" : "";
             lines[i] = `${prefix}${serialize(lines[i] === "" ? "\n" : lines[i])}${suffix}`;

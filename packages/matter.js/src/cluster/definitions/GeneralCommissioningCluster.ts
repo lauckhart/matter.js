@@ -15,7 +15,7 @@ import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 
 /**
- * This structure provides some constant values that MAY be of use to all commissioners.
+ * This structure provides some constant values that may be of use to all commissioners.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.4.3
  */
@@ -49,8 +49,19 @@ export const TlvBasicCommissioningInfo = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.4.2
  */
 export const enum RegulatoryLocationType {
+    /**
+     * Indoor only
+     */
     Indoor = 0,
+
+    /**
+     * Outdoor only
+     */
     Outdoor = 1,
+
+    /**
+     * Indoor/Outdoor
+     */
     IndoorOutdoor = 2
 }
 
@@ -70,10 +81,31 @@ export const TlvArmFailSafeRequest = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.9.4.1
  */
 export const enum CommissioningError {
+    /**
+     * No error
+     */
     Ok = 0,
+
+    /**
+     * Attempting to set regulatory configuration to a region or indoor/outdoor mode for which the server does not have
+     * proper configuration.
+     */
     ValueOutsideRange = 1,
+
+    /**
+     * Executed CommissioningComplete outside CASE session.
+     */
     InvalidAuthentication = 2,
+
+    /**
+     * Executed CommissioningComplete when there was no active Fail-Safe context.
+     */
     NoFailSafe = 3,
+
+    /**
+     * Attempting to arm fail- safe or execute CommissioningComplete from a fabric different than the one associated
+     * with the current fail- safe context.
+     */
     BusyWithOtherAdmin = 4
 }
 
@@ -104,7 +136,7 @@ export const TlvArmFailSafeResponse = TlvObject({
  */
 export const TlvSetRegulatoryConfigRequest = TlvObject({
     newRegulatoryConfig: TlvField(0, TlvEnum<RegulatoryLocationType>()),
-    countryCode: TlvField(1, TlvString.bound({ minLength: 2, maxLength: 2 })),
+    countryCode: TlvField(1, TlvString.bound({ length: 2 })),
     breadcrumb: TlvField(2, TlvUInt64)
 });
 
@@ -155,7 +187,7 @@ export const GeneralCommissioningCluster = Cluster({
     attributes: {
         /**
          * This attribute allows for the storage of a client-provided small payload which Administrators and
-         * Commissioners MAY write and then subsequently read, to keep track of their own progress. This MAY be used by
+         * Commissioners may write and then subsequently read, to keep track of their own progress. This may be used by
          * the Commissioner to avoid repeating already-executed actions upon re-establishing a commissioning link after
          * an error.
          *
@@ -170,7 +202,7 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.5.1
          */
-        breadcrumb: WritableAttribute(0, TlvUInt64, { default: 0, writeAcl: AccessLevel.Administer }),
+        breadcrumb: WritableAttribute(0x0, TlvUInt64, { default: 0, writeAcl: AccessLevel.Administer }),
 
         /**
          * This attribute shall describe critical parameters needed at the beginning of commissioning flow. See
@@ -178,7 +210,7 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.5.2
          */
-        basicCommissioningInfo: FixedAttribute(1, TlvBasicCommissioningInfo),
+        basicCommissioningInfo: FixedAttribute(0x1, TlvBasicCommissioningInfo),
 
         /**
          * This attribute shall indicate the regulatory configuration for the product.
@@ -188,7 +220,7 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.5.3
          */
-        regulatoryConfig: Attribute(2, TlvEnum<RegulatoryLocationType>()),
+        regulatoryConfig: Attribute(0x2, TlvEnum<RegulatoryLocationType>()),
 
         /**
          * LocationCapability is statically set by the manufacturer and indicates if this Node needs to be told an
@@ -206,7 +238,7 @@ export const GeneralCommissioningCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.5.4
          */
         locationCapability: FixedAttribute(
-            3,
+            0x3,
             TlvEnum<RegulatoryLocationType>(),
             { default: RegulatoryLocationType.IndoorOutdoor }
         ),
@@ -218,7 +250,7 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.5.5
          */
-        supportsConcurrentConnection: FixedAttribute(4, TlvBoolean, { default: true })
+        supportsConcurrentConnection: FixedAttribute(0x4, TlvBoolean, { default: true })
     },
 
     commands: {
@@ -327,7 +359,7 @@ export const GeneralCommissioningCluster = Cluster({
          *   6. If an AddNOC command had been successfully invoked, achieve the equivalent effect of invoking the
          *      RemoveFabric command against the Fabric Index stored in the Fail-Safe Context for the Fabric Index that
          *      was the subject of the AddNOC command. This shall remove all associations to that Fabric including all
-         *      fabric-scoped data, and MAY possibly factory-reset the device depending on current device state. This
+         *      fabric-scoped data, and may possibly factory-reset the device depending on current device state. This
          *      shall only apply to Fabrics added during the fail-safe period as the result of the AddNOC command.
          *
          *   7. Remove any RCACs added by the AddTrustedRootCertificate command that are not currently referenced by
@@ -340,7 +372,7 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.2
          */
-        armFailSafe: Command(0, TlvArmFailSafeRequest, 1, TlvArmFailSafeResponse),
+        armFailSafe: Command(0x0, TlvArmFailSafeRequest, 1, TlvArmFailSafeResponse),
 
         /**
          * This shall add or update the regulatory configuration in the RegulatoryConfig Attribute to the value
@@ -375,7 +407,7 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.4
          */
-        setRegulatoryConfig: Command(2, TlvSetRegulatoryConfigRequest, 3, TlvSetRegulatoryConfigResponse),
+        setRegulatoryConfig: Command(0x2, TlvSetRegulatoryConfigRequest, 3, TlvSetRegulatoryConfigResponse),
 
         /**
          * This command has no data.
@@ -432,6 +464,6 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.6
          */
-        commissioningComplete: Command(4, TlvNoArguments, 5, TlvCommissioningCompleteResponse)
+        commissioningComplete: Command(0x4, TlvNoArguments, 5, TlvCommissioningCompleteResponse)
     }
 });

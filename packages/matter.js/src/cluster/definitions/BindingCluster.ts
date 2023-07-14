@@ -80,7 +80,7 @@ export const TlvTargetStruct = TlvObject({
  *
  * When a client cluster requires a target for an interaction, the Binding cluster shall exist on the same endpoint.
  *
- * Once a binding entry is created on the Binding cluster, the client endpoint MAY initiate interactions to the binding
+ * Once a binding entry is created on the Binding cluster, the client endpoint may initiate interactions to the binding
  * target.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 9.6
@@ -98,7 +98,7 @@ export const BindingCluster = Cluster({
          * @see {@link MatterCoreSpecificationV1_1} § 9.6.6.1
          */
         binding: WritableFabricScopedAttribute(
-            0,
+            0x0,
             TlvArray(TlvTargetStruct),
             { persistent: true, default: [], writeAcl: AccessLevel.Manage }
         )

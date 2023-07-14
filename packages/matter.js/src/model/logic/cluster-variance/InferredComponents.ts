@@ -226,19 +226,17 @@ function addElement(components: InferredComponents, element: ValueModel) {
     }
 
     while (true) {
-        if (text === "D") {
-            text = "O";
-            break;
-        }
-        if (text === "P") {
-            text = "M";
-            break;
-        }
         if (text.match(/^[DP], /)) {
             text = text.substring(3);
         } else {
             break;
         }
+    }
+
+    if (text === "D") {
+        text = "O";
+    } else if (text === "P") {
+        text = "M";
     }
 
     for (const matcher of VarianceMatchers) {

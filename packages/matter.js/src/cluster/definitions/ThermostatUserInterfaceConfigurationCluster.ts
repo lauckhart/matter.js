@@ -92,7 +92,7 @@ export const enum ScheduleProgrammingVisibility {
 export const ThermostatUserInterfaceConfigurationCluster = Cluster({
     id: 0x204,
     name: "ThermostatUserInterfaceConfiguration",
-    revision: 1,
+    revision: 2,
     features: {},
 
     attributes: {
@@ -105,7 +105,7 @@ export const ThermostatUserInterfaceConfigurationCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.1
          */
         temperatureDisplayMode: WritableAttribute(
-            0,
+            0x0,
             TlvEnum<TemperatureDisplayMode>(),
             { default: TemperatureDisplayMode.Celsius }
         ),
@@ -121,7 +121,7 @@ export const ThermostatUserInterfaceConfigurationCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.2
          */
         keypadLockout: WritableAttribute(
-            1,
+            0x1,
             TlvEnum<KeypadLockout>(),
             { default: KeypadLockout.NoLockout, writeAcl: AccessLevel.Manage }
         ),
@@ -129,10 +129,10 @@ export const ThermostatUserInterfaceConfigurationCluster = Cluster({
         /**
          * The ScheduleProgrammingVisibility attribute is used to hide the weekly schedule programming functionality or
          * menu on a thermostat from a user to prevent local user programming of the weekly schedule. The schedule
-         * programming MAY still be performed via a remote interface, and the thermostat MAY operate in schedule
+         * programming may still be performed via a remote interface, and the thermostat may operate in schedule
          * programming mode.
          *
-         * This attribute is designed to prevent local tampering with or disabling of schedules that MAY have been
+         * This attribute is designed to prevent local tampering with or disabling of schedules that may have been
          * programmed by users or service providers via a more capable remote interface. The programming schedule shall
          * continue to run even though it is not visible to the user locally at the thermostat.
          *
@@ -141,7 +141,7 @@ export const ThermostatUserInterfaceConfigurationCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.5.5.3
          */
         scheduleProgrammingVisibility: OptionalWritableAttribute(
-            2,
+            0x2,
             TlvEnum<ScheduleProgrammingVisibility>(),
             { default: ScheduleProgrammingVisibility.ScheduleProgrammingPermitted, writeAcl: AccessLevel.Manage }
         )

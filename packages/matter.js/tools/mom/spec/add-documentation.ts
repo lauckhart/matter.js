@@ -77,8 +77,8 @@ function mergeSplitParagraphs(paragraphs: string[]) {
  * gobbledy gook produced by tired spec writers -> word -> PDF -> HTML -> us
  * pipeline.
  */
-export function addDetails(target: { details?: string }, definition: HtmlReference) {
-    let prose = definition.prose;
+export function addDocumentation(target: { details?: string }, definition: HtmlReference) {
+    const prose = definition.prose;
     if (!prose) {
         return;
     }
@@ -103,7 +103,7 @@ export function addDetails(target: { details?: string }, definition: HtmlReferen
             // various junk that also appears in links but isn't a heading
             if (text.match(/^[^(.:]*$/)) {
                 looksLikeHeading = true;
-            }            
+            }
         }
 
         // Extract text
@@ -124,7 +124,7 @@ export function addDetails(target: { details?: string }, definition: HtmlReferen
             paragraphs.push(text);
         }
     }
-    
+
     if (paragraphs) {
         mergeSplitParagraphs(paragraphs);
         target.details = paragraphs.join("\n");

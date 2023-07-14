@@ -40,13 +40,13 @@ export const ValidProxiesCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 9.15.15.5.1
          */
-        validProxyList: WritableFixedAttribute(0, TlvArray(TlvValidProxyStruct), { persistent: true, default: [] })
+        validProxyList: WritableFixedAttribute(0x0, TlvArray(TlvValidProxyStruct), { persistent: true, default: [] })
     },
 
     commands: {
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.15.15.6
          */
-        getValidProxiesRequest: Command(0, TlvNoArguments, 1, TlvNoArguments)
+        getValidProxiesRequest: Command(0x0, TlvNoArguments, 1, TlvNoArguments)
     }
 });

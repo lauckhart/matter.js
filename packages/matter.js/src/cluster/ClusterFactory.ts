@@ -83,9 +83,9 @@ export function BaseClusterComponent<
  */
 export type ClusterForBaseCluster<T, SF> =
     T extends BaseClusterComponent<infer F, infer A, infer C, infer E>
-        ? SF extends TypeFromPartialBitSchema<F>
-            ? Cluster<F, SF, A, C, E>
-        : never
+    ? SF extends TypeFromPartialBitSchema<F>
+    ? Cluster<F, SF, A, C, E>
+    : never
     : never;
 
 /**

@@ -98,7 +98,7 @@ function ansiLogFormatter(now: Date, level: Level, facility: string, values: any
             .replace(/([✓✔])/g, `${ANSI_CODES.LEVEL_INFO}$1${levelCode}`)
             .replace(/([✗✘])/g, `${ANSI_CODES.LEVEL_ERROR}$1${levelCode}`));
     formattedValues = `${nestingPrefix()}${formattedValues}`;
-    const prefixedMatch = formattedValues.match(/^(⎸? *\d+)(.*)$/);
+    const prefixedMatch = formattedValues.match(/^(⎸? *\d+ )(.*)$/);
     if (prefixedMatch) {
         // Use prefix color for nesting and/or line number prefixes in the message
         formattedValues = `${ANSI_CODES.PREFIX}${prefixedMatch[1]}${ANSI_CODES.NONE}${levelCode}${prefixedMatch[2]}${ANSI_CODES.NONE}`;

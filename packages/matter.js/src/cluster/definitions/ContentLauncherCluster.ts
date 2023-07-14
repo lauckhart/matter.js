@@ -12,9 +12,26 @@ import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/Bitmap
 import { Attribute, Command, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
-import { TlvUInt32, TlvDouble, TlvEnum } from "../../tlv/TlvNumber.js";
+import { TlvUInt32, TlvBitmap, TlvDouble, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
+
+/**
+ * The value of the ContentLauncher supportedStreamingProtocols attribute
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.2.1
+ */
+export const SupportedStreamingProtocols = {
+    /**
+     * Device supports Dynamic Adaptive Streaming over HTTP (DASH)
+     */
+    dash: BitFlag(0),
+
+    /**
+     * Device supports HTTP Live Streaming (HLS)
+     */
+    hls: BitFlag(1)
+};
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.9
@@ -122,7 +139,7 @@ export const TlvBrandingInformationStruct = TlvObject({
 
     /**
      * This shall indicate background of the Video Player while content launch request is being processed by it. This
-     * background information MAY also be used by the Video Player when it is in idle state.
+     * background information may also be used by the Video Player when it is in idle state.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.5.6.2
      */
@@ -173,7 +190,7 @@ export const TlvLaunchUrlRequest = TlvObject({
     contentUrl: TlvField(0, TlvString),
 
     /**
-     * This field, if present, shall provide a string that MAY be used to describe the content being accessed at the
+     * This field, if present, shall provide a string that may be used to describe the content being accessed at the
      * given URL.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.2.2
@@ -181,7 +198,7 @@ export const TlvLaunchUrlRequest = TlvObject({
     displayString: TlvOptionalField(1, TlvString),
 
     /**
-     * This field, if present, shall indicate the branding information that MAY be displayed when playing back the
+     * This field, if present, shall indicate the branding information that may be displayed when playing back the
      * given content.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.2.3
@@ -466,14 +483,12 @@ export const UrlPlaybackComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.1
          */
-        acceptHeader: Attribute(0, TlvArray(TlvString), { persistent: true, default: [] }),
+        acceptHeader: Attribute(0x0, TlvArray(TlvString, { maxLength: 100 }), { persistent: true, default: [] }),
 
         /**
-         * This attribute provides information about supported streaming protocols.
-         *
-         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.2
+         * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.3.2.1
          */
-        supportedStreamingProtocols: Attribute(1, TlvUInt32, { persistent: true })
+        supportedStreamingProtocols: Attribute(0x1, TlvBitmap(TlvUInt32, SupportedStreamingProtocols), { persistent: true })
     },
 
     commands: {
@@ -487,7 +502,7 @@ export const UrlPlaybackComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.2
          */
-        launchUrl: Command(1, TlvLaunchUrlRequest, 2, TlvLauncherResponse)
+        launchUrl: Command(0x1, TlvLaunchUrlRequest, 2, TlvLauncherResponse)
     }
 });
 
@@ -502,7 +517,7 @@ export const ContentSearchComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.1
          */
-        launchContent: Command(0, TlvLaunchContentRequest, 2, TlvLauncherResponse)
+        launchContent: Command(0x0, TlvLaunchContentRequest, 2, TlvLauncherResponse)
     }
 });
 

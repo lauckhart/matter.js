@@ -114,6 +114,14 @@ export abstract class Model {
     }
 
     /**
+     * Get a string that uniquely identifies this model.  This is normally
+     * the effective ID but some models require a generated identifier.
+     */
+    get key() {
+        return this.effectiveId?.toString();
+    }
+
+    /**
      * Children of models are always models.
      */
     get children(): Model[] {

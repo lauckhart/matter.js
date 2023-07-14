@@ -8,45 +8,56 @@
 
 import { Cluster, Attribute, OptionalWritableAttribute, AccessLevel } from "../../cluster/Cluster.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { TlvUInt8, TlvBitmap, TlvEnum, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
+import { TlvUInt8, TlvBitmap, TlvEnum, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
-
-/**
- * Bit definitions for TlvOccupancyBitmap
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.1
- */
-export const OccupancyBitmapBits = {
-    /**
-     * Indicates the sensed occupancy state; 1 = occupied, 0 = unoccupied.
-     */
-    occupied: BitFlag(1)
-};
 
 /**
  * All other bits are reserved.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.1
  */
-export const TlvOccupancyBitmap = TlvBitmap(TlvUInt8, OccupancyBitmapBits);
+export const OccupancyBitmap = {
+    /**
+     * Indicates the sensed occupancy state; 1 = occupied, 0 = unoccupied.
+     */
+    occupied: BitFlag(0)
+};
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.2
  */
 export const enum OccupancySensorType {
+    /**
+     * Indicates a passive infrared sensor.
+     */
     Pir = 0,
+
+    /**
+     * Indicates a ultrasonic sensor.
+     */
     Ultrasonic = 1,
+
+    /**
+     * Indicates a passive infrared and ultrasonic sensor.
+     */
     PirAndUltrasonic = 2,
+
+    /**
+     * Indicates a physical contact sensor.
+     */
     PhysicalContact = 3
 }
 
 /**
- * Bit definitions for TlvOccupancySensorTypeBitmap
- *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.3
  */
-export const OccupancySensorTypeBitmapBits = {
+export const OccupancySensorTypeBitmap = {
+    /**
+     * Indicates a passive infrared sensor.
+     */
+    pir: BitFlag(0),
+
     /**
      * Indicates a ultrasonic sensor.
      */
@@ -55,13 +66,8 @@ export const OccupancySensorTypeBitmapBits = {
     /**
      * Indicates a physical contact sensor.
      */
-    physicalContact: BitFlag(4)
+    physicalContact: BitFlag(2)
 };
-
-/**
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.5.3
- */
-export const TlvOccupancySensorTypeBitmap = TlvBitmap(TlvUInt8, OccupancySensorTypeBitmapBits);
 
 /**
  * Occupancy Sensing
@@ -73,7 +79,7 @@ export const TlvOccupancySensorTypeBitmap = TlvBitmap(TlvUInt8, OccupancySensorT
 export const OccupancySensingCluster = Cluster({
     id: 0x406,
     name: "OccupancySensing",
-    revision: 1,
+    revision: 3,
     features: {},
 
     attributes: {
@@ -82,14 +88,14 @@ export const OccupancySensingCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.6.1
          */
-        occupancy: Attribute(0, TlvOccupancyBitmap),
+        occupancy: Attribute(0x0, TlvBitmap(TlvUInt8, OccupancyBitmap)),
 
         /**
          * The OccupancySensorType attribute specifies the type of the occupancy sensor.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.6.2
          */
-        occupancySensorType: Attribute(1, TlvEnum<OccupancySensorType>()),
+        occupancySensorType: Attribute(0x1, TlvEnum<OccupancySensorType>()),
 
         /**
          * The OccupancySensorTypeBitmap attribute specifies the types of the occupancy sensor. A ‘1’ in each bit
@@ -102,7 +108,7 @@ export const OccupancySensingCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.6.3
          */
-        occupancySensorTypeBitmap: Attribute(2, TlvOccupancySensorTypeBitmap),
+        occupancySensorTypeBitmap: Attribute(0x2, TlvBitmap(TlvUInt8, OccupancySensorTypeBitmap)),
 
         /**
          * The PIROccupiedToUnoccupiedDelay attribute specifies the time delay, in seconds, before the PIR sensor
@@ -110,7 +116,11 @@ export const OccupancySensingCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.7.1
          */
-        pirOccupiedToUnoccupiedDelay: OptionalWritableAttribute(16, TlvUInt16, { default: 0, writeAcl: AccessLevel.Manage }),
+        pirOccupiedToUnoccupiedDelay: OptionalWritableAttribute(
+            0x10,
+            TlvUInt16,
+            { default: 0, writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * The PIRUnoccupiedToOccupiedDelay attribute specifies the time delay, in seconds, before the PIR sensor
@@ -119,7 +129,11 @@ export const OccupancySensingCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.7.2
          */
-        pirUnoccupiedToOccupiedDelay: OptionalWritableAttribute(17, TlvUInt16, { default: 0, writeAcl: AccessLevel.Manage }),
+        pirUnoccupiedToOccupiedDelay: OptionalWritableAttribute(
+            0x11,
+            TlvUInt16,
+            { default: 0, writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * The PIRUnoccupiedToOccupiedThreshold attribute specifies the number of movement detection events that must
@@ -129,7 +143,7 @@ export const OccupancySensingCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.7.3
          */
         pirUnoccupiedToOccupiedThreshold: OptionalWritableAttribute(
-            18,
+            0x12,
             TlvUInt8.bound({ min: 1, max: 254 }),
             { default: 1, writeAcl: AccessLevel.Manage }
         ),
@@ -141,7 +155,7 @@ export const OccupancySensingCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.8.1
          */
         ultrasonicOccupiedToUnoccupiedDelay: OptionalWritableAttribute(
-            32,
+            0x20,
             TlvUInt16,
             { default: 0, writeAcl: AccessLevel.Manage }
         ),
@@ -154,7 +168,7 @@ export const OccupancySensingCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.8.2
          */
         ultrasonicUnoccupiedToOccupiedDelay: OptionalWritableAttribute(
-            33,
+            0x21,
             TlvUInt16,
             { default: 0, writeAcl: AccessLevel.Manage }
         ),
@@ -168,7 +182,7 @@ export const OccupancySensingCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.8.3
          */
         ultrasonicUnoccupiedToOccupiedThreshold: OptionalWritableAttribute(
-            34,
+            0x22,
             TlvUInt8.bound({ min: 1, max: 254 }),
             { default: 1, writeAcl: AccessLevel.Manage }
         ),
@@ -181,7 +195,7 @@ export const OccupancySensingCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.9.1
          */
         physicalContactOccupiedToUnoccupiedDelay: OptionalWritableAttribute(
-            48,
+            0x30,
             TlvNullable(TlvUInt16),
             { default: 0, writeAcl: AccessLevel.Manage }
         ),
@@ -195,7 +209,7 @@ export const OccupancySensingCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.9.2
          */
         physicalContactUnoccupiedToOccupiedDelay: OptionalWritableAttribute(
-            49,
+            0x31,
             TlvNullable(TlvUInt16),
             { default: 0, writeAcl: AccessLevel.Manage }
         ),
@@ -209,7 +223,7 @@ export const OccupancySensingCluster = Cluster({
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.7.9.3
          */
         physicalContactUnoccupiedToOccupiedThreshold: OptionalWritableAttribute(
-            50,
+            0x32,
             TlvUInt8.bound({ min: 1, max: 254 }),
             { default: 1, writeAcl: AccessLevel.Manage }
         )
