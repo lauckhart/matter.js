@@ -30,7 +30,7 @@ export const WakeOnLanCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.10.2.1
          */
-        macAddress: OptionalFixedAttribute(0x0, TlvByteString),
+        macAddress: OptionalFixedAttribute(0x0, TlvByteString.bound({ minLength: 6, maxLength: 8 })),
 
         /**
          * This shall indicate the current link-local address of the device. Only 128-bit IPv6 link-local addresses
@@ -44,6 +44,6 @@ export const WakeOnLanCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.10.2.2
          */
-        linkLocalAddress: OptionalFixedAttribute(0x1, TlvByteString)
+        linkLocalAddress: OptionalFixedAttribute(0x1, TlvByteString.bound({ length: 16 }))
     }
 });

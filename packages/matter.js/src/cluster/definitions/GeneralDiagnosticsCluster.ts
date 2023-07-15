@@ -90,14 +90,14 @@ export const TlvNetworkInterface = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.6.5
      */
-    hardwareAddress: TlvField(4, TlvByteString),
+    hardwareAddress: TlvField(4, TlvByteString.bound({ minLength: 6, maxLength: 8 })),
 
     /**
      * This field shall provide a list of the IPv4 addresses that are currently assigned to the network interface.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.6.6
      */
-    iPv4Addresses: TlvField(5, TlvArray(TlvByteString, { maxLength: 4 })),
+    iPv4Addresses: TlvField(5, TlvArray(TlvByteString.bound({ length: 4 }), { maxLength: 4 })),
 
     /**
      * This field shall provide a list of the unicast IPv6 addresses that are currently assigned to the network
@@ -106,7 +106,7 @@ export const TlvNetworkInterface = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.11.4.6.7
      */
-    iPv6Addresses: TlvField(6, TlvArray(TlvByteString, { maxLength: 8 })),
+    iPv6Addresses: TlvField(6, TlvArray(TlvByteString.bound({ length: 16 }), { maxLength: 8 })),
 
     /**
      * This field shall indicate the type of the interface using the InterfaceTypeEnum.

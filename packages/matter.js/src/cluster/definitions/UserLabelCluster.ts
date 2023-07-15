@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Cluster, WritableAttribute, AccessLevel, Attribute } from "../../cluster/Cluster.js";
+import { Cluster, WritableAttribute, AccessLevel, FixedAttribute } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvLabelStruct } from "../../cluster/definitions/LabelCluster.js";
@@ -37,6 +37,6 @@ export const UserLabelCluster = Cluster({
             { persistent: true, default: [], writeAcl: AccessLevel.Manage }
         ),
 
-        clusterRevision: Attribute(0xfffd, TlvUInt16, { default: 1 })
+        clusterRevision: FixedAttribute(0xfffd, TlvUInt16.bound({ min: 1 }), { default: 1 })
     }
 });

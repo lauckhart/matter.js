@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Cluster, Attribute } from "../../cluster/Cluster.js";
+import { Cluster, Attribute, FixedAttribute } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvLabelStruct } from "../../cluster/definitions/LabelCluster.js";
@@ -38,6 +38,6 @@ export const FixedLabelCluster = Cluster({
          */
         labelList: Attribute(0x0, TlvArray(TlvLabelStruct), { persistent: true, default: [] }),
 
-        clusterRevision: Attribute(0xfffd, TlvUInt16, { default: 1 })
+        clusterRevision: FixedAttribute(0xfffd, TlvUInt16.bound({ min: 1 }), { default: 1 })
     }
 });

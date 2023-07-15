@@ -551,7 +551,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.6
          */
-        meshLocalPrefix: Attribute(0x5, TlvNullable(TlvByteString)),
+        meshLocalPrefix: Attribute(0x5, TlvNullable(TlvByteString.bound({ minLength: 1, maxLength: 17 }))),
 
         /**
          * The NeighborTable attribute shall indicate the current list of Nodes that comprise the neighbor table on the

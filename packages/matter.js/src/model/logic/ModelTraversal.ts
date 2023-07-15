@@ -256,25 +256,39 @@ export class ModelTraversal {
 
     /**
      * Get an aspect that reflects extension of any shadowed aspects.  Note
-     * that this searches the *parent's* inheritance hierarchy as aspects are
-     * inherited by replacing properties.
+     * that this searches parent's inheritance and the model's inheritance.
+     * This is because aspects can be inherited by overriding an element in
+     * the parent or by direct type inheritance.  Aspects in shadowed elements
+     * take priority as they are presumably more specific.
      */
     findAspect(model: Model | undefined, symbol: symbol): Aspect<any> | undefined {
-        let result: Aspect<any> | undefined;
-        this.operation(() => {
-            while (model) {
-                const aspect = (model as any)[symbol] as Aspect<any>;
-                if (aspect && !aspect.empty) {
-                    if (result) {
-                        result = aspect.extend(result);
-                    } else {
-                        result = aspect;
-                    }
+        if (!model) {
+            return;
+        }
+
+        return this.operation(() => {
+            let aspect = (model as any)[symbol] as Aspect<any>;
+
+            const shadowedAspect = this.findAspect(this.findShadow(model), symbol);
+            if (shadowedAspect) {
+                if (aspect) {
+                    aspect = shadowedAspect.extend(aspect);
+                } else {
+                    aspect = shadowedAspect;
                 }
-                model = this.findShadow(model);
             }
-        })
-        return result;
+
+            const inheritedAspect = this.findAspect(this.findBase(model), symbol);
+            if (inheritedAspect) {
+                if (aspect) {
+                    aspect = inheritedAspect.extend(aspect);
+                } else {
+                    aspect = inheritedAspect;
+                }
+            }
+
+            return aspect;
+        });
     }
 
     /**

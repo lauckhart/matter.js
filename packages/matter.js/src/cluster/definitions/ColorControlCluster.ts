@@ -1125,7 +1125,7 @@ export const ColorControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.18
          */
-        colorCapabilities: Attribute(0x400a, TlvBitmap(TlvUInt32, FeatureMap))
+        colorCapabilities: FixedAttribute(0x400a, TlvBitmap(TlvUInt32, FeatureMap))
     }
 });
 
