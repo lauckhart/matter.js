@@ -23,31 +23,33 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "HEAT", id: 0x0, conformance: "AUTO, O.a+", description: "Heating",
+                    tag: "datatype", name: "HEAT", conformance: "AUTO, O.a+", constraint: "0", description: "Heating",
                     details: "Thermostat is capable of managing a heating device"
                 },
                 {
-                    tag: "datatype", name: "COOL", id: 0x1, conformance: "AUTO, O.a+", description: "Cooling",
+                    tag: "datatype", name: "COOL", conformance: "AUTO, O.a+", constraint: "1", description: "Cooling",
                     details: "Thermostat is capable of managing a cooling device"
                 },
                 {
-                    tag: "datatype", name: "OCC", id: 0x2, conformance: "O", description: "Occupancy",
+                    tag: "datatype", name: "OCC", conformance: "O", constraint: "2", description: "Occupancy",
                     details: "Supports Occupied and Unoccupied setpoints"
                 },
                 {
-                    tag: "datatype", name: "SCH", id: 0x3, conformance: "O", description: "ScheduleConfiguration",
+                    tag: "datatype", name: "SCH", conformance: "O", constraint: "3",
+                    description: "ScheduleConfiguration",
                     details: "Supports remote configuration of a weekly schedule of setpoint transitions"
                 },
                 {
-                    tag: "datatype", name: "SB", id: 0x4, conformance: "O", description: "Setback",
+                    tag: "datatype", name: "SB", conformance: "O", constraint: "4", description: "Setback",
                     details: "Supports configurable setback (or span)"
                 },
                 {
-                    tag: "datatype", name: "AUTO", id: 0x5, conformance: "O", description: "AutoMode",
+                    tag: "datatype", name: "AUTO", conformance: "O", constraint: "5", description: "AutoMode",
                     details: "Supports a System Mode of Auto"
                 },
                 {
-                    tag: "datatype", name: "LTNE", id: 0x6, conformance: "O", description: "LocalTemperatureNotExposed",
+                    tag: "datatype", name: "LTNE", conformance: "O", constraint: "6",
+                    description: "LocalTemperatureNotExposed",
                     details: "Thermostat does not expose the LocalTemperature Value in the LocalTemperature attribute"
                 }
             ]

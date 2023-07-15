@@ -38,7 +38,6 @@ export const BallastConfigurationCluster = Cluster({
     id: 0x301,
     name: "BallastConfiguration",
     revision: 4,
-    features: {},
 
     attributes: {
         /**

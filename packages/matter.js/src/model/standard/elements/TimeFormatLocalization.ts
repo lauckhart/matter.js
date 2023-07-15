@@ -30,7 +30,7 @@ Matter.children.push({
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "core", section: "11.4.4" },
             children: [{
-                tag: "datatype", name: "CALFMT", id: 0x0, description: "CalendarFormat",
+                tag: "datatype", name: "CALFMT", constraint: "0", description: "CalendarFormat",
                 details: "The Node can be configured to use different calendar formats when conveying values to a user."
             }]
         },

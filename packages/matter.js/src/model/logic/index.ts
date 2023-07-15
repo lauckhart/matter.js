@@ -7,6 +7,7 @@
 export * from "./MergeModels.js";
 export * from "./ModelVariantTraversal.js";
 export * from "./ValidateModel.js";
+import "./definition-validation/index.js";
 export * from "./ClusterVariance.js";
 export * from "./RecordValidator.js";
-import "./definition-validation/index.js";
+export * from "./DefaultValue.js";

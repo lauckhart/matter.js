@@ -34,7 +34,7 @@ Matter.children.push({
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.4.4" },
             children: [{
-                tag: "datatype", name: "SN", id: 0x0, default: 0, description: "SceneNames",
+                tag: "datatype", name: "SN", constraint: "0", default: 1, description: "SceneNames",
                 details: "The ability to store a name for a scene."
             }]
         },
@@ -84,7 +84,7 @@ Matter.children.push({
                 "bits shall be 0.",
             xref: { document: "cluster", section: "1.4.7.5" },
             children: [{
-                tag: "datatype", name: "SceneNames", constraint: "7",
+                tag: "datatype", name: "NameSupport", constraint: "7", default: 1,
                 description: "The ability to store a name for a scene."
             }]
         },

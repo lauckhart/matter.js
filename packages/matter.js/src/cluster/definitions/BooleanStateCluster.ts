@@ -29,7 +29,6 @@ export const BooleanStateCluster = Cluster({
     id: 0x45,
     name: "BooleanState",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

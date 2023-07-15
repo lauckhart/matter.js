@@ -93,7 +93,6 @@ export const ThermostatUserInterfaceConfigurationCluster = Cluster({
     id: 0x204,
     name: "ThermostatUserInterfaceConfiguration",
     revision: 2,
-    features: {},
 
     attributes: {
         /**

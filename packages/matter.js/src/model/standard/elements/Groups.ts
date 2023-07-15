@@ -38,7 +38,7 @@ Matter.children.push({
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.3.4" },
             children: [{
-                tag: "datatype", name: "GN", id: 0x0, default: 0, description: "GroupNames",
+                tag: "datatype", name: "GN", constraint: "0", default: 1, description: "GroupNames",
                 details: "The ability to store a name for a group."
             }]
         },
@@ -51,7 +51,7 @@ Matter.children.push({
                 "bits shall be 0.",
             xref: { document: "cluster", section: "1.3.6.1" },
             children: [{
-                tag: "datatype", name: "GroupNames", constraint: "7",
+                tag: "datatype", name: "NameSupport", constraint: "7", default: 1,
                 description: "The ability to store a name for a group."
             }]
         },

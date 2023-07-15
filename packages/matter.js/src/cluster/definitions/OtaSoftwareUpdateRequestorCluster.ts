@@ -190,7 +190,6 @@ export const OtaSoftwareUpdateRequestorCluster = Cluster({
     id: 0x2a,
     name: "OtaSoftwareUpdateRequestor",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

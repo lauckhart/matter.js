@@ -343,7 +343,7 @@ export const WindComponent = ClusterComponent({
  *
  * An interface for controlling a fan in a heating/cooling system.
  *
- * FanControlCluster supports optional features that you can enable with the FanControlCluster.with factory method.
+ * FanControlCluster supports optional features that you can enable with the FanControlCluster.with() factory method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4
  */

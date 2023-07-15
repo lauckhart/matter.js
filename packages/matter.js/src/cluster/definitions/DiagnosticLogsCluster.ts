@@ -243,7 +243,6 @@ export const DiagnosticLogsCluster = Cluster({
     id: 0x32,
     name: "DiagnosticLogs",
     revision: 1,
-    features: {},
 
     commands: {
         /**

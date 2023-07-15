@@ -89,7 +89,6 @@ export const BindingCluster = Cluster({
     id: 0x1e,
     name: "Binding",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

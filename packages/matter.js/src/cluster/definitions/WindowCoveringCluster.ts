@@ -855,7 +855,7 @@ export const TiltAndAbsolutePositionComponent = ClusterComponent({
  * The window covering cluster provides an interface for controlling and adjusting automatic window coverings such as
  * drapery motors, automatic shades, curtains and blinds.
  *
- * WindowCoveringCluster supports optional features that you can enable with the WindowCoveringCluster.with factory
+ * WindowCoveringCluster supports optional features that you can enable with the WindowCoveringCluster.with() factory
  * method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3

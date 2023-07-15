@@ -25,15 +25,15 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "OO", id: 0x0, default: 1, description: "OnOff",
+                    tag: "datatype", name: "OO", constraint: "0", default: 1, description: "OnOff",
                     details: "Dependency with the On/Off cluster"
                 },
                 {
-                    tag: "datatype", name: "LT", id: 0x1, default: 0, description: "Lighting",
+                    tag: "datatype", name: "LT", constraint: "1", default: 0, description: "Lighting",
                     details: "Behavior that supports lighting applications"
                 },
                 {
-                    tag: "datatype", name: "FQ", id: 0x2, default: 0, description: "Frequency",
+                    tag: "datatype", name: "FQ", constraint: "2", default: 0, description: "Frequency",
                     details: "Supports frequency attributes and behavior. The Pulse Width Modulation cluster was created for " +
                         "frequency control."
                 }

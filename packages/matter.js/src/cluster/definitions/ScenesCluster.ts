@@ -7,8 +7,9 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { Cluster, Attribute, OptionalAttribute, Command, TlvNoResponse, OptionalCommand } from "../../cluster/Cluster.js";
-import { BitFlag, BitField } from "../../schema/BitmapSchema.js";
+import { BaseClusterComponent, ExtensibleCluster, validateFeatureSelection, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
+import { BitFlag, BitField, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { Attribute, OptionalAttribute, Command, TlvNoResponse, OptionalCommand, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt16, TlvUInt32, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvGroupId } from "../../datatype/GroupId.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
@@ -29,7 +30,7 @@ export const NameSupport = {
     /**
      * The ability to store a name for a scene.
      */
-    sceneNames: BitFlag(7)
+    nameSupport: BitFlag(7)
 };
 
 /**
@@ -375,24 +376,9 @@ export enum ScenesFeature {
 }
 
 /**
- * Scenes
- *
- * The Scenes cluster provides attributes and commands for setting up and recalling scenes. Each scene corresponds to a
- * set of stored values of specified attributes for one or more clusters on the same end point as the Scenes cluster.
- *
- * In most cases scenes are associated with a particular group identifier. Scenes may also exist without a group, in
- * which case the value 0 replaces the group identifier. Note that extra care is required in these cases to avoid a
- * scene identifier collision, and that commands related to scenes without a group may only be unicast, i.e., they may
- * not be multicast or broadcast.
- *
- * In a network supporting fabrics, scenes are scoped to the accessing fabric. When storing scene information,
- * implementations need to take care of this.
- *
- * NOTE Support for Scenes cluster is provisional.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4
+ * These elements and properties are present in all Scenes clusters.
  */
-export const ScenesCluster = Cluster({
+export const ScenesBase = BaseClusterComponent({
     id: 0x5,
     name: "Scenes",
     revision: 4,
@@ -537,3 +523,54 @@ export const ScenesCluster = Cluster({
         copyScene: OptionalCommand(0x42, TlvCopySceneRequest, 66, TlvCopySceneResponse)
     }
 });
+
+/**
+ * Scenes
+ *
+ * The Scenes cluster provides attributes and commands for setting up and recalling scenes. Each scene corresponds to a
+ * set of stored values of specified attributes for one or more clusters on the same end point as the Scenes cluster.
+ *
+ * In most cases scenes are associated with a particular group identifier. Scenes may also exist without a group, in
+ * which case the value 0 replaces the group identifier. Note that extra care is required in these cases to avoid a
+ * scene identifier collision, and that commands related to scenes without a group may only be unicast, i.e., they may
+ * not be multicast or broadcast.
+ *
+ * In a network supporting fabrics, scenes are scoped to the accessing fabric. When storing scene information,
+ * implementations need to take care of this.
+ *
+ * NOTE Support for Scenes cluster is provisional.
+ *
+ * ScenesCluster supports optional features that you can enable with the ScenesCluster.with() factory method.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4
+ */
+export const ScenesCluster = ExtensibleCluster({
+    ...ScenesBase,
+    supportedFeatures: { sceneNames: true },
+
+    /**
+     * Use this factory method to create a Scenes cluster with support for optional features. Include each
+     * {@link ScenesFeature} you wish to support.
+     *
+     * @param features the optional features to support
+     * @returns a Scenes cluster with specified features enabled
+     * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
+     */
+    factory: <T extends `${ScenesFeature}`[]>(...features: [...T]) => {
+        validateFeatureSelection(features, ScenesFeature);
+        const cluster = Cluster({ ...ScenesBase, supportedFeatures: BitFlags(ScenesBase.features, ...features) });
+        return cluster as unknown as ScenesExtension<BitFlags<typeof ScenesBase.features, T>>;
+    }
+});
+
+export type ScenesExtension<SF extends TypeFromPartialBitSchema<typeof ScenesBase.features>> =
+    ClusterForBaseCluster<typeof ScenesBase, SF>
+    & { supportedFeatures: SF };
+
+/**
+ * This cluster supports all Scenes features. It may support illegal feature combinations.
+ *
+ * If you use this cluster you must manually specify which features are active and ensure the set of active features is
+ * legal per the Matter specification.
+ */
+export const ScenesComplete = Cluster({ ...ScenesCluster });

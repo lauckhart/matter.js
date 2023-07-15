@@ -7,8 +7,9 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { Cluster, Command } from "../../cluster/Cluster.js";
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BaseClusterComponent, ExtensibleCluster, validateFeatureSelection, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
+import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { Command, Cluster } from "../../cluster/Cluster.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvEnum } from "../../tlv/TlvNumber.js";
 
@@ -178,14 +179,9 @@ export enum KeypadInputFeature {
 }
 
 /**
- * Keypad Input
- *
- * This cluster provides an interface for key code based input and control on a device like a Video Player or an
- * endpoint like a Content App. This may include text or action commands such as UP, DOWN, and SELECT.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8
+ * These elements and properties are present in all KeypadInput clusters.
  */
-export const KeypadInputCluster = Cluster({
+export const KeypadInputBase = BaseClusterComponent({
     id: 0x509,
     name: "KeypadInput",
     revision: 1,
@@ -226,3 +222,43 @@ export const KeypadInputCluster = Cluster({
         sendKey: Command(0x0, TlvSendKeyRequest, 1, TlvSendKeyResponse)
     }
 });
+
+/**
+ * Keypad Input
+ *
+ * This cluster provides an interface for key code based input and control on a device like a Video Player or an
+ * endpoint like a Content App. This may include text or action commands such as UP, DOWN, and SELECT.
+ *
+ * KeypadInputCluster supports optional features that you can enable with the KeypadInputCluster.with() factory method.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8
+ */
+export const KeypadInputCluster = ExtensibleCluster({
+    ...KeypadInputBase,
+
+    /**
+     * Use this factory method to create a KeypadInput cluster with support for optional features. Include each
+     * {@link KeypadInputFeature} you wish to support.
+     *
+     * @param features the optional features to support
+     * @returns a KeypadInput cluster with specified features enabled
+     * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
+     */
+    factory: <T extends `${KeypadInputFeature}`[]>(...features: [...T]) => {
+        validateFeatureSelection(features, KeypadInputFeature);
+        const cluster = Cluster({ ...KeypadInputBase, supportedFeatures: BitFlags(KeypadInputBase.features, ...features) });
+        return cluster as unknown as KeypadInputExtension<BitFlags<typeof KeypadInputBase.features, T>>;
+    }
+});
+
+export type KeypadInputExtension<SF extends TypeFromPartialBitSchema<typeof KeypadInputBase.features>> =
+    ClusterForBaseCluster<typeof KeypadInputBase, SF>
+    & { supportedFeatures: SF };
+
+/**
+ * This cluster supports all KeypadInput features. It may support illegal feature combinations.
+ *
+ * If you use this cluster you must manually specify which features are active and ensure the set of active features is
+ * legal per the Matter specification.
+ */
+export const KeypadInputComplete = Cluster({ ...KeypadInputCluster });

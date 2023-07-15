@@ -24,12 +24,12 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "AS", id: 0x0, description: "AdvancedSeek",
+                    tag: "datatype", name: "AS", constraint: "0", description: "AdvancedSeek",
                     details: "Enables clients to implement more advanced media seeking behavior in their user interface, such as " +
                         "for example a \"seek bar\". Adds support for Attributes and Commands related to advanced seek support"
                 },
                 {
-                    tag: "datatype", name: "VS", id: 0x1, description: "VariableSpeed",
+                    tag: "datatype", name: "VS", constraint: "1", description: "VariableSpeed",
                     details: "Support for commands to support variable speed playback on media that supports it."
                 }
             ]

@@ -42,7 +42,6 @@ export const ProxyConfigurationCluster = Cluster({
     id: 0x42,
     name: "ProxyConfiguration",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

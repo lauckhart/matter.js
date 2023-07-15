@@ -428,12 +428,14 @@ export const FrequencyComponent = ClusterComponent({
  * This cluster provides an interface for controlling a characteristic of a device that can be set to a level, for
  * example the brightness of a light, the degree of closure of a door, or the power output of a heater.
  *
- * LevelControlCluster supports optional features that you can enable with the LevelControlCluster.with factory method.
+ * LevelControlCluster supports optional features that you can enable with the LevelControlCluster.with() factory
+ * method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6
  */
 export const LevelControlCluster = ExtensibleCluster({
     ...LevelControlBase,
+    supportedFeatures: { onOff: true },
 
     /**
      * Use this factory method to create a LevelControl cluster with support for optional features. Include each

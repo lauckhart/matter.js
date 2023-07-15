@@ -113,7 +113,7 @@ export const AudioOutputBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.3.1
          */
-        outputList: Attribute(0x0, TlvArray(TlvOutputInfoStruct), { default: [] }),
+        outputList: Attribute(0x0, TlvArray(TlvOutputInfoStruct)),
 
         /**
          * This field contains the value of the index field of the currently selected OutputInfoStruct.
@@ -153,7 +153,7 @@ export const NameUpdatesComponent = ClusterComponent({
  *
  * This cluster provides an interface for controlling the Output on a Video Player device such as a TV.
  *
- * AudioOutputCluster supports optional features that you can enable with the AudioOutputCluster.with factory method.
+ * AudioOutputCluster supports optional features that you can enable with the AudioOutputCluster.with() factory method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5
  */

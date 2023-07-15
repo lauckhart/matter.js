@@ -80,7 +80,6 @@ export const OccupancySensingCluster = Cluster({
     id: 0x406,
     name: "OccupancySensing",
     revision: 3,
-    features: {},
 
     attributes: {
         /**

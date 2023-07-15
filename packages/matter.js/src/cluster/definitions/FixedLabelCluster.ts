@@ -31,7 +31,6 @@ export const FixedLabelCluster = Cluster({
     id: 0x40,
     name: "FixedLabel",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

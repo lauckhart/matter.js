@@ -177,7 +177,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
 
     function translateFeatures() {
         const records = translateTable("feature", definition.features, {
-            id: Alias(Integer, "bit"),
+            constraint: Alias(Integer, "bit"),
             conformance: Optional(Code),
             details: Optional(Alias(Str, "description", "summary")),
 

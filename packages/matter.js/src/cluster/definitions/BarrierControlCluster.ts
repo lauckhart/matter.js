@@ -25,7 +25,6 @@ export const BarrierControlCluster = Cluster({
     id: 0x103,
     name: "BarrierControl",
     revision: 1,
-    features: {},
 
     attributes: {
         barrierMovingState: Attribute(0x1, TlvUInt8),

@@ -163,7 +163,6 @@ export const OtaSoftwareUpdateProviderCluster = Cluster({
     id: 0x29,
     name: "OtaSoftwareUpdateProvider",
     revision: 1,
-    features: {},
 
     commands: {
         /**

@@ -20,7 +20,7 @@ Matter.children.push({
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.5.4" },
             children: [{
-                tag: "datatype", name: "LT", id: 0x0, description: "LevelControlForLighting",
+                tag: "datatype", name: "LT", constraint: "0", description: "LevelControlForLighting",
                 details: "Behavior that supports lighting applications."
             }]
         },

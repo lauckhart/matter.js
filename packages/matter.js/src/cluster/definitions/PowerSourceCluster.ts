@@ -1032,7 +1032,7 @@ export const WiredComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.11
          */
-        activeWiredFaults: OptionalAttribute(0xa, TlvArray(TlvEnum<WiredFault>(), { length: 8 }), { default: [] })
+        activeWiredFaults: OptionalAttribute(0xa, TlvArray(TlvEnum<WiredFault>(), { length: 8 }))
     },
 
     events: {
@@ -1120,7 +1120,7 @@ export const BatteryComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.19
          */
-        activeBatFaults: OptionalAttribute(0x12, TlvArray(TlvEnum<BatFault>(), { length: 8 }), { default: [] })
+        activeBatFaults: OptionalAttribute(0x12, TlvArray(TlvEnum<BatFault>(), { length: 8 }))
     },
 
     events: {
@@ -1251,7 +1251,7 @@ export const RechargeableComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.7.6.31
          */
-        activeBatChargeFaults: OptionalAttribute(0x1e, TlvArray(TlvEnum<BatChargeFault>(), { length: 16 }), { default: [] })
+        activeBatChargeFaults: OptionalAttribute(0x1e, TlvArray(TlvEnum<BatChargeFault>(), { length: 16 }))
     },
 
     events: {
@@ -1281,7 +1281,7 @@ export const RechargeableComponent = ClusterComponent({
  * Power Source Configuration cluster referenced by the Root Node device type for the Node provides the overview of the
  * power source(s) of the Node.
  *
- * PowerSourceCluster supports optional features that you can enable with the PowerSourceCluster.with factory method.
+ * PowerSourceCluster supports optional features that you can enable with the PowerSourceCluster.with() factory method.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.7
  */

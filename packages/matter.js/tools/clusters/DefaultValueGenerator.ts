@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { FieldValue, Metatype, ValueModel } from "../../src/model/index.js";
+import { Metatype, ValueModel } from "../../src/model/index.js";
 import { camelize, serialize } from "../../src/util/String.js";
+import { Properties } from "../../src/util/Type.js";
 import { WrappedConstantKeys } from "./NumberConstants.js";
 import { TlvGenerator } from "./TlvGenerator.js";
 
@@ -15,33 +16,16 @@ import { TlvGenerator } from "./TlvGenerator.js";
 export class DefaultValueGenerator {
     constructor(private tlv: TlvGenerator) { }
 
-    create(model: ValueModel) {
-        const metatype = model.effectiveMetatype;
-        const defaultValue = model.effectiveDefault;
-
-        if (defaultValue === undefined) {
-            switch (metatype) {
-                case Metatype.object:
-                    return this.buildObject(model);
-
-                case Metatype.bitmap:
-                    return this.buildBitmap(model);
-            }
-            return;
-        }
-
-        if (defaultValue === null) {
-            return defaultValue;
-        }
-
+    create(model: ValueModel, defaultValue = model.effectiveDefault) {
         // TODO - don't currently have a way to express "this field should
         // default to the value of another field" as indicated by
         // model.default.reference
-        if (FieldValue.is(defaultValue, FieldValue.reference)) {
-            return;
+
+        if (defaultValue === undefined || defaultValue === null) {
+            return defaultValue;
         }
 
-        switch (metatype) {
+        switch (model.effectiveMetatype) {
             case Metatype.integer:
             case Metatype.float:
                 return this.createNumeric(defaultValue, model);
@@ -53,7 +37,7 @@ export class DefaultValueGenerator {
                 return this.createBitmap(defaultValue, model);
 
             case Metatype.object:
-                return FieldValue.objectValue(defaultValue);
+                return this.createObject(defaultValue, model);
 
             default:
                 return defaultValue;
@@ -64,23 +48,23 @@ export class DefaultValueGenerator {
      * Simple numbers serialize either as one of our "wrapped ID" things or
      * just as a numeric literal.
      */
-    private createNumeric(defaultValue: FieldValue, model: ValueModel) {
-        const value = FieldValue.numericValue(defaultValue, model.type);
+    private createNumeric(defaultValue: any, model: ValueModel) {
+        if (typeof defaultValue !== "number" && typeof defaultValue !== "bigint") return;
         const type = model.effectiveType;
         if (type) {
             const fieldName = (WrappedConstantKeys as any)[model.effectiveType];
             if (fieldName) {
-                return { [fieldName]: value };
+                return { [fieldName]: defaultValue };
             }
         }
-        return value;
+        return defaultValue;
     }
 
     /**
      * For enums, translate ID or string into an enum constant.
      */
-    private createEnum(defaultValue: FieldValue, model: ValueModel) {
-        if (typeof defaultValue == "number" || typeof defaultValue == "string") {
+    private createEnum(defaultValue: any, model: ValueModel) {
+        if (typeof defaultValue === "number" || typeof defaultValue === "string") {
             const value = model.member(defaultValue);
             if (value) {
                 const enumName = this.tlv.nameFor(value.parent);
@@ -89,7 +73,6 @@ export class DefaultValueGenerator {
                 }
             }
         }
-        return defaultValue;
     }
 
     /**
@@ -97,15 +80,14 @@ export class DefaultValueGenerator {
      * fields.  Then we generate a value for each field depending on the field
      * type.
      */
-    private createBitmap(defaultValue: FieldValue, model: ValueModel) {
-        const bits = FieldValue.numericValue(defaultValue, model.type);
-        if (bits === undefined) {
-            return defaultValue;
+    private createBitmap(defaultValue: any, model: ValueModel) {
+        if (typeof defaultValue !== "number") {
+            return;
         }
 
         const fields = new Map<ValueModel, number>();
-        for (let bit = 0; Math.pow(bit, 2) <= bits; bit++) {
-            if (!(bits & (1 << bit))) {
+        for (let bit = 0; Math.pow(bit, 2) <= defaultValue; bit++) {
+            if (!(defaultValue & (1 << bit))) {
                 continue;
             }
 
@@ -148,57 +130,38 @@ export class DefaultValueGenerator {
     }
 
     /**
-     * Object defaults, if not specified explicitly, are built from field
-     * defaults.
+     * For objects, we need to recurse into each property.
      */
-    private buildObject(model: ValueModel) {
-        let result: { [key: string]: any } | undefined;
+    private createObject(defaultValue: any, model: ValueModel) {
+        // Neither of these should be true, this is more for TS's benefit
+        if (typeof defaultValue !== "object" || defaultValue === undefined || defaultValue === null) {
+            return;
+        }
 
-        for (const child of model.members) {
-            const name = camelize(child.name, false);
-            if (result && result[name] !== undefined) {
+        const alreadyProcessed = new Set<string>();
+        let result: Properties | undefined;
+        for (const member of model.members) {
+            const name = camelize(member.name, false);
+
+            // Members are listed with overrides first so we ignore subsequent
+            // definitions for the same name
+            if (alreadyProcessed.has(name)) {
                 continue;
             }
+            alreadyProcessed.add(name);
 
-            const value = this.create(child);
+            let value = defaultValue[name];
             if (value !== undefined) {
-                if (!result) {
-                    result = {};
+                value = this.create(member, value);
+                if (value !== undefined) {
+                    if (result === undefined) {
+                        result = {};
+                    }
+                    result[name] = value;
                 }
-
-                result[name] = value;
             }
         }
 
         return result;
-    }
-
-    /**
-     * Bitmap defaults, if not expressed numerically
-     */
-    private buildBitmap(model: ValueModel) {
-        let result = {} as { [key: string]: number | boolean };
-
-        // Convert the default value for each bit
-        for (const m of model.members) {
-            const defaultValue = FieldValue.numericValue(m.default, "uint8");
-            if (defaultValue === undefined) {
-                continue;
-            }
-            const name = camelize(m.description ?? m.name, false);
-            if (typeof m.constraint.value === "number") {
-                result[name] = !!defaultValue;
-            } else if (typeof m.constraint.min === "number" && typeof m.constraint.max === "number") {
-                result[name] = defaultValue;
-            }
-        }
-
-        // Only return a value if there are non-zero fields.  We add zero
-        // values above because this allows derived bitmaps to override fields
-        // from 1 -> 0
-        const entries = Object.entries(result).filter(([, v]) => !!v);
-        if (entries.length) {
-            return Object.fromEntries(entries);
-        }
     }
 }

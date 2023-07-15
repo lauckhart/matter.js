@@ -240,7 +240,7 @@ export const PacketCountsOrErrorCountsComponent = ClusterComponent({
  * Cluster attempts to centralize all metrics that are relevant to a potential Ethernet connection to a Node.
  *
  * EthernetNetworkDiagnosticsCluster supports optional features that you can enable with the
- * EthernetNetworkDiagnosticsCluster.with factory method.
+ * EthernetNetworkDiagnosticsCluster.with() factory method.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.15
  */

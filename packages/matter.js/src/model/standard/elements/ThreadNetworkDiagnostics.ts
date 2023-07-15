@@ -26,21 +26,21 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "PKTCNT", id: 0x0, description: "PacketCounts",
+                    tag: "datatype", name: "PKTCNT", constraint: "0", description: "PacketCounts",
                     details: "Server supports the counts for the number of received and transmitted packets on the Thread " +
                         "interface."
                 },
                 {
-                    tag: "datatype", name: "ERRCNT", id: 0x1, description: "ErrorCounts",
+                    tag: "datatype", name: "ERRCNT", constraint: "1", description: "ErrorCounts",
                     details: "Server supports the counts for the number of errors that have occurred during the reception and " +
                         "transmission of packets on the Thread interface."
                 },
                 {
-                    tag: "datatype", name: "MLECNT", id: 0x2, description: "MleCounts",
+                    tag: "datatype", name: "MLECNT", constraint: "2", description: "MleCounts",
                     details: "Server supports the counts for various MLE layer happenings."
                 },
                 {
-                    tag: "datatype", name: "MACCNT", id: 0x3, description: "MacCounts",
+                    tag: "datatype", name: "MACCNT", constraint: "3", description: "MacCounts",
                     details: "Server supports the counts for various MAC layer happenings."
                 }
             ]

@@ -2218,7 +2218,7 @@ export const RfidCredentialNotUserComponent = ClusterComponent({
  *
  * An interface to a generic way to secure a door
  *
- * DoorLockCluster supports optional features that you can enable with the DoorLockCluster.with factory method.
+ * DoorLockCluster supports optional features that you can enable with the DoorLockCluster.with() factory method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2
  */

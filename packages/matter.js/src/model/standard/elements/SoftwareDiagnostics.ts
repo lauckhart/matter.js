@@ -24,7 +24,7 @@ Matter.children.push({
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "core", section: "11.12.4" },
             children: [{
-                tag: "datatype", name: "WTRMRK", id: 0x0, description: "Watermarks",
+                tag: "datatype", name: "WTRMRK", constraint: "0", description: "Watermarks",
                 details: "Node makes available the metrics for high watermark related to memory consumption."
             }]
         },

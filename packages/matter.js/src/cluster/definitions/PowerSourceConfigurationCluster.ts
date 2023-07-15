@@ -23,7 +23,6 @@ export const PowerSourceConfigurationCluster = Cluster({
     id: 0x2e,
     name: "PowerSourceConfiguration",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

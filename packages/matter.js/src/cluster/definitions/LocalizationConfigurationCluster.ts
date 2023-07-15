@@ -27,7 +27,6 @@ export const LocalizationConfigurationCluster = Cluster({
     id: 0x2b,
     name: "LocalizationConfiguration",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

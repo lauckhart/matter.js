@@ -884,7 +884,7 @@ export const ConstantTemperatureComponent = ClusterComponent({
  * controlled by the On/Off and Level Control clusters.
  *
  * PumpConfigurationAndControlCluster supports optional features that you can enable with the
- * PumpConfigurationAndControlCluster.with factory method.
+ * PumpConfigurationAndControlCluster.with() factory method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2
  */

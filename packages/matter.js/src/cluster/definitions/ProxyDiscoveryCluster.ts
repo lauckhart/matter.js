@@ -23,7 +23,6 @@ export const ProxyDiscoveryCluster = Cluster({
     id: 0x43,
     name: "ProxyDiscovery",
     revision: 1,
-    features: {},
 
     commands: {
         /**

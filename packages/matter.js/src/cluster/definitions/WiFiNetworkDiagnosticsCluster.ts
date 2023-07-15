@@ -404,7 +404,7 @@ export const PacketCountsComponent = ClusterComponent({
  * attempts to centralize all metrics that are relevant to a potential Wi-Fi radio running on a Node.
  *
  * WiFiNetworkDiagnosticsCluster supports optional features that you can enable with the
- * WiFiNetworkDiagnosticsCluster.with factory method.
+ * WiFiNetworkDiagnosticsCluster.with() factory method.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.14
  */

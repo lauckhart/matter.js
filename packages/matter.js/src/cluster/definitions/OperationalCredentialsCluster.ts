@@ -490,7 +490,6 @@ export const OperationalCredentialsCluster = Cluster({
     id: 0x3e,
     name: "OperationalCredentials",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

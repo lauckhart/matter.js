@@ -262,7 +262,7 @@ export const QueryComponent = ClusterComponent({
  * Zigbee: Note that this cluster cannot be disabled, and remains functional regardless of the setting of the
  * DeviceEnable attribute in the Basic cluster.
  *
- * IdentifyCluster supports optional features that you can enable with the IdentifyCluster.with factory method.
+ * IdentifyCluster supports optional features that you can enable with the IdentifyCluster.with() factory method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2
  */

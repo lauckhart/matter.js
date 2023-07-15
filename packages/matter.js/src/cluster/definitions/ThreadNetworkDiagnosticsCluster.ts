@@ -1122,7 +1122,7 @@ export const MacCountsComponent = ClusterComponent({
  * attempts to centralize all metrics that are relevant to a potential Thread radio running on a Node.
  *
  * ThreadNetworkDiagnosticsCluster supports optional features that you can enable with the
- * ThreadNetworkDiagnosticsCluster.with factory method.
+ * ThreadNetworkDiagnosticsCluster.with() factory method.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.13
  */

@@ -23,7 +23,6 @@ export const UserLabelCluster = Cluster({
     id: 0x41,
     name: "UserLabel",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

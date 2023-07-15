@@ -32,7 +32,6 @@ export const ValidProxiesCluster = Cluster({
     id: 0x44,
     name: "ValidProxies",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

@@ -24,11 +24,11 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "CS", id: 0x0, description: "ContentSearch",
+                    tag: "datatype", name: "CS", constraint: "0", description: "ContentSearch",
                     details: "Device supports content search (non-app specific)"
                 },
                 {
-                    tag: "datatype", name: "UP", id: 0x1, description: "UrlPlayback",
+                    tag: "datatype", name: "UP", constraint: "1", description: "UrlPlayback",
                     details: "Device supports basic URL-based file playback"
                 }
             ]

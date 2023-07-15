@@ -32,13 +32,16 @@ Matter.children.push({
             xref: { document: "core", section: "11.16.5" },
 
             children: [
-                { tag: "datatype", name: "TZ", id: 0x0, description: "TimeZone", details: "Server supports time zone." },
                 {
-                    tag: "datatype", name: "NTPC", id: 0x1, description: "NtpClient",
+                    tag: "datatype", name: "TZ", constraint: "0", description: "TimeZone",
+                    details: "Server supports time zone."
+                },
+                {
+                    tag: "datatype", name: "NTPC", constraint: "1", description: "NtpClient",
                     details: "Server supports an NTP or SNTP client."
                 },
                 {
-                    tag: "datatype", name: "NTPS", id: 0x2, description: "NtpServer",
+                    tag: "datatype", name: "NTPS", constraint: "2", description: "NtpServer",
                     details: "Server supports an NTP server role."
                 }
             ]

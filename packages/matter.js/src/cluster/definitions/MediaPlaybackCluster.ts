@@ -467,7 +467,7 @@ export const VariableSpeedComponent = ClusterComponent({
  * This cluster provides an interface for controlling Media Playback (PLAY, PAUSE, etc) on a media device such as a TV,
  * Set-top Box, or Smart Speaker.
  *
- * MediaPlaybackCluster supports optional features that you can enable with the MediaPlaybackCluster.with factory
+ * MediaPlaybackCluster supports optional features that you can enable with the MediaPlaybackCluster.with() factory
  * method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10

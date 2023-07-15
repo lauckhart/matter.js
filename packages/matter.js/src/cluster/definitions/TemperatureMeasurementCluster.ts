@@ -23,7 +23,6 @@ export const TemperatureMeasurementCluster = Cluster({
     id: 0x402,
     name: "TemperatureMeasurement",
     revision: 4,
-    features: {},
 
     attributes: {
         /**

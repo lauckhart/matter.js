@@ -26,12 +26,12 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "PKTCNT", id: 0x0, description: "PacketCounts",
+                    tag: "datatype", name: "PKTCNT", constraint: "0", description: "PacketCounts",
                     details: "Node makes available the counts for the number of received and transmitted packets on the Wi-Fi " +
                         "interface."
                 },
                 {
-                    tag: "datatype", name: "ERRCNT", id: 0x1, description: "ErrorCounts",
+                    tag: "datatype", name: "ERRCNT", constraint: "1", description: "ErrorCounts",
                     details: "Node makes available the counts for the number of errors that have occurred during the reception " +
                         "and transmission of packets on the Wi-Fi interface."
                 }

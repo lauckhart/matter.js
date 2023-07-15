@@ -182,7 +182,6 @@ export const GeneralCommissioningCluster = Cluster({
     id: 0x30,
     name: "GeneralCommissioning",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

@@ -324,7 +324,7 @@ export const ChannelListOrLineupInfoComponent = ClusterComponent({
  *
  * This cluster provides an interface for controlling the current Channel on a device or endpoint.
  *
- * ChannelCluster supports optional features that you can enable with the ChannelCluster.with factory method.
+ * ChannelCluster supports optional features that you can enable with the ChannelCluster.with() factory method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6
  */

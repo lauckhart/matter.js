@@ -21,7 +21,6 @@ export const LowPowerCluster = Cluster({
     id: 0x508,
     name: "LowPower",
     revision: 1,
-    features: {},
 
     commands: {
         /**

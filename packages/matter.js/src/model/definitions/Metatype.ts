@@ -112,10 +112,6 @@ export namespace Metatype {
 
             case Metatype.bitmap:
             case Metatype.enum:
-                if (FieldValue.is(value, FieldValue.flags)) {
-                    return value;
-                }
-
                 const id = Number(value);
                 if (Number.isNaN(id)) {
                     // Key name

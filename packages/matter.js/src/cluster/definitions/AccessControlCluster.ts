@@ -307,7 +307,6 @@ export const AccessControlCluster = Cluster({
     id: 0x1f,
     name: "AccessControl",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

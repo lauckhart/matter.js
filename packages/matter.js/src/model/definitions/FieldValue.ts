@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { MatterError } from "../../common/MatterError.js";
 import { serialize as stringSerialize } from "../../util/String.js";
 
 /**
@@ -130,7 +131,7 @@ export namespace FieldValue {
      * Given a type name as a hint, do our best to convert a field value to a
      * number.
      */
-    export function numericValue(value: FieldValue | undefined, typeName: string | undefined) {
+    export function numericValue(value: FieldValue | undefined, typeName?: string) {
         if (typeof value === "boolean") {
             return value ? 1 : 0;
         }
@@ -171,6 +172,35 @@ export namespace FieldValue {
     export function objectValue(value: FieldValue | undefined) {
         if (is(value, properties)) {
             return (value as Properties).properties;
+        }
+    }
+
+    /**
+     * Unwrap wrapped values, leave others as-is.
+     */
+    export function unwrap(value: FieldValue | undefined, typeName?: string) {
+        if (value === null || typeof value !== "object" || Array.isArray(value) || value instanceof Date) {
+            return value;
+        }
+
+        const type = value.type;
+        switch (type) {
+            case "properties":
+                return objectValue(value);
+
+            case "reference":
+                // This needs to be handled at a higher level
+                return;
+
+            case "percent":
+            case "celsius":
+                return numericValue(value, typeName);
+
+            case undefined:
+                throw new MatterError(`Field value objects must be wrappers with "type" field`);
+
+            default:
+                throw new MatterError(`Unsupported wrapped object type "${type}"`);
         }
     }
 }

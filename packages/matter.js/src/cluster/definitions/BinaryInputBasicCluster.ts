@@ -20,16 +20,15 @@ export const BinaryInputBasicCluster = Cluster({
     id: 0xf,
     name: "BinaryInputBasic",
     revision: 1,
-    features: {},
 
     attributes: {
         activeText: OptionalWritableAttribute(0x4, TlvString, { default: "" }),
         description: OptionalWritableAttribute(0x1c, TlvString, { default: "" }),
         inactiveText: OptionalWritableAttribute(0x2e, TlvString, { default: "" }),
         outOfService: WritableAttribute(0x51, TlvBoolean, { default: true }),
-        polarity: OptionalAttribute(0x54, TlvUInt8, { default: 0 }),
+        polarity: OptionalAttribute(0x54, TlvUInt8),
         presentValue: WritableAttribute(0x55, TlvBoolean),
-        reliability: OptionalWritableAttribute(0x67, TlvUInt8, { default: 0 }),
+        reliability: OptionalWritableAttribute(0x67, TlvUInt8),
         statusFlags: Attribute(0x6f, TlvUInt8),
         applicationType: OptionalAttribute(0x100, TlvUInt32)
     }

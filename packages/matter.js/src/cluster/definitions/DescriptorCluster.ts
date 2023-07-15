@@ -60,7 +60,6 @@ export const DescriptorCluster = Cluster({
     id: 0x1d,
     name: "Descriptor",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

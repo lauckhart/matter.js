@@ -24,7 +24,6 @@ export const RelativeHumidityMeasurementCluster = Cluster({
     id: 0x405,
     name: "RelativeHumidityMeasurement",
     revision: 3,
-    features: {},
 
     attributes: {
         /**

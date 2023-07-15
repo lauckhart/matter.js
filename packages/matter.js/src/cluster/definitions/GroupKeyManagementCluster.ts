@@ -7,8 +7,9 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
-import { Cluster, WritableFabricScopedAttribute, AccessLevel, FabricScopedAttribute, FixedAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BaseClusterComponent, ExtensibleCluster, validateFeatureSelection, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
+import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { WritableFabricScopedAttribute, AccessLevel, FabricScopedAttribute, FixedAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvGroupId } from "../../datatype/GroupId.js";
@@ -246,13 +247,9 @@ export enum GroupKeyManagementFeature {
 }
 
 /**
- * Group Key Management
- *
- * The Group Key Management Cluster is the mechanism by which group keys are managed.
- *
- * @see {@link MatterCoreSpecificationV1_1} § 11.2
+ * These elements and properties are present in all GroupKeyManagement clusters.
  */
-export const GroupKeyManagementCluster = Cluster({
+export const GroupKeyManagementBase = BaseClusterComponent({
     id: 0x3f,
     name: "GroupKeyManagement",
     revision: 1,
@@ -411,3 +408,46 @@ export const GroupKeyManagementCluster = Cluster({
         keySetReadAllIndices: Command(0x4, TlvNoArguments, 5, TlvKeySetReadAllIndicesResponse)
     }
 });
+
+/**
+ * Group Key Management
+ *
+ * The Group Key Management Cluster is the mechanism by which group keys are managed.
+ *
+ * GroupKeyManagementCluster supports optional features that you can enable with the GroupKeyManagementCluster.with()
+ * factory method.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 11.2
+ */
+export const GroupKeyManagementCluster = ExtensibleCluster({
+    ...GroupKeyManagementBase,
+
+    /**
+     * Use this factory method to create a GroupKeyManagement cluster with support for optional features. Include each
+     * {@link GroupKeyManagementFeature} you wish to support.
+     *
+     * @param features the optional features to support
+     * @returns a GroupKeyManagement cluster with specified features enabled
+     * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
+     */
+    factory: <T extends `${GroupKeyManagementFeature}`[]>(...features: [...T]) => {
+        validateFeatureSelection(features, GroupKeyManagementFeature);
+        const cluster = Cluster({
+            ...GroupKeyManagementBase,
+            supportedFeatures: BitFlags(GroupKeyManagementBase.features, ...features)
+        });
+        return cluster as unknown as GroupKeyManagementExtension<BitFlags<typeof GroupKeyManagementBase.features, T>>;
+    }
+});
+
+export type GroupKeyManagementExtension<SF extends TypeFromPartialBitSchema<typeof GroupKeyManagementBase.features>> =
+    ClusterForBaseCluster<typeof GroupKeyManagementBase, SF>
+    & { supportedFeatures: SF };
+
+/**
+ * This cluster supports all GroupKeyManagement features. It may support illegal feature combinations.
+ *
+ * If you use this cluster you must manually specify which features are active and ensure the set of active features is
+ * legal per the Matter specification.
+ */
+export const GroupKeyManagementComplete = Cluster({ ...GroupKeyManagementCluster });

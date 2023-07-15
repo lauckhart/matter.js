@@ -78,7 +78,6 @@ export const AccountLoginCluster = Cluster({
     id: 0x50e,
     name: "AccountLogin",
     revision: 1,
-    features: {},
 
     commands: {
         /**

@@ -7,8 +7,9 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { Cluster, FixedAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BaseClusterComponent, ExtensibleCluster, validateFeatureSelection, ClusterForBaseCluster } from "../../cluster/ClusterFactory.js";
+import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { FixedAttribute, Command, TlvNoResponse, Cluster } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvGroupId } from "../../datatype/GroupId.js";
@@ -26,7 +27,7 @@ export const NameSupport = {
     /**
      * The ability to store a name for a group.
      */
-    groupNames: BitFlag(7)
+    nameSupport: BitFlag(7)
 };
 
 /**
@@ -149,27 +150,9 @@ export enum GroupsFeature {
 }
 
 /**
- * Groups
- *
- * The Groups cluster manages, per endpoint, the content of the node-wide Group Table that is part of the underlying
- * interaction layer.
- *
- * In a network supporting fabrics, group IDs referenced by attributes or other elements of this cluster are scoped to
- * the accessing fabric.
- *
- * The Groups cluster is scoped to the endpoint. Groups cluster commands support discovering the endpoint membership in
- * a group, adding the endpoint to a group, removing the endpoint from a group, removing endpoint membership from all
- * groups. All commands defined in this cluster shall only affect groups scoped to the accessing fabric.
- *
- * When group names are supported, the server stores a name string, which is set by the client for each assigned group
- * and indicated in response to a client request.
- *
- * Note that configuration of group addresses for outgoing commands is achieved using the Message Layer mechanisms
- * where the Group Table is not involved. Hence this cluster does not play a part in that.
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3
+ * These elements and properties are present in all Groups clusters.
  */
-export const GroupsCluster = Cluster({
+export const GroupsBase = BaseClusterComponent({
     id: 0x4,
     name: "Groups",
     revision: 4,
@@ -247,3 +230,57 @@ export const GroupsCluster = Cluster({
         addGroupIfIdentifying: Command(0x5, TlvAddGroupIfIdentifyingRequest, 0x5, TlvNoResponse)
     }
 });
+
+/**
+ * Groups
+ *
+ * The Groups cluster manages, per endpoint, the content of the node-wide Group Table that is part of the underlying
+ * interaction layer.
+ *
+ * In a network supporting fabrics, group IDs referenced by attributes or other elements of this cluster are scoped to
+ * the accessing fabric.
+ *
+ * The Groups cluster is scoped to the endpoint. Groups cluster commands support discovering the endpoint membership in
+ * a group, adding the endpoint to a group, removing the endpoint from a group, removing endpoint membership from all
+ * groups. All commands defined in this cluster shall only affect groups scoped to the accessing fabric.
+ *
+ * When group names are supported, the server stores a name string, which is set by the client for each assigned group
+ * and indicated in response to a client request.
+ *
+ * Note that configuration of group addresses for outgoing commands is achieved using the Message Layer mechanisms
+ * where the Group Table is not involved. Hence this cluster does not play a part in that.
+ *
+ * GroupsCluster supports optional features that you can enable with the GroupsCluster.with() factory method.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3
+ */
+export const GroupsCluster = ExtensibleCluster({
+    ...GroupsBase,
+    supportedFeatures: { groupNames: true },
+
+    /**
+     * Use this factory method to create a Groups cluster with support for optional features. Include each
+     * {@link GroupsFeature} you wish to support.
+     *
+     * @param features the optional features to support
+     * @returns a Groups cluster with specified features enabled
+     * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
+     */
+    factory: <T extends `${GroupsFeature}`[]>(...features: [...T]) => {
+        validateFeatureSelection(features, GroupsFeature);
+        const cluster = Cluster({ ...GroupsBase, supportedFeatures: BitFlags(GroupsBase.features, ...features) });
+        return cluster as unknown as GroupsExtension<BitFlags<typeof GroupsBase.features, T>>;
+    }
+});
+
+export type GroupsExtension<SF extends TypeFromPartialBitSchema<typeof GroupsBase.features>> =
+    ClusterForBaseCluster<typeof GroupsBase, SF>
+    & { supportedFeatures: SF };
+
+/**
+ * This cluster supports all Groups features. It may support illegal feature combinations.
+ *
+ * If you use this cluster you must manually specify which features are active and ensure the set of active features is
+ * legal per the Matter specification.
+ */
+export const GroupsComplete = Cluster({ ...GroupsCluster });

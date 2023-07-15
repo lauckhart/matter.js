@@ -63,7 +63,42 @@ export const enum EnhancedColorMode {
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.5
  */
-export const FeatureMap = {};
+export const FeatureMap = {
+    /**
+     * HueSaturation
+     *
+     * Supports color specification via hue/saturation.
+     */
+    hs: BitFlag(0),
+
+    /**
+     * EnhancedHue
+     *
+     * Enhanced hue is supported.
+     */
+    ehue: BitFlag(1),
+
+    /**
+     * ColorLoop
+     *
+     * Color loop is supported.
+     */
+    cl: BitFlag(2),
+
+    /**
+     * Xy
+     *
+     * Supports color specification via XY.
+     */
+    xy: BitFlag(3),
+
+    /**
+     * ColorTemperature
+     *
+     * Supports specification of color temperature.
+     */
+    ct: BitFlag(4)
+};
 
 /**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.4.2
@@ -1452,7 +1487,8 @@ export const HueSaturationOrXyComponent = ClusterComponent({
  *
  * Attributes and commands for controlling the color properties of a color-capable light.
  *
- * ColorControlCluster supports optional features that you can enable with the ColorControlCluster.with factory method.
+ * ColorControlCluster supports optional features that you can enable with the ColorControlCluster.with() factory
+ * method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2
  */

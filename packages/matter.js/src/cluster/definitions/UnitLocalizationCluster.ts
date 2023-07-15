@@ -96,8 +96,8 @@ export const TemperatureUnitComponent = ClusterComponent({
  * This cluster supports an interface to a Node. It provides attributes for determining and configuring the units that
  * a Node shall utilize when conveying values in communication to a user.
  *
- * UnitLocalizationCluster supports optional features that you can enable with the UnitLocalizationCluster.with factory
- * method.
+ * UnitLocalizationCluster supports optional features that you can enable with the UnitLocalizationCluster.with()
+ * factory method.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.5
  */

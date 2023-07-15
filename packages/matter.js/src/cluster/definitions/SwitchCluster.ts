@@ -319,7 +319,7 @@ export const MomentarySwitchReleaseComponent = ClusterComponent({
  * perform actions based on this, for example by sending commands to perform an action such as controlling a light or a
  * window shade.
  *
- * SwitchCluster supports optional features that you can enable with the SwitchCluster.with factory method.
+ * SwitchCluster supports optional features that you can enable with the SwitchCluster.with() factory method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.11
  */

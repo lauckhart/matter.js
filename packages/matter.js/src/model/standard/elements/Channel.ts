@@ -22,11 +22,11 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "CL", id: 0x0, description: "ChannelList",
+                    tag: "datatype", name: "CL", constraint: "0", description: "ChannelList",
                     details: "Provides list of available channels."
                 },
                 {
-                    tag: "datatype", name: "LI", id: 0x1, description: "LineupInfo",
+                    tag: "datatype", name: "LI", constraint: "1", description: "LineupInfo",
                     details: "Provides lineup info, which is a reference to an external source of lineup information."
                 }
             ]

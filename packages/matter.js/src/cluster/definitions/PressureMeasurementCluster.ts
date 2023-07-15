@@ -146,7 +146,7 @@ export const ExtendedComponent = ClusterComponent({
  * This cluster provides an interface to pressure measurement functionality, including configuration and provision of
  * notifications of pressure measurements.
  *
- * PressureMeasurementCluster supports optional features that you can enable with the PressureMeasurementCluster.with
+ * PressureMeasurementCluster supports optional features that you can enable with the PressureMeasurementCluster.with()
  * factory method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4

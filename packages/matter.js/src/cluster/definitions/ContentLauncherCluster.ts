@@ -532,7 +532,7 @@ export const ContentSearchOrUrlPlaybackComponent = ClusterComponent({});
  * This cluster provides an interface for launching content on a Video Player device such as a Streaming Media Player,
  * Smart TV or Smart Screen.
  *
- * ContentLauncherCluster supports optional features that you can enable with the ContentLauncherCluster.with factory
+ * ContentLauncherCluster supports optional features that you can enable with the ContentLauncherCluster.with() factory
  * method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7

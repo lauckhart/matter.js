@@ -14,6 +14,7 @@ import { Model } from "./Model.js";
 // references in the Model.constructors factory pool.
 import { type DatatypeModel } from "./DatatypeModel.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
+import { DefaultValue } from "../index.js";
 
 const CONSTRAINT: unique symbol = Symbol("constraint");
 const CONFORMANCE: unique symbol = Symbol("conformance");
@@ -133,13 +134,12 @@ export abstract class ValueModel extends Model implements ValueElement {
     }
 
     /**
-     * The value to use as a default.
+     * The value to use as a default.  The "default" field has a manually
+     * supplied value but this property decodes the default and/or generates
+     * a default from subfields.
      */
-    get effectiveDefault(): FieldValue | undefined {
-        if (this.default === undefined && !this.nullable && this.effectiveMetatype === Metatype.array && !this.constraint.min) {
-            return [];
-        }
-        return this.default;
+    get effectiveDefault() {
+        return DefaultValue(this);
     }
 
     /**
@@ -189,7 +189,6 @@ export abstract class ValueModel extends Model implements ValueElement {
     get members(): DatatypeModel[] {
         return new ModelTraversal().findMembers(this, [ElementTag.Datatype]) as DatatypeModel[];
     }
-
 
     /**
      * Collect constraints and conformance for this type and all base types.

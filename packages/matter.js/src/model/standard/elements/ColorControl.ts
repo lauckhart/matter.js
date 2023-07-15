@@ -23,17 +23,23 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "HS", id: 0x0, description: "HueSaturation",
+                    tag: "datatype", name: "HS", constraint: "0", description: "HueSaturation",
                     details: "Supports color specification via hue/saturation."
                 },
                 {
-                    tag: "datatype", name: "EHUE", id: 0x1, description: "EnhancedHue",
+                    tag: "datatype", name: "EHUE", constraint: "1", description: "EnhancedHue",
                     details: "Enhanced hue is supported."
                 },
-                { tag: "datatype", name: "CL", id: 0x2, description: "ColorLoop", details: "Color loop is supported." },
-                { tag: "datatype", name: "XY", id: 0x3, description: "Xy", details: "Supports color specification via XY." },
                 {
-                    tag: "datatype", name: "CT", id: 0x4, description: "ColorTemperature",
+                    tag: "datatype", name: "CL", constraint: "2", description: "ColorLoop",
+                    details: "Color loop is supported."
+                },
+                {
+                    tag: "datatype", name: "XY", constraint: "3", description: "Xy",
+                    details: "Supports color specification via XY."
+                },
+                {
+                    tag: "datatype", name: "CT", constraint: "4", description: "ColorTemperature",
                     details: "Supports specification of color temperature."
                 }
             ]

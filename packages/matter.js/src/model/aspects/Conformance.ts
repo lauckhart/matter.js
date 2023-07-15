@@ -264,7 +264,7 @@ export namespace Conformance {
             case Special.Name:
             case Special.Value:
                 // Name or value
-                return FieldValue.serialize(ast.param);
+                return FieldValue.serialize(ast.param) as string;
 
             default:
                 // Flag

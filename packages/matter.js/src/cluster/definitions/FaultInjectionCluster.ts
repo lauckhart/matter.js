@@ -49,7 +49,6 @@ export const FaultInjectionCluster = Cluster({
     id: 0xfff1fc06,
     name: "FaultInjection",
     revision: 1,
-    features: {},
     commands: {
         failAtFault: Command(0x0, TlvFailAtFaultRequest, 0x0, TlvNoResponse),
         failRandomlyAtFault: Command(0x1, TlvFailRandomlyAtFaultRequest, 0x1, TlvNoResponse)

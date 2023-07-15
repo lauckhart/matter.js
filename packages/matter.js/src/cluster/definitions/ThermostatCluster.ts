@@ -932,7 +932,7 @@ export const ThermostatBase = BaseClusterComponent({
         acLouverPosition: OptionalWritableAttribute(
             0x45,
             TlvEnum<AcLouverPosition>(),
-            { persistent: true, default: 0, writeAcl: AccessLevel.Manage }
+            { persistent: true, writeAcl: AccessLevel.Manage }
         ),
 
         /**
@@ -1390,7 +1390,7 @@ export const SetbackComponent = ClusterComponent({
  *
  * This cluster provides an interface to the functionality of a thermostat.
  *
- * ThermostatCluster supports optional features that you can enable with the ThermostatCluster.with factory method.
+ * ThermostatCluster supports optional features that you can enable with the ThermostatCluster.with() factory method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3
  */

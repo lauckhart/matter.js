@@ -25,31 +25,34 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "PRSCONST", id: 0x0, conformance: "O.a+", description: "ConstantPressure",
+                    tag: "datatype", name: "PRSCONST", conformance: "O.a+", constraint: "0",
+                    description: "ConstantPressure",
                     details: "Supports operating in constant pressure mode"
                 },
                 {
-                    tag: "datatype", name: "PRSCOMP", id: 0x1, conformance: "O.a+", description: "CompensatedPressure",
+                    tag: "datatype", name: "PRSCOMP", conformance: "O.a+", constraint: "1",
+                    description: "CompensatedPressure",
                     details: "Supports operating in compensated pressure mode"
                 },
                 {
-                    tag: "datatype", name: "FLW", id: 0x2, conformance: "O.a+", description: "ConstantFlow",
+                    tag: "datatype", name: "FLW", conformance: "O.a+", constraint: "2", description: "ConstantFlow",
                     details: "Supports operating in constant flow mode"
                 },
                 {
-                    tag: "datatype", name: "SPD", id: 0x3, conformance: "O.a+", description: "ConstantSpeed",
+                    tag: "datatype", name: "SPD", conformance: "O.a+", constraint: "3", description: "ConstantSpeed",
                     details: "Supports operating in constant speed mode"
                 },
                 {
-                    tag: "datatype", name: "TEMP", id: 0x4, conformance: "O.a+", description: "ConstantTemperature",
+                    tag: "datatype", name: "TEMP", conformance: "O.a+", constraint: "4",
+                    description: "ConstantTemperature",
                     details: "Supports operating in constant temperature mode"
                 },
                 {
-                    tag: "datatype", name: "AUTO", id: 0x5, conformance: "O", description: "Automatic",
+                    tag: "datatype", name: "AUTO", conformance: "O", constraint: "5", description: "Automatic",
                     details: "Supports operating in automatic mode"
                 },
                 {
-                    tag: "datatype", name: "LOCAL", id: 0x6, conformance: "O", description: "LocalOperation",
+                    tag: "datatype", name: "LOCAL", conformance: "O", constraint: "6", description: "LocalOperation",
                     details: "Supports operating using local settings"
                 }
             ]

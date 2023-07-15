@@ -403,7 +403,6 @@ export const GeneralDiagnosticsCluster = Cluster({
     id: 0x33,
     name: "GeneralDiagnostics",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

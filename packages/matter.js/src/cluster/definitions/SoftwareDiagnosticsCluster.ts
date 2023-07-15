@@ -199,7 +199,7 @@ export const WatermarksComponent = ClusterComponent({
  * Node to assist a user or Administrator in diagnosing potential problems. The Software Diagnostics Cluster attempts
  * to centralize all metrics that are relevant to the software that may be running on a Node.
  *
- * SoftwareDiagnosticsCluster supports optional features that you can enable with the SoftwareDiagnosticsCluster.with
+ * SoftwareDiagnosticsCluster supports optional features that you can enable with the SoftwareDiagnosticsCluster.with()
  * factory method.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.12

@@ -545,7 +545,7 @@ export const NtpServerComponent = ClusterComponent({
  *
  * NOTE Support for Time Synchronization is provisional.
  *
- * TimeSyncCluster supports optional features that you can enable with the TimeSyncCluster.with factory method.
+ * TimeSyncCluster supports optional features that you can enable with the TimeSyncCluster.with() factory method.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.16
  */

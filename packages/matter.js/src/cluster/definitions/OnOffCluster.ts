@@ -274,7 +274,7 @@ export const LevelControlForLightingComponent = ClusterComponent({
  *
  * Attributes and commands for turning devices on and off.
  *
- * OnOffCluster supports optional features that you can enable with the OnOffCluster.with factory method.
+ * OnOffCluster supports optional features that you can enable with the OnOffCluster.with() factory method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5
  */

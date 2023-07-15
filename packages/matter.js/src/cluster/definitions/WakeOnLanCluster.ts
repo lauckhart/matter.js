@@ -22,7 +22,6 @@ export const WakeOnLanCluster = Cluster({
     id: 0x503,
     name: "WakeOnLan",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

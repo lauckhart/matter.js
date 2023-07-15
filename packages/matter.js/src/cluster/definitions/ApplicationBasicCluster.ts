@@ -80,7 +80,6 @@ export const ApplicationBasicCluster = Cluster({
     id: 0x50d,
     name: "ApplicationBasic",
     revision: 1,
-    features: {},
 
     attributes: {
         /**
@@ -146,7 +145,7 @@ export const ApplicationBasicCluster = Cluster({
         allowedVendorList: FixedAttribute(
             0x7,
             TlvArray(TlvVendorId),
-            { default: [], readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
+            { readAcl: AccessLevel.Administer, writeAcl: AccessLevel.Administer }
         )
     }
 });

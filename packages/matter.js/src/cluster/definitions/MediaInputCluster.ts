@@ -189,7 +189,7 @@ export const NameUpdatesComponent = ClusterComponent({
  *
  * This cluster provides an interface for controlling the Input Selector on a media device such as a Video Player.
  *
- * MediaInputCluster supports optional features that you can enable with the MediaInputCluster.with factory method.
+ * MediaInputCluster supports optional features that you can enable with the MediaInputCluster.with() factory method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9
  */

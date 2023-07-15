@@ -275,7 +275,7 @@ export const BasicComponent = ClusterComponent({
  * cluster is used.
  *
  * AdministratorCommissioningCluster supports optional features that you can enable with the
- * AdministratorCommissioningCluster.with factory method.
+ * AdministratorCommissioningCluster.with() factory method.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.18
  */

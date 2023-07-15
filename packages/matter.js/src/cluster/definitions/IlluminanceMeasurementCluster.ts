@@ -22,7 +22,6 @@ export const IlluminanceMeasurementCluster = Cluster({
     id: 0x400,
     name: "IlluminanceMeasurement",
     revision: 3,
-    features: {},
 
     attributes: {
         /**

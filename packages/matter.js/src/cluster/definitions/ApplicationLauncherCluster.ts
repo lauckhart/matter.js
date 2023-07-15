@@ -267,7 +267,7 @@ export const ApplicationPlatformComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.3.1
          */
-        catalogList: Attribute(0x0, TlvArray(TlvUInt16), { persistent: true, default: [] })
+        catalogList: Attribute(0x0, TlvArray(TlvUInt16), { persistent: true })
     }
 });
 
@@ -276,7 +276,7 @@ export const ApplicationPlatformComponent = ClusterComponent({
  *
  * This cluster provides an interface for launching applications on a Video Player device such as a TV.
  *
- * ApplicationLauncherCluster supports optional features that you can enable with the ApplicationLauncherCluster.with
+ * ApplicationLauncherCluster supports optional features that you can enable with the ApplicationLauncherCluster.with()
  * factory method.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4

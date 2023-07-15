@@ -138,7 +138,6 @@ export const BasicInformationCluster = Cluster({
     id: 0x28,
     name: "BasicInformation",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

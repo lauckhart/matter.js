@@ -109,7 +109,6 @@ export const TargetNavigatorCluster = Cluster({
     id: 0x505,
     name: "TargetNavigator",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

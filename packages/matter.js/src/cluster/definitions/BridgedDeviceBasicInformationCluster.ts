@@ -100,7 +100,6 @@ export const BridgedDeviceBasicInformationCluster = Cluster({
     id: 0x39,
     name: "BridgedDeviceBasicInformation",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

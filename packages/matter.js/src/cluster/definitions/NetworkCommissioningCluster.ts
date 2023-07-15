@@ -1002,8 +1002,8 @@ export const ThreadNetworkInterfaceComponent = ClusterComponent({
  * interface, in this context, is a unique entity that can have an IPv6 address assigned to it and ingress and egress
  * IP packets.
  *
- * NetworkCommissioningCluster supports optional features that you can enable with the NetworkCommissioningCluster.with
- * factory method.
+ * NetworkCommissioningCluster supports optional features that you can enable with the
+ * NetworkCommissioningCluster.with() factory method.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.8
  */

@@ -31,7 +31,6 @@ export const ElectricalMeasurementCluster = Cluster({
     id: 0xb04,
     name: "ElectricalMeasurement",
     revision: 1,
-    features: {},
 
     attributes: {
         measurementType: OptionalAttribute(0x0, TlvUInt32),

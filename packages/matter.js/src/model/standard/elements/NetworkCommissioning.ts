@@ -37,15 +37,18 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "WI", id: 0x0, conformance: "O.a", description: "WiFiNetworkInterface",
+                    tag: "datatype", name: "WI", conformance: "O.a", constraint: "0",
+                    description: "WiFiNetworkInterface",
                     details: "Wi-Fi related features"
                 },
                 {
-                    tag: "datatype", name: "TH", id: 0x1, conformance: "O.a", description: "ThreadNetworkInterface",
+                    tag: "datatype", name: "TH", conformance: "O.a", constraint: "1",
+                    description: "ThreadNetworkInterface",
                     details: "Thread related features"
                 },
                 {
-                    tag: "datatype", name: "ET", id: 0x2, conformance: "O.a", description: "EthernetNetworkInterface",
+                    tag: "datatype", name: "ET", conformance: "O.a", constraint: "2",
+                    description: "EthernetNetworkInterface",
                     details: "Ethernet related features"
                 }
             ]

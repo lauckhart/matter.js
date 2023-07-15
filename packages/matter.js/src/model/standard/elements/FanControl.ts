@@ -22,13 +22,16 @@ Matter.children.push({
             xref: { document: "cluster", section: "4.4.5" },
 
             children: [
-                { tag: "datatype", name: "SPD", id: 0x0, description: "MultiSpeed", details: "1-100 speeds" },
+                { tag: "datatype", name: "SPD", constraint: "0", description: "MultiSpeed", details: "1-100 speeds" },
                 {
-                    tag: "datatype", name: "AUT", id: 0x1, description: "Auto",
+                    tag: "datatype", name: "AUT", constraint: "1", description: "Auto",
                     details: "Automatic mode supported for fan speed"
                 },
-                { tag: "datatype", name: "RCK", id: 0x2, description: "Rocking", details: "Rocking movement supported" },
-                { tag: "datatype", name: "WND", id: 0x3, description: "Wind", details: "Wind emulation supported" }
+                {
+                    tag: "datatype", name: "RCK", constraint: "2", description: "Rocking",
+                    details: "Rocking movement supported"
+                },
+                { tag: "datatype", name: "WND", constraint: "3", description: "Wind", details: "Wind emulation supported" }
             ]
         },
 

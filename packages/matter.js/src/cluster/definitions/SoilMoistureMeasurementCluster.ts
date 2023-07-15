@@ -22,7 +22,6 @@ export const SoilMoistureMeasurementCluster = Cluster({
     id: 0x408,
     name: "SoilMoistureMeasurement",
     revision: 3,
-    features: {},
 
     attributes: {
         /**

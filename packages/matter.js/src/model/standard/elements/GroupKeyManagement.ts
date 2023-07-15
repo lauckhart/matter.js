@@ -21,7 +21,7 @@ Matter.children.push({
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "core", section: "11.2.5" },
             children: [{
-                tag: "datatype", name: "CS", id: 0x0, description: "CacheAndSync",
+                tag: "datatype", name: "CS", constraint: "0", description: "CacheAndSync",
                 details: "The ability to support CacheAndSync security policy and MCSP."
             }]
         },

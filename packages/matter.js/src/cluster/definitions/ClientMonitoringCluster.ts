@@ -40,7 +40,6 @@ export const ClientMonitoringCluster = Cluster({
     id: 0x1046,
     name: "ClientMonitoring",
     revision: 1,
-    features: {},
 
     attributes: {
         idleModeInterval: Attribute(0x0, TlvUInt32, { default: 18 }),

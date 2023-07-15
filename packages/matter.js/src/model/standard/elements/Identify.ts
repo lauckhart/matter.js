@@ -33,7 +33,7 @@ Matter.children.push({
             tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.2.4" },
             children: [{
-                tag: "datatype", name: "QRY", id: 0x0, description: "Query",
+                tag: "datatype", name: "QRY", constraint: "0", description: "Query",
                 details: "Multicast query for identification state"
             }]
         },

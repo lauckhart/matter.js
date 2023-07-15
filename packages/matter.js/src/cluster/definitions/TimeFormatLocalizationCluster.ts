@@ -183,7 +183,7 @@ export const CalendarFormatComponent = ClusterComponent({
  * formatting information that a Node shall utilize when conveying values to a user.
  *
  * TimeFormatLocalizationCluster supports optional features that you can enable with the
- * TimeFormatLocalizationCluster.with factory method.
+ * TimeFormatLocalizationCluster.with() factory method.
  *
  * @see {@link MatterCoreSpecificationV1_1} § 11.4
  */

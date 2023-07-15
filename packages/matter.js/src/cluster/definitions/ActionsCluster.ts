@@ -553,7 +553,6 @@ export const ActionsCluster = Cluster({
     id: 0x25,
     name: "Actions",
     revision: 1,
-    features: {},
 
     attributes: {
         /**

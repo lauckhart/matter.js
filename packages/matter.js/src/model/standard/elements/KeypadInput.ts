@@ -25,14 +25,17 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "NV", id: 0x0, description: "NavigationKeyCodes",
+                    tag: "datatype", name: "NV", constraint: "0", description: "NavigationKeyCodes",
                     details: "Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU"
                 },
                 {
-                    tag: "datatype", name: "LK", id: 0x1, description: "LocationKeys",
+                    tag: "datatype", name: "LK", constraint: "1", description: "LocationKeys",
                     details: "Supports CEC keys 0x0A (Settings) and 0x09 (Home)"
                 },
-                { tag: "datatype", name: "NK", id: 0x2, description: "NumberKeys", details: "Supports numeric input 0..9" }
+                {
+                    tag: "datatype", name: "NK", constraint: "2", description: "NumberKeys",
+                    details: "Supports numeric input 0..9"
+                }
             ]
         },
 

@@ -24,23 +24,25 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "LF", id: 0x0, conformance: "O.a+", description: "Lift",
+                    tag: "datatype", name: "LF", conformance: "O.a+", constraint: "0", description: "Lift",
                     details: "Lift Control and behavior for lifting/sliding window coverings"
                 },
                 {
-                    tag: "datatype", name: "TL", id: 0x1, conformance: "O.a+", description: "Tilt",
+                    tag: "datatype", name: "TL", conformance: "O.a+", constraint: "1", description: "Tilt",
                     details: "Tilt Control and behavior for tilting window coverings"
                 },
                 {
-                    tag: "datatype", name: "PA_LF", id: 0x2, conformance: "[LF]", description: "PositionAwareLift",
+                    tag: "datatype", name: "PA_LF", conformance: "[LF]", constraint: "2",
+                    description: "PositionAwareLift",
                     details: "Position Aware lift control is supported."
                 },
                 {
-                    tag: "datatype", name: "ABS", id: 0x3, conformance: "O", description: "AbsolutePosition",
+                    tag: "datatype", name: "ABS", conformance: "O", constraint: "3", description: "AbsolutePosition",
                     details: "Absolute positioning is supported."
                 },
                 {
-                    tag: "datatype", name: "PA_TL", id: 0x4, conformance: "[TL]", description: "PositionAwareTilt",
+                    tag: "datatype", name: "PA_TL", conformance: "[TL]", constraint: "4",
+                    description: "PositionAwareTilt",
                     details: "Position Aware tilt control is supported."
                 }
             ]
