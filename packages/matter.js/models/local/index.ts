@@ -12,14 +12,14 @@
 // ID and name so we provide both even though only one is required for
 // matching.
 
-import "./ColorControlOverrides.ts";
-import "./WindowCoveringOverrides.ts";
-import "./AdministratorCommissioningClusterOverrides.ts";
-import "./DoorLockOverrides.ts";
+import "./ColorControlOverrides.js";
+import "./WindowCoveringOverrides.js";
+import "./AdministratorCommissioningClusterOverrides.js";
+import "./DoorLockOverrides.js";
 import "./PumpConfigurationAndControlOverrides.js";
-import "./ModeSelectOverrides.ts";
-import "./GroupKeyManagementOverrides.ts";
-import "./IlluminanceMeasurementOverrides.ts";
-import "./OperationalCredentialsOverrides.ts";
-import "./GroupsOverrides.ts";
-import "./ScenesOverrides.ts";
+import "./ModeSelectOverrides.js";
+import "./GroupKeyManagementOverrides.js";
+import "./IlluminanceMeasurementOverrides.js";
+import "./OperationalCredentialsOverrides.js";
+import "./GroupsOverrides.js";
+import "./ScenesOverrides.js";

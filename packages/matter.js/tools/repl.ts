@@ -14,7 +14,7 @@ import * as model from "../src/model/index.js";
 
 (global as any).model = model;
 
-const server = repl.start({ prompt: "matter.js > "});
+const server = repl.start({ prompt: "matter.js > " });
 
 const historyPath = process.env.MATTER_REPL_HISTORY || join(homedir(), ".matter-repl-history");
 server.setupHistory(historyPath, error => {

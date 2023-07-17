@@ -99,7 +99,7 @@ function castValue(model: ValueModel) {
 
         case Metatype.boolean:
             return !!modelDefault;
-    
+
         default:
             throw new InternalError(`Unsupported metatype "${metatype}"`);
     }

@@ -14,7 +14,7 @@ LocalMatter.children.push({
     name: "AdministratorCommissioning",
 
     children: [
-        // Constrain length of OpenCommissioningWindow.PakePasscodeVerifier
+        // Constrain length of OpenCommissioningWindow.PakePasscodeVerifier using formula defined in specification
         {
             tag: "command", id: 0, name: "OpenCommissioningWindow",
 

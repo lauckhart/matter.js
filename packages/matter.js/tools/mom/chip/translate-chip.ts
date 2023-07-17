@@ -238,7 +238,7 @@ function createValueElement<T extends AnyValueElement>({
             if (isArray) {
                 const entry = DatatypeElement({ name: "entry", type: child.type });
                 entry.children = (child as DatatypeElement).children;
-                child.children = [ entry ];
+                child.children = [entry];
                 child.type = "list";
             }
 

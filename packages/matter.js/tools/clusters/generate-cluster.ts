@@ -145,7 +145,7 @@ function generateExtensibleClusterBase(file: ClusterFile, featureNames: FeatureN
             const name = camelize(feature.description ?? feature.name, false);
             featureBlock.atom(name, `BitFlag(${feature.constraint.value})`)
                 .document(feature);
-            
+
         });
     }
 
@@ -200,7 +200,7 @@ function generateFactory(base: Block, variance: ClusterVariance, featureNames: F
 function generateExtensionType(file: ClusterFile, variance: ClusterVariance, featureNames: FeatureNames, illegal: IllegalFeatureCombinations) {
     file.addImport("cluster/ClusterFactory", "ClusterForBaseCluster");
     file.addImport("schema/BitmapSchema", "TypeFromPartialBitSchema");
-    
+
     const factoryType = Array<string>(
         `export type ${file.cluster.name}Extension<SF extends TypeFromPartialBitSchema<typeof ${file.cluster.name}Base.features>> =`,
         `    ClusterForBaseCluster<typeof ${file.cluster.name}Base, SF>`,
