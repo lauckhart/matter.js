@@ -176,7 +176,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "DownloadProtocolEnum", type: "enum8",
+            tag: "datatype", name: "DownloadProtocolEnum", type: "enum8", conformance: "M",
             details: "Note that only HTTP over TLS (HTTPS) is supported (see RFC 7230). Using HTTP without TLS shall" +
                 "\n" +
                 "NOT be supported, as there is no way to authenticate the involved participants.",
@@ -196,17 +196,6 @@ Matter.children.push({
                     tag: "datatype", name: "VendorSpecific", id: 0x3, conformance: "O",
                     description: "Indicates support for vendor specific protocol."
                 }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "OtaDownloadProtocol", type: "enum8", conformance: "M",
-
-            children: [
-                { tag: "datatype", name: "BdxSynchronous", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "BdxAsynchronous", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "Https", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "VendorSpecific", id: 0x3, conformance: "M" }
             ]
         }
     ]

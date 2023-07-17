@@ -14,11 +14,6 @@ import { NamedComponents } from "./cluster-variance/NamedComponents.js";
  */
 export type ClusterVariance = {
     /**
-     * True iff the cluster has optional components.
-     */
-    componentized: boolean,
-
-    /**
      * The base component.
      */
     base: InferredComponent,
@@ -49,7 +44,6 @@ export function ClusterVariance(cluster: ClusterModel): ClusterVariance {
     const { illegal, requiresFeatures } = IllegalFeatureCombinations(cluster);
 
     return {
-        componentized: !!components.length,
         base,
         components,
         illegal,

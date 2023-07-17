@@ -225,7 +225,7 @@ export const TlvEnhancedAddSceneRequest = TlvObject({
     sceneId: TlvField(1, TlvUInt8),
     transitionTime: TlvField(2, TlvUInt16),
     sceneName: TlvField(3, TlvString),
-    extensionFieldSets: TlvField(4, TlvExtensionFieldSet)
+    extensionFieldSets: TlvField(4, TlvArray(TlvExtensionFieldSet))
 });
 
 /**
@@ -265,7 +265,7 @@ export const TlvEnhancedViewSceneResponse = TlvObject({
     sceneId: TlvField(2, TlvUInt8),
     transitionTime: TlvOptionalField(3, TlvUInt16),
     sceneName: TlvOptionalField(4, TlvString),
-    extensionFieldSets: TlvOptionalField(5, TlvExtensionFieldSet)
+    extensionFieldSets: TlvOptionalField(5, TlvArray(TlvExtensionFieldSet))
 });
 
 /**

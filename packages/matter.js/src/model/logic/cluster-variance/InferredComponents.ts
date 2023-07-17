@@ -67,11 +67,6 @@ const NOT = "!";
  * classify into as few sets as possible.  This leads to fewer duplicated
  * elements and reduced complexity of generated clusters.
  * 
- * An alternative would be to permute features, test for conformance, then
- * infer the condition from conforming feature permutations.  For now though
- * current approach is much simpler.  Could revisit if variance permutations
- * increases drastically with future Matter versions.
- * 
  * Matches string form rather than the AST because that is also simpler for
  * the moment.  Note this is less fragile than it may appear because string is
  * normalized product of parser -> AST -> serializer.

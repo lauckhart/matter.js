@@ -295,7 +295,7 @@ export abstract class ModelVariantTraversal<S = void> {
 }
 
 /**
- * Map of source name -> datatype name -> actual name
+ * Map of Model -> name
  */
 type NameMapping = Map<Model, string>;
 
@@ -318,8 +318,16 @@ type ClusterState = {
  */
 function computeCanonicalNames(sourceNames: string[], variants: VariantDetail) {
     // First, infer name equivalence of datatypes based on usage.  There is no
-    // ID on datatypes.  This is a reliable alternative
-    const datatypeNameMap = inferEquivalentDatatypes(sourceNames, variants);
+    // ID on datatypes.  This is a reliable alternative.  We perform this
+    // iteratively as new mappings could appear from subfields of previously-
+    // unknown equivalent datatypes
+    const datatypeNameMap = new Map<Model, string>();
+    let numberOfMappings;
+
+    do {
+        numberOfMappings = datatypeNameMap.size;
+        inferEquivalentDatatypes(sourceNames, variants, datatypeNameMap);
+    } while (numberOfMappings != datatypeNameMap.size);
 
     // Now that we generally what what equals what, go through the names and
     // choose the name for the final model
@@ -338,8 +346,9 @@ function computeCanonicalNames(sourceNames: string[], variants: VariantDetail) {
  */
 function inferEquivalentDatatypes(
     sourceNames: string[],
-    variants: VariantDetail
-): NameMapping {
+    variants: VariantDetail,
+    datatypeNameMap: NameMapping
+) {
     type ModelNameMapping = {
         mapTo: string | undefined,
         priority: number
@@ -349,6 +358,7 @@ function inferEquivalentDatatypes(
     // Create a new traversal to visit each element
     const traversal = new class extends ModelVariantTraversal {
         override visit(variants: VariantDetail, recurse: () => void[]) {
+
             let mapEntry: ModelNameMapping | undefined;
 
             for (let priority = 0; priority < sourceNames.length; priority++) {
@@ -394,29 +404,35 @@ function inferEquivalentDatatypes(
         }
 
         override enterCluster() {
-            // Do not call base logic because it is uses inferCanonicalNames
+            // Do not call base logic because it is uses inferCanonicalNames,
+            // but do install existing mappings that may be present from
+            // previous iterations of this function
+            if (variants.tag === ElementTag.Cluster) {
+                this.clusterState = { canonicalNames: datatypeNameMap };
+                return true;
+            }
             return false;
         }
     }(sourceNames);
     traversal.traverse(variants.map);
 
     // Convert the internal structure to NameMappings
-    const result = new Map<Model, string>();
     for (const [model, mapEntry] of nameVariants) {
         if (mapEntry.mapTo && mapEntry.mapTo !== model.name) {
-            result.set(model, mapEntry.mapTo);
+            datatypeNameMap.set(model, mapEntry.mapTo);
         }
     }
-    return result;
 }
 
-// Heuristically select the best name for each element.  Priority does affect
-// this selection but it's not absolute
+/**
+ * Heuristically select the best name for each element.  Priority does affect
+ * this selection but it's not absolute
+ */
 function chooseCanonicalNames(
     sourceNames: string[],
     variants: VariantDetail,
-    datatypeMapping: NameMapping
-) {
+    datatypeNameMap: NameMapping
+): NameMapping {
     const canonicalNames = new Map<Model, string>();
 
     const traversal = new class extends ModelVariantTraversal {
@@ -486,7 +502,7 @@ function chooseCanonicalNames(
             // Disable default logic, just ensure our datatype names are always
             // installed so datatypes match up correctly
             if (variants.tag === ElementTag.Cluster) {
-                this.clusterState = { canonicalNames: datatypeMapping };
+                this.clusterState = { canonicalNames: datatypeNameMap };
                 return true;
             }
             return false;

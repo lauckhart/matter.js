@@ -227,12 +227,22 @@ function createValueElement<T extends AnyValueElement>({
 
             const childType = str(propertyEl.getAttribute("type"));
 
-            element.children.push(createValueElement({
+            const child = createValueElement({
                 factory: DatatypeElement,
                 source: propertyEl,
                 isClass: propertyIsClass,
                 type: childType
-            }));
+            });
+
+            const isArray = propertyEl.getAttribute("array") === "true";
+            if (isArray) {
+                const entry = DatatypeElement({ name: "entry", type: child.type });
+                entry.children = (child as DatatypeElement).children;
+                child.children = [ entry ];
+                child.type = "list";
+            }
+
+            element.children.push(child);
         })
     }
 

@@ -283,7 +283,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "AccessControlTargetStruct", type: "struct",
+            tag: "datatype", name: "AccessControlTargetStruct", type: "struct", conformance: "M",
             xref: { document: "core", section: "9.10.4.4" },
             children: [
                 { tag: "datatype", name: "Cluster", id: 0x0, type: "cluster-id", conformance: "M", quality: "X" },
@@ -427,15 +427,6 @@ Matter.children.push({
 
                 xref: { document: "core", section: "9.10.4.6.1" }
             }]
-        },
-
-        {
-            tag: "datatype", name: "Target", type: "struct", conformance: "M",
-            children: [
-                { tag: "datatype", name: "Cluster", id: 0x0, type: "cluster-id", conformance: "M", quality: "X" },
-                { tag: "datatype", name: "Endpoint", id: 0x1, type: "endpoint-no", conformance: "M", quality: "X" },
-                { tag: "datatype", name: "DeviceType", id: 0x2, type: "devtype-id", conformance: "M", quality: "X" }
-            ]
         }
     ]
 });

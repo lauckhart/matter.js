@@ -14,6 +14,7 @@ import { TlvInt16, TlvUInt8, TlvBitmap, TlvEnum, TlvUInt16, TlvUInt32, TlvInt8 }
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
+import { TlvArray } from "../../tlv/TlvArray.js";
 
 /**
  * The value of the Thermostat remoteSensing attribute
@@ -481,7 +482,7 @@ export const TlvSetWeeklyScheduleRequest = TlvObject({
     numberOfTransitionsForSequence: TlvField(0, TlvUInt8),
     dayOfWeekForSequence: TlvField(1, TlvBitmap(TlvUInt8, DayOfWeek)),
     modeForSequence: TlvField(2, TlvBitmap(TlvUInt8, ModeForSequence)),
-    transitions: TlvField(3, TlvThermostatScheduleTransition)
+    transitions: TlvField(3, TlvArray(TlvThermostatScheduleTransition))
 });
 
 /**
@@ -501,7 +502,7 @@ export const TlvGetWeeklyScheduleResponse = TlvObject({
     numberOfTransitionsForSequence: TlvField(0, TlvUInt8),
     dayOfWeekForSequence: TlvField(1, TlvBitmap(TlvUInt8, DayOfWeek)),
     modeForSequence: TlvField(2, TlvBitmap(TlvUInt8, ModeForSequence)),
-    transitions: TlvField(3, TlvThermostatScheduleTransition)
+    transitions: TlvField(3, TlvArray(TlvThermostatScheduleTransition))
 });
 
 /**

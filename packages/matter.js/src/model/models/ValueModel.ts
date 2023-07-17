@@ -239,8 +239,7 @@ export abstract class ValueModel extends Model implements ValueElement {
 
     /**
      * Is this model mandatory?  This supports a limited subset of conformance
-     * and is only appropriate for field conformance.  And maybe not even then
-     * but we'll see if we can get away with it.
+     * and is only appropriate for field conformance.
      */
     get mandatory() {
         const conformance = this.effectiveConformance.ast;
@@ -256,6 +255,9 @@ export abstract class ValueModel extends Model implements ValueElement {
                     return true;
                 }
             }
+        }
+        if (conformance.type === Conformance.Special.Name) {
+            return conformance.param.match(/^[A-Z]+$/);
         }
         return false;
     }

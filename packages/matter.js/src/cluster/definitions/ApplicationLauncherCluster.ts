@@ -65,7 +65,7 @@ export const TlvLaunchAppRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.1.1
      */
-    application: TlvOptionalField(0, TlvApplicationStruct),
+    application: TlvField(0, TlvApplicationStruct),
 
     /**
      * This field shall specify optional app-specific data to be sent to the app.
@@ -132,7 +132,7 @@ export const TlvStopAppRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.2.1
      */
-    application: TlvOptionalField(0, TlvApplicationStruct)
+    application: TlvField(0, TlvApplicationStruct)
 });
 
 /**
@@ -146,7 +146,7 @@ export const TlvHideAppRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.3.1
      */
-    application: TlvOptionalField(0, TlvApplicationStruct)
+    application: TlvField(0, TlvApplicationStruct)
 });
 
 /**

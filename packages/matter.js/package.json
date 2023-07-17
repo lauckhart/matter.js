@@ -33,6 +33,7 @@
     "test-node": "TZ=utc NODE_OPTIONS=--experimental-vm-modules jest",
     "test-web": "TZ=utc karma start test/karma.conf.cjs",
     "test": "npm run test-node && npm run test-web",
+    "console": "node --loader ts-node/esm tools/repl.ts",
     "generate-spec": "node --loader ts-node/esm tools/generate-spec.ts",
     "generate-chip": "node --loader ts-node/esm tools/generate-chip.ts",
     "generate-model": "node --loader ts-node/esm tools/generate-model.ts",

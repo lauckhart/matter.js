@@ -187,11 +187,36 @@ export const WiFiSecurityBitmap = {
     wpa3Personal: BitFlag(4)
 };
 
+/**
+ * WiFiBandEnum encodes a supported Wi-Fi frequency band present in the WiFiBand field of the
+ * WiFiInterfaceScanResultStruct.
+ *
+ * @see {@link MatterCoreSpecificationV1_1} § 11.8.5.2
+ */
 export const enum WiFiBand {
+    /**
+     * 2.4GHz - 2.401GHz to2.495GHz(802.11b/g/n/ax)
+     */
     "2G4" = 0,
+
+    /**
+     * 3.65GHz - 3.655GHz to3.695GHz (802.11y)
+     */
     "3G65" = 1,
+
+    /**
+     * 5GHz - 5.150GHz to5.895GHz(802.11a/n/ac/ax)
+     */
     "5G" = 2,
+
+    /**
+     * 6GHz - 5.925GHz to7.125GHz (802.11ax / WiFi 6E)
+     */
     "6G" = 3,
+
+    /**
+     * 60GHz - 57.24GHz to70.20GHz (802.11ad/ay)
+     */
     "60G" = 4
 }
 
@@ -201,10 +226,10 @@ export const enum WiFiBand {
  * @see {@link MatterCoreSpecificationV1_1} § 11.8.5.5
  */
 export const TlvWiFiInterfaceScanResultStruct = TlvObject({
-    security: TlvOptionalField(0, TlvBitmap(TlvUInt8, WiFiSecurityBitmap)),
-    ssid: TlvOptionalField(1, TlvByteString.bound({ maxLength: 32 })),
-    bssid: TlvOptionalField(2, TlvByteString.bound({ length: 6 })),
-    channel: TlvOptionalField(3, TlvUInt16),
+    security: TlvField(0, TlvBitmap(TlvUInt8, WiFiSecurityBitmap)),
+    ssid: TlvField(1, TlvByteString.bound({ maxLength: 32 })),
+    bssid: TlvField(2, TlvByteString.bound({ length: 6 })),
+    channel: TlvField(3, TlvUInt16),
 
     /**
      * This field, if present, may be used to differentiate overlapping channel number values across different Wi-Fi
@@ -228,21 +253,21 @@ export const TlvWiFiInterfaceScanResultStruct = TlvObject({
  * @see {@link MatterCoreSpecificationV1_1} § 11.8.5.6
  */
 export const TlvThreadInterfaceScanResultStruct = TlvObject({
-    panId: TlvOptionalField(0, TlvUInt16.bound({ max: 65534 })),
-    extendedPanId: TlvOptionalField(1, TlvUInt64),
-    networkName: TlvOptionalField(2, TlvString.bound({ minLength: 1, maxLength: 16 })),
-    channel: TlvOptionalField(3, TlvUInt16),
-    version: TlvOptionalField(4, TlvUInt8),
+    panId: TlvField(0, TlvUInt16.bound({ max: 65534 })),
+    extendedPanId: TlvField(1, TlvUInt64),
+    networkName: TlvField(2, TlvString.bound({ minLength: 1, maxLength: 16 })),
+    channel: TlvField(3, TlvUInt16),
+    version: TlvField(4, TlvUInt8),
 
     /**
      * ExtendedAddress stands for an IEEE 802.15.4 Extended Address.
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.8.5.6.1
      */
-    extendedAddress: TlvOptionalField(5, TlvByteString.bound({ minLength: 6, maxLength: 8 })),
+    extendedAddress: TlvField(5, TlvByteString.bound({ minLength: 6, maxLength: 8 })),
 
-    rssi: TlvOptionalField(6, TlvInt8),
-    lqi: TlvOptionalField(7, TlvUInt8)
+    rssi: TlvField(6, TlvInt8),
+    lqi: TlvField(7, TlvUInt8)
 });
 
 /**
@@ -299,7 +324,7 @@ export const TlvScanNetworksResponse = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.2.3
      */
-    wiFiScanResults: TlvOptionalField(2, TlvArray(TlvWiFiInterfaceScanResultStruct)),
+    wiFiScanResults: TlvField(2, TlvArray(TlvWiFiInterfaceScanResultStruct)),
 
     /**
      * If NetworkingStatus was Success, this field shall contain the Thread network scan results. The list may be empty
@@ -315,7 +340,7 @@ export const TlvScanNetworksResponse = TlvObject({
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.2.4
      */
-    threadScanResults: TlvOptionalField(3, TlvArray(TlvThreadInterfaceScanResultStruct))
+    threadScanResults: TlvField(3, TlvArray(TlvThreadInterfaceScanResultStruct))
 });
 
 /**

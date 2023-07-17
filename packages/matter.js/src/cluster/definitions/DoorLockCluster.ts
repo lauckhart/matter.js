@@ -726,7 +726,7 @@ export const TlvGetUserResponse = TlvObject({
     userStatus: TlvField(3, TlvNullable(TlvEnum<UserStatus>())),
     userType: TlvField(4, TlvNullable(TlvEnum<UserType>())),
     credentialRule: TlvField(5, TlvNullable(TlvEnum<CredentialRule>())),
-    credentials: TlvField(6, TlvNullable(TlvCredentialStruct)),
+    credentials: TlvField(6, TlvNullable(TlvArray(TlvCredentialStruct))),
     creatorFabricIndex: TlvField(7, TlvNullable(TlvFabricIndex)),
     lastModifiedFabricIndex: TlvField(8, TlvNullable(TlvFabricIndex)),
     nextUserIndex: TlvField(9, TlvNullable(TlvUInt16))

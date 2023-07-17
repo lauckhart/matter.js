@@ -196,7 +196,10 @@ Matter.children.push({
                 { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" },
                 { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M" },
                 { tag: "datatype", name: "SceneName", type: "string", conformance: "M" },
-                { tag: "datatype", name: "ExtensionFieldSets", type: "ExtensionFieldSet", conformance: "M" }
+                {
+                    tag: "datatype", name: "ExtensionFieldSets", type: "list", conformance: "M",
+                    children: [{ tag: "datatype", name: "entry", type: "ExtensionFieldSet" }]
+                }
             ]
         },
 
@@ -406,7 +409,10 @@ Matter.children.push({
                 { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" },
                 { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "O" },
                 { tag: "datatype", name: "SceneName", type: "string", conformance: "O" },
-                { tag: "datatype", name: "ExtensionFieldSets", type: "ExtensionFieldSet", conformance: "O" }
+                {
+                    tag: "datatype", name: "ExtensionFieldSets", type: "list", conformance: "O",
+                    children: [{ tag: "datatype", name: "entry", type: "ExtensionFieldSet" }]
+                }
             ]
         },
 
@@ -460,7 +466,8 @@ Matter.children.push({
                     tag: "datatype", name: "AttributeValue", id: 0x1, type: "any", access: "RW", conformance: "M",
                     details: "This is the attribute value as part of an extension field set. See AttributeID to determine the " +
                         "data type for this field.",
-                    xref: { document: "cluster", section: "1.4.6.1.2" }
+                    xref: { document: "cluster", section: "1.4.6.1.2" },
+                    children: [{ tag: "datatype", name: "entry", type: "uint8" }]
                 }
             ]
         },

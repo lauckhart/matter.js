@@ -758,7 +758,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "WiFiSecurityBitmap", type: "map8",
+            tag: "datatype", name: "WiFiSecurityBitmap", type: "map8", conformance: "M",
             details: "WiFiSecurityBitmap encodes the supported Wi-Fi security types present in the Security field of the " +
                 "WiFiInterfaceScanResultStruct.",
             xref: { document: "core", section: "11.8.5.1" },
@@ -782,7 +782,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "WiFiBandEnum", type: "enum8",
+            tag: "datatype", name: "WiFiBandEnum", type: "enum8", conformance: "M",
             details: "WiFiBandEnum encodes a supported Wi-Fi frequency band present in the WiFiBand field of the " +
                 "WiFiInterfaceScanResultStruct.",
             xref: { document: "core", section: "11.8.5.2" },
@@ -912,7 +912,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "WiFiInterfaceScanResultStruct", type: "struct",
+            tag: "datatype", name: "WiFiInterfaceScanResultStruct", type: "struct", conformance: "M",
             details: "WiFiInterfaceScanResultStruct represents a single Wi-Fi network scan result.",
             xref: { document: "core", section: "11.8.5.5" },
 
@@ -923,7 +923,7 @@ Matter.children.push({
                 { tag: "datatype", name: "Channel", id: 0x3, type: "uint16", conformance: "WI" },
 
                 {
-                    tag: "datatype", name: "WiFiBand", id: 0x4, type: "WiFiBand", conformance: "[WI]",
+                    tag: "datatype", name: "WiFiBand", id: 0x4, type: "WiFiBandEnum", conformance: "[WI]",
                     details: "This field, if present, may be used to differentiate overlapping channel number values across " +
                         "different Wi-Fi frequency bands.",
                     xref: { document: "core", section: "11.8.5.5.1" }
@@ -938,7 +938,7 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "ThreadInterfaceScanResultStruct", type: "struct",
+            tag: "datatype", name: "ThreadInterfaceScanResultStruct", type: "struct", conformance: "M",
             details: "ThreadInterfaceScanResultStruct represents a single Thread network scan result.",
             xref: { document: "core", section: "11.8.5.6" },
 
@@ -955,58 +955,6 @@ Matter.children.push({
                 },
                 { tag: "datatype", name: "Rssi", id: 0x6, type: "int8", conformance: "TH" },
                 { tag: "datatype", name: "Lqi", id: 0x7, type: "uint8", conformance: "TH" }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "WiFiInterfaceScanResult", type: "struct", conformance: "M",
-
-            children: [
-                { tag: "datatype", name: "Security", type: "WiFiSecurity", conformance: "M" },
-                { tag: "datatype", name: "Ssid", type: "octstr", conformance: "M" },
-                { tag: "datatype", name: "Bssid", type: "octstr", conformance: "M" },
-                { tag: "datatype", name: "Channel", type: "uint16", conformance: "M" },
-                { tag: "datatype", name: "WiFiBand", type: "WiFiBand", conformance: "M" },
-                { tag: "datatype", name: "Rssi", type: "int8", conformance: "M" }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "WiFiSecurity", type: "map8", conformance: "M",
-
-            children: [
-                { tag: "datatype", name: "Unencrypted", constraint: "0" },
-                { tag: "datatype", name: "WEP", constraint: "1" },
-                { tag: "datatype", name: "WPA-PERSONAL", constraint: "2" },
-                { tag: "datatype", name: "WPA2-PERSONAL", constraint: "3" },
-                { tag: "datatype", name: "WPA3-PERSONAL", constraint: "4" }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "WiFiBand", type: "enum8", conformance: "M",
-
-            children: [
-                { tag: "datatype", name: "2G4", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "3G65", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "5G", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "6G", id: 0x3, conformance: "M" },
-                { tag: "datatype", name: "60G", id: 0x4, conformance: "M" }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "ThreadInterfaceScanResult", type: "struct", conformance: "M",
-
-            children: [
-                { tag: "datatype", name: "PanId", type: "uint16", conformance: "M" },
-                { tag: "datatype", name: "ExtendedPanId", type: "uint64", conformance: "M" },
-                { tag: "datatype", name: "NetworkName", type: "string", conformance: "M" },
-                { tag: "datatype", name: "Channel", type: "uint16", conformance: "M" },
-                { tag: "datatype", name: "Version", type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "ExtendedAddress", type: "octstr", conformance: "M" },
-                { tag: "datatype", name: "Rssi", type: "int8", conformance: "M" },
-                { tag: "datatype", name: "Lqi", type: "uint8", conformance: "M" }
             ]
         }
     ]

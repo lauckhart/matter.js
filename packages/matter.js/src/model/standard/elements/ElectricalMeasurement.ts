@@ -230,7 +230,10 @@ Matter.children.push({
                 { tag: "datatype", name: "ProfileCount", type: "uint8", conformance: "M" },
                 { tag: "datatype", name: "ProfileIntervalPeriod", type: "enum8", conformance: "M" },
                 { tag: "datatype", name: "MaxNumberOfIntervals", type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "ListOfAttributes", type: "uint16", conformance: "M" }
+                {
+                    tag: "datatype", name: "ListOfAttributes", type: "list", conformance: "M",
+                    children: [{ tag: "datatype", name: "entry", type: "uint16" }]
+                }
             ]
         },
 
@@ -255,7 +258,10 @@ Matter.children.push({
                 { tag: "datatype", name: "ProfileIntervalPeriod", type: "enum8", conformance: "M" },
                 { tag: "datatype", name: "NumberOfIntervalsDelivered", type: "uint8", conformance: "M" },
                 { tag: "datatype", name: "AttributeId", type: "uint16", conformance: "M" },
-                { tag: "datatype", name: "Intervals", type: "uint8", conformance: "M" }
+                {
+                    tag: "datatype", name: "Intervals", type: "list", conformance: "M",
+                    children: [{ tag: "datatype", name: "entry", type: "uint8" }]
+                }
             ]
         },
 

@@ -1204,7 +1204,10 @@ Matter.children.push({
                 { tag: "datatype", name: "UserStatus", type: "UserStatusEnum", conformance: "M", quality: "X" },
                 { tag: "datatype", name: "UserType", type: "UserTypeEnum", conformance: "M", quality: "X" },
                 { tag: "datatype", name: "CredentialRule", type: "CredentialRuleEnum", conformance: "M", quality: "X" },
-                { tag: "datatype", name: "Credentials", type: "CredentialStruct", conformance: "M", quality: "X" },
+                {
+                    tag: "datatype", name: "Credentials", type: "list", conformance: "M", quality: "X",
+                    children: [{ tag: "datatype", name: "entry", type: "CredentialStruct" }]
+                },
                 { tag: "datatype", name: "CreatorFabricIndex", type: "fabric-idx", conformance: "M", quality: "X" },
                 { tag: "datatype", name: "LastModifiedFabricIndex", type: "fabric-idx", conformance: "M", quality: "X" },
                 { tag: "datatype", name: "NextUserIndex", type: "uint16", conformance: "M", quality: "X" }

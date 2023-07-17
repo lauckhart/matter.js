@@ -87,12 +87,14 @@ export const ChipMatter: MatterElement = {
                             conformance: "M"
                         },
                         {
-                            tag: "datatype", name: "Subjects", id: 0x3, type: "uint64", access: "R S", conformance: "M",
-                            quality: "X"
+                            tag: "datatype", name: "Subjects", id: 0x3, type: "list", access: "R S", conformance: "M",
+                            quality: "X",
+                            children: [{ tag: "datatype", name: "entry", type: "uint64" }]
                         },
                         {
-                            tag: "datatype", name: "Targets", id: 0x4, type: "Target", access: "R S", conformance: "M",
-                            quality: "X"
+                            tag: "datatype", name: "Targets", id: 0x4, type: "list", access: "R S", conformance: "M",
+                            quality: "X",
+                            children: [{ tag: "datatype", name: "entry", type: "Target" }]
                         }
                     ]
                 },
@@ -378,7 +380,10 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "EndpointListId", type: "uint16", conformance: "M" },
                         { tag: "datatype", name: "Name", type: "string", conformance: "M" },
                         { tag: "datatype", name: "Type", type: "EndpointListTypeEnum", conformance: "M" },
-                        { tag: "datatype", name: "Endpoints", type: "endpoint-no", conformance: "M" }
+                        {
+                            tag: "datatype", name: "Endpoints", type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "endpoint-no" }]
+                        }
                     ]
                 },
 
@@ -997,7 +1002,10 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "VendorId", type: "vendor-id", conformance: "M" },
                         { tag: "datatype", name: "ProductId", type: "uint16", conformance: "M" },
                         { tag: "datatype", name: "SoftwareVersion", type: "uint32", conformance: "M" },
-                        { tag: "datatype", name: "ProtocolsSupported", type: "OtaDownloadProtocol", conformance: "M" },
+                        {
+                            tag: "datatype", name: "ProtocolsSupported", type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "OtaDownloadProtocol" }]
+                        },
                         { tag: "datatype", name: "HardwareVersion", type: "uint16", conformance: "O" },
                         { tag: "datatype", name: "Location", type: "string", conformance: "O" },
                         { tag: "datatype", name: "RequestorCanConsent", type: "bool", conformance: "O", default: true },
@@ -1581,15 +1589,22 @@ export const ChipMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "ContentSearchStruct", type: "struct", conformance: "M",
-                    children: [{ tag: "datatype", name: "ParameterList", type: "ParameterStruct", conformance: "M" }]
+                    children: [{
+                        tag: "datatype", name: "ParameterList", type: "list", conformance: "M",
+                        children: [{ tag: "datatype", name: "entry", type: "ParameterStruct" }]
+                    }]
                 },
 
                 {
                     tag: "datatype", name: "ParameterStruct", type: "struct", conformance: "M",
+
                     children: [
                         { tag: "datatype", name: "Type", type: "ParameterEnum", conformance: "M" },
                         { tag: "datatype", name: "Value", type: "string", conformance: "M" },
-                        { tag: "datatype", name: "ExternalIdList", type: "AdditionalInfoStruct", conformance: "O" }
+                        {
+                            tag: "datatype", name: "ExternalIdList", type: "list", conformance: "O",
+                            children: [{ tag: "datatype", name: "entry", type: "AdditionalInfoStruct" }]
+                        }
                     ]
                 },
 
@@ -2050,7 +2065,10 @@ export const ChipMatter: MatterElement = {
                         {
                             tag: "datatype", name: "CredentialRule", type: "CredentialRuleEnum", conformance: "M", quality: "X"
                         },
-                        { tag: "datatype", name: "Credentials", type: "CredentialStruct", conformance: "M", quality: "X" },
+                        {
+                            tag: "datatype", name: "Credentials", type: "list", conformance: "M", quality: "X",
+                            children: [{ tag: "datatype", name: "entry", type: "CredentialStruct" }]
+                        },
                         { tag: "datatype", name: "CreatorFabricIndex", type: "fabric-idx", conformance: "M", quality: "X" },
                         {
                             tag: "datatype", name: "LastModifiedFabricIndex", type: "fabric-idx", conformance: "M",
@@ -2142,8 +2160,8 @@ export const ChipMatter: MatterElement = {
                         },
                         { tag: "datatype", name: "SourceNode", id: 0x4, type: "node-id", conformance: "M", quality: "X" },
                         {
-                            tag: "datatype", name: "Credentials", id: 0x5, type: "CredentialStruct", conformance: "O",
-                            quality: "X"
+                            tag: "datatype", name: "Credentials", id: 0x5, type: "list", conformance: "O", quality: "X",
+                            children: [{ tag: "datatype", name: "entry", type: "CredentialStruct" }]
                         }
                     ]
                 },
@@ -2164,8 +2182,8 @@ export const ChipMatter: MatterElement = {
                         },
                         { tag: "datatype", name: "SourceNode", id: 0x5, type: "node-id", conformance: "M", quality: "X" },
                         {
-                            tag: "datatype", name: "Credentials", id: 0x6, type: "CredentialStruct", conformance: "O",
-                            quality: "X"
+                            tag: "datatype", name: "Credentials", id: 0x6, type: "list", conformance: "O", quality: "X",
+                            children: [{ tag: "datatype", name: "entry", type: "CredentialStruct" }]
                         }
                     ]
                 },
@@ -2790,25 +2808,46 @@ export const ChipMatter: MatterElement = {
 
                 {
                     tag: "event", name: "HardwareFaultChange", id: 0x0, conformance: "O", priority: "critical",
+
                     children: [
-                        { tag: "datatype", name: "Current", id: 0x0, type: "HardwareFaultEnum", conformance: "M" },
-                        { tag: "datatype", name: "Previous", id: 0x1, type: "HardwareFaultEnum", conformance: "M" }
+                        {
+                            tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "HardwareFaultEnum" }]
+                        },
+                        {
+                            tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "HardwareFaultEnum" }]
+                        }
                     ]
                 },
 
                 {
                     tag: "event", name: "RadioFaultChange", id: 0x1, conformance: "O", priority: "critical",
+
                     children: [
-                        { tag: "datatype", name: "Current", id: 0x0, type: "RadioFaultEnum", conformance: "M" },
-                        { tag: "datatype", name: "Previous", id: 0x1, type: "RadioFaultEnum", conformance: "M" }
+                        {
+                            tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "RadioFaultEnum" }]
+                        },
+                        {
+                            tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "RadioFaultEnum" }]
+                        }
                     ]
                 },
 
                 {
                     tag: "event", name: "NetworkFaultChange", id: 0x2, conformance: "O", priority: "critical",
+
                     children: [
-                        { tag: "datatype", name: "Current", id: 0x0, type: "NetworkFaultEnum", conformance: "M" },
-                        { tag: "datatype", name: "Previous", id: 0x1, type: "NetworkFaultEnum", conformance: "M" }
+                        {
+                            tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "NetworkFaultEnum" }]
+                        },
+                        {
+                            tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "NetworkFaultEnum" }]
+                        }
                     ]
                 },
 
@@ -2832,8 +2871,14 @@ export const ChipMatter: MatterElement = {
                             quality: "X"
                         },
                         { tag: "datatype", name: "HardwareAddress", type: "octstr", conformance: "M" },
-                        { tag: "datatype", name: "IPv4Addresses", type: "octstr", conformance: "M" },
-                        { tag: "datatype", name: "IPv6Addresses", type: "octstr", conformance: "M" },
+                        {
+                            tag: "datatype", name: "IPv4Addresses", type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "octstr" }]
+                        },
+                        {
+                            tag: "datatype", name: "IPv6Addresses", type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "octstr" }]
+                        },
                         { tag: "datatype", name: "Type", type: "InterfaceTypeEnum", conformance: "M" }
                     ]
                 },
@@ -2943,15 +2988,23 @@ export const ChipMatter: MatterElement = {
                     direction: "request",
                     children: [{ tag: "datatype", name: "GroupKeySetId", type: "uint16", conformance: "M" }]
                 },
+
                 {
                     tag: "command", name: "KeySetReadAllIndices", id: 0x4, access: "R F A", conformance: "M",
                     direction: "request", response: "KeySetReadAllIndicesResponse",
-                    children: [{ tag: "datatype", name: "GroupKeySetIDs", type: "uint16", conformance: "M" }]
+                    children: [{
+                        tag: "datatype", name: "GroupKeySetIDs", type: "list", conformance: "M",
+                        children: [{ tag: "datatype", name: "entry", type: "uint16" }]
+                    }]
                 },
+
                 {
                     tag: "command", name: "KeySetReadAllIndicesResponse", id: 0x5, conformance: "M",
                     direction: "response",
-                    children: [{ tag: "datatype", name: "GroupKeySetIDs", type: "uint16", conformance: "M" }]
+                    children: [{
+                        tag: "datatype", name: "GroupKeySetIDs", type: "list", conformance: "M",
+                        children: [{ tag: "datatype", name: "entry", type: "uint16" }]
+                    }]
                 },
 
                 {
@@ -2964,9 +3017,13 @@ export const ChipMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "GroupInfoMapStruct", type: "struct", access: "R F", conformance: "M",
+
                     children: [
                         { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M" },
-                        { tag: "datatype", name: "Endpoints", id: 0x2, type: "endpoint-no", conformance: "M" },
+                        {
+                            tag: "datatype", name: "Endpoints", id: 0x2, type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "endpoint-no" }]
+                        },
                         { tag: "datatype", name: "GroupName", id: 0x3, type: "string", conformance: "O" }
                     ]
                 },
@@ -3026,11 +3083,16 @@ export const ChipMatter: MatterElement = {
                     response: "ViewGroupResponse",
                     children: [{ tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" }]
                 },
+
                 {
                     tag: "command", name: "GetGroupMembership", id: 0x2, access: "R F", conformance: "M",
                     direction: "request", response: "GetGroupMembershipResponse",
-                    children: [{ tag: "datatype", name: "GroupList", type: "group-id", conformance: "M" }]
+                    children: [{
+                        tag: "datatype", name: "GroupList", type: "list", conformance: "M",
+                        children: [{ tag: "datatype", name: "entry", type: "group-id" }]
+                    }]
                 },
+
                 {
                     tag: "command", name: "RemoveGroup", id: 0x3, access: "R F M", conformance: "M",
                     direction: "request", response: "RemoveGroupResponse",
@@ -3070,9 +3132,13 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "GetGroupMembershipResponse", id: 0x2, conformance: "M",
                     direction: "response",
+
                     children: [
                         { tag: "datatype", name: "Capacity", type: "uint8", conformance: "M", quality: "X" },
-                        { tag: "datatype", name: "GroupList", type: "group-id", conformance: "M" }
+                        {
+                            tag: "datatype", name: "GroupList", type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "group-id" }]
+                        }
                     ]
                 },
 
@@ -3683,10 +3749,14 @@ export const ChipMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "ModeOptionStruct", type: "struct", conformance: "M",
+
                     children: [
                         { tag: "datatype", name: "Label", type: "string", conformance: "M" },
                         { tag: "datatype", name: "Mode", type: "uint8", conformance: "M" },
-                        { tag: "datatype", name: "SemanticTags", type: "SemanticTagStruct", conformance: "M" }
+                        {
+                            tag: "datatype", name: "SemanticTags", type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "SemanticTagStruct" }]
+                        }
                     ]
                 },
 
@@ -3741,8 +3811,14 @@ export const ChipMatter: MatterElement = {
                     children: [
                         { tag: "datatype", name: "NetworkingStatus", type: "NetworkCommissioningStatus", conformance: "M" },
                         { tag: "datatype", name: "DebugText", type: "string", conformance: "O" },
-                        { tag: "datatype", name: "WiFiScanResults", type: "WiFiInterfaceScanResult", conformance: "O" },
-                        { tag: "datatype", name: "ThreadScanResults", type: "ThreadInterfaceScanResult", conformance: "O" }
+                        {
+                            tag: "datatype", name: "WiFiScanResults", type: "list", conformance: "O",
+                            children: [{ tag: "datatype", name: "entry", type: "WiFiInterfaceScanResult" }]
+                        },
+                        {
+                            tag: "datatype", name: "ThreadScanResults", type: "list", conformance: "O",
+                            children: [{ tag: "datatype", name: "entry", type: "ThreadInterfaceScanResult" }]
+                        }
                     ]
                 },
 
@@ -4291,25 +4367,46 @@ export const ChipMatter: MatterElement = {
 
                 {
                     tag: "event", name: "WiredFaultChange", id: 0x0, conformance: "O", priority: "info",
+
                     children: [
-                        { tag: "datatype", name: "Current", id: 0x0, type: "WiredFaultEnum", conformance: "M" },
-                        { tag: "datatype", name: "Previous", id: 0x1, type: "WiredFaultEnum", conformance: "M" }
+                        {
+                            tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "WiredFaultEnum" }]
+                        },
+                        {
+                            tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "WiredFaultEnum" }]
+                        }
                     ]
                 },
 
                 {
                     tag: "event", name: "BatFaultChange", id: 0x1, conformance: "O", priority: "info",
+
                     children: [
-                        { tag: "datatype", name: "Current", id: 0x0, type: "BatFaultEnum", conformance: "M" },
-                        { tag: "datatype", name: "Previous", id: 0x1, type: "BatFaultEnum", conformance: "M" }
+                        {
+                            tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "BatFaultEnum" }]
+                        },
+                        {
+                            tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "BatFaultEnum" }]
+                        }
                     ]
                 },
 
                 {
                     tag: "event", name: "BatChargeFaultChange", id: 0x2, conformance: "O", priority: "info",
+
                     children: [
-                        { tag: "datatype", name: "Current", id: 0x0, type: "BatChargeFaultEnum", conformance: "M" },
-                        { tag: "datatype", name: "Previous", id: 0x1, type: "BatChargeFaultEnum", conformance: "M" }
+                        {
+                            tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "BatChargeFaultEnum" }]
+                        },
+                        {
+                            tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "BatChargeFaultEnum" }]
+                        }
                     ]
                 },
 
@@ -4744,7 +4841,10 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M" },
                         { tag: "datatype", name: "SceneName", type: "string", conformance: "M" },
-                        { tag: "datatype", name: "ExtensionFieldSets", type: "ExtensionFieldSet", conformance: "M" }
+                        {
+                            tag: "datatype", name: "ExtensionFieldSets", type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "ExtensionFieldSet" }]
+                        }
                     ]
                 },
 
@@ -4805,7 +4905,10 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M" },
                         { tag: "datatype", name: "SceneName", type: "string", conformance: "M" },
-                        { tag: "datatype", name: "ExtensionFieldSets", type: "ExtensionFieldSet", conformance: "M" }
+                        {
+                            tag: "datatype", name: "ExtensionFieldSets", type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "ExtensionFieldSet" }]
+                        }
                     ]
                 },
 
@@ -4849,7 +4952,10 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "O" },
                         { tag: "datatype", name: "SceneName", type: "string", conformance: "O" },
-                        { tag: "datatype", name: "ExtensionFieldSets", type: "ExtensionFieldSet", conformance: "O" }
+                        {
+                            tag: "datatype", name: "ExtensionFieldSets", type: "list", conformance: "O",
+                            children: [{ tag: "datatype", name: "entry", type: "ExtensionFieldSet" }]
+                        }
                     ]
                 },
 
@@ -4887,7 +4993,10 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
                         { tag: "datatype", name: "Capacity", type: "uint8", conformance: "M", quality: "X" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
-                        { tag: "datatype", name: "SceneList", type: "uint8", conformance: "O" }
+                        {
+                            tag: "datatype", name: "SceneList", type: "list", conformance: "O",
+                            children: [{ tag: "datatype", name: "entry", type: "uint8" }]
+                        }
                     ]
                 },
 
@@ -4910,7 +5019,10 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "O" },
                         { tag: "datatype", name: "SceneName", type: "string", conformance: "O" },
-                        { tag: "datatype", name: "ExtensionFieldSets", type: "ExtensionFieldSet", conformance: "O" }
+                        {
+                            tag: "datatype", name: "ExtensionFieldSets", type: "list", conformance: "O",
+                            children: [{ tag: "datatype", name: "entry", type: "ExtensionFieldSet" }]
+                        }
                     ]
                 },
 
@@ -4925,17 +5037,25 @@ export const ChipMatter: MatterElement = {
 
                 {
                     tag: "datatype", name: "ExtensionFieldSet", type: "struct", conformance: "M",
+
                     children: [
                         { tag: "datatype", name: "ClusterId", type: "cluster-id", conformance: "M" },
-                        { tag: "datatype", name: "AttributeValueList", type: "AttributeValuePair", conformance: "M" }
+                        {
+                            tag: "datatype", name: "AttributeValueList", type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "AttributeValuePair" }]
+                        }
                     ]
                 },
 
                 {
                     tag: "datatype", name: "AttributeValuePair", type: "struct", conformance: "M",
+
                     children: [
                         { tag: "datatype", name: "AttributeId", type: "attrib-id", conformance: "O" },
-                        { tag: "datatype", name: "AttributeValue", type: "uint8", conformance: "M" }
+                        {
+                            tag: "datatype", name: "AttributeValue", type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "uint8" }]
+                        }
                     ]
                 },
 
@@ -5344,7 +5464,10 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "NumberOfTransitionsForSequence", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "DayOfWeekForSequence", type: "DayOfWeek", conformance: "M" },
                         { tag: "datatype", name: "ModeForSequence", type: "ModeForSequence", conformance: "M" },
-                        { tag: "datatype", name: "Transitions", type: "ThermostatScheduleTransition", conformance: "M" }
+                        {
+                            tag: "datatype", name: "Transitions", type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "ThermostatScheduleTransition" }]
+                        }
                     ]
                 },
 
@@ -5369,7 +5492,10 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "NumberOfTransitionsForSequence", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "DayOfWeekForSequence", type: "DayOfWeek", conformance: "M" },
                         { tag: "datatype", name: "ModeForSequence", type: "ModeForSequence", conformance: "M" },
-                        { tag: "datatype", name: "Transitions", type: "ThermostatScheduleTransition", conformance: "M" }
+                        {
+                            tag: "datatype", name: "Transitions", type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "ThermostatScheduleTransition" }]
+                        }
                     ]
                 },
 
@@ -5589,9 +5715,16 @@ export const ChipMatter: MatterElement = {
 
                 {
                     tag: "event", name: "NetworkFaultChange", id: 0x1, conformance: "O", priority: "info",
+
                     children: [
-                        { tag: "datatype", name: "Current", id: 0x0, type: "NetworkFault", conformance: "M" },
-                        { tag: "datatype", name: "Previous", id: 0x1, type: "NetworkFault", conformance: "M" }
+                        {
+                            tag: "datatype", name: "Current", id: 0x0, type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "NetworkFault" }]
+                        },
+                        {
+                            tag: "datatype", name: "Previous", id: 0x1, type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "NetworkFault" }]
+                        }
                     ]
                 },
 
@@ -6590,7 +6723,10 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "ProfileCount", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "ProfileIntervalPeriod", type: "enum8", conformance: "M" },
                         { tag: "datatype", name: "MaxNumberOfIntervals", type: "uint8", conformance: "M" },
-                        { tag: "datatype", name: "ListOfAttributes", type: "uint16", conformance: "M" }
+                        {
+                            tag: "datatype", name: "ListOfAttributes", type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "uint16" }]
+                        }
                     ]
                 },
 
@@ -6615,7 +6751,10 @@ export const ChipMatter: MatterElement = {
                         { tag: "datatype", name: "ProfileIntervalPeriod", type: "enum8", conformance: "M" },
                         { tag: "datatype", name: "NumberOfIntervalsDelivered", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "AttributeId", type: "uint16", conformance: "M" },
-                        { tag: "datatype", name: "Intervals", type: "uint8", conformance: "M" }
+                        {
+                            tag: "datatype", name: "Intervals", type: "list", conformance: "M",
+                            children: [{ tag: "datatype", name: "entry", type: "uint8" }]
+                        }
                     ]
                 },
 

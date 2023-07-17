@@ -974,7 +974,10 @@ Matter.children.push({
                 { tag: "datatype", name: "NumberOfTransitionsForSequence", type: "uint8", conformance: "M" },
                 { tag: "datatype", name: "DayOfWeekForSequence", type: "DayOfWeek", conformance: "M" },
                 { tag: "datatype", name: "ModeForSequence", type: "ModeForSequence", conformance: "M" },
-                { tag: "datatype", name: "Transitions", type: "ThermostatScheduleTransition", conformance: "M" }
+                {
+                    tag: "datatype", name: "Transitions", type: "list", conformance: "M",
+                    children: [{ tag: "datatype", name: "entry", type: "ThermostatScheduleTransition" }]
+                }
             ]
         },
 
@@ -1008,7 +1011,10 @@ Matter.children.push({
                 { tag: "datatype", name: "NumberOfTransitionsForSequence", type: "uint8", conformance: "M" },
                 { tag: "datatype", name: "DayOfWeekForSequence", type: "DayOfWeek", conformance: "M" },
                 { tag: "datatype", name: "ModeForSequence", type: "ModeForSequence", conformance: "M" },
-                { tag: "datatype", name: "Transitions", type: "ThermostatScheduleTransition", conformance: "M" }
+                {
+                    tag: "datatype", name: "Transitions", type: "list", conformance: "M",
+                    children: [{ tag: "datatype", name: "entry", type: "ThermostatScheduleTransition" }]
+                }
             ]
         },
 
