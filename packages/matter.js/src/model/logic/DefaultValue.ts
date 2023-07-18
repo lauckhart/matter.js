@@ -19,7 +19,7 @@ import { ValueModel } from "../models/index.js";
  * correct type.
  */
 export function DefaultValue(model: ValueModel): any {
-    let value = castValue(model);
+    const value = castValue(model);
     if (value === undefined) {
         return buildValue(model);
     }
@@ -30,7 +30,7 @@ export function DefaultValue(model: ValueModel): any {
  * When an explicit value is present, cast to native JS type.
  */
 function castValue(model: ValueModel) {
-    let modelDefault = model.default;
+    const modelDefault = model.default;
     if (modelDefault === undefined) {
         return;
     }
@@ -120,7 +120,7 @@ function buildValue(model: ValueModel) {
                 && !model.constraint.min
                 && !model.constraint.value
             ) {
-                return Array();
+                return [];
             }
             return;
 

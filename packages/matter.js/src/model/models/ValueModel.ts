@@ -14,7 +14,7 @@ import { Model } from "./Model.js";
 // references in the Model.constructors factory pool.
 import { type DatatypeModel } from "./DatatypeModel.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
-import { DefaultValue } from "../index.js";
+import { DefaultValue } from "../logic/index.js";
 
 const CONSTRAINT: unique symbol = Symbol("constraint");
 const CONFORMANCE: unique symbol = Symbol("conformance");
