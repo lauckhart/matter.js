@@ -6,7 +6,7 @@
 
 // Run a TypeScript REPL with key objects loaded
 
-import { repl } from "@ts-node/repl";
+import repl from "repl";
 import { homedir } from "os";
 import { join } from "path";
 
