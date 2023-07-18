@@ -6,6 +6,8 @@
 
 const LIST_INDENT = 2;
 
+export { camelize, serialize, describeList } from "#matter.js/util/String.ts";
+
 /**
  * Performs word wrap.  Input is assumed to be a series of paragraphs separated
  * by a newline.  Output is an array of formatted lines.

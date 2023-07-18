@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { MatterElement } from "../src/model/index.js";
+import { MatterElement } from "#matter.js/model/index.js";
 
 export const ChipMatter: MatterElement = {
     tag: "matter", name: "ChipMatter",

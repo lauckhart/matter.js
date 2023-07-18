@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Globals } from "../../src/model/index.js";
+import { Globals } from "#matter.js/model/index.js";
 import { LocalMatter } from "../local.js";
 
 LocalMatter.children.push({

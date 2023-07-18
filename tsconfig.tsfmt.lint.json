@@ -11,7 +11,11 @@
       "noUnusedLocals": true,
       "strictNullChecks": true
     },
-    "include": ["packages/**/*.ts"],
+    "include": [
+        "packages/**/*.ts",
+        "tools/**/*.ts",
+        "models/**/*.ts"
+    ],
     "exclude": [
         "packages/*/dist",
 

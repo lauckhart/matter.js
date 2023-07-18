@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../../src/common/InternalError.js";
-import { Specification } from "../../src/model/index.js";
-import { serialize } from "../../src/util/String.js";
+import { InternalError } from "#matter.js/common/InternalError.js";
+import { Specification } from "#matter.js/model/index.js";
+import { serialize } from "#matter.js/util/String.js";
 import { writeMatterFile } from "./file.js";
 import { asObjectKey, wordWrap } from "./string.js";
 

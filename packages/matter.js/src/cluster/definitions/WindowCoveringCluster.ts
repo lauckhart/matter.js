@@ -165,7 +165,7 @@ export const Mode = {
     /**
      * Disables (0) or Enables (1) Lift reversal
      */
-    bit0: BitFlag(0),
+    motorDirectionReversed: BitFlag(0),
 
     /**
      * Disabled (0) or Enabled (1) placing the Window Covering into calibration Mode where limits are either setup
@@ -179,7 +179,7 @@ export const Mode = {
      * device/manufacturer implementation.A manufacturer might choose to set the operational bit to its not operational
      * value, if applicable during calibration mode
      */
-    bit1: BitFlag(1),
+    calibrationMode: BitFlag(1),
 
     /**
      * Disables (0) or Enables (1) placing the Window Covering into Maintenance Mode where it cannot be moved over the
@@ -187,13 +187,13 @@ export const Mode = {
      * DownOrClose, GoTos) that can result in movement, must be ignored and respond with a BUSY status. Additionally,
      * the operational bit of the ConfigStatus attribute should be set to its not operational value.
      */
-    bit2: BitFlag(2),
+    maintenanceMode: BitFlag(2),
 
     /**
      * Disables (0) or Enables (1) the display of any feedback LEDs resident especially on the packaging of an endpoint
      * where they may cause distraction to the occupant.
      */
-    bit3: BitFlag(3)
+    ledFeedback: BitFlag(3)
 };
 
 /**

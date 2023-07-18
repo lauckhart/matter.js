@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Logger } from "../../../src/log/Logger.js";
-import { AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals, Metatype } from "../../../src/model/index.js";
-import { camelize } from "../../../src/util/String.js";
+import { Logger } from "#matter.js/log/Logger.js";
+import { AttributeElement, ClusterElement, CommandElement, DatatypeElement, EventElement, Globals, Metatype } from "#matter.js/model/index.js";
+import { camelize } from "#util/string.js";
 import { addDocumentation } from "./add-documentation.js";
 import { Bits, Code, Identifier, Integer, LowerIdentifier, NoSpace, Str, UpperIdentifier } from "./html-translators.js";
 import { ClusterReference, HtmlReference } from "./spec-types.js";
@@ -177,7 +177,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
 
     function translateFeatures() {
         const records = translateTable("feature", definition.features, {
-            constraint: Alias(Integer, "bit"),
+            constraint: Alias(Integer, "bit", "id"),
             conformance: Optional(Code),
             details: Optional(Alias(Str, "description", "summary")),
 

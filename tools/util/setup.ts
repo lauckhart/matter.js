@@ -4,25 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Time } from "../../src/time/Time.js";
-import { Logger } from "../../src/log/Logger.js";
-
-Time.get = () => ({
-    now: () => {
-        return new Date();
-    },
-
-    nowMs: () => {
-        return new Date().getTime();
-    },
-
-    getPeriodicTimer: () => {
-        throw new Error();
-    },
-
-    getTimer: () => {
-        throw new Error();
-    }
-});
+import { Logger } from "#matter.js/log/Logger.js";
 
 Logger.format = "ansi";

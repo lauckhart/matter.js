@@ -7,15 +7,15 @@
 import {
     ClusterModel,
     ClusterVariance
-} from "../../src/model/index.js";
-import { Logger } from "../../src/log/Logger.js";
+} from "#matter.js/model/index.js";
+import { Logger } from "#matter.js/log/Logger.js";
 import { ClusterFile } from "./ClusterFile.js";
 import { ClusterComponentGenerator } from "./ClusterComponentGenerator.js";
-import { camelize, serialize } from "../../src/util/String.js";
-import { FeatureNames, translateBitmap } from "../../src/model/logic/cluster-variance/FeatureBitmap.js";
-import { conditionToBitmaps } from "../../src/model/logic/cluster-variance/VarianceCondition.js";
-import { IllegalFeatureCombinations } from "../../src/model/logic/cluster-variance/IllegalFeatureCombinations.js";
-import { Block } from "../util/TsFile.js";
+import { camelize, serialize } from "#util/string.js";
+import { FeatureNames, translateBitmap } from "#matter.js/model/logic/cluster-variance/FeatureBitmap.js";
+import { conditionToBitmaps } from "#matter.js/model/logic/cluster-variance/VarianceCondition.js";
+import { IllegalFeatureCombinations } from "#matter.js/model/logic/cluster-variance/IllegalFeatureCombinations.js";
+import { Block } from "#util/TsFile.js";
 
 const logger = Logger.get("generate-cluster");
 

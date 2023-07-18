@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Words } from "../../util/words.js";
+import { Words } from "#util/words.js";
 import { Str } from "./html-translators.js";
 import { HtmlReference } from "./spec-types.js";
 

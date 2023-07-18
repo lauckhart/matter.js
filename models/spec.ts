@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { MatterElement } from "../src/model/index.js";
+import { MatterElement } from "#matter.js/model/index.js";
 
 export const SpecMatter: MatterElement = {
     tag: "matter", name: "SpecMatter",
@@ -1763,6 +1763,15 @@ export const SpecMatter: MatterElement = {
 
             children: [
                 { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
+
+                {
+                    tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+                    xref: { document: "cluster", section: "1.8.4" },
+                    children: [{
+                        tag: "datatype", name: "DEPONOFF", constraint: "0", description: "OnOff",
+                        details: "Dependency with the On/Off cluster"
+                    }]
+                },
 
                 {
                     tag: "attribute", name: "Description", id: 0x0, type: "string", access: "R V", conformance: "M",

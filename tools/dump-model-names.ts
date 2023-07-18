@@ -7,7 +7,7 @@
 // This utility dumps names from the model to make it easier to look for
 // inconsistencies
 
-import { Matter, MatterModel } from "../src/model/index.js";
+import { Matter, MatterModel } from "#matter.js/model/index.js";
 
 const names = {} as { [name: string]: number };
 

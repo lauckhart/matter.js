@@ -7,16 +7,14 @@
 // Generates the runtime Matter model
 
 import "./util/setup.js";
-import { Logger } from "../src/log/Logger.js";
-import { AnyElement, MatterElement, MatterModel } from "../src/model/index.js";
-import { MergeModels } from "../src/model/logic/index.js";
+import { Logger } from "#matter.js/log/Logger.js";
+import { AnyElement, MatterElement, MatterModel } from "#matter.js/model/index.js";
+import { MergeModels } from "#matter.js/model/logic/index.js";
 import { TsFile } from "./util/TsFile.js";
 import { clean } from "./util/file.js";
 import { generateElement } from "./mom/common/generate-element.js";
-import { SpecMatter, ChipMatter, LocalMatter } from "../models/index.js";
+import { SpecMatter, ChipMatter, LocalMatter } from "#models/index.js";
 import { finalizeModel } from "./util/finalize-model.js";
-
-export const MODEL_PATH = "src/model/standard/elements";
 export const CLUSTER_SUFFIX = "Element";
 
 const logger = Logger.get("generate-model");
@@ -24,7 +22,7 @@ const logger = Logger.get("generate-model");
 function generateElementFile(element: AnyElement) {
     logger.debug(element.name);
 
-    const file = new TsFile(`${MODEL_PATH}/${element.name}`);
+    const file = new TsFile(`#elements/${element.name}`);
 
     file.addImport(`../Matter`, `Matter`);
 
@@ -39,7 +37,7 @@ function generateElementFile(element: AnyElement) {
 }
 
 function generateIndex(elements: AnyElement[]) {
-    const file = new TsFile(`${MODEL_PATH}/index`);
+    const file = new TsFile(`#elements/index`);
     elements.forEach(element => {
         if (!element.global) {
             file.addImport(`./${element.name}`);
@@ -54,7 +52,7 @@ const matter = new MatterModel(MergeModels({ spec: SpecMatter, chip: ChipMatter,
 const validationResult = finalizeModel(matter);
 
 logger.info("remove matter model elements")
-clean(`${MODEL_PATH}`);
+clean("#elements");
 
 logger.info("generate matter model");
 Logger.nest(() => {

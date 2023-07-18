@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Globals } from "../../src/model/elements/Globals.js";
+import { Globals } from "#matter.js/model/elements/Globals.js";
 import {
     UINT8_MAX,
     UINT16_MAX,
@@ -21,7 +21,7 @@ import {
     INT64_MAX,
     FLOAT32_MIN,
     FLOAT32_MAX
-} from "../../src/util/Number.js";
+} from "#matter.js/util/Number.js";
 
 /**
  * Map of matter datatype names to TlvGenerator.tlvImport arguments.

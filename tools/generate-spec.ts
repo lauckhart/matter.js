@@ -18,14 +18,14 @@
 // mention the term "masochist".
 
 import "./util/setup.js";
-import { ClusterElement } from "../src/model/index.js"
+import { ClusterElement } from "#matter.js/model/index.js"
 import { scanIndex } from "./mom/spec/scan-index.js";
 
 import { paths } from "./mom/spec/spec-input.js";
 import { ClusterReference, HtmlReference } from "./mom/spec/spec-types.js";
 import { loadCluster } from "./mom/spec/load-cluster.js";
 import { translateCluster } from "./mom/spec/translate-cluster.js";
-import { Logger } from "../src/log/Logger.js";
+import { Logger } from "#matter.js/log/Logger.js";
 import { generateIntermediateModel } from "./mom/common/generate-intermediate.js";
 import { loadDevices } from "./mom/spec/load-devices.js";
 import { translateDevice } from "./mom/spec/translate-device.js";

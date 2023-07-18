@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../../src/common/InternalError.js";
+import { InternalError } from "#matter.js/common/InternalError.js";
 import {
     ClusterModel,
     CommandModel,
@@ -17,10 +17,9 @@ import {
     Metatype,
     Model,
     ValueModel
-} from "../../src/model/index.js";
-import { camelize, serialize } from "../../src/util/String.js";
-import { Entry } from "../util/TsFile.js";
-import { asObjectKey } from "../util/string.js";
+} from "#matter.js/model/index.js";
+import { camelize, serialize, asObjectKey } from "#util/string.js";
+import { Entry } from "#util/TsFile.js";
 import { ClusterFile } from "./ClusterFile.js";
 import { NumericRanges, SpecializedNumbers, WrappedConstantKeys } from "./NumberConstants.js";
 

@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Logger } from "../../../src/log/Logger.js";
-import { Access, AnyElement, AttributeElement, ValueElement, ClusterElement, CommandElement, Conformance, DatatypeElement, ElementTag, EventElement, AnyValueElement } from "../../../src/model/index.js";
-import { camelize } from "../../../src/util/String.js";
+import { Logger } from "#matter.js/log/Logger.js";
+import { Access, AnyElement, AttributeElement, ValueElement, ClusterElement, CommandElement, Conformance, DatatypeElement, ElementTag, EventElement, AnyValueElement } from "#matter.js/model/index.js";
+import { camelize } from "#util/string.js";
 import { TypeMap } from "./type-map.js";
 
 const logger = Logger.get("translate-chip");

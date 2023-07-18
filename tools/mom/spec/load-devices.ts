@@ -9,5 +9,6 @@ import { HtmlReference } from "./spec-types.js";
 
 export function* loadDevices(devices: HtmlReference): Generator<HtmlReference> {
     // TODO
+    devices;
     //scanSection(devices)
 }

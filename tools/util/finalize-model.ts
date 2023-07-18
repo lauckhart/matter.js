@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Logger } from "../../src/log/Logger.js";
-import { AttributeModel, ClusterModel, CommandModel, DatatypeModel, Globals, MatterModel, Metatype, ValidateModel, ValueModel } from "../../src/model/index.js";
-import { isDeepEqual } from "../../src/util/DeepEqual.js";
+import { Logger } from "#matter.js/log/Logger.js";
+import { AttributeModel, ClusterModel, CommandModel, DatatypeModel, Globals, MatterModel, Metatype, ValidateModel, ValueModel } from "#matter.js/model/index.js";
+import { isDeepEqual } from "#matter.js/util/DeepEqual.js";
 
 const logger = Logger.get("create-model");
 

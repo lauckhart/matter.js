@@ -6,9 +6,9 @@
 
 export const INTERMEDIATE_PATH = "models";
 
-import { Logger } from "../../../src/log/Logger.js";
-import { MatterElement, MatterModel } from "../../../src/model/index.js";
-import { camelize } from "../../../src/util/String.js";
+import { Logger } from "#matter.js/log/Logger.js";
+import { MatterElement, MatterModel } from "#matter.js/model/index.js";
+import { camelize } from "#util/string.js";
 import { TsFile } from "../../util/TsFile.js";
 import { finalizeModel } from "../../util/finalize-model.js";
 import { generateElement } from "./generate-element.js";
@@ -29,8 +29,8 @@ export function generateIntermediateModel(source: string, elements: MatterElemen
 
     const validationResult = finalizeModel(matter);
 
-    const file = new TsFile(`${INTERMEDIATE_PATH}/${source}`);
-    file.addImport("../src/model/index", "MatterElement");
+    const file = new TsFile(`#intermediate/${source}`);
+    file.addImport("#matter.js/model/index", "MatterElement");
     generateElement(file, matter, `export const ${camelize(source)}Matter: MatterElement = `);
     file.save();
 

@@ -4,10 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AnyElement } from "../../../src/model/index.js";
-import { serialize } from "../../../src/util/String.js";
-import { Block } from "../../util/TsFile.js";
-import { wordWrap } from "../../util/string.js";
+import { AnyElement } from "#matter.js/model/index.js";
+import { serialize, wordWrap } from "#util/string.js";
+import { Block } from "#util/TsFile.js";
 
 export function generateElement(target: Block, element: AnyElement, prefix = "", suffix = "") {
     const block = target.expressions(`${prefix}{`, `}${suffix}`);

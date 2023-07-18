@@ -5,7 +5,7 @@
  */
 
 import "./util/setup.js";
-import { MatterModel } from "../src/model/index.js";
+import { MatterModel } from "#matter.js/model/index.js";
 import { generateCluster } from "./clusters/generate-cluster.js";
 import { ClusterFile } from "./clusters/ClusterFile.js";
 import { TsFile } from "./util/TsFile.js";

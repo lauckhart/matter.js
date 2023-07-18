@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Specification } from "../../../src/model/index.js";
+import { Specification } from "#matter.js/model/index.js";
 
 /** An HTML table */
 export type Table = {

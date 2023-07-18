@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { camelize } from "../../../src/util/String.js";
-import { Words } from "../../util/words.js";
+import { camelize } from "#util/string.js";
+import { Words } from "#util/words.js";
 
 /** String, trimmed with whitespace collapsed */
 export const Str = (el: HTMLElement) => {

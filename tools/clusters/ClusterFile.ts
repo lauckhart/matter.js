@@ -4,11 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterModel } from "../../src/model/index.js";
-import { Block, TsFile } from "../util/TsFile.js";
-import { clean } from "../util/file.js";
-
-const DEFINITION_PATH = "src/cluster/definitions"
+import { ClusterModel } from "#matter.js/model/index.js";
+import { Block, TsFile } from "#util/TsFile.js";
+import { clean } from "#util/file.js";
 
 export class ClusterFile extends TsFile {
     clusterName: string;
@@ -22,11 +20,11 @@ export class ClusterFile extends TsFile {
     }
 
     static clean() {
-        clean(DEFINITION_PATH);
+        clean("#clusters");
     }
 
     static createFilename(name: string) {
-        return `${DEFINITION_PATH}/${name}`;
+        return `#clusters/${name}`;
     }
 
     override addImport(filename: string, symbol: string) {

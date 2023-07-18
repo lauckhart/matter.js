@@ -14,11 +14,11 @@ import {
     EventModel,
     Model,
     ValueModel
-} from "../../src/model/index.js";
-import { InferredComponent } from "../../src/model/logic/cluster-variance/InferredComponents.js";
-import { NamedComponent } from "../../src/model/logic/cluster-variance/NamedComponents.js";
-import { camelize } from "../../src/util/String.js";
-import { Block } from "../util/TsFile.js";
+} from "#matter.js/model/index.js";
+import { InferredComponent } from "#matter.js/model/logic/cluster-variance/InferredComponents.js";
+import { NamedComponent } from "#matter.js/model/logic/cluster-variance/NamedComponents.js";
+import { camelize } from "#util/string.js";
+import { Block } from "#util/TsFile.js";
 import { ClusterFile } from "./ClusterFile.js";
 import { DefaultValueGenerator } from "./DefaultValueGenerator.js";
 import { TlvGenerator } from "./TlvGenerator.js";

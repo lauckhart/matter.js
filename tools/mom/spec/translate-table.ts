@@ -5,8 +5,8 @@
  */
 
 import { HtmlReference } from "./spec-types.js";
-import { Logger } from "../../../src/log/Logger.js";
-import { AnyElement, DatatypeElement, Specification } from "../../../src/model/index.js";
+import { Logger } from "#matter.js/log/Logger.js";
+import { AnyElement, DatatypeElement, Specification } from "#matter.js/model/index.js";
 import { Str } from "./html-translators.js";
 import { addDocumentation } from "./add-documentation.js";
 

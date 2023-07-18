@@ -6,11 +6,11 @@
 
 // Run a TypeScript REPL with key objects loaded
 
-import repl from "repl";
+import { repl } from "@ts-node/repl";
 import { homedir } from "os";
 import { join } from "path";
 
-import * as model from "../src/model/index.js";
+import * as model from "#matter.js/model/index.js";
 
 (global as any).model = model;
 (global as any).matter = new model.MatterModel();

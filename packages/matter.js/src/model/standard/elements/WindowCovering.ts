@@ -329,17 +329,20 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.3.5.21" },
 
             children: [
-                { tag: "datatype", name: "Bit0", constraint: "0", description: "Disables (0) or Enables (1) Lift reversal" },
                 {
-                    tag: "datatype", name: "Bit1", constraint: "1",
+                    tag: "datatype", name: "MotorDirectionReversed", constraint: "0",
+                    description: "Disables (0) or Enables (1) Lift reversal"
+                },
+                {
+                    tag: "datatype", name: "CalibrationMode", constraint: "1",
                     description: "Disabled (0) or Enabled (1) placing the Window Covering into calibration Mode where limits are either setup using tools or learned by the Window Covering by doing self-calibration.If in calibration mode, all commands (e.g: UpOrOpen, DownOrClose, GoTos) that can result in movement, could be accepted and result in a self-calibration being initiated before the command is executed. In case the Window Covering does not have the ability or is not able to perform a self-calibration, the command SHOULD be ignored and a FAILURE status SHOULD be returned.In a write interaction, setting this bit to 0, while the device is in calibration mode, is not allowed and SHALL generate a FAILURE error status. In order to leave calibration mode, the device must perform its calibration routine, either as a self- calibration or assisted by external tool(s), depending on the device/manufacturer implementation.A manufacturer might choose to set the operational bit to its not operational value, if applicable during calibration mode"
                 },
                 {
-                    tag: "datatype", name: "Bit2", constraint: "2",
+                    tag: "datatype", name: "MaintenanceMode", constraint: "2",
                     description: "Disables (0) or Enables (1) placing the Window Covering into Maintenance Mode where it cannot be moved over the network or by a switch connected to a Local Switch Input.While in maintenance mode, all commands (e.g: UpOrOpen, DownOrClose, GoTos) that can result in movement, must be ignored and respond with a BUSY status. Additionally, the operational bit of the ConfigStatus attribute should be set to its not operational value."
                 },
                 {
-                    tag: "datatype", name: "Bit3", constraint: "3",
+                    tag: "datatype", name: "LedFeedback", constraint: "3",
                     description: "Disables (0) or Enables (1) the display of any feedback LEDs resident especially on the packaging of an endpoint where they may cause distraction to the occupant."
                 }
             ]
@@ -624,23 +627,23 @@ Matter.children.push({
         },
 
         {
-            tag: "datatype", name: "MovementStatus", type: "enum8",
-            details: "Values for OperationalStatus attribute fields.",
-            children: [
-                { tag: "datatype", name: "Stopped", id: 0x0, details: "Covering is not moving" },
-                { tag: "datatype", name: "Opening", id: 0x1, details: "Covering is moving from closed to open" },
-                { tag: "datatype", name: "Closing", id: 0x2, details: "Covering is moving from open to closed" }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "Mode",
+            tag: "datatype", name: "Mode", type: "map8", conformance: "M",
 
             children: [
                 { tag: "datatype", name: "MotorDirectionReversed", constraint: "0" },
                 { tag: "datatype", name: "CalibrationMode", constraint: "1" },
                 { tag: "datatype", name: "MaintenanceMode", constraint: "2" },
                 { tag: "datatype", name: "LedFeedback", constraint: "3" }
+            ]
+        },
+
+        {
+            tag: "datatype", name: "MovementStatus", type: "enum8",
+            details: "Values for OperationalStatus attribute fields.",
+            children: [
+                { tag: "datatype", name: "Stopped", id: 0x0, details: "Covering is not moving" },
+                { tag: "datatype", name: "Opening", id: 0x1, details: "Covering is moving from closed to open" },
+                { tag: "datatype", name: "Closing", id: 0x2, details: "Covering is moving from open to closed" }
             ]
         }
     ]

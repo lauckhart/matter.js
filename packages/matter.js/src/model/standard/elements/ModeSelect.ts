@@ -38,6 +38,15 @@ Matter.children.push({
         { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
 
         {
+            tag: "attribute", name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
+            xref: { document: "cluster", section: "1.8.4" },
+            children: [{
+                tag: "datatype", name: "DEPONOFF", constraint: "0", description: "OnOff",
+                details: "Dependency with the On/Off cluster"
+            }]
+        },
+
+        {
             tag: "attribute", name: "Description", id: 0x0, type: "string", access: "R V", conformance: "M",
             constraint: "max 64", quality: "F",
 

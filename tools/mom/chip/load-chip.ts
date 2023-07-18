@@ -3,14 +3,14 @@
  * Copyright 2022-2023 Project CHIP Authors
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Directory, Repo } from "../../util/github.js";
-import { readFileWithCache } from "../../util/file.js";
+import { Directory, Repo } from "#util/github.js";
+import { readFileWithCache } from "#util/file.js";
 import { readFileSync } from "fs";
 import { homedir } from "os";
 import { resolve } from "path";
-import { Logger } from "../../../src/log/Logger.js";
+import { Logger } from "#matter.js/log/Logger.js";
 import { JSDOM } from "jsdom";
-import { AnyElement, ClusterElement, DatatypeElement, Globals, Metatype, ValueElement } from "../../../src/model/index.js";
+import { AnyElement, ClusterElement, DatatypeElement, Globals, Metatype, ValueElement } from "#matter.js/model/index.js";
 import { translateChip } from "./translate-chip.js";
 
 const AUTH_FILE = resolve(homedir(), ".gh-auth");

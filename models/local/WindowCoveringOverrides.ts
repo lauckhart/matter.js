@@ -38,7 +38,7 @@ LocalMatter.children.push({
         // placeholders in spec.ts.  Since spec overrides chip for names we
         // need to re-write them here
         {
-            tag: "datatype", name: "Mode",
+            tag: "attribute", id: 0x17, name: "Mode",
 
             children: [
                 { tag: "datatype", name: "MotorDirectionReversed", constraint: "0" },

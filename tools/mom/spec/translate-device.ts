@@ -7,5 +7,6 @@
 import { HtmlReference } from "./spec-types.js";
 
 export function* translateDevice(deviceRef: HtmlReference) {
-    
+    // TODO
+    deviceRef;
 }

@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Logger } from "../../../src/log/Logger.js";
-import { camelize } from "../../../src/util/String.js";
+import { Logger } from "#matter.js/log/Logger.js";
+import { camelize } from "#util/string.js";
 import { ClusterReference, HtmlReference } from "./spec-types.js";
 import { scanSection } from "./scan-section.js";
-import { Specification } from "../../../src/model/index.js";
+import { Specification } from "#matter.js/model/index.js";
 
 const logger = Logger.get("load-cluster");
 

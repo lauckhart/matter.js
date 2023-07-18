@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Metatype, ValueModel } from "../../src/model/index.js";
-import { camelize, serialize } from "../../src/util/String.js";
-import { Properties } from "../../src/util/Type.js";
+import { Metatype, ValueModel } from "#matter.js/model/index.js";
+import { camelize, serialize } from "#util/string.js";
+import { Properties } from "#matter.js/util/Type.js";
 import { SpecializedNumbers, WrappedConstantKeys } from "./NumberConstants.js";
 import { TlvGenerator } from "./TlvGenerator.js";
 
