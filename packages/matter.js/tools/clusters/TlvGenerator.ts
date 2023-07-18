@@ -390,12 +390,6 @@ export class TlvGenerator {
             return "StatusCode";
         }
 
-        // Special case - we allow non-FeatureMap fields to reference the
-        // feature map for values, but the name of the enum is specialized
-        if (model.id === Globals.FeatureMap.id) {
-            return `${this.cluster.name}Feature`;
-        }
-
         // Determine what we'll call this thing.  Name should be defined
         const name = this.nameFor(model);
         if (name === undefined) {

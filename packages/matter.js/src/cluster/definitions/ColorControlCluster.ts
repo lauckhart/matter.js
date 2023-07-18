@@ -59,6 +59,48 @@ export const enum EnhancedColorMode {
 }
 
 /**
+ * The value of the ColorControl featureMap attribute
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.5
+ */
+export const FeatureMap = {
+    /**
+     * HueSaturation
+     *
+     * Supports color specification via hue/saturation.
+     */
+    hs: BitFlag(0),
+
+    /**
+     * EnhancedHue
+     *
+     * Enhanced hue is supported.
+     */
+    ehue: BitFlag(1),
+
+    /**
+     * ColorLoop
+     *
+     * Color loop is supported.
+     */
+    cl: BitFlag(2),
+
+    /**
+     * Xy
+     *
+     * Supports color specification via XY.
+     */
+    xy: BitFlag(3),
+
+    /**
+     * ColorTemperature
+     *
+     * Supports specification of color temperature.
+     */
+    ct: BitFlag(4)
+};
+
+/**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.4.2
  */
 export const enum ColorControlDirection {
@@ -1083,7 +1125,7 @@ export const ColorControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.18
          */
-        colorCapabilities: FixedAttribute(0x400a, TlvBitmap(TlvUInt32, ColorControlFeature))
+        colorCapabilities: FixedAttribute(0x400a, TlvBitmap(TlvUInt32, FeatureMap))
     }
 });
 
