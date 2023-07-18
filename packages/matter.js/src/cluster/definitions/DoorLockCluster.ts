@@ -2154,10 +2154,10 @@ export const PinCredentialNotUserComponent = ClusterComponent({
 });
 
 /**
- * A DoorLockCluster supports these elements if it supports features PinCredential and RfidCredential and it doesn't
- * support feature USR.
+ * A DoorLockCluster supports these elements if it supports features PinCredential, RfidCredential and
+ * FingerCredentials and it doesn't support feature USR.
  */
-export const PinCredentialAndRfidCredentialNotUserComponent = ClusterComponent({
+export const PinCredentialAndRfidCredentialAndFingerCredentialsNotUserComponent = ClusterComponent({
     commands: {
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
@@ -2251,12 +2251,15 @@ export const DoorLockCluster = ExtensibleCluster({
         extendCluster(cluster, PinCredentialNotUserComponent, { pinCredential: true, user: false });
         extendCluster(
             cluster,
-            PinCredentialAndRfidCredentialNotUserComponent,
-            { pinCredential: true, rfidCredential: true, user: false }
+            PinCredentialAndRfidCredentialAndFingerCredentialsNotUserComponent,
+            { pinCredential: true, rfidCredential: true, fingerCredentials: true, user: false }
         );
         extendCluster(cluster, NotUserComponent, { user: false });
         extendCluster(cluster, RfidCredentialNotUserComponent, { rfidCredential: true, user: false });
-        preventCluster(cluster, { user: true, pinCredential: false, rfidCredential: false });
+        preventCluster(
+            cluster,
+            { user: true, pinCredential: false, rfidCredential: false, fingerCredentials: false, faceCredentials: false }
+        );
         return cluster as unknown as DoorLockExtension<BitFlags<typeof DoorLockBase.features, T>>;
     }
 });
@@ -2278,10 +2281,10 @@ export type DoorLockExtension<SF extends TypeFromPartialBitSchema<typeof DoorLoc
     & (SF extends { notification: true } ? typeof NotificationComponent : {})
     & (SF extends { notification: true, rfidCredential: true } ? typeof NotificationAndRfidCredentialComponent : {})
     & (SF extends { pinCredential: true, user: false } ? typeof PinCredentialNotUserComponent : {})
-    & (SF extends { pinCredential: true, rfidCredential: true, user: false } ? typeof PinCredentialAndRfidCredentialNotUserComponent : {})
+    & (SF extends { pinCredential: true, rfidCredential: true, fingerCredentials: true, user: false } ? typeof PinCredentialAndRfidCredentialAndFingerCredentialsNotUserComponent : {})
     & (SF extends { user: false } ? typeof NotUserComponent : {})
     & (SF extends { rfidCredential: true, user: false } ? typeof RfidCredentialNotUserComponent : {})
-    & (SF extends { user: true, pinCredential: false, rfidCredential: false } ? never : {});
+    & (SF extends { user: true, pinCredential: false, rfidCredential: false, fingerCredentials: false, faceCredentials: false } ? never : {});
 
 /**
  * This cluster supports all DoorLock features. It may support illegal feature combinations.
@@ -2318,7 +2321,7 @@ export const DoorLockComplete = Cluster({
         ...HolidaySchedulesComponent.commands,
         ...NotificationComponent.commands,
         ...PinCredentialNotUserComponent.commands,
-        ...PinCredentialAndRfidCredentialNotUserComponent.commands,
+        ...PinCredentialAndRfidCredentialAndFingerCredentialsNotUserComponent.commands,
         ...NotUserComponent.commands,
         ...RfidCredentialNotUserComponent.commands
     }

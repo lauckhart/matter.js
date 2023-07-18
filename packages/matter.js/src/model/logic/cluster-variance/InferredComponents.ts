@@ -56,11 +56,21 @@ function pattern(...parts: string[]) {
     return new RegExp(`^${parts.join("")}$`);
 }
 
-const FEATURE = "([A-Z_][A-Z_]+)";
+const FEATURE_NAME = "[A-Z_][A-Z_]+";
+const FEATURE = `(${FEATURE_NAME})`;
+const CONJUNCT_FEATURES = `(${FEATURE_NAME}(?: & ${FEATURE_NAME})*)`;
+const DISJUNCT_FEATURES = CONJUNCT_FEATURES.replace("&", "[|,]");
 const FIELD = "[A-Z][A-Za-z_$]+";
-const OR = " \\| ";
 const AND = " & ";
 const NOT = "!";
+
+function splitConjunction(conjunction: string) {
+    return conjunction.split(" & ");
+}
+
+function splitDisjunction(disjunction: string) {
+    return disjunction.split(" | ");
+}
 
 /**
  * We use a rules-based approach to infer cluster variance.  The goal is to
@@ -103,41 +113,33 @@ const VarianceMatchers: VarianceMatcher[] = [
 
     // FOO & fieldName (field ignored as must be runtime enforced)
     {
-        pattern: pattern(FEATURE, " & ", FIELD),
+        pattern: pattern(FEATURE, AND, FIELD),
         processor: (add, match) => {
             add(true, { allOf: match });
         }
     },
 
-    // FOO
+    // FOO<& BAR>*
     {
-        pattern: pattern(FEATURE),
+        pattern: pattern(CONJUNCT_FEATURES),
         processor: (add, match) => {
-            add(false, { allOf: match })
+            add(false, { allOf: splitConjunction(match[0]) })
         }
     },
 
-    // [FOO]
+    // [FOO<& BAR>*]
     {
-        pattern: pattern("[", FEATURE, "]"),
+        pattern: pattern("[", CONJUNCT_FEATURES, "]"),
         processor: (add, match) => {
-            add(true, { allOf: match })
+            add(true, { allOf: splitConjunction(match[0]) })
         }
     },
 
-    // FOO | BAR or FOO, BAR
+    // FOO<| BAR*> or FOO<, BAR>*
     {
-        pattern: pattern(FEATURE, "(?:, | \\| )", FEATURE),
+        pattern: pattern(DISJUNCT_FEATURES),
         processor: (add, match) => {
-            add(false, { anyOf: match });
-        }
-    },
-
-    // FOO & BAR
-    {
-        pattern: pattern(FEATURE, AND, FEATURE),
-        processor: (add, match) => {
-            add(false, { allOf: match });
+            add(false, { anyOf: splitDisjunction(match[0]) });
         }
     },
 
@@ -167,11 +169,11 @@ const VarianceMatchers: VarianceMatcher[] = [
         }
     },
 
-    // !FOO & (BAR | BIZ)
+    // !FOO & (BAR<| BIZ>*)
     {
-        pattern: pattern(NOT, FEATURE, AND, "(", FEATURE, OR, FEATURE, ")"),
+        pattern: pattern(NOT, FEATURE, AND, "(", DISJUNCT_FEATURES, ")"),
         processor: (add, match) => {
-            add(true, { allOf: match.slice(1), not: match[0] });
+            add(true, { allOf: splitDisjunction(match[1]), not: match[0] });
         }
     },
 
@@ -188,14 +190,6 @@ const VarianceMatchers: VarianceMatcher[] = [
         pattern: pattern("[", NOT, FEATURE, "]"),
         processor: (add, match) => {
             add(true, { not: match[0] });
-        }
-    },
-
-    // [FOO & BAR]
-    {
-        pattern: pattern("[", FEATURE, AND, FEATURE, "]"),
-        processor: (add, match) => {
-            add(true, { allOf: match });
         }
     },
 

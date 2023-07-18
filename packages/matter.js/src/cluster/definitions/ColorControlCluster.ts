@@ -1424,9 +1424,9 @@ export const ColorLoopComponent = ClusterComponent({
 });
 
 /**
- * A ColorControlCluster supports these elements if it supports features HueSaturation or Xy.
+ * A ColorControlCluster supports these elements if it supports features HueSaturation, Xy or ColorTemperature.
  */
-export const HueSaturationOrXyComponent = ClusterComponent({
+export const HueSaturationOrXyOrColorTemperatureComponent = ClusterComponent({
     commands: {
         /**
          * The StopMoveStep command is provided to allow MoveTo and Step commands to be stopped. (Note this
@@ -1468,7 +1468,15 @@ export const ColorControlCluster = ExtensibleCluster({
         extendCluster(cluster, ColorTemperatureComponent, { colorTemperature: true });
         extendCluster(cluster, EnhancedHueComponent, { enhancedHue: true });
         extendCluster(cluster, ColorLoopComponent, { colorLoop: true });
-        extendCluster(cluster, HueSaturationOrXyComponent, { hueSaturation: true }, { xy: true });
+
+        extendCluster(
+            cluster,
+            HueSaturationOrXyOrColorTemperatureComponent,
+            { hueSaturation: true },
+            { xy: true },
+            { colorTemperature: true }
+        );
+
         return cluster as unknown as ColorControlExtension<BitFlags<typeof ColorControlBase.features, T>>;
     }
 });
@@ -1481,7 +1489,7 @@ export type ColorControlExtension<SF extends TypeFromPartialBitSchema<typeof Col
     & (SF extends { colorTemperature: true } ? typeof ColorTemperatureComponent : {})
     & (SF extends { enhancedHue: true } ? typeof EnhancedHueComponent : {})
     & (SF extends { colorLoop: true } ? typeof ColorLoopComponent : {})
-    & (SF extends { hueSaturation: true } | { xy: true } ? typeof HueSaturationOrXyComponent : {});
+    & (SF extends { hueSaturation: true } | { xy: true } | { colorTemperature: true } ? typeof HueSaturationOrXyOrColorTemperatureComponent : {});
 
 /**
  * This cluster supports all ColorControl features. It may support illegal feature combinations.
@@ -1506,6 +1514,6 @@ export const ColorControlComplete = Cluster({
         ...ColorTemperatureComponent.commands,
         ...EnhancedHueComponent.commands,
         ...ColorLoopComponent.commands,
-        ...HueSaturationOrXyComponent.commands
+        ...HueSaturationOrXyOrColorTemperatureComponent.commands
     }
 });
