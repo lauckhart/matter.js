@@ -40,19 +40,25 @@ export function parseHeading(e: Node | null) {
     }
 }
 
+export type IndexDetail = {
+    clusters: HtmlReference[],
+    device?: HtmlReference
+}
+
 // Read an index file to find the portions of the spec we care about
 export function scanIndex(path: string) {
+    const result: IndexDetail = {
+        clusters: Array<HtmlReference>(),
+        device: undefined
+    }
+
     const source = loadHtml(path);
     const titleEl = source.querySelector("h1");
     if (!titleEl || !titleEl.textContent) {
         logger.error("cannot find specification title");
-        return;
+        return result;
     }
     const title = titleEl.textContent;
-
-    const result = {
-        clusters: Array<HtmlReference>()
-    }
 
     let spec: Specification;
     if (title.match(/matter specification/i)) {
@@ -63,13 +69,13 @@ export function scanIndex(path: string) {
         spec = Specification.Device;
     } else {
         logger.error(`matter specification name ${title} unrecognized`);
-        return;
+        return result;
     }
 
     const versionEl = titleEl.nextElementSibling;
     if (!versionEl || !versionEl.textContent || !versionEl.textContent.match(/version (?:\d\.)+/i)) {
         logger.error(`version element unrecognized`)
-        return;
+        return result;
     }
     const version = versionEl.textContent.replace(/.*version ([\d.]+).*/i, "$1");
 
@@ -132,6 +138,16 @@ export function scanIndex(path: string) {
                 result.clusters.push(cluster);
             }
             return;
+        }
+
+        // Having learned our lesson with clusters, don't bother with the index
+        // for devices.  Just scan the entire document
+        if (spec === "device") {
+            result.device = {
+                name: heading.name,
+                path,
+                xref
+            };
         }
     });
 

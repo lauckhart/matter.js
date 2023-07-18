@@ -105,12 +105,12 @@ export function* scanSection(ref: HtmlReference) {
     // State for scanSectionPage
     const namesIdentified = new Set<string>();
 
-    // Scan the cluster index page
+    // Scan the index page
     let path = ref.path;
     let html = loadHtml(path);
     yield* scanSectionPage(ref, html);
 
-    // Scan all subpages referenced from the cluster index page
+    // Scan all subpages referenced from the index page
     const toc = html.querySelectorAll(".toc a");
     for (const link of toc as NodeListOf<HTMLAnchorElement>) {
         path = join(dirname(ref.path), link.href);

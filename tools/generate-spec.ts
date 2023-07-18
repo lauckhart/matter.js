@@ -27,6 +27,8 @@ import { loadCluster } from "./mom/spec/load-cluster.js";
 import { translateCluster } from "./mom/spec/translate-cluster.js";
 import { Logger } from "../src/log/Logger.js";
 import { generateIntermediateModel } from "./mom/common/generate-intermediate.js";
+import { loadDevices } from "./mom/spec/load-devices.js";
+import { translateDevice } from "./mom/spec/translate-device.js";
 
 const clusters = Array<ClusterElement>();
 const logger = Logger.get("generate-spec");
@@ -44,12 +46,20 @@ function scanCluster(clusterRef: HtmlReference) {
     });
 }
 
+function scanDevices(devices: HtmlReference) {
+    for (const deviceRef of loadDevices(devices)) {
+        logger.info(`device ${deviceRef.name} (${deviceRef.xref.document} § ${deviceRef.xref.section})`);
+        Logger.nest(() => translateDevice(deviceRef));
+    }
+}
+
 paths.forEach(path => {
     logger.info(`load from spec ${path}`);
     Logger.nest(() => {
         const index = scanIndex(path);
-        if (index) {
-            index.clusters.forEach(scanCluster);
+        index.clusters.forEach(scanCluster);
+        if (index.device) {
+            scanDevices(index.device);
         }
     });
 });
