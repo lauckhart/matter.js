@@ -72,7 +72,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PhysicalClosedLimitLift", id: 0x1, type: "uint16", access: "R V",
-            conformance: "[LF & PA_LF]", default: 0, quality: "F",
+            conformance: "[LF & PA_LF & ABS]", default: 0, quality: "F",
             details: "The PhysicalClosedLimitLift attribute identifies the maximum possible encoder position possible (in " +
                 "centimeters) to position the height of the window covering Lift.",
             xref: { document: "cluster", section: "5.3.5.2" }
@@ -80,7 +80,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "PhysicalClosedLimitTilt", id: 0x2, type: "uint16", access: "R V",
-            conformance: "[TL & PA_TL]", default: 0, quality: "F",
+            conformance: "[TL & PA_TL & ABS]", default: 0, quality: "F",
             details: "The PhysicalClosedLimitTilt attribute identifies the maximum possible encoder position possible " +
                 "(tenth of a degrees) to position the angle of the window covering Tilt.",
             xref: { document: "cluster", section: "5.3.5.3" }
@@ -88,7 +88,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentPositionLift", id: 0x3, type: "uint16", access: "R V",
-            conformance: "[LF & PA_LF]", constraint: "InstalledOpenLimitLift to InstalledClosedLimitLift",
+            conformance: "[LF & PA_LF & ABS]", constraint: "InstalledOpenLimitLift to InstalledClosedLimitLift",
             default: null, quality: "X N",
             details: "The CurrentPositionLift attribute identifies the actual Lift position (in centimeters) of the " +
                 "window covering from the fully-open position.",
@@ -97,7 +97,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "CurrentPositionTilt", id: 0x4, type: "uint16", access: "R V",
-            conformance: "[TL & PA_TL]", constraint: "InstalledOpenLimitTilt to InstalledClosedLimitTilt",
+            conformance: "[TL & PA_TL & ABS]", constraint: "InstalledOpenLimitTilt to InstalledClosedLimitTilt",
             default: null, quality: "X N",
             details: "The CurrentPositionTilt attribute identifies the actual Tilt position (in tenth of an degree) of " +
                 "the window covering from the fully-open position.",
@@ -270,7 +270,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "InstalledOpenLimitLift", id: 0x10, type: "uint16", access: "R V",
-            conformance: "LF & PA_LF", constraint: "0 to 65534", default: 0, quality: "N",
+            conformance: "LF & PA_LF & ABS", constraint: "0 to 65534", default: 0, quality: "N",
             details: "The InstalledOpenLimitLift attribute identifies the Open Limit for Lifting the Window Covering " +
                 "whether position (in centimeters) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.17" }
@@ -278,7 +278,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "InstalledClosedLimitLift", id: 0x11, type: "uint16", access: "R V",
-            conformance: "LF & PA_LF", constraint: "0 to 65534", default: 65534, quality: "N",
+            conformance: "LF & PA_LF & ABS", constraint: "0 to 65534", default: 65534, quality: "N",
             details: "The InstalledClosedLimitLift attribute identifies the Closed Limit for Lifting the Window Covering " +
                 "whether position (in centimeters) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.18" }
@@ -286,7 +286,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "InstalledOpenLimitTilt", id: 0x12, type: "uint16", access: "R V",
-            conformance: "TL & PA_TL", constraint: "0 to 65534", default: 0, quality: "N",
+            conformance: "TL & PA_TL & ABS", constraint: "0 to 65534", default: 0, quality: "N",
             details: "The InstalledOpenLimitTilt attribute identifies the Open Limit for Tilting the Window Covering " +
                 "whether position (in tenth of a degree) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.19" }
@@ -294,7 +294,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "InstalledClosedLimitTilt", id: 0x13, type: "uint16", access: "R V",
-            conformance: "TL & PA_TL", constraint: "0 to 65534", default: 65534, quality: "N",
+            conformance: "TL & PA_TL & ABS", constraint: "0 to 65534", default: 65534, quality: "N",
             details: "The InstalledClosedLimitTilt attribute identifies the Closed Limit for Tilting the Window Covering " +
                 "whether position (in tenth of a degree) is encoded or timed.",
             xref: { document: "cluster", section: "5.3.5.20" }

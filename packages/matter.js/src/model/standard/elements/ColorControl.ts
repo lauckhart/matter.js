@@ -1175,7 +1175,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "StopMoveStep", id: 0x47, access: "O", conformance: "HS | XY",
+            tag: "command", name: "StopMoveStep", id: 0x47, access: "O", conformance: "HS | XY | CT",
             direction: "request", response: "status",
             details: "The StopMoveStep command is provided to allow MoveTo and Step commands to be stopped. (Note this " +
                 "automatically provides symmetry to the Level Control cluster.)" +

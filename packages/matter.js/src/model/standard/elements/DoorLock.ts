@@ -58,7 +58,8 @@ Matter.children.push({
                     details: "PIN codes over- the-air supported for lock/unlock operations"
                 },
                 {
-                    tag: "datatype", name: "USR", conformance: "[PIN | RID]", constraint: "8", description: "User",
+                    tag: "datatype", name: "USR", conformance: "[PIN | RID | FGP | FACE]", constraint: "8",
+                    description: "User",
                     details: "Lock supports the user commands and database"
                 },
                 {
@@ -975,13 +976,13 @@ Matter.children.push({
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
-            tag: "command", name: "SetUserStatus", id: 0x9, access: "A", conformance: "!USR & (PIN | RID)",
-            direction: "request", response: "status",
+            tag: "command", name: "SetUserStatus", id: 0x9, access: "A",
+            conformance: "!USR & (PIN | RID | FGP)", direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
-            tag: "command", name: "GetUserStatus", id: 0xa, access: "A", conformance: "!USR & (PIN | RID)",
-            direction: "request", response: "GetUserStatusResponse",
+            tag: "command", name: "GetUserStatus", id: 0xa, access: "A",
+            conformance: "!USR & (PIN | RID | FGP)", direction: "request", response: "GetUserStatusResponse",
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
@@ -1131,12 +1132,12 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "SetUserType", id: 0x14, access: "A", conformance: "!USR & (PIN | RID)",
+            tag: "command", name: "SetUserType", id: 0x14, access: "A", conformance: "!USR & (PIN | RID | FGP)",
             direction: "request", response: "status",
             xref: { document: "cluster", section: "5.2.4" }
         },
         {
-            tag: "command", name: "GetUserType", id: 0x15, access: "A", conformance: "!USR & (PIN | RID)",
+            tag: "command", name: "GetUserType", id: 0x15, access: "A", conformance: "!USR & (PIN | RID | FGP)",
             direction: "request", response: "GetUserTypeResponse",
             xref: { document: "cluster", section: "5.2.4" }
         },
@@ -1675,7 +1676,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "RemoteOnlyUser", id: 0x9, conformance: "USR & COTA",
+                    tag: "datatype", name: "RemoteOnlyUser", id: 0x9, conformance: "USR & COTA & PIN",
                     details: "User access and PIN code is restricted to remote lock/unlock commands only. This type of user might " +
                         "be useful for regular delivery services or voice assistant unlocking operations to prevent a PIN " +
                         "code credential created for them from being used at the keypad. The PIN code credential would only " +

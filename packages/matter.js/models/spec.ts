@@ -4018,7 +4018,7 @@ export const SpecMatter: MatterElement = {
                 },
 
                 {
-                    tag: "command", name: "StopMoveStep", id: 0x47, access: "O", conformance: "HS | XY",
+                    tag: "command", name: "StopMoveStep", id: 0x47, access: "O", conformance: "HS | XY | CT",
                     direction: "request", response: "status",
                     details: "The StopMoveStep command is provided to allow MoveTo and Step commands to be stopped. (Note this " +
                         "automatically provides symmetry to the Level Control cluster.)" +
@@ -6523,7 +6523,8 @@ export const SpecMatter: MatterElement = {
                             details: "PIN codes over- the-air supported for lock/unlock operations"
                         },
                         {
-                            tag: "datatype", name: "USR", conformance: "[PIN | RID]", constraint: "8", description: "User",
+                            tag: "datatype", name: "USR", conformance: "[PIN | RID | FGP | FACE]", constraint: "8",
+                            description: "User",
                             details: "Lock supports the user commands and database"
                         },
                         {
@@ -7405,13 +7406,13 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "5.2.4" }
                 },
                 {
-                    tag: "command", name: "SetUserStatus", id: 0x9, access: "A", conformance: "!USR & (PIN | RID)",
-                    direction: "request", response: "status",
+                    tag: "command", name: "SetUserStatus", id: 0x9, access: "A",
+                    conformance: "!USR & (PIN | RID | FGP)", direction: "request", response: "status",
                     xref: { document: "cluster", section: "5.2.4" }
                 },
                 {
-                    tag: "command", name: "GetUserStatus", id: 0xa, access: "A", conformance: "!USR & (PIN | RID)",
-                    direction: "request", response: "GetUserStatusResponse",
+                    tag: "command", name: "GetUserStatus", id: 0xa, access: "A",
+                    conformance: "!USR & (PIN | RID | FGP)", direction: "request", response: "GetUserStatusResponse",
                     xref: { document: "cluster", section: "5.2.4" }
                 },
                 {
@@ -7479,12 +7480,12 @@ export const SpecMatter: MatterElement = {
                     xref: { document: "cluster", section: "5.2.4" }
                 },
                 {
-                    tag: "command", name: "SetUserType", id: 0x14, access: "A", conformance: "!USR & (PIN | RID)",
+                    tag: "command", name: "SetUserType", id: 0x14, access: "A", conformance: "!USR & (PIN | RID | FGP)",
                     direction: "request", response: "status",
                     xref: { document: "cluster", section: "5.2.4" }
                 },
                 {
-                    tag: "command", name: "GetUserType", id: 0x15, access: "A", conformance: "!USR & (PIN | RID)",
+                    tag: "command", name: "GetUserType", id: 0x15, access: "A", conformance: "!USR & (PIN | RID | FGP)",
                     direction: "request", response: "GetUserTypeResponse",
                     xref: { document: "cluster", section: "5.2.4" }
                 },
@@ -7980,7 +7981,7 @@ export const SpecMatter: MatterElement = {
                         },
 
                         {
-                            tag: "datatype", name: "RemoteOnlyUser", id: 0x9, conformance: "USR & COTA",
+                            tag: "datatype", name: "RemoteOnlyUser", id: 0x9, conformance: "USR & COTA & PIN",
                             details: "User access and PIN code is restricted to remote lock/unlock commands only. This type of user might " +
                                 "be useful for regular delivery services or voice assistant unlocking operations to prevent a PIN " +
                                 "code credential created for them from being used at the keypad. The PIN code credential would only " +
@@ -8055,7 +8056,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "PhysicalClosedLimitLift", id: 0x1, type: "uint16", access: "R V",
-                    conformance: "[LF & PA_LF]", default: 0, quality: "F",
+                    conformance: "[LF & PA_LF & ABS]", default: 0, quality: "F",
                     details: "The PhysicalClosedLimitLift attribute identifies the maximum possible encoder position possible (in " +
                         "centimeters) to position the height of the window covering Lift.",
                     xref: { document: "cluster", section: "5.3.5.2" }
@@ -8063,7 +8064,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "PhysicalClosedLimitTilt", id: 0x2, type: "uint16", access: "R V",
-                    conformance: "[TL & PA_TL]", default: 0, quality: "F",
+                    conformance: "[TL & PA_TL & ABS]", default: 0, quality: "F",
                     details: "The PhysicalClosedLimitTilt attribute identifies the maximum possible encoder position possible " +
                         "(tenth of a degrees) to position the angle of the window covering Tilt.",
                     xref: { document: "cluster", section: "5.3.5.3" }
@@ -8071,7 +8072,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "CurrentPositionLift", id: 0x3, type: "uint16", access: "R V",
-                    conformance: "[LF & PA_LF]", constraint: "InstalledOpenLimitLift to InstalledClosedLimitLift",
+                    conformance: "[LF & PA_LF & ABS]", constraint: "InstalledOpenLimitLift to InstalledClosedLimitLift",
                     default: null, quality: "X N",
                     details: "The CurrentPositionLift attribute identifies the actual Lift position (in centimeters) of the " +
                         "window covering from the fully-open position.",
@@ -8080,7 +8081,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "CurrentPositionTilt", id: 0x4, type: "uint16", access: "R V",
-                    conformance: "[TL & PA_TL]", constraint: "InstalledOpenLimitTilt to InstalledClosedLimitTilt",
+                    conformance: "[TL & PA_TL & ABS]", constraint: "InstalledOpenLimitTilt to InstalledClosedLimitTilt",
                     default: null, quality: "X N",
                     details: "The CurrentPositionTilt attribute identifies the actual Tilt position (in tenth of an degree) of " +
                         "the window covering from the fully-open position.",
@@ -8253,7 +8254,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "InstalledOpenLimitLift", id: 0x10, type: "uint16", access: "R V",
-                    conformance: "LF & PA_LF", constraint: "0 to 65534", default: 0, quality: "N",
+                    conformance: "LF & PA_LF & ABS", constraint: "0 to 65534", default: 0, quality: "N",
                     details: "The InstalledOpenLimitLift attribute identifies the Open Limit for Lifting the Window Covering " +
                         "whether position (in centimeters) is encoded or timed.",
                     xref: { document: "cluster", section: "5.3.5.17" }
@@ -8261,7 +8262,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "InstalledClosedLimitLift", id: 0x11, type: "uint16", access: "R V",
-                    conformance: "LF & PA_LF", constraint: "0 to 65534", default: 65534, quality: "N",
+                    conformance: "LF & PA_LF & ABS", constraint: "0 to 65534", default: 65534, quality: "N",
                     details: "The InstalledClosedLimitLift attribute identifies the Closed Limit for Lifting the Window Covering " +
                         "whether position (in centimeters) is encoded or timed.",
                     xref: { document: "cluster", section: "5.3.5.18" }
@@ -8269,7 +8270,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "InstalledOpenLimitTilt", id: 0x12, type: "uint16", access: "R V",
-                    conformance: "TL & PA_TL", constraint: "0 to 65534", default: 0, quality: "N",
+                    conformance: "TL & PA_TL & ABS", constraint: "0 to 65534", default: 0, quality: "N",
                     details: "The InstalledOpenLimitTilt attribute identifies the Open Limit for Tilting the Window Covering " +
                         "whether position (in tenth of a degree) is encoded or timed.",
                     xref: { document: "cluster", section: "5.3.5.19" }
@@ -8277,7 +8278,7 @@ export const SpecMatter: MatterElement = {
 
                 {
                     tag: "attribute", name: "InstalledClosedLimitTilt", id: 0x13, type: "uint16", access: "R V",
-                    conformance: "TL & PA_TL", constraint: "0 to 65534", default: 65534, quality: "N",
+                    conformance: "TL & PA_TL & ABS", constraint: "0 to 65534", default: 65534, quality: "N",
                     details: "The InstalledClosedLimitTilt attribute identifies the Closed Limit for Tilting the Window Covering " +
                         "whether position (in tenth of a degree) is encoded or timed.",
                     xref: { document: "cluster", section: "5.3.5.20" }

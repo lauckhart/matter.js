@@ -178,13 +178,16 @@ export namespace Conformance {
     export type Definition
         = Flag | Name | (Flag | Name)[] | { ast: Conformance.Ast } | string | undefined;
 
-    const BinaryOperators = new Set([EQ, NE, OR, XOR, AND]);
-    const OrXorAnd = new Set([OR, XOR, AND]);
-
     // Serialize with parenthesis if necessary to make the expression atomic
-    function serializeAtomic(ast: Ast, operators = BinaryOperators) {
+    function serializeAtomic(ast: Ast, otherOperator?: Operator) {
         const serialized = serialize(ast);
-        if (ast.type === Conformance.Special.Group || operators.has(ast.type as Operator)) {
+        if (
+            ast.type === Conformance.Special.Group
+            || (
+                otherOperator !== undefined
+                && isHigherPrecedence(otherOperator, ast.type)
+            )
+        ) {
             return `(${serialized})`;
         }
         return serialized;
@@ -234,7 +237,9 @@ export namespace Conformance {
             case Operator.LT:
             case Operator.GTE:
             case Operator.LTE:
-                return `${serializeAtomic(ast.param.lhs, OrXorAnd)} ${ast.type} ${serializeAtomic(ast.param.rhs, OrXorAnd)}`;
+                const lhs = serializeAtomic(ast.param.lhs, ast.type);
+                const rhs = serializeAtomic(ast.param.rhs, ast.type);
+                return `${lhs} ${ast.type} ${rhs}`;
 
             case Operator.NOT:
                 return `!${serializeAtomic(ast.param)}`;
@@ -270,6 +275,29 @@ export namespace Conformance {
                 // Flag
                 return ast.type;
         }
+    }
+
+    export function isBinaryOperator(type: Ast["type"] | Operator): type is Operator {
+        return Parser.BinaryOperators.has(type as any);
+    }
+
+    export function precedenceOf(operator: Ast["type"] | Operator) {
+        const index = Parser.BinaryOperatorPrecedence.findIndex(ops => ops.indexOf(operator as any) != -1);
+        return index === -1 ? undefined : index;
+    }
+
+    export function isHigherPrecedence(operator: Ast["type"] | Operator, other: Ast["type"] | Operator) {
+        const precedence1 = precedenceOf(operator);
+        if (precedence1 === undefined) {
+            return false;
+        }
+
+        const precedence2 = precedenceOf(other);
+        if (precedence2 === undefined) {
+            return false;
+        }
+
+        return precedence1 < precedence2;
     }
 }
 
@@ -596,6 +624,7 @@ class Parser {
                         type: op,
                         param: { lhs, rhs }
                     } as Conformance.Ast);
+                    i--;
                 }
             }
         });
@@ -682,7 +711,8 @@ class Parser {
 namespace Parser {
     // Highest precedence first
     export const BinaryOperatorPrecedence = [
-        [Tokenizer.Special.Or, Tokenizer.Special.Xor, Tokenizer.Special.And],
+        [Tokenizer.Special.And],
+        [Tokenizer.Special.Or, Tokenizer.Special.Xor],
         [Tokenizer.Special.GreaterThan, Tokenizer.Special.LessThan, Tokenizer.Special.GreaterThanOrEqual, Tokenizer.Special.LessThanOrEqual],
         [Tokenizer.Special.Equal, Tokenizer.Special.NotEqual]
     ]

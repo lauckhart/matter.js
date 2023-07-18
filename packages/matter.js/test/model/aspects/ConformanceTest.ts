@@ -24,7 +24,8 @@ const TEST_DEFINITIONS = [
     "AB == 2",
     "Mom",
     "[AB].a",
-    "[LF & PA_LF & ABS]"
+    "[LF & PA_LF & ABS]",
+    "!USR & (PIN | RID | FGP)"
 ]
 
 const TEST_DEFINITIONS2 = {
