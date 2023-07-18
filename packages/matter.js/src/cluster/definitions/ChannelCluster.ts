@@ -315,7 +315,7 @@ export const ChannelListOrLineupInfoComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.6.4.1
          */
-        changeChannel: Command(0x0, TlvChangeChannelRequest, 1, TlvChangeChannelResponse)
+        changeChannel: Command(0x0, TlvChangeChannelRequest, 0x1, TlvChangeChannelResponse)
     }
 });
 

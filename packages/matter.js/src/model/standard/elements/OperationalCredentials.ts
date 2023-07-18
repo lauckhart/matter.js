@@ -19,7 +19,7 @@ Matter.children.push({
         { tag: "attribute", name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 },
 
         {
-            tag: "attribute", name: "NoCs", id: 0x0, type: "list", access: "R F A", conformance: "M",
+            tag: "attribute", name: "Nocs", id: 0x0, type: "list", access: "R U A", conformance: "M",
             constraint: "max SupportedFabrics", quality: "N C",
 
             details: "This attribute contains all NOCs applicable to this Node, encoded as a read-only list of NOCStruct." +
@@ -36,7 +36,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "Fabrics", id: 0x1, type: "list", access: "R F V", conformance: "M",
+            tag: "attribute", name: "Fabrics", id: 0x1, type: "list", access: "R U V", conformance: "M",
             constraint: "max SupportedFabrics", quality: "N",
 
             details: "This attribute describes all fabrics to which this Node is commissioned, encoded as a read-only " +
@@ -99,7 +99,7 @@ Matter.children.push({
         },
 
         {
-            tag: "attribute", name: "CurrentFabricIndex", id: 0x5, type: "uint8", access: "R V",
+            tag: "attribute", name: "CurrentFabricIndex", id: 0x5, type: "fabric-idx", access: "R V",
             conformance: "M", default: 0,
             details: "This attribute shall contain accessing fabric index." +
                 "\n" +

@@ -33,7 +33,7 @@ export const FlowMeasurementCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.5.4.1
          */
-        measuredValue: Attribute(0x0, TlvNullable(TlvUInt16), { default: null }),
+        measuredValue: Attribute(0x0, TlvNullable(TlvUInt16.bound({ max: 65534 })), { default: null }),
 
         /**
          * The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. See

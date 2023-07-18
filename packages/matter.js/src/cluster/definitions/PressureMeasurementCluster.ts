@@ -54,7 +54,7 @@ export const PressureMeasurementBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.1
          */
-        measuredValue: Attribute(0x0, TlvNullable(TlvInt16)),
+        measuredValue: Attribute(0x0, TlvNullable(TlvInt16.bound({ min: -32767 }))),
 
         /**
          * This attribute indicates the minimum value of MeasuredValue that can be measured. See Measured Value for
@@ -101,7 +101,7 @@ export const ExtendedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.5
          */
-        scaledValue: Attribute(0x10, TlvNullable(TlvInt16), { default: 0 }),
+        scaledValue: Attribute(0x10, TlvNullable(TlvInt16.bound({ min: -32767 })), { default: 0 }),
 
         /**
          * The MinScaledValue attribute indicates the minimum value of ScaledValue that can be measured. The null value

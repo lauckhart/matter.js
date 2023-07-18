@@ -371,7 +371,7 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.2
          */
-        armFailSafe: Command(0x0, TlvArmFailSafeRequest, 1, TlvArmFailSafeResponse),
+        armFailSafe: Command(0x0, TlvArmFailSafeRequest, 0x1, TlvArmFailSafeResponse),
 
         /**
          * This shall add or update the regulatory configuration in the RegulatoryConfig Attribute to the value
@@ -406,7 +406,7 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.4
          */
-        setRegulatoryConfig: Command(0x2, TlvSetRegulatoryConfigRequest, 3, TlvSetRegulatoryConfigResponse),
+        setRegulatoryConfig: Command(0x2, TlvSetRegulatoryConfigRequest, 0x3, TlvSetRegulatoryConfigResponse),
 
         /**
          * This command has no data.
@@ -463,6 +463,6 @@ export const GeneralCommissioningCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.9.6.6
          */
-        commissioningComplete: Command(0x4, TlvNoArguments, 5, TlvCommissioningCompleteResponse)
+        commissioningComplete: Command(0x4, TlvNoArguments, 0x5, TlvCommissioningCompleteResponse)
     }
 });

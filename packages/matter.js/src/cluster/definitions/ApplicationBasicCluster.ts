@@ -9,7 +9,7 @@
 import { Cluster, OptionalFixedAttribute, FixedAttribute, Attribute, AccessLevel } from "../../cluster/Cluster.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvString } from "../../tlv/TlvString.js";
-import { TlvVendorId } from "../../datatype/VendorId.js";
+import { TlvVendorId, VendorId } from "../../datatype/VendorId.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
@@ -95,7 +95,7 @@ export const ApplicationBasicCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.2
          */
-        vendorId: OptionalFixedAttribute(0x1, TlvVendorId, { default: { id: 0 } }),
+        vendorId: OptionalFixedAttribute(0x1, TlvVendorId, { default: new VendorId(0) }),
 
         /**
          * This attribute shall specify a human readable (displayable) name of the Content App assigned by the vendor.

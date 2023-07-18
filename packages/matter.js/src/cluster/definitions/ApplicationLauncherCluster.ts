@@ -212,7 +212,7 @@ export const ApplicationLauncherBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.1
          */
-        launchApp: Command(0x0, TlvLaunchAppRequest, 3, TlvLauncherResponse),
+        launchApp: Command(0x0, TlvLaunchAppRequest, 0x3, TlvLauncherResponse),
 
         /**
          * Upon receipt of this command, the server shall stop the application if it is running. The application shall
@@ -230,7 +230,7 @@ export const ApplicationLauncherBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.2
          */
-        stopApp: Command(0x1, TlvStopAppRequest, 3, TlvLauncherResponse),
+        stopApp: Command(0x1, TlvStopAppRequest, 0x3, TlvLauncherResponse),
 
         /**
          * Upon receipt of this command, the server shall hide the application. The application shall be either
@@ -249,7 +249,7 @@ export const ApplicationLauncherBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.3
          */
-        hideApp: Command(0x2, TlvHideAppRequest, 3, TlvLauncherResponse)
+        hideApp: Command(0x2, TlvHideAppRequest, 0x3, TlvLauncherResponse)
     }
 });
 

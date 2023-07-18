@@ -260,7 +260,7 @@ export const MultiSpeedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.6
          */
-        speedSetting: WritableAttribute(0x5, TlvNullable(TlvUInt8), { default: 0 }),
+        speedSetting: WritableAttribute(0x5, TlvNullable(TlvUInt8.bound({ max: 100 })), { default: 0 }),
 
         /**
          * This attribute shall indicate the actual currently operating fan speed, or zero to indicate that the fan is
@@ -268,7 +268,7 @@ export const MultiSpeedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.4.6.7
          */
-        speedCurrent: Attribute(0x6, TlvUInt8, { default: 0 })
+        speedCurrent: Attribute(0x6, TlvUInt8.bound({ max: 100 }), { default: 0 })
     }
 });
 

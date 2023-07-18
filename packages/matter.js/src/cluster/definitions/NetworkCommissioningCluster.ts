@@ -794,7 +794,7 @@ export const WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent = ClusterComp
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.1
          */
-        scanNetworks: Command(0x0, TlvScanNetworksRequest, 1, TlvScanNetworksResponse),
+        scanNetworks: Command(0x0, TlvScanNetworksRequest, 0x1, TlvScanNetworksResponse),
 
         /**
          * This command shall remove the network configuration from the Cluster if there was already a network
@@ -819,7 +819,7 @@ export const WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent = ClusterComp
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.7
          */
-        removeNetwork: Command(0x4, TlvRemoveNetworkRequest, 5, TlvNetworkConfigResponse),
+        removeNetwork: Command(0x4, TlvRemoveNetworkRequest, 0x5, TlvNetworkConfigResponse),
 
         /**
          * This command shall attempt to connect to a network whose configuration was previously added by either the
@@ -890,7 +890,7 @@ export const WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent = ClusterComp
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.9
          */
-        connectNetwork: Command(0x6, TlvConnectNetworkRequest, 7, TlvConnectNetworkResponse),
+        connectNetwork: Command(0x6, TlvConnectNetworkRequest, 0x7, TlvConnectNetworkResponse),
 
         /**
          * This command shall set the specific order of the network configuration selected by its NetworkID in the
@@ -953,7 +953,7 @@ export const WiFiNetworkInterfaceOrThreadNetworkInterfaceComponent = ClusterComp
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.11
          */
-        reorderNetwork: Command(0x8, TlvReorderNetworkRequest, 5, TlvNetworkConfigResponse)
+        reorderNetwork: Command(0x8, TlvReorderNetworkRequest, 0x5, TlvNetworkConfigResponse)
     }
 });
 
@@ -979,7 +979,7 @@ export const WiFiNetworkInterfaceComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.3
          */
-        addOrUpdateWiFiNetwork: Command(0x2, TlvAddOrUpdateWiFiNetworkRequest, 5, TlvNetworkConfigResponse)
+        addOrUpdateWiFiNetwork: Command(0x2, TlvAddOrUpdateWiFiNetworkRequest, 0x5, TlvNetworkConfigResponse)
     }
 });
 
@@ -1006,7 +1006,7 @@ export const ThreadNetworkInterfaceComponent = ClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.8.7.4
          */
-        addOrUpdateThreadNetwork: Command(0x3, TlvAddOrUpdateThreadNetworkRequest, 5, TlvNetworkConfigResponse)
+        addOrUpdateThreadNetwork: Command(0x3, TlvAddOrUpdateThreadNetworkRequest, 0x5, TlvNetworkConfigResponse)
     }
 });
 

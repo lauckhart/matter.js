@@ -25,13 +25,16 @@ export function MergeModels(
             reparentToCanonicalParent(priority, variants);
         }
 
-        // Special case for datatype models -- if we downgraded from enum8 to
-        // uint8, ignore children.  Limited to enum8 to be conservative but
-        // will want to extend if this ever happens for other types
-        if (merged instanceof ValueModel && merged.type === "uint8") {
-            if (Object.values(variants.map).find(v => v?.type === "enum8")) {
-                return merged;
-            }
+        // If the manual override specifies a type but no children, ignore
+        // children from other variants.  This allows us to override to a type
+        // that doesn't have children 
+        const manual = priority.get(variants.tag, "type")[0];
+        if (
+            merged.type
+            && variants.map[manual]?.type === merged.type
+            && !variants.map[manual].children?.length
+        ) {
+            return merged;
         }
 
         merged.children = recurse();

@@ -54,10 +54,6 @@ export class ClusterComponentGenerator {
             .sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
 
         this.defineTypedElements(AttributeModel, elements, block, (model, add) => {
-            if (model.base instanceof AttributeModel && model.base.global) {
-                return;
-            }
-
             const factoryParts = Array<string>("Attribute");
             if (model.fixed) {
                 factoryParts.unshift("Fixed");
@@ -143,7 +139,7 @@ export class ClusterComponentGenerator {
                 responseModel = this.cluster.get(CommandModel, model.response);
             }
             if (responseModel) {
-                block.atom(responseModel.id);
+                block.atom(hex(responseModel.id));
                 block.atom(this.tlv.reference(responseModel));
             } else {
                 this.file.addImport("cluster/Cluster", "TlvNoResponse");

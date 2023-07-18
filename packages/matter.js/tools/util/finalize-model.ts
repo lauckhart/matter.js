@@ -61,6 +61,11 @@ function patchClusterTypes(cluster: ClusterModel) {
             return;
         }
 
+        if (model.name === "Status" && model.type === "uint8") {
+            model.type = "status";
+            return;
+        }
+
         const datatype = datatypes[model.name];
         if (!datatype || datatype === model) {
             return;

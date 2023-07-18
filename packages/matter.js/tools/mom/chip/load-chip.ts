@@ -79,6 +79,10 @@ function installDatatypes(elements: AnyElement[]) {
         let source: AnyElement | undefined;
         switch ((globals[type] as DatatypeElement).metatype) {
             case Metatype.enum:
+                if (element.name === "Status") {
+                    // We map this to "status" in finalizeModel()
+                    break;
+                }
                 source = findType(element.name);
                 break;
 

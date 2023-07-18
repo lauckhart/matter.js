@@ -543,8 +543,9 @@ export class TsFile extends Block {
             list = new Array<string>();
             this.imports.set(file, list);
         }
-        if (name) {
-            if (list.indexOf(name) === -1) list.push(name);
+        if (name && list.indexOf(name) === -1) {
+            list.push(name);
+            this.nameDefined(name);
         }
         return this;
     }

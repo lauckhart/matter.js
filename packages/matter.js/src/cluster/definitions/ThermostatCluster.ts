@@ -966,7 +966,7 @@ export const ThermostatBase = BaseClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
          */
-        getRelayStatusLog: OptionalCommand(0x4, TlvNoArguments, 1, TlvNoArguments)
+        getRelayStatusLog: OptionalCommand(0x4, TlvNoArguments, 0x1, TlvNoArguments)
     }
 });
 
@@ -1271,7 +1271,7 @@ export const ScheduleConfigurationComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
          */
-        getWeeklySchedule: Command(0x2, TlvGetWeeklyScheduleRequest, 0, TlvGetWeeklyScheduleResponse),
+        getWeeklySchedule: Command(0x2, TlvGetWeeklyScheduleRequest, 0x0, TlvGetWeeklyScheduleResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.8
@@ -1311,7 +1311,7 @@ export const SetbackComponent = ClusterComponent({
          */
         occupiedSetback: WritableAttribute(
             0x34,
-            TlvNullable(TlvUInt8),
+            TlvNullable(TlvUInt8.bound({ max: 254 })),
             { persistent: true, default: null, writeAcl: AccessLevel.Manage }
         ),
 
@@ -1323,7 +1323,7 @@ export const SetbackComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.38
          */
-        occupiedSetbackMin: FixedAttribute(0x35, TlvNullable(TlvUInt8.bound({ min: 0 })), { default: null }),
+        occupiedSetbackMin: FixedAttribute(0x35, TlvNullable(TlvUInt8.bound({ min: 0, max: 254 })), { default: null }),
 
         /**
          * This attribute specifies the maximum value that the Thermostat server will allow the OccupiedSetback
@@ -1360,7 +1360,7 @@ export const SetbackComponent = ClusterComponent({
          */
         unoccupiedSetback: OptionalWritableAttribute(
             0x37,
-            TlvNullable(TlvUInt8),
+            TlvNullable(TlvUInt8.bound({ max: 254 })),
             { persistent: true, default: null, writeAcl: AccessLevel.Manage }
         ),
 
@@ -1372,7 +1372,11 @@ export const SetbackComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.41
          */
-        unoccupiedSetbackMin: OptionalFixedAttribute(0x38, TlvNullable(TlvUInt8.bound({ min: 0 })), { default: null }),
+        unoccupiedSetbackMin: OptionalFixedAttribute(
+            0x38,
+            TlvNullable(TlvUInt8.bound({ min: 0, max: 254 })),
+            { default: null }
+        ),
 
         /**
          * This attribute specifies the maximum value that the Thermostat server will allow the UnoccupiedSetback

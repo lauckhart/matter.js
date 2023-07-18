@@ -219,7 +219,7 @@ export const KeypadInputBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.8.3.1
          */
-        sendKey: Command(0x0, TlvSendKeyRequest, 1, TlvSendKeyResponse)
+        sendKey: Command(0x0, TlvSendKeyRequest, 0x1, TlvSendKeyResponse)
     }
 });
 

@@ -275,7 +275,10 @@ function translateFields(desc: string, fields?: HtmlReference) {
 
         if (r.constraint) {
             // Remove units and otherwise normalize constraint
-            r.constraint = r.constraint.replace(/ octets| entries| bytes| per node/i, "").replace(/ to(\d|max)/i, " to $1");
+            r.constraint = r.constraint
+                .replace(/ octets| entries| bytes| per node/i, "")
+                .replace(/ to(\d|max)/i, " to $1")
+                .replace(/ValuetoMax/, "Value to Max");
 
             // Ignore window covering's bitmap constraints
             if (r.constraint.match(/^[0x]{4} [0x]{4}$/)) {

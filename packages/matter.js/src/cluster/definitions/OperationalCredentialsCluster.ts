@@ -16,9 +16,9 @@ import { TlvVendorId } from "../../datatype/VendorId.js";
 import { TlvFabricId } from "../../datatype/FabricId.js";
 import { TlvNodeId } from "../../datatype/NodeId.js";
 import { TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
+import { TlvFabricIndex, FabricIndex } from "../../datatype/FabricIndex.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvSubjectId } from "../../datatype/SubjectId.js";
-import { TlvFabricIndex } from "../../datatype/FabricIndex.js";
 
 /**
  * This encodes a fabric sensitive NOC chain, underpinning a commissioned Operational Identity for a given Node.
@@ -504,9 +504,9 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.1
          */
-        noCs: FabricScopedAttribute(
+        nocs: FabricScopedAttribute(
             0x0,
-            TlvArray(TlvNOCStruct),
+            TlvArray(TlvNOCStruct, { maxLength: 254 }),
 
             {
                 persistent: true,
@@ -527,7 +527,11 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.2
          */
-        fabrics: FabricScopedAttribute(0x1, TlvArray(TlvFabricDescriptorStruct), { persistent: true, default: [] }),
+        fabrics: FabricScopedAttribute(
+            0x1,
+            TlvArray(TlvFabricDescriptorStruct, { maxLength: 254 }),
+            { persistent: true, default: [] }
+        ),
 
         /**
          * This attribute contains the number of Fabrics that are supported by the device. This value is fixed for a
@@ -549,7 +553,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.4
          */
-        commissionedFabrics: Attribute(0x3, TlvUInt8, { persistent: true }),
+        commissionedFabrics: Attribute(0x3, TlvUInt8.bound({ max: 254 }), { persistent: true }),
 
         /**
          * This attribute shall contain a read-only list of Trusted Root CA Certificates installed on the Node, as
@@ -571,7 +575,7 @@ export const OperationalCredentialsCluster = Cluster({
          */
         trustedRootCertificates: Attribute(
             0x4,
-            TlvArray(TlvByteString),
+            TlvArray(TlvByteString, { maxLength: 254 }),
             { persistent: true, omitChanges: true, default: [] }
         ),
 
@@ -583,7 +587,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.5.6
          */
-        currentFabricIndex: Attribute(0x5, TlvUInt8, { default: 0 })
+        currentFabricIndex: Attribute(0x5, TlvFabricIndex, { default: new FabricIndex(0) })
     },
 
     commands: {
@@ -596,7 +600,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.1
          */
-        attestationRequest: Command(0x0, TlvAttestationRequestRequest, 1, TlvAttestationResponse),
+        attestationRequest: Command(0x0, TlvAttestationRequestRequest, 0x1, TlvAttestationResponse),
 
         /**
          * If the CertificateType is not a valid value per CertificateChainTypeEnum then the command shall fail with a
@@ -604,7 +608,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.3
          */
-        certificateChainRequest: Command(0x2, TlvCertificateChainRequestRequest, 3, TlvCertificateChainResponse),
+        certificateChainRequest: Command(0x2, TlvCertificateChainRequestRequest, 0x3, TlvCertificateChainResponse),
 
         /**
          * This command shall be generated to execute the Node Operational CSR Procedure and subsequently return the
@@ -634,7 +638,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.5
          */
-        csrRequest: Command(0x4, TlvCsrRequestRequest, 5, TlvCsrResponse),
+        csrRequest: Command(0x4, TlvCsrRequestRequest, 0x5, TlvCsrResponse),
 
         /**
          * This command shall add a new NOC chain to the device and commission a new Fabric association upon successful
@@ -649,7 +653,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.8
          */
-        addNoc: Command(0x6, TlvAddNocRequest, 8, TlvNocResponse),
+        addNoc: Command(0x6, TlvAddNocRequest, 0x8, TlvNocResponse),
 
         /**
          * This command shall replace the NOC and optional associated ICAC (if present) scoped under the accessing
@@ -708,7 +712,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.9
          */
-        updateNoc: Command(0x7, TlvUpdateNocRequest, 8, TlvNocResponse),
+        updateNoc: Command(0x7, TlvUpdateNocRequest, 0x8, TlvNocResponse),
 
         /**
          * This command shall be used by an Administrator to set the user-visible Label field for a given Fabric, as
@@ -736,7 +740,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.11
          */
-        updateFabricLabel: Command(0x9, TlvUpdateFabricLabelRequest, 8, TlvNocResponse),
+        updateFabricLabel: Command(0x9, TlvUpdateFabricLabelRequest, 0x8, TlvNocResponse),
 
         /**
          * This command is used by Administrators to remove a given Fabric and delete all associated fabric-scoped data.
@@ -794,7 +798,7 @@ export const OperationalCredentialsCluster = Cluster({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.12
          */
-        removeFabric: Command(0xa, TlvRemoveFabricRequest, 8, TlvNocResponse),
+        removeFabric: Command(0xa, TlvRemoveFabricRequest, 0x8, TlvNocResponse),
 
         /**
          * This command shall add a Trusted Root CA Certificate, provided as its Matter Certificate Encoding

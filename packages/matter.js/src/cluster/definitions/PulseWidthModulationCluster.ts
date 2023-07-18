@@ -170,7 +170,11 @@ export const PulseWidthModulationBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.1
          */
-        currentLevel: Attribute(0x0, TlvNullable(TlvUInt8), { scene: true, persistent: true, default: null }),
+        currentLevel: Attribute(
+            0x0,
+            TlvNullable(TlvUInt8.bound({ max: 254 })),
+            { scene: true, persistent: true, default: null }
+        ),
 
         /**
          * The MinLevel attribute indicates the minimum value of CurrentLevel that is capable of being assigned.
@@ -222,7 +226,7 @@ export const PulseWidthModulationBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.6.5.10
          */
-        onLevel: WritableAttribute(0x11, TlvNullable(TlvUInt8), { default: null }),
+        onLevel: WritableAttribute(0x11, TlvNullable(TlvUInt8.bound({ max: 254 })), { default: null }),
 
         /**
          * The OnTransitionTime attribute represents the time taken to move the current level from the minimum level to

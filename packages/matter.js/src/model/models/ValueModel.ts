@@ -46,7 +46,7 @@ export abstract class ValueModel extends Model implements ValueElement {
         this.setAspect(CONSTRAINT, Constraint, definition);
     }
     get effectiveConstraint(): Constraint {
-        return this.getEffectiveAspect(CONSTRAINT, Constraint);
+        return new ModelTraversal().findConstraint(this, CONSTRAINT) || this.constraint;
     }
 
     get conformance(): Conformance {

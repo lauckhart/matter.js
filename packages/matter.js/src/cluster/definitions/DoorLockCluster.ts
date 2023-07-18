@@ -1660,7 +1660,7 @@ export const LoggingComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getLogRecord: Command(0x4, TlvNoArguments, 4, TlvNoArguments)
+        getLogRecord: Command(0x4, TlvNoArguments, 0x4, TlvNoArguments)
     }
 });
 
@@ -1725,7 +1725,7 @@ export const UserComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getUser: Command(0x1b, TlvGetUserRequest, 28, TlvGetUserResponse),
+        getUser: Command(0x1b, TlvGetUserRequest, 0x1c, TlvGetUserResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
@@ -1735,12 +1735,12 @@ export const UserComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        setCredential: Command(0x22, TlvSetCredentialRequest, 35, TlvSetCredentialResponse),
+        setCredential: Command(0x22, TlvSetCredentialRequest, 0x23, TlvSetCredentialResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getCredentialStatus: Command(0x24, TlvGetCredentialStatusRequest, 37, TlvGetCredentialStatusResponse),
+        getCredentialStatus: Command(0x24, TlvGetCredentialStatusRequest, 0x25, TlvGetCredentialStatusResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
@@ -1857,7 +1857,7 @@ export const WeekDayAccessSchedulesComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getWeekDaySchedule: Command(0xc, TlvGetWeekDayScheduleRequest, 12, TlvGetWeekDayScheduleResponse),
+        getWeekDaySchedule: Command(0xc, TlvGetWeekDayScheduleRequest, 0xc, TlvGetWeekDayScheduleResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
@@ -1888,7 +1888,7 @@ export const YearDayAccessSchedulesComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getYearDaySchedule: Command(0xf, TlvGetYearDayScheduleRequest, 15, TlvGetYearDayScheduleResponse),
+        getYearDaySchedule: Command(0xf, TlvGetYearDayScheduleRequest, 0xf, TlvGetYearDayScheduleResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
@@ -1919,7 +1919,7 @@ export const HolidaySchedulesComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getHolidaySchedule: Command(0x12, TlvGetHolidayScheduleRequest, 18, TlvGetHolidayScheduleResponse),
+        getHolidaySchedule: Command(0x12, TlvGetHolidayScheduleRequest, 0x12, TlvGetHolidayScheduleResponse),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
@@ -2139,7 +2139,7 @@ export const PinCredentialNotUserComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getPinCode: Command(0x6, TlvNoArguments, 6, TlvNoArguments),
+        getPinCode: Command(0x6, TlvNoArguments, 0x6, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
@@ -2167,7 +2167,7 @@ export const PinCredentialAndRfidCredentialNotUserComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getUserStatus: OptionalCommand(0xa, TlvNoArguments, 10, TlvNoArguments),
+        getUserStatus: OptionalCommand(0xa, TlvNoArguments, 0xa, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
@@ -2177,7 +2177,7 @@ export const PinCredentialAndRfidCredentialNotUserComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getUserType: OptionalCommand(0x15, TlvNoArguments, 21, TlvNoArguments)
+        getUserType: OptionalCommand(0x15, TlvNoArguments, 0x15, TlvNoArguments)
     }
 });
 
@@ -2199,7 +2199,7 @@ export const RfidCredentialNotUserComponent = ClusterComponent({
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
          */
-        getRfidCode: Command(0x17, TlvNoArguments, 23, TlvNoArguments),
+        getRfidCode: Command(0x17, TlvNoArguments, 0x17, TlvNoArguments),
 
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4

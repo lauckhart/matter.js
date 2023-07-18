@@ -63,6 +63,7 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
         for (let i = 0; i < definition.length; i++) {
             switch (definition[i]) {
                 case 'R': flags.push(Access.Rw.Read); break;
+                case 'U': flags.push(Access.Fabric.Unaware); break;
                 case 'F': flags.push(Access.Fabric.Scoped); break;
                 case 'S': flags.push(Access.Fabric.Sensitive); break;
                 case 'V': flags.push(Access.Privilege.View); break;
@@ -169,6 +170,10 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
                     this.rw = f;
                     break;
 
+                case Access.Fabric.Unaware:
+                    this.fabric = Access.Fabric.Unaware;
+                    break;
+
                 case Access.Fabric.Scoped:
                     if (this.fabric !== Access.Fabric.Sensitive) {
                         this.fabric = f;
@@ -240,6 +245,11 @@ export namespace Access {
      * Affect of fabric on access.
      */
     export enum Fabric {
+        /**
+         * Extension - allows for override of fabric specification.
+         */
+        Unaware = "U",
+
         /**
          * Writable only by scoped fabric.
          */
@@ -325,6 +335,7 @@ export namespace Access {
     export const RW = Rw.ReadWrite;
     export const RWo = Rw.ReadWriteOption;
 
+    export const U = Fabric.Unaware;
     export const F = Fabric.Scoped;
     export const S = Fabric.Sensitive;
 

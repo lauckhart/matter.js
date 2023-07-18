@@ -59,48 +59,6 @@ export const enum EnhancedColorMode {
 }
 
 /**
- * The value of the ColorControl featureMap attribute
- *
- * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.5
- */
-export const FeatureMap = {
-    /**
-     * HueSaturation
-     *
-     * Supports color specification via hue/saturation.
-     */
-    hs: BitFlag(0),
-
-    /**
-     * EnhancedHue
-     *
-     * Enhanced hue is supported.
-     */
-    ehue: BitFlag(1),
-
-    /**
-     * ColorLoop
-     *
-     * Color loop is supported.
-     */
-    cl: BitFlag(2),
-
-    /**
-     * Xy
-     *
-     * Supports color specification via XY.
-     */
-    xy: BitFlag(3),
-
-    /**
-     * ColorTemperature
-     *
-     * Supports specification of color temperature.
-     */
-    ct: BitFlag(4)
-};
-
-/**
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.11.4.2
  */
 export const enum ColorControlDirection {
@@ -1125,7 +1083,7 @@ export const ColorControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.18
          */
-        colorCapabilities: FixedAttribute(0x400a, TlvBitmap(TlvUInt32, FeatureMap))
+        colorCapabilities: FixedAttribute(0x400a, TlvBitmap(TlvUInt32, ColorControlFeature))
     }
 });
 
@@ -1306,7 +1264,7 @@ export const ColorTemperatureComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 3.2.7.21
          */
-        coupleColorTempToLevelMinMireds: OptionalAttribute(0x400d, TlvUInt16),
+        coupleColorTempToLevelMinMireds: OptionalAttribute(0x400d, TlvUInt16.bound({ max: 65279 })),
 
         /**
          * The StartUpColorTemperatureMireds attribute shall define the desired startup color temperature value a lamp

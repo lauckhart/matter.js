@@ -243,7 +243,7 @@ export const QueryComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.2
          */
-        identifyQuery: Command(0x1, TlvNoArguments, 0, TlvIdentifyQueryResponse)
+        identifyQuery: Command(0x1, TlvNoArguments, 0x0, TlvIdentifyQueryResponse)
     }
 });
 

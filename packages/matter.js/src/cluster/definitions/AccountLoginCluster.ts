@@ -125,7 +125,7 @@ export const AccountLoginCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.1
          */
-        getSetupPin: Command(0x0, TlvGetSetupPinRequest, 1, TlvGetSetupPinResponse),
+        getSetupPin: Command(0x0, TlvGetSetupPinRequest, 0x1, TlvGetSetupPinResponse),
 
         /**
          * The purpose of this command is to allow the Content App to assume the user account of a given Commissionee

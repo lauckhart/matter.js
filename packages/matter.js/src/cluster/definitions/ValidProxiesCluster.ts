@@ -46,6 +46,6 @@ export const ValidProxiesCluster = Cluster({
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.15.15.6
          */
-        getValidProxiesRequest: Command(0x0, TlvNoArguments, 1, TlvNoArguments)
+        getValidProxiesRequest: Command(0x0, TlvNoArguments, 0x1, TlvNoArguments)
     }
 });

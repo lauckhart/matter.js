@@ -5,7 +5,7 @@
  */
 
 import { InternalError } from "../../common/InternalError.js";
-import { Aspect } from "../aspects/index.js";
+import { Aspect, Constraint } from "../aspects/index.js";
 import { ElementTag, FieldValue, Metatype } from "../definitions/index.js";
 import { AnyElement, Globals } from "../elements/index.js";
 import { type Model, type ValueModel, CommandModel } from "../models/index.js";
@@ -288,6 +288,61 @@ export class ModelTraversal {
             }
 
             return aspect;
+        });
+    }
+
+    /**
+     * Constraint aspects are specialized because we infer constraint fields
+     * that are referenced in other models.
+     */
+    findConstraint(model: ValueModel, symbol: symbol, field?: "value" | "min" | "max"): Constraint | undefined {
+        return this.operation(() => {
+            let constraint = this.findAspect(model, symbol) as Constraint;
+            if (constraint === undefined) {
+                return;
+            }
+
+            const bounds = {} as Constraint.Ast;
+
+            const resolve = (field: "value" | "min" | "max") => {
+                const value = constraint[field];
+                const name = FieldValue.referenced(value);
+                if (name === undefined) {
+                    return;
+                }
+
+                const referenced = this.findMember(
+                    model.parent,
+                    name,
+                    [ElementTag.Attribute, ElementTag.Datatype]
+                ) as ValueModel;
+                if (!referenced) {
+                    return;
+                }
+
+                const otherConstraint = this.findConstraint(referenced, symbol, field);
+                if (otherConstraint?.[field]) {
+                    bounds[field] = otherConstraint[field];
+                }
+            }
+
+            // The only reason the field filter exists is that some fields
+            // referenced in constraints are circularly constrained (e.g. min
+            // of max field is max of min field and vice versa).  By only
+            // loading the field of interest we avoid infinite loops
+            if (field) {
+                resolve(field);
+            } else {
+                resolve("value");
+                resolve("min");
+                resolve("max");
+            }
+
+            if (Object.keys(bounds).length) {
+                constraint = constraint.extend(bounds) as Constraint;
+            }
+
+            return constraint;
         });
     }
 

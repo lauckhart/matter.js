@@ -34,9 +34,22 @@ LocalMatter.children.push({
             ]
         },
 
-        // Set the name of the ConfigStatus config fields.  They're correct in
-        // chip.ts but only placeholders in spec.ts.  Since spec overrides chip
-        // for names we need to re-override them here
+        // Set Mode field names.  They're correct in chip.ts but only
+        // placeholders in spec.ts.  Since spec overrides chip for names we
+        // need to re-write them here
+        {
+            tag: "datatype", name: "Mode",
+
+            children: [
+                { tag: "datatype", name: "MotorDirectionReversed", constraint: "0" },
+                { tag: "datatype", name: "CalibrationMode", constraint: "1" },
+                { tag: "datatype", name: "MaintenanceMode", constraint: "2" },
+                { tag: "datatype", name: "LedFeedback", constraint: "3" },
+            ]
+        },
+
+        // Set the name of the ConfigStatus config fields.  Same issue as for
+        // Mode
         {
             tag: "attribute", id: 7, name: "ConfigStatus",
 

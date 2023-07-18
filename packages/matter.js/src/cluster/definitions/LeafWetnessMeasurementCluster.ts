@@ -41,7 +41,7 @@ export const LeafWetnessMeasurementCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.6.4.1
          */
-        measuredValue: Attribute(0x0, TlvNullable(TlvUInt16)),
+        measuredValue: Attribute(0x0, TlvNullable(TlvUInt16.bound({ max: 10000 }))),
 
         /**
          * The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. The null

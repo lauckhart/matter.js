@@ -48,7 +48,7 @@ export class Aspect<D> {
         });
     }
 
-    extend(other: Aspect<D>) {
+    extend(other: Exclude<D, "string">) {
         const descriptors = [
             ...Object.entries(Object.getOwnPropertyDescriptors(this)),
             ...Object.entries(Object.getOwnPropertyDescriptors(other))

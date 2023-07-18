@@ -13,6 +13,7 @@ import { join } from "path";
 import * as model from "../src/model/index.js";
 
 (global as any).model = model;
+(global as any).matter = new model.MatterModel();
 
 const server = repl.start({ prompt: "matter.js > " });
 

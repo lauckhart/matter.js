@@ -139,6 +139,6 @@ export const TargetNavigatorCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1
          */
-        navigateTarget: Command(0x0, TlvNavigateTargetRequest, 1, TlvNavigateTargetResponse)
+        navigateTarget: Command(0x0, TlvNavigateTargetRequest, 0x1, TlvNavigateTargetResponse)
     }
 });

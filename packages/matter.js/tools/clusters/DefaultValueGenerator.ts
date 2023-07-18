@@ -7,7 +7,7 @@
 import { Metatype, ValueModel } from "../../src/model/index.js";
 import { camelize, serialize } from "../../src/util/String.js";
 import { Properties } from "../../src/util/Type.js";
-import { WrappedConstantKeys } from "./NumberConstants.js";
+import { SpecializedNumbers, WrappedConstantKeys } from "./NumberConstants.js";
 import { TlvGenerator } from "./TlvGenerator.js";
 
 /**
@@ -51,11 +51,14 @@ export class DefaultValueGenerator {
     private createNumeric(defaultValue: any, model: ValueModel) {
         if (typeof defaultValue !== "number" && typeof defaultValue !== "bigint") return;
         const type = model.effectiveType;
-        if (type) {
-            const fieldName = (WrappedConstantKeys as any)[model.effectiveType];
-            if (fieldName) {
-                return { [fieldName]: defaultValue };
+        if (type && (WrappedConstantKeys as any)[type]) {
+            const importConf = SpecializedNumbers[type];
+            if (!importConf) {
+                throw new Error(`Unable to ascertain constructor for wrapped ID type ${type}`)
             }
+            const constructor = importConf[1].replace("Tlv", "");
+            this.tlv.importTlv(importConf[0], constructor);
+            return serialize.asIs(`new ${constructor}(${defaultValue})`);
         }
         return defaultValue;
     }

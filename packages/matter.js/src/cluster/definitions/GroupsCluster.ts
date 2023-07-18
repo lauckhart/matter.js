@@ -14,6 +14,7 @@ import { TlvUInt8, TlvBitmap, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvGroupId } from "../../datatype/GroupId.js";
 import { TlvString } from "../../tlv/TlvString.js";
+import { StatusCode } from "../../protocol/interaction/InteractionProtocol.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -40,19 +41,15 @@ export const TlvAddGroupRequest = TlvObject({
     groupName: TlvField(1, TlvString.bound({ maxLength: 16 }))
 });
 
-export const enum Status {
-    UpdateAvailable = 0,
-    Busy = 1,
-    NotAvailable = 2,
-    DownloadProtocolNotSupported = 3
-}
-
 /**
  * The AddGroupResponse is sent by the Groups cluster server in response to an AddGroup command.
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.7
  */
-export const TlvAddGroupResponse = TlvObject({ status: TlvField(0, TlvEnum<Status>()), groupId: TlvField(1, TlvGroupId) });
+export const TlvAddGroupResponse = TlvObject({
+    status: TlvField(0, TlvEnum<StatusCode>()),
+    groupId: TlvField(1, TlvGroupId)
+});
 
 /**
  * Input to the Groups viewGroup command
@@ -67,7 +64,7 @@ export const TlvViewGroupRequest = TlvObject({ groupId: TlvField(0, TlvGroupId) 
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.8
  */
 export const TlvViewGroupResponse = TlvObject({
-    status: TlvField(0, TlvEnum<Status>()),
+    status: TlvField(0, TlvEnum<StatusCode>()),
     groupId: TlvField(1, TlvGroupId),
     groupName: TlvField(2, TlvString.bound({ maxLength: 16 }))
 });
@@ -123,7 +120,10 @@ export const TlvRemoveGroupRequest = TlvObject({ groupId: TlvField(0, TlvGroupId
  *
  * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.10
  */
-export const TlvRemoveGroupResponse = TlvObject({ status: TlvField(0, TlvEnum<Status>()), groupId: TlvField(1, TlvGroupId) });
+export const TlvRemoveGroupResponse = TlvObject({
+    status: TlvField(0, TlvEnum<StatusCode>()),
+    groupId: TlvField(1, TlvGroupId)
+});
 
 /**
  * Input to the Groups addGroupIfIdentifying command
@@ -182,7 +182,7 @@ export const GroupsBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.1
          */
-        addGroup: Command(0x0, TlvAddGroupRequest, 0, TlvAddGroupResponse),
+        addGroup: Command(0x0, TlvAddGroupRequest, 0x0, TlvAddGroupResponse),
 
         /**
          * The ViewGroup command allows a client to request that the server responds with a ViewGroupResponse command
@@ -190,7 +190,7 @@ export const GroupsBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.2
          */
-        viewGroup: Command(0x1, TlvViewGroupRequest, 1, TlvViewGroupResponse),
+        viewGroup: Command(0x1, TlvViewGroupRequest, 0x1, TlvViewGroupResponse),
 
         /**
          * The GetGroupMembership command allows a client to inquire about the group membership of the server endpoint,
@@ -198,7 +198,7 @@ export const GroupsBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.3
          */
-        getGroupMembership: Command(0x2, TlvGetGroupMembershipRequest, 2, TlvGetGroupMembershipResponse),
+        getGroupMembership: Command(0x2, TlvGetGroupMembershipRequest, 0x2, TlvGetGroupMembershipResponse),
 
         /**
          * The RemoveGroup command allows a client to request that the server removes the membership for the server
@@ -206,7 +206,7 @@ export const GroupsBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3.7.4
          */
-        removeGroup: Command(0x3, TlvRemoveGroupRequest, 3, TlvRemoveGroupResponse),
+        removeGroup: Command(0x3, TlvRemoveGroupRequest, 0x3, TlvRemoveGroupResponse),
 
         /**
          * The RemoveAllGroups command allows a client to direct the server to remove all group associations for the

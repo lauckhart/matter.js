@@ -3115,7 +3115,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "AddGroupResponse", id: 0x0, conformance: "M", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" }
                     ]
                 },
@@ -3123,7 +3123,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "ViewGroupResponse", id: 0x1, conformance: "M", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "GroupName", type: "string", conformance: "M" }
                     ]
@@ -3145,19 +3145,8 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "RemoveGroupResponse", id: 0x3, conformance: "M", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" }
-                    ]
-                },
-
-                {
-                    tag: "datatype", name: "Status", type: "enum8",
-
-                    children: [
-                        { tag: "datatype", name: "UpdateAvailable", id: 0x0, conformance: "M" },
-                        { tag: "datatype", name: "Busy", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "NotAvailable", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M" }
                     ]
                 }
             ]
@@ -4937,7 +4926,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "AddSceneResponse", id: 0x0, conformance: "M", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" }
                     ]
@@ -4947,7 +4936,7 @@ export const ChipMatter: MatterElement = {
                     tag: "command", name: "ViewSceneResponse", id: 0x1, conformance: "M", direction: "response",
 
                     children: [
-                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "O" },
@@ -4962,7 +4951,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "RemoveSceneResponse", id: 0x2, conformance: "M", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" }
                     ]
@@ -4971,7 +4960,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "RemoveAllScenesResponse", id: 0x3, conformance: "M", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" }
                     ]
                 },
@@ -4979,7 +4968,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "StoreSceneResponse", id: 0x4, conformance: "M", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" }
                     ]
@@ -4990,7 +4979,7 @@ export const ChipMatter: MatterElement = {
                     direction: "response",
 
                     children: [
-                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "status", conformance: "M" },
                         { tag: "datatype", name: "Capacity", type: "uint8", conformance: "M", quality: "X" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
                         {
@@ -5003,7 +4992,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "EnhancedAddSceneResponse", id: 0x40, conformance: "O", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" }
                     ]
@@ -5014,7 +5003,7 @@ export const ChipMatter: MatterElement = {
                     direction: "response",
 
                     children: [
-                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "status", conformance: "M" },
                         { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "O" },
@@ -5029,7 +5018,7 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "command", name: "CopySceneResponse", id: 0x42, conformance: "O", direction: "response",
                     children: [
-                        { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
+                        { tag: "datatype", name: "Status", type: "status", conformance: "M" },
                         { tag: "datatype", name: "GroupIdentifierFrom", type: "group-id", conformance: "M" },
                         { tag: "datatype", name: "SceneIdentifierFrom", type: "uint8", conformance: "M" }
                     ]
@@ -5062,17 +5051,6 @@ export const ChipMatter: MatterElement = {
                 {
                     tag: "datatype", name: "ScenesCopyMode", type: "map8", conformance: "M",
                     children: [{ tag: "datatype", name: "CopyAllScenes", constraint: "0" }]
-                },
-
-                {
-                    tag: "datatype", name: "Status", type: "enum8",
-
-                    children: [
-                        { tag: "datatype", name: "UpdateAvailable", id: 0x0, conformance: "M" },
-                        { tag: "datatype", name: "Busy", id: 0x1, conformance: "M" },
-                        { tag: "datatype", name: "NotAvailable", id: 0x2, conformance: "M" },
-                        { tag: "datatype", name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M" }
-                    ]
                 }
             ]
         },
@@ -6736,18 +6714,7 @@ export const ChipMatter: MatterElement = {
 
                     children: [
                         { tag: "datatype", name: "StartTime", type: "uint32", conformance: "M" },
-
-                        {
-                            tag: "datatype", name: "Status", type: "enum8", conformance: "M",
-
-                            children: [
-                                { tag: "datatype", name: "UpdateAvailable", id: 0x0, conformance: "M" },
-                                { tag: "datatype", name: "Busy", id: 0x1, conformance: "M" },
-                                { tag: "datatype", name: "NotAvailable", id: 0x2, conformance: "M" },
-                                { tag: "datatype", name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M" }
-                            ]
-                        },
-
+                        { tag: "datatype", name: "Status", type: "status", conformance: "M" },
                         { tag: "datatype", name: "ProfileIntervalPeriod", type: "enum8", conformance: "M" },
                         { tag: "datatype", name: "NumberOfIntervalsDelivered", type: "uint8", conformance: "M" },
                         { tag: "datatype", name: "AttributeId", type: "uint16", conformance: "M" },

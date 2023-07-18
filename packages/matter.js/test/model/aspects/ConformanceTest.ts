@@ -23,7 +23,8 @@ const TEST_DEFINITIONS = [
     "AB.a2+",
     "AB == 2",
     "Mom",
-    "[AB].a"
+    "[AB].a",
+    "[LF & PA_LF & ABS]"
 ]
 
 const TEST_DEFINITIONS2 = {

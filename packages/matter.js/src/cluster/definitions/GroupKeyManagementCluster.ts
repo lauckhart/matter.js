@@ -367,7 +367,7 @@ export const GroupKeyManagementBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.2
          */
-        keySetRead: Command(0x1, TlvKeySetReadRequest, 2, TlvKeySetReadResponse),
+        keySetRead: Command(0x1, TlvKeySetReadRequest, 0x2, TlvKeySetReadResponse),
 
         /**
          * This command is used by Administrators to remove all state of a given Group Key Set.
@@ -405,7 +405,7 @@ export const GroupKeyManagementBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.8.5
          */
-        keySetReadAllIndices: Command(0x4, TlvNoArguments, 5, TlvKeySetReadAllIndicesResponse)
+        keySetReadAllIndices: Command(0x4, TlvNoArguments, 0x5, TlvKeySetReadAllIndicesResponse)
     }
 });
 

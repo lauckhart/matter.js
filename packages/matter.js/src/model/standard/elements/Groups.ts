@@ -136,7 +136,7 @@ Matter.children.push({
             details: "The AddGroupResponse is sent by the Groups cluster server in response to an AddGroup command.",
             xref: { document: "cluster", section: "1.3.7.7" },
             children: [
-                { tag: "datatype", name: "Status", id: 0x0, type: "Status", conformance: "M", constraint: "desc" },
+                { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                 { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1" }
             ]
         },
@@ -147,7 +147,7 @@ Matter.children.push({
                 "command.",
             xref: { document: "cluster", section: "1.3.7.8" },
             children: [
-                { tag: "datatype", name: "Status", id: 0x0, type: "Status", conformance: "M", constraint: "desc" },
+                { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                 { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1" },
                 { tag: "datatype", name: "GroupName", id: 0x2, type: "string", conformance: "M", constraint: "max 16" }
             ]
@@ -201,19 +201,8 @@ Matter.children.push({
                 "RemoveGroup command.",
             xref: { document: "cluster", section: "1.3.7.10" },
             children: [
-                { tag: "datatype", name: "Status", id: 0x0, type: "Status", conformance: "M", constraint: "desc" },
+                { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                 { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1" }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "Status", type: "enum8",
-
-            children: [
-                { tag: "datatype", name: "UpdateAvailable", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Busy", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "NotAvailable", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M" }
             ]
         }
     ]

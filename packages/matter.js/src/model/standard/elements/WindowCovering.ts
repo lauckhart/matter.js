@@ -631,6 +631,17 @@ Matter.children.push({
                 { tag: "datatype", name: "Opening", id: 0x1, details: "Covering is moving from closed to open" },
                 { tag: "datatype", name: "Closing", id: 0x2, details: "Covering is moving from open to closed" }
             ]
+        },
+
+        {
+            tag: "datatype", name: "Mode",
+
+            children: [
+                { tag: "datatype", name: "MotorDirectionReversed", constraint: "0" },
+                { tag: "datatype", name: "CalibrationMode", constraint: "1" },
+                { tag: "datatype", name: "MaintenanceMode", constraint: "2" },
+                { tag: "datatype", name: "LedFeedback", constraint: "3" }
+            ]
         }
     ]
 });

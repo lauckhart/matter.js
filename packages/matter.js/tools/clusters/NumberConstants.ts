@@ -27,7 +27,8 @@ import {
  * Map of matter datatype names to TlvGenerator.tlvImport arguments.
  */
 export const SpecializedNumbers: { [name: string]: [string, string] } = {
-    [Globals.actionId.name]: ["datatype", "TlvAttributeId"],
+    [Globals.actionId.name]: ["datatype", "TlvActionId"],
+    [Globals.attributeId.name]: ["datatype", "TlvAttributeId"],
     [Globals.clusterId.name]: ["datatype", "TlvClusterId"],
     [Globals.commandId.name]: ["datatype", "TlvCommandId"],
     [Globals.deviceTypeId.name]: ["datatype", "TlvDeviceTypeId"],
@@ -51,6 +52,9 @@ export const SpecializedNumbers: { [name: string]: [string, string] } = {
 /**
  * Map of matter datatype names of wrapped TLV types to the wrapping field
  * name.
+ * 
+ * Turns out we don't actually need the key because we use the constructor but
+ * leaving in place in case something changes.
  */
 export const WrappedConstantKeys = {
     [Globals.actionId.name]: "id",
@@ -80,5 +84,7 @@ export const NumericRanges = {
     int16: { min: INT16_MIN, max: INT16_MAX },
     int32: { min: INT32_MIN, max: INT32_MAX },
     int64: { min: INT64_MIN, max: INT64_MAX },
-    float32: { min: FLOAT32_MIN, max: FLOAT32_MAX }
+    float32: { min: FLOAT32_MIN, max: FLOAT32_MAX },
+    percent: { min: 0, max: 100 },
+    percent100ths: { min: 0, max: 10000 }
 }

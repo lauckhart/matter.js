@@ -179,7 +179,7 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "EnhancedAddScene", id: 0x40, access: "M", conformance: "O",
+            tag: "command", name: "EnhancedAddScene", id: 0x40, type: "AddScene", access: "M", conformance: "O",
             direction: "request", response: "EnhancedAddSceneResponse",
 
             details: "The EnhancedAddScene command allows a scene to be added using a finer scene transition time than " +
@@ -189,32 +189,17 @@ Matter.children.push({
                 "\n" +
                 "The TransitionTime data field shall be measured in tenths of a second rather than in seconds.",
 
-            xref: { document: "cluster", section: "1.4.9.9" },
-
-            children: [
-                { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
-                { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "M" },
-                { tag: "datatype", name: "SceneName", type: "string", conformance: "M" },
-                {
-                    tag: "datatype", name: "ExtensionFieldSets", type: "list", conformance: "M",
-                    children: [{ tag: "datatype", name: "entry", type: "ExtensionFieldSet" }]
-                }
-            ]
+            xref: { document: "cluster", section: "1.4.9.9" }
         },
 
         {
-            tag: "command", name: "EnhancedViewScene", id: 0x41, access: "O", conformance: "O",
-            direction: "request", response: "EnhancedViewSceneResponse",
+            tag: "command", name: "EnhancedViewScene", id: 0x41, type: "ViewScene", access: "O",
+            conformance: "O", direction: "request", response: "EnhancedViewSceneResponse",
             details: "The EnhancedViewScene command allows a scene to be retrieved using a finer scene transition time " +
                 "than the ViewScene command." +
                 "\n" +
                 "This command shall have the same data fields as the ViewScene command.",
-            xref: { document: "cluster", section: "1.4.9.10" },
-            children: [
-                { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
-                { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" }
-            ]
+            xref: { document: "cluster", section: "1.4.9.10" }
         },
 
         {
@@ -280,7 +265,7 @@ Matter.children.push({
             tag: "command", name: "AddSceneResponse", id: 0x0, conformance: "M", direction: "response",
             xref: { document: "cluster", section: "1.4.9.12" },
             children: [
-                { tag: "datatype", name: "Status", id: 0x0, type: "Status", conformance: "M", constraint: "desc" },
+                { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                 { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M" },
                 { tag: "datatype", name: "SceneId", id: 0x2, type: "uint8", conformance: "M" }
             ]
@@ -291,7 +276,7 @@ Matter.children.push({
             xref: { document: "cluster", section: "1.4.9.13" },
 
             children: [
-                { tag: "datatype", name: "Status", id: 0x0, type: "Status", conformance: "M", constraint: "desc" },
+                { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                 { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M" },
                 { tag: "datatype", name: "SceneId", id: 0x2, type: "uint8", conformance: "M" },
                 { tag: "datatype", name: "TransitionTime", id: 0x3, type: "uint16", conformance: "desc" },
@@ -307,7 +292,7 @@ Matter.children.push({
             tag: "command", name: "RemoveSceneResponse", id: 0x2, conformance: "M", direction: "response",
             xref: { document: "cluster", section: "1.4.9.14" },
             children: [
-                { tag: "datatype", name: "Status", id: 0x0, type: "Status", conformance: "M", constraint: "desc" },
+                { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                 { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M" },
                 { tag: "datatype", name: "SceneId", id: 0x2, type: "uint8", conformance: "M" }
             ]
@@ -317,7 +302,7 @@ Matter.children.push({
             tag: "command", name: "RemoveAllScenesResponse", id: 0x3, conformance: "M", direction: "response",
             xref: { document: "cluster", section: "1.4.9.15" },
             children: [
-                { tag: "datatype", name: "Status", id: 0x0, type: "Status", conformance: "M", constraint: "desc" },
+                { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                 { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M" }
             ]
         },
@@ -326,7 +311,7 @@ Matter.children.push({
             tag: "command", name: "StoreSceneResponse", id: 0x4, conformance: "M", direction: "response",
             xref: { document: "cluster", section: "1.4.9.16" },
             children: [
-                { tag: "datatype", name: "Status", id: 0x0, type: "Status", conformance: "M", constraint: "desc" },
+                { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                 { tag: "datatype", name: "GroupId", id: 0x1, type: "group-id", conformance: "M" },
                 { tag: "datatype", name: "SceneId", id: 0x2, type: "uint8", conformance: "M" }
             ]
@@ -365,7 +350,7 @@ Matter.children.push({
             xref: { document: "cluster", section: "1.4.9.17" },
 
             children: [
-                { tag: "datatype", name: "Status", id: 0x0, type: "Status", conformance: "M", constraint: "desc" },
+                { tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" },
                 { tag: "datatype", name: "Capacity", id: 0x1, type: "uint8", conformance: "M", quality: "X" },
                 { tag: "datatype", name: "GroupId", id: 0x2, type: "group-id", conformance: "M" },
                 {
@@ -376,22 +361,18 @@ Matter.children.push({
         },
 
         {
-            tag: "command", name: "EnhancedAddSceneResponse", id: 0x40, conformance: "O", direction: "response",
+            tag: "command", name: "EnhancedAddSceneResponse", id: 0x40, type: "AddSceneResponse",
+            conformance: "O", direction: "response",
             details: "The EnhancedAddSceneResponse command allows a server to respond to an EnhancedAddScene command, see " +
                 "EnhancedAddScene Command." +
                 "\n" +
                 "This command shall have the same data fields as the AddSceneResponse command.",
-            xref: { document: "cluster", section: "1.4.9.18" },
-            children: [
-                { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
-                { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
-                { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" }
-            ]
+            xref: { document: "cluster", section: "1.4.9.18" }
         },
 
         {
-            tag: "command", name: "EnhancedViewSceneResponse", id: 0x41, conformance: "O",
-            direction: "response",
+            tag: "command", name: "EnhancedViewSceneResponse", id: 0x41, type: "ViewSceneResponse",
+            conformance: "O", direction: "response",
 
             details: "The EnhancedViewSceneResponse command allows a server to respond to an EnhancedViewScene command " +
                 "using a finer scene transition time." +
@@ -401,19 +382,7 @@ Matter.children.push({
                 "\n" +
                 "The TransitionTime field shall be measured in tenths of a second rather than in seconds.",
 
-            xref: { document: "cluster", section: "1.4.9.19" },
-
-            children: [
-                { tag: "datatype", name: "Status", type: "Status", conformance: "M" },
-                { tag: "datatype", name: "GroupId", type: "group-id", conformance: "M" },
-                { tag: "datatype", name: "SceneId", type: "uint8", conformance: "M" },
-                { tag: "datatype", name: "TransitionTime", type: "uint16", conformance: "O" },
-                { tag: "datatype", name: "SceneName", type: "string", conformance: "O" },
-                {
-                    tag: "datatype", name: "ExtensionFieldSets", type: "list", conformance: "O",
-                    children: [{ tag: "datatype", name: "entry", type: "ExtensionFieldSet" }]
-                }
-            ]
+            xref: { document: "cluster", section: "1.4.9.19" }
         },
 
         {
@@ -423,7 +392,7 @@ Matter.children.push({
 
             children: [
                 {
-                    tag: "datatype", name: "Status", id: 0x0, type: "Status", conformance: "M", constraint: "desc",
+                    tag: "datatype", name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
                     details: "The Status field contains the status of the copy scene attempt. This field shall be set to one of " +
                         "the non-reserved values listed in Values of the Status Field of the CopySceneResponse Command.",
                     xref: { document: "cluster", section: "1.4.9.20.1" }
@@ -485,17 +454,6 @@ Matter.children.push({
                     tag: "datatype", name: "AttributeValueList", id: 0x1, type: "list", access: "RW", conformance: "M",
                     children: [{ tag: "datatype", name: "entry", type: "AttributeValuePair" }]
                 }
-            ]
-        },
-
-        {
-            tag: "datatype", name: "Status", type: "enum8",
-
-            children: [
-                { tag: "datatype", name: "UpdateAvailable", id: 0x0, conformance: "M" },
-                { tag: "datatype", name: "Busy", id: 0x1, conformance: "M" },
-                { tag: "datatype", name: "NotAvailable", id: 0x2, conformance: "M" },
-                { tag: "datatype", name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M" }
             ]
         }
     ]

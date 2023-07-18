@@ -22,6 +22,20 @@ LocalMatter.children.push({
         {
             tag: "attribute", id: 4, name: "NameSupport",
             children: [{ tag: "datatype", name: "NameSupport", default: true }]
-        }
+        },
+
+        // The following commands use the same fields as the unenhanced versions
+        {
+            tag: "command", id: 0x40, name: "EnhancedAddScene", type: "AddScene", direction: "request"
+        },
+        {
+            tag: "command", id: 0x40, name: "EnhancedAddSceneResponse", type: "AddSceneResponse", direction: "response"
+        },
+        {
+            tag: "command", id: 0x41, name: "EnhancedViewScene", type: "ViewScene", direction: "request"
+        },
+        {
+            tag: "command", id: 0x41, name: "EnhancedViewSceneResponse", type: "ViewSceneResponse", direction: "response"
+        },
     ]
 })

@@ -247,14 +247,14 @@ export const MediaPlaybackBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.1
          */
-        play: Command(0x0, TlvNoArguments, 10, TlvPlaybackResponse),
+        play: Command(0x0, TlvNoArguments, 0xa, TlvPlaybackResponse),
 
         /**
          * Upon receipt, this shall pause playback of the media.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.2
          */
-        pause: Command(0x1, TlvNoArguments, 10, TlvPlaybackResponse),
+        pause: Command(0x1, TlvNoArguments, 0xa, TlvPlaybackResponse),
 
         /**
          * Upon receipt, this shall stop playback of the media. User-visible outcome is context-specific. This may
@@ -262,14 +262,14 @@ export const MediaPlaybackBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.3
          */
-        stop: Command(0x2, TlvNoArguments, 10, TlvPlaybackResponse),
+        stop: Command(0x2, TlvNoArguments, 0xa, TlvPlaybackResponse),
 
         /**
          * Upon receipt, this shall Start Over with the current media playback item.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.4
          */
-        startOver: OptionalCommand(0x3, TlvNoArguments, 10, TlvPlaybackResponse),
+        startOver: OptionalCommand(0x3, TlvNoArguments, 0xa, TlvPlaybackResponse),
 
         /**
          * Upon receipt, this shall cause the handler to be invoked for "Previous". User experience is
@@ -277,7 +277,7 @@ export const MediaPlaybackBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.5
          */
-        previous: OptionalCommand(0x4, TlvNoArguments, 10, TlvPlaybackResponse),
+        previous: OptionalCommand(0x4, TlvNoArguments, 0xa, TlvPlaybackResponse),
 
         /**
          * Upon receipt, this shall cause the handler to be invoked for "Next". User experience is context- specific.
@@ -285,21 +285,21 @@ export const MediaPlaybackBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.6
          */
-        next: OptionalCommand(0x5, TlvNoArguments, 10, TlvPlaybackResponse),
+        next: OptionalCommand(0x5, TlvNoArguments, 0xa, TlvPlaybackResponse),
 
         /**
          * Upon receipt, this shall Skip forward in the media by the given number of milliseconds.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.9
          */
-        skipForward: OptionalCommand(0x8, TlvSkipForwardRequest, 10, TlvPlaybackResponse),
+        skipForward: OptionalCommand(0x8, TlvSkipForwardRequest, 0xa, TlvPlaybackResponse),
 
         /**
          * Upon receipt, this shall Skip backward in the media by the given number of milliseconds.
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.10
          */
-        skipBackward: OptionalCommand(0x9, TlvSkipBackwardRequest, 10, TlvPlaybackResponse)
+        skipBackward: OptionalCommand(0x9, TlvSkipBackwardRequest, 0xa, TlvPlaybackResponse)
     }
 });
 
@@ -414,7 +414,7 @@ export const AdvancedSeekComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.11
          */
-        seek: Command(0xb, TlvSeekRequest, 10, TlvPlaybackResponse)
+        seek: Command(0xb, TlvSeekRequest, 0xa, TlvPlaybackResponse)
     }
 });
 
@@ -440,7 +440,7 @@ export const VariableSpeedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.7
          */
-        rewind: Command(0x6, TlvNoArguments, 10, TlvPlaybackResponse),
+        rewind: Command(0x6, TlvNoArguments, 0xa, TlvPlaybackResponse),
 
         /**
          * Upon receipt, this shall start playback of the media in the forward direction in case the media is currently
@@ -457,7 +457,7 @@ export const VariableSpeedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.8
          */
-        fastForward: Command(0x7, TlvNoArguments, 10, TlvPlaybackResponse)
+        fastForward: Command(0x7, TlvNoArguments, 0xa, TlvPlaybackResponse)
     }
 });
 

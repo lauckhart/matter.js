@@ -550,7 +550,11 @@ export const LiftAndPositionAwareLiftComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.4
          */
-        currentPositionLift: OptionalAttribute(0x3, TlvNullable(TlvUInt16), { persistent: true, default: null }),
+        currentPositionLift: OptionalAttribute(
+            0x3,
+            TlvNullable(TlvUInt16.bound({ max: 65534 })),
+            { persistent: true, default: null }
+        ),
 
         /**
          * The CurrentPositionLiftPercentage attribute identifies the actual position as a percentage from 0% to 100%
@@ -560,7 +564,7 @@ export const LiftAndPositionAwareLiftComponent = ClusterComponent({
          */
         currentPositionLiftPercentage: OptionalAttribute(
             0x8,
-            TlvNullable(TlvPercent.bound({ min: 0, max: 100 })),
+            TlvNullable(TlvPercent),
             { scene: true, persistent: true, default: null }
         )
     },
@@ -608,7 +612,11 @@ export const TiltAndPositionAwareTiltComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.5.5
          */
-        currentPositionTilt: OptionalAttribute(0x4, TlvNullable(TlvUInt16), { persistent: true, default: null }),
+        currentPositionTilt: OptionalAttribute(
+            0x4,
+            TlvNullable(TlvUInt16.bound({ max: 65534 })),
+            { persistent: true, default: null }
+        ),
 
         /**
          * The CurrentPositionTiltPercentage attribute identifies the actual position as a percentage from 0% to 100%
@@ -618,7 +626,7 @@ export const TiltAndPositionAwareTiltComponent = ClusterComponent({
          */
         currentPositionTiltPercentage: OptionalAttribute(
             0x9,
-            TlvNullable(TlvPercent.bound({ min: 0, max: 100 })),
+            TlvNullable(TlvPercent),
             { scene: true, persistent: true, default: null }
         )
     },
@@ -669,7 +677,7 @@ export const LiftComponent = ClusterComponent({
          */
         targetPositionLiftPercent100Ths: OptionalAttribute(
             0xb,
-            TlvNullable(TlvPercent100ths.bound({ min: 0, max: 10000 })),
+            TlvNullable(TlvPercent100ths),
             { scene: true, default: null }
         ),
 
@@ -681,7 +689,7 @@ export const LiftComponent = ClusterComponent({
          */
         currentPositionLiftPercent100Ths: OptionalAttribute(
             0xe,
-            TlvNullable(TlvPercent100ths.bound({ min: 0, max: 10000 })),
+            TlvNullable(TlvPercent100ths),
             { persistent: true, default: null }
         ),
 
@@ -751,7 +759,7 @@ export const TiltComponent = ClusterComponent({
          */
         targetPositionTiltPercent100Ths: OptionalAttribute(
             0xc,
-            TlvNullable(TlvPercent100ths.bound({ min: 0, max: 10000 })),
+            TlvNullable(TlvPercent100ths),
             { scene: true, default: null }
         ),
 
@@ -763,7 +771,7 @@ export const TiltComponent = ClusterComponent({
          */
         currentPositionTiltPercent100Ths: OptionalAttribute(
             0xf,
-            TlvNullable(TlvPercent100ths.bound({ min: 0, max: 10000 })),
+            TlvNullable(TlvPercent100ths),
             { persistent: true, default: null }
         ),
 

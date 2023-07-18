@@ -502,7 +502,7 @@ export const UrlPlaybackComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.2
          */
-        launchUrl: Command(0x1, TlvLaunchUrlRequest, 2, TlvLauncherResponse)
+        launchUrl: Command(0x1, TlvLaunchUrlRequest, 0x2, TlvLauncherResponse)
     }
 });
 
@@ -517,7 +517,7 @@ export const ContentSearchComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.7.4.1
          */
-        launchContent: Command(0x0, TlvLaunchContentRequest, 2, TlvLauncherResponse)
+        launchContent: Command(0x0, TlvLaunchContentRequest, 0x2, TlvLauncherResponse)
     }
 });
 

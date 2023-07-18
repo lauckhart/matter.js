@@ -6,11 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Cluster, Attribute, FixedAttribute } from "../../cluster/Cluster.js";
+import { Cluster, Attribute } from "../../cluster/Cluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvLabelStruct } from "../../cluster/definitions/LabelCluster.js";
-import { TlvUInt16 } from "../../tlv/TlvNumber.js";
 
 /**
  * Fixed Label
@@ -36,8 +35,6 @@ export const FixedLabelCluster = Cluster({
         /**
          * @see {@link MatterCoreSpecificationV1_1} § 9.8.4
          */
-        labelList: Attribute(0x0, TlvArray(TlvLabelStruct), { persistent: true, default: [] }),
-
-        clusterRevision: FixedAttribute(0xfffd, TlvUInt16.bound({ min: 1 }), { default: 1 })
+        labelList: Attribute(0x0, TlvArray(TlvLabelStruct), { persistent: true, default: [] })
     }
 });

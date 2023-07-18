@@ -203,4 +203,13 @@ export namespace FieldValue {
                 throw new MatterError(`Unsupported wrapped object type "${type}"`);
         }
     }
+
+    /**
+     * Get the referenced name if the FieldValue is a reference.
+     */
+    export function referenced(value: FieldValue | undefined) {
+        if (is(value, reference)) {
+            return (value as Reference).name;
+        }
+    }
 }
