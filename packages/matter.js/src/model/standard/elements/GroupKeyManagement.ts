@@ -28,7 +28,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "GroupKeyMap", id: 0x0, type: "list", access: "RW F VM", conformance: "M",
-            constraint: "desc", default: [], quality: "N",
+            constraint: "max 254", default: [], quality: "N",
             details: "This attribute is a list of GroupKeyMapStruct entries. Each entry associates a logical Group Id " +
                 "with a particular group key set.",
             xref: { document: "core", section: "11.2.7.1" },
@@ -37,7 +37,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "GroupTable", id: 0x1, type: "list", access: "R F", conformance: "M",
-            constraint: "desc", default: [],
+            constraint: "max 254", default: [],
 
             details: "This attribute is a list of GroupInfoMapStruct entries. Each entry provides read-only information " +
                 "about how a given logical Group ID maps to a particular set of endpoints, and a name for the group. " +

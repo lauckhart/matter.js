@@ -1,15 +1,9 @@
 {
+  "extends": "../packages/matter.js/tsconfig.json",
+  
   "compilerOptions": {
     "target": "es2018",
-    "module": "nodenext",
-    "sourceMap": true,
-    "strictNullChecks": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": true,
-    "noImplicitOverride": true,
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
-    "strict": true,
+    "composite": false,
 
     "paths": {
       "#util/*": [ "./tools/util/*" ],

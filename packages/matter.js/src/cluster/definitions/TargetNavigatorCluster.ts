@@ -32,7 +32,7 @@ export const TlvTargetInfoStruct = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.5.1.2
      */
-    name: TlvField(1, TlvString)
+    name: TlvField(1, TlvString.bound({ maxLength: 32 }))
 });
 
 /**
@@ -118,7 +118,7 @@ export const TargetNavigatorCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.3.1
          */
-        targetList: Attribute(0x0, TlvArray(TlvTargetInfoStruct), { default: [] }),
+        targetList: Attribute(0x0, TlvArray(TlvTargetInfoStruct, { maxLength: 254 }), { default: [] }),
 
         /**
          * The CurrentTarget attribute shall represent the Identifier for the target which is currently in foreground

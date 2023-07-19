@@ -205,7 +205,8 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "OccupiedCoolingSetpoint", id: 0x11, type: "temperature", access: "RW VO",
-            conformance: "COOL", constraint: "desc", default: { type: "celsius", value: 26 }, quality: "N S",
+            conformance: "COOL", constraint: "min -27315", default: { type: "celsius", value: 26 },
+            quality: "N S",
 
             details: "This attribute specifies the cooling mode setpoint when the room is occupied." +
                 "\n" +
@@ -220,7 +221,8 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "OccupiedHeatingSetpoint", id: 0x12, type: "temperature", access: "RW VO",
-            conformance: "HEAT", constraint: "desc", default: { type: "celsius", value: 20 }, quality: "N S",
+            conformance: "HEAT", constraint: "min -27315", default: { type: "celsius", value: 20 },
+            quality: "N S",
 
             details: "This attribute specifies the heating mode setpoint when the room is occupied." +
                 "\n" +
@@ -235,7 +237,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "UnoccupiedCoolingSetpoint", id: 0x13, type: "temperature", access: "RW VO",
-            conformance: "COOL & OCC", constraint: "desc", default: { type: "celsius", value: 26 },
+            conformance: "COOL & OCC", constraint: "min -27315", default: { type: "celsius", value: 26 },
             quality: "N",
 
             details: "This attribute specifies the cooling mode setpoint when the room is unoccupied." +
@@ -250,7 +252,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "UnoccupiedHeatingSetpoint", id: 0x14, type: "temperature", access: "RW VO",
-            conformance: "HEAT & OCC", constraint: "desc", default: { type: "celsius", value: 20 },
+            conformance: "HEAT & OCC", constraint: "min -27315", default: { type: "celsius", value: 20 },
             quality: "N",
 
             details: "This attribute specifies the heating mode setpoint when the room is unoccupied." +
@@ -265,7 +267,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MinHeatSetpointLimit", id: 0x15, type: "temperature", access: "RW VM",
-            conformance: "[HEAT]", constraint: "desc",
+            conformance: "[HEAT]", constraint: "min -27315",
             default: { type: "reference", name: "AbsMinHeatSetpointLimit" }, quality: "N",
 
             details: "This attribute specifies the minimum level that the heating setpoint may be set to." +
@@ -285,7 +287,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxHeatSetpointLimit", id: 0x16, type: "temperature", access: "RW VM",
-            conformance: "[HEAT]", constraint: "desc",
+            conformance: "[HEAT]", constraint: "min -27315",
             default: { type: "reference", name: "AbsMaxHeatSetpointLimit" }, quality: "N",
 
             details: "This attribute specifies the maximum level that the heating setpoint may be set to." +
@@ -301,7 +303,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MinCoolSetpointLimit", id: 0x17, type: "temperature", access: "RW VM",
-            conformance: "[COOL]", constraint: "desc",
+            conformance: "[COOL]", constraint: "min -27315",
             default: { type: "reference", name: "AbsMinCoolSetpointLimit" }, quality: "N",
 
             details: "This attribute specifies the minimum level that the cooling setpoint may be set to." +
@@ -317,7 +319,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxCoolSetpointLimit", id: 0x18, type: "temperature", access: "RW VM",
-            conformance: "[COOL]", constraint: "desc",
+            conformance: "[COOL]", constraint: "min -27315",
             default: { type: "reference", name: "AbsMaxCoolSetpointLimit" }, quality: "N",
 
             details: "This attribute specifies the maximum level that the cooling setpoint may be set to." +
@@ -937,7 +939,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "AcCoilTemperature", id: 0x46, type: "temperature", access: "R V",
-            conformance: "O", default: null, quality: "X",
+            conformance: "O", constraint: "min -27315", default: null, quality: "X",
             details: "This attribute represents the temperature of the AC coil, as measured locally or remotely (over the " +
                 "network).",
             xref: { document: "cluster", section: "4.3.7.50" }

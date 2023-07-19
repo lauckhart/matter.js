@@ -941,7 +941,7 @@ export const ThermostatBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.50
          */
-        acCoilTemperature: OptionalAttribute(0x46, TlvNullable(TlvInt16), { default: null }),
+        acCoilTemperature: OptionalAttribute(0x46, TlvNullable(TlvInt16.bound({ min: -27315 })), { default: null }),
 
         /**
          * This attribute specifies the format for the ACCapacity attribute.
@@ -1034,7 +1034,11 @@ export const HeatingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.14
          */
-        occupiedHeatingSetpoint: WritableAttribute(0x12, TlvInt16, { scene: true, persistent: true, default: 2000 }),
+        occupiedHeatingSetpoint: WritableAttribute(
+            0x12,
+            TlvInt16.bound({ min: -27315 }),
+            { scene: true, persistent: true, default: 2000 }
+        ),
 
         /**
          * This attribute specifies the heating mode setpoint when the room is unoccupied.
@@ -1046,7 +1050,11 @@ export const HeatingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.16
          */
-        unoccupiedHeatingSetpoint: OptionalWritableAttribute(0x14, TlvInt16, { persistent: true, default: 2000 }),
+        unoccupiedHeatingSetpoint: OptionalWritableAttribute(
+            0x14,
+            TlvInt16.bound({ min: -27315 }),
+            { persistent: true, default: 2000 }
+        ),
 
         /**
          * This attribute specifies the minimum level that the heating setpoint may be set to.
@@ -1063,7 +1071,11 @@ export const HeatingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.17
          */
-        minHeatSetpointLimit: OptionalWritableAttribute(0x15, TlvInt16, { persistent: true, writeAcl: AccessLevel.Manage }),
+        minHeatSetpointLimit: OptionalWritableAttribute(
+            0x15,
+            TlvInt16.bound({ min: -27315 }),
+            { persistent: true, writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * This attribute specifies the maximum level that the heating setpoint may be set to.
@@ -1076,7 +1088,11 @@ export const HeatingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.18
          */
-        maxHeatSetpointLimit: OptionalWritableAttribute(0x16, TlvInt16, { persistent: true, writeAcl: AccessLevel.Manage })
+        maxHeatSetpointLimit: OptionalWritableAttribute(
+            0x16,
+            TlvInt16.bound({ min: -27315 }),
+            { persistent: true, writeAcl: AccessLevel.Manage }
+        )
     }
 });
 
@@ -1125,7 +1141,11 @@ export const CoolingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.13
          */
-        occupiedCoolingSetpoint: WritableAttribute(0x11, TlvInt16, { scene: true, persistent: true, default: 2600 }),
+        occupiedCoolingSetpoint: WritableAttribute(
+            0x11,
+            TlvInt16.bound({ min: -27315 }),
+            { scene: true, persistent: true, default: 2600 }
+        ),
 
         /**
          * This attribute specifies the cooling mode setpoint when the room is unoccupied.
@@ -1137,7 +1157,11 @@ export const CoolingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.15
          */
-        unoccupiedCoolingSetpoint: OptionalWritableAttribute(0x13, TlvInt16, { persistent: true, default: 2600 }),
+        unoccupiedCoolingSetpoint: OptionalWritableAttribute(
+            0x13,
+            TlvInt16.bound({ min: -27315 }),
+            { persistent: true, default: 2600 }
+        ),
 
         /**
          * This attribute specifies the minimum level that the cooling setpoint may be set to.
@@ -1150,7 +1174,11 @@ export const CoolingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.19
          */
-        minCoolSetpointLimit: OptionalWritableAttribute(0x17, TlvInt16, { persistent: true, writeAcl: AccessLevel.Manage }),
+        minCoolSetpointLimit: OptionalWritableAttribute(
+            0x17,
+            TlvInt16.bound({ min: -27315 }),
+            { persistent: true, writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * This attribute specifies the maximum level that the cooling setpoint may be set to.
@@ -1164,7 +1192,11 @@ export const CoolingComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.3.7.20
          */
-        maxCoolSetpointLimit: OptionalWritableAttribute(0x18, TlvInt16, { persistent: true, writeAcl: AccessLevel.Manage })
+        maxCoolSetpointLimit: OptionalWritableAttribute(
+            0x18,
+            TlvInt16.bound({ min: -27315 }),
+            { persistent: true, writeAcl: AccessLevel.Manage }
+        )
     }
 });
 

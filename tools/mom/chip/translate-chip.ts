@@ -5,8 +5,9 @@
  */
 
 import { Logger } from "#matter.js/log/Logger.js";
-import { Access, AnyElement, AttributeElement, ValueElement, ClusterElement, CommandElement, Conformance, DatatypeElement, ElementTag, EventElement, AnyValueElement } from "#matter.js/model/index.js";
+import { Access, AnyElement, AttributeElement, ValueElement, ClusterElement, CommandElement, Conformance, DatatypeElement, ElementTag, EventElement, AnyValueElement, Globals, Constraint } from "#matter.js/model/index.js";
 import { camelize } from "#util/string.js";
+import { NumericRanges } from "../../clusters/NumberConstants.js";
 import { TypeMap } from "./type-map.js";
 
 const logger = Logger.get("translate-chip");
@@ -179,6 +180,71 @@ function mapType(chipType: string | undefined) {
     return camelize(chipType);
 }
 
+function setBounds(source: Element, element: ValueElement) {
+    let typeBounds: { min: number, max: number };
+    switch (element.type) {
+        case Globals.list.name:
+        case Globals.string.name:
+            const length = int(source.getAttribute("length"));
+            if (length !== undefined) {
+                element.constraint = { max: length };
+            }
+            return;
+
+        default:
+            typeBounds = (NumericRanges as any)[element.type as any];
+            if (!typeBounds) {
+                return;
+            }
+            break;
+    }
+
+    function getBound(name: string) {
+        let value = int(source.getAttribute(name));
+        if (value === undefined) {
+            return;
+        }
+        if (value > typeBounds.max && typeBounds.min < 0) {
+            // CHIP sometimes encodes signed bounds with an unsigned constant
+            value == typeBounds.max - typeBounds.max;
+        }
+        if (value >= typeBounds.min && value <= typeBounds.max) {
+            return value;
+        }
+    }
+
+    let min = getBound("min");
+    if (min !== undefined && min === typeBounds.min) {
+        min = undefined;
+    }
+
+    let max = getBound("max");
+    if (max !== undefined && max === typeBounds.max) {
+        max = undefined;
+    }
+
+    if (min === undefined && max === undefined) {
+        return;
+    }
+
+    if (min !== undefined && max !== undefined && min >= max) {
+        // Sometimes constraint definitions are just junk.  Like electrical
+        // measurement cluster where I *think* they intended to encode signed
+        // values as unsigned but forgot a byte.  Regardless, ignore
+        return;
+    }
+
+    const bounds = {} as Constraint.Ast;
+    if (min !== undefined) {
+        bounds.min = min;
+    }
+    if (max !== undefined) {
+        bounds.max = max;
+    }
+
+    element.constraint = bounds;
+}
+
 // Create a MOM element with data properties translated from CHIP XML
 function createValueElement<T extends AnyValueElement>({
     factory,
@@ -218,6 +284,7 @@ function createValueElement<T extends AnyValueElement>({
     }
 
     setQualities(source, element);
+    setBounds(source, element);
 
     if (propertyTag) {
         children(source, propertyTag).forEach(propertyEl => {
@@ -240,6 +307,11 @@ function createValueElement<T extends AnyValueElement>({
                 entry.children = (child as DatatypeElement).children;
                 child.children = [entry];
                 child.type = "list";
+
+                const length = int(propertyEl.getAttribute("length"));
+                if (length !== undefined) {
+                    child.constraint = { max: length };
+                }
             }
 
             element.children.push(child);

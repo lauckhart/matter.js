@@ -104,7 +104,7 @@ export const ApplicationBasicCluster = Cluster({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.3.3.3
          */
-        applicationName: FixedAttribute(0x2, TlvString),
+        applicationName: FixedAttribute(0x2, TlvString.bound({ maxLength: 32 })),
 
         /**
          * This attribute, if present, shall specify a numeric ID assigned by the vendor to identify a specific Content

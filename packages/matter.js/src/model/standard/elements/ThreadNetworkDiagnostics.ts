@@ -111,7 +111,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "NeighborTable", id: 0x7, type: "list", access: "R V", conformance: "M",
-            default: [],
+            constraint: "max 254", default: [],
             details: "The NeighborTable attribute shall indicate the current list of Nodes that comprise the neighbor " +
                 "table on the Node.",
             xref: { document: "core", section: "11.13.6.8" },
@@ -120,7 +120,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "RouteTable", id: 0x8, type: "list", access: "R V", conformance: "M",
-            default: [],
+            constraint: "max 254", default: [],
             details: "The RouteTable attribute shall indicate the current list of router capable Nodes for which routes " +
                 "have been established.",
             xref: { document: "core", section: "11.13.6.9" },

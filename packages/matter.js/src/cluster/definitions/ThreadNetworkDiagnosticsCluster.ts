@@ -559,7 +559,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.8
          */
-        neighborTable: Attribute(0x7, TlvArray(TlvNeighborTableStruct), { default: [] }),
+        neighborTable: Attribute(0x7, TlvArray(TlvNeighborTableStruct, { maxLength: 254 }), { default: [] }),
 
         /**
          * The RouteTable attribute shall indicate the current list of router capable Nodes for which routes have been
@@ -567,7 +567,7 @@ export const ThreadNetworkDiagnosticsBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.13.6.9
          */
-        routeTable: Attribute(0x8, TlvArray(TlvRouteTableStruct), { default: [] }),
+        routeTable: Attribute(0x8, TlvArray(TlvRouteTableStruct, { maxLength: 254 }), { default: [] }),
 
         /**
          * The PartitionId attribute shall indicate the Thread Leader Partition Id for the Thread network to which the

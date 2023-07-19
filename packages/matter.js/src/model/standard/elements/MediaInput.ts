@@ -29,6 +29,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "InputList", id: 0x0, type: "list", access: "R V", conformance: "M",
+            constraint: "max 254",
             details: "This list provides the media inputs supported by the device.",
             xref: { document: "cluster", section: "6.9.3.1" },
             children: [{ tag: "datatype", name: "entry", type: "InputInfoStruct" }]
@@ -102,7 +103,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "Name", id: 0x2, type: "string", conformance: "M",
+                    tag: "datatype", name: "Name", id: 0x2, type: "string", conformance: "M", constraint: "max 32",
                     details: "This shall indicate the input name, such as “HDMI 1”. This field may be blank, but SHOULD be " +
                         "provided when known.",
                     xref: { document: "cluster", section: "6.9.5.1.3" }
@@ -110,6 +111,7 @@ Matter.children.push({
 
                 {
                     tag: "datatype", name: "Description", id: 0x3, type: "string", conformance: "M",
+                    constraint: "max 32",
                     details: "This shall indicate the user editable input description, such as “Living room Playstation”. This " +
                         "field may be blank, but SHOULD be provided when known.",
                     xref: { document: "cluster", section: "6.9.5.1.4" }

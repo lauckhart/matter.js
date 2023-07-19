@@ -35,7 +35,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "ApplicationName", id: 0x2, type: "string", access: "R V", conformance: "M",
-            constraint: "desc", quality: "F",
+            constraint: "max 32", quality: "F",
             details: "This attribute shall specify a human readable (displayable) name of the Content App assigned by the " +
                 "vendor. For example, \"NPR On Demand\". The maximum length of the ApplicationName attribute is 256 " +
                 "bytes of UTF-8 characters.",

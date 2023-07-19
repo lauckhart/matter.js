@@ -25,19 +25,40 @@ Matter.children.push({
         { tag: "attribute", name: "DcPower", id: 0x106, type: "int16", conformance: "O", default: 32768 },
         { tag: "attribute", name: "DcPowerMin", id: 0x107, type: "int16", conformance: "O", default: 32768 },
         { tag: "attribute", name: "DcPowerMax", id: 0x108, type: "int16", conformance: "O", default: 32768 },
-        { tag: "attribute", name: "DcVoltageMultiplier", id: 0x200, type: "uint16", conformance: "O", default: 1 },
-        { tag: "attribute", name: "DcVoltageDivisor", id: 0x201, type: "uint16", conformance: "O", default: 1 },
-        { tag: "attribute", name: "DcCurrentMultiplier", id: 0x202, type: "uint16", conformance: "O", default: 1 },
-        { tag: "attribute", name: "DcCurrentDivisor", id: 0x203, type: "uint16", conformance: "O", default: 1 },
-        { tag: "attribute", name: "DcPowerMultiplier", id: 0x204, type: "uint16", conformance: "O", default: 1 },
-        { tag: "attribute", name: "DcPowerDivisor", id: 0x205, type: "uint16", conformance: "O", default: 1 },
+        {
+            tag: "attribute", name: "DcVoltageMultiplier", id: 0x200, type: "uint16", conformance: "O",
+            constraint: "min 1", default: 1
+        },
+        {
+            tag: "attribute", name: "DcVoltageDivisor", id: 0x201, type: "uint16", conformance: "O",
+            constraint: "min 1", default: 1
+        },
+        {
+            tag: "attribute", name: "DcCurrentMultiplier", id: 0x202, type: "uint16", conformance: "O",
+            constraint: "min 1", default: 1
+        },
+        {
+            tag: "attribute", name: "DcCurrentDivisor", id: 0x203, type: "uint16", conformance: "O",
+            constraint: "min 1", default: 1
+        },
+        {
+            tag: "attribute", name: "DcPowerMultiplier", id: 0x204, type: "uint16", conformance: "O",
+            constraint: "min 1", default: 1
+        },
+        {
+            tag: "attribute", name: "DcPowerDivisor", id: 0x205, type: "uint16", conformance: "O",
+            constraint: "min 1", default: 1
+        },
         { tag: "attribute", name: "AcFrequency", id: 0x300, type: "uint16", conformance: "O", default: 65535 },
         { tag: "attribute", name: "AcFrequencyMin", id: 0x301, type: "uint16", conformance: "O", default: 65535 },
         { tag: "attribute", name: "AcFrequencyMax", id: 0x302, type: "uint16", conformance: "O", default: 65535 },
         { tag: "attribute", name: "NeutralCurrent", id: 0x303, type: "uint16", conformance: "O", default: 0 },
         { tag: "attribute", name: "TotalActivePower", id: 0x304, type: "int32", conformance: "O", default: 0 },
         { tag: "attribute", name: "TotalReactivePower", id: 0x305, type: "int32", conformance: "O", default: 0 },
-        { tag: "attribute", name: "TotalApparentPower", id: 0x306, type: "uint32", conformance: "O", default: 1 },
+        {
+            tag: "attribute", name: "TotalApparentPower", id: 0x306, type: "uint32", conformance: "O",
+            constraint: "max 16777215", default: 1
+        },
         { tag: "attribute", name: "Measured1StHarmonicCurrent", id: 0x307, type: "int16", conformance: "O", default: 32768 },
         { tag: "attribute", name: "Measured3RdHarmonicCurrent", id: 0x308, type: "int16", conformance: "O", default: 32768 },
         { tag: "attribute", name: "Measured5ThHarmonicCurrent", id: 0x309, type: "int16", conformance: "O", default: 32768 },
@@ -71,12 +92,30 @@ Matter.children.push({
             tag: "attribute", name: "MeasuredPhase11ThHarmonicCurrent", id: 0x312, type: "int16",
             conformance: "O", default: 32768
         },
-        { tag: "attribute", name: "AcFrequencyMultiplier", id: 0x400, type: "uint16", conformance: "O", default: 1 },
-        { tag: "attribute", name: "AcFrequencyDivisor", id: 0x401, type: "uint16", conformance: "O", default: 1 },
-        { tag: "attribute", name: "PowerMultiplier", id: 0x402, type: "uint32", conformance: "O", default: 1 },
-        { tag: "attribute", name: "PowerDivisor", id: 0x403, type: "uint32", conformance: "O", default: 1 },
-        { tag: "attribute", name: "HarmonicCurrentMultiplier", id: 0x404, type: "int8", conformance: "O", default: 0 },
-        { tag: "attribute", name: "PhaseHarmonicCurrentMultiplier", id: 0x405, type: "int8", conformance: "O", default: 0 },
+        {
+            tag: "attribute", name: "AcFrequencyMultiplier", id: 0x400, type: "uint16", conformance: "O",
+            constraint: "min 1", default: 1
+        },
+        {
+            tag: "attribute", name: "AcFrequencyDivisor", id: 0x401, type: "uint16", conformance: "O",
+            constraint: "min 1", default: 1
+        },
+        {
+            tag: "attribute", name: "PowerMultiplier", id: 0x402, type: "uint32", conformance: "O",
+            constraint: "max 16777215", default: 1
+        },
+        {
+            tag: "attribute", name: "PowerDivisor", id: 0x403, type: "uint32", conformance: "O",
+            constraint: "max 16777215", default: 1
+        },
+        {
+            tag: "attribute", name: "HarmonicCurrentMultiplier", id: 0x404, type: "int8", conformance: "O",
+            constraint: "min -127", default: 0
+        },
+        {
+            tag: "attribute", name: "PhaseHarmonicCurrentMultiplier", id: 0x405, type: "int8", conformance: "O",
+            constraint: "min -127", default: 0
+        },
         { tag: "attribute", name: "InstantaneousVoltage", id: 0x500, type: "int16", conformance: "O", default: 65535 },
         { tag: "attribute", name: "InstantaneousLineCurrent", id: 0x501, type: "uint16", conformance: "O", default: 65535 },
         { tag: "attribute", name: "InstantaneousActiveCurrent", id: 0x502, type: "int16", conformance: "O", default: 65535 },
@@ -96,7 +135,10 @@ Matter.children.push({
         { tag: "attribute", name: "ActivePowerMax", id: 0x50d, type: "int16", conformance: "O", default: 65535 },
         { tag: "attribute", name: "ReactivePower", id: 0x50e, type: "int16", conformance: "O", default: 65535 },
         { tag: "attribute", name: "ApparentPower", id: 0x50f, type: "uint16", conformance: "O", default: 65535 },
-        { tag: "attribute", name: "AcPowerFactor", id: 0x510, type: "int8", conformance: "O", default: 0 },
+        {
+            tag: "attribute", name: "AcPowerFactor", id: 0x510, type: "int8", conformance: "O",
+            constraint: "-100 to 100", default: 0
+        },
         {
             tag: "attribute", name: "AverageRmsVoltageMeasurementPeriod", id: 0x511, type: "uint16",
             access: "RW", conformance: "O", default: 0
@@ -121,12 +163,30 @@ Matter.children.push({
             tag: "attribute", name: "RmsVoltageSwellPeriod", id: 0x517, type: "uint16", access: "RW",
             conformance: "O", default: 0
         },
-        { tag: "attribute", name: "AcVoltageMultiplier", id: 0x600, type: "uint16", conformance: "O", default: 1 },
-        { tag: "attribute", name: "AcVoltageDivisor", id: 0x601, type: "uint16", conformance: "O", default: 1 },
-        { tag: "attribute", name: "AcCurrentMultiplier", id: 0x602, type: "uint16", conformance: "O", default: 1 },
-        { tag: "attribute", name: "AcCurrentDivisor", id: 0x603, type: "uint16", conformance: "O", default: 1 },
-        { tag: "attribute", name: "AcPowerMultiplier", id: 0x604, type: "uint16", conformance: "O", default: 1 },
-        { tag: "attribute", name: "AcPowerDivisor", id: 0x605, type: "uint16", conformance: "O", default: 1 },
+        {
+            tag: "attribute", name: "AcVoltageMultiplier", id: 0x600, type: "uint16", conformance: "O",
+            constraint: "min 1", default: 1
+        },
+        {
+            tag: "attribute", name: "AcVoltageDivisor", id: 0x601, type: "uint16", conformance: "O",
+            constraint: "min 1", default: 1
+        },
+        {
+            tag: "attribute", name: "AcCurrentMultiplier", id: 0x602, type: "uint16", conformance: "O",
+            constraint: "min 1", default: 1
+        },
+        {
+            tag: "attribute", name: "AcCurrentDivisor", id: 0x603, type: "uint16", conformance: "O",
+            constraint: "min 1", default: 1
+        },
+        {
+            tag: "attribute", name: "AcPowerMultiplier", id: 0x604, type: "uint16", conformance: "O",
+            constraint: "min 1", default: 1
+        },
+        {
+            tag: "attribute", name: "AcPowerDivisor", id: 0x605, type: "uint16", conformance: "O",
+            constraint: "min 1", default: 1
+        },
         {
             tag: "attribute", name: "DcOverloadAlarmsMask", id: 0x700, type: "map8", access: "RW",
             conformance: "O", default: 0
@@ -161,7 +221,10 @@ Matter.children.push({
         { tag: "attribute", name: "ActivePowerMaxPhaseB", id: 0x90d, type: "int16", conformance: "O", default: 65535 },
         { tag: "attribute", name: "ReactivePowerPhaseB", id: 0x90e, type: "int16", conformance: "O", default: 65535 },
         { tag: "attribute", name: "ApparentPowerPhaseB", id: 0x90f, type: "uint16", conformance: "O", default: 65535 },
-        { tag: "attribute", name: "PowerFactorPhaseB", id: 0x910, type: "int8", conformance: "O", default: 0 },
+        {
+            tag: "attribute", name: "PowerFactorPhaseB", id: 0x910, type: "int8", conformance: "O",
+            constraint: "-100 to 100", default: 0
+        },
         {
             tag: "attribute", name: "AverageRmsVoltageMeasurementPeriodPhaseB", id: 0x911, type: "uint16",
             conformance: "O", default: 0
@@ -198,7 +261,10 @@ Matter.children.push({
         { tag: "attribute", name: "ActivePowerMaxPhaseC", id: 0xa0d, type: "int16", conformance: "O", default: 65535 },
         { tag: "attribute", name: "ReactivePowerPhaseC", id: 0xa0e, type: "int16", conformance: "O", default: 65535 },
         { tag: "attribute", name: "ApparentPowerPhaseC", id: 0xa0f, type: "uint16", conformance: "O", default: 65535 },
-        { tag: "attribute", name: "PowerFactorPhaseC", id: 0xa10, type: "int8", conformance: "O", default: 0 },
+        {
+            tag: "attribute", name: "PowerFactorPhaseC", id: 0xa10, type: "int8", conformance: "O",
+            constraint: "-100 to 100", default: 0
+        },
         {
             tag: "attribute", name: "AverageRmsVoltageMeasurementPeriodPhaseC", id: 0xa11, type: "uint16",
             conformance: "O", default: 0

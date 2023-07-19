@@ -48,6 +48,7 @@ Matter.children.push({
         },
         {
             tag: "attribute", name: "VendorName", id: 0x1, type: "string", conformance: "O",
+            constraint: "max 32",
             xref: { document: "core", section: "9.13.4" }
         },
         {
@@ -56,12 +57,13 @@ Matter.children.push({
         },
         {
             tag: "attribute", name: "ProductName", id: 0x3, type: "string", conformance: "O",
+            constraint: "max 32",
             xref: { document: "core", section: "9.13.4" }
         },
         { tag: "attribute", name: "ProductId", id: 0x4, conformance: "X", xref: { document: "core", section: "9.13.4" } },
         {
             tag: "attribute", name: "NodeLabel", id: 0x5, type: "string", access: "RW", conformance: "O",
-            default: "",
+            constraint: "max 32", default: "",
             xref: { document: "core", section: "9.13.4" }
         },
         { tag: "attribute", name: "Location", id: 0x6, conformance: "X", xref: { document: "core", section: "9.13.4" } },
@@ -71,6 +73,7 @@ Matter.children.push({
         },
         {
             tag: "attribute", name: "HardwareVersionString", id: 0x8, type: "string", conformance: "O",
+            constraint: "max 64",
             xref: { document: "core", section: "9.13.4" }
         },
         {
@@ -79,26 +82,32 @@ Matter.children.push({
         },
         {
             tag: "attribute", name: "SoftwareVersionString", id: 0xa, type: "string", conformance: "O",
+            constraint: "max 64",
             xref: { document: "core", section: "9.13.4" }
         },
         {
             tag: "attribute", name: "ManufacturingDate", id: 0xb, type: "string", conformance: "O",
+            constraint: "max 16",
             xref: { document: "core", section: "9.13.4" }
         },
         {
             tag: "attribute", name: "PartNumber", id: 0xc, type: "string", conformance: "O",
+            constraint: "max 32",
             xref: { document: "core", section: "9.13.4" }
         },
         {
             tag: "attribute", name: "ProductUrl", id: 0xd, type: "string", conformance: "O",
+            constraint: "max 256",
             xref: { document: "core", section: "9.13.4" }
         },
         {
             tag: "attribute", name: "ProductLabel", id: 0xe, type: "string", conformance: "O",
+            constraint: "max 64",
             xref: { document: "core", section: "9.13.4" }
         },
         {
             tag: "attribute", name: "SerialNumber", id: 0xf, type: "string", conformance: "O",
+            constraint: "max 32",
             xref: { document: "core", section: "9.13.4" }
         },
         {
@@ -111,6 +120,7 @@ Matter.children.push({
         },
         {
             tag: "attribute", name: "UniqueId", id: 0x12, type: "string", conformance: "O",
+            constraint: "max 32",
             xref: { document: "core", section: "9.13.4" }
         },
         {

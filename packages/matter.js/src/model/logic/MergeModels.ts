@@ -7,6 +7,7 @@
 import { InternalError } from "../../common/InternalError.js";
 import { ElementTag, Metatype } from "../definitions/index.js";
 import { AnyElement } from "../elements/index.js";
+import { Constraint } from "../index.js";
 import { Model, ValueModel } from "../models/index.js";
 import { ModelVariantTraversal, TraverseMap, VariantDetail } from "./ModelVariantTraversal.js";
 
@@ -63,6 +64,20 @@ export function MergeModels(
             const type = visitor.chooseType(variants);
             if (type?.type !== undefined && type?.type !== null) {
                 properties.type = type.type;
+            }
+        }
+
+        // Specialized support for constraint -- non-empty constraints should
+        // override "desc"
+        const constraint = new Constraint(properties.constraint);
+        if (constraint.desc) {
+            for (const key of priority.get("*", "constraint")) {
+                const definition = (variants.map[key] as ValueModel | undefined)?.constraint;
+                const constraint = new Constraint(definition);
+                if (!constraint?.empty && !constraint?.desc) {
+                    properties.constraint = definition;
+                    break;
+                }
             }
         }
 

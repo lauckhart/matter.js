@@ -22,9 +22,9 @@ export const BinaryInputBasicCluster = Cluster({
     revision: 1,
 
     attributes: {
-        activeText: OptionalWritableAttribute(0x4, TlvString, { default: "" }),
-        description: OptionalWritableAttribute(0x1c, TlvString, { default: "" }),
-        inactiveText: OptionalWritableAttribute(0x2e, TlvString, { default: "" }),
+        activeText: OptionalWritableAttribute(0x4, TlvString.bound({ maxLength: 16 }), { default: "" }),
+        description: OptionalWritableAttribute(0x1c, TlvString.bound({ maxLength: 16 }), { default: "" }),
+        inactiveText: OptionalWritableAttribute(0x2e, TlvString.bound({ maxLength: 16 }), { default: "" }),
         outOfService: WritableAttribute(0x51, TlvBoolean, { default: true }),
         polarity: OptionalAttribute(0x54, TlvUInt8),
         presentValue: WritableAttribute(0x55, TlvBoolean),

@@ -59,7 +59,7 @@ export const TlvOutputInfoStruct = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.5.5.1.3
      */
-    name: TlvField(2, TlvString)
+    name: TlvField(2, TlvString.bound({ maxLength: 32 }))
 });
 
 /**

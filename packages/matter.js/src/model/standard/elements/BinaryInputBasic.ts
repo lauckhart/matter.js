@@ -14,9 +14,18 @@ Matter.children.push({
         "that measurement.",
 
     children: [
-        { tag: "attribute", name: "ActiveText", id: 0x4, type: "string", access: "RW", conformance: "O", default: "" },
-        { tag: "attribute", name: "Description", id: 0x1c, type: "string", access: "RW", conformance: "O", default: "" },
-        { tag: "attribute", name: "InactiveText", id: 0x2e, type: "string", access: "RW", conformance: "O", default: "" },
+        {
+            tag: "attribute", name: "ActiveText", id: 0x4, type: "string", access: "RW", conformance: "O",
+            constraint: "max 16", default: ""
+        },
+        {
+            tag: "attribute", name: "Description", id: 0x1c, type: "string", access: "RW", conformance: "O",
+            constraint: "max 16", default: ""
+        },
+        {
+            tag: "attribute", name: "InactiveText", id: 0x2e, type: "string", access: "RW", conformance: "O",
+            constraint: "max 16", default: ""
+        },
         { tag: "attribute", name: "OutOfService", id: 0x51, type: "bool", access: "RW", conformance: "M", default: true },
         { tag: "attribute", name: "Polarity", id: 0x54, type: "enum8", conformance: "O", default: 0 },
         { tag: "attribute", name: "PresentValue", id: 0x55, type: "bool", access: "RW", conformance: "M", quality: "P" },

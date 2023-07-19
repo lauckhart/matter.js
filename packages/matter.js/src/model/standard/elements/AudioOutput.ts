@@ -82,7 +82,7 @@ Matter.children.push({
                 },
 
                 {
-                    tag: "datatype", name: "Name", id: 0x2, type: "string", conformance: "M",
+                    tag: "datatype", name: "Name", id: 0x2, type: "string", conformance: "M", constraint: "max 32",
                     details: "The device defined and user editable output name, such as “Soundbar”, “Speakers”. This field may be " +
                         "blank, but SHOULD be provided when known.",
                     xref: { document: "cluster", section: "6.5.5.1.3" }

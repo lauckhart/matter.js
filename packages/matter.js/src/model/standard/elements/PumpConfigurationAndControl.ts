@@ -71,7 +71,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxSpeed", id: 0x1, type: "uint16", access: "R V", conformance: "M",
-            default: null, quality: "X F",
+            constraint: "max 65534", default: null, quality: "X F",
             details: "This attribute specifies the maximum speed the pump can achieve. It is a physical limit, and does " +
                 "not apply to any specific control mode or operation mode." +
                 "\n" +
@@ -82,7 +82,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxFlow", id: 0x2, type: "uint16", access: "R V", conformance: "M",
-            default: null, quality: "X F",
+            constraint: "max 65534", default: null, quality: "X F",
             details: "This attribute specifies the maximum flow the pump can achieve. It is a physical limit, and does " +
                 "not apply to any specific control mode or operation mode." +
                 "\n" +
@@ -137,7 +137,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MinConstSpeed", id: 0x7, type: "uint16", access: "R V",
-            conformance: "SPD, [AUTO]", default: null, quality: "X F",
+            conformance: "SPD, [AUTO]", constraint: "max 65534", default: null, quality: "X F",
             details: "This attribute specifies the minimum speed the pump can achieve when it is working with the " +
                 "ControlMode attribute set to ConstantSpeed." +
                 "\n" +
@@ -148,7 +148,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxConstSpeed", id: 0x8, type: "uint16", access: "R V",
-            conformance: "SPD, [AUTO]", default: null, quality: "X F",
+            conformance: "SPD, [AUTO]", constraint: "max 65534", default: null, quality: "X F",
             details: "This attribute specifies the maximum speed the pump can achieve when it is working with the " +
                 "ControlMode attribute set to ConstantSpeed." +
                 "\n" +
@@ -159,7 +159,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MinConstFlow", id: 0x9, type: "uint16", access: "R V",
-            conformance: "FLW, [AUTO]", default: null, quality: "X F",
+            conformance: "FLW, [AUTO]", constraint: "max 65534", default: null, quality: "X F",
 
             details: "This attribute specifies the minimum flow the pump can achieve when it is working with the Con" +
                 "\n" +
@@ -173,7 +173,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MaxConstFlow", id: 0xa, type: "uint16", access: "R V",
-            conformance: "FLW, [AUTO]", default: null, quality: "X F",
+            conformance: "FLW, [AUTO]", constraint: "max 65534", default: null, quality: "X F",
             details: "This attribute specifies the maximum flow the pump can achieve when it is working with the " +
                 "ControlMode attribute set to ConstantFlow." +
                 "\n" +
@@ -267,7 +267,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Capacity", id: 0x13, type: "int16", access: "R V", conformance: "M",
-            default: null, quality: "X P",
+            constraint: "min 0", default: null, quality: "X P",
 
             details: "This attribute specifies the actual capacity of the pump as a percentage of the effective maximum " +
                 "setpoint value. It is updated dynamically as the speed of the pump changes." +
@@ -283,7 +283,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "Speed", id: 0x14, type: "uint16", access: "R V", conformance: "O",
-            default: null, quality: "X",
+            constraint: "max 65534", default: null, quality: "X",
 
             details: "This attribute specifies the actual speed of the pump measured in RPM. It is updated dynamically as " +
                 "the speed of the pump changes." +

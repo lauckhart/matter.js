@@ -332,7 +332,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.2
          */
-        maxSpeed: FixedAttribute(0x1, TlvNullable(TlvUInt16), { default: null }),
+        maxSpeed: FixedAttribute(0x1, TlvNullable(TlvUInt16.bound({ max: 65534 })), { default: null }),
 
         /**
          * This attribute specifies the maximum flow the pump can achieve. It is a physical limit, and does not apply
@@ -342,7 +342,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.3
          */
-        maxFlow: FixedAttribute(0x2, TlvNullable(TlvUInt16), { default: null }),
+        maxFlow: FixedAttribute(0x2, TlvNullable(TlvUInt16.bound({ max: 65534 })), { default: null }),
 
         /**
          * This attribute specifies the activity status of the pump functions as listed in PumpStatusBitmap. Where a
@@ -406,7 +406,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.17
          */
-        capacity: Attribute(0x13, TlvNullable(TlvInt16), { default: null }),
+        capacity: Attribute(0x13, TlvNullable(TlvInt16.bound({ min: 0 })), { default: null }),
 
         /**
          * This attribute specifies the actual speed of the pump measured in RPM. It is updated dynamically as the
@@ -419,7 +419,7 @@ export const PumpConfigurationAndControlBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.18
          */
-        speed: OptionalAttribute(0x14, TlvNullable(TlvUInt16), { default: null }),
+        speed: OptionalAttribute(0x14, TlvNullable(TlvUInt16.bound({ max: 65534 })), { default: null }),
 
         /**
          * This attribute specifies the accumulated number of hours that the pump has been powered and the motor has
@@ -702,7 +702,7 @@ export const AutomaticComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.8
          */
-        minConstSpeed: OptionalFixedAttribute(0x7, TlvNullable(TlvUInt16), { default: null }),
+        minConstSpeed: OptionalFixedAttribute(0x7, TlvNullable(TlvUInt16.bound({ max: 65534 })), { default: null }),
 
         /**
          * This attribute specifies the maximum speed the pump can achieve when it is working with the ControlMode
@@ -712,7 +712,7 @@ export const AutomaticComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.9
          */
-        maxConstSpeed: OptionalFixedAttribute(0x8, TlvNullable(TlvUInt16), { default: null }),
+        maxConstSpeed: OptionalFixedAttribute(0x8, TlvNullable(TlvUInt16.bound({ max: 65534 })), { default: null }),
 
         /**
          * This attribute specifies the minimum flow the pump can achieve when it is working with the Con
@@ -723,7 +723,7 @@ export const AutomaticComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.10
          */
-        minConstFlow: OptionalFixedAttribute(0x9, TlvNullable(TlvUInt16), { default: null }),
+        minConstFlow: OptionalFixedAttribute(0x9, TlvNullable(TlvUInt16.bound({ max: 65534 })), { default: null }),
 
         /**
          * This attribute specifies the maximum flow the pump can achieve when it is working with the ControlMode
@@ -733,7 +733,7 @@ export const AutomaticComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.11
          */
-        maxConstFlow: OptionalFixedAttribute(0xa, TlvNullable(TlvUInt16), { default: null }),
+        maxConstFlow: OptionalFixedAttribute(0xa, TlvNullable(TlvUInt16.bound({ max: 65534 })), { default: null }),
 
         /**
          * This attribute specifies the minimum temperature the pump can maintain in the system when it is working with
@@ -803,7 +803,7 @@ export const ConstantSpeedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.8
          */
-        minConstSpeed: FixedAttribute(0x7, TlvNullable(TlvUInt16), { default: null }),
+        minConstSpeed: FixedAttribute(0x7, TlvNullable(TlvUInt16.bound({ max: 65534 })), { default: null }),
 
         /**
          * This attribute specifies the maximum speed the pump can achieve when it is working with the ControlMode
@@ -813,7 +813,7 @@ export const ConstantSpeedComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.9
          */
-        maxConstSpeed: FixedAttribute(0x8, TlvNullable(TlvUInt16), { default: null })
+        maxConstSpeed: FixedAttribute(0x8, TlvNullable(TlvUInt16.bound({ max: 65534 })), { default: null })
     }
 });
 
@@ -831,7 +831,7 @@ export const ConstantFlowComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.10
          */
-        minConstFlow: FixedAttribute(0x9, TlvNullable(TlvUInt16), { default: null }),
+        minConstFlow: FixedAttribute(0x9, TlvNullable(TlvUInt16.bound({ max: 65534 })), { default: null }),
 
         /**
          * This attribute specifies the maximum flow the pump can achieve when it is working with the ControlMode
@@ -841,7 +841,7 @@ export const ConstantFlowComponent = ClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 4.2.7.11
          */
-        maxConstFlow: FixedAttribute(0xa, TlvNullable(TlvUInt16), { default: null })
+        maxConstFlow: FixedAttribute(0xa, TlvNullable(TlvUInt16.bound({ max: 65534 })), { default: null })
     }
 });
 

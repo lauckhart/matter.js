@@ -336,7 +336,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "LedSettings", id: 0x22, type: "uint8", access: "R[W] VM", conformance: "O",
-            constraint: "desc", default: 0, quality: "P",
+            constraint: "max 2", default: 0, quality: "P",
             details: "The settings for the LED support three different modes",
             xref: { document: "cluster", section: "5.2.3.25" }
         },
@@ -352,7 +352,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "SoundVolume", id: 0x24, type: "uint8", access: "R[W] VM", conformance: "O",
-            constraint: "desc", default: 0, quality: "P",
+            constraint: "max 3", default: 0, quality: "P",
             details: "The sound volume on a door lock has four possible settings: silent, low, high and medium volumes",
             xref: { document: "cluster", section: "5.2.3.27" }
         },

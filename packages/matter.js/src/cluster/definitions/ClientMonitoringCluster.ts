@@ -42,10 +42,10 @@ export const ClientMonitoringCluster = Cluster({
     revision: 1,
 
     attributes: {
-        idleModeInterval: Attribute(0x0, TlvUInt32, { default: 18 }),
-        activeModeInterval: Attribute(0x1, TlvUInt32, { default: 18 }),
-        activeModeThreshold: Attribute(0x2, TlvUInt16, { default: 0 }),
-        expectedClients: Attribute(0x3, TlvArray(TlvMonitoringRegistration), { default: [] })
+        idleModeInterval: Attribute(0x0, TlvUInt32.bound({ min: 300, max: 86400000 }), { default: 18 }),
+        activeModeInterval: Attribute(0x1, TlvUInt32.bound({ min: 300, max: 86400000 }), { default: 18 }),
+        activeModeThreshold: Attribute(0x2, TlvUInt16.bound({ min: 300, max: 60000 }), { default: 0 }),
+        expectedClients: Attribute(0x3, TlvArray(TlvMonitoringRegistration, { maxLength: 4 }), { default: [] })
     },
 
     commands: {

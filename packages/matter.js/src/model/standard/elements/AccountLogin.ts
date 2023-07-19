@@ -74,6 +74,7 @@ Matter.children.push({
 
             children: [{
                 tag: "datatype", name: "TempAccountIdentifier", id: 0x0, type: "string", conformance: "M",
+                constraint: "max 100",
                 details: "This attribute shall specify the client’s Temporary Account Identifier. The length of this field " +
                     "shall be at least 16 characters to protect the account holder against password guessing attacks.",
                 xref: { document: "cluster", section: "6.2.4.1.1" }
@@ -144,9 +145,11 @@ Matter.children.push({
             children: [
                 {
                     tag: "datatype", name: "TempAccountIdentifier", id: 0x0, type: "string", conformance: "M",
+                    constraint: "max 100",
                     details: "This field shall specify the client’s temporary account identifier.",
                     xref: { document: "cluster", section: "6.2.4.3.1" }
                 },
+
                 {
                     tag: "datatype", name: "SetupPin", id: 0x1, type: "string", conformance: "M", constraint: "min 11",
                     details: "This field shall provide the setup PIN code as a text string at least 11 characters in length.",

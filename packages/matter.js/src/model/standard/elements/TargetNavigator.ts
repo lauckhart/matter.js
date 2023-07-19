@@ -20,6 +20,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "TargetList", id: 0x0, type: "list", access: "R V", conformance: "M",
+            constraint: "max 254",
             details: "The TargetList attribute shall represent a list of targets that can be navigated to within the " +
                 "experience presented to the user by the Endpoint (Video Player or Content App). The list shall not " +
                 "contain any entries with the same Identifier in the TargetInfoStruct object.",
@@ -95,7 +96,7 @@ Matter.children.push({
                     xref: { document: "cluster", section: "6.11.5.1.1" }
                 },
                 {
-                    tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "M",
+                    tag: "datatype", name: "Name", id: 0x1, type: "string", conformance: "M", constraint: "max 32",
                     details: "A name string for the TargetInfoStruct.",
                     xref: { document: "cluster", section: "6.11.5.1.2" }
                 }

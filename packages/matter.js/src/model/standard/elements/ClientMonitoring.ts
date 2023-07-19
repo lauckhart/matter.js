@@ -14,11 +14,21 @@ Matter.children.push({
         "on the server.",
 
     children: [
-        { tag: "attribute", name: "IdleModeInterval", id: 0x0, type: "uint32", conformance: "M", default: 18 },
-        { tag: "attribute", name: "ActiveModeInterval", id: 0x1, type: "uint32", conformance: "M", default: 18 },
-        { tag: "attribute", name: "ActiveModeThreshold", id: 0x2, type: "uint16", conformance: "M", default: 0 },
+        {
+            tag: "attribute", name: "IdleModeInterval", id: 0x0, type: "uint32", conformance: "M",
+            constraint: "300 to 86400000", default: 18
+        },
+        {
+            tag: "attribute", name: "ActiveModeInterval", id: 0x1, type: "uint32", conformance: "M",
+            constraint: "300 to 86400000", default: 18
+        },
+        {
+            tag: "attribute", name: "ActiveModeThreshold", id: 0x2, type: "uint16", conformance: "M",
+            constraint: "300 to 60000", default: 0
+        },
         {
             tag: "attribute", name: "ExpectedClients", id: 0x3, type: "list", conformance: "M",
+            constraint: "max 4",
             children: [{ tag: "datatype", name: "entry", type: "MonitoringRegistration" }]
         },
 

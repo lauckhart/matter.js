@@ -272,7 +272,7 @@ export const GroupKeyManagementBase = BaseClusterComponent({
          */
         groupKeyMap: WritableFabricScopedAttribute(
             0x0,
-            TlvArray(TlvGroupKeyMapStruct),
+            TlvArray(TlvGroupKeyMapStruct, { maxLength: 254 }),
             { persistent: true, default: [], writeAcl: AccessLevel.Manage }
         ),
 
@@ -288,7 +288,7 @@ export const GroupKeyManagementBase = BaseClusterComponent({
          *
          * @see {@link MatterCoreSpecificationV1_1} § 11.2.7.2
          */
-        groupTable: FabricScopedAttribute(0x1, TlvArray(TlvGroupInfoMapStruct), { default: [] }),
+        groupTable: FabricScopedAttribute(0x1, TlvArray(TlvGroupInfoMapStruct, { maxLength: 254 }), { default: [] }),
 
         /**
          * This attribute shall indicate the maximum number of groups that this node supports per fabric. The value of

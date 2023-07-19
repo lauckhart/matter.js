@@ -1404,7 +1404,11 @@ export const DoorLockBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.25
          */
-        ledSettings: OptionalWritableAttribute(0x22, TlvUInt8, { default: 0, writeAcl: AccessLevel.Manage }),
+        ledSettings: OptionalWritableAttribute(
+            0x22,
+            TlvUInt8.bound({ max: 2 }),
+            { default: 0, writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * The number of seconds to wait after unlocking a lock before it automatically locks again. 0=disabled. If
@@ -1420,7 +1424,11 @@ export const DoorLockBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.3.27
          */
-        soundVolume: OptionalWritableAttribute(0x24, TlvUInt8, { default: 0, writeAcl: AccessLevel.Manage }),
+        soundVolume: OptionalWritableAttribute(
+            0x24,
+            TlvUInt8.bound({ max: 3 }),
+            { default: 0, writeAcl: AccessLevel.Manage }
+        ),
 
         /**
          * The current operating mode of the lock (see OperatingModeEnum).

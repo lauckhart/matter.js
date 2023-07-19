@@ -65,7 +65,7 @@ export const TlvInputInfoStruct = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.5.1.3
      */
-    name: TlvField(2, TlvString),
+    name: TlvField(2, TlvString.bound({ maxLength: 32 })),
 
     /**
      * This shall indicate the user editable input description, such as “Living room Playstation”. This field may be
@@ -73,7 +73,7 @@ export const TlvInputInfoStruct = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.5.1.4
      */
-    description: TlvField(3, TlvString)
+    description: TlvField(3, TlvString.bound({ maxLength: 32 }))
 });
 
 /**
@@ -134,7 +134,7 @@ export const MediaInputBase = BaseClusterComponent({
          *
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.9.3.1
          */
-        inputList: Attribute(0x0, TlvArray(TlvInputInfoStruct), { default: [] }),
+        inputList: Attribute(0x0, TlvArray(TlvInputInfoStruct, { maxLength: 254 }), { default: [] }),
 
         /**
          * This field contains the value of the index field of the currently selected InputInfoStruct.

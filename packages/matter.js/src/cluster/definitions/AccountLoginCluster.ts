@@ -25,7 +25,7 @@ export const TlvGetSetupPinRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.1.1
      */
-    tempAccountIdentifier: TlvField(0, TlvString)
+    tempAccountIdentifier: TlvField(0, TlvString.bound({ maxLength: 100 }))
 });
 
 /**
@@ -55,7 +55,7 @@ export const TlvLoginRequest = TlvObject({
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.2.4.3.1
      */
-    tempAccountIdentifier: TlvField(0, TlvString),
+    tempAccountIdentifier: TlvField(0, TlvString.bound({ maxLength: 100 })),
 
     /**
      * This field shall provide the setup PIN code as a text string at least 11 characters in length.

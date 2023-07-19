@@ -20,7 +20,7 @@ Matter.children.push({
 
         {
             tag: "attribute", name: "MacAddress", id: 0x0, type: "hwadr", access: "R V", conformance: "O",
-            constraint: "desc", quality: "F",
+            constraint: "max 32", quality: "F",
             details: "This shall indicate the current MAC address of the device. Only 48-bit MAC Addresses shall be used " +
                 "for this attribute as required by the Wake on LAN protocol.",
             xref: { document: "cluster", section: "1.10.2.1" }
