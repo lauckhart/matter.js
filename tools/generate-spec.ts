@@ -48,7 +48,7 @@ function scanCluster(clusterRef: HtmlReference) {
 
 function scanDevices(devices: HtmlReference) {
     for (const deviceRef of loadDevices(devices)) {
-        logger.info(`device ${deviceRef.name} (${deviceRef.xref.document} § ${deviceRef.xref.section})`);
+        logger.info(`translate ${deviceRef.name} (${deviceRef.xref.document} § ${deviceRef.xref.section})`);
         Logger.nest(() => elements.push(...translateDevice(deviceRef)));
     }
 }
