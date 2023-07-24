@@ -18,6 +18,7 @@ export enum ElementTag {
     Event = "event",
     Attribute = "attribute",
     DeviceType = "deviceType",
+    Requirement = "requirement",
     Datatype = "datatype",
 
     // Root element type - not formally part of specification

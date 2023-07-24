@@ -5,9 +5,10 @@
  */
 
 import { Mei } from "../definitions/index.js";
-import { ClusterElement, DeviceTypeElement } from "../elements/index.js";
+import { DeviceTypeElement, RequirementElement } from "../elements/index.js";
 import { ClusterModel } from "./ClusterModel.js";
 import { Model } from "./Model.js";
+import { RequirementModel } from "./RequirementModel.js";
 
 export class DeviceTypeModel extends Model implements DeviceTypeElement {
     override tag: DeviceTypeElement.Tag = DeviceTypeElement.Tag;
@@ -22,11 +23,11 @@ export class DeviceTypeModel extends Model implements DeviceTypeElement {
         return this.all(DeviceTypeModel);
     }
 
-    override get children(): (DeviceTypeModel | ClusterModel)[] {
+    override get children(): RequirementModel[] {
         return super.children as any;
     }
 
-    override set children(children: (DeviceTypeModel | ClusterModel | DeviceTypeElement | ClusterElement)[]) {
+    override set children(children: (RequirementModel | RequirementElement)[]) {
         super.children = children;
     }
 
