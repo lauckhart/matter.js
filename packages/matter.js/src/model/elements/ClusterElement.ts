@@ -29,6 +29,12 @@ export type ClusterElement = BaseElement & {
      */
     classification?: `${ClusterElement.Classification}`,
 
+    /**
+     * Flags a cluster as a client cluster.  This is only relevant for cluster
+     * definitions on devices.
+     */
+    client?: boolean,
+
     children?: ClusterElement.Child[]
 }
 

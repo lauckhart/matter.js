@@ -13,8 +13,8 @@ export * from "./CommandElement.js";
 export * from "./EventElement.js";
 export * from "./ClusterElement.js";
 
+export * from "./DeviceClusterElement.js";
 export * from "./DeviceTypeElement.js";
-export * from "./RequirementElement.js";
 
 export * from "./EndpointElement.js";
 export * from "./NodeElement.js";

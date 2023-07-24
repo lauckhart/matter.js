@@ -6,7 +6,8 @@
 
 import { ElementTag, Mei } from "../definitions/index.js";
 import { BaseElement } from "./BaseElement.js";
-import { RequirementElement } from "./RequirementElement.js";
+import { DeviceClusterElement } from "./DeviceClusterElement.js";
+import { DatatypeElement } from "./DatatypeElement.js";
 
 /**
  * Details on a specific device as defined in the Matter specification.
@@ -18,7 +19,7 @@ export type DeviceTypeElement = BaseElement & {
     tag: `${DeviceTypeElement.Tag}`,
     classification: `${DeviceTypeElement.Classification}`,
     category?: string,
-    children?: RequirementElement[]
+    children?: (DeviceClusterElement | DatatypeElement)[]
 }
 
 export function DeviceTypeElement(definition: DeviceTypeElement.Properties) {

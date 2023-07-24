@@ -11,9 +11,12 @@ export * from "./DatatypeModel.js";
 export * from "./AttributeModel.js";
 export * from "./CommandModel.js";
 export * from "./EventModel.js";
+export * from "./BaseClusterModel.js";
 export * from "./ClusterModel.js";
 
+export * from "./DeviceClusterModel.js";
 export * from "./DeviceTypeModel.js";
+
 export * from "./EndpointModel.js";
 export * from "./NodeModel.js";
 export * from "./FabricModel.js";

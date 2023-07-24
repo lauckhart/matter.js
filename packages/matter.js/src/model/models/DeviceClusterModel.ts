@@ -5,18 +5,17 @@
  */
 
 import { Conformance, Quality } from "../aspects/index.js";
-import { RequirementElement, NodeElement } from "../elements/index.js";
+import { DeviceClusterElement } from "../elements/index.js";
 import { Aspects } from "./Aspects.js";
-import { ClusterModel } from "./ClusterModel.js";
+import { BaseClusterModel } from "./BaseClusterModel.js";
 import { Model } from "./Model.js";
 
 const CONFORMANCE: unique symbol = Symbol("conformance");
 const QUALITY: unique symbol = Symbol("quality");
 
-export class RequirementModel extends Model implements RequirementElement {
-    override tag: RequirementElement.Tag = RequirementElement.Tag;
-    override id!: number;
-    clientServer!: RequirementElement.ClientServer;
+export class DeviceClusterModel extends BaseClusterModel implements DeviceClusterElement {
+    override tag: DeviceClusterElement.Tag = DeviceClusterElement.Tag;
+    client: boolean = false;
 
     get conformance(): Conformance {
         return Aspects.getAspect(this, CONFORMANCE, Conformance);
@@ -38,19 +37,7 @@ export class RequirementModel extends Model implements RequirementElement {
         return Aspects.getEffectiveAspect(this, QUALITY, Quality);
     }
 
-    override get children(): ClusterModel.Child[] {
-        return super.children as any;
-    }
-
-    override set children(children: ClusterModel.Child[]) {
-        super.children = children;
-    }
-
-    constructor(definition: RequirementElement.Properties) {
-        super(definition);
-    }
-
     static {
-        Model.constructors[RequirementElement.Tag] = this;
+        Model.constructors[DeviceClusterElement.Tag] = this;
     }
 }

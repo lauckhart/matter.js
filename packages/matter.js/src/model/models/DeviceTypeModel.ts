@@ -5,29 +5,26 @@
  */
 
 import { Mei } from "../definitions/index.js";
-import { DeviceTypeElement, RequirementElement } from "../elements/index.js";
-import { ClusterModel } from "./ClusterModel.js";
+import { DeviceTypeElement, DeviceClusterElement, DatatypeElement } from "../elements/index.js";
+import { DatatypeModel } from "./DatatypeModel.js";
+import { DeviceClusterModel } from "./DeviceClusterModel.js";
 import { Model } from "./Model.js";
-import { RequirementModel } from "./RequirementModel.js";
 
 export class DeviceTypeModel extends Model implements DeviceTypeElement {
     override tag: DeviceTypeElement.Tag = DeviceTypeElement.Tag;
     override id!: Mei;
     classification!: DeviceTypeElement.Classification;
+    revision!: number;
 
     get clusters() {
-        return this.all(ClusterModel);
+        return this.all(DeviceClusterModel);
     }
 
-    get deviceTypes() {
-        return this.all(DeviceTypeModel);
-    }
-
-    override get children(): RequirementModel[] {
+    override get children(): (DeviceClusterModel | DatatypeModel)[] {
         return super.children as any;
     }
 
-    override set children(children: (RequirementModel | RequirementElement)[]) {
+    override set children(children: (DeviceClusterModel | DatatypeModel | DeviceClusterElement | DatatypeElement)[]) {
         super.children = children;
     }
 

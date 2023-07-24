@@ -41,7 +41,7 @@ function augmentDevice(device: DeviceReference, content: HtmlReference) {
 
         case "classification":
             what = "classification";
-            device.classifications = content;
+            device.classification = content;
             break;
 
         case "element requirements":

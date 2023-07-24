@@ -55,7 +55,7 @@ export type ClusterReference = HtmlReference & {
  */
 export type DeviceReference = HtmlReference & {
     category?: string,
-    classifications?: HtmlReference,
+    classification?: HtmlReference,
     revisions?: HtmlReference,
     conditionSets?: HtmlReference[],
     clusters?: HtmlReference,

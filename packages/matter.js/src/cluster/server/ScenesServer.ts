@@ -117,7 +117,7 @@ export class ScenesManager {
     }
 }
 
-export const ScenesClusterHandler: () => ClusterServerHandlers<typeof ScenesCluster> = () => {
+export const ScenesClusterHandler: () => ClusterServerHandlers<typeof Foo> = () => {
     const addSceneLogic = (endpointId: number, groupId: GroupId, sceneId: number, sceneTransitionTime: number, sceneName: string, extensionFieldSets: any, transitionTime100ms: number, fabric: Fabric) => {
 
         if (groupId.id !== 0 && !GroupsManager.hasGroup(fabric, endpointId, groupId)) {

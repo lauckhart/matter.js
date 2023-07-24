@@ -27,5 +27,4 @@ export namespace Aspects {
         }
         return getAspect(model, symbol, constructor);
     }
-
 }
