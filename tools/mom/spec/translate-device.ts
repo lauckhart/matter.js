@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DatatypeElement, DeviceClusterElement, DeviceTypeElement } from "#matter.js/model/index.js";
+import { AttributeElement, CommandElement, DatatypeElement, DeviceClusterElement, DeviceTypeElement, EventElement } from "#matter.js/model/index.js";
 import { Logger } from "#matter.js/log/Logger.js";
 import { DeviceReference } from "./spec-types.js";
 import { Identifier, Integer, LowerIdentifier, Str } from "./html-translators.js";
-import { Alias, Constant, Optional, translateTable } from "./translate-table.js";
+import { Alias, Constant, Optional, translateRecordsToMatter, translateTable } from "./translate-table.js";
 
 const logger = Logger.get("translate-devices");
 
@@ -120,7 +120,9 @@ function addConditions(device: DeviceTypeElement, deviceRef: DeviceReference) {
         }
     });
 
-    if (conditions) {
+    const translated = translateRecordsToMatter("conditions", conditions, DatatypeElement);
+
+    if (translated?.length) {
         if (!device.children) {
             device.children = [];
         }
@@ -132,17 +134,88 @@ function addConditions(device: DeviceTypeElement, deviceRef: DeviceReference) {
 }
 
 function addClusters(device: DeviceTypeElement, deviceRef: DeviceReference) {
-    const clusters = new Map<String, DeviceClusterElement>();
-    const requirements = translateTable("clusters", deviceRef.clusters, {
-
+    const clusterRecords = translateTable("clusters", deviceRef.clusters, {
+        id: Optional(Alias(Integer, "identifier")),
+        name: Alias(Identifier, "clustername"),
+        client: (el: HTMLElement) => Identifier(el) === "Client",
+        quality: Optional(Str),
+        conformance: Optional(Str)
     });
-    const elements = translateTable("elements", deviceRef.elements, {
+
+    const clusters = translateRecordsToMatter(
+        "clusters",
+        clusterRecords,
+        DeviceClusterElement
+    );
+    if (!clusters?.length) {
+        return;
+    }
+
+    if (!device.children) {
+        device.children = [];
+    }
+    device.children.push(...clusters);
+
+    const clusterIndex = new Map<string, DeviceClusterElement>();
+    for (const cluster of clusters) {
+        clusterIndex.set(cluster.name.toLowerCase(), cluster);
+    }
+    
+    const elementRecords = translateTable("elements", deviceRef.elements, {
         id: Integer,
-        cluster: Identifier,
+        cluster: LowerIdentifier,
         element: LowerIdentifier,
         name: Identifier,
         constraint: Optional(Str),
         access: Optional(Str),
         conformance: Optional(Str)
     });
+
+    for (const record of elementRecords) {
+        const properties = {
+            id: record.id,
+            name: record.name,
+            constraint: record.constraint,
+            access: record.access,
+            conformance: record.conformance
+        };
+
+        const cluster = clusterIndex.get(record.cluster);
+        if (!cluster) {
+            logger.error(`no cluster ${record.cluster} for ${record.element} ${record.name}`);
+            continue;
+        }
+
+        const addElement = <T>(factory: (definition: typeof properties) => T) => {
+            if (!cluster.children) {
+                cluster.children = [];
+            }
+            cluster.children.push(factory(properties));
+        }
+
+        let features: DatatypeElement | undefined;
+        switch (record.element) {
+            case "feature":
+                if (!features) {
+                    features = 
+                }
+                break;
+
+            case "attribute":
+                addElement(AttributeElement);
+                break;
+
+            case "command":
+                addElement(CommandElement);
+                break;
+                
+            case "event":
+                addElement(EventElement);
+                break;
+
+            default:
+                logger.error(`unsupported type ${record.element} for ${record.cluster} element ${record.name}`)
+                break;
+        }
+    }
 }
