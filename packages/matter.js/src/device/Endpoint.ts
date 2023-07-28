@@ -28,7 +28,9 @@ export interface EndpointOptions {
 }
 
 export class Endpoint {
-    private readonly clusterServers = new Map<number, ClusterServerObj<Attributes, Commands, Events>>();
+    // Note - clusterServers should be ClusterServerObj<Attributes, Commands, Events> but as of TS 5.1.6 TS gets
+    // confused by template member names and doesn't believe extended attributes are covariant with bare attributes
+    private readonly clusterServers = new Map<number, any>();
     private readonly clusterClients = new Map<number, ClusterClientObj<any, Attributes, Commands, Events>>();
     private readonly childEndpoints: Endpoint[] = [];
     id: number | undefined;
