@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as assert from "assert";
+import { assert } from "../assertions.js";
 import { ByteArray } from "../../src/util/ByteArray.js";
 import { AAAARecord, ARecord, DnsCodec, DnsMessage, DnsMessageType, PtrRecord, SrvRecord, TxtRecord } from "../../src/codec/DnsCodec.js";
 

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as assert from "assert";
+import { assert } from "../assertions.js";
 
 import { Time } from "../../src/time/Time.js";
 import { TimeFake } from "../../src/time/TimeFake.js";
@@ -249,9 +249,9 @@ describe("Endpoint Structures", () => {
             const node = new TestNode();
             addRequiredRootClusters(node, false);
 
-            assert.throws(() => node.getRootEndpoint().verifyRequiredClusters(), {
-                message: "Device type MA-rootdevice (0x16) requires cluster server AdministratorCommissioning(0x3c) but it is not present on endpoint 0"
-            });
+            assert.throws(() => node.getRootEndpoint().verifyRequiredClusters(),
+                "Device type MA-rootdevice (0x16) requires cluster server AdministratorCommissioning(0x3c) but it is not present on endpoint 0"
+            );
 
         });
 

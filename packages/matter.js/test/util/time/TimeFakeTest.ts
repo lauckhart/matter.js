@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as assert from "assert";
+import { assert } from "../../assertions.js";
 import { TimeFake } from "../../../src/time/TimeFake.js";
 
 const FAKE_TIME = 36000000;

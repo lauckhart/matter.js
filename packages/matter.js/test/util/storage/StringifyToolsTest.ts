@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as assert from "assert";
+import { assert } from "../../assertions.js";
 import { AttributeId } from "../../../src/datatype/AttributeId.js";
 import { ClusterId } from "../../../src/datatype/ClusterId.js";
 import { CommandId } from "../../../src/datatype/CommandId.js";

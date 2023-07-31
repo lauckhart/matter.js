@@ -6,7 +6,7 @@
 import { Time } from "../../../src/time/Time.js";
 import { TimeFake } from "../../../src/time/TimeFake.js";
 import { normalizeAndDecodeReadAttributeReport, normalizeAttributeData } from "../../../src/protocol/interaction/AttributeDataDecoder.js";
-import * as assert from "assert";
+import { assert } from "../../assertions.js";
 import { TlvField, TlvObject } from "../../../src/tlv/TlvObject.js";
 import { TlvUInt8 } from "../../../src/tlv/TlvNumber.js";
 import { TlvNullable } from "../../../src/tlv/TlvNullable.js";

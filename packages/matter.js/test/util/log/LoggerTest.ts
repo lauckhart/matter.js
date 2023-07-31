@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as assert from "assert";
+import { assert } from "../../assertions.js";
 import { Level, Format, Logger, DiagnosticDictionary } from "../../../src/log/Logger.js";
 import { Time } from "../../../src/time/Time.js";
 import { TimeFake } from "../../../src/time/TimeFake.js";

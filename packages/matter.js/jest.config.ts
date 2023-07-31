@@ -1,7 +1,7 @@
 import type { Config } from 'jest';
 
 const config: Config = {
-    testMatch: ["<rootDir>/test/**/*.ts"],
+    testMatch: ["<rootDir>/test/**/*Test.ts"],
     preset: "ts-jest",
     testEnvironment: "node",
     collectCoverage: true,

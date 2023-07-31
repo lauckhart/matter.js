@@ -6,7 +6,7 @@
 
 import { StorageBackendMemory } from "../../../src/storage/StorageBackendMemory.js";
 import { StorageContext } from "../../../src/storage/StorageContext.js";
-import * as assert from "assert";
+import { assert } from "../../assertions.js";
 import { SupportedStorageTypes } from "../../../src/storage/StringifyTools.js";
 import { ByteArray } from "../../../src/util/ByteArray.js";
 import { StorageManager } from "../../../src/storage/index.js";
@@ -96,9 +96,7 @@ describe("StorageContext", () => {
 
         assert.throws(() => {
             storageContext.get("key");
-        }, {
-            message: "No value found for key key in context context and no default value specified!"
-        });
+        }, "No value found for key key in context context and no default value specified!");
     });
 
     it("check if key is set", () => {

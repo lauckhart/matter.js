@@ -27,6 +27,10 @@ import { BindingCluster } from "../../src/cluster/definitions/BindingCluster.js"
 import { IdentifyCluster, Identify } from "../../src/cluster/definitions/IdentifyCluster.js";
 import { Cluster, ClusterExtend } from "../../src/cluster/Cluster.js";
 
+function ok(value: unknown): asserts value {
+    assert.ok(value);
+}
+
 describe("ClusterServer structure", () => {
     describe("correct attribute servers are used and exposed", () => {
         it("FixedAttribute has get but no set", async () => {
@@ -54,7 +58,7 @@ describe("ClusterServer structure", () => {
             // TS ignore to allow a check, remove to test typing)
 
             assert.equal(basic.attributes.softwareVersion.getLocal(), 1);
-            assert.ok(basic.attributes.softwareVersion instanceof FixedAttributeServer);
+            ok(basic.attributes.softwareVersion instanceof FixedAttributeServer);
             assert.equal(basic.getSoftwareVersionAttribute(), 1);
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
@@ -69,7 +73,7 @@ describe("ClusterServer structure", () => {
             // Now we set this Cluster into Endpoint and retrieve it again and verify it is the same
             const endpoint = new Endpoint([DeviceTypes.ON_OFF_LIGHT], { endpointId: 1 });
             endpoint.addClusterServer(basic);
-
+            
             const basic2 = endpoint.getClusterServer(BasicInformationCluster);
             assert.ok(basic2);
 

@@ -5,7 +5,7 @@
  */
 
 import { ByteArray } from "../../src/util/ByteArray.js";
-import * as assert from "assert";
+import { assert } from "../assertions.js";
 import { ReedSolomon } from "../../src/math/ReedSolomon.js";
 
 describe("ReedSolomon", () => {

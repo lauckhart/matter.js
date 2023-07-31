@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as assert from "assert";
+import { assert } from "../assertions.js";
 import { MatterError } from "../../src/common/MatterError.js";
 import { tryCatch, tryCatchAsync } from "../../src/common/TryCatchHandler.js";
 
@@ -109,8 +109,8 @@ describe("Errors", () => {
         });
 
         it("tryCatch with unexpected error, throw error", async () => {
-            await assert.rejects(
-                async () => tryCatchAsync(
+            await assert.isRejected(
+                tryCatchAsync(
                     async () => { throw new Error("test") },
                     SubMatterError, "caught"
                 ),
@@ -151,7 +151,7 @@ describe("Errors", () => {
         });
 
         it("tryCatch with inherited error process error in handler function that throws the error instead return valid value", async () => {
-            await assert.rejects(async () => await tryCatchAsync(
+            await assert.isRejected(tryCatchAsync(
                 () => { throw new SubSubMatterError("test") },
                 SubMatterError, error => {
                     if (error instanceof OtherMatterError) {

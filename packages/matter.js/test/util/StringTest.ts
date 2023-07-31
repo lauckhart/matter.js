@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as assert from "assert";
+import { assert } from "../assertions.js";
 import { camelize, capitalize } from "../../src/util/String.js";
 
 const CAMELIZE_TESTS = {

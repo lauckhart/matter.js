@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as assert from "assert";
+import { assert } from "../assertions.js";
 import { DnsCodec, DnsMessageType } from "../../src/codec/DnsCodec.js";
 import { UdpChannelFake } from "../../src/net/fake/UdpChannelFake.js";
 import { UdpChannel } from "../../src/net/UdpChannel.js";

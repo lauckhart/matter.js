@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as assert from "assert";
+import { assert } from "../assertions.js";
 import { QrCode } from "../../src/schema/QrCodeSchema.js";
 
 const QR_CODE = [

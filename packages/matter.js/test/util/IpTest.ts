@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as assert from "assert";
+import { assert } from "../assertions.js";
 import { iPv4ToNumber, iPv6ToArray, onSameNetwork } from "../../src/util/Ip.js";
 
 describe("IP", () => {

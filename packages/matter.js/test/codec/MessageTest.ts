@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as assert from "assert";
+import { assert } from "../assertions.js";
 import { MessageCodec } from "../../src/codec/MessageCodec.js";
 import { NodeId } from "../../src/datatype/NodeId.js";
 import { ByteArray } from "../../src/util/ByteArray.js";

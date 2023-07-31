@@ -5,7 +5,7 @@
  */
 
 import { StorageBackendMemory } from "../../../src/storage/StorageBackendMemory.js";
-import * as assert from "assert";
+import { assert } from "../../assertions.js";
 import { StorageManager } from "../../../src/storage/StorageManager.js";
 
 describe("StorageManager", () => {
@@ -32,9 +32,7 @@ describe("StorageManager", () => {
 
         assert.throws(() => {
             storageManager.createContext("context");
-        }, {
-            message: "The storage needs to be initialized first!"
-        });
+        }, "The storage needs to be initialized first!");
     });
 
     it("creating StorageContext with  dot in name fails", async () => {
@@ -45,9 +43,7 @@ describe("StorageManager", () => {
 
         assert.throws(() => {
             storageManager.createContext("my.context");
-        }, {
-            message: "Context must not contain dots!"
-        });
+        }, "Context must not contain dots!");
     });
 
     it("getting same StorageContext context access same data", async () => {

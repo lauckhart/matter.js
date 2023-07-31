@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as assert from "assert";
+import { assert } from "../assertions.js";
 import { isDeepEqual } from "../../src/util/DeepEqual.js";
 import { VendorId } from "../../src/datatype/VendorId.js";
 import { ByteArray } from "../../src/util/ByteArray.js";
