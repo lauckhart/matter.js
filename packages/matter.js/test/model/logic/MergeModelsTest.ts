@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { expect } from "expect";
 import { MergeModels } from "../../../src/model/logic/index.js";
 import { ClusterElement, ClusterModel, MatterElement, MatterModel } from "../../../src/model/index.js";
 

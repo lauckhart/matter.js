@@ -30,27 +30,28 @@
     "build": "npm run build-cjs && npm run build-es",
     "build-clean": "npm run clean && npm run build",
     "build-doc": "typedoc --excludeExternals --plugin typedoc-plugin-missing-exports --plugin typedoc-plugin-markdown --gitRemote upstream --tsconfig tsconfig.dist-cjs.json",
-    "test-node": "TZ=utc NODE_OPTIONS=--experimental-vm-modules jest",
-    "test-web": "TZ=utc wtr",
+    "test-node": "c8 mocha",
+    "test-web": "wtr",
     "test": "npm run test-node && npm run test-web"
   },
   "dependencies": {
-    "@types/chai": "^4.3.5",
     "bn.js": "^5.2.1",
     "elliptic": "^6.5.4"
   },
   "devDependencies": {
     "@types/bn.js": "^5.1.1",
-    "@types/chai-as-promised": "^7.1.5",
     "@types/elliptic": "^6.4.14",
-    "@types/jest": "^29.5.1",
+    "@types/expect": "^24.3.0",
     "@web/dev-server-esbuild": "^0.4.1",
     "@web/test-runner": "^0.17.0",
     "@web/test-runner-puppeteer": "^0.14.0",
-    "chai": "^4.3.7",
-    "chai-as-promised": "^7.1.1",
+    "c8": "^8.0.1",
+    "expect": "^29.6.2",
     "jest": "^29.5.0",
+    "mocha": "^10.2.0",
+    "mocha-suppress-logs": "^0.3.1",
     "ts-jest": "^29.1.0",
+    "ts-mocha": "^10.0.0",
     "typescript": "^5.1.6"
   },
   "files": [

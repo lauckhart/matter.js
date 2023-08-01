@@ -5,7 +5,7 @@
  */
 
 import { StorageBackendMemory } from "../../../src/storage/StorageBackendMemory.js";
-import { assert } from "../../assertions.js";
+import { expect } from "expect";
 
 describe("StorageInMemory", () => {
 
@@ -15,7 +15,7 @@ describe("StorageInMemory", () => {
         storage.set(["context"], "key", "value");
 
         const value = storage.get(["context"], "key");
-        assert.equal(value, "value");
+        expect(value).toBe("value")
     });
 
     it("write and read success with multiple context levels", () => {
@@ -24,41 +24,41 @@ describe("StorageInMemory", () => {
         storage.set(["context", "subcontext", "subsubcontext"], "key", "value");
 
         const value = storage.get(["context", "subcontext", "subsubcontext"], "key");
-        assert.equal(value, "value");
+        expect(value).toBe("value")
     });
 
     it("Throws error when context is empty on set", () => {
-        assert.throws(() => {
+        expect(() => {
             const storage = new StorageBackendMemory();
             storage.set([], "key", "value");
-        }, "Context and key must not be empty!");
+        }).toThrow("Context and key must not be empty!");
     });
 
     it("Throws error when context is empty on set", () => {
-        assert.throws(() => {
+        expect(() => {
             const storage = new StorageBackendMemory();
             storage.set([""], "key", "value");
-        }, "Context must not be an empty string!" );
+        }).toThrow("Context must not be an empty string!" );
     });
 
     it("Throws error when key is empty on set", () => {
-        assert.throws(() => {
+        expect(() => {
             const storage = new StorageBackendMemory();
             storage.set(["context"], "", "value");
-        }, "Context and key must not be empty!");
+        }).toThrow("Context and key must not be empty!");
     });
 
     it("Throws error when context is empty on get with subcontext", () => {
-        assert.throws(() => {
+        expect(() => {
             const storage = new StorageBackendMemory();
             storage.get(["ok", ""], "key");
-        }, "Context must not be an empty string!");
+        }).toThrow("Context must not be an empty string!");
     });
 
     it("Throws error when key is empty on get", () => {
-        assert.throws(() => {
+        expect(() => {
             const storage = new StorageBackendMemory();
             storage.get(["context", "subcontext"], "");
-        }, "Context and key must not be empty!");
+        }).toThrow("Context and key must not be empty!");
     });
 });

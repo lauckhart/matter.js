@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { expect } from "expect";
 import { TlvArray } from "../../src/tlv/TlvArray.js";
 import { TlvBoolean } from "../../src/tlv/TlvBoolean.js";
 import { TlvDouble, TlvFloat, TlvInt16, TlvInt32, TlvInt64, TlvInt8, TlvUInt16, TlvUInt32, TlvUInt64, TlvUInt8 } from "../../src/tlv/TlvNumber.js";

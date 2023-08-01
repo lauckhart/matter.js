@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { expect } from "expect";
 import { Constraint } from "../../../src/model/aspects/Constraint.js";
 
 const TEST_CONSTRAINTS: [text: string, ast: Constraint.Ast, expectedText?: string][] = [

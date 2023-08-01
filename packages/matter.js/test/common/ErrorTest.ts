@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { assert } from "../assertions.js";
+import { expect } from "expect";
 import { MatterError } from "../../src/common/MatterError.js";
 import { tryCatch, tryCatchAsync } from "../../src/common/TryCatchHandler.js";
 
@@ -13,14 +13,13 @@ class SubSubMatterError extends SubMatterError { }
 class OtherMatterError extends MatterError { }
 
 describe("Errors", () => {
-
     describe("Test tryCatch method", () => {
         it("tryCatch without error return value", () => {
             const result = tryCatch(
                 () => "ok",
                 MatterError, "caught");
 
-            assert.equal(result, "ok");
+            expect(result).toBe("ok")
         });
 
         it("tryCatch with expected error, uses fallback value", () => {
@@ -28,16 +27,17 @@ describe("Errors", () => {
                 () => { throw new SubMatterError("test") },
                 SubMatterError, "caught");
 
-            assert.equal(result, "caught");
+            expect(result).toBe("caught")
         });
 
         it("tryCatch with unexpected error, throw error", () => {
-            assert.throws(
+            expect(
                 () => tryCatch(
                     () => { throw new Error("test") },
                     SubMatterError, "caught"
-                ),
-                Error, "test"
+                )
+            ).toThrow(
+                "test"
             );
         });
 
@@ -46,7 +46,7 @@ describe("Errors", () => {
                 () => { throw new SubSubMatterError("test") },
                 SubSubMatterError, "caught");
 
-            assert.equal(result, "caught");
+            expect(result).toBe("caught")
         });
 
         it("tryCatch with inherited error also return fallback when checking for parent error", () => {
@@ -54,7 +54,7 @@ describe("Errors", () => {
                 () => { throw new SubSubMatterError("test") },
                 SubMatterError, "caught");
 
-            assert.equal(result, "caught");
+            expect(result).toBe("caught")
         });
 
         it("tryCatch with inherited error process error in handler function return dynamic fallback value", () => {
@@ -68,11 +68,11 @@ describe("Errors", () => {
                 }
             );
 
-            assert.equal(result, "caught");
+            expect(result).toBe("caught")
         });
 
         it("tryCatch with inherited error process error in handler function that throws the error instead return valid value", () => {
-            assert.throws(() => {
+            expect(() => {
                 tryCatch(
                     () => { throw new SubSubMatterError("test") },
                     SubMatterError, error => {
@@ -82,8 +82,8 @@ describe("Errors", () => {
                         throw error;
                     }
                 );
-            },
-                SubSubMatterError, "test"
+            }).toThrow(
+                new SubSubMatterError("test")
             );
         });
     });
@@ -96,7 +96,7 @@ describe("Errors", () => {
                 MatterError, "caught",
             );
 
-            assert.equal(result, "ok");
+            expect(result).toBe("ok")
         });
 
         it("tryCatch with expected error, uses fallback value", async () => {
@@ -105,16 +105,17 @@ describe("Errors", () => {
                 SubMatterError, "caught"
             );
 
-            assert.equal(result, "caught");
+            expect(result).toBe("caught")
         });
 
         it("tryCatch with unexpected error, throw error", async () => {
-            await assert.isRejected(
+            await expect(
                 tryCatchAsync(
                     async () => { throw new Error("test") },
                     SubMatterError, "caught"
-                ),
-                Error, "test"
+                )
+            ).rejects.toThrow(
+                "test"
             );
         });
 
@@ -124,7 +125,7 @@ describe("Errors", () => {
                 SubSubMatterError, "caught"
             );
 
-            assert.equal(result, "caught");
+            expect(result).toBe("caught")
         });
 
         it("tryCatch with inherited error also return fallback when checking for parent error", async () => {
@@ -133,7 +134,7 @@ describe("Errors", () => {
                 SubMatterError, "caught"
             );
 
-            assert.equal(result, "caught");
+            expect(result).toBe("caught")
         });
 
         it("tryCatch with inherited error process error in handler function return dynamic fallback value", async () => {
@@ -147,19 +148,20 @@ describe("Errors", () => {
                 }
             );
 
-            assert.equal(result, "caught");
+            expect(result).toBe("caught")
         });
 
         it("tryCatch with inherited error process error in handler function that throws the error instead return valid value", async () => {
-            await assert.isRejected(tryCatchAsync(
+            await expect(tryCatchAsync(
                 () => { throw new SubSubMatterError("test") },
                 SubMatterError, error => {
                     if (error instanceof OtherMatterError) {
                         return "caught";
                     }
                     throw error;
-                }),
-                SubSubMatterError, "test"
+                })
+            ).rejects.toThrow(
+                new SubSubMatterError("test")
             );
         });
     });

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { expect } from "expect";
 import { AttributeModel, ClusterModel, DatatypeModel, Globals, MatterModel, Metatype } from "../../../src/model/index.js";
 
 describe("Model", () => {

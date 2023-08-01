@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { expect } from "expect";
 import { AnyElement, MatterModel, ModelVariantTraversal, VariantDetail } from "../../../src/model/index.js";
 
 describe("ModelVariantTraversal", () => {

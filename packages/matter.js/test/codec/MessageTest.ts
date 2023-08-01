@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { assert } from "../assertions.js";
+import { expect } from "expect";
 import { MessageCodec } from "../../src/codec/MessageCodec.js";
 import { NodeId } from "../../src/datatype/NodeId.js";
 import { ByteArray } from "../../src/util/ByteArray.js";
@@ -64,13 +64,13 @@ describe("MessageCodec", () => {
         it("decodes a message", () => {
             const result = MessageCodec.decodePayload(MessageCodec.decodePacket(ENCODED));
 
-            assert.deepEqual(result, DECODED);
+            expect(result).toEqual(DECODED)
         });
 
         it("decodes a message 2", () => {
             const result = MessageCodec.decodePayload(MessageCodec.decodePacket(ENCODED_2));
 
-            assert.deepEqual(result, DECODED_2);
+            expect(result).toEqual(DECODED_2)
         });
     });
 
@@ -78,13 +78,13 @@ describe("MessageCodec", () => {
         it("encodes a message", () => {
             const result = MessageCodec.encodePacket(MessageCodec.encodePayload(DECODED));
 
-            assert.deepEqual(result, ENCODED);
+            expect(result).toEqual(ENCODED)
         });
 
         it("encodes a message 2", () => {
             const result = MessageCodec.encodePacket(MessageCodec.encodePayload(DECODED_2));
 
-            assert.deepEqual(result, ENCODED_2);
+            expect(result).toEqual(ENCODED_2)
         });
     });
 });

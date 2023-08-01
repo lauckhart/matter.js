@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { expect } from "expect";
 import { Conformance } from "../../../src/model/aspects/Conformance.js";
 
 const TEST_DEFINITIONS = [

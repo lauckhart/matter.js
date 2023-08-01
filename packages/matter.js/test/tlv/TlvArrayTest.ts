@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { expect } from "expect";
 import { TlvArray } from "../../src/tlv/TlvArray.js";
 import { TlvString } from "../../src/tlv/TlvString.js";
 import { ByteArray } from "../../src/util/ByteArray.js";

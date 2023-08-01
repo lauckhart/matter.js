@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { expect } from "expect";
 import { TlvUInt8 } from "../../src/tlv/TlvNumber.js";
 import { TlvField, TlvObject, TlvOptionalField } from "../../src/tlv/TlvObject.js";
 import { TypeFromSchema } from "../../src/tlv/TlvSchema.js";

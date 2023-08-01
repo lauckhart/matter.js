@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { expect } from "expect";
 import { Quality } from "../../../src/model/aspects/Quality.js";
 
 describe("Quality", () => {

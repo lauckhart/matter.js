@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { expect } from "expect";
 import { BaseClusterComponent, ClusterComponent, ClusterForBaseCluster, ExtensibleCluster, IllegalClusterError, extendCluster, preventCluster, validateFeatureSelection } from "../../src/cluster/ClusterFactory.js";
 import { Attribute, Cluster, Command, Event, EventPriority, TlvNoResponse } from "../../src/cluster/Cluster.js";
 import { TlvUInt8 } from "../../src/tlv/TlvNumber.js";
@@ -194,13 +195,13 @@ describe("ClusterFactory", () => {
         it("accepts a supported feature", () => {
             expect(() => {
                 validateFeatureSelection(["AbsolutelyFabulous"], Feature)
-            }).not.toThrowError(IllegalClusterError)
+            }).not.toThrow(IllegalClusterError)
         })
 
         it("rejects an unsupported feature", () => {
             expect(() => {
                 validateFeatureSelection(["SomewhatFabulous"], Feature)
-            }).toThrowError(IllegalClusterError);
+            }).toThrow(IllegalClusterError);
         })
     })
 
@@ -220,7 +221,7 @@ describe("ClusterFactory", () => {
                     createCluster({ absolutelyFabulous: true, bitterDisappointment: true }),
                     { absolutelyFabulous: true, bitterDisappointment: true }
                 )
-            }).toThrowError(/Feature combination.*is disallowed/);
+            }).toThrow(/Feature combination.*is disallowed/);
         })
     })
 
@@ -238,7 +239,7 @@ describe("ClusterFactory", () => {
                 fancy: false,
                 absolutelyFabulous: false,
                 bitterDisappointment: false
-            })
+            });
             expectElements(cluster);
             expectElements2(cluster);
             expectElementCounts(cluster, 2);
@@ -247,13 +248,13 @@ describe("ClusterFactory", () => {
         it("rejects unsupported features", () => {
             expect(() => {
                 TestExtensibleCluster.with("AbsolutelyFabulous", "BitterDisappointment");
-            }).toThrowError(IllegalClusterError);
+            }).toThrow(IllegalClusterError);
         })
 
         it("rejects unsupported features with supported features", () => {
             expect(() => {
                 TestExtensibleCluster.with("Extended", "AbsolutelyFabulous", "BitterDisappointment");
-            }).toThrowError(IllegalClusterError);
+            }).toThrow(IllegalClusterError);
         })
     })
 

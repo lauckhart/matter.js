@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { expect } from "expect";
 import { Access } from "../../../src/model/aspects/Access.js";
 
 const FLAG_PERMUTATIONS: [string, Access.Ast][] = [

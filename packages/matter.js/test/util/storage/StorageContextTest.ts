@@ -6,7 +6,7 @@
 
 import { StorageBackendMemory } from "../../../src/storage/StorageBackendMemory.js";
 import { StorageContext } from "../../../src/storage/StorageContext.js";
-import { assert } from "../../assertions.js";
+import { expect } from "expect";
 import { SupportedStorageTypes } from "../../../src/storage/StringifyTools.js";
 import { ByteArray } from "../../../src/util/ByteArray.js";
 import { StorageManager } from "../../../src/storage/index.js";
@@ -34,7 +34,7 @@ describe("StorageContext", () => {
             it(testName, () => {
                 storageContext.set(testVector.key, testVector.input);
                 const valueFromStorage = storageContext.get(testVector.key);
-                assert.deepEqual(valueFromStorage, testVector.input);
+                expect(valueFromStorage).toEqual(testVector.input)
             });
         }
     });
@@ -47,7 +47,7 @@ describe("StorageContext", () => {
             it(testName, () => {
                 storageContext.set(testVector.key, testVector.input);
                 const valueFromStorage = storageContext.get(testVector.key);
-                assert.deepEqual(valueFromStorage, testVector.input);
+                expect(valueFromStorage).toEqual(testVector.input)
             });
         }
     });
@@ -60,10 +60,10 @@ describe("StorageContext", () => {
         storageContext.set("key", "value");
 
         const valueFromStorage = storageContext.get("key");
-        assert.equal(valueFromStorage, "value");
+        expect(valueFromStorage).toBe("value")
 
         const valueFromStorageWithContext = storage.get(["context"], "key");
-        assert.equal(valueFromStorageWithContext, "value");
+        expect(valueFromStorageWithContext).toBe("value")
     });
 
     it("write and read wib subcontexts", () => {
@@ -74,10 +74,10 @@ describe("StorageContext", () => {
         storageContext.set("key", "value");
 
         const valueFromStorage = storageContext.get("key");
-        assert.equal(valueFromStorage, "value");
+        expect(valueFromStorage).toBe("value")
 
         const valueFromStorageWithContext = storage.get(["context", "subcontext", "subsubcontext"], "key");
-        assert.equal(valueFromStorageWithContext, "value");
+        expect(valueFromStorageWithContext).toBe("value")
     });
 
     it("read with default value", () => {
@@ -86,7 +86,7 @@ describe("StorageContext", () => {
         const storageContext = new StorageContext(storage, ["context"]);
 
         const valueFromStorage = storageContext.get("key", "defaultValue");
-        assert.equal(valueFromStorage, "defaultValue");
+        expect(valueFromStorage).toBe("defaultValue")
     });
 
     it("Throws error when reading a not set key without default value", () => {
@@ -94,9 +94,9 @@ describe("StorageContext", () => {
 
         const storageContext = new StorageContext(storage, ["context"]);
 
-        assert.throws(() => {
+        expect(() => {
             storageContext.get("key");
-        }, "No value found for key key in context context and no default value specified!");
+        }).toThrow("No value found for key key in context context and no default value specified!");
     });
 
     it("check if key is set", () => {
@@ -106,7 +106,7 @@ describe("StorageContext", () => {
 
         storageContext.set("key", "value");
 
-        assert.equal(storageContext.has("key"), true);
+        expect(storageContext.has("key")).toBe(true)
     });
 
     it("check if key is not set", () => {
@@ -116,7 +116,7 @@ describe("StorageContext", () => {
 
         storageContext.set("key", "value");
 
-        assert.equal(storageContext.has("key2"), false);
+        expect(storageContext.has("key2")).toBe(false)
     });
 
     it("check if key is set with subcontext", () => {
@@ -126,7 +126,7 @@ describe("StorageContext", () => {
 
         storageContext.set("key", "value");
 
-        assert.equal(storageContext.has("key"), true);
+        expect(storageContext.has("key")).toBe(true)
     });
 
     it("check if key is not set with subcontext", () => {
@@ -136,7 +136,7 @@ describe("StorageContext", () => {
 
         storageContext.set("key", "value");
 
-        assert.equal(storageContext.has("key2"), false);
+        expect(storageContext.has("key2")).toBe(false)
     });
 
     it("create sub StorageContext write and read success", async () => {
@@ -152,7 +152,7 @@ describe("StorageContext", () => {
         subStorageContext.set("key", "value");
 
         const valueFromStorage = subStorageContext.get("key");
-        assert.equal(valueFromStorage, "value");
+        expect(valueFromStorage).toBe("value")
     });
 
     it("create sub StorageContext overlapping naming write and read success", async () => {
@@ -169,10 +169,10 @@ describe("StorageContext", () => {
         storageContext.set("subcontext", "value2");
 
         const valueFromStorage = subStorageContext.get("key");
-        assert.equal(valueFromStorage, "value1");
+        expect(valueFromStorage).toBe("value1")
 
         const valueFromStorage2 = storageContext.get("subcontext");
-        assert.equal(valueFromStorage2, "value2");
+        expect(valueFromStorage2).toBe("value2")
     });
 
 });

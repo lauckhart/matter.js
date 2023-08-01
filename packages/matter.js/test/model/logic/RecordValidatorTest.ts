@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { expect } from "expect";
 import { AttributeModel, DatatypeModel, FeatureSet, Globals, RecordValidator } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
 import { Properties } from "../../../src/util/Type.js";

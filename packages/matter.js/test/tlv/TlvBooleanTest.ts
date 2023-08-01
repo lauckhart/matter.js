@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { expect } from "expect";
 import { TlvBoolean } from "../../src/tlv/TlvBoolean.js";
 import { ByteArray } from "../../src/util/ByteArray.js";
 
@@ -39,11 +40,11 @@ describe("TlvBoolean", () => {
     describe("validation", () => {
         it("throws an error if the value is not a boolean", () => {
             expect(() => TlvBoolean.validate("a" as any))
-                .toThrowError("Expected boolean, got string.");
+                .toThrow("Expected boolean, got string.");
         });
 
         it("does not throw an error if the value is a boolean", () => {
-            expect(TlvBoolean.validate(true)).toBe(undefined);
+            expect(TlvBoolean.validate(true)).not.toBeDefined();
         });
     });
 });

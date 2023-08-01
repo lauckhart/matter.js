@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { assert } from "../assertions.js";
+import { expect } from "expect";
 import { ByteArray } from "../../src/util/ByteArray.js";
 import { BitByteArray, ContextTagged, DerCodec, EcdsaWithSHA256_X962, OrganisationName_X520, PublicKeyEcPrime256v1_X962 } from "../../src/codec/DerCodec.js";
 
@@ -26,7 +26,7 @@ describe("DerCodec", () => {
         it("encodes a message", () => {
             const result = DerCodec.encode(DECODED);
 
-            assert.equal(result.toHex(), ENCODED.toHex());
+            expect(result.toHex()).toBe(ENCODED.toHex())
         });
     });
 });

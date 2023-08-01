@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { assert } from "../assertions.js";
+import { expect } from "expect";
 import { Verhoeff } from "../../src/math/Verhoeff.js";
 
 describe("Verhoeff", () => {
@@ -12,7 +12,7 @@ describe("Verhoeff", () => {
         it("encodes a string", () => {
             const result = new Verhoeff().computeChecksum("236");
 
-            assert.equal(result, 3);
+            expect(result).toBe(3)
         });
     });
 });

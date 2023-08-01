@@ -5,7 +5,7 @@ export default {
     nodeResolve: true,
     coverage: true,
     files: ["test/**/*Test.ts"],
-    debug: true,
+    //debug: true,
     browsers: [
         puppeteerLauncher()
     ],
