@@ -6,7 +6,7 @@
 
 import { ElementTag, Mei } from "../definitions/index.js";
 import { BaseElement } from "./BaseElement.js";
-import { DeviceClusterElement } from "./DeviceClusterElement.js";
+import { RequirementElement } from "./RequirementElement.js";
 import { DatatypeElement } from "./DatatypeElement.js";
 
 /**
@@ -15,11 +15,11 @@ import { DatatypeElement } from "./DatatypeElement.js";
  * TODO - extract/merge DeviceTypes.ts?
  */
 export type DeviceTypeElement = BaseElement & {
-    id: Mei,
+    id?: Mei,
     tag: `${DeviceTypeElement.Tag}`,
     classification: `${DeviceTypeElement.Classification}`,
     category?: string,
-    children?: (DeviceClusterElement | DatatypeElement)[]
+    children?: (RequirementElement | DatatypeElement)[]
 }
 
 export function DeviceTypeElement(definition: DeviceTypeElement.Properties) {
@@ -32,6 +32,7 @@ export namespace DeviceTypeElement {
     export type Properties = BaseElement.Properties<DeviceTypeElement>;
 
     export enum Classification {
+        Base = "base",
         Node = "node",
         Utility = "utility",
         Simple = "simple",

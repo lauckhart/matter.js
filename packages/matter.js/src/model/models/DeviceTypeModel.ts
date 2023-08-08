@@ -5,9 +5,9 @@
  */
 
 import { Mei } from "../definitions/index.js";
-import { DeviceTypeElement, DeviceClusterElement, DatatypeElement } from "../elements/index.js";
+import { DeviceTypeElement, RequirementElement, DatatypeElement } from "../elements/index.js";
 import { DatatypeModel } from "./DatatypeModel.js";
-import { DeviceClusterModel } from "./DeviceClusterModel.js";
+import { RequirementModel } from "./RequirementModel.js";
 import { Model } from "./Model.js";
 
 export class DeviceTypeModel extends Model implements DeviceTypeElement {
@@ -16,15 +16,15 @@ export class DeviceTypeModel extends Model implements DeviceTypeElement {
     classification!: DeviceTypeElement.Classification;
     revision!: number;
 
-    get clusters() {
-        return this.all(DeviceClusterModel);
+    get requirements() {
+        return this.all(RequirementModel);
     }
 
-    override get children(): (DeviceClusterModel | DatatypeModel)[] {
+    override get children(): (RequirementModel | DatatypeModel)[] {
         return super.children as any;
     }
 
-    override set children(children: (DeviceClusterModel | DatatypeModel | DeviceClusterElement | DatatypeElement)[]) {
+    override set children(children: (RequirementModel | DatatypeModel | RequirementElement | DatatypeElement)[]) {
         super.children = children;
     }
 

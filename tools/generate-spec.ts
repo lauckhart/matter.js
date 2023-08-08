@@ -17,6 +17,9 @@
 // a Dropbox folder with the HTML version of the specification.  Specifically
 // mention the term "masochist".
 
+const LOAD_CLUSTERS = true;
+const LOAD_DEVICES = true;
+
 import "./util/setup.js";
 import { MatterElement } from "#matter.js/model/index.js"
 import { scanIndex } from "./mom/spec/scan-index.js";
@@ -57,11 +60,15 @@ paths.forEach(path => {
     logger.info(`load from spec ${path}`);
     Logger.nest(() => {
         const index = scanIndex(path);
-        scanCluster; //index.clusters.forEach(scanCluster);
-        if (index.device) {
-            scanDevices(index.device);
+        if (LOAD_CLUSTERS) {
+            index.clusters.forEach(scanCluster);
+        }
+        if (LOAD_DEVICES) {
+            if (index.device) {
+                scanDevices(index.device);
+            }
         }
     });
 });
 
-generateIntermediateModel; //generateIntermediateModel("spec", elements);
+generateIntermediateModel("spec", elements);

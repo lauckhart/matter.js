@@ -4,11 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AttributeElement, CommandElement, DatatypeElement, DeviceClusterElement, DeviceTypeElement, EventElement } from "#matter.js/model/index.js";
+import { DatatypeElement, RequirementElement, DeviceTypeElement } from "#matter.js/model/index.js";
 import { Logger } from "#matter.js/log/Logger.js";
 import { DeviceReference } from "./spec-types.js";
 import { Identifier, Integer, LowerIdentifier, Str } from "./html-translators.js";
 import { Alias, Constant, Optional, translateRecordsToMatter, translateTable } from "./translate-table.js";
+import { camelize } from "../../util/string.js";
 
 const logger = Logger.get("translate-devices");
 
@@ -20,12 +21,21 @@ export function* translateDevice(deviceRef: DeviceReference) {
 
     addConditions(device, deviceRef);
     addClusters(device, deviceRef);
+    
+    yield device;
 }
 
 function createDevice(deviceRef: DeviceReference) {
-    const metadata = translateTable("deviceType", deviceRef, {
+    if (deviceRef.name === "Base") {
+        return DeviceTypeElement({
+            name: "Base",
+            classification: DeviceTypeElement.Classification.Base
+        });
+    }
+
+    const metadata = translateTable("deviceType", deviceRef.classification, {
         id: Integer,
-        name: Identifier,
+        name: Alias(Identifier, "devicename"),
         superset: Optional(Identifier),
         class: LowerIdentifier,
         scope: LowerIdentifier
@@ -39,7 +49,7 @@ function createDevice(deviceRef: DeviceReference) {
     let classification;
     if (metadata.class === "simple") {
         classification = DeviceTypeElement.Classification.Simple;
-    } else if (metadata.class === "dynamic utility") {
+    } else if (metadata.class === "dynamicutility") {
         classification = DeviceTypeElement.Classification.Dynamic;
     } else if (metadata.class === "node") {
         classification = DeviceTypeElement.Classification.Node;
@@ -53,7 +63,7 @@ function createDevice(deviceRef: DeviceReference) {
     }
 
     const revisions = translateTable("deviceType", deviceRef.revisions, {
-        revision: Integer
+        revision: Alias(Integer, "rev")
     });
     let revision = revisions[revisions.length - 1]?.revision;
     if (revision === undefined) {
@@ -73,14 +83,16 @@ function createDevice(deviceRef: DeviceReference) {
         device.type = metadata.superset;
     }
 
-    device.children = [DeviceClusterElement({
+    device.children = [RequirementElement({
         id: 0x1d,
         name: "Descriptor",
+        element: RequirementElement.ElementType.ServerCluster,
         children: [DatatypeElement({
             name: "DeviceTypeStruct",
+            type: "struct",
             children: [
-                DatatypeElement({ name: "DeviceType", default: definition.id }),
-                DatatypeElement({ name: "Revision", default: revision })
+                DatatypeElement({ name: "DeviceType", type: "devtype-id", default: definition.id }),
+                DatatypeElement({ name: "Revision", type: "uint16", default: revision })
             ]
         })]
     })];
@@ -113,7 +125,7 @@ function addConditions(device: DeviceTypeElement, deviceRef: DeviceReference) {
                 "classtag"
             ),
             description: Optional(Str)
-        })
+        });
 
         if (definitions) {
             conditions.push(...definitions);
@@ -128,6 +140,7 @@ function addConditions(device: DeviceTypeElement, deviceRef: DeviceReference) {
         }
         device.children.push(DatatypeElement({
             name: "conditions",
+            type: "enum8",
             children: conditions
         }));
     }
@@ -136,16 +149,30 @@ function addConditions(device: DeviceTypeElement, deviceRef: DeviceReference) {
 function addClusters(device: DeviceTypeElement, deviceRef: DeviceReference) {
     const clusterRecords = translateTable("clusters", deviceRef.clusters, {
         id: Optional(Alias(Integer, "identifier")),
-        name: Alias(Identifier, "clustername"),
-        client: (el: HTMLElement) => Identifier(el) === "Client",
+        name: Alias(Identifier, "clustername", "cluster"),
+        element: Alias(
+            (el: HTMLElement) => {
+                const cs = LowerIdentifier(el);
+                switch (cs) {
+                    case "client":
+                        return RequirementElement.ElementType.ClientCluster;
+
+                    case "server":
+                        return RequirementElement.ElementType.ServerCluster;
+
+                    default:
+                        logger.error(`Invalid client/server value ${cs} (assuming server)`)
+                        return RequirementElement.ElementType.ServerCluster;
+                }
+            }, "clientserver"),
         quality: Optional(Str),
         conformance: Optional(Str)
     });
-
+    
     const clusters = translateRecordsToMatter(
         "clusters",
         clusterRecords,
-        DeviceClusterElement
+        RequirementElement
     );
     if (!clusters?.length) {
         return;
@@ -156,15 +183,19 @@ function addClusters(device: DeviceTypeElement, deviceRef: DeviceReference) {
     }
     device.children.push(...clusters);
 
-    const clusterIndex = new Map<string, DeviceClusterElement>();
+    const clusterIndex = new Map<string, RequirementElement[]>();
     for (const cluster of clusters) {
-        clusterIndex.set(cluster.name.toLowerCase(), cluster);
+        if (clusterIndex.has(cluster.name)) {
+            clusterIndex.get(cluster.name)?.push(cluster);
+        } else {
+            clusterIndex.set(cluster.name.toLowerCase(), [ cluster ]);
+        }
     }
     
     const elementRecords = translateTable("elements", deviceRef.elements, {
-        id: Integer,
+        id: Optional(Integer),
         cluster: LowerIdentifier,
-        element: LowerIdentifier,
+        element: Identifier,
         name: Identifier,
         constraint: Optional(Str),
         access: Optional(Str),
@@ -172,50 +203,23 @@ function addClusters(device: DeviceTypeElement, deviceRef: DeviceReference) {
     });
 
     for (const record of elementRecords) {
-        const properties = {
-            id: record.id,
-            name: record.name,
-            constraint: record.constraint,
-            access: record.access,
-            conformance: record.conformance
-        };
-
-        const cluster = clusterIndex.get(record.cluster);
-        if (!cluster) {
-            logger.error(`no cluster ${record.cluster} for ${record.element} ${record.name}`);
+        const clusters = clusterIndex.get(record.cluster);
+        if (!clusters) {
+            logger.error(`No cluster ${record.cluster} for ${record.element} requirement ${record.name}`);
             continue;
         }
 
-        const addElement = <T>(factory: (definition: typeof properties) => T) => {
+        for (const cluster of clusters) {
             if (!cluster.children) {
                 cluster.children = [];
             }
-            cluster.children.push(factory(properties));
-        }
-
-        let features: DatatypeElement | undefined;
-        switch (record.element) {
-            case "feature":
-                if (!features) {
-                    features = 
-                }
-                break;
-
-            case "attribute":
-                addElement(AttributeElement);
-                break;
-
-            case "command":
-                addElement(CommandElement);
-                break;
-                
-            case "event":
-                addElement(EventElement);
-                break;
-
-            default:
-                logger.error(`unsupported type ${record.element} for ${record.cluster} element ${record.name}`)
-                break;
+            cluster.children.push(RequirementElement({
+                element: camelize(record.element, false) as RequirementElement.ElementType,
+                name: record.name,
+                constraint: record.constraint,
+                access: record.access,
+                conformance: record.conformance
+            }));
         }
     }
 }
