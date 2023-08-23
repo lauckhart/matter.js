@@ -11,7 +11,7 @@ import { ValueModel } from "./ValueModel.js";
 
 export class DatatypeModel extends ValueModel implements DatatypeElement {
     override tag: DatatypeElement.Tag = DatatypeElement.Tag;
-    override id?: Mei;
+    declare id?: Mei;
 
     constructor(definition: DatatypeElement.Properties) {
         super(definition);

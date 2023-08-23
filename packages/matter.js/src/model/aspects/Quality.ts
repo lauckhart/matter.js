@@ -14,14 +14,14 @@ import { Aspect } from "./Aspect.js";
  * that do not involve access or conformance.
  */
 export class Quality extends Aspect<Quality.Definition> implements Quality.Ast {
-    public nullable?: boolean;
-    public nonvolatile?: boolean;
-    public fixed?: boolean;
-    public changesOmitted?: boolean;
-    public scene?: boolean;
-    public reportable?: boolean;
-    public singleton?: boolean;
-    public disallowed?: Quality.AllProperties;
+    declare nullable?: boolean;
+    declare nonvolatile?: boolean;
+    declare fixed?: boolean;
+    declare changesOmitted?: boolean;
+    declare scene?: boolean;
+    declare reportable?: boolean;
+    declare singleton?: boolean;
+    declare disallowed?: Quality.AllProperties;
 
     /**
      * Initialize from a Quality.All definition or a string conforming to the

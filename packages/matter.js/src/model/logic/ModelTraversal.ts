@@ -8,7 +8,7 @@ import { InternalError } from "../../common/MatterError.js";
 import { Aspect, Constraint } from "../aspects/index.js";
 import { ElementTag, FieldValue, Metatype } from "../definitions/index.js";
 import { AnyElement, Globals } from "../elements/index.js";
-import { CommandModel, type Model, type ValueModel } from "../models/index.js";
+import type { CommandModel, Model, ValueModel } from "../models/index.js";
 
 const OPERATION_DEPTH_LIMIT = 20;
 
@@ -464,7 +464,7 @@ export class ModelTraversal {
             }
 
             // A command can reference its response
-            if (model instanceof CommandModel && this.findResponse(model) === type) {
+            if (model.tag === ElementTag.Command && this.findResponse(model as CommandModel) === type) {
                 references.push(model);
                 return;
             }

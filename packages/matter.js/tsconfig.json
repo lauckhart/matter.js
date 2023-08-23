@@ -1,7 +1,8 @@
 /* Dev configuration */
 {
-  "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "target": "ES2015",
+    "strictNullChecks": true, // Required to correctly generate Nullable types in d.ts
     "esModuleInterop": true, // Required to remove warnings on jest test
     "composite": true,  // For linking this package from other packages
     "incremental": true, // Speed up subsequent builds
@@ -16,17 +17,19 @@
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "strict": true,
+    
+    // Type definition generation
+    "emitDeclarationOnly": true,
+    "outDir": "build/types",
+    "declarationMap": true,
+    "sourceRoot": "../../..",
+
+    "types": [
+      "mocha",
+      "elliptic"
+    ]
   },
-  /* During dev, src are included, so they are also modified during refactorings. */
-  "include": ["src/**/*.ts", "test/**/*.ts"],
-  "exclude": [],
 
-  "typeRoots": [
-    "./node_modules/@types",
-    "./test/support"
-  ],
-
-  "types": [
-    "globals"
-  ]
+  // We treat test files like source files until final build steps
+  "include": ["src/**/*.ts", "test/**/*.ts", "test/rollup.config.js"]
 }

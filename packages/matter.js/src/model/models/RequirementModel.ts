@@ -17,7 +17,7 @@ const QUALITY: unique symbol = Symbol("quality");
 
 export class RequirementModel extends Model implements RequirementElement {
     override tag: RequirementElement.Tag = RequirementElement.Tag;
-    element!: RequirementElement.ElementType;
+    declare element: RequirementElement.ElementType;
 
     override get key() {
         return `${this.id ?? this.name}:${this.element}`;

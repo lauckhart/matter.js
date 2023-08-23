@@ -7,6 +7,9 @@
     "strictNullChecks": true, // Required to correctly generate Nullable types in d.ts
     "incremental": true, // Speed up subsequent builds
     "esModuleInterop": true, // needed for jest tests
+
+    // Disable automatic type loading or Mocha globals conflict with Jest globals
+    "types": []
   },
   "references": [
       { "path": "../matter-node.js" },

@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as console from "console";
 import { NotImplementedError } from "../common/MatterError.js";
 import { Time } from "../time/Time.js";
 import { ByteArray } from "../util/ByteArray.js";

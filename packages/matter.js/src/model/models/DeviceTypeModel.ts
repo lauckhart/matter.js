@@ -12,9 +12,9 @@ import { RequirementModel } from "./RequirementModel.js";
 
 export class DeviceTypeModel extends Model implements DeviceTypeElement {
     override tag: DeviceTypeElement.Tag = DeviceTypeElement.Tag;
-    override id!: Mei;
-    classification!: DeviceTypeElement.Classification;
-    revision!: number;
+    declare id: Mei;
+    declare classification: DeviceTypeElement.Classification;
+    declare revision: number;
 
     get requirements() {
         return this.all(RequirementModel);

@@ -19,7 +19,7 @@ import { Model } from "./Model.js";
 export class MatterModel extends Model implements MatterElement {
     override tag: MatterElement.Tag = MatterElement.Tag;
     override isTypeScope = true;
-    version?: string;
+    declare version?: string;
 
     /**
      * Clusters.

@@ -15,7 +15,7 @@ import { DefinitionError } from "../definitions/DefinitionError.js";
  */
 export class Aspect<D> {
     definition: D;
-    errors?: DefinitionError[];
+    declare errors?: DefinitionError[];
 
     get valid() {
         return !this.errors;

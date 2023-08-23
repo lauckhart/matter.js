@@ -4,8 +4,60 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Level, Logger } from "../../src/log/Logger.js";
+import { Format, Level, Logger } from "../../src/log/Logger.js";
 
+if (globalThis?.process?.stdout) {
+    Logger.format = Format.ANSI;
+}
+
+let messageBuffer: [ Level, string ][] | undefined;
+
+let defaultLog: typeof Logger.log | undefined;
+
+function bufferedLog(...args: [ Level, string ]) {
+    if (!messageBuffer) {
+        messageBuffer = [];
+    }
+    messageBuffer.push(args);
+}
+
+/**
+ * Buffer log messages so we can only emit messages for failed tests.
+ */
+beforeEach(function() {
+    messageBuffer = undefined;
+    defaultLog = Logger.log;
+    Logger.log = bufferedLog;
+});
+
+/**
+ * Stop buffering log messages and emit buffered messages if test failed.
+ */
+afterEach(function() {
+    stopBuffering();
+    if (messageBuffer) {
+        if (this.currentTest?.isFailed()) {
+            for (const args of messageBuffer) {
+                Logger.log(...args);
+            }
+        }
+        messageBuffer = undefined;
+    }
+});
+
+/**
+ * Disable default log buffering.
+ */
+export function stopBuffering() {
+    if (defaultLog) {
+        Logger.log = defaultLog;
+        defaultLog = undefined;
+    }
+}
+
+/**
+ * Invoke logic and return any log messages produced.
+ */
 export function captureLogs(fn: () => void) {
     const actualLogSettings = {
         logFormatter: Logger.logFormatter,
@@ -15,6 +67,7 @@ export function captureLogs(fn: () => void) {
     };
 
     try {
+        Logger.format = Format.PLAIN;
         const captured = new Array<{ level: Level; message: string }>();
         Logger.log = (level, message) =>
             captured.push({
@@ -28,6 +81,9 @@ export function captureLogs(fn: () => void) {
     }
 }
 
+/**
+ * Run logic and return a singled produced log message.
+ */
 export function captureLog(fn: () => void) {
     return captureLogs(fn).pop();
 }

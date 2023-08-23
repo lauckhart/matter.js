@@ -11,7 +11,7 @@ import { ValueModel } from "./ValueModel.js";
 
 export class AttributeModel extends ValueModel implements AttributeElement {
     override tag: AttributeElement.Tag = AttributeElement.Tag;
-    override id!: Mei;
+    declare id: Mei;
 
     get writable() {
         return this.effectiveAccess.writable;

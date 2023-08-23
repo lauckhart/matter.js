@@ -27,9 +27,9 @@ const QUALITY: unique symbol = Symbol("quality");
  * this class.
  */
 export abstract class ValueModel extends Model implements ValueElement {
-    byteSize?: ValueElement.Size;
-    default?: FieldValue;
-    metatype?: Metatype;
+    declare byteSize?: ValueElement.Size;
+    declare default?: FieldValue;
+    declare metatype?: Metatype;
     override isType? = true;
 
     override get children(): DatatypeModel[] {

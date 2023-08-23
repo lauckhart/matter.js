@@ -14,10 +14,10 @@ import { Model } from "./Model.js";
 
 export class ClusterModel extends Model {
     override tag: ClusterElement.Tag = ClusterElement.Tag;
-    override id?: Mei;
-    classification?: ClusterElement.Classification;
+    declare id?: Mei;
+    declare classification?: ClusterElement.Classification;
     override isTypeScope = true;
-    singleton?: boolean;
+    declare singleton?: boolean;
 
     get attributes() {
         return this.all(AttributeModel);
