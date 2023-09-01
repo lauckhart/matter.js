@@ -24,11 +24,9 @@
     "url": "https://github.com/project-chip/matter.js.git"
   },
   "scripts": {
-    "clean": "rm -rf dist && rm -rf out && rm -f *.tsbuildinfo",
-    "build-cjs": "tsc -b tsconfig.dist-cjs.json && cp package-cjs.json dist/cjs/package.json",
-    "build-es": "tsc -b tsconfig.dist-es.json",
-    "build": "npm run build-cjs && npm run build-es",
-    "build-clean": "npm run clean && npm run build",
+    "clean": "build clean",
+    "build": "build",
+    "build-clean": "build --clean",
     "build-doc": "typedoc --excludeExternals --plugin typedoc-plugin-missing-exports --plugin typedoc-plugin-markdown --gitRemote upstream --tsconfig tsconfig.dist-cjs.json",
     "test-node": "mocha",
     "test-web": "karma start test/karma.conf.cjs",
@@ -41,6 +39,7 @@
     "karma-mocha": "^2.0.1"
   },
   "devDependencies": {
+    "@project-chip/matter.js-tools": "0.1.0",
     "@types/bn.js": "^5.1.1",
     "@types/chai": "^4.3.5",
     "@types/elliptic": "^6.4.14",
