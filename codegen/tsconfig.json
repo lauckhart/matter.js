@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "composite": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "moduleResolution": "node16",
+    "target": "es2018",
+    "module": "es2022",
+    "esModuleInterop": true,
+    "strictNullChecks": true,
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+
+    "paths": {
+      "#util/*": [ "./tools/util/*" ]
+    }
+  },
+
+  "ts-node": {
+    "experimentalResolver": true
+  },
+
+  "include": [
+    "src/**/*.ts"
+  ]
+}

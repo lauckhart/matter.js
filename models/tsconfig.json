@@ -1,9 +1,16 @@
 {
-  "extends": "../tools/tsconfig.json",
+  "extends": "../packages/matter.js/tsconfig.base.json",
 
   "compilerOptions": {
-    "paths": {
-      "#matter.js/*": [ "./links/matter.js/src/*" ]
-    }
-  }
+    "outDir": "dist",
+    "rootDir": "src",
+    "composite": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "moduleResolution": "node16",
+    "tsBuildInfoFile": "dist/.tsbuildinfo"
+  },
+
+  "include": [ "src/**/*.ts" ]
 }
