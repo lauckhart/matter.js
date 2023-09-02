@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DiagnosticDictionary, Format, Level, Logger } from "../../src/log/Logger.js";
+import { DiagnosticDictionary, Format, Level, Logger, consoleLogger } from "../../src/log/Logger.js";
 import { ByteArray } from "../../src/util/ByteArray.js";
+import { captureLog } from "../support/logging.js";
 
 const LOGGER_NAME = "UnitTest";
 
@@ -306,32 +307,37 @@ describe("Logger", () => {
 
     function itUsesCorrectConsoleMethod(sourceName: string, sinkName: string = sourceName) {
         it(`maps logger.${sourceName} to console.${sinkName}`, () => {
-            disableLogBuffering();
-
-            const actualConsole = (<any>Logger.log).console;
-            let result: string | undefined = undefined;
-            let calls = 0;
-            const mock = (message: string) => {
-                calls++;
-                result = message;
-            };
-
+            const logger = Logger.log;
             try {
-                (<any>Logger.log).console = {
-                    [sinkName]: mock,
-                };
-                (<any>logger)[sourceName].call(logger, "test");
-            } finally {
-                (<any>Logger.log).console = actualConsole;
-            }
+                Logger.log = consoleLogger;
 
-            expect(calls).equal(1);
-            expect(result).exist;
-            expect(result).match(
-                new RegExp(
-                    `\\d{4}-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d.\\d\\d\\d.*${sourceName.toUpperCase()}.*UnitTest.*test`,
-                ),
-            );
+                const actualConsole = (<any>Logger.log).console;
+                let result: string | undefined = undefined;
+                let calls = 0;
+                const mock = (message: string) => {
+                    calls++;
+                    result = message;
+                };
+
+                try {
+                    (<any>Logger.log).console = {
+                        [sinkName]: mock,
+                    };
+                    (<any>logger)[sourceName].call(logger, "test");
+                } finally {
+                    (<any>Logger.log).console = actualConsole;
+                }
+
+                expect(calls).equal(1);
+                expect(result).exist;
+                expect(result).match(
+                    new RegExp(
+                        `\\d{4}-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d.\\d\\d\\d.*${sourceName.toUpperCase()}.*UnitTest.*test`,
+                    ),
+                );
+            } finally {
+                Logger.log = logger;
+            }
         });
     }
 

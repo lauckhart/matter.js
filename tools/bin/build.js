@@ -1,3 +1,3 @@
 #!/usr/bin/env node
-import { main } from "../dist/esm/build/cli.js"
+import { main } from "../dist/esm/building/cli.js"
 await main();
