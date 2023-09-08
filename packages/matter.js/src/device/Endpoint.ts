@@ -141,7 +141,12 @@ export class Endpoint {
         if (cluster.id === DescriptorCluster.id) {
             this.descriptorCluster = cluster as unknown as ClusterServerObjForCluster<typeof DescriptorCluster>;
         }
+
+        // In ts4 the cast to "any" here was unnecessary.  It seems like it
+        // shouldn't be necessary but TS5.2.2 complains that the types don't
+        // overlap
         this.clusterServers.set(cluster.id, cluster as any);
+
         this.descriptorCluster.attributes.serverList.init(Array.from(this.clusterServers.keys()).sort((a, b) => a - b));
         this.structureChangedCallback(); // Inform parent about structure change
     }
@@ -165,6 +170,8 @@ export class Endpoint {
     >(cluster: Cluster<F, SF, A, C, E>): ClusterServerObj<A, E> | undefined {
         const clusterServer = this.clusterServers.get(cluster.id);
         if (clusterServer !== undefined) {
+            // See comment in addClusterServer, same issue with "as unknown"
+            // cast here
             return clusterServer as unknown as ClusterServerObj<A, E>;
         }
     }
