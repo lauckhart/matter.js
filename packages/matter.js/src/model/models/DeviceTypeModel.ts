@@ -7,10 +7,10 @@
 import { Mei } from "../definitions/index.js";
 import { DatatypeElement, DeviceTypeElement, RequirementElement } from "../elements/index.js";
 import { DatatypeModel } from "./DatatypeModel.js";
-import { Model } from "./Model.js";
+import { ElementModel, Model } from "./Model.js";
 import { RequirementModel } from "./RequirementModel.js";
 
-export class DeviceTypeModel extends Model implements DeviceTypeElement {
+export class DeviceTypeModel extends ElementModel<RequirementElement | DatatypeElement, RequirementModel | DatatypeModel> implements DeviceTypeElement {
     override tag: DeviceTypeElement.Tag = DeviceTypeElement.Tag;
     override id!: Mei;
     classification!: DeviceTypeElement.Classification;
@@ -18,14 +18,6 @@ export class DeviceTypeModel extends Model implements DeviceTypeElement {
 
     get requirements() {
         return this.all(RequirementModel);
-    }
-
-    override get children(): (RequirementModel | DatatypeModel)[] {
-        return super.children as any;
-    }
-
-    override set children(children: (RequirementModel | DatatypeModel | RequirementElement | DatatypeElement)[]) {
-        super.children = children;
     }
 
     constructor(definition: DeviceTypeElement.Properties) {

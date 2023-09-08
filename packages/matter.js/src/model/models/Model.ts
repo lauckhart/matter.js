@@ -9,8 +9,25 @@ import { DefinitionError, ElementTag, Specification } from "../definitions/index
 import { AnyElement, BaseElement } from "../elements/index.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
 
-const CHILDREN = Symbol("children");
-const PARENT = Symbol("parent");
+/**
+ * Link to parent model.
+ */
+const PARENT = Symbol("PARENT");
+
+/**
+ * Link to a parent's child collection.
+ */
+const CHILDREN = Symbol("CHILDREN");
+
+/**
+ * Link to previous element in a collection.
+ */
+const PREV = Symbol("PREV");
+
+/**
+ * Link to next element in a collection.
+ */
+const NEXT = Symbol("NEXT");
 
 /**
  * A "model" is a class that implements runtime functionality associated with
@@ -43,14 +60,23 @@ export abstract class Model {
      */
     isType?: boolean;
 
-    private [CHILDREN]!: Array<any>;
-    private [PARENT]?: Model;
+    private [CHILDREN]?: Collection;
+    [PARENT]?: Model;
+    [PREV]?: Child;
+    [NEXT]?: Child;
 
     /**
      * Did validation find errors?
      */
     get valid() {
         return !this.errors;
+    }
+
+    /**
+     * Is the model childless?
+     */
+    get empty() {
+        return !this[CHILDREN] || this[CHILDREN].empty;
     }
 
     /**
@@ -65,45 +91,49 @@ export abstract class Model {
     }
 
     /**
-     * The structural parent.  This is the model for the element that contains
-     * this element's definition.
+     * Access the hierarchical parent, if any.
      */
-    get parent(): Model | undefined {
+    get parent() {
         return this[PARENT];
     }
 
-    set parent(parent: Model | undefined) {
-        if (this.parent === parent) {
-            return;
-        }
-
-        if (this.parent) {
-            const index = this.parent.children.indexOf(this);
-            if (index !== -1) {
-                this.parent.children.splice(index, 1);
-            }
-        }
-
-        if (!parent) {
-            delete this[PARENT];
-        } else {
-            this[PARENT] = parent;
-        }
-
-        if (parent) {
-            parent.children.push(this);
-        }
+    /**
+     * Access the first child model, if any.
+     */
+    get firstChild() {
+        return this[CHILDREN]?.first;
     }
 
     /**
-     * Element view of children.  For TypeScript this allows children to be
-     * added as elements.  For JavaScript this is identical to children().
+     * Access the last child model, if any.
      */
-    get elements(): AnyElement[] {
-        if (!this[CHILDREN]) {
-            this.children = [];
+    get lastChild(): Model | undefined {
+        return this[CHILDREN]?.last;
+    }
+
+    /**
+     * Access the previous sibling in the parent, if any.
+     */
+    get previousSibling(): Model | undefined {
+        return this[PARENT] && this[PREV] && this[PARENT][CHILDREN]?.export(this[PREV]);
+    }
+
+    /**
+     * Access the next sibling in the parent, if any.
+     */
+    get nextSibling(): Model | undefined {
+        return this[PARENT] && this[NEXT] && this[PARENT][CHILDREN]?.export(this[NEXT]);
+    }
+
+    /**
+     * Set this model's parent.
+     */
+    set parent(parent: Model | undefined) {
+        if (parent) {
+            parent.add(this);
+        } else {
+            this[PARENT]?.remove(this);
         }
-        return this[CHILDREN];
     }
 
     /**
@@ -119,71 +149,6 @@ export abstract class Model {
      */
     get key() {
         return this.effectiveId?.toString();
-    }
-
-    /**
-     * Children of models are always models.
-     */
-    get children(): Model[] {
-        if (!this[CHILDREN]) {
-            this.children = [];
-        }
-        return this[CHILDREN];
-    }
-
-    /**
-     * Children can be added as models or elements.
-     */
-    set children(children: (Model | AnyElement)[]) {
-        this[CHILDREN] = new Proxy(Array<Model>(), {
-            get: (target, p, receiver) => {
-                let result = Reflect.get(target, p, receiver);
-                if (!(result instanceof Model) && typeof p === "string" && p.match(/^[0-9]+$/)) {
-                    result = Model.create(result);
-                    result[PARENT] = this;
-                    Reflect.set(target, p, result, receiver);
-                }
-                return result;
-            },
-
-            set: (target, p, newValue, receiver) => {
-                if (typeof p === "string" && p.match(/^[0-9]+$/)) {
-                    if (typeof newValue !== "object" || newValue === null || !newValue.tag) {
-                        throw new InternalError("Child must be Model or AnyElement");
-                    }
-                }
-                const result = Reflect.set(target, p, newValue, receiver);
-                if (newValue instanceof Model) {
-                    if (newValue[PARENT] !== this) {
-                        if (newValue[PARENT]) {
-                            newValue.parent = undefined;
-                        }
-                        newValue[PARENT] = this;
-                    }
-                }
-                return result;
-            },
-
-            deleteProperty: (target, p) => {
-                let child;
-                if (typeof p === "string" && p.match(/^[0-9]+$/)) {
-                    child = target[Number.parseInt(p)];
-                }
-                if (Reflect.deleteProperty(target, p) && child) {
-                    if (child[PARENT] === this && this.children.indexOf(child) === -1) {
-                        child[PARENT] = undefined;
-                    }
-                    return true;
-                }
-                return false;
-            },
-        });
-
-        // Clone child array because if it references a former parent they'll
-        // disappear as we add
-        children = [...children];
-
-        this[CHILDREN].push(...children);
     }
 
     /**
@@ -239,10 +204,42 @@ export abstract class Model {
     }
 
     /**
-     * Add a child.  children.push works too but only accepts models.
+     * Add one or more children.
      */
     add(...children: (Model | AnyElement)[]) {
-        this.children.push(...(children as any[]));
+        const collection = Collection.for(this);
+        for (const child of children) {
+            collection.add(child);
+        }
+    }
+
+    /**
+     * Replace all children of the model.
+     */
+    set children(children: Iterable<AnyElement | Model>) {
+        // Clone container because if it references a former parent it'll
+        // mutate as we add
+        children = [ ...children ];
+
+        const collection = Collection.for(this);
+        collection.clear();
+        for (const child of children) {
+            collection.add(child);
+        }
+    }
+
+    /**
+     * Remove one or more children from the model.
+     */
+    remove(...children: (Model | AnyElement)[]) {
+        const collection = this[CHILDREN];
+        if (!collection) {
+            return;
+        }
+
+        for (const child of children) {
+            collection.remove(child);
+        }
     }
 
     /**
@@ -261,21 +258,71 @@ export abstract class Model {
     }
 
     /**
+     * Filter children with a predicate.
+     */
+    filter(fn: (model: Model) => boolean) {
+        const result = Array<Model>();
+        for (const child of this) {
+            if (fn(child)) {
+                result.push(child);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Find the first child matching a predicate.
+     */
+    find(fn: (model: Model) => boolean) {
+        for (const child of this) {
+            if (fn(child)) {
+                return child;
+            }
+        }
+    }
+
+    /**
+     * Apply a function to each child.
+     */
+    forEach(fn: (model: Model) => void) {
+        for (const child of this) {
+            fn(child);
+        }
+    }
+
+    /**
+     * Count the number of children in the model.
+     */
+    get childCount() {
+        let count = 0;
+        for (const _child of this) {
+            count++;
+        }
+        return count;
+    }
+
+    /**
      * Retrieve all models of a specific element type from local scope.
      *
      * @param constructor model class or a predicate object
      */
     all<T extends Model>(constructor: Model.Constructor<T>) {
-        return this.children.filter(c => c instanceof constructor) as T[];
+        return this.filter(c => c instanceof constructor) as T[];
     }
 
     /**
      * Retrieve a specific model by ID or name.
+     * 
+     * Retrieval by name is currently an indexed operation, ID is not.
      */
     get<T extends Model>(constructor: Model.Constructor<T>, key: number | string) {
-        return this.children.find(c =>
-            c instanceof constructor && typeof key === "number" ? c.effectiveId === key : c.name === key,
-        ) as T;
+        if (typeof key === "string") {
+            return this[CHILDREN]?.getByName(constructor, key);
+        } else {
+            return this.find(c =>
+                c instanceof constructor && c.effectiveId === key,
+            ) as T;
+        }
     }
 
     /**
@@ -388,6 +435,10 @@ export abstract class Model {
             this.xref = Model.CrossReference.get(this.xref);
         }
     }
+
+    [Symbol.iterator]() {
+        return new ModelIterator(this);
+    }
 }
 
 export namespace Model {
@@ -427,5 +478,223 @@ export namespace Model {
             }
             return (this.instances[key] = new CrossReference(xref));
         }
+    }
+}
+
+/**
+ * Internally we store models as elements or models.  This allows us to
+ * efficiently build the structure directly from JSON then lazily instantiate
+ * models as they're accessed.
+ */
+type Child = (AnyElement | Model) & {
+    [PARENT]?: Model,
+    [PREV]?: Child,
+    [NEXT]?: Child
+}
+
+/**
+ * Iterates over model children.
+ */
+class ModelIterator implements Iterator<Model, undefined> {
+    #value?: Model;
+
+    constructor(parent?: Model) {
+        this.#value = parent?.firstChild;
+    }
+
+    next(): IteratorResult<Model, undefined> {
+        if (this.#value === undefined) {
+            return { value: undefined, done: true };
+        }
+
+        const result = this.#value;
+        this.#value = this.#value.nextSibling;
+
+        return { value: result };
+    }
+}
+
+/**
+ * The internal implementation of the Model container.
+ */
+class Collection {
+    #first?: Child;
+    #last?: Child;
+    #array?: Model[];
+    #nameIndex = {} as { [name: string]: Child | Child[] }
+
+    constructor(private owner: Model) {}
+
+    static for(parent: Model) {
+        return parent[CHILDREN] ?? (parent[CHILDREN] = new Collection(parent));
+    }
+
+    get empty() {
+        return !this.#first;
+    }
+
+    get first(): Model | undefined {
+        return this.#first && this.export(this.#first);
+    }
+
+    get last(): Model | undefined {
+        return this.#last && this.export(this.#last);
+    }
+
+    clear() {
+        let child = this.#first;
+        while (child) {
+            const nextChild = child[NEXT];
+            delete child[PARENT];
+            delete child[PREV];
+            delete child[NEXT];
+            child = nextChild;
+        }
+        this.#first = this.#last = undefined;
+        this.#nameIndex = {};
+        this.#array = undefined;
+    }
+
+    add(child: Child) {
+        const parent = child[PARENT];
+        if (parent === this.owner) {
+            return;
+        }
+        parent?.remove(child);
+
+        if (this.#last) {
+            child[PREV] = this.#last;
+            this.#last = this.#last[NEXT] = child;
+        } else {
+            this.#last = this.#first = child;
+        }
+        this.addToIndex(child);
+    }
+
+    remove(child: Child) {
+        if (child[PREV]) {
+            child[PREV][NEXT] = child[NEXT];
+            delete child[PREV];
+        }
+        if (child[NEXT]) {
+            child[NEXT][PREV] = child[PREV];
+            delete child[NEXT];
+        }
+        this.removeFromIndex(child);
+        delete child[PARENT];
+        delete child[PREV];
+        delete child[NEXT];
+    }
+
+    export(child: Child) {
+        if (child instanceof Model) {
+            return child;
+        }
+        this.removeFromIndex(child);
+        const model = Model.create(child) as Child;
+        if (child[PREV]) {
+            child[PREV][NEXT] = model;
+            model[PREV] = child[PREV];
+        }
+        if (child[NEXT]) {
+            child[NEXT][PREV] = model;
+            model[NEXT] = child[NEXT];
+        }
+        this.addToIndex(model);
+        return model as Model;
+    }
+
+    getByName<T extends Model>(constructor: Model.Constructor<T>, name: string): T | undefined {
+        const entry = this.#nameIndex[name];
+        let found;
+        if (Array.isArray(entry)) {
+            found = entry.find(m => m instanceof constructor);
+        } else {
+            found = entry;
+        }
+        return found && this.export(found) as T;
+    }
+
+    get array(): Model[] {
+        if (!this.#array) {
+            this.#array = Array<Model>();
+            for (let child = this.#first; child; child = child[NEXT]) {
+                this.#array.push(this.export(child));
+            }
+        }
+        return this.#array;
+    }
+
+    private addToIndex(child: Child) {
+        const entry = this.#nameIndex[child.name];
+        if (Array.isArray(entry)) {
+            entry.push(child);
+        } else if (entry) {
+            this.#nameIndex[child.name] = [ entry, child ];
+        } else {
+            this.#nameIndex[child.name] = child;
+        }
+        this.#array = undefined;
+    }
+
+    private removeFromIndex(child: Child) {
+        const entry = this.#nameIndex[child.name];
+        if (entry === child) {
+            delete this.#nameIndex[child.name];
+        } else if (Array.isArray(entry)) {
+            const index = entry.indexOf(child);
+            if (index) {
+                entry.splice(index, 1);
+            }
+        }
+        this.#array = undefined;
+    }
+}
+
+/**
+ * All Model subclasses implement an element interface.  This base class
+ * specializes child references for those subclasses.
+ * 
+ * This is a separate class from Model so we needn't do Model<any, any>
+ * everywhere a generic Model is required.
+ */
+export abstract class ElementModel<ChildElement extends AnyElement, ChildModel extends Model> extends Model {
+    /**
+     * Access child elements as an array.  Implements AnyElement.children.
+     * 
+     * This is available for compatibility with the Element interface but is
+     * not efficient so use should be minimized.  The returned array is
+     * immutable.
+     */
+    override get children(): ChildElement[] {
+        return (this[CHILDREN]?.array ?? Object.freeze(Array<ChildElement>())) as ChildElement[];
+    }
+
+    override set children(elements: Iterable<ChildElement | ChildModel>) {
+        super.children = elements;
+    }
+
+    override add(...children: (ChildModel | ChildElement)[]) {
+        super.add(...children);
+    }
+
+    override [Symbol.iterator]() {
+        return super[Symbol.iterator]() as Iterator<ChildModel>;
+    }
+
+    override get firstChild() {
+        return super.firstChild as ChildModel;
+    }
+
+    override get lastChild() {
+        return super.lastChild as ChildModel;
+    }
+
+    override get nextSibling() {
+        return super.nextSibling as ChildModel;
+    }
+
+    override get previousSibling() {
+        return super.previousSibling as ChildModel;
     }
 }

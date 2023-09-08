@@ -44,9 +44,9 @@ export class ModelValidator<T extends Model> {
 
     protected validateStructure(requireId: boolean, ...childTypes: (new (...args: any) => Model)[]) {
         this.validateProperty({ name: "id", type: "number", required: requireId });
-        if (this.model.children && childTypes.length) {
+        if (!this.model.empty && childTypes.length) {
             let index = 0;
-            for (const child of this.model.children) {
+            for (const child of this.model) {
                 let ok = false;
                 for (const type of childTypes) {
                     if (child instanceof type) {
@@ -57,7 +57,7 @@ export class ModelValidator<T extends Model> {
                 if (!ok) {
                     this.error(
                         "UNACCEPTABLE_TYPE",
-                        `${this.model.path}.children[${index}] type ${child.constructor.name} is not allowed`,
+                        `${this.model.path}[${index}] type ${child.constructor.name} is not allowed`,
                     );
                 }
                 index++;
@@ -107,7 +107,7 @@ export class ModelValidator<T extends Model> {
     private validateChildUniqueness() {
         const identities = {} as { [identity: string]: number };
 
-        for (const child of this.model.children) {
+        for (const child of this.model) {
             function addIdentity(id: string | number) {
                 if (child instanceof CommandModel) {
                     id = `${id}:${child.direction}`;

@@ -7,7 +7,7 @@
 import { Access, Aspect, Conformance, Constraint, Quality } from "../aspects/index.js";
 import { ElementTag, FieldValue, Metatype } from "../definitions/index.js";
 import { AnyElement, DatatypeElement, Globals, ValueElement } from "../elements/index.js";
-import { Model } from "./Model.js";
+import { ElementModel, Model } from "./Model.js";
 
 // These are circular dependencies so just to be safe we only import the
 // types.  We also need the class, though, at runtime.  So we use the
@@ -26,19 +26,11 @@ const QUALITY: unique symbol = Symbol("quality");
  * Each ValueElement has a corresponding implementation that derives from
  * this class.
  */
-export abstract class ValueModel extends Model implements ValueElement {
+export abstract class ValueModel extends ElementModel<DatatypeElement, DatatypeModel> implements ValueElement {
     byteSize?: ValueElement.Size;
     default?: FieldValue;
     metatype?: Metatype;
     override isType? = true;
-
-    override get children(): DatatypeModel[] {
-        return super.children as any;
-    }
-
-    override set children(children: (DatatypeModel | DatatypeElement)[]) {
-        super.children = children;
-    }
 
     get constraint(): Constraint {
         return Aspects.getAspect(this, CONSTRAINT, Constraint);

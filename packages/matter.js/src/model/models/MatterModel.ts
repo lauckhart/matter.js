@@ -11,12 +11,12 @@ import { ClusterModel } from "./ClusterModel.js";
 import { DatatypeModel } from "./DatatypeModel.js";
 import { DeviceTypeModel } from "./DeviceTypeModel.js";
 import { FabricModel } from "./FabricModel.js";
-import { Model } from "./Model.js";
+import { ElementModel, Model } from "./Model.js";
 
 /**
  * The root of a Matter model.
  */
-export class MatterModel extends Model implements MatterElement {
+export class MatterModel extends ElementModel<MatterElement.Child, MatterModel.Child> implements MatterElement {
     override tag: MatterElement.Tag = MatterElement.Tag;
     override isTypeScope = true;
     version?: string;
@@ -54,14 +54,6 @@ export class MatterModel extends Model implements MatterElement {
      */
     get fabrics() {
         return this.all(FabricModel);
-    }
-
-    override get children(): MatterModel.Child[] {
-        return super.children as any;
-    }
-
-    override set children(children: (MatterModel.Child | MatterElement.Child)[]) {
-        super.children = children;
     }
 
     constructor(definition: MatterElement.Properties = Matter, globals = Object.values(Globals)) {

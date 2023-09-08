@@ -219,7 +219,7 @@ export class ModelTraversal {
             if (!model.isType) {
                 return false;
             }
-            if (model.children.length) {
+            if (model.firstChild) {
                 result = model as ValueModel;
                 return false;
             }
@@ -371,7 +371,7 @@ export class ModelTraversal {
         const members = Array<Model>();
 
         this.visitInheritance(scope, model => {
-            for (const child of model.children) {
+            for (const child of model) {
                 if (allowedTags.indexOf(child.tag) !== -1) {
                     members.push(child);
                 }
@@ -396,7 +396,7 @@ export class ModelTraversal {
                     continue;
                 }
 
-                for (const c of (scope as ValueModel).children) {
+                for (const c of scope as ValueModel) {
                     if (c.constraint.test(bit)) {
                         return c;
                     }
@@ -520,7 +520,7 @@ export class ModelTraversal {
             if (visitor(model) === false) {
                 return false;
             }
-            for (const c of model.children) {
+            for (const c of model) {
                 if (this.visit(c, visitor) === false) {
                     return false;
                 }
@@ -549,7 +549,7 @@ export class ModelTraversal {
      * Search for a direct child by name.
      */
     private findLocal(scope: Model, key: ModelTraversal.ElementSelector, allowedTags: ElementTag[]) {
-        for (const c of scope.children) {
+        for (const c of scope) {
             if (c.is(key) && allowedTags.indexOf(c.tag) !== -1 && !this.dismissed?.has(c)) {
                 return c;
             }

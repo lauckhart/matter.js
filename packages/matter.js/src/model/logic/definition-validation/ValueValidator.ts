@@ -27,7 +27,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
             if (name.match(/^[A-Z_$]+$/)) {
                 // Feature lookup
                 const cluster = this.model.owner(ClusterModel);
-                return !!cluster?.features.find(f => f.name === name);
+                return !!cluster?.find(f => f.name === name);
             } else {
                 // Field lookup
                 return !!this.model.parent?.member(name);
@@ -143,14 +143,14 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
         const metatype = this.model.directMetatype;
         switch (metatype) {
             case Metatype.object:
-                if (this.model.metatype || !this.model.children.length) {
+                if (this.model.metatype || this.model.empty) {
                     this.error("CHILDLESS_STRUCT", `struct element with no children`);
                 }
                 break;
 
             case Metatype.enum:
             case Metatype.bitmap:
-                if (!this.model.children.length && !this.model.global) {
+                if (this.model.empty && !this.model.global) {
                     this.error(`CHILDLESS_${metatype.toUpperCase()}`, `${this.model.type} with no children`);
                 }
                 if (metatype == Metatype.enum) {
@@ -161,9 +161,9 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
                 break;
 
             case Metatype.array:
-                if (!this.model.children.length) {
+                if (this.model.empty) {
                     this.error("UNTYPED_ARRAY", `array element with no entry type`);
-                } else if (this.model.children.length > 1) {
+                } else if (this.model.childCount > 1) {
                     this.error("OVERLY_TYPED_ARRAY", `array element with multiple entry types`);
                 }
                 break;
@@ -173,7 +173,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
     private validateEnumKeys() {
         const ids = new Set<number>();
         const names = new Set<string>();
-        for (const c of this.model.children) {
+        for (const c of this.model) {
             if (c.id) {
                 if (ids.has(c.id)) {
                     this.error(
@@ -192,7 +192,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
 
     private validateBitFields() {
         const ranges = Array<{ name: string; min: number; max: number }>();
-        for (const c of this.model.children) {
+        for (const c of this.model) {
             let min, max;
 
             if (typeof c.constraint.value === "number") {

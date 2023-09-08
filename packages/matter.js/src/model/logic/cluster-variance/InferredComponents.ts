@@ -28,7 +28,9 @@ export type InferredComponents = InferredComponent[];
  */
 export function InferredComponents(cluster: ClusterModel): InferredComponents {
     const result = [] as InferredComponents;
-    cluster.children.forEach(child => addElement(result, child));
+    for (const child of cluster) {
+        addElement(result, child);
+    }
     return result;
 }
 

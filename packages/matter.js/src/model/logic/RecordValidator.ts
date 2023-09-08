@@ -23,7 +23,7 @@ import { ValidatorImplementation } from "./record-validation/ValidatorImplementa
 export function RecordValidator(fields: ValueModel[], featureMap: ValueModel, features: FeatureSet): RecordValidator {
     const definedFeatures = new FeatureSet();
     const enabledFeatures = new FeatureSet();
-    for (const feature of featureMap.children) {
+    for (const feature of featureMap) {
         definedFeatures.add(feature.name);
         if (feature.description && features.has(camelize(feature.description, false))) {
             enabledFeatures.add(feature.name);

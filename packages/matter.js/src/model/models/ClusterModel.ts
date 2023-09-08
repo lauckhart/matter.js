@@ -10,9 +10,9 @@ import { AttributeModel } from "./AttributeModel.js";
 import { CommandModel } from "./CommandModel.js";
 import { DatatypeModel } from "./DatatypeModel.js";
 import { EventModel } from "./EventModel.js";
-import { Model } from "./Model.js";
+import { ElementModel, Model } from "./Model.js";
 
-export class ClusterModel extends Model {
+export class ClusterModel extends ElementModel<ClusterElement.Child, ClusterModel.Child> implements ClusterElement {
     override tag: ClusterElement.Tag = ClusterElement.Tag;
     override id?: Mei;
     classification?: ClusterElement.Classification;
@@ -50,14 +50,6 @@ export class ClusterModel extends Model {
 
     get featureMap() {
         return this.get(AttributeModel, Globals.FeatureMap.id);
-    }
-
-    override get children(): ClusterModel.Child[] {
-        return super.children as any;
-    }
-
-    override set children(children: (ClusterModel.Child | ClusterElement.Child)[]) {
-        super.children = children;
     }
 
     constructor(definition: ClusterElement.Properties) {

@@ -210,9 +210,7 @@ export abstract class ModelVariantTraversal<S = void> {
         // Iterate over each model variant
         for (const [sourceName, variant] of Object.entries(variants.map)) {
             // For each child of this variant, associated it with a slot
-            for (let i = 0; i < variant.children.length; i++) {
-                const child = variant.children[i];
-
+            for (const child of variant) {
                 if (child.global) {
                     // Ignore globals, they're managed by the MatterModel
                     continue;

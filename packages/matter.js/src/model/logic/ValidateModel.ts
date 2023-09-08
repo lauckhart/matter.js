@@ -68,7 +68,7 @@ export function ValidateModel(model: Model) {
         // );
 
         Logger.nest(() => {
-            model.children.forEach(validate);
+            model.forEach(validate);
         });
     }
 

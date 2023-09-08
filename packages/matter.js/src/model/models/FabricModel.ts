@@ -5,10 +5,10 @@
  */
 
 import { FabricElement, NodeElement } from "../elements/index.js";
-import { Model } from "./Model.js";
+import { ElementModel, Model } from "./Model.js";
 import { NodeModel } from "./NodeModel.js";
 
-export class FabricModel extends Model implements FabricElement {
+export class FabricModel extends ElementModel<NodeElement, NodeModel> implements FabricElement {
     override tag: FabricElement.Tag = FabricElement.Tag;
     override id!: number;
 

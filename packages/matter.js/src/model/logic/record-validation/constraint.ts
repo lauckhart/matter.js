@@ -26,8 +26,8 @@ export function addConstraint(builder: ValidatorBuilder, model: ValueModel, cons
         switch (metatype) {
             case Metatype.array:
                 let entryTest;
-                if (ast.entry && model.children[0]) {
-                    entryTest = generateConstraintExpr(model.children[0], ast.entry);
+                if (ast.entry && model.firstChild) {
+                    entryTest = generateConstraintExpr(model.firstChild, ast.entry);
                 }
                 return generateRangeTest("v.length", ast, "Array.isArray(v)", entryTest);
 

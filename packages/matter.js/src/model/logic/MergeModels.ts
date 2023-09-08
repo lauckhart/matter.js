@@ -27,7 +27,7 @@ export function MergeModels(variants: TraverseMap, priorities = MergeModels.Defa
         // children from other variants.  This allows us to override to a type
         // that doesn't have children
         const manual = priority.get(variants.tag, "type")[0];
-        if (merged.type && variants.map[manual]?.type === merged.type && !variants.map[manual].children?.length) {
+        if (merged.type && variants.map[manual]?.type === merged.type && variants.map[manual].empty) {
             return merged;
         }
 
@@ -245,14 +245,14 @@ function reparentToCanonicalParent(priority: PriorityHandler, variants: VariantD
                 // Skip if this is the canonical variant or this variant
                 // already has children
                 const variant = variants.map[variantName];
-                if (variant === type || variant.children.length) {
+                if (variant === type || !variant.empty) {
                     continue;
                 }
 
                 // Skip if the base type is not local to the cluster or doesn't
                 // have children
                 const base = variant.base;
-                if (!(base instanceof ValueModel) || base.parent?.tag !== ElementTag.Cluster || !base.children.length) {
+                if (!(base instanceof ValueModel) || base.parent?.tag !== ElementTag.Cluster || base.empty) {
                     continue;
                 }
 
@@ -263,7 +263,7 @@ function reparentToCanonicalParent(priority: PriorityHandler, variants: VariantD
 
                 // Rewrite
                 deparented.push(base);
-                variant.children = base.children;
+                variant.children = base;
                 variant.type = base.type;
             }
         }
