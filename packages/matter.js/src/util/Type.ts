@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ClusterId } from "../datatype/ClusterId.js";
+
 export type Properties = { [key: string]: any };
 
 /** Merges two types into one. */
@@ -56,5 +58,5 @@ export type MakeMandatory<T> = Exclude<T, undefined>;
 
 /** Create a branded type */
 declare const __brand: unique symbol;
-type Brand<B> = { [__brand]: B };
+export type Brand<B> = { [__brand]: B };
 export type Branded<T, B> = T & Brand<B>;
