@@ -986,7 +986,7 @@ export namespace WindowCovering {
      * features is legal per the Matter specification.
      */
     export const Complete = ClusterFactory.Definition({
-        id: 258,
+        id: Cluster.id,
         name: Cluster.name,
         revision: Cluster.revision,
         features: Cluster.features,
