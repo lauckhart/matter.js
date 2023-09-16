@@ -23,14 +23,8 @@ import {
     WritableAttribute,
 } from "../../src/cluster/Cluster.js";
 import {
-    BaseClusterComponent,
-    ClusterComponent,
-    ClusterForBaseCluster,
-    ExtensibleCluster,
-    IllegalClusterError,
-    extendCluster,
-    preventCluster,
-    validateFeatureSelection,
+    ClusterFactory,
+    IllegalClusterError
 } from "../../src/cluster/ClusterFactory.js";
 import { ClusterServer } from "../../src/cluster/server/ClusterServer.js";
 import { ClusterServerHandlers } from "../../src/cluster/server/ClusterServerTypes.js";
@@ -60,7 +54,7 @@ const METADATA = {
     features: FEATURES,
 };
 
-const ELEMENTS = ClusterComponent({
+const ELEMENTS = ClusterFactory.Component({
     attributes: {
         attr1: WritableAttribute(1, TlvUInt8),
     },
@@ -72,7 +66,7 @@ const ELEMENTS = ClusterComponent({
     },
 });
 
-const ELEMENTS2 = ClusterComponent({
+const ELEMENTS2 = ClusterFactory.Component({
     attributes: {
         attr2: Attribute(4, TlvUInt8),
     },
@@ -89,14 +83,14 @@ const ELEMENTS2 = ClusterComponent({
     },
 });
 
-function expectMetadata(component: BaseClusterComponent<any, any, any, any>) {
+function expectMetadata(component: ClusterFactory.Definition) {
     expect(component.id).equal(METADATA.id);
     expect(component.name).equal(METADATA.name);
     expect(component.revision).equal(METADATA.revision);
     expect(component.features).equal(METADATA.features);
 }
 
-function expectElements(component: ClusterComponent<any, any, any>) {
+function expectElements(component: ClusterFactory.Component) {
     expect(component.attributes.attr1).exist;
     expect(component.attributes.attr1.id).equal(1);
     expect(component.commands.cmd1).exist;
@@ -105,7 +99,7 @@ function expectElements(component: ClusterComponent<any, any, any>) {
     expect(component.events.ev1.id).equal(3);
 }
 
-function expectElements2(component: ClusterComponent<any, any, any>) {
+function expectElements2(component: ClusterFactory.Component) {
     expect(component.attributes.attr2).exist;
     expect(component.attributes.attr2.id).equal(4);
     expect(component.commands.cmd2).exist;
@@ -115,7 +109,7 @@ function expectElements2(component: ClusterComponent<any, any, any>) {
 }
 
 function createCluster(supportedFeatures: TypeFromPartialBitSchema<typeof FEATURES>) {
-    const base = BaseClusterComponent({
+    const base = ClusterFactory.Component({
         ...METADATA,
         ...ELEMENTS,
     });
@@ -128,7 +122,7 @@ function createCluster(supportedFeatures: TypeFromPartialBitSchema<typeof FEATUR
 function createExtendedCluster(supportedFeatures: TypeFromPartialBitSchema<typeof FEATURES>) {
     const cluster = createCluster(supportedFeatures);
 
-    extendCluster(cluster, ELEMENTS2, {
+    ClusterFactory.extend(cluster, ELEMENTS2, {
         extended: true,
         fancy: true,
         absolutelyFabulous: false,
@@ -146,43 +140,44 @@ function expectElementCounts(cluster: Cluster<any, any, any, any, any>, count: n
     expect(Object.keys(cluster.events).length).equal(count);
 }
 
-export const TestBase = BaseClusterComponent({
+export const TestBase = ClusterFactory.Definition({
     ...METADATA,
     ...ELEMENTS,
 });
 
-const TestExtensibleCluster = ExtensibleCluster({
-    ...TestBase,
-    factory: <T extends `${Feature}`[]>(...features: [...T]) => {
-        validateFeatureSelection(features, Feature);
+const TestExtensibleCluster = ClusterFactory.Extensible(
+    TestBase,
+
+    <T extends `${Feature}`[]>(...features: [...T]) => {
+        ClusterFactory.validateFeatureSelection(features, Feature);
         const cluster = Cluster({
             ...TestBase,
             supportedFeatures: BitFlags(METADATA.features, ...features),
         });
-        extendCluster(cluster, ELEMENTS2, { extended: true });
-        preventCluster(cluster, { absolutelyFabulous: true, bitterDisappointment: true });
+        ClusterFactory.extend(cluster, ELEMENTS2, { extended: true });
+        ClusterFactory.prevent(cluster, { absolutelyFabulous: true, bitterDisappointment: true });
 
         return cluster as unknown as TestExtension<BitFlags<typeof METADATA.features, T>>;
     },
-});
+);
 
-export type TestExtension<SF extends TypeFromPartialBitSchema<typeof TestBase.features>> = ClusterForBaseCluster<
-    typeof TestBase,
-    SF
-> & { supportedFeatures: SF } & (SF extends { extended: true } ? typeof ELEMENTS2 : {}) &
-    (SF extends { absolutelyFabulous: true; bitterDisappointment: true } ? never : {});
+export type TestExtension<SF extends TypeFromPartialBitSchema<typeof TestBase.features>> =
+    & Omit<typeof TestBase, "supportedFeatures">
+    & { supportedFeatures: SF }
+    & (SF extends { extended: true } ? typeof ELEMENTS2 : {})
+    & (SF extends { absolutelyFabulous: true; bitterDisappointment: true } ? never : {});
 
 describe("ClusterFactory", () => {
     describe("ClusterComponent", () => {
         it("installs elements", () => {
-            const component = ClusterComponent(ELEMENTS);
+            const component = ClusterFactory.Component(ELEMENTS);
             expectElements(component);
         });
     });
 
     describe("BaseClusterComponent", () => {
         it("builds cluster", () => {
-            const base = BaseClusterComponent({
+            const base = ClusterFactory.Definition({
                 ...METADATA,
                 ...ELEMENTS,
             });
@@ -218,13 +213,13 @@ describe("ClusterFactory", () => {
     describe("validateFeatureSelection", () => {
         it("accepts a supported feature", () => {
             expect(() => {
-                validateFeatureSelection(["AbsolutelyFabulous"], Feature);
+                ClusterFactory.validateFeatureSelection(["AbsolutelyFabulous"], Feature);
             }).not.throw(IllegalClusterError);
         });
 
         it("rejects an unsupported feature", () => {
             expect(() => {
-                validateFeatureSelection(["SomewhatFabulous"], Feature);
+                ClusterFactory.validateFeatureSelection(["SomewhatFabulous"], Feature);
             }).throw(IllegalClusterError, '"SomewhatFabulous" is not a valid feature identifier');
         });
     });
@@ -232,7 +227,7 @@ describe("ClusterFactory", () => {
     describe("preventCluster", () => {
         it("allows legal features", () => {
             expect(() => {
-                preventCluster(createCluster({ extended: true }), {
+                ClusterFactory.prevent(createCluster({ extended: true }), {
                     absolutelyFabulous: true,
                     bitterDisappointment: true,
                 });
@@ -241,7 +236,7 @@ describe("ClusterFactory", () => {
 
         it("rejects illegal features", () => {
             expect(() => {
-                preventCluster(createCluster({ absolutelyFabulous: true, bitterDisappointment: true }), {
+                ClusterFactory.prevent(createCluster({ absolutelyFabulous: true, bitterDisappointment: true }), {
                     absolutelyFabulous: true,
                     bitterDisappointment: true,
                 });
@@ -299,6 +294,8 @@ describe("ClusterFactory", () => {
      */
     it("ClusterServer type is correct for automatic cluster", () => {
         const MyCluster = TestExtensibleCluster.with("Extended");
+type T = (typeof MyCluster)["attributes"]
+        const x = {} as ClusterServerHandlers<typeof MyCluster>;
 
         // Create handlers directly
         const handlers: ClusterServerHandlers<typeof MyCluster> = {

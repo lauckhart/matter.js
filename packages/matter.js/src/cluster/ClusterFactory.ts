@@ -39,7 +39,7 @@ export namespace ClusterFactory {
     export interface Elements {
         readonly attributes: Attributes;
         readonly commands: Commands;
-        readonly events: Events;
+        readonly events: Elements;
     }
 
     /**
@@ -47,6 +47,15 @@ export namespace ClusterFactory {
      * cluster definition.
      */
     export interface Component extends Elements {}
+
+    /**
+     * A "typed component" is a component with detailed type information.
+     */
+    export interface TypedComponent<T extends Partial<Component>> {
+        attributes: T["attributes"] extends Attributes ? T["attributes"] : {};
+        commands: T["commands"] extends Commands ? T["commands"] : {};
+        events: T["events"] extends Events ? T["events"] : {};
+    }
 
     /**
      * Cluster "features" describe the features supported by a cluster.
@@ -63,7 +72,40 @@ export namespace ClusterFactory {
     export interface Definition extends Identity, Features<BitSchema>, Elements {}
 
     /**
-     * This is a definition that is open to modification.
+     * An "partial definition" is the input to Definition().  It does not
+     * require empty object properties to be present.
+     */
+    export type PartialDefinition =
+        & { id: number }
+        & Omit<Identity, "id">
+        & Partial<Features>
+        & {
+            attributes?: Attributes;
+            commands?: Commands;
+            events?: Events;
+        }
+
+    /**
+     * A "typed definition" is a definition with detailed type information.
+     */
+    export type TypedDefinition<T extends PartialDefinition> =
+        {
+            id: Branded<T["id"], "ClusterId">,
+            name: T["name"],
+            revision: T["revision"],
+            features: T["features"] extends {} ? T["features"] : {},
+            supportedFeatures: T["supportedFeatures"] extends {} ? T["supportedFeatures"] : {},
+            attributes: T["attributes"] extends infer A extends {}
+                ? Merge<A, GlobalAttributes<T["features"] extends {} ? T["features"] : {}>>
+                : {},
+            commands: T["commands"] extends {} ? T["commands"] : {},
+            events: T["events"] extends {} ? T["events"] : {},
+            unknown: T["unknown"] extends boolean ? T["unknown"] : false,
+        }
+        & Omit<T, "attributes">
+
+    /**
+     * This is a definition that may be modified.
      */
     export type MutableDefinition = {
         -readonly [Key in keyof Definition]: Definition[Key]
@@ -108,7 +150,7 @@ export namespace ClusterFactory {
     /**
      * Define a cluster component.
      */
-    export function Component<const T extends Partial<Elements>>(component: T): T & Component {
+    export function Component<const T extends Partial<Component>>(component: T): TypedComponent<T> {
         return {
             attributes: {},
             commands: {},
@@ -117,36 +159,14 @@ export namespace ClusterFactory {
         };
     }
 
-    export type Input =
-        & { id: number }
-        & Omit<Identity, "id">
-        & Partial<Features>
-        & Partial<Elements>
-
-    export type Cluster<T extends Input> =
-        {
-            id: T["id"] extends ClusterId ? T["id"] : Branded<T["id"], "ClusterId">,
-            name: T["name"],
-            revision: T["revision"],
-            features: T["features"] extends {} ? T["features"] : {},
-            supportedFeatures: T["supportedFeatures"] extends {} ? T["supportedFeatures"] : {},
-            attributes: T["attributes"] extends infer A extends {}
-                ? Merge<A, GlobalAttributes<T["features"] extends {} ? T["features"] : {}>>
-                : {},
-            commands: T["commands"] extends {} ? T["commands"] : {},
-            events: T["events"] extends {} ? T["events"] : {},
-            unknown: T["unknown"] extends boolean ? T["unknown"] : false,
-        }
-        & Omit<T, "attributes">
-
     /**
      * Define a cluster.
      */
     export function Definition<
-        const T extends Input
+        const T extends PartialDefinition
     >(definition: T) {
         return {
-            id: definition.id,
+            id: ClusterId(definition.id),
             name: definition.name,
             revision: definition.revision,
             features: definition.features ?? {},
@@ -158,7 +178,7 @@ export namespace ClusterFactory {
             commands: definition.commands ?? {},
             events: definition.events ?? {},
             unknown: definition.unknown,
-        } as Cluster<T>;
+        } as TypedDefinition<T>;
     }
 
     /**

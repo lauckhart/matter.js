@@ -214,7 +214,7 @@ type ServerAttributeGetters<A extends Attributes> = {
 type ServerAttributeSetters<A extends Attributes> = {
     [P in NonFixedAttributeNames<A> as `set${Capitalize<string & P>}Attribute`]: (value: AttributeJsType<A[P]>) => void;
 } & {
-    [P in FabricScopedAttributeNames<A> as `set${Capitalize<string & P>}Attribute`]: (
+    [P in FabricScopedAttributeNames<A> as `set${Capitalize<string & P>}AttributeYo`]: (
         value: AttributeJsType<A[P]>,
         fabric: Fabric,
     ) => void;
