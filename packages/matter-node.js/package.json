@@ -24,12 +24,12 @@
         "url": "https://github.com/project-chip/matter.js.git"
     },
     "scripts": {
-        "clean": "rm -rf dist && rm -f *.tsbuildinfo",
-        "build": "tsc -b tsconfig.dist.json",
-        "build-clean": "npm run clean && npm run build",
-        "build-doc": "typedoc --excludeExternals --plugin typedoc-plugin-missing-exports --plugin typedoc-plugin-markdown --gitRemote upstream --tsconfig tsconfig.dist.json",
-        "test": "jest",
-        "test-chip": "jest --config=jest.chip.config.ts --runInBand"
+        "clean": "build clean",
+        "build": "build",
+        "build-clean": "build --clean",
+        "build-doc": "typedoc --excludeExternals --plugin typedoc-plugin-missing-exports --plugin typedoc-plugin-markdown --gitRemote upstream --tsconfig tsconfig.json",
+        "test": "matter-test",
+        "test-chip": "matter-test --spec=test-chip/ChipTestRunner.ts"
     },
     "devDependencies": {
         "@types/bn.js": "^5.1.1",

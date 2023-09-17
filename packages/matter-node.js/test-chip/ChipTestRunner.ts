@@ -129,7 +129,7 @@ async function pairWithChipTool(startedCallback?: () => Promise<void>) {
 
 describe("Chip-Tool-Tests", () => {
     /** Add scripts to the chip-tool binary folder because needed for execution of some tests. */
-    beforeAll(async () => {
+    before(async () => {
         await fs.mkdir(`${CHIP_BIN_PATH}/src/app/tests/suites/commands/system/scripts`, { recursive: true });
         await executeProcess("cp", [
             `${__dirname}/scripts/*`,
@@ -155,8 +155,7 @@ describe("Chip-Tool-Tests", () => {
             it(
                 `"${suiteName}": Start chip-tool and test instance for initial pairing`,
                 async () => await pairWithChipTool(async () => await testInstance.start()),
-                30000,
-            );
+            ).timeout(30000);
 
             it(
                 `"${suiteName}": Execute tests`,
@@ -168,17 +167,16 @@ describe("Chip-Tool-Tests", () => {
                         async (testDescription, userPrompt) =>
                             testInstance.handleUserprompt(testDescription, userPrompt),
                     ),
-                120000,
-            );
+            ).timeout(120000);
 
-            afterAll(async () => {
+            after(async () => {
                 await testInstance.stop();
                 await new Promise(resolve => setTimeout(resolve, 2000)); //Add a short delay
             });
         });
     }
 
-    afterAll(async () => {
+    after(async () => {
         await Network.get().close();
     });
 });

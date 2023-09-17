@@ -139,7 +139,7 @@ describe("Storage in JSON File", () => {
         );
     });
 
-    afterAll(async () => {
+    after(async () => {
         try {
             await unlink(TEST_STORAGE_LOCATION);
         } catch {

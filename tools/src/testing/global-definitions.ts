@@ -6,7 +6,7 @@
 
 import Chai from "chai";
 import ChaiAsPromised from "chai-as-promised";
-import { browserSetup } from "./mocha.js";
+import { generalSetup, browserSetup } from "./mocha.js";
 
 Chai.use(ChaiAsPromised);
 
@@ -16,5 +16,6 @@ Object.assign(globalThis as any, {
 });
 
 if (typeof window === "object" && globalThis === window) {
+    generalSetup(Mocha);
     browserSetup(mocha);
 }

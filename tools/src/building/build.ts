@@ -74,7 +74,9 @@ export class Project {
 
     async installDeclarations() {
         await mkdir("dist", { recursive: true });
-        await cp(`build/types/src`, `dist/esm`, { recursive: true, force: true });
+        if (this.pkg.esm) {
+            await cp(`build/types/src`, `dist/esm`, { recursive: true, force: true });
+        }
         if (this.pkg.cjs) {
             await cp(`build/types/src`, `dist/cjs`, { recursive: true, force: true });
         }
@@ -82,7 +84,7 @@ export class Project {
 
     private async build(format: Format, inputDir: string, outputDir: string) {
         await esbuild({
-            entryPoints: [`${inputDir}/**/*.ts`],
+            entryPoints: [ `${inputDir}/**/*.ts` ],
             outdir: outputDir,
             format: format,
             sourcemap: true,

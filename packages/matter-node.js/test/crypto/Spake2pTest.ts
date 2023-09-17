@@ -53,7 +53,7 @@ describe("Spake2p", () => {
             assert.equal(result.Ke.toHex(), Ke.toHex());
             assert.equal(result.hAY.toHex(), hAY.toHex());
             assert.equal(result.hBX.toHex(), hBX.toHex());
-        }, 20000);
+        }).timeout(20000);
 
         it("generates shared secret and key confirmation for the receiver", async () => {
             const result = await spake2pReceiver.computeSecretAndVerifiersFromX(L, X, Y);
@@ -61,7 +61,7 @@ describe("Spake2p", () => {
             assert.equal(result.Ke.toHex(), Ke.toHex());
             assert.equal(result.hAY.toHex(), hAY.toHex());
             assert.equal(result.hBX.toHex(), hBX.toHex());
-        }, 20000);
+        }).timeout(20000);
     });
 
     describe("context hash test", () => {

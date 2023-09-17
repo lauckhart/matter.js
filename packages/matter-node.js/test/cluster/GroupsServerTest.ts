@@ -64,7 +64,7 @@ describe("Groups Server test", () => {
     }
 
     describe("Basic groups actions", () => {
-        beforeAll(async () => {
+        before(async () => {
             await initializeTestEnv();
         });
 
@@ -315,7 +315,7 @@ describe("Groups Server test", () => {
     });
 
     describe("General error cases", () => {
-        beforeAll(async () => {
+        before(async () => {
             await initializeTestEnv();
         });
 
@@ -369,7 +369,7 @@ describe("Groups Server test", () => {
     });
 
     describe("Add group while identifying success test", () => {
-        beforeAll(async () => {
+        before(async () => {
             await initializeTestEnv();
         });
 
@@ -398,7 +398,7 @@ describe("Groups Server test", () => {
     });
 
     describe("Add group while identifying without identifying test", () => {
-        beforeAll(async () => {
+        before(async () => {
             await initializeTestEnv();
             const identifyCluster = endpoint?.getClusterServer(Identify.Cluster);
             assert.ok(identifyCluster);

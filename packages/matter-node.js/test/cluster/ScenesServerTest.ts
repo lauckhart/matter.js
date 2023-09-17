@@ -68,7 +68,7 @@ describe("Scenes Server test", () => {
     }
 
     describe("Basic scenes logic", () => {
-        beforeAll(async () => {
+        before(async () => {
             await initializeTestEnv();
         });
 
@@ -678,7 +678,7 @@ describe("Scenes Server test", () => {
     });
 
     describe("General error cases", () => {
-        beforeAll(async () => {
+        before(async () => {
             await initializeTestEnv();
         });
 
@@ -810,7 +810,7 @@ describe("Scenes Server test", () => {
     });
 
     describe("Scene Logic tests", () => {
-        beforeAll(async () => {
+        before(async () => {
             await initializeTestEnv();
         });
 

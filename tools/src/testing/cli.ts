@@ -39,6 +39,12 @@ export async function main(argv = process.argv) {
             type: "boolean",
             describe: "enable web tests in default test mode",
         })
+        .option("spec", {
+            type: "array",
+            string: true,
+            describe: "One or more paths of tests to run",
+            default: "test/**/*Test.ts"
+        })
         .option("fgrep", { alias: "f", type: "string", describe: "Only run tests matching this string" })
         .option("grep", { alias: "g", type: "string", describe: "Only run tests matching this regexp" })
         .option("invert", { alias: "i", type: "boolean", describe: "Inverts --grep and --fgrep matches" })
@@ -57,8 +63,12 @@ export async function main(argv = process.argv) {
 
     // If no test types are specified explicitly, run all enabled types
     if (!testTypes.size) {
-        testTypes.add(TestType.esm);
-        testTypes.add(TestType.cjs);
+        if (project.pkg.esm) {
+            testTypes.add(TestType.esm);
+        }
+        if (project.pkg.cjs) {
+            testTypes.add(TestType.cjs);
+        }
         if (args.web) {
             testTypes.add(TestType.web);
         }
@@ -78,20 +88,22 @@ export async function main(argv = process.argv) {
 
     const reporter = new ProgressReporter(project.pkg.start("Testing"));
 
+    const spec = Array.isArray(args.spec) ? args.spec : [ args.spec ];
+
     if (testTypes.has(TestType.esm)) {
         await buildEsm();
-        await runTests(() => testNode("esm", loadFiles("esm"), reporter, args));
+        await runTests(() => testNode("esm", loadFiles("esm", spec), reporter, args));
     }
 
     if (testTypes.has(TestType.cjs)) {
         await project.buildSource("cjs");
         await project.buildTests("cjs");
-        await runTests(() => testNode("cjs", loadFiles("cjs"), reporter, args));
+        await runTests(() => testNode("cjs", loadFiles("cjs", spec), reporter, args));
     }
 
     if (testTypes.has(TestType.web)) {
         await buildEsm();
-        await runTests(() => testWeb(manual, loadFiles("esm"), reporter, args));
+        await runTests(() => testWeb(manual, loadFiles("esm", spec), reporter, args));
     }
 }
 
@@ -102,9 +114,15 @@ async function runTests(runner: () => Promise<boolean>) {
     }
 }
 
-function loadFiles(format: "esm" | "cjs") {
+function loadFiles(format: "esm" | "cjs", specs: string[]) {
     const files = Array<string>();
     files.push(Package.tools.resolve(`dist/esm/testing/global-definitions.js`));
-    files.push(...glob.sync(Package.project.resolve(`build/${format}/test/**/*Test.js`)));
+    for (let spec of specs) {
+        spec = spec.replace(/\.ts$/, ".js");
+        if (!spec.startsWith("build")) {
+            spec = `build/${format}/${spec}`;
+        }
+        files.push(...glob.sync(Package.project.resolve(spec)));
+    }
     return files;
 }

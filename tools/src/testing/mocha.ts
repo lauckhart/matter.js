@@ -9,6 +9,11 @@ import type MochaType from "mocha";
 import { TestOptions } from "./options.js";
 import { ConsoleProxyReporter, FailureDetail, Reporter } from "./reporter.js";
 
+export function generalSetup(Mocha: typeof MochaType) {
+    Mocha.reporters.Base.colors["diff added inline"] = "97;42" as any;
+    Mocha.reporters.Base.colors["diff removed inline"] = "97;41" as any;
+}
+
 export function adaptReporter(Mocha: typeof MochaType, title: string, reporter: Reporter) {
     const RUNNER = Mocha.Runner.constants;
 

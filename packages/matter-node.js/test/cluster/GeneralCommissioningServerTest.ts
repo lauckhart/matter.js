@@ -91,7 +91,7 @@ describe("GeneralCommissioning Server test", () => {
     }
 
     describe("setRegulatoryConfig: Allow changing commissionable info and country", () => {
-        beforeAll(async () => {
+        before(async () => {
             await initializeTestEnv(
                 "US",
                 GeneralCommissioning.RegulatoryLocationType.IndoorOutdoor,
@@ -183,7 +183,7 @@ describe("GeneralCommissioning Server test", () => {
     });
 
     describe("setRegulatoryConfig: Allow changing regulatory location info but not country", () => {
-        beforeAll(async () => {
+        before(async () => {
             await initializeTestEnv(
                 "DE",
                 GeneralCommissioning.RegulatoryLocationType.IndoorOutdoor,
@@ -247,7 +247,7 @@ describe("GeneralCommissioning Server test", () => {
     });
 
     describe("setRegulatoryConfig: Allow changing nothing", () => {
-        beforeAll(async () => {
+        before(async () => {
             await initializeTestEnv(
                 "XX",
                 GeneralCommissioning.RegulatoryLocationType.Indoor,
@@ -345,7 +345,7 @@ describe("GeneralCommissioning Server test", () => {
     });
 
     describe("setRegulatoryConfig: Allow changing country on whitelist", () => {
-        beforeAll(async () => {
+        before(async () => {
             await initializeTestEnv(
                 "XX",
                 GeneralCommissioning.RegulatoryLocationType.Indoor,

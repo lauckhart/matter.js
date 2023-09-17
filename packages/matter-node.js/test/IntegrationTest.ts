@@ -80,7 +80,7 @@ describe("Integration Test", () => {
     let onOffLightDeviceServer: OnOffLightDevice;
     const startupTimestamp = fakeTime.nowMs();
 
-    beforeAll(async () => {
+    before(async () => {
         Logger.defaultLogLevel = Level.DEBUG;
         Time.get = () => fakeTime;
         Network.get = () => clientNetwork;
@@ -243,8 +243,7 @@ describe("Integration Test", () => {
 
                 assert.ok(commissioningController.getFabric().nodeId);
             },
-            60 * 1000 /* 1mn timeout */,
-        );
+        ).timeout(60 * 1000);
 
         it("Verify that commissioning changed the Regulatory Config/Location values", async () => {
             const generalCommissioningCluster = commissioningController.getRootClusterClient(
@@ -314,7 +313,7 @@ describe("Integration Test", () => {
                 await fakeTime.yield();
                 await fakeTime.advanceTime(5000);
                 await promise;
-            }, 6000);
+            }).timeout(6000);
 
             it("Timed invoke ok", async () => {
                 const adminCommissioningCluster = commissioningController.getRootClusterClient(
@@ -998,7 +997,7 @@ describe("Integration Test", () => {
         });
     });
 
-    afterAll(async () => {
+    after(async () => {
         await matterServer.close();
         await matterClient.close();
         await fakeControllerStorage.close();
