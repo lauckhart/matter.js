@@ -3,7 +3,11 @@
   "compilerOptions": {
     "target": "es2018",
     "module": "nodenext",
-    "moduleResolution": "nodenext"
+    "moduleResolution": "nodenext",
+    "types": [
+      "node",
+      "@project-chip/matter-node.js"
+    ]
   },
 
   "include": [

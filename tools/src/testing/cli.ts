@@ -53,6 +53,7 @@ export async function main(argv = process.argv) {
         .option("invert", { alias: "i", type: "boolean", describe: "Inverts --grep and --fgrep matches" })
         .option("profile", { type: "boolean", describe: "Write profiling data to build/profiles (node only)" })
         .option("all-logs", { type: "boolean", describe: "Emit log messages in real time" })
+        .option("force-exit", { type: "boolean", describe: "Force Node to exit after tests complete" })
         .command("*", "run all supported test types")
         .command("esm", "run tests on node (ES6 modules)", () => testTypes.add(TestType.esm))
         .command("cjs", "run tests on node (CommonJS modules)", () => testTypes.add(TestType.cjs))
@@ -112,6 +113,10 @@ export async function main(argv = process.argv) {
     }
 
     progress.shutdown();
+
+    if (args.forceExit) {
+        process.exit(0);
+    }
 }
 
 function fatal(message: string) {

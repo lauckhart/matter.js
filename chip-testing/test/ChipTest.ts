@@ -5,7 +5,7 @@ import { promises as fs } from "fs";
 import { DeviceTestInstance } from "./DeviceTestInstance";
 import * as Tests from "./suites/index.js";
 
-const CHIP_BIN_PATH = process.env.CHIP_BIN_PATH ?? `${__dirname}/../../../bin`;
+const CHIP_BIN_PATH = process.env.CHIP_BIN_PATH ?? `${__dirname}/../../bin`;
 
 /**
  * Execute an external process and return a promise that resolves when the process exits.
@@ -132,7 +132,7 @@ describe("Chip-Tool-Tests", () => {
     before(async () => {
         await fs.mkdir(`${CHIP_BIN_PATH}/src/app/tests/suites/commands/system/scripts`, { recursive: true });
         await executeProcess("cp", [
-            `${__dirname}/scripts/*`,
+            `${__dirname}/../src/scripts/*`,
             `${CHIP_BIN_PATH}/src/app/tests/suites/commands/system/scripts/`,
         ]);
         await executeProcess("chmod", ["+x", `${CHIP_BIN_PATH}/src/app/tests/suites/commands/system/scripts/*`]);

@@ -28,8 +28,7 @@
         "build": "build",
         "build-clean": "build --clean",
         "build-doc": "typedoc --excludeExternals --plugin typedoc-plugin-missing-exports --plugin typedoc-plugin-markdown --gitRemote upstream --tsconfig tsconfig.json",
-        "test": "matter-test",
-        "test-chip": "matter-test --spec=test-chip/ChipTestRunner.ts"
+        "test": "matter-test"
     },
     "devDependencies": {
         "@types/bn.js": "^5.1.1",

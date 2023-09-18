@@ -4,9 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// eslint-disable-next-line no-restricted-imports
-import { CommissioningServer } from "../../src/export";
-
+import { CommissioningServer } from "@project-chip/matter-node.js";
 import { DeviceTypeId, VendorId } from "@project-chip/matter.js/datatype";
 import { OnOffPluginUnitDevice } from "@project-chip/matter.js/device";
 import { StorageManager } from "@project-chip/matter.js/storage";

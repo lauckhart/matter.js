@@ -9,7 +9,8 @@
         "packages/matter-node-shell.js",
         "packages/matter-node.js-examples",
         "models",
-        "codegen"
+        "codegen",
+        "chip-testing"
     ],
     "scripts": {
         "prepare": "npm run build-clean",
