@@ -41,7 +41,7 @@ export class Package {
         path?: string;
         name?: string;
     } = {}) {
-        let { root, json } = findJson("package.json", path, name);
+        const { root, json } = findJson("package.json", path, name);
         this.path = root;
         this.json = json;
 
@@ -69,7 +69,7 @@ export class Package {
         if (this.#tsconfig) {
             return this.#tsconfig;
         }
-        return this.#tsconfig = findJson("tsconfig.json", this.path);
+        return (this.#tsconfig = findJson("tsconfig.json", this.path));
     }
 
     static node(name: string) {

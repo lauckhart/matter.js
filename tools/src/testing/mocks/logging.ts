@@ -22,6 +22,8 @@ export function loggerSetup(Logger: LoggerLike) {
     Logger.format = "ansi";
 
     let messageBuffer: [number, string][] | undefined;
+
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const defaultLog = Logger.log;
 
     function passMessage(args: [number, string]) {
@@ -59,4 +61,4 @@ export function loggerSetup(Logger: LoggerLike) {
             messageBuffer = undefined;
         }
     });
-};
+}

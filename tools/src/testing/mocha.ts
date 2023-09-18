@@ -28,7 +28,7 @@ export function generalSetup(Mocha: typeof MochaType) {
         try {
             MatterHooks.loggerSink = (_, message) => {
                 logs.push(message);
-            }
+            };
             return await fn();
         } catch (e) {
             process.stdout.write(logs.join("\n"));
@@ -44,8 +44,8 @@ export function generalSetup(Mocha: typeof MochaType) {
         const actual = Mocha.Suite.prototype[hook] as (this: any, fn: Mocha.Func) => any;
         Mocha.Suite.prototype[hook] = function (this: any, fn: Mocha.Func) {
             return actual.call(this, async function (this: any, ...args: any) {
-                return await onlyLogFailure(async () => await fn.apply(this, args));
-            })
+                return await onlyLogFailure(async () => fn.apply(this, args));
+            });
         } as any;
     }
 
@@ -55,11 +55,12 @@ export function generalSetup(Mocha: typeof MochaType) {
     filterLogs("afterEach");
 
     // Reset mocks before each test
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const actualBeforeEach = Mocha.Suite.prototype.beforeEach;
     Mocha.Suite.prototype.beforeEach = function (this: any, ...args: any) {
         MockTime.reset();
         return actualBeforeEach.apply(this, args);
-    }
+    };
 }
 
 export function adaptReporter(Mocha: typeof MochaType, title: string, reporter: Reporter) {
@@ -126,6 +127,12 @@ export function adaptReporter(Mocha: typeof MochaType, title: string, reporter: 
                 message = error.stack.slice(0, index);
                 stack = error.stack
                     .slice(index + 1)
+
+                    // Node's assert helpfully puts entire objects in the
+                    // message and thus in the stack.  We do diffs ourselves,
+                    // we just want the stack.  This does a rough cleanup
+                    .replace(/.*?\n    at/s, "    at")
+                    
                     .trim()
                     .replace(/\n\s+/gm, "\n");
             } else {
@@ -135,6 +142,10 @@ export function adaptReporter(Mocha: typeof MochaType, title: string, reporter: 
             message = error.message;
         } else {
             message = error.toString();
+        }
+
+        if (message.endsWith(":")) {
+            message = message.slice(message.length - 1);
         }
 
         if (error.expected && error.actual) {

@@ -9,8 +9,8 @@ import Mocha from "mocha";
 import { relative } from "path";
 import v8Profiler from "v8-profiler-next";
 import { Package } from "../util/package.js";
-import "./mocks/index.js";
 import { adaptReporter, applyOptions, generalSetup } from "./mocha.js";
+import "./mocks/index.js";
 import { TestOptions } from "./options.js";
 import { Reporter } from "./reporter.js";
 
@@ -38,15 +38,13 @@ export async function testNode(format: "cjs" | "esm", files: string[], reporter:
         startProfiling();
     }
 
-    const runner = await new Promise<Mocha.Runner>(resolve => {
+    await new Promise<Mocha.Runner>(resolve => {
         const runner = mocha.run(() => resolve(runner));
     });
 
     if (options.profile) {
         await stopProfiling();
     }
-
-    return !runner.stats?.failures;
 }
 
 function startProfiling() {

@@ -11,6 +11,7 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { Project } from "../building/build.js";
 import { Package } from "../util/package.js";
+import { Progress } from "../util/progress.js";
 import { testNode } from "./node.js";
 import { ProgressReporter } from "./reporter.js";
 import { testWeb } from "./web.js";
@@ -44,7 +45,7 @@ export async function main(argv = process.argv) {
             type: "array",
             string: true,
             describe: "One or more paths of tests to run",
-            default: "test/**/*Test.ts"
+            default: "test/**/*Test.ts",
         })
         .option("fgrep", { alias: "f", type: "string", describe: "Only run tests matching this string" })
         .option("grep", { alias: "g", type: "string", describe: "Only run tests matching this regexp" })
@@ -87,24 +88,25 @@ export async function main(argv = process.argv) {
         esmBuilt = true;
     }
 
-    const reporter = new ProgressReporter(project.pkg.start("Testing"));
+    const progress = project.pkg.start("Testing");
+    const reporter = new ProgressReporter(progress);
 
-    const spec = Array.isArray(args.spec) ? args.spec : [ args.spec ];
+    const spec = Array.isArray(args.spec) ? args.spec : [args.spec];
 
     if (testTypes.has(TestType.esm)) {
         await buildEsm();
-        await runTests(() => testNode("esm", loadFiles("esm", spec), reporter, args));
+        await runTests(progress, () => testNode("esm", loadFiles("esm", spec), reporter, args));
     }
 
     if (testTypes.has(TestType.cjs)) {
         await project.buildSource("cjs");
         await project.buildTests("cjs");
-        await runTests(() => testNode("cjs", loadFiles("cjs", spec), reporter, args));
+        await runTests(progress, () => testNode("cjs", loadFiles("cjs", spec), reporter, args));
     }
 
     if (testTypes.has(TestType.web)) {
         await buildEsm();
-        await runTests(() => testWeb(manual, loadFiles("esm", spec), reporter, args));
+        await runTests(progress, () => testWeb(manual, loadFiles("esm", spec), reporter, args));
     }
 }
 
@@ -113,9 +115,10 @@ function fatal(message: string) {
     process.exit(1);
 }
 
-async function runTests(runner: () => Promise<boolean>) {
-    if (!(await runner())) {
-        fatal("Tests failed, aborting");
+async function runTests(progress: Progress, runner: () => Promise<void>) {
+    await runner();
+    if (progress.status !== Progress.Status.Success) {
+        fatal(`Test ${progress.status.toLowerCase()}, aborting`);
     }
 }
 
@@ -131,7 +134,7 @@ function loadFiles(format: "esm" | "cjs", specs: string[]) {
         files.push(...glob.sync(Package.project.resolve(spec)));
     }
     if (!files.length) {
-        fatal(`No tests found for ${specs.join(", ")}`);
+        fatal(`No files match ${specs.join(", ")}`);
     }
     return files;
 }

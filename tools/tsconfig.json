@@ -12,6 +12,8 @@
   },
 
   "include": [
-    "src/**/*.ts"
-, "src/testing/mocharc.cjs"  ]
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "src/testing/mocharc.cjs"
+  ]
 }

@@ -42,8 +42,8 @@ import { DecodedEventData } from "@project-chip/matter.js/interaction";
 import { MdnsBroadcaster, MdnsScanner } from "@project-chip/matter.js/mdns";
 import { Network, NetworkFake } from "@project-chip/matter.js/net";
 import { StorageBackendMemory, StorageManager } from "@project-chip/matter.js/storage";
-import { ByteArray, getPromiseResolver } from "@project-chip/matter.js/util";
 import { Time } from "@project-chip/matter.js/time";
+import { ByteArray, getPromiseResolver } from "@project-chip/matter.js/util";
 
 const SERVER_IPv6 = "fdce:7c65:b2dd:7d46:923f:8a53:eb6c:cafe";
 const SERVER_IPv4 = "192.168.200.1";
@@ -227,20 +227,17 @@ describe("Integration Test", () => {
     });
 
     describe("commission", () => {
-        it(
-            "the client commissions a new device",
-            async () => {
-                // override the mdns scanner to avoid the client to try to resolve the server's address
-                commissioningController.setMdnsScanner(await MdnsScanner.create(CLIENT_IPv6));
-                await commissioningController.connect();
+        it("the client commissions a new device", async () => {
+            // override the mdns scanner to avoid the client to try to resolve the server's address
+            commissioningController.setMdnsScanner(await MdnsScanner.create(CLIENT_IPv6));
+            await commissioningController.connect();
 
-                Network.get = () => {
-                    throw new Error("Network should not be requested post starting");
-                };
+            Network.get = () => {
+                throw new Error("Network should not be requested post starting");
+            };
 
-                assert.ok(commissioningController.getFabric().nodeId);
-            },
-        ).timeout(60 * 1000);
+            assert.ok(commissioningController.getFabric().nodeId);
+        }).timeout(60 * 1000);
 
         it("Verify that commissioning changed the Regulatory Config/Location values", async () => {
             const generalCommissioningCluster = commissioningController.getRootClusterClient(

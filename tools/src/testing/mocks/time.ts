@@ -51,15 +51,16 @@ class MockInterval extends MockTimer {
 
 // Must match matter.js Time interface
 export class MockTime {
-    private readonly callbacks = new Array<{ atMs: number; callback: TimerCallback }>();
+    private callbacks = new Array<{ atMs: number; callback: TimerCallback }>();
     private timeMs: number;
 
     constructor(private startTimeMs: number) {
-        this.timeMs = this.startTimeMs
+        this.timeMs = this.startTimeMs;
     }
 
     reset(time = this.startTimeMs) {
-        this.timeMs = time
+        this.callbacks = [];
+        this.timeMs = time;
     }
 
     now(): Date {

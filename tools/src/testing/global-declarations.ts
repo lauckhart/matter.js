@@ -20,20 +20,22 @@ declare global {
      * enable mocking.  We use globals rather than imports so we can hook the
      * modules regardless of whether they're loaded as CommonJS or ESM.
      */
-    let MatterHooks: undefined | {
-        /**
-         * Configure time.
-         */
-        timeSetup?: ((Time: any) => void);
+    let MatterHooks:
+        | undefined
+        | {
+              /**
+               * Configure time.
+               */
+              timeSetup?: (Time: any) => void;
 
-        /**
-         * Configure logging.
-         */
-        loggerSetup?: ((Logger: any) => void);
+              /**
+               * Configure logging.
+               */
+              loggerSetup?: (Logger: any) => void;
 
-        /**
-         * Receive intercepted log messages.  The logging mocks 
-         */
-        loggerSink?: ((level: number, message: string) => void);
-    }
+              /**
+               * Receive intercepted log messages.  The logging mocks
+               */
+              loggerSink?: (level: number, message: string) => void;
+          };
 }

@@ -6,9 +6,9 @@
 
 import Chai from "chai";
 import ChaiAsPromised from "chai-as-promised";
-import { generalSetup, browserSetup } from "./mocha.js";
+import { browserSetup, generalSetup } from "./mocha.js";
 import { loggerSetup } from "./mocks/logging.js";
-import { timeSetup, TheMockTime } from "./mocks/time.js";
+import { TheMockTime, timeSetup } from "./mocks/time.js";
 
 Chai.use(ChaiAsPromised);
 
@@ -19,10 +19,10 @@ Object.assign(globalThis as any, {
 Object.assign(globalThis, {
     MatterHooks: {
         loggerSetup: loggerSetup,
-        timeSetup: timeSetup
+        timeSetup: timeSetup,
     },
-    
-    MockTime: TheMockTime
+
+    MockTime: TheMockTime,
 });
 
 if (typeof window === "object" && globalThis === window) {

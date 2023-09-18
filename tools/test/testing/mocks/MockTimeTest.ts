@@ -3,12 +3,11 @@
  * Copyright 2022-2023 Project CHIP Authors
  * SPDX-License-Identifier: Apache-2.0
  */
-import { MockTime } from "../../../src/testing/mocks/time.js";
 
 const FAKE_TIME = 36000000;
 
 describe("MockTime", () => {
-    beforeEach(() => MockTime.reset(FAKE_TIME))
+    beforeEach(() => MockTime.reset(FAKE_TIME));
 
     describe("now", () => {
         it("returns the fake date", () => {

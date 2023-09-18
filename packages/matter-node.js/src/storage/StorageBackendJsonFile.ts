@@ -45,9 +45,9 @@ export class StorageBackendJsonFile extends StorageBackendMemory {
     override set<T extends SupportedStorageTypes>(contexts: string[], key: string, value: T): void {
         super.set(contexts, key, value);
         if (!this.waitForCommit) {
-            this.committed = new Promise((resolve) => {
+            this.committed = new Promise(resolve => {
                 this.resolveCommitted = resolve;
-            })
+            });
             this.waitForCommit = true;
             this.commitTimer.start();
         }
