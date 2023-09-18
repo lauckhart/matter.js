@@ -6,6 +6,7 @@
 
 import colors from "ansi-colors";
 import { glob } from "glob";
+import { relative } from "path";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { Project } from "../building/build.js";
@@ -107,10 +108,14 @@ export async function main(argv = process.argv) {
     }
 }
 
+function fatal(message: string) {
+    process.stderr.write(colors.bgRedBright.whiteBright(`${message}\n`));
+    process.exit(1);
+}
+
 async function runTests(runner: () => Promise<boolean>) {
     if (!(await runner())) {
-        process.stdout.write(colors.bgRedBright.whiteBright(`Tests failed, aborting\n`));
-        process.exit(1);
+        fatal("Tests failed, aborting");
     }
 }
 
@@ -119,10 +124,14 @@ function loadFiles(format: "esm" | "cjs", specs: string[]) {
     files.push(Package.tools.resolve(`dist/esm/testing/global-definitions.js`));
     for (let spec of specs) {
         spec = spec.replace(/\.ts$/, ".js");
-        if (!spec.startsWith("build")) {
+        spec = relative(Package.project.path, spec);
+        if (!spec.startsWith(".") && !spec.startsWith("build/") && !spec.startsWith("dist/")) {
             spec = `build/${format}/${spec}`;
         }
         files.push(...glob.sync(Package.project.resolve(spec)));
+    }
+    if (!files.length) {
+        fatal(`No tests found for ${specs.join(", ")}`);
     }
     return files;
 }

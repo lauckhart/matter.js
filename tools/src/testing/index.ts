@@ -6,4 +6,5 @@
 
 export * from "./node.js";
 export * from "./web.js";
+export * from "./mocks/index.js";
 import "./global-declarations.js";

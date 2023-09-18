@@ -2,7 +2,7 @@
     "extends": "../../tools/tsconfig.base.json",
     "compilerOptions": {
         "outDir": "dist",
-        "types": ["node", "mocha"]
+        "types": ["node", "mocha", "@project-chip/matter.js-tools"]
     },
     "include": ["src/**/*.ts", "test/**/*.ts", "test-chip/**/*.ts"],
 

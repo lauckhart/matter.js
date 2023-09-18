@@ -10,8 +10,56 @@ import { TestOptions } from "./options.js";
 import { ConsoleProxyReporter, FailureDetail, Reporter } from "./reporter.js";
 
 export function generalSetup(Mocha: typeof MochaType) {
-    Mocha.reporters.Base.colors["diff added inline"] = "97;42" as any;
-    Mocha.reporters.Base.colors["diff removed inline"] = "97;41" as any;
+    // White text, 16-bit and 256-bit green background
+    Mocha.reporters.Base.colors["diff added inline"] = "97;42;48;5;22" as any;
+
+    // White text, 16-bit and 256-bit red background
+    Mocha.reporters.Base.colors["diff removed inline"] = "97;41;48;5;52" as any;
+
+    // Some of our test suites have setup/teardown logic that logs profusely.
+    // Hide these logs unless something goes wrong
+    async function onlyLogFailure(fn: () => any) {
+        if (!MatterHooks) {
+            throw new Error("Matter hooks not loaded");
+        }
+
+        const logs = Array<string>();
+        const existingSink = MatterHooks.loggerSink;
+        try {
+            MatterHooks.loggerSink = (_, message) => {
+                logs.push(message);
+            }
+            return await fn();
+        } catch (e) {
+            process.stdout.write(logs.join("\n"));
+            throw e;
+        } finally {
+            if (MatterHooks) {
+                MatterHooks.loggerSink = existingSink;
+            }
+        }
+    }
+
+    function filterLogs(hook: "beforeAll" | "afterAll" | "beforeEach" | "afterEach") {
+        const actual = Mocha.Suite.prototype[hook] as (this: any, fn: Mocha.Func) => any;
+        Mocha.Suite.prototype[hook] = function (this: any, fn: Mocha.Func) {
+            return actual.call(this, async function (this: any, ...args: any) {
+                return await onlyLogFailure(async () => await fn.apply(this, args));
+            })
+        } as any;
+    }
+
+    filterLogs("beforeAll");
+    filterLogs("afterAll");
+    filterLogs("beforeEach");
+    filterLogs("afterEach");
+
+    // Reset mocks before each test
+    const actualBeforeEach = Mocha.Suite.prototype.beforeEach;
+    Mocha.Suite.prototype.beforeEach = function (this: any, ...args: any) {
+        MockTime.reset();
+        return actualBeforeEach.apply(this, args);
+    }
 }
 
 export function adaptReporter(Mocha: typeof MochaType, title: string, reporter: Reporter) {
@@ -24,7 +72,10 @@ export function adaptReporter(Mocha: typeof MochaType, title: string, reporter: 
             super(runner);
 
             runner.once(RUNNER.EVENT_RUN_BEGIN, () => {
-                MatterLoggerSink = (_, message) => {
+                if (!MatterHooks) {
+                    throw new Error("Matter hooks not loaded");
+                }
+                MatterHooks.loggerSink = (_, message) => {
                     logs.push(message);
                 };
                 reporter.beginRun(title, this.translatedStats);
@@ -45,7 +96,10 @@ export function adaptReporter(Mocha: typeof MochaType, title: string, reporter: 
             });
 
             runner.once(RUNNER.EVENT_RUN_END, () => {
-                MatterLoggerSink = undefined;
+                if (!MatterHooks) {
+                    throw new Error("Matter hooks not loaded");
+                }
+                MatterHooks.loggerSink = undefined;
                 reporter.endRun(this.translatedStats);
             });
         }

@@ -122,7 +122,7 @@ function buildIndex(files: string[]) {
         ),
     });
 
-    files = ["/tools/dist/esm/testing/logging.js", ...files.map(file => `/${relative(Package.workspace.path, file)}`)];
+    files = ["/tools/dist/esm/testing/mocks/index.js", ...files.map(file => `/${relative(Package.workspace.path, file)}`)];
     const imports = files.map(file => `import ${JSON.stringify(file)}`).join("\n    ");
 
     return `<!DOCTYPE html>

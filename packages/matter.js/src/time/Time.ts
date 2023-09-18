@@ -59,3 +59,5 @@ export interface Timer {
     /** Stops this timer, chainable. */
     stop(): Timer;
 }
+
+MatterHooks?.timeSetup?.(Time);

@@ -4,19 +4,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { getPromiseResolver } from "../util/Promises.js";
-import { Time, Timer, TimerCallback } from "./Time.js";
+type TimerCallback = () => any;
 
-class TimerFake implements Timer {
+// Must match matter.js Timer interface
+class MockTimer {
     isRunning = false;
     private readonly callback: TimerCallback;
 
     constructor(
-        private readonly timeFake: TimeFake,
+        private readonly timeFake: MockTime,
         private readonly durationMs: number,
         callback: TimerCallback,
     ) {
-        if (this instanceof IntervalFake) {
+        if (this instanceof MockInterval) {
             this.callback = callback;
         } else {
             this.callback = () => {
@@ -39,8 +39,8 @@ class TimerFake implements Timer {
     }
 }
 
-class IntervalFake extends TimerFake {
-    constructor(timeFake: TimeFake, durationMs: number, callback: TimerCallback) {
+class MockInterval extends MockTimer {
+    constructor(timeFake: MockTime, durationMs: number, callback: TimerCallback) {
         const intervalCallback = async () => {
             timeFake.callbackAtTime(timeFake.nowMs() + durationMs, intervalCallback);
             await callback();
@@ -49,11 +49,17 @@ class IntervalFake extends TimerFake {
     }
 }
 
-export class TimeFake extends Time {
+// Must match matter.js Time interface
+export class MockTime {
     private readonly callbacks = new Array<{ atMs: number; callback: TimerCallback }>();
+    private timeMs: number;
 
-    constructor(private timeMs: number) {
-        super();
+    constructor(private startTimeMs: number) {
+        this.timeMs = this.startTimeMs
+    }
+
+    reset(time = this.startTimeMs) {
+        this.timeMs = time
     }
 
     now(): Date {
@@ -64,12 +70,12 @@ export class TimeFake extends Time {
         return this.timeMs;
     }
 
-    getTimer(durationMs: number, callback: TimerCallback): Timer {
-        return new TimerFake(this, durationMs, callback);
+    getTimer(durationMs: number, callback: TimerCallback): MockTimer {
+        return new MockTimer(this, durationMs, callback);
     }
 
-    getPeriodicTimer(intervalMs: number, callback: TimerCallback): Timer {
-        return new IntervalFake(this, intervalMs, callback);
+    getPeriodicTimer(intervalMs: number, callback: TimerCallback): MockTimer {
+        return new MockInterval(this, intervalMs, callback);
     }
 
     async advanceTime(ms: number) {
@@ -88,9 +94,7 @@ export class TimeFake extends Time {
     }
 
     async yield() {
-        const { promise, resolver } = await getPromiseResolver<void>();
-        resolver();
-        await promise;
+        await new Promise<void>(resolve => setTimeout(resolve, 0));
     }
 
     callbackAtTime(atMs: number, callback: TimerCallback) {
@@ -103,4 +107,9 @@ export class TimeFake extends Time {
         if (index === -1) return;
         this.callbacks.splice(index, 1);
     }
+}
+
+export const TheMockTime = new MockTime(0);
+export function timeSetup(Time: { get: () => MockTime }) {
+    Time.get = () => TheMockTime;
 }

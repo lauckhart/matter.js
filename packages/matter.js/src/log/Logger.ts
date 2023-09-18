@@ -346,14 +346,4 @@ export class Logger {
     }
 }
 
-declare global {
-    /**
-     * This global hook allows test suites to hook logging independent of the
-     * module mechanism.
-     */
-    let MatterLoggerHook: ((TheLogger: typeof Logger) => void) | undefined;
-}
-
-if (typeof MatterLoggerHook !== "undefined") {
-    MatterLoggerHook(Logger);
-}
+MatterHooks?.loggerSetup?.(Logger);

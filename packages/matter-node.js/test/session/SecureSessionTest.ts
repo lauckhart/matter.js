@@ -4,11 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Time, TimeFake } from "@project-chip/matter.js/time";
 import { ByteArray } from "@project-chip/matter.js/util";
-
-Time.get = () => new TimeFake(0);
-
 import { Crypto } from "@project-chip/matter.js/crypto";
 import { CryptoNode } from "../../src/crypto/CryptoNode";
 

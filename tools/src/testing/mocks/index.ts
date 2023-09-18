@@ -4,4 +4,5 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from "./Time.js";
+import "./logging.js";
+export * from "./time.js";

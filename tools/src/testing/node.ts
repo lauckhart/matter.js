@@ -9,7 +9,7 @@ import Mocha from "mocha";
 import { relative } from "path";
 import v8Profiler from "v8-profiler-next";
 import { Package } from "../util/package.js";
-import "./logging.js";
+import "./mocks/index.js";
 import { adaptReporter, applyOptions, generalSetup } from "./mocha.js";
 import { TestOptions } from "./options.js";
 import { Reporter } from "./reporter.js";

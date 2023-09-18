@@ -16,13 +16,8 @@ import { FAKE_INTERFACE_NAME } from "../../src/net/fake/SimulatedNetwork.js";
 import { UdpChannelFake } from "../../src/net/fake/UdpChannelFake.js";
 import { Network } from "../../src/net/Network.js";
 import { UdpChannel } from "../../src/net/UdpChannel.js";
-import { Time } from "../../src/time/Time.js";
-import { TimeFake } from "../../src/time/TimeFake.js";
 import { ByteArray } from "../../src/util/ByteArray.js";
 import { getPromiseResolver } from "../../src/util/Promises.js";
-import { singleton } from "../../src/util/Singleton.js";
-
-Time.get = singleton(() => new TimeFake(0));
 
 Crypto.get = () =>
     ({
@@ -674,7 +669,6 @@ describe("MDNS Scanner and Broadcaster", () => {
 
     describe("integration", () => {
         it("the client directly returns server record if it has been announced before", async () => {
-            const fakeTime = Time.get() as TimeFake;
             let queryReceived = false;
             let dataWereSent = false;
             scannerChannel.onData((_netInterface, _peerAddress, _peerPort, data) => {
@@ -687,8 +681,8 @@ describe("MDNS Scanner and Broadcaster", () => {
             await broadcaster.setFabrics(PORT, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric]);
             await broadcaster.announce(PORT);
 
-            await fakeTime.yield(); // Make sure data were broadcasted async
-            await fakeTime.yield(); // Make sure data were received and processed async
+            await MockTime.yield(); // Make sure data were broadcasted async
+            await MockTime.yield(); // Make sure data were received and processed async
 
             const result = await scanner.findOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID, 1);
 
@@ -701,7 +695,6 @@ describe("MDNS Scanner and Broadcaster", () => {
         });
 
         it("the client queries the server record if it has not been announced before", async () => {
-            const fakeTime = Time.get() as TimeFake;
             const sentData = new Array<ByteArray>();
             scannerChannel.onData((_netInterface, _peerAddress, _peerPort, data) => sentData.push(data));
 
@@ -709,9 +702,9 @@ describe("MDNS Scanner and Broadcaster", () => {
 
             const findPromise = scanner.findOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID);
 
-            await fakeTime.yield(); // make sure responding promise is created
-            await fakeTime.advanceTime(1); // Trigger timer to send query (0ms timer)
-            await fakeTime.yield(); // make sure responding promise is created
+            await MockTime.yield(); // make sure responding promise is created
+            await MockTime.advanceTime(1); // Trigger timer to send query (0ms timer)
+            await MockTime.yield(); // make sure responding promise is created
 
             expect(DnsCodec.decode(sentData[0])).deep.equal({
                 additionalRecords: [],
@@ -733,7 +726,6 @@ describe("MDNS Scanner and Broadcaster", () => {
         });
 
         it("the client queries the server record and get correct response also with multiple announced instances", async () => {
-            const fakeTime = Time.get() as TimeFake;
             const netData = new Array<ByteArray>();
             broadcasterChannel.onData((_netInterface, _peerAddress, _peerPort, data) => {
                 netData.push(data);
@@ -750,9 +742,9 @@ describe("MDNS Scanner and Broadcaster", () => {
 
             const findPromise = scanner.findOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID);
 
-            await fakeTime.yield(); // make sure responding promise is created
-            await fakeTime.advanceTime(1); // Trigger timer to send query (0ms timer)
-            await fakeTime.yield(); // Make sure data were queried async
+            await MockTime.yield(); // make sure responding promise is created
+            await MockTime.advanceTime(1); // Trigger timer to send query (0ms timer)
+            await MockTime.yield(); // Make sure data were queried async
 
             expect(netData.length).equal(3);
 
@@ -899,7 +891,6 @@ describe("MDNS Scanner and Broadcaster", () => {
         });
 
         it("the client queries the server record and get correct response when announced before", async () => {
-            const fakeTime = Time.get() as TimeFake;
             let dataWereSent = false;
             let queryReceived = false;
             scannerChannel.onData((_netInterface, _peerAddress, _peerPort, data) => {
@@ -922,8 +913,8 @@ describe("MDNS Scanner and Broadcaster", () => {
             await broadcaster.announce(PORT);
             await broadcaster.announce(PORT2);
 
-            await fakeTime.yield();
-            await fakeTime.yield();
+            await MockTime.yield();
+            await MockTime.yield();
 
             const result = await scanner.findOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID);
 

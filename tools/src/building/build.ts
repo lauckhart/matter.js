@@ -9,6 +9,7 @@ import { build as esbuild, Format } from "esbuild";
 import { cp, mkdir, rm, stat, symlink, writeFile } from "fs/promises";
 import { ignoreError } from "../util/errors.js";
 import { Package } from "../util/package.js";
+import { glob } from "glob";
 
 export class Project {
     pkg: Package;
@@ -82,19 +83,40 @@ export class Project {
         }
     }
 
-    private async build(format: Format, inputDir: string, outputDir: string) {
+    private async build(format: Format, indir: string, outdir: string) {
+        const config = await ignoreError(
+            "ERR_MODULE_NOT_FOUND",
+            () => import(`${this.pkg.path}/build.config.js`)
+        ) as Project.Config;
+
+        await config?.before?.(this, format);
+
+        const files = await glob(`${indir}/**/*.ts`);
+        const entryPoints = files.map(file => ({
+            in: file,
+            out: `${file.slice(indir.length + 1).replace(/\.ts$/, "")}`
+        }));
         await esbuild({
-            entryPoints: [ `${inputDir}/**/*.ts` ],
-            outdir: outputDir,
-            format: format,
+            entryPoints,
+            outdir,
+            format,
             sourcemap: true,
             absWorkingDir: this.pkg.path,
         });
+
+        await config?.after?.(this, format);
     }
 
     private async specifyFormat(dir: string, format: Format) {
         if (format === "cjs") {
             await writeFile(`${dir}/${format}/package.json`, '{ "type": "commonjs" }');
         }
+    }
+}
+
+export namespace Project {
+    export interface Config {
+        before?: (project: Project, format: Format) => Promise<void>;
+        after?: (project: Project, format: Format) => Promise<void>;
     }
 }

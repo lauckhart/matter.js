@@ -9,10 +9,6 @@ import { CryptoNode } from "../../src/crypto/CryptoNode";
 
 Crypto.get = () => new CryptoNode();
 
-import { Time, TimeFake } from "@project-chip/matter.js/time";
-
-Time.get = () => new TimeFake(0);
-
 import {
     ClusterServer,
     ClusterServerObjForCluster,

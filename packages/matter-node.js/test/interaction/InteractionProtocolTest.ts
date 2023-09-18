@@ -18,10 +18,6 @@ Crypto.get = () => {
     return crypto;
 };
 
-import { Time, TimeFake } from "@project-chip/matter.js/time";
-
-Time.get = () => new TimeFake(0);
-
 import {
     AccessControlCluster,
     AccessLevel,

@@ -55,8 +55,8 @@ module.exports = (format = "cjs") => {
     return {
         inlineDiffs: true,
         file: [
-            `${TOOLS}/dist/esm/testing/logging.js`,
-            `${TOOLS}/dist/esm/testing/global-definitions.js`
+            `${TOOLS}/dist/${format}/testing/mocks/index.js`,
+            `${TOOLS}/dist/${format}/testing/global-definitions.js`
         ],
         spec: [ defaultSpec ]
     }
