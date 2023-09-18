@@ -4,12 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ByteArray } from "@project-chip/matter.js/util";
-
 import { Crypto } from "@project-chip/matter.js/crypto";
-import { CryptoNode } from "../../src/crypto/CryptoNode";
-
-Crypto.get = () => new CryptoNode();
+import { ByteArray } from "@project-chip/matter.js/util";
 
 import { FabricId, FabricIndex, NodeId, VendorId } from "@project-chip/matter.js/datatype";
 import { Fabric, FabricBuilder } from "@project-chip/matter.js/fabric";

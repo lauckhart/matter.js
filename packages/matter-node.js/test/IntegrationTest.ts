@@ -6,11 +6,6 @@
 
 import * as assert from "assert";
 
-import { Crypto } from "@project-chip/matter.js/crypto";
-import { CryptoNode } from "../src/crypto/CryptoNode";
-
-Crypto.get = () => new CryptoNode();
-
 import {
     AccessControl,
     AdministratorCommissioning,
@@ -80,6 +75,8 @@ describe("Integration Test", () => {
     beforeEach(() => MockTime.reset(TIME_START));
 
     before(async () => {
+        MockTime.reset(TIME_START);
+
         Network.get = () => clientNetwork;
 
         const controllerStorageManager = new StorageManager(fakeControllerStorage);
@@ -270,10 +267,10 @@ describe("Integration Test", () => {
                     },
                     { timedRequestTimeoutMs: 1 },
                 );
-                await MockTime.yield();
-                await MockTime.yield();
-                await MockTime.yield();
-                await MockTime.advanceTime(10);
+                await MockTime.yield3();
+                await MockTime.yield3();
+                await MockTime.yield3();
+                await MockTime.advance(10);
                 await assert.rejects(async () => await promise, {
                     message: "(148) Received error status: 148", // Timeout expired
                 });
@@ -286,10 +283,10 @@ describe("Integration Test", () => {
                 assert.ok(onoffCluster);
 
                 const promise = onoffCluster.toggle(undefined, { timedRequestTimeoutMs: 1 });
-                await MockTime.yield();
-                await MockTime.yield();
-                await MockTime.yield();
-                await MockTime.advanceTime(10);
+                await MockTime.yield3();
+                await MockTime.yield3();
+                await MockTime.yield3();
+                await MockTime.advance(10);
                 await assert.rejects(async () => await promise, {
                     message: "(148) Received error status: 148", // Timeout expired
                 });
@@ -302,10 +299,10 @@ describe("Integration Test", () => {
                 assert.ok(onoffCluster);
 
                 const promise = onoffCluster.off(undefined, { asTimedRequest: true });
-                await MockTime.yield();
-                await MockTime.yield();
-                await MockTime.yield();
-                await MockTime.advanceTime(5000);
+                await MockTime.yield3();
+                await MockTime.yield3();
+                await MockTime.yield3();
+                await MockTime.advance(5000);
                 await promise;
             }).timeout(6000);
 
@@ -564,7 +561,7 @@ describe("Integration Test", () => {
 
             basicInfoCluster.attributes.nodeLabel.addListener(callback);
 
-            await MockTime.advanceTime(60);
+            await MockTime.advance(60);
             await promise;
 
             // Local value because not yet updated from subscription
@@ -698,7 +695,7 @@ describe("Integration Test", () => {
                 listener: value => callback(value),
             });
 
-            await MockTime.yield();
+            await MockTime.yield3();
             const firstReport = await firstPromise;
             assert.deepEqual(firstReport, { value: false, time: startTime });
 
@@ -709,9 +706,9 @@ describe("Integration Test", () => {
             }>();
             callback = (value: boolean) => updateResolver({ value, time: Time.nowMs() });
 
-            await MockTime.advanceTime(2 * 1000);
+            await MockTime.advance(2 * 1000);
             onOffLightDeviceServer.setOnOff(true);
-            await MockTime.advanceTime(100);
+            await MockTime.advance(100);
             const updateReport = await updatePromise;
 
             assert.deepEqual(updateReport, { value: true, time: startTime + 2 * 1000 + 100 });
@@ -724,12 +721,12 @@ describe("Integration Test", () => {
             callback = (value: boolean) => lastResolver({ value, time: Time.nowMs() });
 
             // Verify that no update comes in after max cycle time 1h
-            await MockTime.advanceTime(60 * 60 * 1000);
+            await MockTime.advance(60 * 60 * 1000);
 
             // ... but on next change immediately (means immediately + 50ms, so wait 100ms) then
-            await MockTime.advanceTime(2 * 1000);
+            await MockTime.advance(2 * 1000);
             onOffLightDeviceServer.setOnOff(false);
-            await MockTime.advanceTime(100);
+            await MockTime.advance(100);
             const lastReport = await lastPromise;
 
             assert.deepEqual(lastReport, { value: false, time: startTime + (60 * 60 + 4) * 1000 + 200 });
@@ -763,10 +760,10 @@ describe("Integration Test", () => {
 
             assert.deepEqual(pushedUpdates, []);
 
-            await MockTime.advanceTime(2 * 1000);
+            await MockTime.advance(2 * 1000);
             onOffLightDeviceServer.setOnOff(true);
-            await MockTime.advanceTime(100);
-            await MockTime.yield();
+            await MockTime.advance(100);
+            await MockTime.yield3();
 
             await updatePromise;
 
@@ -795,7 +792,7 @@ describe("Integration Test", () => {
             //await onOffClient.attributes.onOff.subscribe(0, 5);
             await scenesClient.subscribeSceneCountAttribute(value => callback(value), 0, 5);
 
-            await MockTime.yield();
+            await MockTime.yield3();
             const firstReport = await firstPromise;
             assert.deepEqual(firstReport, { value: 0, time: startTime });
 
@@ -806,7 +803,7 @@ describe("Integration Test", () => {
             }>();
             callback = (value: number) => updateResolver({ value, time: Time.nowMs() });
 
-            await MockTime.advanceTime(2 * 1000);
+            await MockTime.advance(2 * 1000);
             await scenesClient.addScene({
                 groupId: GroupId(1),
                 sceneId: 1,
@@ -814,7 +811,7 @@ describe("Integration Test", () => {
                 sceneName: "Test",
                 extensionFieldSets: [],
             });
-            await MockTime.advanceTime(100);
+            await MockTime.advance(100);
             const updateReport = await updatePromise;
 
             assert.deepEqual(updateReport, { value: 1, time: startTime + 2 * 1000 + 100 });
@@ -839,7 +836,7 @@ describe("Integration Test", () => {
 
             await basicInformationClient.subscribeReachableChangedEvent(event => callback(event), 0, 5, true);
 
-            await MockTime.advanceTime(0);
+            await MockTime.advance(0);
             const firstReport = await firstPromise;
             assert.deepEqual(firstReport, {
                 value: {
@@ -861,9 +858,9 @@ describe("Integration Test", () => {
             }>();
             callback = (value: DecodedEventData<any>) => updateResolver({ value, time: Time.nowMs() });
 
-            await MockTime.advanceTime(2 * 1000);
+            await MockTime.advance(2 * 1000);
             basicInformationServer.setReachableAttribute(true);
-            await MockTime.advanceTime(100);
+            await MockTime.advance(100);
             const updateReport = await updatePromise;
 
             assert.deepEqual(updateReport, {

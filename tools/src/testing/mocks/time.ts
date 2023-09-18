@@ -12,7 +12,7 @@ class MockTimer {
     private readonly callback: TimerCallback;
 
     constructor(
-        private readonly timeFake: MockTime,
+        private readonly mockTime: MockTime,
         private readonly durationMs: number,
         callback: TimerCallback,
     ) {
@@ -27,25 +27,25 @@ class MockTimer {
     }
 
     start() {
-        this.timeFake.callbackAtTime(this.timeFake.nowMs() + this.durationMs, this.callback);
+        this.mockTime.callbackAtTime(this.mockTime.nowMs() + this.durationMs, this.callback);
         this.isRunning = true;
         return this;
     }
 
     stop() {
-        this.timeFake.removeCallback(this.callback);
+        this.mockTime.removeCallback(this.callback);
         this.isRunning = false;
         return this;
     }
 }
 
 class MockInterval extends MockTimer {
-    constructor(timeFake: MockTime, durationMs: number, callback: TimerCallback) {
+    constructor(mockTime: MockTime, durationMs: number, callback: TimerCallback) {
         const intervalCallback = async () => {
-            timeFake.callbackAtTime(timeFake.nowMs() + durationMs, intervalCallback);
+            mockTime.callbackAtTime(mockTime.nowMs() + durationMs, intervalCallback);
             await callback();
         };
-        super(timeFake, durationMs, intervalCallback);
+        super(mockTime, durationMs, intervalCallback);
     }
 }
 
@@ -79,7 +79,10 @@ export class MockTime {
         return new MockInterval(this, intervalMs, callback);
     }
 
-    async advanceTime(ms: number) {
+    /**
+     * Move time forward.  Runs tasks scheduled during this interval.
+     */
+    async advance(ms: number) {
         const newTimeMs = this.timeMs + ms;
 
         while (true) {
@@ -94,8 +97,27 @@ export class MockTime {
         this.timeMs = newTimeMs;
     }
 
+    /**
+     * Yield to scheduled microtasks.  This means that all code paths waiting
+     * on resolved promises (including await) will proceed before this method
+     * returns.
+     */
     async yield() {
-        await new Promise<void>(resolve => setTimeout(resolve, 0));
+        await Promise.resolve();
+    }
+
+    /**
+     * Due to its implementation, an older version of yield() would actually
+     * yield to microtasks three times.  Our tests then depended on this
+     * functionality -- one yield could trigger up to three nested awaits.
+     * 
+     * To make this clear, the version of yield() that emulates old behavior
+     * is called "yield3".
+     */
+    async yield3() {
+        await Promise.resolve();
+        await Promise.resolve();
+        await Promise.resolve();
     }
 
     callbackAtTime(atMs: number, callback: TimerCallback) {

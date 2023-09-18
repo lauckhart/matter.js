@@ -5,7 +5,7 @@
  */
 
 import { readFileSync, statSync } from "fs";
-import { dirname, resolve } from "path";
+import { dirname, resolve, relative } from "path";
 import { ignoreErrorSync } from "./errors.js";
 import { Progress } from "./progress.js";
 
@@ -57,6 +57,10 @@ export class Package {
 
     resolve(path: string) {
         return resolve(this.path, path);
+    }
+
+    relative(path: string) {
+        return relative(this.path, path);
     }
 
     start(what: string) {

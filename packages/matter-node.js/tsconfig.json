@@ -4,7 +4,7 @@
         "outDir": "dist",
         "types": ["node", "mocha", "@project-chip/matter.js-tools"]
     },
-    "include": ["src/**/*.ts", "test/**/*.ts", "test-chip/**/*.ts"],
+    "include": ["src/**/*.ts", "test/**/*.ts"],
 
     "typedocOptions": {
         "entryPoints": [

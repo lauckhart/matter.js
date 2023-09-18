@@ -15,6 +15,7 @@ import { Progress } from "../util/progress.js";
 import { testNode } from "./node.js";
 import { ProgressReporter } from "./reporter.js";
 import { testWeb } from "./web.js";
+import { existsSync } from "fs";
 
 enum TestType {
     esm = "esm",
@@ -51,6 +52,7 @@ export async function main(argv = process.argv) {
         .option("grep", { alias: "g", type: "string", describe: "Only run tests matching this regexp" })
         .option("invert", { alias: "i", type: "boolean", describe: "Inverts --grep and --fgrep matches" })
         .option("profile", { type: "boolean", describe: "Write profiling data to build/profiles (node only)" })
+        .option("all-logs", { type: "boolean", describe: "Emit log messages in real time"})
         .command("*", "run all supported test types")
         .command("esm", "run tests on node (ES6 modules)", () => testTypes.add(TestType.esm))
         .command("cjs", "run tests on node (CommonJS modules)", () => testTypes.add(TestType.cjs))
@@ -125,6 +127,12 @@ async function runTests(progress: Progress, runner: () => Promise<void>) {
 function loadFiles(format: "esm" | "cjs", specs: string[]) {
     const files = Array<string>();
     files.push(Package.tools.resolve(`dist/esm/testing/global-definitions.js`));
+
+    const config = Package.project.resolve(`build/${format}/test/test.config.js`);
+    if (existsSync(config)) {
+        files.push(config);
+    }
+
     for (let spec of specs) {
         spec = spec.replace(/\.ts$/, ".js");
         spec = relative(Package.project.path, spec);
@@ -133,8 +141,10 @@ function loadFiles(format: "esm" | "cjs", specs: string[]) {
         }
         files.push(...glob.sync(Package.project.resolve(spec)));
     }
+
     if (!files.length) {
         fatal(`No files match ${specs.join(", ")}`);
     }
+    
     return files;
 }

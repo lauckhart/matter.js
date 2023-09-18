@@ -5,18 +5,7 @@
  */
 
 import { Crypto } from "@project-chip/matter.js/crypto";
-import { CryptoNode } from "../../src/crypto/CryptoNode";
-
 import { KEY } from "../cluster/ClusterServerTestingUtil.js";
-
-Crypto.get = () => {
-    const crypto = new CryptoNode();
-    // Force random data to be deterministic
-    crypto.getRandomData = (length: number) => {
-        return new Uint8Array(length);
-    };
-    return crypto;
-};
 
 import {
     AccessControlCluster,
@@ -650,12 +639,25 @@ async function getDummyMessageExchange(
 }
 
 describe("InteractionProtocol", () => {
+    let realGetRandomData = Crypto.get().getRandomData;
+
+    before(() => {
+        realGetRandomData = Crypto.get().getRandomData;
+        Crypto.get().getRandomData = (length: number) => {
+                return new Uint8Array(length);
+            };
+    })
+
+    after(() => {
+        Crypto.get().getRandomData = realGetRandomData;
+    })
+
     describe("handleReadRequest", () => {
         let storageManager: StorageManager;
         let storageContext: StorageContext;
         let endpoint: Endpoint;
         let interactionProtocol: InteractionServer;
-        const basicInfoClusterServer = ClusterServer(
+        const basicInfoClusterServer = () => ClusterServer(
             BasicInformationCluster,
             {
                 dataModelRevision: 1,
@@ -690,7 +692,7 @@ describe("InteractionProtocol", () => {
         });
 
         it("replies with attribute values", async () => {
-            endpoint.addClusterServer(basicInfoClusterServer);
+            endpoint.addClusterServer(basicInfoClusterServer());
             interactionProtocol.setRootEndpoint(endpoint);
 
             const result = interactionProtocol.handleReadRequest(await getDummyMessageExchange(), READ_REQUEST);
@@ -699,7 +701,7 @@ describe("InteractionProtocol", () => {
         });
 
         it("replies with attribute values using (unused) version filter", async () => {
-            endpoint.addClusterServer(basicInfoClusterServer);
+            endpoint.addClusterServer(basicInfoClusterServer());
             interactionProtocol.setRootEndpoint(endpoint);
 
             const result = interactionProtocol.handleReadRequest(
@@ -711,7 +713,7 @@ describe("InteractionProtocol", () => {
         });
 
         it("replies with attribute values with active version filter", async () => {
-            endpoint.addClusterServer(basicInfoClusterServer);
+            endpoint.addClusterServer(basicInfoClusterServer());
             interactionProtocol.setRootEndpoint(endpoint);
 
             const result = interactionProtocol.handleReadRequest(
@@ -728,7 +730,7 @@ describe("InteractionProtocol", () => {
         let storageContext: StorageContext;
         let endpoint: Endpoint;
         let interactionProtocol: InteractionServer;
-        const basicInfoClusterServer = ClusterServer(
+        const basicInfoClusterServer = () => ClusterServer(
             BasicInformationCluster,
             {
                 dataModelRevision: 1,
@@ -764,7 +766,7 @@ describe("InteractionProtocol", () => {
 
         // Success case is tested in Integration test
         it("errors when no path match the requested path's", async () => {
-            endpoint.addClusterServer(basicInfoClusterServer);
+            endpoint.addClusterServer(basicInfoClusterServer());
             interactionProtocol.setRootEndpoint(endpoint);
 
             let statusSent = -1;

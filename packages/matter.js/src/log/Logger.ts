@@ -346,4 +346,6 @@ export class Logger {
     }
 }
 
-MatterHooks?.loggerSetup?.(Logger);
+if (typeof MatterHooks !== "undefined") {
+    MatterHooks.loggerSetup?.(Logger);
+}

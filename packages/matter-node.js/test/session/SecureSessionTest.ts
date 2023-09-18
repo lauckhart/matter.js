@@ -4,12 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Crypto } from "@project-chip/matter.js/crypto";
 import { ByteArray } from "@project-chip/matter.js/util";
-import { CryptoNode } from "../../src/crypto/CryptoNode";
-
-Crypto.get = () => new CryptoNode();
-
 import { Message, MessageCodec, SessionType } from "@project-chip/matter.js/codec";
 import { SecureSession, UNDEFINED_NODE_ID } from "@project-chip/matter.js/session";
 import * as assert from "assert";

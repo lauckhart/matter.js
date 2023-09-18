@@ -5,10 +5,6 @@
  */
 
 import { Crypto, Spake2p } from "@project-chip/matter.js/crypto";
-import { CryptoNode } from "../../src/crypto/CryptoNode";
-
-Crypto.get = () => new CryptoNode();
-
 import { ByteArray } from "@project-chip/matter.js/util";
 import * as assert from "assert";
 import { BN } from "bn.js";

@@ -27,7 +27,7 @@ describe("MockTime", () => {
 
     describe("advanceTime", () => {
         it("advances the time by the duration specified", async () => {
-            await MockTime.advanceTime(45);
+            await MockTime.advance(45);
 
             expect(MockTime.nowMs()).equal(FAKE_TIME + 45);
         });
@@ -45,11 +45,11 @@ describe("MockTime", () => {
             expect(result.isRunning).equal(true);
             expect(firedTime).equal(undefined);
 
-            await MockTime.advanceTime(45);
+            await MockTime.advance(45);
 
             expect(firedTime).equal(FAKE_TIME + 30);
 
-            await MockTime.advanceTime(20);
+            await MockTime.advance(20);
 
             expect(firedTime).equal(FAKE_TIME + 60);
 
@@ -68,7 +68,7 @@ describe("MockTime", () => {
 
             expect(firedTime).equal(undefined);
 
-            await MockTime.advanceTime(45);
+            await MockTime.advance(45);
 
             expect(firedTime).equal(undefined);
             expect(result.isRunning).equal(false);
@@ -86,7 +86,7 @@ describe("MockTime", () => {
 
             expect(firedTime).equal(undefined);
 
-            await MockTime.advanceTime(45);
+            await MockTime.advance(45);
 
             expect(firedTime).equal(FAKE_TIME + 30);
             expect(result.isRunning).equal(false);
@@ -104,7 +104,7 @@ describe("MockTime", () => {
 
             expect(firedTime).equal(undefined);
 
-            await MockTime.advanceTime(45);
+            await MockTime.advance(45);
 
             expect(firedTime).equal(undefined);
             expect(result.isRunning).equal(false);

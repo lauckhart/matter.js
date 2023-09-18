@@ -34,6 +34,11 @@ declare global {
               loggerSetup?: (Logger: any) => void;
 
               /**
+               * Configure crypto.
+               */
+              cryptoSetup?: (Crypto: any) => void;
+
+              /**
                * Receive intercepted log messages.  The logging mocks
                */
               loggerSink?: (level: number, message: string) => void;

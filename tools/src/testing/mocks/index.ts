@@ -5,4 +5,5 @@
  */
 
 import "./logging.js";
+export * from "./crypto.js";
 export * from "./time.js";

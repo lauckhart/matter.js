@@ -5,7 +5,6 @@
  */
 
 import { DnsCodec, DnsMessageType } from "../../src/codec/DnsCodec.js";
-import { Crypto } from "../../src/crypto/Crypto.js";
 import { NodeId } from "../../src/datatype/NodeId.js";
 import { VendorId } from "../../src/datatype/VendorId.js";
 import { Fabric } from "../../src/fabric/Fabric.js";
@@ -18,13 +17,6 @@ import { Network } from "../../src/net/Network.js";
 import { UdpChannel } from "../../src/net/UdpChannel.js";
 import { ByteArray } from "../../src/util/ByteArray.js";
 import { getPromiseResolver } from "../../src/util/Promises.js";
-
-Crypto.get = () =>
-    ({
-        getRandomData: (length: number) => {
-            return new Uint8Array(length);
-        },
-    }) as Crypto;
 
 const SERVER_IPv4 = "192.168.200.1";
 const SERVER_IPv6 = "fe80::e777:4f5e:c61e:7314";
@@ -681,8 +673,8 @@ describe("MDNS Scanner and Broadcaster", () => {
             await broadcaster.setFabrics(PORT, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric]);
             await broadcaster.announce(PORT);
 
-            await MockTime.yield(); // Make sure data were broadcasted async
-            await MockTime.yield(); // Make sure data were received and processed async
+            await MockTime.yield3(); // Make sure data were broadcasted async
+            await MockTime.yield3(); // Make sure data were received and processed async
 
             const result = await scanner.findOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID, 1);
 
@@ -702,9 +694,9 @@ describe("MDNS Scanner and Broadcaster", () => {
 
             const findPromise = scanner.findOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID);
 
-            await MockTime.yield(); // make sure responding promise is created
-            await MockTime.advanceTime(1); // Trigger timer to send query (0ms timer)
-            await MockTime.yield(); // make sure responding promise is created
+            await MockTime.yield3(); // make sure responding promise is created
+            await MockTime.advance(1); // Trigger timer to send query (0ms timer)
+            await MockTime.yield3(); // make sure responding promise is created
 
             expect(DnsCodec.decode(sentData[0])).deep.equal({
                 additionalRecords: [],
@@ -742,9 +734,9 @@ describe("MDNS Scanner and Broadcaster", () => {
 
             const findPromise = scanner.findOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID);
 
-            await MockTime.yield(); // make sure responding promise is created
-            await MockTime.advanceTime(1); // Trigger timer to send query (0ms timer)
-            await MockTime.yield(); // Make sure data were queried async
+            await MockTime.yield3(); // make sure responding promise is created
+            await MockTime.advance(1); // Trigger timer to send query (0ms timer)
+            await MockTime.yield3(); // Make sure data were queried async
 
             expect(netData.length).equal(3);
 
@@ -913,8 +905,8 @@ describe("MDNS Scanner and Broadcaster", () => {
             await broadcaster.announce(PORT);
             await broadcaster.announce(PORT2);
 
-            await MockTime.yield();
-            await MockTime.yield();
+            await MockTime.yield3();
+            await MockTime.yield3();
 
             const result = await scanner.findOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID);
 

@@ -14,23 +14,28 @@
  * limitations under the License.
  */
 
-const readline = require('readline');
-const { exec } = require("child_process");
+import readline from "readline";
+import { exec } from "child_process";
+import { CommandEntry } from "./cli";
 
 /**
  * Class to process and dispatch shell commands.
  */
-class Shell {
+export class Shell {
+    prompt: string;
+    commandList: Array<CommandEntry>;
+    configExecPassthrough = false;
+    readline?: readline.Interface;
+
     /**
      * Construct a new Shell object.
      *
      * @param {string} prompt Prompt string to use for each command line.
      * @param {Array} commandList Array of JSON commands dispatch structures.
      */
-    constructor(prompt, commandList) {
+    constructor(prompt: string, commandList: CommandEntry[]) {
         this.prompt = prompt;
         this.commandList = commandList;
-        this.configExecPassthrough = false
     }
 
     start() {
@@ -57,16 +62,16 @@ class Shell {
      *
      * @param {string} line
      */
-    onReadLine(line) {
+    async onReadLine(line: string) {
         var handled = 0;
         var err = -1;
         if (line) {
             var args = line.split(/\s+/);
 
-            var entry = this.commandList.find(entry => entry['command'] == args[0])
+            var entry = this.commandList.find(entry => entry.command == args[0])
             if (entry) {
                 handled = 1
-                err = entry['handler'](args)
+                err = await entry['handler'](args)
             }
             if (!handled) {
 
@@ -75,7 +80,6 @@ class Shell {
                 } else {
                     // Pass unhandled commands through to underlying shell.
                     exec(line, (error, stdout, stderr) => {
-                        err = error
                         console.log(`\n${stdout}`);
                         if (error) {
                             console.log(`error: ${error.message}`);
@@ -86,7 +90,7 @@ class Shell {
                             return;
                         }
                         console.log((err) ? `Error ${err}` : "Done")
-                        this.readline.prompt()
+                        this.readline?.prompt()
                     })
                 }
             }
@@ -94,10 +98,6 @@ class Shell {
         if (handled) {
             console.log((err) ? `Error ${err}` : "Done")
         }
-        this.readline.prompt()
+        this.readline?.prompt()
     }
-}
-
-module.exports = {
-    Shell
 }

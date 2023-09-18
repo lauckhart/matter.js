@@ -9,6 +9,8 @@ import type MochaType from "mocha";
 import { TestOptions } from "./options.js";
 import { ConsoleProxyReporter, FailureDetail, Reporter } from "./reporter.js";
 
+let emitLogsOnFailure = true;
+
 export function generalSetup(Mocha: typeof MochaType) {
     // White text, 16-bit and 256-bit green background
     Mocha.reporters.Base.colors["diff added inline"] = "97;42;48;5;22" as any;
@@ -26,15 +28,17 @@ export function generalSetup(Mocha: typeof MochaType) {
         const logs = Array<string>();
         const existingSink = MatterHooks.loggerSink;
         try {
-            MatterHooks.loggerSink = (_, message) => {
-                logs.push(message);
-            };
+            if (emitLogsOnFailure) {
+                MatterHooks.loggerSink = (_, message) => {
+                    logs.push(message);
+                };
+            }
             return await fn();
         } catch (e) {
             process.stdout.write(logs.join("\n"));
             throw e;
         } finally {
-            if (MatterHooks) {
+            if (emitLogsOnFailure) {
                 MatterHooks.loggerSink = existingSink;
             }
         }
@@ -44,7 +48,7 @@ export function generalSetup(Mocha: typeof MochaType) {
         const actual = Mocha.Suite.prototype[hook] as (this: any, fn: Mocha.Func) => any;
         Mocha.Suite.prototype[hook] = function (this: any, fn: Mocha.Func) {
             return actual.call(this, async function (this: any, ...args: any) {
-                return await onlyLogFailure(async () => fn.apply(this, args));
+                return await onlyLogFailure(() => fn.apply(this, args));
             });
         } as any;
     }
@@ -54,12 +58,14 @@ export function generalSetup(Mocha: typeof MochaType) {
     filterLogs("beforeEach");
     filterLogs("afterEach");
 
-    // Reset mocks before each test
+    // Reset mocks before each suite.  Suites could conceivably have callbacks
+    // that occur across tests.  If individual tests need a reset the suite
+    // needs to handle itself.
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    const actualBeforeEach = Mocha.Suite.prototype.beforeEach;
-    Mocha.Suite.prototype.beforeEach = function (this: any, ...args: any) {
+    const actualBeforeAll = Mocha.Suite.prototype.beforeAll;
+    Mocha.Suite.prototype.beforeAll = function (this: Mocha.Context, ...args: any) {
         MockTime.reset();
-        return actualBeforeEach.apply(this, args);
+        return actualBeforeAll.apply(this, args);
     };
 }
 
@@ -145,7 +151,7 @@ export function adaptReporter(Mocha: typeof MochaType, title: string, reporter: 
         }
 
         if (message.endsWith(":")) {
-            message = message.slice(message.length - 1);
+            message = message.slice(0, message.length - 1);
         }
 
         if (error.expected && error.actual) {
@@ -179,6 +185,7 @@ export function applyOptions(mocha: Mocha, options: TestOptions) {
     if (options.invert) {
         mocha.invert();
     }
+    emitLogsOnFailure = !options.allLogs;
 }
 
 export function browserSetup(mocha: BrowserMocha) {

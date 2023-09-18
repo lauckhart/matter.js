@@ -5,10 +5,6 @@
  */
 
 import { Crypto, PrivateKey, PublicKey } from "@project-chip/matter.js/crypto";
-import { CryptoNode } from "../../src/crypto/CryptoNode";
-
-Crypto.get = () => new CryptoNode();
-
 import { CertificateManager, TlvOperationalCertificate, TlvRootCertificate } from "@project-chip/matter.js/certificate";
 import { BYTES_KEY, DerCodec, DerNode, ELEMENTS_KEY, EcdsaWithSHA256_X962 } from "@project-chip/matter.js/codec";
 import { ByteArray } from "@project-chip/matter.js/util";

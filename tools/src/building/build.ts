@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { spawn } from "child_process";
 import { build as esbuild, Format } from "esbuild";
 import { cp, mkdir, readFile, rm, stat, symlink, writeFile } from "fs/promises";
 import { glob } from "glob";
 import { ignoreError } from "../util/errors.js";
 import { Package } from "../util/package.js";
+import { execute } from "../running/execute.js";
 
 export class Project {
     pkg: Package;
@@ -42,33 +42,18 @@ export class Project {
     async buildDeclarations() {
         // Would prefer to run in-process but tsc API would be far messier and
         // compilation is quite slow regardless
-        await new Promise<void>((resolve, reject) => {
-            const proc = spawn(
-                "tsc",
-                [
-                    "-p",
-                    this.pkg.resolve("tsconfig.json"),
-                    "--outDir",
-                    this.pkg.resolve("build/types"),
-                    "--tsBuildInfoFile",
-                    this.pkg.resolve("build/types/tsbuildinfo"),
-                    "--emitDeclarationOnly",
-                    "--sourceMap",
-                    "--declarationMap",
-                    "--incremental",
-                ],
-                {
-                    stdio: "inherit",
-                },
-            );
-            proc.on("error", reject);
-            proc.on("close", code => {
-                if (code !== 0) {
-                    process.exit(code ?? -1);
-                }
-                resolve();
-            });
-        });
+        return execute("tsc", [
+            "-p",
+            this.pkg.resolve("tsconfig.json"),
+            "--outDir",
+            this.pkg.resolve("build/types"),
+            "--tsBuildInfoFile",
+            this.pkg.resolve("build/types/tsbuildinfo"),
+            "--emitDeclarationOnly",
+            "--sourceMap",
+            "--declarationMap",
+            "--incremental",
+        ]);
     }
 
     async installDeclarationFormat(format: Format) {
@@ -135,10 +120,13 @@ export class Project {
 
         await config?.before?.(this, format);
 
-        const files = await glob(`${indir}/**/*.ts`);
+        const files = await glob([
+            `${indir}/**/*.ts`,
+            `${indir}/**/*.js`
+        ]);
         const entryPoints = files.map(file => ({
             in: file,
-            out: `${file.slice(indir.length + 1).replace(/\.ts$/, "")}`,
+            out: `${file.slice(indir.length + 1).replace(/\.[jt]s$/, "")}`,
         }));
         await esbuild({
             entryPoints,

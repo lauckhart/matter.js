@@ -30,7 +30,7 @@ describe("Storage in JSON File", () => {
         const value = storage.get(["context"], "key");
         assert.equal(value, "value");
 
-        await MockTime.advanceTime(2 * 1000);
+        await MockTime.advance(2 * 1000);
 
         await storage.committed;
 
@@ -66,7 +66,7 @@ describe("Storage in JSON File", () => {
         storage.delete(["context"], "key");
         assert.equal(storage.get(["context"], "key"), undefined);
 
-        await MockTime.advanceTime(2 * 1000);
+        await MockTime.advance(2 * 1000);
 
         await storage.committed;
 

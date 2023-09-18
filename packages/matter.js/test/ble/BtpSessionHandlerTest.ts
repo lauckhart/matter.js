@@ -375,7 +375,7 @@ describe("BtpSessionHandler", () => {
             };
 
             await btpSessionHandler?.handleIncomingBleData(matterMessage);
-            await MockTime.advanceTime(5000);
+            await MockTime.advance(5000);
 
             const result = await writeBlePromise;
             const matterHandlerResult = await handleMatterMessagePromise;
@@ -419,7 +419,7 @@ describe("BtpSessionHandler", () => {
             await btpSessionHandler?.handleIncomingBleData(matterMessage); // BLE data coming in
 
             await handleMatterMessagePromise; // Getting parsed and sent to Matter layer
-            await MockTime.advanceTime(15000); // now nothing happens in 15s
+            await MockTime.advance(15000); // now nothing happens in 15s
             await disconnectBlePromise; // disconnected because of error
         });
 
