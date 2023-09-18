@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Crypto } from "../../../src/crypto/Crypto.js";
 import { WindowCovering, WindowCoveringCluster } from "../../../src/cluster/definitions/WindowCoveringCluster.js";
 import { ClusterServer } from "../../../src/cluster/server/ClusterServer.js";
+import { Crypto } from "../../../src/crypto/Crypto.js";
 import { BitFlags } from "../../../src/schema/BitmapSchema.js";
 
 describe("WindowCoveringCluster", () => {
@@ -16,12 +16,12 @@ describe("WindowCoveringCluster", () => {
     before(() => {
         actualCrypto = Crypto.get;
         Crypto.get = () =>
-        ({
-            // make Random data deterministic
-            getRandomData: (length: number) => {
-                return new Uint8Array(length);
-            },
-        }) as Crypto;
+            ({
+                // make Random data deterministic
+                getRandomData: (length: number) => {
+                    return new Uint8Array(length);
+                },
+            }) as Crypto;
     });
 
     after(() => {

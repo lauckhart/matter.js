@@ -52,6 +52,10 @@ export class Progress {
         delete this.start;
     }
 
+    shutdown() {
+        stdout.write("\n");
+    }
+
     protected write(text: string) {
         if (this.lastLine === text) {
             return;

@@ -68,7 +68,7 @@ async function testInBrowser(url: string, reporter: Reporter, options: TestOptio
         return { browser, page };
     }
 
-    async function run({ browser, page }: {browser: Browser, page: Page}) {
+    async function run({ browser, page }: { browser: Browser; page: Page }) {
         await page.goto(url);
         await page.evaluate(options => (globalThis as any).MatterTest.auto(options), options);
         await browser.close();
@@ -76,7 +76,7 @@ async function testInBrowser(url: string, reporter: Reporter, options: TestOptio
 
     await new Promise<void>((resolve, reject) => {
         setup()
-            .then((cx) => {
+            .then(cx => {
                 cx.page.on("console", consoleHandler(reporter));
                 cx.page.on("pageerror", error => reject(error));
                 return cx;

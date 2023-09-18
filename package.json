@@ -13,10 +13,10 @@
     ],
     "scripts": {
         "prepare": "npm run build-clean",
-        "build": "npm run build --workspaces",
-        "build-clean": "npm run build-clean --workspaces",
+        "build": "npm -s run build --workspaces",
+        "build-clean": "npm -s run build-clean --workspaces",
         "build-doc": "npm run build-doc --workspaces --if-present",
-        "test": "npm run test --workspaces --if-present",
+        "test": "npm -s run test --workspaces --if-present",
         "lint": "eslint --cache --cache-strategy content 'tools/**/*.ts' 'codegen/**/*.ts' 'models/src/local/**/*.ts' 'packages/**/*.ts'",
         "lint-fix": "eslint --cache --cache-strategy content  --fix 'tools/**/*.ts' 'codegen/**/*.ts' 'models/src/local/**/*.ts' 'packages/**/*.ts'",
         "format": "prettier --write 'packages/**/*.ts' 'tools/**/*.ts' 'models/**/*.ts'",

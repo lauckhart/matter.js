@@ -11,8 +11,8 @@ const TheCrypto = {
     getRandomData: (length: number) => {
         // Make random data deterministic
         return new Uint8Array(length);
-    }
-}
+    },
+};
 
 export function cryptoSetup(Crypto: any) {
     Crypto.get = () => TheCrypto;

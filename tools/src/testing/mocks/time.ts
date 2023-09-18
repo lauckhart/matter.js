@@ -110,7 +110,7 @@ export class MockTime {
      * Due to its implementation, an older version of yield() would actually
      * yield to microtasks three times.  Our tests then depended on this
      * functionality -- one yield could trigger up to three nested awaits.
-     * 
+     *
      * To make this clear, the version of yield() that emulates old behavior
      * is called "yield3".
      */

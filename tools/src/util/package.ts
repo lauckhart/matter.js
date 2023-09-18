@@ -5,7 +5,7 @@
  */
 
 import { readFileSync, statSync } from "fs";
-import { dirname, resolve, relative } from "path";
+import { dirname, relative, resolve } from "path";
 import { ignoreErrorSync } from "./errors.js";
 import { Progress } from "./progress.js";
 

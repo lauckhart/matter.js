@@ -7,9 +7,9 @@
 import Chai from "chai";
 import ChaiAsPromised from "chai-as-promised";
 import { browserSetup, generalSetup } from "./mocha.js";
+import { cryptoSetup } from "./mocks/crypto.js";
 import { loggerSetup } from "./mocks/logging.js";
 import { TheMockTime, timeSetup } from "./mocks/time.js";
-import { cryptoSetup } from "./mocks/crypto.js";
 
 Chai.use(ChaiAsPromised);
 
@@ -21,7 +21,7 @@ Object.assign(globalThis, {
     MatterHooks: {
         loggerSetup: loggerSetup,
         timeSetup: timeSetup,
-        cryptoSetup: cryptoSetup
+        cryptoSetup: cryptoSetup,
     },
 
     MockTime: TheMockTime,

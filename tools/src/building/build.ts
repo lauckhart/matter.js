@@ -7,9 +7,9 @@
 import { build as esbuild, Format } from "esbuild";
 import { cp, mkdir, readFile, rm, stat, symlink, writeFile } from "fs/promises";
 import { glob } from "glob";
+import { execute } from "../running/execute.js";
 import { ignoreError } from "../util/errors.js";
 import { Package } from "../util/package.js";
-import { execute } from "../running/execute.js";
 
 export class Project {
     pkg: Package;
@@ -120,10 +120,7 @@ export class Project {
 
         await config?.before?.(this, format);
 
-        const files = await glob([
-            `${indir}/**/*.ts`,
-            `${indir}/**/*.js`
-        ]);
+        const files = await glob([`${indir}/**/*.ts`, `${indir}/**/*.js`]);
         const entryPoints = files.map(file => ({
             in: file,
             out: `${file.slice(indir.length + 1).replace(/\.[jt]s$/, "")}`,

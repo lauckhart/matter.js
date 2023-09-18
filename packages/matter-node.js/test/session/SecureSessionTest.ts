@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ByteArray } from "@project-chip/matter.js/util";
 import { Message, MessageCodec, SessionType } from "@project-chip/matter.js/codec";
 import { SecureSession, UNDEFINED_NODE_ID } from "@project-chip/matter.js/session";
+import { ByteArray } from "@project-chip/matter.js/util";
 import * as assert from "assert";
 
 const DECRYPT_KEY = ByteArray.fromHex("bacb178b2588443d5d5b1e4559e7accc");

@@ -137,8 +137,8 @@ export function adaptReporter(Mocha: typeof MochaType, title: string, reporter: 
                     // Node's assert helpfully puts entire objects in the
                     // message and thus in the stack.  We do diffs ourselves,
                     // we just want the stack.  This does a rough cleanup
-                    .replace(/.*?\n    at/s, "    at")
-                    
+                    .replace(/.*?\n {4}at/s, "    at")
+
                     .trim()
                     .replace(/\n\s+/gm, "\n");
             } else {

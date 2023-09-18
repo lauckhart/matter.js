@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *  https://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import readline from "readline";
 import { exec } from "child_process";
+import readline from "readline";
 import { CommandEntry } from "./cli";
 
 /**
@@ -47,14 +47,19 @@ export class Shell {
             terminal: true,
             prompt: this.prompt,
         });
-        this.readline.on('line', function (cmd) {
-            self.onReadLine(cmd.trim());
-        }).on('close', function () {
-            process.stdout.write('goodbye\n');
-            process.exit(0);
-        });
+        this.readline
+            .on("line", function (cmd) {
+                self.onReadLine(cmd.trim()).catch(e => {
+                    process.stderr.write(`Read error: ${e}\n`);
+                    process.exit(1);
+                });
+            })
+            .on("close", function () {
+                process.stdout.write("goodbye\n");
+                process.exit(0);
+            });
 
-        this.readline.prompt()
+        this.readline.prompt();
     }
 
     /**
@@ -63,20 +68,19 @@ export class Shell {
      * @param {string} line
      */
     async onReadLine(line: string) {
-        var handled = 0;
-        var err = -1;
+        let handled = 0;
+        let err = -1;
         if (line) {
-            var args = line.split(/\s+/);
+            const args = line.split(/\s+/);
 
-            var entry = this.commandList.find(entry => entry.command == args[0])
+            const entry = this.commandList.find(entry => entry.command == args[0]);
             if (entry) {
-                handled = 1
-                err = await entry['handler'](args)
+                handled = 1;
+                err = await entry["handler"](args);
             }
             if (!handled) {
-
                 if (!this.configExecPassthrough) {
-                    console.log("Error: command not found")
+                    console.log("Error: command not found");
                 } else {
                     // Pass unhandled commands through to underlying shell.
                     exec(line, (error, stdout, stderr) => {
@@ -89,15 +93,15 @@ export class Shell {
                             console.log(`stderr: ${stderr}`);
                             return;
                         }
-                        console.log((err) ? `Error ${err}` : "Done")
-                        this.readline?.prompt()
-                    })
+                        console.log(err ? `Error ${err}` : "Done");
+                        this.readline?.prompt();
+                    });
                 }
             }
         }
         if (handled) {
-            console.log((err) ? `Error ${err}` : "Done")
+            console.log(err ? `Error ${err}` : "Done");
         }
-        this.readline?.prompt()
+        this.readline?.prompt();
     }
 }

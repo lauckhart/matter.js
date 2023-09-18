@@ -639,49 +639,52 @@ async function getDummyMessageExchange(
 }
 
 describe("InteractionProtocol", () => {
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     let realGetRandomData = Crypto.get().getRandomData;
 
     before(() => {
+        // eslint-disable-next-line @typescript-eslint/unbound-method
         realGetRandomData = Crypto.get().getRandomData;
         Crypto.get().getRandomData = (length: number) => {
-                return new Uint8Array(length);
-            };
-    })
+            return new Uint8Array(length);
+        };
+    });
 
     after(() => {
         Crypto.get().getRandomData = realGetRandomData;
-    })
+    });
 
     describe("handleReadRequest", () => {
         let storageManager: StorageManager;
         let storageContext: StorageContext;
         let endpoint: Endpoint;
         let interactionProtocol: InteractionServer;
-        const basicInfoClusterServer = () => ClusterServer(
-            BasicInformationCluster,
-            {
-                dataModelRevision: 1,
-                vendorName: "vendor",
-                vendorId: VendorId(1),
-                productName: "product",
-                productId: 2,
-                nodeLabel: "",
-                hardwareVersion: 0,
-                hardwareVersionString: "0",
-                location: "US",
-                localConfigDisabled: false,
-                softwareVersion: 1,
-                softwareVersionString: "v1",
-                capabilityMinima: {
-                    caseSessionsPerFabric: 100,
-                    subscriptionsPerFabric: 100,
+        const basicInfoClusterServer = () =>
+            ClusterServer(
+                BasicInformationCluster,
+                {
+                    dataModelRevision: 1,
+                    vendorName: "vendor",
+                    vendorId: VendorId(1),
+                    productName: "product",
+                    productId: 2,
+                    nodeLabel: "",
+                    hardwareVersion: 0,
+                    hardwareVersionString: "0",
+                    location: "US",
+                    localConfigDisabled: false,
+                    softwareVersion: 1,
+                    softwareVersionString: "v1",
+                    capabilityMinima: {
+                        caseSessionsPerFabric: 100,
+                        subscriptionsPerFabric: 100,
+                    },
                 },
-            },
-            {},
-            {
-                startUp: true,
-            },
-        );
+                {},
+                {
+                    startUp: true,
+                },
+            );
 
         beforeEach(async () => {
             storageManager = new StorageManager(new StorageBackendMemory());
@@ -730,31 +733,32 @@ describe("InteractionProtocol", () => {
         let storageContext: StorageContext;
         let endpoint: Endpoint;
         let interactionProtocol: InteractionServer;
-        const basicInfoClusterServer = () => ClusterServer(
-            BasicInformationCluster,
-            {
-                dataModelRevision: 1,
-                vendorName: "vendor",
-                vendorId: VendorId(1),
-                productName: "product",
-                productId: 2,
-                nodeLabel: "",
-                hardwareVersion: 0,
-                hardwareVersionString: "0",
-                location: "US",
-                localConfigDisabled: false,
-                softwareVersion: 1,
-                softwareVersionString: "v1",
-                capabilityMinima: {
-                    caseSessionsPerFabric: 100,
-                    subscriptionsPerFabric: 100,
+        const basicInfoClusterServer = () =>
+            ClusterServer(
+                BasicInformationCluster,
+                {
+                    dataModelRevision: 1,
+                    vendorName: "vendor",
+                    vendorId: VendorId(1),
+                    productName: "product",
+                    productId: 2,
+                    nodeLabel: "",
+                    hardwareVersion: 0,
+                    hardwareVersionString: "0",
+                    location: "US",
+                    localConfigDisabled: false,
+                    softwareVersion: 1,
+                    softwareVersionString: "v1",
+                    capabilityMinima: {
+                        caseSessionsPerFabric: 100,
+                        subscriptionsPerFabric: 100,
+                    },
                 },
-            },
-            {},
-            {
-                startUp: true,
-            },
-        );
+                {},
+                {
+                    startUp: true,
+                },
+            );
 
         beforeEach(async () => {
             storageManager = new StorageManager(new StorageBackendMemory());
