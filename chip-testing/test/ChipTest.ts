@@ -2,8 +2,8 @@ import { Network } from "@project-chip/matter.js/net";
 import { StorageBackendMemory, StorageManager } from "@project-chip/matter.js/storage";
 import { spawn } from "child_process";
 import { promises as fs } from "fs";
-import { DeviceTestInstance } from "./DeviceTestInstance";
-import * as Tests from "./suites/index.js";
+import { DeviceTestInstance } from "../src/DeviceTestInstance";
+import * as Tests from "../src/suites/index.js";
 
 const CHIP_BIN_PATH = process.env.CHIP_BIN_PATH ?? `${__dirname}/../../bin`;
 
@@ -152,22 +152,16 @@ describe("Chip-Tool-Tests", () => {
 
             it(`"${suiteName}": Setup test instance`, async () => await testInstance.setup());
 
-            it(
-                `"${suiteName}": Start chip-tool and test instance for initial pairing`,
-                async () => await pairWithChipTool(async () => await testInstance.start()),
-            ).timeout(30000);
+            it(`"${suiteName}": Start chip-tool and test instance for initial pairing`, async () =>
+                await pairWithChipTool(async () => await testInstance.start())).timeout(30000);
 
-            it(
-                `"${suiteName}": Execute tests`,
-                async () =>
-                    await executeChipToolTest(
-                        testInstance.testName,
-                        testInstance.PICSConfig,
-                        (command, params) => testInstance.handleCommand(command, params),
-                        async (testDescription, userPrompt) =>
-                            testInstance.handleUserprompt(testDescription, userPrompt),
-                    ),
-            ).timeout(120000);
+            it(`"${suiteName}": Execute tests`, async () =>
+                await executeChipToolTest(
+                    testInstance.testName,
+                    testInstance.PICSConfig,
+                    (command, params) => testInstance.handleCommand(command, params),
+                    async (testDescription, userPrompt) => testInstance.handleUserprompt(testDescription, userPrompt),
+                )).timeout(120000);
 
             after(async () => {
                 await testInstance.stop();

@@ -4,5 +4,5 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import "testing/global-declarations.ts";
+import "./testing/global-declarations.js";
 export * from "./util/package.js";

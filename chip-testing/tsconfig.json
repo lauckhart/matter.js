@@ -6,11 +6,14 @@
     "moduleResolution": "nodenext",
     "types": [
       "node",
-      "@project-chip/matter-node.js"
+      "mocha",
+      "@project-chip/matter-node.js",
+      "@project-chip/matter.js-tools"
     ]
   },
 
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "test/ChipTest.ts"
   ]
 }
