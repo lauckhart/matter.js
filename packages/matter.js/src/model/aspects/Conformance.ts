@@ -65,6 +65,30 @@ export class Conformance extends Aspect<Conformance.Definition> {
         return Conformance.validateReferences(this, this.ast, lookup);
     }
 
+    /**
+     * Is the associated element mandatory?
+     *
+     * This supports a limited subset of conformance and is only appropriate
+     * for field and requirement conformance.
+     */
+    get mandatory() {
+        const conformance = this.ast;
+        if (conformance.type === Conformance.Flag.Mandatory) {
+            return true;
+        }
+        if (conformance.type === Conformance.Special.Group) {
+            for (const c of conformance.param) {
+                if (c.type === Conformance.Flag.Provisional) {
+                    continue;
+                }
+                if (c.type === Conformance.Flag.Mandatory) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     override toString() {
         return Conformance.serialize(this.ast);
     }

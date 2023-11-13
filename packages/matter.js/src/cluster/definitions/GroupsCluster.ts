@@ -6,9 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag } from "../../schema/BitmapSchema.js";
 import { FixedAttribute, Command, AccessLevel, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
@@ -18,6 +18,8 @@ import { StatusCode } from "../../protocol/interaction/InteractionProtocol.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace Groups {
     /**
@@ -155,7 +157,7 @@ export namespace Groups {
     /**
      * These elements and properties are present in all Groups clusters.
      */
-    export const Base = ClusterFactory.Definition({
+    export const Base = MutableCluster.Component({
         id: 0x4,
         name: "Groups",
         revision: 4,
@@ -245,8 +247,18 @@ export namespace Groups {
                 TlvNoResponse,
                 { invokeAcl: AccessLevel.Manage }
             )
-        }
+        },
+
+        /**
+         * This metadata controls which GroupsCluster elements matter.js activates for specific feature combinations.
+         */
+        extensions: MutableCluster.Extensions()
     });
+
+    /**
+     * @see {@link Cluster}
+     */
+    export const ClusterInstance = MutableCluster({ ...Base, supportedFeatures: { groupNames: true } });
 
     /**
      * Groups
@@ -272,31 +284,12 @@ export namespace Groups {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.3
      */
-    export const Cluster = ClusterFactory.Extensible(
-        { ...Base, supportedFeatures: { groupNames: true } },
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
 
-        /**
-         * Use this factory method to create a Groups cluster with support for optional features. Include each
-         * {@link Feature} you wish to support.
-         *
-         * @param features the optional features to support
-         * @returns a Groups cluster with specified features enabled
-         * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
-         */
-        <T extends `${Feature}`[]>(...features: [...T]) => {
-            ClusterFactory.validateFeatureSelection(features, Feature);
-            const cluster = ClusterFactory.Definition({
-                ...Base,
-                supportedFeatures: BitFlags(Base.features, ...features)
-            });
-            return cluster as unknown as Extension<BitFlags<typeof Base.features, T>>;
-        }
-    );
-
-    export type Extension<SF extends TypeFromPartialBitSchema<typeof Base.features>> =
-        Omit<typeof Base, "supportedFeatures">
-        & { supportedFeatures: SF };
+    export const Cluster: Cluster = ClusterInstance;
+    export const Complete = Cluster;
 }
 
-export type GroupsCluster = typeof Groups.Cluster;
+export type GroupsCluster = Groups.Cluster;
 export const GroupsCluster = Groups.Cluster;
+ClusterRegistry.register(Groups.Complete);

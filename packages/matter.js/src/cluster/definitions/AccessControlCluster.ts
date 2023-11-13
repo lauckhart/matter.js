@@ -6,8 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
-import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import {
     WritableFabricScopedAttribute,
     AccessLevel,
@@ -18,6 +17,7 @@ import {
 } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvEnum, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvSubjectId } from "../../datatype/SubjectId.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
@@ -27,6 +27,8 @@ import { TlvDeviceTypeId } from "../../datatype/DeviceTypeId.js";
 import { TlvFabricIndex } from "../../datatype/FabricIndex.js";
 import { TlvByteString } from "../../tlv/TlvString.js";
 import { TlvNodeId } from "../../datatype/NodeId.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace AccessControl {
     /**
@@ -309,19 +311,9 @@ export namespace AccessControl {
     });
 
     /**
-     * Access Control
-     *
-     * The Access Control Cluster exposes a data model view of a Node’s Access Control List (ACL), which codifies the
-     * rules used to manage and enforce Access Control for the Node’s endpoints and their associated cluster instances.
-     * Access to this Access Control Cluster itself requires a special Administer privilege level, such that only Nodes
-     * granted such privilege (hereafter termed "Administrators") can manage the Access Control Cluster.
-     *
-     * The Access Control Cluster shall be present on the root node endpoint of each Node, and shall NOT be present on
-     * any other Endpoint of any Node.
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 9.10
+     * @see {@link Cluster}
      */
-    export const Cluster = ClusterFactory.Definition({
+    export const ClusterInstance = MutableCluster({
         id: 0x1f,
         name: "AccessControl",
         revision: 1,
@@ -458,7 +450,26 @@ export namespace AccessControl {
             )
         }
     });
+
+    /**
+     * Access Control
+     *
+     * The Access Control Cluster exposes a data model view of a Node’s Access Control List (ACL), which codifies the
+     * rules used to manage and enforce Access Control for the Node’s endpoints and their associated cluster instances.
+     * Access to this Access Control Cluster itself requires a special Administer privilege level, such that only Nodes
+     * granted such privilege (hereafter termed "Administrators") can manage the Access Control Cluster.
+     *
+     * The Access Control Cluster shall be present on the root node endpoint of each Node, and shall NOT be present on
+     * any other Endpoint of any Node.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 9.10
+     */
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
+
+    export const Cluster: Cluster = ClusterInstance;
+    export const Complete = Cluster;
 }
 
-export type AccessControlCluster = typeof AccessControl.Cluster;
+export type AccessControlCluster = AccessControl.Cluster;
 export const AccessControlCluster = AccessControl.Cluster;
+ClusterRegistry.register(AccessControl.Complete);

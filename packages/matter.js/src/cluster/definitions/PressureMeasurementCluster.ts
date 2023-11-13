@@ -6,14 +6,69 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
-import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import { Attribute, OptionalAttribute } from "../../cluster/Cluster.js";
 import { TlvInt16, TlvUInt16, TlvInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlag } from "../../schema/BitmapSchema.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace PressureMeasurement {
+    /**
+     * A PressureMeasurementCluster supports these elements if it supports feature Extended.
+     */
+    export const ExtendedComponent = MutableCluster.Component({
+        attributes: {
+            /**
+             * ScaledValue represents the pressure in Pascals as follows:
+             *
+             * ScaledValue = 10Scale x Pressure [Pa]
+             *
+             * The null value indicates that the value is not available.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.5
+             */
+            scaledValue: Attribute(0x10, TlvNullable(TlvInt16.bound({ min: -32767 })), { default: 0 }),
+
+            /**
+             * The MinScaledValue attribute indicates the minimum value of ScaledValue that can be measured. The null
+             * value indicates that the value is not available.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.6
+             */
+            minScaledValue: Attribute(0x11, TlvNullable(TlvInt16.bound({ min: -32767 })), { default: 0 }),
+
+            /**
+             * This attribute indicates the maximum value of ScaledValue that can be measured. MaxScaledValue shall be
+             * greater than MinScaledValue.
+             *
+             * The null value indicates that the value is not available.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.7
+             */
+            maxScaledValue: Attribute(0x12, TlvNullable(TlvInt16), { default: 0 }),
+
+            /**
+             * This attribute indicates the magnitude of the possible error that is associated with ScaledValue. The
+             * true value is located in the range
+             *
+             * (ScaledValue – ScaledTolerance) to (ScaledValue + ScaledTolerance).
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.8
+             */
+            scaledTolerance: OptionalAttribute(0x13, TlvUInt16.bound({ max: 2048 }), { default: 0 }),
+
+            /**
+             * This attribute indicates the base 10 exponent used to obtain ScaledValue (see ScaledValue Attribute).
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.9
+             */
+            scale: Attribute(0x14, TlvInt8.bound({ min: -127 }), { default: 0 })
+        }
+    })
+
     /**
      * These are optional features supported by PressureMeasurementCluster.
      *
@@ -31,7 +86,7 @@ export namespace PressureMeasurement {
     /**
      * These elements and properties are present in all PressureMeasurement clusters.
      */
-    export const Base = ClusterFactory.Definition({
+    export const Base = MutableCluster.Component({
         id: 0x403,
         name: "PressureMeasurement",
         revision: 3,
@@ -85,61 +140,19 @@ export namespace PressureMeasurement {
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.4
              */
             tolerance: OptionalAttribute(0x3, TlvUInt16.bound({ max: 2048 }), { default: 0 })
-        }
+        },
+
+        /**
+         * This metadata controls which PressureMeasurementCluster elements matter.js activates for specific feature
+         * combinations.
+         */
+        extensions: MutableCluster.Extensions({ flags: { extended: true }, component: ExtendedComponent })
     });
 
     /**
-     * A PressureMeasurementCluster supports these elements if it supports feature Extended.
+     * @see {@link Cluster}
      */
-    export const ExtendedComponent = ClusterFactory.Component({
-        attributes: {
-            /**
-             * ScaledValue represents the pressure in Pascals as follows:
-             *
-             * ScaledValue = 10Scale x Pressure [Pa]
-             *
-             * The null value indicates that the value is not available.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.5
-             */
-            scaledValue: Attribute(0x10, TlvNullable(TlvInt16.bound({ min: -32767 })), { default: 0 }),
-
-            /**
-             * The MinScaledValue attribute indicates the minimum value of ScaledValue that can be measured. The null
-             * value indicates that the value is not available.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.6
-             */
-            minScaledValue: Attribute(0x11, TlvNullable(TlvInt16.bound({ min: -32767 })), { default: 0 }),
-
-            /**
-             * This attribute indicates the maximum value of ScaledValue that can be measured. MaxScaledValue shall be
-             * greater than MinScaledValue.
-             *
-             * The null value indicates that the value is not available.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.7
-             */
-            maxScaledValue: Attribute(0x12, TlvNullable(TlvInt16), { default: 0 }),
-
-            /**
-             * This attribute indicates the magnitude of the possible error that is associated with ScaledValue. The
-             * true value is located in the range
-             *
-             * (ScaledValue – ScaledTolerance) to (ScaledValue + ScaledTolerance).
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.8
-             */
-            scaledTolerance: OptionalAttribute(0x13, TlvUInt16.bound({ max: 2048 }), { default: 0 }),
-
-            /**
-             * This attribute indicates the base 10 exponent used to obtain ScaledValue (see ScaledValue Attribute).
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4.5.9
-             */
-            scale: Attribute(0x14, TlvInt8.bound({ min: -127 }), { default: 0 })
-        }
-    });
+    export const ClusterInstance = MutableCluster({ ...Base });
 
     /**
      * Pressure Measurement
@@ -152,42 +165,16 @@ export namespace PressureMeasurement {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 2.4
      */
-    export const Cluster = ClusterFactory.Extensible(
-        Base,
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
 
-        /**
-         * Use this factory method to create a PressureMeasurement cluster with support for optional features. Include
-         * each {@link Feature} you wish to support.
-         *
-         * @param features the optional features to support
-         * @returns a PressureMeasurement cluster with specified features enabled
-         * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
-         */
-        <T extends `${Feature}`[]>(...features: [...T]) => {
-            ClusterFactory.validateFeatureSelection(features, Feature);
-            const cluster = ClusterFactory.Definition({
-                ...Base,
-                supportedFeatures: BitFlags(Base.features, ...features)
-            });
-            ClusterFactory.extend(cluster, ExtendedComponent, { extended: true });
-            return cluster as unknown as Extension<BitFlags<typeof Base.features, T>>;
-        }
-    );
-
-    export type Extension<SF extends TypeFromPartialBitSchema<typeof Base.features>> =
-        Omit<typeof Base, "supportedFeatures">
-        & { supportedFeatures: SF }
-        & (SF extends { extended: true } ? typeof ExtendedComponent : {});
+    export const Cluster: Cluster = ClusterInstance;
 
     const EXT = { extended: true };
 
     /**
-     * This cluster supports all PressureMeasurement features. It may support illegal feature combinations.
-     *
-     * If you use this cluster you must manually specify which features are active and ensure the set of active
-     * features is legal per the Matter specification.
+     * @see {@link Complete}
      */
-    export const Complete = ClusterFactory.Definition({
+    export const CompleteInstance = MutableCluster({
         id: Cluster.id,
         name: Cluster.name,
         revision: Cluster.revision,
@@ -195,23 +182,34 @@ export namespace PressureMeasurement {
 
         attributes: {
             ...Cluster.attributes,
-            scaledValue: ClusterFactory.AsConditional(ExtendedComponent.attributes.scaledValue, { mandatoryIf: [EXT] }),
-            minScaledValue: ClusterFactory.AsConditional(
+            scaledValue: MutableCluster.AsConditional(ExtendedComponent.attributes.scaledValue, { mandatoryIf: [EXT] }),
+            minScaledValue: MutableCluster.AsConditional(
                 ExtendedComponent.attributes.minScaledValue,
                 { mandatoryIf: [EXT] }
             ),
-            maxScaledValue: ClusterFactory.AsConditional(
+            maxScaledValue: MutableCluster.AsConditional(
                 ExtendedComponent.attributes.maxScaledValue,
                 { mandatoryIf: [EXT] }
             ),
-            scaledTolerance: ClusterFactory.AsConditional(
+            scaledTolerance: MutableCluster.AsConditional(
                 ExtendedComponent.attributes.scaledTolerance,
                 { optionalIf: [EXT] }
             ),
-            scale: ClusterFactory.AsConditional(ExtendedComponent.attributes.scale, { mandatoryIf: [EXT] })
+            scale: MutableCluster.AsConditional(ExtendedComponent.attributes.scale, { mandatoryIf: [EXT] })
         }
     });
+
+    /**
+     * This cluster supports all PressureMeasurement features. It may support illegal feature combinations.
+     *
+     * If you use this cluster you must manually specify which features are active and ensure the set of active
+     * features is legal per the Matter specification.
+     */
+    export interface Complete extends Identity<typeof CompleteInstance> {}
+
+    export const Complete: Complete = CompleteInstance;
 }
 
-export type PressureMeasurementCluster = typeof PressureMeasurement.Cluster;
+export type PressureMeasurementCluster = PressureMeasurement.Cluster;
 export const PressureMeasurementCluster = PressureMeasurement.Cluster;
+ClusterRegistry.register(PressureMeasurement.Complete);

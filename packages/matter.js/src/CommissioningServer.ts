@@ -49,7 +49,7 @@ import { FabricIndex } from "./datatype/FabricIndex.js";
 import { VendorId } from "./datatype/VendorId.js";
 import { Aggregator } from "./device/Aggregator.js";
 import { Device, RootEndpoint } from "./device/Device.js";
-import { Endpoint } from "./device/Endpoint.js";
+import { EndpointInterface } from "./endpoint/EndpointInterface.js";
 import { Logger } from "./log/Logger.js";
 import { MdnsBroadcaster } from "./mdns/MdnsBroadcaster.js";
 import { MdnsInstanceBroadcaster } from "./mdns/MdnsInstanceBroadcaster.js";
@@ -58,7 +58,7 @@ import { UdpInterface } from "./net/UdpInterface.js";
 import { InteractionServer } from "./protocol/interaction/InteractionServer.js";
 import { BitSchema, TypeFromBitSchema, TypeFromPartialBitSchema } from "./schema/BitmapSchema.js";
 import {
-    CommissionningFlowType,
+    CommissioningFlowType,
     DiscoveryCapabilitiesBitmap,
     DiscoveryCapabilitiesSchema,
     ManualPairingCodeCodec,
@@ -92,12 +92,7 @@ export interface DevicePairingInformation {
     qrPairingCode: string;
 }
 
-/**
- * Constructor options for a CommissioningServer device
- * Beside the general options it also contains the data for the BasicInformation cluster which is added automatically
- * and allows to override the certificates used for the OperationalCredentials cluster
- */
-export interface CommissioningServerOptions {
+export interface GeneralCommissioningServerOptions {
     /** Port of the server, normally automatically managed. */
     port?: number;
 
@@ -123,7 +118,7 @@ export interface CommissioningServerOptions {
     discriminator?: number;
 
     /** The Flow type of the Commissioning flow used in announcements. */
-    flowType?: CommissionningFlowType;
+    flowType?: CommissioningFlowType;
 
     /** Optional Vendor specific additional BLE Advertisement data. */
     additionalBleAdvertisementData?: ByteArray;
@@ -152,32 +147,10 @@ export interface CommissioningServerOptions {
     subscriptionRandomizationWindowSeconds?: number;
 
     /**
-     * Device details to be used for the BasicInformation cluster. Some of the values are initialized with defaults if
-     * not set here.
-     */
-    basicInformation:
-        | {
-              vendorId: number;
-              vendorName: string;
-              productId: number;
-              productName: string;
-          }
-        | AttributeInitialValues<typeof BasicInformationCluster.attributes>;
-
-    /**
      * Vendor specific certificates to be used for the OperationalCredentials cluster. If not set Test certificates
      * (official Chip tool test Root certificate is used) are generated automatically.
      */
     certificates?: OperationalCredentialsServerConf;
-
-    /**
-     * Optional configuration for the GeneralCommissioning cluster. If not set the default values are used.
-     * Use these options to limit the allowed countries for regulatory configuration.
-     */
-    generalCommissioning?: Partial<AttributeInitialValues<typeof GeneralCommissioningCluster.attributes>> & {
-        allowCountryCodeChange?: boolean; // Default true if not set
-        countryCodeWhitelist?: string[]; // Default all countries are allowed
-    };
 
     /**
      * This callback is called when the device is commissioned or decommissioned to a fabric/controller. The provided
@@ -193,6 +166,47 @@ export interface CommissioningServerOptions {
      */
     activeSessionsChangedCallback?: (fabricIndex: FabricIndex) => void;
 }
+
+/**
+ * Commissioning options with automatic management of the root endpoint.
+ */
+export interface StandardCommissioningServerOptions extends GeneralCommissioningServerOptions {
+    /**
+     * Device details to be used for the BasicInformation cluster. Some of the values are initialized with defaults if
+     * not set here.
+     */
+    basicInformation:
+        | {
+              vendorId: number;
+              vendorName: string;
+              productId: number;
+              productName: string;
+          }
+        | AttributeInitialValues<typeof BasicInformationCluster.attributes>;
+
+    /**
+     * Optional configuration for the GeneralCommissioning cluster. If not set the default values are used.
+     * Use these options to limit the allowed countries for regulatory configuration.
+     */
+    generalCommissioning?: Partial<AttributeInitialValues<typeof GeneralCommissioningCluster.attributes>> & {
+        allowCountryCodeChange?: boolean; // Default true if not set
+        countryCodeWhitelist?: string[]; // Default all countries are allowed
+    };
+}
+
+/**
+ * Commissioning server options with manual management of the root endpoint.
+ */
+export interface ManualCommissioningServerOptions extends GeneralCommissioningServerOptions {
+    basicInformation: undefined;
+}
+
+/**
+ * Constructor options for a CommissioningServer device
+ * Beside the general options it also contains the data for the BasicInformation cluster which is added automatically
+ * and allows to override the certificates used for the OperationalCredentials cluster
+ */
+export type CommissioningServerOptions = StandardCommissioningServerOptions | ManualCommissioningServerOptions;
 
 /**
  * Commands exposed by the CommissioningServer
@@ -214,7 +228,7 @@ export class CommissioningServer extends MatterNode {
     private port?: number;
     private readonly passcode: number;
     private readonly discriminator: number;
-    private readonly flowType: CommissionningFlowType;
+    private readonly flowType: CommissioningFlowType;
 
     private storage?: StorageContext;
     private endpointStructureStorage?: StorageContext;
@@ -239,27 +253,24 @@ export class CommissioningServer extends MatterNode {
      */
     constructor(private readonly options: CommissioningServerOptions) {
         super();
-        const {
-            port,
-            passcode,
-            discriminator,
-            flowType,
-            nextEndpointId,
-            delayedAnnouncement,
-            basicInformation: { vendorId: vendorIdNumber, productId },
-            generalCommissioning,
-        } = options;
-        this.port = port;
-        if (passcode !== undefined && FORBIDDEN_PASSCODES.includes(passcode)) {
-            throw new ImplementationError(`Passcode ${passcode} is not allowed.`);
+        this.port = options.port;
+        if (options.passcode !== undefined && FORBIDDEN_PASSCODES.includes(options.passcode)) {
+            throw new ImplementationError(`Passcode ${options.passcode} is not allowed.`);
         }
-        this.passcode = passcode ?? PaseClient.generateRandomPasscode();
-        this.discriminator = discriminator ?? PaseClient.generateRandomDiscriminator();
-        this.flowType = flowType ?? CommissionningFlowType.Standard;
-        this.nextEndpointId = EndpointNumber(nextEndpointId ?? 1);
-        this.delayedAnnouncement = delayedAnnouncement;
+        this.passcode = options.passcode ?? PaseClient.generateRandomPasscode();
+        this.discriminator = options.discriminator ?? PaseClient.generateRandomDiscriminator();
+        this.flowType = options.flowType ?? CommissioningFlowType.Standard;
+        this.nextEndpointId = EndpointNumber(options.nextEndpointId ?? 1);
+        this.delayedAnnouncement = options.delayedAnnouncement;
 
-        const vendorId = VendorId(vendorIdNumber);
+        if (options.basicInformation) {
+            this.createRootEndpoint(options);
+        }
+    }
+
+    private createRootEndpoint(options: StandardCommissioningServerOptions) {
+        const vendorId = VendorId(options.basicInformation.vendorId);
+        const productId = options.basicInformation.productId;
 
         // Set the required basicInformation and respect the provided values
         // TODO Get the defaults from the cluster meta details
@@ -336,6 +347,7 @@ export class CommissioningServer extends MatterNode {
         );
 
         // TODO Get the defaults from the cluster meta details
+        const generalCommissioning = options.generalCommissioning;
         this.rootEndpoint.addClusterServer(
             ClusterServer(
                 GeneralCommissioningCluster,
@@ -500,7 +512,7 @@ export class CommissioningServer extends MatterNode {
      * @param endpoint Endpoint to add
      * @protected
      */
-    protected addEndpoint(endpoint: Endpoint) {
+    protected addEndpoint(endpoint: EndpointInterface) {
         this.rootEndpoint.addChildEndpoint(endpoint);
     }
 
@@ -510,7 +522,7 @@ export class CommissioningServer extends MatterNode {
      * @param endpointId Endpoint ID of the child endpoint to get
      * @protected
      */
-    protected getChildEndpoint(endpointId: EndpointNumber): Endpoint | undefined {
+    protected getChildEndpoint(endpointId: EndpointNumber): EndpointInterface | undefined {
         return this.rootEndpoint.getChildEndpoint(endpointId);
     }
 
@@ -682,7 +694,7 @@ export class CommissioningServer extends MatterNode {
         this.endpointStructureStorage?.set("nextEndpointId", this.nextEndpointId);
     }
 
-    private initializeEndpointIdsFromStorage(endpoint: Endpoint, parentUniquePrefix = "") {
+    private initializeEndpointIdsFromStorage(endpoint: EndpointInterface, parentUniquePrefix = "") {
         if (this.endpointStructureStorage === undefined) {
             throw new ImplementationError("Storage manager must be initialized to enable initialization from storage.");
         }
@@ -717,7 +729,7 @@ export class CommissioningServer extends MatterNode {
         }
     }
 
-    private fillAndStoreEndpointIds(endpoint: Endpoint, parentUniquePrefix = "") {
+    private fillAndStoreEndpointIds(endpoint: EndpointInterface, parentUniquePrefix = "") {
         if (this.endpointStructureStorage === undefined) {
             throw new ImplementationError("endpointStructureStorage not set!");
         }

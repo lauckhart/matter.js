@@ -6,8 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
-import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import {
     WritableFabricScopedAttribute,
     AccessLevel,
@@ -22,11 +21,14 @@ import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvNodeId } from "../../datatype/NodeId.js";
 import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
 import { TlvFabricIndex } from "../../datatype/FabricIndex.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvEnum, TlvUInt8, TlvUInt32, TlvUInt16, TlvUInt64, TlvInt64 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvVendorId } from "../../datatype/VendorId.js";
 import { TlvByteString } from "../../tlv/TlvString.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace OtaSoftwareUpdateRequestor {
     /**
@@ -193,13 +195,9 @@ export namespace OtaSoftwareUpdateRequestor {
     });
 
     /**
-     * OTA Software Update Requestor
-     *
-     * Provides an interface for downloading and applying OTA software updates
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 11.19.7
+     * @see {@link Cluster}
      */
-    export const Cluster = ClusterFactory.Definition({
+    export const ClusterInstance = MutableCluster({
         id: 0x2a,
         name: "OtaSoftwareUpdateRequestor",
         revision: 1,
@@ -311,7 +309,20 @@ export namespace OtaSoftwareUpdateRequestor {
             downloadError: Event(0x2, EventPriority.Info, TlvDownloadErrorEvent)
         }
     });
+
+    /**
+     * OTA Software Update Requestor
+     *
+     * Provides an interface for downloading and applying OTA software updates
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 11.19.7
+     */
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
+
+    export const Cluster: Cluster = ClusterInstance;
+    export const Complete = Cluster;
 }
 
-export type OtaSoftwareUpdateRequestorCluster = typeof OtaSoftwareUpdateRequestor.Cluster;
+export type OtaSoftwareUpdateRequestorCluster = OtaSoftwareUpdateRequestor.Cluster;
 export const OtaSoftwareUpdateRequestorCluster = OtaSoftwareUpdateRequestor.Cluster;
+ClusterRegistry.register(OtaSoftwareUpdateRequestor.Complete);

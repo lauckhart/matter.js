@@ -10,6 +10,7 @@ import { Matter } from "../Matter.js";
 
 Matter.children.push({
     tag: "deviceType", name: "Base", classification: "base",
+    xref: { document: "device", section: "1.1" },
 
     children: [
         {
@@ -112,19 +113,21 @@ Matter.children.push({
         },
 
         {
-            tag: "requirement", name: "Descriptor", element: "serverCluster",
+            tag: "requirement", name: "Descriptor", conformance: "M", element: "serverCluster",
             xref: { document: "device", section: "1.1.7" }
         },
         {
-            tag: "requirement", name: "Binding", element: "serverCluster",
+            tag: "requirement", name: "Binding", conformance: "Simple & Client", element: "serverCluster",
             xref: { document: "device", section: "1.1.7" }
         },
         {
-            tag: "requirement", name: "FixedLabel", element: "serverCluster",
+            tag: "requirement", name: "FixedLabel", conformance: "[App & Server & Multiple]",
+            element: "serverCluster",
             xref: { document: "device", section: "1.1.7" }
         },
         {
-            tag: "requirement", name: "UserLabel", element: "serverCluster",
+            tag: "requirement", name: "UserLabel", conformance: "[App & Server & Multiple]",
+            element: "serverCluster",
             xref: { document: "device", section: "1.1.7" }
         }
     ]

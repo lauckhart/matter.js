@@ -13,6 +13,7 @@ export * from "./DeepEqual.js";
 export * from "./Ip.js";
 export * from "./NamedHandler.js";
 export * from "./Number.js";
+export * from "./Observable.js";
 export * from "./Promises.js";
 export * from "./Queue.js";
 export * from "./Singleton.js";

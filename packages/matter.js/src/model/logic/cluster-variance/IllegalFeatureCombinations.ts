@@ -44,6 +44,8 @@ export function IllegalFeatureCombinations(cluster: ClusterModel) {
         }
     }
 
+    let requiresFeatures = false;
+
     for (const choice of Object.values(choices)) {
         // If choices are mutually exclusive, reject any two flags in
         // combination
@@ -62,11 +64,11 @@ export function IllegalFeatureCombinations(cluster: ClusterModel) {
         for (const f of choice.features) {
             flags[f] = false;
         }
-
         add(flags);
+        requiresFeatures = true;
     }
 
-    return { illegal, requiresFeatures: !!choices.length };
+    return { illegal, requiresFeatures };
 }
 
 function addFeatureNode(

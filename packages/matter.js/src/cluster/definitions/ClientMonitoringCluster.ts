@@ -6,13 +6,15 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import { Attribute, Command, TlvNoResponse, AccessLevel, OptionalCommand } from "../../cluster/Cluster.js";
 import { TlvUInt32, TlvUInt16, TlvUInt64 } from "../../tlv/TlvNumber.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNodeId } from "../../datatype/NodeId.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace ClientMonitoring {
     export const TlvMonitoringRegistration = TlvObject({
@@ -37,11 +39,9 @@ export namespace ClientMonitoring {
     });
 
     /**
-     * Client Monitoring
-     *
-     * Client Monitoring allows for ensuring that listed clients meet the required monitoring conditions on the server.
+     * @see {@link Cluster}
      */
-    export const Cluster = ClusterFactory.Definition({
+    export const ClusterInstance = MutableCluster({
         id: 0x1046,
         name: "ClientMonitoring",
         revision: 1,
@@ -79,7 +79,18 @@ export namespace ClientMonitoring {
             )
         }
     });
+
+    /**
+     * Client Monitoring
+     *
+     * Client Monitoring allows for ensuring that listed clients meet the required monitoring conditions on the server.
+     */
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
+
+    export const Cluster: Cluster = ClusterInstance;
+    export const Complete = Cluster;
 }
 
-export type ClientMonitoringCluster = typeof ClientMonitoring.Cluster;
+export type ClientMonitoringCluster = ClientMonitoring.Cluster;
 export const ClientMonitoringCluster = ClientMonitoring.Cluster;
+ClusterRegistry.register(ClientMonitoring.Complete);

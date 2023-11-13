@@ -12,7 +12,6 @@ import { TlvWrapper } from "../tlv/TlvWrapper.js";
 import { Endian } from "../util/ByteArray.js";
 import { DataWriter } from "../util/DataWriter.js";
 import { toBigInt } from "../util/Number.js";
-import { Branded } from "../util/Type.js";
 
 /**
  * A Node Identifier (Node ID) is a 64-bit number that uniquely identifies an individual Node or a
@@ -20,10 +19,12 @@ import { Branded } from "../util/Type.js";
  *
  * @see {@link MatterCoreSpecificationV1_0} § 2.5.5
  */
-export type NodeId = Branded<bigint, "NodeId">;
+// TODO - research - branded bigint triggering TS5 bug(?) in TimeSyncCluster
+// Doesn't happen with FabricId
+export type NodeId = bigint; //Branded<bigint, "NodeId">;
 
 export function NodeId(v: bigint | number): NodeId {
-    return toBigInt(v) as NodeId;
+    return toBigInt(v)// as NodeId;
 }
 
 export namespace NodeId {

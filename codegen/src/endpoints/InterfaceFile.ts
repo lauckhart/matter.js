@@ -1,0 +1,45 @@
+/**
+ * @license
+ * Copyright 2022-2023 Project CHIP Authors
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import { Block, TsFile } from "../util/TsFile.js";
+import { ClusterModel, ClusterVariance } from "@project-chip/matter.js/model";
+import { Logger } from "@project-chip/matter.js/log";
+import { InterfaceGenerator } from "./InterfaceGenerator.js";
+
+const logger = Logger.get("InterfaceFile");
+
+export class InterfaceFile extends TsFile {
+    definitionName: string;
+    cluster: ClusterModel;
+    ns: Block;
+
+    constructor(cluster: ClusterModel, private variance: ClusterVariance) {
+        const definitionName = `${cluster.name}Interface`;
+        super(`#interfaces/${definitionName}`);
+        this.definitionName = definitionName;
+        this.cluster = cluster;
+        this.ns = this.statements(`export namespace ${definitionName} {`, "}");
+
+        this.generate();
+    }
+
+    override addImport(filename: string, symbol: string) {
+        return super.addImport(`../../../${filename}`, symbol);
+    }
+
+    private generate() {
+        logger.info(`${this.cluster.name} → ${this.name}.ts`);
+
+        const gen = new InterfaceGenerator(this);
+
+        gen.generateComponent("Base", this.variance.base);
+        for (const component of this.variance.components) {
+            gen.generateComponent(component.name, component);
+        }
+
+        gen.generateInterface();
+    }
+}

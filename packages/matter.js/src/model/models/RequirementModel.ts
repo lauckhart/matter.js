@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Access, Conformance, Constraint, Quality } from "../aspects/index.js";
+import { Access, Aspect, Conformance, Constraint, Quality } from "../aspects/index.js";
 import { DatatypeElement, RequirementElement } from "../elements/index.js";
 import { Aspects } from "./Aspects.js";
 import { DatatypeModel } from "./DatatypeModel.js";
@@ -18,6 +18,7 @@ const QUALITY: unique symbol = Symbol("quality");
 export class RequirementModel extends Model implements RequirementElement {
     override tag: RequirementElement.Tag = RequirementElement.Tag;
     element!: RequirementElement.ElementType;
+    default?: any;
 
     override get key() {
         return `${this.id ?? this.name}:${this.element}`;
@@ -61,5 +62,27 @@ export class RequirementModel extends Model implements RequirementElement {
 
     static {
         Model.constructors[RequirementElement.Tag] = this;
+    }
+
+    get requirements() {
+        return this.all(RequirementModel);
+    }
+
+    override valueOf() {
+        const result = super.valueOf() as any;
+        for (const k of ["conformance", "access", "quality", "constraint"]) {
+            const v = (this as any)[k] as Aspect<any>;
+            if (v && !v.empty) {
+                result[k] = v.valueOf();
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Is the element mandatory?
+     */
+    get mandatory() {
+        return this.conformance.mandatory;
     }
 }

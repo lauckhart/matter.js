@@ -27,7 +27,7 @@ import { DeviceTypeId } from "./datatype/DeviceTypeId.js";
 import { FabricIndex } from "./datatype/FabricIndex.js";
 import { NodeId } from "./datatype/NodeId.js";
 import { VendorId } from "./datatype/VendorId.js";
-import { Endpoint } from "./device/Endpoint.js";
+import { EndpointInterface } from "./endpoint/EndpointInterface.js";
 import { Fabric } from "./fabric/Fabric.js";
 import { FabricManager } from "./fabric/FabricManager.js";
 import { Logger } from "./log/Logger.js";
@@ -437,7 +437,7 @@ export class MatterDevice {
         expiryLengthSeconds: number,
         maxCumulativeFailsafeSeconds: number,
         associatedFabric: Fabric | undefined,
-        endpoint: Endpoint,
+        endpoint: EndpointInterface,
     ) {
         if (this.failSafeContext === undefined) {
             // If ExpiryLengthSeconds is 0 and the fail-safe timer was not armed, then this command invocation SHALL lead

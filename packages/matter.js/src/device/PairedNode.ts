@@ -42,7 +42,7 @@ import { DecodedEventReportValue } from "../protocol/interaction/EventDataDecode
 import { StatusResponseError } from "../protocol/interaction/InteractionMessenger.js";
 import { StatusCode } from "../protocol/interaction/InteractionProtocol.js";
 import {
-    CommissionningFlowType,
+    CommissioningFlowType,
     DiscoveryCapabilitiesSchema,
     ManualPairingCodeCodec,
     QrPairingCodeCodec,
@@ -52,6 +52,7 @@ import { Time } from "../time/Time.js";
 import { DeviceTypeDefinition, DeviceTypes, UnknownDeviceType, getDeviceTypeDefinitionByCode } from "./DeviceTypes.js";
 import { Endpoint } from "./Endpoint.js";
 import { EndpointLoggingOptions, logEndpoint } from "./EndpointStructureLogger.js";
+import { EndpointInterface } from "../endpoint/EndpointInterface.js";
 
 const logger = Logger.get("PairedNode");
 
@@ -609,7 +610,7 @@ export class PairedNode {
     }
 
     /** Returns the devices/endpoints known for this node. */
-    getDevices(): Endpoint[] {
+    getDevices(): EndpointInterface[] {
         return this.endpoints.get(EndpointNumber(0))?.getChildEndpoints() ?? [];
     }
 
@@ -720,7 +721,7 @@ export class PairedNode {
             version: 0,
             vendorId,
             productId,
-            flowType: CommissionningFlowType.Standard,
+            flowType: CommissioningFlowType.Standard,
             discriminator: discriminator,
             passcode: passcode,
             discoveryCapabilities: DiscoveryCapabilitiesSchema.encode({

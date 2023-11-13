@@ -6,11 +6,13 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import { Attribute, OptionalWritableAttribute, Command, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvUInt8, TlvUInt16 } from "../../tlv/TlvNumber.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace BarrierControl {
     /**
@@ -19,11 +21,9 @@ export namespace BarrierControl {
     export const TlvBarrierControlGoToPercentRequest = TlvObject({ percentOpen: TlvField(0, TlvUInt8) });
 
     /**
-     * Barrier Control
-     *
-     * This cluster provides control of a barrier (garage door).
+     * @see {@link Cluster}
      */
-    export const Cluster = ClusterFactory.Definition({
+    export const ClusterInstance = MutableCluster({
         id: 0x103,
         name: "BarrierControl",
         revision: 1,
@@ -46,7 +46,18 @@ export namespace BarrierControl {
             barrierControlStop: Command(0x1, TlvNoArguments, 0x1, TlvNoResponse)
         }
     });
+
+    /**
+     * Barrier Control
+     *
+     * This cluster provides control of a barrier (garage door).
+     */
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
+
+    export const Cluster: Cluster = ClusterInstance;
+    export const Complete = Cluster;
 }
 
-export type BarrierControlCluster = typeof BarrierControl.Cluster;
+export type BarrierControlCluster = BarrierControl.Cluster;
 export const BarrierControlCluster = BarrierControl.Cluster;
+ClusterRegistry.register(BarrierControl.Complete);

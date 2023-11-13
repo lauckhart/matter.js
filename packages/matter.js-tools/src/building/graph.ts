@@ -9,8 +9,8 @@ import colors from "ansi-colors";
 import { Package } from "../util/package.js";
 import { Progress } from "../util/progress.js";
 import { Builder } from "./builder.js";
-import { InternalBuildError } from "./error.js";
 import { Project } from "./project.js";
+import { InternalBuildError } from "./error.js";
 
 /**
  * Graph of dependencies for workspace packages.
@@ -48,7 +48,6 @@ export class Graph {
         for (const name in allDeps) {
             for (const dep of allDeps[name]) {
                 const depNode = nodeMap[dep];
-
                 // Note -- allow nodes to reference themselves, seems to be
                 // necessary on tools for use of tsc
                 if (depNode && depNode !== nodeMap[name]) {

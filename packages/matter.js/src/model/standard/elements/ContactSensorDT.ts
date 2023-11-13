@@ -10,27 +10,25 @@ import { Matter } from "../Matter.js";
 
 Matter.children.push({
     tag: "deviceType", name: "ContactSensor", id: 0x15, classification: "simple",
+    details: "This defines conformance to the Contact Sensor device type.",
+    xref: { document: "device", section: "7.1" },
 
     children: [
         {
             tag: "requirement", name: "Descriptor", id: 0x1d, element: "serverCluster",
-
             children: [{
-                tag: "datatype", name: "DeviceTypeStruct", type: "struct",
-                children: [
-                    { tag: "datatype", name: "DeviceType", type: "devtype-id", default: 21 },
-                    { tag: "datatype", name: "Revision", type: "uint16", default: 1 }
-                ]
+                tag: "requirement", name: "DeviceTypeList", default: [ { deviceType: 21, revision: 1 } ],
+                element: "attribute"
             }]
         },
 
         {
-            tag: "requirement", name: "Identify", id: 0x3, element: "serverCluster",
+            tag: "requirement", name: "Identify", id: 0x3, conformance: "M", element: "serverCluster",
             xref: { document: "device", section: "7.1.4" },
-            children: [{ tag: "requirement", name: "Query", element: "feature" }]
+            children: [{ tag: "requirement", name: "QUERY", conformance: "!Matter", element: "feature" }]
         },
         {
-            tag: "requirement", name: "BooleanState", id: 0x45, element: "serverCluster",
+            tag: "requirement", name: "BooleanState", id: 0x45, conformance: "M", element: "serverCluster",
             xref: { document: "device", section: "7.1.4" }
         }
     ]

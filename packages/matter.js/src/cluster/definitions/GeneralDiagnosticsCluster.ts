@@ -6,8 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
-import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import {
     Attribute,
     OptionalAttribute,
@@ -21,9 +20,12 @@ import {
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvEnum, TlvUInt16, TlvUInt64, TlvUInt32 } from "../../tlv/TlvNumber.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace GeneralDiagnostics {
     /**
@@ -416,16 +418,9 @@ export namespace GeneralDiagnostics {
     }
 
     /**
-     * General Diagnostics
-     *
-     * The General Diagnostics Cluster, along with other diagnostics clusters, provide a means to acquire standardized
-     * diagnostics metrics that may be used by a Node to assist a user or Administrator in diagnosing potential
-     * problems. The General Diagnostics Cluster attempts to centralize all metrics that are broadly relevant to the
-     * majority of Nodes.
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 11.11
+     * @see {@link Cluster}
      */
-    export const Cluster = ClusterFactory.Definition({
+    export const ClusterInstance = MutableCluster({
         id: 0x33,
         name: "GeneralDiagnostics",
         revision: 1,
@@ -611,7 +606,23 @@ export namespace GeneralDiagnostics {
             bootReason: Event(0x3, EventPriority.Critical, TlvBootReasonEvent)
         }
     });
+
+    /**
+     * General Diagnostics
+     *
+     * The General Diagnostics Cluster, along with other diagnostics clusters, provide a means to acquire standardized
+     * diagnostics metrics that may be used by a Node to assist a user or Administrator in diagnosing potential
+     * problems. The General Diagnostics Cluster attempts to centralize all metrics that are broadly relevant to the
+     * majority of Nodes.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 11.11
+     */
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
+
+    export const Cluster: Cluster = ClusterInstance;
+    export const Complete = Cluster;
 }
 
-export type GeneralDiagnosticsCluster = typeof GeneralDiagnostics.Cluster;
+export type GeneralDiagnosticsCluster = GeneralDiagnostics.Cluster;
 export const GeneralDiagnosticsCluster = GeneralDiagnostics.Cluster;
+ClusterRegistry.register(GeneralDiagnostics.Complete);

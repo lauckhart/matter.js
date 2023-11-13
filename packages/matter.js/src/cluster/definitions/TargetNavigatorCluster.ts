@@ -6,14 +6,16 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
-import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import { Attribute, OptionalAttribute, Command } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace TargetNavigator {
     /**
@@ -101,13 +103,9 @@ export namespace TargetNavigator {
     });
 
     /**
-     * Target Navigator
-     *
-     * This cluster provides an interface for UX navigation within a set of targets on a device or endpoint.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11
+     * @see {@link Cluster}
      */
-    export const Cluster = ClusterFactory.Definition({
+    export const ClusterInstance = MutableCluster({
         id: 0x505,
         name: "TargetNavigator",
         revision: 1,
@@ -144,7 +142,20 @@ export namespace TargetNavigator {
             navigateTarget: Command(0x0, TlvNavigateTargetRequest, 0x1, TlvNavigateTargetResponse)
         }
     });
+
+    /**
+     * Target Navigator
+     *
+     * This cluster provides an interface for UX navigation within a set of targets on a device or endpoint.
+     *
+     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11
+     */
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
+
+    export const Cluster: Cluster = ClusterInstance;
+    export const Complete = Cluster;
 }
 
-export type TargetNavigatorCluster = typeof TargetNavigator.Cluster;
+export type TargetNavigatorCluster = TargetNavigator.Cluster;
 export const TargetNavigatorCluster = TargetNavigator.Cluster;
+ClusterRegistry.register(TargetNavigator.Complete);

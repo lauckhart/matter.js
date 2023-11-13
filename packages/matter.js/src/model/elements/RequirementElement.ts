@@ -23,6 +23,7 @@ export type RequirementElement = BaseElement & {
     access?: Access.Definition;
     quality?: Quality.Definition;
     conformance?: Conformance.Definition;
+    default?: any;
 
     children?: (RequirementElement | DatatypeElement)[];
 };

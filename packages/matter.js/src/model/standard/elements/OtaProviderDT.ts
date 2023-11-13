@@ -10,26 +10,25 @@ import { Matter } from "../Matter.js";
 
 Matter.children.push({
     tag: "deviceType", name: "OtaProvider", id: 0x14, classification: "utility",
+    details: "An OTA Provider is a node that is capable of providing an OTA software update to other nodes on the " +
+        "same fabric.",
+    xref: { document: "device", section: "2.4" },
 
     children: [
         {
             tag: "requirement", name: "Descriptor", id: 0x1d, element: "serverCluster",
-
             children: [{
-                tag: "datatype", name: "DeviceTypeStruct", type: "struct",
-                children: [
-                    { tag: "datatype", name: "DeviceType", type: "devtype-id", default: 20 },
-                    { tag: "datatype", name: "Revision", type: "uint16", default: 1 }
-                ]
+                tag: "requirement", name: "DeviceTypeList", default: [ { deviceType: 20, revision: 1 } ],
+                element: "attribute"
             }]
         },
 
         {
-            tag: "requirement", name: "OtaSoftwareUpdateRequestor", element: "clientCluster",
+            tag: "requirement", name: "OtaSoftwareUpdateRequestor", conformance: "O", element: "clientCluster",
             xref: { document: "device", section: "2.4.3" }
         },
         {
-            tag: "requirement", name: "OtaSoftwareUpdateProvider", element: "serverCluster",
+            tag: "requirement", name: "OtaSoftwareUpdateProvider", conformance: "M", element: "serverCluster",
             xref: { document: "device", section: "2.4.3" }
         }
     ]
