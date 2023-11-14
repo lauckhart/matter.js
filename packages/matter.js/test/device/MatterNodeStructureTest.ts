@@ -37,6 +37,7 @@ import { ComposedDevice } from "../../src/device/ComposedDevice.js";
 import { RootEndpoint } from "../../src/device/Device.js";
 import { DeviceTypes } from "../../src/device/DeviceTypes.js";
 import { OnOffLightDevice, OnOffPluginUnitDevice } from "../../src/device/OnOffDevices.js";
+import { EndpointInterface } from "../../src/endpoint/EndpointInterface.js";
 import { InteractionEndpointStructure } from "../../src/protocol/interaction/InteractionEndpointStructure.js";
 import { InteractionServer, attributePathToId } from "../../src/protocol/interaction/InteractionServer.js";
 import { StorageBackendMemory } from "../../src/storage/StorageBackendMemory.js";
@@ -44,7 +45,7 @@ import { StorageManager } from "../../src/storage/StorageManager.js";
 import { ByteArray } from "../../src/util/ByteArray.js";
 
 function addRequiredRootClusters(
-    rootEndpoint: RootEndpoint,
+    rootEndpoint: EndpointInterface,
     includeAdminCommissioningCluster = true,
     includeBasicInformationCluster = true,
 ) {

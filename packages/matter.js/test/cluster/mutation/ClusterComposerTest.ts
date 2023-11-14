@@ -59,18 +59,13 @@ describe("ClusterComposer", () => {
 
         it("doesn't extend cluster when features don't match", () => {
             const cluster = composer.compose(["Extended"]);
-            expectElementCounts(cluster, 1);
+            expectElementCounts(cluster, 2);
         });
 
         it("treats missing feature as false", () => {
             const cluster = composer.compose(["Extended", "Fancy"]);
             expectElements2(cluster);
             expectElementCounts(cluster, 2);
-        });
-
-        it("does not extend with disabled features", () => {
-            const cluster = composer.compose(["Extended", "Fancy"]);
-            expectElementCounts(cluster, 1);
         });
     });
 

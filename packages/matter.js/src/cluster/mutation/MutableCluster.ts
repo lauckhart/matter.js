@@ -26,7 +26,7 @@ export function MutableCluster<const T extends ClusterType.Options>(options: T) 
     const cluster = ClusterType(options);
 
     Object.assign(cluster, {
-        with(features: ClusterComposer.FeatureSelection<typeof cluster>) {
+        with(...features: ClusterComposer.FeatureSelection<typeof cluster>) {
             return new ClusterComposer(cluster).compose(features);
         },
 
@@ -43,7 +43,7 @@ export function MutableCluster<const T extends ClusterType.Options>(options: T) 
         },
     });
 
-    return cluster as unknown as MutableCluster<T>;
+    return cluster as MutableCluster<T>;
 }
 
 export namespace MutableCluster {
@@ -112,13 +112,13 @@ export namespace MutableCluster {
      */
     export function ExtensibleOnly<const T extends ClusterType.Options>(options: T) {
         return {
-            id: ClusterId,
-            name: String,
+            id: options.id,
+            name: options.name,
 
-            with(features: ClusterComposer.FeatureSelection<ClusterType.Of<T>>) {
+            with(...features: ClusterComposer.FeatureSelection<ClusterType.Of<T>>) {
                 return new ClusterComposer(ClusterType(options)).compose(features);
             },
-        } as unknown as ExtensibleOnly<T>;
+        } as ExtensibleOnly<T>;
     }
 
     /**

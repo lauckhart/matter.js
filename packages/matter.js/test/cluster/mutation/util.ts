@@ -193,3 +193,18 @@ export function expectElementCounts(cluster: ClusterType, count: number) {
     expect(Object.keys(cluster.commands).length).equal(count);
     expect(Object.keys(cluster.events).length).equal(count);
 }
+
+export function stripFunctions(value: any): any {
+    if (typeof value === "function") {
+        return undefined;
+    }
+    if (typeof value === "object" && value !== null) {
+        return Object.fromEntries(
+            Object.entries(value).map(kv => [kv[0], stripFunctions(kv[1])])
+        );
+    }
+    if (Array.isArray(value)) {
+        return value.map(v => stripFunctions(v));
+    }
+    return value;
+}

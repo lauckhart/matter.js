@@ -16,6 +16,7 @@ import { ClusterType } from "../../src/cluster/ClusterType.js";
 import { TlvNumberSchema, TlvUInt8 } from "../../src/tlv/TlvNumber.js";
 import { TlvSchema } from "../../src/tlv/TlvSchema.js";
 import { Branded } from "../../src/util/Type.js";
+import { stripFunctions } from "./mutation/util.js";
 
 const BaseFoo = {
     id: 1,
@@ -80,8 +81,20 @@ describe("ClusterType", () => {
             const clusterCluster = Cluster(BaseFoo);
             FooCluster satisfies typeof clusterCluster;
 
-            delete FooCluster.extensions;
-            expect(FooCluster).deep.equal(clusterCluster);
+            const expected = stripFunctions(clusterCluster);
+            const actual = stripFunctions(FooCluster);
+
+            // Test some fields individually to make it easier to diagnose conflicts with no visual changes
+
+            for (const key in clusterCluster.attributes) {
+                expect((actual.attributes as any)[key]).deep.equal((expected.attributes as any)[key]);
+            }
+
+            for (const key in clusterCluster) {
+                expect((actual as any)[key]).deep.equal((expected as any)[key]);
+            }
+
+            expect(actual).deep.equal(expected);
         });
 
         it("type defines correctly", () => {
@@ -94,7 +107,7 @@ describe("ClusterType", () => {
             expect(FooCluster.id).equal(1);
             expect(FooCluster.name).equal("Foo");
             expect(FooCluster.revision).equal(1);
-            expect(FooCluster.attributes.attr.id).equal(1);
+            expect(FooCluster.attributes.attr.id).equal(2);
             expect(FooCluster.attributes.attr.schema).instanceof(TlvNumberSchema);
         });
     });

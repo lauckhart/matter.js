@@ -15,7 +15,6 @@ import { CommandId } from "../../datatype/CommandId.js";
 import { EndpointNumber } from "../../datatype/EndpointNumber.js";
 import { EventId } from "../../datatype/EventId.js";
 import { NodeId } from "../../datatype/NodeId.js";
-import { Endpoint } from "../../device/Endpoint.js";
 import { EndpointInterface } from "../../endpoint/EndpointInterface.js";
 import { TypeFromSchema } from "../../tlv/TlvSchema.js";
 import { TlvAttributePath, TlvCommandPath, TlvEventPath } from "./InteractionProtocol.js";

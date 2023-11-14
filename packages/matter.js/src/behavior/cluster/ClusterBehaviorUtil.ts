@@ -35,17 +35,12 @@ export function createType<const C extends ClusterType>(cluster: C, base: Behavi
             return cluster;
         }
 
-        static override get EndpointScope() {
-            return EndpointScope;
-        }
-
-        static override get FabricScope() {
-            return FabricScope;
-        }
-
-        static override get Events() {
-            return MyEvents;
-        }
+        // These are read-only but we can't define with getters because this
+        // prevents us from override by defining a new class in the matching
+        // namespace.
+        static override readonly EndpointScope = EndpointScope;
+        static override readonly FabricScope = FabricScope;
+        static override readonly Events = MyEvents;
 
         static for(cluster: ClusterType) {
             return createType(cluster, this);

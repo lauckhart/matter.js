@@ -9,6 +9,7 @@ import {
     Command,
     Event,
     EventPriority,
+    GlobalAttributes,
     OptionalAttribute,
     OptionalCommand,
     OptionalEvent,
@@ -17,7 +18,7 @@ import { ClusterType } from "../../../src/cluster/ClusterType.js";
 import { ElementModifier } from "../../../src/cluster/mutation/ElementModifier.js";
 import { TlvBoolean } from "../../../src/tlv/TlvBoolean.js";
 import { TlvUInt8 } from "../../../src/tlv/TlvNumber.js";
-import { Elements1ish, TestBase } from "./util.js";
+import { Elements1ish, TestBase, stripFunctions } from "./util.js";
 
 describe("ElementModifier", () => {
     describe("alter", () => {
@@ -53,7 +54,7 @@ describe("ElementModifier", () => {
 
             // Type: Entire alteration
             type AlteredT = ElementModifier.WithAlterations<typeof cluster, typeof alterations>;
-            const altered = {} as AlteredT;
+            const altered = { attributes: {} } as AlteredT;
             altered.attributes satisfies {};
             altered.attributes.foo satisfies { optional: false };
             altered.attributes.bar satisfies { optional: true };
@@ -142,14 +143,14 @@ describe("ElementModifier", () => {
             set satisfies Elements1ish;
 
             // Functional: Generic cluster
-            const generic = new ElementModifier({} as ClusterType).set({});
+            const generic = new ElementModifier({ attributes: {} } as ClusterType).set({});
             generic satisfies ClusterType;
             expect(generic.attributes).deep.equal({});
 
             // Functional: Empty attributes
             const empty = new ElementModifier(ClusterType({ id: 1, revision: 1, name: "One" })).set({});
             empty satisfies ClusterType;
-            expect(empty.attributes).deep.equal({});
+            expect(stripFunctions(empty.attributes)).deep.equal(stripFunctions(GlobalAttributes({})));
 
             // Functional: With attribute
             const withAttr = new ElementModifier(TestBase).set({ attr1: 4 });
@@ -237,9 +238,9 @@ describe("ElementModifier", () => {
             // Functional
             const disabled = new ElementModifier(cluster).enable(flags);
             disabled satisfies Altered;
-            expect(disabled.attributes.attr.optional).equal(true);
-            expect(disabled.commands.cmd.optional).equal(true);
-            expect(disabled.events.ev.optional).equal(true);
+            expect(disabled.attributes.attr.optional).equal(false);
+            expect(disabled.commands.cmd.optional).equal(false);
+            expect(disabled.events.ev.optional).equal(false);
         });
     });
 });

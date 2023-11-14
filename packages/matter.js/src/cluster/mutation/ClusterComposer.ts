@@ -83,7 +83,7 @@ export class ClusterComposer<const T extends ClusterType> {
      * Injects a component into a cluster if the cluster supports the specified
      * features.  Uses matching element from "original" if present.  This
      * allows for component insertion without overwrite of other changes to the
-     * named feature.
+     * named element.
      */
     private accept(
         definition: ClusterComposer.WritableDefinition,
@@ -104,18 +104,16 @@ export class ClusterComposer<const T extends ClusterType> {
             }
 
             let dest = definition[name];
-            if (!dest) {
-                dest = definition[name] = {};
+            if (dest) {
+                dest = { ...dest } as any;
+            } else {
+                dest = {};
             }
-
-            dest = { ...dest } as any;
+            (definition as any)[name] = dest;
 
             for (const key in src) {
-                const orig = original?.[name]?.[key];
-                if (orig) {
-                    dest[name] = orig;
-                } else if (!dest[name]) {
-                    (dest as any)[name] = src;
+                if (dest[key] === undefined) {
+                    dest[key] = src[key];
                 }
             }
         }

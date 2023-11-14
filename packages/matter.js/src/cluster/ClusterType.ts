@@ -31,23 +31,33 @@ export interface ClusterType extends ClusterType.Identity, ClusterType.Features<
  * Define a cluster.
  */
 export function ClusterType<const T extends ClusterType.Options>(options: T) {
-    const features = options.features ?? {};
-
-    return {
-        commands: {},
-        events: {},
-        supportedFeatures: {},
-
-        ...options,
-
+    const cluster = {
         id: ClusterId(options.id),
-        features,
+        name: options.name,
+        revision: options.revision,
+
+        features: options.features ?? {},
+        supportedFeatures: options.supportedFeatures ?? {},
 
         attributes: {
-            ...GlobalAttributes(features),
             ...options.attributes,
+            ...GlobalAttributes(options.features ?? {}),
         },
-    } as unknown as ClusterType.Of<T>;
+        commands: options.commands ?? {},
+        events: options.events ?? {},
+
+        unknown: false,
+    } as ClusterType.Of<T>;
+
+    if (options.base) {
+        cluster.base = options.base as ClusterType.Of<T>["base"];
+    }
+
+    if (options.extensions) {
+        cluster.extensions = options.extensions as ClusterType.Of<T>["extensions"];;
+    }
+
+    return cluster;
 }
 
 export namespace ClusterType {
@@ -81,6 +91,7 @@ export namespace ClusterType {
         commands: T["commands"] extends {} ? T["commands"] : {};
         events: T["events"] extends {} ? T["events"] : {};
         unknown: T["unknown"] extends boolean ? T["unknown"] : false;
+        base: T["base"] extends {} ? T["base"] : undefined;
         extensions: T["extensions"] extends {} ? T["extensions"] : undefined;
     }
 

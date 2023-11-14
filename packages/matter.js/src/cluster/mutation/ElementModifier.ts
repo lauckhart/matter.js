@@ -18,7 +18,7 @@ export class ElementModifier<const T extends ClusterType> {
      */
     alter<const AlterationsT extends ElementModifier.Alterations<T>>(alterations: AlterationsT) {
         return modifyElements(this.cluster, alterations, (element, alteration: any) => {
-            for (const property of alteration) {
+            for (const property in alteration) {
                 element[property] = alteration[property];
             }
         }) as ElementModifier.WithAlterations<T, AlterationsT>;
@@ -43,8 +43,10 @@ export class ElementModifier<const T extends ClusterType> {
      */
     enable<const FlagsT extends ElementModifier.ElementFlags<T>>(flags: FlagsT) {
         return modifyElements(this.cluster, flags, (element, flag) => {
-            if (flag) {
+            if (flag === true) {
                 element.optional = false;
+            } else if (flag === false) {
+                element.optional = true;
             }
         }) as ElementModifier.WithAlterations<T, ElementModifier.ElementFlagAlterations<FlagsT>>;
     }
@@ -184,7 +186,7 @@ function modifyElements(
 
         for (const elementName in mods) {
             const mod = mods[elementName];
-            if (!mod) {
+            if (mod === undefined) {
                 continue;
             }
 
@@ -198,7 +200,9 @@ function modifyElements(
                 replaced = true;
             }
 
-            elements[elementName] = modifier({ ...element }, mod);
+            elements[elementName] = { ...element };
+            
+            modifier(elements[elementName], mod);
         }
     }
 
