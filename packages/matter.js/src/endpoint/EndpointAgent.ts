@@ -112,7 +112,7 @@ export namespace EndpointAgent {
      * {@link EndpointAgent.require}.
      */
     export interface Type<B extends SupportedBehaviors = {}> {
-        new (context: InvocationContext):
+        new (part: Part, context: InvocationContext):
             & EndpointAgent
             & { readonly [K in keyof B & string]: InstanceType<B[K]> };
     }

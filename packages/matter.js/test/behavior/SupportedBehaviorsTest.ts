@@ -37,7 +37,7 @@ describe("BehaviorList", () => {
         const sb = SupportedBehaviors.extend({}, [WC1, CC]);
         sb satisfies { windowCovering: WC1, colorControl: CC };
         ({}) as IsNever<typeof sb> satisfies false;
-        expect(sb).deep.equal([WC1, CC]);
+        expect(sb).deep.equal({ windowCovering: WC1, colorControl: CC });
     });
 
     it("extends twice", () => {

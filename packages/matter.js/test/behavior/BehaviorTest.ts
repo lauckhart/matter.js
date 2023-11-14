@@ -12,6 +12,7 @@ import { EventEmitter, Observable } from "../../src/util/Observable.js";
 import { createBehavior } from "./behavior-test-util.js";
 
 class TestBehavior extends Behavior {
+    static override id = "test";
     declare readonly events: TestBehavior.Events;
     declare readonly state: TestBehavior.EndpointScope & TestBehavior.FabricScope;
 

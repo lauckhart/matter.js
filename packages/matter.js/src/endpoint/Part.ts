@@ -48,12 +48,11 @@ export class Part {
         }
 
         const behaviors = options.type?.behaviors;
-        if (!behaviors || !behaviors.length) {
+        if (!behaviors || !Object.keys(behaviors).length) {
             throw new ImplementationError("Part created with no behaviors");
         }
         
         this.#behaviors = new Behaviors(this, behaviors);
-        this.#behaviors.initialize();
     }
 
     /**
@@ -99,6 +98,7 @@ export class Part {
             throw new ImplementationError(`Cannot reparent installed part`);
         }
         this.#owner = owner;
+        this.#behaviors.initialize();
 
         if (this.#id !== undefined) {
             this.getAgent().get(LifecycleBehavior).state.installed = true;
@@ -210,7 +210,7 @@ export class Part {
         // For unscoped access we cache the agent
         if (!context || !context.fabric) {
             if (!this.#unscopedAgent) {
-                this.#unscopedAgent = new this.#agentType({});
+                this.#unscopedAgent = new this.#agentType(this, {});
             }
             return this.#unscopedAgent;
         }
@@ -220,7 +220,7 @@ export class Part {
         // TODO - agents need a 1:1 mapping with sessions.  They're optimized
         // for fast creation but if necessary we could cache and reuse by
         // replacing the context
-        return new this.#agentType(context);
+        return new this.#agentType(this, context);
     }
 
     destroy() {

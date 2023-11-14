@@ -45,7 +45,7 @@ export class ClusterBehavior extends Behavior {
      * The ID of ClusterBehavior implementations is the uncapitalized cluster
      * name.
      */
-    static override id = "unknown" as Uncapitalize<string>;
+    static override id: Uncapitalize<string>;
 
     /**
      * The cluster implemented by this behavior.
@@ -144,15 +144,12 @@ export class ClusterBehavior extends Behavior {
         >;
     }
 
-    static override supports(other: Behavior) {
+    static override supports(other: Behavior.Type) {
         if (!Behavior.supports.call(this, other)) {
             return false;
         }
-        if (!(other instanceof ClusterBehavior)) {
-            return false;
-        }
 
-        const otherFeatures = other.cluster.supportedFeatures;
+        const otherFeatures = (other as ClusterBehavior.Type).cluster.supportedFeatures;
         const myFeatures = this.cluster.supportedFeatures;
         for (const name in otherFeatures) {
             if (otherFeatures[name] && !(myFeatures as Record<string, boolean>)[name]) {

@@ -51,7 +51,7 @@ export abstract class Behavior {
      * EndpointBuilder also uses the ID when replacing behaviors using the
      * with() builder method.
      */
-    static readonly id: Uncapitalize<string>;
+    static readonly id: string;
 
     /**
      * The "behavior owner" connects the behavior with its runtime context.
@@ -80,13 +80,6 @@ export abstract class Behavior {
     constructor(agent: EndpointAgent, backing: BehaviorBacking) {
         this.#agent = agent;
         (this as unknown as Internal)[BACKING] = backing;
-    }
-
-    /**
-     * Does this behavior support functionality of a specific implementation?
-     */
-    static supports(other: Behavior) {
-        return other instanceof this;
     }
 
     /**
@@ -121,6 +114,13 @@ export abstract class Behavior {
      * {@link LifecycleBehavior.state.initializingBehaviors}.
      */
     initialize() {}
+
+    /**
+     * Does this behavior support functionality of a specific implementation?
+     */
+    static supports(other: Behavior.Type) {
+        return (this as any) === other || this.prototype instanceof other;
+    }
 
     /**
      * Default state values.

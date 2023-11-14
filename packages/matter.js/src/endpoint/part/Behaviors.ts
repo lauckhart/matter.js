@@ -24,12 +24,15 @@ export class Behaviors {
     #backings: Record<string, BehaviorBacking> = {};
 
     constructor(part: Part, supported: SupportedBehaviors) {
-        if (!Array.isArray(supported)) {
+        if (typeof supported !== "object") {
             throw new ImplementationError("Part \"behaviors\" option must be an array of Behavior.Type instances");
         }
-        for (let i = 0; i < supported.length; i++) {
-            if (!(supported[i].prototype instanceof Behavior)) {
-                throw new ImplementationError(`Part behavior #${i} is not a Behavior.Type`);
+        for (const id in supported) {
+            if (!(supported[id].prototype instanceof Behavior)) {
+                throw new ImplementationError(`Part behavior #${id} is not a Behavior.Type`);
+            }
+            if (typeof supported[id].id !== "string") {
+                throw new ImplementationError(`Part behavior #${id} has no ID`);
             }
         }
 
@@ -52,7 +55,7 @@ export class Behaviors {
      */
     has<T extends Behavior.Type>(type: T) {
         const myType = this.#supported[type.id];
-        return myType === type || myType?.prototype.supports(type);
+        return myType === type || myType?.supports(type);
     }
 
     /**

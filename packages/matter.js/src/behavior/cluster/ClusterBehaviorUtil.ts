@@ -11,6 +11,7 @@ import type { ClusterType } from "../../cluster/ClusterType.js";
 import type { ClusterBehavior } from "./ClusterBehavior.js";
 import { ValidationError } from "../../common/MatterError.js";
 import { EventEmitter, Observable } from "../../util/Observable.js";
+import { Attribute, GlobalAttributes } from "../../cluster/Cluster.js";
 
 /**
  * This is the actual implementation of ClusterBehavior.for().
@@ -94,24 +95,32 @@ function createDerivedState(cluster: ClusterType, base: Behavior.Type, fabricSco
     const oldAttributes = (base as ClusterBehavior.Type).cluster?.attributes ?? {};
 
     const defaults = {} as Record<string, any>;
-    for (const key in oldDefaults) {
-        if (oldAttributes[key] === undefined || newAttributes[key] !== undefined) {
-            defaults[key] = oldDefaults[key];
+    for (const name in oldDefaults) {
+        if (isGlobal(name)) {
+            continue;
+        }
+
+        if (oldAttributes[name] === undefined || newAttributes[name] !== undefined) {
+            defaults[name] = oldDefaults[name];
         }
     }
 
-    for (const key in cluster.attributes) {
-        const attribute = cluster.attributes[key];
+    for (const name in cluster.attributes) {
+        const attribute = cluster.attributes[name];
         if (attribute.fabricScoped !== fabricScoped) {
             continue;
         }
-        if (defaults[key] === undefined) {
-            defaults[key] = attribute.default;
+        if (!isGlobal(name) && defaults[name] === undefined) {
+            defaults[name] = attribute.default;
         }
-        descriptors[key] = createPropertyDescriptor(attribute, `${base.id}.state.${key}`);
+        descriptors[name] = createPropertyDescriptor(attribute, `${camelize(cluster.name, false)}.state.${name}`);
     }
 
     return State.with(defaults, descriptors);
+}
+
+function isGlobal(name: string) {
+    return (GlobalAttributes as any)[name] !== undefined;
 }
 
 /**
@@ -120,8 +129,17 @@ function createDerivedState(cluster: ClusterType, base: Behavior.Type, fabricSco
 function createPropertyDescriptor(attribute: ClusterType.Attribute, name: string) {
     const schema = attribute.schema;
 
-    const descriptor = {
-        validate(value) {
+    const descriptor = {} as State.FieldConfiguration;
+
+    // Do not validate global attributes as these are currently managed by
+    // ClusterServer
+    if (!isGlobal(name)) {
+        descriptor.validate = (value) => {
+            if (value === undefined && !attribute.optional) {
+                // Schema validation catches this but generate a more explicit message
+                throw new ValidationError(`No value provided for required property ${name}`);
+            }
+
             try {
                 schema.validate(value);
             } catch (e) {
@@ -131,7 +149,7 @@ function createPropertyDescriptor(attribute: ClusterType.Attribute, name: string
                 }
             }
         }
-    } as State.FieldConfiguration;
+    }
 
     if (attribute.fixed) {
         descriptor.fixed = true;

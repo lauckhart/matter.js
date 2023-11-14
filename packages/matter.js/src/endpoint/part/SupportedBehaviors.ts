@@ -5,6 +5,8 @@
  */
 
 import { Behavior } from "../../behavior/Behavior.js";
+import { ImplementationError } from "../../common/MatterError.js";
+import { camelize } from "../../util/String.js";
 
 /**
  * A set of behaviors an endpoint supports.
@@ -17,9 +19,7 @@ export type SupportedBehaviors = Record<string, Behavior.Type>;
 export function SupportedBehaviors<const T extends SupportedBehaviors.List>(...types: T) {
     const result = {} as SupportedBehaviors;
 
-    for (const type of types) {
-        result[type.id] = type;
-    }
+    addBehaviors(result, types);
 
     return result as SupportedBehaviors.MapOf<T>;
 }
@@ -39,14 +39,12 @@ export namespace SupportedBehaviors {
      * "with" in a namespace.
      */
     export function extend<const BehaviorsT extends SupportedBehaviors, const NewBehaviorsT extends List>(
-        behaviors: BehaviorsT,
-        newBehaviors: NewBehaviorsT,
+        currentTypes: BehaviorsT,
+        newTypes: NewBehaviorsT,
     ) {
-        const result = { ...behaviors } as SupportedBehaviors;
+        const result = { ...currentTypes } as SupportedBehaviors;
 
-        for (const added of newBehaviors) {
-            result[added.id] = added;
-        }
+        addBehaviors(result, newTypes);
 
         return result as unknown as With<BehaviorsT, NewBehaviorsT>;
     }
@@ -80,5 +78,14 @@ export namespace SupportedBehaviors {
      */
     export type StateOf<SB extends SupportedBehaviors> = {
         [K in keyof SB]: Behavior.StateOf<SB[K]>
+    }
+}
+
+function addBehaviors(target: SupportedBehaviors, types: SupportedBehaviors.List) {
+    for (const type of types) {
+        if (typeof type.id !== "string") {
+            throw new ImplementationError("Behavior type has no ID");
+        }
+        target[camelize(type.id, false)] = type;
     }
 }

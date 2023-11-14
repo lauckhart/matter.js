@@ -50,8 +50,8 @@ describe("AdministratorCommissioningCluster", () => {
         // Functional
         const cluster = Cluster;
         cluster satisfies Satisfactory;
-        expect(typeof cluster.commands.openCommissioningWindow).equal("function");
-        expect(typeof (cluster.commands as any).openBasicCommissioningWindow).equal(undefined);
+        expect(typeof cluster.commands.openCommissioningWindow).equal("object");
+        expect((cluster.commands as any).openBasicCommissioningWindow).undefined;
     });
 
     it("has basic commissioning when enabled", () => {
@@ -94,32 +94,32 @@ describe("AdministratorCommissioningCluster", () => {
         ({}) as ClusterComposer.Of<Cluster, ["Basic"]> satisfies Satisfactory;
 
         // Type: Fake "with" (uses MutableCluster method typing)
-        const fakeBase1 = {} as MutableCluster.Methods<Cluster>;
+        const fakeBase1 = { with() {} } as MutableCluster.Methods<Cluster>;
         const fakeWith1 = fakeBase1.with("Basic");
         fakeWith1 satisfies Satisfactory;
 
         // Type: Fake "with" 2 (creates cluster using options object)
         type FakeCluster1 = ClusterType.Of<AdministratorCommissioning.Cluster>;
-        const fakeBase2 = {} as MutableCluster.Methods<FakeCluster1>;
+        const fakeBase2 = { with() {} } as MutableCluster.Methods<FakeCluster1>;
         const fakeWith2 = fakeBase2.with("Basic");
         fakeWith2 satisfies Satisfactory;
 
         // Type: Fake "with" 3 (generates cluster using constituent types)
         type Base = typeof AdministratorCommissioning.Base;
         type FakeCluster2 = ClusterType.Of<Base>;
-        const fakeBase3 = {} as MutableCluster.Methods<FakeCluster2>;
+        const fakeBase3 = { with() {} } as MutableCluster.Methods<FakeCluster2>;
         const fakeWith3 = fakeBase3.with("Basic");
         fakeWith3 satisfies Satisfactory;
 
         // Type: Fake mutable cluster (fakes MutableCluster factory typing)
-        const fakeBase4 = {} as MutableCluster<Cluster>;
+        const fakeBase4 = { with() {} } as MutableCluster<Cluster>;
         const fakeWith4 = fakeBase4.with("Basic");
         fakeWith4 satisfies Satisfactory;
 
         // Functional
         const cluster = Cluster.with("Basic");
         cluster satisfies Satisfactory;
-        expect(typeof cluster.commands.openCommissioningWindow).equal("function");
-        expect(typeof cluster.commands.openBasicCommissioningWindow).equal("function");
+        expect(typeof cluster.commands.openCommissioningWindow).equal("object");
+        expect(typeof cluster.commands.openBasicCommissioningWindow).equal("object");
     });
 });

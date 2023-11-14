@@ -112,7 +112,10 @@ export class ClusterComposer<const T extends ClusterType> {
             (definition as any)[name] = dest;
 
             for (const key in src) {
-                if (dest[key] === undefined) {
+                const orig = original?.[name]?.[key];
+                if (orig) {
+                    dest[key] = orig;
+                } else {
                     dest[key] = src[key];
                 }
             }
