@@ -49,6 +49,12 @@ export namespace LifecycleBehavior {
         initialized$change = Observable();
 
         /**
+         * This event is special cased in Part.  It is invoked after all
+         * behaviors are destroyed.
+         */
+        destroyed = Observable<[ part: Part]>();
+
+        /**
          * This event bubbles up when any part or behavior is added or removed
          * in the part ownership tree.
          */

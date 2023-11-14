@@ -22,9 +22,4 @@ export interface PartOwner {
      * @returns a new {@link BehaviorBacking}
      */
     initializeBehavior(part: Part, behavior: Behavior.Type): BehaviorBacking;
-
-    /**
-     * An owned part has been destroyed.
-     */
-    partDestroyed(part: Part): void;
 }

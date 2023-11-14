@@ -9,7 +9,6 @@ import { ObservableSet, WritableObservableSet } from "../../util/Observable.js";
 import { Behavior } from "../../behavior/Behavior.js";
 import { State } from "../../behavior/state/State.js";
 import { DescriptorServer } from "../../behavior/server/definitions/DescriptorServer.js";
-import { PartOwner } from "./PartOwner.js";
 import { LifecycleBehavior } from "./LifecycleBehavior.js";
 import { InternalError } from "../../common/MatterError.js";
 
@@ -39,22 +38,16 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
         for (const part of this.state.parts) {
             adoptPart(part);
         }
-        const parentOwner = this.agent.part.owner;
+        const owner = this.agent.part.owner;
 
         function structureChangeEmitter(part: Part) {
             agent.get(LifecycleBehavior).events.structure$change.emit(part);
         }
 
-        const childOwner: PartOwner = {
-            initializeBehavior(part, behavior) {
-                return parentOwner.initializeBehavior(part, behavior);
-            },
-
-            partDestroyed(part: Part) {
-                if (parts.has(part)) {
-                    parts.delete(part);
-                    structureChangeEmitter(part);
-                }
+        function childDestroyed(part: Part) {
+            if (parts.has(part)) {
+                parts.delete(part);
+                structureChangeEmitter(part);
             }
         }
 
@@ -68,7 +61,7 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
         }
 
         function adoptPart(child: Part) {
-            child.owner = childOwner;
+            child.owner = owner;
 
             const lifecycle = agent.get(LifecycleBehavior);
             
@@ -81,11 +74,12 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
                 registerPart(child);
             }
 
-            lifecycle.events.initialized$change.on(registerIfInitialized)
+            lifecycle.events.initialized$change(registerIfInitialized)
             registerIfInitialized();
 
             const childLifecycle = child.getAgent().get(LifecycleBehavior);
             childLifecycle.events.structure$change(structureChangeEmitter);
+            childLifecycle.events.destroyed(childDestroyed);
 
             structureChangeEmitter(agent.part);
         }
@@ -100,6 +94,7 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
 
             const childLifeCycle = child.getAgent().get(LifecycleBehavior);
             childLifeCycle.events.structure$change.off(structureChangeEmitter);
+            childLifeCycle.events.destroyed.off(childDestroyed);
 
             structureChangeEmitter(agent.part);
         }

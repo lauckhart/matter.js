@@ -23,12 +23,13 @@ import { ClusterEvents } from "../cluster/ClusterEvents.js";
 import { AttributeServer, FabricScopedAttributeServer } from "../../cluster/server/AttributeServer.js";
 import { SecureSession } from "../../session/SecureSession.js";
 import { ServerBehaviorBacking } from "./ServerBehaviorBacking.js";
+import { Attributes, Events } from "../../cluster/Cluster.js";
 
 /**
  * Backing for cluster behaviors on servers.
  */
 export class ClusterServerBehaviorBacking extends ServerBehaviorBacking {
-    #clusterServer: ClusterServerObj<any, any>;
+    #clusterServer: ClusterServerObj<Attributes, Events>;
 
     constructor(part: Part, type: ClusterBehavior.Type) {
         super(part, type);

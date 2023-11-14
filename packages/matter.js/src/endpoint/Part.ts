@@ -224,8 +224,9 @@ export class Part {
     }
 
     destroy() {
+        const destroyedEvent = this.getAgent().get(LifecycleBehavior).events.destroyed;
         this.behaviors.destroy();
-        this.#owner?.partDestroyed(this);
+        destroyedEvent.emit(this);
     }
 }
 

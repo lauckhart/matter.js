@@ -7,7 +7,7 @@
 import { OperationalCredentialsServerConf } from "../../cluster/server/OperationalCredentialsServer.js";
 import { RootEndpoint } from "../../endpoint/definitions/system/RootEndpoint.js";
 import { CommissioningFlowType } from "../../schema/PairingCodeSchema.js";
-import { Storage } from "../../storage/Storage.js";
+import { StorageManager } from "../../storage/StorageManager.js";
 import { ByteArray } from "../../util/ByteArray.js";
 
 /**
@@ -17,44 +17,49 @@ export type ServerOptions = {
     /**
      * The root endpoint type for the server.  
      */
-    root?: typeof RootEndpoint;
+    readonly root?: typeof RootEndpoint;
 
     /**
-     * Storage used for persistent server state.  By default creates a storage
-     * pool for the server's name using Storage.create().
+     * Storage used for persistent server state.  This is used when running
+     * standalone.  If not present, creates a storage pool for the server's
+     * name using Storage.create().
      */
-    storage?: Storage;
+    readonly storageManager?: StorageManager;
 
     /**
      * The next ID assigned to a new endpoint.
      */
-    nextEndpointId?: number;
+    readonly nextEndpointId?: number;
 
     /**
      * Certification information for the OperationalCredentials cluster.
      *
      * If omitted the server automatically generates development certificates.
      */
-    certification?: OperationalCredentialsServerConf;
+    readonly certification?: OperationalCredentialsServerConf;
 
     /**
      * Networking options.
      */
-    network?: {
-        // TODO - change to "announce addresses"
+    readonly network?: {
         announceInterface?: string;
-
-        // TODO - change these to "listen addresses"
+        discoverInterface?: string;
         port?: number;
         listeningAddressIpv4?: string;
         listeningAddressIpv6?: string;
         disableIpv4?: boolean;
+
+        // TODO - change above to the following:
+        // addresses: Address | Address[];
+        // listen: Address | Address[];
+        // announce: Address | Address[];
+        // discover: Address | Address[];
     };
 
     /**
      * Commissioning options.
      */
-    commissioning?: {
+    readonly commissioning?: {
         /**
          * The passcode/pin for initial commissioning.
          *
@@ -98,7 +103,7 @@ export type ServerOptions = {
     /**
      * Attribute and event subscription options.
      */
-    subscription?: {
+    readonly subscription?: {
         /**
          * Optional maximum subscription interval to use for sending subscription reports. It will be used if not too
          * low and inside the range requested by the connected controller.

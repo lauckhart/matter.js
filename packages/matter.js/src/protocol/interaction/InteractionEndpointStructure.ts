@@ -57,7 +57,7 @@ export class InteractionEndpointStructure {
         }
     }
 
-    public initializeFromEndpoint(endpoint: Endpoint) {
+    public initializeFromEndpoint(endpoint: EndpointInterface) {
         this.clear();
 
         this.verifyAndInitializeStructureElementsFromEndpoint(endpoint); // Initialize Data from Root Endpoint

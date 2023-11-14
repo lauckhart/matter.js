@@ -24,9 +24,7 @@ export function createBehavior<T extends Behavior.Type>(type: T) {
     part.owner = {
         initializeBehavior(part, behavior) {
             return new ServerBehaviorBacking(part, behavior);
-        },
-
-        partDestroyed(_part) {}
+        }
     }
 
     const context = {

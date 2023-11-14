@@ -4,18 +4,25 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Behavior } from "../../behavior/Behavior.js";
+import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
+import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
+import { ClusterServerBehaviorBacking } from "../../behavior/server/ClusterServerBehaviorBacking.js";
+import { ServerBehaviorBacking } from "../../behavior/server/ServerBehaviorBacking.js";
 import { DescriptorServer } from "../../behavior/server/definitions/DescriptorServer.js";
 import { Attributes, Commands, Events } from "../../cluster/Cluster.js";
 import { ClusterType } from "../../cluster/ClusterType.js";
 import { ClusterClientObj } from "../../cluster/client/ClusterClientTypes.js";
 import { ClusterServerObj } from "../../cluster/server/ClusterServerTypes.js";
-import { InternalError } from "../../common/MatterError.js";
+import { ImplementationError, InternalError, NotImplementedError } from "../../common/MatterError.js";
 import { ClusterId } from "../../datatype/ClusterId.js";
 import { EndpointNumber } from "../../datatype/EndpointNumber.js";
 import { EndpointInterface } from "../EndpointInterface.js";
 import { Part } from "../Part.js";
 import { LifecycleBehavior } from "../part/LifecycleBehavior.js";
+import { PartOwner } from "../part/PartOwner.js";
 import { PartsBehavior } from "../part/PartsBehavior.js";
+import { UnmanagedClusterBehavior } from "./UnmanagedClusterBehavior.js";
 
 const SERVER = Symbol("server");
 interface ServerPart extends Part {
@@ -26,11 +33,10 @@ interface ServerPart extends Part {
  * PartServer makes a {@link Part} available for remote access as an Endpoint
  * on a Matter network.
  */
-export class PartServer implements EndpointInterface {
+export class PartServer implements EndpointInterface, PartOwner {
     #part: Part;
     #name = "";
     #structureChangedCallback?: () => void;
-
     readonly #clusterServers = new Map<ClusterId, ClusterServerObj<Attributes, Events>>();
 
     constructor(part: Part) {
@@ -39,6 +45,21 @@ export class PartServer implements EndpointInterface {
         this.#part.getAgent().get(LifecycleBehavior).events.structure$change(
             () => this.#structureChangedCallback?.()
         );
+    }
+
+    initializeBehavior(part: Part, behavior: Behavior.Type): BehaviorBacking {
+        let backing;
+        if (behavior.prototype instanceof ClusterBehavior) {
+            const cluster = (behavior as ClusterBehavior.Type).cluster;
+            if (this.#clusterServers.has(cluster.id)) {
+                throw new InternalError(`${this.#part.description} behavior ${behavior.name} cluster ${cluster.id} initialized multiple times`);
+            }
+            backing = new ClusterServerBehaviorBacking(part, behavior as ClusterBehavior.Type);
+            this.#clusterServers.set(cluster.id, backing.clusterServer);
+        } else {
+            backing = new ServerBehaviorBacking(part, behavior);
+        }
+        return backing;
     }
 
     get id() {
@@ -95,6 +116,15 @@ export class PartServer implements EndpointInterface {
     setStructureChangedCallback(callback: () => void): void {
         this.#structureChangedCallback = callback;
     }
+    
+    addClusterServer<A extends Attributes, E extends Events>(server: ClusterServerObj<A, E>): void {
+        const behavior = UnmanagedClusterBehavior.for(server);
+
+        // This will throw if there's a conflict with a managed behavior
+        this.#part.behaviors.require(behavior);
+
+        this.#clusterServers.set(server.id, server as any);
+    }
 
     hasClusterServer(cluster: ClusterType): boolean {
         return this.#clusterServers.has(cluster.id);
@@ -120,6 +150,31 @@ export class PartServer implements EndpointInterface {
     getAllClusterClients(): ClusterClientObj<any, Attributes, Commands, Events>[] {
         // TODO -- no binding support yet (or client behaviors)
         return [];
+    }
+
+    addClusterClient(): void {
+        throw new NotImplementedError("Cluster clients unavailable on PartServer");
+    }
+
+    getClusterClient(): any {
+        throw new NotImplementedError("Cluster clients unavailable on PartServer");
+    }
+
+    addChildEndpoint(endpoint: EndpointInterface): void {
+        if (endpoint instanceof PartServer) {
+            this.#part.getAgent().get(PartsBehavior).add(endpoint.#part);
+        } else {
+            throw new ImplementationError("Attempt to add unmanaged endpoint as child of Part");
+        }
+    }
+
+    getChildEndpoint(id: EndpointNumber): EndpointInterface | undefined {
+        const parts = this.#part.getAgent().get(PartsBehavior).state.parts;
+        for (const part of parts) {
+            if (part.id === id) {
+                return PartServer.forPart(part);
+            }
+        }
     }
 
     static forPart(part: Part) {

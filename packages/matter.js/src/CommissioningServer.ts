@@ -192,13 +192,21 @@ export interface StandardCommissioningServerOptions extends GeneralCommissioning
         allowCountryCodeChange?: boolean; // Default true if not set
         countryCodeWhitelist?: string[]; // Default all countries are allowed
     };
+
+    /**
+     * The root endpoint is managed by the server.
+     */
+    rootEndpoint?: undefined;
 }
 
 /**
  * Commissioning server options with manual management of the root endpoint.
  */
 export interface ManualCommissioningServerOptions extends GeneralCommissioningServerOptions {
-    basicInformation: undefined;
+    /**
+     * The root endpoint for the server.
+     */
+    rootEndpoint: EndpointInterface;
 }
 
 /**
@@ -238,7 +246,7 @@ export class CommissioningServer extends MatterNode {
     private deviceInstance?: MatterDevice;
     private interactionServer?: InteractionServer;
 
-    protected readonly rootEndpoint = new RootEndpoint();
+    protected readonly rootEndpoint: EndpointInterface;
 
     private nextEndpointId: EndpointNumber;
 
@@ -263,12 +271,16 @@ export class CommissioningServer extends MatterNode {
         this.nextEndpointId = EndpointNumber(options.nextEndpointId ?? 1);
         this.delayedAnnouncement = options.delayedAnnouncement;
 
-        if (options.basicInformation) {
-            this.createRootEndpoint(options);
+        if (options.rootEndpoint) {
+            this.rootEndpoint = options.rootEndpoint;
+        } else {
+            this.rootEndpoint = this.createRootEndpoint(options);
         }
     }
 
-    private createRootEndpoint(options: StandardCommissioningServerOptions) {
+    private createRootEndpoint(options: StandardCommissioningServerOptions): EndpointInterface {
+        const rootEndpoint = new RootEndpoint();
+
         const vendorId = VendorId(options.basicInformation.vendorId);
         const productId = options.basicInformation.productId;
 
@@ -306,7 +318,7 @@ export class CommissioningServer extends MatterNode {
                 leave: true,
             },
         );
-        this.rootEndpoint.addClusterServer(basicInformationCluster);
+        rootEndpoint.addClusterServer(basicInformationCluster);
 
         if (reachabilitySupported) {
             basicInformationCluster.subscribeReachableAttribute(
@@ -331,7 +343,7 @@ export class CommissioningServer extends MatterNode {
 
         // Add Operational credentials cluster to root directly because it is not allowed to be changed afterward
         // TODO Get the defaults from the cluster meta details
-        this.rootEndpoint.addClusterServer(
+        rootEndpoint.addClusterServer(
             ClusterServer(
                 OperationalCredentialsCluster,
                 {
@@ -348,7 +360,7 @@ export class CommissioningServer extends MatterNode {
 
         // TODO Get the defaults from the cluster meta details
         const generalCommissioning = options.generalCommissioning;
-        this.rootEndpoint.addClusterServer(
+        rootEndpoint.addClusterServer(
             ClusterServer(
                 GeneralCommissioningCluster,
                 {
@@ -373,7 +385,7 @@ export class CommissioningServer extends MatterNode {
 
         const networkId = new ByteArray(32);
         // TODO Get the defaults from the cluster meta details
-        this.rootEndpoint.addClusterServer(
+        rootEndpoint.addClusterServer(
             ClusterServer(
                 NetworkCommissioningCluster.with("EthernetNetworkInterface"),
                 {
@@ -389,7 +401,7 @@ export class CommissioningServer extends MatterNode {
         );
 
         // TODO Get the defaults from the cluster meta details
-        this.rootEndpoint.addClusterServer(
+        rootEndpoint.addClusterServer(
             ClusterServer(
                 AccessControlCluster,
                 {
@@ -408,7 +420,7 @@ export class CommissioningServer extends MatterNode {
         );
 
         // TODO Get the defaults from the cluster meta details
-        this.rootEndpoint.addClusterServer(
+        rootEndpoint.addClusterServer(
             ClusterServer(
                 GroupKeyManagementCluster,
                 {
@@ -422,7 +434,7 @@ export class CommissioningServer extends MatterNode {
         );
 
         // TODO Get the defaults from the cluster meta details
-        this.rootEndpoint.addClusterServer(
+        rootEndpoint.addClusterServer(
             ClusterServer(
                 GeneralDiagnosticsCluster,
                 {
@@ -445,7 +457,7 @@ export class CommissioningServer extends MatterNode {
             ),
         );
 
-        this.rootEndpoint.addClusterServer(
+        rootEndpoint.addClusterServer(
             ClusterServer(
                 AdministratorCommissioningCluster,
                 {
@@ -456,6 +468,8 @@ export class CommissioningServer extends MatterNode {
                 AdministratorCommissioningHandler(),
             ),
         );
+
+        return rootEndpoint;
     }
 
     /**

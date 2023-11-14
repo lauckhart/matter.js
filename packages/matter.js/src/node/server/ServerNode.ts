@@ -4,63 +4,69 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NotImplementedError } from "../../common/MatterError.js";
-//import { RootEndpoint } from "../../endpoint/definitions/system/RootEndpoint.js";
+import { CommissioningServer } from "../../CommissioningServer.js";
+import { ImplementationError } from "../../common/MatterError.js";
+import { EndpointNumber } from "../../datatype/EndpointNumber.js";
+import { Part } from "../../endpoint/Part.js";
+import { PartServer } from "../../endpoint/server/PartServer.js";
 import { Node } from "../Node.js";
-import { InvokeRequestAction } from "../action/InvokeRequestAction.js";
-import { InvokeResponseAction } from "../action/InvokeResponseAction.js";
-import { ReadRequestAction } from "../action/ReadRequestAction.js";
-import { ReportDataAction } from "../action/ReportDataAction.js";
-import { SubscribeRequestAction } from "../action/SubscribeRequestAction.js";
-import { SubscribeResponseAction } from "../action/SubscribeResponseAction.js";
-import { WriteRequestAction } from "../action/WriteRequestAction.js";
-import { WriteResponseAction } from "../action/WriteResponseAction.js";
-import { ServerContext } from "./ServerContext.js";
+import { NodeRunner } from "../NodeRunner.js";
+import { ServerConfiguration } from "./ServerConfiguration.js";
 import { ServerOptions } from "./ServerOptions.js";
 
-const RootEndpoint = {} as any;
+/**
+ * Implementation of a Matter Node server.
+ * 
+ * This is this highest-level API Matter.js offers for implementing a Matter
+ * Node.
+ */
+export class ServerNode extends CommissioningServer implements Node {
+    #configuration: ServerConfiguration;
+    #root: Part;
+    #runner?: NodeRunner;
 
-export class ServerNode implements Node {
-    #context: ServerContext;
-    #root: typeof RootEndpoint;
-
-    constructor(context: ServerContext) {
-        this.#context = context;
-
-        // TODO
-        this.#root = context.root;
-        this.#context;
+    constructor(options?: ServerOptions) {
+        const configuration = ServerConfiguration.for(options);
+        const root = new Part({
+            id: EndpointNumber(0),
+            type: configuration.root,
+        })
+        super({
+            ...configuration.commissioningServerOptions,
+            rootEndpoint: new PartServer(root)
+        });
+        this.#configuration = configuration;
+        this.#root = root;
     }
 
-    async create(options: ServerOptions) {
-        return new ServerNode(await ServerContext.create(options));
-    }
-
+    /**
+     * Access the root endpoint {@link Part}.
+     */
     get root() {
         return this.#root;
     }
 
-    async [Symbol.asyncDispose]() {
-        await this.#context[Symbol.asyncDispose]();
+    /**
+     * Run the node in "standalone" mode.
+     * 
+     * This mode creates a {@link NodeRunner} dedicated to this node.
+     */
+    async run() {
+        if (this.#runner) {
+            throw new ImplementationError("Already running");
+        }
+        const runner = new NodeRunner(this.#configuration);
+        runner.add(this);
+        await runner.run();
     }
 
-    invoke(action: InvokeRequestAction): Promise<InvokeResponseAction> {
-        action;
-        throw new NotImplementedError();
-    }
-
-    read(action: ReadRequestAction): Promise<ReportDataAction> {
-        action;
-        throw new NotImplementedError();
-    }
-
-    write(action: WriteRequestAction): Promise<WriteResponseAction> {
-        action;
-        throw new NotImplementedError();
-    }
-
-    subscribe(action: SubscribeRequestAction): Promise<SubscribeResponseAction> {
-        action;
-        throw new NotImplementedError();
+    /**
+     * Terminate after starting with run().
+     */
+    async abort() {
+        if (!this.#runner) {
+            throw new ImplementationError("Not running");
+        }
+        this.#runner.abort();
     }
 }
