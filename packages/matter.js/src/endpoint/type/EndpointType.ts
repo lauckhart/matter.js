@@ -13,8 +13,9 @@ import { SupportedBehaviors } from "../part/SupportedBehaviors.js";
  */
 export interface EndpointType {
     name: string,
-    deviceClass: DeviceClasses,
     deviceType: DeviceTypeId,
+    deviceRevision: number,
+    deviceClass: DeviceClasses,
     behaviors: SupportedBehaviors,
     requirements: EndpointType.Requirements,
 }
@@ -39,6 +40,7 @@ export namespace EndpointType {
         & {
             name: T["name"],
             deviceType: DeviceTypeId,
+            deviceRevision: number,
             deviceClass: DeviceClasses,
             behaviors: T["behaviors"] extends SupportedBehaviors ? T["behaviors"] : {},
             requirements: T["requirements"] extends Requirements ? T["requirements"] : {},
@@ -50,6 +52,7 @@ export namespace EndpointType {
     export interface Options {
         name: string,
         deviceType: number,
+        deviceRevision: number,
         deviceClass?: DeviceClasses,
         behaviors?: SupportedBehaviors,
         requirements?: Requirements,

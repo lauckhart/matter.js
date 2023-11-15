@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
 import { ThermostatServer } from "../../../behavior/server/definitions/ThermostatServer.js";
 import { GroupsServer } from "../../../behavior/server/definitions/GroupsServer.js";
@@ -29,11 +28,7 @@ export const ThermostatRequirements = {
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
     server: {
-        mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 769, revision: 2 }] }),
-            Identify: IdentifyServer,
-            Thermostat: ThermostatServer
-        },
+        mandatory: { Identify: IdentifyServer, Thermostat: ThermostatServer },
         optional: {
             Groups: GroupsServer,
             Scenes: ScenesServer,
@@ -58,11 +53,9 @@ export const ThermostatRequirements = {
 export const ThermostatDeviceDefinition = MutableEndpoint({
     name: "Thermostat",
     deviceType: 0x301,
+    deviceRevision: 2,
     requirements: ThermostatRequirements,
-    behaviors: SupportedBehaviors(
-        ThermostatRequirements.server.mandatory.Descriptor,
-        ThermostatRequirements.server.mandatory.Identify
-    )
+    behaviors: SupportedBehaviors(ThermostatRequirements.server.mandatory.Identify)
 });
 
 /**

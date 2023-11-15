@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
 import { GroupsServer } from "../../../behavior/server/definitions/GroupsServer.js";
 import { ScenesServer } from "../../../behavior/server/definitions/ScenesServer.js";
@@ -24,7 +23,6 @@ export const OnOffLightRequirements = {
      */
     server: {
         mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 256, revision: 2 }] }),
             Identify: IdentifyServer.alter({ commands: { triggerEffect: { optional: false } } }),
             Groups: GroupsServer,
 
@@ -62,10 +60,10 @@ export const OnOffLightRequirements = {
 export const OnOffLightDeviceDefinition = MutableEndpoint({
     name: "OnOffLight",
     deviceType: 0x100,
+    deviceRevision: 2,
     requirements: OnOffLightRequirements,
 
     behaviors: SupportedBehaviors(
-        OnOffLightRequirements.server.mandatory.Descriptor,
         OnOffLightRequirements.server.mandatory.Identify,
         OnOffLightRequirements.server.mandatory.Groups,
         OnOffLightRequirements.server.mandatory.Scenes,

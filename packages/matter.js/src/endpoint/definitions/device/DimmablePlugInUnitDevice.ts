@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
 import { GroupsServer } from "../../../behavior/server/definitions/GroupsServer.js";
 import { ScenesServer } from "../../../behavior/server/definitions/ScenesServer.js";
@@ -23,7 +22,6 @@ export const DimmablePlugInUnitRequirements = {
      */
     server: {
         mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 267, revision: 2 }] }),
             Identify: IdentifyServer.alter({ commands: { triggerEffect: { optional: false } } }),
             Groups: GroupsServer,
 
@@ -54,10 +52,10 @@ export const DimmablePlugInUnitRequirements = {
 export const DimmablePlugInUnitDeviceDefinition = MutableEndpoint({
     name: "DimmablePlugInUnit",
     deviceType: 0x10b,
+    deviceRevision: 2,
     requirements: DimmablePlugInUnitRequirements,
 
     behaviors: SupportedBehaviors(
-        DimmablePlugInUnitRequirements.server.mandatory.Descriptor,
         DimmablePlugInUnitRequirements.server.mandatory.Identify,
         DimmablePlugInUnitRequirements.server.mandatory.Groups,
         DimmablePlugInUnitRequirements.server.mandatory.Scenes,

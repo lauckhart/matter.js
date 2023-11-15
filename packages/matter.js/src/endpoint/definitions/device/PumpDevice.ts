@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { OnOffServer } from "../../../behavior/server/definitions/OnOffServer.js";
 import {
     PumpConfigurationAndControlServer
@@ -30,12 +29,10 @@ export const PumpRequirements = {
      */
     server: {
         mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 771, revision: 2 }] }),
             OnOff: OnOffServer,
             PumpConfigurationAndControl: PumpConfigurationAndControlServer,
             Identify: IdentifyServer
         },
-
         optional: { LevelControl: LevelControlServer, Scenes: ScenesServer, Groups: GroupsServer }
     },
 
@@ -55,12 +52,9 @@ export const PumpRequirements = {
 export const PumpDeviceDefinition = MutableEndpoint({
     name: "Pump",
     deviceType: 0x303,
+    deviceRevision: 2,
     requirements: PumpRequirements,
-    behaviors: SupportedBehaviors(
-        PumpRequirements.server.mandatory.Descriptor,
-        PumpRequirements.server.mandatory.OnOff,
-        PumpRequirements.server.mandatory.Identify
-    )
+    behaviors: SupportedBehaviors(PumpRequirements.server.mandatory.OnOff, PumpRequirements.server.mandatory.Identify)
 });
 
 /**

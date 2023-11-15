@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
 import { GroupsServer } from "../../../behavior/server/definitions/GroupsServer.js";
 import { ScenesServer } from "../../../behavior/server/definitions/ScenesServer.js";
@@ -24,7 +23,6 @@ export const ExtendedColorLightRequirements = {
      */
     server: {
         mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 269, revision: 2 }] }),
             Identify: IdentifyServer.alter({ commands: { triggerEffect: { optional: false } } }),
             Groups: GroupsServer,
 
@@ -59,10 +57,10 @@ export const ExtendedColorLightRequirements = {
 export const ExtendedColorLightDeviceDefinition = MutableEndpoint({
     name: "ExtendedColorLight",
     deviceType: 0x10d,
+    deviceRevision: 2,
     requirements: ExtendedColorLightRequirements,
 
     behaviors: SupportedBehaviors(
-        ExtendedColorLightRequirements.server.mandatory.Descriptor,
         ExtendedColorLightRequirements.server.mandatory.Identify,
         ExtendedColorLightRequirements.server.mandatory.Groups,
         ExtendedColorLightRequirements.server.mandatory.Scenes,

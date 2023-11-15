@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import {
     BridgedDeviceBasicInformationServer
 } from "../../../behavior/server/definitions/BridgedDeviceBasicInformationServer.js";
@@ -22,10 +21,7 @@ export const BridgedNodeRequirements = {
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
     server: {
-        mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 19, revision: 1 }] }),
-            BridgedDeviceBasicInformation: BridgedDeviceBasicInformationServer
-        },
+        mandatory: { BridgedDeviceBasicInformation: BridgedDeviceBasicInformationServer },
         optional: { PowerSourceConfiguration: PowerSourceConfigurationServer, PowerSource: PowerSourceServer }
     }
 };
@@ -33,11 +29,9 @@ export const BridgedNodeRequirements = {
 export const BridgedNodeDeviceDefinition = MutableEndpoint({
     name: "BridgedNode",
     deviceType: 0x13,
+    deviceRevision: 1,
     requirements: BridgedNodeRequirements,
-    behaviors: SupportedBehaviors(
-        BridgedNodeRequirements.server.mandatory.Descriptor,
-        BridgedNodeRequirements.server.mandatory.BridgedDeviceBasicInformation
-    )
+    behaviors: SupportedBehaviors(BridgedNodeRequirements.server.mandatory.BridgedDeviceBasicInformation)
 });
 
 /**

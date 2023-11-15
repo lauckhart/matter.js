@@ -5,7 +5,6 @@
  */
 
 import type { InvocationContext } from "../InvocationContext.js";
-import type { StateManager } from "./StateManager.js";
 
 /**
  * Mutable state for a behavior.
@@ -88,7 +87,7 @@ export namespace State {
      * Generic state class type.
      */
     export type Type<T extends object = {}> = {
-        new (values?: Record<string, any>, manager?: StateManager, context?: InvocationContext): State & T;
+        new (values?: Record<string, any>, context?: InvocationContext): State & T;
         with: typeof State.with;
         fields: FieldOptions;
     }

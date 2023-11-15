@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
 import { SwitchServer } from "../../../behavior/server/definitions/SwitchServer.js";
 import { FixedLabelServer } from "../../../behavior/server/definitions/FixedLabelServer.js";
@@ -20,11 +19,7 @@ export const GenericSwitchRequirements = {
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
     server: {
-        mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 15, revision: 1 }] }),
-            Identify: IdentifyServer,
-            Switch: SwitchServer
-        },
+        mandatory: { Identify: IdentifyServer, Switch: SwitchServer },
         optional: { FixedLabel: FixedLabelServer }
     }
 };
@@ -32,11 +27,9 @@ export const GenericSwitchRequirements = {
 export const GenericSwitchDeviceDefinition = MutableEndpoint({
     name: "GenericSwitch",
     deviceType: 0xf,
+    deviceRevision: 1,
     requirements: GenericSwitchRequirements,
-    behaviors: SupportedBehaviors(
-        GenericSwitchRequirements.server.mandatory.Descriptor,
-        GenericSwitchRequirements.server.mandatory.Identify
-    )
+    behaviors: SupportedBehaviors(GenericSwitchRequirements.server.mandatory.Identify)
 });
 
 /**

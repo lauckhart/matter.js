@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
 import { GroupsServer } from "../../../behavior/server/definitions/GroupsServer.js";
 import { ScenesServer } from "../../../behavior/server/definitions/ScenesServer.js";
@@ -24,7 +23,6 @@ export const ColorTemperatureLightRequirements = {
      */
     server: {
         mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 268, revision: 2 }] }),
             Identify: IdentifyServer.alter({ commands: { triggerEffect: { optional: false } } }),
             Groups: GroupsServer,
 
@@ -59,10 +57,10 @@ export const ColorTemperatureLightRequirements = {
 export const ColorTemperatureLightDeviceDefinition = MutableEndpoint({
     name: "ColorTemperatureLight",
     deviceType: 0x10c,
+    deviceRevision: 2,
     requirements: ColorTemperatureLightRequirements,
 
     behaviors: SupportedBehaviors(
-        ColorTemperatureLightRequirements.server.mandatory.Descriptor,
         ColorTemperatureLightRequirements.server.mandatory.Identify,
         ColorTemperatureLightRequirements.server.mandatory.Groups,
         ColorTemperatureLightRequirements.server.mandatory.Scenes,

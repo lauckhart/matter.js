@@ -105,7 +105,7 @@ function createDescriptor(
 
     if (property === ENDPOINT_SCOPE) {
         descriptor.get = function(this: Internal) {
-            (this[ENDPOINT_SCOPE] as Record<string, any>)[name]
+            return (this[ENDPOINT_SCOPE] as Record<string, any>)[name]
         }
 
         descriptor.set = function(this: Internal, value: any) {
@@ -116,7 +116,7 @@ function createDescriptor(
             if (this[FABRIC_SCOPE] === undefined) {
                 throw new ImplementationError(`Illegal read of property ${behaviorName}.state.${name} outside fabric scope`);
             }
-            (this[FABRIC_SCOPE] as Record<string, any>)[name]
+            return (this[FABRIC_SCOPE] as Record<string, any>)[name]
         }
 
         descriptor.set = function(this: Internal, value: any) {

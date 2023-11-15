@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
 import { BooleanStateServer } from "../../../behavior/server/definitions/BooleanStateServer.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
@@ -18,21 +17,15 @@ export const ContactSensorRequirements = {
     /**
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
-    server: {
-        mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 21, revision: 1 }] }),
-            Identify: IdentifyServer,
-            BooleanState: BooleanStateServer
-        }
-    }
+    server: { mandatory: { Identify: IdentifyServer, BooleanState: BooleanStateServer } }
 };
 
 export const ContactSensorDeviceDefinition = MutableEndpoint({
     name: "ContactSensor",
     deviceType: 0x15,
+    deviceRevision: 1,
     requirements: ContactSensorRequirements,
     behaviors: SupportedBehaviors(
-        ContactSensorRequirements.server.mandatory.Descriptor,
         ContactSensorRequirements.server.mandatory.Identify,
         ContactSensorRequirements.server.mandatory.BooleanState
     )

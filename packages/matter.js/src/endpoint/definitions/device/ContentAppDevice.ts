@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { KeypadInputServer } from "../../../behavior/server/definitions/KeypadInputServer.js";
 import { ApplicationLauncherServer } from "../../../behavior/server/definitions/ApplicationLauncherServer.js";
 import { ApplicationBasicServer } from "../../../behavior/server/definitions/ApplicationBasicServer.js";
@@ -26,7 +25,6 @@ export const ContentAppRequirements = {
      */
     server: {
         mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 36, revision: 1 }] }),
             KeypadInput: KeypadInputServer,
             ApplicationLauncher: ApplicationLauncherServer,
             ApplicationBasic: ApplicationBasicServer
@@ -45,10 +43,9 @@ export const ContentAppRequirements = {
 export const ContentAppDeviceDefinition = MutableEndpoint({
     name: "ContentApp",
     deviceType: 0x24,
+    deviceRevision: 1,
     requirements: ContentAppRequirements,
-
     behaviors: SupportedBehaviors(
-        ContentAppRequirements.server.mandatory.Descriptor,
         ContentAppRequirements.server.mandatory.KeypadInput,
         ContentAppRequirements.server.mandatory.ApplicationLauncher,
         ContentAppRequirements.server.mandatory.ApplicationBasic

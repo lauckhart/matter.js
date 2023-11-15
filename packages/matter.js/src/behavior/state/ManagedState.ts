@@ -7,15 +7,14 @@
 import type { InvocationContext } from "../InvocationContext.js";
 import { Observable } from "../../util/Observable.js";
 import { State } from "./State.js";
-import { StateManager } from "./StateManager.js";
 import { ImplementationError } from "../../common/MatterError.js";
+import { ClusterEvents } from "../cluster/ClusterEvents.js";
 
 /**
  * A cache of managed state implementation classes.
  */
 const cache = new WeakMap<State.Type>();
 
-const MANAGER = Symbol("manager");
 const CONTEXT = Symbol("context");
 const VALUES = Symbol("values");
 
@@ -25,7 +24,6 @@ const VALUES = Symbol("values");
  * to avoid polluting the public interface.
  */
 interface Internal extends State.Internal {
-    [MANAGER]?: StateManager;
     [CONTEXT]?: InvocationContext;
     [VALUES]: Record<string, any>;
 }
@@ -50,8 +48,7 @@ export function ManagedState<T extends State.Type>(type: T, behaviorName: string
 
     // TS's gimpy mixin support makes defining classes inline kind of ugly,
     // so just define the class manually
-    function StateType(this: Internal, values?: Record<string, any>, manager?: StateManager, context?: InvocationContext) {
-        this[MANAGER] = manager;
+    function StateType(this: Internal, values?: Record<string, any>, context?: InvocationContext) {
         this[CONTEXT] = context;
         this[VALUES] = {
             ...defaults,
@@ -75,9 +72,6 @@ export function ManagedState<T extends State.Type>(type: T, behaviorName: string
             if (!context) {
                 context = this[CONTEXT];
             }
-            if (!context) {
-                throw new ImplementationError("Managed state must either have context set or passed via SET");
-            }
 
             const property = fields[name];
             if (property?.fixed) {
@@ -86,12 +80,11 @@ export function ManagedState<T extends State.Type>(type: T, behaviorName: string
                 property?.validate?.(value);
             }
         
-            this[MANAGER]?.setStateValue(name, value, context);
             this[VALUES][name] = value;
 
             const observable = (context?.behavior?.events as undefined | Record<string, Observable>)?.[`${name}$change`];
             if (observable instanceof Observable) {
-                observable.emit(value, oldValue, context);
+                (observable as ClusterEvents.AttributeObservable).emit(value, oldValue, context ?? {});
             }
         },
 
@@ -113,7 +106,8 @@ export function ManagedState<T extends State.Type>(type: T, behaviorName: string
 
 export namespace ManagedState {
     export type Type<T extends State.Type> = {
-        new (values?: Record<string, any>, manager?: StateManager, context?: InvocationContext): InstanceType<T>;
+        new (values?: Record<string, any>, context?: InvocationContext): InstanceType<T>;
+
         with: typeof State.with;
         fields: State.FieldOptions;
     }

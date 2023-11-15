@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { OnOffServer } from "../../../behavior/server/definitions/OnOffServer.js";
 import { LevelControlServer } from "../../../behavior/server/definitions/LevelControlServer.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
@@ -18,21 +17,15 @@ export const SpeakerRequirements = {
     /**
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
-    server: {
-        mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 34, revision: 1 }] }),
-            OnOff: OnOffServer,
-            LevelControl: LevelControlServer
-        }
-    }
+    server: { mandatory: { OnOff: OnOffServer, LevelControl: LevelControlServer } }
 };
 
 export const SpeakerDeviceDefinition = MutableEndpoint({
     name: "Speaker",
     deviceType: 0x22,
+    deviceRevision: 1,
     requirements: SpeakerRequirements,
     behaviors: SupportedBehaviors(
-        SpeakerRequirements.server.mandatory.Descriptor,
         SpeakerRequirements.server.mandatory.OnOff,
         SpeakerRequirements.server.mandatory.LevelControl
     )

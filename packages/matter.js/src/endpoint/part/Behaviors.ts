@@ -40,7 +40,17 @@ export class Behaviors {
         this.#supported = supported;
 
         this.require(LifecycleBehavior);
-        this.require(DescriptorServer);
+
+        if (!this.has(DescriptorServer)) {
+            this.require(DescriptorServer.set({
+                deviceTypeList: [
+                    {
+                        deviceType: part.type.deviceType,
+                        revision: part.type.deviceRevision,
+                    }
+                ]
+            }));
+        }
     }
 
     /**
@@ -92,7 +102,7 @@ export class Behaviors {
     }
 
     /**
-     * Complete initialization after installation into {@link Part}.
+     * Complete initialization after installation into a {@link Part}.
      */
     initialize() {
         const descriptor = this.#part.getAgent().get(DescriptorServer);

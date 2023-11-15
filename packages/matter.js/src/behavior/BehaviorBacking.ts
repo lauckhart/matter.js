@@ -5,7 +5,6 @@
  */
 
 import { State } from "./state/State.js";
-import { StateManager } from "./state/StateManager.js";
 import type { Behavior } from "./Behavior.js";
 import type { InvocationContext } from "./InvocationContext.js";
 import type { Part } from "../endpoint/Part.js";
@@ -16,7 +15,7 @@ import { EventEmitter } from "../util/Observable.js";
  * The "backing" for a behavior manages those portions of behavior that endure
  * for the lifetime of an endpoint.
  */
-export abstract class BehaviorBacking implements StateManager {
+export abstract class BehaviorBacking {
     #part: Part;
     #type: Behavior.Type;
     #internal?: State;
@@ -42,8 +41,10 @@ export abstract class BehaviorBacking implements StateManager {
     }
 
     /**
-     * Create a behavior.  Derivatives may override to perform additional
-     * setup beyond simply instantiating the behavior.
+     * Create an instance of the backed {@link Behavior}.
+     * 
+     * Derivatives may override to perform additional setup beyond simple
+     * instantiation.
      */
     createBehavior(agent: EndpointAgent) {
         return new this.#type(agent, this);
@@ -79,13 +80,6 @@ export abstract class BehaviorBacking implements StateManager {
             this.#events = new this.#type.Events();
         }
         return this.#events;
-    }
-
-    /**
-     * Interception point for state mutation.  Derivatives may override to
-     * provide validation and propagate state.
-     */
-    setStateValue(_name: string, _value: any, _context: InvocationContext) {
     }
 
     /**

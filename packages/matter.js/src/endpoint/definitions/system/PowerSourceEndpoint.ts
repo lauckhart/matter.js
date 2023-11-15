@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { PowerSourceServer } from "../../../behavior/server/definitions/PowerSourceServer.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { DeviceClasses } from "../../../device/DeviceTypes.js";
@@ -18,23 +17,16 @@ export const PowerSourceRequirements = {
     /**
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
-    server: {
-        mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 17, revision: 1 }] }),
-            PowerSource: PowerSourceServer
-        }
-    }
+    server: { mandatory: { PowerSource: PowerSourceServer } }
 };
 
 export const PowerSourceEndpointDefinition = MutableEndpoint({
     name: "PowerSource",
     deviceType: 0x11,
+    deviceRevision: 1,
     deviceClass: DeviceClasses.Utility,
     requirements: PowerSourceRequirements,
-    behaviors: SupportedBehaviors(
-        PowerSourceRequirements.server.mandatory.Descriptor,
-        PowerSourceRequirements.server.mandatory.PowerSource
-    )
+    behaviors: SupportedBehaviors(PowerSourceRequirements.server.mandatory.PowerSource)
 });
 
 /**

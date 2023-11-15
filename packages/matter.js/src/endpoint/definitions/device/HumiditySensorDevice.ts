@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
 import {
     RelativeHumidityMeasurementServer
@@ -20,21 +19,15 @@ export const HumiditySensorRequirements = {
     /**
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
-    server: {
-        mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 775, revision: 2 }] }),
-            Identify: IdentifyServer,
-            RelativeHumidityMeasurement: RelativeHumidityMeasurementServer
-        }
-    }
+    server: { mandatory: { Identify: IdentifyServer, RelativeHumidityMeasurement: RelativeHumidityMeasurementServer } }
 };
 
 export const HumiditySensorDeviceDefinition = MutableEndpoint({
     name: "HumiditySensor",
     deviceType: 0x307,
+    deviceRevision: 2,
     requirements: HumiditySensorRequirements,
     behaviors: SupportedBehaviors(
-        HumiditySensorRequirements.server.mandatory.Descriptor,
         HumiditySensorRequirements.server.mandatory.Identify,
         HumiditySensorRequirements.server.mandatory.RelativeHumidityMeasurement
     )

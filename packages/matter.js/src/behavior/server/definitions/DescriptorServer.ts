@@ -90,7 +90,7 @@ export class DescriptorServer extends DescriptorBehavior {
     private addToList<I>(list: I[], items: I[]) {
         return [
             ...new Set([
-                ...list,
+                ...list ?? [],
                 ...items,
             ])
         ]

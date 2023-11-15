@@ -48,13 +48,6 @@ export class ClusterRequirements {
                     break;
             }
         }
-
-        if (cluster.name === "Descriptor") {
-            this.defaults = {
-                ...this.defaults,
-                ...file.extraDescriptorProperties,
-            }
-        }
     }
 
     private ingestFeature(requirement: RequirementModel) {

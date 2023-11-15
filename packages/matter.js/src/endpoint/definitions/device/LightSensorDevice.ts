@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
 import { IlluminanceMeasurementServer } from "../../../behavior/server/definitions/IlluminanceMeasurementServer.js";
 import { GroupsBehavior } from "../../../behavior/definitions/GroupsBehavior.js";
@@ -19,13 +18,7 @@ export const LightSensorRequirements = {
     /**
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
-    server: {
-        mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 262, revision: 2 }] }),
-            Identify: IdentifyServer,
-            IlluminanceMeasurement: IlluminanceMeasurementServer
-        }
-    },
+    server: { mandatory: { Identify: IdentifyServer, IlluminanceMeasurement: IlluminanceMeasurementServer } },
 
     /**
      * A definition for each client cluster supported by the endpoint per the Matter specification.
@@ -36,9 +29,9 @@ export const LightSensorRequirements = {
 export const LightSensorDeviceDefinition = MutableEndpoint({
     name: "LightSensor",
     deviceType: 0x106,
+    deviceRevision: 2,
     requirements: LightSensorRequirements,
     behaviors: SupportedBehaviors(
-        LightSensorRequirements.server.mandatory.Descriptor,
         LightSensorRequirements.server.mandatory.Identify,
         LightSensorRequirements.server.mandatory.IlluminanceMeasurement
     )

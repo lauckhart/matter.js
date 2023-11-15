@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
 import { GroupsServer } from "../../../behavior/server/definitions/GroupsServer.js";
 import { FanControlServer } from "../../../behavior/server/definitions/FanControlServer.js";
@@ -19,23 +18,15 @@ export const FanRequirements = {
     /**
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
-    server: {
-        mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 43, revision: 1 }] }),
-            Identify: IdentifyServer,
-            Groups: GroupsServer,
-            FanControl: FanControlServer
-        }
-    }
+    server: { mandatory: { Identify: IdentifyServer, Groups: GroupsServer, FanControl: FanControlServer } }
 };
 
 export const FanDeviceDefinition = MutableEndpoint({
     name: "Fan",
     deviceType: 0x2b,
+    deviceRevision: 1,
     requirements: FanRequirements,
-
     behaviors: SupportedBehaviors(
-        FanRequirements.server.mandatory.Descriptor,
         FanRequirements.server.mandatory.Identify,
         FanRequirements.server.mandatory.Groups,
         FanRequirements.server.mandatory.FanControl

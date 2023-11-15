@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { OnOffServer } from "../../../behavior/server/definitions/OnOffServer.js";
 import { MediaPlaybackServer } from "../../../behavior/server/definitions/MediaPlaybackServer.js";
 import { KeypadInputServer } from "../../../behavior/server/definitions/KeypadInputServer.js";
@@ -30,7 +29,6 @@ export const CastingVideoPlayerRequirements = {
      */
     server: {
         mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 35, revision: 1 }] }),
             OnOff: OnOffServer,
             MediaPlayback: MediaPlaybackServer,
             KeypadInput: KeypadInputServer,
@@ -53,10 +51,10 @@ export const CastingVideoPlayerRequirements = {
 export const CastingVideoPlayerDeviceDefinition = MutableEndpoint({
     name: "CastingVideoPlayer",
     deviceType: 0x23,
+    deviceRevision: 1,
     requirements: CastingVideoPlayerRequirements,
 
     behaviors: SupportedBehaviors(
-        CastingVideoPlayerRequirements.server.mandatory.Descriptor,
         CastingVideoPlayerRequirements.server.mandatory.OnOff,
         CastingVideoPlayerRequirements.server.mandatory.MediaPlayback,
         CastingVideoPlayerRequirements.server.mandatory.KeypadInput,

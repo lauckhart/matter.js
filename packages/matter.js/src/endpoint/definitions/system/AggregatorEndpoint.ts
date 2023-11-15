@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { ActionsServer } from "../../../behavior/server/definitions/ActionsServer.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { DeviceClasses } from "../../../device/DeviceTypes.js";
@@ -18,18 +17,16 @@ export const AggregatorRequirements = {
     /**
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
-    server: {
-        mandatory: { Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 14, revision: 1 }] }) },
-        optional: { Actions: ActionsServer }
-    }
+    server: { optional: { Actions: ActionsServer } }
 };
 
 export const AggregatorEndpointDefinition = MutableEndpoint({
     name: "Aggregator",
     deviceType: 0xe,
+    deviceRevision: 1,
     deviceClass: DeviceClasses.Dynamic,
     requirements: AggregatorRequirements,
-    behaviors: SupportedBehaviors(AggregatorRequirements.server.mandatory.Descriptor)
+    behaviors: SupportedBehaviors()
 });
 
 /**

@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { FlowMeasurementServer } from "../../../behavior/server/definitions/FlowMeasurementServer.js";
 import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
@@ -18,21 +17,15 @@ export const FlowSensorRequirements = {
     /**
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
-    server: {
-        mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 774, revision: 2 }] }),
-            FlowMeasurement: FlowMeasurementServer,
-            Identify: IdentifyServer
-        }
-    }
+    server: { mandatory: { FlowMeasurement: FlowMeasurementServer, Identify: IdentifyServer } }
 };
 
 export const FlowSensorDeviceDefinition = MutableEndpoint({
     name: "FlowSensor",
     deviceType: 0x306,
+    deviceRevision: 2,
     requirements: FlowSensorRequirements,
     behaviors: SupportedBehaviors(
-        FlowSensorRequirements.server.mandatory.Descriptor,
         FlowSensorRequirements.server.mandatory.FlowMeasurement,
         FlowSensorRequirements.server.mandatory.Identify
     )

@@ -14,10 +14,18 @@ export class DeviceTypeModel extends Model implements DeviceTypeElement {
     override tag: DeviceTypeElement.Tag = DeviceTypeElement.Tag;
     override id!: Mei;
     classification!: DeviceTypeElement.Classification;
-    revision!: number;
 
     get requirements() {
         return this.all(RequirementModel);
+    }
+
+    get revision() {
+        return this
+            .get(RequirementModel, "Descriptor")
+            .get(RequirementModel, "DeviceTypeList")
+            .default
+            [0]
+            .revision;
     }
 
     override get children(): (RequirementModel | DatatypeModel)[] {

@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { BasicInformationServer } from "../../../behavior/server/definitions/BasicInformationServer.js";
 import { AccessControlServer } from "../../../behavior/server/definitions/AccessControlServer.js";
 import { GroupKeyManagementServer } from "../../../behavior/server/definitions/GroupKeyManagementServer.js";
@@ -37,7 +36,6 @@ export const RootRequirements = {
      */
     server: {
         mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 22, revision: 1 }] }),
             BasicInformation: BasicInformationServer,
             AccessControl: AccessControlServer,
             GroupKeyManagement: GroupKeyManagementServer,
@@ -66,11 +64,11 @@ export const RootRequirements = {
 export const RootEndpointDefinition = MutableEndpoint({
     name: "RootNode",
     deviceType: 0x16,
+    deviceRevision: 1,
     deviceClass: DeviceClasses.Node,
     requirements: RootRequirements,
 
     behaviors: SupportedBehaviors(
-        RootRequirements.server.mandatory.Descriptor,
         RootRequirements.server.mandatory.BasicInformation,
         RootRequirements.server.mandatory.AccessControl,
         RootRequirements.server.mandatory.GroupKeyManagement,

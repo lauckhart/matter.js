@@ -36,7 +36,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
      */
     getFabricScope(fabric: Fabric | undefined) {
         if (fabric === undefined) {
-            throw new ImplementationError(`Illegal access to ${this.type.id} fabric state outside of fabric scope`);
+            throw new ImplementationError(`Cannot access ${this.type.id} fabric properties without fabric scope`);
         }
         let fabricScope = this.#fabricScopes.get(fabric);
         if (!fabricScope) {
@@ -66,7 +66,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
      */
     protected createEndpointScope(values = {}) {
         const endpointScopeType = ManagedState(this.type.EndpointScope);
-        this.#endpointScope = new endpointScopeType(values, this);
+        this.#endpointScope = new endpointScopeType(values);
         return this.#endpointScope;
     }
 
@@ -78,7 +78,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
             this.#fabricScopeType = ManagedState(this.type.FabricScope, this.type.id);
         }
 
-        const scope = new this.type.FabricScope(values, this);
+        const scope = new this.type.FabricScope(values);
         this.#fabricScopes.set(fabric, scope);
         return scope;
     }

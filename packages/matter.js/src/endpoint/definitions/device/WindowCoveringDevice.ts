@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
 import { WindowCoveringServer } from "../../../behavior/server/definitions/WindowCoveringServer.js";
 import { GroupsServer } from "../../../behavior/server/definitions/GroupsServer.js";
@@ -21,11 +20,7 @@ export const WindowCoveringRequirements = {
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
     server: {
-        mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 514, revision: 2 }] }),
-            Identify: IdentifyServer,
-            WindowCovering: WindowCoveringServer
-        },
+        mandatory: { Identify: IdentifyServer, WindowCovering: WindowCoveringServer },
         optional: { Groups: GroupsServer, Scenes: ScenesServer }
     }
 };
@@ -33,11 +28,9 @@ export const WindowCoveringRequirements = {
 export const WindowCoveringDeviceDefinition = MutableEndpoint({
     name: "WindowCovering",
     deviceType: 0x202,
+    deviceRevision: 2,
     requirements: WindowCoveringRequirements,
-    behaviors: SupportedBehaviors(
-        WindowCoveringRequirements.server.mandatory.Descriptor,
-        WindowCoveringRequirements.server.mandatory.Identify
-    )
+    behaviors: SupportedBehaviors(WindowCoveringRequirements.server.mandatory.Identify)
 });
 
 /**

@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { OnOffBehavior } from "../../../behavior/definitions/OnOffBehavior.js";
 import { MediaPlaybackBehavior } from "../../../behavior/definitions/MediaPlaybackBehavior.js";
 import { KeypadInputBehavior } from "../../../behavior/definitions/KeypadInputBehavior.js";
@@ -26,11 +25,6 @@ import { Identity } from "../../../util/Type.js";
 import { MatterDeviceLibrarySpecificationV1_1 } from "../../../spec/Specifications.js";
 
 export const VideoRemoteControlRequirements = {
-    /**
-     * An implementation for each server cluster supported by the endpoint per the Matter specification.
-     */
-    server: { mandatory: { Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 42, revision: 1 }] }) } },
-
     /**
      * A definition for each client cluster supported by the endpoint per the Matter specification.
      */
@@ -55,8 +49,9 @@ export const VideoRemoteControlRequirements = {
 export const VideoRemoteControlDeviceDefinition = MutableEndpoint({
     name: "VideoRemoteControl",
     deviceType: 0x2a,
+    deviceRevision: 1,
     requirements: VideoRemoteControlRequirements,
-    behaviors: SupportedBehaviors(VideoRemoteControlRequirements.server.mandatory.Descriptor)
+    behaviors: SupportedBehaviors()
 });
 
 /**

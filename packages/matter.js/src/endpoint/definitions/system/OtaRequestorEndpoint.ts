@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { OtaSoftwareUpdateRequestorServer } from "../../../behavior/server/definitions/OtaSoftwareUpdateRequestorServer.js";
 import { OtaSoftwareUpdateProviderBehavior } from "../../../behavior/definitions/OtaSoftwareUpdateProviderBehavior.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
@@ -19,12 +18,7 @@ export const OtaRequestorRequirements = {
     /**
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
-    server: {
-        mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 18, revision: 1 }] }),
-            OtaSoftwareUpdateRequestor: OtaSoftwareUpdateRequestorServer
-        }
-    },
+    server: { mandatory: { OtaSoftwareUpdateRequestor: OtaSoftwareUpdateRequestorServer } },
 
     /**
      * A definition for each client cluster supported by the endpoint per the Matter specification.
@@ -35,12 +29,10 @@ export const OtaRequestorRequirements = {
 export const OtaRequestorEndpointDefinition = MutableEndpoint({
     name: "OtaRequestor",
     deviceType: 0x12,
+    deviceRevision: 1,
     deviceClass: DeviceClasses.Utility,
     requirements: OtaRequestorRequirements,
-    behaviors: SupportedBehaviors(
-        OtaRequestorRequirements.server.mandatory.Descriptor,
-        OtaRequestorRequirements.server.mandatory.OtaSoftwareUpdateRequestor
-    )
+    behaviors: SupportedBehaviors(OtaRequestorRequirements.server.mandatory.OtaSoftwareUpdateRequestor)
 });
 
 /**

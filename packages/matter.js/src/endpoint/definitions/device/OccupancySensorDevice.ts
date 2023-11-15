@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
 import { OccupancySensingServer } from "../../../behavior/server/definitions/OccupancySensingServer.js";
 import { GroupsBehavior } from "../../../behavior/definitions/GroupsBehavior.js";
@@ -19,13 +18,7 @@ export const OccupancySensorRequirements = {
     /**
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
-    server: {
-        mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 263, revision: 2 }] }),
-            Identify: IdentifyServer,
-            OccupancySensing: OccupancySensingServer
-        }
-    },
+    server: { mandatory: { Identify: IdentifyServer, OccupancySensing: OccupancySensingServer } },
 
     /**
      * A definition for each client cluster supported by the endpoint per the Matter specification.
@@ -36,9 +29,9 @@ export const OccupancySensorRequirements = {
 export const OccupancySensorDeviceDefinition = MutableEndpoint({
     name: "OccupancySensor",
     deviceType: 0x107,
+    deviceRevision: 2,
     requirements: OccupancySensorRequirements,
     behaviors: SupportedBehaviors(
-        OccupancySensorRequirements.server.mandatory.Descriptor,
         OccupancySensorRequirements.server.mandatory.Identify,
         OccupancySensorRequirements.server.mandatory.OccupancySensing
     )

@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { TimeSyncServer } from "../../../behavior/server/definitions/TimeSyncServer.js";
 import { DoorLockBehavior } from "../../../behavior/definitions/DoorLockBehavior.js";
 import { IdentifyBehavior } from "../../../behavior/definitions/IdentifyBehavior.js";
@@ -21,10 +20,7 @@ export const DoorLockControllerRequirements = {
     /**
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
-    server: {
-        mandatory: { Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 11, revision: 2 }] }) },
-        optional: { TimeSync: TimeSyncServer }
-    },
+    server: { optional: { TimeSync: TimeSyncServer } },
 
     /**
      * A definition for each client cluster supported by the endpoint per the Matter specification.
@@ -38,8 +34,9 @@ export const DoorLockControllerRequirements = {
 export const DoorLockControllerDeviceDefinition = MutableEndpoint({
     name: "DoorLockController",
     deviceType: 0xb,
+    deviceRevision: 2,
     requirements: DoorLockControllerRequirements,
-    behaviors: SupportedBehaviors(DoorLockControllerRequirements.server.mandatory.Descriptor)
+    behaviors: SupportedBehaviors()
 });
 
 /**

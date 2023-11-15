@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
 import { GroupsServer } from "../../../behavior/server/definitions/GroupsServer.js";
 import { OnOffServer } from "../../../behavior/server/definitions/OnOffServer.js";
@@ -24,13 +23,7 @@ export const HeatingCoolingUnitRequirements = {
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
     server: {
-        mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 768, revision: 2 }] }),
-            Identify: IdentifyServer,
-            Groups: GroupsServer,
-            OnOff: OnOffServer
-        },
-
+        mandatory: { Identify: IdentifyServer, Groups: GroupsServer, OnOff: OnOffServer },
         optional: { Scenes: ScenesServer, LevelControl: LevelControlServer, FanControl: FanControlServer }
     },
 
@@ -43,10 +36,9 @@ export const HeatingCoolingUnitRequirements = {
 export const HeatingCoolingUnitDeviceDefinition = MutableEndpoint({
     name: "HeatingCoolingUnit",
     deviceType: 0x300,
+    deviceRevision: 2,
     requirements: HeatingCoolingUnitRequirements,
-
     behaviors: SupportedBehaviors(
-        HeatingCoolingUnitRequirements.server.mandatory.Descriptor,
         HeatingCoolingUnitRequirements.server.mandatory.Identify,
         HeatingCoolingUnitRequirements.server.mandatory.Groups,
         HeatingCoolingUnitRequirements.server.mandatory.OnOff

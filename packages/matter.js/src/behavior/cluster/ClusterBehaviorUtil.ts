@@ -11,7 +11,7 @@ import type { ClusterType } from "../../cluster/ClusterType.js";
 import type { ClusterBehavior } from "./ClusterBehavior.js";
 import { ValidationError } from "../../common/MatterError.js";
 import { EventEmitter, Observable } from "../../util/Observable.js";
-import { Attribute, GlobalAttributes } from "../../cluster/Cluster.js";
+import { GlobalAttributes } from "../../cluster/Cluster.js";
 
 /**
  * This is the actual implementation of ClusterBehavior.for().

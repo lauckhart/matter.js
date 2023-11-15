@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
 import { GroupsServer } from "../../../behavior/server/definitions/GroupsServer.js";
 import { ScenesServer } from "../../../behavior/server/definitions/ScenesServer.js";
@@ -22,14 +21,7 @@ export const OnOffPlugInUnitRequirements = {
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
     server: {
-        mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 266, revision: 2 }] }),
-            Identify: IdentifyServer,
-            Groups: GroupsServer,
-            Scenes: ScenesServer,
-            OnOff: OnOffServer
-        },
-
+        mandatory: { Identify: IdentifyServer, Groups: GroupsServer, Scenes: ScenesServer, OnOff: OnOffServer },
         optional: { LevelControl: LevelControlServer }
     }
 };
@@ -37,10 +29,10 @@ export const OnOffPlugInUnitRequirements = {
 export const OnOffPlugInUnitDeviceDefinition = MutableEndpoint({
     name: "OnOffPlugInUnit",
     deviceType: 0x10a,
+    deviceRevision: 2,
     requirements: OnOffPlugInUnitRequirements,
 
     behaviors: SupportedBehaviors(
-        OnOffPlugInUnitRequirements.server.mandatory.Descriptor,
         OnOffPlugInUnitRequirements.server.mandatory.Identify,
         OnOffPlugInUnitRequirements.server.mandatory.Groups,
         OnOffPlugInUnitRequirements.server.mandatory.Scenes,

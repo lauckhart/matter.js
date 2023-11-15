@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { OnOffServer } from "../../../behavior/server/definitions/OnOffServer.js";
 import { MediaPlaybackServer } from "../../../behavior/server/definitions/MediaPlaybackServer.js";
 import { KeypadInputServer } from "../../../behavior/server/definitions/KeypadInputServer.js";
@@ -26,12 +25,7 @@ export const BasicVideoPlayerRequirements = {
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
     server: {
-        mandatory: {
-            Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 40, revision: 1 }] }),
-            OnOff: OnOffServer,
-            MediaPlayback: MediaPlaybackServer,
-            KeypadInput: KeypadInputServer
-        },
+        mandatory: { OnOff: OnOffServer, MediaPlayback: MediaPlaybackServer, KeypadInput: KeypadInputServer },
 
         optional: {
             WakeOnLan: WakeOnLanServer,
@@ -47,10 +41,9 @@ export const BasicVideoPlayerRequirements = {
 export const BasicVideoPlayerDeviceDefinition = MutableEndpoint({
     name: "BasicVideoPlayer",
     deviceType: 0x28,
+    deviceRevision: 1,
     requirements: BasicVideoPlayerRequirements,
-
     behaviors: SupportedBehaviors(
-        BasicVideoPlayerRequirements.server.mandatory.Descriptor,
         BasicVideoPlayerRequirements.server.mandatory.OnOff,
         BasicVideoPlayerRequirements.server.mandatory.MediaPlayback,
         BasicVideoPlayerRequirements.server.mandatory.KeypadInput

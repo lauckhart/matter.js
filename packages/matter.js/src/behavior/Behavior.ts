@@ -150,9 +150,9 @@ export abstract class Behavior {
 
         // TS has weird requirements on mixin constructors, thus ghetto casts
         // below
-        class SetBehavior extends (this as unknown as new (context: any) => any) {
-            constructor(agent: EndpointAgent) {
-                super(agent);
+        class SetBehavior extends (this as unknown as new (agent: EndpointAgent, backing: BehaviorBacking) => any) {
+            constructor(agent: EndpointAgent, backing: BehaviorBacking) {
+                super(agent, backing);
 
                 Object.assign(this, defaults);
             }

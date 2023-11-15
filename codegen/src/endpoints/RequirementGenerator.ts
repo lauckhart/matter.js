@@ -44,8 +44,8 @@ export class RequirementGenerator {
                 logger.error(`Skipping ${file.model.name} server cluster for unknown cluster ${requirement.name}`);
                 continue;
             }
-            if (definition.id === undefined) {
-                // Skip base clusters
+            if (definition.id === undefined || definition.id === 0x1d) {
+                // Skip base clusters & descriptor
                 continue;
             }
 

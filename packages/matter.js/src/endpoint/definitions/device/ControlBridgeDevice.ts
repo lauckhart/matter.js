@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DescriptorServer } from "../../../behavior/server/definitions/DescriptorServer.js";
 import { IdentifyBehavior } from "../../../behavior/definitions/IdentifyBehavior.js";
 import { GroupsBehavior } from "../../../behavior/definitions/GroupsBehavior.js";
 import { ScenesBehavior } from "../../../behavior/definitions/ScenesBehavior.js";
@@ -21,11 +20,6 @@ import { Identity } from "../../../util/Type.js";
 import { MatterDeviceLibrarySpecificationV1_1 } from "../../../spec/Specifications.js";
 
 export const ControlBridgeRequirements = {
-    /**
-     * An implementation for each server cluster supported by the endpoint per the Matter specification.
-     */
-    server: { mandatory: { Descriptor: DescriptorServer.set({ deviceTypeList: [{ deviceType: 2112, revision: 2 }] }) } },
-
     /**
      * A definition for each client cluster supported by the endpoint per the Matter specification.
      */
@@ -49,8 +43,9 @@ export const ControlBridgeRequirements = {
 export const ControlBridgeDeviceDefinition = MutableEndpoint({
     name: "ControlBridge",
     deviceType: 0x840,
+    deviceRevision: 2,
     requirements: ControlBridgeRequirements,
-    behaviors: SupportedBehaviors(ControlBridgeRequirements.server.mandatory.Descriptor)
+    behaviors: SupportedBehaviors()
 });
 
 /**
