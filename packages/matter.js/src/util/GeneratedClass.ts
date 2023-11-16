@@ -125,6 +125,7 @@ function createConstructor(name: string, _callSuper: (...args: any[]) => object,
 
     return eval(`
         function ${name}() {
+            if (!new.target) return Reflect.construct(${name}, arguments);
             const self = _callSuper(arguments);
             _initialize?.apply(self, arguments);
             return self;

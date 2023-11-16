@@ -20,6 +20,7 @@ import { GeneratedClass } from "../../util/GeneratedClass.js";
 export function createType<const C extends ClusterType>(cluster: C, base: Behavior.Type) {
     return GeneratedClass({
         name: `${cluster.name}Behavior`,
+        base,
 
         staticDescriptors: {
             id: {
