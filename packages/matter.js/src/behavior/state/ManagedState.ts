@@ -4,18 +4,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { InvocationContext } from "../InvocationContext.js";
 import { Observable } from "../../util/Observable.js";
 import { State } from "./State.js";
-import { ImplementationError } from "../../common/MatterError.js";
-import { ClusterEvents } from "../cluster/ClusterEvents.js";
+import { ValidationError } from "../../common/MatterError.js";
+import { GeneratedClass } from "../../util/GeneratedClass.js";
+import type { ClusterEvents } from "../cluster/ClusterEvents.js";
+import type { InvocationContext } from "../InvocationContext.js";
+import { camelize } from "../../util/String.js";
 
 /**
  * A cache of managed state implementation classes.
  */
 const cache = new WeakMap<State.Type>();
 
-const CONTEXT = Symbol("context");
 const VALUES = Symbol("values");
 
 /**
@@ -24,84 +25,106 @@ const VALUES = Symbol("values");
  * to avoid polluting the public interface.
  */
 interface Internal extends State.Internal {
-    [CONTEXT]?: InvocationContext;
-    [VALUES]: Record<string, any>;
+    [VALUES]: State.Internal & Record<string, any>;
 }
 
 /**
- * Create a "managed state" class.  The public {@link State} interface is a
- * bare JS object but internally we need wiring for validating writes and
- * triggering events.  This class acts as a wrapper and performs those
- * functions.
+ * The public {@link State} interface is a bare JS object but internally we
+ * need wiring for validating writes and triggering events.  This function
+ * creates a wrapper that performs those functions.
+ * 
+ * This is a pure function for {@link type}.  It caches the generated class.
  */
-export function ManagedState<T extends State.Type>(type: T, behaviorName: string = "(behavior)") {
+export function ManagedState<T extends State.Type>(type: T, behaviorName?: string) {
+    const fields = type.fields;
+
+    let className, diagnosticsName: string;
+    if (behaviorName) {
+        className = `${camelize(behaviorName, true)}$${type.name}`;
+        diagnosticsName = `${camelize(behaviorName, false)}.state`
+    } else {
+        className = `${type.name}$`;
+        diagnosticsName = type.name;
+    }
+
     // First check the cache
     const cached = cache.get(type);
     if (cached) {
         return cached as ManagedState.Type<T>;
     }
 
-    // Instantiate the base to get property names and default values
-    const defaults = new type;
-
-    const fields = type.fields;
-
-    // TS's gimpy mixin support makes defining classes inline kind of ugly,
-    // so just define the class manually
-    function StateType(this: Internal, values?: Record<string, any>, context?: InvocationContext) {
-        this[CONTEXT] = context;
-        this[VALUES] = {
-            ...defaults,
-            ...values,
-        };
-
-        for (const key in this[VALUES]) {
-            fields[key]?.validate?.(this[VALUES][key]);
+    // We add instance descriptors in preprocess() below
+    const instanceDescriptors = {
+        [State.SET]: {
+            value: setter
         }
+    } as PropertyDescriptorMap;
 
-        Object.seal(this);
+    for (const name in GeneratedClass.prototypeFor(type)) {
+        // The generated class extends the base class but we actually
+        // delegate all properties to the [VALUE] instance
+        instanceDescriptors[name] = createDescriptor(name);
     }
 
-    Object.assign(StateType.prototype, {
-        [State.SET](this: Internal, name: string, value: any, context?: InvocationContext) {
-            const oldValue = this[VALUES][name];
-            if (oldValue === value) {
-                return;
-            }
+    // Generate the class
+    const managed = GeneratedClass({
+        name: className,
+        base: type,
 
-            if (!context) {
-                context = this[CONTEXT];
-            }
+        initialize(this: Internal, values, context) {
+            State.call(this);
 
-            const property = fields[name];
-            if (property?.fixed) {
-                throw new ImplementationError(`Illegal write to read-only property ${behaviorName}.state.${name}`);
-            } else {
-                property?.validate?.(value);
-            }
-        
-            this[VALUES][name] = value;
-
-            const observable = (context?.behavior?.events as undefined | Record<string, Observable>)?.[`${name}$change`];
-            if (observable instanceof Observable) {
-                (observable as ClusterEvents.AttributeObservable).emit(value, oldValue, context ?? {});
-            }
+            this[State.INITIALIZE](values, context);
         },
 
-        with: State.with,
-        fields: fields,
+        staticDescriptors: {
+            fields: {
+                get() {
+                    return type.fields
+                },
+
+                enumerable: true
+            },
+        },
     })
 
-    const descriptors = {} as PropertyDescriptorMap;
-    for (const name in defaults) {
-        descriptors[name] = createDescriptor(name);
+    cache.set(type, managed);
+
+    return managed as ManagedState.Type<T>;
+
+    function setter(this: Internal, name: string, value: any, context?: InvocationContext) {
+        const oldValue = this[VALUES][name];
+        if (oldValue === value) {
+            return;
+        }
+    
+        if (!context) {
+            context = this[State.CONTEXT] ?? {};
+        }
+    
+        const field = fields[name];
+        if (field) {
+            try {
+                if (field.fixed) {
+                    throw new ValidationError(`Property is read-only`);
+                }
+
+                field.validate?.(value, context);
+            } catch (e) {
+                if (e instanceof ValidationError) {
+                    e.message = `Cannot set ${diagnosticsName}.${name}: ${e.message}`;
+                }
+                throw e;
+            }
+        }
+    
+        this[VALUES][name] = value;
+    
+        const observable = (context.behavior?.events as undefined | Record<string, Observable>)?.[`${name}$change`];
+        if (observable instanceof Observable) {
+            (observable as ClusterEvents.AttributeObservable).emit(value, oldValue, context);
+        }
     }
-
-    Object.defineProperties(StateType.prototype, descriptors);
-
-    cache.set(type, StateType);
-
-    return StateType as unknown as ManagedState.Type<T>;
 }
 
 export namespace ManagedState {
@@ -120,7 +143,7 @@ function createDescriptor(name: string) {
         },
 
         set(this: Internal, value: any) {
-            this[State.SET](name, value, this[CONTEXT]);
+            this[State.SET](name, value);
         },
 
         enumerable: true,

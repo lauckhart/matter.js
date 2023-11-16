@@ -65,7 +65,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
      * values.
      */
     protected createEndpointScope(values = {}) {
-        const endpointScopeType = ManagedState(this.type.EndpointScope);
+        const endpointScopeType = ManagedState(this.type.EndpointScope, this.type.id);
         this.#endpointScope = new endpointScopeType(values);
         return this.#endpointScope;
     }

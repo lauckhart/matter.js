@@ -26,43 +26,29 @@ describe("ManagedState", () => {
         expect(ManagedState(MyState)).equals(Managed);
     })
 
-    it("delegates get", () => {
+    it("gets defaults", () => {
         const state = new Managed(new MyState);
 
         expect(state.foo).equals("bar");
     })
 
-    it("delegates set", () => {
-        const state = new MyState;
+    it("sets and gets", () => {
         const managed = new Managed(new MyState);
 
         managed.foo = "BAR";
-        expect(state.foo).equals("BAR");
+        expect(managed.foo).equals("BAR");
     })
 
-    it("has a working getter", () => {
-        const state = new Managed(new MyState);
-
-        expect(state.foo).equals("bar");
-    })
-
-    it("has a working setter", () => {
-        const state = new MyState;
-        const managed = new Managed(new MyState) as unknown as State.Internal;
-
-        managed[State.SET]("foo", "BAR");
-        expect(state.foo).equals("BAR");
-    })
-
-    it("triggers events", () => {
+    it("triggers events", async () => {
         const behavior = {
             events: {
                 foo$change: Observable()
             }
         };
 
-        let args;
-        behavior.events.foo$change((...a: any[]) => args = a)
+        const result = new Promise(resolve =>
+            behavior.events.foo$change((...args: any[]) => resolve(args))
+        )
 
         const context = {
             behavior: behavior as unknown as Behavior
@@ -72,12 +58,24 @@ describe("ManagedState", () => {
 
         state.foo = "BAR";
 
-        expect(args).equals(["BAR", "bar", context]);
+        expect(result).eventually.deep.equal(["BAR", "bar", context]);
     })
 
     it("handles rejection well", () => {
-        const state = new Managed(new MyState);
+        const state = new (ManagedState(class extends State {
+            foo: string | undefined = undefined;
+
+            static override fields = {
+                foo: {
+                    validate(value: string): void {
+                        if (value !== undefined) {
+                            throw new Error("Bad value");
+                        }
+                    }
+                }
+            }
+        }));
         expect(() => state.foo = "bad").throws("Bad value");
-        expect(state.foo).equals("bar");
+        expect(state.foo).undefined;
     })
 })

@@ -20,6 +20,7 @@ describe("ClusterBehavior", () => {
         describe("state types meet type requirement", () => {
             ClusterBehavior.EndpointScope satisfies State.Type;
             ClusterBehavior.EndpointScope satisfies ClusterBehavior.Type["EndpointScope"];
+
             ClusterBehavior.FabricScope satisfies State.Type;
             ClusterBehavior.FabricScope satisfies ClusterBehavior.Type["FabricScope"];
         });
@@ -34,11 +35,16 @@ describe("ClusterBehavior", () => {
             ClusterBehavior.FabricScope satisfies ClusterBehavior.Type["FabricScope"];
             ClusterBehavior.Events satisfies ClusterBehavior.Type["Events"];
 
+            typeof ClusterBehavior.EndpointScope === "function";
+            typeof ClusterBehavior.FabricScope === "function";
+            typeof ClusterBehavior.Events === "function";
+
             ClusterBehavior satisfies ClusterBehavior.Type;
+            typeof ClusterBehavior === "function";
         });
     })
 
-    describe("base elements", () => {
+    describe("ClusterBehavior.for", () => {
         it("exposes mandatory properties for enabled cluster elements", () => {
             ({}) as MyBehavior satisfies {
                 state: {
@@ -46,10 +52,13 @@ describe("ClusterBehavior", () => {
                     reqFabricAttr: string
                 }
             };
+            expect(MyBehavior.EndpointScope.prototype.reqAttr).equals("hello");
+            expect(MyBehavior.FabricScope.prototype.reqFabricAttr).equals("world");
             
             ({}) as MyBehavior satisfies {
                 reqCmd: (request: string, state: any) => MaybePromise<string>
             };
+            expect(typeof MyBehavior.prototype.reqCmd).equals("function");
             
             ({}) as MyBehavior satisfies {
                 events: {
@@ -83,7 +92,7 @@ describe("ClusterBehavior", () => {
             ({}) as Match<MyBehavior, { optCmd: (...args: any[]) => any }> satisfies true;
         });
 
-        it("exposes values for enabled cluster elements", () => {
+        it("instance exposes values for enabled cluster elements", () => {
             const behavior = createBehavior(MyBehavior);
 
             expect(behavior.state.reqAttr).equals("hello");
@@ -92,7 +101,7 @@ describe("ClusterBehavior", () => {
             expect(behavior.events.reqEv).is.a("function");
         });
 
-        it("does not expose values for disabled cluster elements", () => {
+        it("instance does not expose values for disabled cluster elements", () => {
             const behavior = createBehavior(MyBehavior);
 
             expect((behavior.state as any).optAttr).undefined;
@@ -101,7 +110,7 @@ describe("ClusterBehavior", () => {
             expect((behavior.events as any).reqEv).undefined;
         });
 
-        it("allows standard method override", () => {
+        it("instance allows standard method override", () => {
             const Ignored = class extends MyBehavior {
                 override reqCmd(request: string): string {
                     return request.toUpperCase();

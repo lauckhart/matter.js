@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ImplementationError } from "../../common/MatterError.js";
+import { GeneratedClass } from "../../util/GeneratedClass.js";
 import type { InvocationContext } from "../InvocationContext.js";
 
 /**
@@ -11,6 +13,9 @@ import type { InvocationContext } from "../InvocationContext.js";
  * 
  * State is either "global" or "scoped".  Scoped state is scoped to a Matter
  * fabric.  Each behavior has a separate class for global and scoped state.
+ * 
+ * The public interface for state is just a JS object.  {@link State.Internal}
+ * is an additional semi-public interface you may access by casting.
  */
 export class State {
     // Default state has no properties
@@ -22,26 +27,19 @@ export class State {
     static with<This extends State.Type, T extends object>(
         this: This,
         defaults: T,
-        fields: State.FieldOptions = {}
+        options?: State.WithOptions
     ) {
-        fields = {
-            ...this.fields,
-            ...fields
-        };
-
-        // TypeScript has a weird limitation on mixins, thus the ugly cast in
-        // the next line
-        class SpecializedState extends (this as unknown as new (...args: any[]) => State) {
-            constructor() {
-                super();
-
-                Object.assign(this, defaults);
-            }
-
-            static fields = fields;
+        const staticProps = {} as { fields?: State.FieldOptions };
+        if (options?.fields) {
+            staticProps.fields = options.fields;
         }
         
-        return SpecializedState as unknown as State.Type<InstanceType<This> & T>;
+        return GeneratedClass({
+            name: options?.name ?? `${this.name}$`,
+            base: this,
+            instanceProperties: defaults,
+            staticProperties: staticProps
+        }) as State.Type<InstanceType<This> & T>;
     }
 
     /**
@@ -52,30 +50,48 @@ export class State {
     static fields = {} as State.FieldOptions;
 }
 
-(State.prototype as any)[State.SET] = function(name: string, value: any, _context?: InvocationContext) {
-    (this as any)[name] = value;
-}
-
 export namespace State {
-    /**
-     * Key for low-level setter.
-     */
     export const SET = Symbol("SET");
+    export const INITIALIZE = Symbol("SET");
+    export const CONTEXT = Symbol("CONTEXT");
 
     /**
-     * This internal view of state exposes a low-level set method.  This method
-     * allows the caller to convey context when performing a set.
+     * This "internal" view of state exposes methods we don't want to bother
+     * the user with.  We achieve this by using symbols and omitting them from
+     * the default interface.
      */
     export interface Internal extends State {
+        /**
+         * Information about the context in which the state is accessed.
+         */
+        [CONTEXT]: InvocationContext | undefined;
+
+        /**
+         * Low-level setter.  This operates the same as calling "set" but
+         * allows for override of the invocation context.
+         */
         [SET](name: string, value: any, context?: InvocationContext): void;
+
+        /**
+         * Initialize.  This is separate from construction so we can seal the
+         * object.  If a derivative will not be subclassed it can initialize in
+         * its constructor.
+         */
+        [INITIALIZE](values?: Record<string, any>, context?: InvocationContext): void;
     }
 
     /**
-     * Field options.  These are affect class generation in ManagedState.
+     * The base State class does not use these but it carries as metadata for
+     * configuration of ManagedState.
      */
     export interface FieldConfiguration {
         fixed?: boolean;
-        validate?: (value: any) => void;
+        validate?: (value: any, context: InvocationContext) => void;
+    }
+
+    export type WithOptions = {
+        name?: string;
+        fields?: FieldOptions;
     }
 
     /**
@@ -92,3 +108,26 @@ export namespace State {
         fields: FieldOptions;
     }
 }
+
+Object.assign(State.prototype, {
+    [State.CONTEXT]: undefined,
+
+    [State.SET](name: string, value: any) {
+        (this as any)[name] = value;
+    },
+
+    [State.INITIALIZE](this: State.Internal, values?: Record<string, any>, context?: InvocationContext): void {
+        Object.seal(this);
+
+        this[State.CONTEXT] = context;
+
+        if (values) {
+            for (const name in values) {
+                if (!(name in this)) {
+                    throw new ImplementationError(`State property "${name}" is not supported`);
+                }
+                (this as any)[name] = values[name];
+            }
+        }
+    },
+});

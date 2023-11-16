@@ -136,21 +136,17 @@ export abstract class Behavior {
      * Create a new behavior with different default state values.
      */
     static set<This extends Behavior.Type>(this: This, defaults: Behavior.InputStateOf<This>) {
-        const endpointScopeDefaults = new this.EndpointScope;
-        const fabricScopeDefaults = new this.FabricScope;
-
-        for (const key in defaults) {
-            if (endpointScopeDefaults.hasOwnProperty(key)) {
-                (endpointScopeDefaults as any)[key] = (defaults as any)[key];
-            }
-            if (fabricScopeDefaults.hasOwnProperty(key)) {
-                (fabricScopeDefaults as any)[key] = (defaults as any)[key];
-            }
-        }
+        const Base = this;
+        const EndpointScope = this.EndpointScope.with(defaults);
+        const FabricScope = this.FabricScope.with(defaults);
 
         // TS has weird requirements on mixin constructors, thus ghetto casts
         // below
-        class SetBehavior extends (this as unknown as new (agent: EndpointAgent, backing: BehaviorBacking) => any) {
+        function Behavior$set(this: Behavior, agent: EndpointAgent, backing: BehaviorBacking) {
+            Base.call(this, agent, backing);
+        }
+        Behavior.prototype = Object.create(new Base());
+        class Behavior$set extends (this as unknown as new (agent: EndpointAgent, backing: BehaviorBacking) => any) {
             constructor(agent: EndpointAgent, backing: BehaviorBacking) {
                 super(agent, backing);
 
@@ -163,7 +159,7 @@ export abstract class Behavior {
             readonly defaults = defaults;
         }
 
-        return SetBehavior as unknown as This;
+        return Behavior$set as unknown as This;
     }
 }
 

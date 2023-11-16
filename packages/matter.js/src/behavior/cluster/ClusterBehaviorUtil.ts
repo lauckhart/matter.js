@@ -11,7 +11,6 @@ import type { ClusterType } from "../../cluster/ClusterType.js";
 import type { ClusterBehavior } from "./ClusterBehavior.js";
 import { ValidationError } from "../../common/MatterError.js";
 import { EventEmitter, Observable } from "../../util/Observable.js";
-import { GlobalAttributes } from "../../cluster/Cluster.js";
 
 /**
  * This is the actual implementation of ClusterBehavior.for().
@@ -96,10 +95,6 @@ function createDerivedState(cluster: ClusterType, base: Behavior.Type, fabricSco
 
     const defaults = {} as Record<string, any>;
     for (const name in oldDefaults) {
-        if (isGlobal(name)) {
-            continue;
-        }
-
         if (oldAttributes[name] === undefined || newAttributes[name] !== undefined) {
             defaults[name] = oldDefaults[name];
         }
@@ -107,10 +102,11 @@ function createDerivedState(cluster: ClusterType, base: Behavior.Type, fabricSco
 
     for (const name in cluster.attributes) {
         const attribute = cluster.attributes[name];
-        if (attribute.fabricScoped !== fabricScoped) {
+
+        if (isGlobal(attribute) || attribute.fabricScoped !== fabricScoped) {
             continue;
         }
-        if (!isGlobal(name) && defaults[name] === undefined) {
+        if (defaults[name] === undefined) {
             defaults[name] = attribute.default;
         }
         descriptors[name] = createPropertyDescriptor(attribute, `${camelize(cluster.name, false)}.state.${name}`);
@@ -119,21 +115,21 @@ function createDerivedState(cluster: ClusterType, base: Behavior.Type, fabricSco
     return State.with(defaults, descriptors);
 }
 
-function isGlobal(name: string) {
-    return (GlobalAttributes as any)[name] !== undefined;
+function isGlobal(attribute: ClusterType.Attribute) {
+    return attribute.id === 0xfe || (attribute.id >= 0xfff0 && attribute.id <= 0xffff);
 }
 
 /**
  * Add additional attribute-specific validation.
  */
 function createPropertyDescriptor(attribute: ClusterType.Attribute, name: string) {
+if (name === "myCluster.state.clusterRevision") debugger;
     const schema = attribute.schema;
-
     const descriptor = {} as State.FieldConfiguration;
 
     // Do not validate global attributes as these are currently managed by
     // ClusterServer
-    if (!isGlobal(name)) {
+    if (!isGlobal(attribute)) {
         descriptor.validate = (value) => {
             if (value === undefined && !attribute.optional) {
                 // Schema validation catches this but generate a more explicit message

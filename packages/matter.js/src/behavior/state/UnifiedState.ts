@@ -5,11 +5,31 @@
  */
 
 import { ImplementationError } from "../../common/MatterError.js";
+import { GeneratedClass } from "../../util/GeneratedClass.js";
 import { InvocationContext } from "../InvocationContext.js";
 import { State } from "./State.js";
 
+const ENDPOINT_SCOPE = Symbol("endpoint-scope");
+const FABRIC_SCOPE = Symbol("fabric-scope");
+
+interface Internal extends State.Internal {
+    [ENDPOINT_SCOPE]: State.Internal;
+    [FABRIC_SCOPE]?: State.Internal;
+}
+
 /**
- * "Unified" state includes all state values (endpoint and fabric) for a behavior
+ * Cache for generated classes.
+ */
+const cache = new WeakMap<
+    State.Type,
+    WeakMap<
+        State.Type,
+        UnifiedState<any, any>
+    >
+>;
+
+/**
+ * "Unified" state includes all state values (endpoint and fabric) for a
  * behavior.
  */
 export type UnifiedState<ES extends State.Type, FS extends State.Type> =
@@ -24,7 +44,7 @@ export function UnifiedState<
 >(
     EndpointScope: ES,
     FabricScope: FS,
-    behaviorName: string = "(behavior)",
+    behaviorName: string = "Behavior",
 ) {
     let cacheSlot = cache.get(EndpointScope);
     if (cacheSlot) {
@@ -36,31 +56,39 @@ export function UnifiedState<
         cache.set(EndpointScope, cacheSlot = new WeakMap);
     }
 
-    const g = new EndpointScope;
-    const s = new FabricScope;
+    const instanceDescriptors = {} as PropertyDescriptorMap;
 
-    function StateType(this: Internal, endpointScope: State, fabricScope: State | undefined, context: InvocationContext) {
-        this[ENDPOINT_SCOPE] = endpointScope as State.Internal;
-        this[FABRIC_SCOPE] = fabricScope as State.Internal;
-        this[CONTEXT] = context;
-        Object.seal(this);
+    for (const name in GeneratedClass.prototypeFor(EndpointScope)) {
+        instanceDescriptors[name] = createDescriptor(ENDPOINT_SCOPE, name, behaviorName);
+    }
+    for (const name in GeneratedClass.prototypeFor(FabricScope)) {
+        instanceDescriptors[name] = createDescriptor(FABRIC_SCOPE, name, behaviorName);
     }
 
-    StateType.prototype = new State;
-    StateType.with = State.with;
+    const type = GeneratedClass({
+        name: `${behaviorName}$State`,
+        base: State,
+        instanceDescriptors,
 
-    const descriptors = {} as PropertyDescriptorMap;
-    for (const name in g) {
-        descriptors[name] = createDescriptor(ENDPOINT_SCOPE, name, behaviorName);
-    }
-    for (const name in s) {
-        descriptors[name] = createDescriptor(FABRIC_SCOPE, name, behaviorName);
-    }
-    Object.defineProperties(StateType.prototype, descriptors);
+        initialize(
+            this: Internal,
+            endpointScope: State.Internal,
+            fabricScope: State.Internal | undefined,
+            context: InvocationContext
+        ) {
+            State.call(this);
 
-    cacheSlot.set(FabricScope, StateType as unknown as State.Type);
+            this[ENDPOINT_SCOPE] = endpointScope;
+            this[FABRIC_SCOPE] = fabricScope;
+            this[State.CONTEXT] = context;
 
-    return StateType as unknown as UnifiedState.Type<ES, FS>;
+            this[State.INITIALIZE](undefined, context);
+        }
+    });
+
+    cacheSlot.set(FabricScope, type as State.Type);
+
+    return type as UnifiedState.Type<ES, FS>;
 }
 
 export namespace UnifiedState {
@@ -70,27 +98,6 @@ export namespace UnifiedState {
             fabricScope: InstanceType<FS> | undefined,
             context: InvocationContext
         ) => UnifiedState<ES, FS>;
-}
-
-/**
- * Cache for generated classes.
- */
-const cache = new WeakMap<
-    State.Type,
-    WeakMap<
-        State.Type,
-        UnifiedState<any, any>
-    >
->;
-
-const ENDPOINT_SCOPE = Symbol("endpoint-scope");
-const FABRIC_SCOPE = Symbol("fabric-scope");
-const CONTEXT = Symbol("context");
-
-interface Internal extends State.Internal {
-    [ENDPOINT_SCOPE]: State.Internal;
-    [FABRIC_SCOPE]?: State.Internal;
-    [CONTEXT]: InvocationContext;
 }
 
 function createDescriptor(
