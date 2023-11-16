@@ -58,10 +58,10 @@ export function UnifiedState<
 
     const instanceDescriptors = {} as PropertyDescriptorMap;
 
-    for (const name in GeneratedClass.prototypeFor(EndpointScope)) {
+    for (const name in new EndpointScope) {
         instanceDescriptors[name] = createDescriptor(ENDPOINT_SCOPE, name, behaviorName);
     }
-    for (const name in GeneratedClass.prototypeFor(FabricScope)) {
+    for (const name in new FabricScope) {
         instanceDescriptors[name] = createDescriptor(FABRIC_SCOPE, name, behaviorName);
     }
 
@@ -76,11 +76,8 @@ export function UnifiedState<
             fabricScope: State.Internal | undefined,
             context: InvocationContext
         ) {
-            State.call(this);
-
             this[ENDPOINT_SCOPE] = endpointScope;
             this[FABRIC_SCOPE] = fabricScope;
-            this[State.CONTEXT] = context;
 
             this[State.INITIALIZE](undefined, context);
         }

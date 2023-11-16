@@ -60,9 +60,9 @@ export function ManagedState<T extends State.Type>(type: T, behaviorName?: strin
         }
     } as PropertyDescriptorMap;
 
-    for (const name in GeneratedClass.prototypeFor(type)) {
+    for (const name in new type) {
         // The generated class extends the base class but we actually
-        // delegate all properties to the [VALUE] instance
+        // delegate all enumerable properties to the [VALUE] instance
         instanceDescriptors[name] = createDescriptor(name);
     }
 
@@ -72,8 +72,6 @@ export function ManagedState<T extends State.Type>(type: T, behaviorName?: strin
         base: type,
 
         initialize(this: Internal, values, context) {
-            State.call(this);
-
             this[State.INITIALIZE](values, context);
         },
 

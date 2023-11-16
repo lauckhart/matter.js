@@ -11,6 +11,7 @@ import type { ClusterType } from "../cluster/ClusterType.js";
 import { EndpointAgent } from "../endpoint/EndpointAgent.js";
 import { EventEmitter } from "../util/Observable.js";
 import type { LifecycleBehavior } from "../endpoint/part/LifecycleBehavior.js";
+import { GeneratedClass } from "../util/GeneratedClass.js";
 
 // We store state and events using this symbol because TS prevents us from
 // defining the corresponding getters as part of the class
@@ -136,30 +137,15 @@ export abstract class Behavior {
      * Create a new behavior with different default state values.
      */
     static set<This extends Behavior.Type>(this: This, defaults: Behavior.InputStateOf<This>) {
-        const Base = this;
-        const EndpointScope = this.EndpointScope.with(defaults);
-        const FabricScope = this.FabricScope.with(defaults);
+        return GeneratedClass({
+            name: this.name,
+            base: this,
 
-        // TS has weird requirements on mixin constructors, thus ghetto casts
-        // below
-        function Behavior$set(this: Behavior, agent: EndpointAgent, backing: BehaviorBacking) {
-            Base.call(this, agent, backing);
-        }
-        Behavior.prototype = Object.create(new Base());
-        class Behavior$set extends (this as unknown as new (agent: EndpointAgent, backing: BehaviorBacking) => any) {
-            constructor(agent: EndpointAgent, backing: BehaviorBacking) {
-                super(agent, backing);
-
-                Object.assign(this, defaults);
+            staticProperties: {
+                EndpointScope: this.EndpointScope.with(defaults),
+                FabricScope: this.EndpointScope.with(defaults),
             }
-
-            static EndpointScope = State.with(endpointScopeDefaults);
-            static FabricScope = State.with(fabricScopeDefaults);
-
-            readonly defaults = defaults;
-        }
-
-        return Behavior$set as unknown as This;
+        }) as unknown as This;
     }
 }
 

@@ -11,53 +11,51 @@ import type { ClusterType } from "../../cluster/ClusterType.js";
 import type { ClusterBehavior } from "./ClusterBehavior.js";
 import { ValidationError } from "../../common/MatterError.js";
 import { EventEmitter, Observable } from "../../util/Observable.js";
+import { GeneratedClass } from "../../util/GeneratedClass.js";
 
 /**
- * This is the actual implementation of ClusterBehavior.for().
+ * This is the actual implementation of ClusterBehavior.for().  The result
+ * must match {@link ClusterBehavior.Type}<C>.
  */
 export function createType<const C extends ClusterType>(cluster: C, base: Behavior.Type) {
-    const MyEvents = createBaseEvents([
-        ...Object.keys(cluster.events),
-        ...Object.keys(cluster.attributes).map(k => `${k}$change`),
-    ]);
+    return GeneratedClass({
+        name: `${cluster.name}Behavior`,
 
-    const EndpointScope = createDerivedState(cluster, base, false);
-    const FabricScope = createDerivedState(cluster, base, true);
+        staticDescriptors: {
+            id: {
+                value: camelize(cluster.name, false) as Uncapitalize<string>,
+                enumerable: true,
+            },
 
-    // Create the class
-    const id = camelize(cluster.name, false) as Uncapitalize<string>;
-    class DerivedBehavior extends base {
-        static override get id() {
-            return id;
-        }
+            cluster: {
+                value: cluster,
+                enumerable: true,
+            },
 
-        static get cluster() {
-            return cluster;
-        }
+            EndpointScope: {
+                value: createDerivedState(cluster, base, false),
+                enumerable: true
+            },
 
-        // These are read-only but we can't define with getters because this
-        // prevents us from override by defining a new class in the matching
-        // namespace.
-        static override readonly EndpointScope = EndpointScope;
-        static override readonly FabricScope = FabricScope;
-        static override readonly Events = MyEvents;
+            FabricScope: {
+                value: createDerivedState(cluster, base, true),
+                enumerable: true,
+            },
 
-        static for(cluster: ClusterType) {
-            return createType(cluster, this);
-        }
-    }
+            Events: {
+                value: createBaseEvents(cluster.name, [
+                    ...Object.keys(cluster.events),
+                    ...Object.keys(cluster.attributes).map(k => `${k}$change`),
+                ]),
+                enumerable: true,
+            },
+        },
 
-    // Add default command handlers
-    Object.defineProperties(
-        DerivedBehavior.prototype,
-        Object.fromEntries(
+        instanceProperties: Object.fromEntries(
             Object.keys(cluster.commands)
-            .map(k => [ k, Behavior.unimplemented])
+                .map(k => [ k, Behavior.unimplemented ])
         )
-    );
-
-    // ClusterBehavior.Type must match what we did above
-    return DerivedBehavior;
+    })
 }
 
 /**
@@ -88,7 +86,7 @@ export type ClusterOf<B extends Behavior.Type> =
 function createDerivedState(cluster: ClusterType, base: Behavior.Type, fabricScoped: boolean) {
     const BaseScope = fabricScoped ? base.FabricScope : base.EndpointScope;
     const oldDefaults = new BaseScope as Record<string, any>;
-    const descriptors = {} as State.FieldOptions;
+    const fields = {} as State.FieldOptions;
 
     const newAttributes = cluster.attributes;
     const oldAttributes = (base as ClusterBehavior.Type).cluster?.attributes ?? {};
@@ -109,10 +107,13 @@ function createDerivedState(cluster: ClusterType, base: Behavior.Type, fabricSco
         if (defaults[name] === undefined) {
             defaults[name] = attribute.default;
         }
-        descriptors[name] = createPropertyDescriptor(attribute, `${camelize(cluster.name, false)}.state.${name}`);
+        fields[name] = createPropertyDescriptor(attribute, `${camelize(cluster.name, false)}.state.${name}`);
     }
 
-    return State.with(defaults, descriptors);
+    return State.with(defaults, {
+        name: `${cluster.name}${BaseScope.name}`,
+        fields,
+    });
 }
 
 function isGlobal(attribute: ClusterType.Attribute) {
@@ -157,27 +158,17 @@ if (name === "myCluster.state.clusterRevision") debugger;
 /**
  * Extend events with additional implementations.
  */
-function createBaseEvents(names: string[]) {
-    class ExtendedEvents extends EventEmitter {
-        constructor() {
-            super();
+function createBaseEvents(clusterName: string, names: string[]) {
+    return GeneratedClass({
+        name: `${clusterName}$Events`,
+        base: EventEmitter,
 
-            const descriptors = {} as PropertyDescriptorMap;
+        initialize() {
             for (const name of names) {
-                descriptors[name] = {
-                    value: Observable(),
-                    enumerable: true
-                };
+                (self as any)[name] = Observable();
             }
 
-            Object.defineProperties(
-                this,
-                descriptors
-            );
-
-            Object.freeze(this);
+            return self;
         }
-    }
-
-    return ExtendedEvents;
+    });
 }
