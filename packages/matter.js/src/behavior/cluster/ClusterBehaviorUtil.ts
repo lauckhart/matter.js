@@ -22,6 +22,21 @@ export function createType<const C extends ClusterType>(cluster: C, base: Behavi
         name: `${cluster.name}Behavior`,
         base,
 
+        // These are really read-only but installing as such on the prototype
+        // prevents us from overriding using namespace overrides.  If we
+        // instead override as static properties then we lose the automatic
+        // interface generation of the class definition
+        staticProperties: {
+            EndpointScope: createDerivedState(cluster, base, false),
+
+            FabricScope:createDerivedState(cluster, base, true),
+
+            Events: createBaseEvents(cluster.name, [
+                ...Object.keys(cluster.events),
+                ...Object.keys(cluster.attributes).map(k => `${k}$change`),
+            ]),
+        },
+
         staticDescriptors: {
             id: {
                 value: camelize(cluster.name, false) as Uncapitalize<string>,

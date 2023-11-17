@@ -61,15 +61,14 @@ export function ManagedState<T extends State.Type>(type: T, behaviorName?: strin
     } as PropertyDescriptorMap;
 
     for (const name in new type) {
-        // The generated class extends the base class but we actually
-        // delegate all enumerable properties to the [VALUE] instance
+        // Delegate all enumerable properties to the [VALUE] instance
         instanceDescriptors[name] = createDescriptor(name);
     }
 
     // Generate the class
     const managed = GeneratedClass({
         name: className,
-        base: type,
+        base: State,
 
         initialize(this: Internal, values, context) {
             this[State.INITIALIZE](values, context);
