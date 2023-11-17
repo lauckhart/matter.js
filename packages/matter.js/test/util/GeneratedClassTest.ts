@@ -94,7 +94,7 @@ describe("GeneratedClass", () => {
     it("delegates to super", () => {
         const klass = GeneratedClass({
             base: Object,
-            
+
             super(construct) {
                 const instance = construct();
                 (instance as any).foo = "bar";
@@ -103,5 +103,72 @@ describe("GeneratedClass", () => {
         });
 
         expect((new klass() as any).foo).equals("bar");
+    })
+
+    function expectBizesAndBazes(...types: Array<new () => any>) {
+        const Type = types[0];
+        const instance = new Type;
+
+        for (let i = 0; i < types.length; i++) {
+            const index = i + 1;
+            expect(instance).instanceof(types[i]);
+            expect(instance[`foo${index}`]).equals(`bar${index}`);
+            expect((Type as any)[`biz${index}`]).equals(`baz${index}`)
+            i++;
+        }
+    }
+
+    it("extends ES6 class", () => {
+        class Es6 {
+            foo1 = "bar1";
+            static biz1 = "baz1";
+        }
+
+        const Derived = GeneratedClass({
+            name: "Derived",
+            base: Es6,
+
+            instanceProperties: { foo2: "bar2" },
+            staticProperties: { biz2: "baz2" },
+        });
+
+        expectBizesAndBazes(Derived, Es6);
+    })
+
+    it("is extensible by ES6 class", () => {
+        const Generated = GeneratedClass({
+            name: "Generated",
+            instanceProperties: { foo1: "bar1" },
+            staticProperties: { biz1: "baz1" },
+        });
+
+        class Es6 extends Generated {
+            foo2 = "bar2";
+            static biz2 = "baz2";
+        }
+
+        expectBizesAndBazes(Es6, Generated);        
+    })
+
+    it("extension of ES6 class is extensible by ES6 class", () => {
+        class Base {
+            foo = "bar";
+            static biz = "baz";
+        }
+
+        const FirstDerivative = GeneratedClass({
+            name: "FirstDerivative",
+            base: Base,
+
+            instanceProperties: { foo2: "bar2" },
+            staticProperties: { biz2: "baz2" },
+        })
+
+        class SecondDerivative extends FirstDerivative {
+            foo3 = "bar3";
+            static biz3 = "baz3";
+        }
+
+        expectBizesAndBazes(SecondDerivative, FirstDerivative, Base);
     })
 })
