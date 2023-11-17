@@ -26,6 +26,7 @@ export function createBehavior<T extends Behavior.Type>(type: T) {
     const part = new Part({
         type: endpointType,
     });
+    
     part.owner = {
         initializeBehavior(part, behavior) {
             return new ServerBehaviorBacking(part, behavior);

@@ -7,7 +7,7 @@
 import { camelize } from "../../util/String.js";
 import { Behavior } from "../Behavior.js";
 import { State } from "../state/State.js";
-import type { ClusterType } from "../../cluster/ClusterType.js";
+import { ClusterType } from "../../cluster/ClusterType.js";
 import type { ClusterBehavior } from "./ClusterBehavior.js";
 import { ValidationError } from "../../common/MatterError.js";
 import { EventEmitter, Observable } from "../../util/Observable.js";
@@ -29,7 +29,7 @@ export function createType<const C extends ClusterType>(cluster: C, base: Behavi
         staticProperties: {
             EndpointScope: createDerivedState(cluster, base, false),
 
-            FabricScope:createDerivedState(cluster, base, true),
+            FabricScope: createDerivedState(cluster, base, true),
 
             Events: createBaseEvents(cluster.name, [
                 ...Object.keys(cluster.events),
@@ -100,13 +100,26 @@ export type ClusterOf<B extends Behavior.Type> =
  * base Behavior.Type and adds new default values from cluster attributes.
  */
 function createDerivedState(cluster: ClusterType, base: Behavior.Type, fabricScoped: boolean) {
-    const BaseScope = fabricScoped ? base.FabricScope : base.EndpointScope;
+    const scopeName = fabricScoped ? "FabricScope" : "EndpointScope";
+    const BaseScope = base[scopeName];
     const oldDefaults = new BaseScope as Record<string, any>;
     const fields = {} as State.FieldOptions;
 
-    const newAttributes = cluster.attributes;
+    const newAttributes = {} as Record<string, ClusterType.Attribute>;
+    for (const name in cluster.attributes) {
+        const attribute = cluster.attributes[name];
+        if (!isGlobal(attribute) && attribute.fabricScoped === fabricScoped) {
+            newAttributes[name] = attribute;
+        }
+    }
+
     const oldAttributes = (base as ClusterBehavior.Type).cluster?.attributes ?? {};
 
+    // Carry forward overrides that were not injected due to an attribute or
+    // are applicable to the new attribute set.
+    //
+    // We will lose defaults for attributes that are removed then added, TBD if
+    // this is an issue
     const defaults = {} as Record<string, any>;
     for (const name in oldDefaults) {
         if (oldAttributes[name] === undefined || newAttributes[name] !== undefined) {
@@ -114,20 +127,19 @@ function createDerivedState(cluster: ClusterType, base: Behavior.Type, fabricSco
         }
     }
 
-    for (const name in cluster.attributes) {
+    // For each new attribute, inject the attribute's default if we don't have
+    // an override, then inject a descriptor
+    for (const name in newAttributes) {
         const attribute = cluster.attributes[name];
 
-        if (isGlobal(attribute) || attribute.fabricScoped !== fabricScoped) {
-            continue;
-        }
         if (defaults[name] === undefined) {
             defaults[name] = attribute.default;
         }
-        fields[name] = createPropertyDescriptor(attribute, `${camelize(cluster.name, false)}.state.${name}`);
+        fields[name] = configureField(attribute, `${camelize(cluster.name, false)}.state.${name}`);
     }
 
     return State.with(defaults, {
-        name: `${cluster.name}${BaseScope.name}`,
+        name: `${cluster.name}$${scopeName}`,
         fields,
     });
 }
@@ -139,27 +151,22 @@ function isGlobal(attribute: ClusterType.Attribute) {
 /**
  * Add additional attribute-specific validation.
  */
-function createPropertyDescriptor(attribute: ClusterType.Attribute, name: string) {
-if (name === "myCluster.state.clusterRevision") debugger;
+function configureField(attribute: ClusterType.Attribute, name: string) {
     const schema = attribute.schema;
     const descriptor = {} as State.FieldConfiguration;
 
-    // Do not validate global attributes as these are currently managed by
-    // ClusterServer
-    if (!isGlobal(attribute)) {
-        descriptor.validate = (value) => {
-            if (value === undefined && !attribute.optional) {
-                // Schema validation catches this but generate a more explicit message
-                throw new ValidationError(`No value provided for required property ${name}`);
-            }
+    descriptor.validate = (value) => {
+        if (value === undefined && !attribute.optional) {
+            // Schema validation catches this but generate a more explicit message
+            throw new ValidationError(`No value provided for required property ${name}`);
+        }
 
-            try {
-                schema.validate(value);
-            } catch (e) {
-                if (e instanceof ValidationError) {
-                    e.message = `Illegal value for property ${name}: ${e.message}`;
-                    throw e;
-                }
+        try {
+            schema.validate(value);
+        } catch (e) {
+            if (e instanceof ValidationError) {
+                e.message = `Illegal value for property ${name}: ${e.message}`;
+                throw e;
             }
         }
     }

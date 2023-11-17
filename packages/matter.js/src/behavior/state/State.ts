@@ -20,6 +20,37 @@ import type { InvocationContext } from "../InvocationContext.js";
 export class State {
     // Default state has no properties
 
+    constructor() {
+        (this as unknown as State.Internal)[State.CONTEXT] = undefined;
+    }
+
+    /**
+     * Obtain a new state type with different default values.
+     */
+    static set<This extends State.Type, T extends object>(
+        this: This,
+        defaults: T
+    ) {
+        const oldDefaults = new this as Record<string, any>;
+        let newDefaults: Record<string, any> | undefined;
+        for (const name in defaults) {
+            if (oldDefaults.hasOwnProperty(name)) {
+                if (oldDefaults[name] !== defaults[name]) {
+                    if (newDefaults === undefined) {
+                        newDefaults = {};
+                    }
+                    newDefaults[name] = defaults[name];
+                }
+            }
+        }
+
+        if (newDefaults) {
+            return this.with(newDefaults) as unknown as This;
+        }
+
+        return this;
+    }
+
     /**
      * You may extend state using normal subclassing or by using this method
      * which overrides and/or adds properties.
@@ -27,7 +58,7 @@ export class State {
     static with<This extends State.Type, T extends object>(
         this: This,
         defaults: T,
-        options?: State.WithOptions
+        options?: State.WithOptions,
     ) {
         const staticProps = {} as { fields?: State.FieldOptions };
         if (options?.fields) {
@@ -104,14 +135,13 @@ export namespace State {
      */
     export type Type<T extends object = {}> = {
         new (values?: Record<string, any>, context?: InvocationContext): State & T;
+        set: typeof State.set;
         with: typeof State.with;
         fields: FieldOptions;
     }
 }
 
 Object.assign(State.prototype, {
-    [State.CONTEXT]: undefined,
-
     [State.SET](name: string, value: any) {
         (this as any)[name] = value;
     },

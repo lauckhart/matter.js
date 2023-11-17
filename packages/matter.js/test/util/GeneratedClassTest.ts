@@ -43,7 +43,7 @@ describe("GeneratedClass", () => {
 
     it("requires new", () => {
         const Klass = GeneratedClass({});
-        expect(() => (Klass as any)()).throws("Class constructor \"GeneratedClass\" cannot be invoked without 'new'");
+        expect(() => (Klass as any)()).throws();
     })
 
     it("instantiates as instanceof base", () => {
@@ -91,18 +91,22 @@ describe("GeneratedClass", () => {
         expect((new klass("hello") as any).foo).equals("HELLO");
     })
 
-    it("delegates to super", () => {
+    it("preprocesses arguments", () => {
         const klass = GeneratedClass({
-            base: Object,
+            base: class {
+                foo;
 
-            super(construct) {
-                const instance = construct();
-                (instance as any).foo = "bar";
-                return instance;
+                constructor(foo: string) {
+                    this.foo = foo;
+                }
+            },
+
+            args(foo: string) {
+                return [ foo.toUpperCase() ];
             }
         });
 
-        expect((new klass() as any).foo).equals("bar");
+        expect((new klass("bar") as any).foo).equals("BAR");
     })
 
     function expectBizesAndBazes(...types: Array<new () => any>) {
@@ -112,6 +116,7 @@ describe("GeneratedClass", () => {
         for (let i = 0; i < types.length; i++) {
             const index = i + 1;
             expect(instance).instanceof(types[i]);
+            expect(instance.hasOwnProperty(instance, `foo${index}`));
             expect(instance[`foo${index}`]).equals(`bar${index}`);
             expect((Type as any)[`biz${index}`]).equals(`baz${index}`)
             i++;
@@ -152,8 +157,8 @@ describe("GeneratedClass", () => {
 
     it("extension of ES6 class is extensible by ES6 class", () => {
         class Base {
-            foo = "bar";
-            static biz = "baz";
+            foo1 = "bar1";
+            static biz1 = "baz1";
         }
 
         const FirstDerivative = GeneratedClass({

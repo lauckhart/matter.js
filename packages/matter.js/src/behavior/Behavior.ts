@@ -142,8 +142,8 @@ export abstract class Behavior {
             base: this,
 
             staticProperties: {
-                EndpointScope: this.EndpointScope.with(defaults),
-                FabricScope: this.EndpointScope.with(defaults),
+                EndpointScope: this.EndpointScope.set(defaults),
+                FabricScope: this.FabricScope.set(defaults),
             }
         }) as unknown as This;
     }

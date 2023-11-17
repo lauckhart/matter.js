@@ -6,6 +6,7 @@
 
 import { ImplementationError } from "../../common/MatterError.js";
 import { GeneratedClass } from "../../util/GeneratedClass.js";
+import { camelize } from "../../util/String.js";
 import { InvocationContext } from "../InvocationContext.js";
 import { State } from "./State.js";
 
@@ -66,7 +67,7 @@ export function UnifiedState<
     }
 
     const type = GeneratedClass({
-        name: `${behaviorName}$State`,
+        name: `${camelize(behaviorName, true)}$State`,
         base: State,
         instanceDescriptors,
 

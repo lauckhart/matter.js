@@ -71,9 +71,11 @@ export function ManagedState<T extends State.Type>(type: T, behaviorName?: strin
         base: State,
 
         initialize(this: Internal, values, context) {
+            this[VALUES] = new type as typeof this[typeof VALUES];
             this[State.INITIALIZE](values, context);
         },
 
+        instanceDescriptors,
         staticDescriptors: {
             fields: {
                 get() {
@@ -128,6 +130,7 @@ export namespace ManagedState {
     export type Type<T extends State.Type> = {
         new (values?: Record<string, any>, context?: InvocationContext): InstanceType<T>;
 
+        set: typeof State.set;
         with: typeof State.with;
         fields: State.FieldOptions;
     }

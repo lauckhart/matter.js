@@ -16,7 +16,7 @@ export function GeneratedClass(options: GeneratedClass.Options) {
     const {
         base,
         name,
-        super: superFn,
+        args,
         initialize,
         instanceProperties,
         instanceDescriptors,
@@ -26,36 +26,14 @@ export function GeneratedClass(options: GeneratedClass.Options) {
 
     let type: new (...args: any[]) => any;
 
-    // Create the base class constructor
-    let callSuper;
-    if (base) {
-        const construct = (...args: any[]) => {
-            const instance = Reflect.construct(base, args, type);
-            instance.constructor = type;
-            return instance;
-        }
-        if (superFn) {
-            callSuper = (...args: any[]) => superFn(construct, ...args);
-        } else {
-            callSuper = construct;
-        }
-    }
-
     // Create the constructor function
-    type = createConstructor(name ?? (base ? `${base.name}$` : "GeneratedClass"), initialize, callSuper);
-
-    // Set up inheritance if there's a base
-    if (base) {
-        // Static inheritance
-        Object.setPrototypeOf(type, base);
-
-        // Instance inheritance
-        function Proto(this: any) {
-            this.constructor = base;
-        }
-        Proto.prototype = base.prototype;
-        type.prototype = new (Proto as any);
-    }
+    type = createConstructor({
+        name: name ?? (base ? `${base.name}$` : "GeneratedClass"),
+        base,
+        args,
+        initialize,
+        instanceProperties,
+    });
 
     // Install properties
     if (staticProperties) {
@@ -63,9 +41,6 @@ export function GeneratedClass(options: GeneratedClass.Options) {
     }
     if (staticDescriptors) {
         Object.defineProperties(type, staticDescriptors);
-    }
-    if (instanceProperties) {
-        Object.assign(type.prototype, instanceProperties);
     }
     if (instanceDescriptors) {
         Object.defineProperties(type.prototype, instanceDescriptors);
@@ -90,12 +65,10 @@ export namespace GeneratedClass {
         base?: new (...args: any) => any;
 
         /**
-         * A function that constructs the base class.  Only relevant if there's
-         * a base class.  Allows implementations to perform pre-instantiation
-         * initialization and pass different arguments to the base constructor.
-         * This function must call construct and return the result.
+         * A preprocessor for arguments.  Derivatives may use this to
+         * transform arguments prior to call to super() and initialize().
          */
-        super?: (construct: (...args: any[]) => object, ...args: any[]) => object;
+        args?: (...args: any[]) => any[];
 
         /**
          * A function that performs initialization after instantiation.  "this"
@@ -126,43 +99,65 @@ export namespace GeneratedClass {
     }
 }
 
-function createConstructor(name: string, initialize?: (...args: any[]) => void, callSuper?: (self: any, ...args: any[]) => object) {
+interface ConstructorOptions {
+    name: string,
+    base?: new (...args: any[]) => any,
+    args?: (...args: any[]) => any[],
+    initialize?: (...args: any[]) => void,
+    instanceProperties?: object,
+}
+
+function createConstructor({ name, base, args, initialize, instanceProperties }: ConstructorOptions) {
     // CJS Transpilation renames this symbol so bring it local to access
     const _InternalError = InternalError;
     _InternalError;
 
     // Have to use eval if we don't want every class to be called
     // "GeneratedClass" in the debugger but we can ensure this won't be
-    // abused
+    // abused.
+    //
+    // "name" is the only input to this function that appears textually in the
+    // eval.
     if (!name.match(/^[a-z0-9$_]+$/i)) {
-        throw new InternalError("Refusing to generate class with name that may be evil");
+        throw new InternalError("Refusing to generate class with untrustworthy name");
     }
 
-    const code = [
-        `function ${name}() {`,
-        `if (!new.target) throw new _InternalError('Class constructor "${name}" cannot be invoked without \\'new\\'')`,
-    ]
-
-    if (callSuper) {
-        code.push(`const self = callSuper(...arguments)`);
+    let ext;
+    if (base) {
+        ext = `extends base `;
+    } else {
+        ext = "";
     }
 
-    if (initialize) {
-        if (callSuper) {
-            code.push("initialize.apply(self, arguments)");
+    const code = [ `class ${name} ${ext}{` ];
+
+    if (args || initialize || instanceProperties) {
+        code.push("constructor() {");
+
+        let argsName;
+        if (args) {
+            argsName = "a";
+            code.push(`const a = args(...arguments)`);
         } else {
-            code.push("initialize.apply(this, arguments)");
+            argsName = "arguments";
         }
+
+        if (base) {
+            code.push(`super(...${argsName})`);
+        }
+
+        if (instanceProperties) {
+            code.push(`Object.assign(this, instanceProperties)`);
+        }
+
+        if (initialize) {
+            code.push(`initialize.apply(this, ${argsName})`);
+        }
+
+        code.push("}")
     }
 
-    if (callSuper) {
-        code.push("return self");
-    }
-
-    code.push(
-        "}",
-        name,
-    );
+    code.push("}", name);
 
     return eval(code.join("\n"));
 }
