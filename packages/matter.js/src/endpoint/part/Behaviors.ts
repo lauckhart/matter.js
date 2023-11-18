@@ -8,12 +8,12 @@ import { Behavior } from "../../behavior/Behavior.js";
 import { ImplementationError } from "../../common/MatterError.js";
 import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import { LifecycleBehavior } from "./LifecycleBehavior.js";
-import { DescriptorServer } from "../../behavior/server/definitions/DescriptorServer.js";
 import type { Part } from "../Part.js";
 import type { SupportedBehaviors } from "./SupportedBehaviors.js";
 import type { EndpointAgent } from "../EndpointAgent.js";
 import type { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
 import { camelize, describeList } from "../../util/String.js";
+import { Observable } from "../../util/Observable.js";
 
 /**
  * This class manages {@link Behavior} instances owned by a {@link Part}.
@@ -22,6 +22,14 @@ export class Behaviors {
     #part: Part;
     #supported: SupportedBehaviors;
     #backings: Record<string, BehaviorBacking> = {};
+    #supportAdded = Observable<[type: Behavior.Type]>();
+
+    /**
+     * Event emitted when support is added for a new behavior.
+     */
+    get supportAdded() {
+        return this.#supportAdded;
+    }
 
     constructor(part: Part, supported: SupportedBehaviors) {
         if (typeof supported !== "object") {
@@ -38,19 +46,6 @@ export class Behaviors {
 
         this.#part = part;
         this.#supported = supported;
-
-        this.require(LifecycleBehavior);
-
-        if (!this.has(DescriptorServer)) {
-            this.require(DescriptorServer.set({
-                deviceTypeList: [
-                    {
-                        deviceType: part.type.deviceType,
-                        revision: part.type.deviceRevision,
-                    }
-                ]
-            }));
-        }
     }
 
     /**
@@ -108,14 +103,6 @@ export class Behaviors {
             `Cannot create behavior ${
                 type.id
             } because installed implementation is incompatible`);
-    }
-
-    /**
-     * Complete initialization after installation into a {@link Part}.
-     */
-    initialize() {
-        const descriptor = this.#part.getAgent().get(DescriptorServer);
-        descriptor.addServers(...Object.values(this.#supported));
     }
 
     /**

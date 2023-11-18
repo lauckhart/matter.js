@@ -52,8 +52,8 @@ describe("ClusterBehavior", () => {
                     reqFabricAttr: string
                 }
             };
-            expect(MyBehavior.EndpointScope.prototype.reqAttr).equals("hello");
-            expect(MyBehavior.FabricScope.prototype.reqFabricAttr).equals("world");
+            expect((new MyBehavior.EndpointScope).reqAttr).equals("hello");
+            expect((new MyBehavior.FabricScope).reqFabricAttr).equals("world");
             
             ({}) as MyBehavior satisfies {
                 reqCmd: (request: string, state: any) => MaybePromise<string>
@@ -105,9 +105,8 @@ describe("ClusterBehavior", () => {
             const behavior = createBehavior(MyBehavior);
 
             expect((behavior.state as any).optAttr).undefined;
-            expect(behavior.reqCmd as any).undefined;
-            expect((behavior.events as any).reqAttr$change).undefined;
-            expect((behavior.events as any).reqEv).undefined;
+            expect((behavior.events as any).optAttr$change).undefined;
+            expect((behavior.events as any).optEv).undefined;
         });
 
         it("instance allows standard method override", () => {

@@ -9,7 +9,7 @@ import { Behavior } from "../Behavior.js";
 import { State } from "../state/State.js";
 import { ClusterType } from "../../cluster/ClusterType.js";
 import type { ClusterBehavior } from "./ClusterBehavior.js";
-import { ValidationError } from "../../common/MatterError.js";
+import { ImplementationError, ValidationError } from "../../common/MatterError.js";
 import { EventEmitter, Observable } from "../../util/Observable.js";
 import { GeneratedClass } from "../../util/GeneratedClass.js";
 
@@ -18,23 +18,22 @@ import { GeneratedClass } from "../../util/GeneratedClass.js";
  * must match {@link ClusterBehavior.Type}<C>.
  */
 export function createType<const C extends ClusterType>(cluster: C, base: Behavior.Type) {
+    const namesUsed = new Set<string>();
+
     return GeneratedClass({
         name: `${cluster.name}Behavior`,
         base,
 
-        // These are really read-only but installing as such on the prototype
-        // prevents us from overriding using namespace overrides.  If we
-        // instead override as static properties then we lose the automatic
-        // interface generation of the class definition
+        // These are really read-only but installing as getters on the
+        // prototype prevents us from overriding using namespace overrides.  If
+        // we instead override as static properties then we lose the automatic
+        // interface type.  So just publish as static properties.
         staticProperties: {
-            EndpointScope: createDerivedState(cluster, base, false),
+            EndpointScope: createDerivedState(cluster, base, false, namesUsed),
 
-            FabricScope: createDerivedState(cluster, base, true),
+            FabricScope: createDerivedState(cluster, base, true, namesUsed),
 
-            Events: createBaseEvents(cluster.name, [
-                ...Object.keys(cluster.events),
-                ...Object.keys(cluster.attributes).map(k => `${k}$change`),
-            ]),
+            Events: createBaseEvents(cluster, namesUsed),
         },
 
         staticDescriptors: {
@@ -47,30 +46,18 @@ export function createType<const C extends ClusterType>(cluster: C, base: Behavi
                 value: cluster,
                 enumerable: true,
             },
-
-            EndpointScope: {
-                value: createDerivedState(cluster, base, false),
-                enumerable: true
-            },
-
-            FabricScope: {
-                value: createDerivedState(cluster, base, true),
-                enumerable: true,
-            },
-
-            Events: {
-                value: createBaseEvents(cluster.name, [
-                    ...Object.keys(cluster.events),
-                    ...Object.keys(cluster.attributes).map(k => `${k}$change`),
-                ]),
-                enumerable: true,
-            },
         },
 
-        instanceProperties: Object.fromEntries(
+        instanceDescriptors: Object.fromEntries(
             Object.keys(cluster.commands)
-                .map(k => [ k, Behavior.unimplemented ])
-        )
+                .map(k => [
+                    k,
+                    {
+                        value: Behavior.unimplemented,
+                        enumerable: true
+                    }
+                ])
+        ),
     })
 }
 
@@ -99,18 +86,31 @@ export type ClusterOf<B extends Behavior.Type> =
  * Create a new state subclass that inherits relevant default values from a
  * base Behavior.Type and adds new default values from cluster attributes.
  */
-function createDerivedState(cluster: ClusterType, base: Behavior.Type, fabricScoped: boolean) {
+function createDerivedState(
+    cluster: ClusterType,
+    base: Behavior.Type,
+    fabricScoped: boolean,
+    namesUsed: Set<string>
+) {
     const scopeName = fabricScoped ? "FabricScope" : "EndpointScope";
     const BaseScope = base[scopeName];
     const oldDefaults = new BaseScope as Record<string, any>;
     const fields = {} as State.FieldOptions;
+    const statePrefix = `${camelize(cluster.name, false)}.state`;
 
     const newAttributes = {} as Record<string, ClusterType.Attribute>;
     for (const name in cluster.attributes) {
         const attribute = cluster.attributes[name];
-        if (!isGlobal(attribute) && attribute.fabricScoped === fabricScoped) {
-            newAttributes[name] = attribute;
+        if (isGlobal(attribute)) {
+            continue;
         }
+        if (attribute.fabricScoped !== fabricScoped) {
+            continue;
+        }
+        if (attribute.optional && !(name in oldDefaults)) {
+            continue;
+        }
+        newAttributes[name] = attribute;
     }
 
     const oldAttributes = (base as ClusterBehavior.Type).cluster?.attributes ?? {};
@@ -123,7 +123,9 @@ function createDerivedState(cluster: ClusterType, base: Behavior.Type, fabricSco
     const defaults = {} as Record<string, any>;
     for (const name in oldDefaults) {
         if (oldAttributes[name] === undefined || newAttributes[name] !== undefined) {
-            defaults[name] = oldDefaults[name];
+            if (name in oldDefaults) {
+                defaults[name] = oldDefaults[name];
+            }
         }
     }
 
@@ -132,10 +134,17 @@ function createDerivedState(cluster: ClusterType, base: Behavior.Type, fabricSco
     for (const name in newAttributes) {
         const attribute = cluster.attributes[name];
 
-        if (defaults[name] === undefined) {
+        if (!(name in defaults)) {
             defaults[name] = attribute.default;
         }
-        fields[name] = configureField(attribute, `${camelize(cluster.name, false)}.state.${name}`);
+        fields[name] = configureField(attribute, `${statePrefix}.${name}`);
+    }
+
+    for (const name in defaults) {
+        if (namesUsed.has(name)) {
+            throw new ImplementationError(`Conflicting definitions of property ${statePrefix}.${name}`);
+        }
+        namesUsed.add(name);
     }
 
     return State.with(defaults, {
@@ -181,17 +190,26 @@ function configureField(attribute: ClusterType.Attribute, name: string) {
 /**
  * Extend events with additional implementations.
  */
-function createBaseEvents(clusterName: string, names: string[]) {
+function createBaseEvents(cluster: ClusterType, stateNames: Set<string>) {
+    const names = new Set<string>;
+
+    for (const name in cluster.events) {
+        if (!cluster.events[name].optional) {
+            names.add(name);
+        }
+    }
+    for (const name of stateNames) {
+        names.add(`${name}$change`);
+    }
+
     return GeneratedClass({
-        name: `${clusterName}$Events`,
+        name: `${cluster.name}$Events`,
         base: EventEmitter,
 
         initialize() {
             for (const name of names) {
-                (self as any)[name] = Observable();
+                (this as any)[name] = Observable();
             }
-
-            return self;
         }
     });
 }

@@ -42,6 +42,19 @@ export class PartServer implements EndpointInterface, PartOwner {
     constructor(part: Part) {
         this.#part = part;
 
+        part.behaviors.require(LifecycleBehavior);
+
+        if (!part.behaviors.has(DescriptorServer)) {
+            part.behaviors.require(DescriptorServer.set({
+                deviceTypeList: [
+                    {
+                        deviceType: part.type.deviceType,
+                        revision: part.type.deviceRevision,
+                    }
+                ]
+            }));
+        }
+
         this.#part.getAgent().get(LifecycleBehavior).events.structure$change(
             () => this.#structureChangedCallback?.()
         );

@@ -98,7 +98,6 @@ export class Part {
             throw new ImplementationError(`Cannot reparent installed part`);
         }
         this.#owner = owner;
-        this.#behaviors.initialize();
 
         if (this.#id !== undefined) {
             this.getAgent().get(LifecycleBehavior).state.installed = true;

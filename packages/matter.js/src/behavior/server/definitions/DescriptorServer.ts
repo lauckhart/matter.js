@@ -8,6 +8,7 @@ import { Descriptor } from "../../../cluster/definitions/DescriptorCluster.js";
 import { ClusterId } from "../../../datatype/ClusterId.js";
 import { DeviceClasses } from "../../../device/DeviceTypes.js";
 import { Part } from "../../../endpoint/Part.js";
+import { PartsBehavior } from "../../../endpoint/part/PartsBehavior.js";
 import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { isDeepEqual } from "../../../util/DeepEqual.js";
 import { Behavior } from "../../Behavior.js";
@@ -19,6 +20,28 @@ import { DescriptorBehavior } from "../../definitions/DescriptorBehavior.js";
 export class DescriptorServer extends DescriptorBehavior {
     declare endpointScope: DescriptorServer.EndpointScope;
 
+    override initialize() {
+        const part = this.agent.part;
+
+        if (!this.state.deviceTypeList.length) {
+            const partType = this.agent.part.type;
+            this.state.deviceTypeList = [
+                {
+                    deviceType: partType.deviceType,
+                    revision: partType.deviceRevision,
+                }
+            ];
+        }
+
+        this.addServers(...Object.values(part.behaviors.supported));
+
+        part.behaviors.supportAdded(behavior => this.addServers(behavior));
+    }
+
+    /**
+     * Extend device type metadata.  This is a shortcut for deduped insert
+     * into the deviceTypeList cluster attribute.
+     */
     addDeviceTypes(...deviceTypes: DescriptorServer.DeviceType[]) {
         const list = this.state.deviceTypeList;
         nextInput: for (const newDeviceType of deviceTypes) {
@@ -32,58 +55,36 @@ export class DescriptorServer extends DescriptorBehavior {
         this.state.deviceTypeList = list;
     }
 
-    removeDeviceTypes(...deviceTypes: DescriptorServer.DeviceType[]) {
-        const list = [ ...this.state.deviceTypeList ];
-        nextInput: for (const newDeviceType of deviceTypes) {
-            for (let i = 0; i < list.length; i++) {
-                if (isDeepEqual(deviceTypes[i], newDeviceType)) {
-                    list.splice(i, 1);
-                    continue nextInput;
-                }
+    private addServers(...types: Behavior.Type[]) {
+        this.state.serverList = this.addToList(
+            this.state.serverList,
+            this.getClusterIds(types),
+        );
+
+        // If PartsBehavior is added, update partsList and handlers to
+        // synchronize going forward
+        for (const type of types) {
+            if (type.supports(PartsBehavior)) {
+                const parts = this.agent.get(PartsBehavior);
+
+                this.addParts(...parts);
+                parts.added(part => this.addParts(part));
+                parts.deleted(part => this.removeParts(part));
             }
         }
-        this.state.deviceTypeList = list;
     }
 
-    addParts(...parts: Part[]) {
+    private addParts(...parts: Part[]) {
         this.state.partsList = this.addToList(
             this.state.partsList,
             this.defined(parts.map(part => part.id)),
         )
     }
 
-    removeParts(...parts: Part[]) {
+    private removeParts(...parts: Part[]) {
         this.state.partsList = this.removeFromList(
             this.state.partsList,
             parts.map(part => part.id)
-        )
-    }
-
-    addServers(...types: Behavior.Type[]) {
-        this.state.serverList = this.addToList(
-            this.state.serverList,
-            this.getClusterIds(types),
-        );
-    }
-
-    removeServers(...types: Behavior.Type[]) {
-        this.state.serverList = this.removeFromList(
-            this.state.serverList,
-            this.getClusterIds(types),
-        )
-    }
-
-    addClients(...types: Behavior.Type[]) {
-        this.state.clientList = this.addToList(
-            this.state.clientList,
-            this.getClusterIds(types),
-        )
-    }
-
-    removeClients(...types: Behavior.Type[]) {
-        this.state.clientList = this.removeFromList(
-            this.state.clientList,
-            this.getClusterIds(types),
         )
     }
 

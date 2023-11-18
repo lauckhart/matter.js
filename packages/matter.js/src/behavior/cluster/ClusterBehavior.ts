@@ -216,6 +216,7 @@ export namespace ClusterBehavior {
             | "cluster"
             | "state"
             | "events"
+            | "initialize"
 
             // Omit command methods of old cluster
             | keyof ClusterInterface.MethodsOf<

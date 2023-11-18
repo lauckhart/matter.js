@@ -8,7 +8,6 @@ import { Part } from "../Part.js";
 import { ObservableSet, WritableObservableSet } from "../../util/Observable.js";
 import { Behavior } from "../../behavior/Behavior.js";
 import { State } from "../../behavior/state/State.js";
-import { DescriptorServer } from "../../behavior/server/definitions/DescriptorServer.js";
 import { LifecycleBehavior } from "./LifecycleBehavior.js";
 import { InternalError } from "../../common/MatterError.js";
 
@@ -18,7 +17,6 @@ import { InternalError } from "../../common/MatterError.js";
  * You can manipulate child parts using {@link WritableObservableSet}
  * interface.
  * 
- * The parts behavior automatically updates the Matter PartsList.
  * Notifications of structural change bubble via
  * {@link LifecycleBehavior.events.structure$change}.
  */
@@ -71,16 +69,12 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
         }
 
         /**
-         * Add the part to the descriptor part list and update its online
-         * status.
+         * Validates and updates part status.
          */
-        function registerPart(child: Part) {
+        function partReady(child: Part) {
             if (child.id === undefined) {
                 throw new InternalError("Part reports as initialized but has no assigned ID");
             }
-
-            const descriptor = agent.get(DescriptorServer);
-            descriptor.addParts(child);
 
             child.getAgent().get(LifecycleBehavior).state.online = lifecycle.state.online;
         }
@@ -98,7 +92,7 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
                 }
                 state.initializing.delete(child);
 
-                registerPart(child);
+                partReady(child);
             }
 
             lifecycle.events.initialized$change(registerIfInitialized);
@@ -119,9 +113,6 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
             if (child.id === undefined) {
                 return;
             }
-
-            const descriptor = agent.get(DescriptorServer);
-            descriptor.removeParts(child);
 
             const childLifeCycle = child.getAgent().get(LifecycleBehavior);
             childLifeCycle.events.structure$change.off(structureChangeEmitter);

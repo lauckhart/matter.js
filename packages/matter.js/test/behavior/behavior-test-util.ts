@@ -11,6 +11,12 @@ import { SupportedBehaviors } from "../../src/endpoint/part/SupportedBehaviors.j
 import { EndpointType } from "../../src/endpoint/type/EndpointType.js";
 import { Fabric } from "../../src/fabric/Fabric.js";
 
+export const MockFabric = {
+    fabricIndex: 1,
+
+    addRemoveCallback() {}
+} as unknown as Fabric;
+
 export function createBehavior<T extends Behavior.Type>(type: T) {
     const behaviors = SupportedBehaviors(
         type
@@ -34,7 +40,7 @@ export function createBehavior<T extends Behavior.Type>(type: T) {
     }
 
     const context = {
-        fabric: { fabricIndex: 1 } as Fabric
+        fabric: MockFabric
     }
 
     return part.getAgent(context).get(type);
