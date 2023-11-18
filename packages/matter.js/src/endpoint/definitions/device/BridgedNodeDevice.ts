@@ -8,9 +8,9 @@
 
 import {
     BridgedDeviceBasicInformationServer
-} from "../../../behavior/server/definitions/BridgedDeviceBasicInformationServer.js";
-import { PowerSourceConfigurationServer } from "../../../behavior/server/definitions/PowerSourceConfigurationServer.js";
-import { PowerSourceServer } from "../../../behavior/server/definitions/PowerSourceServer.js";
+} from "../../../behavior/definitions/bridged-device-basic-information/Server.js";
+import { PowerSourceConfigurationServer } from "../../../behavior/definitions/power-source-configuration/Server.js";
+import { PowerSourceServer } from "../../../behavior/definitions/power-source/Server.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

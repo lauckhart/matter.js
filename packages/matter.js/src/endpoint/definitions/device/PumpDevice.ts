@@ -6,18 +6,16 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { OnOffServer } from "../../../behavior/server/definitions/OnOffServer.js";
-import {
-    PumpConfigurationAndControlServer
-} from "../../../behavior/server/definitions/PumpConfigurationAndControlServer.js";
-import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
-import { LevelControlServer } from "../../../behavior/server/definitions/LevelControlServer.js";
-import { ScenesServer } from "../../../behavior/server/definitions/ScenesServer.js";
-import { GroupsServer } from "../../../behavior/server/definitions/GroupsServer.js";
-import { TemperatureMeasurementBehavior } from "../../../behavior/definitions/TemperatureMeasurementBehavior.js";
-import { PressureMeasurementBehavior } from "../../../behavior/definitions/PressureMeasurementBehavior.js";
-import { FlowMeasurementBehavior } from "../../../behavior/definitions/FlowMeasurementBehavior.js";
-import { OccupancySensingBehavior } from "../../../behavior/definitions/OccupancySensingBehavior.js";
+import { OnOffServer } from "../../../behavior/definitions/on-off/Server.js";
+import { PumpConfigurationAndControlServer } from "../../../behavior/definitions/pump-configuration-and-control/Server.js";
+import { IdentifyServer } from "../../../behavior/definitions/identify/Server.js";
+import { LevelControlServer } from "../../../behavior/definitions/level-control/Server.js";
+import { ScenesServer } from "../../../behavior/definitions/scenes/Server.js";
+import { GroupsServer } from "../../../behavior/definitions/groups/Server.js";
+import { TemperatureMeasurementBehavior } from "../../../behavior/definitions/temperature-measurement/Behavior.js";
+import { PressureMeasurementBehavior } from "../../../behavior/definitions/pressure-measurement/Behavior.js";
+import { FlowMeasurementBehavior } from "../../../behavior/definitions/flow-measurement/Behavior.js";
+import { OccupancySensingBehavior } from "../../../behavior/definitions/occupancy-sensing/Behavior.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

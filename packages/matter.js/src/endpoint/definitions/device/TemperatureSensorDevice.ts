@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { TemperatureMeasurementServer } from "../../../behavior/server/definitions/TemperatureMeasurementServer.js";
-import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
+import { TemperatureMeasurementServer } from "../../../behavior/definitions/temperature-measurement/Server.js";
+import { IdentifyServer } from "../../../behavior/definitions/identify/Server.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

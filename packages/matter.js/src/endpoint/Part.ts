@@ -12,8 +12,8 @@ import { LifecycleBehavior } from "./part/LifecycleBehavior.js";
 import type { InvocationContext } from "../behavior/InvocationContext.js";
 import type { EndpointNumber } from "../datatype/EndpointNumber.js";
 import type { PartOwner } from "./part/PartOwner.js";
-import { BasicInformationBehavior } from "../behavior/definitions/BasicInformationBehavior.js";
-import { BridgedDeviceBasicInformationBehavior } from "../behavior/definitions/BridgedDeviceBasicInformationBehavior.js";
+import { BasicInformationBehavior } from "../behavior/definitions/basic-information/Behavior.js";
+import { BridgedDeviceBasicInformationBehavior } from "../behavior/definitions/bridged-device-basic-information/Behavior.js";
 
 /**
  * Endpoints consist of a root part and one or more child parts.  This class

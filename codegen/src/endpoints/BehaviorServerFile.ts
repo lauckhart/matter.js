@@ -7,16 +7,19 @@
 import { Logger } from "@project-chip/matter.js/log";
 import { ClusterModel, ClusterVariance } from "@project-chip/matter.js/model";
 import { TsFile } from "../util/TsFile.js";
+import { decamelize } from "@project-chip/matter.js/util";
 
 const logger = Logger.get("BehaviorServerFile");
 
 export class BehaviorServerFile extends TsFile {
+    readonly baseName: string;
     readonly definitionName: string;
 
     constructor(public cluster: ClusterModel, private variance: ClusterVariance) {
-        const definitionName = `${cluster.name}Server`;
-        super(`#behavior-servers/${definitionName}`, true);
-        this.definitionName = definitionName;
+        const baseName = `${decamelize(cluster.name)}/Server`
+        super(`#behaviors/${baseName}`, true);
+        this.baseName = baseName;
+        this.definitionName = `${cluster.name}Server`;
         this.cluster = cluster;
 
         this.generate();
@@ -25,7 +28,7 @@ export class BehaviorServerFile extends TsFile {
     private generate() {
         logger.info(`${this.cluster.name} → ${this.name}.ts`);
 
-        this.addImport(`../../definitions/${this.cluster.name}Behavior`, `${this.cluster.name}Behavior`);
+        this.addImport(`./Behavior`, `${this.cluster.name}Behavior`);
 
         let base;
         let extraDoc;

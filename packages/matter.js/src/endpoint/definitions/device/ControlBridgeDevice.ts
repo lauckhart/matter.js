@@ -6,14 +6,14 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { IdentifyBehavior } from "../../../behavior/definitions/IdentifyBehavior.js";
-import { GroupsBehavior } from "../../../behavior/definitions/GroupsBehavior.js";
-import { ScenesBehavior } from "../../../behavior/definitions/ScenesBehavior.js";
-import { OnOffBehavior } from "../../../behavior/definitions/OnOffBehavior.js";
-import { LevelControlBehavior } from "../../../behavior/definitions/LevelControlBehavior.js";
-import { ColorControlBehavior } from "../../../behavior/definitions/ColorControlBehavior.js";
-import { IlluminanceMeasurementBehavior } from "../../../behavior/definitions/IlluminanceMeasurementBehavior.js";
-import { OccupancySensingBehavior } from "../../../behavior/definitions/OccupancySensingBehavior.js";
+import { IdentifyBehavior } from "../../../behavior/definitions/identify/Behavior.js";
+import { GroupsBehavior } from "../../../behavior/definitions/groups/Behavior.js";
+import { ScenesBehavior } from "../../../behavior/definitions/scenes/Behavior.js";
+import { OnOffBehavior } from "../../../behavior/definitions/on-off/Behavior.js";
+import { LevelControlBehavior } from "../../../behavior/definitions/level-control/Behavior.js";
+import { ColorControlBehavior } from "../../../behavior/definitions/color-control/Behavior.js";
+import { IlluminanceMeasurementBehavior } from "../../../behavior/definitions/illuminance-measurement/Behavior.js";
+import { OccupancySensingBehavior } from "../../../behavior/definitions/occupancy-sensing/Behavior.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

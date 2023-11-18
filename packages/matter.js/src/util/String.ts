@@ -77,6 +77,27 @@ export function camelize(name: string, upperFirst = true) {
 }
 
 /**
+ * Converts an identifier from CamelCase to snake_case.
+ */
+export function decamelize(name: string, separator = "-") {
+    const result = Array<string>();
+    let needSeparator = false;
+    for (const c of name) {
+        if (c >= 'A' && c <= 'Z') {
+            if (needSeparator) {
+                result.push(separator);
+                needSeparator = false;
+            }
+            result.push(c.toLowerCase());
+        } else {
+            result.push(c);
+            needSeparator = true;
+        }
+    }
+    return result.join("");
+}
+
+/**
  * Like JSON.stringify but targets well-formed JS and is slightly more readable.
  */
 export function serialize(value: any) {

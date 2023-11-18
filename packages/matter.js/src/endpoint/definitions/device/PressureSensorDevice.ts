@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { PressureMeasurementServer } from "../../../behavior/server/definitions/PressureMeasurementServer.js";
-import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
+import { PressureMeasurementServer } from "../../../behavior/definitions/pressure-measurement/Server.js";
+import { IdentifyServer } from "../../../behavior/definitions/identify/Server.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

@@ -6,24 +6,24 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BasicInformationServer } from "../../../behavior/server/definitions/BasicInformationServer.js";
-import { AccessControlServer } from "../../../behavior/server/definitions/AccessControlServer.js";
-import { GroupKeyManagementServer } from "../../../behavior/server/definitions/GroupKeyManagementServer.js";
-import { GeneralCommissioningServer } from "../../../behavior/server/definitions/GeneralCommissioningServer.js";
-import { AdministratorCommissioningServer } from "../../../behavior/server/definitions/AdministratorCommissioningServer.js";
-import { OperationalCredentialsServer } from "../../../behavior/server/definitions/OperationalCredentialsServer.js";
-import { GeneralDiagnosticsServer } from "../../../behavior/server/definitions/GeneralDiagnosticsServer.js";
-import { PowerSourceConfigurationServer } from "../../../behavior/server/definitions/PowerSourceConfigurationServer.js";
-import { TimeSyncServer } from "../../../behavior/server/definitions/TimeSyncServer.js";
-import { NetworkCommissioningServer } from "../../../behavior/server/definitions/NetworkCommissioningServer.js";
-import { LocalizationConfigurationServer } from "../../../behavior/server/definitions/LocalizationConfigurationServer.js";
-import { TimeFormatLocalizationServer } from "../../../behavior/server/definitions/TimeFormatLocalizationServer.js";
-import { UnitLocalizationServer } from "../../../behavior/server/definitions/UnitLocalizationServer.js";
-import { DiagnosticLogsServer } from "../../../behavior/server/definitions/DiagnosticLogsServer.js";
-import { SoftwareDiagnosticsServer } from "../../../behavior/server/definitions/SoftwareDiagnosticsServer.js";
-import { EthernetNetworkDiagnosticsServer } from "../../../behavior/server/definitions/EthernetNetworkDiagnosticsServer.js";
-import { WiFiNetworkDiagnosticsServer } from "../../../behavior/server/definitions/WiFiNetworkDiagnosticsServer.js";
-import { ThreadNetworkDiagnosticsServer } from "../../../behavior/server/definitions/ThreadNetworkDiagnosticsServer.js";
+import { BasicInformationServer } from "../../../behavior/definitions/basic-information/Server.js";
+import { AccessControlServer } from "../../../behavior/definitions/access-control/Server.js";
+import { GroupKeyManagementServer } from "../../../behavior/definitions/group-key-management/Server.js";
+import { GeneralCommissioningServer } from "../../../behavior/definitions/general-commissioning/Server.js";
+import { AdministratorCommissioningServer } from "../../../behavior/definitions/administrator-commissioning/Server.js";
+import { OperationalCredentialsServer } from "../../../behavior/definitions/operational-credentials/Server.js";
+import { GeneralDiagnosticsServer } from "../../../behavior/definitions/general-diagnostics/Server.js";
+import { PowerSourceConfigurationServer } from "../../../behavior/definitions/power-source-configuration/Server.js";
+import { TimeSyncServer } from "../../../behavior/definitions/time-sync/Server.js";
+import { NetworkCommissioningServer } from "../../../behavior/definitions/network-commissioning/Server.js";
+import { LocalizationConfigurationServer } from "../../../behavior/definitions/localization-configuration/Server.js";
+import { TimeFormatLocalizationServer } from "../../../behavior/definitions/time-format-localization/Server.js";
+import { UnitLocalizationServer } from "../../../behavior/definitions/unit-localization/Server.js";
+import { DiagnosticLogsServer } from "../../../behavior/definitions/diagnostic-logs/Server.js";
+import { SoftwareDiagnosticsServer } from "../../../behavior/definitions/software-diagnostics/Server.js";
+import { EthernetNetworkDiagnosticsServer } from "../../../behavior/definitions/ethernet-network-diagnostics/Server.js";
+import { WiFiNetworkDiagnosticsServer } from "../../../behavior/definitions/wi-fi-network-diagnostics/Server.js";
+import { ThreadNetworkDiagnosticsServer } from "../../../behavior/definitions/thread-network-diagnostics/Server.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { DeviceClasses } from "../../../device/DeviceTypes.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";

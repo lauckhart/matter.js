@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
-import { BooleanStateServer } from "../../../behavior/server/definitions/BooleanStateServer.js";
+import { IdentifyServer } from "../../../behavior/definitions/identify/Server.js";
+import { BooleanStateServer } from "../../../behavior/definitions/boolean-state/Server.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

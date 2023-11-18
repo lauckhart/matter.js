@@ -6,10 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { IdentifyServer } from "../../../behavior/server/definitions/IdentifyServer.js";
-import {
-    RelativeHumidityMeasurementServer
-} from "../../../behavior/server/definitions/RelativeHumidityMeasurementServer.js";
+import { IdentifyServer } from "../../../behavior/definitions/identify/Server.js";
+import { RelativeHumidityMeasurementServer } from "../../../behavior/definitions/relative-humidity-measurement/Server.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

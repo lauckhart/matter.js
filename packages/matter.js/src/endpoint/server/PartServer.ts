@@ -9,7 +9,7 @@ import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
 import { ClusterServerBehaviorBacking } from "../../behavior/server/ClusterServerBehaviorBacking.js";
 import { ServerBehaviorBacking } from "../../behavior/server/ServerBehaviorBacking.js";
-import { DescriptorServer } from "../../behavior/server/definitions/DescriptorServer.js";
+import { DescriptorServer } from "../../behavior/definitions/descriptor/Server.js";
 import { Attributes, Commands, Events } from "../../cluster/Cluster.js";
 import { ClusterType } from "../../cluster/ClusterType.js";
 import { ClusterClientObj } from "../../cluster/client/ClusterClientTypes.js";
@@ -43,17 +43,7 @@ export class PartServer implements EndpointInterface, PartOwner {
         this.#part = part;
 
         part.behaviors.require(LifecycleBehavior);
-
-        if (!part.behaviors.has(DescriptorServer)) {
-            part.behaviors.require(DescriptorServer.set({
-                deviceTypeList: [
-                    {
-                        deviceType: part.type.deviceType,
-                        revision: part.type.deviceRevision,
-                    }
-                ]
-            }));
-        }
+        part.behaviors.require(DescriptorServer);
 
         this.#part.getAgent().get(LifecycleBehavior).events.structure$change(
             () => this.#structureChangedCallback?.()

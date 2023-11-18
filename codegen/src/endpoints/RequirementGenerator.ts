@@ -5,6 +5,7 @@
  */
 
 import { Logger } from "@project-chip/matter.js/log";
+import { decamelize } from "@project-chip/matter.js/util";
 import { ClusterModel, ClusterVariance, MatterModel, RequirementModel } from "@project-chip/matter.js/model";
 import { Block } from "../util/TsFile.js";
 import { ClusterRequirements } from "./ClusterRequirements.js";
@@ -98,12 +99,13 @@ export class RequirementGenerator {
 
     private generateOne(detail: ClusterDetail, target: Block) {
         let baseName;
+        let dir = decamelize(detail.definition.name);
         if (this.type === "server") {
             baseName = `${detail.definition.name}Server`;
-            this.file.addImport(`behavior/server/definitions/${baseName}`, baseName);
+            this.file.addImport(`behavior/definitions/${dir}/Server`, baseName);
         } else {
             baseName = `${detail.definition.name}Behavior`;
-            this.file.addImport(`behavior/definitions/${baseName}`, baseName);
+            this.file.addImport(`behavior/definitions/${dir}/Behavior`, baseName);
         }
 
         const cluster = target.builder(`${detail.definition.name}: ${baseName}`);

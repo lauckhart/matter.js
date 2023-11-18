@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { IdentifyBehavior } from "../../../behavior/definitions/IdentifyBehavior.js";
-import { OnOffBehavior } from "../../../behavior/definitions/OnOffBehavior.js";
-import { GroupsBehavior } from "../../../behavior/definitions/GroupsBehavior.js";
-import { ScenesBehavior } from "../../../behavior/definitions/ScenesBehavior.js";
+import { IdentifyBehavior } from "../../../behavior/definitions/identify/Behavior.js";
+import { OnOffBehavior } from "../../../behavior/definitions/on-off/Behavior.js";
+import { GroupsBehavior } from "../../../behavior/definitions/groups/Behavior.js";
+import { ScenesBehavior } from "../../../behavior/definitions/scenes/Behavior.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

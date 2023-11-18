@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { OnOffServer } from "../../../behavior/server/definitions/OnOffServer.js";
-import { LevelControlServer } from "../../../behavior/server/definitions/LevelControlServer.js";
+import { OnOffServer } from "../../../behavior/definitions/on-off/Server.js";
+import { LevelControlServer } from "../../../behavior/definitions/level-control/Server.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

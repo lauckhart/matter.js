@@ -8,25 +8,31 @@ import { Block, TsFile } from "../util/TsFile.js";
 import { ClusterModel, ClusterVariance } from "@project-chip/matter.js/model";
 import { Logger } from "@project-chip/matter.js/log";
 import { InterfaceGenerator } from "./InterfaceGenerator.js";
+import { decamelize } from "@project-chip/matter.js/util";
 
 const logger = Logger.get("InterfaceFile");
 
 export class InterfaceFile extends TsFile {
-    definitionName: string;
-    cluster: ClusterModel;
-    ns: Block;
+    readonly baseName: string;
+    readonly definitionName: string;
+    readonly cluster: ClusterModel;
+    readonly ns: Block;
 
     constructor(cluster: ClusterModel, private variance: ClusterVariance) {
-        const definitionName = `${cluster.name}Interface`;
-        super(`#interfaces/${definitionName}`);
-        this.definitionName = definitionName;
+        const baseName = `${decamelize(cluster.name)}/Interface`;
+        super(`#behaviors/${baseName}`);
+        this.baseName = baseName;
+        this.definitionName = `${cluster.name}Interface`;
         this.cluster = cluster;
-        this.ns = this.statements(`export namespace ${definitionName} {`, "}");
+        this.ns = this.statements(`export namespace ${this.definitionName} {`, "}");
 
         this.generate();
     }
 
     override addImport(filename: string, symbol: string) {
+        if (filename.startsWith("./")) {
+            return super.addImport(filename, symbol);
+        }
         return super.addImport(`../../../${filename}`, symbol);
     }
 

@@ -17,23 +17,19 @@ export async function main() {
 
     const clusters = mom.clusters.filter(cluster => cluster.id !== undefined);
 
-    const interfaceExports = new TsFile("#interfaces/exports");
     const behaviorExports = new TsFile("#behaviors/exports");
-    const behaviorServerExports = new TsFile("#behavior-servers/exports");
 
     for (const cluster of clusters) {
         const variance = ClusterVariance(cluster);
 
         if (cluster.all(CommandModel).length) {
-            generateClusterFile(InterfaceFile, cluster, interfaceExports, variance);
+            generateClusterFile(InterfaceFile, cluster, behaviorExports, variance);
         }
         generateClusterFile(BehaviorFile, cluster, behaviorExports, variance);
-        generateClusterFile(BehaviorServerFile, cluster, behaviorServerExports, variance);
+        generateClusterFile(BehaviorServerFile, cluster, behaviorExports, variance);
     }
 
-    interfaceExports.save();
     behaviorExports.save();
-    behaviorServerExports.save();
 
     EndpointFile.clean();
     const endpointExports = new TsFile("#endpoints/exports");
@@ -47,12 +43,12 @@ export async function main() {
 }
 
 function generateClusterFile(
-    klass: new (cluster: ClusterModel, variance: ClusterVariance) => (TsFile & { definitionName: string }),
+    klass: new (cluster: ClusterModel, variance: ClusterVariance) => (TsFile & { baseName: string }),
     cluster: ClusterModel,
     exports: TsFile,
     variance: ClusterVariance,
 ) {
     const file = new klass(cluster, variance);
     file.save();
-    exports.atom(`export * from "./${file.definitionName}.js"`);
+    exports.atom(`export * from "./${file.baseName}.js"`);
 }

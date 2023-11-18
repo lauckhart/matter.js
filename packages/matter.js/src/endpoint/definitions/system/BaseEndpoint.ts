@@ -6,9 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BindingServer } from "../../../behavior/server/definitions/BindingServer.js";
-import { FixedLabelServer } from "../../../behavior/server/definitions/FixedLabelServer.js";
-import { UserLabelServer } from "../../../behavior/server/definitions/UserLabelServer.js";
+import { BindingServer } from "../../../behavior/definitions/binding/Server.js";
+import { FixedLabelServer } from "../../../behavior/definitions/fixed-label/Server.js";
+import { UserLabelServer } from "../../../behavior/definitions/user-label/Server.js";
 
 export const BaseRequirements = {
     /**

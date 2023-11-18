@@ -6,15 +6,15 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { OnOffServer } from "../../../behavior/server/definitions/OnOffServer.js";
-import { MediaPlaybackServer } from "../../../behavior/server/definitions/MediaPlaybackServer.js";
-import { KeypadInputServer } from "../../../behavior/server/definitions/KeypadInputServer.js";
-import { WakeOnLanServer } from "../../../behavior/server/definitions/WakeOnLanServer.js";
-import { ChannelServer } from "../../../behavior/server/definitions/ChannelServer.js";
-import { TargetNavigatorServer } from "../../../behavior/server/definitions/TargetNavigatorServer.js";
-import { MediaInputServer } from "../../../behavior/server/definitions/MediaInputServer.js";
-import { LowPowerServer } from "../../../behavior/server/definitions/LowPowerServer.js";
-import { AudioOutputServer } from "../../../behavior/server/definitions/AudioOutputServer.js";
+import { OnOffServer } from "../../../behavior/definitions/on-off/Server.js";
+import { MediaPlaybackServer } from "../../../behavior/definitions/media-playback/Server.js";
+import { KeypadInputServer } from "../../../behavior/definitions/keypad-input/Server.js";
+import { WakeOnLanServer } from "../../../behavior/definitions/wake-on-lan/Server.js";
+import { ChannelServer } from "../../../behavior/definitions/channel/Server.js";
+import { TargetNavigatorServer } from "../../../behavior/definitions/target-navigator/Server.js";
+import { MediaInputServer } from "../../../behavior/definitions/media-input/Server.js";
+import { LowPowerServer } from "../../../behavior/definitions/low-power/Server.js";
+import { AudioOutputServer } from "../../../behavior/definitions/audio-output/Server.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";
