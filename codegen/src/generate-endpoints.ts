@@ -17,7 +17,7 @@ export async function main() {
 
     const clusters = mom.clusters.filter(cluster => cluster.id !== undefined);
 
-    const behaviorExports = new TsFile("#behaviors/exports");
+    const behaviorExports = new TsFile("#behaviors/export");
 
     for (const cluster of clusters) {
         const variance = ClusterVariance(cluster);
@@ -32,7 +32,7 @@ export async function main() {
     behaviorExports.save();
 
     EndpointFile.clean();
-    const endpointExports = new TsFile("#endpoints/exports");
+    const endpointExports = new TsFile("#endpoints/export");
     for (const device of mom.deviceTypes) {
         const file = new EndpointFile(device);
         file.save();
