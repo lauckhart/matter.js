@@ -10,7 +10,15 @@ import { EventEmitter, Observable, ObservableSet } from "../../util/Observable.j
 import type { Part } from "../Part.js";
 
 /**
- * Manages Part lifecycle.
+ * This behavior manages state related to the owning {@link Part}'s lifecycle.
+ * 
+ * {@link LifecycleBehavior.state} includes:
+ *     - Whether the part is installed into an owner
+ *     - Whether the part's behaviors are initialized
+ *     - Whether the part is online (addressable from a network)
+ * 
+ * Other components that depend on this information may react to changes via
+ * {@link LifecycleBehavior.events}.
  */
 export class LifecycleBehavior extends Behavior {
     static override readonly id = "lifecycle";
@@ -39,14 +47,40 @@ export class LifecycleBehavior extends Behavior {
 
 export namespace LifecycleBehavior {
     export class EndpointScope extends State {
+        /**
+         * True when the part is installed into a parent.
+         * 
+         * Updated by the part when its owner is set.
+         */
         installed = false;
+
+        /**
+         * True when all behaviors have completed initialization.
+         * 
+         * Set by LifecycleBehavior when the part is installed and
+         * {@link initializingBehaviors} is empty.
+         */
         initialized = false;
+
+        /**
+         * True when the part is online (addressable from a network).
+         * 
+         * Updated by the Node when it is started or stopped. 
+         */
+        online = false;
+
+        /**
+         * The set of behaviors still undergoing initialization.
+         * 
+         * Updated by parts that perform asynchronous initialization.
+         */
         initializingBehaviors = new ObservableSet<Behavior>();
     }
 
     export class Events extends EventEmitter {
         installed$change = Observable();
         initialized$change = Observable();
+        online$change = Observable<[ online: boolean ]>();
 
         /**
          * This event is special cased in Part.  It is invoked after all

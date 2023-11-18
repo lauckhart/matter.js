@@ -18,6 +18,7 @@ import { camelize } from "../../util/String.js";
 const cache = new WeakMap<State.Type>();
 
 const VALUES = Symbol("values");
+const OWNER = Symbol("manager");
 
 /**
  * These are the internal fields of managed state.  We can't use privates
@@ -26,6 +27,7 @@ const VALUES = Symbol("values");
  */
 interface Internal extends State.Internal {
     [VALUES]: State.Internal & Record<string, any>;
+    [OWNER]: ManagedState.Owner;
 }
 
 /**
@@ -35,13 +37,13 @@ interface Internal extends State.Internal {
  * 
  * This is a pure function for {@link type}.  It caches the generated class.
  */
-export function ManagedState<T extends State.Type>(type: T, behaviorName?: string) {
+export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.Owner = {}) {
     const fields = type.fields;
 
     let className, diagnosticsName: string;
-    if (behaviorName) {
-        className = `${camelize(behaviorName, true)}$${type.name}`;
-        diagnosticsName = `${camelize(behaviorName, false)}.state`
+    if (owner.name) {
+        className = `${camelize(owner.name, true)}$${type.name}`;
+        diagnosticsName = `${camelize(owner.name, false)}.state`
     } else {
         className = `${type.name}$`;
         diagnosticsName = type.name;
@@ -57,6 +59,10 @@ export function ManagedState<T extends State.Type>(type: T, behaviorName?: strin
     const instanceDescriptors = {
         [State.SET]: {
             value: setter
+        },
+
+        [OWNER]: {
+            value: owner
         }
     } as PropertyDescriptorMap;
 
@@ -104,7 +110,7 @@ export function ManagedState<T extends State.Type>(type: T, behaviorName?: strin
         const field = fields[name];
         if (field) {
             try {
-                if (field.fixed) {
+                if (field.fixed && this[OWNER].online) {
                     throw new ValidationError(`Property is read-only`);
                 }
 
@@ -133,6 +139,11 @@ export namespace ManagedState {
         set: typeof State.set;
         with: typeof State.with;
         fields: State.FieldOptions;
+    }
+
+    export interface Owner {
+        readonly name?: string;
+        readonly online?: boolean;
     }
 }
 

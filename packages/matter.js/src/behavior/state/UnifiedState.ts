@@ -57,12 +57,21 @@ export function UnifiedState<
         cache.set(EndpointScope, cacheSlot = new WeakMap);
     }
 
-    const instanceDescriptors = {} as PropertyDescriptorMap;
+    const instanceDescriptors = {
+        [State.SET]: {
+            value() {
+                throw new ImplementationError("No setter on UnifiedState, use object API");
+            }
+        },
+    } as PropertyDescriptorMap;
 
-    for (const name in new EndpointScope) {
+    const endpointProps = Object.keys(new EndpointScope);
+    for (const name of endpointProps) {
         instanceDescriptors[name] = createDescriptor(ENDPOINT_SCOPE, name, behaviorName);
     }
-    for (const name in new FabricScope) {
+
+    const fabricProps = Object.keys(new FabricScope);
+    for (const name of fabricProps) {
         instanceDescriptors[name] = createDescriptor(FABRIC_SCOPE, name, behaviorName);
     }
 

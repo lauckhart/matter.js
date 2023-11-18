@@ -81,6 +81,15 @@ export class Behaviors {
                     } because incompatible implementation already exists`);
             }
         } else {
+            if (!type.supports(LifecycleBehavior)) {
+                if (this.#part.getAgent().get(LifecycleBehavior).state.online) {
+                    throw new ImplementationError(
+                        `Cannot add behavior ${
+                            type.id
+                        } after part is online`
+                    )
+                }
+            }
             this.#supported[type.id] = type;
         }
     }

@@ -31,19 +31,38 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
         const parts = this.state.parts;
         const state = this.state;
         const agent = this.agent;
+        const owner = this.agent.part.owner;
+        const lifecycle = agent.get(LifecycleBehavior);
 
+        // Update state in response to the mutation state.parts
         parts.added(child => adoptPart(child));
         parts.deleted(child => disownPart(child));
 
+        // Immediately adopt any parts present in state upon initialization
         for (const part of this.state.parts) {
             adoptPart(part);
         }
-        const owner = this.agent.part.owner;
 
+        // Monitor online state of owner so we can propagate to children
+        lifecycle.events.online$change((online) => {
+            for (const part of state.parts) {
+                part.getAgent().get(LifecycleBehavior).state.online = online;
+            }
+        })
+
+        /**
+         * Broadcast the lifecycle "structure changed" event.  Invoked in
+         * response to structure changes in children.  This is how the event
+         * bubbles.
+         */
         function structureChangeEmitter(part: Part) {
             agent.get(LifecycleBehavior).events.structure$change.emit(part);
         }
 
+        /**
+         * Remove a destroyed part.  Invoked in response to the child's
+         * "destroyed" event.
+         */
         function childDestroyed(part: Part) {
             if (parts.has(part)) {
                 parts.delete(part);
@@ -51,6 +70,10 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
             }
         }
 
+        /**
+         * Add the part to the descriptor part list and update its online
+         * status.
+         */
         function registerPart(child: Part) {
             if (child.id === undefined) {
                 throw new InternalError("Part reports as initialized but has no assigned ID");
@@ -58,12 +81,16 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
 
             const descriptor = agent.get(DescriptorServer);
             descriptor.addParts(child);
+
+            child.getAgent().get(LifecycleBehavior).state.online = lifecycle.state.online;
         }
 
+        /**
+         * Take ownership of a part.  Invoked when a part is added to
+         * state.parts.
+         */
         function adoptPart(child: Part) {
             child.owner = owner;
-
-            const lifecycle = agent.get(LifecycleBehavior);
             
             const registerIfInitialized = () => {
                 if (lifecycle.state.initialized) {
@@ -74,7 +101,7 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
                 registerPart(child);
             }
 
-            lifecycle.events.initialized$change(registerIfInitialized)
+            lifecycle.events.initialized$change(registerIfInitialized);
             registerIfInitialized();
 
             const childLifecycle = child.getAgent().get(LifecycleBehavior);
@@ -84,6 +111,10 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
             structureChangeEmitter(agent.part);
         }
 
+        /**
+         * Terminate ownership of a part.  Invoked when a part is removed from
+         * state.parts.
+         */
         function disownPart(child: Part) {
             if (child.id === undefined) {
                 return;

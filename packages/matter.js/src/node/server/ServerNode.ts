@@ -8,6 +8,7 @@ import { CommissioningServer } from "../../CommissioningServer.js";
 import { ImplementationError } from "../../common/MatterError.js";
 import { EndpointNumber } from "../../datatype/EndpointNumber.js";
 import { Part } from "../../endpoint/Part.js";
+import { LifecycleBehavior } from "../../endpoint/part/LifecycleBehavior.js";
 import { PartServer } from "../../endpoint/server/PartServer.js";
 import { Node } from "../Node.js";
 import { NodeRunner } from "../NodeRunner.js";
@@ -68,5 +69,15 @@ export class ServerNode extends CommissioningServer implements Node {
             throw new ImplementationError("Not running");
         }
         this.#runner.abort();
+    }
+
+    override async start() {
+        await super.start();
+        this.#root.getAgent().get(LifecycleBehavior).state.online = true;
+    }
+
+    override async close() {
+        this.#root.getAgent().get(LifecycleBehavior).state.online = false;
+        await super.close();
     }
 }

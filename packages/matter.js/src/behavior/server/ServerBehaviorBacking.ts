@@ -5,6 +5,7 @@
  */
 
 import { ImplementationError } from "../../common/MatterError.js";
+import { LifecycleBehavior } from "../../endpoint/part/LifecycleBehavior.js";
 import { Fabric } from "../../fabric/Fabric.js";
 import { BehaviorBacking } from "../BehaviorBacking.js";
 import { InvocationContext } from "../InvocationContext.js";
@@ -17,7 +18,7 @@ import { UnifiedState } from "../state/UnifiedState.js";
  */
 export class ServerBehaviorBacking extends BehaviorBacking {
     #endpointScope?: State;
-    #fabricScopes = new WeakMap<Fabric, State>;
+    #fabricScopes = new Map<Fabric, State>;
     #fabricScopeType?: State.Type;
     #stateType?: UnifiedState.Type;
 
@@ -38,10 +39,15 @@ export class ServerBehaviorBacking extends BehaviorBacking {
         if (fabric === undefined) {
             throw new ImplementationError(`Cannot access ${this.type.id} fabric properties without fabric scope`);
         }
+        
         let fabricScope = this.#fabricScopes.get(fabric);
+        
         if (!fabricScope) {
             fabricScope = this.createFabricScope(fabric);
+
+            fabric.addRemoveCallback(() => this.#fabricScopes.delete(fabric));
         }
+        
         return fabricScope;
     }
     
@@ -57,7 +63,9 @@ export class ServerBehaviorBacking extends BehaviorBacking {
             this.#stateType = UnifiedState(this.type.EndpointScope, this.type.FabricScope, this.type.id);
         }
 
-        return new this.#stateType(endpointScope, fabricScope, context);
+        const instance = new this.#stateType(endpointScope, fabricScope, context);
+
+        return instance;
     }
 
     /**
@@ -65,7 +73,8 @@ export class ServerBehaviorBacking extends BehaviorBacking {
      * values.
      */
     protected createEndpointScope(values = {}) {
-        const endpointScopeType = ManagedState(this.type.EndpointScope, this.type.id);
+        const endpointScopeType = ManagedState(this.type.EndpointScope);
+
         this.#endpointScope = new endpointScopeType(values);
         return this.#endpointScope;
     }
@@ -75,11 +84,23 @@ export class ServerBehaviorBacking extends BehaviorBacking {
      */
     protected createFabricScope(fabric: Fabric, values = {}) {
         if (!this.#fabricScopeType) {
-            this.#fabricScopeType = ManagedState(this.type.FabricScope, this.type.id);
+            this.#fabricScopeType = ManagedState(this.type.FabricScope);
         }
 
         const scope = new this.type.FabricScope(values);
         this.#fabricScopes.set(fabric, scope);
         return scope;
+    }
+
+    protected createScope(type: State.Type) {
+        const part = this.part;
+
+        return ManagedState(type, {
+            name: this.type.id,
+            
+            get online() {
+                return part.getAgent().get(LifecycleBehavior).state.online;
+            }
+        })
     }
 }
