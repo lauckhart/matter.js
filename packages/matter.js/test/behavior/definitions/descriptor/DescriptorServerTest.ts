@@ -4,10 +4,30 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MockPart } from "../../behavior-mocks.js";
+import { MockEndpoint, MockPart } from "../../behavior-mocks.js";
 import { DescriptorBehavior } from "../../../../src/behavior/definitions/descriptor/DescriptorBehavior.js";
+import { OnOffServer } from "../../../../src/behavior/definitions/on-off/OnOffServer.js";
+import { PartsBehavior } from "../../../../src/behavior/definitions/parts/PartsBehavior.js";
 
-describe("descriptor/DescriptorServer", () => {
+function createFamily() {
+    const parent = new MockPart({
+        id: 1,
+        behavior: PartsBehavior
+    });
+
+    const child = new MockPart({
+        id: 2,
+        type: MockEndpoint,
+        owner: undefined
+    });
+
+    const parts = parent.getAgent().get(PartsBehavior);
+    parts.add(child);
+
+    return { parent, child };
+}
+
+describe("DescriptorServer", () => {
     it("adds device type automatically if necessary", () => {
         const device = new MockPart;
         const descriptor = device.mockAgent.get(DescriptorBehavior);
@@ -20,14 +40,34 @@ describe("descriptor/DescriptorServer", () => {
     })
 
     it("adds servers automatically", () => {
-        // TODO
+        const device = new MockPart;
+        const descriptor = device.mockAgent.get(DescriptorBehavior);
+
+        device.behaviors.require(OnOffServer);
+
+        expect(descriptor.state.serverList).deep.equals([
+            29,
+            6,
+        ]);
     })
 
     it("adds parts automatically", () => {
-        // TODO
+        const { parent } = createFamily();
+
+        const partsList = parent.mockAgent.get(DescriptorBehavior).state.partsList;
+
+        expect(partsList).deep.equals([ 2 ]);
     })
 
     it("remove parts automatically", () => {
-        // TODO
+        const { parent, child } = createFamily();
+
+        const partsState = parent.mockAgent.get(DescriptorBehavior).state;
+
+        expect(partsState.partsList).deep.equals([ 2 ]);
+
+        child.destroy();
+
+        expect(partsState.partsList).deep.equals([]);
     })
 })

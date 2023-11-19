@@ -86,6 +86,7 @@ export class Behaviors {
                 }
             }
             this.#supported[type.id] = type;
+            this.#supportAdded.emit(type);
         }
     }
 
