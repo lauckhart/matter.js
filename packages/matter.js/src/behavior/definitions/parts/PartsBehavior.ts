@@ -1,0 +1,176 @@
+/**
+ * @license
+ * Copyright 2022-2023 Project CHIP Authors
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import { Part } from "../../../endpoint/Part.js";
+import { ObservableSet, WritableObservableSet } from "../../../util/Observable.js";
+import { Behavior } from "../../Behavior.js";
+import { State } from "../../state/State.js";
+import { LifecycleBehavior } from "../lifecycle/LifecycleBehavior.js";
+import { InternalError } from "../../../common/MatterError.js";
+import { BehaviorBacking } from "../../BehaviorBacking.js";
+
+/**
+ * Manages parent-child relationship between endpoints.
+ * 
+ * You can manipulate child parts using {@link WritableObservableSet}
+ * interface.
+ * 
+ * Notifications of structural change bubble via
+ * {@link LifecycleBehavior.events.structure$change}.
+ */
+export class PartsBehavior extends Behavior implements WritableObservableSet<Part> {
+    static override readonly id = "parts"; 
+
+    declare readonly state: PartsBehavior.EndpointScope;
+
+    override initialize() {
+        const children = this.state.children;
+        const state = this.state;
+        const agent = this.agent;
+        const lifecycle = agent.get(LifecycleBehavior);
+
+        // Update state in response to the mutation state.parts
+        children.added(child => adoptPart(child));
+        children.deleted(child => disownPart(child));
+
+        // Immediately adopt any parts present in state upon initialization
+        for (const part of this.state.children) {
+            adoptPart(part);
+        }
+
+        // Monitor online state of owner so we can propagate to children
+        lifecycle.events.online$change((online) => {
+            for (const part of state.children) {
+                part.getAgent().get(LifecycleBehavior).state.online = online;
+            }
+        })
+
+        /**
+         * Broadcast the lifecycle "structure changed" event.  Invoked in
+         * response to structure changes in children.  This is how the event
+         * bubbles.
+         */
+        function structureChangeEmitter(part: Part) {
+            agent.get(LifecycleBehavior).events.structure$change.emit(part);
+        }
+
+        /**
+         * Remove a destroyed part.  Invoked in response to the child's
+         * "destroyed" event.
+         */
+        function childDestroyed(part: Part) {
+            if (children.has(part)) {
+                children.delete(part);
+            }
+        }
+
+        /**
+         * Validates and updates part status.
+         */
+        function partReady(child: Part) {
+            if (child.id === undefined) {
+                throw new InternalError("Part reports as initialized but has no assigned ID");
+            }
+
+            child.getAgent().get(LifecycleBehavior).state.online = lifecycle.state.online;
+        }
+
+        /**
+         * Take ownership of a part.  Invoked when a part is added to
+         * state.parts.
+         */
+        function adoptPart(child: Part) {
+            child.owner = agent.part;
+            
+            const registerIfInitialized = () => {
+                if (lifecycle.state.initialized) {
+                    lifecycle.events.initialized$change.off(registerIfInitialized);
+                }
+                state.initializing.delete(child);
+
+                partReady(child);
+            }
+
+            lifecycle.events.initialized$change(registerIfInitialized);
+            registerIfInitialized();
+
+            const childLifecycle = child.getAgent().get(LifecycleBehavior);
+            childLifecycle.events.structure$change(structureChangeEmitter);
+            childLifecycle.events.destroyed(childDestroyed);
+
+            structureChangeEmitter(agent.part);
+        }
+
+        /**
+         * Terminate ownership of a part.  Invoked when a part is removed from
+         * state.parts.
+         */
+        function disownPart(child: Part) {
+            if (child.id === undefined) {
+                return;
+            }
+
+            const childLifeCycle = child.getAgent().get(LifecycleBehavior);
+            childLifeCycle.events.structure$change.off(structureChangeEmitter);
+            childLifeCycle.events.destroyed.off(childDestroyed);
+
+            structureChangeEmitter(agent.part);
+        }
+    }
+
+    has(part: Part) {
+        return this.state.children.has(part);
+    }
+
+    add(part: Part) {
+        this.state.children.add(part);
+    }
+
+    delete(part: Part) {
+        return this.state.children.delete(part);
+    }
+
+    clear() {
+        this.state.children.clear();
+    }
+
+    get added() {
+        return this.state.children.added;
+    }
+
+    get deleted() {
+        return this.state.children.deleted;
+    }
+
+    get size() {
+        return this.state.children.size;
+    }
+
+    [Symbol.iterator]() {
+        return this.state.children[Symbol.iterator]();
+    }
+
+    initializeBehavior(part: Part, behavior: Behavior.Type): BehaviorBacking {
+        return this.agent.part.owner.initializeBehavior(
+            part,
+            behavior
+        );
+    }
+}
+
+export namespace PartsBehavior {
+    export class EndpointScope extends State {
+        /**
+         * Child parts of the endpoint.
+         */
+        children = new ObservableSet<Part>();
+
+        /**
+         * The behavior stores parts undergoing initialization here.
+         */
+        initializing = new Set<Part>();
+    }
+}
