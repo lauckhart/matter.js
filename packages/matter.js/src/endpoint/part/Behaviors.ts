@@ -7,7 +7,7 @@
 import { Behavior } from "../../behavior/Behavior.js";
 import { ImplementationError } from "../../common/MatterError.js";
 import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
-import { LifecycleBehavior } from "./LifecycleBehavior.js";
+import { LifecycleBehavior } from "../../behavior/definitions/lifecycle/LifecycleBehavior.js";
 import type { Part } from "../Part.js";
 import type { SupportedBehaviors } from "./SupportedBehaviors.js";
 import type { EndpointAgent } from "../EndpointAgent.js";

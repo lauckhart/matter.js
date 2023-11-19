@@ -8,12 +8,14 @@ import { ImplementationError } from "../common/MatterError.js";
 import { EndpointAgent } from "./EndpointAgent.js";
 import { EndpointType } from "./type/EndpointType.js";
 import { Behaviors } from "./part/Behaviors.js";
-import { LifecycleBehavior } from "./part/LifecycleBehavior.js";
-import type { InvocationContext } from "../behavior/InvocationContext.js";
-import type { EndpointNumber } from "../datatype/EndpointNumber.js";
-import type { PartOwner } from "./part/PartOwner.js";
+import { LifecycleBehavior } from "../behavior/definitions/lifecycle/LifecycleBehavior.js";
+import { EndpointNumber } from "../datatype/EndpointNumber.js";
 import { BasicInformationBehavior } from "../behavior/definitions/basic-information/Behavior.js";
 import { BridgedDeviceBasicInformationBehavior } from "../behavior/definitions/bridged-device-basic-information/Behavior.js";
+import { BehaviorBacking } from "../behavior/BehaviorBacking.js";
+import { Behavior } from "../behavior/Behavior.js";
+import type { InvocationContext } from "../behavior/InvocationContext.js";
+import type { PartOwner } from "./part/PartOwner.js";
 
 /**
  * Endpoints consist of a root part and one or more child parts.  This class
@@ -23,7 +25,7 @@ import { BridgedDeviceBasicInformationBehavior } from "../behavior/definitions/b
  * with {@link Part.getAgent}.  Agents are stateless and designed for quick
  * instantiation so you can create them as needed then discard.
  */
-export class Part {
+export class Part implements PartOwner {
     #id?: EndpointNumber;
     #key?: string | undefined;
     #type: EndpointType;
@@ -36,7 +38,7 @@ export class Part {
         this.#type = options.type;
 
         if (options.id !== undefined) {
-            this.id = options.id;
+            this.id = EndpointNumber(options.id);
         }
         
         if (options.key !== undefined) {
@@ -47,12 +49,12 @@ export class Part {
             this.#key = options.key;
         }
 
-        const behaviors = options.type?.behaviors;
-        if (!behaviors || !Object.keys(behaviors).length) {
-            throw new ImplementationError("Part created with no behaviors");
-        }
+        const behaviors = options.type?.behaviors ?? [];
         
         this.#behaviors = new Behaviors(this, behaviors);
+
+        this.#behaviors.require(LifecycleBehavior);
+
     }
 
     /**
@@ -163,6 +165,20 @@ export class Part {
         return description;
     }
 
+    toString() {
+        const ident = Array<string>();
+        if (this.key) {
+            ident.push(this.key);
+        }
+        if (this.id) {
+            ident.push(`#${this.id}`);
+        }
+        if (!ident.length) {
+            ident.push("anon");
+        }
+        return `${this.type.name}<${ident.join("; ")}>`;
+    }
+
     /**
      * Obtain the key used to identify this part across invocations.
      * 
@@ -227,6 +243,10 @@ export class Part {
         this.behaviors.destroy();
         destroyedEvent.emit(this);
     }
+
+    initializeBehavior(part: Part, behavior: Behavior.Type): BehaviorBacking {
+        return this.owner.initializeBehavior(part, behavior);
+    }
 }
 
 export namespace Part {
@@ -236,6 +256,6 @@ export namespace Part {
     export interface Options {
         type: EndpointType,
         key?: string,
-        id?: EndpointNumber,
+        id?: number,
     }
 }

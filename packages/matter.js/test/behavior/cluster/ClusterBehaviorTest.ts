@@ -8,10 +8,10 @@ import { ClusterBehavior } from "../../../src/behavior/cluster/ClusterBehavior.j
 import { InvocationContext } from "../../../src/behavior/InvocationContext.js";
 import { Observable } from "../../../src/util/Observable.js";
 import { MaybePromise } from "../../../src/util/Type.js";
-import { createBehavior } from "../behavior-test-util.js";
 import { MyBehavior } from "./cluster-behavior-test-util.js";
 import { Behavior } from "../../../src/behavior/Behavior.js";
 import { State } from "../../../src/behavior/state/State.js";
+import { MockPart } from "../behavior-mocks.js";
 
 describe("ClusterBehavior", () => {
     type Match<Input, Type> = Input extends Type ? true : false;
@@ -93,7 +93,7 @@ describe("ClusterBehavior", () => {
         });
 
         it("instance exposes values for enabled cluster elements", () => {
-            const behavior = createBehavior(MyBehavior);
+            const behavior = MockPart.createBehavior(MyBehavior);
 
             expect(behavior.state.reqAttr).equals("hello");
             expect(behavior.reqCmd).is.a("function");
@@ -102,7 +102,7 @@ describe("ClusterBehavior", () => {
         });
 
         it("instance does not expose values for disabled cluster elements", () => {
-            const behavior = createBehavior(MyBehavior);
+            const behavior = MockPart.createBehavior(MyBehavior);
 
             expect((behavior.state as any).optAttr).undefined;
             expect((behavior.events as any).optAttr$change).undefined;

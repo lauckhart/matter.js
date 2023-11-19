@@ -8,7 +8,7 @@ import { CommissioningServer } from "../../CommissioningServer.js";
 import { ImplementationError } from "../../common/MatterError.js";
 import { EndpointNumber } from "../../datatype/EndpointNumber.js";
 import { Part } from "../../endpoint/Part.js";
-import { LifecycleBehavior } from "../../endpoint/part/LifecycleBehavior.js";
+import { LifecycleBehavior } from "../../behavior/definitions/lifecycle/LifecycleBehavior.js";
 import { PartServer } from "../../endpoint/server/PartServer.js";
 import { Node } from "../Node.js";
 import { NodeRunner } from "../NodeRunner.js";

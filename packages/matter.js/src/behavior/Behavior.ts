@@ -10,7 +10,7 @@ import type { BehaviorBacking } from "./BehaviorBacking.js";
 import type { ClusterType } from "../cluster/ClusterType.js";
 import { EndpointAgent } from "../endpoint/EndpointAgent.js";
 import { EventEmitter } from "../util/Observable.js";
-import type { LifecycleBehavior } from "../endpoint/part/LifecycleBehavior.js";
+import type { LifecycleBehavior } from "./definitions/lifecycle/LifecycleBehavior.js";
 import { GeneratedClass } from "../util/GeneratedClass.js";
 
 // We store state and events using this symbol because TS prevents us from
@@ -55,14 +55,21 @@ export abstract class Behavior {
     static readonly id: string;
 
     /**
-     * The "behavior owner" connects the behavior with its runtime context.
+     * The agent that owns the behavior.
      */
     get agent() {
         return this.#agent;
     }
 
     /**
-     * Access agent context.
+     * The part that owns behavior's agent.
+     */
+    get part() {
+        return this.#agent.part;
+    }
+
+    /**
+     * The context in which the behavior operates.
      */
     get context() {
         return this.#agent.context;

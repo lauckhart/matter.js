@@ -7,18 +7,15 @@
 import { Logger } from "@project-chip/matter.js/log";
 import { ClusterModel, ClusterVariance } from "@project-chip/matter.js/model";
 import { TsFile } from "../util/TsFile.js";
-import { decamelize } from "@project-chip/matter.js/util";
 
 const logger = Logger.get("BehaviorServerFile");
 
 export class BehaviorServerFile extends TsFile {
-    readonly baseName: string;
+    static readonly baseName = "Server";
     readonly definitionName: string;
 
-    constructor(public cluster: ClusterModel, private variance: ClusterVariance) {
-        const baseName = `${decamelize(cluster.name)}/Server`
-        super(`#behaviors/${baseName}`, true);
-        this.baseName = baseName;
+    constructor(name: string, public cluster: ClusterModel, private variance: ClusterVariance) {
+        super(name, true);
         this.definitionName = `${cluster.name}Server`;
         this.cluster = cluster;
 

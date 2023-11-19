@@ -48,7 +48,7 @@ const OBSERVERS = Symbol("observers");
 const ONCE = Symbol("ONCE");
 
 const ObservablePrototype: ThisType<Observable<any> & { [OBSERVERS]?: Set<Function>, [ONCE]?: Set<Function> }> = {
-    async trigger(payload: any) {
+    emit(payload: any) {
         if (this[OBSERVERS]) {
             for (const observer of this[OBSERVERS]) {
                 observer(payload);
@@ -158,6 +158,7 @@ export interface ReadableObservableSet<T> {
     [Symbol.iterator]: () => Iterator<T, undefined>;
     has(item: T): boolean;
 
+    get size(): number;
     get added(): Observable<[T]>;
     get deleted(): Observable<[T]>;
 }

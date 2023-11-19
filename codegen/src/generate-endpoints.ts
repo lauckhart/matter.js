@@ -11,25 +11,27 @@ import { TsFile } from "./util/TsFile.js";
 import "./util/setup.js";
 import { InterfaceFile } from "./endpoints/InterfaceFile.js";
 import { BehaviorServerFile } from "./endpoints/BehaviorServerFile.js";
+import { decamelize } from "@project-chip/matter.js/util";
 
 export async function main() {
     const mom = new MatterModel();
 
     const clusters = mom.clusters.filter(cluster => cluster.id !== undefined);
 
-    const behaviorExports = new TsFile("#behaviors/export");
-
     for (const cluster of clusters) {
         const variance = ClusterVariance(cluster);
+        const dir = `#behaviors/${decamelize(cluster.name)}`;
+
+        const exports = new TsFile(`${dir}/export`);
 
         if (cluster.all(CommandModel).length) {
-            generateClusterFile(InterfaceFile, cluster, behaviorExports, variance);
+            generateClusterFile(dir, InterfaceFile, cluster, exports, variance);
         }
-        generateClusterFile(BehaviorFile, cluster, behaviorExports, variance);
-        generateClusterFile(BehaviorServerFile, cluster, behaviorExports, variance);
-    }
+        generateClusterFile(dir, BehaviorFile, cluster, exports, variance);
+        generateClusterFile(dir, BehaviorServerFile, cluster, exports, variance);
 
-    behaviorExports.save();
+        exports.save();
+    }
 
     EndpointFile.clean();
     const endpointExports = new TsFile("#endpoints/export");
@@ -43,12 +45,17 @@ export async function main() {
 }
 
 function generateClusterFile(
-    klass: new (cluster: ClusterModel, variance: ClusterVariance) => (TsFile & { baseName: string }),
+    dir: string,
+    type: {
+        new (name: string, cluster: ClusterModel, variance: ClusterVariance): TsFile;
+        baseName: string;
+    },
     cluster: ClusterModel,
     exports: TsFile,
     variance: ClusterVariance,
 ) {
-    const file = new klass(cluster, variance);
+    const name = `${cluster.name}/${type.baseName}`;
+    const file = new type(`${dir}/${name}`, cluster, variance);
     file.save();
-    exports.atom(`export * from "./${file.baseName}.js"`);
+    exports.atom(`export * from "./${name}.js"`);
 }

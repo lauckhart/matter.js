@@ -9,7 +9,7 @@ import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
 import { ClusterServerBehaviorBacking } from "../../behavior/server/ClusterServerBehaviorBacking.js";
 import { ServerBehaviorBacking } from "../../behavior/server/ServerBehaviorBacking.js";
-import { DescriptorServer } from "../../behavior/definitions/descriptor/Server.js";
+import { DescriptorServer } from "../../behavior/definitions/descriptor/DescriptorServer.js";
 import { Attributes, Commands, Events } from "../../cluster/Cluster.js";
 import { ClusterType } from "../../cluster/ClusterType.js";
 import { ClusterClientObj } from "../../cluster/client/ClusterClientTypes.js";
@@ -19,9 +19,9 @@ import { ClusterId } from "../../datatype/ClusterId.js";
 import { EndpointNumber } from "../../datatype/EndpointNumber.js";
 import { EndpointInterface } from "../EndpointInterface.js";
 import { Part } from "../Part.js";
-import { LifecycleBehavior } from "../part/LifecycleBehavior.js";
+import { LifecycleBehavior } from "../../behavior/definitions/lifecycle/LifecycleBehavior.js";
 import { PartOwner } from "../part/PartOwner.js";
-import { PartsBehavior } from "../part/PartsBehavior.js";
+import { PartsBehavior } from "../../behavior/definitions/parts/PartsBehavior.js";
 import { UnmanagedClusterBehavior } from "./UnmanagedClusterBehavior.js";
 
 const SERVER = Symbol("server");
@@ -42,7 +42,6 @@ export class PartServer implements EndpointInterface, PartOwner {
     constructor(part: Part) {
         this.#part = part;
 
-        part.behaviors.require(LifecycleBehavior);
         part.behaviors.require(DescriptorServer);
 
         this.#part.getAgent().get(LifecycleBehavior).events.structure$change(
@@ -172,7 +171,7 @@ export class PartServer implements EndpointInterface, PartOwner {
     }
 
     getChildEndpoint(id: EndpointNumber): EndpointInterface | undefined {
-        const parts = this.#part.getAgent().get(PartsBehavior).state.parts;
+        const parts = this.#part.getAgent().get(PartsBehavior).state.children;
         for (const part of parts) {
             if (part.id === id) {
                 return PartServer.forPart(part);

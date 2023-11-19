@@ -9,7 +9,7 @@ import { BehaviorBacking } from "../../src/behavior/BehaviorBacking.js";
 import { State } from "../../src/behavior/state/State.js";
 import { EndpointAgent } from "../../src/endpoint/EndpointAgent.js";
 import { EventEmitter, Observable } from "../../src/util/Observable.js";
-import { createBehavior } from "./behavior-test-util.js";
+import { MockPart } from "./behavior-mocks.js";
 
 class TestBehavior extends Behavior {
     static override id = "test";
@@ -39,7 +39,7 @@ describe("Behavior", () => {
     type IsObject<T> = T extends undefined ? false : T extends object ? true : false;
 
     it("instantiates with correct properties", () => {
-        const behavior = createBehavior(TestBehavior);
+        const behavior = MockPart.createBehavior(TestBehavior);
         expect(behavior.agent.get(TestBehavior)).equals(behavior);
         expect(behavior.state.endpointValue).equals(1);
         expect(behavior.state.fabricValue).equals(2);
@@ -47,7 +47,7 @@ describe("Behavior", () => {
     });
 
     it("unifies state", () => {
-        const behavior = createBehavior(TestBehavior);
+        const behavior = MockPart.createBehavior(TestBehavior);
         const state = behavior.state;
 
         ({}) as IsObject<typeof state> satisfies true;
@@ -58,7 +58,7 @@ describe("Behavior", () => {
 
     it("set creates new type with proper defaults", () => {
         const NewBehavior = TestBehavior.set({ endpointValue: 3, fabricValue: 4 });
-        const behavior = createBehavior(NewBehavior);
+        const behavior = MockPart.createBehavior(NewBehavior);
         const state = behavior.state;
 
         ({}) as IsObject<typeof state> satisfies true;

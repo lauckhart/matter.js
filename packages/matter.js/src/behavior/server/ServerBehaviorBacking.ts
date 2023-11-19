@@ -5,7 +5,7 @@
  */
 
 import { ImplementationError } from "../../common/MatterError.js";
-import { LifecycleBehavior } from "../../endpoint/part/LifecycleBehavior.js";
+import { LifecycleBehavior } from "../definitions/lifecycle/LifecycleBehavior.js";
 import { Fabric } from "../../fabric/Fabric.js";
 import { BehaviorBacking } from "../BehaviorBacking.js";
 import { InvocationContext } from "../InvocationContext.js";
