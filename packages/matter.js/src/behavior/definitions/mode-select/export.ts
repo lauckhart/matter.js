@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./ModeSelect/Interface.js";
-export * from "./ModeSelect/Behavior.js";
-export * from "./ModeSelect/Server.js";
+export * from "./ModeSelectInterface.js";
+export * from "./ModeSelectBehavior.js";
+export * from "./ModeSelectServer.js";

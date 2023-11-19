@@ -6,10 +6,12 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { OtaSoftwareUpdateProviderServer } from "../../../behavior/definitions/ota-software-update-provider/Server.js";
+import {
+    OtaSoftwareUpdateProviderServer
+} from "../../../behavior/definitions/ota-software-update-provider/OtaSoftwareUpdateProviderServer.js";
 import {
     OtaSoftwareUpdateRequestorBehavior
-} from "../../../behavior/definitions/ota-software-update-requestor/Behavior.js";
+} from "../../../behavior/definitions/ota-software-update-requestor/OtaSoftwareUpdateRequestorBehavior.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { DeviceClasses } from "../../../device/DeviceTypes.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";

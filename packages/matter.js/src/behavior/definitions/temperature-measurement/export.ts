@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./TemperatureMeasurement/Behavior.js";
-export * from "./TemperatureMeasurement/Server.js";
+export * from "./TemperatureMeasurementBehavior.js";
+export * from "./TemperatureMeasurementServer.js";

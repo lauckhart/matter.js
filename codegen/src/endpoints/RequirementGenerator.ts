@@ -99,13 +99,13 @@ export class RequirementGenerator {
 
     private generateOne(detail: ClusterDetail, target: Block) {
         let baseName;
-        let dir = decamelize(detail.definition.name);
+        let prefix = `behavior/definitions/${decamelize(detail.definition.name)}/${detail.definition.name}`;
         if (this.type === "server") {
             baseName = `${detail.definition.name}Server`;
-            this.file.addImport(`behavior/definitions/${dir}/Server`, baseName);
+            this.file.addImport(`${prefix}Server`, baseName);
         } else {
             baseName = `${detail.definition.name}Behavior`;
-            this.file.addImport(`behavior/definitions/${dir}/Behavior`, baseName);
+            this.file.addImport(`${prefix}Behavior`, baseName);
         }
 
         const cluster = target.builder(`${detail.definition.name}: ${baseName}`);

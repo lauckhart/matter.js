@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./KeypadInput/Interface.js";
-export * from "./KeypadInput/Behavior.js";
-export * from "./KeypadInput/Server.js";
+export * from "./KeypadInputInterface.js";
+export * from "./KeypadInputBehavior.js";
+export * from "./KeypadInputServer.js";

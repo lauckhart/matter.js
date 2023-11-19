@@ -6,9 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { IdentifyServer } from "../../../behavior/definitions/identify/Server.js";
-import { IlluminanceMeasurementServer } from "../../../behavior/definitions/illuminance-measurement/Server.js";
-import { GroupsBehavior } from "../../../behavior/definitions/groups/Behavior.js";
+import { IdentifyServer } from "../../../behavior/definitions/identify/IdentifyServer.js";
+import {
+    IlluminanceMeasurementServer
+} from "../../../behavior/definitions/illuminance-measurement/IlluminanceMeasurementServer.js";
+import { GroupsBehavior } from "../../../behavior/definitions/groups/GroupsBehavior.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

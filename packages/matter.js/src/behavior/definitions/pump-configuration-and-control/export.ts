@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./PumpConfigurationAndControl/Behavior.js";
-export * from "./PumpConfigurationAndControl/Server.js";
+export * from "./PumpConfigurationAndControlBehavior.js";
+export * from "./PumpConfigurationAndControlServer.js";

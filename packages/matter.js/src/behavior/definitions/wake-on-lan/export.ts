@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./WakeOnLan/Behavior.js";
-export * from "./WakeOnLan/Server.js";
+export * from "./WakeOnLanBehavior.js";
+export * from "./WakeOnLanServer.js";

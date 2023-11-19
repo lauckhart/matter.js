@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./SoftwareDiagnostics/Interface.js";
-export * from "./SoftwareDiagnostics/Behavior.js";
-export * from "./SoftwareDiagnostics/Server.js";
+export * from "./SoftwareDiagnosticsInterface.js";
+export * from "./SoftwareDiagnosticsBehavior.js";
+export * from "./SoftwareDiagnosticsServer.js";

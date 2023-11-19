@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./PressureMeasurement/Behavior.js";
-export * from "./PressureMeasurement/Server.js";
+export * from "./PressureMeasurementBehavior.js";
+export * from "./PressureMeasurementServer.js";

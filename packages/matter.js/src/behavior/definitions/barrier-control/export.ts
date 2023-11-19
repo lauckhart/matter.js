@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./BarrierControl/Interface.js";
-export * from "./BarrierControl/Behavior.js";
-export * from "./BarrierControl/Server.js";
+export * from "./BarrierControlInterface.js";
+export * from "./BarrierControlBehavior.js";
+export * from "./BarrierControlServer.js";

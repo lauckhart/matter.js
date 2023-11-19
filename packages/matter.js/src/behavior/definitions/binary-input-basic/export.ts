@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./BinaryInputBasic/Behavior.js";
-export * from "./BinaryInputBasic/Server.js";
+export * from "./BinaryInputBasicBehavior.js";
+export * from "./BinaryInputBasicServer.js";

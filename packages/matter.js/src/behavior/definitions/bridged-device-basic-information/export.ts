@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./BridgedDeviceBasicInformation/Behavior.js";
-export * from "./BridgedDeviceBasicInformation/Server.js";
+export * from "./BridgedDeviceBasicInformationBehavior.js";
+export * from "./BridgedDeviceBasicInformationServer.js";

@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./Descriptor/Behavior.js";
-export * from "./Descriptor/Server.js";
+export * from "./DescriptorBehavior.js";
+export * from "./DescriptorServer.js";

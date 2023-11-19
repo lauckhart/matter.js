@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./TargetNavigator/Interface.js";
-export * from "./TargetNavigator/Behavior.js";
-export * from "./TargetNavigator/Server.js";
+export * from "./TargetNavigatorInterface.js";
+export * from "./TargetNavigatorBehavior.js";
+export * from "./TargetNavigatorServer.js";

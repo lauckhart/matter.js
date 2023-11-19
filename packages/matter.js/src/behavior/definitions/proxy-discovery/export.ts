@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./ProxyDiscovery/Interface.js";
-export * from "./ProxyDiscovery/Behavior.js";
-export * from "./ProxyDiscovery/Server.js";
+export * from "./ProxyDiscoveryInterface.js";
+export * from "./ProxyDiscoveryBehavior.js";
+export * from "./ProxyDiscoveryServer.js";

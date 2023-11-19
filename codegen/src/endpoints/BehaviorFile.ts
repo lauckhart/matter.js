@@ -31,7 +31,7 @@ export class BehaviorFile extends TsFile {
         const builder = this.builder(`export const ${this.cluster.name}Behavior = ClusterBehavior`);
 
         if (this.cluster.all(CommandModel).length) {
-            this.addImport(`./Interface`, `${this.cluster.name}Interface`);
+            this.addImport(`./${this.cluster.name}Interface`, `${this.cluster.name}Interface`);
             builder.atom(`withInterface<${this.cluster.name}Interface>()`);
         }
 

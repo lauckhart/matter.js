@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./GeneralCommissioning/Interface.js";
-export * from "./GeneralCommissioning/Behavior.js";
-export * from "./GeneralCommissioning/Server.js";
+export * from "./GeneralCommissioningInterface.js";
+export * from "./GeneralCommissioningBehavior.js";
+export * from "./GeneralCommissioningServer.js";

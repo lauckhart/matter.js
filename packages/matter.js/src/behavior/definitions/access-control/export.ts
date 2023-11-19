@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./AccessControl/Behavior.js";
-export * from "./AccessControl/Server.js";
+export * from "./AccessControlBehavior.js";
+export * from "./AccessControlServer.js";

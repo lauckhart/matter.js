@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./UnitLocalization/Behavior.js";
-export * from "./UnitLocalization/Server.js";
+export * from "./UnitLocalizationBehavior.js";
+export * from "./UnitLocalizationServer.js";

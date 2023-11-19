@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./UserLabel/Behavior.js";
-export * from "./UserLabel/Server.js";
+export * from "./UserLabelBehavior.js";
+export * from "./UserLabelServer.js";

@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./LowPower/Interface.js";
-export * from "./LowPower/Behavior.js";
-export * from "./LowPower/Server.js";
+export * from "./LowPowerInterface.js";
+export * from "./LowPowerBehavior.js";
+export * from "./LowPowerServer.js";

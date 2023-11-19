@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./OccupancySensing/Behavior.js";
-export * from "./OccupancySensing/Server.js";
+export * from "./OccupancySensingBehavior.js";
+export * from "./OccupancySensingServer.js";

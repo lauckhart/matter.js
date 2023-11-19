@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./LocalizationConfiguration/Behavior.js";
-export * from "./LocalizationConfiguration/Server.js";
+export * from "./LocalizationConfigurationBehavior.js";
+export * from "./LocalizationConfigurationServer.js";

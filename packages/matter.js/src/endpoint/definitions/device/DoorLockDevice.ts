@@ -6,9 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { IdentifyServer } from "../../../behavior/definitions/identify/Server.js";
-import { DoorLockServer } from "../../../behavior/definitions/door-lock/Server.js";
-import { TimeSyncBehavior } from "../../../behavior/definitions/time-sync/Behavior.js";
+import { IdentifyServer } from "../../../behavior/definitions/identify/IdentifyServer.js";
+import { DoorLockServer } from "../../../behavior/definitions/door-lock/DoorLockServer.js";
+import { TimeSyncBehavior } from "../../../behavior/definitions/time-sync/TimeSyncBehavior.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

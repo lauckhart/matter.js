@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./Binding/Behavior.js";
-export * from "./Binding/Server.js";
+export * from "./BindingBehavior.js";
+export * from "./BindingServer.js";

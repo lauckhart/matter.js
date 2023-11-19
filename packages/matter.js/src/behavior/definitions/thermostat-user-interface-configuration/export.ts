@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./ThermostatUserInterfaceConfiguration/Behavior.js";
-export * from "./ThermostatUserInterfaceConfiguration/Server.js";
+export * from "./ThermostatUserInterfaceConfigurationBehavior.js";
+export * from "./ThermostatUserInterfaceConfigurationServer.js";

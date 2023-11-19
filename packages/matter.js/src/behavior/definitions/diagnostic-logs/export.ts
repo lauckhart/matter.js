@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./DiagnosticLogs/Interface.js";
-export * from "./DiagnosticLogs/Behavior.js";
-export * from "./DiagnosticLogs/Server.js";
+export * from "./DiagnosticLogsInterface.js";
+export * from "./DiagnosticLogsBehavior.js";
+export * from "./DiagnosticLogsServer.js";

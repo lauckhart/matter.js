@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./WiFiNetworkDiagnostics/Interface.js";
-export * from "./WiFiNetworkDiagnostics/Behavior.js";
-export * from "./WiFiNetworkDiagnostics/Server.js";
+export * from "./WiFiNetworkDiagnosticsInterface.js";
+export * from "./WiFiNetworkDiagnosticsBehavior.js";
+export * from "./WiFiNetworkDiagnosticsServer.js";

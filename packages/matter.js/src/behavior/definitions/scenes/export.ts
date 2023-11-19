@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./Scenes/Interface.js";
-export * from "./Scenes/Behavior.js";
-export * from "./Scenes/Server.js";
+export * from "./ScenesInterface.js";
+export * from "./ScenesBehavior.js";
+export * from "./ScenesServer.js";

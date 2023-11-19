@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./ContentLauncher/Interface.js";
-export * from "./ContentLauncher/Behavior.js";
-export * from "./ContentLauncher/Server.js";
+export * from "./ContentLauncherInterface.js";
+export * from "./ContentLauncherBehavior.js";
+export * from "./ContentLauncherServer.js";

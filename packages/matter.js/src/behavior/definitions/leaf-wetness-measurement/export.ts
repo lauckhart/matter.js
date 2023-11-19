@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./LeafWetnessMeasurement/Behavior.js";
-export * from "./LeafWetnessMeasurement/Server.js";
+export * from "./LeafWetnessMeasurementBehavior.js";
+export * from "./LeafWetnessMeasurementServer.js";

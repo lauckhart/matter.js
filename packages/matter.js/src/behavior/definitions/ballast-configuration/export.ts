@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./BallastConfiguration/Behavior.js";
-export * from "./BallastConfiguration/Server.js";
+export * from "./BallastConfigurationBehavior.js";
+export * from "./BallastConfigurationServer.js";

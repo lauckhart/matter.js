@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./OperationalCredentials/Interface.js";
-export * from "./OperationalCredentials/Behavior.js";
-export * from "./OperationalCredentials/Server.js";
+export * from "./OperationalCredentialsInterface.js";
+export * from "./OperationalCredentialsBehavior.js";
+export * from "./OperationalCredentialsServer.js";

@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./EthernetNetworkDiagnostics/Interface.js";
-export * from "./EthernetNetworkDiagnostics/Behavior.js";
-export * from "./EthernetNetworkDiagnostics/Server.js";
+export * from "./EthernetNetworkDiagnosticsInterface.js";
+export * from "./EthernetNetworkDiagnosticsBehavior.js";
+export * from "./EthernetNetworkDiagnosticsServer.js";

@@ -6,9 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { IdentifyServer } from "../../../behavior/definitions/identify/Server.js";
-import { OccupancySensingServer } from "../../../behavior/definitions/occupancy-sensing/Server.js";
-import { GroupsBehavior } from "../../../behavior/definitions/groups/Behavior.js";
+import { IdentifyServer } from "../../../behavior/definitions/identify/IdentifyServer.js";
+import { OccupancySensingServer } from "../../../behavior/definitions/occupancy-sensing/OccupancySensingServer.js";
+import { GroupsBehavior } from "../../../behavior/definitions/groups/GroupsBehavior.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

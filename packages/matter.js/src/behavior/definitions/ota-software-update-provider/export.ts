@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./OtaSoftwareUpdateProvider/Interface.js";
-export * from "./OtaSoftwareUpdateProvider/Behavior.js";
-export * from "./OtaSoftwareUpdateProvider/Server.js";
+export * from "./OtaSoftwareUpdateProviderInterface.js";
+export * from "./OtaSoftwareUpdateProviderBehavior.js";
+export * from "./OtaSoftwareUpdateProviderServer.js";

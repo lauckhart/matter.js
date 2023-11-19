@@ -6,13 +6,13 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { IdentifyServer } from "../../../behavior/definitions/identify/Server.js";
-import { GroupsServer } from "../../../behavior/definitions/groups/Server.js";
-import { OnOffServer } from "../../../behavior/definitions/on-off/Server.js";
-import { ScenesServer } from "../../../behavior/definitions/scenes/Server.js";
-import { LevelControlServer } from "../../../behavior/definitions/level-control/Server.js";
-import { FanControlServer } from "../../../behavior/definitions/fan-control/Server.js";
-import { ThermostatBehavior } from "../../../behavior/definitions/thermostat/Behavior.js";
+import { IdentifyServer } from "../../../behavior/definitions/identify/IdentifyServer.js";
+import { GroupsServer } from "../../../behavior/definitions/groups/GroupsServer.js";
+import { OnOffServer } from "../../../behavior/definitions/on-off/OnOffServer.js";
+import { ScenesServer } from "../../../behavior/definitions/scenes/ScenesServer.js";
+import { LevelControlServer } from "../../../behavior/definitions/level-control/LevelControlServer.js";
+import { FanControlServer } from "../../../behavior/definitions/fan-control/FanControlServer.js";
+import { ThermostatBehavior } from "../../../behavior/definitions/thermostat/ThermostatBehavior.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

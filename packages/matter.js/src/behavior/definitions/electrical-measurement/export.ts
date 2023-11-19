@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./ElectricalMeasurement/Interface.js";
-export * from "./ElectricalMeasurement/Behavior.js";
-export * from "./ElectricalMeasurement/Server.js";
+export * from "./ElectricalMeasurementInterface.js";
+export * from "./ElectricalMeasurementBehavior.js";
+export * from "./ElectricalMeasurementServer.js";

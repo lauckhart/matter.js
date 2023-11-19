@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./TimeSync/Interface.js";
-export * from "./TimeSync/Behavior.js";
-export * from "./TimeSync/Server.js";
+export * from "./TimeSyncInterface.js";
+export * from "./TimeSyncBehavior.js";
+export * from "./TimeSyncServer.js";

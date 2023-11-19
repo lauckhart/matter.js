@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./PowerSource/Behavior.js";
-export * from "./PowerSource/Server.js";
+export * from "./PowerSourceBehavior.js";
+export * from "./PowerSourceServer.js";

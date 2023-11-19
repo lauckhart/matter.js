@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./ApplicationLauncher/Interface.js";
-export * from "./ApplicationLauncher/Behavior.js";
-export * from "./ApplicationLauncher/Server.js";
+export * from "./ApplicationLauncherInterface.js";
+export * from "./ApplicationLauncherBehavior.js";
+export * from "./ApplicationLauncherServer.js";

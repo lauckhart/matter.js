@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./WindowCovering/Interface.js";
-export * from "./WindowCovering/Behavior.js";
-export * from "./WindowCovering/Server.js";
+export * from "./WindowCoveringInterface.js";
+export * from "./WindowCoveringBehavior.js";
+export * from "./WindowCoveringServer.js";

@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./MediaInput/Interface.js";
-export * from "./MediaInput/Behavior.js";
-export * from "./MediaInput/Server.js";
+export * from "./MediaInputInterface.js";
+export * from "./MediaInputBehavior.js";
+export * from "./MediaInputServer.js";

@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./ClientMonitoring/Interface.js";
-export * from "./ClientMonitoring/Behavior.js";
-export * from "./ClientMonitoring/Server.js";
+export * from "./ClientMonitoringInterface.js";
+export * from "./ClientMonitoringBehavior.js";
+export * from "./ClientMonitoringServer.js";

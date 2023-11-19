@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { IdentifyServer } from "../../../behavior/definitions/identify/Server.js";
-import { WindowCoveringServer } from "../../../behavior/definitions/window-covering/Server.js";
-import { GroupsServer } from "../../../behavior/definitions/groups/Server.js";
-import { ScenesServer } from "../../../behavior/definitions/scenes/Server.js";
+import { IdentifyServer } from "../../../behavior/definitions/identify/IdentifyServer.js";
+import { WindowCoveringServer } from "../../../behavior/definitions/window-covering/WindowCoveringServer.js";
+import { GroupsServer } from "../../../behavior/definitions/groups/GroupsServer.js";
+import { ScenesServer } from "../../../behavior/definitions/scenes/ScenesServer.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

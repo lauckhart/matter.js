@@ -6,9 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { IdentifyServer } from "../../../behavior/definitions/identify/Server.js";
-import { SwitchServer } from "../../../behavior/definitions/switch/Server.js";
-import { FixedLabelServer } from "../../../behavior/definitions/fixed-label/Server.js";
+import { IdentifyServer } from "../../../behavior/definitions/identify/IdentifyServer.js";
+import { SwitchServer } from "../../../behavior/definitions/switch/SwitchServer.js";
+import { FixedLabelServer } from "../../../behavior/definitions/fixed-label/FixedLabelServer.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

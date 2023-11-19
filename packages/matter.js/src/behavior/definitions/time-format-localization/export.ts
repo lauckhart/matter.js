@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./TimeFormatLocalization/Behavior.js";
-export * from "./TimeFormatLocalization/Server.js";
+export * from "./TimeFormatLocalizationBehavior.js";
+export * from "./TimeFormatLocalizationServer.js";

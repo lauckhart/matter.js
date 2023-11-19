@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./AdministratorCommissioning/Interface.js";
-export * from "./AdministratorCommissioning/Behavior.js";
-export * from "./AdministratorCommissioning/Server.js";
+export * from "./AdministratorCommissioningInterface.js";
+export * from "./AdministratorCommissioningBehavior.js";
+export * from "./AdministratorCommissioningServer.js";

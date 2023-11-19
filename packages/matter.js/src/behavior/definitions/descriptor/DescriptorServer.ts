@@ -11,7 +11,7 @@ import { PartsBehavior } from "../parts/PartsBehavior.js";
 import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { isDeepEqual } from "../../../util/DeepEqual.js";
 import { Behavior } from "../../Behavior.js";
-import { DescriptorBehavior } from "./Behavior.js";
+import { DescriptorBehavior } from "./DescriptorBehavior.js";
 
 /**
  * This is the default server implementation of DescriptorBehavior.

@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./ApplicationBasic/Behavior.js";
-export * from "./ApplicationBasic/Server.js";
+export * from "./ApplicationBasicBehavior.js";
+export * from "./ApplicationBasicServer.js";

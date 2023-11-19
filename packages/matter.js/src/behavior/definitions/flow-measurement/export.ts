@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./FlowMeasurement/Behavior.js";
-export * from "./FlowMeasurement/Server.js";
+export * from "./FlowMeasurementBehavior.js";
+export * from "./FlowMeasurementServer.js";

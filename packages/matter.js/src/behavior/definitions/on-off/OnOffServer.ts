@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { OnOffBehavior } from "./Behavior.js";
 import { OnOff } from "../../../cluster/definitions/OnOffCluster.js";
+import { OnOffBehavior } from "./OnOffBehavior.js";
+import { OnOffInterface } from "./OnOffInterface.js";
 import { State } from "../../state/State.js";
 import { Time, Timer } from "../../../time/Time.js";
-import { OnOffInterface } from "./Interface.js";
 
 const Base = OnOffBehavior
     .for({ ...OnOff.Complete, supportedFeatures: { levelControlForLighting: true } });

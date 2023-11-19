@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./AccountLogin/Interface.js";
-export * from "./AccountLogin/Behavior.js";
-export * from "./AccountLogin/Server.js";
+export * from "./AccountLoginInterface.js";
+export * from "./AccountLoginBehavior.js";
+export * from "./AccountLoginServer.js";

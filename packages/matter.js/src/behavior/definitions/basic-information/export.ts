@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./BasicInformation/Behavior.js";
-export * from "./BasicInformation/Server.js";
+export * from "./BasicInformationBehavior.js";
+export * from "./BasicInformationServer.js";

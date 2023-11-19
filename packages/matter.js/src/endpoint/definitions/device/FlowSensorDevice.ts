@@ -6,8 +6,8 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { FlowMeasurementServer } from "../../../behavior/definitions/flow-measurement/Server.js";
-import { IdentifyServer } from "../../../behavior/definitions/identify/Server.js";
+import { FlowMeasurementServer } from "../../../behavior/definitions/flow-measurement/FlowMeasurementServer.js";
+import { IdentifyServer } from "../../../behavior/definitions/identify/IdentifyServer.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

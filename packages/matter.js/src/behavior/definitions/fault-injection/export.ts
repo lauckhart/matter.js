@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./FaultInjection/Interface.js";
-export * from "./FaultInjection/Behavior.js";
-export * from "./FaultInjection/Server.js";
+export * from "./FaultInjectionInterface.js";
+export * from "./FaultInjectionBehavior.js";
+export * from "./FaultInjectionServer.js";

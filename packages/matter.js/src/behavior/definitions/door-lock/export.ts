@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./DoorLock/Interface.js";
-export * from "./DoorLock/Behavior.js";
-export * from "./DoorLock/Server.js";
+export * from "./DoorLockInterface.js";
+export * from "./DoorLockBehavior.js";
+export * from "./DoorLockServer.js";

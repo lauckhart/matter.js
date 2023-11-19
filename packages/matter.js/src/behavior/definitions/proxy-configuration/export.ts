@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./ProxyConfiguration/Behavior.js";
-export * from "./ProxyConfiguration/Server.js";
+export * from "./ProxyConfigurationBehavior.js";
+export * from "./ProxyConfigurationServer.js";

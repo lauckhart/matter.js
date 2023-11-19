@@ -6,20 +6,22 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { IdentifyServer } from "../../../behavior/definitions/identify/Server.js";
-import { ThermostatServer } from "../../../behavior/definitions/thermostat/Server.js";
-import { GroupsServer } from "../../../behavior/definitions/groups/Server.js";
-import { ScenesServer } from "../../../behavior/definitions/scenes/Server.js";
+import { IdentifyServer } from "../../../behavior/definitions/identify/IdentifyServer.js";
+import { ThermostatServer } from "../../../behavior/definitions/thermostat/ThermostatServer.js";
+import { GroupsServer } from "../../../behavior/definitions/groups/GroupsServer.js";
+import { ScenesServer } from "../../../behavior/definitions/scenes/ScenesServer.js";
 import {
     ThermostatUserInterfaceConfigurationServer
-} from "../../../behavior/definitions/thermostat-user-interface-configuration/Server.js";
+} from "../../../behavior/definitions/thermostat-user-interface-configuration/ThermostatUserInterfaceConfigurationServer.js";
 import {
     RelativeHumidityMeasurementBehavior
-} from "../../../behavior/definitions/relative-humidity-measurement/Behavior.js";
-import { TimeSyncBehavior } from "../../../behavior/definitions/time-sync/Behavior.js";
-import { FanControlBehavior } from "../../../behavior/definitions/fan-control/Behavior.js";
-import { TemperatureMeasurementBehavior } from "../../../behavior/definitions/temperature-measurement/Behavior.js";
-import { OccupancySensingBehavior } from "../../../behavior/definitions/occupancy-sensing/Behavior.js";
+} from "../../../behavior/definitions/relative-humidity-measurement/RelativeHumidityMeasurementBehavior.js";
+import { TimeSyncBehavior } from "../../../behavior/definitions/time-sync/TimeSyncBehavior.js";
+import { FanControlBehavior } from "../../../behavior/definitions/fan-control/FanControlBehavior.js";
+import {
+    TemperatureMeasurementBehavior
+} from "../../../behavior/definitions/temperature-measurement/TemperatureMeasurementBehavior.js";
+import { OccupancySensingBehavior } from "../../../behavior/definitions/occupancy-sensing/OccupancySensingBehavior.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

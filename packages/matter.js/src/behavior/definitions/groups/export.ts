@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./Groups/Interface.js";
-export * from "./Groups/Behavior.js";
-export * from "./Groups/Server.js";
+export * from "./GroupsInterface.js";
+export * from "./GroupsBehavior.js";
+export * from "./GroupsServer.js";

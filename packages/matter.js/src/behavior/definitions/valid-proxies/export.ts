@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./ValidProxies/Interface.js";
-export * from "./ValidProxies/Behavior.js";
-export * from "./ValidProxies/Server.js";
+export * from "./ValidProxiesInterface.js";
+export * from "./ValidProxiesBehavior.js";
+export * from "./ValidProxiesServer.js";

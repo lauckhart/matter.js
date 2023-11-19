@@ -6,14 +6,14 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { KeypadInputServer } from "../../../behavior/definitions/keypad-input/Server.js";
-import { ApplicationLauncherServer } from "../../../behavior/definitions/application-launcher/Server.js";
-import { ApplicationBasicServer } from "../../../behavior/definitions/application-basic/Server.js";
-import { ChannelServer } from "../../../behavior/definitions/channel/Server.js";
-import { TargetNavigatorServer } from "../../../behavior/definitions/target-navigator/Server.js";
-import { MediaPlaybackServer } from "../../../behavior/definitions/media-playback/Server.js";
-import { ContentLauncherServer } from "../../../behavior/definitions/content-launcher/Server.js";
-import { AccountLoginServer } from "../../../behavior/definitions/account-login/Server.js";
+import { KeypadInputServer } from "../../../behavior/definitions/keypad-input/KeypadInputServer.js";
+import { ApplicationLauncherServer } from "../../../behavior/definitions/application-launcher/ApplicationLauncherServer.js";
+import { ApplicationBasicServer } from "../../../behavior/definitions/application-basic/ApplicationBasicServer.js";
+import { ChannelServer } from "../../../behavior/definitions/channel/ChannelServer.js";
+import { TargetNavigatorServer } from "../../../behavior/definitions/target-navigator/TargetNavigatorServer.js";
+import { MediaPlaybackServer } from "../../../behavior/definitions/media-playback/MediaPlaybackServer.js";
+import { ContentLauncherServer } from "../../../behavior/definitions/content-launcher/ContentLauncherServer.js";
+import { AccountLoginServer } from "../../../behavior/definitions/account-login/AccountLoginServer.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

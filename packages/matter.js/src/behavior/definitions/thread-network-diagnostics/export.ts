@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./ThreadNetworkDiagnostics/Interface.js";
-export * from "./ThreadNetworkDiagnostics/Behavior.js";
-export * from "./ThreadNetworkDiagnostics/Server.js";
+export * from "./ThreadNetworkDiagnosticsInterface.js";
+export * from "./ThreadNetworkDiagnosticsBehavior.js";
+export * from "./ThreadNetworkDiagnosticsServer.js";

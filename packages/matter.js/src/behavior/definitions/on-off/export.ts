@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./OnOff/Interface.js";
-export * from "./OnOff/Behavior.js";
-export * from "./OnOff/Server.js";
+export * from "./OnOffInterface.js";
+export * from "./OnOffBehavior.js";
+export * from "./OnOffServer.js";

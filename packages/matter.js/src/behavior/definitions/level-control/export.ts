@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./LevelControl/Interface.js";
-export * from "./LevelControl/Behavior.js";
-export * from "./LevelControl/Server.js";
+export * from "./LevelControlInterface.js";
+export * from "./LevelControlBehavior.js";
+export * from "./LevelControlServer.js";

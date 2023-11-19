@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./Identify/Interface.js";
-export * from "./Identify/Behavior.js";
-export * from "./Identify/Server.js";
+export * from "./IdentifyInterface.js";
+export * from "./IdentifyBehavior.js";
+export * from "./IdentifyServer.js";

@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./NetworkCommissioning/Interface.js";
-export * from "./NetworkCommissioning/Behavior.js";
-export * from "./NetworkCommissioning/Server.js";
+export * from "./NetworkCommissioningInterface.js";
+export * from "./NetworkCommissioningBehavior.js";
+export * from "./NetworkCommissioningServer.js";

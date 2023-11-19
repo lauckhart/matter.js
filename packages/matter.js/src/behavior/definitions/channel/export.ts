@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./Channel/Interface.js";
-export * from "./Channel/Behavior.js";
-export * from "./Channel/Server.js";
+export * from "./ChannelInterface.js";
+export * from "./ChannelBehavior.js";
+export * from "./ChannelServer.js";

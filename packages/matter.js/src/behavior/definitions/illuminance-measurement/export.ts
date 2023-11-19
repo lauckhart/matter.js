@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./IlluminanceMeasurement/Behavior.js";
-export * from "./IlluminanceMeasurement/Server.js";
+export * from "./IlluminanceMeasurementBehavior.js";
+export * from "./IlluminanceMeasurementServer.js";

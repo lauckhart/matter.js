@@ -54,7 +54,7 @@ function generateClusterFile(
     exports: TsFile,
     variance: ClusterVariance,
 ) {
-    const name = `${cluster.name}/${type.baseName}`;
+    const name = `${cluster.name}${type.baseName}`;
     const file = new type(`${dir}/${name}`, cluster, variance);
     file.save();
     exports.atom(`export * from "./${name}.js"`);

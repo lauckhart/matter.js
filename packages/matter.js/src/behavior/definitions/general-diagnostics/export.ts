@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./GeneralDiagnostics/Interface.js";
-export * from "./GeneralDiagnostics/Behavior.js";
-export * from "./GeneralDiagnostics/Server.js";
+export * from "./GeneralDiagnosticsInterface.js";
+export * from "./GeneralDiagnosticsBehavior.js";
+export * from "./GeneralDiagnosticsServer.js";

@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { WindowCoveringBehavior } from "../../../behavior/definitions/window-covering/Behavior.js";
-import { IdentifyBehavior } from "../../../behavior/definitions/identify/Behavior.js";
-import { GroupsBehavior } from "../../../behavior/definitions/groups/Behavior.js";
-import { ScenesBehavior } from "../../../behavior/definitions/scenes/Behavior.js";
+import { WindowCoveringBehavior } from "../../../behavior/definitions/window-covering/WindowCoveringBehavior.js";
+import { IdentifyBehavior } from "../../../behavior/definitions/identify/IdentifyBehavior.js";
+import { GroupsBehavior } from "../../../behavior/definitions/groups/GroupsBehavior.js";
+import { ScenesBehavior } from "../../../behavior/definitions/scenes/ScenesBehavior.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

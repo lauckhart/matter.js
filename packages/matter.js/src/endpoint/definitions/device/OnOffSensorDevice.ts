@@ -6,12 +6,12 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { IdentifyBehavior } from "../../../behavior/definitions/identify/Behavior.js";
-import { OnOffBehavior } from "../../../behavior/definitions/on-off/Behavior.js";
-import { GroupsBehavior } from "../../../behavior/definitions/groups/Behavior.js";
-import { ScenesBehavior } from "../../../behavior/definitions/scenes/Behavior.js";
-import { LevelControlBehavior } from "../../../behavior/definitions/level-control/Behavior.js";
-import { ColorControlBehavior } from "../../../behavior/definitions/color-control/Behavior.js";
+import { IdentifyBehavior } from "../../../behavior/definitions/identify/IdentifyBehavior.js";
+import { OnOffBehavior } from "../../../behavior/definitions/on-off/OnOffBehavior.js";
+import { GroupsBehavior } from "../../../behavior/definitions/groups/GroupsBehavior.js";
+import { ScenesBehavior } from "../../../behavior/definitions/scenes/ScenesBehavior.js";
+import { LevelControlBehavior } from "../../../behavior/definitions/level-control/LevelControlBehavior.js";
+import { ColorControlBehavior } from "../../../behavior/definitions/color-control/ColorControlBehavior.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

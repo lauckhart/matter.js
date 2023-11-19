@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./MediaPlayback/Interface.js";
-export * from "./MediaPlayback/Behavior.js";
-export * from "./MediaPlayback/Server.js";
+export * from "./MediaPlaybackInterface.js";
+export * from "./MediaPlaybackBehavior.js";
+export * from "./MediaPlaybackServer.js";

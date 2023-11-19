@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./ColorControl/Interface.js";
-export * from "./ColorControl/Behavior.js";
-export * from "./ColorControl/Server.js";
+export * from "./ColorControlInterface.js";
+export * from "./ColorControlBehavior.js";
+export * from "./ColorControlServer.js";

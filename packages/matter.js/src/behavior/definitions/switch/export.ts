@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./Switch/Behavior.js";
-export * from "./Switch/Server.js";
+export * from "./SwitchBehavior.js";
+export * from "./SwitchServer.js";

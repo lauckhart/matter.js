@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./Actions/Interface.js";
-export * from "./Actions/Behavior.js";
-export * from "./Actions/Server.js";
+export * from "./ActionsInterface.js";
+export * from "./ActionsBehavior.js";
+export * from "./ActionsServer.js";

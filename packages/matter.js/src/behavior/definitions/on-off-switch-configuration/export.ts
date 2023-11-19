@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./OnOffSwitchConfiguration/Behavior.js";
-export * from "./OnOffSwitchConfiguration/Server.js";
+export * from "./OnOffSwitchConfigurationBehavior.js";
+export * from "./OnOffSwitchConfigurationServer.js";

@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./PulseWidthModulation/Interface.js";
-export * from "./PulseWidthModulation/Behavior.js";
-export * from "./PulseWidthModulation/Server.js";
+export * from "./PulseWidthModulationInterface.js";
+export * from "./PulseWidthModulationBehavior.js";
+export * from "./PulseWidthModulationServer.js";

@@ -6,9 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { IdentifyServer } from "../../../behavior/definitions/identify/Server.js";
-import { GroupsServer } from "../../../behavior/definitions/groups/Server.js";
-import { FanControlServer } from "../../../behavior/definitions/fan-control/Server.js";
+import { IdentifyServer } from "../../../behavior/definitions/identify/IdentifyServer.js";
+import { GroupsServer } from "../../../behavior/definitions/groups/GroupsServer.js";
+import { FanControlServer } from "../../../behavior/definitions/fan-control/FanControlServer.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";

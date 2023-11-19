@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./GroupKeyManagement/Interface.js";
-export * from "./GroupKeyManagement/Behavior.js";
-export * from "./GroupKeyManagement/Server.js";
+export * from "./GroupKeyManagementInterface.js";
+export * from "./GroupKeyManagementBehavior.js";
+export * from "./GroupKeyManagementServer.js";

@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./AudioOutput/Interface.js";
-export * from "./AudioOutput/Behavior.js";
-export * from "./AudioOutput/Server.js";
+export * from "./AudioOutputInterface.js";
+export * from "./AudioOutputBehavior.js";
+export * from "./AudioOutputServer.js";

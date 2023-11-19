@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./SoilMoistureMeasurement/Behavior.js";
-export * from "./SoilMoistureMeasurement/Server.js";
+export * from "./SoilMoistureMeasurementBehavior.js";
+export * from "./SoilMoistureMeasurementServer.js";

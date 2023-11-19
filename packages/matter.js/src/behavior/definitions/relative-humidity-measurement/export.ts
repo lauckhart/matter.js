@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./RelativeHumidityMeasurement/Behavior.js";
-export * from "./RelativeHumidityMeasurement/Server.js";
+export * from "./RelativeHumidityMeasurementBehavior.js";
+export * from "./RelativeHumidityMeasurementServer.js";

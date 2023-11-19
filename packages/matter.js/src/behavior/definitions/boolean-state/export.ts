@@ -6,5 +6,5 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-export * from "./BooleanState/Behavior.js";
-export * from "./BooleanState/Server.js";
+export * from "./BooleanStateBehavior.js";
+export * from "./BooleanStateServer.js";
