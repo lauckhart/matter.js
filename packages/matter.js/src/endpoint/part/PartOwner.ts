@@ -9,7 +9,7 @@ import type { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import type { Part } from "../Part.js";
 
 /**
- * This is the interface used by {@link EndpointAgent} and {@link Behavior} to
+ * This is the interface used by {@link Agent} and {@link Behavior} to
  * perform internal operations that differ between client and server
  * implementations.
  */

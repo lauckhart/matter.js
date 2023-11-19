@@ -6,7 +6,7 @@
 
 export * from "./type/EndpointType.js";
 export * from "./type/MutableEndpoint.js";
-export * from "./EndpointAgent.js";
+export * from "./Agent.js";
 export * from "./Part.js";
 export * from "../behavior/definitions/lifecycle/LifecycleBehavior.js";
 export * from "./part/PartOwner.js";

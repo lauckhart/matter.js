@@ -99,7 +99,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
             name: this.type.id,
             
             get online() {
-                return part.getAgent().get(LifecycleBehavior).state.online;
+                return part.agent.get(LifecycleBehavior).state.online;
             }
         })
     }

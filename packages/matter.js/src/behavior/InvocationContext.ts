@@ -14,8 +14,8 @@ import { Behavior } from "./Behavior.js";
  * Provides contextual information when invoking methods and emitting events.
  */
 export interface InvocationContext {
-    behavior?: Behavior;
     fabric?: Fabric;
+    behavior?: Behavior;
     session?: Session<MatterDevice>;
     message?: Message;
 }

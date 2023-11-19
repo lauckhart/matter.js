@@ -34,6 +34,14 @@ export function EndpointType<const T extends EndpointType.Options>(options: T) {
 
 export namespace EndpointType {
     /**
+     * An endpoint type with no behaviors or requirements.
+     */
+    export interface Empty extends Omit<EndpointType, "behaviors" | "requirements"> {
+        behaviors: {};
+        requirements: {};
+    };
+
+    /**
      * A fully typed {@link EndpointType} defined by {@link EndpointType.Options}.
      */
     export type For<T extends EndpointType.Options> =

@@ -69,10 +69,10 @@ export function MutableEndpoint<const T extends EndpointType.Options>(options: T
         },
 
         with<This extends MutableEndpoint, const B extends SupportedBehaviors.List>(this: This, ...behaviors: B) {
-            return {
+            return MutableEndpoint({
                 ...options,
                 behaviors: SupportedBehaviors.extend(this.behaviors, behaviors)
-            } as unknown as MutableEndpoint.With<This, B>;
+            }) as unknown as MutableEndpoint.With<This, B>;
         }
     }
 }

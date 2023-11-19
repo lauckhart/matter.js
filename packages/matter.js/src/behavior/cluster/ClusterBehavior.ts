@@ -15,7 +15,7 @@ import { type ClusterOf, createType } from "./ClusterBehaviorUtil.js";
 import type { BehaviorBacking } from "../BehaviorBacking.js";
 import type { ClusterState } from "./ClusterState.js";
 import type { ClusterEvents } from "./ClusterEvents.js";
-import type { EndpointAgent } from "../../endpoint/EndpointAgent.js";
+import type { Agent } from "../../endpoint/Agent.js";
 
 /**
  * A {@link Behavior} with specialization for a specific cluster.
@@ -64,7 +64,7 @@ export class ClusterBehavior extends Behavior {
      */
     static readonly Interface = ClusterInterface.Empty;
 
-    constructor(agent: EndpointAgent, backing: BehaviorBacking) {
+    constructor(agent: Agent, backing: BehaviorBacking) {
         super(agent, backing);
 
         const cluster = (this.constructor as typeof ClusterBehavior).cluster;
@@ -170,7 +170,7 @@ export namespace ClusterBehavior {
         B extends Behavior.Type = Behavior.Type,
         I extends ClusterInterface = ClusterInterface.InterfaceOf<B>
     > {
-        new (agent: EndpointAgent, backing: BehaviorBacking): Instance<C, B, I>;
+        new (agent: Agent, backing: BehaviorBacking): Instance<C, B, I>;
 
         /**
          * The behavior ID for ClusterBehaviors is the name of the cluster.

@@ -4,34 +4,29 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MockEndpoint, MockPart } from "../../behavior-mocks.js";
-import { DescriptorBehavior } from "../../../../src/behavior/definitions/descriptor/DescriptorBehavior.js";
+import { MockEndpoint, MockParentEndpoint, MockPart } from "../../behavior-mocks.js";
 import { OnOffServer } from "../../../../src/behavior/definitions/on-off/OnOffServer.js";
-import { PartsBehavior } from "../../../../src/behavior/definitions/parts/PartsBehavior.js";
 
 function createFamily() {
-    const parent = new MockPart({
-        id: 1,
-        behavior: PartsBehavior
-    });
+    const parent = new MockPart(
+        MockParentEndpoint,
+        { id: 1 },
+    ).agent;
 
-    const child = new MockPart({
-        id: 2,
-        type: MockEndpoint,
-        owner: undefined
-    });
+    const child = new MockPart(
+        MockEndpoint,
+        { id: 2, owner: undefined },
+    ).agent;
 
-    const parts = parent.getAgent().get(PartsBehavior);
-    parts.add(child);
+    parent.parts.add(child);
 
     return { parent, child };
 }
 
 describe("DescriptorServer", () => {
     it("adds device type automatically if necessary", () => {
-        const device = new MockPart;
-        const descriptor = device.mockAgent.get(DescriptorBehavior);
-        expect(descriptor.state.deviceTypeList).deep.equals([
+        const device = new MockPart(MockEndpoint).agent;
+        expect(device.descriptor.state.deviceTypeList).deep.equals([
             {
                 deviceType: 1,
                 revision: 1,
@@ -40,12 +35,11 @@ describe("DescriptorServer", () => {
     })
 
     it("adds servers automatically", () => {
-        const device = new MockPart;
-        const descriptor = device.mockAgent.get(DescriptorBehavior);
+        const device = new MockPart(MockEndpoint).agent;
 
-        device.behaviors.require(OnOffServer);
+        device.require(OnOffServer);
 
-        expect(descriptor.state.serverList).deep.equals([
+        expect(device.descriptor.state.serverList).deep.equals([
             29,
             6,
         ]);
@@ -54,7 +48,7 @@ describe("DescriptorServer", () => {
     it("adds parts automatically", () => {
         const { parent } = createFamily();
 
-        const partsList = parent.mockAgent.get(DescriptorBehavior).state.partsList;
+        const partsList = parent.descriptor.state.partsList;
 
         expect(partsList).deep.equals([ 2 ]);
     })
@@ -62,11 +56,11 @@ describe("DescriptorServer", () => {
     it("remove parts automatically", () => {
         const { parent, child } = createFamily();
 
-        const partsState = parent.mockAgent.get(DescriptorBehavior).state;
+        const partsState = parent.descriptor.state;
 
         expect(partsState.partsList).deep.equals([ 2 ]);
 
-        child.destroy();
+        child.part.destroy();
 
         expect(partsState.partsList).deep.equals([]);
     })

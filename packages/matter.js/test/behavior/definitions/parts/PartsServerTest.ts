@@ -4,32 +4,28 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { LifecycleBehavior } from "../../../../src/behavior/definitions/lifecycle/LifecycleBehavior.js";
-import { PartsBehavior } from "../../../../src/behavior/definitions/parts/PartsBehavior.js";
 import { Part } from "../../../../src/endpoint/Part.js";
-import { MockEndpoint, MockPart } from "../../behavior-mocks.js";
+import { MockEndpoint, MockParentEndpoint, MockPart } from "../../behavior-mocks.js";
 
 function createParent() {
-    return new MockPart({
-        id: 1,
-        type: MockEndpoint.with(PartsBehavior)
-    })
+    return new MockPart(
+        MockParentEndpoint,
+        { id: 1 },
+    ).agent;
 }
 
 function createParentAndChild() {
-    return new MockPart({
-        id: 2,
-        type: MockEndpoint.with(PartsBehavior),
-        owner: undefined
-    })
+    return new MockPart(
+        MockParentEndpoint,
+        { id: 2, owner: undefined },
+    ).agent;
 }
 
 function createChild() {
-    return new MockPart({
-        id: 3,
-        type: MockEndpoint,
-        owner: undefined
-    })
+    return new MockPart(
+        MockEndpoint,
+        { id: 3, owner: undefined },
+    ).agent;
 }
 
 describe("PartsBehavior", () => {
@@ -37,25 +33,25 @@ describe("PartsBehavior", () => {
         const parent = createParent();
         const child = createChild();
 
-        const parts = parent.getAgent().get(PartsBehavior);
+        const parts = parent.parts;
         parts.add(child);
 
         expect(parts.size).equals(1);
         expect(parts.state.children.size).equals(1);
 
-        expect(child.owner).equals(parent);
+        expect(child.part.owner).equals(parent.part);
     })
 
     it("disowns destroyed parts", () => {
         const parent = createParent();
         const child = createChild();
 
-        const parts = parent.getAgent().get(PartsBehavior);
+        const parts = parent.parts;
         parts.add(child);
 
         expect(parts.size).equals(1);
 
-        child.destroy();
+        child.part.destroy();
 
         expect(parts.size).equals(0);
         expect(parts.state.children.size).equals(0);
@@ -66,16 +62,16 @@ describe("PartsBehavior", () => {
         const child = createParentAndChild();
         const grandchild = createChild();
 
-        parent.getAgent().get(PartsBehavior).add(child);
+        parent.parts.add(child);
 
         let bubbled: Part | undefined;
-        parent.getAgent().get(LifecycleBehavior).events.structure$change(
+        parent.lifecycle.events.structure$change(
             part => bubbled = part
         )
 
-        child.getAgent().get(PartsBehavior).add(grandchild);
+        child.parts.add(grandchild);
 
-        expect(bubbled).equals(child);
+        expect(bubbled).equals(child.part);
     })
 
     it("bubbles delete", () => {
@@ -83,16 +79,16 @@ describe("PartsBehavior", () => {
         const child = createParentAndChild();
         const grandchild = createChild();
 
-        parent.getAgent().get(PartsBehavior).add(child);
-        child.getAgent().get(PartsBehavior).add(grandchild);
+        parent.parts.add(child);
+        child.parts.add(grandchild);
 
         let bubbled: Part | undefined;
-        parent.getAgent().get(LifecycleBehavior).events.structure$change(
+        parent.lifecycle.events.structure$change(
             part => bubbled = part
         )
 
-        grandchild.destroy();
+        grandchild.part.destroy();
 
-        expect(bubbled).equals(child);
+        expect(bubbled).equals(child.part);
     })
 })

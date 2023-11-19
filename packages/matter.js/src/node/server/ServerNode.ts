@@ -28,9 +28,8 @@ export class ServerNode extends CommissioningServer implements Node {
 
     constructor(options?: ServerOptions) {
         const configuration = ServerConfiguration.for(options);
-        const root = new Part({
+        const root = new Part(configuration.root, {
             id: EndpointNumber(0),
-            type: configuration.root,
         })
         super({
             ...configuration.commissioningServerOptions,
@@ -73,11 +72,11 @@ export class ServerNode extends CommissioningServer implements Node {
 
     override async start() {
         await super.start();
-        this.#root.getAgent().get(LifecycleBehavior).state.online = true;
+        this.#root.agent.get(LifecycleBehavior).state.online = true;
     }
 
     override async close() {
-        this.#root.getAgent().get(LifecycleBehavior).state.online = false;
+        this.#root.agent.get(LifecycleBehavior).state.online = false;
         await super.close();
     }
 }

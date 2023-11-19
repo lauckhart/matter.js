@@ -8,24 +8,24 @@ import { Behavior } from "../behavior/Behavior.js";
 import { InvocationContext } from "../behavior/InvocationContext.js";
 import type { SupportedBehaviors } from "./part/SupportedBehaviors.js";
 import type { Part } from "./Part.js";
+import { GeneratedClass } from "../util/GeneratedClass.js";
 
 /**
- * Endpoint agent offers interaction with a single endpoint.  This is the
- * functional interface to endpoints.  It is separate from the endpoint
- * definition because the endpoint API is only available in the context of
- * a fabric.
+ * An Agent offers interaction with a single endpoint.  This is the operational
+ * interface to endpoints.  It is separate from the {@link Part} because the
+ * agent is context-aware with access to at most one fabric.
  * 
  * An endpoint agent manages one or more {@link Behavior} instances that
  * implement a discrete subset of the agent's functionality.
  * 
- * Each endpoint agent has an associated {@link EndpointAgent.Type} that
+ * Each endpoint agent has an associated {@link Agent.Type} that
  * defines each {@link Behavior.Type} the endpoint supports.
  * 
- * {@link EndpointAgent.Type} is a permanent feature of an endpoint but
- * agent instances themselves are transitory and there is no guarantee they
- * will exist beyond the lifecycle of a single transaction.
+ * {@link Agent.Type} is a permanent feature of an endpoint but agent instances
+ * themselves are transitory and there is no guarantee they will exist beyond
+ * the lifecycle of a single transaction.
  */
-export class EndpointAgent {
+export class Agent {
     #part: Part;
     #context: InvocationContext;
     #behaviors = {} as Record<string, Behavior>;
@@ -59,6 +59,12 @@ export class EndpointAgent {
     /**
      * Obtain a {@link Behavior} supported by this agent.  Throws an error if
      * the {@link Behavior.Type} isn't supported.
+     * 
+     * You may also access behaviors using normal property access, e.g.
+     * `agent.descriptor` is the same as `agent.get(DescriptorBehavior)`.
+     * 
+     * Property access is available in TypeScript when the set of behaviors
+     * is defined statically.
      */
     get<T extends Behavior.Type>(type: T) {
         let behavior = this.#behaviors[type.id];
@@ -79,15 +85,13 @@ export class EndpointAgent {
     }
 
     /**
-     * Create a new EndpointAgent that supports the specified behaviors.
+     * Create a new {@link Agent} that supports the specified behaviors.
      */
-    static for<B extends SupportedBehaviors>(behaviors: SupportedBehaviors) {
-        class Agent extends EndpointAgent {}
-
-        const descriptors = {} as PropertyDescriptorMap;
+    static for<B extends SupportedBehaviors>(name: string, behaviors: SupportedBehaviors) {
+        const props = {} as PropertyDescriptorMap;
         Object.values(behaviors).forEach(behavior => {
-            descriptors[behavior.id] = {
-                get(this: EndpointAgent) {
+            props[behavior.id] = {
+                get(this: Agent) {
                     return this.get(behavior);
                 },
 
@@ -95,25 +99,30 @@ export class EndpointAgent {
             }
         });
 
-        Object.defineProperties(Agent.prototype, descriptors);
-
-        return Agent as unknown as EndpointAgent.Type<B>;
+        return GeneratedClass({
+            name: `${name}Agent`,
+            base: Agent,
+            instanceDescriptors: props,
+        }) as Agent.Type<B>
     }
 }
 
-export namespace EndpointAgent {
+export namespace Agent {
     /**
-     * Static type for EndpointAgent with a property for each statically
+     * Static type for {@link Agent} with a property for each statically
      * defined behavior.
      * 
      * Behaviors available at construction time are available as instance
-     * properties.  You must use {@link EndpointAgent.get} or
-     * {@link EndpointAgent.require} to acquire behaviors added via
-     * {@link EndpointAgent.require}.
+     * properties.  You must use {@link Agent.get} or
+     * {@link Agent.require} to acquire behaviors added via
+     * {@link Agent.require}.
      */
     export interface Type<B extends SupportedBehaviors = {}> {
-        new (part: Part, context: InvocationContext):
-            & EndpointAgent
-            & { readonly [K in keyof B & string]: InstanceType<B[K]> };
+        new (part: Part, context: InvocationContext): Instance<B>;
     }
+
+    export type Instance<B extends SupportedBehaviors = {}> = (
+        & Agent
+        & { readonly [K in keyof B & string]: InstanceType<B[K]> }
+    );
 }

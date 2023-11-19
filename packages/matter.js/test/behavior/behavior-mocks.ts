@@ -12,6 +12,9 @@ import { Part } from "../../src/endpoint/Part.js";
 import { Behavior } from "../../src/behavior/Behavior.js";
 import { ServerBehaviorBacking } from "../../src/behavior/server/ServerBehaviorBacking.js";
 import { DescriptorServer } from "../../src/behavior/definitions/descriptor/DescriptorServer.js";
+import { PartsBehavior } from "../../src/behavior/definitions/parts/PartsBehavior.js";
+import { EndpointType } from "../../src/endpoint/type/EndpointType.js";
+import { LifecycleBehavior } from "../../src/behavior/definitions/lifecycle/LifecycleBehavior.js";
 
 class MockFabricImplementation {
     fabricIndex;
@@ -35,7 +38,9 @@ export const MockEndpoint = MutableEndpoint({
     name: "MyEndpoint",
     deviceType: 1,
     deviceRevision: 1,
-})
+}).with(LifecycleBehavior, DescriptorServer);
+
+export const MockParentEndpoint = MockEndpoint.with(PartsBehavior);
 
 export class MockContext implements InvocationContext {
     declare fabric?: Fabric;
@@ -49,30 +54,9 @@ export class MockContext implements InvocationContext {
     }
 }
 
-export namespace MockPart {
-    export type Options =
-        & (
-            | (Part.Options & { behavior?: undefined })
-            | (Omit<Part.Options, "type"> & { type?: undefined, behavior: Behavior.Type })
-        )
-        & {
-            owner?: PartOwner | undefined
-        };
-}
-
-export class MockPart extends Part {
-    constructor(options?: MockPart.Options) {
-        const partOptions = { ...options } as Part.Options;
-
-        if (!partOptions.type) {
-            if (options?.behavior) {
-                partOptions.type = MockEndpoint.with(DescriptorServer, options.behavior);
-            } else {
-                partOptions.type = MockEndpoint.with(DescriptorServer);
-            }
-        }
-
-        super(partOptions);
+export class MockPart<T extends EndpointType> extends Part<T> {
+    constructor(type: T, options?: MockPart.Options) {
+        super(type, options);
 
         if (options && "owner" in options) {
             if (options.owner !== undefined) {
@@ -88,10 +72,13 @@ export class MockPart extends Part {
     }
 
     static createBehavior<T extends Behavior.Type>(type: T) {
-        const part = new MockPart({
-            behavior: type
-        });
+        const part = new MockPart(MockEndpoint.with(type));
+        return part.mockAgent.get(type) as InstanceType<T>;
+    }
+}
 
-        return part.mockAgent.get(type);
+export namespace MockPart {
+    export interface Options extends Part.Options {
+        owner?: PartOwner;
     }
 }

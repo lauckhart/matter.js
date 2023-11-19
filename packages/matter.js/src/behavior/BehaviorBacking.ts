@@ -8,7 +8,7 @@ import { State } from "./state/State.js";
 import type { Behavior } from "./Behavior.js";
 import type { InvocationContext } from "./InvocationContext.js";
 import type { Part } from "../endpoint/Part.js";
-import { EndpointAgent } from "../endpoint/EndpointAgent.js";
+import { Agent } from "../endpoint/Agent.js";
 import { EventEmitter } from "../util/Observable.js";
 
 /**
@@ -46,7 +46,7 @@ export abstract class BehaviorBacking {
      * Derivatives may override to perform additional setup beyond simple
      * instantiation.
      */
-    createBehavior(agent: EndpointAgent) {
+    createBehavior(agent: Agent) {
         return new this.#type(agent, this);
     }
 

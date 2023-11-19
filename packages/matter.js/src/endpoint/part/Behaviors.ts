@@ -10,7 +10,7 @@ import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import { LifecycleBehavior } from "../../behavior/definitions/lifecycle/LifecycleBehavior.js";
 import type { Part } from "../Part.js";
 import type { SupportedBehaviors } from "./SupportedBehaviors.js";
-import type { EndpointAgent } from "../EndpointAgent.js";
+import type { Agent } from "../Agent.js";
 import type { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
 import { camelize, describeList } from "../../util/String.js";
 import { Observable } from "../../util/Observable.js";
@@ -65,7 +65,7 @@ export class Behaviors {
 
     /**
      * Add behavior support dynamically at runtime.  Typically called via
-     * {@link EndpointAgent.require}.
+     * {@link Agent.require}.
      */
     require(type: Behavior.Type) {
         if (this.#supported[type.id]) {
@@ -77,7 +77,7 @@ export class Behaviors {
             }
         } else {
             if (!type.supports(LifecycleBehavior)) {
-                if (this.#part.getAgent().get(LifecycleBehavior).state.online) {
+                if (this.#part.agent.get(LifecycleBehavior).state.online) {
                     throw new ImplementationError(
                         `Cannot add behavior ${
                             type.id
@@ -91,10 +91,10 @@ export class Behaviors {
     }
 
     /**
-     * Create a behavior.  {@link EndpointAgent} obtains behaviors via this
+     * Create a behavior.  {@link Agent} obtains behaviors via this
      * method.
      */
-    create(type: Behavior.Type, agent: EndpointAgent) {
+    create(type: Behavior.Type, agent: Agent) {
         const behavior = this.getBacking(type).createBehavior(agent);
         if (behavior instanceof type) {
             return behavior;
@@ -172,7 +172,7 @@ export class Behaviors {
         const backing = this.#part.owner.initializeBehavior(this.#part, myType);
         this.#backings[type.id] = backing;
 
-        this.#part.getAgent().get(type).initialize();
+        this.#part.agent.get(type).initialize();
 
         return backing;
     }

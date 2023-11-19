@@ -5,7 +5,7 @@
  */
 
 import { ImplementationError } from "../common/MatterError.js";
-import { EndpointAgent } from "./EndpointAgent.js";
+import { Agent } from "./Agent.js";
 import { EndpointType } from "./type/EndpointType.js";
 import { Behaviors } from "./part/Behaviors.js";
 import { LifecycleBehavior } from "../behavior/definitions/lifecycle/LifecycleBehavior.js";
@@ -21,27 +21,31 @@ import type { PartOwner } from "./part/PartOwner.js";
  * Endpoints consist of a root part and one or more child parts.  This class
  * manages the current state of a single part.
  * 
- * You can interact with endpoints using an {@link EndpointAgent} created
+ * You can interact with endpoints using an {@link Agent} created
  * with {@link Part.getAgent}.  Agents are stateless and designed for quick
  * instantiation so you can create them as needed then discard.
  */
-export class Part implements PartOwner {
+export class Part<T extends EndpointType = EndpointType.Empty> implements PartOwner {
     #id?: EndpointNumber;
     #key?: string | undefined;
     #type: EndpointType;
     #owner?: PartOwner;
-    #agentType?: EndpointAgent.Type;
-    #unscopedAgent?: EndpointAgent;
+    #agentType?: Agent.Type<T["behaviors"]>;
+    #unscopedAgent?: Agent.Instance<T["behaviors"]>;
     #behaviors: Behaviors;
 
-    constructor(options: Part.Options) {
-        this.#type = options.type;
+    constructor(type: T, options?: Part.Options) {
+        if (type === null || (typeof type !== "object")) {
+            throw new ImplementationError(`Part type is not an object`);
+        }
 
-        if (options.id !== undefined) {
+        this.#type = type;
+
+        if (options?.id !== undefined) {
             this.id = EndpointNumber(options.id);
         }
         
-        if (options.key !== undefined) {
+        if (options?.key !== undefined) {
             // Any other limitations?
             if (typeof options.key !== "string" || !options.key.length) {
                 throw new ImplementationError(`Illegal part identifier ${options.key}`);
@@ -49,7 +53,7 @@ export class Part implements PartOwner {
             this.#key = options.key;
         }
 
-        const behaviors = options.type?.behaviors ?? [];
+        const behaviors = type.behaviors ?? [];
         
         this.#behaviors = new Behaviors(this, behaviors);
 
@@ -102,7 +106,7 @@ export class Part implements PartOwner {
         this.#owner = owner;
 
         if (this.#id !== undefined) {
-            this.getAgent().get(LifecycleBehavior).state.installed = true;
+            this.agent.get(LifecycleBehavior).state.installed = true;
         }
     }
 
@@ -128,7 +132,7 @@ export class Part implements PartOwner {
         this.#id = value;
 
         if (this.#owner !== undefined) {
-            this.getAgent().get(LifecycleBehavior).state.installed = true;
+            this.agent.get(LifecycleBehavior).state.installed = true;
         }
     }
 
@@ -189,7 +193,7 @@ export class Part implements PartOwner {
             return `custom_${this.key}`;
         }
         
-        const agent = this.getAgent();
+        const agent = this.agent;
         let basicInfo;
         if (agent.has(BasicInformationBehavior)) {
             basicInfo = agent.get(BasicInformationBehavior).state;
@@ -211,41 +215,48 @@ export class Part implements PartOwner {
     }
 
     /**
-     * Create an {@link EndpointAgent}.  This is the primary means of
+     * Create an {@link Agent}.  This is the primary means of
      * interacting with an endpoint.
      * 
-     * If {@link InvocationContext.fabric} is not present, any operations of
-     * the agent that reference fabric scope will throw an error.
+     * If {@link InvocationContext.fabric} is not present the operation will
+     * fail.
      */
-    getAgent(context?: InvocationContext) {
-        if (!this.#agentType) {
-            this.#agentType = EndpointAgent.for(this.#behaviors.supported);
+    getAgent(context: InvocationContext): Agent.Instance<T["behaviors"]> {
+        if (context.fabric === undefined) {
+            throw new ImplementationError(`Missing agent fabric part ${this}`);
         }
+        return new this.agentType(this, context);
+    }
 
-        // For unscoped access we cache the agent
-        if (!context || !context.fabric) {
-            if (!this.#unscopedAgent) {
-                this.#unscopedAgent = new this.#agentType(this, {});
-            }
-            return this.#unscopedAgent;
+    /**
+     * An {@link Agent} with no fabric scope.  Any operation of the
+     * agent that references fabric scope will throw an error.
+     * 
+     * This should only be used for local purposes.  All network interaction
+     * should use {@link getAgent} to create a context-aware agent.
+     */
+    get agent() {
+        if (!this.#unscopedAgent) {
+            this.#unscopedAgent = new this.agentType(this, {});
         }
-
-        // For scoped access we need an agent with session context
-        //
-        // TODO - agents need a 1:1 mapping with sessions.  They're optimized
-        // for fast creation but if necessary we could cache and reuse by
-        // replacing the context
-        return new this.#agentType(this, context);
+        return this.#unscopedAgent;
     }
 
     destroy() {
-        const destroyedEvent = this.getAgent().get(LifecycleBehavior).events.destroyed;
+        const destroyedEvent = this.agent.get(LifecycleBehavior).events.destroyed;
         this.behaviors.destroy();
         destroyedEvent.emit(this);
     }
 
     initializeBehavior(part: Part, behavior: Behavior.Type): BehaviorBacking {
         return this.owner.initializeBehavior(part, behavior);
+    }
+
+    private get agentType() {
+        if (!this.#agentType) {
+            this.#agentType = Agent.for(this.type.name, this.#behaviors.supported);
+        }
+        return this.#agentType;
     }
 }
 
@@ -254,7 +265,6 @@ export namespace Part {
      * Construction options for {@link Part}.
      */
     export interface Options {
-        type: EndpointType,
         key?: string,
         id?: number,
     }

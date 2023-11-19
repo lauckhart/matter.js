@@ -44,7 +44,7 @@ export class PartServer implements EndpointInterface, PartOwner {
 
         part.behaviors.require(DescriptorServer);
 
-        this.#part.getAgent().get(LifecycleBehavior).events.structure$change(
+        this.#part.agent.get(LifecycleBehavior).events.structure$change(
             () => this.#structureChangedCallback?.()
         );
     }
@@ -90,12 +90,12 @@ export class PartServer implements EndpointInterface, PartOwner {
 
     updatePartsList(): EndpointNumber[] {
         // No actual update, parts list is maintained by PartsBehavior
-        const descriptor = this.#part.getAgent().get(DescriptorServer);
+        const descriptor = this.#part.agent.get(DescriptorServer);
         return descriptor.state.partsList;
     }
 
     getChildEndpoints(): EndpointInterface[] {
-        const agent = this.#part.getAgent();
+        const agent = this.#part.agent;
         if (agent.has(PartsBehavior)) {
             const parts = agent.get(PartsBehavior);
             return [ ...parts ].map(part => PartServer.forPart(part));
@@ -164,14 +164,14 @@ export class PartServer implements EndpointInterface, PartOwner {
 
     addChildEndpoint(endpoint: EndpointInterface): void {
         if (endpoint instanceof PartServer) {
-            this.#part.getAgent().get(PartsBehavior).add(endpoint.#part);
+            this.#part.agent.get(PartsBehavior).add(endpoint.#part);
         } else {
             throw new ImplementationError("Attempt to add unmanaged endpoint as child of Part");
         }
     }
 
     getChildEndpoint(id: EndpointNumber): EndpointInterface | undefined {
-        const parts = this.#part.getAgent().get(PartsBehavior).state.children;
+        const parts = this.#part.agent.get(PartsBehavior).state.children;
         for (const part of parts) {
             if (part.id === id) {
                 return PartServer.forPart(part);

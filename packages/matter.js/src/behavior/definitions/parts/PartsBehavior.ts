@@ -9,8 +9,9 @@ import { ObservableSet, WritableObservableSet } from "../../../util/Observable.j
 import { Behavior } from "../../Behavior.js";
 import { State } from "../../state/State.js";
 import { LifecycleBehavior } from "../lifecycle/LifecycleBehavior.js";
-import { InternalError } from "../../../common/MatterError.js";
+import { ImplementationError, InternalError } from "../../../common/MatterError.js";
 import { BehaviorBacking } from "../../BehaviorBacking.js";
+import { Agent } from "../../../endpoint/Agent.js";
 
 /**
  * Manages parent-child relationship between endpoints.
@@ -21,7 +22,7 @@ import { BehaviorBacking } from "../../BehaviorBacking.js";
  * Notifications of structural change bubble via
  * {@link LifecycleBehavior.events.structure$change}.
  */
-export class PartsBehavior extends Behavior implements WritableObservableSet<Part> {
+export class PartsBehavior extends Behavior implements WritableObservableSet<Part, Part | Agent> {
     static override readonly id = "parts"; 
 
     declare readonly state: PartsBehavior.EndpointScope;
@@ -44,7 +45,7 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
         // Monitor online state of owner so we can propagate to children
         lifecycle.events.online$change((online) => {
             for (const part of state.children) {
-                part.getAgent().get(LifecycleBehavior).state.online = online;
+                part.agent.get(LifecycleBehavior).state.online = online;
             }
         })
 
@@ -75,7 +76,7 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
                 throw new InternalError("Part reports as initialized but has no assigned ID");
             }
 
-            child.getAgent().get(LifecycleBehavior).state.online = lifecycle.state.online;
+            child.agent.get(LifecycleBehavior).state.online = lifecycle.state.online;
         }
 
         /**
@@ -97,7 +98,7 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
             lifecycle.events.initialized$change(registerIfInitialized);
             registerIfInitialized();
 
-            const childLifecycle = child.getAgent().get(LifecycleBehavior);
+            const childLifecycle = child.agent.get(LifecycleBehavior);
             childLifecycle.events.structure$change(structureChangeEmitter);
             childLifecycle.events.destroyed(childDestroyed);
 
@@ -113,7 +114,7 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
                 return;
             }
 
-            const childLifeCycle = child.getAgent().get(LifecycleBehavior);
+            const childLifeCycle = child.agent.get(LifecycleBehavior);
             childLifeCycle.events.structure$change.off(structureChangeEmitter);
             childLifeCycle.events.destroyed.off(childDestroyed);
 
@@ -121,16 +122,16 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
         }
     }
 
-    has(part: Part) {
-        return this.state.children.has(part);
+    has(child: Part | Agent) {
+        return this.state.children.has(partFor(child));
     }
 
-    add(part: Part) {
-        this.state.children.add(part);
+    add(child: Part | Agent) {
+        this.state.children.add(partFor(child));
     }
 
-    delete(part: Part) {
-        return this.state.children.delete(part);
+    delete(child: Part | Agent) {
+        return this.state.children.delete(partFor(child));
     }
 
     clear() {
@@ -173,4 +174,16 @@ export namespace PartsBehavior {
          */
         initializing = new Set<Part>();
     }
+}
+
+function partFor(child: Part | Agent) {
+    if (child instanceof Agent) {
+        child = child.part;
+    }
+
+    if (child instanceof Part) {
+        return child;
+    }
+
+    throw new ImplementationError(`Illegal part value type`);
 }

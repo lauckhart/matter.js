@@ -8,7 +8,7 @@ import { NotImplementedError } from "../common/MatterError.js";
 import { State } from "./state/State.js";
 import type { BehaviorBacking } from "./BehaviorBacking.js";
 import type { ClusterType } from "../cluster/ClusterType.js";
-import { EndpointAgent } from "../endpoint/EndpointAgent.js";
+import { Agent } from "../endpoint/Agent.js";
 import { EventEmitter } from "../util/Observable.js";
 import type { LifecycleBehavior } from "./definitions/lifecycle/LifecycleBehavior.js";
 import { GeneratedClass } from "../util/GeneratedClass.js";
@@ -39,7 +39,7 @@ interface Internal extends Behavior {
  * implementations offered by Matter.js.
  */
 export abstract class Behavior {
-    #agent: EndpointAgent;
+    #agent: Agent;
 
     /**
      * Each behavior implementation has an ID that uniquely identifies the
@@ -85,7 +85,7 @@ export abstract class Behavior {
      */
     declare readonly events: EventEmitter;
 
-    constructor(agent: EndpointAgent, backing: BehaviorBacking) {
+    constructor(agent: Agent, backing: BehaviorBacking) {
         this.#agent = agent;
         (this as unknown as Internal)[BACKING] = backing;
     }
@@ -199,7 +199,7 @@ export namespace Behavior {
      * Static properties supported by all behaviors.
      */
     export interface Type {
-        new (agent: EndpointAgent, backing: BehaviorBacking): Behavior;
+        new (agent: Agent, backing: BehaviorBacking): Behavior;
 
         id: typeof Behavior.id;
         set: typeof Behavior.set;

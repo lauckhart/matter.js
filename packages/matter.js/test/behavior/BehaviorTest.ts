@@ -7,7 +7,7 @@
 import { Behavior } from "../../src/behavior/Behavior.js";
 import { BehaviorBacking } from "../../src/behavior/BehaviorBacking.js";
 import { State } from "../../src/behavior/state/State.js";
-import { EndpointAgent } from "../../src/endpoint/EndpointAgent.js";
+import { Agent } from "../../src/endpoint/Agent.js";
 import { EventEmitter, Observable } from "../../src/util/Observable.js";
 import { MockPart } from "./behavior-mocks.js";
 
@@ -16,7 +16,7 @@ class TestBehavior extends Behavior {
     declare readonly events: TestBehavior.Events;
     declare readonly state: TestBehavior.EndpointScope & TestBehavior.FabricScope;
 
-    constructor(agent: EndpointAgent, backing: BehaviorBacking) {
+    constructor(agent: Agent, backing: BehaviorBacking) {
         super(agent, backing);
     }
 }
