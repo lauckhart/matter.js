@@ -34,6 +34,19 @@ describe("DescriptorServer", () => {
         ])
     })
 
+    it("does not add device type automatically if unnecessary", () => {
+        const Device2Endpoint = MockEndpoint.set({
+            descriptor: { deviceTypeList: { deviceType: 2, revision: 2 } }
+        });
+        const device = new MockPart(Device2Endpoint).agent;
+        expect(device.descriptor.state.deviceTypeList).deep.equals([
+            {
+                deviceType: 2,
+                revision: 2,
+            }
+        ]);
+    })
+
     it("adds servers automatically", () => {
         const device = new MockPart(MockEndpoint).agent;
 
@@ -49,7 +62,6 @@ describe("DescriptorServer", () => {
         const { parent } = createFamily();
 
         const partsList = parent.descriptor.state.partsList;
-
         expect(partsList).deep.equals([ 2 ]);
     })
 
@@ -57,11 +69,9 @@ describe("DescriptorServer", () => {
         const { parent, child } = createFamily();
 
         const partsState = parent.descriptor.state;
-
         expect(partsState.partsList).deep.equals([ 2 ]);
 
         child.part.destroy();
-
         expect(partsState.partsList).deep.equals([]);
     })
 })

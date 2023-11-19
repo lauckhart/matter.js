@@ -58,7 +58,6 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
         this.#behaviors = new Behaviors(this, behaviors);
 
         this.#behaviors.require(LifecycleBehavior);
-
     }
 
     /**

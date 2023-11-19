@@ -21,6 +21,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
     #fabricScopes = new Map<Fabric, State>;
     #fabricScopeType?: State.Type;
     #stateType?: UnifiedState.Type;
+    #stateOwner?: ManagedState.Owner;
 
     /**
      * Access endpoint scope.
@@ -73,7 +74,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
      * values.
      */
     protected createEndpointScope(values = {}) {
-        const endpointScopeType = ManagedState(this.type.EndpointScope);
+        const endpointScopeType = ManagedState(this.type.EndpointScope, this.stateOwner);
 
         this.#endpointScope = new endpointScopeType(values);
         return this.#endpointScope;
@@ -84,7 +85,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
      */
     protected createFabricScope(fabric: Fabric, values = {}) {
         if (!this.#fabricScopeType) {
-            this.#fabricScopeType = ManagedState(this.type.FabricScope);
+            this.#fabricScopeType = ManagedState(this.type.FabricScope, this.stateOwner);
         }
 
         const scope = new this.type.FabricScope(values);
@@ -92,15 +93,26 @@ export class ServerBehaviorBacking extends BehaviorBacking {
         return scope;
     }
 
-    protected createScope(type: State.Type) {
+    protected get stateOwner() {
         const part = this.part;
+        
+        // We need access to lifecycle state to access online status.  Loads
+        // lazily to avoid infinite loops but we then cache as this is
+        // referenced for every write
+        let lifecycleState: LifecycleBehavior.EndpointScope | undefined;
 
-        return ManagedState(type, {
-            name: this.type.id,
-            
-            get online() {
-                return part.agent.get(LifecycleBehavior).state.online;
+        if (this.#stateOwner === undefined) {
+            this.#stateOwner = {
+                name: this.type.name,
+                get online() {
+                    if (lifecycleState === undefined) {
+                        lifecycleState = part.agent.get(LifecycleBehavior).state;
+                    }
+                    return lifecycleState.online;
+                }
             }
-        })
+        }
+
+        return this.#stateOwner;
     }
 }
