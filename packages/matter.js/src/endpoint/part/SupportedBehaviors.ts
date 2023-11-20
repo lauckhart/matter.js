@@ -79,6 +79,13 @@ export namespace SupportedBehaviors {
     export type StateOf<SB extends SupportedBehaviors> = {
         [K in keyof SB]: Behavior.StateOf<SB[K]>
     }
+
+    /**
+     * Input version of {@link StateOf}.
+     */
+    export type InputStateOf<SB extends SupportedBehaviors> = {
+        [K in keyof SB]?: Behavior.InputStateOf<SB[K]>
+    }
 }
 
 function addBehaviors(target: SupportedBehaviors, types: SupportedBehaviors.List) {

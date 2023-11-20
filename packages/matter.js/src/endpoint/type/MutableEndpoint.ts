@@ -51,39 +51,44 @@ export function MutableEndpoint<const T extends EndpointType.Options>(options: T
                 }
             }
 
-            return defaults as SupportedBehaviors.StateOf<typeof type.behaviors>;
+            return defaults;
         },
 
-        set<This extends MutableEndpoint>(this: This, defaults: Record<string, Record<string, any>>) {
+        set(this: MutableEndpoint, defaults: SupportedBehaviors.InputStateOf<typeof type.behaviors>) {
             const newBehaviors = Array<Behavior.Type>();
 
             for (const name in this.behaviors) {
                 const updates = (defaults as any)[name];
-                const behavior = (this.behaviors as SupportedBehaviors)[name];
+                const behavior = this.behaviors[name];
                 if (updates) {
                     newBehaviors.push(behavior.set(updates));
                 }
             }
     
-            return this.with(...newBehaviors) as unknown as This;
+            return this.with(...newBehaviors);
         },
 
-        with<This extends MutableEndpoint, const B extends SupportedBehaviors.List>(this: This, ...behaviors: B) {
+        with(this: MutableEndpoint, ...behaviors: Behavior.Type[]) {
             return MutableEndpoint({
                 ...options,
                 behaviors: SupportedBehaviors.extend(this.behaviors, behaviors)
-            }) as unknown as MutableEndpoint.With<This, B>;
+            });
         }
-    }
+    } as unknown as MutableEndpoint.With<
+        EndpointType.For<T>,
+        T["behaviors"] extends SupportedBehaviors ? T["behaviors"] : {}
+    >;
 }
 
 export namespace MutableEndpoint {
-    export type With<E extends MutableEndpoint, B extends SupportedBehaviors.List> =
-        & Omit<E, "behaviors">
+    export type With<B extends EndpointType, SB extends SupportedBehaviors> =
+        & Omit<B, "behaviors" | "defaults" | "set" | "with">
         & {
-            behaviors: SupportedBehaviors.With<
-                E["behaviors"] extends infer EB extends SupportedBehaviors ? EB : {},
-                B
-            >
+            behaviors: SB;
+            defaults: SupportedBehaviors.StateOf<SB>;
+            set(defaults: SupportedBehaviors.InputStateOf<SB>):
+                With<B, SB>;
+            with<const BL extends SupportedBehaviors.List>(...behaviors: BL):
+                With<B, SupportedBehaviors.With<SB, BL>>;
         };
 }

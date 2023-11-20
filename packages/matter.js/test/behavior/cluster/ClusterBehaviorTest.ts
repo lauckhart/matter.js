@@ -11,7 +11,7 @@ import { MaybePromise } from "../../../src/util/Type.js";
 import { MyBehavior } from "./cluster-behavior-test-util.js";
 import { Behavior } from "../../../src/behavior/Behavior.js";
 import { State } from "../../../src/behavior/state/State.js";
-import { MockPart } from "../behavior-mocks.js";
+import { MockPart } from "../../endpoint/part-mocks.js";
 
 describe("ClusterBehavior", () => {
     type Match<Input, Type> = Input extends Type ? true : false;

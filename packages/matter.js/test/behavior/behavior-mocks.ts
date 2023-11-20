@@ -13,7 +13,6 @@ import { Behavior } from "../../src/behavior/Behavior.js";
 import { ServerBehaviorBacking } from "../../src/behavior/server/ServerBehaviorBacking.js";
 import { DescriptorServer } from "../../src/behavior/definitions/descriptor/DescriptorServer.js";
 import { PartsBehavior } from "../../src/behavior/definitions/parts/PartsBehavior.js";
-import { EndpointType } from "../../src/endpoint/type/EndpointType.js";
 import { LifecycleBehavior } from "../../src/behavior/definitions/lifecycle/LifecycleBehavior.js";
 
 class MockFabricImplementation {
@@ -51,34 +50,5 @@ export class MockContext implements InvocationContext {
         if (!this.fabric) {
             this.fabric = new MockFabric;
         }
-    }
-}
-
-export class MockPart<T extends EndpointType> extends Part<T> {
-    constructor(type: T, options?: MockPart.Options) {
-        super(type, options);
-
-        if (options && "owner" in options) {
-            if (options.owner !== undefined) {
-                this.owner = options.owner;
-            }
-        } else {
-            this.owner = new MockOwner;
-        }
-    }
-
-    get mockAgent() {
-        return this.getAgent(new MockContext);
-    }
-
-    static createBehavior<T extends Behavior.Type>(type: T) {
-        const part = new MockPart(MockEndpoint.with(type));
-        return part.mockAgent.get(type) as InstanceType<T>;
-    }
-}
-
-export namespace MockPart {
-    export interface Options extends Part.Options {
-        owner?: PartOwner;
     }
 }

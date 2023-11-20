@@ -4,8 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MockEndpoint, MockParentEndpoint, MockPart } from "../../behavior-mocks.js";
+import { MockEndpoint, MockParentEndpoint } from "../../behavior-mocks.js";
+import { MockPart } from "../../../endpoint/part-mocks.js";
 import { OnOffServer } from "../../../../src/behavior/definitions/on-off/OnOffServer.js";
+import { MutableEndpoint } from "../../../../src/endpoint/type/MutableEndpoint.js";
+import { DescriptorServer } from "../../../../src/behavior/definitions/descriptor/DescriptorServer.js";
+import { EndpointNumber } from "../../../../src/datatype/EndpointNumber.js";
+import { ClusterId } from "../../../../src/datatype/ClusterId.js";
+import { DeviceTypeId } from "../../../../src/datatype/DeviceTypeId.js";
 
 function createFamily() {
     const parent = new MockPart(
@@ -24,6 +30,23 @@ function createFamily() {
 }
 
 describe("DescriptorServer", () => {
+    it("properly extends part type", () => {
+        const device = MutableEndpoint({
+            name: "Foo",
+            deviceType: 1,
+            deviceRevision: 1,
+        }).with(DescriptorServer);
+
+        device.defaults satisfies {
+            descriptor: {
+                deviceTypeList?: Array<{ deviceType: DeviceTypeId, revision: number }>,
+                partsList: Array<EndpointNumber>,
+                serverList: Array<ClusterId>,
+                clientList: Array<ClusterId>,
+            }
+        }
+    })
+
     it("adds device type automatically if necessary", () => {
         const device = new MockPart(MockEndpoint).agent;
         expect(device.descriptor.state.deviceTypeList).deep.equals([
@@ -36,8 +59,9 @@ describe("DescriptorServer", () => {
 
     it("does not add device type automatically if unnecessary", () => {
         const Device2Endpoint = MockEndpoint.set({
-            descriptor: { deviceTypeList: { deviceType: 2, revision: 2 } }
+            descriptor: { deviceTypeList: [ { deviceType: 2, revision: 2 } ] }
         });
+        
         const device = new MockPart(Device2Endpoint).agent;
         expect(device.descriptor.state.deviceTypeList).deep.equals([
             {

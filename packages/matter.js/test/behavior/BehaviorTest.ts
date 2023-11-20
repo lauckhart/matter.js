@@ -9,7 +9,7 @@ import { BehaviorBacking } from "../../src/behavior/BehaviorBacking.js";
 import { State } from "../../src/behavior/state/State.js";
 import { Agent } from "../../src/endpoint/Agent.js";
 import { EventEmitter, Observable } from "../../src/util/Observable.js";
-import { MockPart } from "./behavior-mocks.js";
+import { MockPart } from "../endpoint/part-mocks.js";
 
 class TestBehavior extends Behavior {
     static override id = "test";

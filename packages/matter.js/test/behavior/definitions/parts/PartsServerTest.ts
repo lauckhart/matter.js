@@ -5,7 +5,8 @@
  */
 
 import { Part } from "../../../../src/endpoint/Part.js";
-import { MockEndpoint, MockParentEndpoint, MockPart } from "../../behavior-mocks.js";
+import { MockEndpoint, MockParentEndpoint } from "../../behavior-mocks.js";
+import { MockPart } from "../../../endpoint/part-mocks.js";
 
 function createParent() {
     return new MockPart(
