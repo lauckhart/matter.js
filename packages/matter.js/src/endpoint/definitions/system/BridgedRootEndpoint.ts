@@ -6,6 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { PartsBehavior } from "../../../behavior/definitions/parts/PartsBehavior.js";
 import {
     BridgedDeviceBasicInformationServer
 } from "../../../behavior/definitions/bridged-device-basic-information/BridgedDeviceBasicInformationServer.js";
@@ -18,22 +19,27 @@ import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";
 import { MatterDeviceLibrarySpecificationV1_1 } from "../../../spec/Specifications.js";
 
-export const BridgedNodeRequirements = {
+export const BridgedRootRequirements = {
     /**
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
     server: {
-        mandatory: { BridgedDeviceBasicInformation: BridgedDeviceBasicInformationServer },
+        mandatory: { parts: PartsBehavior, BridgedDeviceBasicInformation: BridgedDeviceBasicInformationServer },
         optional: { PowerSourceConfiguration: PowerSourceConfigurationServer, PowerSource: PowerSourceServer }
-    }
+    },
+
+    /**
+     * A definition for each client cluster supported by the endpoint per the Matter specification.
+     */
+    client: { mandatory: { parts: PartsBehavior } }
 };
 
-export const BridgedNodeDeviceDefinition = MutableEndpoint({
+export const BridgedRootEndpointDefinition = MutableEndpoint({
     name: "BridgedNode",
     deviceType: 0x13,
     deviceRevision: 1,
-    requirements: BridgedNodeRequirements,
-    behaviors: SupportedBehaviors(BridgedNodeRequirements.server.mandatory.BridgedDeviceBasicInformation)
+    requirements: BridgedRootRequirements,
+    behaviors: SupportedBehaviors(BridgedRootRequirements.server.mandatory.BridgedDeviceBasicInformation)
 });
 
 /**
@@ -43,6 +49,6 @@ export const BridgedNodeDeviceDefinition = MutableEndpoint({
  *
  * @see {@link MatterDeviceLibrarySpecificationV1_1} § 2.6
  */
-export interface BridgedNodeDevice extends Identity<typeof BridgedNodeDeviceDefinition> {}
+export interface BridgedRootEndpoint extends Identity<typeof BridgedRootEndpointDefinition> {}
 
-export const BridgedNodeDevice: BridgedNodeDevice = BridgedNodeDeviceDefinition;
+export const BridgedRootEndpoint: BridgedRootEndpoint = BridgedRootEndpointDefinition;

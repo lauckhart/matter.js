@@ -5,19 +5,22 @@
  */
 
 import { OperationalCredentialsServerConf } from "../../cluster/server/OperationalCredentialsServer.js";
-import { RootEndpoint } from "../../endpoint/definitions/system/RootEndpoint.js";
+import { ProductDescription } from "../../common/InstanceBroadcaster.js";
+import { Part } from "../../endpoint/Part.js";
+import { EndpointType } from "../../endpoint/type/EndpointType.js";
 import { CommissioningFlowType } from "../../schema/PairingCodeSchema.js";
 import { StorageManager } from "../../storage/StorageManager.js";
 import { ByteArray } from "../../util/ByteArray.js";
+import type { NodeServer } from "./NodeServer.js";
 
 /**
- * ServerNode configuration, used for automatic ServerContext management.
+ * Configuration options for {@link NodeServer}.
  */
 export type ServerOptions = {
     /**
-     * The root endpoint type for the server.  
+     * Initial endpoints published by the server.
      */
-    readonly root?: typeof RootEndpoint;
+    readonly endpoints?: (EndpointType | Part)[];
 
     /**
      * Storage used for persistent server state.  This is used when running
@@ -61,6 +64,11 @@ export type ServerOptions = {
      */
     readonly commissioning?: {
         /**
+         * Product information for commissioning broadcasts.
+         */
+        productDescription?: Partial<ProductDescription>;
+
+        /**
          * The passcode/pin for initial commissioning.
          *
          * If omitted the server generates a random passcode.
@@ -88,16 +96,6 @@ export type ServerOptions = {
          * Should availability be announced automatically or manually via announce()?
          */
         automaticAnnouncement?: boolean;
-
-        /**
-         * The device type included in announcements.
-         */
-        deviceType?: number;
-
-        /**
-         * The device name included in announcements.
-         */
-        deviceName?: string;
     };
 
     /**

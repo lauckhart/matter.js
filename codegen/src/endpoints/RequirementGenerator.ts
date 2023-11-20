@@ -27,7 +27,10 @@ export class RequirementGenerator {
 
     #mandatory = Array<ClusterDetail>();
     #optional = Array<ClusterDetail>();
+    #mandatoryBlock?: Block;
+    #optionalBlock?: Block;
     #clusterBlock: Block | undefined;
+    #mandatoryParts = false;
 
     constructor(
         private file: EndpointFile,
@@ -38,6 +41,14 @@ export class RequirementGenerator {
             throw new Error("Unable to locate root MatterModel");
         }
         const clusterReqs = this.file.model.requirements.filter(r => r.element === `${type}Cluster`);
+        
+        switch (file.model.name) {
+            case "RootEndpoint":
+            case "Aggregator":
+            case "BridgedNode":
+                this.#mandatoryParts = true;
+                break;
+        }
 
         for (const requirement of clusterReqs) {
             const definition = matter.get(ClusterModel, requirement.name);
@@ -69,18 +80,17 @@ export class RequirementGenerator {
     }
 
     generate() {
-        if (this.#mandatory.length) {
-            const block = this.clusterBlock.expressions("mandatory: {", "}");
-            for (const detail of this.#mandatory) {
-                this.generateOne(detail, block);
-            }
+        if (this.#mandatoryParts) {
+            this.file.addImport(`behavior/definitions/parts/PartsBehavior`, "PartsBehavior");
+            this.mandatoryBlock.atom("parts", "PartsBehavior");
         }
 
-        if (this.#optional.length) {
-            const block = this.clusterBlock.expressions("optional: {", "}");
-            for (const detail of this.#optional) {
-                this.generateOne(detail, block);
-            }
+        for (const detail of this.#mandatory) {
+            this.generateOne(detail, this.mandatoryBlock);
+        }
+
+        for (const detail of this.#optional) {
+            this.generateOne(detail, this.optionalBlock);
         }
 
         return this.#clusterBlock;
@@ -88,6 +98,20 @@ export class RequirementGenerator {
 
     reference(cluster: ClusterModel, mandatory = true) {
         return `${this.file.requirementsName}.${this.type}.${mandatory ? "mandatory" : "optional"}.${cluster.name}`;
+    }
+
+    private get mandatoryBlock() {
+        if (this.#mandatoryBlock === undefined) {
+            this.#mandatoryBlock = this.clusterBlock.expressions("mandatory: {", "}");
+        }
+        return this.#mandatoryBlock;
+    }
+
+    private get optionalBlock() {
+        if (this.#optionalBlock === undefined) {
+            this.#optionalBlock = this.clusterBlock.expressions("optional: {", "}");
+        }
+        return this.#optionalBlock;
     }
 
     private get clusterBlock() {

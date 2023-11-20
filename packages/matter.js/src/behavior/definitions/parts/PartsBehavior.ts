@@ -12,6 +12,7 @@ import { LifecycleBehavior } from "../lifecycle/LifecycleBehavior.js";
 import { ImplementationError, InternalError } from "../../../common/MatterError.js";
 import { BehaviorBacking } from "../../BehaviorBacking.js";
 import { Agent } from "../../../endpoint/Agent.js";
+import { EndpointType } from "../../../endpoint/type/EndpointType.js";
 
 /**
  * Manages parent-child relationship between endpoints.
@@ -122,15 +123,15 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
         }
     }
 
-    has(child: Part | Agent) {
+    has(child: Part | Agent | EndpointType) {
         return this.state.children.has(partFor(child));
     }
 
-    add(child: Part | Agent) {
+    add(child: Part | Agent | EndpointType) {
         this.state.children.add(partFor(child));
     }
 
-    delete(child: Part | Agent) {
+    delete(child: Part | Agent | EndpointType) {
         return this.state.children.delete(partFor(child));
     }
 
@@ -176,13 +177,21 @@ export namespace PartsBehavior {
     }
 }
 
-function partFor(child: Part | Agent) {
+function partFor(child: Part | Agent | EndpointType) {
     if (child instanceof Agent) {
         child = child.part;
     }
 
     if (child instanceof Part) {
         return child;
+    }
+
+    if (
+        child.name != undefined
+        && child.deviceType !== undefined
+        && child.deviceRevision !== undefined
+    ) {
+        return new Part(child);
     }
 
     throw new ImplementationError(`Illegal part value type`);

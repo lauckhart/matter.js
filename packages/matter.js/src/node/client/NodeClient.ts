@@ -16,7 +16,7 @@ import { WriteRequestAction } from "../action/WriteRequestAction.js";
 import { WriteResponseAction } from "../action/WriteResponseAction.js";
 import { Node } from "../Node.js";
 
-export class ClientNode implements Node {
+export class NodeClient implements Node {
     constructor() {
         throw new NotImplementedError("Client nodes are TODO");
     }

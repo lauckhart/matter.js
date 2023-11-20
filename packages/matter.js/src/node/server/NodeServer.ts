@@ -6,37 +6,49 @@
 
 import { CommissioningServer } from "../../CommissioningServer.js";
 import { ImplementationError } from "../../common/MatterError.js";
-import { EndpointNumber } from "../../datatype/EndpointNumber.js";
 import { Part } from "../../endpoint/Part.js";
 import { LifecycleBehavior } from "../../behavior/definitions/lifecycle/LifecycleBehavior.js";
 import { PartServer } from "../../endpoint/server/PartServer.js";
 import { Node } from "../Node.js";
-import { NodeRunner } from "../NodeRunner.js";
+import { Runner } from "../Runner.js";
 import { ServerConfiguration } from "./ServerConfiguration.js";
 import { ServerOptions } from "./ServerOptions.js";
+import { EndpointType } from "../../endpoint/type/EndpointType.js";
+import { PartsBehavior } from "../../behavior/definitions/parts/PartsBehavior.js";
 
 /**
  * Implementation of a Matter Node server.
  * 
  * This is this highest-level API Matter.js offers for implementing a Matter
  * Node.
+ * 
+ * This is perhaps more appropriately called "ServerNode" but that gets
+ * confusing with the conventions of matter-node.js.
  */
-export class ServerNode extends CommissioningServer implements Node {
+export class NodeServer extends CommissioningServer implements Node {
     #configuration: ServerConfiguration;
     #root: Part;
-    #runner?: NodeRunner;
+    #runner?: Runner;
 
     constructor(options?: ServerOptions) {
-        const configuration = ServerConfiguration.for(options);
-        const root = new Part(configuration.root, {
-            id: EndpointNumber(0),
-        })
+        const configuration = new ServerConfiguration(options);
+        const root = configuration.root;
         super({
             ...configuration.commissioningServerOptions,
             rootEndpoint: new PartServer(root)
         });
+        configuration.owner = this;
         this.#configuration = configuration;
         this.#root = root;
+    }
+
+    /**
+     * Add an endpoint.
+     */
+    add(endpoint: Part | EndpointType) {
+        if (typeof endpoint === "function") {
+            this.root.agent.get(PartsBehavior).add(endpoint);
+        }
     }
 
     /**
@@ -49,13 +61,13 @@ export class ServerNode extends CommissioningServer implements Node {
     /**
      * Run the node in "standalone" mode.
      * 
-     * This mode creates a {@link NodeRunner} dedicated to this node.
+     * This mode creates a {@link Runner} dedicated to this node.
      */
     async run() {
         if (this.#runner) {
             throw new ImplementationError("Already running");
         }
-        const runner = new NodeRunner(this.#configuration);
+        const runner = new Runner(this.#configuration);
         runner.add(this);
         await runner.run();
     }
@@ -63,7 +75,7 @@ export class ServerNode extends CommissioningServer implements Node {
     /**
      * Terminate after starting with run().
      */
-    async abort() {
+    abort() {
         if (!this.#runner) {
             throw new ImplementationError("Not running");
         }

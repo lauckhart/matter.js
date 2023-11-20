@@ -5,22 +5,30 @@
  */
 
 import { Crypto } from "../../crypto/Crypto.js";
-import { DeviceTypeId } from "../../datatype/DeviceTypeId.js";
-import { AggregatorEndpoint } from "../../endpoint/definitions/system/AggregatorEndpoint.js";
 import { RootEndpoint } from "../../endpoint/definitions/system/RootEndpoint.js";
 import { Logger } from "../../log/Logger.js";
 import { ServerOptions } from "./ServerOptions.js";
 import { StorageManager } from "../../storage/StorageManager.js";
+import { ProductDescription } from "../../common/InstanceBroadcaster.js";
+import { ImplementationError, InternalError } from "../../common/MatterError.js";
+import { BridgedRootEndpoint } from "../../endpoint/definitions/system/BridgedRootEndpoint.js";
+import { AggregatorEndpoint } from "../../endpoint/definitions/system/AggregatorEndpoint.js";
+import { VendorId } from "../../datatype/VendorId.js";
+import type { Node } from "../Node.js";
+import { PartsBehavior } from "../../behavior/definitions/parts/PartsBehavior.js";
+import { DeviceTypeId } from "../../datatype/DeviceTypeId.js";
+import { Part } from "../../endpoint/Part.js";
 
 const logger = Logger.get("ServerConfiguration");
 
 /**
- * This class manages server configuration.
+ * This class manages configuration for a server.
  */
-export class ServerConfiguration implements ServerOptions {
-    #root: RootEndpoint;
-    #network: ServerConfiguration.CompleteNetworkOptions;
-    #commissioning: ServerConfiguration.CompleteCommissioningOptions;
+export class ServerConfiguration {
+    #owner?: Node;
+    #root: Part;
+    #network: ServerConfiguration.NetworkOptions;
+    #commissioning: ServerConfiguration.CommissioningOptions;
     #subscription: Exclude<ServerOptions["subscription"], undefined>;
     #certification?: ServerOptions["certification"];
     #nextEndpointId?: ServerOptions["nextEndpointId"];
@@ -54,12 +62,8 @@ export class ServerConfiguration implements ServerOptions {
         return this.#storageManager;
     }
 
-    static for(options?: ServerOptions) {
-        if (options instanceof ServerConfiguration) {
-            return options;
-        }
-
-        return new ServerConfiguration(options);
+    set owner(owner: Node) {
+        this.#owner = owner;
     }
 
     constructor(options?: ServerOptions) {
@@ -67,7 +71,8 @@ export class ServerConfiguration implements ServerOptions {
             options = {};
         }
 
-        this.#root = this.configureRootEndpoint(options);
+        const { root, productDescription } = this.configureNode(options);
+        this.#root = root;
 
         this.#network = {
             ...options.network,
@@ -75,7 +80,7 @@ export class ServerConfiguration implements ServerOptions {
             port: options.network?.port ?? 5540
         }
 
-        this.#commissioning = this.configureCommissioning(options);
+        this.#commissioning = this.configureCommissioning(options, productDescription);
 
         this.#subscription = options.subscription ?? {};
 
@@ -96,13 +101,58 @@ export class ServerConfiguration implements ServerOptions {
         };
     }
 
-    private configureRootEndpoint(options: ServerOptions) {
-        let root = options.root;
+    private configureNode(options: ServerOptions) {
+        const endpoints = options.endpoints ?? [];
 
-        if (!root) {
-            root = RootEndpoint;
+        let root: Part | undefined;
+        let children: Part[];
+
+        function add(part: Part) {
+            switch (part.type.deviceType) {
+                case RootEndpoint.deviceType:
+                case BridgedRootEndpoint.deviceType:
+                    if (root !== undefined) {
+                        throw new ImplementationError("Node may not have more than one root endpoint");
+                    }
+                    if (part.id !== undefined && part.id !== 0) {
+                        throw new ImplementationError(`Root endpoint ID must be 0 (was ${part.id})`);
+                    }
+                    root = part;
+                    break;
+
+                default:
+                    children.push(part);
+                    break;
+            }
         }
 
+        for (const endpoint of endpoints) {
+            if (endpoint instanceof Part) {
+                add(endpoint);
+            } else {
+                add(new Part(endpoint));
+            }
+        }
+
+        if (!root) {
+            root = new Part(RootEndpoint);
+        }
+
+        let productDescription;
+        if (root.type.deviceType === RootEndpoint.deviceType) {
+            productDescription = this.configureNativeNode(root as Part<RootEndpoint>);
+        } else if (root.type.deviceType === BridgedRootEndpoint.deviceType) {
+            productDescription = this.configureBridgedNode(root as Part<BridgedRootEndpoint>);
+        } else {
+            throw new ImplementationError(`Root node type must be ${RootEndpoint.name} or ${BridgedRootEndpoint.name}`);
+        }
+
+        return { root, productDescription };
+    }
+
+    private configureNativeNode(root: Part<RootEndpoint>) {
+        // Greg: TODO - Need to convert from configuring EndpointType to configuring Part
+        const agent = root.agent;
         let defaults = {} as Record<string, Record<string, any>>;
 
         function addDefault(cluster: string, attr: string, value: any) {
@@ -130,10 +180,10 @@ export class ServerConfiguration implements ServerOptions {
             const dict = {} as Record<string, any>;
             for (const cluster in defaults) {
                 for (const attr in defaults[cluster]) {
-                    dict[`${cluster}.${attr}`] = defaults[cluster][attr];
+                    dict[`${cluster}.state.${attr}`] = defaults[cluster][attr];
                 }
             }
-            logger.warn("Using development values for some cluster attributes:", Logger.dict(dict));
+            logger.warn("Using development values for some attributes:", Logger.dict(dict));
 
             root = root.set(defaults as any);
         }
@@ -149,10 +199,30 @@ export class ServerConfiguration implements ServerOptions {
 
         setDefaults();
 
-        return root;
+        return {
+            name: bi.productName,
+            productId: bi.productId,
+            vendorId: bi.vendorId,
+        };
     }
 
-    private configureCommissioning(options: ServerOptions) {
+    private configureBridgedNode(root: Part<BridgedRootEndpoint>) {
+        const bi = root.agent.bridgedDeviceBasicInformation;
+
+        return {
+            name: bi.state.productName ?? "Matter.js Bridge",
+            deviceType: AggregatorEndpoint.deviceType,
+
+            // TODO - These are optional or don't exist in BDBI but we require
+            // them for commissioning broadcast.  I'm guessing they aren't
+            // really required so setting to -1 rather than developmental
+            // values but need to confirm
+            vendorId: bi.state.vendorId ?? VendorId(-1),
+            productId: -1,
+        }
+    }
+
+    private configureCommissioning(options: ServerOptions, productDefaults: Partial<ProductDescription>) {
         const commissioning = { ...options.commissioning };
         if (!commissioning.passcode) {
             while (true) {
@@ -162,36 +232,83 @@ export class ServerConfiguration implements ServerOptions {
                     break;
                 }
             }
-            logger.info("Commissioning with random passcode", commissioning.passcode);
+            logger.info("Commissioning with generated passcode:", commissioning.passcode);
         }
         if (!commissioning.discriminator) {
             commissioning.discriminator = Crypto.getRandomUInt16() & 0xfff;
-            logger.info("Commissioning with random discriminator", commissioning.discriminator);
+            logger.info("Commissioning with generated discriminator:", commissioning.discriminator);
         }
 
-        if (!commissioning.deviceName) {
-            commissioning.deviceName = options.root?.defaults.basicInformation.productName ?? "Unknown Device";
+        const productDescription = {
+            ...productDefaults,
+            ...commissioning.productDescription,
+        };
+
+        // These should have default values set in configureNode()
+        if (productDescription.name === undefined) {
+            throw new InternalError("No commissioning product description name set");
         }
-        if (!commissioning.deviceType) {
-            logger.warn(
-                "Defaulting to Aggregator device type for commissioning announcements which is likely incorrect.  " +
-                    "Set the commissioning device type to remove this warning",
-            );
-            commissioning.deviceType = AggregatorEndpoint.deviceType;
+        if (productDescription.productId === undefined) {
+            throw new InternalError("No commissioning product ID set");
         }
-        return commissioning as ServerConfiguration.CompleteCommissioningOptions;
+        if (productDescription.vendorId === undefined) {
+            throw new InternalError("No commissioning vendor ID set");
+        }
+
+        // If device type is not set we attempt to infer by inspecting
+        // endpoints.  We do this lazily so we can inspect parts present when
+        // commissioning commences
+        if (productDescription.deviceType === undefined) {
+            Object.defineProperty(productDescription, "deviceType", {
+                enumerable: true,
+                get: () => this.inferDeviceType()
+            });
+        }
+
+        return commissioning as ServerConfiguration.CommissioningOptions;
+    }
+
+    private inferDeviceType() {
+        if (!this.#owner) {
+            throw new InternalError("Cannot infer device type because configuration owner is not set");
+        }
+
+        const parts = this.#owner.root.agent.get(PartsBehavior);
+
+        let type: DeviceTypeId | undefined;
+        let name: string | undefined;
+        for (const part of parts) {
+            switch (part.type.deviceType) {
+                case RootEndpoint.deviceType:
+                case BridgedRootEndpoint.deviceType:
+                    continue;
+            }
+
+            // If there are multiple parts, fall back to aggregator
+            if (type !== undefined) {
+                type = AggregatorEndpoint.deviceType;
+                break;
+            }
+
+            type = part.type.deviceType;
+        }
+
+        if (type === undefined) {
+            throw new ImplementationError("Cannot infer commissioning device type because no device parts are present");
+        } else {
+            logger.info(`Commissioning as device type "${name}" (#${type})`);
+        }
     }
 }
 
 export namespace ServerConfiguration {
-    export type CompleteNetworkOptions = ServerOptions["network"] & {
+    export type NetworkOptions = ServerOptions["network"] & {
         port: number;
     }
 
-    export type CompleteCommissioningOptions = ServerOptions["commissioning"] & {
+    export type CommissioningOptions = ServerOptions["commissioning"] & {
+        productDescription: ProductDescription;
         passcode: number;
         discriminator: number;
-        deviceType: DeviceTypeId;
-        deviceName: string;
     }
 }

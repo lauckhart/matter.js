@@ -15,9 +15,9 @@ import { CommissioningController } from "../CommissioningController.js";
 import { CommissioningServer } from "../CommissioningServer.js";
 
 /**
- * NodeRunner exposes one or more {@link Node} instances to a Matter network.
+ * Runner exposes one or more {@link Node} instances to a Matter network.
  */
-export class NodeRunner {
+export class Runner {
     #configuration: ServerConfiguration;
     #nodes = new Set<Node>;
     #abort?: () => void;
@@ -48,7 +48,7 @@ export class NodeRunner {
         try {
             if (!storage) {
                 storage = new StorageManager(
-                    Storage.create(this.#configuration.commissioning.deviceName, false)
+                    Storage.create(this.#configuration.commissioning.productDescription.name, false)
                 );
                 
                 this.#abort = () => {

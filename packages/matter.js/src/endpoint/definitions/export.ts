@@ -12,7 +12,7 @@ export * from "./system/PowerSourceEndpoint.js";
 export * from "./system/OtaRequestorEndpoint.js";
 export * from "./system/OtaProviderEndpoint.js";
 export * from "./system/AggregatorEndpoint.js";
-export * from "./device/BridgedNodeDevice.js";
+export * from "./system/BridgedRootEndpoint.js";
 export * from "./device/OnOffLightDevice.js";
 export * from "./device/DimmableLightDevice.js";
 export * from "./device/ColorTemperatureLightDevice.js";

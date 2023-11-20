@@ -6,6 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { PartsBehavior } from "../../../behavior/definitions/parts/PartsBehavior.js";
 import { ActionsServer } from "../../../behavior/definitions/actions/ActionsServer.js";
 import { MutableEndpoint } from "../../type/MutableEndpoint.js";
 import { DeviceClasses } from "../../../device/DeviceTypes.js";
@@ -17,7 +18,12 @@ export const AggregatorRequirements = {
     /**
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
-    server: { optional: { Actions: ActionsServer } }
+    server: { mandatory: { parts: PartsBehavior }, optional: { Actions: ActionsServer } },
+
+    /**
+     * A definition for each client cluster supported by the endpoint per the Matter specification.
+     */
+    client: { mandatory: { parts: PartsBehavior } }
 };
 
 export const AggregatorEndpointDefinition = MutableEndpoint({

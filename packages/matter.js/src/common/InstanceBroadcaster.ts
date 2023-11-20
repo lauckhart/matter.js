@@ -130,9 +130,9 @@ export const PairingHintBitmap = {
 
 export const PairingHintBitmapSchema = BitmapSchema(PairingHintBitmap);
 
-export type CommissioningModeInstanceData = {
+export interface ProductDescription {
     /** Device name for commissionable announcements. */
-    deviceName: string;
+    name: string;
 
     /** Device type for commissionable announcements. */
     deviceType: number;
@@ -142,7 +142,9 @@ export type CommissioningModeInstanceData = {
 
     /** Product ID for commissionable announcements. */
     productId: number;
+}
 
+export interface CommissioningModeInstanceData extends ProductDescription {
     /** Device discriminator for commissionable announcements. */
     discriminator: number;
 

@@ -41,9 +41,9 @@ import {
     OperationalCredentialsClusterHandler,
     OperationalCredentialsServerConf,
 } from "./cluster/server/OperationalCredentialsServer.js";
+import { ProductDescription } from "./common/InstanceBroadcaster.js";
 import { ImplementationError, NoProviderError } from "./common/MatterError.js";
 import { Crypto } from "./crypto/Crypto.js";
-import { DeviceTypeId } from "./datatype/DeviceTypeId.js";
 import { EndpointNumber } from "./datatype/EndpointNumber.js";
 import { FabricIndex } from "./datatype/FabricIndex.js";
 import { VendorId } from "./datatype/VendorId.js";
@@ -101,12 +101,6 @@ export interface GeneralCommissioningServerOptions {
 
     /** IPv6 listener address, defaults to all interfaces.*/
     listeningAddressIpv6?: string;
-
-    /** The device name to be used for the BasicInformation cluster. */
-    deviceName: string;
-
-    /** The device type to be used for the BasicInformation cluster. */
-    deviceType: number;
 
     /** The next endpoint ID to be assigned to a new endpoint. */
     nextEndpointId?: number;
@@ -171,6 +165,12 @@ export interface GeneralCommissioningServerOptions {
  * Commissioning options with automatic management of the root endpoint.
  */
 export interface StandardCommissioningServerOptions extends GeneralCommissioningServerOptions {
+    /** The device name to be used for the BasicInformation cluster. */
+    deviceName: string;
+
+    /** The device type to be used for the BasicInformation cluster. */
+    deviceType: number;
+
     /**
      * Device details to be used for the BasicInformation cluster. Some of the values are initialized with defaults if
      * not set here.
@@ -203,6 +203,11 @@ export interface StandardCommissioningServerOptions extends GeneralCommissioning
  * Commissioning server options with manual management of the root endpoint.
  */
 export interface ManualCommissioningServerOptions extends GeneralCommissioningServerOptions {
+    /**
+     * Product description for commissioning broadcast.
+     */
+    productDescription: ProductDescription,
+
     /**
      * The root endpoint for the server.
      */
@@ -588,8 +593,18 @@ export class CommissioningServer extends MatterNode {
         if (basicInformation == undefined) {
             throw new ImplementationError("BasicInformationCluster needs to be set!");
         }
-        const vendorId = basicInformation.attributes.vendorId.getLocal();
-        const productId = basicInformation.attributes.productId.getLocal();
+
+        let productDescription: ProductDescription;
+        if (this.options.rootEndpoint) {
+            productDescription = this.options.productDescription;
+        } else {
+            productDescription = {
+                name: this.options.deviceName,
+                deviceType: this.options.deviceType,
+                vendorId: basicInformation.attributes.vendorId.getLocal(),
+                productId: basicInformation.attributes.productId.getLocal(),
+            }
+        }
 
         this.interactionServer = new InteractionServer(this.storage, {
             subscriptionMaxIntervalSeconds: this.options.subscriptionMaxIntervalSeconds,
@@ -606,10 +621,7 @@ export class CommissioningServer extends MatterNode {
 
         // TODO adjust later and refactor MatterDevice
         this.deviceInstance = new MatterDevice(
-            this.options.deviceName,
-            DeviceTypeId(this.options.deviceType),
-            vendorId,
-            productId,
+            productDescription,
             this.discriminator,
             this.passcode,
             this.storage,

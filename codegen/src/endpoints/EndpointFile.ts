@@ -25,13 +25,18 @@ export class EndpointFile extends TsFile {
         let name;
         let specName;
 
-        if (model.classification === DeviceTypeElement.Classification.Simple) {
+        if (
+            model.classification === DeviceTypeElement.Classification.Simple
+                && model.name !== "BridgedNode"
+        ) {
             specName = model.name;
             name = `${model.name}Device`;
             path = `device/${name}`;
         } else {
             if (model.name === "RootNode") {
                 specName = "Root";
+            } else if (model.name === "BridgedNode") {
+                specName = "BridgedRoot";
             } else {
                 specName = model.name;
             }

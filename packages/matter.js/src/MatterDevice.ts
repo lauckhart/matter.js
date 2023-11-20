@@ -18,15 +18,13 @@ import { OperationalCredentials } from "./cluster/definitions/OperationalCredent
 import { MAXIMUM_COMMISSIONING_TIMEOUT_S } from "./cluster/server/AdministratorCommissioningServer.js";
 import { Channel } from "./common/Channel.js";
 import { FailSafeManager } from "./common/FailSafeManager.js";
-import { InstanceBroadcaster } from "./common/InstanceBroadcaster.js";
+import { ProductDescription, InstanceBroadcaster } from "./common/InstanceBroadcaster.js";
 import { InternalError, MatterFlowError } from "./common/MatterError.js";
 import { Scanner } from "./common/Scanner.js";
 import { TransportInterface } from "./common/TransportInterface.js";
 import { Crypto } from "./crypto/Crypto.js";
-import { DeviceTypeId } from "./datatype/DeviceTypeId.js";
 import { FabricIndex } from "./datatype/FabricIndex.js";
 import { NodeId } from "./datatype/NodeId.js";
-import { VendorId } from "./datatype/VendorId.js";
 import { EndpointInterface } from "./endpoint/EndpointInterface.js";
 import { Fabric } from "./fabric/Fabric.js";
 import { FabricManager } from "./fabric/FabricManager.js";
@@ -69,10 +67,7 @@ export class MatterDevice {
     private failSafeContext?: FailSafeManager;
 
     constructor(
-        private readonly deviceName: string,
-        private readonly deviceType: DeviceTypeId,
-        private readonly vendorId: VendorId,
-        private readonly productId: number,
+        private readonly productDescription: ProductDescription,
         private readonly discriminator: number,
         private readonly initialPasscode: number,
         private readonly storage: StorageContext,
@@ -216,10 +211,7 @@ export class MatterDevice {
             await broadcaster.setCommissionMode(
                 mode === AdministratorCommissioning.CommissioningWindowStatus.EnhancedWindowOpen ? 2 : 1,
                 {
-                    deviceName: this.deviceName,
-                    deviceType: this.deviceType,
-                    vendorId: this.vendorId,
-                    productId: this.productId,
+                    ...this.productDescription,
                     discriminator: discriminator ?? this.discriminator,
                 },
             );
