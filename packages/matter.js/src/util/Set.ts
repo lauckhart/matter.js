@@ -89,7 +89,7 @@ export class BasicSet<T, AddT = T> implements ImmutableSet<T>, MutableSet<T, Add
             }
         }
 
-        this.#added?.emit(created as T);
+        this.#added?.emit(created);
     }
 
     get(key: string, field: keyof T) {
@@ -130,7 +130,7 @@ export class BasicSet<T, AddT = T> implements ImmutableSet<T>, MutableSet<T, Add
             }
         }
 
-        this.#deleted?.emit(item as T);
+        this.#deleted?.emit(item);
 
         return true;
     }

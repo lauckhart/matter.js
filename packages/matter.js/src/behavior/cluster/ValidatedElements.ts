@@ -59,11 +59,11 @@ export class ValidatedElements {
 
         this.validateAttributes(
             behavior.cluster.attributes,
-            behavior.EndpointScope?.prototype,
-            behavior.FabricScope?.prototype,
+            new behavior.EndpointScope,
+            new behavior.FabricScope,
         );
         this.validateCommands(behavior.cluster?.commands, behavior.prototype);
-        this.validateEvents(behavior.cluster?.events, behavior.Events?.prototype);
+        this.validateEvents(behavior.cluster?.events, new behavior.Events);
     }
 
     /**
@@ -120,7 +120,7 @@ export class ValidatedElements {
                 prop = `EndpointScope.${name}`;
             }
 
-            if (!scope.hasOwnProperty(name)) {
+            if (!(name in scope)) {
                 if (!attr.optional) {
                     this.error(prop, "Mandatory element unsupported");
                 }
@@ -156,7 +156,7 @@ export class ValidatedElements {
                 continue;
             }
 
-            if (!implementations.hasOwnProperty(name) || implementations[name] === undefined) {
+            if (!(name in implementations) || implementations[name] === undefined) {
                 if (!command.optional) {
                     this.error(name, `Implementation missing`);
                 }
@@ -194,7 +194,7 @@ export class ValidatedElements {
                 continue;
             }
 
-            if (!emitters.hasOwnProperty(name)) {
+            if (!(name in emitters)) {
                 if (!event.optional) {
                     this.error(`cluster.events.${name}`, "Implementation missing");
                 }

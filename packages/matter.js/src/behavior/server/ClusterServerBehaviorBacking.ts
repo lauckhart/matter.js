@@ -60,13 +60,6 @@ export class ClusterServerBehaviorBacking extends ServerBehaviorBacking {
         for (const name in elements.attributes) {
             createChangeHandler(this, name);
         }
-
-        for (const name in this.#clusterServer.attributes) {
-            const attr = this.#clusterServer.attributes[name];
-            if (attr) {
-                attr.addValueChangeListener;
-            }
-        }
     }
 
     get clusterServer() {

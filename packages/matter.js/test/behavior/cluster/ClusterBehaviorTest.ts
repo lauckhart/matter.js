@@ -89,9 +89,10 @@ describe("ClusterBehavior", () => {
             const behavior = MockPart.createBehavior(MyBehavior);
 
             expect(behavior.state.reqAttr).equals("hello");
+            // eslint-disable-next-line @typescript-eslint/unbound-method
             expect(behavior.reqCmd).is.a("function");
-            expect(behavior.events.reqAttr$change).is.a("function");
-            expect(behavior.events.reqEv).is.a("function");
+            expect(behavior.events.reqAttr$change.constructor.name).equals("Event");
+            expect(behavior.events.reqEv.constructor.name).equals("Event");
         });
 
         it("instance does not expose values for disabled cluster elements", () => {

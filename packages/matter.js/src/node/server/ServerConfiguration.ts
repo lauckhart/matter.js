@@ -104,7 +104,7 @@ export class ServerConfiguration {
         const endpoints = options.endpoints ?? [];
 
         let root: Part | undefined;
-        let children = Array<Part>();
+        const children = Array<Part>();
 
         function add(part: Part) {
             switch (part.type.deviceType) {

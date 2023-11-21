@@ -56,6 +56,7 @@ describe("ManagedState", () => {
 
         state.foo = "BAR";
 
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         expect(result).eventually.deep.equal(["BAR", "bar", context]);
     });
 

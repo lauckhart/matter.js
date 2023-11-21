@@ -56,21 +56,21 @@ describe("GeneratedClass", () => {
     });
 
     it("sets instance property", () => {
-        expect((new (GeneratedClass({ instanceProperties: { foo: "bar" } }))() as any).foo).equals("bar");
+        expect((new (GeneratedClass({ instanceProperties: { foo: "bar" } }))()).foo).equals("bar");
     });
 
     it("sets instance descriptor", () => {
-        expect((new (GeneratedClass({ instanceDescriptors: { foo: { value: "bar" } } }))() as any).foo).equals("bar");
+        expect(new (GeneratedClass({ instanceDescriptors: { foo: { value: "bar" } } }))().foo).equals("bar");
     });
 
     it("inherits instance property", () => {
         const Base = GeneratedClass({ instanceProperties: { foo: "bar" } });
-        expect((new (GeneratedClass({ base: Base }))() as any).foo).equals("bar");
+        expect(new (GeneratedClass({ base: Base }))().foo).equals("bar");
     });
 
     it("inherits instance descriptor", () => {
         const Base = GeneratedClass({ instanceDescriptors: { foo: { value: "bar" } } });
-        expect((new (GeneratedClass({ base: Base }))() as any).foo).equals("bar");
+        expect(new (GeneratedClass({ base: Base }))().foo).equals("bar");
     });
 
     it("initializes", () => {
@@ -80,7 +80,7 @@ describe("GeneratedClass", () => {
             },
         });
 
-        expect((new klass("hello") as any).foo).equals("HELLO");
+        expect(new klass("hello").foo).equals("HELLO");
     });
 
     it("preprocesses arguments", () => {
@@ -98,7 +98,7 @@ describe("GeneratedClass", () => {
             },
         });
 
-        expect((new klass("bar") as any).foo).equals("BAR");
+        expect(new klass("bar").foo).equals("BAR");
     });
 
     function expectBizesAndBazes(...types: Array<new () => any>) {
@@ -108,7 +108,7 @@ describe("GeneratedClass", () => {
         for (let i = 0; i < types.length; i++) {
             const index = i + 1;
             expect(instance).instanceof(types[i]);
-            expect(instance.hasOwnProperty(instance, `foo${index}`));
+            expect(`foo${index}` in instance).ok;
             expect(instance[`foo${index}`]).equals(`bar${index}`);
             expect((Type as any)[`biz${index}`]).equals(`baz${index}`);
             i++;

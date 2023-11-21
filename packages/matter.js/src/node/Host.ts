@@ -20,9 +20,9 @@ enum Status {
 }
 
 /**
- * Runner exposes one or more {@link Node} instances to a Matter network.
+ * Host exposes one or more {@link Node} instances to a Matter network.
  */
-export class Runner {
+export class Host {
     // We share configuration with the server
     #configuration: ServerConfiguration;
 
@@ -56,7 +56,7 @@ export class Runner {
     /**
      * Add a node to execute.
      */
-    async add(node: Node) {
+    add(node: Node) {
         this.#nodes.add(node);
     }
 
@@ -77,10 +77,8 @@ export class Runner {
 
         try {
             try {
+                // Can't abort this
                 storage = await environment.createStorage();
-
-                // No way to abort storage initialization; best we can do is
-                // respect the abort once initialization completes
                 if (this.aborted) {
                     return;
                 }
@@ -96,14 +94,20 @@ export class Runner {
 
             for (const node of this.#nodes) {
                 if (node instanceof CommissioningController) {
-                    server.addCommissioningController(node);
+                    await server.addCommissioningController(node);
                 } else if (node instanceof CommissioningServer) {
-                    server.addCommissioningServer(node);
+                    await server.addCommissioningServer(node);
                 } else {
                     throw new ImplementationError(
                         "Cannot run node that is neither a CommissioningController nor a CommissioningServer",
                     );
                 }
+            }
+
+            // Can't abort this
+            await server.start();
+            if (this.aborted) {
+                return;
             }
 
             await new Promise<void>((resolve, reject) => {
@@ -113,11 +117,12 @@ export class Runner {
                     };
                 } catch (e) {
                     reject(e);
+                } finally {
+                    this.#abort = undefined;
                 }
             });
-            server.start();
         } finally {
-            // Can't cancel this either so just have to wait
+            // Can't abort this
             await storage?.close();
 
             environment.tasks.delete(this.task);

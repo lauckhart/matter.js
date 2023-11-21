@@ -43,7 +43,7 @@ describe("Behavior", () => {
         expect(behavior.agent.get(TestBehavior)).equals(behavior);
         expect(behavior.state.endpointValue).equals(1);
         expect(behavior.state.fabricValue).equals(2);
-        expect(behavior.events.endpointValue$change).is.a("function");
+        expect(behavior.events.endpointValue$change.constructor.name).equals("Event");
     });
 
     it("unifies state", () => {

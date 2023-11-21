@@ -87,11 +87,11 @@ describe("ClusterType", () => {
             // Test some fields individually to make it easier to diagnose conflicts with no visual changes
 
             for (const key in clusterCluster.attributes) {
-                expect((actual.attributes as any)[key]).deep.equal((expected.attributes as any)[key]);
+                expect(actual.attributes[key]).deep.equal(expected.attributes[key]);
             }
 
             for (const key in clusterCluster) {
-                expect((actual as any)[key]).deep.equal((expected as any)[key]);
+                expect(actual[key]).deep.equal(expected[key]);
             }
 
             expect(actual).deep.equal(expected);

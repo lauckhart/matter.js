@@ -88,7 +88,7 @@ export class ClusterBehavior extends Behavior {
         this: This,
         cluster: ClusterT,
     ): ClusterBehavior.Type<ClusterT, This> {
-        return createType(cluster, this) as any;
+        return createType(cluster, this);
     }
 
     /**

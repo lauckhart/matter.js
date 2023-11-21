@@ -52,7 +52,7 @@ export class MockPart<T extends EndpointType> extends Part<T> {
 
     static createBehavior<T extends Behavior.Type>(type: T) {
         const part = new MockPart(MockEndpoint.with(type));
-        return part.mockAgent.get(type) as InstanceType<T>;
+        return part.mockAgent.get(type);
     }
 }
 

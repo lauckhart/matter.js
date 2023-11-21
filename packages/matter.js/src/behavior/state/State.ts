@@ -31,7 +31,7 @@ export class State {
         const oldDefaults = new this() as Record<string, any>;
         let newDefaults: Record<string, any> | undefined;
         for (const name in defaults) {
-            if (oldDefaults.hasOwnProperty(name)) {
+            if (name in oldDefaults) {
                 if (oldDefaults[name] !== defaults[name]) {
                     if (newDefaults === undefined) {
                         newDefaults = {};

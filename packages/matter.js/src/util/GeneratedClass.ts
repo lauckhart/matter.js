@@ -24,10 +24,8 @@ export function GeneratedClass(options: GeneratedClass.Options) {
         staticDescriptors,
     } = options;
 
-    let type: new (...args: any[]) => any;
-
     // Create the constructor function
-    type = createConstructor({
+    const type = createConstructor({
         name: name ?? (base ? `${base.name}$` : "GeneratedClass"),
         base,
         args,

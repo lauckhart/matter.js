@@ -39,7 +39,7 @@ export interface Observable<T extends any[] = any[]> {
     once(observer: Observer<T>): void;
 }
 
-class BasicObservable<T extends any[] = any[]> implements Observable<T> {
+class Event<T extends any[] = any[]> implements Observable<T> {
     #observers?: Set<Observer<T>>;
     #once?: Set<Observer<T>>;
 
@@ -76,7 +76,7 @@ class BasicObservable<T extends any[] = any[]> implements Observable<T> {
 }
 
 function constructObservable() {
-    return new BasicObservable();
+    return new Event();
 }
 
 /**

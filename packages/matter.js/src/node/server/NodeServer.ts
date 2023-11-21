@@ -12,7 +12,7 @@ import { Part } from "../../endpoint/Part.js";
 import { PartServer } from "../../endpoint/server/PartServer.js";
 import { EndpointType } from "../../endpoint/type/EndpointType.js";
 import { Node } from "../Node.js";
-import { Runner } from "../Runner.js";
+import { Host } from "../Host.js";
 import { ServerConfiguration } from "./ServerConfiguration.js";
 import { ServerOptions } from "./ServerOptions.js";
 
@@ -28,7 +28,7 @@ import { ServerOptions } from "./ServerOptions.js";
 export class NodeServer extends CommissioningServer implements Node {
     #configuration: ServerConfiguration;
     #root: Part;
-    #runner?: Runner;
+    #runner?: Host;
 
     constructor(options?: ServerOptions) {
         const configuration = new ServerConfiguration(options);
@@ -61,13 +61,13 @@ export class NodeServer extends CommissioningServer implements Node {
     /**
      * Run the node in "standalone" mode.
      *
-     * This mode creates a {@link Runner} dedicated to this node.
+     * This mode creates a {@link Host} dedicated to this node.
      */
     async run() {
         if (this.#runner) {
             throw new ImplementationError("Already running");
         }
-        const runner = new Runner(this.#configuration);
+        const runner = new Host(this.#configuration);
         runner.add(this);
         await runner.run();
     }

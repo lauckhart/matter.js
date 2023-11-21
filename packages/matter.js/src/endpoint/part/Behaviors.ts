@@ -144,7 +144,7 @@ export class Behaviors {
      * Obtain the backing for a behavior type.
      */
     private getBacking(type: Behavior.Type) {
-        let backing = this.#backings[type.id];
+        const backing = this.#backings[type.id];
 
         if (backing) {
             return backing;

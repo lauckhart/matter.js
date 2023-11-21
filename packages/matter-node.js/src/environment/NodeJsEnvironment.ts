@@ -32,7 +32,7 @@ export class NodeJsEnvironment extends Environment {
                 this.#interruptHandlers = new WeakMap();
             }
 
-            const handler = () => task.abort;
+            const handler = () => task.abort();
             this.#interruptHandlers.set(task, handler);
             process.once("SIGINT", handler);
         });
@@ -95,10 +95,11 @@ function loadEnvAndArgs() {
     }
 
     // Quick & even dirtier command line parsing
-    for (let arg in process.argv) {
+    for (let arg of process.argv) {
         if (!arg.startsWith("--")) {
             continue;
         }
+        arg = arg.slice(2);
 
         const separatorPos = arg.indexOf("=");
         let key, value;
