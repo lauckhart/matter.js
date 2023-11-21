@@ -38,6 +38,7 @@ import { PairedDevice, RootEndpoint } from "./Device.js";
 import { BasicInformation } from "../cluster/definitions/BasicInformationCluster.js";
 import { AdministratorCommissioning } from "../cluster/definitions/index.js";
 import { Crypto } from "../crypto/Crypto.js";
+import { EndpointInterface } from "../endpoint/EndpointInterface.js";
 import { DecodedEventReportValue } from "../protocol/interaction/EventDataDecoder.js";
 import { StatusResponseError } from "../protocol/interaction/InteractionMessenger.js";
 import { StatusCode } from "../protocol/interaction/InteractionProtocol.js";
@@ -52,7 +53,6 @@ import { Time } from "../time/Time.js";
 import { DeviceTypeDefinition, DeviceTypes, UnknownDeviceType, getDeviceTypeDefinitionByCode } from "./DeviceTypes.js";
 import { Endpoint } from "./Endpoint.js";
 import { EndpointLoggingOptions, logEndpoint } from "./EndpointStructureLogger.js";
-import { EndpointInterface } from "../endpoint/EndpointInterface.js";
 
 const logger = Logger.get("PairedNode");
 

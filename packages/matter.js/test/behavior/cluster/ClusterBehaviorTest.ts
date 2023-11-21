@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterBehavior } from "../../../src/behavior/cluster/ClusterBehavior.js";
+import { Behavior } from "../../../src/behavior/Behavior.js";
 import { InvocationContext } from "../../../src/behavior/InvocationContext.js";
+import { ClusterBehavior } from "../../../src/behavior/cluster/ClusterBehavior.js";
+import { State } from "../../../src/behavior/state/State.js";
 import { Observable } from "../../../src/util/Observable.js";
 import { MaybePromise } from "../../../src/util/Type.js";
-import { MyBehavior } from "./cluster-behavior-test-util.js";
-import { Behavior } from "../../../src/behavior/Behavior.js";
-import { State } from "../../../src/behavior/state/State.js";
 import { MockPart } from "../../endpoint/part-mocks.js";
+import { MyBehavior } from "./cluster-behavior-test-util.js";
 
 describe("ClusterBehavior", () => {
     type Match<Input, Type> = Input extends Type ? true : false;
@@ -42,41 +42,34 @@ describe("ClusterBehavior", () => {
             ClusterBehavior satisfies ClusterBehavior.Type;
             typeof ClusterBehavior === "function";
         });
-    })
+    });
 
     describe("ClusterBehavior.for", () => {
         it("exposes mandatory properties for enabled cluster elements", () => {
             ({}) as MyBehavior satisfies {
                 state: {
-                    reqAttr: string,
-                    reqFabricAttr: string
-                }
+                    reqAttr: string;
+                    reqFabricAttr: string;
+                };
             };
-            expect((new MyBehavior.EndpointScope).reqAttr).equals("hello");
-            expect((new MyBehavior.FabricScope).reqFabricAttr).equals("world");
-            
+            expect(new MyBehavior.EndpointScope().reqAttr).equals("hello");
+            expect(new MyBehavior.FabricScope().reqFabricAttr).equals("world");
+
             ({}) as MyBehavior satisfies {
-                reqCmd: (request: string, state: any) => MaybePromise<string>
+                reqCmd: (request: string, state: any) => MaybePromise<string>;
             };
             expect(typeof MyBehavior.prototype.reqCmd).equals("function");
-            
+
             ({}) as MyBehavior satisfies {
                 events: {
-                    reqAttr$change: Observable<[
-                        value: string,
-                        oldValue: string,
-                        context?: InvocationContext
-                    ]>
-                }
+                    reqAttr$change: Observable<[value: string, oldValue: string, context?: InvocationContext]>;
+                };
             };
-            
+
             ({}) as MyBehavior satisfies {
                 events: {
-                    reqEv: Observable<[
-                        string,
-                        context?: InvocationContext
-                    ]>
-                }
+                    reqEv: Observable<[string, context?: InvocationContext]>;
+                };
             };
         });
 
@@ -118,9 +111,9 @@ describe("ClusterBehavior", () => {
                 override optCmd(request: boolean): boolean {
                     return !request;
                 }
-            }
+            };
             Ignored;
-        })
+        });
     });
 
     describe("for", () => {

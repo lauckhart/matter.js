@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NotImplementedError } from "../common/MatterError.js";
-import { State } from "./state/State.js";
-import type { BehaviorBacking } from "./BehaviorBacking.js";
 import type { ClusterType } from "../cluster/ClusterType.js";
+import { NotImplementedError } from "../common/MatterError.js";
 import { Agent } from "../endpoint/Agent.js";
-import { EventEmitter } from "../util/Observable.js";
-import type { LifecycleBehavior } from "./definitions/lifecycle/LifecycleBehavior.js";
 import { GeneratedClass } from "../util/GeneratedClass.js";
+import { EventEmitter } from "../util/Observable.js";
+import type { BehaviorBacking } from "./BehaviorBacking.js";
+import type { LifecycleBehavior } from "./definitions/lifecycle/LifecycleBehavior.js";
+import { State } from "./state/State.js";
 
 // We store state and events using this symbol because TS prevents us from
 // defining the corresponding getters as part of the class
@@ -30,11 +30,11 @@ interface Internal extends Behavior {
 /**
  * Behavior implements functionality for an Endpoint.  Endpoint agents are
  * implemented as a composition of behaviors.
- * 
+ *
  * Most behaviors associated 1:1 with a Matter cluster type as implemented by
  * ClusterBehavior.  But you can also extend Behavior directly to add other
  * types of composable logic to an endpoint.
- * 
+ *
  * You probably want to build your behavior using one of the standard
  * implementations offered by Matter.js.
  */
@@ -45,10 +45,10 @@ export abstract class Behavior {
      * Each behavior implementation has an ID that uniquely identifies the
      * type of behavior.  An Endpoint may only have one behavior with the
      * specified ID.
-     * 
+     *
      * Endpoint instances store each behavior in a property with the same name
      * as the behavior's ID.
-     * 
+     *
      * EndpointBuilder also uses the ID when replacing behaviors using the
      * with() builder method.
      */
@@ -116,7 +116,7 @@ export abstract class Behavior {
     /**
      * Behaviors are ephemeral and should not perform initialization in their
      * constructor.  They can override this method instead.
-     * 
+     *
      * This method is synchronous.  If a behavior has not completed
      * initialization before returning it should place itself into
      * {@link LifecycleBehavior.state.initializingBehaviors}.
@@ -135,9 +135,9 @@ export abstract class Behavior {
      */
     static get defaults(): Record<string, any> {
         return {
-            ...new this.EndpointScope,
-            ...new this.FabricScope
-        }
+            ...new this.EndpointScope(),
+            ...new this.FabricScope(),
+        };
     }
 
     /**
@@ -151,7 +151,7 @@ export abstract class Behavior {
             staticProperties: {
                 EndpointScope: this.EndpointScope.set(defaults),
                 FabricScope: this.FabricScope.set(defaults),
-            }
+            },
         }) as unknown as This;
     }
 }
@@ -168,7 +168,7 @@ Object.defineProperties(Behavior.prototype, {
             return this[STATE];
         },
 
-        enumerable: true
+        enumerable: true,
     },
 
     internal: {
@@ -179,7 +179,7 @@ Object.defineProperties(Behavior.prototype, {
             return this[INTERNAL];
         },
 
-        enumerable: false
+        enumerable: false,
     },
 
     events: {
@@ -190,8 +190,8 @@ Object.defineProperties(Behavior.prototype, {
             return this[EVENTS];
         },
 
-        enumerable: true
-    }
+        enumerable: true,
+    },
 });
 
 export namespace Behavior {
@@ -225,12 +225,10 @@ export namespace Behavior {
      * The state type of a behavior Type.  This includes endpoint- and
      * fabric-scoped properties.
      */
-    export type StateOf<B extends Type> =
-        InstanceType<B["EndpointScope"]> & InstanceType<B["FabricScope"]>;
+    export type StateOf<B extends Type> = InstanceType<B["EndpointScope"]> & InstanceType<B["FabricScope"]>;
 
     /**
      * Input variant of StateOf.
      */
-    export type InputStateOf<B extends Type> =
-        Partial<ClusterType.RelaxTypes<StateOf<B>>>;
+    export type InputStateOf<B extends Type> = Partial<ClusterType.RelaxTypes<StateOf<B>>>;
 }

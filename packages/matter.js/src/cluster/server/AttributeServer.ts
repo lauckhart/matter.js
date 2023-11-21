@@ -150,7 +150,11 @@ export abstract class BaseAttributeServer<T> {
  */
 export class FixedAttributeServer<T> extends BaseAttributeServer<T> {
     readonly isFixed: boolean = true;
-    protected readonly getter: (session?: Session<MatterDevice>, endpoint?: EndpointInterface, isFabricFiltered?: boolean) => T;
+    protected readonly getter: (
+        session?: Session<MatterDevice>,
+        endpoint?: EndpointInterface,
+        isFabricFiltered?: boolean,
+    ) => T;
 
     constructor(
         id: AttributeId,

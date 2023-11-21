@@ -129,7 +129,8 @@ export function generateCluster(file: ClusterFile) {
 
 function generateClusterInterface(file: ClusterFile, documentation: string | Documentation, extraDoc?: string) {
     file.addImport("util/Type", "Identity");
-    file.ns.atom("export interface Cluster extends Identity<typeof ClusterInstance> {}")
+    file.ns
+        .atom("export interface Cluster extends Identity<typeof ClusterInstance> {}")
         .document(documentation, extraDoc);
     file.ns.undefine("Cluster");
     file.ns.atom("export const Cluster: Cluster = ClusterInstance");

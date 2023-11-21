@@ -15,32 +15,32 @@ const logger = Logger.get("ElementSupport");
 /**
  * Analyzes a ClusterBehavior implementation to ensure it conforms to the
  * Matter specification.
- * 
+ *
  * As this API is accessible via vanilla JavaScript, validation includes tests
  * for errors that TypeScript otherwise prevents.
- * 
+ *
  * Records elements supported and a list of errors if validation fails.
  */
 export class ValidatedElements {
     /**
      * Supported attributes.
      */
-    attributes = new Set<string>;
+    attributes = new Set<string>();
 
     /**
      * Supported commands.
      */
-    commands = new Set<string>;
+    commands = new Set<string>();
 
     /**
      * Supported events.
      */
-    events = new Set<string>;
+    events = new Set<string>();
 
     /**
      * A list of implementation errors, if any.
      */
-    errors?: { element: string, message: string }[];
+    errors?: { element: string; message: string }[];
 
     #name: string;
 
@@ -60,16 +60,10 @@ export class ValidatedElements {
         this.validateAttributes(
             behavior.cluster.attributes,
             behavior.EndpointScope?.prototype,
-            behavior.FabricScope?.prototype
+            behavior.FabricScope?.prototype,
         );
-        this.validateCommands(
-            behavior.cluster?.commands,
-            behavior.prototype,
-        );
-        this.validateEvents(
-            behavior.cluster?.events,
-            behavior.Events?.prototype,
-        );
+        this.validateCommands(behavior.cluster?.commands, behavior.prototype);
+        this.validateEvents(behavior.cluster?.events, behavior.Events?.prototype);
     }
 
     /**
@@ -86,12 +80,8 @@ export class ValidatedElements {
 
         throw new ImplementationError(
             `There ${
-                this.errors.length > 1
-                    ? `are ${this.errors.length} errors`
-                    : `is 1 error`
-            } in a ClusterBehavior implementation for property ${
-                this.#name
-            } (see log for details)`
+                this.errors.length > 1 ? `are ${this.errors.length} errors` : `is 1 error`
+            } in a ClusterBehavior implementation for property ${this.#name} (see log for details)`,
         );
     }
 
@@ -187,10 +177,7 @@ export class ValidatedElements {
         }
     }
 
-    private validateEvents(
-        events?: ClusterType.ElementSet<ClusterType.Event>,
-        emitters?: Record<string, any>
-    ) {
+    private validateEvents(events?: ClusterType.ElementSet<ClusterType.Event>, emitters?: Record<string, any>) {
         if (!events) {
             this.error("cluster.events", "Property missing");
             return;

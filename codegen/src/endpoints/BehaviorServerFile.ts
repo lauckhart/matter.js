@@ -14,7 +14,11 @@ export class BehaviorServerFile extends TsFile {
     static readonly baseName = "Server";
     readonly definitionName: string;
 
-    constructor(name: string, public cluster: ClusterModel, private variance: ClusterVariance) {
+    constructor(
+        name: string,
+        public cluster: ClusterModel,
+        private variance: ClusterVariance,
+    ) {
         super(name, true);
         this.definitionName = `${cluster.name}Server`;
         this.cluster = cluster;
@@ -29,21 +33,21 @@ export class BehaviorServerFile extends TsFile {
 
         let base;
         let extraDoc;
-        if ((this.variance.components).length) {
+        if (this.variance.components.length) {
             this.addImport(`../../../cluster/definitions/${this.cluster.name}Cluster`, this.cluster.name);
             this.atom(`const Base = ${this.cluster.name}Behavior.for(${this.cluster.name}.Complete)`);
-            base = 'Base';
-            extraDoc = `This implementation includes all features of ${this.cluster.name}.Cluster.  `
-                + `You should use ${this.cluster.name}Server.with to specialize the class for the features your `
-                + `implementation supports.`;
+            base = "Base";
+            extraDoc =
+                `This implementation includes all features of ${this.cluster.name}.Cluster.  ` +
+                `You should use ${this.cluster.name}Server.with to specialize the class for the features your ` +
+                `implementation supports.`;
         } else {
             base = `${this.cluster.name}Behavior`;
         }
 
-        this.statements(`export class ${this.cluster.name}Server extends ${base} {`, `}`)
-            .document(
-                `This is the default server implementation of ${this.cluster.name}Behavior.`,
-                extraDoc
-            );
+        this.statements(`export class ${this.cluster.name}Server extends ${base} {`, `}`).document(
+            `This is the default server implementation of ${this.cluster.name}Behavior.`,
+            extraDoc,
+        );
     }
 }

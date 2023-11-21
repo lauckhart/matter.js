@@ -16,7 +16,7 @@ import type { Part } from "../Part.js";
 export interface PartOwner {
     /**
      * Initialize a behavior.
-     * 
+     *
      * @param part the {@link Part} the behavior belongs to
      * @param type the {@link Behavior} type
      * @returns a new {@link BehaviorBacking}

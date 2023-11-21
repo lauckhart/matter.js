@@ -12,12 +12,12 @@ import { SupportedBehaviors } from "../part/SupportedBehaviors.js";
  * An EndpointType defines functionality for an endpoint.
  */
 export interface EndpointType {
-    name: string,
-    deviceType: DeviceTypeId,
-    deviceRevision: number,
-    deviceClass: DeviceClasses,
-    behaviors: SupportedBehaviors,
-    requirements: EndpointType.Requirements,
+    name: string;
+    deviceType: DeviceTypeId;
+    deviceRevision: number;
+    deviceClass: DeviceClasses;
+    behaviors: SupportedBehaviors;
+    requirements: EndpointType.Requirements;
 }
 
 /**
@@ -28,7 +28,7 @@ export function EndpointType<const T extends EndpointType.Options>(options: T) {
         ...options,
         deviceClass: options.deviceClass ?? DeviceClasses.Simple,
         behaviors: options.behaviors ?? {},
-        requirements: options.requirements ?? {}
+        requirements: options.requirements ?? {},
     } as unknown as EndpointType.For<T>;
 }
 
@@ -39,31 +39,30 @@ export namespace EndpointType {
     export interface Empty extends Omit<EndpointType, "behaviors" | "requirements"> {
         behaviors: {};
         requirements: {};
-    };
+    }
 
     /**
      * A fully typed {@link EndpointType} defined by {@link EndpointType.Options}.
      */
-    export type For<T extends EndpointType.Options> =
-        & {
-            name: T["name"],
-            deviceType: DeviceTypeId,
-            deviceRevision: number,
-            deviceClass: DeviceClasses,
-            behaviors: T["behaviors"] extends SupportedBehaviors ? T["behaviors"] : {},
-            requirements: T["requirements"] extends Requirements ? T["requirements"] : {},
-        };
+    export type For<T extends EndpointType.Options> = {
+        name: T["name"];
+        deviceType: DeviceTypeId;
+        deviceRevision: number;
+        deviceClass: DeviceClasses;
+        behaviors: T["behaviors"] extends SupportedBehaviors ? T["behaviors"] : {};
+        requirements: T["requirements"] extends Requirements ? T["requirements"] : {};
+    };
 
     /**
      * Endpoint configuration.
      */
     export interface Options {
-        name: string,
-        deviceType: number,
-        deviceRevision: number,
-        deviceClass?: DeviceClasses,
-        behaviors?: SupportedBehaviors,
-        requirements?: Requirements,
+        name: string;
+        deviceType: number;
+        deviceRevision: number;
+        deviceClass?: DeviceClasses;
+        behaviors?: SupportedBehaviors;
+        requirements?: Requirements;
     }
 
     /**

@@ -10,6 +10,6 @@ import "./net/register.js";
 
 import "./crypto/register.js";
 
-import "./storage/register.js";
+import "./environment/register.js";
 
 export * from "@project-chip/matter.js";

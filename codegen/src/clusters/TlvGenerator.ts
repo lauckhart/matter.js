@@ -29,12 +29,15 @@ class InternalError extends Error {}
 export class TlvGenerator {
     private definedDatatypes = new Set<Model>();
     private scopedNames = new Set<string>();
-    
+
     get file() {
         return this.definitions.file;
     }
 
-    constructor(public cluster: ClusterModel, public definitions: Block) {
+    constructor(
+        public cluster: ClusterModel,
+        public definitions: Block,
+    ) {
         // Find datatype names that conflict at top-level module scope.
         // Datatypes at cluster level get to use their own name but for nested
         // structures we prepend the parent name

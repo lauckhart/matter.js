@@ -9,8 +9,8 @@ import { DeviceTypeElement, DeviceTypeModel } from "@project-chip/matter.js/mode
 import { describeList } from "@project-chip/matter.js/util";
 import { Block, TsFile } from "../util/TsFile.js";
 import { clean } from "../util/file.js";
-import { RequirementGenerator } from "./RequirementGenerator.js";
 import { serialize } from "../util/string.js";
+import { RequirementGenerator } from "./RequirementGenerator.js";
 
 const logger = Logger.get("EndpointFile");
 
@@ -25,10 +25,7 @@ export class EndpointFile extends TsFile {
         let name;
         let specName;
 
-        if (
-            model.classification === DeviceTypeElement.Classification.Simple
-                && model.name !== "BridgedNode"
-        ) {
+        if (model.classification === DeviceTypeElement.Classification.Simple && model.name !== "BridgedNode") {
             specName = model.name;
             name = `${model.name}Device`;
             path = `device/${name}`;
@@ -121,22 +118,10 @@ export class EndpointFile extends TsFile {
 
         this.addImport("util/Type", "Identity");
         const intf = this.atom(
-            `export interface ${
-                this.definitionName
-            } extends Identity<typeof ${
-                this.definitionName
-            }Definition> {}`
+            `export interface ${this.definitionName} extends Identity<typeof ${this.definitionName}Definition> {}`,
         );
         this.undefine(this.definitionName);
-        this.atom(
-            `export const ${
-                this.definitionName
-            }: ${
-                this.definitionName
-            } = ${
-                this.definitionName
-            }Definition`
-        );
+        this.atom(`export const ${this.definitionName}: ${this.definitionName} = ${this.definitionName}Definition`);
 
         if (requirements.mandatoryWithExtension) {
             // Additional clusters are required

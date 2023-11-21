@@ -14,7 +14,7 @@ import { BitSchema, TypeFromPartialBitSchema } from "../schema/BitmapSchema.js";
 
 /**
  * The primary interface for Matter.js endpoint implementations.
- * 
+ *
  * TODO - this interface represents a wad of deferred architectural decisions,
  * a quick way to redirect to generated device cluster management
  */
@@ -30,10 +30,7 @@ export interface EndpointInterface {
     destroy(): void;
     setStructureChangedCallback(callback: () => void): void;
 
-    addClusterServer<
-        A extends Attributes,
-        E extends Events,
-    >(server: ClusterServerObj<A, E>): void;
+    addClusterServer<A extends Attributes, E extends Events>(server: ClusterServerObj<A, E>): void;
     hasClusterServer(cluster: ClusterType): boolean;
     getClusterServer<
         F extends BitSchema,
@@ -41,23 +38,24 @@ export interface EndpointInterface {
         A extends Attributes,
         C extends Commands,
         E extends Events,
-    >(cluster: Cluster<F, SF, A, C, E>): ClusterServerObj<A, E> | undefined;
+    >(
+        cluster: Cluster<F, SF, A, C, E>,
+    ): ClusterServerObj<A, E> | undefined;
     getClusterServerById(clusterId: ClusterId): ClusterServerObj<Attributes, Events> | undefined;
     getAllClusterServers(): ClusterServerObj<Attributes, Events>[];
 
-    addClusterClient<
-        F extends BitSchema,
-        A extends Attributes,
-        C extends Commands,
-        E extends Events,
-    > (client: ClusterClientObj<F, A, C, E>): void;
+    addClusterClient<F extends BitSchema, A extends Attributes, C extends Commands, E extends Events>(
+        client: ClusterClientObj<F, A, C, E>,
+    ): void;
     getClusterClient<
         F extends BitSchema,
         SF extends TypeFromPartialBitSchema<F>,
         A extends Attributes,
         C extends Commands,
         E extends Events,
-    >(cluster: Cluster<F, SF, A, C, E>): ClusterClientObj<F, A, C, E> | undefined;
+    >(
+        cluster: Cluster<F, SF, A, C, E>,
+    ): ClusterClientObj<F, A, C, E> | undefined;
     getAllClusterClients(): ClusterClientObj<any, Attributes, Commands, Events>[];
 
     addChildEndpoint(endpoint: EndpointInterface): void;

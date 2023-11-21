@@ -172,21 +172,19 @@ export namespace ClusterComposer {
     /**
      * The result of composition.
      */
-    export type WithFeatures<
-        ClusterT extends ClusterType,
-        FeaturesT extends FeatureSelection<BaseOf<ClusterT>>,
-    > = Omit<BaseOf<ClusterT>, "supportedFeatures" | "base" | ElementType> & {
+    export type WithFeatures<ClusterT extends ClusterType, FeaturesT extends FeatureSelection<BaseOf<ClusterT>>> = Omit<
+        BaseOf<ClusterT>,
+        "supportedFeatures" | "base" | ElementType
+    > & {
         supportedFeatures: FeaturesAsFlags<BaseOf<ClusterT>, FeaturesT>;
         base: BaseOf<ClusterT>;
     } & WithSelected<
-        ClusterT,
-        SelectedElements<
-            FeaturesAsFlags<ClusterT, FeaturesT>,
-            ClusterT["extensions"] extends object
-                ? ClusterT["extensions"]
-                : []
-        >
-    >;
+            ClusterT,
+            SelectedElements<
+                FeaturesAsFlags<ClusterT, FeaturesT>,
+                ClusterT["extensions"] extends object ? ClusterT["extensions"] : []
+            >
+        >;
 
     /**
      * Convert a {@link FeatureSelection} array into a {@link FeatureFlags}
@@ -233,8 +231,7 @@ export namespace ClusterComposer {
     export type WithSelected<ClusterT extends ClusterType, SelectedT extends Component> = [SelectedT] extends [never]
         ? never
         : {
-              [TypeT in ElementType]: // Include elements in current cluster if valid according to base
-              // and extensions
+              [TypeT in ElementType]: // and extensions // Include elements in current cluster if valid according to base
               Pick<ClusterT[TypeT], keyof ClusterT[TypeT] & (keyof BaseOf<ClusterT>[TypeT] | keyof SelectedT[TypeT])> &
                   // Include extension elements if not present in current cluster
                   Omit<SelectedT[TypeT], keyof ClusterT[TypeT]> &

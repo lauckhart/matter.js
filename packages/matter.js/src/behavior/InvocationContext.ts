@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { Message } from "../codec/MessageCodec.js";
-import { Session } from "../session/Session.js";
 import { MatterDevice } from "../MatterDevice.js";
+import type { Message } from "../codec/MessageCodec.js";
 import { Fabric } from "../fabric/Fabric.js";
+import { Session } from "../session/Session.js";
 import { Behavior } from "./Behavior.js";
 
 /**

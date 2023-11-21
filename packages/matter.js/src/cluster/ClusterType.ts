@@ -54,7 +54,7 @@ export function ClusterType<const T extends ClusterType.Options>(options: T) {
     }
 
     if (options.extensions) {
-        cluster.extensions = options.extensions as ClusterType.Of<T>["extensions"];;
+        cluster.extensions = options.extensions as ClusterType.Of<T>["extensions"];
     }
 
     return cluster;
@@ -182,35 +182,32 @@ export namespace ClusterType {
      * Extract the type of a cluster's attributes (excluding global
      * attributes).
      */
-    export type AttributesOf<C> =
-        C extends { attributes: infer E extends { [K in string]: ClusterType.Attribute } }
-            ? string extends keyof E
-                ? EmptyElementSet<Attribute>
-                : Omit<
-                    { -readonly [K in (string & keyof E) as E[K] extends ClusterType.Attribute ? K : never]: E[K] },
-                    keyof GlobalAttributes<any>
-                >
-            : EmptyElementSet<Attribute>;
+    export type AttributesOf<C> = C extends { attributes: infer E extends { [K in string]: ClusterType.Attribute } }
+        ? string extends keyof E
+            ? EmptyElementSet<Attribute>
+            : Omit<
+                  { -readonly [K in string & keyof E as E[K] extends ClusterType.Attribute ? K : never]: E[K] },
+                  keyof GlobalAttributes<any>
+              >
+        : EmptyElementSet<Attribute>;
 
     /**
      * Extract the type of a cluster's commands.
      */
-    export type CommandsOf<C> =
-        C extends { commands: infer E extends { [K in string]: ClusterType.Command } }
-            ? string extends keyof E
-                ? EmptyElementSet<Command>
-                : { -readonly [K in keyof E as E[K] extends ClusterType.Command ? K : never]: E[K] }
-            : EmptyElementSet<Command>;
+    export type CommandsOf<C> = C extends { commands: infer E extends { [K in string]: ClusterType.Command } }
+        ? string extends keyof E
+            ? EmptyElementSet<Command>
+            : { -readonly [K in keyof E as E[K] extends ClusterType.Command ? K : never]: E[K] }
+        : EmptyElementSet<Command>;
 
     /**
      * Extract the type of a cluster's events.
      */
-    export type EventsOf<C> =
-        C extends { events: infer E extends { [K in string]: ClusterType.Event } }
-            ? string extends keyof E
-                ? EmptyElementSet<Command>
-                : { -readonly [K in keyof E as E[K] extends ClusterType.Event ? K : never]: E[K] }
-            : EmptyElementSet<Event>;
+    export type EventsOf<C> = C extends { events: infer E extends { [K in string]: ClusterType.Event } }
+        ? string extends keyof E
+            ? EmptyElementSet<Command>
+            : { -readonly [K in keyof E as E[K] extends ClusterType.Event ? K : never]: E[K] }
+        : EmptyElementSet<Event>;
 
     /**
      * This bit of hackery describes a set that has no elements but for which
@@ -308,7 +305,7 @@ export namespace ClusterType {
 
         attributes: {},
         commands: {},
-        events: {}
+        events: {},
     });
     export type Unknown = typeof Unknown;
 }

@@ -4,26 +4,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterServer } from "../../cluster/server/ClusterServer.js";
-import { ValidatedElements } from "../cluster/ValidatedElements.js";
-import type { ClusterBehavior } from "../cluster/ClusterBehavior.js";
-import type {
-    ClusterServerObj,
-    CommandHandler,
-    SupportedEventsList
-} from "../../cluster/server/ClusterServerTypes.js";
-import type { Part } from "../../endpoint/Part.js";
-import { InvocationContext } from "../InvocationContext.js";
-import { Session } from "../../session/Session.js";
 import { MatterDevice } from "../../MatterDevice.js";
-import { EndpointInterface } from "../../endpoint/EndpointInterface.js";
-import { ImplementationError, InternalError } from "../../common/MatterError.js";
-import { isDeepEqual } from "../../util/DeepEqual.js";
-import { ClusterEvents } from "../cluster/ClusterEvents.js";
-import { AttributeServer, FabricScopedAttributeServer } from "../../cluster/server/AttributeServer.js";
-import { SecureSession } from "../../session/SecureSession.js";
-import { ServerBehaviorBacking } from "./ServerBehaviorBacking.js";
 import { Attributes, Events } from "../../cluster/Cluster.js";
+import { AttributeServer, FabricScopedAttributeServer } from "../../cluster/server/AttributeServer.js";
+import { ClusterServer } from "../../cluster/server/ClusterServer.js";
+import type { ClusterServerObj, CommandHandler, SupportedEventsList } from "../../cluster/server/ClusterServerTypes.js";
+import { ImplementationError, InternalError } from "../../common/MatterError.js";
+import { EndpointInterface } from "../../endpoint/EndpointInterface.js";
+import type { Part } from "../../endpoint/Part.js";
+import { SecureSession } from "../../session/SecureSession.js";
+import { Session } from "../../session/Session.js";
+import { isDeepEqual } from "../../util/DeepEqual.js";
+import { InvocationContext } from "../InvocationContext.js";
+import type { ClusterBehavior } from "../cluster/ClusterBehavior.js";
+import { ClusterEvents } from "../cluster/ClusterEvents.js";
+import { ValidatedElements } from "../cluster/ValidatedElements.js";
+import { ServerBehaviorBacking } from "./ServerBehaviorBacking.js";
 
 /**
  * Backing for cluster behaviors on servers.
@@ -57,12 +53,7 @@ export class ClusterServerBehaviorBacking extends ServerBehaviorBacking {
         }
 
         // Create the cluster server
-        this.#clusterServer = ClusterServer(
-            type.cluster,
-            type.defaults,
-            handlers,
-            supportedEvents
-        )
+        this.#clusterServer = ClusterServer(type.cluster, type.defaults, handlers, supportedEvents);
 
         // Monitor change events so we can notify the cluster server of data
         // changes
@@ -73,7 +64,7 @@ export class ClusterServerBehaviorBacking extends ServerBehaviorBacking {
         for (const name in this.#clusterServer.attributes) {
             const attr = this.#clusterServer.attributes[name];
             if (attr) {
-                attr.addValueChangeListener
+                attr.addValueChangeListener;
             }
         }
     }
@@ -84,7 +75,7 @@ export class ClusterServerBehaviorBacking extends ServerBehaviorBacking {
 }
 
 function createCommandHandler(backing: ClusterServerBehaviorBacking, name: string): CommandHandler<any, any, any> {
-    return (args) => {
+    return args => {
         const context: InvocationContext = {
             fabric: args.session.getAssociatedFabric(),
             session: args.session,
@@ -94,35 +85,31 @@ function createCommandHandler(backing: ClusterServerBehaviorBacking, name: strin
         const agent = backing.part.getAgent(context);
         const behavior = agent.get(backing.type);
         return (behavior as unknown as Record<string, (arg: any) => any>)[name](args.request);
-    }
+    };
 }
 
-function createAttributeAccessors(backing: ClusterServerBehaviorBacking, name: string, fabric: boolean):
-    {
-        get: (session?: Session<MatterDevice>, endpoint?: EndpointInterface) => any,
-        set: (value: any, session?: Session<MatterDevice>, endpoint?: EndpointInterface) => boolean,
-    }
-{
+function createAttributeAccessors(
+    backing: ClusterServerBehaviorBacking,
+    name: string,
+    fabric: boolean,
+): {
+    get: (session?: Session<MatterDevice>, endpoint?: EndpointInterface) => any;
+    set: (value: any, session?: Session<MatterDevice>, endpoint?: EndpointInterface) => boolean;
+} {
     const getScope = fabric
-        ?
-            (op: string, session?: Session<MatterDevice>) => {
-                const fabric = session?.getAssociatedFabric();
-                if (!fabric) {
-                    throw new InternalError(`Attempted ${
-                        op
-                    } on ${
-                        backing.clusterServer.name
-                    } attribute ${
-                        name
-                    } without associated fabric`);
-                }
+        ? (op: string, session?: Session<MatterDevice>) => {
+              const fabric = session?.getAssociatedFabric();
+              if (!fabric) {
+                  throw new InternalError(
+                      `Attempted ${op} on ${backing.clusterServer.name} attribute ${name} without associated fabric`,
+                  );
+              }
 
-                return backing.getFabricScope(fabric) as Record<string, any>;
-            }
-        :
-            () => {
-                return backing.endpointScope as Record<string, any>;
-            };
+              return backing.getFabricScope(fabric) as Record<string, any>;
+          }
+        : () => {
+              return backing.endpointScope as Record<string, any>;
+          };
 
     return {
         get() {
@@ -136,14 +123,12 @@ function createAttributeAccessors(backing: ClusterServerBehaviorBacking, name: s
             }
             scope[name] = value;
             return true;
-        }
-    }
+        },
+    };
 }
 
 function createChangeHandler(backing: ClusterServerBehaviorBacking, name: string) {
-    const observable =
-        (backing.events as any)[`${name}$change`] as
-            ClusterEvents.AttributeObservable;
+    const observable = (backing.events as any)[`${name}$change`] as ClusterEvents.AttributeObservable;
     if (!observable) {
         return;
     }
@@ -154,7 +139,7 @@ function createChangeHandler(backing: ClusterServerBehaviorBacking, name: string
     }
 
     if (attributeServer instanceof FabricScopedAttributeServer) {
-        observable((_value, _oldValue, context) => {
+        observable.on((_value, _oldValue, context) => {
             const session = context.session;
             if (session instanceof SecureSession) {
                 attributeServer.updated(session);
@@ -163,15 +148,15 @@ function createChangeHandler(backing: ClusterServerBehaviorBacking, name: string
             } else {
                 throw new ImplementationError(`Attribute with fabric-scoped server updated outside of fabric context`);
             }
-        })
+        });
     } else if (attributeServer instanceof AttributeServer) {
-        observable((_value, _oldValue, context) => {
+        observable.on((_value, _oldValue, context) => {
             const session = context.session;
             if (session instanceof SecureSession) {
                 attributeServer.updated(session);
             } else {
                 attributeServer.updatedLocal();
             }
-        })
+        });
     }
 }

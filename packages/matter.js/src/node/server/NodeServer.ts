@@ -5,23 +5,23 @@
  */
 
 import { CommissioningServer } from "../../CommissioningServer.js";
+import { LifecycleBehavior } from "../../behavior/definitions/lifecycle/LifecycleBehavior.js";
+import { PartsBehavior } from "../../behavior/definitions/parts/PartsBehavior.js";
 import { ImplementationError } from "../../common/MatterError.js";
 import { Part } from "../../endpoint/Part.js";
-import { LifecycleBehavior } from "../../behavior/definitions/lifecycle/LifecycleBehavior.js";
 import { PartServer } from "../../endpoint/server/PartServer.js";
+import { EndpointType } from "../../endpoint/type/EndpointType.js";
 import { Node } from "../Node.js";
 import { Runner } from "../Runner.js";
 import { ServerConfiguration } from "./ServerConfiguration.js";
 import { ServerOptions } from "./ServerOptions.js";
-import { EndpointType } from "../../endpoint/type/EndpointType.js";
-import { PartsBehavior } from "../../behavior/definitions/parts/PartsBehavior.js";
 
 /**
  * Implementation of a Matter Node server.
- * 
+ *
  * This is this highest-level API Matter.js offers for implementing a Matter
  * Node.
- * 
+ *
  * This is perhaps more appropriately called "ServerNode" but that gets
  * confusing with the conventions of matter-node.js.
  */
@@ -35,7 +35,7 @@ export class NodeServer extends CommissioningServer implements Node {
         const root = configuration.root;
         super({
             ...configuration.commissioningServerOptions,
-            rootEndpoint: new PartServer(root)
+            rootEndpoint: new PartServer(root),
         });
         configuration.owner = this;
         this.#configuration = configuration;
@@ -60,7 +60,7 @@ export class NodeServer extends CommissioningServer implements Node {
 
     /**
      * Run the node in "standalone" mode.
-     * 
+     *
      * This mode creates a {@link Runner} dedicated to this node.
      */
     async run() {

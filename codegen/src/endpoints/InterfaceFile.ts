@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Block, TsFile } from "../util/TsFile.js";
-import { ClusterModel, ClusterVariance } from "@project-chip/matter.js/model";
 import { Logger } from "@project-chip/matter.js/log";
+import { ClusterModel, ClusterVariance } from "@project-chip/matter.js/model";
+import { Block, TsFile } from "../util/TsFile.js";
 import { InterfaceGenerator } from "./InterfaceGenerator.js";
 
 const logger = Logger.get("InterfaceFile");
@@ -17,7 +17,11 @@ export class InterfaceFile extends TsFile {
     readonly cluster: ClusterModel;
     readonly ns: Block;
 
-    constructor(name: string, cluster: ClusterModel, private variance: ClusterVariance) {
+    constructor(
+        name: string,
+        cluster: ClusterModel,
+        private variance: ClusterVariance,
+    ) {
         super(name);
         this.definitionName = `${cluster.name}Interface`;
         this.cluster = cluster;

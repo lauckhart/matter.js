@@ -5,28 +5,19 @@
  */
 
 import { Part } from "../../../../src/endpoint/Part.js";
-import { MockEndpoint, MockParentEndpoint } from "../../behavior-mocks.js";
 import { MockPart } from "../../../endpoint/part-mocks.js";
+import { MockEndpoint, MockParentEndpoint } from "../../behavior-mocks.js";
 
 function createParent() {
-    return new MockPart(
-        MockParentEndpoint,
-        { id: 1 },
-    ).agent;
+    return new MockPart(MockParentEndpoint, { id: 1 }).agent;
 }
 
 function createParentAndChild() {
-    return new MockPart(
-        MockParentEndpoint,
-        { id: 2, owner: undefined },
-    ).agent;
+    return new MockPart(MockParentEndpoint, { id: 2, owner: undefined }).agent;
 }
 
 function createChild() {
-    return new MockPart(
-        MockEndpoint,
-        { id: 3, owner: undefined },
-    ).agent;
+    return new MockPart(MockEndpoint, { id: 3, owner: undefined }).agent;
 }
 
 describe("PartsBehavior", () => {
@@ -41,7 +32,7 @@ describe("PartsBehavior", () => {
         expect(parts.state.children.size).equals(1);
 
         expect(child.part.owner).equals(parent.part);
-    })
+    });
 
     it("disowns destroyed parts", () => {
         const parent = createParent();
@@ -56,7 +47,7 @@ describe("PartsBehavior", () => {
 
         expect(parts.size).equals(0);
         expect(parts.state.children.size).equals(0);
-    })
+    });
 
     it("bubbles adds", () => {
         const parent = createParent();
@@ -66,14 +57,12 @@ describe("PartsBehavior", () => {
         parent.parts.add(child);
 
         let bubbled: Part | undefined;
-        parent.lifecycle.events.structure$change(
-            part => bubbled = part
-        )
+        parent.lifecycle.events.structure$change.on(part => (bubbled = part));
 
         child.parts.add(grandchild);
 
         expect(bubbled).equals(child.part);
-    })
+    });
 
     it("bubbles delete", () => {
         const parent = createParent();
@@ -84,12 +73,10 @@ describe("PartsBehavior", () => {
         child.parts.add(grandchild);
 
         let bubbled: Part | undefined;
-        parent.lifecycle.events.structure$change(
-            part => bubbled = part
-        )
+        parent.lifecycle.events.structure$change.on(part => (bubbled = part));
 
         grandchild.part.destroy();
 
         expect(bubbled).equals(child.part);
-    })
-})
+    });
+});

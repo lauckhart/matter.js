@@ -18,7 +18,7 @@ import { OperationalCredentials } from "./cluster/definitions/OperationalCredent
 import { MAXIMUM_COMMISSIONING_TIMEOUT_S } from "./cluster/server/AdministratorCommissioningServer.js";
 import { Channel } from "./common/Channel.js";
 import { FailSafeManager } from "./common/FailSafeManager.js";
-import { ProductDescription, InstanceBroadcaster } from "./common/InstanceBroadcaster.js";
+import { InstanceBroadcaster, ProductDescription } from "./common/InstanceBroadcaster.js";
 import { InternalError, MatterFlowError } from "./common/MatterError.js";
 import { Scanner } from "./common/Scanner.js";
 import { TransportInterface } from "./common/TransportInterface.js";

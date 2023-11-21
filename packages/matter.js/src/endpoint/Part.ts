@@ -4,23 +4,23 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ImplementationError } from "../common/MatterError.js";
-import { Agent } from "./Agent.js";
-import { EndpointType } from "./type/EndpointType.js";
-import { Behaviors } from "./part/Behaviors.js";
-import { LifecycleBehavior } from "../behavior/definitions/lifecycle/LifecycleBehavior.js";
-import { EndpointNumber } from "../datatype/EndpointNumber.js";
+import { Behavior } from "../behavior/Behavior.js";
+import { BehaviorBacking } from "../behavior/BehaviorBacking.js";
+import type { InvocationContext } from "../behavior/InvocationContext.js";
 import { BasicInformationBehavior } from "../behavior/definitions/basic-information/BasicInformationBehavior.js";
 import { BridgedDeviceBasicInformationBehavior } from "../behavior/definitions/bridged-device-basic-information/BridgedDeviceBasicInformationBehavior.js";
-import { BehaviorBacking } from "../behavior/BehaviorBacking.js";
-import { Behavior } from "../behavior/Behavior.js";
-import type { InvocationContext } from "../behavior/InvocationContext.js";
+import { LifecycleBehavior } from "../behavior/definitions/lifecycle/LifecycleBehavior.js";
+import { ImplementationError } from "../common/MatterError.js";
+import { EndpointNumber } from "../datatype/EndpointNumber.js";
+import { Agent } from "./Agent.js";
+import { Behaviors } from "./part/Behaviors.js";
 import type { PartOwner } from "./part/PartOwner.js";
+import { EndpointType } from "./type/EndpointType.js";
 
 /**
  * Endpoints consist of a root part and one or more child parts.  This class
  * manages the current state of a single part.
- * 
+ *
  * You can interact with endpoints using an {@link Agent} created
  * with {@link Part.getAgent}.  Agents are stateless and designed for quick
  * instantiation so you can create them as needed then discard.
@@ -35,7 +35,7 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
     #behaviors: Behaviors;
 
     constructor(type: T, options?: Part.Options) {
-        if (type === null || (typeof type !== "object")) {
+        if (type === null || typeof type !== "object") {
             throw new ImplementationError(`Part type is not an object`);
         }
 
@@ -44,7 +44,7 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
         if (options?.id !== undefined) {
             this.id = EndpointNumber(options.id);
         }
-        
+
         if (options?.key !== undefined) {
             // Any other limitations?
             if (typeof options.key !== "string" || !options.key.length) {
@@ -54,7 +54,7 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
         }
 
         const behaviors = type.behaviors ?? [];
-        
+
         this.#behaviors = new Behaviors(this, behaviors);
 
         this.#behaviors.require(LifecycleBehavior);
@@ -121,12 +121,7 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
             throw new ImplementationError(`Endpoint ID ${value} is out of bounds`);
         }
         if (this.#id !== undefined && this.#id !== value) {
-            throw new ImplementationError(
-                `Illegal attempt to reassign endpoint ${
-                    this.#id
-                } ID to ${
-                    value
-                }`);
+            throw new ImplementationError(`Illegal attempt to reassign endpoint ${this.#id} ID to ${value}`);
         }
         this.#id = value;
 
@@ -157,13 +152,9 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
                 description = ` #${this.id}`;
             }
         }
-        description = `Endpoint ${
-            description ?? ""
-        } of type ${
+        description = `Endpoint ${description ?? ""} of type ${
             this.type.name
-        } (device type 0x${
-            this.type.deviceType.toString(16)
-        })`;
+        } (device type 0x${this.type.deviceType.toString(16)})`;
 
         return description;
     }
@@ -184,14 +175,14 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
 
     /**
      * Obtain the key used to identify this part across invocations.
-     * 
+     *
      * @returns the key, or undefined if the key is unavailable
      */
     get uniqueId() {
         if (this.key) {
             return `custom_${this.key}`;
         }
-        
+
         const agent = this.agent;
         let basicInfo;
         if (agent.has(BasicInformationBehavior)) {
@@ -204,7 +195,7 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
 
         const uniqueId = basicInfo.uniqueId;
         if (uniqueId) {
-            return `unique_${uniqueId}`
+            return `unique_${uniqueId}`;
         }
 
         const serialNumber = basicInfo.serialNumber;
@@ -216,7 +207,7 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
     /**
      * Create an {@link Agent}.  This is the primary means of
      * interacting with an endpoint.
-     * 
+     *
      * If {@link InvocationContext.fabric} is not present the operation will
      * fail.
      */
@@ -230,7 +221,7 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
     /**
      * An {@link Agent} with no fabric scope.  Any operation of the
      * agent that references fabric scope will throw an error.
-     * 
+     *
      * This should only be used for local purposes.  All network interaction
      * should use {@link getAgent} to create a context-aware agent.
      */
@@ -264,7 +255,7 @@ export namespace Part {
      * Construction options for {@link Part}.
      */
     export interface Options {
-        key?: string,
-        id?: number,
+        key?: string;
+        id?: number;
     }
 }

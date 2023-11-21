@@ -5,13 +5,12 @@
  */
 
 import { OnOff } from "../../../cluster/definitions/OnOffCluster.js";
+import { Time, Timer } from "../../../time/Time.js";
+import { State } from "../../state/State.js";
 import { OnOffBehavior } from "./OnOffBehavior.js";
 import { OnOffInterface } from "./OnOffInterface.js";
-import { State } from "../../state/State.js";
-import { Time, Timer } from "../../../time/Time.js";
 
-const Base = OnOffBehavior
-    .for({ ...OnOff.Complete, supportedFeatures: { levelControlForLighting: true } });
+const Base = OnOffBehavior.for({ ...OnOff.Complete, supportedFeatures: { levelControlForLighting: true } });
 
 /**
  * This is the default server implementation of OnOffBehavior.
@@ -20,7 +19,7 @@ const Base = OnOffBehavior
  * the class for the features your implementation supports.
  */
 export class OnOffServer extends Base {
-    declare protected internal: OnOffServer.InternalScope;
+    protected declare internal: OnOffServer.InternalScope;
 
     override on() {
         this.state.onOff = true;
@@ -60,7 +59,7 @@ export class OnOffServer extends Base {
         let timer = this.internal.timedOnTimer;
         if (timer === undefined) {
             timer = this.internal.timedOnTimer = Time.getPeriodicTimer(100, () => {
-                let time = this.state.onTime ?? -.1;
+                let time = this.state.onTime ?? -0.1;
                 if (time <= 0) {
                     time = 0;
                     timer?.stop();
@@ -76,13 +75,13 @@ export class OnOffServer extends Base {
         let timer = this.internal.delayedOffTimer;
         if (timer === undefined) {
             timer = this.internal.delayedOffTimer = Time.getTimer(100, () => {
-                let time = this.state.offWaitTime ?? -.1;
+                let time = this.state.offWaitTime ?? -0.1;
                 if (time <= 0) {
                     time = 0;
                     timer?.stop(); // Delayed off
                 }
                 this.state.offWaitTime = time;
-            })
+            });
         }
         return timer;
     }

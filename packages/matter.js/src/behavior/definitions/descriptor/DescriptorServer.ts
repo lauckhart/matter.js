@@ -7,10 +7,10 @@
 import { Descriptor } from "../../../cluster/definitions/DescriptorCluster.js";
 import { ClusterId } from "../../../datatype/ClusterId.js";
 import { Part } from "../../../endpoint/Part.js";
-import { PartsBehavior } from "../parts/PartsBehavior.js";
 import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { isDeepEqual } from "../../../util/DeepEqual.js";
 import { Behavior } from "../../Behavior.js";
+import { PartsBehavior } from "../parts/PartsBehavior.js";
 import { DescriptorBehavior } from "./DescriptorBehavior.js";
 
 /**
@@ -26,13 +26,13 @@ export class DescriptorServer extends DescriptorBehavior {
                 {
                     deviceType: partType.deviceType,
                     revision: partType.deviceRevision,
-                }
+                },
             ];
         }
 
         this.addServers(...Object.values(part.behaviors.supported));
 
-        part.behaviors.supportAdded(behavior => this.addServers(behavior));
+        part.behaviors.supportAdded.on(behavior => this.addServers(behavior));
     }
 
     /**
@@ -53,10 +53,7 @@ export class DescriptorServer extends DescriptorBehavior {
     }
 
     private addServers(...types: Behavior.Type[]) {
-        this.state.serverList = this.addToList(
-            this.state.serverList,
-            this.getClusterIds(types),
-        );
+        this.state.serverList = this.addToList(this.state.serverList, this.getClusterIds(types));
 
         // If PartsBehavior is added, update partsList and add handlers to
         // synchronize going forward
@@ -65,33 +62,25 @@ export class DescriptorServer extends DescriptorBehavior {
                 const parts = this.agent.get(PartsBehavior);
 
                 this.addParts(...parts);
-                parts.added(part => this.addParts(part));
-                parts.deleted(part => this.removeParts(part));
+                parts.added.on(part => this.addParts(part));
+                parts.deleted.on(part => this.removeParts(part));
             }
         }
     }
 
     private addParts(...parts: Part[]) {
-        this.state.partsList = this.addToList(
-            this.state.partsList,
-            this.defined(parts.map(part => part.id)),
-        )
+        this.state.partsList = this.addToList(this.state.partsList, this.defined(parts.map(part => part.id)));
     }
 
     private removeParts(...parts: Part[]) {
         this.state.partsList = this.removeFromList(
             this.state.partsList,
-            parts.map(part => part.id)
-        )
+            parts.map(part => part.id),
+        );
     }
 
     private addToList<I>(list: I[], items: I[]) {
-        return [
-            ...new Set([
-                ...list ?? [],
-                ...items,
-            ])
-        ]
+        return [...new Set([...(list ?? []), ...items])];
     }
 
     private removeFromList<I>(list: I[], items: I[]) {
@@ -99,13 +88,11 @@ export class DescriptorServer extends DescriptorBehavior {
         for (const item of items) {
             set.delete(item);
         }
-        return [ ...set ] as Exclude<I, undefined>[];
+        return [...set] as Exclude<I, undefined>[];
     }
 
     private getClusterIds(types: Behavior.Type[]) {
-        return this.defined(
-            types.map(type => (type as { cluster?: { id?: ClusterId } }).cluster?.id)
-        );
+        return this.defined(types.map(type => (type as { cluster?: { id?: ClusterId } }).cluster?.id));
     }
 
     private defined<T>(items: (T | undefined)[]) {

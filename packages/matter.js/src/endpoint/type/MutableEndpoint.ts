@@ -64,16 +64,16 @@ export function MutableEndpoint<const T extends EndpointType.Options>(options: T
                     newBehaviors.push(behavior.set(updates));
                 }
             }
-    
+
             return this.with(...newBehaviors);
         },
 
         with(this: MutableEndpoint, ...behaviors: Behavior.Type[]) {
             return MutableEndpoint({
                 ...options,
-                behaviors: SupportedBehaviors.extend(this.behaviors, behaviors)
+                behaviors: SupportedBehaviors.extend(this.behaviors, behaviors),
             });
-        }
+        },
     } as unknown as MutableEndpoint.With<
         EndpointType.For<T>,
         T["behaviors"] extends SupportedBehaviors ? T["behaviors"] : {}
@@ -81,14 +81,13 @@ export function MutableEndpoint<const T extends EndpointType.Options>(options: T
 }
 
 export namespace MutableEndpoint {
-    export type With<B extends EndpointType, SB extends SupportedBehaviors> =
-        & Omit<B, "behaviors" | "defaults" | "set" | "with">
-        & {
-            behaviors: SB;
-            defaults: SupportedBehaviors.StateOf<SB>;
-            set(defaults: SupportedBehaviors.InputStateOf<SB>):
-                With<B, SB>;
-            with<const BL extends SupportedBehaviors.List>(...behaviors: BL):
-                With<B, SupportedBehaviors.With<SB, BL>>;
-        };
+    export type With<B extends EndpointType, SB extends SupportedBehaviors> = Omit<
+        B,
+        "behaviors" | "defaults" | "set" | "with"
+    > & {
+        behaviors: SB;
+        defaults: SupportedBehaviors.StateOf<SB>;
+        set(defaults: SupportedBehaviors.InputStateOf<SB>): With<B, SB>;
+        with<const BL extends SupportedBehaviors.List>(...behaviors: BL): With<B, SupportedBehaviors.With<SB, BL>>;
+    };
 }

@@ -5,15 +5,15 @@
  */
 
 import { Behavior } from "../../behavior/Behavior.js";
-import { ImplementationError } from "../../common/MatterError.js";
 import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
+import type { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
 import { LifecycleBehavior } from "../../behavior/definitions/lifecycle/LifecycleBehavior.js";
+import { ImplementationError } from "../../common/MatterError.js";
+import { Observable } from "../../util/Observable.js";
+import { camelize, describeList } from "../../util/String.js";
+import type { Agent } from "../Agent.js";
 import type { Part } from "../Part.js";
 import type { SupportedBehaviors } from "./SupportedBehaviors.js";
-import type { Agent } from "../Agent.js";
-import type { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { camelize, describeList } from "../../util/String.js";
-import { Observable } from "../../util/Observable.js";
 
 /**
  * This class manages {@link Behavior} instances owned by a {@link Part}.
@@ -33,7 +33,7 @@ export class Behaviors {
 
     constructor(part: Part, supported: SupportedBehaviors) {
         if (typeof supported !== "object") {
-            throw new ImplementationError("Part \"behaviors\" option must be an array of Behavior.Type instances");
+            throw new ImplementationError('Part "behaviors" option must be an array of Behavior.Type instances');
         }
         for (const id in supported) {
             if (!(supported[id].prototype instanceof Behavior)) {
@@ -71,18 +71,13 @@ export class Behaviors {
         if (this.#supported[type.id]) {
             if (!this.has(type)) {
                 throw new ImplementationError(
-                    `Cannot require behavior ${
-                        type.id
-                    } because incompatible implementation already exists`);
+                    `Cannot require behavior ${type.id} because incompatible implementation already exists`,
+                );
             }
         } else {
             if (!type.supports(LifecycleBehavior)) {
                 if (this.#part.agent.get(LifecycleBehavior).state.online) {
-                    throw new ImplementationError(
-                        `Cannot add behavior ${
-                            type.id
-                        } after part is online`
-                    )
+                    throw new ImplementationError(`Cannot add behavior ${type.id} after part is online`);
                 }
             }
             this.#supported[type.id] = type;
@@ -101,9 +96,8 @@ export class Behaviors {
         }
 
         throw new ImplementationError(
-            `Cannot create behavior ${
-                type.id
-            } because installed implementation is incompatible`);
+            `Cannot create behavior ${type.id} because installed implementation is incompatible`,
+        );
     }
 
     /**
@@ -124,10 +118,10 @@ export class Behaviors {
         if (!requirements) {
             return;
         }
-        
+
         const missing = Array<string>();
         for (const requirement of Object.values(requirements)) {
-            let name = camelize(requirement.name)
+            let name = camelize(requirement.name);
 
             const cluster = (requirement as ClusterBehavior.Type).cluster;
             if (cluster) {
@@ -135,17 +129,13 @@ export class Behaviors {
             }
 
             if (!this.#part.behaviors.has(requirement)) {
-                missing.push(name)
+                missing.push(name);
             }
         }
 
         if (missing.length) {
             throw new ImplementationError(
-                `${
-                    this.#part.description
-                } is missing required clusters: ${
-                    describeList("and", ...missing)
-                }`
+                `${this.#part.description} is missing required clusters: ${describeList("and", ...missing)}`,
             );
         }
     }
@@ -179,18 +169,15 @@ export class Behaviors {
 
     private getBehaviorType(type: Behavior.Type) {
         const myType = this.#supported[type.id];
-        
+
         if (myType === undefined) {
             return myType;
         }
 
         if (typeof myType !== "function" || !(myType.prototype instanceof Behavior)) {
-            throw new ImplementationError(
-                `Endpoint behavior ${
-                    type.id
-                } implementation is not a Behavior`);
+            throw new ImplementationError(`Endpoint behavior ${type.id} implementation is not a Behavior`);
         }
-        
+
         return myType;
     }
 }

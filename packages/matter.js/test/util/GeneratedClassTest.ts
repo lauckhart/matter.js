@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { GeneratedClass } from "../../src/util/GeneratedClass.js"
+import { GeneratedClass } from "../../src/util/GeneratedClass.js";
 
 describe("GeneratedClass", () => {
     it("names classes correctly", () => {
@@ -14,82 +14,74 @@ describe("GeneratedClass", () => {
         expect(Foo.name).equals("Foo");
 
         expect(GeneratedClass({ base: Foo }).name).equals("Foo$");
-    })
+    });
 
     it("sets static property", () => {
-        expect((GeneratedClass({ staticProperties: { foo: "bar" }}) as any).foo).equals("bar");
-    })
+        expect((GeneratedClass({ staticProperties: { foo: "bar" } }) as any).foo).equals("bar");
+    });
 
     it("sets static descriptor", () => {
-        expect((GeneratedClass({ staticDescriptors: { foo: { value: "bar" } }}) as any).foo).equals("bar");
-    })
+        expect((GeneratedClass({ staticDescriptors: { foo: { value: "bar" } } }) as any).foo).equals("bar");
+    });
 
     it("inherits static property", () => {
-        const Base = GeneratedClass({ staticProperties: { foo: "bar" }});
+        const Base = GeneratedClass({ staticProperties: { foo: "bar" } });
         expect((GeneratedClass({ base: Base }) as any).foo).equals("bar");
-    })
+    });
 
     it("inherits static descriptor", () => {
-        const Base = GeneratedClass({ staticDescriptors: { foo: { value: "bar" } }});
+        const Base = GeneratedClass({ staticDescriptors: { foo: { value: "bar" } } });
         expect((GeneratedClass({ base: Base }) as any).foo).equals("bar");
-    })
+    });
 
     it("instantiates as instanceof", () => {
         const Klass = GeneratedClass({});
-        const instance = new Klass;
+        const instance = new Klass();
         expect(instance.constructor).equals(Klass);
         expect(instance).instanceof(Klass);
-    })
+    });
 
     it("requires new", () => {
         const Klass = GeneratedClass({});
         expect(() => (Klass as any)()).throws();
-    })
+    });
 
     it("instantiates as instanceof base", () => {
         class Base {}
         const Klass = GeneratedClass({ base: Base });
-        const instance = new Klass;
+        const instance = new Klass();
         expect(instance.constructor).equals(Klass);
         expect(instance) instanceof Klass;
         expect(instance) instanceof Base;
-    })
+    });
 
     it("sets instance property", () => {
-        expect((new (
-            GeneratedClass({ instanceProperties: { foo: "bar" }}
-        )) as any).foo).equals("bar");
-    })
+        expect((new (GeneratedClass({ instanceProperties: { foo: "bar" } }))() as any).foo).equals("bar");
+    });
 
     it("sets instance descriptor", () => {
-        expect((new (
-            GeneratedClass({ instanceDescriptors: { foo: { value: "bar" } }})
-        ) as any).foo).equals("bar");
-    })
+        expect((new (GeneratedClass({ instanceDescriptors: { foo: { value: "bar" } } }))() as any).foo).equals("bar");
+    });
 
     it("inherits instance property", () => {
-        const Base = GeneratedClass({ instanceProperties: { foo: "bar" }});
-        expect((new (
-            GeneratedClass({ base: Base })
-        ) as any).foo).equals("bar");
-    })
+        const Base = GeneratedClass({ instanceProperties: { foo: "bar" } });
+        expect((new (GeneratedClass({ base: Base }))() as any).foo).equals("bar");
+    });
 
     it("inherits instance descriptor", () => {
-        const Base = GeneratedClass({ instanceDescriptors: { foo: { value: "bar" } }});
-        expect((new (
-            GeneratedClass({ base: Base })
-        ) as any).foo).equals("bar");
-    })
+        const Base = GeneratedClass({ instanceDescriptors: { foo: { value: "bar" } } });
+        expect((new (GeneratedClass({ base: Base }))() as any).foo).equals("bar");
+    });
 
     it("initializes", () => {
         const klass = GeneratedClass({
             initialize(this: { foo: string }, input: string) {
                 this.foo = input.toUpperCase();
-            }
-        })
+            },
+        });
 
         expect((new klass("hello") as any).foo).equals("HELLO");
-    })
+    });
 
     it("preprocesses arguments", () => {
         const klass = GeneratedClass({
@@ -102,23 +94,23 @@ describe("GeneratedClass", () => {
             },
 
             args(foo: string) {
-                return [ foo.toUpperCase() ];
-            }
+                return [foo.toUpperCase()];
+            },
         });
 
         expect((new klass("bar") as any).foo).equals("BAR");
-    })
+    });
 
     function expectBizesAndBazes(...types: Array<new () => any>) {
         const Type = types[0];
-        const instance = new Type;
+        const instance = new Type();
 
         for (let i = 0; i < types.length; i++) {
             const index = i + 1;
             expect(instance).instanceof(types[i]);
             expect(instance.hasOwnProperty(instance, `foo${index}`));
             expect(instance[`foo${index}`]).equals(`bar${index}`);
-            expect((Type as any)[`biz${index}`]).equals(`baz${index}`)
+            expect((Type as any)[`biz${index}`]).equals(`baz${index}`);
             i++;
         }
     }
@@ -138,7 +130,7 @@ describe("GeneratedClass", () => {
         });
 
         expectBizesAndBazes(Derived, Es6);
-    })
+    });
 
     it("is extensible by ES6 class", () => {
         const Generated = GeneratedClass({
@@ -152,8 +144,8 @@ describe("GeneratedClass", () => {
             static biz2 = "baz2";
         }
 
-        expectBizesAndBazes(Es6, Generated);        
-    })
+        expectBizesAndBazes(Es6, Generated);
+    });
 
     it("extension of ES6 class is extensible by ES6 class", () => {
         class Base {
@@ -167,7 +159,7 @@ describe("GeneratedClass", () => {
 
             instanceProperties: { foo2: "bar2" },
             staticProperties: { biz2: "baz2" },
-        })
+        });
 
         class SecondDerivative extends FirstDerivative {
             foo3 = "bar3";
@@ -175,5 +167,5 @@ describe("GeneratedClass", () => {
         }
 
         expectBizesAndBazes(SecondDerivative, FirstDerivative, Base);
-    })
-})
+    });
+});

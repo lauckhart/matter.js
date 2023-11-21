@@ -8,7 +8,7 @@ import { InternalError } from "../common/MatterError.js";
 
 /**
  * Helper function for class generation.
- * 
+ *
  * This factory does not offer TypeScript types for the resulting class.  You
  * must cast separately.
  */
@@ -100,11 +100,11 @@ export namespace GeneratedClass {
 }
 
 interface ConstructorOptions {
-    name: string,
-    base?: new (...args: any[]) => any,
-    args?: (...args: any[]) => any[],
-    initialize?: (...args: any[]) => void,
-    instanceProperties?: object,
+    name: string;
+    base?: new (...args: any[]) => any;
+    args?: (...args: any[]) => any[];
+    initialize?: (...args: any[]) => void;
+    instanceProperties?: object;
 }
 
 function createConstructor({ name, base, args, initialize, instanceProperties }: ConstructorOptions) {
@@ -129,7 +129,7 @@ function createConstructor({ name, base, args, initialize, instanceProperties }:
         ext = "";
     }
 
-    const code = [ `class ${name} ${ext}{` ];
+    const code = [`class ${name} ${ext}{`];
 
     if (args || initialize || instanceProperties) {
         code.push("constructor() {");
@@ -154,7 +154,7 @@ function createConstructor({ name, base, args, initialize, instanceProperties }:
             code.push(`initialize.apply(this, ${argsName})`);
         }
 
-        code.push("}")
+        code.push("}");
     }
 
     code.push("}", name);

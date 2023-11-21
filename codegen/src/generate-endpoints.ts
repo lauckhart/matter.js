@@ -5,13 +5,13 @@
  */
 
 import { ClusterModel, ClusterVariance, CommandModel, MatterModel } from "@project-chip/matter.js/model";
+import { decamelize } from "@project-chip/matter.js/util";
 import { BehaviorFile } from "./endpoints/BehaviorFile.js";
+import { BehaviorServerFile } from "./endpoints/BehaviorServerFile.js";
 import { EndpointFile } from "./endpoints/EndpointFile.js";
+import { InterfaceFile } from "./endpoints/InterfaceFile.js";
 import { TsFile } from "./util/TsFile.js";
 import "./util/setup.js";
-import { InterfaceFile } from "./endpoints/InterfaceFile.js";
-import { BehaviorServerFile } from "./endpoints/BehaviorServerFile.js";
-import { decamelize } from "@project-chip/matter.js/util";
 
 export async function main() {
     const mom = new MatterModel();

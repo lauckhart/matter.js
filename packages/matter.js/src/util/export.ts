@@ -16,6 +16,7 @@ export * from "./Number.js";
 export * from "./Observable.js";
 export * from "./Promises.js";
 export * from "./Queue.js";
+export * from "./Set.js";
 export * from "./Singleton.js";
 export * from "./Stream.js";
 export * from "./String.js";

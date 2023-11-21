@@ -4,16 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Behavior } from "../../src/behavior/Behavior.js";
+import { InvocationContext } from "../../src/behavior/InvocationContext.js";
+import { DescriptorServer } from "../../src/behavior/definitions/descriptor/DescriptorServer.js";
+import { LifecycleBehavior } from "../../src/behavior/definitions/lifecycle/LifecycleBehavior.js";
+import { PartsBehavior } from "../../src/behavior/definitions/parts/PartsBehavior.js";
+import { ServerBehaviorBacking } from "../../src/behavior/server/ServerBehaviorBacking.js";
+import { Part } from "../../src/endpoint/Part.js";
+import { PartOwner } from "../../src/endpoint/part/PartOwner.js";
 import { MutableEndpoint } from "../../src/endpoint/type/MutableEndpoint.js";
 import type { Fabric } from "../../src/fabric/Fabric.js";
-import { PartOwner } from "../../src/endpoint/part/PartOwner.js";
-import { InvocationContext } from "../../src/behavior/InvocationContext.js";
-import { Part } from "../../src/endpoint/Part.js";
-import { Behavior } from "../../src/behavior/Behavior.js";
-import { ServerBehaviorBacking } from "../../src/behavior/server/ServerBehaviorBacking.js";
-import { DescriptorServer } from "../../src/behavior/definitions/descriptor/DescriptorServer.js";
-import { PartsBehavior } from "../../src/behavior/definitions/parts/PartsBehavior.js";
-import { LifecycleBehavior } from "../../src/behavior/definitions/lifecycle/LifecycleBehavior.js";
 
 class MockFabricImplementation {
     fabricIndex;
@@ -48,7 +48,7 @@ export class MockContext implements InvocationContext {
         Object.assign(this, options);
 
         if (!this.fabric) {
-            this.fabric = new MockFabric;
+            this.fabric = new MockFabric();
         }
     }
 }

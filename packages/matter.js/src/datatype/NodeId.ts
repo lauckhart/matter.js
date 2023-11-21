@@ -24,7 +24,7 @@ import { toBigInt } from "../util/Number.js";
 export type NodeId = bigint; //Branded<bigint, "NodeId">;
 
 export function NodeId(v: bigint | number): NodeId {
-    return toBigInt(v)// as NodeId;
+    return toBigInt(v); // as NodeId;
 }
 
 export namespace NodeId {

@@ -5,14 +5,17 @@
  */
 
 import { ClusterModel, Globals, Metatype, ValueModel } from "@project-chip/matter.js/model";
-import { Block } from "../util/TsFile.js";
 import { TlvGenerator } from "../clusters/TlvGenerator.js";
+import { Block } from "../util/TsFile.js";
 
 export class TypeGenerator {
-    private defined = new Set<string>;
+    private defined = new Set<string>();
     private tlv: TlvGenerator;
 
-    constructor(cluster: ClusterModel, private definitions: Block) {
+    constructor(
+        cluster: ClusterModel,
+        private definitions: Block,
+    ) {
         this.tlv = new TlvGenerator(cluster, definitions);
     }
 
@@ -73,24 +76,15 @@ export class TypeGenerator {
                 }
                 const typeName = sourceName.startsWith("Tlv") ? sourceName.slice(3) : sourceName;
                 if (!this.defined.has(typeName)) {
-                    this.definitions.file.addImport(
-                        "tlv/TlvSchema",
-                        "TypeFromSchema"
-                    );
+                    this.definitions.file.addImport("tlv/TlvSchema", "TypeFromSchema");
                     this.definitions.file.addImport(
                         `cluster/definitions/${this.tlv.cluster.name}Cluster`,
-                        this.tlv.cluster.name
+                        this.tlv.cluster.name,
                     );
 
-                    this.definitions.atom(
-                        `export type ${
-                            typeName
-                        } = TypeFromSchema<typeof ${
-                            this.tlv.cluster.name
-                        }.${
-                            sourceName
-                        }>`
-                    ).document(model);
+                    this.definitions
+                        .atom(`export type ${typeName} = TypeFromSchema<typeof ${this.tlv.cluster.name}.${sourceName}>`)
+                        .document(model);
 
                     this.defined.add(typeName);
                 }

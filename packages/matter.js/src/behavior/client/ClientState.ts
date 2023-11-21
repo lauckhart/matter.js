@@ -15,6 +15,6 @@ export class ClientState extends State {
         this.#backing = backing;
 
         // TODO
-        this.#backing
+        this.#backing;
     }
 }

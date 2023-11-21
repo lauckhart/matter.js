@@ -7,15 +7,15 @@
 import { ClusterType } from "../../cluster/ClusterType.js";
 import { ClusterComposer } from "../../cluster/mutation/ClusterComposer.js";
 import { ElementModifier } from "../../cluster/mutation/ElementModifier.js";
-import { Behavior } from "../Behavior.js";
 import { ImplementationError } from "../../common/MatterError.js";
-import { State } from "../state/State.js";
-import { ClusterInterface } from "./ClusterInterface.js";
-import { type ClusterOf, createType } from "./ClusterBehaviorUtil.js";
-import type { BehaviorBacking } from "../BehaviorBacking.js";
-import type { ClusterState } from "./ClusterState.js";
-import type { ClusterEvents } from "./ClusterEvents.js";
 import type { Agent } from "../../endpoint/Agent.js";
+import { Behavior } from "../Behavior.js";
+import type { BehaviorBacking } from "../BehaviorBacking.js";
+import { State } from "../state/State.js";
+import { createType, type ClusterOf } from "./ClusterBehaviorUtil.js";
+import type { ClusterEvents } from "./ClusterEvents.js";
+import { ClusterInterface } from "./ClusterInterface.js";
+import type { ClusterState } from "./ClusterState.js";
 
 /**
  * A {@link Behavior} with specialization for a specific cluster.
@@ -27,11 +27,11 @@ import type { Agent } from "../../endpoint/Agent.js";
  *
  * Subclasses can be modified using the static builder methods or extended like
  * a normal class.
- * 
+ *
  * Behaviors should store all mutable state in their {@link Behavior.state}
  * property.  Other fields will be transient and may not be retained across
  * invocations.
- * 
+ *
  * TODO - currently ClusterBehaviors may be instantiated with unsupported
  * mandatory commands and attributes.  Currently this is a runtime error but
  * not a build-time error.  Should we generate abstract methods etc. for this,
@@ -52,7 +52,7 @@ export class ClusterBehavior extends Behavior {
      */
     get cluster() {
         return this.#cluster;
-    };
+    }
 
     /**
      * Every cluster behavior has an associated ClusterType defined statically.
@@ -84,10 +84,7 @@ export class ClusterBehavior extends Behavior {
      * implementation with the cluster in the subclass replaced.  You should
      * generally only do this with a {@link ClusterType} with the same ID.
      */
-    static for<
-        This extends ClusterBehavior.Type,
-        const ClusterT extends ClusterType
-    >(
+    static for<This extends ClusterBehavior.Type, const ClusterT extends ClusterType>(
         this: This,
         cluster: ClusterT,
     ): ClusterBehavior.Type<ClusterT, This> {
@@ -130,18 +127,12 @@ export class ClusterBehavior extends Behavior {
     /**
      * Create a ClusterBehavior like this one with different interface
      * methods.
-     * 
+     *
      * The Interface "property" is type-only.  We define a method however to
      * keep the API consistent.  At runtime the method is a no-op.
      */
-    static withInterface<
-        const I extends ClusterInterface
-    >() {
-        return this as unknown as ClusterBehavior.Type<
-            typeof ClusterType.Unknown,
-            typeof ClusterBehavior,
-            I
-        >;
+    static withInterface<const I extends ClusterInterface>() {
+        return this as unknown as ClusterBehavior.Type<typeof ClusterType.Unknown, typeof ClusterBehavior, I>;
     }
 
     static override supports(other: Behavior.Type) {
@@ -168,7 +159,7 @@ export namespace ClusterBehavior {
     export interface Type<
         C extends ClusterType = ClusterType,
         B extends Behavior.Type = Behavior.Type,
-        I extends ClusterInterface = ClusterInterface.InterfaceOf<B>
+        I extends ClusterInterface = ClusterInterface.InterfaceOf<B>,
     > {
         new (agent: Agent, backing: BehaviorBacking): Instance<C, B, I>;
 
@@ -209,40 +200,34 @@ export namespace ClusterBehavior {
      */
     export type Instance<C extends ClusterType, B extends Behavior.Type, I extends ClusterInterface> =
         // Base class
-        & ClusterBehavior
+        ClusterBehavior &
+            // Bring extensions of old class forward
+            Omit<
+                InstanceType<B>,
+                | "cluster"
+                | "state"
+                | "events"
+                | "initialize"
 
-        // Bring extensions of old class forward
-        & Omit<InstanceType<B>,
-            | "cluster"
-            | "state"
-            | "events"
-            | "initialize"
+                // Omit command methods of old cluster
+                | keyof ClusterInterface.MethodsOf<ClusterInterface.InterfaceOf<B>, ClusterOf<B>>
+            > &
+            // Add command methods
+            ClusterInterface.MethodsOf<I, C> & // Add other properties
+            {
+                /**
+                 * The implemented cluster.
+                 */
+                cluster: C;
 
-            // Omit command methods of old cluster
-            | keyof ClusterInterface.MethodsOf<
-                ClusterInterface.InterfaceOf<B>,
-                ClusterOf<B>
-            >
-        >
+                /**
+                 * State values for the behavior.
+                 */
+                state: ClusterState<C, B>;
 
-        // Add command methods
-        & ClusterInterface.MethodsOf<I, C>
-
-        // Add other properties
-        & {
-            /**
-             * The implemented cluster.
-             */
-            cluster: C;
-
-            /**
-             * State values for the behavior.
-             */
-            state: ClusterState<C, B>;
-
-            /**
-             * Observables for cluster events and attribute changes.
-             */
-            events: ClusterEvents<C, B>;
-        };
+                /**
+                 * Observables for cluster events and attribute changes.
+                 */
+                events: ClusterEvents<C, B>;
+            };
 }

@@ -25,18 +25,19 @@ export class UnmanagedClusterBehavior extends Behavior {
         if (behavior) {
             return behavior;
         }
-        const cluster = ClusterRegistry.get(server.id)
-            ?? ClusterType({
+        const cluster =
+            ClusterRegistry.get(server.id) ??
+            ClusterType({
                 id: server.id,
                 name: server.name,
-                revision: 1
+                revision: 1,
             });
 
         behavior = class extends Behavior {
             static override id = camelize(cluster.name, false) as Uncapitalize<string>;
             static readonly cluster = cluster;
             cluster = cluster;
-        }
+        };
 
         cache[server.id] = behavior;
 

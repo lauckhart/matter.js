@@ -7,7 +7,7 @@
 import { DeviceTypeId } from "../../../src/datatype/DeviceTypeId.js";
 import { DeviceClasses } from "../../../src/device/DeviceTypes.js";
 import { SupportedBehaviors } from "../../../src/endpoint/part/SupportedBehaviors.js";
-import { MutableEndpoint } from "../../../src/endpoint/type/MutableEndpoint.js"
+import { MutableEndpoint } from "../../../src/endpoint/type/MutableEndpoint.js";
 import { MockBehavior1, MockBehavior2 } from "../part-mocks.js";
 
 const Identity = {
@@ -33,7 +33,7 @@ const IdentityWithBehaviorsProps = {
     behaviors: {
         one: MockBehavior1,
         two: MockBehavior2,
-    } as const
+    } as const,
 } as const;
 
 function expectIdentity<T extends typeof IdentityProps>(type: T) {
@@ -49,14 +49,14 @@ function expectIdentityWithBehaviors<T extends typeof IdentityWithBehaviorsProps
 
 export interface Defaults {
     one: {
-        b1e: string,
-        b1f: string,
-    },
+        b1e: string;
+        b1f: string;
+    };
 
     two: {
-        b2e: string,
-        b2f: string,
-    }
+        b2e: string;
+        b2f: string;
+    };
 }
 
 function expectDefaults(actual: Defaults, expected: Defaults) {
@@ -78,28 +78,25 @@ describe("MutableEndpoint", () => {
         const Type = MutableEndpoint(Identity);
 
         expectIdentity(Type);
-        
+
         expect(Type.behaviors).deep.equals({});
         expect(Type.requirements).deep.equals({});
-    })
+    });
 
     it("sets fields with behaviors", () => {
         const Type = MutableEndpoint(IdentityWithBehaviors);
         expectIdentityWithBehaviors(Type);
-    })
+    });
 
     it("extends with two behaviors", () => {
-        const Type = MutableEndpoint(Identity)
-            .with(MockBehavior1, MockBehavior2);
+        const Type = MutableEndpoint(Identity).with(MockBehavior1, MockBehavior2);
         expectIdentityWithBehaviors(Type);
     });
 
     it("extends with one behavior twice", () => {
-        const Type = MutableEndpoint(Identity)
-            .with(MockBehavior1)
-            .with(MockBehavior2);
+        const Type = MutableEndpoint(Identity).with(MockBehavior1).with(MockBehavior2);
         expectIdentityWithBehaviors(Type);
-    })
+    });
 
     it("extracts defaults", () => {
         const Type = MutableEndpoint(IdentityWithBehaviors);
@@ -115,9 +112,9 @@ describe("MutableEndpoint", () => {
             two: {
                 b2e: "biz",
                 b2f: "baz",
-            }
-        })
-    })
+            },
+        });
+    });
 
     it("sets defaults", () => {
         const Type = MutableEndpoint(IdentityWithBehaviors).set({
@@ -129,7 +126,7 @@ describe("MutableEndpoint", () => {
             two: {
                 b2e: "zib",
                 b2f: "zab",
-            }
+            },
         });
 
         expectIdentity(Type);
@@ -145,7 +142,7 @@ describe("MutableEndpoint", () => {
             two: {
                 b2e: "zib",
                 b2f: "zab",
-            }
-        })
-    })
-})
+            },
+        });
+    });
+});

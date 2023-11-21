@@ -52,17 +52,15 @@ export namespace SupportedBehaviors {
     /**
      * Add or replace behaviors.
      */
-    export type With<CurrentT extends SupportedBehaviors, NewT extends List> =
-        & Omit<CurrentT, NewT[number]["id"]>
-        & MapOf<NewT>;
+    export type With<CurrentT extends SupportedBehaviors, NewT extends List> = Omit<CurrentT, NewT[number]["id"]> &
+        MapOf<NewT>;
 
     /**
      * Convert a List to BehaviorTypes.
      */
-    export type MapOf<T extends List> =
-        T extends readonly [ infer F extends Behavior.Type ]
+    export type MapOf<T extends List> = T extends readonly [infer F extends Behavior.Type]
         ? { readonly [K in F["id"]]: F }
-        : T extends readonly [ infer F extends Behavior.Type, ...infer R extends List ]
+        : T extends readonly [infer F extends Behavior.Type, ...infer R extends List]
         ? { readonly [K in F["id"]]: F } & MapOf<R>
         : {};
 
@@ -70,22 +68,22 @@ export namespace SupportedBehaviors {
      * Properties of an endpoint contributed by listed behaviors.
      */
     export type EndpointProperties<SB extends SupportedBehaviors> = {
-        readonly [K in keyof SB]: InstanceType<SB[K]>
+        readonly [K in keyof SB]: InstanceType<SB[K]>;
     };
 
     /**
      * Compound state for all behaviors.
      */
     export type StateOf<SB extends SupportedBehaviors> = {
-        [K in keyof SB]: Behavior.StateOf<SB[K]>
-    }
+        [K in keyof SB]: Behavior.StateOf<SB[K]>;
+    };
 
     /**
      * Input version of {@link StateOf}.
      */
     export type InputStateOf<SB extends SupportedBehaviors> = {
-        [K in keyof SB]?: Behavior.InputStateOf<SB[K]>
-    }
+        [K in keyof SB]?: Behavior.InputStateOf<SB[K]>;
+    };
 }
 
 function addBehaviors(target: SupportedBehaviors, types: SupportedBehaviors.List) {

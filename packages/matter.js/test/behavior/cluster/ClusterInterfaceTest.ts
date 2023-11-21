@@ -18,35 +18,35 @@ const FeaturedCluster = ClusterType({
 
     features: {
         foo: BitFlag(0),
-        bar: BitFlag(1)
+        bar: BitFlag(1),
     },
 
     supportedFeatures: {
-        foo: true
-    }
+        foo: true,
+    },
 });
 
 type FeaturesInterface = {
     components: [
         {
-            flags: {},
+            flags: {};
             methods: {
                 unconditionalMethod(value: string): boolean;
-            }
+            };
         },
         {
-            flags: { foo: true },
+            flags: { foo: true };
             methods: {
                 fooMethod(value: number): number;
-            }
+            };
         },
         {
-            flags: { bar: true },
+            flags: { bar: true };
             methods: {
                 barMethod(value: boolean): string;
-            }
-        }
-    ]
+            };
+        },
+    ];
 };
 
 describe("ClusterInterface", () => {
@@ -75,7 +75,7 @@ describe("ClusterInterface", () => {
             type Imo = ClusterInterface.InterfaceMethodsOf<FeaturesInterface, { foo: true }>;
             ({}) as keyof Imo satisfies "unconditionalMethod" | "fooMethod";
             ({}) as "unconditionalMethod" | "fooMethod" satisfies keyof Imo;
-        })
+        });
 
         it("allows override via standard method", () => {
             class Ignored implements ClusterInterface.InterfaceMethodsOf<FeaturesInterface, { foo: true }> {
@@ -88,23 +88,21 @@ describe("ClusterInterface", () => {
                 }
             }
             Ignored;
-        })
+        });
     });
 
     describe("MappedMethodsOf", () => {
-        type Mmo = ClusterInterface.MappedMethodsOf<
-            ClusterType.CommandsOf<MyCluster>
-        >;
+        type Mmo = ClusterInterface.MappedMethodsOf<ClusterType.CommandsOf<MyCluster>>;
 
         it("requires mandatory", () => {
             ({}) as Mmo satisfies {
-                reqCmd(request: string, state: any, context?: InvocationContext): MaybePromise<string>
-            }
-        })
+                reqCmd(request: string, state: any, context?: InvocationContext): MaybePromise<string>;
+            };
+        });
 
         it("allowsOptional", () => {
             undefined satisfies Mmo["optCmd"];
             ((_request: boolean) => true) satisfies Mmo["optCmd"];
-        })
+        });
     });
-})
+});

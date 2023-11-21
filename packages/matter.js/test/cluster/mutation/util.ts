@@ -199,9 +199,7 @@ export function stripFunctions(value: any): any {
         return undefined;
     }
     if (typeof value === "object" && value !== null) {
-        return Object.fromEntries(
-            Object.entries(value).map(kv => [kv[0], stripFunctions(kv[1])])
-        );
+        return Object.fromEntries(Object.entries(value).map(kv => [kv[0], stripFunctions(kv[1])]));
     }
     if (Array.isArray(value)) {
         return value.map(v => stripFunctions(v));

@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ClusterType } from "../../cluster/ClusterType.js";
+import { ImplementationError, ValidationError } from "../../common/MatterError.js";
+import { GeneratedClass } from "../../util/GeneratedClass.js";
+import { EventEmitter, Observable } from "../../util/Observable.js";
 import { camelize } from "../../util/String.js";
 import { Behavior } from "../Behavior.js";
 import { State } from "../state/State.js";
-import { ClusterType } from "../../cluster/ClusterType.js";
 import type { ClusterBehavior } from "./ClusterBehavior.js";
-import { ImplementationError, ValidationError } from "../../common/MatterError.js";
-import { EventEmitter, Observable } from "../../util/Observable.js";
-import { GeneratedClass } from "../../util/GeneratedClass.js";
 
 /**
  * This is the actual implementation of ClusterBehavior.for().  The result
@@ -49,52 +49,43 @@ export function createType<const C extends ClusterType>(cluster: C, base: Behavi
         },
 
         instanceDescriptors: Object.fromEntries(
-            Object.keys(cluster.commands)
-                .map(k => [
-                    k,
-                    {
-                        value: Behavior.unimplemented,
-                        enumerable: true
-                    }
-                ])
+            Object.keys(cluster.commands).map(k => [
+                k,
+                {
+                    value: Behavior.unimplemented,
+                    enumerable: true,
+                },
+            ]),
         ),
-    })
+    });
 }
 
 /**
  * Utility to omit the generic "string" from a string record.
- * 
+ *
  * We need this to enable ClusterBehavior.for on the base class where the
  * element objects otherwise have a generic string key that messes up
  * covariance.
  */
 export type Named<O extends Record<string, any>> = {
-    [K in string & keyof O as string extends K ? never : K]: O[K]
-}
+    [K in string & keyof O as string extends K ? never : K]: O[K];
+};
 
 /**
  * The cluster type for a behavior.
  */
-export type ClusterOf<B extends Behavior.Type> =
-    InstanceType<B> extends { cluster: infer C extends ClusterType }
-        ?
-            C
-        :
-            ClusterType.Unknown;
+export type ClusterOf<B extends Behavior.Type> = InstanceType<B> extends { cluster: infer C extends ClusterType }
+    ? C
+    : ClusterType.Unknown;
 
 /**
  * Create a new state subclass that inherits relevant default values from a
  * base Behavior.Type and adds new default values from cluster attributes.
  */
-function createDerivedState(
-    cluster: ClusterType,
-    base: Behavior.Type,
-    fabricScoped: boolean,
-    namesUsed: Set<string>
-) {
+function createDerivedState(cluster: ClusterType, base: Behavior.Type, fabricScoped: boolean, namesUsed: Set<string>) {
     const scopeName = fabricScoped ? "FabricScope" : "EndpointScope";
     const BaseScope = base[scopeName];
-    const oldDefaults = new BaseScope as Record<string, any>;
+    const oldDefaults = new BaseScope() as Record<string, any>;
     const fields = {} as State.FieldOptions;
     const statePrefix = `${camelize(cluster.name, false)}.state`;
 
@@ -164,7 +155,7 @@ function configureField(attribute: ClusterType.Attribute, name: string) {
     const schema = attribute.schema;
     const descriptor = {} as State.FieldConfiguration;
 
-    descriptor.validate = (value) => {
+    descriptor.validate = value => {
         if (value === undefined && !attribute.optional) {
             // Schema validation catches this but generate a more explicit message
             throw new ValidationError(`No value provided for required property ${name}`);
@@ -178,7 +169,7 @@ function configureField(attribute: ClusterType.Attribute, name: string) {
                 throw e;
             }
         }
-    }
+    };
 
     if (attribute.fixed) {
         descriptor.fixed = true;
@@ -191,7 +182,7 @@ function configureField(attribute: ClusterType.Attribute, name: string) {
  * Extend events with additional implementations.
  */
 function createBaseEvents(cluster: ClusterType, stateNames: Set<string>) {
-    const names = new Set<string>;
+    const names = new Set<string>();
 
     for (const name in cluster.events) {
         if (!cluster.events[name].optional) {
@@ -210,6 +201,6 @@ function createBaseEvents(cluster: ClusterType, stateNames: Set<string>) {
             for (const name of names) {
                 (this as any)[name] = Observable();
             }
-        }
+        },
     });
 }

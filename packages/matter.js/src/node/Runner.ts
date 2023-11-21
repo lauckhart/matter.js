@@ -4,27 +4,53 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterServer } from "../MatterServer.js";
-import { ImplementationError } from "../common/MatterError.js";
-import { ServerOptions } from "./server/ServerOptions.js";
-import { Storage } from "../storage/Storage.js";
-import { StorageManager } from "../storage/StorageManager.js";
-import { ServerConfiguration } from "./server/ServerConfiguration.js";
-import { Node } from "./Node.js";
 import { CommissioningController } from "../CommissioningController.js";
 import { CommissioningServer } from "../CommissioningServer.js";
+import { MatterServer } from "../MatterServer.js";
+import { ImplementationError } from "../common/MatterError.js";
+import { StorageManager } from "../storage/StorageManager.js";
+import { Node } from "./Node.js";
+import { ServerConfiguration } from "./server/ServerConfiguration.js";
+import { ServerOptions } from "./server/ServerOptions.js";
+
+enum Status {
+    INACTIVE,
+    ACTIVE,
+    ABORTED,
+}
 
 /**
  * Runner exposes one or more {@link Node} instances to a Matter network.
  */
 export class Runner {
+    // We share configuration with the server
     #configuration: ServerConfiguration;
-    #nodes = new Set<Node>;
+
+    // One or more NodeClient and NodeServer instances we will host
+    #nodes = new Set<Node>();
+
+    // We track state outside of run() so it is available to abort()
+    #status = Status.INACTIVE;
+
+    // If the server is running an abortable operation internally, this method
+    // will execute the abort.  If an async operation is not abortable, we wait
+    // until it completes to check the abort flag and this property is
+    // undefined
     #abort?: () => void;
-    #aborted = false;
+
+    // The task registered with the environment.  On Node SIGINT triggers task
+    // abort
+    task = {
+        name: "Node execution",
+        abort: () => this.abort(),
+    };
 
     constructor(options?: ServerOptions) {
-        this.#configuration = ServerConfiguration.for(options);
+        if (options instanceof ServerConfiguration) {
+            this.#configuration = options;
+        } else {
+            this.#configuration = new ServerConfiguration(options);
+        }
     }
 
     /**
@@ -38,31 +64,28 @@ export class Runner {
      * Bring the server online.
      */
     async run() {
-        if (this.#abort) {
+        if (this.#status !== Status.INACTIVE) {
             throw new ImplementationError("Server is already running");
         }
-        this.#aborted = false;
+        this.#status = Status.ACTIVE;
 
-        let storage = this.#configuration.storageManager;
-        let manageStorage = false;
+        const environment = this.#configuration.environment;
+
+        let storage: StorageManager | undefined;
+
+        environment.tasks.add(this.task);
+
         try {
-            if (!storage) {
-                storage = new StorageManager(
-                    Storage.create(this.#configuration.commissioning.productDescription.name, false)
-                );
-                
-                this.#abort = () => {
-                    storage?.close();
-                    storage = undefined;
-                }
-                
-                await storage.initialize();
+            try {
+                storage = await environment.createStorage();
 
-                if (this.#aborted) {
+                // No way to abort storage initialization; best we can do is
+                // respect the abort once initialization completes
+                if (this.aborted) {
                     return;
                 }
-
-                manageStorage = true;
+            } finally {
+                this.#abort = undefined;
             }
 
             const server = new MatterServer(storage, {
@@ -78,7 +101,7 @@ export class Runner {
                     server.addCommissioningServer(node);
                 } else {
                     throw new ImplementationError(
-                        "Cannot run node that is neither a CommissioningController nor a CommissioningServer"
+                        "Cannot run node that is neither a CommissioningController nor a CommissioningServer",
                     );
                 }
             }
@@ -86,19 +109,20 @@ export class Runner {
             await new Promise<void>((resolve, reject) => {
                 try {
                     this.#abort = () => {
-                        this.#aborted = true;
                         server.close().then(resolve).catch(reject);
-                    }
+                    };
                 } catch (e) {
                     reject(e);
                 }
-            })
+            });
             server.start();
         } finally {
-            if (manageStorage) {
-                await storage?.close();
-            }
+            // Can't cancel this either so just have to wait
+            await storage?.close();
+
+            environment.tasks.delete(this.task);
         }
+        this.#status = Status.INACTIVE;
     }
 
     /**
@@ -106,13 +130,21 @@ export class Runner {
      * while the server is running.
      */
     abort() {
-        if (!this.#abort) {
+        if (!this.running) {
             throw new ImplementationError("Server is not running");
         }
-        if (this.#aborted) {
-            throw new ImplementationError("Already aborted");
+        if (this.aborted) {
+            throw new ImplementationError("Server is already aborted");
         }
-        this.#aborted = true;
-        this.#abort();
+        this.#status = Status.ABORTED;
+        this.#abort?.();
+    }
+
+    private get running() {
+        return this.#status === Status.ACTIVE;
+    }
+
+    private get aborted() {
+        return this.#status === Status.ABORTED;
     }
 }

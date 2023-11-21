@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { State } from "./state/State.js";
+import { Agent } from "../endpoint/Agent.js";
+import type { Part } from "../endpoint/Part.js";
+import { EventEmitter } from "../util/Observable.js";
 import type { Behavior } from "./Behavior.js";
 import type { InvocationContext } from "./InvocationContext.js";
-import type { Part } from "../endpoint/Part.js";
-import { Agent } from "../endpoint/Agent.js";
-import { EventEmitter } from "../util/Observable.js";
+import { State } from "./state/State.js";
 
 /**
  * The "backing" for a behavior manages those portions of behavior that endure
@@ -42,7 +42,7 @@ export abstract class BehaviorBacking {
 
     /**
      * Create an instance of the backed {@link Behavior}.
-     * 
+     *
      * Derivatives may override to perform additional setup beyond simple
      * instantiation.
      */
@@ -54,7 +54,7 @@ export abstract class BehaviorBacking {
      * Obtain state for a behavior instance.  This performs the magic required
      * to give agents a unified view of state with event handling and
      * validation wired in.
-     * 
+     *
      * To make this perform optimally we generate and cache necessary
      * classes.
      */
@@ -65,7 +65,7 @@ export abstract class BehaviorBacking {
      */
     getInternal() {
         if (!this.#internal) {
-            this.#internal = new this.#type.InternalScope;
+            this.#internal = new this.#type.InternalScope();
         }
 
         return this.#internal;
@@ -85,6 +85,5 @@ export abstract class BehaviorBacking {
     /**
      * Invoked by the part when the backing is no longer needed.
      */
-    destroy() {
-    }
+    destroy() {}
 }

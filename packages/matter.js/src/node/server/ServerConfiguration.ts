@@ -4,38 +4,42 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Crypto } from "../../crypto/Crypto.js";
-import { RootEndpoint } from "../../endpoint/definitions/system/RootEndpoint.js";
-import { Logger } from "../../log/Logger.js";
-import { ServerOptions } from "./ServerOptions.js";
-import { StorageManager } from "../../storage/StorageManager.js";
+import { PartsBehavior } from "../../behavior/definitions/parts/PartsBehavior.js";
+import { Environment } from "../../common/Environment.js";
 import { ProductDescription } from "../../common/InstanceBroadcaster.js";
 import { ImplementationError, InternalError } from "../../common/MatterError.js";
-import { BridgedRootEndpoint } from "../../endpoint/definitions/system/BridgedRootEndpoint.js";
-import { AggregatorEndpoint } from "../../endpoint/definitions/system/AggregatorEndpoint.js";
-import { VendorId } from "../../datatype/VendorId.js";
-import type { Node } from "../Node.js";
-import { PartsBehavior } from "../../behavior/definitions/parts/PartsBehavior.js";
+import { Crypto } from "../../crypto/Crypto.js";
 import { DeviceTypeId } from "../../datatype/DeviceTypeId.js";
+import { VendorId } from "../../datatype/VendorId.js";
 import { Part } from "../../endpoint/Part.js";
+import { AggregatorEndpoint } from "../../endpoint/definitions/system/AggregatorEndpoint.js";
+import { BridgedRootEndpoint } from "../../endpoint/definitions/system/BridgedRootEndpoint.js";
+import { RootEndpoint } from "../../endpoint/definitions/system/RootEndpoint.js";
+import { Logger } from "../../log/Logger.js";
+import type { Node } from "../Node.js";
+import { ServerOptions } from "./ServerOptions.js";
 
 const logger = Logger.get("ServerConfiguration");
 
 /**
- * This class manages configuration for a server.
+ * ServerConfiguration manages configuration for a server.
  */
 export class ServerConfiguration {
     #owner?: Node;
+    #environment: Environment;
     #root: Part;
     #network: ServerConfiguration.NetworkOptions;
     #commissioning: ServerConfiguration.CommissioningOptions;
     #subscription: Exclude<ServerOptions["subscription"], undefined>;
     #certification?: ServerOptions["certification"];
     #nextEndpointId?: ServerOptions["nextEndpointId"];
-    #storageManager?: StorageManager;
 
     get root() {
         return this.#root;
+    }
+
+    get environment() {
+        return this.#environment;
     }
 
     get network() {
@@ -58,10 +62,6 @@ export class ServerConfiguration {
         return this.#nextEndpointId;
     }
 
-    get storageManager() {
-        return this.#storageManager;
-    }
-
     set owner(owner: Node) {
         this.#owner = owner;
     }
@@ -70,6 +70,7 @@ export class ServerConfiguration {
         if (!options) {
             options = {};
         }
+        this.#environment = options?.environment ?? Environment.default;
 
         const { root, productDescription } = this.configureNode(options);
         this.#root = root;
@@ -77,14 +78,12 @@ export class ServerConfiguration {
         this.#network = {
             ...options.network,
 
-            port: options.network?.port ?? 5540
-        }
+            port: options.network?.port ?? 5540,
+        };
 
         this.#commissioning = this.configureCommissioning(options, productDescription);
 
         this.#subscription = options.subscription ?? {};
-
-        this.#storageManager = options.storageManager;
     }
 
     get commissioningServerOptions() {
@@ -105,7 +104,7 @@ export class ServerConfiguration {
         const endpoints = options.endpoints ?? [];
 
         let root: Part | undefined;
-        let children: Part[];
+        let children = Array<Part>();
 
         function add(part: Part) {
             switch (part.type.deviceType) {
@@ -137,6 +136,9 @@ export class ServerConfiguration {
         if (!root) {
             root = new Part(RootEndpoint);
         }
+        for (const child of children) {
+            root.agent.get(PartsBehavior).add(child);
+        }
 
         let productDescription;
         if (root.type.deviceType === RootEndpoint.deviceType) {
@@ -151,53 +153,31 @@ export class ServerConfiguration {
     }
 
     private configureNativeNode(root: Part<RootEndpoint>) {
-        // Greg: TODO - Need to convert from configuring EndpointType to configuring Part
-        const agent = root.agent;
-        let defaults = {} as Record<string, Record<string, any>>;
+        const bi = root.agent.basicInformation.state;
 
-        function addDefault(cluster: string, attr: string, value: any) {
-            if (!defaults[cluster]) {
-                defaults[cluster] = {};
-            }
-            if (defaults[cluster][attr] === undefined) {
-                defaults[cluster][attr] = value;
+        const defaultsSet = {} as Record<string, any>;
+
+        function setDefault<T extends keyof typeof bi>(name: T, value: (typeof bi)[T]) {
+            if (bi[name] === undefined) {
+                bi[name] = value;
+                defaultsSet[name] = value;
             }
         }
 
-        function setDefaults() {
-            if (Object.keys(defaults).length) {
-                root = root?.set(defaults as any);
-                return true;
-            }
+        setDefault("vendorId", VendorId(0xfff1));
+        setDefault("vendorName", "Matter.js Test Vendor");
+        setDefault("productId", 0x8000);
+        setDefault("productName", "Matter.js Test Product");
+
+        if (Object.keys(defaultsSet).length) {
+            logger.warn("Using development values for some BasicInformation attributes:", Logger.dict(defaultsSet));
         }
 
-        addDefault("basicInformation", "vendorId", 0xfff1);
-        addDefault("basicInformation", "vendorName", "Matter.js Test Vendor");
-        addDefault("basicInformation", "productId", 0x8000);
-        addDefault("basicInformation", "productName", "Matter.js Test Product");
-
-        if (setDefaults()) {
-            const dict = {} as Record<string, any>;
-            for (const cluster in defaults) {
-                for (const attr in defaults[cluster]) {
-                    dict[`${cluster}.state.${attr}`] = defaults[cluster][attr];
-                }
-            }
-            logger.warn("Using development values for some attributes:", Logger.dict(dict));
-
-            root = root.set(defaults as any);
-        }
-
-        defaults = {};
-
-        const bi = root.defaults.basicInformation;
-        addDefault("basicInformation", "productLabel", bi.productName);
-        addDefault("basicInformation", "nodeLabel", bi.productName);
-        addDefault("basicInformation", "dataModelRevision", 1);
-        addDefault("basicInformation", "hardwareVersionString", bi.hardwareVersion.toString());
-        addDefault("basicInformation", "softwareVersionString", bi.softwareVersion.toString());
-
-        setDefaults();
+        setDefault("productLabel", bi.productName);
+        setDefault("nodeLabel", bi.productName);
+        setDefault("dataModelRevision", 1);
+        setDefault("hardwareVersionString", bi.hardwareVersion.toString());
+        setDefault("softwareVersionString", bi.softwareVersion.toString());
 
         return {
             name: bi.productName,
@@ -219,7 +199,7 @@ export class ServerConfiguration {
             // values but need to confirm
             vendorId: bi.state.vendorId ?? VendorId(-1),
             productId: -1,
-        }
+        };
     }
 
     private configureCommissioning(options: ServerOptions, productDefaults: Partial<ProductDescription>) {
@@ -261,7 +241,7 @@ export class ServerConfiguration {
         if (productDescription.deviceType === undefined) {
             Object.defineProperty(productDescription, "deviceType", {
                 enumerable: true,
-                get: () => this.inferDeviceType()
+                get: () => this.inferDeviceType(),
             });
         }
 
@@ -304,11 +284,11 @@ export class ServerConfiguration {
 export namespace ServerConfiguration {
     export type NetworkOptions = ServerOptions["network"] & {
         port: number;
-    }
+    };
 
     export type CommissioningOptions = ServerOptions["commissioning"] & {
         productDescription: ProductDescription;
         passcode: number;
         discriminator: number;
-    }
+    };
 }

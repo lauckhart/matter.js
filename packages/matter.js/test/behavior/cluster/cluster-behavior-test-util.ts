@@ -5,7 +5,17 @@
  */
 
 import { ClusterBehavior } from "../../../src/behavior/cluster/ClusterBehavior.js";
-import { Attribute, Command, Event, EventPriority, FabricScopedAttribute, OptionalAttribute, OptionalCommand, OptionalEvent, OptionalWritableFabricScopedAttribute } from "../../../src/cluster/Cluster.js";
+import {
+    Attribute,
+    Command,
+    Event,
+    EventPriority,
+    FabricScopedAttribute,
+    OptionalAttribute,
+    OptionalCommand,
+    OptionalEvent,
+    OptionalWritableFabricScopedAttribute,
+} from "../../../src/cluster/Cluster.js";
 import { ClusterType } from "../../../src/cluster/ClusterType.js";
 import { TlvBoolean } from "../../../src/tlv/TlvBoolean.js";
 import { TlvString } from "../../../src/tlv/TlvString.js";
@@ -43,10 +53,10 @@ interface MyClusterBaseInterface {
 interface MyClusterInterface {
     components: [
         {
-            flags: {},
-            methods: MyClusterBaseInterface
-        }
-    ]
+            flags: {};
+            methods: MyClusterBaseInterface;
+        },
+    ];
 }
 
 export const BaseBehavior = ClusterBehavior.withInterface<MyClusterInterface>().for(MyCluster);

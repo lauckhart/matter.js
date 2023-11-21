@@ -16,32 +16,18 @@ describe("ClusterEvents", () => {
 
         it("includes required", () => {
             ({}) as Ep satisfies {
-                reqAttr$change: Observable<[
-                    value: string,
-                    oldValue: string,
-                    context?: InvocationContext
-                ]>,
+                reqAttr$change: Observable<[value: string, oldValue: string, context?: InvocationContext]>;
 
-                reqEv: Observable<[
-                    payload: string,
-                    context?: InvocationContext
-                ]>
-            }
-        })
+                reqEv: Observable<[payload: string, context?: InvocationContext]>;
+            };
+        });
 
         it("allows optional", () => {
             undefined satisfies Ep["optAttr$change"];
-            ({}) as Observable<[
-                boolean,
-                boolean,
-                context: InvocationContext
-            ]> satisfies Ep["optAttr$change"];
+            ({}) as Observable<[boolean, boolean, context: InvocationContext]> satisfies Ep["optAttr$change"];
             undefined satisfies Ep["optEv"];
-            ({}) as Observable<[
-                string,
-                context: InvocationContext
-            ]> satisfies Ep["optEv"];
-        })
+            ({}) as Observable<[string, context: InvocationContext]> satisfies Ep["optEv"];
+        });
     });
 
     describe("EventsInstance", () => {
@@ -49,31 +35,17 @@ describe("ClusterEvents", () => {
 
         it("requires mandatory", () => {
             ({}) as Ei satisfies {
-                reqAttr$change: Observable<[
-                    value: string,
-                    oldValue: string,
-                    context: InvocationContext
-                ]>,
+                reqAttr$change: Observable<[value: string, oldValue: string, context: InvocationContext]>;
 
-                reqEv: Observable<[
-                    payload: string,
-                    context: InvocationContext
-                ]>
+                reqEv: Observable<[payload: string, context: InvocationContext]>;
             };
-        })
+        });
 
         it("allows optional", () => {
             undefined satisfies Ei["optAttr$change"];
-            ({}) as Observable<[
-                boolean,
-                boolean,
-                context: InvocationContext
-            ]> satisfies Ei["optAttr$change"];
+            ({}) as Observable<[boolean, boolean, context: InvocationContext]> satisfies Ei["optAttr$change"];
             undefined satisfies Ei["optEv"];
-            ({}) as Observable<[
-                string,
-                context: InvocationContext
-            ]> satisfies Ei["optEv"];
-        })
+            ({}) as Observable<[string, context: InvocationContext]> satisfies Ei["optEv"];
+        });
     });
 });

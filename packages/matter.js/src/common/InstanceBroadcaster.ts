@@ -159,7 +159,7 @@ export interface CommissioningModeInstanceData extends ProductDescription {
 
     /** Pairing Instruction of the device for commissionable announcements. */
     pairingInstructions?: string;
-};
+}
 
 export type CommissionerInstanceData = {
     /** Device name for commissionable announcements. */

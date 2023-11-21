@@ -1,12 +1,12 @@
-import { PartOwner } from "../../src/endpoint/part/PartOwner.js";
-import { Part } from "../../src/endpoint/Part.js";
 import { Behavior } from "../../src/behavior/Behavior.js";
-import { EndpointType } from "../../src/endpoint/type/EndpointType.js";
-import { MockOwner, MockContext, MockEndpoint } from "../behavior/behavior-mocks.js";
 import { State } from "../../src/behavior/state/State.js";
+import { Part } from "../../src/endpoint/Part.js";
+import { PartOwner } from "../../src/endpoint/part/PartOwner.js";
+import { EndpointType } from "../../src/endpoint/type/EndpointType.js";
+import { MockContext, MockEndpoint, MockOwner } from "../behavior/behavior-mocks.js";
 
 export class MockBehavior1 extends Behavior {
-    static override readonly id = "one"
+    static override readonly id = "one";
 }
 
 export namespace MockBehavior1 {
@@ -15,12 +15,12 @@ export namespace MockBehavior1 {
     }
 
     export class FabricScope extends State {
-        b1f = "bar"
+        b1f = "bar";
     }
 }
 
 export class MockBehavior2 extends Behavior {
-    static override readonly id = "two"
+    static override readonly id = "two";
 }
 
 export namespace MockBehavior2 {
@@ -42,12 +42,12 @@ export class MockPart<T extends EndpointType> extends Part<T> {
                 this.owner = options.owner;
             }
         } else {
-            this.owner = new MockOwner;
+            this.owner = new MockOwner();
         }
     }
 
     get mockAgent() {
-        return this.getAgent(new MockContext);
+        return this.getAgent(new MockContext());
     }
 
     static createBehavior<T extends Behavior.Type>(type: T) {

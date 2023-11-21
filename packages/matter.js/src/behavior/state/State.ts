@@ -10,10 +10,10 @@ import type { InvocationContext } from "../InvocationContext.js";
 
 /**
  * Mutable state for a behavior.
- * 
+ *
  * State is either "global" or "scoped".  Scoped state is scoped to a Matter
  * fabric.  Each behavior has a separate class for global and scoped state.
- * 
+ *
  * The public interface for state is just a JS object.  {@link State.Internal}
  * is an additional semi-public interface you may access by casting.
  */
@@ -27,11 +27,8 @@ export class State {
     /**
      * Obtain a new state type with different default values.
      */
-    static set<This extends State.Type, T extends object>(
-        this: This,
-        defaults: T
-    ) {
-        const oldDefaults = new this as Record<string, any>;
+    static set<This extends State.Type, T extends object>(this: This, defaults: T) {
+        const oldDefaults = new this() as Record<string, any>;
         let newDefaults: Record<string, any> | undefined;
         for (const name in defaults) {
             if (oldDefaults.hasOwnProperty(name)) {
@@ -55,21 +52,17 @@ export class State {
      * You may extend state using normal subclassing or by using this method
      * which overrides and/or adds properties.
      */
-    static with<This extends State.Type, T extends object>(
-        this: This,
-        defaults: T,
-        options?: State.WithOptions,
-    ) {
+    static with<This extends State.Type, T extends object>(this: This, defaults: T, options?: State.WithOptions) {
         const staticProps = {} as { fields?: State.FieldOptions };
         if (options?.fields) {
             staticProps.fields = options.fields;
         }
-        
+
         return GeneratedClass({
             name: options?.name ?? `${this.name}$`,
             base: this,
             instanceProperties: defaults,
-            staticProperties: staticProps
+            staticProperties: staticProps,
         }) as State.Type<InstanceType<This> & T>;
     }
 
@@ -123,7 +116,7 @@ export namespace State {
     export type WithOptions = {
         name?: string;
         fields?: FieldOptions;
-    }
+    };
 
     /**
      * A set of field options.
@@ -138,7 +131,7 @@ export namespace State {
         set: typeof State.set;
         with: typeof State.with;
         fields: FieldOptions;
-    }
+    };
 }
 
 Object.assign(State.prototype, {

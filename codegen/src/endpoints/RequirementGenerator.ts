@@ -5,8 +5,8 @@
  */
 
 import { Logger } from "@project-chip/matter.js/log";
-import { decamelize } from "@project-chip/matter.js/util";
 import { ClusterModel, ClusterVariance, MatterModel, RequirementModel } from "@project-chip/matter.js/model";
+import { decamelize } from "@project-chip/matter.js/util";
 import { Block } from "../util/TsFile.js";
 import { ClusterRequirements } from "./ClusterRequirements.js";
 import { EndpointFile } from "./EndpointFile.js";
@@ -41,7 +41,7 @@ export class RequirementGenerator {
             throw new Error("Unable to locate root MatterModel");
         }
         const clusterReqs = this.file.model.requirements.filter(r => r.element === `${type}Cluster`);
-        
+
         switch (file.model.name) {
             case "RootEndpoint":
             case "Aggregator":

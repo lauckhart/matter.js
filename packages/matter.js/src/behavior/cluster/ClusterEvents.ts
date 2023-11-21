@@ -16,43 +16,40 @@ import type { ClusterOf, Named } from "./ClusterBehaviorUtil.js";
  */
 export type ClusterEvents<C extends ClusterType, B extends Behavior.Type> =
     // Keep observables *not* supplied by the old cluster
-    & Omit<InstanceType<B["Events"]>, keyof ClusterEvents.Properties<ClusterOf<B>>>
-    
-    // Add observables supplied by the old cluster
-    & ClusterEvents.Properties<C>;
+    Omit<InstanceType<B["Events"]>, keyof ClusterEvents.Properties<ClusterOf<B>>> &
+        // Add observables supplied by the old cluster
+        ClusterEvents.Properties<C>;
 
 export namespace ClusterEvents {
     export type Type<C extends ClusterType, B extends Behavior.Type> = {
         new (): ClusterEvents<C, B>;
-    }
+    };
 
     /**
      * Properties the cluster contributes to Events.
      */
-    export type Properties<C> =
-        & AttributeObservables<Named<ClusterType.AttributesOf<C>>>
-        & EventObservables<Named<ClusterType.EventsOf<C>>>;
+    export type Properties<C> = AttributeObservables<Named<ClusterType.AttributesOf<C>>> &
+        EventObservables<Named<ClusterType.EventsOf<C>>>;
 
-    export type AttributeObservables<A extends Record<string, ClusterType.Attribute>> =
-        ClusterType.SomeOptional<{ [K in keyof A & string as `${K}$change`]: A[K] }, {
-            [K in keyof A & string as `${K}$change`]: AttributeObservable<A[K]>
-        }>;
+    export type AttributeObservables<A extends Record<string, ClusterType.Attribute>> = ClusterType.SomeOptional<
+        { [K in keyof A & string as `${K}$change`]: A[K] },
+        {
+            [K in keyof A & string as `${K}$change`]: AttributeObservable<A[K]>;
+        }
+    >;
 
-    export type AttributeObservable<A extends ClusterType.Attribute = ClusterType.Attribute> =
-        Observable<[
-            value: TypeFromSchema<A["schema"]>,
-            oldValue: TypeFromSchema<A["schema"]>,
-            context: InvocationContext,
-        ]>;
+    export type AttributeObservable<A extends ClusterType.Attribute = ClusterType.Attribute> = Observable<
+        [value: TypeFromSchema<A["schema"]>, oldValue: TypeFromSchema<A["schema"]>, context: InvocationContext]
+    >;
 
-    export type EventObservables<E extends Record<string, ClusterType.Event>> =
-        ClusterType.SomeOptional<E, {
-            [K in keyof E & string]: EventObservable<E[K]>
-        }>;
+    export type EventObservables<E extends Record<string, ClusterType.Event>> = ClusterType.SomeOptional<
+        E,
+        {
+            [K in keyof E & string]: EventObservable<E[K]>;
+        }
+    >;
 
-    export type EventObservable<E extends ClusterType.Event> =
-        Observable<[
-            payload: TypeFromSchema<E["schema"]>,
-            context: InvocationContext,
-        ]>;
+    export type EventObservable<E extends ClusterType.Event> = Observable<
+        [payload: TypeFromSchema<E["schema"]>, context: InvocationContext]
+    >;
 }

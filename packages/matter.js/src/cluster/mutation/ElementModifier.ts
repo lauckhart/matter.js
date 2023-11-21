@@ -201,7 +201,7 @@ function modifyElements(
             }
 
             elements[elementName] = { ...element };
-            
+
             modifier(elements[elementName], mod);
         }
     }

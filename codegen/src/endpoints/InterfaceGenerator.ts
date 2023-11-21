@@ -5,8 +5,8 @@
  */
 
 import { CommandModel, InferredComponent, VarianceCondition, conditionToBitmaps } from "@project-chip/matter.js/model";
-import type { InterfaceFile } from "./InterfaceFile.js";
 import { camelize } from "../util/string.js";
+import type { InterfaceFile } from "./InterfaceFile.js";
 import { TypeGenerator } from "./TypeGenerator.js";
 
 export class InterfaceGenerator {
@@ -20,7 +20,7 @@ export class InterfaceGenerator {
     generateComponent(name: string, component: InferredComponent) {
         const commands = [
             ...component.mandatory.filter(model => model instanceof CommandModel && model.isRequest),
-            ...component.optional.filter(model => model instanceof CommandModel && model.isRequest)
+            ...component.optional.filter(model => model instanceof CommandModel && model.isRequest),
         ] as CommandModel[];
 
         if (!commands.length) {
@@ -33,7 +33,7 @@ export class InterfaceGenerator {
 
         for (const command of commands) {
             this.file.addImport("util/Type", "MaybePromise");
-            
+
             let request = this.types.reference(command, "");
             if (request.length) {
                 request = `request: ${request}`;
@@ -41,8 +41,7 @@ export class InterfaceGenerator {
 
             const response = this.types.reference(command.responseModel, "void");
 
-            intf.atom(`${camelize(command.name, false)}(${request}): MaybePromise<${response}>`)
-                .document(command);
+            intf.atom(`${camelize(command.name, false)}(${request}): MaybePromise<${response}>`).document(command);
         }
     }
 

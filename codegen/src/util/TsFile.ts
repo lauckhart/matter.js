@@ -394,7 +394,9 @@ export class Block extends Entry {
     protected delimiterAfter(index: number, serialized: string): string {
         // Do not delimit functions structures that eslint will complain about
         if (
-            serialized.match(/^(?:\s*(?:\/\*.*\*\/|export|const))*\s*(?:export)?\s*(?:enum|function|namespace|interface|class)/m)
+            serialized.match(
+                /^(?:\s*(?:\/\*.*\*\/|export|const))*\s*(?:export)?\s*(?:enum|function|namespace|interface|class)/m,
+            )
         ) {
             return "";
         }

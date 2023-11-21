@@ -9,8 +9,8 @@ import colors from "ansi-colors";
 import { Package } from "../util/package.js";
 import { Progress } from "../util/progress.js";
 import { Builder } from "./builder.js";
-import { Project } from "./project.js";
 import { InternalBuildError } from "./error.js";
+import { Project } from "./project.js";
 
 /**
  * Graph of dependencies for workspace packages.

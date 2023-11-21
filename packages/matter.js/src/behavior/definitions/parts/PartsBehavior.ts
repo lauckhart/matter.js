@@ -4,27 +4,27 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ImplementationError, InternalError } from "../../../common/MatterError.js";
+import { Agent } from "../../../endpoint/Agent.js";
 import { Part } from "../../../endpoint/Part.js";
-import { ObservableSet, WritableObservableSet } from "../../../util/Observable.js";
+import { EndpointType } from "../../../endpoint/type/EndpointType.js";
+import { BasicSet, MutableSet } from "../../../util/Set.js";
 import { Behavior } from "../../Behavior.js";
+import { BehaviorBacking } from "../../BehaviorBacking.js";
 import { State } from "../../state/State.js";
 import { LifecycleBehavior } from "../lifecycle/LifecycleBehavior.js";
-import { ImplementationError, InternalError } from "../../../common/MatterError.js";
-import { BehaviorBacking } from "../../BehaviorBacking.js";
-import { Agent } from "../../../endpoint/Agent.js";
-import { EndpointType } from "../../../endpoint/type/EndpointType.js";
 
 /**
  * Manages parent-child relationship between endpoints.
- * 
- * You can manipulate child parts using {@link WritableObservableSet}
+ *
+ * You can manipulate child parts using {@link MutableSet}
  * interface.
- * 
+ *
  * Notifications of structural change bubble via
  * {@link LifecycleBehavior.events.structure$change}.
  */
-export class PartsBehavior extends Behavior implements WritableObservableSet<Part, Part | Agent> {
-    static override readonly id = "parts"; 
+export class PartsBehavior extends Behavior implements MutableSet<Part, Part | Agent> {
+    static override readonly id = "parts";
 
     declare readonly state: PartsBehavior.EndpointScope;
 
@@ -35,8 +35,8 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
         const lifecycle = agent.get(LifecycleBehavior);
 
         // Update state in response to the mutation state.parts
-        children.added(child => adoptPart(child));
-        children.deleted(child => disownPart(child));
+        children.added.on(child => adoptPart(child));
+        children.deleted.on(child => disownPart(child));
 
         // Immediately adopt any parts present in state upon initialization
         for (const part of this.state.children) {
@@ -44,11 +44,11 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
         }
 
         // Monitor online state of owner so we can propagate to children
-        lifecycle.events.online$change((online) => {
+        lifecycle.events.online$change.on(online => {
             for (const part of state.children) {
                 part.agent.get(LifecycleBehavior).state.online = online;
             }
-        })
+        });
 
         /**
          * Broadcast the lifecycle "structure changed" event.  Invoked in
@@ -86,7 +86,7 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
          */
         function adoptPart(child: Part) {
             child.owner = agent.part;
-            
+
             const registerIfInitialized = () => {
                 if (lifecycle.state.initialized) {
                     lifecycle.events.initialized$change.off(registerIfInitialized);
@@ -94,14 +94,14 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
                 state.initializing.delete(child);
 
                 partReady(child);
-            }
+            };
 
-            lifecycle.events.initialized$change(registerIfInitialized);
+            lifecycle.events.initialized$change.on(registerIfInitialized);
             registerIfInitialized();
 
             const childLifecycle = child.agent.get(LifecycleBehavior);
-            childLifecycle.events.structure$change(structureChangeEmitter);
-            childLifecycle.events.destroyed(childDestroyed);
+            childLifecycle.events.structure$change.on(structureChangeEmitter);
+            childLifecycle.events.destroyed.on(childDestroyed);
 
             structureChangeEmitter(agent.part);
         }
@@ -156,10 +156,7 @@ export class PartsBehavior extends Behavior implements WritableObservableSet<Par
     }
 
     initializeBehavior(part: Part, behavior: Behavior.Type): BehaviorBacking {
-        return this.agent.part.owner.initializeBehavior(
-            part,
-            behavior
-        );
+        return this.agent.part.owner.initializeBehavior(part, behavior);
     }
 }
 
@@ -168,7 +165,7 @@ export namespace PartsBehavior {
         /**
          * Child parts of the endpoint.
          */
-        children = new ObservableSet<Part>();
+        children = new BasicSet<Part>();
 
         /**
          * The behavior stores parts undergoing initialization here.
@@ -186,11 +183,7 @@ function partFor(child: Part | Agent | EndpointType) {
         return child;
     }
 
-    if (
-        child.name != undefined
-        && child.deviceType !== undefined
-        && child.deviceRevision !== undefined
-    ) {
+    if (child.name != undefined && child.deviceType !== undefined && child.deviceRevision !== undefined) {
         return new Part(child);
     }
 

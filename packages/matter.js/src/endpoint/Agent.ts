@@ -6,21 +6,21 @@
 
 import { Behavior } from "../behavior/Behavior.js";
 import { InvocationContext } from "../behavior/InvocationContext.js";
-import type { SupportedBehaviors } from "./part/SupportedBehaviors.js";
-import type { Part } from "./Part.js";
 import { GeneratedClass } from "../util/GeneratedClass.js";
+import type { Part } from "./Part.js";
+import type { SupportedBehaviors } from "./part/SupportedBehaviors.js";
 
 /**
  * An Agent offers interaction with a single endpoint.  This is the operational
  * interface to endpoints.  It is separate from the {@link Part} because the
  * agent is context-aware with access to at most one fabric.
- * 
+ *
  * An endpoint agent manages one or more {@link Behavior} instances that
  * implement a discrete subset of the agent's functionality.
- * 
+ *
  * Each endpoint agent has an associated {@link Agent.Type} that
  * defines each {@link Behavior.Type} the endpoint supports.
- * 
+ *
  * {@link Agent.Type} is a permanent feature of an endpoint but agent instances
  * themselves are transitory and there is no guarantee they will exist beyond
  * the lifecycle of a single transaction.
@@ -59,10 +59,10 @@ export class Agent {
     /**
      * Obtain a {@link Behavior} supported by this agent.  Throws an error if
      * the {@link Behavior.Type} isn't supported.
-     * 
+     *
      * You may also access behaviors using normal property access, e.g.
      * `agent.descriptor` is the same as `agent.get(DescriptorBehavior)`.
-     * 
+     *
      * Property access is available in TypeScript when the set of behaviors
      * is defined statically.
      */
@@ -95,15 +95,15 @@ export class Agent {
                     return this.get(behavior);
                 },
 
-                enumerable: true
-            }
+                enumerable: true,
+            };
         });
 
         return GeneratedClass({
             name: `${name}Agent`,
             base: Agent,
             instanceDescriptors: props,
-        }) as Agent.Type<B>
+        }) as Agent.Type<B>;
     }
 }
 
@@ -111,7 +111,7 @@ export namespace Agent {
     /**
      * Static type for {@link Agent} with a property for each statically
      * defined behavior.
-     * 
+     *
      * Behaviors available at construction time are available as instance
      * properties.  You must use {@link Agent.get} or
      * {@link Agent.require} to acquire behaviors added via
@@ -121,8 +121,7 @@ export namespace Agent {
         new (part: Part, context: InvocationContext): Instance<B>;
     }
 
-    export type Instance<B extends SupportedBehaviors = {}> = (
-        & Agent
-        & { readonly [K in keyof B & string]: InstanceType<B[K]> }
-    );
+    export type Instance<B extends SupportedBehaviors = {}> = Agent & {
+        readonly [K in keyof B & string]: InstanceType<B[K]>;
+    };
 }

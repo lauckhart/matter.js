@@ -27,8 +27,8 @@ export interface AsyncDestructable {
  * Base class for full async lifecycle management.
  */
 export class Usable implements Usable.Interface {
-    #destroyed?: Observable<[ instance: this ]>;
-    #initialized?: Observable<[ instance: this ]>;
+    #destroyed?: Observable<[instance: this]>;
+    #initialized?: Observable<[instance: this]>;
 
     /**
      * Perform post-construction initialization.
@@ -68,7 +68,7 @@ export class Usable implements Usable.Interface {
             this.#destroyed = Observable();
         }
         return this.#destroyed;
-    };
+    }
 
     /**
      * Supports ES "using".

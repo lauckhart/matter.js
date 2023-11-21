@@ -5,11 +5,11 @@
  */
 
 import { OperationalCredentialsServerConf } from "../../cluster/server/OperationalCredentialsServer.js";
+import { Environment } from "../../common/Environment.js";
 import { ProductDescription } from "../../common/InstanceBroadcaster.js";
 import { Part } from "../../endpoint/Part.js";
 import { EndpointType } from "../../endpoint/type/EndpointType.js";
 import { CommissioningFlowType } from "../../schema/PairingCodeSchema.js";
-import { StorageManager } from "../../storage/StorageManager.js";
 import { ByteArray } from "../../util/ByteArray.js";
 import type { NodeServer } from "./NodeServer.js";
 
@@ -18,16 +18,14 @@ import type { NodeServer } from "./NodeServer.js";
  */
 export type ServerOptions = {
     /**
+     * Execution environment.
+     */
+    readonly environment?: Environment;
+
+    /**
      * Initial endpoints published by the server.
      */
     readonly endpoints?: (EndpointType | Part)[];
-
-    /**
-     * Storage used for persistent server state.  This is used when running
-     * standalone.  If not present, creates a storage pool for the server's
-     * name using Storage.create().
-     */
-    readonly storageManager?: StorageManager;
 
     /**
      * The next ID assigned to a new endpoint.
@@ -52,7 +50,7 @@ export type ServerOptions = {
         listeningAddressIpv6?: string;
         disableIpv4?: boolean;
 
-        // TODO - change above to the following:
+        // TODO - change above to something along the lines of:
         // addresses: Address | Address[];
         // listen: Address | Address[];
         // announce: Address | Address[];

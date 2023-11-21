@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Observable } from "../../util/Observable.js";
-import { State } from "./State.js";
 import { ValidationError } from "../../common/MatterError.js";
 import { GeneratedClass } from "../../util/GeneratedClass.js";
-import type { ClusterEvents } from "../cluster/ClusterEvents.js";
-import type { InvocationContext } from "../InvocationContext.js";
+import { Observable } from "../../util/Observable.js";
 import { camelize } from "../../util/String.js";
+import type { InvocationContext } from "../InvocationContext.js";
+import type { ClusterEvents } from "../cluster/ClusterEvents.js";
+import { State } from "./State.js";
 
 /**
  * A cache of managed state implementation classes.
@@ -34,7 +34,7 @@ interface Internal extends State.Internal {
  * The public {@link State} interface is a bare JS object but internally we
  * need wiring for validating writes and triggering events.  This function
  * creates a wrapper that performs those functions.
- * 
+ *
  * This is a pure function for {@link type}.  It caches the generated class.
  */
 export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.Owner = {}) {
@@ -43,7 +43,7 @@ export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.
     let className, diagnosticsName: string;
     if (owner.name) {
         className = `${camelize(owner.name, true)}$${type.name}`;
-        diagnosticsName = `${camelize(owner.name, false)}.state`
+        diagnosticsName = `${camelize(owner.name, false)}.state`;
     } else {
         className = `${type.name}$`;
         diagnosticsName = type.name;
@@ -58,15 +58,15 @@ export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.
     // We add instance descriptors in preprocess() below
     const instanceDescriptors = {
         [State.SET]: {
-            value: setter
+            value: setter,
         },
 
         [OWNER]: {
-            value: owner
-        }
+            value: owner,
+        },
     } as PropertyDescriptorMap;
 
-    for (const name in new type) {
+    for (const name in new type()) {
         // Delegate all enumerable properties to the [VALUE] instance
         instanceDescriptors[name] = createDescriptor(name);
     }
@@ -77,7 +77,7 @@ export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.
         base: State,
 
         initialize(this: Internal, values, context) {
-            this[VALUES] = new type as typeof this[typeof VALUES];
+            this[VALUES] = new type() as (typeof this)[typeof VALUES];
             this[State.INITIALIZE](values, context);
         },
 
@@ -85,13 +85,13 @@ export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.
         staticDescriptors: {
             fields: {
                 get() {
-                    return type.fields
+                    return type.fields;
                 },
 
-                enumerable: true
+                enumerable: true,
             },
         },
-    })
+    });
 
     cache.set(type, managed);
 
@@ -102,11 +102,11 @@ export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.
         if (oldValue === value) {
             return;
         }
-    
+
         if (!context) {
             context = this[State.CONTEXT] ?? {};
         }
-    
+
         const field = fields[name];
         if (field) {
             try {
@@ -122,9 +122,9 @@ export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.
                 throw e;
             }
         }
-    
+
         this[VALUES][name] = value;
-    
+
         const observable = (context.behavior?.events as undefined | Record<string, Observable>)?.[`${name}$change`];
         if (observable instanceof Observable) {
             (observable as ClusterEvents.AttributeObservable).emit(value, oldValue, context);
@@ -139,7 +139,7 @@ export namespace ManagedState {
         set: typeof State.set;
         with: typeof State.with;
         fields: State.FieldOptions;
-    }
+    };
 
     export interface Owner {
         readonly name?: string;
@@ -158,8 +158,8 @@ function createDescriptor(name: string) {
         },
 
         enumerable: true,
-        configurable: false
-    }
+        configurable: false,
+    };
 
     return descriptor;
 }

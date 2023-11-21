@@ -206,7 +206,7 @@ export interface ManualCommissioningServerOptions extends GeneralCommissioningSe
     /**
      * Product description for commissioning broadcast.
      */
-    productDescription: ProductDescription,
+    productDescription: ProductDescription;
 
     /**
      * The root endpoint for the server.
@@ -603,7 +603,7 @@ export class CommissioningServer extends MatterNode {
                 deviceType: this.options.deviceType,
                 vendorId: basicInformation.attributes.vendorId.getLocal(),
                 productId: basicInformation.attributes.productId.getLocal(),
-            }
+            };
         }
 
         this.interactionServer = new InteractionServer(this.storage, {

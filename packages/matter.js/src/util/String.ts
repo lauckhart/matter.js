@@ -83,7 +83,7 @@ export function decamelize(name: string, separator = "-") {
     const result = Array<string>();
     let needSeparator = false;
     for (const c of name) {
-        if (c >= 'A' && c <= 'Z') {
+        if (c >= "A" && c <= "Z") {
             if (needSeparator) {
                 result.push(separator);
                 needSeparator = false;

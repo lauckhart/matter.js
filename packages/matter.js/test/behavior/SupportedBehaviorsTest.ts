@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ClusterBehavior } from "../../src/behavior/cluster/ClusterBehavior.js";
 import { ColorControl } from "../../src/cluster/definitions/ColorControlCluster.js";
 import { OnOff } from "../../src/cluster/definitions/OnOffCluster.js";
 import { WindowCovering } from "../../src/cluster/definitions/WindowCoveringCluster.js";
-import { ClusterBehavior } from "../../src/behavior/cluster/ClusterBehavior.js";
 import { SupportedBehaviors } from "../../src/endpoint/part/SupportedBehaviors.js";
 
 const WC1 = ClusterBehavior.for(WindowCovering.Cluster.with("Lift"));
@@ -31,34 +31,34 @@ describe("BehaviorList", () => {
 
     it("instantiates empty to full", () => {
         const fake = {} as SupportedBehaviors.With<{}, [WC1, CC]>;
-        fake satisfies { windowCovering: WC1, colorControl: CC };
+        fake satisfies { windowCovering: WC1; colorControl: CC };
         ({}) as IsNever<typeof fake> satisfies false;
 
         const sb = SupportedBehaviors.extend({}, [WC1, CC]);
-        sb satisfies { windowCovering: WC1, colorControl: CC };
+        sb satisfies { windowCovering: WC1; colorControl: CC };
         ({}) as IsNever<typeof sb> satisfies false;
         expect(sb).deep.equal({ windowCovering: WC1, colorControl: CC });
     });
 
     it("extends twice", () => {
         const fake = {} as SupportedBehaviors.With<{ windowCovering: WC1 }, [CC]>;
-        fake satisfies { windowCovering: WC1, colorControl: CC };
+        fake satisfies { windowCovering: WC1; colorControl: CC };
         ({}) as IsNever<typeof fake> satisfies false;
 
         const sb1 = SupportedBehaviors.extend({}, [WC1]);
         const sb2 = SupportedBehaviors.extend(sb1, [CC]);
-        sb2 satisfies { windowCovering: WC1, colorControl: CC };
+        sb2 satisfies { windowCovering: WC1; colorControl: CC };
         ({}) as IsNever<typeof sb2> satisfies false;
         expect(sb2).deep.equal({ windowCovering: WC1, colorControl: CC });
     });
 
     it("replaces and extends", () => {
-        const fake = {} as SupportedBehaviors.With<{ windowCovering: WC1, colorControl: CC }, [OO, CC, WC2]>;
-        fake satisfies { windowCovering: WC2, colorControl: CC, onOff: OO };
+        const fake = {} as SupportedBehaviors.With<{ windowCovering: WC1; colorControl: CC }, [OO, CC, WC2]>;
+        fake satisfies { windowCovering: WC2; colorControl: CC; onOff: OO };
         ({}) as IsNever<typeof fake> satisfies false;
 
         const sb = SupportedBehaviors.extend({ windowCovering: WC1, colorControl: CC }, [OO, CC, WC2]);
-        sb satisfies { windowCovering: WC2, colorControl: CC, onOff: OO };
+        sb satisfies { windowCovering: WC2; colorControl: CC; onOff: OO };
         ({}) as IsNever<typeof sb> satisfies false;
         expect(sb).deep.equal({ windowCovering: WC2, colorControl: CC, onOff: OO });
     });

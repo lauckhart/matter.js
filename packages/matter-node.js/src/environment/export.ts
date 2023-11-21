@@ -4,6 +4,4 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-if (!Storage.registered) {
-    Storage.create = (name: string, clear = false) => {};
-}
+export * from "./NodeJsEnvironment.js";

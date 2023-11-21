@@ -20,12 +20,7 @@ export class DeviceTypeModel extends Model implements DeviceTypeElement {
     }
 
     get revision() {
-        return this
-            .get(RequirementModel, "Descriptor")
-            .get(RequirementModel, "DeviceTypeList")
-            .default
-            [0]
-            .revision;
+        return this.get(RequirementModel, "Descriptor").get(RequirementModel, "DeviceTypeList").default[0].revision;
     }
 
     override get children(): (RequirementModel | DatatypeModel)[] {

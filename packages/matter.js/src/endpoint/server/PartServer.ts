@@ -7,9 +7,11 @@
 import { Behavior } from "../../behavior/Behavior.js";
 import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
+import { DescriptorServer } from "../../behavior/definitions/descriptor/DescriptorServer.js";
+import { LifecycleBehavior } from "../../behavior/definitions/lifecycle/LifecycleBehavior.js";
+import { PartsBehavior } from "../../behavior/definitions/parts/PartsBehavior.js";
 import { ClusterServerBehaviorBacking } from "../../behavior/server/ClusterServerBehaviorBacking.js";
 import { ServerBehaviorBacking } from "../../behavior/server/ServerBehaviorBacking.js";
-import { DescriptorServer } from "../../behavior/definitions/descriptor/DescriptorServer.js";
 import { Attributes, Commands, Events } from "../../cluster/Cluster.js";
 import { ClusterType } from "../../cluster/ClusterType.js";
 import { ClusterClientObj } from "../../cluster/client/ClusterClientTypes.js";
@@ -19,9 +21,7 @@ import { ClusterId } from "../../datatype/ClusterId.js";
 import { EndpointNumber } from "../../datatype/EndpointNumber.js";
 import { EndpointInterface } from "../EndpointInterface.js";
 import { Part } from "../Part.js";
-import { LifecycleBehavior } from "../../behavior/definitions/lifecycle/LifecycleBehavior.js";
 import { PartOwner } from "../part/PartOwner.js";
-import { PartsBehavior } from "../../behavior/definitions/parts/PartsBehavior.js";
 import { UnmanagedClusterBehavior } from "./UnmanagedClusterBehavior.js";
 
 const SERVER = Symbol("server");
@@ -44,9 +44,7 @@ export class PartServer implements EndpointInterface, PartOwner {
 
         part.behaviors.require(DescriptorServer);
 
-        this.#part.agent.get(LifecycleBehavior).events.structure$change(
-            () => this.#structureChangedCallback?.()
-        );
+        this.#part.agent.get(LifecycleBehavior).events.structure$change.on(() => this.#structureChangedCallback?.());
     }
 
     initializeBehavior(part: Part, behavior: Behavior.Type): BehaviorBacking {
@@ -54,7 +52,11 @@ export class PartServer implements EndpointInterface, PartOwner {
         if (behavior.prototype instanceof ClusterBehavior) {
             const cluster = (behavior as ClusterBehavior.Type).cluster;
             if (this.#clusterServers.has(cluster.id)) {
-                throw new InternalError(`${this.#part.description} behavior ${behavior.name} cluster ${cluster.id} initialized multiple times`);
+                throw new InternalError(
+                    `${this.#part.description} behavior ${behavior.name} cluster ${
+                        cluster.id
+                    } initialized multiple times`,
+                );
             }
             backing = new ClusterServerBehaviorBacking(part, behavior as ClusterBehavior.Type);
             this.#clusterServers.set(cluster.id, backing.clusterServer);
@@ -98,7 +100,7 @@ export class PartServer implements EndpointInterface, PartOwner {
         const agent = this.#part.agent;
         if (agent.has(PartsBehavior)) {
             const parts = agent.get(PartsBehavior);
-            return [ ...parts ].map(part => PartServer.forPart(part));
+            return [...parts].map(part => PartServer.forPart(part));
         }
         return [];
     }
@@ -118,7 +120,7 @@ export class PartServer implements EndpointInterface, PartOwner {
     setStructureChangedCallback(callback: () => void): void {
         this.#structureChangedCallback = callback;
     }
-    
+
     addClusterServer<A extends Attributes, E extends Events>(server: ClusterServerObj<A, E>): void {
         const behavior = UnmanagedClusterBehavior.for(server);
 
@@ -132,9 +134,9 @@ export class PartServer implements EndpointInterface, PartOwner {
         return this.#clusterServers.has(cluster.id);
     }
 
-    getClusterServer<
-        const T extends ClusterType
-    >(cluster: T): ClusterServerObj<T["attributes"], T["events"]> | undefined {
+    getClusterServer<const T extends ClusterType>(
+        cluster: T,
+    ): ClusterServerObj<T["attributes"], T["events"]> | undefined {
         const server = this.#clusterServers.get(cluster.id);
         if (server !== undefined) {
             return server as unknown as ClusterServerObj<T["attributes"], T["events"]>;
@@ -146,7 +148,7 @@ export class PartServer implements EndpointInterface, PartOwner {
     }
 
     getAllClusterServers(): ClusterServerObj<Attributes, Events>[] {
-        return [ ...this.#clusterServers.values() ];
+        return [...this.#clusterServers.values()];
     }
 
     getAllClusterClients(): ClusterClientObj<any, Attributes, Commands, Events>[] {

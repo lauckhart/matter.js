@@ -5,10 +5,10 @@
  */
 
 import { ImplementationError } from "../../common/MatterError.js";
-import { LifecycleBehavior } from "../definitions/lifecycle/LifecycleBehavior.js";
 import { Fabric } from "../../fabric/Fabric.js";
 import { BehaviorBacking } from "../BehaviorBacking.js";
 import { InvocationContext } from "../InvocationContext.js";
+import { LifecycleBehavior } from "../definitions/lifecycle/LifecycleBehavior.js";
 import { ManagedState } from "../state/ManagedState.js";
 import { State } from "../state/State.js";
 import { UnifiedState } from "../state/UnifiedState.js";
@@ -18,7 +18,7 @@ import { UnifiedState } from "../state/UnifiedState.js";
  */
 export class ServerBehaviorBacking extends BehaviorBacking {
     #endpointScope?: State;
-    #fabricScopes = new Map<Fabric, State>;
+    #fabricScopes = new Map<Fabric, State>();
     #fabricScopeType?: State.Type;
     #stateType?: UnifiedState.Type;
     #stateOwner?: ManagedState.Owner;
@@ -40,18 +40,18 @@ export class ServerBehaviorBacking extends BehaviorBacking {
         if (fabric === undefined) {
             throw new ImplementationError(`Cannot access ${this.type.id} fabric properties without fabric scope`);
         }
-        
+
         let fabricScope = this.#fabricScopes.get(fabric);
-        
+
         if (!fabricScope) {
             fabricScope = this.createFabricScope(fabric);
 
             fabric.addRemoveCallback(() => this.#fabricScopes.delete(fabric));
         }
-        
+
         return fabricScope;
     }
-    
+
     createState(context: InvocationContext) {
         const endpointScope = this.endpointScope;
 
@@ -95,7 +95,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
 
     protected get stateOwner() {
         const part = this.part;
-        
+
         // We need access to lifecycle state to access online status.  Loads
         // lazily to avoid infinite loops but we then cache as this is
         // referenced for every write
@@ -109,8 +109,8 @@ export class ServerBehaviorBacking extends BehaviorBacking {
                         lifecycleState = part.agent.get(LifecycleBehavior).state;
                     }
                     return lifecycleState.online;
-                }
-            }
+                },
+            };
         }
 
         return this.#stateOwner;

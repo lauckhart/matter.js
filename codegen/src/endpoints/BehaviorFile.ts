@@ -14,7 +14,11 @@ export class BehaviorFile extends TsFile {
     static readonly baseName = "Behavior";
     readonly definitionName: string;
 
-    constructor(name: string, public cluster: ClusterModel, private variance: ClusterVariance) {
+    constructor(
+        name: string,
+        public cluster: ClusterModel,
+        private variance: ClusterVariance,
+    ) {
         super(name);
         this.definitionName = `${cluster.name}Behavior`;
         this.cluster = cluster;
@@ -39,19 +43,21 @@ export class BehaviorFile extends TsFile {
         if (this.variance.requiresFeatures) {
             this.addImport(`../../../cluster/ClusterType`, "ClusterType");
             builder.atom(`for(ClusterType(${this.cluster.name}.Base))`);
-            extraDocs = `${this.cluster.name}.Cluster requires you to enable one or more optional features.  `
-                + `You can do so using {@link ${this.cluster.name}Behavior.with}.`;
+            extraDocs =
+                `${this.cluster.name}.Cluster requires you to enable one or more optional features.  ` +
+                `You can do so using {@link ${this.cluster.name}Behavior.with}.`;
         } else {
             builder.atom(`for(${this.cluster.name}.Cluster)`);
             if (Object.keys(this.variance.components).length) {
-                extraDocs = `This class does not have optional features of ${this.cluster.name}.Cluster enabled.  `
-                    + `You can enable additional features using ${this.cluster.name}Behavior.with.`;
+                extraDocs =
+                    `This class does not have optional features of ${this.cluster.name}.Cluster enabled.  ` +
+                    `You can enable additional features using ${this.cluster.name}Behavior.with.`;
             }
         }
 
         builder.document(
             `${this.cluster.name}Behavior is the base class for objects that support interaction with {@link ${this.cluster.name}.Cluster}.`,
-            extraDocs
+            extraDocs,
         );
 
         this.atom(`type ${this.cluster.name}BehaviorType = InstanceType<typeof ${this.cluster.name}Behavior>`);

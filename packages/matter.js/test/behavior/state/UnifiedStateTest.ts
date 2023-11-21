@@ -21,21 +21,21 @@ const Unified = UnifiedState(EndpointScope, FabricScope);
 describe("UnifiedState", () => {
     it("is a pure function", () => {
         expect(UnifiedState(EndpointScope, FabricScope)).equals(Unified);
-    })
+    });
 
     it("propagates reads", () => {
-        const endpoint = new EndpointScope;
-        const fabric = new FabricScope;
+        const endpoint = new EndpointScope();
+        const fabric = new FabricScope();
 
         const unified = new Unified(endpoint, fabric, {} as InvocationContext);
 
         expect(unified.foo).equals("bar");
         expect(unified.biz).equals("baz");
-    })
+    });
 
     it("propagates writes", () => {
-        const endpoint = new EndpointScope;
-        const fabric = new FabricScope;
+        const endpoint = new EndpointScope();
+        const fabric = new FabricScope();
 
         const unified = new Unified(endpoint, fabric, {} as InvocationContext);
         unified.foo = "BAR";
@@ -43,5 +43,5 @@ describe("UnifiedState", () => {
 
         expect(endpoint.foo).equals("BAR");
         expect(fabric.biz).equals("BAZ");
-    })
-})
+    });
+});
