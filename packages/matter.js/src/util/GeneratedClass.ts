@@ -157,5 +157,5 @@ function createConstructor({ name, base, args, initialize, instanceProperties }:
 
     code.push("}", name);
 
-    return eval(code.join("\n"));
+    return eval(code.join("\n")) as new (...args: any) => any;
 }

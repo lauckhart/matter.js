@@ -4,17 +4,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CommissioningServer } from "../../CommissioningServer.js";
+import { BasicInformationBehavior } from "../../behavior/definitions/basic-information/BasicInformationBehavior.js";
 import { LifecycleBehavior } from "../../behavior/definitions/lifecycle/LifecycleBehavior.js";
 import { PartsBehavior } from "../../behavior/definitions/parts/PartsBehavior.js";
-import { ImplementationError } from "../../common/MatterError.js";
+import { ImplementationError, InternalError } from "../../common/MatterError.js";
+import { EndpointNumber } from "../../datatype/EndpointNumber.js";
+import { FabricIndex } from "../../datatype/FabricIndex.js";
+import { VendorId } from "../../datatype/VendorId.js";
 import { Part } from "../../endpoint/Part.js";
+import { RootEndpoint } from "../../endpoint/definitions/system/RootEndpoint.js";
 import { PartServer } from "../../endpoint/server/PartServer.js";
 import { EndpointType } from "../../endpoint/type/EndpointType.js";
-import { Node } from "../Node.js";
+import { Logger } from "../../log/Logger.js";
+import { StorageContext } from "../../storage/StorageContext.js";
 import { Host } from "../Host.js";
-import { ServerConfiguration } from "./ServerConfiguration.js";
-import { ServerOptions } from "./ServerOptions.js";
+import { Node } from "../Node.js";
+import { CommissioningOptions } from "../options/CommissioningOptions.js";
+import { ServerOptions } from "../options/ServerOptions.js";
+import { BaseNodeServer } from "./BaseNodeServer.js";
+
+const logger = Logger.get("NodeServer");
 
 /**
  * Implementation of a Matter Node server.
@@ -25,21 +34,59 @@ import { ServerOptions } from "./ServerOptions.js";
  * This is perhaps more appropriately called "ServerNode" but that gets
  * confusing with the conventions of matter-node.js.
  */
-export class NodeServer extends CommissioningServer implements Node {
-    #configuration: ServerConfiguration;
-    #root: Part;
-    #runner?: Host;
+export class NodeServer extends BaseNodeServer implements Node {
+    #configuration: ServerOptions.Configuration;
+    #root: Part<RootEndpoint>;
+    #rootServer?: PartServer;
+    #nextEndpointId: EndpointNumber;
+    #host?: Host;
+    #commissioningConfig?: CommissioningOptions.Configuration;
+    #commissioningStorage?: StorageContext;
+
+    protected override get networkConfig() {
+        return this.#configuration.network;
+    }
+
+    protected override get subscriptionConfig() {
+        return this.#configuration.subscription;
+    }
+
+    protected override get commissioningConfig() {
+        if (this.#commissioningConfig === undefined) {
+            throw new InternalError("Commissioning attempted prior to commissioning configuration");
+        }
+        return this.#commissioningConfig;
+    }
+
+    protected override get rootEndpoint() {
+        if (!this.#rootServer) {
+            this.#rootServer = new PartServer(this.#root);
+        }
+        return this.#rootServer;
+    }
+
+    protected override get nextEndpointId() {
+        return this.#nextEndpointId;
+    }
+
+    protected override set nextEndpointId(id: EndpointNumber) {
+        this.nextEndpointId = id;
+    }
+
+    protected override get advertiseOnStartup() {
+        return this.#configuration.commissioning?.automaticAnnouncement !== false;
+    }
+
+    protected override emitCommissioningChanged(_fabric: FabricIndex): void {}
+
+    protected override emitActiveSessionsChanged(_fabric: FabricIndex): void {}
 
     constructor(options?: ServerOptions) {
-        const configuration = new ServerConfiguration(options);
-        const root = configuration.root;
-        super({
-            ...configuration.commissioningServerOptions,
-            rootEndpoint: new PartServer(root),
-        });
-        configuration.owner = this;
-        this.#configuration = configuration;
-        this.#root = root;
+        super();
+
+        this.#configuration = ServerOptions.configurationFor(options);
+        this.#root = this.#configuration.root;
+        this.#nextEndpointId = this.#configuration.nextEndpointId;
     }
 
     /**
@@ -64,7 +111,7 @@ export class NodeServer extends CommissioningServer implements Node {
      * This mode creates a {@link Host} dedicated to this node.
      */
     async run() {
-        if (this.#runner) {
+        if (this.#host) {
             throw new ImplementationError("Already running");
         }
         const runner = new Host(this.#configuration);
@@ -76,13 +123,16 @@ export class NodeServer extends CommissioningServer implements Node {
      * Terminate after starting with run().
      */
     abort() {
-        if (!this.#runner) {
+        if (!this.#host) {
             throw new ImplementationError("Not running");
         }
-        this.#runner.abort();
+        this.#host.abort();
     }
 
     override async start() {
+        this.configureProduct();
+        this.configureCommissioning();
+
         await super.start();
         this.#root.agent.get(LifecycleBehavior).state.online = true;
     }
@@ -90,5 +140,61 @@ export class NodeServer extends CommissioningServer implements Node {
     override async close() {
         this.#root.agent.get(LifecycleBehavior).state.online = false;
         await super.close();
+    }
+
+    override setStorage(storage: StorageContext) {
+        super.setStorage(storage);
+        this.#commissioningStorage = storage.createContext("Commissioning");
+    }
+
+    protected configureCommissioning() {
+        if (this.#commissioningStorage === undefined) {
+            throw new InternalError("Cannot configure commissioning because commissioning storage is not configured");
+        }
+
+        const config = { ...this.#configuration.commissioning };
+
+        if (config.passcode === undefined) {
+            config.passcode = this.#commissioningStorage.get("passcode");
+        }
+        if (config.discriminator === undefined) {
+            config.discriminator = this.#commissioningStorage.get("discriminator");
+        }
+
+        this.#commissioningConfig = CommissioningOptions.finalConfigurationFor(
+            this.#configuration.commissioning,
+            this.root,
+        );
+
+        this.#commissioningStorage.set("passcode", this.#commissioningConfig.passcode);
+        this.#commissioningStorage.set("discriminator", this.#commissioningConfig.discriminator);
+    }
+
+    protected configureProduct() {
+        const bi = this.root.agent.get(BasicInformationBehavior).state;
+
+        const defaultsSet = {} as Record<string, any>;
+
+        function setDefault<T extends keyof typeof bi>(name: T, value: (typeof bi)[T]) {
+            if (bi[name] === undefined) {
+                bi[name] = value;
+                defaultsSet[name] = value;
+            }
+        }
+
+        setDefault("vendorId", VendorId(0xfff1));
+        setDefault("vendorName", "Matter.js Test Vendor");
+        setDefault("productId", 0x8000);
+        setDefault("productName", "Matter.js Test Product");
+
+        if (Object.keys(defaultsSet).length) {
+            logger.warn("Using development values for some BasicInformation attributes:", Logger.dict(defaultsSet));
+        }
+
+        setDefault("productLabel", bi.productName);
+        setDefault("nodeLabel", bi.productName);
+        setDefault("dataModelRevision", 1);
+        setDefault("hardwareVersionString", bi.hardwareVersion.toString());
+        setDefault("softwareVersionString", bi.softwareVersion.toString());
     }
 }

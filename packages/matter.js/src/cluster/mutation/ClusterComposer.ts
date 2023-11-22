@@ -231,8 +231,11 @@ export namespace ClusterComposer {
     export type WithSelected<ClusterT extends ClusterType, SelectedT extends Component> = [SelectedT] extends [never]
         ? never
         : {
-              [TypeT in ElementType]: // and extensions // Include elements in current cluster if valid according to base
-              Pick<ClusterT[TypeT], keyof ClusterT[TypeT] & (keyof BaseOf<ClusterT>[TypeT] | keyof SelectedT[TypeT])> &
+              [TypeT in ElementType]: Pick<
+                  // and extensions // Include elements in current cluster if valid according to base
+                  ClusterT[TypeT],
+                  keyof ClusterT[TypeT] & (keyof BaseOf<ClusterT>[TypeT] | keyof SelectedT[TypeT])
+              > &
                   // Include extension elements if not present in current cluster
                   Omit<SelectedT[TypeT], keyof ClusterT[TypeT]> &
                   // Include base elements if not present in current cluster or

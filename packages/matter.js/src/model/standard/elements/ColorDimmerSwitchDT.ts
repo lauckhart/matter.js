@@ -50,4 +50,4 @@ Matter.children.push({
             xref: { document: "device", section: "6.3.4" }
         }
     ]
-});
+})

@@ -32,8 +32,6 @@ export class EndpointFile extends TsFile {
         } else {
             if (model.name === "RootNode") {
                 specName = "Root";
-            } else if (model.name === "BridgedNode") {
-                specName = "BridgedRoot";
             } else {
                 specName = model.name;
             }

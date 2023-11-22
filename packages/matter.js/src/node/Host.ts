@@ -5,13 +5,12 @@
  */
 
 import { CommissioningController } from "../CommissioningController.js";
-import { CommissioningServer } from "../CommissioningServer.js";
 import { MatterServer } from "../MatterServer.js";
 import { ImplementationError } from "../common/MatterError.js";
 import { StorageManager } from "../storage/StorageManager.js";
 import { Node } from "./Node.js";
-import { ServerConfiguration } from "./server/ServerConfiguration.js";
-import { ServerOptions } from "./server/ServerOptions.js";
+import { ServerOptions } from "./options/ServerOptions.js";
+import { BaseNodeServer } from "./server/BaseNodeServer.js";
 
 enum Status {
     INACTIVE,
@@ -24,7 +23,7 @@ enum Status {
  */
 export class Host {
     // We share configuration with the server
-    #configuration: ServerConfiguration;
+    #configuration: ServerOptions.Configuration;
 
     // One or more NodeClient and NodeServer instances we will host
     #nodes = new Set<Node>();
@@ -46,11 +45,7 @@ export class Host {
     };
 
     constructor(options?: ServerOptions) {
-        if (options instanceof ServerConfiguration) {
-            this.#configuration = options;
-        } else {
-            this.#configuration = new ServerConfiguration(options);
-        }
+        this.#configuration = ServerOptions.configurationFor(options);
     }
 
     /**
@@ -95,7 +90,7 @@ export class Host {
             for (const node of this.#nodes) {
                 if (node instanceof CommissioningController) {
                     await server.addCommissioningController(node);
-                } else if (node instanceof CommissioningServer) {
+                } else if (node instanceof BaseNodeServer) {
                     await server.addCommissioningServer(node);
                 } else {
                     throw new ImplementationError(

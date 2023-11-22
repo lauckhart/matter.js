@@ -109,4 +109,4 @@ Matter.children.push({
             ]
         }
     ]
-});
+})

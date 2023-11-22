@@ -57,13 +57,9 @@ export class ValidatedElements {
             return;
         }
 
-        this.validateAttributes(
-            behavior.cluster.attributes,
-            new behavior.EndpointScope,
-            new behavior.FabricScope,
-        );
+        this.validateAttributes(behavior.cluster.attributes, new behavior.EndpointScope(), new behavior.FabricScope());
         this.validateCommands(behavior.cluster?.commands, behavior.prototype);
-        this.validateEvents(behavior.cluster?.events, new behavior.Events);
+        this.validateEvents(behavior.cluster?.events, new behavior.Events());
     }
 
     /**

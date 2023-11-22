@@ -6,6 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
+import { PartsBehavior } from "../../../behavior/definitions/parts/PartsBehavior.js";
 import { BasicInformationServer } from "../../../behavior/definitions/basic-information/BasicInformationServer.js";
 import { AccessControlServer } from "../../../behavior/definitions/access-control/AccessControlServer.js";
 import { GroupKeyManagementServer } from "../../../behavior/definitions/group-key-management/GroupKeyManagementServer.js";
@@ -56,6 +57,7 @@ export const RootRequirements = {
      */
     server: {
         mandatory: {
+            Parts: PartsBehavior,
             BasicInformation: BasicInformationServer,
             AccessControl: AccessControlServer,
             GroupKeyManagement: GroupKeyManagementServer,

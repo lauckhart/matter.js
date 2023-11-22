@@ -18,7 +18,7 @@ import { OperationalCredentials } from "./cluster/definitions/OperationalCredent
 import { MAXIMUM_COMMISSIONING_TIMEOUT_S } from "./cluster/server/AdministratorCommissioningServer.js";
 import { Channel } from "./common/Channel.js";
 import { FailSafeManager } from "./common/FailSafeManager.js";
-import { InstanceBroadcaster, ProductDescription } from "./common/InstanceBroadcaster.js";
+import { InstanceBroadcaster } from "./common/InstanceBroadcaster.js";
 import { InternalError, MatterFlowError } from "./common/MatterError.js";
 import { Scanner } from "./common/Scanner.js";
 import { TransportInterface } from "./common/TransportInterface.js";
@@ -31,6 +31,7 @@ import { FabricManager } from "./fabric/FabricManager.js";
 import { Logger } from "./log/Logger.js";
 import { isNetworkInterface, NetInterface } from "./net/NetInterface.js";
 import { NetworkError } from "./net/Network.js";
+import { CommissioningOptions } from "./node/options/CommissioningOptions.js";
 import { ChannelManager } from "./protocol/ChannelManager.js";
 import { ExchangeManager } from "./protocol/ExchangeManager.js";
 import { StatusResponseError } from "./protocol/interaction/InteractionMessenger.js";
@@ -67,9 +68,7 @@ export class MatterDevice {
     private failSafeContext?: FailSafeManager;
 
     constructor(
-        private readonly productDescription: ProductDescription,
-        private readonly discriminator: number,
-        private readonly initialPasscode: number,
+        private readonly commissioningOptions: CommissioningOptions.Configuration,
         private readonly storage: StorageContext,
         private readonly commissioningChangedCallback: (fabricIndex: FabricIndex) => void,
         private readonly sessionChangedCallback: (fabricIndex: FabricIndex) => void,
@@ -211,8 +210,8 @@ export class MatterDevice {
             await broadcaster.setCommissionMode(
                 mode === AdministratorCommissioning.CommissioningWindowStatus.EnhancedWindowOpen ? 2 : 1,
                 {
-                    ...this.productDescription,
-                    discriminator: discriminator ?? this.discriminator,
+                    ...this.commissioningOptions.productDescription,
+                    discriminator: discriminator ?? this.commissioningOptions.discriminator,
                 },
             );
         }
@@ -521,7 +520,7 @@ export class MatterDevice {
         }
 
         this.secureChannelProtocol.setPaseCommissioner(
-            await PaseServer.fromPin(this.initialPasscode, {
+            await PaseServer.fromPin(this.commissioningOptions.passcode, {
                 iterations: 1000,
                 salt: Crypto.get().getRandomData(32),
             }),

@@ -18,12 +18,7 @@ export const AggregatorRequirements = {
     /**
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
-    server: { mandatory: { parts: PartsBehavior }, optional: { Actions: ActionsServer } },
-
-    /**
-     * A definition for each client cluster supported by the endpoint per the Matter specification.
-     */
-    client: { mandatory: { parts: PartsBehavior } }
+    server: { mandatory: { Parts: PartsBehavior }, optional: { Actions: ActionsServer } }
 };
 
 export const AggregatorEndpointDefinition = MutableEndpoint({

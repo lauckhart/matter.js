@@ -78,6 +78,10 @@ export class PartServer implements EndpointInterface, PartOwner {
         return this.#name;
     }
 
+    get agent() {
+        return this.#part.agent;
+    }
+
     getId(): EndpointNumber {
         if (this.id === undefined) {
             throw new InternalError("Endpoint ID has not been assigned yet");

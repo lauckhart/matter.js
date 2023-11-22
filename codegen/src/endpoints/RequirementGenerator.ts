@@ -13,6 +13,8 @@ import { EndpointFile } from "./EndpointFile.js";
 
 const logger = Logger.get("EndpointClusterGenerator");
 
+const MANDATORY_PART_ENDPOINTS = ["RootEndpoint", "AggregatorEndpoint", "BridgedNodeEndpoint"];
+
 type ClusterDetail = {
     requirement: RequirementModel;
     definition: ClusterModel;
@@ -42,12 +44,14 @@ export class RequirementGenerator {
         }
         const clusterReqs = this.file.model.requirements.filter(r => r.element === `${type}Cluster`);
 
-        switch (file.model.name) {
-            case "RootEndpoint":
-            case "Aggregator":
-            case "BridgedNode":
-                this.#mandatoryParts = true;
-                break;
+        if (type === "server" && MANDATORY_PART_ENDPOINTS.includes(file.definitionName)) {
+            switch (file.definitionName) {
+                case "RootEndpoint":
+                case "AggregatorEndpoint":
+                case "BridgedNodeEndpoint":
+                    this.#mandatoryParts = true;
+                    break;
+            }
         }
 
         for (const requirement of clusterReqs) {
@@ -82,7 +86,7 @@ export class RequirementGenerator {
     generate() {
         if (this.#mandatoryParts) {
             this.file.addImport(`behavior/definitions/parts/PartsBehavior`, "PartsBehavior");
-            this.mandatoryBlock.atom("parts", "PartsBehavior");
+            this.mandatoryBlock.atom("Parts", "PartsBehavior");
         }
 
         for (const detail of this.#mandatory) {

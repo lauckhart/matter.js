@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from "./Node.js";
 export * from "./Host.js";
+export * from "./Node.js";
+export * from "./options/ServerOptions.js";
 export * from "./server/NodeServer.js";
-export * from "./server/ServerOptions.js";

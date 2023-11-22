@@ -77,4 +77,4 @@ Matter.children.push({
             ]
         }
     ]
-});
+})

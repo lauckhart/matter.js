@@ -47,4 +47,4 @@ Matter.children.push({
             xref: { document: "device", section: "6.2.4" }
         }
     ]
-});
+})
