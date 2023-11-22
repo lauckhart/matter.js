@@ -6,16 +6,18 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
-import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { BitFlag, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
-import { OptionalAttribute, Command, Attribute } from "../../cluster/Cluster.js";
-import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
+import { Attribute, OptionalAttribute, Command } from "../../cluster/Cluster.js";
+import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
+import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
+import { BitFlag } from "../../schema/BitmapSchema.js";
+import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
-import { TlvArray } from "../../tlv/TlvArray.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace ApplicationLauncher {
     /**
@@ -151,6 +153,24 @@ export namespace ApplicationLauncher {
     });
 
     /**
+     * A ApplicationLauncherCluster supports these elements if it supports feature ApplicationPlatform.
+     */
+    export const ApplicationPlatformComponent = MutableCluster.Component({
+        attributes: {
+            /**
+             * This attribute shall specify the list of supported application catalogs, where each entry in the list is
+             * the CSA-issued vendor ID for the catalog. The DIAL registry (see [DIAL Registry]) shall use value 0x0000.
+             *
+             * It is expected that Content App Platform providers will have their own catalog vendor ID (set to their
+             * own Vendor ID) and will assign an ApplicationID to each Content App.
+             *
+             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.3.1
+             */
+            catalogList: Attribute(0x0, TlvArray(TlvUInt16), { persistent: true })
+        }
+    });
+
+    /**
      * These are optional features supported by ApplicationLauncherCluster.
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.2
@@ -168,7 +188,7 @@ export namespace ApplicationLauncher {
     /**
      * These elements and properties are present in all ApplicationLauncher clusters.
      */
-    export const Base = ClusterFactory.Definition({
+    export const Base = MutableCluster.Component({
         id: 0x50c,
         name: "ApplicationLauncher",
         revision: 1,
@@ -252,26 +272,21 @@ export namespace ApplicationLauncher {
              * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.4.3
              */
             hideApp: Command(0x2, TlvHideAppRequest, 0x3, TlvLauncherResponse)
-        }
+        },
+
+        /**
+         * This metadata controls which ApplicationLauncherCluster elements matter.js activates for specific feature
+         * combinations.
+         */
+        extensions: MutableCluster.Extensions(
+            { flags: { applicationPlatform: true }, component: ApplicationPlatformComponent }
+        )
     });
 
     /**
-     * A ApplicationLauncherCluster supports these elements if it supports feature ApplicationPlatform.
+     * @see {@link Cluster}
      */
-    export const ApplicationPlatformComponent = ClusterFactory.Component({
-        attributes: {
-            /**
-             * This attribute shall specify the list of supported application catalogs, where each entry in the list is
-             * the CSA-issued vendor ID for the catalog. The DIAL registry (see [DIAL Registry]) shall use value 0x0000.
-             *
-             * It is expected that Content App Platform providers will have their own catalog vendor ID (set to their
-             * own Vendor ID) and will assign an ApplicationID to each Content App.
-             *
-             * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4.3.1
-             */
-            catalogList: Attribute(0x0, TlvArray(TlvUInt16), { persistent: true })
-        }
-    });
+    export const ClusterInstance = MutableCluster({ ...Base });
 
     /**
      * Application Launcher
@@ -283,41 +298,15 @@ export namespace ApplicationLauncher {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.4
      */
-    export const Cluster = ClusterFactory.Extensible(
-        Base,
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
 
-        /**
-         * Use this factory method to create an ApplicationLauncher cluster with support for optional features. Include
-         * each {@link Feature} you wish to support.
-         *
-         * @param features the optional features to support
-         * @returns an ApplicationLauncher cluster with specified features enabled
-         * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
-         */
-        <T extends `${Feature}`[]>(...features: [...T]) => {
-            ClusterFactory.validateFeatureSelection(features, Feature);
-            const cluster = ClusterFactory.Definition({
-                ...Base,
-                supportedFeatures: BitFlags(Base.features, ...features)
-            });
-            ClusterFactory.extend(cluster, ApplicationPlatformComponent, { applicationPlatform: true });
-            return cluster as unknown as Extension<BitFlags<typeof Base.features, T>>;
-        }
-    );
-
-    export type Extension<SF extends TypeFromPartialBitSchema<typeof Base.features>> =
-        Omit<typeof Base, "supportedFeatures">
-        & { supportedFeatures: SF }
-        & (SF extends { applicationPlatform: true } ? typeof ApplicationPlatformComponent : {});
+    export const Cluster: Cluster = ClusterInstance;
     const AP = { applicationPlatform: true };
 
     /**
-     * This cluster supports all ApplicationLauncher features. It may support illegal feature combinations.
-     *
-     * If you use this cluster you must manually specify which features are active and ensure the set of active
-     * features is legal per the Matter specification.
+     * @see {@link Complete}
      */
-    export const Complete = ClusterFactory.Definition({
+    export const CompleteInstance = MutableCluster({
         id: Cluster.id,
         name: Cluster.name,
         revision: Cluster.revision,
@@ -325,7 +314,7 @@ export namespace ApplicationLauncher {
 
         attributes: {
             ...Cluster.attributes,
-            catalogList: ClusterFactory.AsConditional(
+            catalogList: MutableCluster.AsConditional(
                 ApplicationPlatformComponent.attributes.catalogList,
                 { mandatoryIf: [AP] }
             )
@@ -333,7 +322,18 @@ export namespace ApplicationLauncher {
 
         commands: Cluster.commands
     });
+
+    /**
+     * This cluster supports all ApplicationLauncher features. It may support illegal feature combinations.
+     *
+     * If you use this cluster you must manually specify which features are active and ensure the set of active
+     * features is legal per the Matter specification.
+     */
+    export interface Complete extends Identity<typeof CompleteInstance> {}
+
+    export const Complete: Complete = CompleteInstance;
 }
 
-export type ApplicationLauncherCluster = typeof ApplicationLauncher.Cluster;
+export type ApplicationLauncherCluster = ApplicationLauncher.Cluster;
 export const ApplicationLauncherCluster = ApplicationLauncher.Cluster;
+ClusterRegistry.register(ApplicationLauncher.Complete);

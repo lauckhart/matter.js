@@ -6,15 +6,17 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
-import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import { Command, TlvNoResponse } from "../../cluster/Cluster.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvVendorId } from "../../datatype/VendorId.js";
 import { TlvUInt16, TlvUInt32, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace OtaSoftwareUpdateProvider {
     /**
@@ -155,13 +157,9 @@ export namespace OtaSoftwareUpdateProvider {
     });
 
     /**
-     * OTA Software Update Provider
-     *
-     * Provides an interface for providing OTA software updates
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 11.19.6
+     * @see {@link Cluster}
      */
-    export const Cluster = ClusterFactory.Definition({
+    export const ClusterInstance = MutableCluster({
         id: 0x29,
         name: "OtaSoftwareUpdateProvider",
         revision: 1,
@@ -222,7 +220,20 @@ export namespace OtaSoftwareUpdateProvider {
             notifyUpdateApplied: Command(0x4, TlvNotifyUpdateAppliedRequest, 0x4, TlvNoResponse)
         }
     });
+
+    /**
+     * OTA Software Update Provider
+     *
+     * Provides an interface for providing OTA software updates
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 11.19.6
+     */
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
+
+    export const Cluster: Cluster = ClusterInstance;
+    export const Complete = Cluster;
 }
 
-export type OtaSoftwareUpdateProviderCluster = typeof OtaSoftwareUpdateProvider.Cluster;
+export type OtaSoftwareUpdateProviderCluster = OtaSoftwareUpdateProvider.Cluster;
 export const OtaSoftwareUpdateProviderCluster = OtaSoftwareUpdateProvider.Cluster;
+ClusterRegistry.register(OtaSoftwareUpdateProvider.Complete);

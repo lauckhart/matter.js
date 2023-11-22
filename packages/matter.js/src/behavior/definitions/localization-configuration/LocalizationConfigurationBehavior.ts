@@ -1,0 +1,19 @@
+/**
+ * @license
+ * Copyright 2022-2023 Project CHIP Authors
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*** THIS FILE IS GENERATED, DO NOT EDIT ***/
+
+import { LocalizationConfiguration } from "../../../cluster/definitions/LocalizationConfigurationCluster.js";
+import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
+
+/**
+ * LocalizationConfigurationBehavior is the base class for objects that support interaction with {@link
+ * LocalizationConfiguration.Cluster}.
+ */
+export const LocalizationConfigurationBehavior = ClusterBehavior.for(LocalizationConfiguration.Cluster);
+
+type LocalizationConfigurationBehaviorType = InstanceType<typeof LocalizationConfigurationBehavior>;
+export interface LocalizationConfigurationBehavior extends LocalizationConfigurationBehaviorType {}

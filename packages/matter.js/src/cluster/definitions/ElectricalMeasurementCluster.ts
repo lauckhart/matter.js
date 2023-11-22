@@ -6,11 +6,13 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import { OptionalAttribute, OptionalWritableAttribute, OptionalCommand, TlvNoResponse } from "../../cluster/Cluster.js";
 import { TlvUInt32, TlvInt16, TlvUInt16, TlvInt32, TlvInt8, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace ElectricalMeasurement {
     /**
@@ -23,13 +25,9 @@ export namespace ElectricalMeasurement {
     });
 
     /**
-     * Electrical Measurement
-     *
-     * Attributes related to the electrical properties of a device. This cluster is used by power outlets and other
-     * devices that need to provide instantaneous data as opposed to metrology data which should be retrieved from the
-     * metering cluster..
+     * @see {@link Cluster}
      */
-    export const Cluster = ClusterFactory.Definition({
+    export const ClusterInstance = MutableCluster({
         id: 0xb04,
         name: "ElectricalMeasurement",
         revision: 1,
@@ -176,7 +174,20 @@ export namespace ElectricalMeasurement {
             )
         }
     });
+
+    /**
+     * Electrical Measurement
+     *
+     * Attributes related to the electrical properties of a device. This cluster is used by power outlets and other
+     * devices that need to provide instantaneous data as opposed to metrology data which should be retrieved from the
+     * metering cluster..
+     */
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
+
+    export const Cluster: Cluster = ClusterInstance;
+    export const Complete = Cluster;
 }
 
-export type ElectricalMeasurementCluster = typeof ElectricalMeasurement.Cluster;
+export type ElectricalMeasurementCluster = ElectricalMeasurement.Cluster;
 export const ElectricalMeasurementCluster = ElectricalMeasurement.Cluster;
+ClusterRegistry.register(ElectricalMeasurement.Complete);

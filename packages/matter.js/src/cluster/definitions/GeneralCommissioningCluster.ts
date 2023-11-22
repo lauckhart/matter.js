@@ -6,14 +6,16 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
-import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import { WritableAttribute, AccessLevel, FixedAttribute, Attribute, Command } from "../../cluster/Cluster.js";
 import { TlvUInt64, TlvUInt16, TlvEnum } from "../../tlv/TlvNumber.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace GeneralCommissioning {
     /**
@@ -170,18 +172,9 @@ export namespace GeneralCommissioning {
     });
 
     /**
-     * General Commissioning
-     *
-     * This cluster is used to manage basic commissioning lifecycle.
-     *
-     * This cluster also represents responsibilities related to commissioning that don’t well fit other commissioning
-     * clusters, like Section 11.8, “Network Commissioning Cluster”. It also hosts functionalities
-     *
-     * those other clusters may depend on.
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 11.9
+     * @see {@link Cluster}
      */
-    export const Cluster = ClusterFactory.Definition({
+    export const ClusterInstance = MutableCluster({
         id: 0x30,
         name: "GeneralCommissioning",
         revision: 1,
@@ -495,7 +488,25 @@ export namespace GeneralCommissioning {
             )
         }
     });
+
+    /**
+     * General Commissioning
+     *
+     * This cluster is used to manage basic commissioning lifecycle.
+     *
+     * This cluster also represents responsibilities related to commissioning that don’t well fit other commissioning
+     * clusters, like Section 11.8, “Network Commissioning Cluster”. It also hosts functionalities
+     *
+     * those other clusters may depend on.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 11.9
+     */
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
+
+    export const Cluster: Cluster = ClusterInstance;
+    export const Complete = Cluster;
 }
 
-export type GeneralCommissioningCluster = typeof GeneralCommissioning.Cluster;
+export type GeneralCommissioningCluster = GeneralCommissioning.Cluster;
 export const GeneralCommissioningCluster = GeneralCommissioning.Cluster;
+ClusterRegistry.register(GeneralCommissioning.Complete);

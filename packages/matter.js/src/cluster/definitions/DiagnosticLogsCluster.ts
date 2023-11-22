@@ -6,12 +6,14 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
-import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import { Command } from "../../cluster/Cluster.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvEnum, TlvEpochUs, TlvSysTimeUs } from "../../tlv/TlvNumber.js";
 import { TlvString, TlvByteString } from "../../tlv/TlvString.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace DiagnosticLogs {
     /**
@@ -232,19 +234,9 @@ export namespace DiagnosticLogs {
     });
 
     /**
-     * Diagnostic Logs
-     *
-     * This Cluster supports an interface to a Node. It provides commands for retrieving unstructured diagnostic logs
-     * from a Node that may be used to aid in diagnostics. It will often be the case that unstructured diagnostic logs
-     * will be Node-wide and not specific to any subset of Endpoints. When present, this Cluster shall be implemented
-     * once for the Node. The Node SHOULD also implement the BDX Initiator and BDX Sender roles as defined in the BDX
-     * Protocol.
-     *
-     * NOTE Support for Diagnostic Logs cluster is provisional.
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 11.10
+     * @see {@link Cluster}
      */
-    export const Cluster = ClusterFactory.Definition({
+    export const ClusterInstance = MutableCluster({
         id: 0x32,
         name: "DiagnosticLogs",
         revision: 1,
@@ -258,7 +250,26 @@ export namespace DiagnosticLogs {
             retrieveLogsRequest: Command(0x0, TlvRetrieveLogsRequestRequest, 0x1, TlvRetrieveLogsResponse)
         }
     });
+
+    /**
+     * Diagnostic Logs
+     *
+     * This Cluster supports an interface to a Node. It provides commands for retrieving unstructured diagnostic logs
+     * from a Node that may be used to aid in diagnostics. It will often be the case that unstructured diagnostic logs
+     * will be Node-wide and not specific to any subset of Endpoints. When present, this Cluster shall be implemented
+     * once for the Node. The Node SHOULD also implement the BDX Initiator and BDX Sender roles as defined in the BDX
+     * Protocol.
+     *
+     * NOTE Support for Diagnostic Logs cluster is provisional.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 11.10
+     */
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
+
+    export const Cluster: Cluster = ClusterInstance;
+    export const Complete = Cluster;
 }
 
-export type DiagnosticLogsCluster = typeof DiagnosticLogs.Cluster;
+export type DiagnosticLogsCluster = DiagnosticLogs.Cluster;
 export const DiagnosticLogsCluster = DiagnosticLogs.Cluster;
+ClusterRegistry.register(DiagnosticLogs.Complete);

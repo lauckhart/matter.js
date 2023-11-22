@@ -6,8 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
-import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import {
     Attribute,
     OptionalAttribute,
@@ -19,9 +18,12 @@ import {
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvUInt16, TlvEnum, TlvBitmap, TlvUInt32 } from "../../tlv/TlvNumber.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { BitFlag } from "../../schema/BitmapSchema.js";
 import { TlvEndpointNumber } from "../../datatype/EndpointNumber.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace Actions {
     /**
@@ -527,43 +529,9 @@ export namespace Actions {
     });
 
     /**
-     * Actions
-     *
-     * This cluster provides a standardized way for a Node (typically a Bridge, but could be any Node) to expose
-     *
-     *   • Information about logical grouping of endpoints on the Node (example: lights in a room)
-     *
-     *   • Information about named actions that can be performed on such a group of endpoints (example: recall a scene
-     *     for a group of lights by its name)
-     *
-     *   • Commands to trigger such actions
-     *
-     *   • Events to receive feedback on the state of such actions.
-     *
-     * The information on grouping and available actions is typically provided by the user or Bridge manufacturer via
-     * some means not defined in Matter, and therefore provided as read-only to Nodes. For example: a
-     * manufacturer-provided app allows a user to set up logical grouping and create/assign scene for such groups.
-     *
-     * Using this cluster, a Node can learn about such logical grouping, provided actions, and trigger such actions.
-     *
-     * While the origin of this cluster stems from use cases with a Bridge, its server side may also be implemented on
-     * any Node which can expose certain grouping, actions or automations to other users.
-     *
-     * After defining the attributes, commands and events for this cluster, and the associated data types, several
-     * examples are provided to illustrate the capabilities of this cluster.
-     *
-     * Actions can be defined in a flexible manner to suit the needs of the various nodes implementing this cluster.
-     * For each action, the commands available for that particular action are defined.
-     *
-     * This cluster can be used to expose only the grouping of endpoints without any actions defined by populating the
-     * EndpointList attribute accordingly and providing an empty list for ActionList.
-     *
-     * The term 'action' in the description of this cluster should not be confused with the term 'action' as used in
-     * the Interaction Model.
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 9.14
+     * @see {@link Cluster}
      */
-    export const Cluster = ClusterFactory.Definition({
+    export const ClusterInstance = MutableCluster({
         id: 0x25,
         name: "Actions",
         revision: 1,
@@ -831,7 +799,50 @@ export namespace Actions {
             actionFailed: Event(0x1, EventPriority.Info, TlvActionFailedEvent)
         }
     });
+
+    /**
+     * Actions
+     *
+     * This cluster provides a standardized way for a Node (typically a Bridge, but could be any Node) to expose
+     *
+     *   • Information about logical grouping of endpoints on the Node (example: lights in a room)
+     *
+     *   • Information about named actions that can be performed on such a group of endpoints (example: recall a scene
+     *     for a group of lights by its name)
+     *
+     *   • Commands to trigger such actions
+     *
+     *   • Events to receive feedback on the state of such actions.
+     *
+     * The information on grouping and available actions is typically provided by the user or Bridge manufacturer via
+     * some means not defined in Matter, and therefore provided as read-only to Nodes. For example: a
+     * manufacturer-provided app allows a user to set up logical grouping and create/assign scene for such groups.
+     *
+     * Using this cluster, a Node can learn about such logical grouping, provided actions, and trigger such actions.
+     *
+     * While the origin of this cluster stems from use cases with a Bridge, its server side may also be implemented on
+     * any Node which can expose certain grouping, actions or automations to other users.
+     *
+     * After defining the attributes, commands and events for this cluster, and the associated data types, several
+     * examples are provided to illustrate the capabilities of this cluster.
+     *
+     * Actions can be defined in a flexible manner to suit the needs of the various nodes implementing this cluster.
+     * For each action, the commands available for that particular action are defined.
+     *
+     * This cluster can be used to expose only the grouping of endpoints without any actions defined by populating the
+     * EndpointList attribute accordingly and providing an empty list for ActionList.
+     *
+     * The term 'action' in the description of this cluster should not be confused with the term 'action' as used in
+     * the Interaction Model.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 9.14
+     */
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
+
+    export const Cluster: Cluster = ClusterInstance;
+    export const Complete = Cluster;
 }
 
-export type ActionsCluster = typeof Actions.Cluster;
+export type ActionsCluster = Actions.Cluster;
 export const ActionsCluster = Actions.Cluster;
+ClusterRegistry.register(Actions.Complete);

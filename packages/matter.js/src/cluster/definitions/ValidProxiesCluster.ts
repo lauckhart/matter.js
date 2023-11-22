@@ -6,13 +6,15 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
-import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import { WritableFixedAttribute, Command } from "../../cluster/Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TlvNodeId } from "../../datatype/NodeId.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace ValidProxies {
     /**
@@ -23,14 +25,9 @@ export namespace ValidProxies {
     export const TlvValidProxyStruct = TlvObject({ nodeId: TlvField(1, TlvNodeId) });
 
     /**
-     * Proxy Valid
-     *
-     * This cluster provides a means for a device to be told of the valid set of possible proxies that can proxy
-     * subscriptions on its behalf as per Section 9.15.7, “Proxy Discovery & Assignment Flow”.
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 9.15.15
+     * @see {@link Cluster}
      */
-    export const Cluster = ClusterFactory.Definition({
+    export const ClusterInstance = MutableCluster({
         id: 0x44,
         name: "ValidProxies",
         revision: 1,
@@ -55,7 +52,21 @@ export namespace ValidProxies {
             getValidProxiesRequest: Command(0x0, TlvNoArguments, 0x1, TlvNoArguments)
         }
     });
+
+    /**
+     * Proxy Valid
+     *
+     * This cluster provides a means for a device to be told of the valid set of possible proxies that can proxy
+     * subscriptions on its behalf as per Section 9.15.7, “Proxy Discovery & Assignment Flow”.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 9.15.15
+     */
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
+
+    export const Cluster: Cluster = ClusterInstance;
+    export const Complete = Cluster;
 }
 
-export type ValidProxiesCluster = typeof ValidProxies.Cluster;
+export type ValidProxiesCluster = ValidProxies.Cluster;
 export const ValidProxiesCluster = ValidProxies.Cluster;
+ClusterRegistry.register(ValidProxies.Complete);

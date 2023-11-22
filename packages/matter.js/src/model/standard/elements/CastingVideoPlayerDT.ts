@@ -11,66 +11,83 @@ import { Matter } from "../Matter.js";
 Matter.children.push({
     tag: "deviceType", name: "CastingVideoPlayer", id: 0x23, classification: "simple",
 
+    details: "This defines conformance to the Casting Video Player device type." +
+        "\n" +
+        "A Video Player (either Basic or Casting) represents a device that is able to play media to a " +
+        "physical output or to a display screen which is part of the device." +
+        "\n" +
+        "A Casting Video Player has basic controls for playback (play, pause, etc.) and keypad input (up, " +
+        "down, number input), and is able to launch content." +
+        "\n" +
+        "For example, a Casting Video Player can be a smart TV device, a TV Set Top Box, or a content " +
+        "streaming device that provides input to another device like a TV or computer monitor." +
+        "\n" +
+        "Please see Video Player Architecture for additional Casting Video Player requirements relating to " +
+        "Video Player device endpoint composition, commissioning, feature representation in clusters, and UI " +
+        "context.",
+
+    xref: { document: "device", section: "10.3" },
+
     children: [
         {
             tag: "requirement", name: "Descriptor", id: 0x1d, element: "serverCluster",
-
             children: [{
-                tag: "datatype", name: "DeviceTypeStruct", type: "struct",
-                children: [
-                    { tag: "datatype", name: "DeviceType", type: "devtype-id", default: 35 },
-                    { tag: "datatype", name: "Revision", type: "uint16", default: 1 }
-                ]
+                tag: "requirement", name: "DeviceTypeList", default: [ { deviceType: 35, revision: 1 } ],
+                element: "attribute"
             }]
         },
 
         {
-            tag: "requirement", name: "OnOff", id: 0x6, element: "serverCluster",
+            tag: "requirement", name: "OnOff", id: 0x6, conformance: "M", element: "serverCluster",
             xref: { document: "device", section: "10.3.4" }
         },
         {
-            tag: "requirement", name: "WakeOnLan", id: 0x503, element: "serverCluster",
+            tag: "requirement", name: "WakeOnLan", id: 0x503, conformance: "O", element: "serverCluster",
             xref: { document: "device", section: "10.3.4" }
         },
         {
-            tag: "requirement", name: "Channel", id: 0x504, element: "serverCluster",
+            tag: "requirement", name: "Channel", id: 0x504, conformance: "O", element: "serverCluster",
             xref: { document: "device", section: "10.3.4" }
         },
         {
-            tag: "requirement", name: "TargetNavigator", id: 0x505, element: "serverCluster",
+            tag: "requirement", name: "TargetNavigator", id: 0x505, conformance: "O", element: "serverCluster",
             xref: { document: "device", section: "10.3.4" }
         },
         {
-            tag: "requirement", name: "MediaPlayback", id: 0x506, element: "serverCluster",
+            tag: "requirement", name: "MediaPlayback", id: 0x506, conformance: "M", element: "serverCluster",
             xref: { document: "device", section: "10.3.4" }
         },
         {
-            tag: "requirement", name: "MediaInput", id: 0x507, element: "serverCluster",
+            tag: "requirement", name: "MediaInput", id: 0x507, conformance: "PhysicalInputs",
+            element: "serverCluster",
             xref: { document: "device", section: "10.3.4" }
         },
         {
-            tag: "requirement", name: "LowPower", id: 0x508, element: "serverCluster",
+            tag: "requirement", name: "LowPower", id: 0x508, conformance: "O", element: "serverCluster",
             xref: { document: "device", section: "10.3.4" }
         },
         {
-            tag: "requirement", name: "KeypadInput", id: 0x509, element: "serverCluster",
+            tag: "requirement", name: "KeypadInput", id: 0x509, conformance: "M", element: "serverCluster",
             xref: { document: "device", section: "10.3.4" }
         },
         {
-            tag: "requirement", name: "ContentLauncher", id: 0x50a, element: "serverCluster",
+            tag: "requirement", name: "ContentLauncher", id: 0x50a, conformance: "M", element: "serverCluster",
             xref: { document: "device", section: "10.3.4" }
         },
         {
-            tag: "requirement", name: "AudioOutput", id: 0x50b, element: "serverCluster",
+            tag: "requirement", name: "AudioOutput", id: 0x50b, conformance: "O", element: "serverCluster",
             xref: { document: "device", section: "10.3.4" }
         },
+
         {
-            tag: "requirement", name: "ApplicationLauncher", id: 0x50c, element: "serverCluster",
+            tag: "requirement", name: "ApplicationLauncher", id: 0x50c, conformance: "ContentAppPlatform",
+            element: "serverCluster",
             xref: { document: "device", section: "10.3.4" },
-            children: [{ tag: "requirement", name: "ApplicationPlatform", element: "feature" }]
+            children: [{ tag: "requirement", name: "APPLICATIONPLATFORM", conformance: "M", element: "feature" }]
         },
+
         {
-            tag: "requirement", name: "AccountLogin", id: 0x50e, element: "serverCluster",
+            tag: "requirement", name: "AccountLogin", id: 0x50e, conformance: "O", element: "serverCluster",
             xref: { document: "device", section: "10.3.4" }
         },
 

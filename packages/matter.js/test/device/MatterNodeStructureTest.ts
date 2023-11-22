@@ -37,6 +37,7 @@ import { ComposedDevice } from "../../src/device/ComposedDevice.js";
 import { RootEndpoint } from "../../src/device/Device.js";
 import { DeviceTypes } from "../../src/device/DeviceTypes.js";
 import { OnOffLightDevice, OnOffPluginUnitDevice } from "../../src/device/OnOffDevices.js";
+import { EndpointInterface } from "../../src/endpoint/EndpointInterface.js";
 import { InteractionEndpointStructure } from "../../src/protocol/interaction/InteractionEndpointStructure.js";
 import { InteractionServer, attributePathToId } from "../../src/protocol/interaction/InteractionServer.js";
 import { StorageBackendMemory } from "../../src/storage/StorageBackendMemory.js";
@@ -44,7 +45,7 @@ import { StorageManager } from "../../src/storage/StorageManager.js";
 import { ByteArray } from "../../src/util/ByteArray.js";
 
 function addRequiredRootClusters(
-    rootEndpoint: RootEndpoint,
+    rootEndpoint: EndpointInterface,
     includeAdminCommissioningCluster = true,
     includeBasicInformationCluster = true,
 ) {
@@ -289,7 +290,7 @@ describe("Endpoint Structures", () => {
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(BasicInformationCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(OperationalCredentialsCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GeneralCommissioning.Cluster)).ok;
-            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Cluster)).ok;
+            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Complete)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AccessControlCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AdministratorCommissioning.Cluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GroupKeyManagementCluster)).ok;
@@ -377,7 +378,7 @@ describe("Endpoint Structures", () => {
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(BasicInformationCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(OperationalCredentialsCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GeneralCommissioning.Cluster)).ok;
-            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Cluster)).ok;
+            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Complete)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AccessControlCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AdministratorCommissioning.Cluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GroupKeyManagementCluster)).ok;
@@ -468,7 +469,7 @@ describe("Endpoint Structures", () => {
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(BasicInformationCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(OperationalCredentialsCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GeneralCommissioning.Cluster)).ok;
-            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Cluster)).ok;
+            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Complete)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AccessControlCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AdministratorCommissioning.Cluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GroupKeyManagementCluster)).ok;
@@ -560,7 +561,7 @@ describe("Endpoint Structures", () => {
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(BasicInformationCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(OperationalCredentialsCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GeneralCommissioning.Cluster)).ok;
-            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Cluster)).ok;
+            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Complete)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AccessControlCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AdministratorCommissioning.Cluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GroupKeyManagementCluster)).ok;
@@ -652,7 +653,7 @@ describe("Endpoint Structures", () => {
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(BasicInformationCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(OperationalCredentialsCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GeneralCommissioning.Cluster)).ok;
-            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Cluster)).ok;
+            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Complete)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AccessControlCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AdministratorCommissioning.Cluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GroupKeyManagementCluster)).ok;
@@ -744,7 +745,7 @@ describe("Endpoint Structures", () => {
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(BasicInformationCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(OperationalCredentialsCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GeneralCommissioning.Cluster)).ok;
-            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Cluster)).ok;
+            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Complete)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AccessControlCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AdministratorCommissioning.Cluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GroupKeyManagementCluster)).ok;
@@ -856,7 +857,7 @@ describe("Endpoint Structures", () => {
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(BasicInformationCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(OperationalCredentialsCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GeneralCommissioning.Cluster)).ok;
-            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Cluster)).ok;
+            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Complete)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AccessControlCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AdministratorCommissioning.Cluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GroupKeyManagementCluster)).ok;
@@ -1014,7 +1015,7 @@ describe("Endpoint Structures", () => {
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(BasicInformationCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(OperationalCredentialsCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GeneralCommissioning.Cluster)).ok;
-            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Cluster)).ok;
+            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Complete)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AccessControlCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AdministratorCommissioning.Cluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GroupKeyManagementCluster)).ok;
@@ -1207,7 +1208,7 @@ describe("Endpoint Structures", () => {
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(BasicInformationCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(OperationalCredentialsCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GeneralCommissioning.Cluster)).ok;
-            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Cluster)).ok;
+            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Complete)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AccessControlCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AdministratorCommissioning.Cluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GroupKeyManagementCluster)).ok;
@@ -1413,7 +1414,7 @@ describe("Endpoint Structures", () => {
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(BasicInformationCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(OperationalCredentialsCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GeneralCommissioning.Cluster)).ok;
-            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Cluster)).ok;
+            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Complete)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AccessControlCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AdministratorCommissioning.Cluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GroupKeyManagementCluster)).ok;
@@ -1664,7 +1665,7 @@ describe("Endpoint Structures", () => {
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(BasicInformationCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(OperationalCredentialsCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GeneralCommissioning.Cluster)).ok;
-            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Cluster)).ok;
+            expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(NetworkCommissioning.Complete)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AccessControlCluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(AdministratorCommissioning.Cluster)).ok;
             expect(endpoints.get(EndpointNumber(0))?.hasClusterServer(GroupKeyManagementCluster)).ok;

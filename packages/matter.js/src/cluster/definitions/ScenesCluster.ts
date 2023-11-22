@@ -6,9 +6,9 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../spec/Specifications.js";
-import { BitFlag, BitField, BitFlags, TypeFromPartialBitSchema } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitField } from "../../schema/BitmapSchema.js";
 import {
     Attribute,
     OptionalAttribute,
@@ -29,6 +29,8 @@ import { TlvClusterId } from "../../datatype/ClusterId.js";
 import { TlvAttributeId } from "../../datatype/AttributeId.js";
 import { TlvAny } from "../../tlv/TlvAny.js";
 import { StatusCode } from "../../protocol/interaction/InteractionProtocol.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace Scenes {
     /**
@@ -335,7 +337,7 @@ export namespace Scenes {
     /**
      * These elements and properties are present in all Scenes clusters.
      */
-    export const Base = ClusterFactory.Definition({
+    export const Base = MutableCluster.Component({
         id: 0x5,
         name: "Scenes",
         revision: 4,
@@ -509,8 +511,18 @@ export namespace Scenes {
                 TlvCopySceneResponse,
                 { invokeAcl: AccessLevel.Manage }
             )
-        }
+        },
+
+        /**
+         * This metadata controls which ScenesCluster elements matter.js activates for specific feature combinations.
+         */
+        extensions: MutableCluster.Extensions()
     });
+
+    /**
+     * @see {@link Cluster}
+     */
+    export const ClusterInstance = MutableCluster({ ...Base, supportedFeatures: { sceneNames: true } });
 
     /**
      * Scenes
@@ -533,31 +545,12 @@ export namespace Scenes {
      *
      * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.4
      */
-    export const Cluster = ClusterFactory.Extensible(
-        { ...Base, supportedFeatures: { sceneNames: true } },
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
 
-        /**
-         * Use this factory method to create a Scenes cluster with support for optional features. Include each
-         * {@link Feature} you wish to support.
-         *
-         * @param features the optional features to support
-         * @returns a Scenes cluster with specified features enabled
-         * @throws {IllegalClusterError} if the feature combination is disallowed by the Matter specification
-         */
-        <T extends `${Feature}`[]>(...features: [...T]) => {
-            ClusterFactory.validateFeatureSelection(features, Feature);
-            const cluster = ClusterFactory.Definition({
-                ...Base,
-                supportedFeatures: BitFlags(Base.features, ...features)
-            });
-            return cluster as unknown as Extension<BitFlags<typeof Base.features, T>>;
-        }
-    );
-
-    export type Extension<SF extends TypeFromPartialBitSchema<typeof Base.features>> =
-        Omit<typeof Base, "supportedFeatures">
-        & { supportedFeatures: SF };
+    export const Cluster: Cluster = ClusterInstance;
+    export const Complete = Cluster;
 }
 
-export type ScenesCluster = typeof Scenes.Cluster;
+export type ScenesCluster = Scenes.Cluster;
 export const ScenesCluster = Scenes.Cluster;
+ClusterRegistry.register(Scenes.Complete);

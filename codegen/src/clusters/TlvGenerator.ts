@@ -17,9 +17,8 @@ import {
     Model,
     ValueModel,
 } from "@project-chip/matter.js/model";
-import { Entry } from "../util/TsFile.js";
+import { Block, Entry } from "../util/TsFile.js";
 import { asObjectKey, camelize, serialize } from "../util/string.js";
-import { ClusterFile } from "./ClusterFile.js";
 import { NumericRanges, SpecializedNumbers, WrappedConstantKeys } from "./NumberConstants.js";
 
 class InternalError extends Error {}
@@ -30,11 +29,15 @@ class InternalError extends Error {}
 export class TlvGenerator {
     private definedDatatypes = new Set<Model>();
     private scopedNames = new Set<string>();
-    private cluster: ClusterModel;
 
-    constructor(public file: ClusterFile) {
-        this.cluster = file.cluster;
+    get file() {
+        return this.definitions.file;
+    }
 
+    constructor(
+        public cluster: ClusterModel,
+        public definitions: Block,
+    ) {
         // Find datatype names that conflict at top-level module scope.
         // Datatypes at cluster level get to use their own name but for nested
         // structures we prepend the parent name
@@ -286,8 +289,8 @@ export class TlvGenerator {
     }
 
     private defineEnum(name: string, model: ValueModel) {
-        const enumBlock = this.file.types.expressions(`export enum ${name} {`, "}");
-        this.file.types.insertingBefore(enumBlock, () => {
+        const enumBlock = this.definitions.expressions(`export enum ${name} {`, "}");
+        this.definitions.insertingBefore(enumBlock, () => {
             model.children.forEach(child => {
                 let name = child.name;
                 if (name.match(/^\d+$/)) {
@@ -303,8 +306,8 @@ export class TlvGenerator {
     private defineStruct(name: string, model: ValueModel) {
         this.importTlv("tlv", "TlvObject");
 
-        const struct = this.file.types.expressions(`export const ${name} = TlvObject({`, "})");
-        this.file.types.insertingBefore(struct, () => {
+        const struct = this.definitions.expressions(`export const ${name} = TlvObject({`, "})");
+        this.definitions.insertingBefore(struct, () => {
             model.children.forEach(field => {
                 if (field.disallowed || field.deprecated) {
                     return;
@@ -333,7 +336,7 @@ export class TlvGenerator {
     }
 
     private defineBitmap(name: string, model: ValueModel) {
-        const bitmap = this.file.types.expressions(`export const ${name} = {`, "}");
+        const bitmap = this.definitions.expressions(`export const ${name} = {`, "}");
 
         for (const child of model.children) {
             let type: string | undefined;

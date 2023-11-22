@@ -38,14 +38,14 @@ export class ClusterComponentGenerator {
         private cluster: ClusterModel,
     ) {
         this.file = target.file as ClusterFile;
-        this.tlv = new TlvGenerator(this.file);
+        this.tlv = new TlvGenerator(this.cluster, this.file.types);
         this.defaults = new DefaultValueGenerator(this.tlv);
     }
 
     defineComponent(component: NamedComponent) {
         const name = `${component.name}Component`;
         const block = this.target
-            .expressions(`export const ${name} = ClusterFactory.Component({`, `})`)
+            .expressions(`export const ${name} = MutableCluster.Component({`, `})`)
             .document(component.documentation);
         return this.populateComponent(component, block);
     }

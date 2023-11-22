@@ -12,9 +12,10 @@
         "generate-spec": "run bin/generate-spec.js",
         "generate-chip": "run bin/generate-chip.js",
         "generate-model": "build esm --prefix=../models && run bin/generate-model.js",
-        "generate-clusters": "build esm --prefix=../packages/matter.js && run bin/generate-clusters.js",
+        "generate-clusters": "build esm --prefix=../packages/matter.js; run bin/generate-clusters.js",
+        "generate-endpoints": "build esm --prefix=../packages/matter.js; run bin/generate-endpoints.js",
         "dump-model-names": "build esm --prefix=../models && run bin/dump-model-names.ts",
-        "generate": "npm run generate-model && npm run generate-clusters"
+        "generate": "npm run generate-model && npm run generate-endpoints && npm run generate-devices"
     },
     "repository": {
         "type": "git",

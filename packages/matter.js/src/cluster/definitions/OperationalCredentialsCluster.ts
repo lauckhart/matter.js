@@ -6,8 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
-import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import {
     FabricScopedAttribute,
     AccessLevel,
@@ -19,6 +18,7 @@ import {
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvObject, TlvField, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TlvByteString, TlvString } from "../../tlv/TlvString.js";
+import { MatterCoreSpecificationV1_1 } from "../../spec/Specifications.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvFabricIndex, FabricIndex } from "../../datatype/FabricIndex.js";
 import { TlvVendorId } from "../../datatype/VendorId.js";
@@ -27,6 +27,8 @@ import { TlvNodeId } from "../../datatype/NodeId.js";
 import { TlvUInt8, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvSubjectId } from "../../datatype/SubjectId.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace OperationalCredentials {
     /**
@@ -505,14 +507,9 @@ export namespace OperationalCredentials {
     });
 
     /**
-     * Operational Credentials
-     *
-     * This cluster is used to add or remove Node Operational credentials on a Commissionee or Node, as well as manage
-     * the associated Fabrics.
-     *
-     * @see {@link MatterCoreSpecificationV1_1} § 11.17
+     * @see {@link Cluster}
      */
-    export const Cluster = ClusterFactory.Definition({
+    export const ClusterInstance = MutableCluster({
         id: 0x3e,
         name: "OperationalCredentials",
         revision: 1,
@@ -890,7 +887,21 @@ export namespace OperationalCredentials {
             )
         }
     });
+
+    /**
+     * Operational Credentials
+     *
+     * This cluster is used to add or remove Node Operational credentials on a Commissionee or Node, as well as manage
+     * the associated Fabrics.
+     *
+     * @see {@link MatterCoreSpecificationV1_1} § 11.17
+     */
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
+
+    export const Cluster: Cluster = ClusterInstance;
+    export const Complete = Cluster;
 }
 
-export type OperationalCredentialsCluster = typeof OperationalCredentials.Cluster;
+export type OperationalCredentialsCluster = OperationalCredentials.Cluster;
 export const OperationalCredentialsCluster = OperationalCredentials.Cluster;
+ClusterRegistry.register(OperationalCredentials.Complete);

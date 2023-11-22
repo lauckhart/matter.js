@@ -211,4 +211,4 @@ Matter.children.push({
             ]
         }
     ]
-});
+})

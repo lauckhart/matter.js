@@ -22,8 +22,9 @@ import { ClusterId } from "../../datatype/ClusterId.js";
 import { CommandId } from "../../datatype/CommandId.js";
 import { EndpointNumber } from "../../datatype/EndpointNumber.js";
 import { EventId } from "../../datatype/EventId.js";
-import { Endpoint } from "../../device/Endpoint.js";
+import { EndpointInterface } from "../../endpoint/EndpointInterface.js";
 import { Logger } from "../../log/Logger.js";
+import { SubscriptionOptions } from "../../node/options/SubscriptionOptions.js";
 import { MessageExchange } from "../../protocol/MessageExchange.js";
 import { ProtocolHandler } from "../../protocol/ProtocolHandler.js";
 import { EventHandler } from "../../protocol/interaction/EventHandler.js";
@@ -120,12 +121,6 @@ export function clusterPathToId({ nodeId, endpointId, clusterId }: TypeFromSchem
     return `${nodeId}/${endpointId}/${clusterId}`;
 }
 
-export type InteractionServerOptions = {
-    subscriptionMaxIntervalSeconds?: number;
-    subscriptionMinIntervalSeconds?: number;
-    subscriptionRandomizationWindowSeconds?: number;
-};
-
 export class InteractionServer implements ProtocolHandler<MatterDevice> {
     private endpointStructure = new InteractionEndpointStructure();
     private nextSubscriptionId = Crypto.getRandomUInt32();
@@ -135,14 +130,14 @@ export class InteractionServer implements ProtocolHandler<MatterDevice> {
 
     constructor(
         private readonly storage: StorageContext,
-        private readonly options?: InteractionServerOptions,
+        private readonly subscriptionOptions = SubscriptionOptions.configurationFor({}),
     ) {}
 
     getId() {
         return INTERACTION_PROTOCOL_ID;
     }
 
-    setRootEndpoint(endpoint: Endpoint) {
+    setRootEndpoint(endpoint: EndpointInterface) {
         // Reset all data
         this.endpointStructure.initializeFromEndpoint(endpoint);
 
@@ -636,10 +631,8 @@ export class InteractionServer implements ProtocolHandler<MatterDevice> {
             isFabricFiltered,
             minIntervalFloorSeconds,
             maxIntervalCeilingSeconds,
-            this.options?.subscriptionMaxIntervalSeconds,
-            this.options?.subscriptionMinIntervalSeconds,
-            this.options?.subscriptionRandomizationWindowSeconds,
             () => this.subscriptionMap.delete(subscriptionId),
+            this.subscriptionOptions,
         );
 
         try {

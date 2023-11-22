@@ -6,20 +6,19 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterFactory } from "../../cluster/ClusterFactory.js";
+import { MutableCluster } from "../../cluster/mutation/MutableCluster.js";
 import { OptionalWritableAttribute, WritableAttribute, OptionalAttribute, Attribute } from "../../cluster/Cluster.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TlvUInt8, TlvUInt32 } from "../../tlv/TlvNumber.js";
+import { Identity } from "../../util/Type.js";
+import { ClusterRegistry } from "../../cluster/ClusterRegistry.js";
 
 export namespace BinaryInputBasic {
     /**
-     * Binary Input (Basic)
-     *
-     * An interface for reading the value of a binary measurement and accessing various characteristics of that
-     * measurement.
+     * @see {@link Cluster}
      */
-    export const Cluster = ClusterFactory.Definition({
+    export const ClusterInstance = MutableCluster({
         id: 0xf,
         name: "BinaryInputBasic",
         revision: 1,
@@ -36,7 +35,20 @@ export namespace BinaryInputBasic {
             applicationType: OptionalAttribute(0x100, TlvUInt32)
         }
     })
+
+    /**
+     * Binary Input (Basic)
+     *
+     * An interface for reading the value of a binary measurement and accessing various characteristics of that
+     * measurement.
+     */
+    export interface Cluster extends Identity<typeof ClusterInstance> {}
+
+    export const Cluster: Cluster = ClusterInstance;
+
+    export const Complete = Cluster;
 }
 
-export type BinaryInputBasicCluster = typeof BinaryInputBasic.Cluster;
+export type BinaryInputBasicCluster = BinaryInputBasic.Cluster;
 export const BinaryInputBasicCluster = BinaryInputBasic.Cluster;
+ClusterRegistry.register(BinaryInputBasic.Complete);

@@ -236,25 +236,10 @@ export abstract class ValueModel extends Model implements ValueElement {
     }
 
     /**
-     * Is this model mandatory?  This supports a limited subset of conformance
-     * and is only appropriate for field conformance.
+     * Is the model mandatory?
      */
     get mandatory() {
-        const conformance = this.effectiveConformance.ast;
-        if (conformance.type === Conformance.Flag.Mandatory) {
-            return true;
-        }
-        if (conformance.type === Conformance.Special.Group) {
-            for (const c of conformance.param) {
-                if (c.type === Conformance.Flag.Provisional) {
-                    continue;
-                }
-                if (c.type === Conformance.Flag.Mandatory) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return this.effectiveConformance.mandatory;
     }
 
     /**
