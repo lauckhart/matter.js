@@ -79,7 +79,7 @@ export namespace DiagnosticLogs {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.1
      */
-    export const TlvRetrieveLogsRequestRequest = TlvObject({
+    export const TlvRetrieveLogsRequest = TlvObject({
         /**
          * This field shall indicate why the diagnostic logs are being retrieved from the Node. A Node may utilize this
          * field to selectively determine the logs to transfer.
@@ -247,7 +247,7 @@ export namespace DiagnosticLogs {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.10.5.1
              */
-            retrieveLogsRequest: Command(0x0, TlvRetrieveLogsRequestRequest, 0x1, TlvRetrieveLogsResponse)
+            retrieveLogsRequest: Command(0x0, TlvRetrieveLogsRequest, 0x1, TlvRetrieveLogsResponse)
         }
     });
 

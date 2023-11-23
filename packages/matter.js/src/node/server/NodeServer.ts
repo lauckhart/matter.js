@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Behavior } from "../../behavior/Behavior.js";
+import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import { BasicInformationBehavior } from "../../behavior/definitions/basic-information/BasicInformationBehavior.js";
 import { LifecycleBehavior } from "../../behavior/definitions/lifecycle/LifecycleBehavior.js";
 import { PartsBehavior } from "../../behavior/definitions/parts/PartsBehavior.js";
@@ -19,6 +21,7 @@ import { Logger } from "../../log/Logger.js";
 import { StorageContext } from "../../storage/StorageContext.js";
 import { Host } from "../Host.js";
 import { Node } from "../Node.js";
+import { DeviceCertification } from "../../behavior/definitions/operational-credentials/DeviceCertification.js";
 import { CommissioningOptions } from "../options/CommissioningOptions.js";
 import { ServerOptions } from "../options/ServerOptions.js";
 import { BaseNodeServer } from "./BaseNodeServer.js";
@@ -41,6 +44,7 @@ export class NodeServer extends BaseNodeServer implements Node {
     #nextEndpointId: EndpointNumber;
     #host?: Host;
     #commissioningConfig?: CommissioningOptions.Configuration;
+    #certification?: DeviceCertification;
     #commissioningStorage?: StorageContext;
 
     protected override get networkConfig() {
@@ -81,11 +85,19 @@ export class NodeServer extends BaseNodeServer implements Node {
 
     protected override emitActiveSessionsChanged(_fabric: FabricIndex): void {}
 
+    get certification() {
+        if (this.#certification === undefined) {
+            throw new InternalError("Certification attempted prior to certification configuration");
+        }
+        return this.#certification;;
+    }
+
     constructor(options?: ServerOptions) {
         super();
 
         this.#configuration = ServerOptions.configurationFor(options);
         this.#root = this.#configuration.root;
+        this.#root.owner = this;
         this.#nextEndpointId = this.#configuration.nextEndpointId;
     }
 
@@ -129,6 +141,17 @@ export class NodeServer extends BaseNodeServer implements Node {
         this.#host.abort();
     }
 
+    getAncestor<T>(type: new (...args: any[]) => T) {
+        if (this instanceof type) {
+            return this;
+        }
+        throw new ImplementationError(`Behavior is not owned by ${type.name}`);
+    }
+
+    initializeBehavior(part: Part, behavior: Behavior.Type): BehaviorBacking {
+        return PartServer.forPart(part).initializeBehavior(behavior);
+    }
+
     override async start() {
         this.configureProduct();
         this.configureCommissioning();
@@ -164,6 +187,11 @@ export class NodeServer extends BaseNodeServer implements Node {
         this.#commissioningConfig = CommissioningOptions.finalConfigurationFor(
             this.#configuration.commissioning,
             this.root,
+        );
+
+        this.#certification = new DeviceCertification(
+            this.#commissioningConfig.productDescription,
+            this.#configuration.certification
         );
 
         this.#commissioningStorage.set("passcode", this.#commissioningConfig.passcode);

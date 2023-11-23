@@ -11,70 +11,70 @@ import { MatterApplicationClusterSpecificationV1_1 } from "../../../spec/Specifi
 import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { WindowCovering } from "../../../cluster/definitions/WindowCoveringCluster.js";
 
+/**
+ * Upon receipt of this command, the server will adjust the window covering to the lift/slide percentage specified in
+ * the payload of this command.
+ *
+ * If the command includes LiftPercent100thsValue, then TargetPositionLiftPercent100ths attribute shall be set to
+ * LiftPercent100thsValue. Otherwise the TargetPositionLiftPercent100ths attribute shall be set to LiftPercentageValue
+ * * 100.
+ *
+ * If a client includes LiftPercent100thsValue in the command, the LiftPercentageValue shall be set to to
+ * LiftPercent100thsValue / 100, so a legacy server which only supports LiftPercentageValue (not
+ * LiftPercent100thsValue) has a value to set the target position.
+ *
+ * If the server does not support the Position Aware feature, then a zero percentage shall be treated as a UpOrOpen
+ * command and a non-zero percentage shall be treated as an DownOrClose command. If the device is only a tilt control
+ * device, then the command SHOULD be ignored and a UNSUPPORTED_COMMAND status SHOULD be returned.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.5
+ */
+export type GoToLiftPercentageRequest = TypeFromSchema<typeof WindowCovering.TlvGoToLiftPercentageRequest>;
+
+/**
+ * Upon receipt of this command, the server will adjust the window covering to the tilt percentage specified in the
+ * payload of this command.
+ *
+ * If the command includes TiltPercent100thsValue, then TargetPositionTiltPercent100ths attribute
+ *
+ * shall be set to TiltPercent100thsValue. Otherwise the TargetPositionTiltPercent100ths attribute shall be set to
+ * TiltPercentageValue * 100.
+ *
+ * If a client includes TiltPercent100thsValue in the command, the TiltPercentageValue shall be set to to
+ * TiltPercent100thsValue / 100, so a legacy server which only supports TiltPercentageValue (not
+ * TiltPercent100thsValue) has a value to set the target position.
+ *
+ * If the server does not support the Position Aware feature, then a zero percentage shall be treated as a UpOrOpen
+ * command and a non-zero percentage shall be treated as an DownOrClose command. If the device is only a tilt control
+ * device, then the command SHOULD be ignored and a UNSUPPORTED_COMMAND status SHOULD be returned.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.7
+ */
+export type GoToTiltPercentageRequest = TypeFromSchema<typeof WindowCovering.TlvGoToTiltPercentageRequest>;
+
+/**
+ * Upon receipt of this command, the Window Covering will adjust the window so the physical lift/slide is at the value
+ * specified in the payload of this command as long as that value is not larger than InstalledOpenLimitLift attribute
+ * and not smaller than InstalledClosedLimitLift attribute. Once the command is received the
+ * TargetPositionLiftPercent100ths attribute will update its value accordingly. If the value is out of bounds a
+ * response containing the status of CONSTRAINT_ERROR will be returned.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.4
+ */
+export type GoToLiftValueRequest = TypeFromSchema<typeof WindowCovering.TlvGoToLiftValueRequest>;
+
+/**
+ * Upon receipt of this command, the Window Covering will adjust the window so the physical tilt is at the tilt value
+ * specified in the payload of this command as long as that value is not larger than InstalledOpenLimitTilt attribute
+ * and not smaller than InstalledClosedLimitTilt attribute. Once the command is received the
+ * TargetPositionTiltPercent100ths attribute will update its value accordingly. If the tilt value is out of bounds a
+ * response containing the status of CONSTRAINT_ERROR will be returned.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.6
+ */
+export type GoToTiltValueRequest = TypeFromSchema<typeof WindowCovering.TlvGoToTiltValueRequest>;
+
 export namespace WindowCoveringInterface {
-    /**
-     * Upon receipt of this command, the server will adjust the window covering to the lift/slide percentage specified
-     * in the payload of this command.
-     *
-     * If the command includes LiftPercent100thsValue, then TargetPositionLiftPercent100ths attribute shall be set to
-     * LiftPercent100thsValue. Otherwise the TargetPositionLiftPercent100ths attribute shall be set to
-     * LiftPercentageValue * 100.
-     *
-     * If a client includes LiftPercent100thsValue in the command, the LiftPercentageValue shall be set to to
-     * LiftPercent100thsValue / 100, so a legacy server which only supports LiftPercentageValue (not
-     * LiftPercent100thsValue) has a value to set the target position.
-     *
-     * If the server does not support the Position Aware feature, then a zero percentage shall be treated as a UpOrOpen
-     * command and a non-zero percentage shall be treated as an DownOrClose command. If the device is only a tilt
-     * control device, then the command SHOULD be ignored and a UNSUPPORTED_COMMAND status SHOULD be returned.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.5
-     */
-    export type GoToLiftPercentageRequest = TypeFromSchema<typeof WindowCovering.TlvGoToLiftPercentageRequest>;
-
-    /**
-     * Upon receipt of this command, the server will adjust the window covering to the tilt percentage specified in the
-     * payload of this command.
-     *
-     * If the command includes TiltPercent100thsValue, then TargetPositionTiltPercent100ths attribute
-     *
-     * shall be set to TiltPercent100thsValue. Otherwise the TargetPositionTiltPercent100ths attribute shall be set to
-     * TiltPercentageValue * 100.
-     *
-     * If a client includes TiltPercent100thsValue in the command, the TiltPercentageValue shall be set to to
-     * TiltPercent100thsValue / 100, so a legacy server which only supports TiltPercentageValue (not
-     * TiltPercent100thsValue) has a value to set the target position.
-     *
-     * If the server does not support the Position Aware feature, then a zero percentage shall be treated as a UpOrOpen
-     * command and a non-zero percentage shall be treated as an DownOrClose command. If the device is only a tilt
-     * control device, then the command SHOULD be ignored and a UNSUPPORTED_COMMAND status SHOULD be returned.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.7
-     */
-    export type GoToTiltPercentageRequest = TypeFromSchema<typeof WindowCovering.TlvGoToTiltPercentageRequest>;
-
-    /**
-     * Upon receipt of this command, the Window Covering will adjust the window so the physical lift/slide is at the
-     * value specified in the payload of this command as long as that value is not larger than InstalledOpenLimitLift
-     * attribute and not smaller than InstalledClosedLimitLift attribute. Once the command is received the
-     * TargetPositionLiftPercent100ths attribute will update its value accordingly. If the value is out of bounds a
-     * response containing the status of CONSTRAINT_ERROR will be returned.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.4
-     */
-    export type GoToLiftValueRequest = TypeFromSchema<typeof WindowCovering.TlvGoToLiftValueRequest>;
-
-    /**
-     * Upon receipt of this command, the Window Covering will adjust the window so the physical tilt is at the tilt
-     * value specified in the payload of this command as long as that value is not larger than InstalledOpenLimitTilt
-     * attribute and not smaller than InstalledClosedLimitTilt attribute. Once the command is received the
-     * TargetPositionTiltPercent100ths attribute will update its value accordingly. If the tilt value is out of bounds
-     * a response containing the status of CONSTRAINT_ERROR will be returned.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.3.6.6
-     */
-    export type GoToTiltValueRequest = TypeFromSchema<typeof WindowCovering.TlvGoToTiltValueRequest>;
-
     export interface Base {
         /**
          * Upon receipt of this command, the Window Covering will adjust its position so the physical lift/slide and

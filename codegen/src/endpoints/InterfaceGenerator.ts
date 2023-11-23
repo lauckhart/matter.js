@@ -14,7 +14,7 @@ export class InterfaceGenerator {
     types;
 
     constructor(private file: InterfaceFile) {
-        this.types = new TypeGenerator(file.cluster, file.ns.section());
+        this.types = new TypeGenerator(file.cluster, file.types);
     }
 
     generateComponent(name: string, component: InferredComponent) {

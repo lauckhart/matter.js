@@ -5,8 +5,9 @@
  */
 
 import type { ClusterType } from "../cluster/ClusterType.js";
-import { NotImplementedError } from "../common/MatterError.js";
+import { ImplementationError, NotImplementedError } from "../common/MatterError.js";
 import { Agent } from "../endpoint/Agent.js";
+import { assertSecureSession } from "../session/SecureSession.js";
 import { GeneratedClass } from "../util/GeneratedClass.js";
 import { EventEmitter } from "../util/Observable.js";
 import type { BehaviorBacking } from "./BehaviorBacking.js";
@@ -73,6 +74,21 @@ export abstract class Behavior {
      */
     get context() {
         return this.#agent.context;
+    }
+
+    /**
+     * The session in which the behavior has been invoked.
+     */
+    get session() {
+        const session = this.#agent.context.session;
+        if (session === undefined) {
+            throw new ImplementationError(`Illegal operation outside session context`);
+        }
+        
+        // TODO - would a behavior ever need access to an insecure session?
+        assertSecureSession(session);
+        
+        return session;
     }
 
     /**

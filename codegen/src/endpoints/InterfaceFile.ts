@@ -15,6 +15,7 @@ export class InterfaceFile extends TsFile {
     static readonly baseName = "Interface";
     readonly definitionName: string;
     readonly cluster: ClusterModel;
+    readonly types: Block;
     readonly ns: Block;
 
     constructor(
@@ -25,6 +26,7 @@ export class InterfaceFile extends TsFile {
         super(name);
         this.definitionName = `${cluster.name}Interface`;
         this.cluster = cluster;
+        this.types = this.section();
         this.ns = this.statements(`export namespace ${this.definitionName} {`, "}");
 
         this.generate();

@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { OperationalCredentialsServerConf } from "../../cluster/server/OperationalCredentialsServer.js";
 import { Environment } from "../../common/Environment.js";
 import { ImplementationError } from "../../common/MatterError.js";
 import { EndpointNumber } from "../../datatype/EndpointNumber.js";
 import { Part } from "../../endpoint/Part.js";
 import { RootEndpoint } from "../../endpoint/definitions/system/RootEndpoint.js";
 import type { NodeServer } from "../server/NodeServer.js";
+import { DeviceCertification } from "../../behavior/definitions/operational-credentials/DeviceCertification.js";
 import { CommissioningOptions } from "./CommissioningOptions.js";
 import { NetworkOptions } from "./NetworkOptions.js";
 import { SubscriptionOptions } from "./SubscriptionOptions.js";
@@ -37,9 +37,10 @@ export type ServerOptions = {
     /**
      * Certification information for the OperationalCredentials cluster.
      *
-     * If omitted the server automatically generates development certificates.
+     * If omitted the server automatically generates development certificates
+     * using CHIP test tool's root certificate.
      */
-    readonly certification?: OperationalCredentialsServerConf;
+    readonly certification?: DeviceCertification.Configuration;
 
     /**
      * Networking options.

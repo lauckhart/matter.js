@@ -110,7 +110,7 @@ export namespace OtaSoftwareUpdateProvider {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.18
      */
-    export const TlvApplyUpdateRequestRequest = TlvObject({
+    export const TlvApplyUpdateRequest = TlvObject({
         updateToken: TlvField(0, TlvByteString.bound({ minLength: 8, maxLength: 32 })),
         newVersion: TlvField(1, TlvUInt32)
     });
@@ -180,7 +180,7 @@ export namespace OtaSoftwareUpdateProvider {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.19.6.5.18
              */
-            applyUpdateRequest: Command(0x2, TlvApplyUpdateRequestRequest, 0x3, TlvApplyUpdateResponse),
+            applyUpdateRequest: Command(0x2, TlvApplyUpdateRequest, 0x3, TlvApplyUpdateResponse),
 
             /**
              * This field shall contain the UpdateToken as specified in Section 11.19.3.6.1, “UpdateToken usage”.

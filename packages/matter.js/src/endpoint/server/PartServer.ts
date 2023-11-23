@@ -21,8 +21,6 @@ import { ClusterId } from "../../datatype/ClusterId.js";
 import { EndpointNumber } from "../../datatype/EndpointNumber.js";
 import { EndpointInterface } from "../EndpointInterface.js";
 import { Part } from "../Part.js";
-import { PartOwner } from "../part/PartOwner.js";
-import { UnmanagedClusterBehavior } from "./UnmanagedClusterBehavior.js";
 
 const SERVER = Symbol("server");
 interface ServerPart extends Part {
@@ -33,7 +31,7 @@ interface ServerPart extends Part {
  * PartServer makes a {@link Part} available for remote access as an Endpoint
  * on a Matter network.
  */
-export class PartServer implements EndpointInterface, PartOwner {
+export class PartServer implements EndpointInterface {
     #part: Part;
     #name = "";
     #structureChangedCallback?: () => void;
@@ -44,10 +42,12 @@ export class PartServer implements EndpointInterface, PartOwner {
 
         part.behaviors.require(DescriptorServer);
 
-        this.#part.agent.get(LifecycleBehavior).events.structure$change.on(() => this.#structureChangedCallback?.());
+        this.#part.agent.get(LifecycleBehavior).events.structure$change.on(
+            () => this.#structureChangedCallback?.()
+        );
     }
 
-    initializeBehavior(part: Part, behavior: Behavior.Type): BehaviorBacking {
+    initializeBehavior(behavior: Behavior.Type): BehaviorBacking {
         let backing;
         if (behavior.prototype instanceof ClusterBehavior) {
             const cluster = (behavior as ClusterBehavior.Type).cluster;
@@ -58,10 +58,10 @@ export class PartServer implements EndpointInterface, PartOwner {
                     } initialized multiple times`,
                 );
             }
-            backing = new ClusterServerBehaviorBacking(part, behavior as ClusterBehavior.Type);
+            backing = new ClusterServerBehaviorBacking(this.#part, behavior as ClusterBehavior.Type);
             this.#clusterServers.set(cluster.id, backing.clusterServer);
         } else {
-            backing = new ServerBehaviorBacking(part, behavior);
+            backing = new ServerBehaviorBacking(this.#part, behavior);
         }
         return backing;
     }
@@ -125,13 +125,8 @@ export class PartServer implements EndpointInterface, PartOwner {
         this.#structureChangedCallback = callback;
     }
 
-    addClusterServer<A extends Attributes, E extends Events>(server: ClusterServerObj<A, E>): void {
-        const behavior = UnmanagedClusterBehavior.for(server);
-
-        // This will throw if there's a conflict with a managed behavior
-        this.#part.behaviors.require(behavior);
-
-        this.#clusterServers.set(server.id, server as any);
+    addClusterServer(): void {
+        throw new ImplementationError("PartServer requires you to implement clusters by adding behaviors");
     }
 
     hasClusterServer(cluster: ClusterType): boolean {

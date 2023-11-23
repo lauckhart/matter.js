@@ -22,4 +22,9 @@ export interface PartOwner {
      * @returns a new {@link BehaviorBacking}
      */
     initializeBehavior(part: Part, behavior: Behavior.Type): BehaviorBacking;
+
+    /**
+     * Obtain an owner of a particular type from the owner hierarchy.
+     */
+    getAncestor<T>(type: new (...args: any[]) => T): T;
 }

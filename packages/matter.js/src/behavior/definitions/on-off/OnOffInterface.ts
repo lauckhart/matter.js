@@ -11,26 +11,25 @@ import { MatterApplicationClusterSpecificationV1_1 } from "../../../spec/Specifi
 import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { OnOff } from "../../../cluster/definitions/OnOffCluster.js";
 
+/**
+ * The OffWithEffect command allows devices to be turned off using enhanced ways of fading.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.4
+ */
+export type OffWithEffectRequest = TypeFromSchema<typeof OnOff.TlvOffWithEffectRequest>;
+
+/**
+ * The OnWithTimedOff command allows devices to be turned on for a specific duration with a guarded off duration so
+ * that SHOULD the device be subsequently turned off, further OnWithTimedOff commands, received during this time, are
+ * prevented from turning the devices back on. Further
+ *
+ * OnWithTimedOff commands received while the server is turned on, will update the period that the device is turned on.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.6
+ */
+export type OnWithTimedOffRequest = TypeFromSchema<typeof OnOff.TlvOnWithTimedOffRequest>;
+
 export namespace OnOffInterface {
-    /**
-     * The OffWithEffect command allows devices to be turned off using enhanced ways of fading.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.4
-     */
-    export type OffWithEffectRequest = TypeFromSchema<typeof OnOff.TlvOffWithEffectRequest>;
-
-    /**
-     * The OnWithTimedOff command allows devices to be turned on for a specific duration with a guarded off duration so
-     * that SHOULD the device be subsequently turned off, further OnWithTimedOff commands, received during this time,
-     * are prevented from turning the devices back on. Further
-     *
-     * OnWithTimedOff commands received while the server is turned on, will update the period that the device is turned
-     * on.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.5.7.6
-     */
-    export type OnWithTimedOffRequest = TypeFromSchema<typeof OnOff.TlvOnWithTimedOffRequest>;
-
     export interface Base {
         /**
          * This command does not have any data fields.

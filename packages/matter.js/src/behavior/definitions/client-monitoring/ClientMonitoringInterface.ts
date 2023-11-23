@@ -10,9 +10,10 @@ import { MaybePromise } from "../../../util/Type.js";
 import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { ClientMonitoring } from "../../../cluster/definitions/ClientMonitoringCluster.js";
 
+export type RegisterClientMonitoringRequest = TypeFromSchema<typeof ClientMonitoring.TlvRegisterClientMonitoringRequest>;
+export type UnregisterClientMonitoringRequest = TypeFromSchema<typeof ClientMonitoring.TlvUnregisterClientMonitoringRequest>;
+
 export namespace ClientMonitoringInterface {
-    export type RegisterClientMonitoringRequest = TypeFromSchema<typeof ClientMonitoring.TlvRegisterClientMonitoringRequest>;
-    export type UnregisterClientMonitoringRequest = TypeFromSchema<typeof ClientMonitoring.TlvUnregisterClientMonitoringRequest>;
     export interface Base {
         registerClientMonitoring(request: RegisterClientMonitoringRequest): MaybePromise<void>;
         unregisterClientMonitoring(request: UnregisterClientMonitoringRequest): MaybePromise<void>;

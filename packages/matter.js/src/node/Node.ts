@@ -5,13 +5,14 @@
  */
 
 import { Part } from "../endpoint/Part.js";
+import { PartOwner } from "../endpoint/part/PartOwner.js";
 
 /**
  * A "node" is a top-level resource that is addressable directly on a network.
  *
  * NodeInterface offers interaction with a node.
  */
-export interface Node {
+export interface Node extends PartOwner {
     /**
      * Access the root part.
      */

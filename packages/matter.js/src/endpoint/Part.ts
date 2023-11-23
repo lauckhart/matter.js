@@ -238,6 +238,16 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
         destroyedEvent.emit(this);
     }
 
+    getAncestor<T>(type: new (...arg: any[]) => T): T {
+        if (this instanceof type) {
+            return this;
+        }
+        if (!this.#owner) {
+            throw new ImplementationError(`Cannot access owner of type ${type.name} because part is not installed`);
+        }
+        return this.#owner.getAncestor(type);
+    }
+
     initializeBehavior(part: Part, behavior: Behavior.Type): BehaviorBacking {
         return this.owner.initializeBehavior(part, behavior);
     }

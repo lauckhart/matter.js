@@ -203,10 +203,10 @@ export class TlvGenerator {
         }
 
         // Specialize the name based on the model type
-        if (defining instanceof CommandModel && defining.isRequest) {
+        if (defining instanceof CommandModel && defining.isRequest && !name.endsWith("Request")) {
             name += "Request";
         }
-        if (defining instanceof EventModel) {
+        if (defining instanceof EventModel && !name.endsWith("Event")) {
             name += "Event";
         }
 

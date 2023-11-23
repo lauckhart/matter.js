@@ -10,8 +10,9 @@ import { MaybePromise } from "../../../util/Type.js";
 import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { ElectricalMeasurement } from "../../../cluster/definitions/ElectricalMeasurementCluster.js";
 
+export type GetMeasurementProfileCommandRequest = TypeFromSchema<typeof ElectricalMeasurement.TlvGetMeasurementProfileCommandRequest>;
+
 export namespace ElectricalMeasurementInterface {
-    export type GetMeasurementProfileCommandRequest = TypeFromSchema<typeof ElectricalMeasurement.TlvGetMeasurementProfileCommandRequest>;
     export interface Base {
         getProfileInfoCommand(): MaybePromise<void>;
         getMeasurementProfileCommand(request: GetMeasurementProfileCommandRequest): MaybePromise<void>;

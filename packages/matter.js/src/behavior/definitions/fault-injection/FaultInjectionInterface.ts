@@ -10,9 +10,10 @@ import { MaybePromise } from "../../../util/Type.js";
 import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { FaultInjection } from "../../../cluster/definitions/FaultInjectionCluster.js";
 
+export type FailAtFaultRequest = TypeFromSchema<typeof FaultInjection.TlvFailAtFaultRequest>;
+export type FailRandomlyAtFaultRequest = TypeFromSchema<typeof FaultInjection.TlvFailRandomlyAtFaultRequest>;
+
 export namespace FaultInjectionInterface {
-    export type FailAtFaultRequest = TypeFromSchema<typeof FaultInjection.TlvFailAtFaultRequest>;
-    export type FailRandomlyAtFaultRequest = TypeFromSchema<typeof FaultInjection.TlvFailRandomlyAtFaultRequest>;
     export interface Base {
         failAtFault(request: FailAtFaultRequest): MaybePromise<void>;
         failRandomlyAtFault(request: FailRandomlyAtFaultRequest): MaybePromise<void>;

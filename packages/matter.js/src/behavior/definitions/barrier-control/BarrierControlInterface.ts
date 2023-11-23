@@ -10,8 +10,9 @@ import { MaybePromise } from "../../../util/Type.js";
 import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { BarrierControl } from "../../../cluster/definitions/BarrierControlCluster.js";
 
+export type BarrierControlGoToPercentRequest = TypeFromSchema<typeof BarrierControl.TlvBarrierControlGoToPercentRequest>;
+
 export namespace BarrierControlInterface {
-    export type BarrierControlGoToPercentRequest = TypeFromSchema<typeof BarrierControl.TlvBarrierControlGoToPercentRequest>;
     export interface Base {
         barrierControlGoToPercent(request: BarrierControlGoToPercentRequest): MaybePromise<void>;
         barrierControlStop(): MaybePromise<void>;

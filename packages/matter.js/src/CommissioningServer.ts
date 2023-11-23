@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AttestationCertificateManager } from "./certificate/AttestationCertificateManager.js";
-import { CertificationDeclarationManager } from "./certificate/CertificationDeclarationManager.js";
 import { AccessControlCluster } from "./cluster/definitions/AccessControlCluster.js";
 import {
     AdministratorCommissioning,
@@ -30,7 +28,6 @@ import { GeneralCommissioningClusterHandler } from "./cluster/server/GeneralComm
 import { GroupKeyManagementClusterHandler } from "./cluster/server/GroupKeyManagementServer.js";
 import {
     OperationalCredentialsClusterHandler,
-    OperationalCredentialsServerConf,
 } from "./cluster/server/OperationalCredentialsServer.js";
 import { Crypto } from "./crypto/Crypto.js";
 import { EndpointNumber } from "./datatype/EndpointNumber.js";
@@ -38,6 +35,7 @@ import { FabricIndex } from "./datatype/FabricIndex.js";
 import { VendorId } from "./datatype/VendorId.js";
 import { RootEndpoint } from "./device/Device.js";
 import { EndpointInterface } from "./endpoint/EndpointInterface.js";
+import { DeviceCertification } from "./behavior/definitions/operational-credentials/DeviceCertification.js";
 import { CommissioningOptions } from "./node/options/CommissioningOptions.js";
 import { NetworkOptions } from "./node/options/NetworkOptions.js";
 import { SubscriptionOptions } from "./node/options/SubscriptionOptions.js";
@@ -111,7 +109,7 @@ export interface CommissioningServerOptions {
      * Vendor specific certificates to be used for the OperationalCredentials cluster. If not set Test certificates
      * (official Chip tool test Root certificate is used) are generated automatically.
      */
-    certificates?: OperationalCredentialsServerConf;
+    certification?: DeviceCertification.Configuration;
 
     /**
      * This callback is called when the device is commissioned or decommissioned to a fabric/controller. The provided
@@ -226,9 +224,6 @@ export class CommissioningServer extends BaseNodeServer {
 
         this.rootEndpoint = new RootEndpoint();
 
-        const vendorId = VendorId(options.basicInformation.vendorId);
-        const productId = options.basicInformation.productId;
-
         // Set the required basicInformation and respect the provided values
         // TODO Get the defaults from the cluster meta details
         const basicInformationAttributes = Object.assign(
@@ -272,19 +267,10 @@ export class CommissioningServer extends BaseNodeServer {
         }
 
         // Use provided certificates for OperationalCredentialsCluster or generate own ones
-        let { certificates } = options;
-        if (certificates == undefined) {
-            const paa = new AttestationCertificateManager(vendorId);
-            const { keyPair: dacKeyPair, dac } = paa.getDACert(productId);
-            const certificationDeclaration = CertificationDeclarationManager.generate(vendorId, productId);
-
-            certificates = {
-                devicePrivateKey: dacKeyPair.privateKey,
-                deviceCertificate: dac,
-                deviceIntermediateCertificate: paa.getPAICert(),
-                certificationDeclaration,
-            };
-        }
+        const certification = new DeviceCertification(
+            this.commissioningConfig.productDescription,
+            options.certification,
+        );
 
         // Add Operational credentials cluster to root directly because it is not allowed to be changed afterward
         // TODO Get the defaults from the cluster meta details
@@ -299,7 +285,7 @@ export class CommissioningServer extends BaseNodeServer {
                     trustedRootCertificates: [],
                     currentFabricIndex: FabricIndex.NO_FABRIC,
                 },
-                OperationalCredentialsClusterHandler(certificates),
+                OperationalCredentialsClusterHandler(certification),
             ),
         );
 

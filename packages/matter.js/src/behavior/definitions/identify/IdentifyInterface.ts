@@ -11,33 +11,33 @@ import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { Identify } from "../../../cluster/definitions/IdentifyCluster.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../../spec/Specifications.js";
 
+/**
+ * This command starts or stops the receiving device identifying itself.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.1
+ */
+export type IdentifyRequest = TypeFromSchema<typeof Identify.TlvIdentifyRequest>;
+
+/**
+ * This command allows the support of feedback to the user, such as a certain light effect. It is used to allow an
+ * implementation to provide visual feedback to the user under certain circumstances such as a color light turning
+ * green when it has successfully connected to a network. The use of this command and the effects themselves are
+ * entirely up to the implementer to use whenever a visual feedback is useful but it is not the same as and does not
+ * replace the identify mechanism used during commissioning.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3
+ */
+export type TriggerEffectRequest = TypeFromSchema<typeof Identify.TlvTriggerEffectRequest>;
+
+/**
+ * This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery Command, in the case
+ * that the device is currently identifying itself.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.4
+ */
+export type IdentifyQueryResponse = TypeFromSchema<typeof Identify.TlvIdentifyQueryResponse>;
+
 export namespace IdentifyInterface {
-    /**
-     * This command starts or stops the receiving device identifying itself.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.1
-     */
-    export type IdentifyRequest = TypeFromSchema<typeof Identify.TlvIdentifyRequest>;
-
-    /**
-     * This command allows the support of feedback to the user, such as a certain light effect. It is used to allow an
-     * implementation to provide visual feedback to the user under certain circumstances such as a color light turning
-     * green when it has successfully connected to a network. The use of this command and the effects themselves are
-     * entirely up to the implementer to use whenever a visual feedback is useful but it is not the same as and does
-     * not replace the identify mechanism used during commissioning.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.3
-     */
-    export type TriggerEffectRequest = TypeFromSchema<typeof Identify.TlvTriggerEffectRequest>;
-
-    /**
-     * This command is generated in response to receiving an IdentifyQuery command, see IdentifyQuery Command, in the
-     * case that the device is currently identifying itself.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 1.2.6.4
-     */
-    export type IdentifyQueryResponse = TypeFromSchema<typeof Identify.TlvIdentifyQueryResponse>;
-
     export interface Base {
         /**
          * This command starts or stops the receiving device identifying itself.

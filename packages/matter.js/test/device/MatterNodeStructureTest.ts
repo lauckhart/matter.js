@@ -250,7 +250,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certificates: {
+                certification: {
                     devicePrivateKey: ByteArray.fromHex("00"),
                     deviceCertificate: ByteArray.fromHex("00"),
                     deviceIntermediateCertificate: ByteArray.fromHex("00"),
@@ -347,7 +347,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certificates: {
+                certification: {
                     devicePrivateKey: ByteArray.fromHex("00"),
                     deviceCertificate: ByteArray.fromHex("00"),
                     deviceIntermediateCertificate: ByteArray.fromHex("00"),
@@ -438,7 +438,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certificates: {
+                certification: {
                     devicePrivateKey: ByteArray.fromHex("00"),
                     deviceCertificate: ByteArray.fromHex("00"),
                     deviceIntermediateCertificate: ByteArray.fromHex("00"),
@@ -530,7 +530,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certificates: {
+                certification: {
                     devicePrivateKey: ByteArray.fromHex("00"),
                     deviceCertificate: ByteArray.fromHex("00"),
                     deviceIntermediateCertificate: ByteArray.fromHex("00"),
@@ -622,7 +622,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certificates: {
+                certification: {
                     devicePrivateKey: ByteArray.fromHex("00"),
                     deviceCertificate: ByteArray.fromHex("00"),
                     deviceIntermediateCertificate: ByteArray.fromHex("00"),
@@ -1135,7 +1135,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certificates: {
+                certification: {
                     devicePrivateKey: ByteArray.fromHex("00"),
                     deviceCertificate: ByteArray.fromHex("00"),
                     deviceIntermediateCertificate: ByteArray.fromHex("00"),
@@ -1329,7 +1329,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certificates: {
+                certification: {
                     devicePrivateKey: ByteArray.fromHex("00"),
                     deviceCertificate: ByteArray.fromHex("00"),
                     deviceIntermediateCertificate: ByteArray.fromHex("00"),
@@ -1580,7 +1580,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certificates: {
+                certification: {
                     devicePrivateKey: ByteArray.fromHex("00"),
                     deviceCertificate: ByteArray.fromHex("00"),
                     deviceIntermediateCertificate: ByteArray.fromHex("00"),
@@ -1887,7 +1887,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certificates: {
+                certification: {
                     devicePrivateKey: ByteArray.fromHex("00"),
                     deviceCertificate: ByteArray.fromHex("00"),
                     deviceIntermediateCertificate: ByteArray.fromHex("00"),
@@ -2005,7 +2005,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certificates: {
+                certification: {
                     devicePrivateKey: ByteArray.fromHex("00"),
                     deviceCertificate: ByteArray.fromHex("00"),
                     deviceIntermediateCertificate: ByteArray.fromHex("00"),

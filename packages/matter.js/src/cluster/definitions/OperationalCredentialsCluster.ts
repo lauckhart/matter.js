@@ -121,9 +121,7 @@ export namespace OperationalCredentials {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.1
      */
-    export const TlvAttestationRequestRequest = TlvObject({
-        attestationNonce: TlvField(0, TlvByteString.bound({ length: 32 }))
-    });
+    export const TlvAttestationRequest = TlvObject({ attestationNonce: TlvField(0, TlvByteString.bound({ length: 32 })) });
 
     /**
      * This command shall be generated in response to an Attestation Request command.
@@ -175,9 +173,7 @@ export namespace OperationalCredentials {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.3
      */
-    export const TlvCertificateChainRequestRequest = TlvObject({
-        certificateType: TlvField(0, TlvEnum<CertificateChainType>())
-    });
+    export const TlvCertificateChainRequest = TlvObject({ certificateType: TlvField(0, TlvEnum<CertificateChainType>()) });
 
     /**
      * This command shall be generated in response to a CertificateChainRequest command.
@@ -199,7 +195,7 @@ export namespace OperationalCredentials {
      *
      * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.5
      */
-    export const TlvCsrRequestRequest = TlvObject({
+    export const TlvCsrRequest = TlvObject({
         csrNonce: TlvField(0, TlvByteString.bound({ length: 32 })),
         isForUpdateNoc: TlvOptionalField(1, TlvBoolean)
     });
@@ -626,7 +622,7 @@ export namespace OperationalCredentials {
              */
             attestationRequest: Command(
                 0x0,
-                TlvAttestationRequestRequest,
+                TlvAttestationRequest,
                 0x1,
                 TlvAttestationResponse,
                 { invokeAcl: AccessLevel.Administer }
@@ -640,7 +636,7 @@ export namespace OperationalCredentials {
              */
             certificateChainRequest: Command(
                 0x2,
-                TlvCertificateChainRequestRequest,
+                TlvCertificateChainRequest,
                 0x3,
                 TlvCertificateChainResponse,
                 { invokeAcl: AccessLevel.Administer }
@@ -675,7 +671,7 @@ export namespace OperationalCredentials {
              *
              * @see {@link MatterCoreSpecificationV1_1} § 11.17.6.5
              */
-            csrRequest: Command(0x4, TlvCsrRequestRequest, 0x5, TlvCsrResponse, { invokeAcl: AccessLevel.Administer }),
+            csrRequest: Command(0x4, TlvCsrRequest, 0x5, TlvCsrResponse, { invokeAcl: AccessLevel.Administer }),
 
             /**
              * This command shall add a new NOC chain to the device and commission a new Fabric association upon

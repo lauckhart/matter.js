@@ -11,35 +11,35 @@ import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { MediaPlayback } from "../../../cluster/definitions/MediaPlaybackCluster.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../../spec/Specifications.js";
 
+/**
+ * This command shall be generated in response to various Playback Commands.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.12
+ */
+export type PlaybackResponse = TypeFromSchema<typeof MediaPlayback.TlvPlaybackResponse>;
+
+/**
+ * Upon receipt, this shall Skip forward in the media by the given number of milliseconds.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.9
+ */
+export type SkipForwardRequest = TypeFromSchema<typeof MediaPlayback.TlvSkipForwardRequest>;
+
+/**
+ * Upon receipt, this shall Skip backward in the media by the given number of milliseconds.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.10
+ */
+export type SkipBackwardRequest = TypeFromSchema<typeof MediaPlayback.TlvSkipBackwardRequest>;
+
+/**
+ * Upon receipt, this shall change the playback position in the media to the given position.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.11
+ */
+export type SeekRequest = TypeFromSchema<typeof MediaPlayback.TlvSeekRequest>;
+
 export namespace MediaPlaybackInterface {
-    /**
-     * This command shall be generated in response to various Playback Commands.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.12
-     */
-    export type PlaybackResponse = TypeFromSchema<typeof MediaPlayback.TlvPlaybackResponse>;
-
-    /**
-     * Upon receipt, this shall Skip forward in the media by the given number of milliseconds.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.9
-     */
-    export type SkipForwardRequest = TypeFromSchema<typeof MediaPlayback.TlvSkipForwardRequest>;
-
-    /**
-     * Upon receipt, this shall Skip backward in the media by the given number of milliseconds.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.10
-     */
-    export type SkipBackwardRequest = TypeFromSchema<typeof MediaPlayback.TlvSkipBackwardRequest>;
-
-    /**
-     * Upon receipt, this shall change the playback position in the media to the given position.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.10.4.11
-     */
-    export type SeekRequest = TypeFromSchema<typeof MediaPlayback.TlvSeekRequest>;
-
     export interface Base {
         /**
          * Upon receipt, this shall play media. If content is currently in a FastForward or Rewind state. Play shall

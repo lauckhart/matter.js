@@ -11,127 +11,127 @@ import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { DoorLock } from "../../../cluster/definitions/DoorLockCluster.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../../spec/Specifications.js";
 
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type LockDoorRequest = TypeFromSchema<typeof DoorLock.TlvLockDoorRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type UnlockDoorRequest = TypeFromSchema<typeof DoorLock.TlvUnlockDoorRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type UnlockWithTimeoutRequest = TypeFromSchema<typeof DoorLock.TlvUnlockWithTimeoutRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type SetUserRequest = TypeFromSchema<typeof DoorLock.TlvSetUserRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type GetUserRequest = TypeFromSchema<typeof DoorLock.TlvGetUserRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type GetUserResponse = TypeFromSchema<typeof DoorLock.TlvGetUserResponse>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type ClearUserRequest = TypeFromSchema<typeof DoorLock.TlvClearUserRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type SetCredentialRequest = TypeFromSchema<typeof DoorLock.TlvSetCredentialRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type SetCredentialResponse = TypeFromSchema<typeof DoorLock.TlvSetCredentialResponse>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type GetCredentialStatusRequest = TypeFromSchema<typeof DoorLock.TlvGetCredentialStatusRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type GetCredentialStatusResponse = TypeFromSchema<typeof DoorLock.TlvGetCredentialStatusResponse>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type ClearCredentialRequest = TypeFromSchema<typeof DoorLock.TlvClearCredentialRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type SetWeekDayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvSetWeekDayScheduleRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type GetWeekDayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvGetWeekDayScheduleRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type GetWeekDayScheduleResponse = TypeFromSchema<typeof DoorLock.TlvGetWeekDayScheduleResponse>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type ClearWeekDayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvClearWeekDayScheduleRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type SetYearDayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvSetYearDayScheduleRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type GetYearDayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvGetYearDayScheduleRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type GetYearDayScheduleResponse = TypeFromSchema<typeof DoorLock.TlvGetYearDayScheduleResponse>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type ClearYearDayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvClearYearDayScheduleRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type SetHolidayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvSetHolidayScheduleRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type GetHolidayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvGetHolidayScheduleRequest>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type GetHolidayScheduleResponse = TypeFromSchema<typeof DoorLock.TlvGetHolidayScheduleResponse>;
+
+/**
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
+ */
+export type ClearHolidayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvClearHolidayScheduleRequest>;
+
 export namespace DoorLockInterface {
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type LockDoorRequest = TypeFromSchema<typeof DoorLock.TlvLockDoorRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type UnlockDoorRequest = TypeFromSchema<typeof DoorLock.TlvUnlockDoorRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type UnlockWithTimeoutRequest = TypeFromSchema<typeof DoorLock.TlvUnlockWithTimeoutRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type SetUserRequest = TypeFromSchema<typeof DoorLock.TlvSetUserRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type GetUserRequest = TypeFromSchema<typeof DoorLock.TlvGetUserRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type GetUserResponse = TypeFromSchema<typeof DoorLock.TlvGetUserResponse>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type ClearUserRequest = TypeFromSchema<typeof DoorLock.TlvClearUserRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type SetCredentialRequest = TypeFromSchema<typeof DoorLock.TlvSetCredentialRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type SetCredentialResponse = TypeFromSchema<typeof DoorLock.TlvSetCredentialResponse>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type GetCredentialStatusRequest = TypeFromSchema<typeof DoorLock.TlvGetCredentialStatusRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type GetCredentialStatusResponse = TypeFromSchema<typeof DoorLock.TlvGetCredentialStatusResponse>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type ClearCredentialRequest = TypeFromSchema<typeof DoorLock.TlvClearCredentialRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type SetWeekDayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvSetWeekDayScheduleRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type GetWeekDayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvGetWeekDayScheduleRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type GetWeekDayScheduleResponse = TypeFromSchema<typeof DoorLock.TlvGetWeekDayScheduleResponse>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type ClearWeekDayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvClearWeekDayScheduleRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type SetYearDayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvSetYearDayScheduleRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type GetYearDayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvGetYearDayScheduleRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type GetYearDayScheduleResponse = TypeFromSchema<typeof DoorLock.TlvGetYearDayScheduleResponse>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type ClearYearDayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvClearYearDayScheduleRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type SetHolidayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvSetHolidayScheduleRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type GetHolidayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvGetHolidayScheduleRequest>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type GetHolidayScheduleResponse = TypeFromSchema<typeof DoorLock.TlvGetHolidayScheduleResponse>;
-
-    /**
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4
-     */
-    export type ClearHolidayScheduleRequest = TypeFromSchema<typeof DoorLock.TlvClearHolidayScheduleRequest>;
-
     export interface Base {
         /**
          * @see {@link MatterApplicationClusterSpecificationV1_1} § 5.2.4

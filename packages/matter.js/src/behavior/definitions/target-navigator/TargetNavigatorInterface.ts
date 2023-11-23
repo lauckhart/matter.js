@@ -11,21 +11,21 @@ import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { TargetNavigator } from "../../../cluster/definitions/TargetNavigatorCluster.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../../spec/Specifications.js";
 
+/**
+ * Upon receipt, this shall navigation the UX to the target identified.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1
+ */
+export type NavigateTargetRequest = TypeFromSchema<typeof TargetNavigator.TlvNavigateTargetRequest>;
+
+/**
+ * This command shall be generated in response to NavigateTarget command.
+ *
+ * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.2
+ */
+export type NavigateTargetResponse = TypeFromSchema<typeof TargetNavigator.TlvNavigateTargetResponse>;
+
 export namespace TargetNavigatorInterface {
-    /**
-     * Upon receipt, this shall navigation the UX to the target identified.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.1
-     */
-    export type NavigateTargetRequest = TypeFromSchema<typeof TargetNavigator.TlvNavigateTargetRequest>;
-
-    /**
-     * This command shall be generated in response to NavigateTarget command.
-     *
-     * @see {@link MatterApplicationClusterSpecificationV1_1} § 6.11.4.2
-     */
-    export type NavigateTargetResponse = TypeFromSchema<typeof TargetNavigator.TlvNavigateTargetResponse>;
-
     export interface Base {
         /**
          * Upon receipt, this shall navigation the UX to the target identified.

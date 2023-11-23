@@ -10,7 +10,6 @@ import { Part } from "../../../endpoint/Part.js";
 import { EndpointType } from "../../../endpoint/type/EndpointType.js";
 import { BasicSet, MutableSet } from "../../../util/Set.js";
 import { Behavior } from "../../Behavior.js";
-import { BehaviorBacking } from "../../BehaviorBacking.js";
 import { State } from "../../state/State.js";
 import { LifecycleBehavior } from "../lifecycle/LifecycleBehavior.js";
 
@@ -153,10 +152,6 @@ export class PartsBehavior extends Behavior implements MutableSet<Part, Part | A
 
     [Symbol.iterator]() {
         return this.state.children[Symbol.iterator]();
-    }
-
-    initializeBehavior(part: Part, behavior: Behavior.Type): BehaviorBacking {
-        return this.agent.part.owner.initializeBehavior(part, behavior);
     }
 }
 
