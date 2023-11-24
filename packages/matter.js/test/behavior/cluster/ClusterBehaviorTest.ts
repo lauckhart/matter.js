@@ -18,8 +18,8 @@ describe("ClusterBehavior", () => {
 
     describe("base class", () => {
         describe("state types meet type requirement", () => {
-            ClusterBehavior.EndpointScope satisfies State.Type;
-            ClusterBehavior.EndpointScope satisfies ClusterBehavior.Type["EndpointScope"];
+            ClusterBehavior.State satisfies State.Type;
+            ClusterBehavior.State satisfies ClusterBehavior.Type["State"];
 
             ClusterBehavior.FabricScope satisfies State.Type;
             ClusterBehavior.FabricScope satisfies ClusterBehavior.Type["FabricScope"];
@@ -31,11 +31,11 @@ describe("ClusterBehavior", () => {
             ({}) as ClusterBehavior["state"] satisfies InstanceType<ClusterBehavior.Type>["state"];
             ({}) as ClusterBehavior["events"] satisfies InstanceType<ClusterBehavior.Type>["events"];
 
-            ClusterBehavior.EndpointScope satisfies ClusterBehavior.Type["EndpointScope"];
+            ClusterBehavior.State satisfies ClusterBehavior.Type["State"];
             ClusterBehavior.FabricScope satisfies ClusterBehavior.Type["FabricScope"];
             ClusterBehavior.Events satisfies ClusterBehavior.Type["Events"];
 
-            typeof ClusterBehavior.EndpointScope === "function";
+            typeof ClusterBehavior.State === "function";
             typeof ClusterBehavior.FabricScope === "function";
             typeof ClusterBehavior.Events === "function";
 
@@ -52,7 +52,7 @@ describe("ClusterBehavior", () => {
                     reqFabricAttr: string;
                 };
             };
-            expect(new MyBehavior.EndpointScope().reqAttr).equals("hello");
+            expect(new MyBehavior.State().reqAttr).equals("hello");
             expect(new MyBehavior.FabricScope().reqFabricAttr).equals("world");
 
             ({}) as MyBehavior satisfies {

@@ -268,8 +268,8 @@ export class CommissioningServer extends BaseNodeServer {
 
         // Use provided certificates for OperationalCredentialsCluster or generate own ones
         const certification = new DeviceCertification(
-            this.commissioningConfig.productDescription,
             options.certification,
+            this.commissioningConfig.productDescription,
         );
 
         // Add Operational credentials cluster to root directly because it is not allowed to be changed afterward

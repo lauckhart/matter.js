@@ -75,6 +75,7 @@ export class State {
 }
 
 export namespace State {
+    export const GET = Symbol("GET");
     export const SET = Symbol("SET");
     export const INITIALIZE = Symbol("SET");
     export const CONTEXT = Symbol("CONTEXT");
@@ -91,14 +92,20 @@ export namespace State {
         [CONTEXT]: InvocationContext | undefined;
 
         /**
-         * Low-level setter.  This operates the same as calling "set" but
-         * allows for override of the invocation context.
+         * Low-level getter.  This operates the same as getting an individual
+         * property but allows for override of the invocation context.
+         */
+        [GET](name: string, context?: InvocationContext): any;
+
+        /**
+         * Low-level setter.  This operates the same as setting an individual
+         * property but allows for override of the invocation context.
          */
         [SET](name: string, value: any, context?: InvocationContext): void;
 
         /**
          * Initialize.  This is separate from construction so we can seal the
-         * object.  If a derivative will not be subclassed it can initialize in
+         * object.  If a derivative will not be subclassed it may initialize in
          * its constructor.
          */
         [INITIALIZE](values?: Record<string, any>, context?: InvocationContext): void;
@@ -110,6 +117,7 @@ export namespace State {
      */
     export interface FieldConfiguration {
         fixed?: boolean;
+        fabricScoped?: boolean;
         validate?: (value: any, context: InvocationContext) => void;
     }
 
@@ -135,6 +143,10 @@ export namespace State {
 }
 
 Object.assign(State.prototype, {
+    [State.GET](name: string) {
+        return (this as any)[name];
+    },
+
     [State.SET](name: string, value: any) {
         (this as any)[name] = value;
     },

@@ -57,7 +57,7 @@ export class ValidatedElements {
             return;
         }
 
-        this.validateAttributes(behavior.cluster.attributes, new behavior.EndpointScope(), new behavior.FabricScope());
+        this.validateAttributes(behavior.cluster.attributes, new behavior.State());
         this.validateCommands(behavior.cluster?.commands, behavior.prototype);
         this.validateEvents(behavior.cluster?.events, new behavior.Events());
     }
@@ -83,19 +83,14 @@ export class ValidatedElements {
 
     private validateAttributes(
         attributes?: ClusterType.ElementSet<ClusterType.Attribute>,
-        endpointDefaults?: Record<string, any>,
-        fabricDefaults?: Record<string, any>,
+        defaults?: Record<string, any>,
     ) {
         if (!attributes) {
             this.error("cluster.attributes", "Property missing");
             return;
         }
-        if (!endpointDefaults) {
-            this.error("FabricScope", "Implementation missing");
-            return;
-        }
-        if (!fabricDefaults) {
-            this.error("EndpointScope", "Implementation missing");
+        if (!defaults) {
+            this.error("State", "Implementation missing");
             return;
         }
 
@@ -106,19 +101,9 @@ export class ValidatedElements {
                 continue;
             }
 
-            let scope: Record<string, any>;
-            let prop: string;
-            if (attr.fabricScoped) {
-                scope = fabricDefaults;
-                prop = `FabricScope.${name}`;
-            } else {
-                scope = endpointDefaults;
-                prop = `EndpointScope.${name}`;
-            }
-
-            if (!(name in scope)) {
+            if (!(name in defaults)) {
                 if (!attr.optional) {
-                    this.error(prop, "Mandatory element unsupported");
+                    this.error(`State.${name}`, "Mandatory element unsupported");
                 }
                 continue;
             }

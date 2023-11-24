@@ -29,9 +29,7 @@ export function createType<const C extends ClusterType>(cluster: C, base: Behavi
         // we instead override as static properties then we lose the automatic
         // interface type.  So just publish as static properties.
         staticProperties: {
-            EndpointScope: createDerivedState(cluster, base, false, namesUsed),
-
-            FabricScope: createDerivedState(cluster, base, true, namesUsed),
+            State: createDerivedState(cluster, base, namesUsed),
 
             Events: createBaseEvents(cluster, namesUsed),
         },
@@ -82,10 +80,9 @@ export type ClusterOf<B extends Behavior.Type> = InstanceType<B> extends { clust
  * Create a new state subclass that inherits relevant default values from a
  * base Behavior.Type and adds new default values from cluster attributes.
  */
-function createDerivedState(cluster: ClusterType, base: Behavior.Type, fabricScoped: boolean, namesUsed: Set<string>) {
-    const scopeName = fabricScoped ? "FabricScope" : "EndpointScope";
-    const BaseScope = base[scopeName];
-    const oldDefaults = new BaseScope() as Record<string, any>;
+function createDerivedState(cluster: ClusterType, base: Behavior.Type, namesUsed: Set<string>) {
+    const BaseState = base["State"];
+    const oldDefaults = new BaseState() as Record<string, any>;
     const fields = {} as State.FieldOptions;
     const statePrefix = `${camelize(cluster.name, false)}.state`;
 
@@ -93,9 +90,6 @@ function createDerivedState(cluster: ClusterType, base: Behavior.Type, fabricSco
     for (const name in cluster.attributes) {
         const attribute = cluster.attributes[name];
         if (isGlobal(attribute)) {
-            continue;
-        }
-        if (attribute.fabricScoped !== fabricScoped) {
             continue;
         }
         if (attribute.optional && !(name in oldDefaults)) {
@@ -139,7 +133,7 @@ function createDerivedState(cluster: ClusterType, base: Behavior.Type, fabricSco
     }
 
     return State.with(defaults, {
-        name: `${cluster.name}$${scopeName}`,
+        name: `${cluster.name}$State`,
         fields,
     });
 }

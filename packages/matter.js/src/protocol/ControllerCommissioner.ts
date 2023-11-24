@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { TlvCertSigningRequest } from "../behavior/definitions/operational-credentials/OperationalCredentialsTypes.js";
 import { CertificateManager } from "../certificate/CertificateManager.js";
 import { RootCertificateManager } from "../certificate/RootCertificateManager.js";
 import { ClusterClient } from "../cluster/client/ClusterClient.js";
@@ -15,7 +16,6 @@ import { GeneralCommissioning } from "../cluster/definitions/GeneralCommissionin
 import { NetworkCommissioning } from "../cluster/definitions/NetworkCommissioningCluster.js";
 import { OperationalCredentials } from "../cluster/definitions/OperationalCredentialsCluster.js";
 import { TimeSyncCluster } from "../cluster/definitions/TimeSyncCluster.js";
-import { TlvCertSigningRequest } from "../cluster/server/OperationalCredentialsServer.js";
 import { MatterError, UnexpectedDataError } from "../common/MatterError.js";
 import { Crypto } from "../crypto/Crypto.js";
 import { ClusterId } from "../datatype/ClusterId.js";

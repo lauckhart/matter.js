@@ -18,6 +18,6 @@ export interface RecordValidationResult {
  * Record validation API.
  */
 export interface RecordValidator {
-    validate(record: { [name: string]: any }): RecordValidationResult;
+    validate(record: Record<string, any>): RecordValidationResult;
     logFailure(): void;
 }

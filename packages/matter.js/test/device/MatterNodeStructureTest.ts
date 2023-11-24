@@ -5,6 +5,7 @@
  */
 
 import { CommissioningServer } from "../../src/CommissioningServer.js";
+import { DeviceCertification } from "../../src/behavior/definitions/operational-credentials/DeviceCertification.js";
 import { AccessControlCluster } from "../../src/cluster/definitions/AccessControlCluster.js";
 import { AdministratorCommissioning } from "../../src/cluster/definitions/AdministratorCommissioningCluster.js";
 import { BasicInformationCluster } from "../../src/cluster/definitions/BasicInformationCluster.js";
@@ -43,6 +44,13 @@ import { InteractionServer, attributePathToId } from "../../src/protocol/interac
 import { StorageBackendMemory } from "../../src/storage/StorageBackendMemory.js";
 import { StorageManager } from "../../src/storage/StorageManager.js";
 import { ByteArray } from "../../src/util/ByteArray.js";
+
+const MockCertification = {
+    privateKey: ByteArray.fromHex("00"),
+    certificate: ByteArray.fromHex("00"),
+    intermediateCertificate: ByteArray.fromHex("00"),
+    declaration: ByteArray.fromHex("00"),
+};
 
 function addRequiredRootClusters(
     rootEndpoint: EndpointInterface,
@@ -92,12 +100,12 @@ function addRequiredRootClusters(
                     trustedRootCertificates: [],
                     currentFabricIndex: FabricIndex.NO_FABRIC,
                 },
-                OperationalCredentialsClusterHandler({
-                    devicePrivateKey: ByteArray.fromHex("00"),
-                    deviceCertificate: ByteArray.fromHex("00"),
-                    deviceIntermediateCertificate: ByteArray.fromHex("00"),
-                    certificationDeclaration: ByteArray.fromHex("00"),
-                }),
+                OperationalCredentialsClusterHandler(new DeviceCertification({
+                    privateKey: ByteArray.fromHex("00"),
+                    certificate: ByteArray.fromHex("00"),
+                    intermediateCertificate: ByteArray.fromHex("00"),
+                    declaration: ByteArray.fromHex("00"),
+                })),
             ),
         );
     }
@@ -250,12 +258,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certification: {
-                    devicePrivateKey: ByteArray.fromHex("00"),
-                    deviceCertificate: ByteArray.fromHex("00"),
-                    deviceIntermediateCertificate: ByteArray.fromHex("00"),
-                    certificationDeclaration: ByteArray.fromHex("00"),
-                },
+                certification: MockCertification,
             });
             addRequiredRootClusters(node.getRootEndpoint());
 
@@ -347,12 +350,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certification: {
-                    devicePrivateKey: ByteArray.fromHex("00"),
-                    deviceCertificate: ByteArray.fromHex("00"),
-                    deviceIntermediateCertificate: ByteArray.fromHex("00"),
-                    certificationDeclaration: ByteArray.fromHex("00"),
-                },
+                certification: MockCertification,
             });
             node.setStorage(testStorageContext);
             addRequiredRootClusters(node.getRootEndpoint());
@@ -438,12 +436,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certification: {
-                    devicePrivateKey: ByteArray.fromHex("00"),
-                    deviceCertificate: ByteArray.fromHex("00"),
-                    deviceIntermediateCertificate: ByteArray.fromHex("00"),
-                    certificationDeclaration: ByteArray.fromHex("00"),
-                },
+                certification: MockCertification,
             });
             node.setStorage(testStorageContext);
             addRequiredRootClusters(node.getRootEndpoint());
@@ -530,12 +523,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certification: {
-                    devicePrivateKey: ByteArray.fromHex("00"),
-                    deviceCertificate: ByteArray.fromHex("00"),
-                    deviceIntermediateCertificate: ByteArray.fromHex("00"),
-                    certificationDeclaration: ByteArray.fromHex("00"),
-                },
+                certification: MockCertification,
             });
             node.setStorage(testStorageContext);
             addRequiredRootClusters(node.getRootEndpoint());
@@ -622,12 +610,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certification: {
-                    devicePrivateKey: ByteArray.fromHex("00"),
-                    deviceCertificate: ByteArray.fromHex("00"),
-                    deviceIntermediateCertificate: ByteArray.fromHex("00"),
-                    certificationDeclaration: ByteArray.fromHex("00"),
-                },
+                certification: MockCertification,
             });
             node.setStorage(testStorageContext);
             addRequiredRootClusters(node.getRootEndpoint());
@@ -1135,12 +1118,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certification: {
-                    devicePrivateKey: ByteArray.fromHex("00"),
-                    deviceCertificate: ByteArray.fromHex("00"),
-                    deviceIntermediateCertificate: ByteArray.fromHex("00"),
-                    certificationDeclaration: ByteArray.fromHex("00"),
-                },
+                certification: MockCertification,
             });
             node.setStorage(testStorageContext);
             addRequiredRootClusters(node.getRootEndpoint());
@@ -1329,12 +1307,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certification: {
-                    devicePrivateKey: ByteArray.fromHex("00"),
-                    deviceCertificate: ByteArray.fromHex("00"),
-                    deviceIntermediateCertificate: ByteArray.fromHex("00"),
-                    certificationDeclaration: ByteArray.fromHex("00"),
-                },
+                certification: MockCertification,
             });
             node.setStorage(testStorageContext);
             addRequiredRootClusters(node.getRootEndpoint());
@@ -1580,12 +1553,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certification: {
-                    devicePrivateKey: ByteArray.fromHex("00"),
-                    deviceCertificate: ByteArray.fromHex("00"),
-                    deviceIntermediateCertificate: ByteArray.fromHex("00"),
-                    certificationDeclaration: ByteArray.fromHex("00"),
-                },
+                certification: MockCertification,
             });
             node.setStorage(testStorageContext);
             addRequiredRootClusters(node.getRootEndpoint());
@@ -1887,12 +1855,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certification: {
-                    devicePrivateKey: ByteArray.fromHex("00"),
-                    deviceCertificate: ByteArray.fromHex("00"),
-                    deviceIntermediateCertificate: ByteArray.fromHex("00"),
-                    certificationDeclaration: ByteArray.fromHex("00"),
-                },
+                certification: MockCertification,
             });
             node.setStorage(testStorageContext);
             addRequiredRootClusters(node.getRootEndpoint());
@@ -2005,12 +1968,7 @@ describe("Endpoint Structures", () => {
                     },
                     serialNumber: `node-matter-0000`,
                 },
-                certification: {
-                    devicePrivateKey: ByteArray.fromHex("00"),
-                    deviceCertificate: ByteArray.fromHex("00"),
-                    deviceIntermediateCertificate: ByteArray.fromHex("00"),
-                    certificationDeclaration: ByteArray.fromHex("00"),
-                },
+                certification: MockCertification,
             });
             node.setStorage(testStorageContext);
             addRequiredRootClusters(node.getRootEndpoint());

@@ -87,8 +87,8 @@ export class ClusterBehavior extends Behavior {
     static for<This extends ClusterBehavior.Type, const ClusterT extends ClusterType>(
         this: This,
         cluster: ClusterT,
-    ): ClusterBehavior.Type<ClusterT, This> {
-        return createType(cluster, this);
+    ) {
+        return createType(cluster, this) as ClusterBehavior.Type<ClusterT, This>;
     }
 
     /**
@@ -176,15 +176,13 @@ export namespace ClusterBehavior {
 
         readonly Events: ClusterEvents.Type<C, B>;
 
-        readonly EndpointScope: State.Type<ClusterState.Endpoint<C, B>>;
+        readonly State: State.Type<ClusterState.Type<C, B>>;
 
-        readonly FabricScope: State.Type<ClusterState.Fabric<C, B>>;
-
-        readonly InternalScope: B["InternalScope"];
+        readonly InternalState: B["InternalState"];
 
         readonly Interface: I;
 
-        readonly defaults: ClusterState.Endpoint<C, B> & ClusterState.Fabric<C, B>;
+        readonly defaults: ClusterState.Type<C, B>;
 
         for: typeof ClusterBehavior.for;
         with: typeof ClusterBehavior.with;

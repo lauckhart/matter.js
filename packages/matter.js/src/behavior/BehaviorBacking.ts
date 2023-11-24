@@ -65,7 +65,7 @@ export abstract class BehaviorBacking {
      */
     getInternal() {
         if (!this.#internal) {
-            this.#internal = new this.#type.InternalScope();
+            this.#internal = new this.#type.InternalState();
         }
 
         return this.#internal;

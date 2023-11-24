@@ -19,7 +19,7 @@ type ChoiceState = {
 /**
  * This is an internal class that implements validation.
  *
- * Actual validation occurs in a the generated "validate" method except for
+ * Actual validation occurs in the generated "validate" method except for
  * portions exposed as utility methods on this class.
  */
 export class ValidatorImplementation implements RecordValidator {

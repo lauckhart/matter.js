@@ -8,7 +8,7 @@ import { OnOff } from "../../../cluster/definitions/OnOffCluster.js";
 import { Time, Timer } from "../../../time/Time.js";
 import { State } from "../../state/State.js";
 import { OnOffBehavior } from "./OnOffBehavior.js";
-import { OnOffInterface } from "./OnOffInterface.js";
+import { OnWithTimedOffRequest } from "./OnOffInterface.js";
 
 const Base = OnOffBehavior.for({ ...OnOff.Complete, supportedFeatures: { levelControlForLighting: true } });
 
@@ -37,7 +37,7 @@ export class OnOffServer extends Base {
         }
     }
 
-    override onWithTimedOff(request: OnOffInterface.OnWithTimedOffRequest) {
+    override onWithTimedOff(request: OnWithTimedOffRequest) {
         if (request.onOffControl.acceptOnlyWhenOn && !this.state.onOff) {
             return;
         }

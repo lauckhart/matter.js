@@ -190,8 +190,8 @@ export class NodeServer extends BaseNodeServer implements Node {
         );
 
         this.#certification = new DeviceCertification(
+            this.#configuration.certification,
             this.#commissioningConfig.productDescription,
-            this.#configuration.certification
         );
 
         this.#commissioningStorage.set("passcode", this.#commissioningConfig.passcode);

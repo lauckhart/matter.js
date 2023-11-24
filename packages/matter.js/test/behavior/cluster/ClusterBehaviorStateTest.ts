@@ -38,7 +38,7 @@ describe("ClusterState", () => {
     });
 
     describe("EndpointAttributeProperties", () => {
-        type Eap = ClusterState.EndpointAttributeProperties<ClusterType.AttributesOf<MyCluster>>;
+        type Eap = ClusterState.AttributeProperties<ClusterType.AttributesOf<MyCluster>>;
 
         it("requires mandatory", () => {
             ({
@@ -56,7 +56,7 @@ describe("ClusterState", () => {
     });
 
     describe("EndpointProperties", () => {
-        type Ep = ClusterState.EndpointProperties<MyCluster>;
+        type Ep = ClusterState.PropertiesOf<MyCluster>;
 
         it("requires mandatory", () => {
             ({
@@ -74,7 +74,7 @@ describe("ClusterState", () => {
     });
 
     describe("Endpoint", () => {
-        type E = ClusterState.Endpoint<MyCluster, Behavior.Type>;
+        type E = ClusterState.Type<MyCluster, Behavior.Type>;
 
         it("satisfies State.Type", () => {
             ({}) as E satisfies State;

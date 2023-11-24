@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ValidationError } from "../../common/MatterError.js";
+import { ImplementationError, ValidationError } from "../../common/MatterError.js";
+import type { FabricIndex } from "../../datatype/FabricIndex.js";
+import { isDeepEqual } from "../../util/DeepEqual.js";
 import { GeneratedClass } from "../../util/GeneratedClass.js";
 import { Observable } from "../../util/Observable.js";
 import { camelize } from "../../util/String.js";
@@ -97,9 +99,42 @@ export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.
 
     return managed as ManagedState.Type<T>;
 
+    type ScopedValue = { fabricIndex: FabricIndex }[];
+
+    function fabricFor(context?: InvocationContext) {
+        const fabric = context?.fabric;
+        if (fabric === undefined) {
+            throw new ValidationError(`Illegal access to fabric-scoped value outside fabric scope`);
+        }
+        return fabric.fabricIndex;
+    }
+
+    function filter(value: any, fabricId: FabricIndex) {
+        if (value === undefined || value === null) {
+            return value;
+        }
+
+        if (!Array.isArray(value)) {
+            throw new ImplementationError("Fabric scoped value is not an array");
+        }
+
+        return (value as ScopedValue).filter(e => e.fabricIndex === fabricId);
+    }
+
     function setter(this: Internal, name: string, value: any, context?: InvocationContext) {
+        const field = fields[name];
+
         const oldValue = this[VALUES][name];
-        if (oldValue === value) {
+
+        if (field?.fabricScoped) {
+            const fabric = fabricFor(context);
+            if (value === undefined || value === null) {
+                value = [];
+            }
+            
+        }
+        
+        if (isDeepEqual(oldValue, value)) {
             return;
         }
 
@@ -107,11 +142,10 @@ export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.
             context = this[State.CONTEXT] ?? {};
         }
 
-        const field = fields[name];
         if (field) {
             try {
                 if (field.fixed && this[OWNER].online) {
-                    throw new ValidationError(`Property is read-only`);
+                    throw new ValidationError("Property is read-only");
                 }
 
                 field.validate?.(value, context);

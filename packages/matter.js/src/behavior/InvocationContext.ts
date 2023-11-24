@@ -15,6 +15,7 @@ import { Behavior } from "./Behavior.js";
  */
 export interface InvocationContext {
     fabric?: Fabric;
+    fabricFiltered?: boolean;
     behavior?: Behavior;
     session?: Session<MatterDevice>;
     message?: Message;

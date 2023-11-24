@@ -12,6 +12,7 @@ import { ByteArray } from "../../../util/ByteArray.js";
 import { CommissioningOptions } from "../../../node/options/CommissioningOptions.js";
 import { Crypto } from "../../../crypto/Crypto.js";
 import { PrivateKey } from "../../../crypto/Key.js";
+import { ImplementationError } from "../../../common/MatterError.js";
 
 /**
  * Device certification used by the OperationalCredentials cluster.
@@ -35,8 +36,8 @@ export class DeviceCertification {
     }
 
     constructor(
-        product: CommissioningOptions.ProductDescription,
-        config?: DeviceCertification.Configuration
+        config?: DeviceCertification.Configuration,
+        product?: CommissioningOptions.ProductDescription,
     ) {
         if (config) {
             this.#privateKey = PrivateKey(config.privateKey);
@@ -44,6 +45,10 @@ export class DeviceCertification {
             this.#intermediateCertificate = config.intermediateCertificate;
             this.#declaration = config.declaration;
         } else {
+            if (product === undefined) {
+                throw new ImplementationError(`Cannot generate device certification without product information`);
+            }
+
             const paa = new AttestationCertificateManager(product.vendorId);
             const { keyPair: dacKeyPair, dac } = paa.getDACert(product.productId);
 

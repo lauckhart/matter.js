@@ -110,18 +110,12 @@ export abstract class Behavior {
      * Implementation of endpoint-scoped state.  Subclasses may override to
      * extend.
      */
-    static EndpointScope = State;
-
-    /**
-     * Implementation of fabric-scoped state.  Subclasses may override to
-     * extend.
-     */
-    static FabricScope = State;
+    static State = State;
 
     /**
      * Implementation of internal state.  Subclasses may override to extend.
      */
-    static InternalScope = State;
+    static InternalState = State;
 
     /**
      * Implementation of the events property.  Subclasses may override to
@@ -150,10 +144,7 @@ export abstract class Behavior {
      * Default state values.
      */
     static get defaults(): Record<string, any> {
-        return {
-            ...new this.EndpointScope(),
-            ...new this.FabricScope(),
-        };
+        return new this.State();
     }
 
     /**
@@ -165,8 +156,7 @@ export abstract class Behavior {
             base: this,
 
             staticProperties: {
-                EndpointScope: this.EndpointScope.set(defaults),
-                FabricScope: this.FabricScope.set(defaults),
+                State: this.State.set(defaults),
             },
         }) as unknown as This;
     }
@@ -222,9 +212,8 @@ export namespace Behavior {
         supports: typeof Behavior.supports;
         defaults: Record<string, any>;
 
-        EndpointScope: State.Type;
-        FabricScope: State.Type;
-        InternalScope: State.Type;
+        State: State.Type;
+        InternalState: State.Type;
         Events: typeof EventEmitter;
     }
 
@@ -241,7 +230,7 @@ export namespace Behavior {
      * The state type of a behavior Type.  This includes endpoint- and
      * fabric-scoped properties.
      */
-    export type StateOf<B extends Type> = InstanceType<B["EndpointScope"]> & InstanceType<B["FabricScope"]>;
+    export type StateOf<B extends Type> = InstanceType<B["State"]>;
 
     /**
      * Input variant of StateOf.

@@ -8,14 +8,6 @@ import { Behavior } from "../../behavior/Behavior.js";
 import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import { ImplementationError, NotImplementedError } from "../../common/MatterError.js";
 import { Part } from "../../endpoint/Part.js";
-import { InvokeRequestAction } from "../action/InvokeRequestAction.js";
-import { InvokeResponseAction } from "../action/InvokeResponseAction.js";
-import { ReadRequestAction } from "../action/ReadRequestAction.js";
-import { ReportDataAction } from "../action/ReportDataAction.js";
-import { SubscribeRequestAction } from "../action/SubscribeRequestAction.js";
-import { SubscribeResponseAction } from "../action/SubscribeResponseAction.js";
-import { WriteRequestAction } from "../action/WriteRequestAction.js";
-import { WriteResponseAction } from "../action/WriteResponseAction.js";
 import { Node } from "../Node.js";
 
 export class NodeClient implements Node {

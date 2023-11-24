@@ -9,10 +9,11 @@ import { Attributes, Events } from "../../cluster/Cluster.js";
 import { AttributeServer, FabricScopedAttributeServer } from "../../cluster/server/AttributeServer.js";
 import { ClusterServer } from "../../cluster/server/ClusterServer.js";
 import type { ClusterServerObj, CommandHandler, SupportedEventsList } from "../../cluster/server/ClusterServerTypes.js";
-import { ImplementationError, InternalError } from "../../common/MatterError.js";
+import { ImplementationError } from "../../common/MatterError.js";
+import type { FabricIndex } from "../../datatype/FabricIndex.js";
 import { EndpointInterface } from "../../endpoint/EndpointInterface.js";
 import type { Part } from "../../endpoint/Part.js";
-import { SecureSession } from "../../session/SecureSession.js";
+import { SecureSession, assertSecureSession } from "../../session/SecureSession.js";
 import { Session } from "../../session/Session.js";
 import { isDeepEqual } from "../../util/DeepEqual.js";
 import { InvocationContext } from "../InvocationContext.js";
@@ -41,7 +42,11 @@ export class ClusterServerBehaviorBacking extends ServerBehaviorBacking {
 
         // Install attribute accessors
         for (const name of elements.attributes) {
-            const { get, set } = createAttributeAccessors(this, name, type.cluster.attributes[name].fabricScoped);
+            const { get, set } = createAttributeAccessors(
+                this,
+                name,
+                type.cluster.attributes[name].fabricScoped
+            );
             handlers[`${name}AttributeGetter`] = get;
             handlers[`${name}AttributeSetter`] = set;
         }
@@ -81,40 +86,52 @@ function createCommandHandler(backing: ClusterServerBehaviorBacking, name: strin
     };
 }
 
+type ScopedValue = { fabricIndex: FabricIndex }[];
+
 function createAttributeAccessors(
     backing: ClusterServerBehaviorBacking,
     name: string,
     fabric: boolean,
 ): {
-    get: (session?: Session<MatterDevice>, endpoint?: EndpointInterface) => any;
+    get: (session?: Session<MatterDevice>, endpoint?: EndpointInterface, isFabricFiltered?: boolean) => any;
     set: (value: any, session?: Session<MatterDevice>, endpoint?: EndpointInterface) => boolean;
 } {
-    const getScope = fabric
-        ? (op: string, session?: Session<MatterDevice>) => {
-              const fabric = session?.getAssociatedFabric();
-              if (!fabric) {
-                  throw new InternalError(
-                      `Attempted ${op} on ${backing.clusterServer.name} attribute ${name} without associated fabric`,
-                  );
-              }
+    if (fabric) {
+        return {
+            get(session, _endpoint, isFabricFiltered) {
+                const value = backing.state[name] as ScopedValue | undefined;
+                if (!value || !isFabricFiltered) {
+                    return value;
+                }
 
-              return backing.getFabricScope(fabric) as Record<string, any>;
-          }
-        : () => {
-              return backing.endpointScope as Record<string, any>;
-          };
+                const fabric = session?.getAssociatedFabric();
+                if (!fabric) {
+                    throw new ImplementationError(
+                        `Fabric filtering requested for ${backing.type.name}.state.${name} outside fabric context`
+                    );
+                }
+                assertSecureSession(session);
+                const fabric = session?.getAssociatedFabric();
+                if (fabric === undefined) {
+                    throw new 
+                }
+                
+                return value.filter(v => v.fabricIndex = session?.getAssociatedFabric())
+            }
+        }
+    }
 
     return {
         get() {
-            return getScope("get")[name];
+            return backing.state[name];
         },
 
-        set(value: any) {
-            const scope = getScope("set");
-            if (isDeepEqual(scope[name], value)) {
+        set(value) {
+            const current = backing.state[name];
+            if (isDeepEqual(current, value)) {
                 return false;
             }
-            scope[name] = value;
+            backing.state[name] = value;
             return true;
         },
     };

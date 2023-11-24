@@ -31,6 +31,10 @@ export class MockOwner implements PartOwner {
     initializeBehavior(part: Part, behavior: Behavior.Type) {
         return new ServerBehaviorBacking(part, behavior);
     }
+
+    getAncestor(): any {
+        throw new Error("No ancestor");
+    }
 }
 
 export const MockEndpoint = MutableEndpoint({
