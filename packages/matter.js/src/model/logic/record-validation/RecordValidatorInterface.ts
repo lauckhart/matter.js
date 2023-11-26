@@ -15,7 +15,11 @@ export interface RecordValidationResult {
 }
 
 /**
- * Record validation API.
+ * Record validation API.  This validates an object such as a struct or cluster
+ * attributes.
+ * 
+ * We perform validation at this level because validation may involve
+ * cross-field dependencies.
  */
 export interface RecordValidator {
     validate(record: Record<string, any>): RecordValidationResult;

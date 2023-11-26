@@ -13,7 +13,6 @@ import { addConformance } from "./conformance.js";
 import { addConstraint } from "./constraint.js";
 import { addQuality } from "./quality.js";
 import { RecordValidator } from "./RecordValidatorInterface.js";
-import { addType } from "./type.js";
 import { type ValidatorImplementation } from "./ValidatorImplementation.js";
 
 const logger = new Logger("ValidatorBuilder");
@@ -48,7 +47,6 @@ export class ValidatorBuilder extends Array<string> {
                 } else if (aspect instanceof Quality) {
                     addQuality(this, child, aspect);
                 }
-                addType(this, child);
             }
         }
 
