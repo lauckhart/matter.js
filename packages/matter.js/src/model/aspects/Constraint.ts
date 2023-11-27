@@ -77,6 +77,16 @@ export class Constraint extends Aspect<Constraint.Definition> implements Constra
             }
         }
 
+        if (this.parts) {
+            for (const part of this.parts) {
+                if (part.test(value)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         return true;
     }
 

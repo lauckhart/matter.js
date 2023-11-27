@@ -11,15 +11,18 @@ import { StatusCode } from "../../../protocol/interaction/InteractionProtocol.js
 import { Access, AttributeModel, ClusterModel, FieldValue, Metatype, ValueModel } from "../../../model/index.js";
 import { Io } from "./Io.js";
 import { IoFactory } from "./IoFactory.js";
+import { camelize } from "../../../util/String.js";
+import { ByteArray } from "../../../util/ByteArray.js";
 
-export function IoWriter(schema: ValueModel | ClusterModel, factory: IoFactory): Io["write"] {
+export function IoWriter(schema: Io.Schema, factory: IoFactory): Io["write"] {
     if (schema instanceof ClusterModel) {
-        return createStructWriter(factory, factory.attributes);
+        return createStructWriter(factory, factory.attributes, schema);
     }
 
     const accessLevel = accessLevelFor(schema);
 
-    if (!schema.access.writable || (schema instanceof AttributeModel && schema.fixed)) {
+    const access = schema.effectiveAccess;
+    if (!access.writable || (schema instanceof AttributeModel && schema.fixed)) {
         return () => {
             throw new StatusResponseError("Value is write-only", StatusCode.UnsupportedWrite);
         }
@@ -30,24 +33,28 @@ export function IoWriter(schema: ValueModel | ClusterModel, factory: IoFactory):
         throw new ImplementationError(`Cannot generate writer for ${schema.name} because it is not a type`);
     }
 
-    const requiresTimed = !!schema.access.timed;
+    const requiresTimed = !!access.timed;
 
     let writer: Io["write"];
     switch (metatype) {
         case Metatype.object:
-            writer = createStructWriter(factory, schema.children);
+            writer = createStructWriter(factory, schema.members, schema);
+            break;
 
         case Metatype.array:
             writer = createListWriter(factory, schema);
+            break;
 
         default:
-            writer = createAtomWriter(metatype);
+            writer = createAtomWriter(metatype, schema);
+            break;
     }
 
     return (value, input, options) => {
         if (options?.accessLevel !== undefined && options.accessLevel >= accessLevel) {
             throw new StatusResponseError("Access denied", StatusCode.UnsupportedAccess);
         }
+
         if (requiresTimed && !options?.timed) {
             throw new StatusResponseError(
                 "Write rejected without required timed interaction",
@@ -63,26 +70,211 @@ function accessLevelFor(schema: ValueModel) {
     return Access.PrivilegePriority[schema.effectiveAccess.writePriv ?? Access.Privilege.Operate] as AccessLevel;
 }
 
-function createAtomWriter(metatype: Metatype): Io["write"] {
-    return (_oldValue, newValue) => {
-        // We do bare-minimum to set the value here.  RecordValidator handles
-        // most validation as constraints and conformance may be affected by
-        // the value of other fields
+/**
+ * We perform field-level validation here.  Cross-field validation must occur
+ * elsewhere with the full record visible.
+ */
+function createAtomValidator(metatype: Metatype, schema: ValueModel) {
+    let validator: undefined | ((value: any) => void);
+
+    const constraint = schema.effectiveConstraint;
+
+    if (!constraint.empty) {
+        switch (metatype) {
+            case Metatype.integer:
+            case Metatype.float:
+                validator = (value: Io.Item) => {
+                    if (value === null) {
+                        return;
+                    }
+
+                    if (!constraint.test(value as number | bigint)) {
+                        throw new StatusResponseError(
+                            "Numeric value is out of range per constraint",
+                            StatusCode.ConstraintError
+                        )
+                    }
+                }
+                break;
+
+            case Metatype.array:
+            case Metatype.bytes:
+            case Metatype.string:
+                validator = (value: Io.Item) => {
+                    if (value === null) {
+                        return;
+                    }
+
+                    if (!constraint.test((value as Array<any> | ByteArray | string).length)) {
+                        throw new StatusResponseError(
+                            "Value length is out of range per constraint",
+                            StatusCode.ConstraintError
+                        )
+                    }
+
+                    if (constraint.entry) {
+                        for (const e of value as Array<any> | ByteArray | string) {
+                            if (!constraint.entry.test(e)) {
+
+                            }
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
+    if (schema.quality.nullable === false) {
+        const nextValidator = validator;
+        validator = (value) => {
+            if (value === null) {
+                throw new Io.DatatypeError(
+                    schema,
+                    "Null written to non-nullable field",
+                );
+            }
+            nextValidator?.(value);
+        }
+    }
+}
+
+function createAtomWriter(metatype: Metatype, schema: ValueModel): Io["write"] {
+    const validator = createAtomValidator(metatype, schema);
+
+    return (newValue) => {
         newValue = Metatype.cast(metatype, newValue as FieldValue);
         if (newValue === FieldValue.Invalid) {
-            throw new StatusResponseError(
+            throw new Io.DatatypeError(
+                schema,
                 `Invalid value for ${metatype} field`,
-                StatusCode.InvalidDataType,
             )
         }
+
+        validator?.(newValue);
+
         return newValue;
     }
 }
 
-function createStructWriter(factory: IoFactory, fields: ValueModel[]): Io["write"] {
-    return (oldValue, newValue, options) => {
-        // TODO
+function createPropertyWriter(factory: IoFactory, schema: ValueModel, fieldName: string) {
+    let writer = factory.get(schema)?.write;
+
+    return (target: Io.Struct, value: Io.Item, options?: Io.WriteOptions) => {
+        if (writer === undefined) {
+            writer = factory.get(schema).write;
+        }
+
+        target[fieldName] = writer(target[fieldName], value, options);
     }
+}
+
+type PropertyWriter = ReturnType<typeof createPropertyWriter>;
+
+function createPropertyWriters(
+    factory: IoFactory,
+    fields: ValueModel[],
+    writerIdIndex: Record<number, PropertyWriter>
+) {
+    const writers = {} as Record<string, PropertyWriter>;
+
+    for (const field of fields) {
+        const fieldName = camelize(field.name, false);
+        const writer = createPropertyWriter(factory, field, fieldName);
+        writers[fieldName] = writer;
+
+        const childId = field.effectiveId;
+        if (childId !== undefined) {
+            writerIdIndex[childId] = writer;
+        }
+    }
+
+    return writers;
+}
+
+function createStructWriter(factory: IoFactory, fields: ValueModel[], schema: Io.Schema): Io["write"] {
+    const writerIdIndex = {} as Record<number, PropertyWriter>;
+    const writers = createPropertyWriters(factory, fields, writerIdIndex);
+
+    const fabricUnawareWriter: Io["write"] = (newValue, oldValue, options) => {
+        // Write to single field
+        if (options?.path?.length) {
+            Io.assertStruct(oldValue);
+            
+            // Obtain the writer
+            const writer = writerIdIndex[options.path[0]];
+            if (writer === undefined) {
+                throw new StatusResponseError(
+                    `Write to unknown struct property ${options.path[0]}`,
+                    StatusCode.UnsupportedAttribute
+                );
+            }
+
+            // Create a copy of the object with the field replaced
+            const result = { ...oldValue } as Io.Struct;
+            writer(result, newValue, { ...options, path: options.path.slice(1) });
+            return result;
+        }
+
+        // Write of entire object
+        if (typeof newValue !== "object") {
+            throw new Io.DatatypeError(
+                schema,
+                "Struct value is not an object"
+            );
+        }
+        Io.assertStruct(newValue);
+
+        const result = {} as Io.Struct;
+
+        // Update each field
+        for (const key in newValue) {
+            const writer = writers[key];
+            if (writer === undefined) {
+                throw new Io.DatatypeError(
+                    schema,
+                    `Write to unknown struct property "${key}"`
+                )
+            }
+
+            writer(result, newValue[key], options);
+        }
+
+        return result;
+    }
+
+    const fabricScoped = schema instanceof ValueModel && schema.effectiveAccess?.fabric === Access.Fabric.Scoped;
+    if (fabricScoped) {
+        return (newValue, oldValue, options) => {
+            // If writing a sub-path, ensure the input fabricIndex is correct.
+            // This shouldn't be possible because the object should be in a
+            // fabric-filtered list but this acts as fallback protection
+            if (options?.path?.length && options.accessingFabric !== undefined) {
+                Io.assertStruct(oldValue);
+                if (oldValue.fabricIndex !== undefined && oldValue.fabricIndex !== options.accessingFabric) {
+                    throw new StatusResponseError(
+                        "Attempt to update fabric-scoped object for other fabric",
+                        StatusCode.UnsupportedWrite
+                    )
+                }
+            }
+
+            const result = fabricUnawareWriter(newValue, oldValue, options) as Io.Struct;
+
+            // Ensure the resulting fabricIndex is correct
+            if (fabricScoped && options?.accessingFabric !== undefined) {
+                if (result.fabricIndex === undefined) {
+                    result.fabricIndex = options.accessingFabric;
+                } else if (result.fabricIndex !== options.accessingFabric) {
+                    throw new StatusResponseError(
+                        "Attempt to create fabric-scoped object for non-accessing fabric",
+                        StatusCode.UnsupportedWrite
+                    )
+                }
+            }
+        }
+    }
+
+    return fabricUnawareWriter;
 }
 
 export enum ListOp {
@@ -134,7 +326,7 @@ function createListWriter(factory: IoFactory, schema: ValueModel): Io["write"] {
         }
     }
 
-    return (oldValue, newValue, options) => {
+    return (newValue, oldValue, options) => {
         if (entryWriter === undefined) {
             entryWriter = createEntryWriter();
         }
@@ -154,9 +346,9 @@ function createListWriter(factory: IoFactory, schema: ValueModel): Io["write"] {
             }
 
             if (!Array.isArray(newValue)) {
-                throw new StatusResponseError(
-                    "List value is not an array",
-                    StatusCode.InvalidDataType,
+                throw new Io.DatatypeError(
+                    schema,
+                    "List value is not an array"
                 )
             }
             
@@ -244,7 +436,7 @@ function createListWriter(factory: IoFactory, schema: ValueModel): Io["write"] {
         // Item update
         return [
             ...oldValue.slice(0, targetIndex),
-            entryWriter(oldValue[targetIndex], newValue, { ...options, path: options?.path?.slice(1) }),
+            entryWriter(newValue, oldValue[targetIndex], { ...options, path: options?.path?.slice(1) }),
             ...oldValue.slice(targetIndex + 1)
         ]
     }

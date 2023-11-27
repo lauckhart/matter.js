@@ -23,7 +23,7 @@ import type { IoFactory } from "./IoFactory.js";
  * @param factory used by the reader to generate sub-value readers
  * @returns the read function
  */
-export function IoReader(schema: ClusterModel | ValueModel, factory: IoFactory): Io["read"] {    
+export function IoReader(schema: Io.Schema, factory: IoFactory): Io["read"] {    
     const accessLevel = accessLevelFor(schema);
     if (schema instanceof ClusterModel) {
         return createStructReader(factory, factory.attributes, accessLevel);
@@ -42,7 +42,7 @@ export function IoReader(schema: ClusterModel | ValueModel, factory: IoFactory):
             return createListReader(factory, schema, accessLevel);
 
         case Metatype.object:
-            return createStructReader(factory, schema.children, accessLevel);
+            return createStructReader(factory, schema.members, accessLevel);
 
         default:
             return createAtomReader(accessLevel);
@@ -50,7 +50,7 @@ export function IoReader(schema: ClusterModel | ValueModel, factory: IoFactory):
     }
 }
 
-function accessLevelFor(schema: ClusterModel | ValueModel) {
+function accessLevelFor(schema: Io.Schema) {
     if (schema instanceof ClusterModel) {
         return AccessLevel.View;
     }
@@ -86,7 +86,7 @@ function createAtomReader(accessLevel: AccessLevel): Io["read"] {
     }
 }
 
-function createPropertyReader(factory: IoFactory, schema: ClusterModel | ValueModel, fieldName: string) {
+function createPropertyReader(factory: IoFactory, schema: Io.Schema, fieldName: string) {
     let reader = factory.isGenerating(schema) ? undefined : factory.get(schema).read;
     const accessLevel = accessLevelFor(schema);
 
@@ -94,7 +94,7 @@ function createPropertyReader(factory: IoFactory, schema: ClusterModel | ValueMo
     // structure
     const fabricSensitive = schema instanceof ValueModel && schema.effectiveAccess.fabric === Access.Fabric.Sensitive;
 
-    return (source: Record<string, Io.Item>, options?: Io.RwOptions) => {
+    return (source: Io.Struct, options?: Io.RwOptions) => {
         // Ignore properties for which access level is too low
         if (options?.accessLevel !== undefined && options?.accessLevel < accessLevel) {
             return;

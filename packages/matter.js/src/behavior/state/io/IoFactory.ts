@@ -10,6 +10,7 @@ import { Io } from "./Io.js";
 import { IoReader } from "./IoReader.js";
 import { InternalError } from "../../../common/MatterError.js";
 import { ClusterType } from "../../../cluster/ClusterType.js";
+import { IoValidator } from "./IoValidator.js";
 
 /**
  * We cache factories based on the schema and active features.
@@ -106,7 +107,7 @@ export class IoFactory {
      * @param schema the model describing the record type
      * @returns the I/O implementation
      */
-    get(schema: ClusterModel | ValueModel): Io {
+    get(schema: Io.Schema): Io {
         let io = this.#cache.get(schema);
         if (io === undefined) {
             if (this.isGenerating(schema)) {
@@ -116,6 +117,7 @@ export class IoFactory {
             io = {
                 read: IoReader(schema, this),
                 write: IoWriter(schema, this),
+                validate: IoValidator(schema, this),
             }
             this.#generating.delete(schema);
             this.#cache.set(schema, io);

@@ -7,13 +7,19 @@
 import { AccessLevel } from "../../../cluster/Cluster.js";
 import { ImplementationError } from "../../../common/MatterError.js";
 import { FabricIndex } from "../../../datatype/FabricIndex.js";
+import { ClusterModel, ValueModel } from "../../../model/index.js";
+import { StatusResponseError } from "../../../protocol/interaction/InteractionMessenger.js";
+import { StatusCode } from "../../../protocol/interaction/InteractionProtocol.js";
 
 export interface Io {
     read: (value: Io.Item, options?: Io.ReadOptions) => Io.Item;
-    write: (oldValue: Io.Item, newValue: Io.Item, options?: Io.WriteOptions) => Io.Item;
+    write: (newValue: Io.Item, oldValue: Io.Item, options?: Io.WriteOptions) => Io.Item;
+    validate: (value: Io.Item) => Io.Item;
 }
 
 export namespace Io {
+    export type Schema = ClusterModel | ValueModel;
+
     export type Path = number[];
 
     export type Item = unknown;
@@ -50,6 +56,17 @@ export namespace Io {
     export function assertArray(item: Item): asserts item is List {
         if (!Array.isArray(item)) {
             throw new ImplementationError(`Expected list value to be an array but was ${typeof item}`);
+        }
+    }
+
+    export class DatatypeError extends StatusResponseError {
+        constructor(schema: Io.Schema, message: string) {
+            super(
+                `Error validating ${
+                    schema.path
+                }: ${
+                    message
+                }`, StatusCode.InvalidDataType);
         }
     }
 }
