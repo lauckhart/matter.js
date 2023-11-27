@@ -10,8 +10,8 @@ import { FabricIndex } from "../../../datatype/FabricIndex.js";
 import { StatusResponseError } from "../../../protocol/interaction/InteractionMessenger.js";
 import { StatusCode } from "../../../protocol/interaction/InteractionProtocol.js";
 import { camelize } from "../../../util/String.js";
-import { Access, AttributeModel, ClusterModel, Metatype, ValueModel,  } from "../../../model/index.js";
-import type { Io } from "./Io.js";
+import { Access, ClusterModel, Metatype, ValueModel,  } from "../../../model/index.js";
+import { Io } from "./Io.js";
 import type { IoFactory } from "./IoFactory.js";
 
 /**
@@ -94,7 +94,7 @@ function createPropertyReader(factory: IoFactory, schema: ClusterModel | ValueMo
     // structure
     const fabricSensitive = schema instanceof ValueModel && schema.effectiveAccess.fabric === Access.Fabric.Sensitive;
 
-    return (source: Io.Item, options?: Io.RwOptions) => {
+    return (source: Record<string, Io.Item>, options?: Io.RwOptions) => {
         // Ignore properties for which access level is too low
         if (options?.accessLevel !== undefined && options?.accessLevel < accessLevel) {
             return;
@@ -148,11 +148,9 @@ function createStructReader(factory: IoFactory, fields: ValueModel[], accessLeve
             return item;
         }
 
-        if (typeof item !== "object") {
-            throw new ImplementationError(`Struct value should be an object but is "${typeof item}"`);
-        }
+        Io.assertStruct(item);
 
-        const owningFabric = (item as any).fabricIndex as FabricIndex | undefined;
+        const owningFabric = item.fabricIndex as FabricIndex | undefined;
         if (typeof owningFabric === "number") {
             options = {
                 ...options,
@@ -173,7 +171,7 @@ function createStructReader(factory: IoFactory, fields: ValueModel[], accessLeve
             return reader(item, { ...options, path: options.path.slice(1) });
         }
 
-        const result = {} as Record<string, any>;
+        const result = {} as Record<string, Io.Item>;
         for (const propName in readers) {
             const value = readers[propName](item, options);
             if (value !== undefined) {
@@ -186,11 +184,12 @@ function createStructReader(factory: IoFactory, fields: ValueModel[], accessLeve
 }
 
 function createListReader(factory: IoFactory, schema: ValueModel, accessLevel: AccessLevel): Io["read"] {
+    // Per specification, fabric scope applies only to lists
     const fabricScoped = schema.effectiveAccess.fabric === Access.Fabric.Scoped;
 
     const entry = schema.listEntry;
     if (entry === undefined) {
-        throw new ImplementationError("List data model has no entry type");
+        throw new ImplementationError("List schema has no entry type");
     }
     let entryReader = factory.isGenerating(entry) ? undefined : factory.get(entry).read;
 
@@ -201,10 +200,6 @@ function createListReader(factory: IoFactory, schema: ValueModel, accessLevel: A
 
         assertAuthorized(accessLevel, options);
 
-        if (!Array.isArray(item)) {
-            throw new ImplementationError(`List value should be an array but is "${typeof item}"`);
-        }
-
         if (entryReader === undefined) {
             entryReader = factory.get(schema).read;
         }
@@ -214,8 +209,14 @@ function createListReader(factory: IoFactory, schema: ValueModel, accessLevel: A
             if (accessingFabric === undefined) {
                 throw new ImplementationError("Fabric filtering requested without accessing fabric");
             }
-            item = item.filter(child => (child as any).fabricIndex === accessingFabric);
+
+            Io.assertArray(item);
+            item = item.filter(child => {
+                Io.assertStruct(child);
+                child.fabricIndex === accessingFabric
+            });
         }
+        Io.assertArray(item);
 
         if (options?.path?.length) {
             let index = options?.path[0];
@@ -248,6 +249,6 @@ function createListReader(factory: IoFactory, schema: ValueModel, accessLevel: A
             return entryReader(subitem, { ...options, path: options.path.slice(1) });
         }
 
-        return item.map((child: any) => entryReader?.(child, options));
+        return item.map(child => entryReader?.(child, options));
     }
 }
