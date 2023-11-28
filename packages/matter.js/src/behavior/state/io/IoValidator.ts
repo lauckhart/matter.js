@@ -5,7 +5,7 @@
  */
 
 import { InternalError } from "../../../common/MatterError.js";
-import { ClusterModel, Metatype, ValueModel } from "../../../model/index.js";
+import { ClusterModel, Constraint, Metatype, ValueModel } from "../../../model/index.js";
 import { ByteArray } from "../../../util/ByteArray.js";
 import { camelize } from "../../../util/String.js";
 import { Io } from "./Io.js";
@@ -36,12 +36,15 @@ export function IoValidator(schema: Io.Schema, factory: IoFactory): Io["validate
 
         case Metatype.integer:
         case Metatype.float:
-            validator = createNumberValidator(schema);
+            validator = createSimpleValidator(schema, assertNumber);
             break;
 
         case Metatype.string:
+            validator = createSimpleValidator(schema, assertString);
+            break;
+
         case Metatype.bytes:
-            validator = createSequenceValidator(schema);
+            validator = createSimpleValidator(schema, assertBytes);
             break;
 
         case Metatype.object:
@@ -52,9 +55,9 @@ export function IoValidator(schema: Io.Schema, factory: IoFactory): Io["validate
             validator = createListValidator(schema, factory);
             break;
 
-        case Metatype.any:
         case Metatype.boolean:
         case Metatype.date:
+        case Metatype.any:
             break;
 
         default:
@@ -77,14 +80,75 @@ export function IoValidator(schema: Io.Schema, factory: IoFactory): Io["validate
     return validator ?? (() => {});
 }
 
-function assertNumber(value: Io.Item, schema: Io.Schema): asserts value is number {
-    if (typeof value === "number") {
+// Note that for arrays we potentially recurse twice - once in validateArray,
+// but also potentially here, where we test entries as proscribed by the
+// constraint[sub-sconstraint] syntax
+function createArrayConstraintValidator(constraint: Constraint, schema: ValueModel): Io["validate"] {
+    let validateEntryConstraint: Io["validate"] | undefined;
+    if (constraint.entry) {
+        const entrySchema = schema.listEntry;
+        if (entrySchema) {
+            validateEntryConstraint = createConstraintValidator(constraint.entry, entrySchema);
+        }
+    }
+
+    return value => {
+        assertArray(value, schema);
+
+        if (!constraint.test(value.length)) {
+            throw new Io.DatatypeError(
+                schema,
+                `Value ${value} is not within bounds defined by constraint`
+            )
+        }
+
+        if (validateEntryConstraint) {
+            for (const e of value) {
+                validateEntryConstraint(e);
+            }
+        }
+    }
+}
+
+function createConstraintValidator(constraint: Constraint, schema: ValueModel) {
+    if (constraint.empty) {
         return;
     }
-    throw new Io.DatatypeError(
-        schema,
-        `Expected number but received ${typeof value}`
-    );
+    
+    switch (schema.effectiveMetatype) {
+        case Metatype.array:
+            return createArrayConstraintValidator(constraint, schema);
+
+        case Metatype.integer:
+        case Metatype.float:
+            return (value: Io.Item) => {
+                assertNumeric(value, schema);
+                if (!constraint.test(value)) {
+                    throw new Io.DatatypeError(
+                        schema,
+                        `Value ${value} is not within bounds defined by constraint`
+                    )
+                }
+            }
+
+        case Metatype.string:
+        case Metatype.bytes:
+            return (value: Io.Item) => {
+                assertSequence(value, schema);
+                if (!constraint.test(value.length)) {
+                    throw new Io.DatatypeError(
+                        schema,
+                        `Value ${value} is not within bounds defined by constraint`
+                    )
+                }
+            }
+            break;
+
+        default:
+            throw new InternalError(
+                `Cannot define constraint for unsupported metatype ${schema.effectiveMetatype}`
+            );
+    }
 }
 
 function createEnumValidator(schema: ValueModel): Io["validate"] | undefined {
@@ -101,16 +165,6 @@ function createEnumValidator(schema: ValueModel): Io["validate"] | undefined {
             )
         }
     }
-}
-
-function assertObject(value: Io.Item, schema: Io.Schema): asserts value is Io.Struct {
-    if (typeof value === "object") {
-        return;
-    }
-    throw new Io.DatatypeError(
-        schema,
-        `Expected object but received ${typeof value}`
-    )
 }
 
 function createBitmapValidator(schema: ValueModel): Io["validate"] | undefined {
@@ -157,6 +211,64 @@ function createBitmapValidator(schema: ValueModel): Io["validate"] | undefined {
     }
 }
 
+function createSimpleValidator(schema: ValueModel, validateType: (value: Io.Item, schema: ValueModel) => void): Io["validate"] {
+    const validateConstraint = createConstraintValidator(schema.effectiveConstraint, schema);
+
+    return value => {
+        validateType(value, schema);
+        validateConstraint?.(value);
+    }
+}
+
+function createStructValidator(fields: ValueModel[], factory: IoFactory): Io["validate"] | undefined {
+    // TODO
+}
+
+function createListValidator(schema: ValueModel, factory: IoFactory): Io["validate"] | undefined {
+    const entry = schema.listEntry;
+    let validateEntries: undefined | ((list: Io.List) => void);
+    if (entry) {
+        let entryValidator = factory.get(entry).validate;
+        validateEntries = (list: Io.List) => {
+            if (entryValidator === undefined) {
+                entryValidator = factory.get(entry).validate;
+            }
+
+            for (const e of list) {
+                entryValidator(e);
+            }
+        }
+    }
+
+    const validateConstraint = createConstraintValidator(schema.constraint, schema);
+
+    return (value: Io.Item) => {
+        assertArray(value, schema);
+        validateConstraint?.(value);
+        validateEntries?.(value);
+    }
+}
+
+function assertNumber(value: Io.Item, schema: Io.Schema): asserts value is number {
+    if (typeof value === "number") {
+        return;
+    }
+    throw new Io.DatatypeError(
+        schema,
+        `Expected number but received ${typeof value}`
+    );
+}
+
+function assertObject(value: Io.Item, schema: Io.Schema): asserts value is Io.Struct {
+    if (typeof value === "object") {
+        return;
+    }
+    throw new Io.DatatypeError(
+        schema,
+        `Expected object but received ${typeof value}`
+    )
+}
+
 function assertNumeric(value: Io.Item, schema: ValueModel): asserts value is number | bigint {
     if (typeof value === "number" || typeof value === "bigint") {
         return;
@@ -167,14 +279,24 @@ function assertNumeric(value: Io.Item, schema: ValueModel): asserts value is num
     );
 }
 
-function createNumberValidator(schema: ValueModel): Io["validate"] | undefined {
-    const constraint = schema.effectiveConstraint;
-    if (!constraint.empty) {
-        return (value: Io.Item) => {
-            assertNumeric(value, schema);
-            constraint.test(value);
-        }
+function assertString(value: Io.Item, schema: ValueModel): asserts value is string {
+    if (typeof value === "string") {
+        return;
     }
+    throw new Io.DatatypeError(
+        schema,
+        `Expected string but received ${typeof value}`
+    );
+}
+
+function assertBytes(value: Io.Item, schema: ValueModel): asserts value is ByteArray {
+    if (value instanceof ByteArray) {
+        return;
+    }
+    throw new Io.DatatypeError(
+        schema,
+        `Expected byte array but received ${typeof value}`
+    );
 }
 
 function assertSequence(value: Io.Item, schema: ValueModel): asserts value is string | ByteArray {
@@ -187,20 +309,11 @@ function assertSequence(value: Io.Item, schema: ValueModel): asserts value is st
     );
 }
 
-function createSequenceValidator(schema: ValueModel): Io["validate"] | undefined {
-    const constraint = schema.effectiveConstraint;
-    if (!constraint.empty) {
-        return (value: Io.Item) => {
-            assertSequence(value, schema);
-            constraint.test(value.length);
-        }
+function assertArray(value: Io.Item, schema: ValueModel): asserts value is Io.Item[] {
+    if (!Array.isArray(value)) {
+        throw new Io.DatatypeError(
+            schema,
+            `Expected array but received ${typeof value}`
+        );
     }
-}
-
-function createStructValidator(fields: ValueModel[], factory: IoFactory): Io["validate"] | undefined {
-    // TODO
-}
-
-function createListValidator(schema: ValueModel, factory: IoFactory): Io["validate"] | undefined {
-    // TODO
 }

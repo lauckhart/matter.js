@@ -50,7 +50,8 @@ export class Constraint extends Aspect<Constraint.Definition> implements Constra
     }
 
     /**
-     * Test a value against a constraint.
+     * Test a value against a constraint.  Only tests primitive values; does
+     * not perform recursion into arrays.
      */
     test(value: FieldValue) {
         if (value === undefined) {
@@ -75,16 +76,6 @@ export class Constraint extends Aspect<Constraint.Definition> implements Constra
             if (typeof this.max !== typeof value || this.max <= value) {
                 return false;
             }
-        }
-
-        if (this.parts) {
-            for (const part of this.parts) {
-                if (part.test(value)) {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         return true;
