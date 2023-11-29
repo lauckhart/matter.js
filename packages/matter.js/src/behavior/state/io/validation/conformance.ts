@@ -32,47 +32,16 @@ export function createConformanceValidator(
     supportedFeatures: FeatureSet,
     nextValidator?: Io["validate"]
 ): Io["validate"] | undefined {
-    const conformance = schema.effectiveConformance;
+    const validate = astToFunction(schema, featureMap, supportedFeatures);
 
-    // As an optimization, handle mandatory (M) and optional (O or empty)
-    // conformance without compiling the full AST.  This covers the majority
-    // of cases.  
-    switch (conformance?.ast?.type) {
-        case Conformance.Flag.Mandatory:
-            // Validation fails if value is undefined
-            return value => {
-                if (value === undefined) {
-                    throw new ConformanceError(
-                        schema,
-                        conformance.ast,
-                        "Mandatory field is missing"
-                    )
-                }
-                nextValidator?.(value);
-            }
-
-        case Conformance.Special.Empty:
-        case Conformance.Flag.Optional:
-            // Validation succeeds if value is undefined, passes to next
-            // validator otherwise
-            if (nextValidator) {
-                return value => {
-                    if (value === undefined) {
-                        return;
-                    }
-                    nextValidator?.(value);
-                }
-            }
-            return;
-
-        default:
-            // Compile the full AST
-            return astToFunction(
-                schema,
-                featureMap,
-                supportedFeatures
-            );
+    if (validate) {
+        return (value, options) => {
+            validate(value, options);
+            nextValidator?.(value, options);
+        }
     }
+
+    return nextValidator;
 }
 
 /**
@@ -198,52 +167,77 @@ function astToFunction(
     schema: ValueModel,
     featureMap: ValueModel,
     supportedFeatures: FeatureSet
-): Io["validate"] {
+): Io["validate"] | undefined {
     const ast = schema.conformance.ast;
     const {
         featuresAvailable,
         featuresSupported
     } = normalizeFeatures(featureMap, supportedFeatures);
 
-    const test = compile(ast);
+    // Compile the AST
+    const compiledNode = compile(ast);
 
-    return (value, options) => {
-        const result = test(value, options);
-        switch (result?.status) {
-            case Code.Optional:
-                return;
+    // The compiled AST is DynamicNode describing how to test a field for
+    // conformance.  Convert this into a validation function.
+    switch (compiledNode.code) {
+        case Code.Conformant:
+            // Passes validation if the field is present
+            return requireValue;
 
-            case Code.Mandatory:
-                if (value === undefined) {
-                    throw new ConformanceError(
-                        schema, 
-                        result.ast ?? ast,
-                        result.error ?? "Value is undefined but mandatory per conformance"
-                    )
+        case Code.Nonconformant:
+        case Code.Disallowed:
+            // Passes validation if the field is not present
+            return disallowValue;
+
+        case Code.Optional:
+            // There is no conformance to check -- the value may be present or
+            // not.  So do not contribute to validation
+            return;
+
+        case Code.Evaluate:
+            // We must perform runtime evaluation to determine whether the
+            // field is conformant
+            const evaluate = compiledNode.evaluate;
+
+            return (value, options) => {
+                const staticNode = evaluate(value, options);
+
+                switch (staticNode.code) {
+                    case Code.Conformant:
+                        requireValue(value);
+                        break;
+
+                    case Code.Nonconformant:
+                    case Code.Disallowed:
+                        disallowValue(value);
+                        break;
+
+                    case Code.Optional:
+                        break;
+
+                    default:
+                        throw new InternalError(
+                            `Unknown or unsupported top-level conformance node type ${compiledNode.code}`
+                        );
                 }
-                return;
-
-            case Code.Disallowed:
-                if (value !== undefined) {
-                    throw new ConformanceError(
-                        schema,
-                        result.ast ?? ast,
-                        result.error ?? "Value is defined but disallowed per conformance"
-                    )
-                }
-
-            default:
-                throw new InternalError(`Unknown conformance status ${result?.status}`)
-        }
+            }
+    
+        default:
+            throw new InternalError(
+                `Unknown or unsupported top-level conformance node type ${compiledNode.code}`
+            );
     }
 
     /**
      * Convert an AST node into a DynamicNode.
      * 
      * If the node requires runtime evaluation it will be a RuntimeNode, which
-     * is a proxy that creates a StaticNode at runtime.
+     * is a proxy that creates a StaticNode for a specific record.
      * 
-     * Otherwise the node will be a StaticNode.
+     * Runtime evaluation is required if the conformance expression has a
+     * choice or cross-references other properties of the same object.
+     * 
+     * Otherwise the node is a StaticNode.
      */
     function compile(ast: Conformance.Ast): DynamicNode {
         switch (ast?.type) {
@@ -588,6 +582,26 @@ function astToFunction(
 
             default:
                 return { code: Code.Nonconformant };
+        }
+    }
+
+    function requireValue(value: unknown) {
+        if (value === undefined) {
+            throw new ConformanceError(
+                schema, 
+                ast,
+                "Mandatory field is undefined"
+            )
+        }
+    }
+    
+    function disallowValue(value: unknown) {
+        if (value !== undefined) {
+            throw new ConformanceError(
+                schema,
+                ast,
+                "Disallowed field is defined"
+            )
         }
     }
 }
