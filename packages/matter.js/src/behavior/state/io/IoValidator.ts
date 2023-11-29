@@ -5,11 +5,19 @@
  */
 
 import { InternalError } from "../../../common/MatterError.js";
-import { ClusterModel, Constraint, Metatype, ValueModel } from "../../../model/index.js";
-import { ByteArray } from "../../../util/ByteArray.js";
+import { ClusterModel, Metatype, ValueModel } from "../../../model/index.js";
 import { camelize } from "../../../util/String.js";
 import { Io } from "./Io.js";
 import { IoFactory } from "./IoFactory.js";
+import {
+    assertArray,
+    assertBytes,
+    assertNumber,
+    assertObject,
+    assertString,
+} from "./validation/assertions.js";
+import { createConformanceValidator } from "./validation/conformance.js";
+import { createConstraintValidator } from "./validation/constraint.js";
 
 /**
  * Generate a function that performs data validation.
@@ -17,9 +25,12 @@ import { IoFactory } from "./IoFactory.js";
  * @param schema the schema against which we validate
  * @param factory used to retrieve validators for sub-properties
  */
-export function IoValidator(schema: Io.Schema, factory: IoFactory): Io["validate"] {
+export function IoValidator(
+    schema: Io.Schema,
+    factory: IoFactory
+): Io["validate"] {
     if (schema instanceof ClusterModel) {
-        return createStructValidator(schema.attributes, factory) ?? (() => {});
+        return createStructValidator(schema.attributes, schema, factory) ?? (() => {});
     }
 
     let validator: Io["validate"] | undefined;
@@ -48,7 +59,7 @@ export function IoValidator(schema: Io.Schema, factory: IoFactory): Io["validate
             break;
 
         case Metatype.object:
-            validator = createStructValidator(schema.members, factory);
+            validator = createStructValidator(schema.members, schema, factory);
             break;
 
         case Metatype.array:
@@ -64,91 +75,27 @@ export function IoValidator(schema: Io.Schema, factory: IoFactory): Io["validate
             throw new InternalError(`Unsupported validation metatype ${metatype}`);
     }
 
+    validator = createNullValidator(schema, validator);
+
+    validator = createConformanceValidator(schema, factory.featureMap, factory.supportedFeatures, validator);
+
+    return validator || (() => {});
+}
+
+function createNullValidator(schema: ValueModel, nextValidator?: Io["validate"]): Io["validate"] | undefined {
     if (schema.effectiveQuality.nullable !== true) {
-        const nextValidator = validator;
-        validator = value => {
+        return (value, options) => {
             if (value === null) {
                 throw new Io.DatatypeError(
                     schema,
                     "Null write to non-nullable field",
                 )
             }
-            nextValidator?.(value);
+            nextValidator?.(value, options);
         }
     }
 
-    return validator ?? (() => {});
-}
-
-// Note that for arrays we potentially recurse twice - once in validateArray,
-// but also potentially here, where we test entries as proscribed by the
-// constraint[sub-sconstraint] syntax
-function createArrayConstraintValidator(constraint: Constraint, schema: ValueModel): Io["validate"] {
-    let validateEntryConstraint: Io["validate"] | undefined;
-    if (constraint.entry) {
-        const entrySchema = schema.listEntry;
-        if (entrySchema) {
-            validateEntryConstraint = createConstraintValidator(constraint.entry, entrySchema);
-        }
-    }
-
-    return value => {
-        assertArray(value, schema);
-
-        if (!constraint.test(value.length)) {
-            throw new Io.DatatypeError(
-                schema,
-                `Value ${value} is not within bounds defined by constraint`
-            )
-        }
-
-        if (validateEntryConstraint) {
-            for (const e of value) {
-                validateEntryConstraint(e);
-            }
-        }
-    }
-}
-
-function createConstraintValidator(constraint: Constraint, schema: ValueModel) {
-    if (constraint.empty) {
-        return;
-    }
-    
-    switch (schema.effectiveMetatype) {
-        case Metatype.array:
-            return createArrayConstraintValidator(constraint, schema);
-
-        case Metatype.integer:
-        case Metatype.float:
-            return (value: Io.Item) => {
-                assertNumeric(value, schema);
-                if (!constraint.test(value)) {
-                    throw new Io.DatatypeError(
-                        schema,
-                        `Value ${value} is not within bounds defined by constraint`
-                    )
-                }
-            }
-
-        case Metatype.string:
-        case Metatype.bytes:
-            return (value: Io.Item) => {
-                assertSequence(value, schema);
-                if (!constraint.test(value.length)) {
-                    throw new Io.DatatypeError(
-                        schema,
-                        `Value ${value} is not within bounds defined by constraint`
-                    )
-                }
-            }
-            break;
-
-        default:
-            throw new InternalError(
-                `Cannot define constraint for unsupported metatype ${schema.effectiveMetatype}`
-            );
-    }
+    return nextValidator;
 }
 
 function createEnumValidator(schema: ValueModel): Io["validate"] | undefined {
@@ -211,24 +158,84 @@ function createBitmapValidator(schema: ValueModel): Io["validate"] | undefined {
     }
 }
 
-function createSimpleValidator(schema: ValueModel, validateType: (value: Io.Item, schema: ValueModel) => void): Io["validate"] {
+function createSimpleValidator(
+    schema: ValueModel,
+    validateType: (value: Io.Item, schema: ValueModel) => void
+): Io["validate"] {
     const validateConstraint = createConstraintValidator(schema.effectiveConstraint, schema);
 
-    return value => {
+    return (value, options) => {
         validateType(value, schema);
-        validateConstraint?.(value);
+        validateConstraint?.(value, options?.siblings);
     }
 }
 
-function createStructValidator(fields: ValueModel[], factory: IoFactory): Io["validate"] | undefined {
-    // TODO
+function createStructValidator(
+    fields: ValueModel[],
+    schema: Io.Schema,
+    factory: IoFactory
+): Io["validate"] | undefined {
+    const validators = {} as Record<string, Io["validate"]>;
+
+    function createPropertyValidator(schema: ValueModel): Io["validate"] {
+        const name = camelize(schema.name, false);
+        if (factory.isGenerating(schema)) {
+            return (value) => {
+                const validate = factory.get(schema).validate;
+                validators[name] = validate;
+                return validate(value)
+            }
+        }
+        return factory.get(schema).validate;
+    }
+
+    for (const field of fields) {
+        validators[camelize(field.name, false)] = createPropertyValidator(field);
+    }
+
+    return value => {
+        assertObject(value, schema);
+        const options: Io.ValidateOptions = {
+            siblings: value,
+            choices: {}
+        }
+
+        for (const name in validators) {
+            const propertyValue = value[name];
+            if (propertyValue !== undefined) {
+                validators[name](propertyValue, options);
+            }
+        }
+
+        for (const name in options.choices) {
+            const choice = options.choices[name];
+            if (choice.count < choice.target) {
+                throw new Io.DatatypeError(
+                    schema,
+                    `Too few fields present for conformance choice ${name} (${choice.count} of min ${choice.target})`
+                )
+            }
+            if (choice.count > choice.target && !choice.orMore) {
+                throw new Io.DatatypeError(
+                    schema,
+                    `Too many fields present for conformance choice ${name} (${choice.count} of max ${choice.target})`
+                )
+            }
+        }
+    }
 }
 
-function createListValidator(schema: ValueModel, factory: IoFactory): Io["validate"] | undefined {
+function createListValidator(
+    schema: ValueModel,
+    factory: IoFactory,
+): Io["validate"] | undefined {
     const entry = schema.listEntry;
     let validateEntries: undefined | ((list: Io.List) => void);
     if (entry) {
-        let entryValidator = factory.get(entry).validate;
+        let entryValidator = factory.isGenerating(entry)
+            ? undefined
+            : factory.get(entry).validate;
+
         validateEntries = (list: Io.List) => {
             if (entryValidator === undefined) {
                 entryValidator = factory.get(entry).validate;
@@ -242,78 +249,9 @@ function createListValidator(schema: ValueModel, factory: IoFactory): Io["valida
 
     const validateConstraint = createConstraintValidator(schema.constraint, schema);
 
-    return (value: Io.Item) => {
+    return (value, options) => {
         assertArray(value, schema);
-        validateConstraint?.(value);
+        validateConstraint?.(value, options?.siblings);
         validateEntries?.(value);
-    }
-}
-
-function assertNumber(value: Io.Item, schema: Io.Schema): asserts value is number {
-    if (typeof value === "number") {
-        return;
-    }
-    throw new Io.DatatypeError(
-        schema,
-        `Expected number but received ${typeof value}`
-    );
-}
-
-function assertObject(value: Io.Item, schema: Io.Schema): asserts value is Io.Struct {
-    if (typeof value === "object") {
-        return;
-    }
-    throw new Io.DatatypeError(
-        schema,
-        `Expected object but received ${typeof value}`
-    )
-}
-
-function assertNumeric(value: Io.Item, schema: ValueModel): asserts value is number | bigint {
-    if (typeof value === "number" || typeof value === "bigint") {
-        return;
-    }
-    throw new Io.DatatypeError(
-        schema,
-        `Expected number or bigint but received ${typeof value}`
-    );
-}
-
-function assertString(value: Io.Item, schema: ValueModel): asserts value is string {
-    if (typeof value === "string") {
-        return;
-    }
-    throw new Io.DatatypeError(
-        schema,
-        `Expected string but received ${typeof value}`
-    );
-}
-
-function assertBytes(value: Io.Item, schema: ValueModel): asserts value is ByteArray {
-    if (value instanceof ByteArray) {
-        return;
-    }
-    throw new Io.DatatypeError(
-        schema,
-        `Expected byte array but received ${typeof value}`
-    );
-}
-
-function assertSequence(value: Io.Item, schema: ValueModel): asserts value is string | ByteArray {
-    if (typeof value === "string" || value instanceof ByteArray) {
-        return;
-    }
-    throw new Io.DatatypeError(
-        schema,
-        `Expected string or ByteArray but received ${typeof value} that is neither`
-    );
-}
-
-function assertArray(value: Io.Item, schema: ValueModel): asserts value is Io.Item[] {
-    if (!Array.isArray(value)) {
-        throw new Io.DatatypeError(
-            schema,
-            `Expected array but received ${typeof value}`
-        );
     }
 }

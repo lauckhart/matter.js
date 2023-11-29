@@ -14,7 +14,7 @@ import { StatusCode } from "../../../protocol/interaction/InteractionProtocol.js
 export interface Io {
     read: (value: Io.Item, options?: Io.ReadOptions) => Io.Item;
     write: (newValue: Io.Item, oldValue: Io.Item, options?: Io.WriteOptions) => Io.Item;
-    validate: (value: Io.Item) => Io.Item;
+    validate: (value: Io.Item, options?: Io.ValidateOptions) => Io.Item;
 }
 
 export namespace Io {
@@ -28,6 +28,9 @@ export namespace Io {
 
     export type List = Item[];
 
+    /**
+     * Options common to read and write.
+     */
     export interface RwOptions {
         path?: Io.Path;
         owningFabric?: FabricIndex;
@@ -35,12 +38,41 @@ export namespace Io {
         accessLevel?: AccessLevel;
     }
 
+    /**
+     * Options common to read.
+     */
     export interface ReadOptions extends RwOptions {
         fabricFiltered?: boolean;
     }
 
+    /**
+     * Options common to write.
+     */
     export interface WriteOptions extends RwOptions {
         timed?: boolean;
+    }
+
+    /**
+     * Validation options.
+     */
+    export interface ValidateOptions {
+        /**
+         * To validate and conformance and constraints we require access to
+         * sibling values.  They are passed here when validating a record.
+         */
+        siblings?: Struct;
+
+        /**
+         * Choice conformance requires context from the parent object.  This
+         * context is passed here.
+         */
+        choices?: Record<string, Choice>;
+    }
+
+    export interface Choice {
+        count: number;
+        target: number;
+        orMore: boolean;
     }
 
     export function isNullish(item: Item) {
