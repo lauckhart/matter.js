@@ -14,7 +14,7 @@ import { IoFactory } from "./IoFactory.js";
 import { camelize } from "../../../util/String.js";
 import { ByteArray } from "../../../util/ByteArray.js";
 
-export function IoWriter(schema: Io.Schema, factory: IoFactory): Io["write"] {
+export function IoWriter(schema: Io.Schema, factory: IoFactory): Io.Write {
     if (schema instanceof ClusterModel) {
         return createStructWriter(factory, factory.attributes, schema);
     }
@@ -35,7 +35,7 @@ export function IoWriter(schema: Io.Schema, factory: IoFactory): Io["write"] {
 
     const requiresTimed = !!access.timed;
 
-    let writer: Io["write"];
+    let writer: Io.Write;
     switch (metatype) {
         case Metatype.object:
             writer = createStructWriter(factory, schema.members, schema);
@@ -83,7 +83,7 @@ function createAtomValidator(metatype: Metatype, schema: ValueModel) {
         switch (metatype) {
             case Metatype.integer:
             case Metatype.float:
-                validator = (value: Io.Item) => {
+                validator = (value: Io.Val) => {
                     if (value === null) {
                         return;
                     }
@@ -100,7 +100,7 @@ function createAtomValidator(metatype: Metatype, schema: ValueModel) {
             case Metatype.array:
             case Metatype.bytes:
             case Metatype.string:
-                validator = (value: Io.Item) => {
+                validator = (value: Io.Val) => {
                     if (value === null) {
                         return;
                     }
@@ -136,9 +136,11 @@ function createAtomValidator(metatype: Metatype, schema: ValueModel) {
             nextValidator?.(value);
         }
     }
+
+    return validator;
 }
 
-function createAtomWriter(metatype: Metatype, schema: ValueModel): Io["write"] {
+function createAtomWriter(metatype: Metatype, schema: ValueModel): Io.Write {
     const validator = createAtomValidator(metatype, schema);
 
     return (newValue) => {
@@ -159,7 +161,7 @@ function createAtomWriter(metatype: Metatype, schema: ValueModel): Io["write"] {
 function createPropertyWriter(factory: IoFactory, schema: ValueModel, fieldName: string) {
     let writer = factory.get(schema)?.write;
 
-    return (target: Io.Struct, value: Io.Item, options?: Io.WriteOptions) => {
+    return (target: Io.Struct, value: Io.Val, options?: Io.WriteOptions) => {
         if (writer === undefined) {
             writer = factory.get(schema).write;
         }
@@ -191,11 +193,11 @@ function createPropertyWriters(
     return writers;
 }
 
-function createStructWriter(factory: IoFactory, fields: ValueModel[], schema: Io.Schema): Io["write"] {
+function createStructWriter(factory: IoFactory, fields: ValueModel[], schema: Io.Schema): Io.Write {
     const writerIdIndex = {} as Record<number, PropertyWriter>;
     const writers = createPropertyWriters(factory, fields, writerIdIndex);
 
-    const fabricUnawareWriter: Io["write"] = (newValue, oldValue, options) => {
+    const fabricUnawareWriter: Io.Write = (newValue, oldValue, options) => {
         // Write to single field
         if (options?.path?.length) {
             Io.assertStruct(oldValue);
@@ -284,7 +286,7 @@ export enum ListOp {
     Modify = "modify",
 }
 
-function createListWriter(factory: IoFactory, schema: ValueModel): Io["write"] {
+function createListWriter(factory: IoFactory, schema: ValueModel): Io.Write {
     const entry = schema.listEntry;
     if (entry === undefined) {
         throw new ImplementationError("List schema has no entry type");
@@ -295,7 +297,7 @@ function createListWriter(factory: IoFactory, schema: ValueModel): Io["write"] {
     // correct and map input indices to indices within the unfiltered list
     const fabricScoped = schema.effectiveAccess.fabric !== Access.Fabric.Scoped;
 
-    function createEntryWriter(): Io["write"] {
+    function createEntryWriter(): Io.Write {
         if (entry === undefined) {
             throw new InternalError("List entry schema somehow disappeared");
         }

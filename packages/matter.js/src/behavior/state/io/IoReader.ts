@@ -23,7 +23,7 @@ import type { IoFactory } from "./IoFactory.js";
  * @param factory used by the reader to generate sub-value readers
  * @returns the read function
  */
-export function IoReader(schema: Io.Schema, factory: IoFactory): Io["read"] {    
+export function IoReader(schema: Io.Schema, factory: IoFactory): Io.Read {    
     const accessLevel = accessLevelFor(schema);
     if (schema instanceof ClusterModel) {
         return createStructReader(factory, factory.attributes, accessLevel);
@@ -70,7 +70,7 @@ function assertAuthorized(accessLevel: AccessLevel, options?: Io.RwOptions) {
     };
 }
 
-function createAtomReader(accessLevel: AccessLevel): Io["read"] {
+function createAtomReader(accessLevel: AccessLevel): Io.Read {
     return (item, options) => {
         if (options?.path?.length) {
             throw new StatusResponseError(
@@ -137,7 +137,7 @@ function createPropertyReaders(factory: IoFactory, fields: ValueModel[], readerI
     return readers;
 }
 
-function createStructReader(factory: IoFactory, fields: ValueModel[], accessLevel: AccessLevel): Io["read"] {
+function createStructReader(factory: IoFactory, fields: ValueModel[], accessLevel: AccessLevel): Io.Read {
     const readerIndex = {} as Record<number, PropertyReader>;
     const readers = createPropertyReaders(factory, fields, readerIndex);
 
@@ -171,7 +171,7 @@ function createStructReader(factory: IoFactory, fields: ValueModel[], accessLeve
             return reader(item, { ...options, path: options.path.slice(1) });
         }
 
-        const result = {} as Record<string, Io.Item>;
+        const result = {} as Record<string, Io.Val>;
         for (const propName in readers) {
             const value = readers[propName](item, options);
             if (value !== undefined) {
@@ -183,7 +183,7 @@ function createStructReader(factory: IoFactory, fields: ValueModel[], accessLeve
     }
 }
 
-function createListReader(factory: IoFactory, schema: ValueModel, accessLevel: AccessLevel): Io["read"] {
+function createListReader(factory: IoFactory, schema: ValueModel, accessLevel: AccessLevel): Io.Read {
     // Per specification, fabric scope applies only to lists
     const fabricScoped = schema.effectiveAccess.fabric === Access.Fabric.Scoped;
 

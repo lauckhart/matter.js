@@ -28,12 +28,12 @@ import { createConstraintValidator } from "./validation/constraint.js";
 export function IoValidator(
     schema: Io.Schema,
     factory: IoFactory
-): Io["validate"] {
+): Io.Validate {
     if (schema instanceof ClusterModel) {
         return createStructValidator(schema.attributes, schema, factory) ?? (() => {});
     }
 
-    let validator: Io["validate"] | undefined;
+    let validator: Io.Validate | undefined;
 
     const metatype = schema.effectiveMetatype;
     switch (metatype) {
@@ -82,7 +82,7 @@ export function IoValidator(
     return validator || (() => {});
 }
 
-function createNullValidator(schema: ValueModel, nextValidator?: Io["validate"]): Io["validate"] | undefined {
+function createNullValidator(schema: ValueModel, nextValidator?: Io.Validate): Io.Validate | undefined {
     if (schema.effectiveQuality.nullable !== true) {
         return (value, options) => {
             if (value === null) {
@@ -98,7 +98,7 @@ function createNullValidator(schema: ValueModel, nextValidator?: Io["validate"])
     return nextValidator;
 }
 
-function createEnumValidator(schema: ValueModel): Io["validate"] | undefined {
+function createEnumValidator(schema: ValueModel): Io.Validate | undefined {
     const valid = new Set(
         schema.members.map(member => member.id).filter(e => e !== undefined)
     );
@@ -114,7 +114,7 @@ function createEnumValidator(schema: ValueModel): Io["validate"] | undefined {
     }
 }
 
-function createBitmapValidator(schema: ValueModel): Io["validate"] | undefined {
+function createBitmapValidator(schema: ValueModel): Io.Validate | undefined {
     const fields = {} as Record<string, { schema: ValueModel, max: number }>;
     
     for (const field of schema.members) {
@@ -160,8 +160,8 @@ function createBitmapValidator(schema: ValueModel): Io["validate"] | undefined {
 
 function createSimpleValidator(
     schema: ValueModel,
-    validateType: (value: Io.Item, schema: ValueModel) => void
-): Io["validate"] {
+    validateType: (value: Io.Val, schema: ValueModel) => void
+): Io.Validate {
     const validateConstraint = createConstraintValidator(schema.effectiveConstraint, schema);
 
     return (value, options) => {
@@ -174,10 +174,10 @@ function createStructValidator(
     fields: ValueModel[],
     schema: Io.Schema,
     factory: IoFactory
-): Io["validate"] | undefined {
-    const validators = {} as Record<string, Io["validate"]>;
+): Io.Validate | undefined {
+    const validators = {} as Record<string, Io.Validate>;
 
-    function createPropertyValidator(schema: ValueModel): Io["validate"] {
+    function createPropertyValidator(schema: ValueModel): Io.Validate {
         const name = camelize(schema.name, false);
         if (factory.isGenerating(schema)) {
             return (value) => {
@@ -228,7 +228,7 @@ function createStructValidator(
 function createListValidator(
     schema: ValueModel,
     factory: IoFactory,
-): Io["validate"] | undefined {
+): Io.Validate | undefined {
     const entry = schema.listEntry;
     let validateEntries: undefined | ((list: Io.List) => void);
     if (entry) {

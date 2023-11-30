@@ -8,7 +8,7 @@ import { ValueModel } from "../../../../model/index.js";
 import { ByteArray } from "../../../../util/ByteArray.js";
 import { Io } from "../Io.js";
 
-export function assertNumber(value: Io.Item, schema: Io.Schema): asserts value is number {
+export function assertNumber(value: Io.Val, schema: Io.Schema): asserts value is number {
     if (typeof value === "number") {
         return;
     }
@@ -18,7 +18,7 @@ export function assertNumber(value: Io.Item, schema: Io.Schema): asserts value i
     );
 }
 
-export function assertObject(value: Io.Item, schema: Io.Schema): asserts value is Io.Struct {
+export function assertObject(value: Io.Val, schema: Io.Schema): asserts value is Io.Struct {
     if (typeof value === "object") {
         return;
     }
@@ -28,7 +28,7 @@ export function assertObject(value: Io.Item, schema: Io.Schema): asserts value i
     )
 }
 
-export function assertNumeric(value: Io.Item, schema: ValueModel): asserts value is number | bigint {
+export function assertNumeric(value: Io.Val, schema: ValueModel): asserts value is number | bigint {
     if (typeof value === "number" || typeof value === "bigint") {
         return;
     }
@@ -38,7 +38,7 @@ export function assertNumeric(value: Io.Item, schema: ValueModel): asserts value
     );
 }
 
-export function assertString(value: Io.Item, schema: ValueModel): asserts value is string {
+export function assertString(value: Io.Val, schema: ValueModel): asserts value is string {
     if (typeof value === "string") {
         return;
     }
@@ -48,7 +48,7 @@ export function assertString(value: Io.Item, schema: ValueModel): asserts value 
     );
 }
 
-export function assertBytes(value: Io.Item, schema: ValueModel): asserts value is ByteArray {
+export function assertBytes(value: Io.Val, schema: ValueModel): asserts value is ByteArray {
     if (value instanceof ByteArray) {
         return;
     }
@@ -58,7 +58,7 @@ export function assertBytes(value: Io.Item, schema: ValueModel): asserts value i
     );
 }
 
-export function assertSequence(value: Io.Item, schema: ValueModel): asserts value is string | ByteArray {
+export function assertSequence(value: Io.Val, schema: ValueModel): asserts value is string | ByteArray {
     if (typeof value === "string" || value instanceof ByteArray) {
         return;
     }
@@ -68,7 +68,7 @@ export function assertSequence(value: Io.Item, schema: ValueModel): asserts valu
     );
 }
 
-export function assertArray(value: Io.Item, schema: ValueModel): asserts value is Io.Item[] {
+export function assertArray(value: Io.Val, schema: ValueModel): asserts value is Io.Val[] {
     if (!Array.isArray(value)) {
         throw new Io.DatatypeError(
             schema,

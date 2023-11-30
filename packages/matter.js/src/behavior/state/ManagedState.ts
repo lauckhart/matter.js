@@ -133,7 +133,7 @@ export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.
             }
             
         }
-        
+
         if (isDeepEqual(oldValue, value)) {
             return;
         }

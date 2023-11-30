@@ -37,7 +37,7 @@ export function createConstraintValidator(constraint: Constraint, schema: ValueM
 
         case Metatype.integer:
         case Metatype.float:
-            return (value: Io.Item) => {
+            return (value: Io.Val) => {
                 assertNumeric(value, schema);
                 if (!constraint.test(value)) {
                     throw new ConstraintError(
@@ -49,7 +49,7 @@ export function createConstraintValidator(constraint: Constraint, schema: ValueM
 
         case Metatype.string:
         case Metatype.bytes:
-            return (value: Io.Item) => {
+            return (value: Io.Val) => {
                 assertSequence(value, schema);
                 if (!constraint.test(value.length)) {
                     throw new ConstraintError(
@@ -74,8 +74,8 @@ export function createConstraintValidator(constraint: Constraint, schema: ValueM
  * to the length.  They are special however as they may have sub-constraints
  * that apply to data elements.
  */
-function createArrayConstraintValidator(constraint: Constraint, schema: ValueModel): Io["validate"] {
-    let validateEntryConstraint: Io["validate"] | undefined;
+function createArrayConstraintValidator(constraint: Constraint, schema: ValueModel): Io.Validate {
+    let validateEntryConstraint: Io.Validate | undefined;
     if (constraint.entry) {
         const entrySchema = schema.listEntry;
         if (entrySchema) {

@@ -5,7 +5,6 @@
  */
 
 import type { ClusterType } from "../../cluster/ClusterType.js";
-import type { FabricIndex } from "../../datatype/FabricIndex.js";
 import type { TypeFromSchema } from "../../tlv/TlvSchema.js";
 import type { Behavior } from "../Behavior.js";
 import type { ClusterOf } from "./ClusterBehaviorUtil.js";
@@ -17,7 +16,7 @@ export type ClusterState<C extends ClusterType, B extends Behavior.Type> = Clust
 
 export namespace ClusterState {
     /**
-     * Instance type for ClusterBehavior global state.
+     * Instance type for ClusterBehavior state.
      */
     export type Type<C extends ClusterType, B extends Behavior.Type> =
         // Keep properties *not* from attributes of the old cluster
@@ -26,7 +25,7 @@ export namespace ClusterState {
             PropertiesOf<C>;
 
     /**
-     * Properties a cluster contributes to Global.
+     * Properties a cluster contributes state.
      */
     export type PropertiesOf<C> = PropertiesOfAttributes<ClusterType.AttributesOf<C>>;
 

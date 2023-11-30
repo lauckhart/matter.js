@@ -12,21 +12,25 @@ import { StatusResponseError } from "../../../protocol/interaction/InteractionMe
 import { StatusCode } from "../../../protocol/interaction/InteractionProtocol.js";
 
 export interface Io {
-    read: (value: Io.Item, options?: Io.ReadOptions) => Io.Item;
-    write: (newValue: Io.Item, oldValue: Io.Item, options?: Io.WriteOptions) => Io.Item;
-    validate: (value: Io.Item, options?: Io.ValidateOptions) => Io.Item;
+    read: Io.Read;
+    write: Io.Write;
+    validate: Io.Validate;
 }
 
 export namespace Io {
+    export type Read = (value: Io.Val, options?: Io.ReadOptions) => Io.Val;
+    export type Write = (newValue: Io.Val, oldValue: Io.Val, options?: Io.WriteOptions) => Io.Val;
+    export type Validate = (value: Io.Val, options?: Io.ValidateOptions) => Io.Val;
+
     export type Schema = ClusterModel | ValueModel;
 
     export type Path = number[];
 
-    export type Item = unknown;
+    export type Val = unknown;
 
-    export type Struct = Record<string, Item>;
+    export type Struct = Record<string, Val>;
 
-    export type List = Item[];
+    export type List = Val[];
 
     /**
      * Options common to read and write.
@@ -75,17 +79,13 @@ export namespace Io {
         orMore: boolean;
     }
 
-    export function isNullish(item: Item) {
-        return item === undefined || item === null;
-    }
-
-    export function assertStruct(item: Item): asserts item is Struct {
+    export function assertStruct(item: Val): asserts item is Struct {
         if (typeof item !== "object" || item === null) {
             throw new ImplementationError(`Expected struct value to be an object but was ${typeof item}`);
         }
     }
 
-    export function assertArray(item: Item): asserts item is List {
+    export function assertArray(item: Val): asserts item is List {
         if (!Array.isArray(item)) {
             throw new ImplementationError(`Expected list value to be an array but was ${typeof item}`);
         }
