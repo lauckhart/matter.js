@@ -9,10 +9,11 @@ import { Conformance, FeatureSet, ValueModel } from "../../../../model/index.js"
 import { StatusResponseError } from "../../../../protocol/interaction/InteractionMessenger.js";
 import { StatusCode } from "../../../../protocol/interaction/InteractionProtocol.js";
 import { camelize } from "../../../../util/String.js";
+import { Schema } from "../../Schema.js";
 import { Io } from "../Io.js";
 
 export class ConformanceError extends StatusResponseError {
-    constructor(schema: Io.Schema, ast: Conformance.Ast, message: string) {
+    constructor(schema: Schema, ast: Conformance.Ast, message: string) {
         super(
             `Conformance violated for ${
                 schema.path

@@ -4,15 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ImplementationError, ValidationError } from "../../common/MatterError.js";
-import type { FabricIndex } from "../../datatype/FabricIndex.js";
-import { isDeepEqual } from "../../util/DeepEqual.js";
-import { GeneratedClass } from "../../util/GeneratedClass.js";
-import { Observable } from "../../util/Observable.js";
-import { camelize } from "../../util/String.js";
-import type { InvocationContext } from "../InvocationContext.js";
-import type { ClusterEvents } from "../cluster/ClusterEvents.js";
-import { State } from "./State.js";
+import { ValidationError } from "../../../common/MatterError.js";
+import type { FabricIndex } from "../../../datatype/FabricIndex.js";
+import { isDeepEqual } from "../../../util/DeepEqual.js";
+import { GeneratedClass } from "../../../util/GeneratedClass.js";
+import { Observable } from "../../../util/Observable.js";
+import { camelize } from "../../../util/String.js";
+import type { InvocationContext } from "../../InvocationContext.js";
+import type { ClusterEvents } from "../../cluster/ClusterEvents.js";
+import { State } from "../State.js";
+import { Io } from "../io/Io.js";
 
 /**
  * A cache of managed state implementation classes.
@@ -40,8 +41,6 @@ interface Internal extends State.Internal {
  * This is a pure function for {@link type}.  It caches the generated class.
  */
 export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.Owner = {}) {
-    const fields = type.fields;
-
     let className, diagnosticsName: string;
     if (owner.name) {
         className = `${camelize(owner.name, true)}$${type.name}`;
@@ -85,9 +84,9 @@ export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.
 
         instanceDescriptors,
         staticDescriptors: {
-            fields: {
+            schema: {
                 get() {
-                    return type.fields;
+                    return type.schema;
                 },
 
                 enumerable: true,
@@ -98,28 +97,6 @@ export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.
     cache.set(type, managed);
 
     return managed as ManagedState.Type<T>;
-
-    type ScopedValue = { fabricIndex: FabricIndex }[];
-
-    function fabricFor(context?: InvocationContext) {
-        const fabric = context?.fabric;
-        if (fabric === undefined) {
-            throw new ValidationError(`Illegal access to fabric-scoped value outside fabric scope`);
-        }
-        return fabric.fabricIndex;
-    }
-
-    function filter(value: any, fabricId: FabricIndex) {
-        if (value === undefined || value === null) {
-            return value;
-        }
-
-        if (!Array.isArray(value)) {
-            throw new ImplementationError("Fabric scoped value is not an array");
-        }
-
-        return (value as ScopedValue).filter(e => e.fabricIndex === fabricId);
-    }
 
     function setter(this: Internal, name: string, value: any, context?: InvocationContext) {
         const field = fields[name];
@@ -172,7 +149,7 @@ export namespace ManagedState {
 
         set: typeof State.set;
         with: typeof State.with;
-        fields: State.FieldOptions;
+        io: Io;
     };
 
     export interface Owner {

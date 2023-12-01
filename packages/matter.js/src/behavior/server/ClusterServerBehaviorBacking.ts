@@ -10,17 +10,22 @@ import { AttributeServer, FabricScopedAttributeServer } from "../../cluster/serv
 import { ClusterServer } from "../../cluster/server/ClusterServer.js";
 import type { ClusterServerObj, CommandHandler, SupportedEventsList } from "../../cluster/server/ClusterServerTypes.js";
 import { ImplementationError } from "../../common/MatterError.js";
-import type { FabricIndex } from "../../datatype/FabricIndex.js";
 import { EndpointInterface } from "../../endpoint/EndpointInterface.js";
 import type { Part } from "../../endpoint/Part.js";
-import { SecureSession, assertSecureSession } from "../../session/SecureSession.js";
+import { Transaction } from "../../endpoint/transaction/Transaction.js";
+import { Logger } from "../../log/Logger.js";
+import { StatusResponseError } from "../../protocol/interaction/InteractionMessenger.js";
+import { SecureSession, } from "../../session/SecureSession.js";
 import { Session } from "../../session/Session.js";
-import { isDeepEqual } from "../../util/DeepEqual.js";
+import { Behavior } from "../Behavior.js";
 import { InvocationContext } from "../InvocationContext.js";
 import type { ClusterBehavior } from "../cluster/ClusterBehavior.js";
 import { ClusterEvents } from "../cluster/ClusterEvents.js";
 import { ValidatedElements } from "../cluster/ValidatedElements.js";
+import { State } from "../state/State.js";
 import { ServerBehaviorBacking } from "./ServerBehaviorBacking.js";
+
+const logger = Logger.get("ClusterServer");
 
 /**
  * Backing for cluster behaviors on servers.
@@ -45,7 +50,6 @@ export class ClusterServerBehaviorBacking extends ServerBehaviorBacking {
             const { get, set } = createAttributeAccessors(
                 this,
                 name,
-                type.cluster.attributes[name].fabricScoped
             );
             handlers[`${name}AttributeGetter`] = get;
             handlers[`${name}AttributeSetter`] = set;
@@ -72,69 +76,116 @@ export class ClusterServerBehaviorBacking extends ServerBehaviorBacking {
     }
 }
 
-function createCommandHandler(backing: ClusterServerBehaviorBacking, name: string): CommandHandler<any, any, any> {
-    return args => {
-        const context: InvocationContext = {
-            fabric: args.session.getAssociatedFabric(),
-            session: args.session,
-            message: args.message,
-        };
+function transact<T>(
+    backing: ClusterServerBehaviorBacking,
+    session: Session<MatterDevice> | undefined,
+    options: InvocationContext,
+    fn: (behavior: Behavior) => T
+): T {
+    const fabric = session?.isSecure() ? session.getAssociatedFabric() : undefined;
+    const transaction = new Transaction(backing.part.transactionCoordinator);
 
-        const agent = backing.part.getAgent(context);
-        const behavior = agent.get(backing.type);
-        return (behavior as unknown as Record<string, (arg: any) => any>)[name](args.request);
+    const context: InvocationContext = {
+        ...options,
+        fabric,
+        session,
+        transaction,
+    }
+
+    const agent = backing.part.getAgent(context);
+
+    let aborted = false;
+    try {
+        return fn(agent.get(backing.type));
+    } catch (e) {
+        aborted = true;
+
+        if (transaction.status !== Transaction.Status.Finished) {
+            try {
+                transaction.rollback();
+            } catch (e) {
+                logger.error(`Error rolling back transaction for ${backing.part.description}:`, e);
+            }
+        }
+
+        throw e;
+    } finally {
+        if (!aborted) {
+            try {
+                transaction.commit();
+            } catch (e) {
+                if (e instanceof StatusResponseError) {
+                    throw e;
+                }
+
+                const error = e instanceof Error ? e : new Error(`${e}`);
+                error.message =
+                    `Error committing transaction for ${
+                        backing.part.description
+                    }: ${
+                        error.message
+                    }`;
+
+                throw error;
+            }
+        }
+    }
+}
+
+function createCommandHandler(
+    backing: ClusterServerBehaviorBacking,
+    name: string
+): CommandHandler<any, any, any> {
+    return ({ request, session, message }) => {
+        transact(
+            backing,
+            session,
+            { message },
+            behavior => {
+                return (behavior as unknown as Record<string, (arg: any) => any>)[name](request);
+            }
+        )
     };
 }
 
-type ScopedValue = { fabricIndex: FabricIndex }[];
-
 function createAttributeAccessors(
     backing: ClusterServerBehaviorBacking,
-    name: string,
-    fabric: boolean,
+    name: string
 ): {
     get: (session?: Session<MatterDevice>, endpoint?: EndpointInterface, isFabricFiltered?: boolean) => any;
     set: (value: any, session?: Session<MatterDevice>, endpoint?: EndpointInterface) => boolean;
 } {
-    if (fabric) {
-        return {
-            get(session, _endpoint, isFabricFiltered) {
-                const value = backing.state[name] as ScopedValue | undefined;
-                if (!value || !isFabricFiltered) {
-                    return value;
-                }
+    return {
+        get(session, _endpoint, isFabricFiltered) {
+            return transact(
+                backing,
+                session,
+                { fabricFiltered: isFabricFiltered },
+                behavior => {
+                    const state = behavior.state as State.Internal;
 
-                const fabric = session?.getAssociatedFabric();
-                if (!fabric) {
-                    throw new ImplementationError(
-                        `Fabric filtering requested for ${backing.type.name}.state.${name} outside fabric context`
-                    );
+                    return state[State.GET](name);
                 }
-                assertSecureSession(session);
-                const fabric = session?.getAssociatedFabric();
-                if (fabric === undefined) {
-                    throw new 
+            );
+        },
+
+        set(value, session) {
+            return transact(
+                backing,
+                session,
+                {},
+                behavior => {
+                    const state = behavior.state as State.Internal;
+
+                    state[State.SET](name, value);
+
+                    // If the transaction is a write transaction, report that
+                    // the attribute is updated
+                    return behavior.context.transaction?.status === Transaction.Status.Exclusive;
                 }
-                
-                return value.filter(v => v.fabricIndex = session?.getAssociatedFabric())
-            }
+            )
         }
     }
-
-    return {
-        get() {
-            return backing.state[name];
-        },
-
-        set(value) {
-            const current = backing.state[name];
-            if (isDeepEqual(current, value)) {
-                return false;
-            }
-            backing.state[name] = value;
-            return true;
-        },
-    };
 }
 
 function createChangeHandler(backing: ClusterServerBehaviorBacking, name: string) {

@@ -4,17 +4,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AccessLevel } from "../../../cluster/Cluster.js";
-import { ImplementationError, InternalError } from "../../../common/MatterError.js";
-import { StatusResponseError } from "../../../protocol/interaction/InteractionMessenger.js";
-import { StatusCode } from "../../../protocol/interaction/InteractionProtocol.js";
-import { Access, AttributeModel, ClusterModel, FieldValue, Metatype, ValueModel } from "../../../model/index.js";
-import { Io } from "./Io.js";
-import { IoFactory } from "./IoFactory.js";
-import { camelize } from "../../../util/String.js";
-import { ByteArray } from "../../../util/ByteArray.js";
+import { AccessLevel } from "../../../../cluster/Cluster.js";
+import { ImplementationError, InternalError } from "../../../../common/MatterError.js";
+import { StatusResponseError } from "../../../../protocol/interaction/InteractionMessenger.js";
+import { StatusCode } from "../../../../protocol/interaction/InteractionProtocol.js";
+import { Access, AttributeModel, ClusterModel, FieldValue, Metatype, ValueModel } from "../../../../model/index.js";
+import { Io } from "../Io.js";
+import { IoFactory } from "../IoFactory.js";
+import { camelize } from "../../../../util/String.js";
+import { ByteArray } from "../../../../util/ByteArray.js";
+import { assertArray, assertStruct } from "./rw-util.js";
+import { Schema } from "../../Schema.js";
 
-export function IoWriter(schema: Io.Schema, factory: IoFactory): Io.Write {
+export function IoWriter(schema: Schema, factory: IoFactory): Io.Write {
     if (schema instanceof ClusterModel) {
         return createStructWriter(factory, factory.attributes, schema);
     }
@@ -175,7 +177,7 @@ type PropertyWriter = ReturnType<typeof createPropertyWriter>;
 function createPropertyWriters(
     factory: IoFactory,
     fields: ValueModel[],
-    writerIdIndex: Record<number, PropertyWriter>
+    writerIndex: Record<string | number, PropertyWriter>
 ) {
     const writers = {} as Record<string, PropertyWriter>;
 
@@ -184,26 +186,27 @@ function createPropertyWriters(
         const writer = createPropertyWriter(factory, field, fieldName);
         writers[fieldName] = writer;
 
+        writerIndex[fieldName] = writer;
         const childId = field.effectiveId;
         if (childId !== undefined) {
-            writerIdIndex[childId] = writer;
+            writerIndex[childId] = writer;
         }
     }
 
     return writers;
 }
 
-function createStructWriter(factory: IoFactory, fields: ValueModel[], schema: Io.Schema): Io.Write {
-    const writerIdIndex = {} as Record<number, PropertyWriter>;
-    const writers = createPropertyWriters(factory, fields, writerIdIndex);
+function createStructWriter(factory: IoFactory, fields: ValueModel[], schema: Schema): Io.Write {
+    const writerIndex = {} as Record<string | number, PropertyWriter>;
+    const writers = createPropertyWriters(factory, fields, writerIndex);
 
     const fabricUnawareWriter: Io.Write = (newValue, oldValue, options) => {
         // Write to single field
         if (options?.path?.length) {
-            Io.assertStruct(oldValue);
+            assertStruct(oldValue);
             
             // Obtain the writer
-            const writer = writerIdIndex[options.path[0]];
+            const writer = writerIndex[options.path[0]];
             if (writer === undefined) {
                 throw new StatusResponseError(
                     `Write to unknown struct property ${options.path[0]}`,
@@ -224,7 +227,7 @@ function createStructWriter(factory: IoFactory, fields: ValueModel[], schema: Io
                 "Struct value is not an object"
             );
         }
-        Io.assertStruct(newValue);
+        assertStruct(newValue);
 
         const result = {} as Io.Struct;
 
@@ -251,7 +254,7 @@ function createStructWriter(factory: IoFactory, fields: ValueModel[], schema: Io
             // This shouldn't be possible because the object should be in a
             // fabric-filtered list but this acts as fallback protection
             if (options?.path?.length && options.accessingFabric !== undefined) {
-                Io.assertStruct(oldValue);
+                assertStruct(oldValue);
                 if (oldValue.fabricIndex !== undefined && oldValue.fabricIndex !== options.accessingFabric) {
                     throw new StatusResponseError(
                         "Attempt to update fabric-scoped object for other fabric",
@@ -315,7 +318,7 @@ function createListWriter(factory: IoFactory, schema: ValueModel): Io.Write {
                 return value;
             }
 
-            Io.assertStruct(value);
+            assertStruct(value);
 
             if (value.fabricIndex === undefined) {
                 value.fabricIndex = options?.accessingFabric;
@@ -365,13 +368,13 @@ function createListWriter(factory: IoFactory, schema: ValueModel): Io.Write {
             if (oldValue === undefined || oldValue === null) {
                 oldValue = [];
             } else {
-                Io.assertArray(oldValue);
+                assertArray(oldValue);
             }
 
             // The updated list has all out-of-scope entries from the old list
             // plus any entries contributed by the new list
             const oldEntries = (oldValue as Io.List).filter(e => {
-                Io.assertStruct(e);
+                assertStruct(e);
                 return e.fabricIndex !== options.accessingFabric;
             });
 
@@ -386,10 +389,19 @@ function createListWriter(factory: IoFactory, schema: ValueModel): Io.Write {
         if (oldValue === undefined || oldValue === null) {
             oldValue = [] as Io.List;
         }
-        Io.assertArray(oldValue);
+        assertArray(oldValue);
         
         // Obtain the target index
         let targetIndex = options.path[0];
+        if (typeof targetIndex === "string") {
+            targetIndex = Number.parseInt(targetIndex);
+            if (Number.isNaN(targetIndex)) {
+                throw new StatusResponseError(
+                    "List index is non-numeric",
+                    StatusCode.InvalidAction
+                )
+            }
+        }
         if (targetIndex < 0) {
             throw new StatusResponseError(
                 "List index must be positive",
@@ -404,7 +416,7 @@ function createListWriter(factory: IoFactory, schema: ValueModel): Io.Write {
             let listIndex = 0;
             for (; listIndex < oldValue.length; listIndex++) {
                 const entry = oldValue[listIndex];
-                Io.assertStruct(entry);
+                assertStruct(entry);
                 if (entry.fabrixIndex === options.accessingFabric) {
                     if (++fabricIndex === targetIndex) {
                         break;

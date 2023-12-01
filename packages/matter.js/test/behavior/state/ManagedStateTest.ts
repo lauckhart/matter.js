@@ -5,7 +5,7 @@
  */
 
 import { Behavior } from "../../../src/behavior/Behavior.js";
-import { ManagedState } from "../../../src/behavior/state/ManagedState.js";
+import { ManagedState } from "../../../src/behavior/state/managed/ManagedState.js";
 import { State } from "../../../src/behavior/state/State.js";
 import { Observable } from "../../../src/util/Observable.js";
 

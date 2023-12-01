@@ -5,13 +5,22 @@
  */
 
 import { AccessLevel } from "../../../cluster/Cluster.js";
-import { ImplementationError } from "../../../common/MatterError.js";
 import { FabricIndex } from "../../../datatype/FabricIndex.js";
-import { ClusterModel, ValueModel } from "../../../model/index.js";
 import { StatusResponseError } from "../../../protocol/interaction/InteractionMessenger.js";
 import { StatusCode } from "../../../protocol/interaction/InteractionProtocol.js";
+import { Schema } from "../Schema.js";
+import type { IoFactory } from "./IoFactory.js";
 
+/**
+ * An Io implements schema-based I/O operations to state.  This includes
+ * read, write and validation.
+ * 
+ * Note this API performs I/O against the in-memory structure.  It does not
+ * involve disk I/O or any other type of persistence.
+ */
 export interface Io {
+    factory: IoFactory;
+    schema: Schema;
     read: Io.Read;
     write: Io.Write;
     validate: Io.Validate;
@@ -20,11 +29,9 @@ export interface Io {
 export namespace Io {
     export type Read = (value: Io.Val, options?: Io.ReadOptions) => Io.Val;
     export type Write = (newValue: Io.Val, oldValue: Io.Val, options?: Io.WriteOptions) => Io.Val;
-    export type Validate = (value: Io.Val, options?: Io.ValidateOptions) => Io.Val;
+    export type Validate = (value: Io.Val, options?: Io.ValidateOptions) => void;
 
-    export type Schema = ClusterModel | ValueModel;
-
-    export type Path = number[];
+    export type Path = (string | number)[];
 
     export type Val = unknown;
 
@@ -79,20 +86,8 @@ export namespace Io {
         orMore: boolean;
     }
 
-    export function assertStruct(item: Val): asserts item is Struct {
-        if (typeof item !== "object" || item === null) {
-            throw new ImplementationError(`Expected struct value to be an object but was ${typeof item}`);
-        }
-    }
-
-    export function assertArray(item: Val): asserts item is List {
-        if (!Array.isArray(item)) {
-            throw new ImplementationError(`Expected list value to be an array but was ${typeof item}`);
-        }
-    }
-
     export class DatatypeError extends StatusResponseError {
-        constructor(schema: Io.Schema, message: string) {
+        constructor(schema: Schema, message: string) {
             super(
                 `Error validating ${
                     schema.path

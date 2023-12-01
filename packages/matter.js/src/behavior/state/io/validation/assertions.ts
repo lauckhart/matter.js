@@ -6,9 +6,10 @@
 
 import { ValueModel } from "../../../../model/index.js";
 import { ByteArray } from "../../../../util/ByteArray.js";
+import { Schema } from "../../Schema.js";
 import { Io } from "../Io.js";
 
-export function assertNumber(value: Io.Val, schema: Io.Schema): asserts value is number {
+export function assertNumber(value: Io.Val, schema: Schema): asserts value is number {
     if (typeof value === "number") {
         return;
     }
@@ -18,7 +19,7 @@ export function assertNumber(value: Io.Val, schema: Io.Schema): asserts value is
     );
 }
 
-export function assertObject(value: Io.Val, schema: Io.Schema): asserts value is Io.Struct {
+export function assertObject(value: Io.Val, schema: Schema): asserts value is Io.Struct {
     if (typeof value === "object") {
         return;
     }

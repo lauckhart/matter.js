@@ -8,11 +8,12 @@ import { InternalError } from "../../../../common/MatterError.js";
 import { Constraint, Metatype, ValueModel } from "../../../../model/index.js";
 import { StatusResponseError } from "../../../../protocol/interaction/InteractionMessenger.js";
 import { StatusCode } from "../../../../protocol/interaction/InteractionProtocol.js";
+import { Schema } from "../../Schema.js";
 import { Io } from "../Io.js";
 import { assertArray, assertNumeric, assertSequence } from "./assertions.js";
 
 export class ConstraintError extends StatusResponseError {
-    constructor(schema: Io.Schema, message: string) {
+    constructor(schema: Schema, message: string) {
         super(
             `Error validating ${
                 schema.path

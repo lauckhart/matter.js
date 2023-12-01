@@ -7,6 +7,7 @@
 import { InternalError } from "../../../common/MatterError.js";
 import { ClusterModel, Metatype, ValueModel } from "../../../model/index.js";
 import { camelize } from "../../../util/String.js";
+import { Schema } from "../Schema.js";
 import { Io } from "./Io.js";
 import { IoFactory } from "./IoFactory.js";
 import {
@@ -26,7 +27,7 @@ import { createConstraintValidator } from "./validation/constraint.js";
  * @param factory used to retrieve validators for sub-properties
  */
 export function IoValidator(
-    schema: Io.Schema,
+    schema: Schema,
     factory: IoFactory
 ): Io.Validate {
     if (schema instanceof ClusterModel) {
@@ -172,7 +173,7 @@ function createSimpleValidator(
 
 function createStructValidator(
     fields: ValueModel[],
-    schema: Io.Schema,
+    schema: Schema,
     factory: IoFactory
 ): Io.Validate | undefined {
     const validators = {} as Record<string, Io.Validate>;

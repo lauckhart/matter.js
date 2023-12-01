@@ -248,6 +248,10 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
         return this.#owner.getAncestor(type);
     }
 
+    get transactionCoordinator() {
+        return this.owner.transactionCoordinator;
+    }
+
     initializeBehavior(part: Part, behavior: Behavior.Type): BehaviorBacking {
         return this.owner.initializeBehavior(part, behavior);
     }

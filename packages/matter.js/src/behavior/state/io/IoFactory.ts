@@ -4,33 +4,34 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AttributeModel, ClusterModel, ElementTag, FeatureSet, Matter, ValueModel } from "../../../model/index.js";
-import { IoWriter } from "./IoWriter.js";
+import { ClusterModel, ElementTag, FeatureSet, Matter, ValueModel, Globals, AttributeModel } from "../../../model/index.js";
+import { IoWriter } from "./rw/writer.js";
 import { Io } from "./Io.js";
-import { IoReader } from "./IoReader.js";
+import { IoReader } from "./rw/reader.js";
 import { InternalError } from "../../../common/MatterError.js";
 import { ClusterType } from "../../../cluster/ClusterType.js";
 import { IoValidator } from "./IoValidator.js";
+import { Schema } from "../Schema.js";
 
 /**
  * We cache factories based on the schema and active features.
  */
-const factoryCache = new WeakMap<ClusterModel, Map<string, IoFactory>>();
+const factoryCache = new WeakMap<Schema, Map<string, IoFactory>>();
 
 /**
  * IoFactory manages I/O implementations.
  */
 export class IoFactory {
-    #generating = new Set<ValueModel | ClusterModel>();
-    #cache = new WeakMap<ValueModel | ClusterModel, Io>();
+    #generating = new Set<Schema>();
+    #cache = new WeakMap<Schema, Io>();
     #featureMap: ValueModel;
     #supportedFeatures: FeatureSet;
-    #attributes: AttributeModel[];
+    #fields: ValueModel[];
 
-    private constructor(featureMap: ValueModel, supportedFeatures: FeatureSet, attributes: AttributeModel[]) {
+    private constructor(featureMap: ValueModel, supportedFeatures: FeatureSet, fields: ValueModel[]) {
         this.#featureMap = featureMap;
         this.#supportedFeatures = supportedFeatures;
-        this.#attributes = attributes;
+        this.#fields = fields;
     }
 
     get featureMap() {
@@ -42,7 +43,7 @@ export class IoFactory {
     }
 
     get attributes() {
-        return this.#attributes;
+        return this.#fields;
     }
 
     /**
@@ -83,9 +84,16 @@ export class IoFactory {
             }
         }
     
-        const featureMap = config.featureMap ?? schema.featureMap;
+        let featureMap = config.featureMap;
+        if (featureMap === undefined) {
+            if (schema instanceof ClusterModel) {
+                featureMap = schema.featureMap;
+            } else {
+                featureMap = new AttributeModel(Globals.FeatureMap);
+            }
+        }
 
-        let attributes = schema.all(AttributeModel);
+        let attributes = schema.all(ValueModel);
         if (cluster) {
             const supportedAttributeIds = new Set(Object.values(cluster.attributes).map(a => a.id as number));
             attributes = attributes.filter(a => a.id !== undefined && supportedAttributeIds.has(a.id));
@@ -107,14 +115,18 @@ export class IoFactory {
      * @param schema the model describing the record type
      * @returns the I/O implementation
      */
-    get(schema: Io.Schema): Io {
+    get(schema: Schema): Io {
         let io = this.#cache.get(schema);
         if (io === undefined) {
             if (this.isGenerating(schema)) {
                 throw new InternalError(`Recursive structure generation requires lazy loading of ${schema.name}`);
             }
+
             this.#generating.add(schema);
+
             io = {
+                factory: this,
+                schema: schema,
                 read: IoReader(schema, this),
                 write: IoWriter(schema, this),
                 validate: IoValidator(schema, this),
@@ -125,7 +137,7 @@ export class IoFactory {
         return io;
     }
 
-    isGenerating(schema: ClusterModel | ValueModel) {
+    isGenerating(schema: Schema) {
         return this.#generating.has(schema);
     }
 }
@@ -135,6 +147,6 @@ export namespace IoFactory {
         cluster?: ClusterType;
         featureMap?: ValueModel;
         supportedFeatures?: FeatureSet;
-        schema?: ClusterModel;
+        schema?: Schema;
     }
 }

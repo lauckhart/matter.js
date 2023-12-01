@@ -4,15 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AccessLevel } from "../../../cluster/Cluster.js";
-import { ImplementationError } from "../../../common/MatterError.js";
-import { FabricIndex } from "../../../datatype/FabricIndex.js";
-import { StatusResponseError } from "../../../protocol/interaction/InteractionMessenger.js";
-import { StatusCode } from "../../../protocol/interaction/InteractionProtocol.js";
-import { camelize } from "../../../util/String.js";
-import { Access, ClusterModel, Metatype, ValueModel,  } from "../../../model/index.js";
-import { Io } from "./Io.js";
-import type { IoFactory } from "./IoFactory.js";
+import { AccessLevel } from "../../../../cluster/Cluster.js";
+import { ImplementationError } from "../../../../common/MatterError.js";
+import { FabricIndex } from "../../../../datatype/FabricIndex.js";
+import { StatusResponseError } from "../../../../protocol/interaction/InteractionMessenger.js";
+import { StatusCode } from "../../../../protocol/interaction/InteractionProtocol.js";
+import { Access, ClusterModel, Metatype, ValueModel,  } from "../../../../model/index.js";
+import { Io } from "../Io.js";
+import type { IoFactory } from "../IoFactory.js";
+import { assertArray, assertStruct, getListIndex } from "./rw-util.js";
+import { camelize } from "../../../../util/String.js";
+import { Schema } from "../../Schema.js";
 
 /**
  * Generate a function that performs a data read.  The read transforms the
@@ -23,7 +25,7 @@ import type { IoFactory } from "./IoFactory.js";
  * @param factory used by the reader to generate sub-value readers
  * @returns the read function
  */
-export function IoReader(schema: Io.Schema, factory: IoFactory): Io.Read {    
+export function IoReader(schema: Schema, factory: IoFactory): Io.Read {    
     const accessLevel = accessLevelFor(schema);
     if (schema instanceof ClusterModel) {
         return createStructReader(factory, factory.attributes, accessLevel);
@@ -50,7 +52,7 @@ export function IoReader(schema: Io.Schema, factory: IoFactory): Io.Read {
     }
 }
 
-function accessLevelFor(schema: Io.Schema) {
+function accessLevelFor(schema: Schema) {
     if (schema instanceof ClusterModel) {
         return AccessLevel.View;
     }
@@ -86,7 +88,7 @@ function createAtomReader(accessLevel: AccessLevel): Io.Read {
     }
 }
 
-function createPropertyReader(factory: IoFactory, schema: Io.Schema, fieldName: string) {
+function createPropertyReader(factory: IoFactory, schema: Schema, fieldName: string) {
     let reader = factory.isGenerating(schema) ? undefined : factory.get(schema).read;
     const accessLevel = accessLevelFor(schema);
 
@@ -120,7 +122,7 @@ function createPropertyReader(factory: IoFactory, schema: Io.Schema, fieldName: 
 
 type PropertyReader = ReturnType<typeof createPropertyReader>;
 
-function createPropertyReaders(factory: IoFactory, fields: ValueModel[], readerIndex: Record<number, PropertyReader>) {
+function createPropertyReaders(factory: IoFactory, fields: ValueModel[], readerIndex: Record<number | string, PropertyReader>) {
     const readers = {} as Record<string, ReturnType<typeof createPropertyReader>>;
 
     for (const field of fields) {
@@ -128,6 +130,7 @@ function createPropertyReaders(factory: IoFactory, fields: ValueModel[], readerI
         const reader = createPropertyReader(factory, field, fieldName);
         readers[fieldName] = reader;
 
+        readerIndex[fieldName] = reader;
         const childId = field.effectiveId;
         if (childId !== undefined) {
             readerIndex[childId] = reader;
@@ -138,7 +141,7 @@ function createPropertyReaders(factory: IoFactory, fields: ValueModel[], readerI
 }
 
 function createStructReader(factory: IoFactory, fields: ValueModel[], accessLevel: AccessLevel): Io.Read {
-    const readerIndex = {} as Record<number, PropertyReader>;
+    const readerIndex = {} as Record<number | string, PropertyReader>;
     const readers = createPropertyReaders(factory, fields, readerIndex);
 
     return (item, options) => {
@@ -148,7 +151,7 @@ function createStructReader(factory: IoFactory, fields: ValueModel[], accessLeve
             return item;
         }
 
-        Io.assertStruct(item);
+        assertStruct(item);
 
         const owningFabric = item.fabricIndex as FabricIndex | undefined;
         if (typeof owningFabric === "number") {
@@ -210,23 +213,16 @@ function createListReader(factory: IoFactory, schema: ValueModel, accessLevel: A
                 throw new ImplementationError("Fabric filtering requested without accessing fabric");
             }
 
-            Io.assertArray(item);
+            assertArray(item);
             item = item.filter(child => {
-                Io.assertStruct(child);
+                assertStruct(child);
                 child.fabricIndex === accessingFabric
             });
         }
-        Io.assertArray(item);
+        assertArray(item);
 
         if (options?.path?.length) {
-            let index = options?.path[0];
-
-            if (index < 0) {
-                throw new StatusResponseError(
-                    `List index ${index} is negative`,
-                    StatusCode.UnsupportedAttribute
-                )
-            }
+            const index = getListIndex(options.path);
 
             if (index > item.length) {
                 throw new StatusResponseError(

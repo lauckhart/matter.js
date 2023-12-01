@@ -5,8 +5,15 @@
  */
 
 import { ImplementationError } from "../../common/MatterError.js";
+import { Transaction } from "../../endpoint/transaction/Transaction.js";
 import { GeneratedClass } from "../../util/GeneratedClass.js";
 import type { InvocationContext } from "../InvocationContext.js";
+import { Schema } from "./Schema.js";
+
+export const SCHEMA = Symbol("schema");
+export interface StaticInternal extends State.Type {
+    [SCHEMA]: Schema
+}
 
 /**
  * Mutable state for a behavior.
@@ -53,32 +60,33 @@ export class State {
      * which overrides and/or adds properties.
      */
     static with<This extends State.Type, T extends object>(this: This, defaults: T, options?: State.WithOptions) {
-        const staticProps = {} as { fields?: State.FieldOptions };
-        if (options?.fields) {
-            staticProps.fields = options.fields;
-        }
-
         return GeneratedClass({
             name: options?.name ?? `${this.name}$`,
             base: this,
             instanceProperties: defaults,
-            staticProperties: staticProps,
         }) as State.Type<InstanceType<This> & T>;
     }
 
     /**
-     * Derivatives may customize handling of state values here.  Fields are
-     * optional and convey field-level detail that cannot be captured using
-     * standard JS semantics.
+     * State structure and legal I/O operations are determined using Matter
+     * schema.
      */
-    static fields = {} as State.FieldOptions;
+    static get schema() {
+        const internal = this as unknown as StaticInternal;
+        if (internal[SCHEMA] === undefined) {
+            internal[SCHEMA] = Schema.Simple(Object.keys(new this));
+        }
+        return (this as unknown as StaticInternal)[SCHEMA];
+    }
 }
 
 export namespace State {
     export const GET = Symbol("GET");
     export const SET = Symbol("SET");
-    export const INITIALIZE = Symbol("SET");
+    export const INITIALIZE = Symbol("INITIALIZE");
     export const CONTEXT = Symbol("CONTEXT");
+    export const TRANSACTION = Symbol("TRANSACTION");
+    export const COMMIT = Symbol("COMMIT");
 
     /**
      * This "internal" view of state exposes methods we don't want to bother
@@ -111,34 +119,19 @@ export namespace State {
         [INITIALIZE](values?: Record<string, any>, context?: InvocationContext): void;
     }
 
-    /**
-     * The base State class does not use these but it carries as metadata for
-     * configuration of ManagedState.
-     */
-    export interface FieldConfiguration {
-        fixed?: boolean;
-        fabricScoped?: boolean;
-        validate?: (value: any, context: InvocationContext) => void;
-    }
-
     export type WithOptions = {
         name?: string;
-        fields?: FieldOptions;
+        schema?: Schema;
     };
-
-    /**
-     * A set of field options.
-     */
-    export type FieldOptions = Record<string, FieldConfiguration | undefined>;
 
     /**
      * Generic state class type.
      */
     export type Type<T extends object = {}> = {
         new (values?: Record<string, any>, context?: InvocationContext): State & T;
+        schema: Schema;
         set: typeof State.set;
         with: typeof State.with;
-        fields: FieldOptions;
     };
 }
 
@@ -165,4 +158,10 @@ Object.assign(State.prototype, {
             }
         }
     },
+
+    [State.COMMIT]() {
+        throw new ImplementationError(
+            "Transactionality unsupported on unmanaged state"
+        );
+    }
 });
