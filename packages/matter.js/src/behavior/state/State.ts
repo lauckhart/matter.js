@@ -5,7 +5,6 @@
  */
 
 import { ImplementationError } from "../../common/MatterError.js";
-import { Transaction } from "../../endpoint/transaction/Transaction.js";
 import { GeneratedClass } from "../../util/GeneratedClass.js";
 import type { InvocationContext } from "../InvocationContext.js";
 import { Schema } from "./Schema.js";
@@ -81,8 +80,6 @@ export class State {
 }
 
 export namespace State {
-    export const GET = Symbol("GET");
-    export const SET = Symbol("SET");
     export const INITIALIZE = Symbol("INITIALIZE");
     export const CONTEXT = Symbol("CONTEXT");
     export const TRANSACTION = Symbol("TRANSACTION");
@@ -98,18 +95,6 @@ export namespace State {
          * Information about the context in which the state is accessed.
          */
         [CONTEXT]: InvocationContext | undefined;
-
-        /**
-         * Low-level getter.  This operates the same as getting an individual
-         * property but allows for override of the invocation context.
-         */
-        [GET](name: string, context?: InvocationContext): any;
-
-        /**
-         * Low-level setter.  This operates the same as setting an individual
-         * property but allows for override of the invocation context.
-         */
-        [SET](name: string, value: any, context?: InvocationContext): void;
 
         /**
          * Initialize.  This is separate from construction so we can seal the
@@ -136,14 +121,6 @@ export namespace State {
 }
 
 Object.assign(State.prototype, {
-    [State.GET](name: string) {
-        return (this as any)[name];
-    },
-
-    [State.SET](name: string, value: any) {
-        (this as any)[name] = value;
-    },
-
     [State.INITIALIZE](this: State.Internal, values?: Record<string, any>, context?: InvocationContext): void {
         Object.seal(this);
 

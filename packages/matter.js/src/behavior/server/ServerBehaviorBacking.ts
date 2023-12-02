@@ -7,7 +7,7 @@
 import { BehaviorBacking } from "../BehaviorBacking.js";
 import { InvocationContext } from "../InvocationContext.js";
 import { LifecycleBehavior } from "../definitions/lifecycle/LifecycleBehavior.js";
-import { ManagedState } from "../state/managed/ManagedState.js";
+import { ManagedState } from "../state/ManagedState.js";
 import { State } from "../state/State.js";
 
 /**

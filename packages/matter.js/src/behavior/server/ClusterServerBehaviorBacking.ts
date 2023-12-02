@@ -12,7 +12,7 @@ import type { ClusterServerObj, CommandHandler, SupportedEventsList } from "../.
 import { ImplementationError } from "../../common/MatterError.js";
 import { EndpointInterface } from "../../endpoint/EndpointInterface.js";
 import type { Part } from "../../endpoint/Part.js";
-import { Transaction } from "../../endpoint/transaction/Transaction.js";
+import { Transaction } from "../state/transaction/Transaction.js";
 import { Logger } from "../../log/Logger.js";
 import { StatusResponseError } from "../../protocol/interaction/InteractionMessenger.js";
 import { SecureSession, } from "../../session/SecureSession.js";

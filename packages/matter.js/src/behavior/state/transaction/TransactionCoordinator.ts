@@ -4,17 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError, MatterError } from "../../common/MatterError.js";
-import { Part } from "../Part.js";
+import { InternalError, MatterError } from "../../../common/MatterError.js";
 import { Transaction, TransactionFlowError } from "./Transaction.js";
 
-interface PartState {
+interface ParticipantState {
     transactions: Set<Transaction>;
     waitingOn?: Set<Transaction>;
     exclusive?: Transaction;
 }
 
-interface ActivePartState extends PartState {
+interface ActivePartState extends ParticipantState {
     exclusive: Transaction;
 }
 
@@ -34,29 +33,29 @@ export class TransactionDeadlockError extends MatterError {}
  * Internal class that manages interactions between transactions.
  */
 export class TransactionCoordinator {
-    #state = new Map<Part, PartState>();
+    #state = new Map<Transaction.Participant, ParticipantState>();
 
     changeStatus(transaction: Transaction, status: Transaction.Status) {
         switch (status) {
             case Transaction.Status.Shared:
-                for (const part of transaction.parts) {
+                for (const part of transaction.participants) {
                     this.#stateFor(part).transactions.add(transaction);
                 }
                 break;
 
             case Transaction.Status.Exclusive:
-                for (const part of transaction.parts) {
-                    if (this.#stateFor(part).exclusive) {
+                for (const participant of transaction.participants) {
+                    if (this.#stateFor(participant).exclusive) {
                         throw new SynchronousTransactionConflictError(
-                            `Cannot begin exclusive transaction for part ${
-                                part.uniqueId
+                            `Cannot begin exclusive transaction for ${
+                                participant.description
                             } because there is already an exclusive transaction.  ` +
                             "You can use transaction.begin() to avoid this error"
                         );
                     }
                 }
-                for (const part of transaction.parts) {
-                    this.#stateFor(part).exclusive = transaction;
+                for (const participant of transaction.participants) {
+                    this.#stateFor(participant).exclusive = transaction;
                 }
                 break;
 
@@ -69,8 +68,8 @@ export class TransactionCoordinator {
                 break;
 
             case Transaction.Status.Finished:
-                for (const part of transaction.parts) {
-                    const state = this.#stateFor(part);
+                for (const participant of transaction.participants) {
+                    const state = this.#stateFor(participant);
                     if (state.exclusive === transaction) {
                         state.exclusive = undefined;
                     }
@@ -82,11 +81,11 @@ export class TransactionCoordinator {
         return status;
     }
 
-    async addingPart(transaction: Transaction, part: Part) {
-        const state = this.#stateFor(part);
+    async addingParticipant(transaction: Transaction, participant: Transaction.Participant) {
+        const state = this.#stateFor(participant);
         while (state.exclusive && transaction.status === Transaction.Status.Exclusive) {
             await this.#awaitExclusivity(
-                [ part ],
+                [ participant ],
                 () => {},
                 state
             );
@@ -99,7 +98,7 @@ export class TransactionCoordinator {
 
             default:
                 throw new TransactionFlowError(
-                    `Cannot add part to transaction because transaction status became ${
+                    `Cannot add participant to transaction because transaction status became ${
                         transaction.status
                     } while waiting for exclusivity`
                 )
@@ -108,31 +107,25 @@ export class TransactionCoordinator {
         state.transactions.add(transaction);
 
         if (transaction.status === Transaction.Status.Exclusive) {
-            this.#setExclusive([ part ], transaction);
+            this.#setExclusive([ participant ], transaction);
         }
     }
 
     async begin(transaction: Transaction) {
-        const parts = transaction.parts;
+        const parts = transaction.participants;
         await this.#awaitExclusivity(
             parts,
-            () => this.#setExclusive(transaction.parts, transaction)
+            () => this.#setExclusive(transaction.participants, transaction)
         );
     }
 
     /**
      * Obtain the internal state object for a part.
      */
-    #stateFor(part: Part) {
-        if (part.owner.transactionCoordinator !== this) {
-            throw new TransactionFlowError(
-                `Cannot add part to transaction because the part is managed by a different coordinator`
-            );
-        }
-
-        let state = this.#state.get(part);
+    #stateFor(participant: Transaction.Participant) {
+        let state = this.#state.get(participant);
         if (state === undefined) {
-            this.#state.set(part, state = { transactions: new Set });
+            this.#state.set(participant, state = { transactions: new Set });
         }
 
         return state;
@@ -146,8 +139,8 @@ export class TransactionCoordinator {
      */
     #assertExclusive(transaction: Transaction, why: string) {
         // Sanity check
-        for (const part of transaction.parts) {
-            if (this.#stateFor(part).exclusive !== transaction) {
+        for (const participant of transaction.participants) {
+            if (this.#stateFor(participant).exclusive !== transaction) {
                 throw new InternalError(
                     `Transaction attempted ${
                         why
@@ -162,10 +155,10 @@ export class TransactionCoordinator {
      * 
      * No part may have an active exclusive transaction or this call will fail.
      */
-    #setExclusive(parts: Iterable<Part>, transaction: Transaction) {
+    #setExclusive(parts: Iterable<Transaction.Participant>, transaction: Transaction) {
         // Sanity check
-        for (const part of parts) {
-            const state = this.#stateFor(part);
+        for (const participant of parts) {
+            const state = this.#stateFor(participant);
             if (state.exclusive) {
                 throw new InternalError(
                     `Transaction set to exclusive with preexisting exclusive transaction`
@@ -174,8 +167,8 @@ export class TransactionCoordinator {
         }
 
         // Install
-        for (const part of parts) {
-            const state = this.#stateFor(part);
+        for (const participant of parts) {
+            const state = this.#stateFor(participant);
             state.exclusive = transaction;
         }
     }
@@ -188,15 +181,15 @@ export class TransactionCoordinator {
      * A callback means state can be updated synchronously.
      */
     async #awaitExclusivity(
-        parts: Iterable<Part>,
+        participants: Iterable<Transaction.Participant>,
         onReady: () => void,
-        joining?: PartState,
+        joining?: ParticipantState,
     ) {
         while (true) {
             let toAwait: undefined | Set<ActivePartState>;
 
-            for (const part of parts) {
-                const state = this.#stateFor(part);
+            for (const participant of participants) {
+                const state = this.#stateFor(participant);
                 if (state.exclusive) {
                     if (!toAwait) {
                         toAwait = new Set;
@@ -238,7 +231,7 @@ export class TransactionCoordinator {
         joining: ActivePartState,
         blockedBy: Set<ActivePartState>
     ) {
-        const allBlocking = new Set<PartState>;
+        const allBlocking = new Set<ParticipantState>;
         this.#findAllBlocking(blockedBy, allBlocking);
         if (allBlocking.has(joining)) {
             throw new TransactionDeadlockError(
@@ -252,7 +245,7 @@ export class TransactionCoordinator {
      * Recursively expand a set of blocking states into all states that must
      * resolve before the the listed states unblock.
      */
-    #findAllBlocking(toAdd: Iterable<PartState>, allBlocking: Set<PartState>) {
+    #findAllBlocking(toAdd: Iterable<ParticipantState>, allBlocking: Set<ParticipantState>) {
         for (const state of toAdd) {
             if (allBlocking.has(state)) {
                 continue;
@@ -261,10 +254,10 @@ export class TransactionCoordinator {
             allBlocking.add(state);
 
             if (state.waitingOn) {
-                const waitingOn = new Set<PartState>;
+                const waitingOn = new Set<ParticipantState>;
                 for (const transaction of state.waitingOn) {
-                    for (const part of transaction.parts) {
-                        waitingOn.add(this.#stateFor(part));
+                    for (const participant of transaction.participants) {
+                        waitingOn.add(this.#stateFor(participant));
                     }
                 }
                 this.#findAllBlocking(waitingOn, allBlocking);

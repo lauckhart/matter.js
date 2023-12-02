@@ -16,19 +16,25 @@ import { ByteArray } from "../../../../util/ByteArray.js";
 import { assertArray, assertStruct } from "./rw-util.js";
 import { Schema } from "../../Schema.js";
 
+/**
+ * Generates a function that performs validated value reads.
+ * 
+ * Note that we do some data validation here but more in-depth validation
+ * requires use of the I/O validator.
+ */
 export function IoWriter(schema: Schema, factory: IoFactory): Io.Write {
     if (schema instanceof ClusterModel) {
         return createStructWriter(factory, factory.attributes, schema);
     }
 
     const accessLevel = accessLevelFor(schema);
-
     const access = schema.effectiveAccess;
-    if (!access.writable || (schema instanceof AttributeModel && schema.fixed)) {
-        return () => {
-            throw new StatusResponseError("Value is write-only", StatusCode.UnsupportedWrite);
-        }
-    }
+    const readOnly =
+        !access.writable
+        || (
+            schema instanceof AttributeModel
+            && schema.fixed
+        );
 
     const metatype = schema.effectiveMetatype;
     if (metatype === undefined) {
@@ -37,35 +43,61 @@ export function IoWriter(schema: Schema, factory: IoFactory): Io.Write {
 
     const requiresTimed = !!access.timed;
 
-    let writer: Io.Write;
+    let baseWriter: Io.Write;
     switch (metatype) {
         case Metatype.object:
-            writer = createStructWriter(factory, schema.members, schema);
+            baseWriter = createStructWriter(factory, schema.members, schema);
             break;
 
         case Metatype.array:
-            writer = createListWriter(factory, schema);
+            baseWriter = createListWriter(factory, schema);
             break;
 
         default:
-            writer = createAtomWriter(metatype, schema);
+            baseWriter = createAtomWriter(metatype, schema);
             break;
     }
 
-    return (value, input, options) => {
-        if (options?.accessLevel !== undefined && options.accessLevel >= accessLevel) {
+    let writer: Io.Write = (value, input, options) => {
+        if (
+            !options?.offline
+            && (
+                options?.accessLevel === undefined
+                || options.accessLevel < accessLevel
+            )
+        ) {
             throw new StatusResponseError("Access denied", StatusCode.UnsupportedAccess);
         }
 
-        if (requiresTimed && !options?.timed) {
-            throw new StatusResponseError(
-                "Write rejected without required timed interaction",
-                StatusCode.NeedsTimedInteraction
-            );
-        }
-
-        return writer(value, input, options);
+        return baseWriter(value, input, options);
     }
+
+    if (readOnly) {
+        const nextWriter = writer;
+        writer = (value, input, options) => {
+            if (!options?.offline) {
+                throw new StatusResponseError("Value is write-only", StatusCode.UnsupportedWrite);
+            }
+
+            return nextWriter(value, input, options);
+        }
+    }
+
+    if (requiresTimed) {
+        const nextWriter = writer;
+        writer = (value, input, options) => {
+            if (!options?.offline && !options?.timed) {
+                throw new StatusResponseError(
+                    "Write rejected without required timed interaction",
+                    StatusCode.NeedsTimedInteraction
+                );
+            }
+
+            return nextWriter(value, input, options);
+        }
+    }
+
+    return writer;
 }
 
 function accessLevelFor(schema: ValueModel) {

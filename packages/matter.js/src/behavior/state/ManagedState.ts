@@ -4,16 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ValidationError } from "../../../common/MatterError.js";
-import type { FabricIndex } from "../../../datatype/FabricIndex.js";
-import { isDeepEqual } from "../../../util/DeepEqual.js";
-import { GeneratedClass } from "../../../util/GeneratedClass.js";
-import { Observable } from "../../../util/Observable.js";
-import { camelize } from "../../../util/String.js";
-import type { InvocationContext } from "../../InvocationContext.js";
-import type { ClusterEvents } from "../../cluster/ClusterEvents.js";
-import { State } from "../State.js";
-import { Io } from "../io/Io.js";
+import { ValidationError } from "../../common/MatterError.js";
+import { isDeepEqual } from "../../util/DeepEqual.js";
+import { GeneratedClass } from "../../util/GeneratedClass.js";
+import { Observable } from "../../util/Observable.js";
+import { camelize } from "../../util/String.js";
+import type { InvocationContext } from "../InvocationContext.js";
+import type { ClusterEvents } from "../cluster/ClusterEvents.js";
+import { Schema } from "./Schema.js";
+import { State } from "./State.js";
+import { Io } from "./io/Io.js";
 
 /**
  * A cache of managed state implementation classes.
@@ -28,9 +28,12 @@ const OWNER = Symbol("manager");
  * because there is no static context for generated classes.  We use symbols
  * to avoid polluting the public interface.
  */
-interface Internal extends State.Internal {
+class ManagedBase extends State implements State.Internal {
     [VALUES]: State.Internal & Record<string, any>;
-    [OWNER]: ManagedState.Owner;
+    [OWNER]?: ManagedState.Owner;
+
+    declare [State.CONTEXT]: State.Internal[typeof State.CONTEXT];
+    declare [State.INITIALIZE]: State.Internal[typeof State.INITIALIZE];
 }
 
 /**
@@ -144,11 +147,12 @@ export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.
 }
 
 export namespace ManagedState {
-    export type Type<T extends State.Type> = {
+    export type Type<T extends State.Type = State.Type> = {
         new (values?: Record<string, any>, context?: InvocationContext): InstanceType<T>;
 
         set: typeof State.set;
         with: typeof State.with;
+        schema: Schema;
         io: Io;
     };
 

@@ -6,7 +6,7 @@
 
 import { MatterDevice } from "../MatterDevice.js";
 import type { Message } from "../codec/MessageCodec.js";
-import { Transaction } from "../endpoint/transaction/Transaction.js";
+import { Transaction } from "./state/transaction/Transaction.js";
 import { Fabric } from "../fabric/Fabric.js";
 import { Session } from "../session/Session.js";
 import { Behavior } from "./Behavior.js";

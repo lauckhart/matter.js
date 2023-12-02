@@ -32,6 +32,7 @@ export function IoReader(schema: Schema, factory: IoFactory): Io.Read {
     }
 
     const metatype = schema.effectiveMetatype;
+    const writeOnly = !schema.effectiveAccess.readable;
 
     if (!schema.effectiveAccess.readable) {
         return () => {
@@ -39,17 +40,29 @@ export function IoReader(schema: Schema, factory: IoFactory): Io.Read {
         }
     }
 
+    let reader: Io.Read;
     switch (metatype) {
         case Metatype.array:
-            return createListReader(factory, schema, accessLevel);
+            reader = createListReader(factory, schema, accessLevel);
 
         case Metatype.object:
-            return createStructReader(factory, schema.members, accessLevel);
+            reader = createStructReader(factory, schema.members, accessLevel);
 
         default:
-            return createAtomReader(accessLevel);
-
+            reader = createAtomReader(accessLevel);
     }
+
+    if (writeOnly) {
+        const nextReader = reader;
+        return (value, options) => {
+            if (!options?.offline) {
+                throw new StatusResponseError("Value is write-only", StatusCode.UnsupportedRead);
+            }
+            return nextReader(value, options);
+        }
+    }
+
+    return reader;
 }
 
 function accessLevelFor(schema: Schema) {
@@ -67,7 +80,11 @@ function isFabricAuthorized(options?: Io.RwOptions) {
 }
 
 function assertAuthorized(accessLevel: AccessLevel, options?: Io.RwOptions) {
-    if (options?.accessLevel !== undefined && options.accessLevel >= accessLevel) {
+    if (options?.offline) {
+        return;
+    }
+
+    if (options?.accessLevel === undefined || options?.accessLevel >= accessLevel) {
         throw new StatusResponseError("Access denied", StatusCode.UnsupportedRead);
     };
 }

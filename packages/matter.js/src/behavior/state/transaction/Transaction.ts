@@ -4,15 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ImplementationError, MatterError } from "../../common/MatterError.js";
-import { createPromise } from "../../util/Promises.js";
-import { Part } from "../Part.js";
-import { TransactionCoordinator } from "./TransactionCoordinator.js";
+import { ImplementationError, MatterError } from "../../../common/MatterError.js";
+import { createPromise } from "../../../util/Promises.js";
+import type { TransactionCoordinator } from "./TransactionCoordinator.js";
 
 export class TransactionFlowError extends MatterError {}
 
 /**
- * Updates to Matter.js {@link Part} state are transactional.
+ * Updates to Matter.js state are transactional.
  * 
  * Transactions are either shared (for reads) or exclusive (for writes).
  * Exclusive transactions do not block shared transactions but state updates
@@ -25,7 +24,7 @@ export class TransactionFlowError extends MatterError {}
  * occur serially.
  */
 export class Transaction {
-    #participants = new Map<Part, Transaction.Control>();
+    #participants = new Set<Transaction.Participant>();
     #status = Transaction.Status.Shared;
     #coordinator: TransactionCoordinator;
     #promise?: Promise<void>;
@@ -46,7 +45,7 @@ export class Transaction {
     /**
      * Obtain the parts participating in the transaction.
      */
-    get parts() {
+    get participants() {
         return this.#participants.keys();
     }
 
@@ -66,35 +65,36 @@ export class Transaction {
     }
 
     /**
-     * The smallest granularity a transaction may have is at the endpoint
-     * level.  By default transactions do not cross endpoint boundaries.
+     * The smallest granularity a transaction may have is at the participant
+     * level.  By default transactions do not cross participant boundaries.
      * 
+     * In Matter.js, endpoint state is the primary transaction participant.
      * Multiple endpoints may participate in a single transaction but it is up
      * to the Matter.js library user to manage consistency in this case.
      * 
-     * This would be possible for example if you are storing state for multiple
-     * endpoints in the same database, or if multiple Matter endpoints
+     * This would be reasonable for example if you are storing state for
+     * multiple endpoints in the same database, or if multiple Matter endpoints
      * represent a single bridged device that you update atomically.
      * 
      * In addition to the issues of consistency, cross-endpoint transactions
      * could potentially result in deadlocks.  Matter.js will detect this and
      * throw an error.  You can avoid this by:
      * 
-     *   1. Only adding endpoints to shared (non-exclusive) transactions before
-     *      a transaction becomes exclusive, or
+     *   1. Only adding participants to shared (non-exclusive) transactions,
+     *      *not* after a transaction becomes exclusive, or
      *   2. Ensuring that you always add endpoints to transactions in the same
      *      order.
      */
-    async addPart(part: Part, control: Transaction.Control) {
-        if (this.#participants.has(part)) {
+    async addParticipant(participant: Transaction.Participant) {
+        if (this.#participants.has(participant)) {
             return;
         }
 
         switch (this.#status) {
             case Transaction.Status.Shared:
             case Transaction.Status.Exclusive:
-                await this.#coordinator.addingPart(this, part);
-                this.#participants.set(part, control);
+                await this.#coordinator.addingParticipant(this, participant);
+                this.#participants.add(participant);
                 break;
 
             default:
@@ -218,19 +218,59 @@ export class Transaction {
 }
 
 export namespace Transaction {
-    export enum Status {
-        Shared = "shared",
-        Waiting = "waiting",
-        Exclusive = "exclusive",
-        Committing = "committing",
-        RollingBack = "rolling back",
-        Finished = "finished",
-    }
-}
+    /**
+     * Components with support for transactionality implement this interface.
+     */
+    export interface Participant {
+        /**
+         * Transition isolated writes into canonical form.
+         */
+        commit(): void;
 
-export namespace Transaction {
-    export interface Control {
-        commit: () => void,
-        rollback: () => void
+        /**
+         * Drop isolated writes and revert to original canonical form.
+         */
+        rollback(): void;
+
+        /**
+         * Textual description used in error messages.
+         */
+        readonly description: string;
+    }
+
+    /**
+     * The lifecycle of a transaction adheres to the following discrete stages.
+     */
+    export enum Status {
+        /**
+         * Transaction is registered but there are no ACID guarantees.
+         */
+        Shared = "shared",
+
+        /**
+         * Transaction is waiting to obtain exclusive access.
+         */
+        Waiting = "waiting",
+
+        /**
+         * Transaction has exclusive access.  Reads will maintain consistency
+         * and writes are allowed.
+         */
+        Exclusive = "exclusive",
+
+        /**
+         * Transaction is in the process of committing.
+         */
+        Committing = "committing",
+
+        /**
+         * Transaction is in the process of rolling back.
+         */
+        RollingBack = "rolling back",
+
+        /**
+         * Transaction is finished.
+         */
+        Finished = "finished",
     }
 }

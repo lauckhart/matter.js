@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Mei } from "../definitions/index.js";
+import { Mei, Metatype } from "../definitions/index.js";
 import { ClusterElement, Globals } from "../elements/index.js";
 import { AttributeModel } from "./AttributeModel.js";
 import { CommandModel } from "./CommandModel.js";
@@ -58,6 +58,14 @@ export class ClusterModel extends Model {
 
     override set children(children: (ClusterModel.Child | ClusterElement.Child)[]) {
         super.children = children;
+    }
+
+    get effectiveMetatype() {
+        return Metatype.object;
+    }
+
+    get members() {
+        return this.children;
     }
 
     constructor(definition: ClusterElement.Properties) {
