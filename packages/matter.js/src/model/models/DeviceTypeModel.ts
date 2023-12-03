@@ -5,8 +5,8 @@
  */
 
 import { Mei } from "../definitions/index.js";
-import { DatatypeElement, DeviceTypeElement, RequirementElement } from "../elements/index.js";
-import { DatatypeModel } from "./DatatypeModel.js";
+import { FieldElement, DeviceTypeElement, RequirementElement } from "../elements/index.js";
+import { FieldModel } from "./FieldModel.js";
 import { Model } from "./Model.js";
 import { RequirementModel } from "./RequirementModel.js";
 
@@ -23,11 +23,11 @@ export class DeviceTypeModel extends Model implements DeviceTypeElement {
         return this.get(RequirementModel, "Descriptor").get(RequirementModel, "DeviceTypeList").default[0].revision;
     }
 
-    override get children(): (RequirementModel | DatatypeModel)[] {
+    override get children(): (RequirementModel | FieldModel)[] {
         return super.children as any;
     }
 
-    override set children(children: (RequirementModel | DatatypeModel | RequirementElement | DatatypeElement)[]) {
+    override set children(children: (RequirementModel | FieldModel | RequirementElement | FieldElement)[]) {
         super.children = children;
     }
 

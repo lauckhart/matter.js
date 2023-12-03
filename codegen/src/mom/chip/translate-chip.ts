@@ -14,7 +14,7 @@ import {
     CommandElement,
     Conformance,
     Constraint,
-    DatatypeElement,
+    FieldElement,
     ElementTag,
     EventElement,
     Globals,
@@ -281,7 +281,7 @@ function createValueElement<T extends AnyValueElement>({
     const attr = (name: string) => source.getAttribute(name);
     const id = int(attr("code") || attr("value") || attr("fieldId") || attr("id"));
 
-    if (factory.Tag !== DatatypeElement.Tag) {
+    if (factory.Tag !== FieldElement.Tag) {
         need(`${factory.Tag} id`, id);
     }
 
@@ -308,8 +308,8 @@ function createValueElement<T extends AnyValueElement>({
 
             const childType = str(propertyEl.getAttribute("type"));
 
-            const child = createValueElement<DatatypeElement>({
-                factory: DatatypeElement,
+            const child = createValueElement<FieldElement>({
+                factory: FieldElement,
                 source: propertyEl,
                 isClass: propertyIsClass,
                 type: childType,
@@ -317,7 +317,7 @@ function createValueElement<T extends AnyValueElement>({
 
             const isArray = propertyEl.getAttribute("array") === "true";
             if (isArray) {
-                const entry = DatatypeElement({ name: "entry", type: child.type });
+                const entry = FieldElement({ name: "entry", type: child.type });
                 entry.children = child.children;
                 child.children = [entry];
                 child.type = "list";
@@ -335,7 +335,7 @@ function createValueElement<T extends AnyValueElement>({
     if (!element.children?.length) {
         const entryType = source.getAttribute("entryType");
         if (entryType) {
-            element.children = [DatatypeElement({ name: "entry", type: mapType(entryType) })];
+            element.children = [FieldElement({ name: "entry", type: mapType(entryType) })];
         }
     }
 
@@ -388,8 +388,8 @@ const translators: { [name: string]: Translator } = {
     },
 
     struct: source => {
-        return createValueElement<DatatypeElement>({
-            factory: DatatypeElement,
+        return createValueElement<FieldElement>({
+            factory: FieldElement,
             source,
             isClass: true,
             type: str(source.getAttribute("type")) ?? "STRUCT",
@@ -398,8 +398,8 @@ const translators: { [name: string]: Translator } = {
     },
 
     enum: source => {
-        return createValueElement<DatatypeElement>({
-            factory: DatatypeElement,
+        return createValueElement<FieldElement>({
+            factory: FieldElement,
             source,
             isClass: true,
             type: need("enum type", str(source.getAttribute("type"))),
@@ -409,8 +409,8 @@ const translators: { [name: string]: Translator } = {
     },
 
     bitmap: source => {
-        const bitmap = createValueElement<DatatypeElement>({
-            factory: DatatypeElement,
+        const bitmap = createValueElement<FieldElement>({
+            factory: FieldElement,
             source,
             isClass: true,
             type: need("bitmap type", str(source.getAttribute("type"))),
@@ -447,7 +447,7 @@ const translators: { [name: string]: Translator } = {
             const constraint = msb === lsb ? { value: msb } : { min: lsb, max: msb + 1 };
 
             bitmap.children.push(
-                DatatypeElement({
+                FieldElement({
                     name: need("bitmap field name", str(f.getAttribute("name"))),
                     constraint: constraint,
                 }),

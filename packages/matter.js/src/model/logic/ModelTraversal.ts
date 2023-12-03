@@ -5,10 +5,10 @@
  */
 
 import { InternalError } from "../../common/MatterError.js";
-import { Aspect, Constraint } from "../aspects/index.js";
+import { Access, Aspect, Constraint } from "../aspects/index.js";
 import { ElementTag, FieldValue, Metatype } from "../definitions/index.js";
 import { AnyElement, Globals } from "../elements/index.js";
-import { CommandModel, type Model, type ValueModel } from "../models/index.js";
+import { type CommandModel, type Model, type ValueModel } from "../models/index.js";
 
 const OPERATION_DEPTH_LIMIT = 20;
 
@@ -313,7 +313,7 @@ export class ModelTraversal {
 
                 const referenced = this.findMember(model.parent, name, [
                     ElementTag.Attribute,
-                    ElementTag.Datatype,
+                    ElementTag.Field,
                 ]) as ValueModel;
                 if (!referenced) {
                     return;
@@ -338,10 +338,47 @@ export class ModelTraversal {
             }
 
             if (Object.keys(bounds).length) {
-                constraint = constraint.extend(bounds) as Constraint;
+                constraint = constraint.extend(bounds);
             }
 
             return constraint;
+        });
+    }
+
+    /**
+     * Access aspects are specialized because access controls are inherited
+     * from the owner if not otherwise defined.
+     * 
+     * That means access controls may come from 5 places, in order of priority:
+     * 
+     *   1. The model itself
+     *   2. A shadowed model in the owner hierarchy
+     *   3. An overridden model in the model's class hierarchy
+     *   4. A model in the parent hierarchy
+     *   5. Access.Default
+     * 
+     * This method uses {@link findAspect} for 1-3 then extends the result with
+     * 4 & 5 as necessary until {@link Access.complete} is true.
+     */
+    findAccess(model: ValueModel | undefined, symbol: symbol, VM: typeof ValueModel): Access {
+        if (model === undefined) {
+            return Access.Default;
+        }
+
+        return this.operation(() => {
+            let access = this.findAspect(model, symbol) as Access;
+
+            if (access.complete) {
+                return access;
+            }
+
+            return access.extend(
+                this.findAccess(
+                    this.findOwner(VM, model),
+                    symbol,
+                    VM
+                ).definition
+            );
         });
     }
 
@@ -463,8 +500,8 @@ export class ModelTraversal {
                 return;
             }
 
-            // A command can reference its response
-            if (model instanceof CommandModel && this.findResponse(model) === type) {
+            // A command may reference its response
+            if (model.tag === ElementTag.Command && this.findResponse(model as CommandModel) === type) {
                 references.push(model);
                 return;
             }

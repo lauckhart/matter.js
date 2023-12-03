@@ -4,37 +4,20 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ValidationError } from "../../common/MatterError.js";
-import { isDeepEqual } from "../../util/DeepEqual.js";
+import { AttributeModel, ClusterModel, FieldElement, FieldModel } from "../../model/index.js";
 import { GeneratedClass } from "../../util/GeneratedClass.js";
-import { Observable } from "../../util/Observable.js";
 import { camelize } from "../../util/String.js";
 import type { InvocationContext } from "../InvocationContext.js";
-import type { ClusterEvents } from "../cluster/ClusterEvents.js";
 import { Schema } from "./Schema.js";
 import { State } from "./State.js";
 import { Io } from "./io/Io.js";
+import { IoFactory } from "./io/IoFactory.js";
+import { StructManagerMixin } from "./io/manage/struct.js";
 
 /**
  * A cache of managed state implementation classes.
  */
 const cache = new WeakMap<State.Type>();
-
-const VALUES = Symbol("values");
-const OWNER = Symbol("manager");
-
-/**
- * These are the internal fields of managed state.  We can't use privates
- * because there is no static context for generated classes.  We use symbols
- * to avoid polluting the public interface.
- */
-class ManagedBase extends State implements State.Internal {
-    [VALUES]: State.Internal & Record<string, any>;
-    [OWNER]?: ManagedState.Owner;
-
-    declare [State.CONTEXT]: State.Internal[typeof State.CONTEXT];
-    declare [State.INITIALIZE]: State.Internal[typeof State.INITIALIZE];
-}
 
 /**
  * The public {@link State} interface is a bare JS object but internally we
@@ -43,53 +26,35 @@ class ManagedBase extends State implements State.Internal {
  *
  * This is a pure function for {@link type}.  It caches the generated class.
  */
-export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.Owner = {}) {
-    let className, diagnosticsName: string;
-    if (owner.name) {
-        className = `${camelize(owner.name, true)}$${type.name}`;
-        diagnosticsName = `${camelize(owner.name, false)}.state`;
-    } else {
-        className = `${type.name}$`;
-        diagnosticsName = type.name;
-    }
-
+export function ManagedState<T extends State.Type>(type: T, ioFactory: IoFactory) {
     // First check the cache
     const cached = cache.get(type);
     if (cached) {
         return cached as ManagedState.Type<T>;
     }
 
-    // We add instance descriptors in preprocess() below
-    const instanceDescriptors = {
-        [State.SET]: {
-            value: setter,
-        },
-
-        [OWNER]: {
-            value: owner,
-        },
-    } as PropertyDescriptorMap;
-
-    for (const name in new type()) {
-        // Delegate all enumerable properties to the [VALUE] instance
-        instanceDescriptors[name] = createDescriptor(name);
-    }
+    // Augment schema with any fields from the original cluster that are not
+    // present in the original schema.  This allows overrides to define fields
+    // using normal JS class semantics without manually updating the schema
+    const schema = getSchema(type);
 
     // Generate the class
     const managed = GeneratedClass({
-        name: className,
+        name: `${type.schema.name}$State`,
         base: State,
 
-        initialize(this: Internal, values, context) {
-            this[VALUES] = new type() as (typeof this)[typeof VALUES];
+        mixins: [
+            StructManagerMixin(ioFactory, type.schema)
+        ],
+
+        initialize(this: State.Internal, values, context) {
             this[State.INITIALIZE](values, context);
         },
 
-        instanceDescriptors,
         staticDescriptors: {
             schema: {
                 get() {
-                    return type.schema;
+                    return schema;
                 },
 
                 enumerable: true,
@@ -100,50 +65,6 @@ export function ManagedState<T extends State.Type>(type: T, owner: ManagedState.
     cache.set(type, managed);
 
     return managed as ManagedState.Type<T>;
-
-    function setter(this: Internal, name: string, value: any, context?: InvocationContext) {
-        const field = fields[name];
-
-        const oldValue = this[VALUES][name];
-
-        if (field?.fabricScoped) {
-            const fabric = fabricFor(context);
-            if (value === undefined || value === null) {
-                value = [];
-            }
-            
-        }
-
-        if (isDeepEqual(oldValue, value)) {
-            return;
-        }
-
-        if (!context) {
-            context = this[State.CONTEXT] ?? {};
-        }
-
-        if (field) {
-            try {
-                if (field.fixed && this[OWNER].online) {
-                    throw new ValidationError("Property is read-only");
-                }
-
-                field.validate?.(value, context);
-            } catch (e) {
-                if (e instanceof ValidationError) {
-                    e.message = `Cannot set ${diagnosticsName}.${name}: ${e.message}`;
-                }
-                throw e;
-            }
-        }
-
-        this[VALUES][name] = value;
-
-        const observable = (context.behavior?.events as undefined | Record<string, Observable>)?.[`${name}$change`];
-        if (observable instanceof Observable) {
-            (observable as ClusterEvents.AttributeObservable).emit(value, oldValue, context);
-        }
-    }
 }
 
 export namespace ManagedState {
@@ -152,7 +73,7 @@ export namespace ManagedState {
 
         set: typeof State.set;
         with: typeof State.with;
-        schema: Schema;
+        schema?: Schema;
         io: Io;
     };
 
@@ -162,19 +83,30 @@ export namespace ManagedState {
     }
 }
 
-function createDescriptor(name: string) {
-    const descriptor: PropertyDescriptor = {
-        get(this: Internal) {
-            return this[VALUES][name];
-        },
+function getSchema(type: State.Type) {
+    let schema = type.schema;
 
-        set(this: Internal, value: any) {
-            this[State.SET](name, value);
-        },
+    const props = new Set<string>();
+    for (const field of schema.children) {
+        props.add(camelize(field.name.toLowerCase()));
+    }
 
-        enumerable: true,
-        configurable: false,
-    };
+    const PropModel = type instanceof ClusterModel ? AttributeModel : FieldModel;
 
-    return descriptor;
+    let cloned = false;
+    for (const name in new type) {
+        if (!props.has(name)) {
+            if (!cloned) {
+                schema = schema.clone();
+            }
+
+            schema.add(new PropModel({
+                tag: FieldElement.Tag,
+                name,
+                type: "any",
+            })
+        }
+    }
+
+    return cloned;
 }

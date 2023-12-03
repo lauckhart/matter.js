@@ -11,7 +11,7 @@ import { ValueElement } from "./ValueElement.js";
 /**
  * An event is triggered by endpoints.
  */
-export type EventElement = ValueElement & {
+export interface EventElement extends ValueElement {
     id: Mei;
     tag: `${EventElement.Tag}`;
 

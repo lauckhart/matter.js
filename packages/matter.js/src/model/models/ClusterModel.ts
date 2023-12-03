@@ -4,13 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Mei, Metatype } from "../definitions/index.js";
+import { FeatureSet, Mei, Metatype } from "../definitions/index.js";
 import { ClusterElement, Globals } from "../elements/index.js";
 import { AttributeModel } from "./AttributeModel.js";
 import { CommandModel } from "./CommandModel.js";
-import { DatatypeModel } from "./DatatypeModel.js";
 import { EventModel } from "./EventModel.js";
 import { Model } from "./Model.js";
+import { DatatypeModel } from "./DatatypeModel.js";
+import { PropertyModel } from "./PropertyModel.js";
+import { Access } from "../aspects/Access.js";
 
 export class ClusterModel extends Model {
     override tag: ClusterElement.Tag = ClusterElement.Tag;
@@ -18,6 +20,7 @@ export class ClusterModel extends Model {
     classification?: ClusterElement.Classification;
     override isTypeScope = true;
     singleton?: boolean;
+    supportedFeatures?: FeatureSet;
 
     get attributes() {
         return this.all(AttributeModel);
@@ -33,6 +36,10 @@ export class ClusterModel extends Model {
 
     get datatypes() {
         return this.all(DatatypeModel);
+    }
+
+    get members() {
+        return this.all(PropertyModel);
     }
 
     get revision() {
@@ -64,8 +71,8 @@ export class ClusterModel extends Model {
         return Metatype.object;
     }
 
-    get members() {
-        return this.children;
+    get effectiveAccess() {
+        return Access.Default;
     }
 
     constructor(definition: ClusterElement.Properties) {
@@ -78,5 +85,9 @@ export class ClusterModel extends Model {
 }
 
 export namespace ClusterModel {
-    export type Child = DatatypeModel | AttributeModel | CommandModel | EventModel;
+    export type Child =
+        DatatypeModel
+        | AttributeModel
+        | CommandModel
+        | EventModel;
 }

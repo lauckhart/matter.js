@@ -24,7 +24,7 @@ import { Schema } from "../../Schema.js";
  */
 export function IoWriter(schema: Schema, factory: IoFactory): Io.Write {
     if (schema instanceof ClusterModel) {
-        return createStructWriter(factory, factory.attributes, schema);
+        return createStructWriter(factory, schema.members, schema);
     }
 
     const accessLevel = accessLevelFor(schema);
@@ -326,48 +326,13 @@ function createListWriter(factory: IoFactory, schema: ValueModel): Io.Write {
     if (entry === undefined) {
         throw new ImplementationError("List schema has no entry type");
     }
-    let entryWriter = factory.isGenerating(entry) ? undefined : createEntryWriter();
+    let entryWriter = createEntryWriter();
 
     // For fabric scoped lists, we validate the fabricIndex for entries is
     // correct and map input indices to indices within the unfiltered list
     const fabricScoped = schema.effectiveAccess.fabric !== Access.Fabric.Scoped;
 
-    function createEntryWriter(): Io.Write {
-        if (entry === undefined) {
-            throw new InternalError("List entry schema somehow disappeared");
-        }
-
-        const entryWriter = factory.get(entry).write;
-
-        if (fabricScoped) {
-            return entryWriter;
-        }
-
-        return (value, input, options) => {
-            value = entryWriter(value, input, options);
-
-            if (value === undefined || value === null) {
-                return value;
-            }
-
-            assertStruct(value);
-
-            if (value.fabricIndex === undefined) {
-                value.fabricIndex = options?.accessingFabric;
-            } else if (options?.accessingFabric && value.fabricIndex !== options?.accessingFabric) {
-                throw new StatusResponseError(
-                    "Fabric scoped list entry fabricIndex is not set to accessing fabric index",
-                    StatusCode.UnsupportedWrite
-                );
-            }
-        }
-    }
-
     return (newValue, oldValue, options) => {
-        if (entryWriter === undefined) {
-            entryWriter = createEntryWriter();
-        }
-
         // No path entries means replace or clear the list
         if (!options?.path?.length) {
             // If new value is null, the list is removed unless the list is
@@ -485,5 +450,36 @@ function createListWriter(factory: IoFactory, schema: ValueModel): Io.Write {
             entryWriter(newValue, oldValue[targetIndex], { ...options, path: options?.path?.slice(1) }),
             ...oldValue.slice(targetIndex + 1)
         ]
+    }
+
+    function createEntryWriter(): Io.Write {
+        if (entry === undefined) {
+            throw new InternalError("List entry schema somehow disappeared");
+        }
+
+        const entryWriter = factory.get(entry).write;
+
+        if (fabricScoped) {
+            return entryWriter;
+        }
+
+        return (value, input, options) => {
+            value = entryWriter(value, input, options);
+
+            if (value === undefined || value === null) {
+                return value;
+            }
+
+            assertStruct(value);
+
+            if (value.fabricIndex === undefined) {
+                value.fabricIndex = options?.accessingFabric;
+            } else if (options?.accessingFabric && value.fabricIndex !== options?.accessingFabric) {
+                throw new StatusResponseError(
+                    "Fabric scoped list entry fabricIndex is not set to accessing fabric index",
+                    StatusCode.UnsupportedWrite
+                );
+            }
+        }
     }
 }

@@ -27,8 +27,10 @@ import { Schema } from "../../Schema.js";
  */
 export function IoReader(schema: Schema, factory: IoFactory): Io.Read {    
     const accessLevel = accessLevelFor(schema);
+
+    // Special case ClusterModel because it does not have access contorls
     if (schema instanceof ClusterModel) {
-        return createStructReader(factory, factory.attributes, accessLevel);
+        return createStructReader(factory, schema.members, accessLevel);
     }
 
     const metatype = schema.effectiveMetatype;
@@ -106,7 +108,7 @@ function createAtomReader(accessLevel: AccessLevel): Io.Read {
 }
 
 function createPropertyReader(factory: IoFactory, schema: Schema, fieldName: string) {
-    let reader = factory.isGenerating(schema) ? undefined : factory.get(schema).read;
+    const reader = factory.get(schema).read;
     const accessLevel = accessLevelFor(schema);
 
     // Per specification, fabric sensitivity is only valid for properties of a
@@ -122,10 +124,6 @@ function createPropertyReader(factory: IoFactory, schema: Schema, fieldName: str
         // Ignore sensitive properties from different fabric
         if (fabricSensitive && !isFabricAuthorized(options)) {
             return;
-        }
-        
-        if (reader === undefined) {
-            reader = factory.get(schema).read;
         }
 
         const value = source[fieldName];
@@ -211,7 +209,7 @@ function createListReader(factory: IoFactory, schema: ValueModel, accessLevel: A
     if (entry === undefined) {
         throw new ImplementationError("List schema has no entry type");
     }
-    let entryReader = factory.isGenerating(entry) ? undefined : factory.get(entry).read;
+    let entryReader = factory.get(entry).read;
 
     return (item, options) => {
         if (item === undefined || item === null) {
@@ -219,10 +217,6 @@ function createListReader(factory: IoFactory, schema: ValueModel, accessLevel: A
         }
 
         assertAuthorized(accessLevel, options);
-
-        if (entryReader === undefined) {
-            entryReader = factory.get(schema).read;
-        }
 
         if (fabricScoped && options?.fabricFiltered) {
             const accessingFabric = options?.accessingFabric;

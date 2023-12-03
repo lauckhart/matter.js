@@ -6,7 +6,7 @@
 
 import { ElementTag, Mei } from "../definitions/index.js";
 import { BaseElement } from "./BaseElement.js";
-import { DatatypeElement } from "./DatatypeElement.js";
+import { FieldElement } from "./FieldElement.js";
 import { RequirementElement } from "./RequirementElement.js";
 
 /**
@@ -14,12 +14,12 @@ import { RequirementElement } from "./RequirementElement.js";
  *
  * TODO - extract/merge DeviceTypes.ts?
  */
-export type DeviceTypeElement = BaseElement & {
+export interface DeviceTypeElement extends BaseElement {
     id?: Mei;
     tag: `${DeviceTypeElement.Tag}`;
     classification: `${DeviceTypeElement.Classification}`;
     category?: string;
-    children?: (RequirementElement | DatatypeElement)[];
+    children?: (RequirementElement | FieldElement)[];
 };
 
 export function DeviceTypeElement(definition: DeviceTypeElement.Properties) {

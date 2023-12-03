@@ -5,9 +5,9 @@
  */
 
 import { Access, Aspect, Conformance, Constraint, Quality } from "../aspects/index.js";
-import { DatatypeElement, RequirementElement } from "../elements/index.js";
+import { FieldElement, RequirementElement } from "../elements/index.js";
 import { Aspects } from "./Aspects.js";
-import { DatatypeModel } from "./DatatypeModel.js";
+import { FieldModel } from "./FieldModel.js";
 import { Model } from "./Model.js";
 
 const CONSTRAINT: unique symbol = Symbol("constraint");
@@ -24,11 +24,11 @@ export class RequirementModel extends Model implements RequirementElement {
         return `${this.id ?? this.name}:${this.element}`;
     }
 
-    override get children(): (RequirementModel | DatatypeModel)[] {
+    override get children(): (RequirementModel | FieldModel)[] {
         return super.children as any;
     }
 
-    override set children(children: (RequirementModel | DatatypeModel | RequirementElement | DatatypeElement)[]) {
+    override set children(children: (RequirementModel | FieldModel | RequirementElement | FieldElement)[]) {
         super.children = children;
     }
 

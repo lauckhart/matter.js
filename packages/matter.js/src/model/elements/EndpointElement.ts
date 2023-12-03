@@ -11,7 +11,7 @@ import { DeviceTypeElement } from "./DeviceTypeElement.js";
 /**
  * Runtime representation of an endpoint.
  */
-export type EndpointElement = BaseElement & {
+export interface EndpointElement extends BaseElement {
     id: number;
     tag: `${EndpointElement.Tag}`;
     children: DeviceTypeElement[];

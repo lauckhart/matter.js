@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { DatatypeModel, type ClusterModel, type ValueModel } from "../../model/index.js";
+import { FieldModel, type ClusterModel, type ValueModel } from "../../model/index.js";
 
 /**
  * We model state using Matter semantics.  For schema we therefore allow any
@@ -23,10 +23,10 @@ export namespace Schema {
      * access to a fixed list of properties with no validation.
      */
     export function Simple(fields: string[]) {
-        const schema = new DatatypeModel({ name: "state" });
+        const schema = new FieldModel({ name: "Anonymous" });
 
         for (const field of fields) {
-            schema.add(new DatatypeModel({ name: field }));
+            schema.add(new FieldModel({ name: field, type: "any" }));
         }
 
         return schema;

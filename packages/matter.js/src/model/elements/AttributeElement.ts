@@ -11,7 +11,7 @@ import { ValueElement } from "./ValueElement.js";
 /**
  * A cluster property description.
  */
-export type AttributeElement = ValueElement & {
+export interface AttributeElement extends ValueElement {
     tag: `${AttributeElement.Tag}`;
     id: Mei;
 };

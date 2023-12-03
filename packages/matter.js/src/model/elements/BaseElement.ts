@@ -15,7 +15,7 @@ import type { AnyElement } from "./AnyElement.js";
  * element has a corresponding "Model" that is a proper class with runtime
  * functionality related to the element.
  */
-export type BaseElement = {
+export interface BaseElement {
     /**
      * The ID of the element per Matter specification, either global or
      * context-specific.  A "machine appropriate" semantic differentiator.

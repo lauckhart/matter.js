@@ -7,7 +7,7 @@
 import { InternalError } from "../../../common/MatterError.js";
 import { isDeepEqual } from "../../../util/DeepEqual.js";
 import { Conformance } from "../../aspects/index.js";
-import { ClusterModel, DatatypeModel } from "../../models/index.js";
+import { ClusterModel, FieldModel } from "../../models/index.js";
 import { FeatureBitmap } from "./FeatureBitmap.js";
 
 export type IllegalFeatureCombinations = FeatureBitmap[];
@@ -72,7 +72,7 @@ export function IllegalFeatureCombinations(cluster: ClusterModel) {
 }
 
 function addFeatureNode(
-    feature: DatatypeModel,
+    feature: FieldModel,
     node: Conformance.Ast,
     illegal: IllegalFeatureCombinations,
     choices: Choices,

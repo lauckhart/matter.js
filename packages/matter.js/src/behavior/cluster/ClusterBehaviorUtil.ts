@@ -5,7 +5,8 @@
  */
 
 import { ClusterType } from "../../cluster/ClusterType.js";
-import { ImplementationError, ValidationError } from "../../common/MatterError.js";
+import { ImplementationError, InternalError } from "../../common/MatterError.js";
+import { ClusterModel, ElementTag, FeatureSet, Matter } from "../../model/index.js";
 import { GeneratedClass } from "../../util/GeneratedClass.js";
 import { EventEmitter, Observable } from "../../util/Observable.js";
 import { camelize } from "../../util/String.js";
@@ -83,7 +84,6 @@ export type ClusterOf<B extends Behavior.Type> = InstanceType<B> extends { clust
 function createDerivedState(cluster: ClusterType, base: Behavior.Type, namesUsed: Set<string>) {
     const BaseState = base["State"];
     const oldDefaults = new BaseState() as Record<string, any>;
-    const fields = {} as State.FieldOptions;
     const statePrefix = `${camelize(cluster.name, false)}.state`;
 
     const newAttributes = {} as Record<string, ClusterType.Attribute>;
@@ -122,7 +122,6 @@ function createDerivedState(cluster: ClusterType, base: Behavior.Type, namesUsed
         if (!(name in defaults)) {
             defaults[name] = attribute.default;
         }
-        fields[name] = configureField(attribute, `${statePrefix}.${name}`);
     }
 
     for (const name in defaults) {
@@ -134,42 +133,12 @@ function createDerivedState(cluster: ClusterType, base: Behavior.Type, namesUsed
 
     return State.with(defaults, {
         name: `${cluster.name}$State`,
-        fields,
+        schema: schemaForCluster(cluster),
     });
 }
 
 function isGlobal(attribute: ClusterType.Attribute) {
     return attribute.id === 0xfe || (attribute.id >= 0xfff0 && attribute.id <= 0xffff);
-}
-
-/**
- * Add additional attribute-specific validation.
- */
-function configureField(attribute: ClusterType.Attribute, name: string) {
-    const schema = attribute.schema;
-    const descriptor = {} as State.FieldConfiguration;
-
-    descriptor.validate = value => {
-        if (value === undefined && !attribute.optional) {
-            // Schema validation catches this but generate a more explicit message
-            throw new ValidationError(`No value provided for required property ${name}`);
-        }
-
-        try {
-            schema.validate(value);
-        } catch (e) {
-            if (e instanceof ValidationError) {
-                e.message = `Illegal value for property ${name}: ${e.message}`;
-                throw e;
-            }
-        }
-    };
-
-    if (attribute.fixed) {
-        descriptor.fixed = true;
-    }
-
-    return descriptor;
 }
 
 /**
@@ -197,4 +166,35 @@ function createBaseEvents(cluster: ClusterType, stateNames: Set<string>) {
             }
         },
     });
+}
+
+/**
+ * Obtain schema for a particular cluster.
+ * 
+ * Current dual-model of clusters is not ideal but necessary for the time
+ * being.  This acts as an adapter to load the appropriate schema for a
+ * cluster.
+ */
+function schemaForCluster(cluster: ClusterType) {
+    let schema: ClusterModel | undefined;
+
+    for (const child of Matter.children) {
+        if (child.tag === ElementTag.Cluster && child.id === cluster.id) {
+            schema = new ClusterModel(child);
+            break;
+        }
+    }
+
+    if (schema === undefined) {
+        throw new InternalError(`Cannot locate schema for cluster ${cluster.id}, please supply manually`);
+    }
+
+    if (cluster.supportedFeatures.length) {
+        schema = new ClusterModel({
+            ...schema,
+            supportedFeatures: new FeatureSet(cluster.supportedFeatures)
+        })
+    }
+
+    return schema;
 }

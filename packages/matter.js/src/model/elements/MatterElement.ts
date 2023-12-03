@@ -8,10 +8,11 @@ import { ElementTag } from "../definitions/index.js";
 import { AttributeElement } from "./AttributeElement.js";
 import { BaseElement } from "./BaseElement.js";
 import { ClusterElement } from "./ClusterElement.js";
-import { DatatypeElement } from "./DatatypeElement.js";
+import { FieldElement } from "./FieldElement.js";
 import { DeviceTypeElement } from "./DeviceTypeElement.js";
 import { FabricElement } from "./FabricElement.js";
 import { NodeElement } from "./NodeElement.js";
+import { DatatypeElement } from "./DatatypeElement.js";
 
 /**
  * The root model element.
@@ -36,5 +37,6 @@ export namespace MatterElement {
         | FabricElement
         | NodeElement
         | DatatypeElement
+        | FieldElement
         | AttributeElement;
 }

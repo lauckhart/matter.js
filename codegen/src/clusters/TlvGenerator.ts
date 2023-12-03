@@ -8,7 +8,7 @@ import {
     ClusterModel,
     CommandModel,
     Constraint,
-    DatatypeModel,
+    FieldModel,
     ElementTag,
     EventModel,
     FieldValue,
@@ -43,7 +43,7 @@ export class TlvGenerator {
         // structures we prepend the parent name
         const names = new Set<string>();
         this.cluster.visit(model => {
-            if (model instanceof DatatypeModel && model.children.length) {
+            if (model instanceof FieldModel && model.children.length) {
                 const metatype = model.effectiveMetatype;
                 switch (metatype) {
                     case Metatype.object:

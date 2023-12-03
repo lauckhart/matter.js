@@ -62,7 +62,7 @@ export abstract class Model {
      */
     get path(): string {
         if (this.parent && this.parent.tag !== ElementTag.Matter) {
-            if (this.parent.tag === ElementTag.Datatype) {
+            if (this.parent.tag === ElementTag.Field) {
                 return `${this.parent.path}.${camelize(this.name, false)}`;
             }
             
@@ -383,7 +383,7 @@ export abstract class Model {
      */
     member(
         key: ModelTraversal.ElementSelector,
-        allowedTags = [ElementTag.Datatype, ElementTag.Attribute],
+        allowedTags = [ElementTag.Field, ElementTag.Attribute],
     ): Model | undefined {
         return new ModelTraversal().findMember(this, key, allowedTags);
     }
@@ -393,6 +393,30 @@ export abstract class Model {
      */
     instanceOf(other: Model | AnyElement) {
         return new ModelTraversal().instanceOf(this, other);
+    }
+
+    /**
+     * Clone the model.  This deep copies all descendant child models but
+     * not other properties.
+     */
+    clone() {
+        const clone = Object.create(Object.getPrototypeOf(this));
+
+        const descriptors = Object.getOwnPropertyDescriptors(this);
+        if (this.children) {
+            delete (descriptors as any)[CHILDREN];
+        }
+        
+        Object.defineProperties(
+            clone,
+            Object.getOwnPropertyDescriptors(this)
+        );
+
+        if (this[CHILDREN]) {
+            clone.children = this[CHILDREN].map(child => child.clone());
+        }
+
+        return clone;
     }
 
     constructor(definition: BaseElement) {

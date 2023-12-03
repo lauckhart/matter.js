@@ -22,15 +22,14 @@ export function StructManager(
     factory: IoFactory,
     schema: Schema
 ): Io.Manage {
-    let Wrapper = factory.isGenerating(schema)
-        ? undefined
-        : ManagedStruct(factory, schema);
+    let Wrapper = GeneratedClass({
+        name: `${schema.name}$Wrapper`,
+
+        ...StructManagerMixin(factory, schema)
+    }) as new (value: Io.Val, owner: Io.ValueOwner) => Io.Struct
 
     return (value, owner) => {
-        if (Wrapper === undefined) {
-            Wrapper = ManagedStruct(factory, schema);
-            return new Wrapper(value, owner);
-        }
+        return new Wrapper(value, owner);
     }
 }
 
@@ -62,23 +61,19 @@ interface Wrapper extends Io.Struct {
 }
 
 /**
- * Create a class that manages a particular struct type.
+ * Configure struct behavior as a mixin.
+ * 
+ * StructManager and ManagedState both use this to implement struct fields
+ * based on schema.
  */
-export function ManagedStruct(
-    factory: IoFactory,
-    schema: Schema,
-    base?: new (...args: any[]) => object
-) {
+export function StructManagerMixin(factory: IoFactory, schema: Schema): GeneratedClass.Mixin {
     const instanceDescriptors = {} as PropertyDescriptorMap;
 
     for (const member of schema.members) {
         instanceDescriptors[camelize(member.name, false)] = createPropertyDescriptor(factory, member);
     }
     
-    return GeneratedClass({
-        name: `${schema.name}$Wrapper`,
-        base,
-
+    return {
         initialize(this: Wrapper, value: Io.Val, owner: Io.ValueOwner, context?: Io.ValueContext) {
             if (typeof value !== undefined) {
                 throw new ImplementationError(
@@ -95,15 +90,12 @@ export function ManagedStruct(
         },
 
         instanceDescriptors
-    }) as new (value: Io.Val, owner: Io.ValueOwner) => Io.Struct;
+    }
 }
 
 function createPropertyDescriptor(factory: IoFactory, schema: Schema): PropertyDescriptor {
     const name = camelize(schema.name);
-    let io = factory.isGenerating(schema)
-        ? undefined
-        : factory.get(schema);
-    let manage = io?.manage;
+    let { read, write, manage } = factory.get(schema);
 
     // The owning attribute and fabric come from structs.  This upgrades the
     // context to include those values if appropriate
@@ -125,13 +117,6 @@ function createPropertyDescriptor(factory: IoFactory, schema: Schema): PropertyD
 
     return {
         get(this: Wrapper) {
-            if (io === undefined) {
-                io = factory.get(schema);
-            }
-            if (manage === undefined) {
-                manage = io.manage;
-            }
-
             let readOptions = this[OWNER].readOptions;
             
             if (this[CONTEXT]?.owningFabric) {
@@ -142,7 +127,7 @@ function createPropertyDescriptor(factory: IoFactory, schema: Schema): PropertyD
             }
 
             manage(
-                io.read(
+                read(
                     this[TARGET][name],
                     readOptions
                 ),
@@ -155,10 +140,6 @@ function createPropertyDescriptor(factory: IoFactory, schema: Schema): PropertyD
             const oldValue = this[TARGET][name];
             if (isDeepEqual(oldValue, value)) {
                 return true;
-            }
-
-            if (io === undefined) {
-                io = factory.get(schema);
             }
 
             if (this[TARGET] === this[VALUE]) {
@@ -175,7 +156,7 @@ function createPropertyDescriptor(factory: IoFactory, schema: Schema): PropertyD
                 }
             }
 
-            this[TARGET][name] = io.write(
+            this[TARGET][name] = write(
                 value,
                 oldValue,
                 this[OWNER].writeOptions

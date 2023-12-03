@@ -9,7 +9,7 @@ import {
     AttributeModel,
     ClusterModel,
     CommandModel,
-    DatatypeModel,
+    FieldModel,
     Globals,
     MatterModel,
     Metatype,
@@ -109,7 +109,7 @@ function patchClusterTypes(cluster: ClusterModel) {
         }
 
         cluster.add(
-            new DatatypeModel({
+            new FieldModel({
                 name: model.name,
                 type: model.type,
                 xref: model.xref,
@@ -136,11 +136,11 @@ function patchOptionsTypes(cluster: ClusterModel) {
             return;
         }
 
-        const mask = element.get(DatatypeModel, "OptionsMask");
+        const mask = element.get(FieldModel, "OptionsMask");
         if (mask) {
             mask.type = "Options";
         }
-        const overrides = element.get(DatatypeModel, "OptionsOverride");
+        const overrides = element.get(FieldModel, "OptionsOverride");
         if (overrides) {
             overrides.type = "Options";
         }
@@ -156,7 +156,7 @@ function patchStatusTypes(cluster: ClusterModel) {
             continue;
         }
 
-        const status = element.get(DatatypeModel, "Status");
+        const status = element.get(FieldModel, "Status");
         if (!status || status.type !== "enum8") {
             continue;
         }

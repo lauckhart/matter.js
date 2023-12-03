@@ -9,7 +9,7 @@ import {
     AttributeElement,
     ClusterElement,
     CommandElement,
-    DatatypeElement,
+    FieldElement,
     EventElement,
     Globals,
     Metatype,
@@ -206,7 +206,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
             default: Optional(Alias(NoSpace, "def")),
         });
 
-        const values = translateRecordsToMatter("feature", records, DatatypeElement);
+        const values = translateRecordsToMatter("feature", records, FieldElement);
         values &&
             children.push({
                 tag: Globals.FeatureMap.tag,
@@ -371,7 +371,7 @@ function translateValueChildren(
     tag: string,
     parent: undefined | { type?: string },
     definition: HtmlReference,
-): DatatypeElement[] | undefined {
+): FieldElement[] | undefined {
     let type = parent?.type;
     if (type === undefined) {
         switch (tag) {
@@ -413,7 +413,7 @@ function translateValueChildren(
 
             records = records.filter(r => r.name !== "Reserved");
 
-            return translateRecordsToMatter("value", records, DatatypeElement);
+            return translateRecordsToMatter("value", records, FieldElement);
         }
 
         case Metatype.bitmap: {
@@ -436,7 +436,7 @@ function translateValueChildren(
                         name = `Bits${constraint.min}To${constraint.max - 1}`;
                     }
                     if (name) {
-                        return DatatypeElement({
+                        return FieldElement({
                             name,
                             constraint,
                             description: r.description,
@@ -457,12 +457,12 @@ function translateValueChildren(
                 description: Optional(Alias(Str, "summary")),
             });
 
-            return translateRecordsToMatter("bit", records, DatatypeElement);
+            return translateRecordsToMatter("bit", records, FieldElement);
         }
 
         case Metatype.object: {
             const records = translateFields("field", definition);
-            return translateRecordsToMatter("field", records, DatatypeElement);
+            return translateRecordsToMatter("field", records, FieldElement);
         }
     }
 }
@@ -573,8 +573,8 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
             name: Alias(Identifier, "value"),
             details: Alias(Str, "summary"),
         });
-        const statusCodes = translateRecordsToMatter("statusCodes", records, DatatypeElement);
-        statusCodes && children.push(DatatypeElement({ name: "StatusCode", type: "status", children: statusCodes }));
+        const statusCodes = translateRecordsToMatter("statusCodes", records, FieldElement);
+        statusCodes && children.push(FieldElement({ name: "StatusCode", type: "status", children: statusCodes }));
     }
 }
 
@@ -640,7 +640,7 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
             return;
         }
 
-        const datatype = DatatypeElement({ type: type, name, description, xref: definition.xref });
+        const datatype = FieldElement({ type: type, name, description, xref: definition.xref });
         datatype.children = translateValueChildren("datatype", datatype, definition);
         return datatype;
     }

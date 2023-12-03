@@ -11,7 +11,7 @@ import { ValueElement } from "./ValueElement.js";
 /**
  * A command describes a remote procedure call.
  */
-export type CommandElement = ValueElement & {
+export interface CommandElement extends ValueElement {
     id: Mei;
     tag: `${CommandElement.Tag}`;
 

@@ -5,12 +5,12 @@
  */
 
 import { CommandElement } from "../../elements/index.js";
-import { CommandModel, DatatypeModel, ValueModel } from "../../models/index.js";
+import { CommandModel, FieldModel, ValueModel } from "../../models/index.js";
 import { ModelValidator } from "./ModelValidator.js";
 
 ModelValidator.validators[CommandElement.Tag] = class CommandValidator extends ModelValidator<CommandModel> {
     override validate() {
-        this.validateStructure(true, DatatypeModel);
+        this.validateStructure(true, FieldModel);
         this.validateProperty({
             name: "direction",
             type: CommandElement.Direction,

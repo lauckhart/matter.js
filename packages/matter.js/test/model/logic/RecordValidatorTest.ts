@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AttributeModel, DatatypeModel, FeatureSet, Globals, RecordValidator } from "../../../src/model/index.js";
+import { AttributeModel, FieldModel, FeatureSet, Globals, RecordValidator } from "../../../src/model/index.js";
 import { camelize } from "../../../src/util/String.js";
 import { Properties } from "../../../src/util/Type.js";
 
 function Fields(...definition: { name?: string; type?: string; conformance?: string }[]): Fields {
     return definition.map(
         f =>
-            new DatatypeModel({
+            new FieldModel({
                 name: "Test",
                 type: "number",
                 ...f,
@@ -25,7 +25,7 @@ function Features(definition: { [code: string]: string }): AttributeModel {
 
         children: Object.entries(definition).map(
             ([name, description]) =>
-                new DatatypeModel({
+                new FieldModel({
                     name,
                     description,
                 }),
@@ -502,7 +502,7 @@ function test(description: string, what: Tests | Test, structure: ClusterStructu
 
 test("RecordValidator", AllTests, {});
 
-type Fields = DatatypeModel[];
+type Fields = FieldModel[];
 type Features = AttributeModel;
 
 type ClusterStructure = {

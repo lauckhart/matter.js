@@ -35,6 +35,17 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
     }
 
     /**
+     * Determine whether this access is fully specified.  This means we know
+     * whether reads and/or writes are allowed and if so the required access
+     * levels.
+     */
+    get complete() {
+        return this.rw !== undefined
+            && (!this.readable || this.rw !== undefined)
+            && (!this.writable || this.rw !== undefined);
+    }
+
+    /**
      * Initialize from an Access.Definition or the access control DSL defined
      * by the Matter Specification.
      */
@@ -396,4 +407,12 @@ export namespace Access {
      * like `[ RW, VA ]` or `[ Access.Rw.W, Access.Privilege.Operate ]`.
      */
     export type Definition = Ast | (Flag | Authorization)[] | string | undefined;
+}
+
+export namespace Access {
+    export const Default = new Access({
+        rw: Access.RW,
+        readPriv: Access.Privilege.View,
+        writePriv: Access.Privilege.Operate,
+    });
 }

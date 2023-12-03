@@ -18,4 +18,5 @@ import "./FabricValidator.js";
 import "./MatterValidator.js";
 import "./NodeValidator.js";
 import "./RequirementValidator.js";
+import "./DatatypeValidator.js";
 import "./ValueValidator.js";

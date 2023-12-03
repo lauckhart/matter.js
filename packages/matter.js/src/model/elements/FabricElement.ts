@@ -11,7 +11,7 @@ import { NodeElement } from "./NodeElement.js";
 /**
  * Runtime representation of a fabric.
  */
-export type FabricElement = BaseElement & {
+export interface FabricElement extends BaseElement {
     id: number;
     tag: `${FabricElement.Tag}`;
     children: NodeElement[];

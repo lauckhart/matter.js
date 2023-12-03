@@ -5,6 +5,7 @@
  */
 
 import { ImplementationError } from "../../common/MatterError.js";
+import { FeatureSet } from "../../model/index.js";
 import { GeneratedClass } from "../../util/GeneratedClass.js";
 import type { InvocationContext } from "../InvocationContext.js";
 import { Schema } from "./Schema.js";
@@ -107,6 +108,7 @@ export namespace State {
     export type WithOptions = {
         name?: string;
         schema?: Schema;
+        supportedFeatures?: FeatureSet;
     };
 
     /**

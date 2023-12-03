@@ -5,7 +5,7 @@
  */
 
 import { ImplementationError } from "../../../../common/MatterError.js";
-import { Metatype, ValueModel } from "../../../../model/index.js";
+import { ValueModel } from "../../../../model/index.js";
 import type { Io } from "../Io.js";
 import type { IoFactory } from "../IoFactory.js";
 import { Schema } from "../../Schema.js";
@@ -25,16 +25,14 @@ export function ListManager(
     factory: IoFactory,
     schema: Schema
 ): Io.Manage {
-    const maybeEntry = schema instanceof ValueModel ? schema.listEntry : undefined;
-    if (maybeEntry === undefined) {
+    const entry = schema instanceof ValueModel ? schema.listEntry : undefined;
+    if (entry === undefined) {
         throw new ImplementationError(
             `List schema ${schema.path} has no entry definition`
         );
     }
-    const entry = maybeEntry;
-
-    // Create a function that will convert entries to managed values on read
-    const manageEntry = createEntryManager(factory, entry);
+    // We use this I/O to perform validated I/O on entries
+    const { manage, read, write } = factory.get(entry);
 
     // Return an Io.Manage that manages reads and writes
     return (list, owner, context) => {
@@ -51,19 +49,10 @@ export function ListManager(
 
         let target = list as Record<string, any>;
 
-        // We use this I/O to perform validated I/O on entries
-        let io = factory.isGenerating(entry)
-            ? undefined
-            : factory.get(entry);
-
         return new Proxy(list, {
             // On read we return managed values if the schema is a struct or
             // array type
             get(_target, property, receiver) {
-                if (io === undefined) {
-                    io = factory.get(entry);
-                }
-
                 if (typeof property === "string" && property.match(/^[0-9]+/)) {
                     let readOptions = owner.readOptions;
                     if (context?.owningFabric) {
@@ -72,8 +61,8 @@ export function ListManager(
                             owningFabric: context?.owningFabric
                         };
                     }
-                    return manageEntry(
-                        io.read(target[property], readOptions),
+                    return manage(
+                        read(target[property], readOptions),
                         owner
                     );
                 }
@@ -92,10 +81,6 @@ export function ListManager(
                     return true;
                 }
 
-                if (io === undefined) {
-                    io = factory.get(schema);
-                }
-
                 if (target === list) {
                     if (owner.beginTransaction()) {
                         target = [ ...list ];
@@ -110,7 +95,7 @@ export function ListManager(
                     };
                 }
 
-                target[property] = io.write(
+                target[property] = write(
                     newValue,
                     oldValue,
                     writeOptions
@@ -119,30 +104,5 @@ export function ListManager(
                 return true;
             }
         });
-    }
-}
-
-function createEntryManager(factory: IoFactory, schema: Schema) {
-    switch (schema.effectiveMetatype) {
-        case Metatype.object:
-        case Metatype.array:
-            return managedWrapper();
-
-        default:
-            return (value: Io.Val) => value;
-    }
-
-    function managedWrapper(): Io.Manage {
-        let manage = factory.isGenerating(schema)
-                ? undefined
-                : factory.get(schema).manage;
-
-        return (value, owner) => {
-            if (manage === undefined) {
-                manage = factory.get(schema).manage;
-            }
-
-            return manage(value, owner);
-        }
     }
 }

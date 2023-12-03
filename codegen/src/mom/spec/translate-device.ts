@@ -5,7 +5,7 @@
  */
 
 import { Logger } from "@project-chip/matter.js/log";
-import { DatatypeElement, DeviceTypeElement, RequirementElement } from "@project-chip/matter.js/model";
+import { FieldElement, DeviceTypeElement, RequirementElement } from "@project-chip/matter.js/model";
 import { camelize } from "../../util/string.js";
 import { addDocumentation } from "./add-documentation.js";
 import { Identifier, Integer, LowerIdentifier, Str } from "./html-translators.js";
@@ -125,7 +125,7 @@ function addConditions(device: DeviceTypeElement, deviceRef: DeviceReference) {
         return;
     }
 
-    const conditions = Array<DatatypeElement>();
+    const conditions = Array<FieldElement>();
     deviceRef.conditionSets.forEach(conditionRef => {
         const definitions = translateTable("condition", conditionRef, {
             tag: Constant("datatype" as const),
@@ -150,14 +150,14 @@ function addConditions(device: DeviceTypeElement, deviceRef: DeviceReference) {
         }
     });
 
-    const translated = translateRecordsToMatter("conditions", conditions, DatatypeElement);
+    const translated = translateRecordsToMatter("conditions", conditions, FieldElement);
 
     if (translated?.length) {
         if (!device.children) {
             device.children = [];
         }
         device.children.push(
-            DatatypeElement({
+            FieldElement({
                 name: "conditions",
                 type: "enum8",
                 children: conditions,

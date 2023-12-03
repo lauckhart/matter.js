@@ -9,7 +9,7 @@ import {
     ClusterModel,
     ClusterVariance,
     CommandModel,
-    DatatypeModel,
+    FieldModel,
     FeatureBitmap,
     ValueModel,
     conditionToBitmaps,
@@ -61,7 +61,7 @@ export function generateCluster(file: ClusterFile) {
     gen.populateComponent(variance.base, base);
 
     // Generate status codes even if they aren't referenced directly
-    const status = cluster.get(DatatypeModel, "StatusCode");
+    const status = cluster.get(FieldModel, "StatusCode");
     if (status) {
         gen.tlv.reference(status);
     }
