@@ -9,6 +9,7 @@ import { ClusterModel, Metatype, ValueModel } from "../../../model/index.js";
 import { camelize } from "../../../util/String.js";
 import { Schema } from "../Schema.js";
 import { Io } from "./Io.js";
+import { IoError } from "./IoError.js";
 import { IoFactory } from "./IoFactory.js";
 import {
     assertArray,
@@ -87,7 +88,7 @@ function createNullValidator(schema: ValueModel, nextValidator?: Io.Validate): I
     if (schema.effectiveQuality.nullable !== true) {
         return (value, options) => {
             if (value === null) {
-                throw new Io.DatatypeError(
+                throw new IoError.ValidationError(
                     schema,
                     "Null write to non-nullable field",
                 )
@@ -107,7 +108,7 @@ function createEnumValidator(schema: ValueModel): Io.Validate | undefined {
     return (value) => {
         assertNumber(value, schema);
         if (!valid.has(value)) {
-            throw new Io.DatatypeError(
+            throw new IoError.ValidationError(
                 schema,
                 `Value ${value} is not a present in enum`
             )
@@ -126,7 +127,7 @@ function createBitmapValidator(schema: ValueModel): Io.Validate | undefined {
         } else if (typeof constraint.min === "number" && typeof constraint.max === "number") {
             max = constraint.max - constraint.min;
         } else {
-            throw new InternalError(`Bitmap field ${field.path} does not properly constrain bit field`)
+            throw new IoError.SchemaError(schema, `Bitmap field does not properly constrain bit field`)
         }
         fields[camelize(field.name, false)] = {
             schema: field,
@@ -140,7 +141,7 @@ function createBitmapValidator(schema: ValueModel): Io.Validate | undefined {
         for (const key in value) {
             const field = fields[key];
             if (field === undefined) {
-                throw new Io.DatatypeError(
+                throw new IoError.ValidationError(
                     schema,
                     `Field ${key} is not present in bitmap`
                 );
@@ -150,7 +151,7 @@ function createBitmapValidator(schema: ValueModel): Io.Validate | undefined {
             assertNumber(fieldValue, field.schema);
 
             if (fieldValue > field.max) {
-                throw new Io.DatatypeError(
+                throw new IoError.ValidationError(
                     field.schema,
                     `Value of ${fieldValue} is too large for bitmap field`
                 )
@@ -199,15 +200,27 @@ function createStructValidator(
         for (const name in options.choices) {
             const choice = options.choices[name];
             if (choice.count < choice.target) {
-                throw new Io.DatatypeError(
+                throw new IoError.ConformanceError(
                     schema,
-                    `Too few fields present for conformance choice ${name} (${choice.count} of min ${choice.target})`
+                    `Too few fields present for conformance choice ${
+                        name
+                    } (${
+                        choice.count
+                    } of min ${
+                        choice.target
+                    })`
                 )
             }
             if (choice.count > choice.target && !choice.orMore) {
-                throw new Io.DatatypeError(
+                throw new IoError.ConformanceError(
                     schema,
-                    `Too many fields present for conformance choice ${name} (${choice.count} of max ${choice.target})`
+                    `Too many fields present for conformance choice ${
+                        name
+                    } (${
+                        choice.count
+                    } of max ${
+                        choice.target
+                    })`
                 )
             }
         }

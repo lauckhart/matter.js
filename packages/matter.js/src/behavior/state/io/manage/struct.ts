@@ -12,6 +12,7 @@ import { GeneratedClass } from "../../../../util/GeneratedClass.js";
 import { camelize } from "../../../../util/String.js";
 import { Schema } from "../../Schema.js";
 import { Io } from "../Io.js";
+import { IoError } from "../IoError.js";
 import { IoFactory } from "../IoFactory.js";
 
 /**
@@ -76,11 +77,10 @@ export function StructManagerMixin(factory: IoFactory, schema: Schema): Generate
     return {
         initialize(this: Wrapper, value: Io.Val, owner: Io.ValueOwner, context?: Io.ValueContext) {
             if (typeof value !== undefined) {
-                throw new ImplementationError(
+                throw new IoError.SchemaError(
+                    schema,
                     `Cannot manage ${
                         typeof value
-                    } for ${
-                        schema.path
                     } because it is not an object`
                 )
             }

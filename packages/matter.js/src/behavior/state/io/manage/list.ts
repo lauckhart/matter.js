@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ImplementationError } from "../../../../common/MatterError.js";
 import { ValueModel } from "../../../../model/index.js";
 import type { Io } from "../Io.js";
 import type { IoFactory } from "../IoFactory.js";
 import { Schema } from "../../Schema.js";
 import { isDeepEqual } from "../../../../util/DeepEqual.js";
+import { IoError } from "../IoError.js";
 
 /**
  * We must use a proxy to properly encapsulate array data.
@@ -27,8 +27,9 @@ export function ListManager(
 ): Io.Manage {
     const entry = schema instanceof ValueModel ? schema.listEntry : undefined;
     if (entry === undefined) {
-        throw new ImplementationError(
-            `List schema ${schema.path} has no entry definition`
+        throw new IoError.SchemaError(
+            schema,
+            `List schema has no entry definition`
         );
     }
     // We use this I/O to perform validated I/O on entries
@@ -38,11 +39,10 @@ export function ListManager(
     return (list, owner, context) => {
         // Sanity check
         if (!Array.isArray(list)) {
-            throw new ImplementationError(
+            throw new IoError.SchemaError(
+                schema,
                 `Cannot manage ${
                     typeof list
-                } for ${
-                    schema.path
                 } because it is not an array`
             );
         }

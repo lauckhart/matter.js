@@ -5,9 +5,7 @@
  */
 
 import { AccessLevel } from "../../../../cluster/Cluster.js";
-import { ImplementationError } from "../../../../common/MatterError.js";
 import { FabricIndex } from "../../../../datatype/FabricIndex.js";
-import { StatusResponseError } from "../../../../protocol/interaction/InteractionMessenger.js";
 import { StatusCode } from "../../../../protocol/interaction/InteractionProtocol.js";
 import { Access, ClusterModel, Metatype, ValueModel,  } from "../../../../model/index.js";
 import { Io } from "../Io.js";
@@ -15,6 +13,7 @@ import type { IoFactory } from "../IoFactory.js";
 import { assertArray, assertStruct, getListIndex } from "./rw-util.js";
 import { camelize } from "../../../../util/String.js";
 import { Schema } from "../../Schema.js";
+import { IoError } from "../IoError.js";
 
 /**
  * Generate a function that performs a data read.  The read transforms the
@@ -38,8 +37,9 @@ export function IoReader(schema: Schema, factory: IoFactory): Io.Read {
 
     if (!schema.effectiveAccess.readable) {
         return () => {
-            throw new StatusResponseError(
-                `Read from write-only value ${schema.path}`,
+            throw new IoError.ReadError(
+                schema,
+                `Read from write-only value`,
                 StatusCode.UnsupportedRead
             );
         }
@@ -61,7 +61,8 @@ export function IoReader(schema: Schema, factory: IoFactory): Io.Read {
         const nextReader = reader;
         return (value, options) => {
             if (!options?.offline) {
-                throw new StatusResponseError(
+                throw new IoError.ReadError(
+                    schema,
                     `Read from write-only value ${schema.path}`,
                     StatusCode.UnsupportedRead
                 );
@@ -100,9 +101,9 @@ function isFabricAuthorized(schema: Schema, options: Io.RwOptions | undefined, c
             return true;
         }
 
-        throw new StatusResponseError(
-            `Illegal read from ${schema.path} without fabric`,
-            StatusCode.UnsupportedRead
+        throw new IoError.ReadError(
+            schema,
+            `Illegal read without fabric`
         );
     }
 
@@ -120,8 +121,9 @@ function assertAuthorized(schema: Schema, accessLevel: AccessLevel, options?: Io
     }
 
     if (options?.accessLevel === undefined || options?.accessLevel >= accessLevel) {
-        throw new StatusResponseError(
-            `Read access denied for ${schema.path}`,
+        throw new IoError.ReadError(
+            schema,
+            `Access denied`,
             StatusCode.UnsupportedRead
         );
     };
@@ -130,10 +132,9 @@ function assertAuthorized(schema: Schema, accessLevel: AccessLevel, options?: Io
 function createAtomReader(schema: Schema, accessLevel: AccessLevel): Io.Read {
     return (item, options) => {
         if (options?.path?.length) {
-            throw new StatusResponseError(
-                `Illegal access to sub-field ${options.path[0]} of "${
-                    schema.path
-                }" which is not a list or struct`,
+            throw new IoError.ReadError(
+                schema,
+                `Illegal access to sub-field ${options.path[0]} of non-container`,
                 StatusCode.UnsupportedAttribute
             );
         }
@@ -221,8 +222,9 @@ function createStructReader(
             const reader = readerIndex[options.path[0]];
             
             if (reader === undefined) {
-                throw new StatusResponseError(
-                    `Read of unknown property ${options.path[0]} of struct ${schema.path}`,
+                throw new IoError.ReadError(
+                    schema,
+                    `Read of unknown struct property ${options.path[0]}`,
                     StatusCode.UnsupportedAttribute
                 );
             }
@@ -248,8 +250,9 @@ function createListReader(factory: IoFactory, schema: ValueModel, accessLevel: A
 
     const entry = schema.listEntry;
     if (entry === undefined) {
-        throw new ImplementationError(
-            `List schema ${schema.path} has no entry type`
+        throw new IoError.SchemaError(
+            schema,
+            `List schema has no entry type`
         );
     }
     let entryReader = factory.get(entry).read;
@@ -268,8 +271,9 @@ function createListReader(factory: IoFactory, schema: ValueModel, accessLevel: A
         if (fabricScoped && options?.fabricFiltered) {
             const accessingFabric = options?.accessingFabric;
             if (accessingFabric === undefined) {
-                throw new ImplementationError(
-                    `Fabric filtering of ${schema.path} requested without accessing fabric`
+                throw new IoError.SchemaError(
+                    schema,
+                    `Fabric filtering requested without accessing fabric`
                 );
             }
 
@@ -282,11 +286,12 @@ function createListReader(factory: IoFactory, schema: ValueModel, accessLevel: A
         assertArray(schema, item);
 
         if (options?.path?.length) {
-            const index = getListIndex(options.path);
+            const index = getListIndex(schema, options.path);
 
             if (index > item.length) {
-                throw new StatusResponseError(
-                    `List index ${index} is out of range for ${schema.path}`,
+                throw new IoError.ReadError(
+                    schema,
+                    `List index ${index} is out of range`,
                     StatusCode.UnsupportedAttribute
                 )
             }
@@ -294,8 +299,9 @@ function createListReader(factory: IoFactory, schema: ValueModel, accessLevel: A
             const subitem = item[index];
             if (subitem === undefined) {
                 if (options.path.length > 1) {
-                    throw new StatusResponseError(
-                        `Cannot access of list index ${index} of ${schema.path} because it is undefined`,
+                    throw new IoError.ReadError(
+                        schema,
+                        `Cannot access index ${index} because list is undefined`,
                         StatusCode.UnsupportedAttribute
                     )
                 }

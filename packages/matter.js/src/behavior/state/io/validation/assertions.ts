@@ -8,12 +8,13 @@ import { ValueModel } from "../../../../model/index.js";
 import { ByteArray } from "../../../../util/ByteArray.js";
 import { Schema } from "../../Schema.js";
 import { Io } from "../Io.js";
+import { IoError } from "../IoError.js";
 
 export function assertNumber(value: Io.Val, schema: Schema): asserts value is number {
     if (typeof value === "number") {
         return;
     }
-    throw new Io.DatatypeError(
+    throw new IoError.ValidationError(
         schema,
         `Expected number but received ${typeof value}`
     );
@@ -23,7 +24,7 @@ export function assertObject(value: Io.Val, schema: Schema): asserts value is Io
     if (typeof value === "object") {
         return;
     }
-    throw new Io.DatatypeError(
+    throw new IoError.ValidationError(
         schema,
         `Expected object but received ${typeof value}`
     )
@@ -33,7 +34,7 @@ export function assertNumeric(value: Io.Val, schema: ValueModel): asserts value 
     if (typeof value === "number" || typeof value === "bigint") {
         return;
     }
-    throw new Io.DatatypeError(
+    throw new IoError.ValidationError(
         schema,
         `Expected number or bigint but received ${typeof value}`
     );
@@ -43,7 +44,7 @@ export function assertString(value: Io.Val, schema: ValueModel): asserts value i
     if (typeof value === "string") {
         return;
     }
-    throw new Io.DatatypeError(
+    throw new IoError.ValidationError(
         schema,
         `Expected string but received ${typeof value}`
     );
@@ -53,7 +54,7 @@ export function assertBytes(value: Io.Val, schema: ValueModel): asserts value is
     if (value instanceof ByteArray) {
         return;
     }
-    throw new Io.DatatypeError(
+    throw new IoError.ValidationError(
         schema,
         `Expected byte array but received ${typeof value}`
     );
@@ -63,7 +64,7 @@ export function assertSequence(value: Io.Val, schema: ValueModel): asserts value
     if (typeof value === "string" || value instanceof ByteArray) {
         return;
     }
-    throw new Io.DatatypeError(
+    throw new IoError.ValidationError(
         schema,
         `Expected string or ByteArray but received ${typeof value} that is neither`
     );
@@ -71,7 +72,7 @@ export function assertSequence(value: Io.Val, schema: ValueModel): asserts value
 
 export function assertArray(value: Io.Val, schema: ValueModel): asserts value is Io.Val[] {
     if (!Array.isArray(value)) {
-        throw new Io.DatatypeError(
+        throw new IoError.ValidationError(
             schema,
             `Expected array but received ${typeof value}`
         );

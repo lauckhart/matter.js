@@ -5,8 +5,7 @@
  */
 
 import { AccessLevel } from "../../../../cluster/Cluster.js";
-import { ImplementationError, InternalError } from "../../../../common/MatterError.js";
-import { StatusResponseError } from "../../../../protocol/interaction/InteractionMessenger.js";
+import { InternalError } from "../../../../common/MatterError.js";
 import { StatusCode } from "../../../../protocol/interaction/InteractionProtocol.js";
 import { Access, AttributeModel, ClusterModel, FieldValue, Metatype, ValueModel } from "../../../../model/index.js";
 import { Io } from "../Io.js";
@@ -15,6 +14,7 @@ import { camelize } from "../../../../util/String.js";
 import { ByteArray } from "../../../../util/ByteArray.js";
 import { assertArray, assertStruct } from "./rw-util.js";
 import { Schema } from "../../Schema.js";
+import { IoError } from "../IoError.js";
 
 /**
  * Generates a function that performs validated value reads.
@@ -38,9 +38,7 @@ export function IoWriter(schema: Schema, factory: IoFactory): Io.Write {
 
     const metatype = schema.effectiveMetatype;
     if (metatype === undefined) {
-        throw new ImplementationError(
-            `Cannot determine type for ${schema.path}`
-        );
+        throw new IoError.SchemaError(schema, `Cannot determine type`);
     }
 
     const requiresTimed = !!access.timed;
@@ -68,8 +66,9 @@ export function IoWriter(schema: Schema, factory: IoFactory): Io.Write {
                 || options.accessLevel < accessLevel
             )
         ) {
-            throw new StatusResponseError(
-                `Write access denied for ${schema.path}`,
+            throw new IoError.WriteError(
+                schema,
+                `Write access denied`,
                 StatusCode.UnsupportedAccess
             );
         }
@@ -81,9 +80,9 @@ export function IoWriter(schema: Schema, factory: IoFactory): Io.Write {
         const nextWriter = writer;
         writer = (value, input, options) => {
             if (!options?.offline) {
-                throw new StatusResponseError(
-                    `Write to read-only value ${schema.path}`,
-                    StatusCode.UnsupportedWrite
+                throw new IoError.WriteError(
+                    schema,
+                    `Write to read-only value`
                 );
             }
 
@@ -95,8 +94,9 @@ export function IoWriter(schema: Schema, factory: IoFactory): Io.Write {
         const nextWriter = writer;
         writer = (value, input, options) => {
             if (!options?.offline && !options?.timed) {
-                throw new StatusResponseError(
-                    `Write denied to ${schema.path} without timed interaction`,
+                throw new IoError.WriteError(
+                    schema,
+                    `Write denied without timed interaction`,
                     StatusCode.NeedsTimedInteraction
                 );
             }
@@ -131,9 +131,9 @@ function createAtomValidator(metatype: Metatype, schema: ValueModel) {
                     }
 
                     if (!constraint.test(value as number | bigint)) {
-                        throw new StatusResponseError(
-                            `Numeric value ${value} is out of range for ${schema.path}`,
-                            StatusCode.ConstraintError
+                        throw new IoError.ConstraintError(
+                            schema,
+                            `Numeric value ${value} is out of range`,
                         )
                     }
                 }
@@ -149,9 +149,9 @@ function createAtomValidator(metatype: Metatype, schema: ValueModel) {
 
                     const length = (value as Array<any> | ByteArray | string).length;
                     if (!constraint.test(length)) {
-                        throw new StatusResponseError(
-                            `List length ${length} out of range for ${schema.path}`,
-                            StatusCode.ConstraintError
+                        throw new IoError.ConstraintError(
+                            schema,
+                            `List length ${length} out of range`,
                         )
                     }
                 }
@@ -163,8 +163,10 @@ function createAtomValidator(metatype: Metatype, schema: ValueModel) {
         const nextValidator = validator;
         validator = (value) => {
             if (value === null) {
-                throw new Io.DatatypeError(
-                    `Null written to non-nullable field ${schema.path}`,
+                throw new IoError.ValidationError(
+                    schema,
+                    `Null written to non-nullable field`,
+                    StatusCode.InvalidDataType
                 );
             }
             nextValidator?.(value);
@@ -180,12 +182,12 @@ function createAtomWriter(metatype: Metatype, schema: ValueModel): Io.Write {
     return (newValue) => {
         newValue = Metatype.cast(metatype, newValue as FieldValue);
         if (newValue === FieldValue.Invalid) {
-            throw new Io.DatatypeError(
+            throw new IoError.ValidationError(
+                schema,
                 `Illegal value for ${
                     metatype
-                } field ${
-                    schema.path
-                }`,
+                } value`,
+                StatusCode.InvalidDataType
             )
         }
 
@@ -243,11 +245,10 @@ function createStructWriter(factory: IoFactory, fields: ValueModel[], schema: Sc
             // Obtain the writer
             const writer = writerIndex[options.path[0]];
             if (writer === undefined) {
-                throw new StatusResponseError(
+                throw new IoError.WriteError(
+                   schema,
                     `Write to unknown property ${
                         options.path[0]
-                    } of ${
-                        schema.path
                     }`,
                     StatusCode.UnsupportedAttribute
                 );
@@ -261,8 +262,9 @@ function createStructWriter(factory: IoFactory, fields: ValueModel[], schema: Sc
 
         // Write of entire object
         if (typeof newValue !== "object") {
-            throw new Io.DatatypeError(
-                `Value for struct ${schema.path} is not an object`
+            throw new IoError.ValidationError(
+                schema,
+                `Struct value for struct is not an object`
             );
         }
         assertStruct(schema, newValue);
@@ -273,12 +275,11 @@ function createStructWriter(factory: IoFactory, fields: ValueModel[], schema: Sc
         for (const key in newValue) {
             const writer = writers[key];
             if (writer === undefined) {
-                throw new Io.DatatypeError(
-                    `Write to unknown struct property "${
+                throw new IoError.ValidationError(
+                    schema,
+                    `Unknown struct property "${
                         key
-                    }" of ${
-                        schema.path
-                    }`
+                    }"`
                 )
             }
 
@@ -314,24 +315,25 @@ function createStructWriter(factory: IoFactory, fields: ValueModel[], schema: Sc
                     }
 
                     if (result.fabricIndex === undefined) {
-                        throw new ImplementationError(
-                            `Offline write of ${schema.path} requires fabricIndex because value is fabric scoped`
+                        throw new IoError.SchemaError(
+                            schema,
+                            `Offline writerequires fabricIndex because value is fabric scoped`
                         )
                     }
                 } else {
                     if (options?.accessingFabric === undefined) {
-                        throw new StatusResponseError(
-                            `Illegal write to ${schema.path} without fabric`,
-                            StatusCode.UnsupportedWrite
+                        throw new IoError.WriteError(
+                            schema,
+                            `Illegal write without fabric`,
                         )
                     }
 
                     if (result.fabricIndex === undefined) {
                         result.fabricIndex = options.accessingFabric;
                     } else {
-                        throw new StatusResponseError(
-                            `Illegal write to ${schema.path} with fabricIndex set`,
-                            StatusCode.UnsupportedWrite
+                        throw new IoError.WriteError(
+                            schema,
+                            `Illegal write to fabricIndex`
                         )
                     }
                 }
@@ -352,7 +354,7 @@ export enum ListOp {
 function createListWriter(factory: IoFactory, schema: ValueModel): Io.Write {
     const entry = schema.listEntry;
     if (entry === undefined) {
-        throw new ImplementationError("List schema has no entry type");
+        throw new IoError.SchemaError(schema, "List schema has no entry type");
     }
 
     let entryWriter = factory.get(entry).write;
@@ -377,8 +379,9 @@ function createListWriter(factory: IoFactory, schema: ValueModel): Io.Write {
             }
 
             if (!Array.isArray(newValue)) {
-                throw new Io.DatatypeError(
-                    `Value for list ${schema.path} is not an array`
+                throw new IoError.ValidationError(
+                    schema,
+                    `Value for list is not an array`
                 )
             }
             
@@ -421,14 +424,16 @@ function createListWriter(factory: IoFactory, schema: ValueModel): Io.Write {
         if (typeof targetIndex === "string") {
             targetIndex = Number.parseInt(targetIndex);
             if (Number.isNaN(targetIndex)) {
-                throw new StatusResponseError(
+                throw new IoError.WriteError(
+                    schema,
                     "List index is non-numeric",
                     StatusCode.InvalidAction
                 )
             }
         }
         if (targetIndex < 0) {
-            throw new StatusResponseError(
+            throw new IoError.WriteError(
+                schema,
                 "List index must be positive",
                 StatusCode.InvalidAction
             )
@@ -452,10 +457,9 @@ function createListWriter(factory: IoFactory, schema: ValueModel): Io.Write {
             if (fabricIndex === targetIndex || fabricIndex + 1 === targetIndex) {
                 targetIndex = listIndex;
             } else {
-                throw new StatusResponseError(
-                    `Write to fabric-scoped list ${
-                        schema.path
-                    } index ${
+                throw new IoError.WriteError(
+                    schema,
+                    `Write to fabric-scoped list index ${
                         targetIndex
                     } would leave gaps in list`,
                     StatusCode.InvalidAction

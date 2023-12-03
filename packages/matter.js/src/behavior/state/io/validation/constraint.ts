@@ -6,22 +6,9 @@
 
 import { InternalError } from "../../../../common/MatterError.js";
 import { Constraint, Metatype, ValueModel } from "../../../../model/index.js";
-import { StatusResponseError } from "../../../../protocol/interaction/InteractionMessenger.js";
-import { StatusCode } from "../../../../protocol/interaction/InteractionProtocol.js";
-import { Schema } from "../../Schema.js";
 import { Io } from "../Io.js";
+import { IoError } from "../IoError.js";
 import { assertArray, assertNumeric, assertSequence } from "./assertions.js";
-
-export class ConstraintError extends StatusResponseError {
-    constructor(schema: Schema, message: string) {
-        super(
-            `Error validating ${
-                schema.path
-            }: ${
-                message
-            }`, StatusCode.InvalidDataType);
-    }
-}
 
 /**
  * Creates a function that validates values based on the constraint in the
@@ -41,7 +28,7 @@ export function createConstraintValidator(constraint: Constraint, schema: ValueM
             return (value: Io.Val) => {
                 assertNumeric(value, schema);
                 if (!constraint.test(value)) {
-                    throw new ConstraintError(
+                    throw new IoError.ConstraintError(
                         schema,
                         `Value ${value} is not within bounds defined by constraint`
                     )
@@ -53,7 +40,7 @@ export function createConstraintValidator(constraint: Constraint, schema: ValueM
             return (value: Io.Val) => {
                 assertSequence(value, schema);
                 if (!constraint.test(value.length)) {
-                    throw new ConstraintError(
+                    throw new IoError.ConstraintError(
                         schema,
                         `Value ${value} is not within bounds defined by constraint`
                     )
@@ -88,7 +75,7 @@ function createArrayConstraintValidator(constraint: Constraint, schema: ValueMod
         assertArray(value, schema);
 
         if (!constraint.test(value.length, options?.siblings)) {
-            throw new ConstraintError(
+            throw new IoError.ConstraintError(
                 schema,
                 `Value ${value} is not within bounds defined by constraint`
             )

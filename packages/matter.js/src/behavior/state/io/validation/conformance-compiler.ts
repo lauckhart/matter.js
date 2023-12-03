@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../../../../common/MatterError.js";
 import { Conformance, FeatureSet, FieldValue, ValueModel } from "../../../../model/index.js";
 import { Io } from "../Io.js";
-import { Code, ConformanceError, ConformantNode, DynamicNode, NonconformantNode, type RuntimeNode, StaticNode, asBoolean, asConformance, createComparison, createLogicalBinaryEvaluator, createLogicalInversion, evaluateNode, isStatic, normalizeFeatures } from "./conformance-util.js";
+import { IoError } from "../IoError.js";
+import { Code, ConformantNode, DynamicNode, NonconformantNode, type RuntimeNode, StaticNode, asBoolean, asConformance, createComparison, createLogicalBinaryEvaluator, createLogicalInversion, evaluateNode, isStatic, normalizeFeatures } from "./conformance-util.js";
 
 /**
  * Generates JS function equivalent of a conformance expression.
@@ -83,14 +83,16 @@ export function astToFunction(
                         break;
 
                     default:
-                        throw new InternalError(
+                        throw new IoError.SchemaError(
+                            schema,
                             `Unknown or unsupported top-level conformance node type ${compiledNode.code}`
                         );
                 }
             }
     
         default:
-            throw new InternalError(
+            throw new IoError.SchemaError(
+                schema,
                 `Unknown or unsupported top-level conformance node type ${compiledNode.code}`
             );
     }
@@ -159,7 +161,10 @@ export function astToFunction(
                 ast satisfies never;
 
                 // Throw at runtime
-                throw new InternalError(`Unsupported conformance AST node type ${(ast as any).type}`)
+                throw new IoError.SchemaError(
+                    schema,
+                    `Unsupported conformance AST node type ${(ast as any).type}`
+                )
         }
     }
 
@@ -218,7 +223,10 @@ export function astToFunction(
      */
     function createGroup(param: Conformance.Ast.Group): DynamicNode {
         if (!Array.isArray(param)) {
-            throw new InternalError("Conformance AST group parameter is not an array");
+            throw new IoError.SchemaError(
+                schema,
+                "Conformance AST group parameter is not an array"
+            );
         }
 
         // A "group" is a list of conformances; any success passes the entire
@@ -474,7 +482,10 @@ export function astToFunction(
                 );
 
             default:
-                throw new InternalError(`Unknown logical binary operator ${operator}`);
+                throw new IoError.SchemaError(
+                    schema,
+                    `Unknown logical binary operator ${operator}`
+                );
         }
     }
 
@@ -492,7 +503,8 @@ export function astToFunction(
         return createComparison(
             operator,
             compile(lhs),
-            compile(rhs)
+            compile(rhs),
+            schema,
         );
     }
 
@@ -507,19 +519,17 @@ export function astToFunction(
 
     function requireValue(value: unknown) {
         if (value === undefined) {
-            throw new ConformanceError(
-                schema, 
-                ast,
+            throw new IoError.ConformanceError(
+                schema,
                 "Mandatory field is undefined"
             )
         }
     }
-    
+
     function disallowValue(value: unknown) {
         if (value !== undefined) {
-            throw new ConformanceError(
+            throw new IoError.ConformanceError(
                 schema,
-                ast,
                 "Disallowed field is defined"
             )
         }

@@ -4,24 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../../../../common/MatterError.js";
 import { Conformance, FeatureSet, ValueModel } from "../../../../model/index.js";
-import { StatusResponseError } from "../../../../protocol/interaction/InteractionMessenger.js";
-import { StatusCode } from "../../../../protocol/interaction/InteractionProtocol.js";
 import { camelize } from "../../../../util/String.js";
 import { Schema } from "../../Schema.js";
 import { Io } from "../Io.js";
-
-export class ConformanceError extends StatusResponseError {
-    constructor(schema: Schema, ast: Conformance.Ast, message: string) {
-        super(
-            `Conformance violated for ${
-                schema.path
-            } expression "${Conformance.serialize(ast)}": ${
-                message
-            }`, StatusCode.InvalidDataType);
-    }
-}
+import { IoError } from "../IoError.js";
 
 /**
  * Normalize the feature map and list of supported feature names into sets of
@@ -142,9 +129,12 @@ export function asBoolean(node: StaticNode) {
  * 
  * We use this to ensure inputs to binary operators make sense.
  */
-export function assertValue(node: DynamicNode, where: string): asserts node is ValueNode {
+export function assertValue(schema: Schema, node: DynamicNode, where: string): asserts node is ValueNode {
     if (node.code !== Code.Value) {
-        throw new InternalError(`Expected a value for ${where} but conformance node is "${node.code}"`);
+        throw new IoError.SchemaError(
+            schema,
+            `Expected a value for ${where} but conformance node is "${node.code}"`
+        );
     }
 }
 
@@ -219,14 +209,15 @@ function performComparison(
     operatorName: Conformance.Operator,
     lhs: StaticNode,
     rhs: StaticNode,
+    schema: Schema,
 ): StaticNode {
     const operator = ComparisonOperators[operatorName];
     if (operator === undefined) {
-        throw new InternalError(`Unknown binary operator ${operatorName}`);
+        throw new IoError.SchemaError(schema, `Unknown binary operator ${operatorName}`);
     }
 
-    assertValue(lhs, `Left-hand side of "${operatorName}"`);
-    assertValue(rhs, `Right-hand side of "${operatorName}"`);
+    assertValue(schema, lhs, `Left-hand side of "${operatorName}"`);
+    assertValue(schema, rhs, `Right-hand side of "${operatorName}"`);
 
     if (
         lhs.value !== undefined
@@ -247,14 +238,16 @@ function performComparison(
 export function createComparison(
     operatorName: Conformance.Operator,
     lhs: DynamicNode,
-    rhs: DynamicNode
+    rhs: DynamicNode,
+    schema: Schema,
 ): DynamicNode {
     // If both sides are static evaluate statically
     if (isStatic(lhs) && isStatic(rhs)) {
         return performComparison(
             operatorName,
             lhs,
-            rhs
+            rhs,
+            schema,
         );
     }
 
@@ -266,7 +259,8 @@ export function createComparison(
             performComparison(
                 operatorName,
                 evaluateNode(lhs, value, options),
-                evaluateNode(rhs, value, options)
+                evaluateNode(rhs, value, options),
+                schema,
             )
     }
 }

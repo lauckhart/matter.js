@@ -4,19 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ImplementationError, InternalError } from "../../../../common/MatterError.js";
-import { StatusResponseError } from "../../../../protocol/interaction/InteractionMessenger.js";
-import { StatusCode } from "../../../../protocol/interaction/InteractionProtocol.js";
+import { InternalError } from "../../../../common/MatterError.js";
 import { Schema } from "../../Schema.js";
 import { Io } from "../Io.js";
+import { IoError } from "../IoError.js";
 
 
 export function assertStruct(schema: Schema, item: Io.Val): asserts item is Io.Struct {
     if (typeof item !== "object" || item === null) {
-        throw new ImplementationError(
-            `Expected struct value ${
-                schema.path
-            } to be an object but was ${
+        throw new IoError.SchemaError(
+            schema,
+            `Struct value type was not object but ${
                 typeof item
             }`
         );
@@ -25,17 +23,16 @@ export function assertStruct(schema: Schema, item: Io.Val): asserts item is Io.S
 
 export function assertArray(schema: Schema, item: Io.Val): asserts item is Io.List {
     if (!Array.isArray(item)) {
-        throw new ImplementationError(
-            `Expected list value ${
-                schema.path
-            } to be an array but was ${
+        throw new IoError.SchemaError(
+            schema,
+            `Listvalue type was notarray but ${
                 typeof item
             }`
         );
     }
 }
 
-export function getListIndex(path: Io.Path) {
+export function getListIndex(schema: Schema, path: Io.Path) {
     let index = path?.[0];
     if (index === undefined) {
         throw new InternalError("Expected list index in empty path");
@@ -44,17 +41,17 @@ export function getListIndex(path: Io.Path) {
     if (typeof index === "string") {
         index = Number.parseInt(index);
         if (Number.isNaN(index)) {
-            throw new StatusResponseError(
-                "List index is non-numeric",
-                StatusCode.InvalidAction
+            throw new IoError.SchemaError(
+                schema,
+                "List index is non-numeric"
             )
         }
     }
 
     if (index < 0) {
-        throw new StatusResponseError(
-            `List index ${index} is negative`,
-            StatusCode.UnsupportedAttribute
+        throw new IoError.SchemaError(
+            schema,
+            `List index ${index} is negative`
         )
     }
 

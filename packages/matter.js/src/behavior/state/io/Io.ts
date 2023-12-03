@@ -179,15 +179,6 @@ export namespace Io {
     }
 
     /**
-     * This error is thrown when datatypes are invalid.
-     */
-    export class DatatypeError extends StatusResponseError {
-        constructor(message: string) {
-            super(message, StatusCode.InvalidDataType);
-        }
-    }
-
-    /**
      * Contextual information used by Io.Manage implementations.
      */
     export interface ValueOwner {
