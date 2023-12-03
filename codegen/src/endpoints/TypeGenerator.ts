@@ -45,7 +45,7 @@ export class TypeGenerator {
                 return "boolean";
 
             case Metatype.bytes:
-                this.definitions.file.addImport(`util/ByteArray`);
+                this.definitions.file.addImport(`util/ByteArray.js`);
                 return "ByteArray";
 
             case Metatype.integer:
@@ -76,9 +76,9 @@ export class TypeGenerator {
                 }
                 const typeName = sourceName.startsWith("Tlv") ? sourceName.slice(3) : sourceName;
                 if (!this.defined.has(typeName)) {
-                    this.definitions.file.addImport("tlv/TlvSchema", "TypeFromSchema");
+                    this.definitions.file.addImport("tlv/TlvSchema.js", "TypeFromSchema");
                     this.definitions.file.addImport(
-                        `cluster/definitions/${this.tlv.cluster.name}Cluster`,
+                        `cluster/definitions/${this.tlv.cluster.name}Cluster.js`,
                         this.tlv.cluster.name,
                     );
 

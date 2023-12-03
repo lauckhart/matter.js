@@ -13,6 +13,7 @@ import { Model } from "./Model.js";
 import { DatatypeModel } from "./DatatypeModel.js";
 import { PropertyModel } from "./PropertyModel.js";
 import { Access } from "../aspects/Access.js";
+import type { FieldModel } from "./FieldModel.js";
 
 export class ClusterModel extends Model {
     override tag: ClusterElement.Tag = ClusterElement.Tag;
@@ -89,5 +90,9 @@ export namespace ClusterModel {
         DatatypeModel
         | AttributeModel
         | CommandModel
-        | EventModel;
+        | EventModel
+
+        // Fields are not cluster children in canonical schema but we allow
+        // them as private values in operational schema
+        | FieldModel;
 }

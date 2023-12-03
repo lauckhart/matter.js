@@ -9,7 +9,7 @@ import {
     ClusterModel,
     ClusterVariance,
     CommandModel,
-    FieldModel,
+    DatatypeModel,
     FeatureBitmap,
     ValueModel,
     conditionToBitmaps,
@@ -26,7 +26,7 @@ const logger = Logger.get("generate-cluster");
 export function generateCluster(file: ClusterFile) {
     const cluster = file.cluster;
     logger.info(`${cluster.name} → ${file.name}.ts`);
-    file.addImport("cluster/mutation/MutableCluster", "MutableCluster");
+    file.addImport("cluster/mutation/MutableCluster.js", "MutableCluster");
 
     // Analyze variance
     const variance = ClusterVariance(cluster);
@@ -61,7 +61,7 @@ export function generateCluster(file: ClusterFile) {
     gen.populateComponent(variance.base, base);
 
     // Generate status codes even if they aren't referenced directly
-    const status = cluster.get(FieldModel, "StatusCode");
+    const status = cluster.get(DatatypeModel, "StatusCode");
     if (status) {
         gen.tlv.reference(status);
     }
@@ -128,7 +128,7 @@ export function generateCluster(file: ClusterFile) {
 }
 
 function generateClusterInterface(file: ClusterFile, documentation: string | Documentation, extraDoc?: string) {
-    file.addImport("util/Type", "Identity");
+    file.addImport("util/Type.js", "Identity");
     file.ns
         .atom("export interface Cluster extends Identity<typeof ClusterInstance> {}")
         .document(documentation, extraDoc);
@@ -140,7 +140,7 @@ function generateClusterExport(file: ClusterFile) {
     file.atom(`export type ${file.clusterName} = ${file.cluster.name}.Cluster`);
     file.atom(`export const ${file.clusterName} = ${file.cluster.name}.Cluster`);
 
-    file.addImport("cluster/ClusterRegistry", "ClusterRegistry");
+    file.addImport("cluster/ClusterRegistry.js", "ClusterRegistry");
     file.atom(`ClusterRegistry.register(${file.cluster.name}.Complete)`);
 }
 
@@ -165,7 +165,7 @@ function generateExtensibleClusterBase(file: ClusterFile) {
     const features = file.cluster.features;
     if (features.length) {
         const featureBlock = base.expressions("features: {", "}");
-        base.file.addImport("schema/BitmapSchema", "BitFlag");
+        base.file.addImport("schema/BitmapSchema.js", "BitFlag");
         features.forEach(feature => {
             const name = camelize(feature.description ?? feature.name, false);
             featureBlock.atom(name, `BitFlag(${feature.constraint.value})`).document(feature);
@@ -307,7 +307,7 @@ function generateExhaustive(file: ClusterFile, variance: ClusterVariance) {
     ["attribute", "command", "event"].forEach(addElements);
 
     // Generate an interface for Complete
-    file.addImport("util/Type", "Identity");
+    file.addImport("util/Type.js", "Identity");
     file.ns
         .atom("export interface Complete extends Identity<typeof CompleteInstance> {}")
         .document(

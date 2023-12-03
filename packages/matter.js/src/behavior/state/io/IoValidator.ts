@@ -178,20 +178,8 @@ function createStructValidator(
 ): Io.Validate | undefined {
     const validators = {} as Record<string, Io.Validate>;
 
-    function createPropertyValidator(schema: ValueModel): Io.Validate {
-        const name = camelize(schema.name, false);
-        if (factory.isGenerating(schema)) {
-            return (value) => {
-                const validate = factory.get(schema).validate;
-                validators[name] = validate;
-                return validate(value)
-            }
-        }
-        return factory.get(schema).validate;
-    }
-
     for (const field of fields) {
-        validators[camelize(field.name, false)] = createPropertyValidator(field);
+        validators[camelize(field.name, false)] = factory.get(schema).validate;
     }
 
     return value => {
@@ -233,15 +221,9 @@ function createListValidator(
     const entry = schema.listEntry;
     let validateEntries: undefined | ((list: Io.List) => void);
     if (entry) {
-        let entryValidator = factory.isGenerating(entry)
-            ? undefined
-            : factory.get(entry).validate;
+        let entryValidator = factory.get(entry).validate;
 
         validateEntries = (list: Io.List) => {
-            if (entryValidator === undefined) {
-                entryValidator = factory.get(entry).validate;
-            }
-
             for (const e of list) {
                 entryValidator(e);
             }

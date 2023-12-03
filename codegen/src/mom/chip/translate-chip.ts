@@ -14,6 +14,7 @@ import {
     CommandElement,
     Conformance,
     Constraint,
+    DatatypeElement,
     FieldElement,
     ElementTag,
     EventElement,
@@ -281,7 +282,7 @@ function createValueElement<T extends AnyValueElement>({
     const attr = (name: string) => source.getAttribute(name);
     const id = int(attr("code") || attr("value") || attr("fieldId") || attr("id"));
 
-    if (factory.Tag !== FieldElement.Tag) {
+    if (factory.Tag !== DatatypeElement.Tag && factory.Tag !== FieldElement.Tag) {
         need(`${factory.Tag} id`, id);
     }
 
@@ -388,8 +389,8 @@ const translators: { [name: string]: Translator } = {
     },
 
     struct: source => {
-        return createValueElement<FieldElement>({
-            factory: FieldElement,
+        return createValueElement<DatatypeElement>({
+            factory: DatatypeElement,
             source,
             isClass: true,
             type: str(source.getAttribute("type")) ?? "STRUCT",
@@ -398,8 +399,8 @@ const translators: { [name: string]: Translator } = {
     },
 
     enum: source => {
-        return createValueElement<FieldElement>({
-            factory: FieldElement,
+        return createValueElement<DatatypeElement>({
+            factory: DatatypeElement,
             source,
             isClass: true,
             type: need("enum type", str(source.getAttribute("type"))),
@@ -409,8 +410,8 @@ const translators: { [name: string]: Translator } = {
     },
 
     bitmap: source => {
-        const bitmap = createValueElement<FieldElement>({
-            factory: FieldElement,
+        const bitmap = createValueElement<DatatypeElement>({
+            factory: DatatypeElement,
             source,
             isClass: true,
             type: need("bitmap type", str(source.getAttribute("type"))),
@@ -482,7 +483,7 @@ const translators: { [name: string]: Translator } = {
                     if (!cluster.children) {
                         cluster.children = [];
                     }
-                    cluster.children.push(element);
+                    cluster.children.push(element as ClusterElement.Child);
                 }
             }
         }

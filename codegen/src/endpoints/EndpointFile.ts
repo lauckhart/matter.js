@@ -97,14 +97,14 @@ export class EndpointFile extends TsFile {
     }
 
     private generateServer(requirements: RequirementGenerator) {
-        this.addImport("endpoint/type/MutableEndpoint", "MutableEndpoint");
+        this.addImport("endpoint/type/MutableEndpoint.js", "MutableEndpoint");
         const definition = this.expressions(`export const ${this.definitionName}Definition = MutableEndpoint({`, "})");
         definition.atom("name", serialize(this.model.name));
         definition.atom("deviceType", `0x${this.model.id.toString(16)}`);
         definition.atom("deviceRevision", this.model.revision);
         this.addDeviceClass(definition);
 
-        this.addImport("endpoint/part/SupportedBehaviors", "SupportedBehaviors");
+        this.addImport("endpoint/part/SupportedBehaviors.js", "SupportedBehaviors");
         definition.atom(`requirements: ${this.requirementsName}`);
         const behaviors = definition.expressions("behaviors: SupportedBehaviors(", ")");
 
@@ -114,7 +114,7 @@ export class EndpointFile extends TsFile {
             }
         }
 
-        this.addImport("util/Type", "Identity");
+        this.addImport("util/Type.js", "Identity");
         const intf = this.atom(
             `export interface ${this.definitionName} extends Identity<typeof ${this.definitionName}Definition> {}`,
         );
@@ -162,7 +162,7 @@ export class EndpointFile extends TsFile {
                 return;
         }
 
-        this.addImport("device/DeviceTypes", "DeviceClasses");
+        this.addImport("device/DeviceTypes.js", "DeviceClasses");
         definition.atom("deviceClass", `DeviceClasses.${deviceClass}`);
     }
 }

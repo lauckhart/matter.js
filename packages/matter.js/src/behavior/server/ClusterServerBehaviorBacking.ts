@@ -162,9 +162,9 @@ function createAttributeAccessors(
                 session,
                 { fabricFiltered: isFabricFiltered },
                 behavior => {
-                    const state = behavior.state as State.Internal;
+                    const state = behavior.state as Record<string, any>;
 
-                    return state[State.GET](name);
+                    return state[name];
                 }
             );
         },
@@ -175,9 +175,9 @@ function createAttributeAccessors(
                 session,
                 {},
                 behavior => {
-                    const state = behavior.state as State.Internal;
+                    const state = behavior.state as Record<string, any>;
 
-                    state[State.SET](name, value);
+                    state[name] = value;
 
                     // If the transaction is a write transaction, report that
                     // the attribute is updated

@@ -7,9 +7,10 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { Matter } from "../Matter.js";
+import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-Matter.children.push({
-    tag: "deviceType", name: "Speaker", id: 0x22, classification: "simple",
+Matter.children.push(DeviceType({
+    name: "Speaker", id: 0x22, classification: "simple",
 
     details: "This defines conformance to the Speaker device type. This feature controls the speaker volume of " +
         "the device." +
@@ -28,21 +29,20 @@ Matter.children.push({
     xref: { document: "device", section: "10.4" },
 
     children: [
-        {
-            tag: "requirement", name: "Descriptor", id: 0x1d, element: "serverCluster",
-            children: [{
-                tag: "requirement", name: "DeviceTypeList", default: [ { deviceType: 34, revision: 1 } ],
-                element: "attribute"
-            }]
-        },
+        Requirement({
+            name: "Descriptor", id: 0x1d, element: "serverCluster",
+            children: [
+                Requirement({ name: "DeviceTypeList", default: [ { deviceType: 34, revision: 1 } ], element: "attribute" })
+            ]
+        }),
 
-        {
-            tag: "requirement", name: "OnOff", id: 0x6, conformance: "M", element: "serverCluster",
+        Requirement({
+            name: "OnOff", id: 0x6, conformance: "M", element: "serverCluster",
             xref: { document: "device", section: "10.4.4" }
-        },
-        {
-            tag: "requirement", name: "LevelControl", id: 0x8, conformance: "M", element: "serverCluster",
+        }),
+        Requirement({
+            name: "LevelControl", id: 0x8, conformance: "M", element: "serverCluster",
             xref: { document: "device", section: "10.4.4" }
-        }
+        })
     ]
-});
+}));

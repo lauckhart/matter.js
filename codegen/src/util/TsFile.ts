@@ -68,7 +68,7 @@ export abstract class Entry {
         this.docText = extra;
         const spec = mapSpec(this.documentation.xref);
         if (spec) {
-            this.parentBlock?.file.addImport("spec/Specifications", spec);
+            this.parentBlock?.file.addImport("spec/Specifications.js", spec);
         }
         return this;
     }
@@ -650,11 +650,11 @@ export class TsFile extends Block {
             const importBlock = this.header.section();
             this.imports.forEach((symbols, name) => {
                 if (symbols.length) {
-                    const imp = importBlock.expressions("import {", `} from "${name}.js"`);
+                    const imp = importBlock.expressions("import {", `} from "${name}"`);
                     imp.shouldGroup = true;
                     symbols.forEach(s => imp.atom(s));
                 } else {
-                    importBlock.atom(`import "${name}.js"`);
+                    importBlock.atom(`import "${name}"`);
                 }
             });
         }

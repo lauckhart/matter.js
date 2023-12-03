@@ -128,7 +128,7 @@ function addConditions(device: DeviceTypeElement, deviceRef: DeviceReference) {
     const conditions = Array<FieldElement>();
     deviceRef.conditionSets.forEach(conditionRef => {
         const definitions = translateTable("condition", conditionRef, {
-            tag: Constant("datatype" as const),
+            tag: Constant("field" as const),
             name: Alias(
                 Identifier,
 

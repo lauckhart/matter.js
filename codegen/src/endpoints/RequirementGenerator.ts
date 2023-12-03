@@ -85,7 +85,7 @@ export class RequirementGenerator {
 
     generate() {
         if (this.#mandatoryParts) {
-            this.file.addImport(`behavior/definitions/parts/PartsBehavior`, "PartsBehavior");
+            this.file.addImport(`behavior/definitions/parts/PartsBehavior.js`, "PartsBehavior");
             this.mandatoryBlock.atom("Parts", "PartsBehavior");
         }
 
@@ -130,10 +130,10 @@ export class RequirementGenerator {
         const prefix = `behavior/definitions/${decamelize(detail.definition.name)}/${detail.definition.name}`;
         if (this.type === "server") {
             baseName = `${detail.definition.name}Server`;
-            this.file.addImport(`${prefix}Server`, baseName);
+            this.file.addImport(`${prefix}Server.js`, baseName);
         } else {
             baseName = `${detail.definition.name}Behavior`;
-            this.file.addImport(`${prefix}Behavior`, baseName);
+            this.file.addImport(`${prefix}Behavior.js`, baseName);
         }
 
         const cluster = target.builder(`${detail.definition.name}: ${baseName}`);

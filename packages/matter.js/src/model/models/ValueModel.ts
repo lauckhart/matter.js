@@ -178,10 +178,7 @@ export abstract class ValueModel extends Model implements ValueElement {
      * Datatype models.
      */
     override get allowedBaseTags() {
-        if (this.tag === ElementTag.Field) {
-            return [ElementTag.Field, ElementTag.Attribute];
-        }
-        return [this.tag, ElementTag.Field];
+        return [this.tag, ElementTag.Datatype];
     }
 
     /**
@@ -295,7 +292,7 @@ export abstract class ValueModel extends Model implements ValueElement {
         const match = this.type?.match(/^list\[(.*)\]$/);
         if (match) {
             this.type = "list";
-            this.children.push(new Model.constructors.datatype({ name: "entry", type: match[1] }) as FieldModel);
+            this.children.push(new Model.constructors.field({ name: "entry", type: match[1] }) as FieldModel);
         }
     }
 }

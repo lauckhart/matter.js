@@ -30,7 +30,7 @@ export function IoReader(schema: Schema, factory: IoFactory): Io.Read {
 
     // Special case ClusterModel because it does not have access contorls
     if (schema instanceof ClusterModel) {
-        return createStructReader(factory, schema.members, accessLevel);
+        return createStructReader(factory, schema, accessLevel);
     }
 
     const metatype = schema.effectiveMetatype;
@@ -38,7 +38,10 @@ export function IoReader(schema: Schema, factory: IoFactory): Io.Read {
 
     if (!schema.effectiveAccess.readable) {
         return () => {
-            throw new StatusResponseError("Value is write-only", StatusCode.UnsupportedRead);
+            throw new StatusResponseError(
+                `Read from write-only value ${schema.path}`,
+                StatusCode.UnsupportedRead
+            );
         }
     }
 
@@ -48,17 +51,20 @@ export function IoReader(schema: Schema, factory: IoFactory): Io.Read {
             reader = createListReader(factory, schema, accessLevel);
 
         case Metatype.object:
-            reader = createStructReader(factory, schema.members, accessLevel);
+            reader = createStructReader(factory, schema, accessLevel);
 
         default:
-            reader = createAtomReader(accessLevel);
+            reader = createAtomReader(schema, accessLevel);
     }
 
     if (writeOnly) {
         const nextReader = reader;
         return (value, options) => {
             if (!options?.offline) {
-                throw new StatusResponseError("Value is write-only", StatusCode.UnsupportedRead);
+                throw new StatusResponseError(
+                    `Read from write-only value ${schema.path}`,
+                    StatusCode.UnsupportedRead
+                );
             }
             return nextReader(value, options);
         }
@@ -75,33 +81,64 @@ function accessLevelFor(schema: Schema) {
     return Access.PrivilegePriority[schema.effectiveAccess.readPriv ?? Access.Privilege.View] as AccessLevel;
 }
 
-function isFabricAuthorized(options?: Io.RwOptions) {
-    return options?.owningFabric === undefined
-        || options?.accessingFabric === undefined
-        || options.owningFabric === options.accessingFabric;
+/**
+ * Authorize fabric access.
+ * 
+ * If offline, only enforces when options.accessingFabric is defined.  When
+ * online options.accessingFabric is required when context.owningFabric
+ * is defined.
+ */
+function isFabricAuthorized(schema: Schema, options: Io.RwOptions | undefined, context: Io.ValueContext | undefined) {
+    const owningFabric = context?.owningFabric;
+    if (owningFabric === undefined) {
+        return true;
+    }
+
+    const accessingFabric = options?.accessingFabric;
+    if (accessingFabric === undefined) {
+        if (options?.offline) {
+            return true;
+        }
+
+        throw new StatusResponseError(
+            `Illegal read from ${schema.path} without fabric`,
+            StatusCode.UnsupportedRead
+        );
+    }
+
+    return accessingFabric === owningFabric;
 }
 
-function assertAuthorized(accessLevel: AccessLevel, options?: Io.RwOptions) {
+/**
+ * Enforce R/W privileges when online.
+ * 
+ * When offline this is a no-op.
+ */
+function assertAuthorized(schema: Schema, accessLevel: AccessLevel, options?: Io.RwOptions) {
     if (options?.offline) {
         return;
     }
 
     if (options?.accessLevel === undefined || options?.accessLevel >= accessLevel) {
-        throw new StatusResponseError("Access denied", StatusCode.UnsupportedRead);
+        throw new StatusResponseError(
+            `Read access denied for ${schema.path}`,
+            StatusCode.UnsupportedRead
+        );
     };
 }
 
-function createAtomReader(accessLevel: AccessLevel): Io.Read {
+function createAtomReader(schema: Schema, accessLevel: AccessLevel): Io.Read {
     return (item, options) => {
         if (options?.path?.length) {
             throw new StatusResponseError(
-                `Path "${
-                    options.path.join(".")
-                }" references sub-fields of a value that is not a list or struct`,
-                StatusCode.UnsupportedAttribute);
+                `Illegal access to sub-field ${options.path[0]} of "${
+                    schema.path
+                }" which is not a list or struct`,
+                StatusCode.UnsupportedAttribute
+            );
         }
 
-        assertAuthorized(accessLevel, options);
+        assertAuthorized(schema, accessLevel, options);
 
         return item;
     }
@@ -115,14 +152,14 @@ function createPropertyReader(factory: IoFactory, schema: Schema, fieldName: str
     // structure
     const fabricSensitive = schema instanceof ValueModel && schema.effectiveAccess.fabric === Access.Fabric.Sensitive;
 
-    return (source: Io.Struct, options?: Io.RwOptions) => {
+    return (source: Io.Struct, options?: Io.RwOptions, context?: Io.ValueContext) => {
         // Ignore properties for which access level is too low
         if (options?.accessLevel !== undefined && options?.accessLevel < accessLevel) {
             return;
         }
 
         // Ignore sensitive properties from different fabric
-        if (fabricSensitive && !isFabricAuthorized(options)) {
+        if (fabricSensitive && !isFabricAuthorized(schema, options, context)) {
             return;
         }
 
@@ -155,23 +192,27 @@ function createPropertyReaders(factory: IoFactory, fields: ValueModel[], readerI
     return readers;
 }
 
-function createStructReader(factory: IoFactory, fields: ValueModel[], accessLevel: AccessLevel): Io.Read {
+function createStructReader(
+    factory: IoFactory,
+    schema: Schema,
+    accessLevel: AccessLevel
+): Io.Read {
     const readerIndex = {} as Record<number | string, PropertyReader>;
-    const readers = createPropertyReaders(factory, fields, readerIndex);
+    const readers = createPropertyReaders(factory, schema.members, readerIndex);
 
-    return (item, options) => {
-        assertAuthorized(accessLevel, options);
+    return (item, options, context) => {
+        assertAuthorized(schema, accessLevel, options);
 
         if (item === undefined || item === null) {
             return item;
         }
 
-        assertStruct(item);
+        assertStruct(schema, item);
 
         const owningFabric = item.fabricIndex as FabricIndex | undefined;
         if (typeof owningFabric === "number") {
-            options = {
-                ...options,
+            context = {
+                ...context,
                 owningFabric: owningFabric,
             }
         }
@@ -181,7 +222,7 @@ function createStructReader(factory: IoFactory, fields: ValueModel[], accessLeve
             
             if (reader === undefined) {
                 throw new StatusResponseError(
-                    `Read of unknown struct property ${options.path[0]}`,
+                    `Read of unknown property ${options.path[0]} of struct ${schema.path}`,
                     StatusCode.UnsupportedAttribute
                 );
             }
@@ -191,7 +232,7 @@ function createStructReader(factory: IoFactory, fields: ValueModel[], accessLeve
 
         const result = {} as Record<string, Io.Val>;
         for (const propName in readers) {
-            const value = readers[propName](item, options);
+            const value = readers[propName](item, options, context);
             if (value !== undefined) {
                 result[propName] = value;
             }
@@ -207,37 +248,45 @@ function createListReader(factory: IoFactory, schema: ValueModel, accessLevel: A
 
     const entry = schema.listEntry;
     if (entry === undefined) {
-        throw new ImplementationError("List schema has no entry type");
+        throw new ImplementationError(
+            `List schema ${schema.path} has no entry type`
+        );
     }
     let entryReader = factory.get(entry).read;
 
-    return (item, options) => {
+    return (item, options, context) => {
         if (item === undefined || item === null) {
             return item;
         }
 
-        assertAuthorized(accessLevel, options);
+        assertAuthorized(
+            schema,
+            accessLevel,
+            options
+        );
 
         if (fabricScoped && options?.fabricFiltered) {
             const accessingFabric = options?.accessingFabric;
             if (accessingFabric === undefined) {
-                throw new ImplementationError("Fabric filtering requested without accessing fabric");
+                throw new ImplementationError(
+                    `Fabric filtering of ${schema.path} requested without accessing fabric`
+                );
             }
 
-            assertArray(item);
+            assertArray(schema, item);
             item = item.filter(child => {
-                assertStruct(child);
+                assertStruct(schema, child);
                 child.fabricIndex === accessingFabric
             });
         }
-        assertArray(item);
+        assertArray(schema, item);
 
         if (options?.path?.length) {
             const index = getListIndex(options.path);
 
             if (index > item.length) {
                 throw new StatusResponseError(
-                    `List index ${index} is out of range`,
+                    `List index ${index} is out of range for ${schema.path}`,
                     StatusCode.UnsupportedAttribute
                 )
             }
@@ -246,14 +295,14 @@ function createListReader(factory: IoFactory, schema: ValueModel, accessLevel: A
             if (subitem === undefined) {
                 if (options.path.length > 1) {
                     throw new StatusResponseError(
-                        `Cannot access properties of list index ${index} because it is empty`,
+                        `Cannot access of list index ${index} of ${schema.path} because it is undefined`,
                         StatusCode.UnsupportedAttribute
                     )
                 }
                 return subitem;
             }
 
-            return entryReader(subitem, { ...options, path: options.path.slice(1) });
+            return entryReader(subitem, { ...options, path: options.path.slice(1) }, context);
         }
 
         return item.map(child => entryReader?.(child, options));

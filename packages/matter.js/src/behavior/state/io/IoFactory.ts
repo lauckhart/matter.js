@@ -36,7 +36,7 @@ export class IoFactory {
      * - If the root schema defines a cluster, the cluster's featureMap and
      *   supportedFeatures affect conformance-based validation
      */
-    private constructor(root: Schema) {
+    constructor(root: Schema) {
         if (root instanceof ClusterModel) {
             this.#featureMap = root.featureMap;
             this.#supportedFeatures = root.supportedFeatures ?? new FeatureSet();

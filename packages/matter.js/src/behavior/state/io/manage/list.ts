@@ -54,16 +54,10 @@ export function ListManager(
             // array type
             get(_target, property, receiver) {
                 if (typeof property === "string" && property.match(/^[0-9]+/)) {
-                    let readOptions = owner.readOptions;
-                    if (context?.owningFabric) {
-                        readOptions = {
-                            ...readOptions,
-                            owningFabric: context?.owningFabric
-                        };
-                    }
                     return manage(
-                        read(target[property], readOptions),
-                        owner
+                        read(target[property], owner.readOptions, context),
+                        owner,
+                        context
                     );
                 }
 
@@ -87,18 +81,11 @@ export function ListManager(
                     }
                 }
 
-                let writeOptions = owner.writeOptions;
-                if (context?.owningFabric) {
-                    writeOptions = {
-                        ...writeOptions,
-                        owningFabric: context?.owningFabric
-                    };
-                }
-
                 target[property] = write(
                     newValue,
                     oldValue,
-                    writeOptions
+                    owner.writeOptions,
+                    context
                 );
 
                 return true;

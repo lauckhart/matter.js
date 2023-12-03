@@ -10,6 +10,7 @@ import {
     ClusterElement,
     CommandElement,
     FieldElement,
+    DatatypeElement,
     EventElement,
     Globals,
     Metatype,
@@ -467,7 +468,7 @@ function translateValueChildren(
     }
 }
 
-// Load attributes, events and commands
+// Load attributes, events, commands and status codes
 function translateInvokable(definition: ClusterReference, children: Array<ClusterElement.Child>) {
     translateAttributes();
     translateEvents();
@@ -574,7 +575,7 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
             details: Alias(Str, "summary"),
         });
         const statusCodes = translateRecordsToMatter("statusCodes", records, FieldElement);
-        statusCodes && children.push(FieldElement({ name: "StatusCode", type: "status", children: statusCodes }));
+        statusCodes && children.push(DatatypeElement({ name: "StatusCode", type: "status", children: statusCodes }));
     }
 }
 
@@ -640,8 +641,8 @@ function translateDatatypes(definition: ClusterReference, children: Array<Cluste
             return;
         }
 
-        const datatype = FieldElement({ type: type, name, description, xref: definition.xref });
-        datatype.children = translateValueChildren("datatype", datatype, definition);
+        const datatype = DatatypeElement({ type: type, name, description, xref: definition.xref });
+        datatype.children = translateValueChildren("field", datatype, definition);
         return datatype;
     }
 }

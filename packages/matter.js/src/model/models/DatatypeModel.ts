@@ -5,7 +5,6 @@
  */
 
 import { DatatypeElement } from "../elements/DatatypeElement.js";
-import { FieldElement } from "../elements/index.js";
 import { Model } from "./Model.js";
 import { ValueModel } from "./ValueModel.js";
 
@@ -18,6 +17,6 @@ export class DatatypeModel extends ValueModel implements DatatypeElement {
     }
 
     static {
-        Model.constructors[FieldElement.Tag] = this;
+        Model.constructors[DatatypeElement.Tag] = this;
     }
 }

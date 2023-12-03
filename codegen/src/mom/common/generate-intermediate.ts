@@ -30,8 +30,12 @@ export function generateIntermediateModel(source: string, elements: MatterElemen
     const validationResult = finalizeModel(matter);
 
     const file = new TsFile(`#intermediate/${source}`);
-    file.addImport("@project-chip/matter.js/model", "MatterElement");
-    generateElement(file, matter, `export const ${camelize(source)}Matter: MatterElement = `);
+    generateElement(
+        file,
+        "@project-chip/matter.js/model",
+        matter,
+        `export const ${camelize(source)}Matter = `
+    );
     file.save();
 
     validationResult.report();

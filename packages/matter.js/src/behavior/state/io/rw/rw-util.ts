@@ -7,18 +7,31 @@
 import { ImplementationError, InternalError } from "../../../../common/MatterError.js";
 import { StatusResponseError } from "../../../../protocol/interaction/InteractionMessenger.js";
 import { StatusCode } from "../../../../protocol/interaction/InteractionProtocol.js";
+import { Schema } from "../../Schema.js";
 import { Io } from "../Io.js";
 
 
-export function assertStruct(item: Io.Val): asserts item is Io.Struct {
+export function assertStruct(schema: Schema, item: Io.Val): asserts item is Io.Struct {
     if (typeof item !== "object" || item === null) {
-        throw new ImplementationError(`Expected struct value to be an object but was ${typeof item}`);
+        throw new ImplementationError(
+            `Expected struct value ${
+                schema.path
+            } to be an object but was ${
+                typeof item
+            }`
+        );
     }
 }
 
-export function assertArray(item: Io.Val): asserts item is Io.List {
+export function assertArray(schema: Schema, item: Io.Val): asserts item is Io.List {
     if (!Array.isArray(item)) {
-        throw new ImplementationError(`Expected list value to be an array but was ${typeof item}`);
+        throw new ImplementationError(
+            `Expected list value ${
+                schema.path
+            } to be an array but was ${
+                typeof item
+            }`
+        );
     }
 }
 

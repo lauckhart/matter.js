@@ -13,7 +13,7 @@ import { ValueElement } from "./ValueElement.js";
  * A datatype represents a named, standalone type definition.
  */
 export interface DatatypeElement extends ValueElement {
-    tag: DatatypeElement.Tag;
+    tag: `${DatatypeElement.Tag}`;
 
     /**
      * A "metatype" provides enough semantics for us to translate a value into

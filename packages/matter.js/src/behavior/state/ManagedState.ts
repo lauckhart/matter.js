@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AttributeModel, ClusterModel, FieldElement, FieldModel } from "../../model/index.js";
+import { FieldElement } from "../../model/index.js";
 import { GeneratedClass } from "../../util/GeneratedClass.js";
 import { camelize } from "../../util/String.js";
 import type { InvocationContext } from "../InvocationContext.js";
@@ -26,12 +26,14 @@ const cache = new WeakMap<State.Type>();
  *
  * This is a pure function for {@link type}.  It caches the generated class.
  */
-export function ManagedState<T extends State.Type>(type: T, ioFactory: IoFactory) {
+export function ManagedState<T extends State.Type>(type: T) {
     // First check the cache
     const cached = cache.get(type);
     if (cached) {
         return cached as ManagedState.Type<T>;
     }
+
+    const ioFactory = new IoFactory(type.schema);
 
     // Augment schema with any fields from the original cluster that are not
     // present in the original schema.  This allows overrides to define fields
@@ -76,11 +78,6 @@ export namespace ManagedState {
         schema?: Schema;
         io: Io;
     };
-
-    export interface Owner {
-        readonly name?: string;
-        readonly online?: boolean;
-    }
 }
 
 function getSchema(type: State.Type) {
@@ -91,8 +88,6 @@ function getSchema(type: State.Type) {
         props.add(camelize(field.name.toLowerCase()));
     }
 
-    const PropModel = type instanceof ClusterModel ? AttributeModel : FieldModel;
-
     let cloned = false;
     for (const name in new type) {
         if (!props.has(name)) {
@@ -100,7 +95,7 @@ function getSchema(type: State.Type) {
                 schema = schema.clone();
             }
 
-            schema.add(new PropModel({
+            schema.add({
                 tag: FieldElement.Tag,
                 name,
                 type: "any",

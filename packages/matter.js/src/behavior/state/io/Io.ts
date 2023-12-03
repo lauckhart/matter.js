@@ -52,10 +52,29 @@ export interface Io {
 }
 
 export namespace Io {
-    export type Read = (value: Io.Val, options?: Io.ReadOptions) => Io.Val;
-    export type Write = (newValue: Io.Val, oldValue: Io.Val, options?: Io.WriteOptions) => Io.Val;
-    export type Validate = (value: Io.Val, options?: Io.ValidateOptions) => void;
-    export type Manage = (value: Io.Val, owner: ValueOwner, context?: ValueContext) => void;
+    export type Read = (
+        value: Io.Val,
+        options?: Io.ReadOptions,
+        context?: ValueContext
+    ) => Io.Val;
+
+    export type Write = (
+        newValue: Io.Val,
+        oldValue: Io.Val,
+        options?: Io.WriteOptions,
+        context?: ValueContext
+    ) => Io.Val;
+
+    export type Validate = (
+        value: Io.Val,
+        options?: Io.ValidateOptions
+    ) => void;
+    
+    export type Manage = (
+        value: Io.Val,
+        owner: ValueOwner,
+        context?: ValueContext
+    ) => void;
 
     export type Path = (string | number)[];
 
@@ -71,14 +90,11 @@ export namespace Io {
     export interface RwOptions {
         /**
          * An optional path used for reading or writing sub-values.
+         * 
+         * This allows for efficient access to a nested value without
+         * processing irrelevant subpaths.
          */
         path?: Io.Path;
-
-        /**
-         * For values within a fabric-scoped list, this is the fabric that owns
-         * the data values.
-         */
-        owningFabric?: FabricIndex;
 
         /**
          * The fabric of the authorized client.
@@ -136,6 +152,24 @@ export namespace Io {
     }
 
     /**
+     * Details about a value's position in the data model.
+     * 
+     * Options and context are similar but options vary with the session and
+     * context varies with the data model.
+     */
+    export interface ValueContext {
+        /**
+         * The attribute the value is part of.
+         */
+        attribute?: AttributeModel;
+
+        /**
+         * The fabric that owns the value.
+         */
+        owningFabric?: FabricIndex;
+    }
+
+    /**
      * Details a conformance choice.  Used during conformance validation.
      */
     export interface Choice {
@@ -148,13 +182,8 @@ export namespace Io {
      * This error is thrown when datatypes are invalid.
      */
     export class DatatypeError extends StatusResponseError {
-        constructor(schema: Schema, message: string) {
-            super(
-                `Error validating ${
-                    schema.path
-                }: ${
-                    message
-                }`, StatusCode.InvalidDataType);
+        constructor(message: string) {
+            super(message, StatusCode.InvalidDataType);
         }
     }
 
@@ -183,20 +212,5 @@ export namespace Io {
          * Write access controls.
          */
         writeOptions?: WriteOptions;
-    }
-
-    /**
-     * Details about a managed value's position in the data model.
-     */
-    export interface ValueContext {
-        /**
-         * The attribute the value is part of.
-         */
-        attribute?: AttributeModel;
-
-        /**
-         * The fabric that owns the value.
-         */
-        owningFabric?: FabricIndex;
     }
 }

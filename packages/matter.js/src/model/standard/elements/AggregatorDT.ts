@@ -7,9 +7,10 @@
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
 import { Matter } from "../Matter.js";
+import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-Matter.children.push({
-    tag: "deviceType", name: "Aggregator", id: 0xe, classification: "dynamic",
+Matter.children.push(DeviceType({
+    name: "Aggregator", id: 0xe, classification: "dynamic",
 
     details: "This device type aggregates endpoints as a collection. Clusters on the endpoint indicating this " +
         "device type provide functionality for the collection of descendent endpoints present in the " +
@@ -24,17 +25,16 @@ Matter.children.push({
     xref: { document: "device", section: "2.5" },
 
     children: [
-        {
-            tag: "requirement", name: "Descriptor", id: 0x1d, element: "serverCluster",
-            children: [{
-                tag: "requirement", name: "DeviceTypeList", default: [ { deviceType: 14, revision: 1 } ],
-                element: "attribute"
-            }]
-        },
+        Requirement({
+            name: "Descriptor", id: 0x1d, element: "serverCluster",
+            children: [
+                Requirement({ name: "DeviceTypeList", default: [ { deviceType: 14, revision: 1 } ], element: "attribute" })
+            ]
+        }),
 
-        {
-            tag: "requirement", name: "Actions", conformance: "O", element: "serverCluster",
+        Requirement({
+            name: "Actions", conformance: "O", element: "serverCluster",
             xref: { document: "device", section: "2.5.4" }
-        }
+        })
     ]
-});
+}));

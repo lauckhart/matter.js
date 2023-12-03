@@ -64,11 +64,11 @@ export class TlvGenerator {
      */
     importTlv(fileOrDirectory: string, name: string) {
         if (fileOrDirectory === "datatype") {
-            fileOrDirectory = `${fileOrDirectory}/${name.replace(/^Tlv/, "")}`;
+            fileOrDirectory = `${fileOrDirectory}/${name.replace(/^Tlv/, "")}.js`;
         } else if (fileOrDirectory === "tlv") {
-            fileOrDirectory = `${fileOrDirectory}/${name}`;
+            fileOrDirectory = `${fileOrDirectory}/${name}.js`;
         } else if (fileOrDirectory === "number") {
-            fileOrDirectory = `tlv/TlvNumber`;
+            fileOrDirectory = `tlv/TlvNumber.js`;
         }
         this.file.addImport(fileOrDirectory, name);
         return name;
@@ -414,7 +414,7 @@ export class TlvGenerator {
         // actually use the type.  Currently not an issue.
         const definingScope = defining.owner(ClusterModel);
         if (definingScope && definingScope !== this.cluster) {
-            this.file.addImport(`cluster/definitions/${definingScope.name}Cluster`, definingScope.name);
+            this.file.addImport(`cluster/definitions/${definingScope.name}Cluster.js`, definingScope.name);
             return `${definingScope.name}.${name}`;
         }
 

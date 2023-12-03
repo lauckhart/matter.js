@@ -29,12 +29,12 @@ export class BehaviorServerFile extends TsFile {
     private generate() {
         logger.info(`${this.cluster.name} → ${this.name}.ts`);
 
-        this.addImport(`./${this.cluster.name}Behavior`, `${this.cluster.name}Behavior`);
+        this.addImport(`./${this.cluster.name}Behavior.js`, `${this.cluster.name}Behavior`);
 
         let base;
         let extraDoc;
         if (this.variance.components.length) {
-            this.addImport(`../../../cluster/definitions/${this.cluster.name}Cluster`, this.cluster.name);
+            this.addImport(`../../../cluster/definitions/${this.cluster.name}Cluster.js`, this.cluster.name);
             this.atom(`const Base = ${this.cluster.name}Behavior.for(${this.cluster.name}.Complete)`);
             base = "Base";
             extraDoc =

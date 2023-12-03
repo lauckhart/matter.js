@@ -117,19 +117,11 @@ function createPropertyDescriptor(factory: IoFactory, schema: Schema): PropertyD
 
     return {
         get(this: Wrapper) {
-            let readOptions = this[OWNER].readOptions;
-            
-            if (this[CONTEXT]?.owningFabric) {
-                readOptions = {
-                    ...readOptions,
-                    owningFabric: this[CONTEXT]?.owningFabric
-                }
-            }
-
             manage(
                 read(
                     this[TARGET][name],
-                    readOptions
+                    this[OWNER].readOptions,
+                    this[CONTEXT],
                 ),
                 this[OWNER],
                 augmentContext(this)
@@ -148,18 +140,11 @@ function createPropertyDescriptor(factory: IoFactory, schema: Schema): PropertyD
                 }
             }
 
-            let writeOptions = this[OWNER].writeOptions;
-            if (this[CONTEXT]?.owningFabric) {
-                writeOptions = {
-                    ...writeOptions,
-                    owningFabric: this[CONTEXT]?.owningFabric
-                }
-            }
-
             this[TARGET][name] = write(
                 value,
                 oldValue,
-                this[OWNER].writeOptions
+                this[OWNER].writeOptions,
+                this[CONTEXT]
             )
         }
     }

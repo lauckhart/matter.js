@@ -128,7 +128,7 @@ export class DefaultValueGenerator {
             return;
         }
 
-        this.tlv.file.addImport("schema/BitmapSchema", "BitsFromPartial");
+        this.tlv.file.addImport("schema/BitmapSchema.js", "BitsFromPartial");
         return serialize.asIs(`BitsFromPartial(${this.tlv.nameFor(model)}, ${serialize(properties)})`);
     }
 

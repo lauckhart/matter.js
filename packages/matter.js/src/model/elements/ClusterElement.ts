@@ -10,6 +10,7 @@ import { BaseElement } from "./BaseElement.js";
 import { CommandElement } from "./CommandElement.js";
 import { EventElement } from "./EventElement.js";
 import { DatatypeElement } from "./DatatypeElement.js";
+import { FieldElement } from "./FieldElement.js";
 
 /**
  * A cluster describes a set of related functionality.
@@ -46,7 +47,12 @@ export namespace ClusterElement {
     export type Tag = ElementTag.Cluster;
     export const Tag = ElementTag.Cluster;
     export type Properties = BaseElement.Properties<ClusterElement>;
-    export type Child = DatatypeElement | AttributeElement | CommandElement | EventElement;
+    export type Child =
+        DatatypeElement
+        | AttributeElement
+        | CommandElement
+        | EventElement
+        | FieldElement;
 
     export enum Classification {
         EndpointUtility = "endpoint",
