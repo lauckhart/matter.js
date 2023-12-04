@@ -437,6 +437,7 @@ export abstract class Model {
 
 export namespace Model {
     export type Constructor<T extends Model> = abstract new (...args: any) => T;
+    export type Type = abstract new (...args: any) => Model;
 
     export type LookupPredicate<T extends Model> =
         | Constructor<T>

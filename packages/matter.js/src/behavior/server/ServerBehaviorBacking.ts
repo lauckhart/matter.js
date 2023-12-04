@@ -17,17 +17,7 @@ import { Io } from "../state/io/Io.js";
 export class ServerBehaviorBacking extends BehaviorBacking {
     #state?: State;
     #stateType?: State.Type;
-    #stateOwner?: Io.ValueOwner;
-
-    /**
-     * Access raw (unmanaged) state.
-     */
-    get state(): Record<string, any> {
-        if (!this.#state) {
-            this.#state = this.createEndpointScope();
-        }
-        return this.#state;
-    }
+    #stateOwner?: Io.ManageOptions;
 
     /**
      * Obtain a managed state instance.
@@ -59,7 +49,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
         // We need access to lifecycle state to access online status.  Loads
         // lazily to avoid infinite loops but we then cache as this is
         // referenced for every write
-        let lifecycleState: LifecycleBehavior.EndpointScope | undefined;
+        let lifecycleState: LifecycleBehavior.State | undefined;
 
         if (this.#stateOwner === undefined) {
             this.#stateOwner = {

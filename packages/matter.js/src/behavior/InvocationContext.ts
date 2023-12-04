@@ -9,7 +9,7 @@ import type { Message } from "../codec/MessageCodec.js";
 import { Transaction } from "./state/transaction/Transaction.js";
 import { Fabric } from "../fabric/Fabric.js";
 import { Session } from "../session/Session.js";
-import { Behavior } from "./Behavior.js";
+import { AccessLevel } from "../cluster/Cluster.js";
 
 /**
  * Provides contextual information when accessing state, invoking methods and
@@ -22,14 +22,14 @@ export interface InvocationContext {
     fabric?: Fabric;
 
     /**
+     * Accessing privilege level.
+     */
+    accessLevel?: AccessLevel;
+
+    /**
      * Should reads of fabric-scoped data be filtered to the accessing fabric?
      */
     fabricFiltered?: boolean;
-
-    /**
-     * The behavior via which invocation occurs.
-     */
-    behavior?: Behavior;
 
     /**
      * The session in which invocation occurs.
@@ -42,7 +42,7 @@ export interface InvocationContext {
     message?: Message;
 
     /**
-     * A transaction the allows for ACID writes.
+     * A transaction that allows for ACID reads and writes.
      */
     transaction?: Transaction;
 }

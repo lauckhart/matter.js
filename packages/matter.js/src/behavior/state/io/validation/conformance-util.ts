@@ -72,7 +72,7 @@ export type StaticNode =
 
 export interface RuntimeNode {
     code: Code.Evaluate;
-    evaluate: (value: Io.Val, options?: Io.ValidateOptions) => StaticNode;
+    evaluate: (value: Io.Val, options?: Io.ValidationContext) => StaticNode;
 }
 
 export type DynamicNode =
@@ -82,7 +82,7 @@ export type DynamicNode =
 /**
  * Convert a static node to a dynamic node at runtime.
  */
-export function evaluateNode(node: DynamicNode, value: Io.Val, options?: Io.ValidateOptions): StaticNode {
+export function evaluateNode(node: DynamicNode, value: Io.Val, options?: Io.ValidationContext): StaticNode {
     if (node.code === Code.Evaluate) {
         return node.evaluate(value, options);
     }

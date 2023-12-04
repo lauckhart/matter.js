@@ -4,10 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ImplementationError } from "../../common/MatterError.js";
-import { FeatureSet } from "../../model/index.js";
 import { GeneratedClass } from "../../util/GeneratedClass.js";
-import type { InvocationContext } from "../InvocationContext.js";
 import { Schema } from "./Schema.js";
 
 export const SCHEMA = Symbol("schema");
@@ -25,11 +22,7 @@ export interface StaticInternal extends State.Type {
  * is an additional semi-public interface you may access by casting.
  */
 export class State {
-    // Default state has no properties
-
-    constructor() {
-        (this as unknown as State.Internal)[State.CONTEXT] = undefined;
-    }
+    // Base state has no properties
 
     /**
      * Obtain a new state type with different default values.
@@ -81,66 +74,18 @@ export class State {
 }
 
 export namespace State {
-    export const INITIALIZE = Symbol("INITIALIZE");
-    export const CONTEXT = Symbol("CONTEXT");
-    export const TRANSACTION = Symbol("TRANSACTION");
-    export const COMMIT = Symbol("COMMIT");
-
-    /**
-     * This "internal" view of state exposes methods we don't want to bother
-     * the user with.  We achieve this by using symbols and omitting them from
-     * the default interface.
-     */
-    export interface Internal extends State {
-        /**
-         * Information about the context in which the state is accessed.
-         */
-        [CONTEXT]: InvocationContext | undefined;
-
-        /**
-         * Initialize.  This is separate from construction so we can seal the
-         * object.  If a derivative will not be subclassed it may initialize in
-         * its constructor.
-         */
-        [INITIALIZE](values?: Record<string, any>, context?: InvocationContext): void;
-    }
-
     export type WithOptions = {
         name?: string;
         schema?: Schema;
-        supportedFeatures?: FeatureSet;
     };
 
     /**
      * Generic state class type.
      */
     export type Type<T extends object = {}> = {
-        new (values?: Record<string, any>, context?: InvocationContext): State & T;
+        new (): State & T;
         schema: Schema;
         set: typeof State.set;
         with: typeof State.with;
     };
 }
-
-Object.assign(State.prototype, {
-    [State.INITIALIZE](this: State.Internal, values?: Record<string, any>, context?: InvocationContext): void {
-        Object.seal(this);
-
-        this[State.CONTEXT] = context;
-
-        if (values) {
-            for (const name in values) {
-                if (!(name in this)) {
-                    throw new ImplementationError(`State property "${name}" is not supported`);
-                }
-                (this as any)[name] = values[name];
-            }
-        }
-    },
-
-    [State.COMMIT]() {
-        throw new ImplementationError(
-            "Transactionality unsupported on unmanaged state"
-        );
-    }
-});

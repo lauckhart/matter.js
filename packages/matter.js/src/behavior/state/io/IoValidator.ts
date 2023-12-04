@@ -185,7 +185,7 @@ function createStructValidator(
 
     return value => {
         assertObject(value, schema);
-        const options: Io.ValidateOptions = {
+        const options: Io.ValidationContext = {
             siblings: value,
             choices: {}
         }

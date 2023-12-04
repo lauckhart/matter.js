@@ -32,7 +32,8 @@ export function ListManager(
             `List schema has no entry definition`
         );
     }
-    // We use this I/O to perform validated I/O on entries
+
+    // We use this Io to perform validated I/O on entries
     const { manage, read, write } = factory.get(entry);
 
     // Return an Io.Manage that manages reads and writes

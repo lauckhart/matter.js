@@ -4,16 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ImplementationError } from "../../../../common/MatterError.js";
 import { FabricIndex } from "../../../../datatype/FabricIndex.js";
-import { AttributeModel } from "../../../../model/index.js";
+import { AttributeModel, ValueModel } from "../../../../model/index.js";
 import { isDeepEqual } from "../../../../util/DeepEqual.js";
 import { GeneratedClass } from "../../../../util/GeneratedClass.js";
 import { camelize } from "../../../../util/String.js";
-import { Schema } from "../../Schema.js";
-import { Io } from "../Io.js";
+import type { Schema } from "../../Schema.js";
+import type { Io } from "../Io.js";
 import { IoError } from "../IoError.js";
-import { IoFactory } from "../IoFactory.js";
+import type { IoFactory } from "../IoFactory.js";
+import { PrimitiveManager } from "./primitive.js";
+import { ManagedReference } from "./reference.js";
 
 /**
  * For structs we generate a class with accessors for each property in the
@@ -27,38 +28,38 @@ export function StructManager(
         name: `${schema.name}$Wrapper`,
 
         ...StructManagerMixin(factory, schema)
-    }) as new (value: Io.Val, owner: Io.ValueOwner) => Io.Struct
+    }) as new (value: Io.Val, options: Io.Options) => Io.Struct
 
     return (value, owner) => {
-        return new Wrapper(value, owner);
+        return new Wrapper(value, options);
     }
 }
 
-const VALUE = Symbol("value");
-const TARGET = Symbol("target");
-const OWNER = Symbol("owner");
+const REF = Symbol("value");
+const OPTIONS = Symbol("options");
 const CONTEXT = Symbol("context");
+const MANAGERS = Symbol("properties");
 
 interface Wrapper extends Io.Struct {
     /**
-     * The original value.
+     * A reference to the proxied value.
      */
-    [VALUE]: Io.Struct;
+    [REF]: Io.ValueReference<Io.Struct>;
 
     /**
-     * The target for accessors.  May be different than VALUE if in a transaction.
+     * The owner of the data structure.
      */
-    [TARGET]: Io.Struct;
-
-    /**
-     * The owner of the wrapped value.
-     */
-    [OWNER]: Io.ValueOwner;
+    [OPTIONS]: Io.Options;
 
     /**
      * Contextual information about the wrapped value.
      */
     [CONTEXT]?: Io.ValueContext;
+
+    /**
+     * Managed values for container fields.
+     */
+    [MANAGERS]?: Record<string, Io.Val>;
 }
 
 /**
@@ -75,17 +76,24 @@ export function StructManagerMixin(factory: IoFactory, schema: Schema): Generate
     }
     
     return {
-        initialize(this: Wrapper, value: Io.Val, owner: Io.ValueOwner, context?: Io.ValueContext) {
-            if (typeof value !== undefined) {
+        initialize(this: Wrapper, ref: Io.ValueReference, options: Io.Options, context?: Io.ValueContext) {
+            // Only objects are acceptable
+            if (typeof ref.value !== "object" || Array.isArray(ref.value)) {
                 throw new IoError.SchemaError(
                     schema,
                     `Cannot manage ${
-                        typeof value
-                    } because it is not an object`
+                        typeof ref.value
+                    } because it is not a struct`
                 )
             }
-            this[TARGET] = this[VALUE] = value as Io.Struct;
-            this[OWNER] = owner;
+
+            // If we are a root property on the
+            if (factory.members.has(schema as ValueModel)) {
+                context = { ...context, property: schema as ValueModel };
+            }
+
+            this[REF] = ref as Io.ValueReference<Io.Struct>;
+            this[OPTIONS] = options;
             this[CONTEXT] = context;
         },
 
@@ -97,33 +105,105 @@ function createPropertyDescriptor(factory: IoFactory, schema: Schema): PropertyD
     const name = camelize(schema.name);
     let { read, write, manage } = factory.get(schema);
 
-    // The owning attribute and fabric come from structs.  This upgrades the
-    // context to include those values if appropriate
-    const attribute = schema instanceof AttributeModel ? schema : undefined;
-    const hasFabricIndex = schema.children.some(child => child.name === "FabricIndex");
-    function augmentContext(wrapper: Wrapper) {
-        let context = wrapper[CONTEXT];
+    // For primitives we don't actually need a manager so just proxy writes
+    // directly
+    if (manage === PrimitiveManager) {
+        return {
+            get(this: Wrapper) {
+                return read(
+                    this[REF].value[name],
+                    this[OPTIONS],
+                    this[CONTEXT]
+                );
+            },
 
-        if (attribute) {
-            context = { ...context, attribute };
+            set(this: Wrapper, value: Io.Val) {
+                this[REF].changed = true;
+                this[REF].value[name] = write(
+                    value,
+                    this[REF].value[name],
+                    this[OPTIONS],
+                    this[CONTEXT]
+                );
+            }
         }
-
-        if (hasFabricIndex) {
-            context = { ...context, owningFabric: wrapper.fabricIndex as FabricIndex | undefined};
-        }
-
-        return context;
     }
 
     return {
         get(this: Wrapper) {
-            manage(
-                read(
-                    this[TARGET][name],
-                    this[OWNER].readOptions,
+            let managed = this[MANAGERS]?.[name];
+            if (managed) {
+                return managed;
+            }
+
+            const ref = ManagedReference(
+                this[REF],
+                name,
+                value => ({ ...(value as Io.Struct) })
+            );
+
+            managed = manage(
+                ref,
+                this[OPTIONS],
+                hasFabricIndex
+                    ? {
+                        ...this[CONTEXT],
+                        owningFabric: this[REF].value.owningFabric as FabricIndex
+                    }
+                    : this[CONTEXT]
+            )
+
+            if (this[MANAGERS]) {
+                this[MANAGERS][name] = managed;
+            } else {
+                this[MANAGERS] = { [name]: managed };
+            }
+
+            return read(
+                managed;
+        },
+
+        set(this: Wrapper, value: Io.Val) {
+            this[REF].value[name] = value;
+        }
+    }
+    // If we have a fabric index, we need to pass the owning fabric to children
+    const hasFabricIndex = schema.children.some(child => child.name === "FabricIndex");
+
+        descriptor.get = function(this: Wrapper) {
+            boolean mutated = false;
+            const parentRef = this[REF];
+            const childRef = {
+                value: read(
+                    this[REF].value,
+                    this[OPTIONS].readOptions,
                     this[CONTEXT],
                 ),
-                this[OWNER],
+
+                get mutated() {
+                    return mutated;
+                }
+                mutate() {
+                    parentRef.mutate();
+                }
+            }
+            manage(
+                ,
+                this[OPTIONS],
+                augmentContext(this)
+            );
+        }
+    }
+
+    const descriptor = {
+        get(this: Wrapper) {
+            manage(
+                read(
+                    this[REF].value.[name],
+                    this[OPTIONS],
+                    this[CONTEXT],
+                ),
+                this[OPTIONS],
                 augmentContext(this)
             );
         },
@@ -135,7 +215,7 @@ function createPropertyDescriptor(factory: IoFactory, schema: Schema): PropertyD
             }
 
             if (this[TARGET] === this[VALUE]) {
-                if (this[OWNER].beginTransaction()) {
+                if (this[OPTIONS].beginTransaction()) {
                     this[TARGET] = { ...this[VALUE] };
                 }
             }
@@ -143,9 +223,11 @@ function createPropertyDescriptor(factory: IoFactory, schema: Schema): PropertyD
             this[TARGET][name] = write(
                 value,
                 oldValue,
-                this[OWNER].writeOptions,
+                this[OPTIONS].writeOptions,
                 this[CONTEXT]
             )
         }
-    }
+    } as PropertyDescriptor;
 }
+
+function createCollectionGetter

@@ -9,6 +9,7 @@ import type { Schema } from "../../Schema.js";
 import type { Io } from "../Io.js";
 import type { IoFactory } from "../IoFactory.js";
 import { ListManager } from "./list.js";
+import { PrimitiveManager } from "./primitive.js";
 import { StructManager } from "./struct.js";
 
 /**
@@ -35,6 +36,6 @@ export function IoManager(schema: Schema, factory: IoFactory): Io.Manage {
         // in state or wrap here but meh
 
         default:
-            return value => value;
+            return PrimitiveManager;
     }
 }

@@ -21,7 +21,7 @@ export function GeneratedClass(options: GeneratedClass.Options) {
     } = options;
 
     // Options + any additional mixins defines complete functionality
-    const allMixins = mixins ? [ options, ...mixins ] : [ options ];
+    const allMixins = mixins ? [ ...mixins, options ] : [ options ];
 
     // Create the constructor function
     const type = createConstructor({

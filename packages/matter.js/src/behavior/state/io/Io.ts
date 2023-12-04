@@ -6,9 +6,7 @@
 
 import type { AccessLevel } from "../../../cluster/Cluster.js";
 import type { FabricIndex } from "../../../datatype/FabricIndex.js";
-import { AttributeModel } from "../../../model/index.js";
-import { StatusResponseError } from "../../../protocol/interaction/InteractionMessenger.js";
-import { StatusCode } from "../../../protocol/interaction/InteractionProtocol.js";
+import type { PropertyModel } from "../../../model/index.js";
 import type { Schema } from "../Schema.js";
 import type { IoFactory } from "./IoFactory.js";
 
@@ -53,26 +51,26 @@ export interface Io {
 
 export namespace Io {
     export type Read = (
-        value: Io.Val,
-        options?: Io.ReadOptions,
+        value: Val,
+        options?: ReadOptions,
         context?: ValueContext
     ) => Io.Val;
 
     export type Write = (
-        newValue: Io.Val,
-        oldValue: Io.Val,
-        options?: Io.WriteOptions,
+        newValue: Val,
+        oldValue: Val,
+        options?: WriteOptions,
         context?: ValueContext
-    ) => Io.Val;
+    ) => Val;
 
     export type Validate = (
-        value: Io.Val,
-        options?: Io.ValidateOptions
+        value: Val,
+        context?: ValidationContext
     ) => void;
     
     export type Manage = (
-        value: Io.Val,
-        owner: ValueOwner,
+        reference: ValueReference,
+        options?: Options,
         context?: ValueContext
     ) => void;
 
@@ -83,6 +81,8 @@ export namespace Io {
     export type Struct = Record<string, Val>;
 
     export type List = Val[];
+
+    export type Container = Struct | List;
 
     /**
      * Options common to read and write.
@@ -108,7 +108,10 @@ export namespace Io {
 
         /**
          * If this is true then access levels are not enforced and all values
-         * are read/write.
+         * are read/write.  Datatypes are still enforced.
+         * 
+         * Tracks "offline" rather than "online" because this makes the safer
+         * mode (full enforcement) the default if the value is omitted.
          */
         offline?: boolean;
     }
@@ -135,12 +138,30 @@ export namespace Io {
     }
 
     /**
-     * Validation options.
+     * All I/O options.
      */
-    export interface ValidateOptions {
+    export interface Options extends ReadOptions, WriteOptions {}
+
+    /**
+     * Details about a value's position in the data model.
+     * 
+     * Options and context are similar but options vary with the session and
+     * context varies with values and position in the model.
+     */
+    export interface ValueContext {
         /**
-         * To validate and conformance and constraints we require access to
-         * sibling values.  They are passed here when validating a record.
+         * The fabric that owns the value.
+         */
+        owningFabric?: FabricIndex;
+    }
+
+    /**
+     * Contextual information tracked during validation.
+     */
+    export interface ValidationContext {
+        /**
+         * To validate conformance and constraints we require access to sibling
+         * values.  They are passed here when validating a record.
          */
         siblings?: Struct;
 
@@ -149,24 +170,6 @@ export namespace Io {
          * context is passed here.
          */
         choices?: Record<string, Choice>;
-    }
-
-    /**
-     * Details about a value's position in the data model.
-     * 
-     * Options and context are similar but options vary with the session and
-     * context varies with the data model.
-     */
-    export interface ValueContext {
-        /**
-         * The attribute the value is part of.
-         */
-        attribute?: AttributeModel;
-
-        /**
-         * The fabric that owns the value.
-         */
-        owningFabric?: FabricIndex;
     }
 
     /**
@@ -179,29 +182,23 @@ export namespace Io {
     }
 
     /**
-     * Contextual information used by Io.Manage implementations.
+     * A ValueReference offers a simple mechanism for referring to properties
+     * by reference.
      */
-    export interface ValueOwner {
+    export interface ValueReference<T extends Val = Val> {
         /**
-         * Begin a transaction.
-         * 
-         * @returns true if transactions are supported
+         * The current value of the referenced property.
          */
-        beginTransaction(): boolean;
+        value: T;
 
         /**
-         * Change notification.
+         * The original value of the referenced property.
          */
-        changed(attribute: AttributeModel): void;
+        readonly original: T;
 
         /**
-         * Read access controls.
+         * Has the value changed?
          */
-        readOptions?: ReadOptions;
-
-        /**
-         * Write access controls.
-         */
-        writeOptions?: WriteOptions;
+        changed: boolean;
     }
 }

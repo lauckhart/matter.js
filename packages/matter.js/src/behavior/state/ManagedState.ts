@@ -21,7 +21,7 @@ const cache = new WeakMap<State.Type>();
 
 /**
  * The public {@link State} interface is a bare JS object but internally we
- * need wiring for validating writes and triggering events.  This function
+ * need wiring for validation, eventing, transactions, etc.  This function
  * creates a wrapper that performs those functions.
  *
  * This is a pure function for {@link type}.  It caches the generated class.
@@ -45,14 +45,18 @@ export function ManagedState<T extends State.Type>(type: T) {
         name: `${type.schema.name}$State`,
         base: State,
 
+        // We share implementation of properties with managed struct I/O
         mixins: [
             StructManagerMixin(ioFactory, type.schema)
         ],
 
-        initialize(this: State.Internal, values, context) {
-            this[State.INITIALIZE](values, context);
+        // Function signature here must match that of StructManagerMixin's
+        // initializer
+        initialize(this: State.Internal, values: Record<string, any>, owner: ManagedState.Owner) {
+            this[State.INITIALIZE](values, owner.context);
         },
 
+        // Override the static schema
         staticDescriptors: {
             schema: {
                 get() {
@@ -70,14 +74,24 @@ export function ManagedState<T extends State.Type>(type: T) {
 }
 
 export namespace ManagedState {
+    /**
+     * {@link ManagedState()} returns a constructor with this signature.
+     */
     export type Type<T extends State.Type = State.Type> = {
-        new (values?: Record<string, any>, context?: InvocationContext): InstanceType<T>;
+        new (values: InstanceType<T>, owner: ManagedState.Owner): InstanceType<T>;
 
         set: typeof State.set;
         with: typeof State.with;
-        schema?: Schema;
+        schema: Schema;
         io: Io;
     };
+
+    /**
+     * Managed state requires a slightly augmented version of value owner.
+     */
+    export interface Owner extends Io.ManageOptions {
+        context?: InvocationContext;
+    }
 }
 
 function getSchema(type: State.Type) {
@@ -103,5 +117,5 @@ function getSchema(type: State.Type) {
         }
     }
 
-    return cloned;
+    return schema;
 }

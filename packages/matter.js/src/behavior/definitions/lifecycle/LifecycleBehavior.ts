@@ -8,7 +8,7 @@ import type { Part } from "../../../endpoint/Part.js";
 import { EventEmitter, Observable } from "../../../util/Observable.js";
 import { BasicSet } from "../../../util/Set.js";
 import { Behavior } from "../../Behavior.js";
-import { State } from "../../state/State.js";
+import { State as BaseState } from "../../state/State.js";
 
 /**
  * This behavior manages state related to the owning {@link Part}'s lifecycle.
@@ -24,7 +24,7 @@ import { State } from "../../state/State.js";
 export class LifecycleBehavior extends Behavior {
     static override readonly id = "lifecycle";
 
-    declare state: LifecycleBehavior.EndpointScope;
+    declare state: LifecycleBehavior.State;
     declare events: LifecycleBehavior.Events;
 
     override initialize() {
@@ -47,7 +47,7 @@ export class LifecycleBehavior extends Behavior {
 }
 
 export namespace LifecycleBehavior {
-    export class EndpointScope extends State {
+    export class State extends BaseState {
         /**
          * True when the part is installed into a parent.
          *
