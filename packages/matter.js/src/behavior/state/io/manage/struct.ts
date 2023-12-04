@@ -5,14 +5,14 @@
  */
 
 import { FabricIndex } from "../../../../datatype/FabricIndex.js";
-import { AttributeModel, ValueModel } from "../../../../model/index.js";
-import { isDeepEqual } from "../../../../util/DeepEqual.js";
+import { ValueModel } from "../../../../model/index.js";
 import { GeneratedClass } from "../../../../util/GeneratedClass.js";
 import { camelize } from "../../../../util/String.js";
 import type { Schema } from "../../Schema.js";
 import type { Io } from "../Io.js";
 import { IoError } from "../IoError.js";
 import type { IoFactory } from "../IoFactory.js";
+import { AccessControl } from "./access.js";
 import { PrimitiveManager } from "./primitive.js";
 import { ManagedReference } from "./reference.js";
 
@@ -30,7 +30,7 @@ export function StructManager(
         ...StructManagerMixin(factory, schema)
     }) as new (value: Io.Val, options: Io.Options) => Io.Struct
 
-    return (value, owner) => {
+    return (value, options) => {
         return new Wrapper(value, options);
     }
 }
@@ -105,8 +105,9 @@ function createPropertyDescriptor(factory: IoFactory, schema: Schema): PropertyD
     const name = camelize(schema.name);
     let { read, write, manage } = factory.get(schema);
 
-    // For primitives we don't actually need a manager so just proxy writes
-    // directly
+    const limits = AccessControl.get
+
+    // For primitives we don't need a manager so just proxy writes directly
     if (manage === PrimitiveManager) {
         return {
             get(this: Wrapper) {
@@ -164,70 +165,8 @@ function createPropertyDescriptor(factory: IoFactory, schema: Schema): PropertyD
         },
 
         set(this: Wrapper, value: Io.Val) {
+            // Uh. No.
             this[REF].value[name] = value;
         }
     }
-    // If we have a fabric index, we need to pass the owning fabric to children
-    const hasFabricIndex = schema.children.some(child => child.name === "FabricIndex");
-
-        descriptor.get = function(this: Wrapper) {
-            boolean mutated = false;
-            const parentRef = this[REF];
-            const childRef = {
-                value: read(
-                    this[REF].value,
-                    this[OPTIONS].readOptions,
-                    this[CONTEXT],
-                ),
-
-                get mutated() {
-                    return mutated;
-                }
-                mutate() {
-                    parentRef.mutate();
-                }
-            }
-            manage(
-                ,
-                this[OPTIONS],
-                augmentContext(this)
-            );
-        }
-    }
-
-    const descriptor = {
-        get(this: Wrapper) {
-            manage(
-                read(
-                    this[REF].value.[name],
-                    this[OPTIONS],
-                    this[CONTEXT],
-                ),
-                this[OPTIONS],
-                augmentContext(this)
-            );
-        },
-
-        set(this: Wrapper, value: Io.Val) {
-            const oldValue = this[TARGET][name];
-            if (isDeepEqual(oldValue, value)) {
-                return true;
-            }
-
-            if (this[TARGET] === this[VALUE]) {
-                if (this[OPTIONS].beginTransaction()) {
-                    this[TARGET] = { ...this[VALUE] };
-                }
-            }
-
-            this[TARGET][name] = write(
-                value,
-                oldValue,
-                this[OPTIONS].writeOptions,
-                this[CONTEXT]
-            )
-        }
-    } as PropertyDescriptor;
 }
-
-function createCollectionGetter
