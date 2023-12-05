@@ -10,9 +10,9 @@ import { camelize } from "../../util/String.js";
 import type { InvocationContext } from "../InvocationContext.js";
 import { Schema } from "./Schema.js";
 import { State } from "./State.js";
-import { Io } from "./io/Io.js";
-import { IoFactory } from "./io/IoFactory.js";
-import { StructManagerMixin } from "./io/manage/struct.js";
+import { ValueManager } from "./ValueManager.js";
+import { StateManager } from "./StateManager.js";
+import { StructManagerMixin } from "./managed/struct.js";
 
 /**
  * A cache of managed state implementation classes.
@@ -33,7 +33,7 @@ export function ManagedState<T extends State.Type>(type: T) {
         return cached as ManagedState.Type<T>;
     }
 
-    const ioFactory = new IoFactory(type.schema);
+    const ioFactory = new StateManager(type.schema);
 
     // Augment schema with any fields from the original cluster that are not
     // present in the original schema.  This allows overrides to define fields
@@ -83,13 +83,13 @@ export namespace ManagedState {
         set: typeof State.set;
         with: typeof State.with;
         schema: Schema;
-        io: Io;
+        io: ValueManager;
     };
 
     /**
      * Managed state requires a slightly augmented version of value owner.
      */
-    export interface Owner extends Io.ManageOptions {
+    export interface Owner extends ValueManager.ManageOptions {
         context?: InvocationContext;
     }
 }

@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Io } from "../Io.js";
+import { Val } from "../Val.js";
 
-type Container = Record<string | number, Io.Val>;
+type Container = Record<string | number, Val>;
 
 /**
  * ManagedReference manages a reference to a container property of another
@@ -31,22 +31,28 @@ type Container = Record<string | number, Io.Val>;
  * @returns a reference to the property
  */
 export function ManagedReference(
-    parent: Io.ValueReference<Io.Container>,
+    parent: Val.Reference<Val.Collection>,
     index: string | number,
-    clone: (container: Io.Val) => Io.Val
+    assertWriteOk: (value: Val) => void,
+    clone: (container: Val) => Val
 ) {
     let changed = false;
     const original = (parent.value as Container)[index]
 
     return {
         get value() {
+            // Authorization is unnecessary here because the reference would
+            // not exist if access is unauthorized
             return (parent.value as Container)[index];
         },
 
-        set value(value: Io.Val) {
+        set value(value: Val) {
             if ((parent.value as Container)[index] === value) {
                 return;
             }
+
+            // Authorization and validation
+            assertWriteOk(value);
 
             if (!changed) {
                 this.changed = true;
@@ -75,5 +81,5 @@ export function ManagedReference(
             parent.changed = true;
             (parent.value as Container)[index] = clone((parent.value as Container)[index]);
         },
-    } as Io.ValueReference;
+    } as Val.Reference;
 }

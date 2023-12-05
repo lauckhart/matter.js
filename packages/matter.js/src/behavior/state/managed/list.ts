@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ValueModel } from "../../../../model/index.js";
-import type { Io } from "../Io.js";
-import type { IoFactory } from "../IoFactory.js";
-import { Schema } from "../../Schema.js";
-import { isDeepEqual } from "../../../../util/DeepEqual.js";
-import { IoError } from "../IoError.js";
+import { ValueModel } from "../../../model/index.js";
+import type { ValueManager } from "../ValueManager.js";
+import type { StateManager } from "../StateManager.js";
+import { Schema } from "../Schema.js";
+import { isDeepEqual } from "../../../util/DeepEqual.js";
+import { SchemaError } from "../../errors.js";
 
 /**
  * We must use a proxy to properly encapsulate array data.
@@ -22,12 +22,12 @@ import { IoError } from "../IoError.js";
  * interface or provide a means for accessing the internal array directly.
  */
 export function ListManager(
-    factory: IoFactory,
+    factory: StateManager,
     schema: Schema
-): Io.Manage {
+): ValueManager.Manage {
     const entry = schema instanceof ValueModel ? schema.listEntry : undefined;
     if (entry === undefined) {
-        throw new IoError.SchemaError(
+        throw new SchemaError(
             schema,
             `List schema has no entry definition`
         );
@@ -36,11 +36,11 @@ export function ListManager(
     // We use this Io to perform validated I/O on entries
     const { manage, read, write } = factory.get(entry);
 
-    // Return an Io.Manage that manages reads and writes
+    // Return an ValueManager.Manage that manages reads and writes
     return (list, owner, context) => {
         // Sanity check
         if (!Array.isArray(list)) {
-            throw new IoError.SchemaError(
+            throw new SchemaError(
                 schema,
                 `Cannot manage ${
                     typeof list

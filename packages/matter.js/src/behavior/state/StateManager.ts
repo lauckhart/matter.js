@@ -4,30 +4,31 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterModel, FeatureSet, ValueModel, Globals, AttributeModel } from "../../../model/index.js";
-import { IoWriter } from "./rw/writer.js";
-import { Io } from "./Io.js";
-import { IoReader } from "./rw/reader.js";
-import { InternalError } from "../../../common/MatterError.js";
-import { IoValidator } from "./IoValidator.js";
-import { Schema } from "../Schema.js";
-import { IoManager } from "./manage/manage.js";
+import { ClusterModel, FeatureSet, ValueModel, Globals, AttributeModel } from "../../model/index.js";
+import { ValueManager } from "./ValueManager.js";
+import { InternalError } from "../../common/MatterError.js";
+import { ValueValidator } from "./ValueValidator.js";
+import { Schema } from "./Schema.js";
+import { AccessEnforcer } from "../AccessEnforcer.js";
 
 /**
- * IoFactory manages I/O implementations.
+ * StateManager manages state associated with a specific root schema.
+ * 
+ * StateManager primarily acts as a factory for ValueManagers.
  */
-export class IoFactory {
+export class StateManager {
     #generating = new Set<Schema>();
-    #cache = new WeakMap<Schema, Io>();
+    #cache = new WeakMap<Schema, ValueManager>();
     #featureMap: ValueModel;
     #supportedFeatures: FeatureSet;
     #members: Set<ValueModel>;
 
     /**
-     * Create an I/O factory for the specified root schema.
+     * Create factory for the specified root schema.
      * 
-     * You can produce an I/O for any schema using this factory.  However,
-     * there are specific customizations controlled by the root schema:
+     * You can produce an ValueManager for any schema using this factory.
+     * However, there are specific customizations controlled by the root
+     * schema:
      * 
      * - Change eventing occur for root schema members.  In the case of
      *   cluster schema this means you can monitor for changes on a
@@ -65,8 +66,8 @@ export class IoFactory {
      * @param schema the model describing the record type
      * @returns the I/O implementation
      */
-    get(schema: Schema): Io {
-        let io = this.#cache.get(schema);
+    get(schema: Schema): ValueManager {
+        let manager = this.#cache.get(schema);
 
         // Implements deferred generation (see comments below).  Proxies to
         // the real generator, installs the generated function, then invokes.
@@ -75,53 +76,51 @@ export class IoFactory {
         // held directly.
         const deferGeneration = (
             name: string,
-            generator: (schema: Schema, factory: IoFactory) => any
+            generator: (schema: Schema, factory: StateManager) => any
         ) => {
             let generated = false;
 
             return (
                 (...args: any[]): any => {
                     if (!generated) {
-                        if (io === undefined) {
+                        if (manager === undefined) {
                             throw new InternalError("Deferred I/O generation invoked impossibly early");
                         }
 
-                        (io as any)[name] = generator(schema, this) as any;
+                        (manager as any)[name] = generator(schema, this) as any;
 
                         generated = true;
                     }
 
-                    return (io as any)[name](...args) as any;
+                    return (manager as any)[name](...args) as any;
                 }
             ) as any;
         }
 
-        if (io === undefined) {
+        if (manager === undefined) {
             if (this.isGenerating(schema)) {
-                io = {
+                manager = {
                     factory: this,
                     schema: schema,
-                    read: deferGeneration("read", IoReader),
-                    write: deferGeneration("write", IoWriter),
-                    validate: deferGeneration("validate", IoValidator),
-                    manage: deferGeneration("manage", IoManager),
+                    access: AccessEnforcer(schema),
+                    validate: deferGeneration("validate", ValueValidator),
+                    manage: deferGeneration("manage", ValueManager),
                 }
             } else {
-                io = {
+                manager = {
                     factory: this,
                     schema: schema,
-                    read: IoReader(schema, this),
-                    write: IoWriter(schema, this),
-                    validate: IoValidator(schema, this),
-                    manage: IoManager(schema, this),
+                    access: AccessEnforcer(schema),
+                    validate: ValueValidator(schema, this),
+                    manage: ValueManager(schema, this),
                 }
             }
 
             this.#generating.delete(schema);
-            this.#cache.set(schema, io);
+            this.#cache.set(schema, manager);
         }
 
-        return io;
+        return manager;
     }
 
     /**

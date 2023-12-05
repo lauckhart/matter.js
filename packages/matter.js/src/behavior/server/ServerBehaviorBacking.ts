@@ -9,7 +9,7 @@ import { InvocationContext } from "../InvocationContext.js";
 import { LifecycleBehavior } from "../definitions/lifecycle/LifecycleBehavior.js";
 import { ManagedState } from "../state/ManagedState.js";
 import { State } from "../state/State.js";
-import { Io } from "../state/io/Io.js";
+import { ValueManager } from "../state/ValueManager.js";
 
 /**
  * This class backs the server implementation of a behavior.
@@ -17,7 +17,7 @@ import { Io } from "../state/io/Io.js";
 export class ServerBehaviorBacking extends BehaviorBacking {
     #state?: State;
     #stateType?: State.Type;
-    #stateOwner?: Io.ManageOptions;
+    #stateOwner?: ValueManager.ManageOptions;
 
     /**
      * Obtain a managed state instance.

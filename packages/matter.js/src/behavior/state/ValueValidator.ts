@@ -4,13 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../../../common/MatterError.js";
-import { ClusterModel, Metatype, ValueModel } from "../../../model/index.js";
-import { camelize } from "../../../util/String.js";
-import { Schema } from "../Schema.js";
-import { Io } from "./Io.js";
-import { IoError } from "./IoError.js";
-import { IoFactory } from "./IoFactory.js";
+import { InternalError } from "../../common/MatterError.js";
+import { ClusterModel, Metatype, ValueModel } from "../../model/index.js";
+import { camelize } from "../../util/String.js";
+import { Schema } from "./Schema.js";
+import { ConformanceError, SchemaError, ValidateError } from "../errors.js";
+import { StateManager } from "./StateManager.js";
 import {
     assertArray,
     assertBytes,
@@ -20,6 +19,9 @@ import {
 } from "./validation/assertions.js";
 import { createConformanceValidator } from "./validation/conformance.js";
 import { createConstraintValidator } from "./validation/constraint.js";
+import type { ValueManager } from "./ValueManager.js";
+import { ValidationContext } from "./validation/context.js";
+import { Val } from "./Val.js";
 
 /**
  * Generate a function that performs data validation.
@@ -27,15 +29,15 @@ import { createConstraintValidator } from "./validation/constraint.js";
  * @param schema the schema against which we validate
  * @param factory used to retrieve validators for sub-properties
  */
-export function IoValidator(
+export function ValueValidator(
     schema: Schema,
-    factory: IoFactory
-): Io.Validate {
+    factory: StateManager
+): ValueManager.Validate {
     if (schema instanceof ClusterModel) {
         return createStructValidator(schema.attributes, schema, factory) ?? (() => {});
     }
 
-    let validator: Io.Validate | undefined;
+    let validator: ValueManager.Validate | undefined;
 
     const metatype = schema.effectiveMetatype;
     switch (metatype) {
@@ -84,11 +86,11 @@ export function IoValidator(
     return validator || (() => {});
 }
 
-function createNullValidator(schema: ValueModel, nextValidator?: Io.Validate): Io.Validate | undefined {
+function createNullValidator(schema: ValueModel, nextValidator?: ValueManager.Validate): ValueManager.Validate | undefined {
     if (schema.effectiveQuality.nullable !== true) {
         return (value, options) => {
             if (value === null) {
-                throw new IoError.ValidationError(
+                throw new ValidateError(
                     schema,
                     "Null write to non-nullable field",
                 )
@@ -100,7 +102,7 @@ function createNullValidator(schema: ValueModel, nextValidator?: Io.Validate): I
     return nextValidator;
 }
 
-function createEnumValidator(schema: ValueModel): Io.Validate | undefined {
+function createEnumValidator(schema: ValueModel): ValueManager.Validate | undefined {
     const valid = new Set(
         schema.members.map(member => member.id).filter(e => e !== undefined)
     );
@@ -108,7 +110,7 @@ function createEnumValidator(schema: ValueModel): Io.Validate | undefined {
     return (value) => {
         assertNumber(value, schema);
         if (!valid.has(value)) {
-            throw new IoError.ValidationError(
+            throw new ValidateError(
                 schema,
                 `Value ${value} is not a present in enum`
             )
@@ -116,7 +118,7 @@ function createEnumValidator(schema: ValueModel): Io.Validate | undefined {
     }
 }
 
-function createBitmapValidator(schema: ValueModel): Io.Validate | undefined {
+function createBitmapValidator(schema: ValueModel): ValueManager.Validate | undefined {
     const fields = {} as Record<string, { schema: ValueModel, max: number }>;
     
     for (const field of schema.members) {
@@ -127,7 +129,7 @@ function createBitmapValidator(schema: ValueModel): Io.Validate | undefined {
         } else if (typeof constraint.min === "number" && typeof constraint.max === "number") {
             max = constraint.max - constraint.min;
         } else {
-            throw new IoError.SchemaError(schema, `Bitmap field does not properly constrain bit field`)
+            throw new SchemaError(schema, `Bitmap field does not properly constrain bit field`)
         }
         fields[camelize(field.name, false)] = {
             schema: field,
@@ -141,7 +143,7 @@ function createBitmapValidator(schema: ValueModel): Io.Validate | undefined {
         for (const key in value) {
             const field = fields[key];
             if (field === undefined) {
-                throw new IoError.ValidationError(
+                throw new ValidateError(
                     schema,
                     `Field ${key} is not present in bitmap`
                 );
@@ -151,7 +153,7 @@ function createBitmapValidator(schema: ValueModel): Io.Validate | undefined {
             assertNumber(fieldValue, field.schema);
 
             if (fieldValue > field.max) {
-                throw new IoError.ValidationError(
+                throw new ValidateError(
                     field.schema,
                     `Value of ${fieldValue} is too large for bitmap field`
                 )
@@ -162,8 +164,8 @@ function createBitmapValidator(schema: ValueModel): Io.Validate | undefined {
 
 function createSimpleValidator(
     schema: ValueModel,
-    validateType: (value: Io.Val, schema: ValueModel) => void
-): Io.Validate {
+    validateType: (value: Val, schema: ValueModel) => void
+): ValueManager.Validate {
     const validateConstraint = createConstraintValidator(schema.effectiveConstraint, schema);
 
     return (value, options) => {
@@ -175,9 +177,9 @@ function createSimpleValidator(
 function createStructValidator(
     fields: ValueModel[],
     schema: Schema,
-    factory: IoFactory
-): Io.Validate | undefined {
-    const validators = {} as Record<string, Io.Validate>;
+    factory: StateManager
+): ValueManager.Validate | undefined {
+    const validators = {} as Record<string, ValueManager.Validate>;
 
     for (const field of fields) {
         validators[camelize(field.name, false)] = factory.get(schema).validate;
@@ -185,7 +187,7 @@ function createStructValidator(
 
     return value => {
         assertObject(value, schema);
-        const options: Io.ValidationContext = {
+        const options: ValidationContext = {
             siblings: value,
             choices: {}
         }
@@ -200,7 +202,7 @@ function createStructValidator(
         for (const name in options.choices) {
             const choice = options.choices[name];
             if (choice.count < choice.target) {
-                throw new IoError.ConformanceError(
+                throw new ConformanceError(
                     schema,
                     `Too few fields present for conformance choice ${
                         name
@@ -212,7 +214,7 @@ function createStructValidator(
                 )
             }
             if (choice.count > choice.target && !choice.orMore) {
-                throw new IoError.ConformanceError(
+                throw new ConformanceError(
                     schema,
                     `Too many fields present for conformance choice ${
                         name
@@ -229,14 +231,14 @@ function createStructValidator(
 
 function createListValidator(
     schema: ValueModel,
-    factory: IoFactory,
-): Io.Validate | undefined {
+    factory: StateManager,
+): ValueManager.Validate | undefined {
     const entry = schema.listEntry;
-    let validateEntries: undefined | ((list: Io.List) => void);
+    let validateEntries: undefined | ((list: Val.List) => void);
     if (entry) {
         let entryValidator = factory.get(entry).validate;
 
-        validateEntries = (list: Io.List) => {
+        validateEntries = (list: Val.List) => {
             for (const e of list) {
                 entryValidator(e);
             }

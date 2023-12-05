@@ -223,10 +223,10 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
                 case Access.Privilege.Operate:
                 case Access.Privilege.Manage:
                 case Access.Privilege.Administer:
-                    if (!this.readPriv || Access.PrivilegePriority[f] < Access.PrivilegePriority[this.readPriv]) {
+                    if (!this.readPriv || Access.PrivilegeLevel[f] < Access.PrivilegeLevel[this.readPriv]) {
                         this.readPriv = f;
                     }
-                    if (!this.writePriv || Access.PrivilegePriority[f] > Access.PrivilegePriority[this.writePriv]) {
+                    if (!this.writePriv || Access.PrivilegeLevel[f] > Access.PrivilegeLevel[this.writePriv]) {
                         this.writePriv = f;
                     }
                     break;
@@ -331,7 +331,7 @@ export namespace Access {
     /**
      * Relative ordering of privilege.
      */
-    export const PrivilegePriority = {
+    export const PrivilegeLevel = {
         V: 1,
         O: 2,
         M: 3,

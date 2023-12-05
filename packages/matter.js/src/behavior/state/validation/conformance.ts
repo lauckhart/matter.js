@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { FeatureSet, ValueModel } from "../../../../model/index.js";
-import { Io } from "../Io.js";
+import { FeatureSet, ValueModel } from "../../../model/index.js";
+import { ValueManager } from "../ValueManager.js";
 import { astToFunction } from "./conformance-compiler.js";
 
 /**
@@ -16,8 +16,8 @@ export function createConformanceValidator(
     schema: ValueModel,
     featureMap: ValueModel,
     supportedFeatures: FeatureSet,
-    nextValidator?: Io.Validate
-): Io.Validate | undefined {
+    nextValidator?: ValueManager.Validate
+): ValueManager.Validate | undefined {
     const validate = astToFunction(schema, featureMap, supportedFeatures);
 
     if (validate) {

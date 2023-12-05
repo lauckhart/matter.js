@@ -4,11 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Conformance, FeatureSet, ValueModel } from "../../../../model/index.js";
-import { camelize } from "../../../../util/String.js";
-import { Schema } from "../../Schema.js";
-import { Io } from "../Io.js";
-import { IoError } from "../IoError.js";
+import { Conformance, FeatureSet, ValueModel } from "../../../model/index.js";
+import { camelize } from "../../../util/String.js";
+import { Schema } from "../Schema.js";
+import { SchemaError } from "../../errors.js";
+import { Val } from "../Val.js";
+import { ValidationContext } from "./context.js";
 
 /**
  * Normalize the feature map and list of supported feature names into sets of
@@ -57,7 +58,7 @@ export enum Code {
 
 export interface ValueNode {
     code: Code.Value;
-    value: Io.Val;
+    value: Val;
 }
 
 export type StaticNode =
@@ -72,7 +73,7 @@ export type StaticNode =
 
 export interface RuntimeNode {
     code: Code.Evaluate;
-    evaluate: (value: Io.Val, options?: Io.ValidationContext) => StaticNode;
+    evaluate: (value: Val, options?: ValidationContext) => StaticNode;
 }
 
 export type DynamicNode =
@@ -82,7 +83,7 @@ export type DynamicNode =
 /**
  * Convert a static node to a dynamic node at runtime.
  */
-export function evaluateNode(node: DynamicNode, value: Io.Val, options?: Io.ValidationContext): StaticNode {
+export function evaluateNode(node: DynamicNode, value: Val, options?: ValidationContext): StaticNode {
     if (node.code === Code.Evaluate) {
         return node.evaluate(value, options);
     }
@@ -131,7 +132,7 @@ export function asBoolean(node: StaticNode) {
  */
 export function assertValue(schema: Schema, node: DynamicNode, where: string): asserts node is ValueNode {
     if (node.code !== Code.Value) {
-        throw new IoError.SchemaError(
+        throw new SchemaError(
             schema,
             `Expected a value for ${where} but conformance node is "${node.code}"`
         );
@@ -213,7 +214,7 @@ function performComparison(
 ): StaticNode {
     const operator = ComparisonOperators[operatorName];
     if (operator === undefined) {
-        throw new IoError.SchemaError(schema, `Unknown binary operator ${operatorName}`);
+        throw new SchemaError(schema, `Unknown binary operator ${operatorName}`);
     }
 
     assertValue(schema, lhs, `Left-hand side of "${operatorName}"`);

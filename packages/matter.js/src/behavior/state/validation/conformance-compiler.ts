@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Conformance, FeatureSet, FieldValue, ValueModel } from "../../../../model/index.js";
-import { Io } from "../Io.js";
-import { IoError } from "../IoError.js";
+import { Conformance, FeatureSet, FieldValue, ValueModel } from "../../../model/index.js";
+import { ValueManager } from "../ValueManager.js";
+import { ConformanceError, SchemaError } from "../../errors.js";
 import { Code, ConformantNode, DynamicNode, NonconformantNode, type RuntimeNode, StaticNode, asBoolean, asConformance, createComparison, createLogicalBinaryEvaluator, createLogicalInversion, evaluateNode, isStatic, normalizeFeatures } from "./conformance-util.js";
+import { ValidationContext } from "./context.js";
 
 /**
  * Generates JS function equivalent of a conformance expression.
@@ -34,7 +35,7 @@ export function astToFunction(
     schema: ValueModel,
     featureMap: ValueModel,
     supportedFeatures: FeatureSet
-): Io.Validate | undefined {
+): ValueManager.Validate | undefined {
     const ast = schema.conformance.ast;
     const {
         featuresAvailable,
@@ -83,7 +84,7 @@ export function astToFunction(
                         break;
 
                     default:
-                        throw new IoError.SchemaError(
+                        throw new SchemaError(
                             schema,
                             `Unknown or unsupported top-level conformance node type ${compiledNode.code}`
                         );
@@ -91,7 +92,7 @@ export function astToFunction(
             }
     
         default:
-            throw new IoError.SchemaError(
+            throw new SchemaError(
                 schema,
                 `Unknown or unsupported top-level conformance node type ${compiledNode.code}`
             );
@@ -161,7 +162,7 @@ export function astToFunction(
                 ast satisfies never;
 
                 // Throw at runtime
-                throw new IoError.SchemaError(
+                throw new SchemaError(
                     schema,
                     `Unsupported conformance AST node type ${(ast as any).type}`
                 )
@@ -182,7 +183,7 @@ export function astToFunction(
         const compiled = compile(param.expr);
 
         const name = param.name;
-        const template: Io.Choice = {
+        const template: ValidationContext.Choice = {
             count: 1,
             target: param.num,
             orMore: !!param.orMore
@@ -223,7 +224,7 @@ export function astToFunction(
      */
     function createGroup(param: Conformance.Ast.Group): DynamicNode {
         if (!Array.isArray(param)) {
-            throw new IoError.SchemaError(
+            throw new SchemaError(
                 schema,
                 "Conformance AST group parameter is not an array"
             );
@@ -482,7 +483,7 @@ export function astToFunction(
                 );
 
             default:
-                throw new IoError.SchemaError(
+                throw new SchemaError(
                     schema,
                     `Unknown logical binary operator ${operator}`
                 );
@@ -519,7 +520,7 @@ export function astToFunction(
 
     function requireValue(value: unknown) {
         if (value === undefined) {
-            throw new IoError.ConformanceError(
+            throw new ConformanceError(
                 schema,
                 "Mandatory field is undefined"
             )
@@ -528,7 +529,7 @@ export function astToFunction(
 
     function disallowValue(value: unknown) {
         if (value !== undefined) {
-            throw new IoError.ConformanceError(
+            throw new ConformanceError(
                 schema,
                 "Disallowed field is defined"
             )

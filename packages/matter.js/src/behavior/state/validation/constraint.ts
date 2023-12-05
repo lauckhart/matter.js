@@ -4,11 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../../../../common/MatterError.js";
-import { Constraint, Metatype, ValueModel } from "../../../../model/index.js";
-import { Io } from "../Io.js";
-import { IoError } from "../IoError.js";
+import { InternalError } from "../../../common/MatterError.js";
+import { Constraint, Metatype, ValueModel } from "../../../model/index.js";
+import { ValueManager } from "../ValueManager.js";
+import { ConstraintError } from "../../errors.js";
 import { assertArray, assertNumeric, assertSequence } from "./assertions.js";
+import { Val } from "../Val.js";
 
 /**
  * Creates a function that validates values based on the constraint in the
@@ -25,10 +26,10 @@ export function createConstraintValidator(constraint: Constraint, schema: ValueM
 
         case Metatype.integer:
         case Metatype.float:
-            return (value: Io.Val) => {
+            return (value: Val) => {
                 assertNumeric(value, schema);
                 if (!constraint.test(value)) {
-                    throw new IoError.ConstraintError(
+                    throw new ConstraintError(
                         schema,
                         `Value ${value} is not within bounds defined by constraint`
                     )
@@ -37,10 +38,10 @@ export function createConstraintValidator(constraint: Constraint, schema: ValueM
 
         case Metatype.string:
         case Metatype.bytes:
-            return (value: Io.Val) => {
+            return (value: Val) => {
                 assertSequence(value, schema);
                 if (!constraint.test(value.length)) {
-                    throw new IoError.ConstraintError(
+                    throw new ConstraintError(
                         schema,
                         `Value ${value} is not within bounds defined by constraint`
                     )
@@ -62,8 +63,8 @@ export function createConstraintValidator(constraint: Constraint, schema: ValueM
  * to the length.  They are special however as they may have sub-constraints
  * that apply to data elements.
  */
-function createArrayConstraintValidator(constraint: Constraint, schema: ValueModel): Io.Validate {
-    let validateEntryConstraint: Io.Validate | undefined;
+function createArrayConstraintValidator(constraint: Constraint, schema: ValueModel): ValueManager.Validate {
+    let validateEntryConstraint: ValueManager.Validate | undefined;
     if (constraint.entry) {
         const entrySchema = schema.listEntry;
         if (entrySchema) {
@@ -75,7 +76,7 @@ function createArrayConstraintValidator(constraint: Constraint, schema: ValueMod
         assertArray(value, schema);
 
         if (!constraint.test(value.length, options?.siblings)) {
-            throw new IoError.ConstraintError(
+            throw new ConstraintError(
                 schema,
                 `Value ${value} is not within bounds defined by constraint`
             )
