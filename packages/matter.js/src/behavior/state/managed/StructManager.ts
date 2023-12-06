@@ -8,11 +8,11 @@ import { FabricIndex } from "../../../datatype/FabricIndex.js";
 import { GeneratedClass } from "../../../util/GeneratedClass.js";
 import { camelize } from "../../../util/String.js";
 import type { Schema } from "../Schema.js";
-import type { ValueManager } from "../ValueManager.js";
-import type { StateManager } from "../StateManager.js";
-import { PrimitiveManager } from "./primitive.js";
-import { ManagedReference } from "./reference.js";
-import { Val } from "../Val.js";
+import type { ValueManager } from "./ValueManager.js";
+import type { StateManager } from "./StateManager.js";
+import { PrimitiveManager } from "./PrimitiveManager.js";
+import { ManagedReference } from "./ManagedReference.js";
+import { Val } from "./Val.js";
 import { AccessEnforcer } from "../../AccessEnforcer.js";
 import { SchemaError } from "../../errors.js";
 
@@ -21,24 +21,26 @@ import { SchemaError } from "../../errors.js";
  * schema.
  */
 export function StructManager(
-    factory: StateManager,
-    schema: Schema
+    owner: StateManager,
+    schema: Schema,
+    base?: new () => Val,
 ): ValueManager.Manage {
     let Wrapper = GeneratedClass({
         name: `${schema.name}$Wrapper`,
+        base,
 
-        ...StructManagerMixin(factory, schema)
+        ...StructManagerMixin(owner, schema)
     }) as new (value: Val, session: AccessEnforcer.Session) => Val.Struct
 
-    return (value, session) => {
-        return new Wrapper(value, session);
+    return (reference, session) => {
+        reference.owner = new Wrapper(reference, session);
+        return reference.owner;
     }
 }
 
 const REF = Symbol("value");
 const SESSION = Symbol("options");
 const CONTEXT = Symbol("context");
-const MANAGERS = Symbol("properties");
 
 interface Wrapper extends Val.Struct {
     /**
@@ -47,7 +49,7 @@ interface Wrapper extends Val.Struct {
     [REF]: Val.Reference<Val.Struct>;
 
     /**
-     * The owner of the data structure.
+     * Information regarding the current user session.
      */
     [SESSION]: AccessEnforcer.Session;
 
@@ -55,25 +57,20 @@ interface Wrapper extends Val.Struct {
      * Contextual information about the wrapped value.
      */
     [CONTEXT]?: AccessEnforcer.Context;
-
-    /**
-     * Managed values for container fields.
-     */
-    [MANAGERS]?: Record<string, Val>;
 }
 
 /**
  * Configure struct behavior as a mixin.
  * 
- * StructManager and ManagedState both use this to implement struct fields
- * based on schema.
+ * StructManager, ManagedState and Datasource all use this to implement struct
+ * fields based on schema.
  */
-export function StructManagerMixin(factory: StateManager, schema: Schema): GeneratedClass.Mixin {
+export function StructManagerMixin(owner: StateManager, schema: Schema): GeneratedClass.Mixin {
     const instanceDescriptors = {} as PropertyDescriptorMap;
     let hasFabricIndex = false;
 
     for (const member of schema.members) {
-        instanceDescriptors[camelize(member.name, false)] = createPropertyDescriptor(factory, member);
+        instanceDescriptors[camelize(member.name, false)] = createPropertyDescriptor(owner, member);
         if (member.name === "FabricIndex") {
             hasFabricIndex = true;
         }
@@ -126,7 +123,7 @@ function createPropertyDescriptor(manager: StateManager, schema: Schema): Proper
             // performed on commit when choice conformance is in play.
             validate(value, { siblings: this[REF].value });
 
-            this[REF].changed = true;
+            this[REF].change();
             this[REF].value[name] = value;
         }
     };
@@ -145,9 +142,9 @@ function createPropertyDescriptor(manager: StateManager, schema: Schema): Proper
                 return undefined;
             }
 
-            let managed = this[MANAGERS]?.[name];
+            let managed = this[REF].subreferences?.[name];
             if (managed) {
-                return managed;
+                return managed.owner;
             }
 
             const assertWriteOk = (value: Val) => {
@@ -169,19 +166,13 @@ function createPropertyDescriptor(manager: StateManager, schema: Schema): Proper
                 cloneContainer,
             );
 
-            managed = manage(
+            ref.owner = manage(
                 ref,
                 this[SESSION],
                 this[CONTEXT],
             );
 
-            if (this[MANAGERS]) {
-                this[MANAGERS][name] = managed;
-            } else {
-                this[MANAGERS] = { [name]: managed };
-            }
-
-            return managed;
+            return ref.owner;
         }
     }
 

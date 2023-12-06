@@ -4,15 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { Schema } from "./Schema.js";
+import type { Schema } from "../Schema.js";
 import type { StateManager } from "./StateManager.js";
-import { AccessEnforcer } from "../AccessEnforcer.js";
+import { AccessEnforcer } from "../../AccessEnforcer.js";
 import { Val } from "./Val.js";
-import { ValidationContext } from "./validation/context.js";
-import { Metatype } from "../../model/definitions/index.js";
-import { StructManager } from "./managed/struct.js";
-import { ListManager } from "./managed/list.js";
-import { PrimitiveManager } from "./managed/primitive.js";
+import { ValidationContext } from "../validation/context.js";
+import { Metatype } from "../../../model/definitions/index.js";
+import { StructManager } from "./StructManager.js";
+import { ListManager } from "./ListManager.js";
+import { PrimitiveManager } from "./PrimitiveManager.js";
 
 /**
  * State manager implements schema-based management of a specific value.
@@ -27,9 +27,9 @@ import { PrimitiveManager } from "./managed/primitive.js";
  */
 export interface ValueManager {
     /**
-     * The factory that created this ValueManager.
+     * The state manager that owns this ValueManager.
      */
-    factory: StateManager;
+    owner: StateManager;
 
     /**
      * The schema that defines this Io's behavior.
@@ -57,13 +57,13 @@ export interface ValueManager {
  * 
  * Used by {@link StateManager} which acts as a cache.
  */
-export function ValueManager(schema: Schema, factory: StateManager): ValueManager.Manage {
+export function ValueManager(schema: Schema, owner: StateManager, base?: new () => Val): ValueManager.Manage {
     switch (schema.effectiveMetatype) {
         case Metatype.object:
-            return StructManager(factory, schema);
+            return StructManager(owner, schema, base);
 
         case Metatype.array:
-            return ListManager(factory, schema);
+            return ListManager(owner, schema);
 
         // TODO - for completeness we should either make ByteArray immutable
         // in state or wrap here but meh
@@ -83,5 +83,5 @@ export namespace ValueManager {
         reference: Val.Reference,
         session: AccessEnforcer.Session,
         context?: AccessEnforcer.Context
-    ) => void;
+    ) => Val;
 }

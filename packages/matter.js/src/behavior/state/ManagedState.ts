@@ -10,9 +10,9 @@ import { camelize } from "../../util/String.js";
 import type { InvocationContext } from "../InvocationContext.js";
 import { Schema } from "./Schema.js";
 import { State } from "./State.js";
-import { ValueManager } from "./ValueManager.js";
-import { StateManager } from "./StateManager.js";
-import { StructManagerMixin } from "./managed/struct.js";
+import { ValueManager } from "./managed/ValueManager.js";
+import { StateManager } from "./managed/StateManager.js";
+import { StructManagerMixin } from "./managed/StructManager.js";
 
 /**
  * A cache of managed state implementation classes.
@@ -52,7 +52,12 @@ export function ManagedState<T extends State.Type>(type: T) {
 
         // Function signature here must match that of StructManagerMixin's
         // initializer
-        initialize(this: State.Internal, values: Record<string, any>, owner: ManagedState.Owner) {
+        initialize(this: Internal, owner: ) {
+            Object.seal(this);
+
+            for (const value of values) {
+
+            }
             this[State.INITIALIZE](values, owner.context);
         },
 
@@ -85,13 +90,6 @@ export namespace ManagedState {
         schema: Schema;
         io: ValueManager;
     };
-
-    /**
-     * Managed state requires a slightly augmented version of value owner.
-     */
-    export interface Owner extends ValueManager.ManageOptions {
-        context?: InvocationContext;
-    }
 }
 
 function getSchema(type: State.Type) {

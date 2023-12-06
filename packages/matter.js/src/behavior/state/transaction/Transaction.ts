@@ -5,10 +5,14 @@
  */
 
 import { ImplementationError, MatterError } from "../../../common/MatterError.js";
+import { Logger } from "../../../log/Logger.js";
 import { createPromise } from "../../../util/Promises.js";
+import { MaybePromise } from "../../../util/Type.js";
 import type { TransactionCoordinator } from "./TransactionCoordinator.js";
 
 export class TransactionFlowError extends MatterError {}
+
+const logger = Logger.get("Transaction");
 
 /**
  * Updates to Matter.js state are transactional.
@@ -22,6 +26,10 @@ export class TransactionFlowError extends MatterError {}
  * can do is throw an error if two write transactions would conflict.  However,
  * you can avoid this by using {@link Transaction.begin} which ensures writes
  * occur serially.
+ * 
+ * Persistence is implemented by a list of participants.  Commits are two
+ * phase.  If an error is thrown in either phase all participants are rolled
+ * back.
  */
 export class Transaction {
     #participants = new Set<Transaction.Participant>();
@@ -137,7 +145,7 @@ export class Transaction {
 
             default:
                 throw new ImplementationError(
-                    `Cannot begin exclusive because transaction is ${
+                    `Cannot become exclusive because transaction is ${
                         this.#status
                     }`);
         }
@@ -170,14 +178,19 @@ export class Transaction {
     }
 
     async commit() {
-        this.#finish("commit", "commit");
+        await this.#finish(
+            Transaction.Status.CommittingPhaseOne,
+            async () => await this.executeCommit()
+        );
     }
 
     async rollback() {
-        this.#finish("rollback", "roll back");
+        await this.#finish(Transaction.Status.RollingBack, () => {
+            async () => await this.executeRollback()
+        });
     }
 
-    #finish(how: "commit" | "rollback", description: string) {
+    async #finish(status: Transaction.Status, finalizer: () => void) {
         switch (this.status) {
             case Transaction.Status.Shared:
                 this.#status = this.#coordinator.changeStatus(
@@ -189,13 +202,11 @@ export class Transaction {
             case Transaction.Status.Exclusive:
                 this.#status = this.#coordinator.changeStatus(
                     this,
-                    Transaction.Status.Finished
+                    status
                 );
 
                 try {
-                    for (const control of this.#participants.values()) {
-                        control[how]();
-                    }
+                    finalizer();
                 } finally {
                     this.#status = this.#coordinator.changeStatus(
                         this,
@@ -208,11 +219,47 @@ export class Transaction {
 
             default:
                 throw new ImplementationError(
-                    `Cannot ${
-                        description
+                    `Cannot become ${
+                        status
                     } because transaction is ${
                         this.#status
                     }`);
+        }
+    }
+
+    private async executeCommit() {
+        // Commit phase 1
+        for (const participant of this.participants) {
+            try {
+                participant.commit1();
+            } catch (e) {
+                logger.error(`Error committing ${participant.description} (phase one), rolling back`);
+                this.executeRollback();
+                return;
+            }
+        }
+
+        // Commit phase 2.  We do this in reverse order so persistence
+        // participants, which should be at the end of the list, can complete
+        // before we update internal state
+        for (const participant of [ ...this.participants ].reverse()) {
+            try {
+                participant.commit2();
+            } catch (e) {
+                logger.error(`Error committing ${participant.description} (phase two), rolling back`);
+                this.executeRollback();
+                return;
+            }
+        }
+    }
+
+    private async executeRollback() {
+        for (const participant of this.participants) {
+            try {
+                await participant.rollback();
+            } catch (e) {
+                logger.error(`State may become inconstent due to rollback error for ${participant.description}:`, e);
+            }
         }
     }
 }
@@ -223,14 +270,19 @@ export namespace Transaction {
      */
     export interface Participant {
         /**
-         * Transition isolated writes into canonical form.
+         * Commit phase one.
          */
-        commit(): void;
+        commit1(): MaybePromise<void>;
 
         /**
-         * Drop isolated writes and revert to original canonical form.
+         * Commit phase two.
          */
-        rollback(): void;
+        commit2(): MaybePromise<void>;
+
+        /**
+         * Drop isolated writes and revert to original canonical source.
+         */
+        rollback(): MaybePromise<void>;
 
         /**
          * Textual description used in error messages.
@@ -259,9 +311,19 @@ export namespace Transaction {
         Exclusive = "exclusive",
 
         /**
-         * Transaction is in the process of committing.
+         * Transaction is in the process of committing, phase one.
          */
-        Committing = "committing",
+        CommittingPhaseOne = "committing phase one",
+
+        /**
+         * Transaction has committed phase one.
+         */
+        CommittedPhaseOne = "committed phase one",
+
+        /**
+         * Transaction is in the process of committing, phase two.
+         */
+        CommittingPhaseTwo = "committing phase two",
 
         /**
          * Transaction is in the process of rolling back.

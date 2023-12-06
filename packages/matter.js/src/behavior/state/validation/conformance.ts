@@ -5,7 +5,7 @@
  */
 
 import { FeatureSet, ValueModel } from "../../../model/index.js";
-import { ValueManager } from "../ValueManager.js";
+import { ValueManager } from "../managed/ValueManager.js";
 import { astToFunction } from "./conformance-compiler.js";
 
 /**

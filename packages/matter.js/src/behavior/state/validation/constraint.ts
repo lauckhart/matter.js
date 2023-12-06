@@ -6,10 +6,10 @@
 
 import { InternalError } from "../../../common/MatterError.js";
 import { Constraint, Metatype, ValueModel } from "../../../model/index.js";
-import { ValueManager } from "../ValueManager.js";
+import { ValueManager } from "../managed/ValueManager.js";
 import { ConstraintError } from "../../errors.js";
 import { assertArray, assertNumeric, assertSequence } from "./assertions.js";
-import { Val } from "../Val.js";
+import { Val } from "../managed/Val.js";
 
 /**
  * Creates a function that validates values based on the constraint in the

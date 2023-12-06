@@ -41,8 +41,24 @@ export namespace Val {
         readonly original: T;
 
         /**
-         * Has the value changed?
+         * Active references to child properties.
          */
-        changed: boolean;
+        subreferences?: Record<number | string, Reference>;
+
+        /**
+         * Prepare for data mutation.  Clones the container and updates
+         * metadata when called on an unmodified reference.
+         */
+        change(): void;
+
+        /**
+         * Refresh any internal cache from the referenced container.
+         */
+        refresh(): void;
+
+        /**
+         * The managed value that owns the reference.
+         */
+        owner?: T;
     }
 }

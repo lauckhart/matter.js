@@ -9,7 +9,7 @@ import { InvocationContext } from "../InvocationContext.js";
 import { LifecycleBehavior } from "../definitions/lifecycle/LifecycleBehavior.js";
 import { ManagedState } from "../state/ManagedState.js";
 import { State } from "../state/State.js";
-import { ValueManager } from "../state/ValueManager.js";
+import { ValueManager } from "../state/managed/ValueManager.js";
 
 /**
  * This class backs the server implementation of a behavior.

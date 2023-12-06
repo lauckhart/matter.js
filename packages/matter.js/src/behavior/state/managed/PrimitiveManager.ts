@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { ValueManager } from "../ValueManager.js";
+import type { ValueManager } from "./ValueManager.js";
 
 /**
  * If you invoke {@link ValueManager.manage} on a non-collection value, this is

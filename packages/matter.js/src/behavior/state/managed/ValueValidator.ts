@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../../common/MatterError.js";
-import { ClusterModel, Metatype, ValueModel } from "../../model/index.js";
-import { camelize } from "../../util/String.js";
-import { Schema } from "./Schema.js";
-import { ConformanceError, SchemaError, ValidateError } from "../errors.js";
+import { InternalError } from "../../../common/MatterError.js";
+import { ClusterModel, Metatype, ValueModel } from "../../../model/index.js";
+import { camelize } from "../../../util/String.js";
+import { Schema } from "../Schema.js";
+import { ConformanceError, SchemaError, ValidateError } from "../../errors.js";
 import { StateManager } from "./StateManager.js";
 import {
     assertArray,
@@ -16,11 +16,11 @@ import {
     assertNumber,
     assertObject,
     assertString,
-} from "./validation/assertions.js";
-import { createConformanceValidator } from "./validation/conformance.js";
-import { createConstraintValidator } from "./validation/constraint.js";
+} from "../validation/assertions.js";
+import { createConformanceValidator } from "../validation/conformance.js";
+import { createConstraintValidator } from "../validation/constraint.js";
 import type { ValueManager } from "./ValueManager.js";
-import { ValidationContext } from "./validation/context.js";
+import { ValidationContext } from "../validation/context.js";
 import { Val } from "./Val.js";
 
 /**

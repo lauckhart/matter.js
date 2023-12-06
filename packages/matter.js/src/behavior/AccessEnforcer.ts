@@ -7,7 +7,7 @@
 import { AccessLevel } from "../cluster/Cluster.js";
 import { FabricIndex } from "../datatype/FabricIndex.js";
 import { Access } from "../model/aspects/index.js";
-import { ValueModel } from "../model/models/index.js";
+import { Model, ValueModel } from "../model/models/index.js";
 import { StatusCode } from "../protocol/interaction/InteractionProtocol.js";
 import { ReadError, WriteError } from "./errors.js";
 import { Schema } from "./state/Schema.js";
@@ -340,9 +340,18 @@ function limitsFor(schema: Schema) {
     const access = schema.effectiveAccess;
     const quality = (schema instanceof ValueModel ? schema.effectiveQuality : undefined);
 
+    // Special handling for fixed values - we treat any property owned by a
+    // fixed value as also read-only
+    let fixed = quality?.fixed;
+    for (let s: Model | undefined = schema.parent; !fixed && s instanceof ValueModel; s = s.parent) {
+        if (s.effectiveQuality.fixed) {
+            fixed = true;
+        }
+    }
+
     const limits: AccessEnforcer.Limits = Object.freeze({
         readable: access.readable,
-        writable: access.writable && !quality?.fixed,
+        writable: access.writable && !fixed,
         fabricScoped: access.fabric === Access.Fabric.Scoped || access.fabric === Access.Fabric.Sensitive,
         fabricSensitive: access.fabric === Access.Fabric.Sensitive,
         timed: access.timed === true,

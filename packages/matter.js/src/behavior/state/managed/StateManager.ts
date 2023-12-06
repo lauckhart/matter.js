@@ -4,12 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterModel, FeatureSet, ValueModel, Globals, AttributeModel } from "../../model/index.js";
+import { ClusterModel, FeatureSet, ValueModel, Globals, AttributeModel } from "../../../model/index.js";
 import { ValueManager } from "./ValueManager.js";
-import { InternalError } from "../../common/MatterError.js";
+import { InternalError } from "../../../common/MatterError.js";
 import { ValueValidator } from "./ValueValidator.js";
-import { Schema } from "./Schema.js";
-import { AccessEnforcer } from "../AccessEnforcer.js";
+import { Schema } from "../Schema.js";
+import { AccessEnforcer } from "../../AccessEnforcer.js";
+import { Val } from "./Val.js";
 
 /**
  * StateManager manages state associated with a specific root schema.
@@ -22,6 +23,7 @@ export class StateManager {
     #featureMap: ValueModel;
     #supportedFeatures: FeatureSet;
     #members: Set<ValueModel>;
+    #root: Schema;
 
     /**
      * Create factory for the specified root schema.
@@ -38,6 +40,7 @@ export class StateManager {
      *   supportedFeatures affect conformance-based validation
      */
     constructor(root: Schema) {
+        this.#root = root;
         if (root instanceof ClusterModel) {
             this.#featureMap = root.featureMap;
             this.#supportedFeatures = root.supportedFeatures ?? new FeatureSet();
@@ -60,13 +63,18 @@ export class StateManager {
         return this.#members;
     }
 
+    get root() {
+        return this.#root;
+    }
+
     /**
-     * Obtain an I/O implementation for a specific schema.
+     * Obtain {@link ValueManager} implementation for a specific schema.
      * 
      * @param schema the model describing the record type
+     * @param base an optional base class for managed structs
      * @returns the I/O implementation
      */
-    get(schema: Schema): ValueManager {
+    get(schema: Schema, base?: new () => Val): ValueManager {
         let manager = this.#cache.get(schema);
 
         // Implements deferred generation (see comments below).  Proxies to
@@ -76,7 +84,7 @@ export class StateManager {
         // held directly.
         const deferGeneration = (
             name: string,
-            generator: (schema: Schema, factory: StateManager) => any
+            generator: (schema: Schema, factory: StateManager, base?: new () => Val) => any
         ) => {
             let generated = false;
 
@@ -87,7 +95,7 @@ export class StateManager {
                             throw new InternalError("Deferred I/O generation invoked impossibly early");
                         }
 
-                        (manager as any)[name] = generator(schema, this) as any;
+                        (manager as any)[name] = generator(schema, this, base) as any;
 
                         generated = true;
                     }
@@ -100,7 +108,7 @@ export class StateManager {
         if (manager === undefined) {
             if (this.isGenerating(schema)) {
                 manager = {
-                    factory: this,
+                    owner: this,
                     schema: schema,
                     access: AccessEnforcer(schema),
                     validate: deferGeneration("validate", ValueValidator),
@@ -108,11 +116,11 @@ export class StateManager {
                 }
             } else {
                 manager = {
-                    factory: this,
+                    owner: this,
                     schema: schema,
                     access: AccessEnforcer(schema),
                     validate: ValueValidator(schema, this),
-                    manage: ValueManager(schema, this),
+                    manage: ValueManager(schema, this, base),
                 }
             }
 
