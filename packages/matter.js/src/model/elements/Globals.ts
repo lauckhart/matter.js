@@ -198,7 +198,7 @@ export const Globals = {
         access: "R V",
         conformance: "P, M",
     }),
-    AcceptedCommandListList: AttributeElement({
+    AcceptedCommandList: AttributeElement({
         id: 0xfff9,
         name: "AcceptedCommandList",
         type: "list[command-id]",

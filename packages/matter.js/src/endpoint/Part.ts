@@ -219,7 +219,7 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
     }
 
     /**
-     * An {@link Agent} with no fabric scope.  Any operation of the
+     * Access an offline {@link Agent}.  Any operation of the
      * agent that references fabric scope will throw an error.
      *
      * This should only be used for local purposes.  All network interaction

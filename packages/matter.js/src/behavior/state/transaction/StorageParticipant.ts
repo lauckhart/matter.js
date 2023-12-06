@@ -12,7 +12,7 @@ import { SupportedStorageTypes } from "../../../storage/StringifyTools.js";
 import { InternalError } from "../../../common/MatterError.js";
 
 /**
- * A {@link PersistenceParticipant} that saves state to the Matter.js
+ * A {@link PersistenceParticipant} that saves state using the Matter.js
  * {@link StorageManager} API.
  * 
  * TODO - Does *not* currently support true two-phase commit.  It would be
@@ -28,12 +28,12 @@ export class StorageParticipant extends PersistenceParticipant {
         this.#storage = storage;
     }
 
-    protected override async doSet(key: string, value: Val) {
-        if (typeof value !== "object" || Array.isArray(value)) {
+    protected override async doSet(key: string, values: Val) {
+        if (typeof values !== "object" || Array.isArray(values)) {
             throw new InternalError("Commit of non-key/value value");
         }
 
-        this.#log.push({ contextName: key, values: value as Val.Struct });
+        this.#log.push({ contextName: key, values: values as Val.Struct });
     }
 
     protected override async doRollback() {

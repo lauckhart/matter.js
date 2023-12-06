@@ -22,7 +22,6 @@ import { InvocationContext } from "../InvocationContext.js";
 import type { ClusterBehavior } from "../cluster/ClusterBehavior.js";
 import { ClusterEvents } from "../cluster/ClusterEvents.js";
 import { ValidatedElements } from "../cluster/ValidatedElements.js";
-import { State } from "../state/State.js";
 import { ServerBehaviorBacking } from "./ServerBehaviorBacking.js";
 
 const logger = Logger.get("ClusterServer");

@@ -5,6 +5,9 @@
  */
 
 import { ImplementationError } from "../common/MatterError.js";
+import { Logger } from "../log/Logger.js";
+
+const logger = Logger.get("Event");
 
 /**
  * A callback function for observables.
@@ -39,14 +42,32 @@ export interface Observable<T extends any[] = any[]> {
     once(observer: Observer<T>): void;
 }
 
+function defaultErrorHandler(error: Error) {
+    logger.error(`Error invoking event observer`, error);
+}
+
+export type ObserverErrorHandler = (error: Error, observer: Observer) => void;
+
 class Event<T extends any[] = any[]> implements Observable<T> {
+    #errorHandler: ObserverErrorHandler;
     #observers?: Set<Observer<T>>;
     #once?: Set<Observer<T>>;
+
+    constructor(errorHandler?: ObserverErrorHandler) {
+        this.#errorHandler = errorHandler ?? defaultErrorHandler;
+    }
 
     emit(...payload: T) {
         if (this.#observers) {
             for (const observer of this.#observers) {
-                observer(...payload);
+                try {
+                    observer(...payload);
+                } catch (e) {
+                    if (!(e instanceof Error)) {
+                        e = new Error(`${e}`);
+                    }
+                    this.#errorHandler(e as Error, observer as Observer);
+                }
                 if (this.#once?.has(observer)) {
                     this.#once.delete(observer);
                     this.#observers.delete(observer);
@@ -75,16 +96,16 @@ class Event<T extends any[] = any[]> implements Observable<T> {
     }
 }
 
-function constructObservable() {
-    return new Event();
+function constructObservable(errorHandler?: ObserverErrorHandler) {
+    return new Event(errorHandler);
 }
 
 /**
  * A general implementation of {@link Observable}.
  */
-export const Observable = constructObservable as {
-    new <T extends any[]>(): Observable<T>;
-    <T extends any[]>(): Observable<T>;
+export const Observable = constructObservable as unknown as {
+    new <T extends any[]>(errorHandler?: ObserverErrorHandler): Observable<T>;
+    <T extends any[]>(errorHandler?: ObserverErrorHandler): Observable<T>;
 };
 
 function event<E, N extends string>(emitter: E, name: N) {

@@ -8,8 +8,8 @@ import { InternalError } from "../../../common/MatterError.js";
 import { Transaction } from "./Transaction.js";
 
 /**
- * PersistenceParticipant is a transaction participant that updates key/value
- * storage.
+ * PersistenceParticipant is a {@link Transaction.Participant} that updates
+ * key/value storage.
  */
 export abstract class PersistenceParticipant implements Transaction.Participant {
     #finished = false;
@@ -21,13 +21,13 @@ export abstract class PersistenceParticipant implements Transaction.Participant 
         this.#transaction = transaction;
     }
 
-    async set(key: string, value: unknown) {
+    async set(key: string, values: unknown) {
         if (this.#finished) {
             throw new InternalError("Set invoked on finished participant");
         }
         this.#transaction.addParticipant(this);
 
-        this.doSet(key, value);
+        this.doSet(key, values);
     }
 
     async commit1() {

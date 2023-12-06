@@ -38,9 +38,35 @@ export class TransactionCoordinator {
     changeStatus(transaction: Transaction, status: Transaction.Status) {
         switch (status) {
             case Transaction.Status.Shared:
-                for (const part of transaction.participants) {
-                    this.#stateFor(part).transactions.add(transaction);
+                switch (transaction.status) {
+                    case Transaction.Status.Shared:
+                        // Initial status change
+                        break;
+
+                    case Transaction.Status.CommittingPhaseTwo:
+                    case Transaction.Status.RollingBack:
+                        // Just completed exclusive transaction, reverting to
+                        // shared.  Deregister all participants as the
+                        // transaction will clear its participant list
+                        for (const participant of transaction.participants) {
+                            const state = this.#state.get(participant);
+                            if (state) {
+                                state.transactions.delete(transaction);
+                                if (!state.transactions.size) {
+                                    this.#state.delete(participant);
+                                }
+                            }
+                        }
+                        break;
+
+                    default:
+                        throw new TransactionFlowError(
+                            `Cannot transition ${
+                                transaction.status
+                            } transaction to shared`
+                        );
                 }
+
                 break;
 
             case Transaction.Status.Exclusive:
@@ -59,22 +85,12 @@ export class TransactionCoordinator {
                 }
                 break;
 
-            case Transaction.Status.Committing:
+            case Transaction.Status.CommittingPhaseOne:
                 this.#assertExclusive(transaction, "commit");
                 break;
 
             case Transaction.Status.RollingBack:
                 this.#assertExclusive(transaction, "roll back");
-                break;
-
-            case Transaction.Status.Finished:
-                for (const participant of transaction.participants) {
-                    const state = this.#stateFor(participant);
-                    if (state.exclusive === transaction) {
-                        state.exclusive = undefined;
-                    }
-                    state.transactions.delete(transaction);
-                }
                 break;
         }
 

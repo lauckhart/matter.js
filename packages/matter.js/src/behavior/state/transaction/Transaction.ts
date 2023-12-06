@@ -28,8 +28,9 @@ const logger = Logger.get("Transaction");
  * occur serially.
  * 
  * Persistence is implemented by a list of participants.  Commits are two
- * phase.  If an error is thrown in either phase all participants are rolled
- * back.
+ * phase.  If an error is thrown in phase one all participants roll back.
+ * An error in phase 2 could result in data inconsistency as we don't have any
+ * form of retry as of yet.
  */
 export class Transaction {
     #participants = new Set<Transaction.Participant>();
@@ -58,13 +59,11 @@ export class Transaction {
     }
 
     /**
-     * Obtain a promise that will resolve when the transaction completes.
+     * Obtain a promise that resolves when the transaction commits or rolls
+     * back.
      */
     get promise() {
         if (this.#promise === undefined) {
-            if (this.#status === Transaction.Status.Finished) {
-                return Promise.resolve();
-            }
             const { promise, resolver } = createPromise<void>();
             this.#promise = promise;
             this.#resolve = resolver;
@@ -185,18 +184,16 @@ export class Transaction {
     }
 
     async rollback() {
-        await this.#finish(Transaction.Status.RollingBack, () => {
+        await this.#finish(
+            Transaction.Status.RollingBack,
             async () => await this.executeRollback()
-        });
+        );
     }
 
-    async #finish(status: Transaction.Status, finalizer: () => void) {
+    async #finish(status: Transaction.Status, finalizer: () => Promise<void>) {
         switch (this.status) {
             case Transaction.Status.Shared:
-                this.#status = this.#coordinator.changeStatus(
-                    this,
-                    Transaction.Status.Finished
-                );
+                this.#resolve?.();
                 break;
 
             case Transaction.Status.Exclusive:
@@ -206,14 +203,19 @@ export class Transaction {
                 );
 
                 try {
-                    finalizer();
+                    await finalizer();
                 } finally {
                     this.#status = this.#coordinator.changeStatus(
                         this,
-                        Transaction.Status.Finished
+                        Transaction.Status.Shared
                     )
 
-                    this.#resolve?.();
+                    try {
+                        this.#resolve?.();
+                    } finally {
+                        this.#promise = undefined;
+                        this.#participants = new Set;
+                    }
                 };
                 break;
 
@@ -233,7 +235,12 @@ export class Transaction {
             try {
                 participant.commit1();
             } catch (e) {
-                logger.error(`Error committing ${participant.description} (phase one), rolling back`);
+                logger.error(
+                    `Error committing ${
+                        participant.description
+                    } (phase one), rolling back:`,
+                    e
+                );
                 this.executeRollback();
                 return;
             }
@@ -246,8 +253,12 @@ export class Transaction {
             try {
                 participant.commit2();
             } catch (e) {
-                logger.error(`Error committing ${participant.description} (phase two), rolling back`);
-                this.executeRollback();
+                logger.error(
+                    `Error committing ${
+                        participant.description
+                    } (phase two), state may become inconsistent:`,
+                    e
+                );
                 return;
             }
         }
@@ -258,7 +269,12 @@ export class Transaction {
             try {
                 await participant.rollback();
             } catch (e) {
-                logger.error(`State may become inconstent due to rollback error for ${participant.description}:`, e);
+                logger.error(
+                    `Error rolling back ${
+                        participant.description
+                    }, state may become inconsistent:`,
+                    e
+                );
             }
         }
     }
@@ -329,10 +345,5 @@ export namespace Transaction {
          * Transaction is in the process of rolling back.
          */
         RollingBack = "rolling back",
-
-        /**
-         * Transaction is finished.
-         */
-        Finished = "finished",
     }
 }
