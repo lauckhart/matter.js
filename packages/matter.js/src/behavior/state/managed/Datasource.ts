@@ -10,9 +10,9 @@ import { Val } from "./Val.js";
 import { Transaction } from "../transaction/Transaction.js";
 import { ValueManager } from "./ValueManager.js";
 import { InternalError } from "../../../common/MatterError.js";
-import { PersistenceParticipant } from "../transaction/PersistenceParticipant.js";
 import { isDeepEqual } from "../../../util/DeepEqual.js";
 import { Observable } from "../../../util/Observable.js";
+import { Persistence } from "./Persistence.js";
 
 /**
  * Datasource manages the canonical root of a state tree.
@@ -92,7 +92,7 @@ export namespace Datasource {
      */
     export interface Session extends AccessEnforcer.Session {
         transaction: Transaction;
-        persistence?: PersistenceParticipant;
+        persistence?: Persistence;
     }
 
     export interface ValueObserver {
@@ -106,7 +106,7 @@ interface Configuration extends Datasource.Options {
 }
 
 interface Changes {
-    persistent: Record<string, Val>;
+    persistent: Val.Struct;
     notifications: Array<{
         event: Observable,
         params: Parameters<Datasource.ValueObserver>
@@ -213,13 +213,13 @@ function createRootReference(config: Configuration, session: Datasource.Session)
         }
     }
 
-    // For commit phase one we pass values to the persistence layer
+    // For commit phase one we pass values to the persistence layer if present
     function commit1() {
         computeChanges();
         if (changes) {
             session.persistence?.set(
                 config.manager.schema.name,
-                changes
+                changes.persistent
             );
         }
     }
