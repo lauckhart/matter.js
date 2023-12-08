@@ -12,15 +12,19 @@ import { FieldModel, type ClusterModel, type ValueModel } from "../../model/inde
  * 
  * Most schema is a ValueModel which explicitly models data.
  * 
+ * You will see references to "structs" and "lists" throughout this code.
+ * These are Matter's two container types and map to JS objects and arrays
+ * respectively.
+ * 
  * If the schema is a ClusterModel, it models a struct with attributes as
- * properties.
+ * fields.
  */
 export type Schema = ClusterModel | ValueModel;
 
 export namespace Schema {
     /**
      * This is a simple struct schema implementation that allows arbitrary
-     * access to a fixed list of properties with no validation.
+     * access to a fixed list of fields with no validation.
      */
     export function Simple(fields: string[]) {
         const schema = new FieldModel({ name: "Anonymous" });

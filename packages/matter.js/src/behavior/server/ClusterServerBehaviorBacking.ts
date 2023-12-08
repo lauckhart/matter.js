@@ -5,7 +5,7 @@
  */
 
 import { MatterDevice } from "../../MatterDevice.js";
-import { Attributes, Events } from "../../cluster/Cluster.js";
+import { AccessLevel, Attributes, Events } from "../../cluster/Cluster.js";
 import { AttributeServer, FabricScopedAttributeServer } from "../../cluster/server/AttributeServer.js";
 import { ClusterServer } from "../../cluster/server/ClusterServer.js";
 import type { ClusterServerObj, CommandHandler, SupportedEventsList } from "../../cluster/server/ClusterServerTypes.js";
@@ -78,17 +78,21 @@ export class ClusterServerBehaviorBacking extends ServerBehaviorBacking {
 function transact<T>(
     backing: ClusterServerBehaviorBacking,
     session: Session<MatterDevice> | undefined,
-    options: InvocationContext,
+    contextFields: Partial<InvocationContext>,
     fn: (behavior: Behavior) => T
 ): T {
     const fabric = session?.isSecure() ? session.getAssociatedFabric() : undefined;
     const transaction = new Transaction(backing.part.transactionCoordinator);
 
     const context: InvocationContext = {
-        ...options,
-        fabric,
+        ...contextFields,
+        accessingFabric: fabric?.fabricIndex,
         session,
         transaction,
+
+        // TODO - this effectively disables access level enforcement because we
+        // don't have privilege management implemented yet
+        accessLevel: AccessLevel.Administer,
     }
 
     const agent = backing.part.getAgent(context);
@@ -99,7 +103,7 @@ function transact<T>(
     } catch (e) {
         aborted = true;
 
-        if (transaction.status !== Transaction.Status.Finished) {
+        if (transaction.status !== Transaction.Status.Shared) {
             try {
                 transaction.rollback();
             } catch (e) {
@@ -203,8 +207,8 @@ function createChangeHandler(backing: ClusterServerBehaviorBacking, name: string
             const session = context.session;
             if (session instanceof SecureSession) {
                 attributeServer.updated(session);
-            } else if (context.fabric) {
-                attributeServer.updatedLocalForFabric(context.fabric);
+            } else if (context.session?.getAssociatedFabric) {
+                attributeServer.updatedLocalForFabric(context.session?.getAssociatedFabric);
             } else {
                 throw new ImplementationError(`Attribute with fabric-scoped server updated outside of fabric context`);
             }

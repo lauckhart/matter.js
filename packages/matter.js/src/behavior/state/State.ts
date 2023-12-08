@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { FieldModel } from "../../model/index.js";
 import { GeneratedClass } from "../../util/GeneratedClass.js";
 import { Schema } from "./Schema.js";
 
@@ -64,13 +65,7 @@ export class State {
      * State structure and legal I/O operations are determined using Matter
      * schema.
      */
-    static get schema() {
-        const internal = this as unknown as StaticInternal;
-        if (internal[SCHEMA] === undefined) {
-            internal[SCHEMA] = Schema.Simple(Object.keys(new this));
-        }
-        return (this as unknown as StaticInternal)[SCHEMA];
-    }
+    static readonly schema = new FieldModel({ name: "Empty" });
 }
 
 export namespace State {

@@ -46,10 +46,11 @@ export namespace Val {
         subreferences?: Record<number | string, Reference>;
 
         /**
-         * Prepare for data mutation.  Clones the container and updates
-         * metadata when called on an unmodified reference.
+         * Mutates data.  Clones the container and updates metadata when called
+         * on an unmodified reference.  Then runs the specified mutator to make
+         * the actual changes.
          */
-        change(): void;
+        change(mutator: () => void): void;
 
         /**
          * Refresh any internal cache from the referenced container.

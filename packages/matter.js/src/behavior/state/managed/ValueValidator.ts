@@ -9,7 +9,7 @@ import { ClusterModel, Metatype, ValueModel } from "../../../model/index.js";
 import { camelize } from "../../../util/String.js";
 import { Schema } from "../Schema.js";
 import { ConformanceError, SchemaError, ValidateError } from "../../errors.js";
-import { StateManager } from "./StateManager.js";
+import { RootManager } from "./values/RootManager.js";
 import {
     assertArray,
     assertBytes,
@@ -19,7 +19,7 @@ import {
 } from "../validation/assertions.js";
 import { createConformanceValidator } from "../validation/conformance.js";
 import { createConstraintValidator } from "../validation/constraint.js";
-import type { ValueManager } from "./ValueManager.js";
+import type { ValueManager } from "./values/ValueManager.js";
 import { ValidationContext } from "../validation/context.js";
 import { Val } from "./Val.js";
 
@@ -31,7 +31,7 @@ import { Val } from "./Val.js";
  */
 export function ValueValidator(
     schema: Schema,
-    factory: StateManager
+    factory: RootManager
 ): ValueManager.Validate {
     if (schema instanceof ClusterModel) {
         return createStructValidator(schema.attributes, schema, factory) ?? (() => {});
@@ -177,7 +177,7 @@ function createSimpleValidator(
 function createStructValidator(
     fields: ValueModel[],
     schema: Schema,
-    factory: StateManager
+    factory: RootManager
 ): ValueManager.Validate | undefined {
     const validators = {} as Record<string, ValueManager.Validate>;
 
@@ -231,7 +231,7 @@ function createStructValidator(
 
 function createListValidator(
     schema: ValueModel,
-    factory: StateManager,
+    factory: RootManager,
 ): ValueManager.Validate | undefined {
     const entry = schema.listEntry;
     let validateEntries: undefined | ((list: Val.List) => void);

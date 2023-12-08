@@ -61,24 +61,30 @@ export function ManagedReference(
             // Authorization and validation
             assertWriteOk(newValue);
 
-            if (value === original) {
-                this.change();
-            }
+            // Set the value directly before change() so change() doesn't
+            // create a useless clone
+            replaceValue(newValue);
 
-            value = (parent.value as Container)[index] = newValue;
+            // Now use change to complete the update
+            this.change(() => (parent.value as Container)[index] = newValue);
         },
 
         get original() {
             return original;
         },
 
-        change() {
-            if (value === original) {
-                parent.change();
-                const newValue = clone(value);
-                (parent.value as Container)[index] = newValue;
-                replaceValue(newValue);
-            }
+        change(mutator: () => void) {
+            parent.change(() => {
+                // Clone the value if we haven't done so yet
+                if (value === original) {
+                    const newValue = clone(value);
+                    (parent.value as Container)[index] = newValue;
+                    replaceValue(newValue);
+                }
+
+                // Apply changes
+                mutator();
+            });
         },
 
         refresh() {

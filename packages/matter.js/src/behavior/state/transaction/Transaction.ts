@@ -92,7 +92,8 @@ export class Transaction {
      *   2. Ensuring that you always add endpoints to transactions in the same
      *      order.
      */
-    async addParticipant(participant: Transaction.Participant) {
+    async join(participant: Transaction.JoiningParticipant) {
+        participant = directParticipantFor(participant);
         if (this.#participants.has(participant)) {
             return;
         }
@@ -307,6 +308,23 @@ export namespace Transaction {
     }
 
     /**
+     * Components may implement this interface to join transactions with a
+     * referenced participant.
+     */
+    export interface IndirectParticipant {
+        /**
+         * The participant the transaction will use in
+         * {@link Transaction.join}.
+         */
+        transactionParticipant: JoiningParticipant;
+    }
+
+    /**
+     * Participant joining a transaction.
+     */
+    export type JoiningParticipant = Participant | IndirectParticipant;
+
+    /**
      * The lifecycle of a transaction adheres to the following discrete stages.
      */
     export enum Status {
@@ -346,4 +364,15 @@ export namespace Transaction {
          */
         RollingBack = "rolling back",
     }
+}
+
+function directParticipantFor(participant: Transaction.JoiningParticipant) {
+    while (true) {
+        const referenced = (participant as Transaction.IndirectParticipant).transactionParticipant;
+        if (referenced === undefined || referenced === participant) {
+            break;
+        }
+        participant = referenced;
+    }
+    return participant as Transaction.Participant;
 }

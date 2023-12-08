@@ -5,7 +5,7 @@
  */
 
 import { Conformance, FeatureSet, FieldValue, ValueModel } from "../../../model/index.js";
-import { ValueManager } from "../managed/ValueManager.js";
+import { ValueManager } from "../managed/values/ValueManager.js";
 import { ConformanceError, SchemaError } from "../../errors.js";
 import { Code, ConformantNode, DynamicNode, NonconformantNode, type RuntimeNode, StaticNode, asBoolean, asConformance, createComparison, createLogicalBinaryEvaluator, createLogicalInversion, evaluateNode, isStatic, normalizeFeatures } from "./conformance-util.js";
 import { ValidationContext } from "./context.js";

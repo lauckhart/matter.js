@@ -12,36 +12,36 @@ import { StatusCode } from "../protocol/interaction/InteractionProtocol.js";
 import { ReadError, WriteError } from "./errors.js";
 import { Schema } from "./state/Schema.js";
 
-const cache = new WeakMap<Schema, AccessEnforcer>();
+const cache = new WeakMap<Schema, AccessController>();
 
 /**
  * Enforces access control for a specific schema.
  */
-export interface AccessEnforcer {
+export interface AccessController {
     /**
      * Operational access control metadata.
      */
-    limits: AccessEnforcer.Limits;
+    limits: AccessController.Limits;
 
     /**
      * Assert read is authorized.
      */
-    authorizeRead: AccessEnforcer.Assertion;
+    authorizeRead: AccessController.Assertion;
 
     /**
      * Determine if read is authorized.
      */
-    mayRead: AccessEnforcer.Verification;
+    mayRead: AccessController.Verification;
 
     /**
      * Assert write is authorized.
      */
-    authorizeWrite: AccessEnforcer.Assertion;
+    authorizeWrite: AccessController.Assertion;
 
     /**
      * Determine if write is authorized.
      */
-    mayWrite: AccessEnforcer.Verification;
+    mayWrite: AccessController.Verification;
 }
 
 /**
@@ -52,7 +52,7 @@ export interface AccessEnforcer {
  * 
  * Pure function; returned value is cached.
  */
-export function AccessEnforcer(schema: Schema) {
+export function AccessController(schema: Schema) {
     let enforcer = cache.get(schema);
     if (enforcer === undefined) {
         enforcer = enforcerFor(schema);
@@ -60,7 +60,7 @@ export function AccessEnforcer(schema: Schema) {
     return enforcer;
 }
 
-export namespace AccessEnforcer {
+export namespace AccessController {
     /**
      * Operational access control metadata for a schema.
      */
@@ -123,7 +123,7 @@ export namespace AccessEnforcer {
     }
 
     /**
-     * Authorization metadata that varies with data structure position.
+     * Metadata that varies with data structure position.
      */
     export interface Context {
         /**
@@ -134,12 +134,12 @@ export namespace AccessEnforcer {
     }
 }
 
-Object.freeze(AccessEnforcer);
+Object.freeze(AccessController);
 
-function enforcerFor(schema: Schema): AccessEnforcer {
+function enforcerFor(schema: Schema): AccessController {
     const limits = limitsFor(schema);
 
-    let mayRead: AccessEnforcer.Verification = (session) => {
+    let mayRead: AccessController.Verification = (session) => {
         if (session.offline) {
             return true;
         }
@@ -151,7 +151,7 @@ function enforcerFor(schema: Schema): AccessEnforcer {
         return false;
     }
 
-    let mayWrite: AccessEnforcer.Verification = (session) => {
+    let mayWrite: AccessController.Verification = (session) => {
         if (session.offline) {
             return true;
         }
@@ -163,7 +163,7 @@ function enforcerFor(schema: Schema): AccessEnforcer {
         return false;
     }
 
-    let authorizeRead: AccessEnforcer.Assertion = (session) => {
+    let authorizeRead: AccessController.Assertion = (session) => {
         if (session.offline) {
             return;
         }
@@ -175,7 +175,7 @@ function enforcerFor(schema: Schema): AccessEnforcer {
         throw new ReadError(schema, "Permission denied");
     }
 
-    let authorizeWrite: AccessEnforcer.Assertion = (session) => {
+    let authorizeWrite: AccessController.Assertion = (session) => {
         if (session.offline) {
             return;
         }
@@ -349,7 +349,7 @@ function limitsFor(schema: Schema) {
         }
     }
 
-    const limits: AccessEnforcer.Limits = Object.freeze({
+    const limits: AccessController.Limits = Object.freeze({
         readable: access.readable,
         writable: access.writable && !fixed,
         fabricScoped: access.fabric === Access.Fabric.Scoped || access.fabric === Access.Fabric.Sensitive,

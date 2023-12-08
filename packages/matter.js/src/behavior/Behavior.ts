@@ -24,7 +24,7 @@ const EVENTS = Symbol("events");
 interface Internal extends Behavior {
     [BACKING]: BehaviorBacking;
     [STATE]: State;
-    [INTERNAL]: State;
+    [INTERNAL]: Object;
     [EVENTS]: EventEmitter;
 }
 
@@ -115,7 +115,7 @@ export abstract class Behavior {
     /**
      * Implementation of internal state.  Subclasses may override to extend.
      */
-    static InternalState = State;
+    static InternalState = Object;
 
     /**
      * Implementation of the events property.  Subclasses may override to
@@ -213,7 +213,7 @@ export namespace Behavior {
         defaults: Record<string, any>;
 
         State: State.Type;
-        InternalState: State.Type;
+        InternalState: typeof Object;
         Events: typeof EventEmitter;
     }
 

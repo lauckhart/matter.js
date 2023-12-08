@@ -4,24 +4,25 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { FabricIndex } from "../../../datatype/FabricIndex.js";
-import { GeneratedClass } from "../../../util/GeneratedClass.js";
-import { camelize } from "../../../util/String.js";
-import type { Schema } from "../Schema.js";
+import { FabricIndex } from "../../../../datatype/FabricIndex.js";
+import { GeneratedClass } from "../../../../util/GeneratedClass.js";
+import { camelize } from "../../../../util/String.js";
+import type { Schema } from "../../Schema.js";
 import type { ValueManager } from "./ValueManager.js";
-import type { StateManager } from "./StateManager.js";
+import type { RootManager } from "./RootManager.js";
 import { PrimitiveManager } from "./PrimitiveManager.js";
-import { ManagedReference } from "./ManagedReference.js";
-import { Val } from "./Val.js";
-import { AccessEnforcer } from "../../AccessEnforcer.js";
-import { SchemaError } from "../../errors.js";
+import { ManagedReference } from "../ManagedReference.js";
+import { Val } from "../Val.js";
+import { AccessController } from "../../../AccessController.js";
+import { SchemaError } from "../../../errors.js";
+import { ValueModel } from "../../../../model/index.js";
 
 /**
  * For structs we generate a class with accessors for each property in the
  * schema.
  */
 export function StructManager(
-    owner: StateManager,
+    owner: RootManager,
     schema: Schema,
     base?: new () => Val,
 ): ValueManager.Manage {
@@ -30,7 +31,7 @@ export function StructManager(
         base,
 
         ...StructManagerMixin(owner, schema)
-    }) as new (value: Val, session: AccessEnforcer.Session) => Val.Struct
+    }) as new (value: Val, session: AccessController.Session) => Val.Struct
 
     return (reference, session) => {
         reference.owner = new Wrapper(reference, session);
@@ -51,21 +52,18 @@ interface Wrapper extends Val.Struct {
     /**
      * Information regarding the current user session.
      */
-    [SESSION]: AccessEnforcer.Session;
+    [SESSION]: AccessController.Session;
 
     /**
      * Contextual information about the wrapped value.
      */
-    [CONTEXT]?: AccessEnforcer.Context;
+    [CONTEXT]?: AccessController.Context;
 }
 
 /**
  * Configure struct behavior as a mixin.
- * 
- * StructManager, ManagedState and Datasource all use this to implement struct
- * fields based on schema.
  */
-export function StructManagerMixin(owner: StateManager, schema: Schema): GeneratedClass.Mixin {
+function StructManagerMixin(owner: RootManager, schema: Schema): GeneratedClass.Mixin {
     const instanceDescriptors = {} as PropertyDescriptorMap;
     let hasFabricIndex = false;
 
@@ -77,7 +75,7 @@ export function StructManagerMixin(owner: StateManager, schema: Schema): Generat
     }
     
     return {
-        initialize(this: Wrapper, ref: Val.Reference, session: AccessEnforcer.Session, context?: AccessEnforcer.Context) {
+        initialize(this: Wrapper, ref: Val.Reference, session: AccessController.Session, context?: AccessController.Context) {
             // Only objects are acceptable
             if (typeof ref.value !== "object" || Array.isArray(ref.value)) {
                 throw new SchemaError(
@@ -103,7 +101,7 @@ export function StructManagerMixin(owner: StateManager, schema: Schema): Generat
     }
 }
 
-function createPropertyDescriptor(manager: StateManager, schema: Schema): PropertyDescriptor {
+function createPropertyDescriptor(manager: RootManager, schema: ValueModel): PropertyDescriptor {
     const name = camelize(schema.name);
     let { access, manage, validate } = manager.get(schema);
 
@@ -123,8 +121,7 @@ function createPropertyDescriptor(manager: StateManager, schema: Schema): Proper
             // performed on commit when choice conformance is in play.
             validate(value, { siblings: this[REF].value });
 
-            this[REF].change();
-            this[REF].value[name] = value;
+            this[REF].change(() => this[REF].value[name] = value);
         }
     };
 

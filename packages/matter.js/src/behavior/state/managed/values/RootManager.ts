@@ -4,20 +4,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClusterModel, FeatureSet, ValueModel, Globals, AttributeModel } from "../../../model/index.js";
+import { ClusterModel, FeatureSet, ValueModel, Globals, AttributeModel } from "../../../../model/index.js";
 import { ValueManager } from "./ValueManager.js";
-import { InternalError } from "../../../common/MatterError.js";
-import { ValueValidator } from "./ValueValidator.js";
-import { Schema } from "../Schema.js";
-import { AccessEnforcer } from "../../AccessEnforcer.js";
-import { Val } from "./Val.js";
+import { InternalError } from "../../../../common/MatterError.js";
+import { ValueValidator } from "../ValueValidator.js";
+import { Schema } from "../../Schema.js";
+import { AccessController } from "../../../AccessController.js";
+import { Val } from "../Val.js";
 
 /**
- * StateManager manages state associated with a specific root schema.
+ * RootManager manages state associated with a specific root schema.  This is
+ * generally a {@link ClusterModel} but may also be a struct
+ * {@link ValueModel}.
  * 
- * StateManager primarily acts as a factory for ValueManagers.
+ * RootManager primarily acts as a factory for {@link ValueManager}s.
  */
-export class StateManager {
+export class RootManager {
     #generating = new Set<Schema>();
     #cache = new WeakMap<Schema, ValueManager>();
     #featureMap: ValueModel;
@@ -84,7 +86,7 @@ export class StateManager {
         // held directly.
         const deferGeneration = (
             name: string,
-            generator: (schema: Schema, factory: StateManager, base?: new () => Val) => any
+            generator: (schema: Schema, factory: RootManager, base?: new () => Val) => any
         ) => {
             let generated = false;
 
@@ -110,7 +112,7 @@ export class StateManager {
                 manager = {
                     owner: this,
                     schema: schema,
-                    access: AccessEnforcer(schema),
+                    access: AccessController(schema),
                     validate: deferGeneration("validate", ValueValidator),
                     manage: deferGeneration("manage", ValueManager),
                 }
@@ -118,7 +120,7 @@ export class StateManager {
                 manager = {
                     owner: this,
                     schema: schema,
-                    access: AccessEnforcer(schema),
+                    access: AccessController(schema),
                     validate: ValueValidator(schema, this),
                     manage: ValueManager(schema, this, base),
                 }

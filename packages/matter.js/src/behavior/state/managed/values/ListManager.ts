@@ -4,15 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Access, ValueModel } from "../../../model/index.js";
+import { Access, ValueModel } from "../../../../model/index.js";
 import type { ValueManager } from "./ValueManager.js";
-import type { StateManager } from "./StateManager.js";
-import { Schema } from "../Schema.js";
-import { SchemaError, WriteError } from "../../errors.js";
-import { Val } from "./Val.js";
-import { AccessEnforcer } from "../../AccessEnforcer.js";
+import type { RootManager } from "./RootManager.js";
+import { Schema } from "../../Schema.js";
+import { SchemaError, WriteError } from "../../../errors.js";
+import { Val } from "../Val.js";
+import { AccessController } from "../../../AccessController.js";
 import { PrimitiveManager } from "./PrimitiveManager.js";
-import { ManagedReference } from "./ManagedReference.js";
+import { ManagedReference } from "../ManagedReference.js";
 
 /**
  * We must use a proxy to properly encapsulate array data.
@@ -30,7 +30,7 @@ import { ManagedReference } from "./ManagedReference.js";
  * mention of this.
  */
 export function ListManager(
-    owner: StateManager,
+    owner: RootManager,
     schema: Schema
 ): ValueManager.Manage {
     const config = createConfig(owner, schema);
@@ -55,7 +55,7 @@ export function ListManager(
     }
 }
 
-function createConfig(owner: StateManager, schema: Schema): ListConfig {
+function createConfig(owner: RootManager, schema: Schema): ListConfig {
     const entry = schema instanceof ValueModel ? schema.listEntry : undefined;
     if (entry === undefined) {
         throw new SchemaError(
@@ -70,7 +70,7 @@ function createConfig(owner: StateManager, schema: Schema): ListConfig {
     // one we treat as permanently fabric scoped for reads
     const fabricSensitive = schema.effectiveAccess.fabric == Access.Fabric.Scoped;
 
-    const access = AccessEnforcer(schema);
+    const access = AccessController(schema);
 
     return {
         schema,
@@ -91,15 +91,15 @@ interface ListConfig {
     manageEntries: boolean;
     manageEntry: ValueManager.Manage;
     validateEntry: ValueManager.Validate;
-    authorizeRead: AccessEnforcer["authorizeRead"];
-    authorizeWrite: AccessEnforcer["authorizeWrite"];
+    authorizeRead: AccessController["authorizeRead"];
+    authorizeWrite: AccessController["authorizeWrite"];
 }
 
 function createProxy(
     config: ListConfig,
     reference: Val.Reference<Val.List>,
-    session: AccessEnforcer.Session,
-    context?: AccessEnforcer.Context
+    session: AccessController.Session,
+    context?: AccessController.Context
 ) {
     const { manageEntry, validateEntry, authorizeRead, authorizeWrite } = config;
 
@@ -159,9 +159,7 @@ function createProxy(
             )
         }
 
-        validateEntry(value);
-        reference.change();
-        reference.value[index] = value;
+        reference.change(() => reference.value[index] = value);
     }
 
     // If the list is fabric-scoped, wrap read and write to map indices
