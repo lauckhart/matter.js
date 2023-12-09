@@ -8,18 +8,17 @@ import { ClusterModel, FeatureSet, ValueModel, Globals, AttributeModel } from ".
 import { ValueManager } from "./ValueManager.js";
 import { InternalError } from "../../../../common/MatterError.js";
 import { ValueValidator } from "../ValueValidator.js";
-import { Schema } from "../../Schema.js";
+import { Schema } from "../../../Schema.js";
 import { AccessController } from "../../../AccessController.js";
 import { Val } from "../Val.js";
 
 /**
- * RootManager manages state associated with a specific root schema.  This is
- * generally a {@link ClusterModel} but may also be a struct
- * {@link ValueModel}.
+ * SchemaManager manages a specific root schema.  This is generally a
+ * {@link ClusterModel} but may also be a struct {@link ValueModel}.
  * 
  * RootManager primarily acts as a factory for {@link ValueManager}s.
  */
-export class RootManager {
+export class SchemaManager {
     #generating = new Set<Schema>();
     #cache = new WeakMap<Schema, ValueManager>();
     #featureMap: ValueModel;
@@ -41,32 +40,51 @@ export class RootManager {
      * - If the root schema defines a cluster, the cluster's featureMap and
      *   supportedFeatures affect conformance-based validation
      */
-    constructor(root: Schema) {
-        this.#root = root;
-        if (root instanceof ClusterModel) {
-            this.#featureMap = root.featureMap;
-            this.#supportedFeatures = root.supportedFeatures ?? new FeatureSet();
+    constructor(schema: Schema) {
+        this.#root = schema;
+        if (schema instanceof ClusterModel) {
+            this.#featureMap = schema.featureMap;
+            this.#supportedFeatures = schema.supportedFeatures ?? new FeatureSet();
         } else {
             this.#featureMap = new AttributeModel(Globals.FeatureMap);
             this.#supportedFeatures = new FeatureSet();
         }
-        this.#members = new Set(root.members);
+        this.#members = new Set(schema.members);
     }
 
-    get featureMap() {
-        return this.#featureMap;
+    /**
+     * Obtain the root schema.
+     */
+    get root() {
+        return this.#root;
     }
 
-    get supportedFeatures() {
-        return this.#supportedFeatures;
+    /**
+     * Obtain the root {@link ValueManager}.
+     */
+    get valueManager() {
+        return this.get(this.root);
     }
 
+    /**
+     * Retrieve root schema elements that contribute fields to the data model.
+     */
     get members() {
         return this.#members;
     }
 
-    get root() {
-        return this.#root;
+    /**
+     * All available features defined in the schema.
+     */
+    get featureMap() {
+        return this.#featureMap;
+    }
+
+    /**
+     * Features supported by this implementation.
+     */
+    get supportedFeatures() {
+        return this.#supportedFeatures;
     }
 
     /**
@@ -86,7 +104,7 @@ export class RootManager {
         // held directly.
         const deferGeneration = (
             name: string,
-            generator: (schema: Schema, factory: RootManager, base?: new () => Val) => any
+            generator: (schema: Schema, factory: SchemaManager, base?: new () => Val) => any
         ) => {
             let generated = false;
 

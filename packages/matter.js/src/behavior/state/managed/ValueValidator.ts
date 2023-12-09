@@ -7,9 +7,9 @@
 import { InternalError } from "../../../common/MatterError.js";
 import { ClusterModel, Metatype, ValueModel } from "../../../model/index.js";
 import { camelize } from "../../../util/String.js";
-import { Schema } from "../Schema.js";
+import { Schema } from "../../Schema.js";
 import { ConformanceError, SchemaError, ValidateError } from "../../errors.js";
-import { RootManager } from "./values/RootManager.js";
+import { SchemaManager } from "./values/SchemaManager.js";
 import {
     assertArray,
     assertBytes,
@@ -31,7 +31,7 @@ import { Val } from "./Val.js";
  */
 export function ValueValidator(
     schema: Schema,
-    factory: RootManager
+    factory: SchemaManager
 ): ValueManager.Validate {
     if (schema instanceof ClusterModel) {
         return createStructValidator(schema.attributes, schema, factory) ?? (() => {});
@@ -131,7 +131,7 @@ function createBitmapValidator(schema: ValueModel): ValueManager.Validate | unde
         } else {
             throw new SchemaError(schema, `Bitmap field does not properly constrain bit field`)
         }
-        fields[camelize(field.name, false)] = {
+        fields[camelize(field.name)] = {
             schema: field,
             max
         };
@@ -177,12 +177,12 @@ function createSimpleValidator(
 function createStructValidator(
     fields: ValueModel[],
     schema: Schema,
-    factory: RootManager
+    factory: SchemaManager
 ): ValueManager.Validate | undefined {
     const validators = {} as Record<string, ValueManager.Validate>;
 
     for (const field of fields) {
-        validators[camelize(field.name, false)] = factory.get(schema).validate;
+        validators[camelize(field.name)] = factory.get(schema).validate;
     }
 
     return value => {
@@ -231,7 +231,7 @@ function createStructValidator(
 
 function createListValidator(
     schema: ValueModel,
-    factory: RootManager,
+    factory: SchemaManager,
 ): ValueManager.Validate | undefined {
     const entry = schema.listEntry;
     let validateEntries: undefined | ((list: Val.List) => void);

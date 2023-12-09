@@ -11,7 +11,6 @@ import { ImplementationError } from "../../common/MatterError.js";
 import type { Agent } from "../../endpoint/Agent.js";
 import { Behavior } from "../Behavior.js";
 import type { BehaviorBacking } from "../BehaviorBacking.js";
-import { State } from "../state/State.js";
 import { createType, type ClusterOf } from "./ClusterBehaviorUtil.js";
 import type { ClusterEvents } from "./ClusterEvents.js";
 import { ClusterInterface } from "./ClusterInterface.js";
@@ -140,7 +139,12 @@ export class ClusterBehavior extends Behavior {
             return false;
         }
 
-        const otherFeatures = (other as ClusterBehavior.Type).cluster.supportedFeatures;
+        const otherCluster = (other as { cluster?: ClusterType }).cluster;
+        if (!otherCluster) {
+            return false;
+        }
+
+        const otherFeatures = otherCluster.supportedFeatures;
         const myFeatures = this.cluster.supportedFeatures;
         for (const name in otherFeatures) {
             if (otherFeatures[name] && !(myFeatures as Record<string, boolean>)[name]) {
@@ -176,13 +180,15 @@ export namespace ClusterBehavior {
 
         readonly Events: ClusterEvents.Type<C, B>;
 
-        readonly State: State.Type<ClusterState.Type<C, B>>;
+        readonly State: new () => ClusterState.Type<C, B>;
 
         readonly InternalState: B["InternalState"];
 
         readonly Interface: I;
 
         readonly defaults: ClusterState.Type<C, B>;
+
+        readonly schema: B["schema"];
 
         for: typeof ClusterBehavior.for;
         with: typeof ClusterBehavior.with;

@@ -6,7 +6,7 @@
 
 import { ValueModel } from "../../../model/index.js";
 import { ByteArray } from "../../../util/ByteArray.js";
-import { Schema } from "../Schema.js";
+import { Schema } from "../../Schema.js";
 import { ValidateError } from "../../errors.js";
 import { Val } from "../managed/Val.js";
 

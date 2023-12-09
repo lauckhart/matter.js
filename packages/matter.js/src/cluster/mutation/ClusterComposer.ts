@@ -73,7 +73,7 @@ export class ClusterComposer<const T extends ClusterType> {
      */
     private validateFeatureSelection(features: ClusterComposer.FeatureSelection<any>) {
         for (const f of features) {
-            if (!this.cluster.features[camelize(f, false)]) {
+            if (!this.cluster.features[camelize(f)]) {
                 throw new IllegalClusterError(`"${f}" is not a valid feature identifier`);
             }
         }

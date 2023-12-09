@@ -7,17 +7,19 @@
 import { Behavior } from "../../../src/behavior/Behavior.js";
 import { ManagedState } from "../../../src/behavior/state/ManagedState.js";
 import { State } from "../../../src/behavior/state/State.js";
-import { Observable } from "../../../src/util/Observable.js";
+import { EventEmitter, Observable } from "../../../src/util/Observable.js";
 
 class MyState extends State {
     foo = "bar";
 }
 
-const Managed = ManagedState(MyState);
+export function managed(state = MyState, events = EventEmitter) {
+    return new ManagedState({ State: state, Events: EventEmitter })
+}
 
 describe("ManagedState", () => {
     it("satisfies Type", () => {
-        ({}) as ManagedState.Type<typeof MyState> satisfies State.Type;
+        ({}) as ManagedState.Type<typeof MyState> satisfies InstanceType<State.Type>;
         Managed satisfies State.Type;
         Managed satisfies ManagedState.Type<typeof MyState>;
     });
@@ -61,22 +63,20 @@ describe("ManagedState", () => {
     });
 
     it("handles rejection well", () => {
-        const state = new (ManagedState(
-            class extends State {
-                foo: string | undefined = undefined;
+        const state = new ManagedState({
+            State: class extends State {
+                get foo() {
+                    return "foo";
+                };
 
-                static override fields = {
-                    foo: {
-                        validate(value: string): void {
-                            if (value !== undefined) {
-                                throw new Error("Bad value");
-                            }
-                        },
-                    },
+                set foo(value): string | undefined {
+                    throw new Error(`Bad value "${value}"`);
                 };
             },
-        ))();
-        expect(() => (state.foo = "bad")).throws("Bad value");
-        expect(state.foo).undefined;
+
+            Events: EventEmitter,
+        });
+        expect(() => (state.foo = "bar")).throws(`Bad values "bar"`);
+        expect(state.foo).equals("foo");
     });
 });

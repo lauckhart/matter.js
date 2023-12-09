@@ -9,7 +9,6 @@ import type { Part } from "../endpoint/Part.js";
 import { EventEmitter } from "../util/Observable.js";
 import type { Behavior } from "./Behavior.js";
 import type { InvocationContext } from "./InvocationContext.js";
-import { State } from "./state/State.js";
 
 /**
  * The "backing" for a behavior manages those portions of behavior that endure
@@ -18,7 +17,7 @@ import { State } from "./state/State.js";
 export abstract class BehaviorBacking {
     #part: Part;
     #type: Behavior.Type;
-    #internal?: State;
+    #internal?: Object;
     #events?: EventEmitter;
 
     constructor(part: Part, type: Behavior.Type) {
@@ -51,14 +50,9 @@ export abstract class BehaviorBacking {
     }
 
     /**
-     * Obtain state for a behavior instance.  This performs the magic required
-     * to give agents a unified view of state with event handling and
-     * validation wired in.
-     *
-     * To make this perform optimally we generate and cache necessary
-     * classes.
+     * Obtain state for a behavior instance.
      */
-    abstract createState(context: InvocationContext): State;
+    abstract createState(context: InvocationContext): Object;
 
     /**
      * Obtain internal state for a behavior instance.

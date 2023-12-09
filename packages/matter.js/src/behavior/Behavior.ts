@@ -11,8 +11,9 @@ import { assertSecureSession } from "../session/SecureSession.js";
 import { GeneratedClass } from "../util/GeneratedClass.js";
 import { EventEmitter } from "../util/Observable.js";
 import type { BehaviorBacking } from "./BehaviorBacking.js";
+import { Schema } from "./Schema.js";
 import type { LifecycleBehavior } from "./definitions/lifecycle/LifecycleBehavior.js";
-import { State } from "./state/State.js";
+import { DerivedState, EmptyState } from "./state/State.js";
 
 // We store state and events using this symbol because TS prevents us from
 // defining the corresponding getters as part of the class
@@ -23,8 +24,8 @@ const EVENTS = Symbol("events");
 
 interface Internal extends Behavior {
     [BACKING]: BehaviorBacking;
-    [STATE]: State;
-    [INTERNAL]: Object;
+    [STATE]: {};
+    [INTERNAL]: {};
     [EVENTS]: EventEmitter;
 }
 
@@ -94,7 +95,7 @@ export abstract class Behavior {
     /**
      * Access the behavior's state.
      */
-    declare readonly state: State;
+    declare readonly state: new () => {};
 
     /**
      * Access the behavior's events.
@@ -107,15 +108,21 @@ export abstract class Behavior {
     }
 
     /**
+     * The Matter schema for the behavior.  Schema metadata controls various
+     * aspects of behavior including data validation and authorization.
+     */
+    static schema: Schema = Schema.empty;
+
+    /**
      * Implementation of endpoint-scoped state.  Subclasses may override to
      * extend.
      */
-    static State = State;
+    static State = EmptyState;
 
     /**
      * Implementation of internal state.  Subclasses may override to extend.
      */
-    static InternalState = Object;
+    static InternalState = EmptyState;
 
     /**
      * Implementation of the events property.  Subclasses may override to
@@ -156,7 +163,11 @@ export abstract class Behavior {
             base: this,
 
             staticProperties: {
-                State: this.State.set(defaults),
+                State: DerivedState({
+                    name: `${this.name}$State`,
+                    base: this.State,
+                    values: defaults,
+                }),
             },
         }) as unknown as This;
     }
@@ -212,8 +223,9 @@ export namespace Behavior {
         supports: typeof Behavior.supports;
         defaults: Record<string, any>;
 
-        State: State.Type;
-        InternalState: typeof Object;
+        schema: Schema,
+        State: new () => {};
+        InternalState: new () => {};
         Events: typeof EventEmitter;
     }
 
@@ -227,8 +239,7 @@ export namespace Behavior {
     }
 
     /**
-     * The state type of a behavior Type.  This includes endpoint- and
-     * fabric-scoped properties.
+     * The state type of a behavior {@link Type}.
      */
     export type StateOf<B extends Type> = InstanceType<B["State"]>;
 
@@ -237,3 +248,4 @@ export namespace Behavior {
      */
     export type InputStateOf<B extends Type> = Partial<ClusterType.RelaxTypes<StateOf<B>>>;
 }
+

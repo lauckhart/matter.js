@@ -174,7 +174,7 @@ function createRootReference(config: Configuration, session: Datasource.Session)
         config.manager.schema.members.filter(
             field => field.effectiveQuality.nonvolatile
         ).map(
-            field => camelize(field.name, false)
+            field => camelize(field.name)
         ));
 
     const reference: Val.Reference<Val.Struct> = {

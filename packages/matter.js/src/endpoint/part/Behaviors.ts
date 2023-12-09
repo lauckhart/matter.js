@@ -121,7 +121,7 @@ export class Behaviors {
 
         const missing = Array<string>();
         for (const requirement of Object.values(requirements)) {
-            let name = camelize(requirement.name);
+            let name = camelize(requirement.name, true);
 
             const cluster = (requirement as ClusterBehavior.Type).cluster;
             if (cluster) {

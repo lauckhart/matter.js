@@ -20,7 +20,7 @@ export namespace ClusterState {
      */
     export type Type<C extends ClusterType, B extends Behavior.Type> =
         // Keep properties *not* from attributes of the old cluster
-        Omit<InstanceType<B["State"]>, keyof PropertiesOf<ClusterOf<B>>> &
+        & Omit<InstanceType<B["State"]>, keyof PropertiesOf<ClusterOf<B>>> &
             // Add properties from attributes of the old cluster
             PropertiesOf<C>;
 

@@ -1,5 +1,4 @@
 import { Behavior } from "../../src/behavior/Behavior.js";
-import { State } from "../../src/behavior/state/State.js";
 import { Part } from "../../src/endpoint/Part.js";
 import { PartOwner } from "../../src/endpoint/part/PartOwner.js";
 import { EndpointType } from "../../src/endpoint/type/EndpointType.js";
@@ -10,11 +9,8 @@ export class MockBehavior1 extends Behavior {
 }
 
 export namespace MockBehavior1 {
-    export class EndpointScope extends State {
+    export class State extends Behavior.State {
         b1e = "foo";
-    }
-
-    export class FabricScope extends State {
         b1f = "bar";
     }
 }
@@ -24,11 +20,8 @@ export class MockBehavior2 extends Behavior {
 }
 
 export namespace MockBehavior2 {
-    export class EndpointScope extends State {
+    export class State extends Behavior.State {
         b2e = "biz";
-    }
-
-    export class FabricScope extends State {
         b2f = "baz";
     }
 }

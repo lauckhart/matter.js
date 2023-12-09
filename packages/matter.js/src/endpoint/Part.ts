@@ -10,6 +10,7 @@ import type { InvocationContext } from "../behavior/InvocationContext.js";
 import { BasicInformationBehavior } from "../behavior/definitions/basic-information/BasicInformationBehavior.js";
 import { BridgedDeviceBasicInformationBehavior } from "../behavior/definitions/bridged-device-basic-information/BridgedDeviceBasicInformationBehavior.js";
 import { LifecycleBehavior } from "../behavior/definitions/lifecycle/LifecycleBehavior.js";
+import { AccessLevel } from "../cluster/Cluster.js";
 import { ImplementationError } from "../common/MatterError.js";
 import { EndpointNumber } from "../datatype/EndpointNumber.js";
 import { Agent } from "./Agent.js";
@@ -212,8 +213,8 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
      * fail.
      */
     getAgent(context: InvocationContext): Agent.Instance<T["behaviors"]> {
-        if (context.fabric === undefined) {
-            throw new ImplementationError(`Missing agent fabric part ${this}`);
+        if (!context.associatedFabric) {
+            throw new ImplementationError(`Cannot obtain agent for part ${this} without associated fabric`);
         }
         return new this.agentType(this, context);
     }
@@ -227,7 +228,13 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
      */
     get agent() {
         if (!this.#unscopedAgent) {
-            this.#unscopedAgent = new this.agentType(this, {});
+            this.#unscopedAgent = new this.agentType(this, {
+                // Set access level as low as possible
+                accessLevel: AccessLevel.View,
+
+                // Disable access level enforcement
+                offline: true,
+            });
         }
         return this.#unscopedAgent;
     }

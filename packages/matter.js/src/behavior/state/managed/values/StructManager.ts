@@ -7,9 +7,9 @@
 import { FabricIndex } from "../../../../datatype/FabricIndex.js";
 import { GeneratedClass } from "../../../../util/GeneratedClass.js";
 import { camelize } from "../../../../util/String.js";
-import type { Schema } from "../../Schema.js";
+import type { Schema } from "../../../Schema.js";
 import type { ValueManager } from "./ValueManager.js";
-import type { RootManager } from "./RootManager.js";
+import type { SchemaManager } from "./SchemaManager.js";
 import { PrimitiveManager } from "./PrimitiveManager.js";
 import { ManagedReference } from "../ManagedReference.js";
 import { Val } from "../Val.js";
@@ -22,7 +22,7 @@ import { ValueModel } from "../../../../model/index.js";
  * schema.
  */
 export function StructManager(
-    owner: RootManager,
+    owner: SchemaManager,
     schema: Schema,
     base?: new () => Val,
 ): ValueManager.Manage {
@@ -63,12 +63,12 @@ interface Wrapper extends Val.Struct {
 /**
  * Configure struct behavior as a mixin.
  */
-function StructManagerMixin(owner: RootManager, schema: Schema): GeneratedClass.Mixin {
+function StructManagerMixin(owner: SchemaManager, schema: Schema): GeneratedClass.Mixin {
     const instanceDescriptors = {} as PropertyDescriptorMap;
     let hasFabricIndex = false;
 
     for (const member of schema.members) {
-        instanceDescriptors[camelize(member.name, false)] = createPropertyDescriptor(owner, member);
+        instanceDescriptors[camelize(member.name)] = createPropertyDescriptor(owner, member);
         if (member.name === "FabricIndex") {
             hasFabricIndex = true;
         }
@@ -101,8 +101,8 @@ function StructManagerMixin(owner: RootManager, schema: Schema): GeneratedClass.
     }
 }
 
-function createPropertyDescriptor(manager: RootManager, schema: ValueModel): PropertyDescriptor {
-    const name = camelize(schema.name);
+function createPropertyDescriptor(manager: SchemaManager, schema: ValueModel): PropertyDescriptor {
+    const name = camelize(schema.name, true);
     let { access, manage, validate } = manager.get(schema);
 
     let descriptor: PropertyDescriptor = {

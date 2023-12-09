@@ -11,7 +11,7 @@ import { GeneratedClass } from "../../util/GeneratedClass.js";
 import { EventEmitter, Observable } from "../../util/Observable.js";
 import { camelize } from "../../util/String.js";
 import { Behavior } from "../Behavior.js";
-import { State } from "../state/State.js";
+import { DerivedState } from "../state/State.js";
 import type { ClusterBehavior } from "./ClusterBehavior.js";
 
 /**
@@ -37,7 +37,7 @@ export function createType<const C extends ClusterType>(cluster: C, base: Behavi
 
         staticDescriptors: {
             id: {
-                value: camelize(cluster.name, false) as Uncapitalize<string>,
+                value: camelize(cluster.name) as Uncapitalize<string>,
                 enumerable: true,
             },
 
@@ -45,6 +45,10 @@ export function createType<const C extends ClusterType>(cluster: C, base: Behavi
                 value: cluster,
                 enumerable: true,
             },
+
+            schema: {
+                value: schemaForCluster(cluster),
+            }
         },
 
         instanceDescriptors: Object.fromEntries(
@@ -84,7 +88,7 @@ export type ClusterOf<B extends Behavior.Type> = InstanceType<B> extends { clust
 function createDerivedState(cluster: ClusterType, base: Behavior.Type, namesUsed: Set<string>) {
     const BaseState = base["State"];
     const oldDefaults = new BaseState() as Record<string, any>;
-    const statePrefix = `${camelize(cluster.name, false)}.state`;
+    const statePrefix = `${camelize(cluster.name)}.state`;
 
     const newAttributes = {} as Record<string, ClusterType.Attribute>;
     for (const name in cluster.attributes) {
@@ -131,9 +135,10 @@ function createDerivedState(cluster: ClusterType, base: Behavior.Type, namesUsed
         namesUsed.add(name);
     }
 
-    return State.with(defaults, {
+    return DerivedState({
         name: `${cluster.name}$State`,
-        schema: schemaForCluster(cluster),
+        base: base.State,
+        values: defaults,
     });
 }
 

@@ -6,7 +6,7 @@
 
 import { Conformance, FeatureSet, ValueModel } from "../../../model/index.js";
 import { camelize } from "../../../util/String.js";
-import { Schema } from "../Schema.js";
+import { Schema } from "../../Schema.js";
 import { SchemaError } from "../../errors.js";
 import { Val } from "../managed/Val.js";
 import { ValidationContext } from "./context.js";
@@ -21,7 +21,7 @@ export function normalizeFeatures(featureMap: ValueModel, supportedFeatures: Fea
 
     for (const feature of featureMap.children) {
         featuresAvailable.add(feature.name);
-        if (feature.description && supportedFeatures.has(camelize(feature.description, false)))
+        if (feature.description && supportedFeatures.has(camelize(feature.description)))
         {
             featuresSupported.add(feature.name);
         }

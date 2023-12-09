@@ -8,7 +8,7 @@ import { ImplementationError } from "../common/MatterError.js";
 import { ValueModel } from "../model/index.js";
 import { StatusResponseError } from "../protocol/interaction/InteractionMessenger.js";
 import { StatusCode } from "../protocol/interaction/InteractionProtocol.js";
-import { Schema } from "./state/Schema.js";
+import { Schema } from "./Schema.js";
 
 /**
  * Thrown due to schema violations.

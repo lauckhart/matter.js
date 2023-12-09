@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { Schema } from "../../Schema.js";
-import type { RootManager } from "./RootManager.js";
+import type { Schema } from "../../../Schema.js";
+import type { SchemaManager } from "./SchemaManager.js";
 import { AccessController } from "../../../AccessController.js";
 import { Val } from "../Val.js";
 import { ValidationContext } from "../../validation/context.js";
@@ -29,7 +29,7 @@ export interface ValueManager {
     /**
      * The state manager that owns this ValueManager.
      */
-    owner: RootManager;
+    owner: SchemaManager;
 
     /**
      * The schema that defines this Io's behavior.
@@ -55,9 +55,9 @@ export interface ValueManager {
 /**
  * Obtain a value manager.
  * 
- * Used by {@link RootManager} which acts as a cache.
+ * Used by {@link SchemaManager} which acts as a cache.
  */
-export function ValueManager(schema: Schema, owner: RootManager, base?: new () => Val): ValueManager.Manage {
+export function ValueManager(schema: Schema, owner: SchemaManager, base?: new () => Val): ValueManager.Manage {
     switch (schema.effectiveMetatype) {
         case Metatype.object:
             return StructManager(owner, schema, base);

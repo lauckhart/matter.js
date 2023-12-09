@@ -10,7 +10,6 @@ import { Part } from "../../../endpoint/Part.js";
 import { EndpointType } from "../../../endpoint/type/EndpointType.js";
 import { BasicSet, MutableSet } from "../../../util/Set.js";
 import { Behavior } from "../../Behavior.js";
-import { State } from "../../state/State.js";
 import { LifecycleBehavior } from "../lifecycle/LifecycleBehavior.js";
 
 /**
@@ -25,7 +24,7 @@ import { LifecycleBehavior } from "../lifecycle/LifecycleBehavior.js";
 export class PartsBehavior extends Behavior implements MutableSet<Part, Part | Agent> {
     static override readonly id = "parts";
 
-    declare readonly state: PartsBehavior.EndpointScope;
+    declare readonly state: PartsBehavior.State;
 
     override initialize() {
         const children = this.state.children;
@@ -156,7 +155,7 @@ export class PartsBehavior extends Behavior implements MutableSet<Part, Part | A
 }
 
 export namespace PartsBehavior {
-    export class EndpointScope extends State {
+    export class State extends Behavior.State {
         /**
          * Child parts of the endpoint.
          */

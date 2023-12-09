@@ -6,8 +6,8 @@
 
 import { Access, ValueModel } from "../../../../model/index.js";
 import type { ValueManager } from "./ValueManager.js";
-import type { RootManager } from "./RootManager.js";
-import { Schema } from "../../Schema.js";
+import type { SchemaManager } from "./SchemaManager.js";
+import { Schema } from "../../../Schema.js";
 import { SchemaError, WriteError } from "../../../errors.js";
 import { Val } from "../Val.js";
 import { AccessController } from "../../../AccessController.js";
@@ -30,7 +30,7 @@ import { ManagedReference } from "../ManagedReference.js";
  * mention of this.
  */
 export function ListManager(
-    owner: RootManager,
+    owner: SchemaManager,
     schema: Schema
 ): ValueManager.Manage {
     const config = createConfig(owner, schema);
@@ -55,7 +55,7 @@ export function ListManager(
     }
 }
 
-function createConfig(owner: RootManager, schema: Schema): ListConfig {
+function createConfig(owner: SchemaManager, schema: Schema): ListConfig {
     const entry = schema instanceof ValueModel ? schema.listEntry : undefined;
     if (entry === undefined) {
         throw new SchemaError(
@@ -182,7 +182,7 @@ function createProxy(
                 }
 
                 const fabricIndex = (entry as Val.Struct).fabricIndex;
-                if (!fabricIndex || fabricIndex === session.accessingFabric) {
+                if (!fabricIndex || fabricIndex === session.associatedFabric) {
                     readMap.push(i);
                 }
             }

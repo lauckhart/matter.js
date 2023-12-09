@@ -4,50 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AttributeModel, FieldModel, FeatureSet, Globals, RecordValidator } from "../../../src/model/index.js";
-import { camelize } from "../../../src/util/String.js";
-import { Properties } from "../../../src/util/Type.js";
-
-function Fields(...definition: { name?: string; type?: string; conformance?: string }[]): Fields {
-    return definition.map(
-        f =>
-            new FieldModel({
-                name: "Test",
-                type: "number",
-                ...f,
-            }),
-    );
-}
-
-function Features(definition: { [code: string]: string }): AttributeModel {
-    return new AttributeModel({
-        ...Globals.FeatureMap,
-
-        children: Object.entries(definition).map(
-            ([name, description]) =>
-                new FieldModel({
-                    name,
-                    description,
-                }),
-        ),
-    });
-}
-
-const NESTING: unique symbol = Symbol("NESTING");
-
-function Tests(...definition: (Fields | Features | Tests["entries"])[]): Tests {
-    const result = { [NESTING]: true } as Tests;
-    for (const d of definition) {
-        if (Array.isArray(d)) {
-            result.fields = d;
-        } else if (d instanceof AttributeModel) {
-            result.features = d;
-        } else {
-            result.entries = d;
-        }
-    }
-    return result;
-}
+import { ConformanceError } from "../../../../src/behavior/errors.js";
+import { Tests, Fields, Features, testValidation } from "./validation-test-utils.js";
 
 const AllTests = Tests({
     conformance: Tests({
@@ -58,7 +16,7 @@ const AllTests = Tests({
                 },
 
                 requires: {
-                    errors: { conformance: "Test" },
+                    error: { type: ConformanceError },
                 },
             }),
 
@@ -80,12 +38,12 @@ const AllTests = Tests({
 
                 "requires if enabled": {
                     supports: ["foo"],
-                    errors: { conformance: "Test" },
+                    error: { type: ConformanceError },
                 },
 
                 "disallows if disabled": {
                     record: { test: 1234 },
-                    errors: { conformance: "Test" },
+                    error: { type: ConformanceError },
                 },
 
                 "allows omission if disabled": {},
@@ -103,7 +61,7 @@ const AllTests = Tests({
 
                 "disallows if disabled": {
                     record: { test: 1234 },
-                    errors: { conformance: "Test" },
+                    error: { type: ConformanceError },
                 },
 
                 "allows omission if disabled": {},
@@ -115,13 +73,13 @@ const AllTests = Tests({
                 },
 
                 "requires if disabled": {
-                    errors: { conformance: "Test" },
+                    error: { type: ConformanceError },
                 },
 
                 "disallows if enabled": {
                     supports: ["foo"],
                     record: { test: 1234 },
-                    errors: { conformance: "Test" },
+                    error: { type: ConformanceError },
                 },
 
                 "allows omission if enabled": {
@@ -139,7 +97,7 @@ const AllTests = Tests({
                 "disallows if enabled": {
                     supports: ["foo"],
                     record: { test: 1234 },
-                    errors: { conformance: "Test" },
+                    error: { type: ConformanceError },
                 },
 
                 "allows omission if enabled": {
@@ -163,7 +121,7 @@ const AllTests = Tests({
 
                     "disallows if disabled": {
                         record: { test: 1234 },
-                        errors: { conformance: "Test" },
+                        error: { type: ConformanceError },
                     },
 
                     "allows omission if disabled": {},
@@ -190,7 +148,7 @@ const AllTests = Tests({
 
                     "disallows if disabled": {
                         record: { test: 1234 },
-                        errors: { conformance: "Test" },
+                        error: { type: ConformanceError },
                     },
 
                     "allows omission if disabled": {},
@@ -206,24 +164,24 @@ const AllTests = Tests({
 
                     "requires if enabled": {
                         supports: ["foo", "bar"],
-                        errors: { conformance: "Test" },
+                        error: { type: ConformanceError },
                     },
 
                     "disallows if disabled": {
                         record: { test: 1234 },
-                        errors: { conformance: "Test" },
+                        error: { type: ConformanceError },
                     },
 
                     "disallows if disabled (LHS enabled)": {
                         supports: ["foo"],
                         record: { test: 1234 },
-                        errors: { conformance: "Test" },
+                        error: { type: ConformanceError },
                     },
 
                     "disallows if disabled (RHS enabled)": {
                         supports: ["bar"],
                         record: { test: 1234 },
-                        errors: { conformance: "Test" },
+                        error: { type: ConformanceError },
                     },
 
                     "allows omission if disabled": {},
@@ -249,19 +207,19 @@ const AllTests = Tests({
 
                     "disallows if disabled": {
                         record: { test: 1234 },
-                        errors: { conformance: "Test" },
+                        error: { type: ConformanceError },
                     },
 
                     "disallows if disabled (LHS enabled)": {
                         supports: ["foo"],
                         record: { test: 1234 },
-                        errors: { conformance: "Test" },
+                        error: { type: ConformanceError },
                     },
 
                     "disallows if disabled (RHS enabled)": {
                         supports: ["bar"],
                         record: { test: 1234 },
-                        errors: { conformance: "Test" },
+                        error: { type: ConformanceError },
                     },
 
                     "allows omission if disabled": {},
@@ -286,13 +244,13 @@ const AllTests = Tests({
 
                 "requires if enabled": {
                     supports: ["aye", "bee", "see"],
-                    errors: { conformance: "Test" },
+                    error: { type: ConformanceError },
                 },
 
                 "disallows if disabled (RHS & LHS enabled)": {
                     supports: ["aye", "see"],
                     record: { test: 1234 },
-                    errors: { conformance: "Test" },
+                    error: { type: ConformanceError },
                 },
 
                 "allows omission if disabled (RHS & LHS enabled)": {
@@ -313,18 +271,18 @@ const AllTests = Tests({
 
                 "requires if enabled (disjunction RHS)": {
                     supports: ["aye", "bee"],
-                    errors: { conformance: "Test" },
+                    error: { type: ConformanceError },
                 },
 
                 "requires if enabled (disjunction LHS)": {
                     supports: ["aye", "see"],
-                    errors: { conformance: "Test" },
+                    error: { type: ConformanceError },
                 },
 
                 "disallows if disabled (conjunction LHS)": {
                     supports: ["see"],
                     record: { test: 1234 },
-                    errors: { conformance: "Test" },
+                    error: { type: ConformanceError },
                 },
 
                 "allows omission if disabled (conjunction LHS)": {
@@ -346,7 +304,7 @@ const AllTests = Tests({
                 "disallows if disabled (conjunction LHS enabled)": {
                     supports: ["bee"],
                     record: { test: 1234 },
-                    errors: { conformance: "Test" },
+                    error: { type: ConformanceError },
                 },
             }),
         }),
@@ -358,19 +316,17 @@ const AllTests = Tests({
                 },
 
                 "requires one field": {
-                    errors: {
-                        code: "CHOICE_THRESHOLD_NOT_MET",
+                    error: {
+                        type: ConformanceError,
                         message: "Choice minimum of 1 not met",
-                        source: "?.a",
                     },
                 },
 
                 "disallows multiple fields": {
                     record: { test1: 1234, test2: 1234 },
-                    errors: {
-                        code: "CHOICE_THRESHOLD_EXCEEDED",
+                    error: {
+                        type: ConformanceError,
                         message: "Choice maximum of 1 exceeded",
-                        source: "?.a",
                     },
                 },
             }),
@@ -387,28 +343,25 @@ const AllTests = Tests({
                     },
 
                     "disallows no fields": {
-                        errors: {
-                            code: "CHOICE_THRESHOLD_NOT_MET",
+                        error: {
+                            type: ConformanceError,
                             message: "Choice minimum of 2 not met",
-                            source: "?.a",
                         },
                     },
 
                     "disallows one field": {
                         record: { test1: 1 },
-                        errors: {
-                            code: "CHOICE_THRESHOLD_NOT_MET",
+                        error: {
+                            type: ConformanceError,
                             message: "Choice minimum of 2 not met",
-                            source: "?.a",
                         },
                     },
 
                     "disallows three fields": {
                         record: { test1: 1, test2: 2, test3: 3 },
-                        errors: {
-                            code: "CHOICE_THRESHOLD_EXCEEDED",
+                        error: {
+                            type: ConformanceError,
                             message: "Choice maximum of 2 exceeded",
-                            source: "?.a",
                         },
                     },
                 },
@@ -422,10 +375,9 @@ const AllTests = Tests({
                     },
 
                     "requires one field": {
-                        errors: {
-                            code: "CHOICE_THRESHOLD_NOT_MET",
+                        error: {
                             message: "Choice minimum of 1 not met",
-                            source: "?.a",
+                            type: ConformanceError,
                         },
                     },
 
@@ -438,93 +390,4 @@ const AllTests = Tests({
     }),
 });
 
-function validate({ fields, features }: ClusterStructure, { supports, record, errors }: Test) {
-    if (!fields) {
-        throw new Error("Validation attempt with no fields defined");
-    }
-
-    // Create definition errors
-    if (errors && !Array.isArray(errors)) {
-        errors = [errors];
-    }
-    const definitionErrors =
-        errors &&
-        errors.map(e => {
-            // Shortcut for conformance errors
-            if (e.conformance) {
-                const fieldName = camelize(e.conformance.replace(/^.*\./, ""), false);
-                return {
-                    code: "CONFORMANCE_VIOLATION",
-                    message: `Value of ${fieldName} is disallowed by conformance`,
-                    source: e.conformance,
-                };
-            }
-
-            return e;
-        });
-
-    // Create record validator
-    const validator = RecordValidator(
-        fields,
-        features ?? new AttributeModel(Globals.FeatureMap),
-        new FeatureSet(supports),
-    );
-
-    // Perform validation
-    try {
-        const result = validator.validate(record ?? {});
-        expect(result.valid).equal(!errors);
-        expect(result.errors).deep.equal(definitionErrors);
-    } catch (e) {
-        validator.logFailure();
-        throw e;
-    }
-}
-
-function test(description: string, what: Tests | Test, structure: ClusterStructure) {
-    if (what.fields) {
-        structure = { ...structure, fields: what.fields };
-    }
-    if (what.features) {
-        structure = { ...structure, features: what.features };
-    }
-
-    if (what[NESTING]) {
-        describe(description, () => {
-            for (const k in what.entries) {
-                test(k, what.entries[k], structure);
-            }
-        });
-    } else {
-        it(description, () => validate(structure, what));
-    }
-}
-
-test("RecordValidator", AllTests, {});
-
-type Fields = FieldModel[];
-type Features = AttributeModel;
-
-type ClusterStructure = {
-    fields?: Fields;
-    features?: Features;
-};
-
-type ErrorOptions = {
-    code?: string;
-    message?: string;
-    source?: string;
-    conformance?: string;
-};
-
-type Test = ClusterStructure & {
-    [NESTING]?: false;
-    supports?: FeatureSet.Definition;
-    record?: Properties;
-    errors?: ErrorOptions[] | ErrorOptions;
-};
-
-type Tests = ClusterStructure & {
-    [NESTING]: true;
-    entries: { [description: string]: Tests | Test };
-};
+testValidation("Conformance validation", AllTests);

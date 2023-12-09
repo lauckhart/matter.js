@@ -59,7 +59,7 @@ export class Constraint extends Aspect<Constraint.Definition> implements Constra
         function valueOf(value: any) {
             if (typeof value === "object") {
                 if (value.type === FieldValue.reference) {
-                    value = properties?.[camelize(value.name, false)];
+                    value = properties?.[camelize(value.name)];
                 }
             }
 

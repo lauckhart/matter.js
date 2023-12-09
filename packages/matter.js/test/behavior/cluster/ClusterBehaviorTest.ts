@@ -20,9 +20,6 @@ describe("ClusterBehavior", () => {
         describe("state types meet type requirement", () => {
             ClusterBehavior.State satisfies State.Type;
             ClusterBehavior.State satisfies ClusterBehavior.Type["State"];
-
-            ClusterBehavior.FabricScope satisfies State.Type;
-            ClusterBehavior.FabricScope satisfies ClusterBehavior.Type["FabricScope"];
         });
 
         describe("meets type requirements", () => {
@@ -32,11 +29,9 @@ describe("ClusterBehavior", () => {
             ({}) as ClusterBehavior["events"] satisfies InstanceType<ClusterBehavior.Type>["events"];
 
             ClusterBehavior.State satisfies ClusterBehavior.Type["State"];
-            ClusterBehavior.FabricScope satisfies ClusterBehavior.Type["FabricScope"];
             ClusterBehavior.Events satisfies ClusterBehavior.Type["Events"];
 
             typeof ClusterBehavior.State === "function";
-            typeof ClusterBehavior.FabricScope === "function";
             typeof ClusterBehavior.Events === "function";
 
             ClusterBehavior satisfies ClusterBehavior.Type;
@@ -53,7 +48,7 @@ describe("ClusterBehavior", () => {
                 };
             };
             expect(new MyBehavior.State().reqAttr).equals("hello");
-            expect(new MyBehavior.FabricScope().reqFabricAttr).equals("world");
+            expect(new MyBehavior.State().reqFabricAttr).equals("world");
 
             ({}) as MyBehavior satisfies {
                 reqCmd: (request: string, state: any) => MaybePromise<string>;

@@ -10,7 +10,7 @@ import { Access } from "../model/aspects/index.js";
 import { Model, ValueModel } from "../model/models/index.js";
 import { StatusCode } from "../protocol/interaction/InteractionProtocol.js";
 import { ReadError, WriteError } from "./errors.js";
-import { Schema } from "./state/Schema.js";
+import { Schema } from "./Schema.js";
 
 const cache = new WeakMap<Schema, AccessController>();
 
@@ -99,7 +99,7 @@ export namespace AccessController {
         /**
          * The fabric of the authorized client.
          */
-        accessingFabric?: FabricIndex;
+        associatedFabric?: FabricIndex;
     
         /**
          * If this is true then access levels are not enforced and all values
@@ -222,14 +222,14 @@ function enforcerFor(schema: Schema): AccessController {
                 return;
             }
 
-            if (session.accessingFabric === undefined) {
+            if (session.associatedFabric === undefined) {
                 throw new ReadError(
                     schema,
                     "Permission denied: No accessing fabric"
                 )
             }
 
-            if (context?.owningFabric && context.owningFabric !== session.accessingFabric) {
+            if (context?.owningFabric && context.owningFabric !== session.associatedFabric) {
                 throw new WriteError(
                     schema,
                     "Permission denied: Owning/accessing fabric mismatch"
@@ -244,11 +244,11 @@ function enforcerFor(schema: Schema): AccessController {
                 return true;
             }
 
-            if (session.accessingFabric === undefined) {
+            if (session.associatedFabric === undefined) {
                 return false;
             }
 
-            if (context?.owningFabric && context.owningFabric !== session.accessingFabric) {
+            if (context?.owningFabric && context.owningFabric !== session.associatedFabric) {
                 throw false;
             }
 
@@ -260,14 +260,14 @@ function enforcerFor(schema: Schema): AccessController {
                 return;
             }
 
-            if (session.accessingFabric === undefined) {
+            if (session.associatedFabric === undefined) {
                 throw new WriteError(
                     schema,
                     "Permission denied: No accessing fabric"
                 )
             }
 
-            if (context?.owningFabric && context.owningFabric !== session.accessingFabric) {
+            if (context?.owningFabric && context.owningFabric !== session.associatedFabric) {
                 throw new WriteError(
                     schema,
                     "Permission denied: Owning/accessing fabric mismatch"
@@ -282,11 +282,11 @@ function enforcerFor(schema: Schema): AccessController {
                 return true;
             }
 
-            if (session.accessingFabric === undefined) {
+            if (session.associatedFabric === undefined) {
                 return false;
             }
 
-            if (context?.owningFabric && context.owningFabric !== session.accessingFabric) {
+            if (context?.owningFabric && context.owningFabric !== session.associatedFabric) {
                 return false;
             }
 

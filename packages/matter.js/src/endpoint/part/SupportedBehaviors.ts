@@ -91,6 +91,6 @@ function addBehaviors(target: SupportedBehaviors, types: SupportedBehaviors.List
         if (typeof type.id !== "string") {
             throw new ImplementationError("Behavior type has no ID");
         }
-        target[camelize(type.id, false)] = type;
+        target[camelize(type.id)] = type;
     }
 }

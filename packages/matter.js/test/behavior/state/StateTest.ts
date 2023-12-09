@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InvocationContext } from "../../../src/behavior/InvocationContext.js";
 import { State } from "../../../src/behavior/state/State.js";
 
 describe("State", () => {
@@ -48,7 +47,7 @@ describe("State", () => {
             foo = "bar";
         })();
 
-        (state as unknown as State.Internal)[State.SET]("foo", "biz", {} as InvocationContext);
+        state.foo = "baz";
 
         expect(state.foo).equals("biz");
     });

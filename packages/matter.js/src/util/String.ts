@@ -10,9 +10,9 @@ export function capitalize<T extends string>(text: T) {
 
 /**
  * Converts identifiers of the form "foo-bar", "foo_bar", "foo bar", "foo*bar",
- * "fooBar" or "FOOBar" into "FooBar" or "fooBar".
+ * "fooBar" or "FOOBar" into "fooBar" or "FooBar".
  */
-export function camelize(name: string, upperFirst = true) {
+export function camelize(name: string, upperFirst = false) {
     const pieces = new Array<string>();
     let pieceStart = 0,
         sawUpper = false,

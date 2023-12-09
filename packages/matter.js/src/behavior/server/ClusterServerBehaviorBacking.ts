@@ -9,7 +9,6 @@ import { AccessLevel, Attributes, Events } from "../../cluster/Cluster.js";
 import { AttributeServer, FabricScopedAttributeServer } from "../../cluster/server/AttributeServer.js";
 import { ClusterServer } from "../../cluster/server/ClusterServer.js";
 import type { ClusterServerObj, CommandHandler, SupportedEventsList } from "../../cluster/server/ClusterServerTypes.js";
-import { ImplementationError } from "../../common/MatterError.js";
 import { EndpointInterface } from "../../endpoint/EndpointInterface.js";
 import type { Part } from "../../endpoint/Part.js";
 import { Transaction } from "../state/transaction/Transaction.js";
@@ -86,7 +85,7 @@ function transact<T>(
 
     const context: InvocationContext = {
         ...contextFields,
-        accessingFabric: fabric?.fabricIndex,
+        associatedFabric: fabric?.fabricIndex,
         session,
         transaction,
 
@@ -207,10 +206,8 @@ function createChangeHandler(backing: ClusterServerBehaviorBacking, name: string
             const session = context.session;
             if (session instanceof SecureSession) {
                 attributeServer.updated(session);
-            } else if (context.session?.getAssociatedFabric) {
-                attributeServer.updatedLocalForFabric(context.session?.getAssociatedFabric);
             } else {
-                throw new ImplementationError(`Attribute with fabric-scoped server updated outside of fabric context`);
+                // Can't notify if we don't know the fabric
             }
         });
     } else if (attributeServer instanceof AttributeServer) {

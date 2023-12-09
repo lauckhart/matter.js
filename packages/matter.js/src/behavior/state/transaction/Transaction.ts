@@ -15,7 +15,7 @@ export class TransactionFlowError extends MatterError {}
 const logger = Logger.get("Transaction");
 
 /**
- * Updates to Matter.js state are transactional.
+ * By default, updates to Matter.js state are transactional.
  * 
  * Transactions are either shared (for reads) or exclusive (for writes).
  * Exclusive transactions do not block shared transactions but state updates
@@ -115,17 +115,29 @@ export class Transaction {
     /**
      * Begin an exclusive transaction.
      * 
-     * Transactions begin automitically on write but there are two cases where
-     * you may want to use this method:
+     * Transactions begin automatically on write but there are a few reasons
+     * you may want to use this method to start an exclusive transaction
+     * explicitly:
      * 
-     *   1. To serialize writes and prevent conflicting writes from throwing an
-     *      error.
+     *   1. Automatic transactions are started in a synchronous context so
+     *      conflicting transactions will throw an error.  If you start a
+     *      transaction, your code will await any transaction that would
+     *      otherwise throw an error.
      * 
-     *   2. To ensure that reads operate on the newest version of state;
-     *      otherwise state might contain stale data if there is an active
-     *      uncommitted write.
+     *   2. State might contain stale data if there is an active uncommitted
+     *      write.  Once you start a transaction you block other writers so can
+     *      be assured you're dealing with newest state. 
+     *
+     *   3. Say transaction A has an exclusive lock on resource 1 and awaits
+     *      resource 2.  Transaction B has an exclusive lock on resource 2.
+     *      Transaction B cannot then await resource 1 without causing a
+     *      deadlock.  Matter.js will detect the deadlock and throw an error.
+     *      One way to prevent this is to begin a transaction and acquire locks
+     *      in a specific order.
      * 
-     * Neither of these are likely to be important for most use cases.
+     * None of the issues above are likely and are probably not a concern for
+     * your application.  If you do encounter these issues the error message
+     * will suggest solutions.
      */
     async begin() {
         switch (this.status) {

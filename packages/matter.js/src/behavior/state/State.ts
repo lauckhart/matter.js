@@ -4,83 +4,62 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { FieldModel } from "../../model/index.js";
 import { GeneratedClass } from "../../util/GeneratedClass.js";
-import { Schema } from "./Schema.js";
+import { Val } from "./managed/Val.js";
 
-export const SCHEMA = Symbol("schema");
-export interface StaticInternal extends State.Type {
-    [SCHEMA]: Schema
+/**
+ * Base state.  We don't use Object directly because state would then inherit
+ * all static Object methods.
+ */
+export const EmptyState = function() { return {} } as unknown as new () => {};
+
+/**
+ * DerivedState is a programmatic extension of state.
+ */
+export interface DerivedState<Base extends DerivedState.Constructor = typeof Object, Extension extends {} = {}> {
+    new (): InstanceType<Base> & Extension;
 }
 
 /**
- * Mutable state for a behavior.
- *
- * State is either "global" or "scoped".  Scoped state is scoped to a Matter
- * fabric.  Each behavior has a separate class for global and scoped state.
- *
- * The public interface for state is just a JS object.  {@link State.Internal}
- * is an additional semi-public interface you may access by casting.
+ * Extend state with additional values..
  */
-export class State {
-    // Base state has no properties
+export function DerivedState<
+    const Base extends DerivedState.Constructor,
+    Extension extends {}
+>(
+    { base, values, name }: DerivedState.Options<Base, Extension>
+) {
+    const oldDefaults = new base as Val.Struct;
 
-    /**
-     * Obtain a new state type with different default values.
-     */
-    static set<This extends State.Type, T extends object>(this: This, defaults: T) {
-        const oldDefaults = new this() as Record<string, any>;
-        let newDefaults: Record<string, any> | undefined;
-        for (const name in defaults) {
-            if (name in oldDefaults) {
-                if (oldDefaults[name] !== defaults[name]) {
-                    if (newDefaults === undefined) {
-                        newDefaults = {};
-                    }
-                    newDefaults[name] = defaults[name];
-                }
+    let newDefaults: undefined | Val.Struct;
+    for (const key in values) {
+        const value = (values as Val.Struct)[key];
+        if (!oldDefaults.hasOwnProperty(key) || oldDefaults[key] !== value) {
+            if (!newDefaults) {
+                newDefaults = {};
             }
+            newDefaults[key] = value;
         }
-
-        if (newDefaults) {
-            return this.with(newDefaults) as unknown as This;
-        }
-
-        return this;
     }
 
-    /**
-     * You may extend state using normal subclassing or by using this method
-     * which overrides and/or adds properties.
-     */
-    static with<This extends State.Type, T extends object>(this: This, defaults: T, options?: State.WithOptions) {
-        return GeneratedClass({
-            name: options?.name ?? `${this.name}$`,
-            base: this,
-            instanceProperties: defaults,
-        }) as State.Type<InstanceType<This> & T>;
+    if (!newDefaults) {
+        return base as unknown as DerivedState<Base, Extension>;
     }
 
-    /**
-     * State structure and legal I/O operations are determined using Matter
-     * schema.
-     */
-    static readonly schema = new FieldModel({ name: "Empty" });
+    return GeneratedClass({
+        name: name ?? base.name,
+        base: base,
+        instanceProperties: newDefaults,
+    }) as DerivedState<Base, Extension>;
 }
 
-export namespace State {
-    export type WithOptions = {
-        name?: string;
-        schema?: Schema;
-    };
+export namespace DerivedState {
 
-    /**
-     * Generic state class type.
-     */
-    export type Type<T extends object = {}> = {
-        new (): State & T;
-        schema: Schema;
-        set: typeof State.set;
-        with: typeof State.with;
-    };
+    export type Constructor = new () => {};
+
+    export interface Options<Base extends Constructor, Values extends {}> {
+        base: Base;
+        values: Values;
+        name?: string;
+    }
 }
