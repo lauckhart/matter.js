@@ -25,6 +25,7 @@ import { DeviceCertification } from "../../behavior/definitions/operational-cred
 import { CommissioningOptions } from "../options/CommissioningOptions.js";
 import { ServerOptions } from "../options/ServerOptions.js";
 import { BaseNodeServer } from "./BaseNodeServer.js";
+import { TransactionCoordinator } from "../../behavior/state/transaction/TransactionCoordinator.js";
 
 const logger = Logger.get("NodeServer");
 
@@ -40,6 +41,7 @@ const logger = Logger.get("NodeServer");
 export class NodeServer extends BaseNodeServer implements Node {
     #configuration: ServerOptions.Configuration;
     #root: Part<RootEndpoint>;
+    #transactionCoordinator: TransactionCoordinator;
     #rootServer?: PartServer;
     #nextEndpointId: EndpointNumber;
     #host?: Host;
@@ -92,13 +94,18 @@ export class NodeServer extends BaseNodeServer implements Node {
         return this.#certification;;
     }
 
-    constructor(options?: ServerOptions) {
+    get transactionCoordinator() {
+        return this.#transactionCoordinator;
+    }
+
+    constructor(options?: ServerOptions.Configuration) {
         super();
 
         this.#configuration = ServerOptions.configurationFor(options);
         this.#root = this.#configuration.root;
         this.#root.owner = this;
         this.#nextEndpointId = this.#configuration.nextEndpointId;
+        this.#transactionCoordinator = new TransactionCoordinator();
     }
 
     /**

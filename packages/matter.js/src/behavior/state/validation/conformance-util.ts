@@ -6,7 +6,7 @@
 
 import { Conformance, FeatureSet, ValueModel } from "../../../model/index.js";
 import { camelize } from "../../../util/String.js";
-import { Schema } from "../../Schema.js";
+import { Schema } from "../../schema/Schema.js";
 import { SchemaError } from "../../errors.js";
 import { Val } from "../managed/Val.js";
 import { ValidationContext } from "./context.js";

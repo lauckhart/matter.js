@@ -89,6 +89,21 @@ export class Conformance extends Aspect<Conformance.Definition> {
         return false;
     }
 
+    /**
+     * Perform limited conformance evaluation to determine whether this
+     * conformance is applicable given a feature combination.
+     * 
+     * Ignores subexpressions that reference field values.
+     * 
+     * This is useful for filtering elements at compile time.  For complete
+     * accuracy you then need to filter at runtime once field values are known.
+     */
+    isApplicable(features: Iterable<string>, supportedFeatures: Iterable<string>) {
+        const fset = features instanceof Set ? features as Set<string> : new Set(features);
+        const sfset = supportedFeatures instanceof Set ? features as Set<string> : new Set(features);
+        return computeApplicability(fset, sfset, this.ast) !== false;
+    }
+
     override toString() {
         return Conformance.serialize(this.ast);
     }
@@ -107,45 +122,45 @@ export namespace Conformance {
 
     export type Ast =
         | {
-              type: Special.Empty | Special.Desc | Flag;
-          }
+            type: Special.Empty | Special.Desc | Flag;
+        }
         | {
-              type: Special.Name;
-              param: Ast.Name;
-          }
+            type: Special.Name;
+            param: Ast.Name;
+        }
         | {
-              type: Special.Value;
-              param: Ast.Value;
-          }
+            type: Special.Value;
+            param: Ast.Value;
+        }
         | {
-              type: Special.Choice;
-              param: Ast.Choice;
-          }
+            type: Special.Choice;
+            param: Ast.Choice;
+        }
         | {
-              type: Special.Group;
-              param: Ast.Group;
-          }
+            type: Special.Group;
+            param: Ast.Group;
+        }
         | {
-              type: Special.OptionalIf;
-              param: Ast.Option;
-          }
+            type: Special.OptionalIf;
+            param: Ast.Option;
+        }
         | {
-              type:
-                  | Operator.AND
-                  | Operator.OR
-                  | Operator.XOR
-                  | Operator.EQ
-                  | Operator.NE
-                  | Operator.LT
-                  | Operator.GT
-                  | Operator.LTE
-                  | Operator.GTE;
-              param: Ast.BinaryOperands;
-          }
+            type:
+                | Operator.AND
+                | Operator.OR
+                | Operator.XOR
+                | Operator.EQ
+                | Operator.NE
+                | Operator.LT
+                | Operator.GT
+                | Operator.LTE
+                | Operator.GTE;
+            param: Ast.BinaryOperands;
+        }
         | {
-              type: Operator.NOT;
-              param: Ast.UnaryOperand;
-          };
+            type: Operator.NOT;
+            param: Ast.UnaryOperand;
+        };
 
     export namespace Ast {
         export type Name = string;
@@ -800,4 +815,55 @@ namespace Parser {
     ];
 
     export const BinaryOperators = new Set(BinaryOperatorPrecedence.flat());
+}
+
+function computeApplicability(
+    features: Set<string>,
+    supportedFeatures: Set<string>,
+    ast: Conformance.Ast
+) {
+    function processNode(ast: Conformance.Ast): boolean {
+        switch (ast.type) {
+            case Conformance.Special.Name:
+                if (features.has(ast.param)) {
+                    return supportedFeatures.has(ast.param);
+                }
+                break;
+    
+            case Conformance.Operator.NOT:
+                const subvalue = processNode(ast.param);
+                if (typeof subvalue === "boolean") {
+                    return !subvalue;
+                }
+                break;
+
+            case Conformance.Operator.AND:
+                if (!processNode(ast.param.lhs) || !processNode(ast.param.rhs)) {
+                    return false;
+                }
+                break;
+
+            case Conformance.Operator.OR:
+                if (!processNode(ast.param.lhs) && !processNode(ast.param.rhs)) {
+                    return false;
+                }
+                break;
+
+            case Conformance.Flag.Disallowed:
+                return false;
+
+            case Conformance.Special.OptionalIf:
+                return processNode(ast.param);
+
+            case Conformance.Special.Group:
+                for (const child of ast.param) {
+                    if (processNode(child)) {
+                        return true;
+                    }
+                }
+                return false;
+        }
+        return true;
+    }
+    return processNode(ast);
 }

@@ -197,7 +197,8 @@ function createConstructor({ name, base, args, mixins }: ConstructorOptions) {
         }
 
         if (instanceProperties) {
-            code.push(`Object.assign(this, instanceProperties)`);
+            // Do not use Object.assign because we want to support accessors
+            code.push(`for (const k of instanceProperties) this[k] = instanceProperties[k]`);
         }
 
         if (initialize) {

@@ -8,6 +8,7 @@ import { Globals, MatterElement } from "../elements/index.js";
 import { Matter } from "../standard/index.js";
 import { AttributeModel } from "./AttributeModel.js";
 import { ClusterModel } from "./ClusterModel.js";
+import { DatatypeModel } from "./DatatypeModel.js";
 import { FieldModel } from "./FieldModel.js";
 import { DeviceTypeModel } from "./DeviceTypeModel.js";
 import { FabricModel } from "./FabricModel.js";
@@ -75,5 +76,5 @@ export class MatterModel extends Model implements MatterElement {
 }
 
 export namespace MatterModel {
-    export type Child = ClusterModel | DeviceTypeModel | FieldModel | AttributeModel | FabricModel;
+    export type Child = ClusterModel | DeviceTypeModel | FieldModel | DatatypeModel | AttributeModel | FabricModel;
 }

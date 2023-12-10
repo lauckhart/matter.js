@@ -8,7 +8,6 @@ import type { Part } from "../../../endpoint/Part.js";
 import { EventEmitter, Observable } from "../../../util/Observable.js";
 import { BasicSet } from "../../../util/Set.js";
 import { Behavior } from "../../Behavior.js";
-import { State as BaseState } from "../../state/State.js";
 
 /**
  * This behavior manages state related to the owning {@link Part}'s lifecycle.
@@ -47,7 +46,7 @@ export class LifecycleBehavior extends Behavior {
 }
 
 export namespace LifecycleBehavior {
-    export class State extends BaseState {
+    export class State {
         /**
          * True when the part is installed into a parent.
          *

@@ -10,11 +10,9 @@ import {
     Command,
     Event,
     EventPriority,
-    FabricScopedAttribute,
     OptionalAttribute,
     OptionalCommand,
     OptionalEvent,
-    OptionalWritableFabricScopedAttribute,
 } from "../../../src/cluster/Cluster.js";
 import { ClusterType } from "../../../src/cluster/ClusterType.js";
 import { TlvBoolean } from "../../../src/tlv/TlvBoolean.js";
@@ -29,8 +27,6 @@ export const MyCluster = ClusterType({
     attributes: {
         reqAttr: Attribute(1, TlvString, { default: "hello" }),
         optAttr: OptionalAttribute(2, TlvBoolean, { default: true }),
-        reqFabricAttr: FabricScopedAttribute(3, TlvString, { default: "world" }),
-        optFabricAttr: OptionalWritableFabricScopedAttribute(4, TlvBoolean, { default: true }),
     },
 
     commands: {

@@ -30,7 +30,10 @@ export class SynchronousTransactionConflictError extends MatterError {}
 export class TransactionDeadlockError extends MatterError {}
 
 /**
- * Internal class that manages interactions between transactions.
+ * TransactionCoordinator manages interactions between transactions.
+ * 
+ * You pass this class to {@link Transaction}.  The methods on
+ * TransactionCoordinator should only be invoked by {@link Transaction}.
  */
 export class TransactionCoordinator {
     #state = new Map<Transaction.Participant, ParticipantState>();

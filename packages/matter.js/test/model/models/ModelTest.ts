@@ -175,8 +175,8 @@ namespace Fixtures {
         name: "GlobalStruct",
         type: "struct",
         children: [
-            { tag: "datatype", name: "numField", type: "uint16" },
-            { tag: "datatype", name: "strField", type: "string" },
+            { tag: "field", name: "numField", type: "uint16" },
+            { tag: "field", name: "strField", type: "string" },
         ],
     });
 
@@ -184,7 +184,7 @@ namespace Fixtures {
     export const cluster1StructType = new FieldModel({
         name: "ClusterDatatype",
         type: "GlobalStruct",
-        children: [{ tag: "datatype", name: "numField2", type: "single" }, cluster1StructFieldOverride],
+        children: [{ tag: "field", name: "numField2", type: "single" }, cluster1StructFieldOverride],
     });
 
     export const cluster1StructField1 = new FieldModel({ name: "structField", type: "ClusterDatatype" });
@@ -192,7 +192,7 @@ namespace Fixtures {
 
     export const globalAttr = new AttributeModel({ id: 1, name: "Attr1" });
 
-    export const feature = new FieldModel({ tag: "datatype", name: "PIN" });
+    export const feature = new FieldModel({ name: "PIN" });
 
     export const cluster1 = new ClusterModel({
         id: 1,
@@ -253,7 +253,7 @@ namespace Fixtures {
                 tag: "datatype",
                 type: "enum16",
                 name: "GlobalEnum",
-                children: [{ tag: "datatype", name: "Value1" }, enumValue2],
+                children: [{ tag: "field", name: "Value1" }, enumValue2],
             },
         ],
     });

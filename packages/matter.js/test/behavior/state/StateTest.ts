@@ -4,51 +4,58 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { State } from "../../../src/behavior/state/State.js";
+import { DerivedState, EmptyState, StateType } from "../../../src/behavior/state/StateType.js";
 
 describe("State", () => {
-    it("satisfies Type", () => {
-        State satisfies State.Type;
+    describe("EmptyState", () => {
+        it("satisfies StateType", () => {
+            EmptyState satisfies StateType;
+        });
     });
 
-    it("extends once", () => {
-        const MyState = State.with({ foo: "bar" });
-        const state = new MyState();
-        expect(state.foo).equal("bar");
-    });
+    describe("DerivedState", () => {
+        it("extends once", () => {
+            const MyState = DerivedState({ values: { foo: "bar" } });
+            const state = new MyState();
+            expect(state.foo).equal("bar");
+        });
 
-    it("extends twice", () => {
-        const MyState = State.with({ foo: "bar" }).with({ biz: "baz" });
-        const state = new MyState();
-        expect(state.foo).equals("bar");
-        expect(state.biz).equals("baz");
-    });
+        it("extends twice", () => {
+            const MyState = DerivedState({
+                base: DerivedState({ values: { foo: "bar" } }),
+                values: { biz: "baz" } }
+            );
+            const state = new MyState();
+            expect(state.foo).equals("bar");
+            expect(state.biz).equals("baz");
+        });
 
-    it("extends manually then with", () => {
-        class ManualState extends State {
-            foo = "bar";
-        }
-        const MyState = ManualState.with({ biz: "baz" });
-        const state = new MyState();
-        expect(state.foo).equals("bar");
-        expect(state.biz).equals("baz");
-    });
+        it("extends normal class", () => {
+            class ManualState {
+                foo = "bar";
+            }
+            const MyState = DerivedState({ base: ManualState, values: { biz: "baz" } });
+            const state = new MyState();
+            expect(state.foo).equals("bar");
+            expect(state.biz).equals("baz");
+        });
 
-    it("has a working getter", () => {
-        const state = new (class extends State {
-            foo = "bar";
-        })();
+        it("supports privates and accessors", () => {
+            class Manual {
+                #foo = 4;
 
-        expect(state.foo).equal("bar");
-    });
+                get foo() {
+                    return this.#foo;
+                }
 
-    it("has a working setter", () => {
-        const state = new (class extends State {
-            foo = "bar";
-        })();
+                set foo(value: number) {
+                    this.#foo = value * 2;
+                }
+            }
+            const Derived = DerivedState({ base: Manual, values: { foo: 8 }});
 
-        state.foo = "baz";
-
-        expect(state.foo).equals("biz");
+            expect((new Manual).foo).equals(4);
+            expect((new Derived).foo).equals(16);
+        });
     });
 });

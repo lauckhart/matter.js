@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { SchemaManager } from "../../../../src/behavior/state/managed/values/SchemaManager.js";
+import { OperationalSchema } from "../../../../src/behavior/schema/OperationalSchema.js";
 import { AttributeModel, ClusterModel, FeatureSet, FieldModel, Globals } from "../../../../src/model/index.js";
 import { StatusResponseError } from "../../../../src/protocol/interaction/InteractionMessenger.js";
 import { Properties } from "../../../../src/util/Type.js";
@@ -67,7 +67,7 @@ function validate({ fields, features }: ClusterStructure, { supports, record, er
     });
 
     // Obtain a manager
-    const root = new SchemaManager(cluster);
+    const root = new OperationalSchema(cluster);
     const manager = root.get(cluster);
 
     // Perform validation

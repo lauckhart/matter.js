@@ -6,18 +6,23 @@
 
 import { Behavior } from "../../behavior/Behavior.js";
 import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
+import { TransactionCoordinator } from "../../behavior/state/transaction/TransactionCoordinator.js";
 import { ImplementationError, NotImplementedError } from "../../common/MatterError.js";
 import { Part } from "../../endpoint/Part.js";
 import { Node } from "../Node.js";
 
 export class NodeClient implements Node {
-    constructor() {
-        throw new NotImplementedError("Client nodes are TODO");
+    get transactionCoordinator(): TransactionCoordinator {
+        throw new NotImplementedError();
     }
 
     get root(): Part {
         // TODO
         throw new NotImplementedError();
+    }
+
+    constructor() {
+        throw new NotImplementedError("Client nodes are TODO");
     }
 
     initializeBehavior(_part: Part, _type: Behavior.Type): BehaviorBacking {

@@ -6,7 +6,6 @@
 
 import { OnOff } from "../../../cluster/definitions/OnOffCluster.js";
 import { Time, Timer } from "../../../time/Time.js";
-import { State } from "../../state/State.js";
 import { OnOffBehavior } from "./OnOffBehavior.js";
 import { OnWithTimedOffRequest } from "./OnOffInterface.js";
 
@@ -19,7 +18,7 @@ const Base = OnOffBehavior.for({ ...OnOff.Complete, supportedFeatures: { levelCo
  * the class for the features your implementation supports.
  */
 export class OnOffServer extends Base {
-    protected declare internal: OnOffServer.InternalScope;
+    protected declare internal: OnOffServer.InternalState;
 
     override on() {
         this.state.onOff = true;
@@ -88,7 +87,7 @@ export class OnOffServer extends Base {
 }
 
 export namespace OnOffServer {
-    export class InternalScope extends State {
+    export class InternalState {
         timedOnTimer?: Timer;
         delayedOffTimer?: Timer;
     }

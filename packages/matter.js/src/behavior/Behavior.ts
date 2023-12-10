@@ -11,9 +11,11 @@ import { assertSecureSession } from "../session/SecureSession.js";
 import { GeneratedClass } from "../util/GeneratedClass.js";
 import { EventEmitter } from "../util/Observable.js";
 import type { BehaviorBacking } from "./BehaviorBacking.js";
-import { Schema } from "./Schema.js";
+import { Schema } from "./schema/Schema.js";
 import type { LifecycleBehavior } from "./definitions/lifecycle/LifecycleBehavior.js";
-import { DerivedState, EmptyState } from "./state/State.js";
+import { DerivedState, EmptyState } from "./state/StateType.js";
+import { BehaviorSchema } from "./schema/BehaviorSchema.js";
+import { OperationalSchema } from "./schema/OperationalSchema.js";
 
 // We store state and events using this symbol because TS prevents us from
 // defining the corresponding getters as part of the class
@@ -27,6 +29,18 @@ interface Internal extends Behavior {
     [STATE]: {};
     [INTERNAL]: {};
     [EVENTS]: EventEmitter;
+}
+
+const SCHEMA = Symbol("schema");
+
+interface StaticInternal {
+    [SCHEMA]: OperationalSchema;
+
+    /**
+     * We don't place this in the public class definition but if derivatives
+     * provide a schema here it will be the basis for the operational schema.
+     */
+    logicalSchema?: Schema;
 }
 
 /**
@@ -95,7 +109,7 @@ export abstract class Behavior {
     /**
      * Access the behavior's state.
      */
-    declare readonly state: new () => {};
+    declare readonly state: {};
 
     /**
      * Access the behavior's events.
@@ -111,7 +125,14 @@ export abstract class Behavior {
      * The Matter schema for the behavior.  Schema metadata controls various
      * aspects of behavior including data validation and authorization.
      */
-    static schema: Schema = Schema.empty;
+    static get schema(): OperationalSchema {
+        const internal = this as unknown as StaticInternal;
+        let schema = internal[SCHEMA];
+        if (!schema) {
+            internal[SCHEMA] = BehaviorSchema(this);
+        }
+        return schema;
+    };
 
     /**
      * Implementation of endpoint-scoped state.  Subclasses may override to
@@ -223,7 +244,7 @@ export namespace Behavior {
         supports: typeof Behavior.supports;
         defaults: Record<string, any>;
 
-        schema: Schema,
+        schema: OperationalSchema,
         State: new () => {};
         InternalState: new () => {};
         Events: typeof EventEmitter;
@@ -248,4 +269,3 @@ export namespace Behavior {
      */
     export type InputStateOf<B extends Type> = Partial<ClusterType.RelaxTypes<StateOf<B>>>;
 }
-

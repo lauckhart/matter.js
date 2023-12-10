@@ -11,4 +11,4 @@ export * from "./cluster/ClusterBehavior.js";
 export * from "./cluster/ClusterInterface.js";
 export * from "./server/ClusterServerBehaviorBacking.js";
 export * from "./server/ServerBehaviorBacking.js";
-export * from "./state/State.js";
+export * from "./state/StateType.js";

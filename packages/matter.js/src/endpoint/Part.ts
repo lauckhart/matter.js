@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { AccessControl } from "../behavior/AccessControl.js";
 import { Behavior } from "../behavior/Behavior.js";
 import { BehaviorBacking } from "../behavior/BehaviorBacking.js";
 import type { InvocationContext } from "../behavior/InvocationContext.js";
 import { BasicInformationBehavior } from "../behavior/definitions/basic-information/BasicInformationBehavior.js";
 import { BridgedDeviceBasicInformationBehavior } from "../behavior/definitions/bridged-device-basic-information/BridgedDeviceBasicInformationBehavior.js";
 import { LifecycleBehavior } from "../behavior/definitions/lifecycle/LifecycleBehavior.js";
-import { AccessLevel } from "../cluster/Cluster.js";
 import { ImplementationError } from "../common/MatterError.js";
 import { EndpointNumber } from "../datatype/EndpointNumber.js";
 import { Agent } from "./Agent.js";
@@ -32,7 +32,7 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
     #type: EndpointType;
     #owner?: PartOwner;
     #agentType?: Agent.Type<T["behaviors"]>;
-    #unscopedAgent?: Agent.Instance<T["behaviors"]>;
+    offlineAgent?: Agent.Instance<T["behaviors"]>;
     #behaviors: Behaviors;
 
     constructor(type: T, options?: Part.Options) {
@@ -227,16 +227,10 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
      * should use {@link getAgent} to create a context-aware agent.
      */
     get agent() {
-        if (!this.#unscopedAgent) {
-            this.#unscopedAgent = new this.agentType(this, {
-                // Set access level as low as possible
-                accessLevel: AccessLevel.View,
-
-                // Disable access level enforcement
-                offline: true,
-            });
+        if (!this.offlineAgent) {
+            this.offlineAgent = new this.agentType(this, AccessControl.OfflineSession);
         }
-        return this.#unscopedAgent;
+        return this.offlineAgent;
     }
 
     destroy() {

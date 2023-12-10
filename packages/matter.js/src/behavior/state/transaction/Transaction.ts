@@ -124,9 +124,10 @@ export class Transaction {
      *      transaction, your code will await any transaction that would
      *      otherwise throw an error.
      * 
-     *   2. State might contain stale data if there is an active uncommitted
-     *      write.  Once you start a transaction you block other writers so can
-     *      be assured you're dealing with newest state. 
+     *   2. Transaction isolation means your view of data may become stale if
+     *      a write occurs in another transaction.  Once you start a
+     *      transaction you block other writers so can be assured you're
+     *      dealing with newest state. 
      *
      *   3. Say transaction A has an exclusive lock on resource 1 and awaits
      *      resource 2.  Transaction B has an exclusive lock on resource 2.
@@ -189,24 +190,42 @@ export class Transaction {
         }
     }
 
+    /**
+     * Commit the transaction.
+     * 
+     * Matter.js commits automatically when an interaction completes.  You may
+     * commit manually to publish your changes mid-interaction.
+     * 
+     * After commit an exclusive transaction becomes shared and data references
+     * refresh to the most recent value.
+     */
     async commit() {
         await this.#finish(
             Transaction.Status.CommittingPhaseOne,
-            async () => await this.executeCommit()
+            async () => await this.#executeCommit()
         );
     }
 
+    /**
+     * Roll back the transaction.
+     * 
+     * Matter.js rolls back automatically when an interaction fails.  You may
+     * roll back manually to undo your changes mid-interaction.
+     * 
+     * After rollback an exclusive transactino becomes shared and data
+     * references refresh to the most recent value.
+     */
     async rollback() {
         await this.#finish(
             Transaction.Status.RollingBack,
-            async () => await this.executeRollback()
+            async () => await this.#executeRollback()
         );
     }
 
     async #finish(status: Transaction.Status, finalizer: () => Promise<void>) {
         switch (this.status) {
             case Transaction.Status.Shared:
-                this.#resolve?.();
+                this.#reset();
                 break;
 
             case Transaction.Status.Exclusive:
@@ -223,12 +242,7 @@ export class Transaction {
                         Transaction.Status.Shared
                     )
 
-                    try {
-                        this.#resolve?.();
-                    } finally {
-                        this.#promise = undefined;
-                        this.#participants = new Set;
-                    }
+                    this.#reset();
                 };
                 break;
 
@@ -242,7 +256,17 @@ export class Transaction {
         }
     }
 
-    private async executeCommit() {
+    #reset() {
+        const resolve = this.#resolve;
+
+        this.#promise = undefined;
+        this.#resolve = undefined;
+        this.#participants = new Set;
+
+        resolve?.();
+    }
+
+    async #executeCommit() {
         // Commit phase 1
         for (const participant of this.participants) {
             try {
@@ -254,7 +278,7 @@ export class Transaction {
                     } (phase one), rolling back:`,
                     e
                 );
-                this.executeRollback();
+                this.#executeRollback();
                 return;
             }
         }
@@ -277,7 +301,7 @@ export class Transaction {
         }
     }
 
-    private async executeRollback() {
+    async #executeRollback() {
         for (const participant of this.participants) {
             try {
                 await participant.rollback();

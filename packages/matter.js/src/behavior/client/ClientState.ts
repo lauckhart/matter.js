@@ -4,14 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { State } from "../state/State.js";
 import { ClientBehaviorBacking } from "./ClientBehaviorBacking.js";
 
-export class ClientState extends State {
+export class ClientState {
     #backing: ClientBehaviorBacking;
 
     constructor(backing: ClientBehaviorBacking) {
-        super();
         this.#backing = backing;
 
         // TODO

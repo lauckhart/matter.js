@@ -5,7 +5,7 @@
  */
 
 import { Crypto } from "../../../crypto/Crypto.js";
-import { AccessController } from "../../AccessController.js";
+import { AccessControl } from "../../AccessControl.js";
 import { Val } from "./Val.js";
 import { Transaction } from "../transaction/Transaction.js";
 import { ValueManager } from "./values/ValueManager.js";
@@ -14,13 +14,14 @@ import { isDeepEqual } from "../../../util/DeepEqual.js";
 import { Observable } from "../../../util/Observable.js";
 import { Persistence } from "./Persistence.js";
 import { camelize, describeList } from "../../../util/String.js";
+import { StateType } from "../StateType.js";
 
 /**
  * Datasource manages the canonical root of a state tree.
  * 
  * The "state" property of a Behavior is a reference to a Datasource.
  */
-export interface Datasource {
+export interface Datasource<T extends StateType = StateType> {
     /**
      * Initialize from persisted state.
      */
@@ -29,7 +30,7 @@ export interface Datasource {
     /**
      * Create a managed version of the source data.
      */
-    reference(session: Datasource.Session): Val.Struct;
+    reference(session: Datasource.Session): InstanceType<T>;
 
     /**
      * The data's version.
@@ -40,13 +41,11 @@ export interface Datasource {
 /**
  * Create a new datasource.
  */
-export function Datasource(options: Datasource.Options): Datasource {
+export function Datasource<const T extends StateType = StateType>(options: Datasource.Options<T>): Datasource<T> {
     const config = configure(options);
 
     return {
         async initialize() {
-            let cloned = false;
-
             const persisted = await config.persistence?.get(config.name) as undefined | Val.Struct;
 
             if (typeof persisted === "object" && persisted !== null) {
@@ -54,11 +53,6 @@ export function Datasource(options: Datasource.Options): Datasource {
                     const value = persisted[key];
 
                     if (value !== undefined && value !== config.values[key]) {
-                        if (!cloned) {
-                            config.values = { ...config.values };
-                            cloned = true;
-                        }
-
                         config.values[key] = value;
                     }
                 }
@@ -69,7 +63,7 @@ export function Datasource(options: Datasource.Options): Datasource {
             return options.manager.manage(
                 createRootReference(config, session),
                 session
-            ) as Val.Struct;
+            ) as InstanceType<T>;
         },
 
         get version() {
@@ -90,7 +84,11 @@ export namespace Datasource {
     /**
      * Datasource configuration options.
      */
-    export interface Options {
+    export interface Options<T extends StateType = StateType> {
+        /**
+         * The JS class for the root value.
+         */
+        type: T,
 
         /**
          * The manager used to manage and validate values.
@@ -102,12 +100,6 @@ export namespace Datasource {
          * {@link manager}'s root schema name.
          */
         name?: string,
-
-        /**
-         * Default values for the datasource.  These may be overridden if there
-         * is persistent state present.
-         */
-        values?: Val.Struct,
 
         /**
          * The version of the data.
@@ -129,7 +121,7 @@ export namespace Datasource {
     /**
      * Session information required for datasource management.
      */
-    export interface Session extends AccessController.Session {
+    export interface Session extends AccessControl.Session {
         transaction?: Transaction;
     }
 
@@ -139,9 +131,9 @@ export namespace Datasource {
 }
 
 interface Configuration extends Datasource.Options {
+    values: Val.Struct;
     name: string;
     version: number;
-    values: Val.Struct;
 }
 
 interface Changes {
@@ -154,10 +146,10 @@ interface Changes {
 
 function configure(options: Datasource.Options): Configuration {
     return {
-        values: {},
         ...options,
         name: options.name ?? options.manager.schema.name,
         version: options.version ?? Crypto.getRandomUInt32(),
+        values: new options.type,
     }
 }
 
@@ -169,13 +161,29 @@ function createRootReference(config: Configuration, session: Datasource.Session)
     let values = config.values;
     let version = config.version;
     let changes: Changes | undefined;
-    
-    const persistentFields = new Set(
-        config.manager.schema.members.filter(
-            field => field.effectiveQuality.nonvolatile
-        ).map(
-            field => camelize(field.name)
-        ));
+
+    const participant = {
+        commit1,
+        commit2,
+        rollback,
+        description: config.manager.schema.name,
+    };
+
+    const transaction = session.transaction;
+    if (transaction) {
+        transaction.promise.finally(reset);
+    }
+
+    const fields = new Set<string>;
+    const persistentFields = new Set<string>;
+
+    for (const field of config.manager.schema.members) {
+        const name = camelize(field.name);
+        fields.add(name);
+        if (field.effectiveQuality.nonvolatile) {
+            persistentFields.add(name);
+        }
+    }
 
     const reference: Val.Reference<Val.Struct> = {
         get original() {
@@ -191,53 +199,54 @@ function createRootReference(config: Configuration, session: Datasource.Session)
         },
 
         change(mutator) {
-            const transaction = session.transaction;
-
             // If we are transactional ensure transaction is exclusive
             if (transaction) {
                 transaction.beginSync();
-                transaction.join({
-                    commit1,
-                    commit2,
-                    rollback,
-                    description: config.manager.schema.name,
-                });
+                transaction.join(participant);
             }
 
-            // Clone values and update version
-            values = { ...this.original };
+            // Clone values if we haven't already
+            if (values === config.values) {
+                values = new config.type;
+                for (const field in fields) {
+                    values[field] = values[field];
+                }
+            }
+
+            // Update version
             version++;
-            if (version > 0xffffffff) {
+            if (version > 0xffff_ffff) {
                 version = 0;
             }
 
-            // If there is a transaction, we must update subreferences now as
-            // we won't roll back on (very unlikely) mutation error
+            // Point subreferences to the new value
             refreshSubrefs();
 
             // Perform the mutation
-            let aborted = false;
+            let autocommit = !transaction;
             try {
                 mutator();
             } catch (e) {
                 // If there is no transaction we roll back immediately on
                 // failure
-                aborted = true;
-                if (!transaction) {
+                if (autocommit) {
+                    autocommit = false;
                     rollback();
                 }
+
                 throw e;
             } finally {
                 // If there is no transaction we commit immediately on success
                 // and roll back if the commit fails
-                if (!aborted && !transaction) {
+                if (!autocommit) {
                     try {
                         commit1();
                         commit2();
-                        refreshSubrefs();
                     } catch (e) {
                         rollback();
                         throw e;
+                    } finally {
+                        refreshSubrefs();
                     }
                 }
             }
@@ -349,5 +358,20 @@ function createRootReference(config: Configuration, session: Datasource.Session)
     function rollback() {
         ({ values, version} = config);
         refreshSubrefs();
+    }
+
+    /**
+     * Whenever the transaction commits or rolls back we refresh to newest
+     * values.
+     * 
+     * There should be no changes in this state so the rollback below is only
+     * to update to the latest value.
+     */
+    function reset() {
+        if (values !== config.values) {
+            rollback();
+        }
+
+        transaction?.promise.finally(reset);
     }
 }

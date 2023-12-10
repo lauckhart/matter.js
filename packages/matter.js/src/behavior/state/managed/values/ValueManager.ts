@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { Schema } from "../../../Schema.js";
-import type { SchemaManager } from "./SchemaManager.js";
-import { AccessController } from "../../../AccessController.js";
+import type { Schema } from "../../../schema/Schema.js";
+import type { OperationalSchema } from "../../../schema/OperationalSchema.js";
+import { AccessControl } from "../../../AccessControl.js";
 import { Val } from "../Val.js";
 import { ValidationContext } from "../../validation/context.js";
 import { Metatype } from "../../../../model/definitions/index.js";
@@ -23,41 +23,41 @@ import { PrimitiveManager } from "./PrimitiveManager.js";
  * 
  *   - Datatype validation
  * 
- *   - Value mutation
+ *   - Managed instance generation
  */
 export interface ValueManager {
     /**
-     * The state manager that owns this ValueManager.
+     * The schema manager that owns this ValueManager.
      */
-    owner: SchemaManager;
+    readonly owner: OperationalSchema;
 
     /**
-     * The schema that defines this Io's behavior.
+     * The schema that controls this manager's behavior.
      */
-    schema: Schema;
+    readonly schema: Schema;
 
     /**
      * Consolidated access control information for the schema.
      */
-    access: AccessController;
+    readonly access: AccessControl;
 
     /**
      * Perform validation.
      */
-    validate: ValueManager.Validate;
+    readonly validate: ValueManager.Validate;
 
     /**
      * Create a managed instance of a value.
      */
-    manage: ValueManager.Manage;
+    readonly manage: ValueManager.Manage;
 }
 
 /**
  * Obtain a value manager.
  * 
- * Used by {@link SchemaManager} which acts as a cache.
+ * Used by {@link OperationalSchema} which acts as a cache.
  */
-export function ValueManager(schema: Schema, owner: SchemaManager, base?: new () => Val): ValueManager.Manage {
+export function ValueManager(schema: Schema, owner: OperationalSchema, base?: new () => Val): ValueManager.Manage {
     switch (schema.effectiveMetatype) {
         case Metatype.object:
             return StructManager(owner, schema, base);
@@ -81,7 +81,7 @@ export namespace ValueManager {
     
     export type Manage = (
         reference: Val.Reference,
-        session: AccessController.Session,
-        context?: AccessController.Context
+        session: AccessControl.Session,
+        context?: AccessControl.Context
     ) => Val;
 }

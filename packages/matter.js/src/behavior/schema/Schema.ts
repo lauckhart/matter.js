@@ -4,13 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { type ClusterModel, type ValueModel, DatatypeModel } from "../model/index.js";
+import { type ClusterModel, type ValueModel, DatatypeModel } from "../../model/index.js";
 
 /**
  * We model state using Matter semantics.  For schema we therefore allow any
  * Matter model that defines a datatype.
  * 
- * Most schema is a ValueModel which explicitly models data.
+ * Most schema is a {@link ValueModel} which explicitly models data.
+ * {@link ClusterModel} is also valid schema.
  * 
  * You will see references to "structs" and "lists" throughout this code.
  * These are Matter's two container types and map to JS objects and arrays

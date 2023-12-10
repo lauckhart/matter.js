@@ -7,9 +7,9 @@
 import { InternalError } from "../../../common/MatterError.js";
 import { ClusterModel, Metatype, ValueModel } from "../../../model/index.js";
 import { camelize } from "../../../util/String.js";
-import { Schema } from "../../Schema.js";
+import { Schema } from "../../schema/Schema.js";
 import { ConformanceError, SchemaError, ValidateError } from "../../errors.js";
-import { SchemaManager } from "./values/SchemaManager.js";
+import { OperationalSchema } from "../../schema/OperationalSchema.js";
 import {
     assertArray,
     assertBytes,
@@ -31,7 +31,7 @@ import { Val } from "./Val.js";
  */
 export function ValueValidator(
     schema: Schema,
-    factory: SchemaManager
+    factory: OperationalSchema
 ): ValueManager.Validate {
     if (schema instanceof ClusterModel) {
         return createStructValidator(schema.attributes, schema, factory) ?? (() => {});
@@ -177,7 +177,7 @@ function createSimpleValidator(
 function createStructValidator(
     fields: ValueModel[],
     schema: Schema,
-    factory: SchemaManager
+    factory: OperationalSchema
 ): ValueManager.Validate | undefined {
     const validators = {} as Record<string, ValueManager.Validate>;
 
@@ -231,7 +231,7 @@ function createStructValidator(
 
 function createListValidator(
     schema: ValueModel,
-    factory: SchemaManager,
+    factory: OperationalSchema,
 ): ValueManager.Validate | undefined {
     const entry = schema.listEntry;
     let validateEntries: undefined | ((list: Val.List) => void);

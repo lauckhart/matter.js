@@ -10,38 +10,38 @@ import { Access } from "../model/aspects/index.js";
 import { Model, ValueModel } from "../model/models/index.js";
 import { StatusCode } from "../protocol/interaction/InteractionProtocol.js";
 import { ReadError, WriteError } from "./errors.js";
-import { Schema } from "./Schema.js";
+import { Schema } from "./schema/Schema.js";
 
-const cache = new WeakMap<Schema, AccessController>();
+const cache = new WeakMap<Schema, AccessControl>();
 
 /**
  * Enforces access control for a specific schema.
  */
-export interface AccessController {
+export interface AccessControl {
     /**
      * Operational access control metadata.
      */
-    limits: AccessController.Limits;
+    limits: AccessControl.Limits;
 
     /**
      * Assert read is authorized.
      */
-    authorizeRead: AccessController.Assertion;
+    authorizeRead: AccessControl.Assertion;
 
     /**
      * Determine if read is authorized.
      */
-    mayRead: AccessController.Verification;
+    mayRead: AccessControl.Verification;
 
     /**
      * Assert write is authorized.
      */
-    authorizeWrite: AccessController.Assertion;
+    authorizeWrite: AccessControl.Assertion;
 
     /**
      * Determine if write is authorized.
      */
-    mayWrite: AccessController.Verification;
+    mayWrite: AccessControl.Verification;
 }
 
 /**
@@ -52,7 +52,7 @@ export interface AccessController {
  * 
  * Pure function; returned value is cached.
  */
-export function AccessController(schema: Schema) {
+export function AccessControl(schema: Schema) {
     let enforcer = cache.get(schema);
     if (enforcer === undefined) {
         enforcer = enforcerFor(schema);
@@ -60,7 +60,7 @@ export function AccessController(schema: Schema) {
     return enforcer;
 }
 
-export namespace AccessController {
+export namespace AccessControl {
     /**
      * Operational access control metadata for a schema.
      */
@@ -90,7 +90,7 @@ export namespace AccessController {
     /**
      * Authorization metadata that varies with session.
      */
-    export interface Session {
+    export type Session = {
         /**
          * The access level of the authorized client.
          */
@@ -123,6 +123,18 @@ export namespace AccessController {
     }
 
     /**
+     * An offline session that disables access controls.
+     */
+    export const OfflineSession: Session = {
+            // Set access level as low as possible.  It should be ignored
+            // due to offline status but make faulty logic fail early
+            accessLevel: AccessLevel.View,
+
+            // Disable access level enforcement
+            offline: true,
+    };
+
+    /**
      * Metadata that varies with data structure position.
      */
     export interface Context {
@@ -134,12 +146,13 @@ export namespace AccessController {
     }
 }
 
-Object.freeze(AccessController);
+Object.freeze(AccessControl);
+Object.freeze(AccessControl.OfflineSession);
 
-function enforcerFor(schema: Schema): AccessController {
+function enforcerFor(schema: Schema): AccessControl {
     const limits = limitsFor(schema);
 
-    let mayRead: AccessController.Verification = (session) => {
+    let mayRead: AccessControl.Verification = (session) => {
         if (session.offline) {
             return true;
         }
@@ -151,7 +164,7 @@ function enforcerFor(schema: Schema): AccessController {
         return false;
     }
 
-    let mayWrite: AccessController.Verification = (session) => {
+    let mayWrite: AccessControl.Verification = (session) => {
         if (session.offline) {
             return true;
         }
@@ -163,7 +176,7 @@ function enforcerFor(schema: Schema): AccessController {
         return false;
     }
 
-    let authorizeRead: AccessController.Assertion = (session) => {
+    let authorizeRead: AccessControl.Assertion = (session) => {
         if (session.offline) {
             return;
         }
@@ -175,7 +188,7 @@ function enforcerFor(schema: Schema): AccessController {
         throw new ReadError(schema, "Permission denied");
     }
 
-    let authorizeWrite: AccessController.Assertion = (session) => {
+    let authorizeWrite: AccessControl.Assertion = (session) => {
         if (session.offline) {
             return;
         }
@@ -349,7 +362,7 @@ function limitsFor(schema: Schema) {
         }
     }
 
-    const limits: AccessController.Limits = Object.freeze({
+    const limits: AccessControl.Limits = Object.freeze({
         readable: access.readable,
         writable: access.writable && !fixed,
         fabricScoped: access.fabric === Access.Fabric.Scoped || access.fabric === Access.Fabric.Sensitive,

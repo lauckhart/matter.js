@@ -6,11 +6,11 @@
 
 import { Access, ValueModel } from "../../../../model/index.js";
 import type { ValueManager } from "./ValueManager.js";
-import type { SchemaManager } from "./SchemaManager.js";
-import { Schema } from "../../../Schema.js";
+import type { OperationalSchema } from "../../../schema/OperationalSchema.js";
+import { Schema } from "../../../schema/Schema.js";
 import { SchemaError, WriteError } from "../../../errors.js";
 import { Val } from "../Val.js";
-import { AccessController } from "../../../AccessController.js";
+import { AccessControl } from "../../../AccessControl.js";
 import { PrimitiveManager } from "./PrimitiveManager.js";
 import { ManagedReference } from "../ManagedReference.js";
 
@@ -30,7 +30,7 @@ import { ManagedReference } from "../ManagedReference.js";
  * mention of this.
  */
 export function ListManager(
-    owner: SchemaManager,
+    owner: OperationalSchema,
     schema: Schema
 ): ValueManager.Manage {
     const config = createConfig(owner, schema);
@@ -55,7 +55,7 @@ export function ListManager(
     }
 }
 
-function createConfig(owner: SchemaManager, schema: Schema): ListConfig {
+function createConfig(owner: OperationalSchema, schema: Schema): ListConfig {
     const entry = schema instanceof ValueModel ? schema.listEntry : undefined;
     if (entry === undefined) {
         throw new SchemaError(
@@ -70,7 +70,7 @@ function createConfig(owner: SchemaManager, schema: Schema): ListConfig {
     // one we treat as permanently fabric scoped for reads
     const fabricSensitive = schema.effectiveAccess.fabric == Access.Fabric.Scoped;
 
-    const access = AccessController(schema);
+    const access = AccessControl(schema);
 
     return {
         schema,
@@ -91,15 +91,15 @@ interface ListConfig {
     manageEntries: boolean;
     manageEntry: ValueManager.Manage;
     validateEntry: ValueManager.Validate;
-    authorizeRead: AccessController["authorizeRead"];
-    authorizeWrite: AccessController["authorizeWrite"];
+    authorizeRead: AccessControl["authorizeRead"];
+    authorizeWrite: AccessControl["authorizeWrite"];
 }
 
 function createProxy(
     config: ListConfig,
     reference: Val.Reference<Val.List>,
-    session: AccessController.Session,
-    context?: AccessController.Context
+    session: AccessControl.Session,
+    context?: AccessControl.Context
 ) {
     const { manageEntry, validateEntry, authorizeRead, authorizeWrite } = config;
 
@@ -235,6 +235,7 @@ function createProxy(
         // On write we enter a transaction
         set(_target, property, newValue, receiver) {
             if (typeof property === "string" && property.match(/^[0-9]+/)) {
+                validateEntry(newValue);
                 writeEntry(Number.parseInt(property), newValue);
                 return true;
             }

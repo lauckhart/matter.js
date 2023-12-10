@@ -11,6 +11,7 @@ import { ImplementationError } from "../../common/MatterError.js";
 import type { Agent } from "../../endpoint/Agent.js";
 import { Behavior } from "../Behavior.js";
 import type { BehaviorBacking } from "../BehaviorBacking.js";
+import type { OperationalSchema } from "../schema/OperationalSchema.js";
 import { createType, type ClusterOf } from "./ClusterBehaviorUtil.js";
 import type { ClusterEvents } from "./ClusterEvents.js";
 import { ClusterInterface } from "./ClusterInterface.js";
@@ -188,7 +189,7 @@ export namespace ClusterBehavior {
 
         readonly defaults: ClusterState.Type<C, B>;
 
-        readonly schema: B["schema"];
+        readonly schema: OperationalSchema;
 
         for: typeof ClusterBehavior.for;
         with: typeof ClusterBehavior.with;

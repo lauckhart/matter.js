@@ -7,7 +7,7 @@
 import { Behavior } from "../../../src/behavior/Behavior.js";
 import { InvocationContext } from "../../../src/behavior/InvocationContext.js";
 import { ClusterBehavior } from "../../../src/behavior/cluster/ClusterBehavior.js";
-import { State } from "../../../src/behavior/state/State.js";
+import { StateType } from "../../../src/behavior/state/StateType.js";
 import { Observable } from "../../../src/util/Observable.js";
 import { MaybePromise } from "../../../src/util/Type.js";
 import { MockPart } from "../../endpoint/part-mocks.js";
@@ -18,7 +18,7 @@ describe("ClusterBehavior", () => {
 
     describe("base class", () => {
         describe("state types meet type requirement", () => {
-            ClusterBehavior.State satisfies State.Type;
+            ClusterBehavior.State satisfies StateType;
             ClusterBehavior.State satisfies ClusterBehavior.Type["State"];
         });
 
@@ -44,11 +44,9 @@ describe("ClusterBehavior", () => {
             ({}) as MyBehavior satisfies {
                 state: {
                     reqAttr: string;
-                    reqFabricAttr: string;
                 };
             };
             expect(new MyBehavior.State().reqAttr).equals("hello");
-            expect(new MyBehavior.State().reqFabricAttr).equals("world");
 
             ({}) as MyBehavior satisfies {
                 reqCmd: (request: string, state: any) => MaybePromise<string>;
@@ -71,8 +69,6 @@ describe("ClusterBehavior", () => {
         it("exposes optional properties for disabled cluster elements", () => {
             undefined satisfies MyBehavior["state"]["optAttr"];
             true satisfies MyBehavior["state"]["optAttr"];
-            undefined satisfies MyBehavior["state"]["optFabricAttr"];
-            true satisfies MyBehavior["state"]["optFabricAttr"];
             (() => true) satisfies MyBehavior["optCmd"];
             ((..._args: any[]) => true) satisfies MyBehavior["optCmd"];
             ({}) as Match<MyBehavior["events"], { optAttr$change: {} }> satisfies false;

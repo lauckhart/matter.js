@@ -7,13 +7,13 @@
 import { FabricIndex } from "../../../../datatype/FabricIndex.js";
 import { GeneratedClass } from "../../../../util/GeneratedClass.js";
 import { camelize } from "../../../../util/String.js";
-import type { Schema } from "../../../Schema.js";
+import type { Schema } from "../../../schema/Schema.js";
 import type { ValueManager } from "./ValueManager.js";
-import type { SchemaManager } from "./SchemaManager.js";
+import type { OperationalSchema } from "../../../schema/OperationalSchema.js";
 import { PrimitiveManager } from "./PrimitiveManager.js";
 import { ManagedReference } from "../ManagedReference.js";
 import { Val } from "../Val.js";
-import { AccessController } from "../../../AccessController.js";
+import { AccessControl } from "../../../AccessControl.js";
 import { SchemaError } from "../../../errors.js";
 import { ValueModel } from "../../../../model/index.js";
 
@@ -22,7 +22,7 @@ import { ValueModel } from "../../../../model/index.js";
  * schema.
  */
 export function StructManager(
-    owner: SchemaManager,
+    owner: OperationalSchema,
     schema: Schema,
     base?: new () => Val,
 ): ValueManager.Manage {
@@ -31,7 +31,7 @@ export function StructManager(
         base,
 
         ...StructManagerMixin(owner, schema)
-    }) as new (value: Val, session: AccessController.Session) => Val.Struct
+    }) as new (value: Val, session: AccessControl.Session) => Val.Struct
 
     return (reference, session) => {
         reference.owner = new Wrapper(reference, session);
@@ -52,18 +52,18 @@ interface Wrapper extends Val.Struct {
     /**
      * Information regarding the current user session.
      */
-    [SESSION]: AccessController.Session;
+    [SESSION]: AccessControl.Session;
 
     /**
      * Contextual information about the wrapped value.
      */
-    [CONTEXT]?: AccessController.Context;
+    [CONTEXT]?: AccessControl.Context;
 }
 
 /**
  * Configure struct behavior as a mixin.
  */
-function StructManagerMixin(owner: SchemaManager, schema: Schema): GeneratedClass.Mixin {
+function StructManagerMixin(owner: OperationalSchema, schema: Schema): GeneratedClass.Mixin {
     const instanceDescriptors = {} as PropertyDescriptorMap;
     let hasFabricIndex = false;
 
@@ -75,7 +75,7 @@ function StructManagerMixin(owner: SchemaManager, schema: Schema): GeneratedClas
     }
     
     return {
-        initialize(this: Wrapper, ref: Val.Reference, session: AccessController.Session, context?: AccessController.Context) {
+        initialize(this: Wrapper, ref: Val.Reference, session: AccessControl.Session, context?: AccessControl.Context) {
             // Only objects are acceptable
             if (typeof ref.value !== "object" || Array.isArray(ref.value)) {
                 throw new SchemaError(
@@ -101,7 +101,7 @@ function StructManagerMixin(owner: SchemaManager, schema: Schema): GeneratedClas
     }
 }
 
-function createPropertyDescriptor(manager: SchemaManager, schema: ValueModel): PropertyDescriptor {
+function createPropertyDescriptor(manager: OperationalSchema, schema: ValueModel): PropertyDescriptor {
     const name = camelize(schema.name, true);
     let { access, manage, validate } = manager.get(schema);
 

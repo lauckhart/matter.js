@@ -5,7 +5,6 @@
  */
 
 import { Behavior } from "../../behavior/Behavior.js";
-import { State } from "../../behavior/state/State.js";
 import { SupportedBehaviors } from "../part/SupportedBehaviors.js";
 import { EndpointType } from "./EndpointType.js";
 
@@ -17,7 +16,7 @@ export interface MutableEndpoint extends EndpointType {
     /**
      * Access default state values.
      */
-    defaults: State;
+    defaults: {};
 
     /**
      * Define an endpoint like this one with different defaults.  Only

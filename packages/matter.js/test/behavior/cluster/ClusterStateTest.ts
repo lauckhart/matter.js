@@ -6,28 +6,25 @@
 
 import { Behavior } from "../../../src/behavior/Behavior.js";
 import { ClusterState } from "../../../src/behavior/cluster/ClusterState.js";
-import { State } from "../../../src/behavior/state/State.js";
 import { ClusterType } from "../../../src/cluster/ClusterType.js";
 import { MyCluster } from "./cluster-behavior-test-util.js";
 
 describe("ClusterState", () => {
     describe("base class", () => {
-        it("satisfies State.Type", () => {
-            ({}) as ClusterState<ClusterType, Behavior.Type> satisfies State;
+        it("is an object", () => {
+            ({}) as ClusterState<ClusterType, Behavior.Type> satisfies {};
         });
     });
 
     describe("AttributeProperties", () => {
-        type Ap = ClusterState.AttributeProperties<ClusterType.AttributesOf<MyCluster>>;
+        type Ap = ClusterState.PropertiesOfAttributes<ClusterType.AttributesOf<MyCluster>>;
 
         it("requires mandatory", () => {
             ({
                 reqAttr: "foo",
-                reqFabricAttr: "foo",
             }) satisfies Ap;
             ({}) as Ap satisfies {
                 reqAttr: string;
-                reqFabricAttr: string;
             };
         });
 
@@ -37,21 +34,21 @@ describe("ClusterState", () => {
         });
     });
 
-    describe("EndpointAttributeProperties", () => {
-        type Eap = ClusterState.AttributeProperties<ClusterType.AttributesOf<MyCluster>>;
+    describe("PropertiesOfAttributes", () => {
+        type Poa = ClusterState.PropertiesOfAttributes<ClusterType.AttributesOf<MyCluster>>;
 
         it("requires mandatory", () => {
             ({
                 reqAttr: "foo",
-            }) satisfies Eap;
-            ({}) as Eap satisfies {
+            }) satisfies Poa;
+            ({}) as Poa satisfies {
                 reqAttr: string;
             };
         });
 
         it("allows optional", () => {
-            undefined satisfies Eap["optAttr"];
-            true satisfies Eap["optAttr"];
+            undefined satisfies Poa["optAttr"];
+            true satisfies Poa["optAttr"];
         });
     });
 
@@ -76,8 +73,8 @@ describe("ClusterState", () => {
     describe("Endpoint", () => {
         type E = ClusterState.Type<MyCluster, Behavior.Type>;
 
-        it("satisfies State.Type", () => {
-            ({}) as E satisfies State;
+        it("is an object", () => {
+            ({}) as E satisfies {};
         });
 
         it("requires mandatory", () => {
@@ -90,66 +87,18 @@ describe("ClusterState", () => {
         });
     });
 
-    describe("FabricAttributeProperties", () => {
-        type Fap = ClusterState.FabricAttributeProperties<ClusterType.AttributesOf<MyCluster>>;
-
-        it("requires mandatory", () => {
-            ({ reqFabricAttr: "foo" }) satisfies Fap;
-            ({}) as Fap satisfies { reqFabricAttr: string };
-        });
-
-        it("allows optional", () => {
-            undefined satisfies Fap["optFabricAttr"];
-            true satisfies Fap["optFabricAttr"];
-        });
-    });
-
-    describe("FabricProperties", () => {
-        type Fp = ClusterState.FabricProperties<MyCluster>;
-
-        it("requires mandatory", () => {
-            ({ reqFabricAttr: "foo" }) satisfies Fp;
-            ({}) as Fp satisfies { reqFabricAttr: string };
-        });
-
-        it("allows optional", () => {
-            undefined satisfies Fp["optFabricAttr"];
-            true satisfies Fp["optFabricAttr"];
-        });
-    });
-
-    describe("Fabric", () => {
-        type F = ClusterState.Fabric<MyCluster, Behavior.Type>;
-
-        it("satisfies State", () => {
-            ({}) as F satisfies State;
-        });
-
-        it("requires mandatory", () => {
-            ({}) as F satisfies { reqFabricAttr: string };
-        });
-
-        it("allows optional", () => {
-            undefined satisfies F["optFabricAttr"];
-            true satisfies F["optFabricAttr"];
-        });
-    });
-
     describe("state instance", () => {
         type Si = ClusterState<MyCluster, Behavior.Type>;
 
         it("requires mandatory", () => {
             ({}) as Si satisfies {
                 reqAttr: string;
-                reqFabricAttr: string;
             };
         });
 
         it("allows optional", () => {
             undefined satisfies Si["optAttr"];
             true satisfies Si["optAttr"];
-            undefined satisfies Si["optFabricAttr"];
-            true satisfies Si["optFabricAttr"];
         });
     });
 });

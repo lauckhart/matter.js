@@ -11,7 +11,7 @@ import { GeneratedClass } from "../../util/GeneratedClass.js";
 import { EventEmitter, Observable } from "../../util/Observable.js";
 import { camelize } from "../../util/String.js";
 import { Behavior } from "../Behavior.js";
-import { DerivedState } from "../state/State.js";
+import { DerivedState } from "../state/StateType.js";
 import type { ClusterBehavior } from "./ClusterBehavior.js";
 
 /**
@@ -46,7 +46,7 @@ export function createType<const C extends ClusterType>(cluster: C, base: Behavi
                 enumerable: true,
             },
 
-            schema: {
+            logicalSchema: {
                 value: schemaForCluster(cluster),
             }
         },
@@ -176,9 +176,12 @@ function createBaseEvents(cluster: ClusterType, stateNames: Set<string>) {
 /**
  * Obtain schema for a particular cluster.
  * 
- * Current dual-model of clusters is not ideal but necessary for the time
- * being.  This acts as an adapter to load the appropriate schema for a
- * cluster.
+ * Currently we model TLV and TypeScript types with ClusterType and use
+ * ClusterModel for logical operations.  This dual mode is not ideal but
+ * necessary for the time being.
+ * 
+ * This acts as an adapter to load the appropriate ClusterModel for a
+ * ClusterType.
  */
 function schemaForCluster(cluster: ClusterType) {
     let schema: ClusterModel | undefined;
