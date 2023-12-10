@@ -72,6 +72,8 @@ export class Transaction {
     }
 
     /**
+     * Add a participant to the transaction.
+     * 
      * The smallest granularity a transaction may have is at the participant
      * level.  By default transactions do not cross participant boundaries.
      * 
@@ -89,26 +91,30 @@ export class Transaction {
      * 
      *   1. Only adding participants to shared (non-exclusive) transactions,
      *      *not* after a transaction becomes exclusive, or
+     * 
      *   2. Ensuring that you always add endpoints to transactions in the same
      *      order.
      */
-    async join(participant: Transaction.JoiningParticipant) {
-        participant = directParticipantFor(participant);
-        if (this.#participants.has(participant)) {
-            return;
-        }
+    async join(...participant: Transaction.JoiningParticipant[]) {
+        const participants = directParticipantsFor(participant);
 
-        switch (this.#status) {
-            case Transaction.Status.Shared:
-            case Transaction.Status.Exclusive:
-                await this.#coordinator.addingParticipant(this, participant);
-                this.#participants.add(participant);
-                break;
+        for (const participant of participants) {
+            if (this.#participants.has(participant)) {
+                continue;
+            }
 
-            default:
-                throw new TransactionFlowError(
-                    `Cannot add part to transaction because transaction is ${this.status}`
-                );
+            switch (this.#status) {
+                case Transaction.Status.Shared:
+                case Transaction.Status.Exclusive:
+                    await this.#coordinator.addingParticipant(this, participant);
+                    this.#participants.add(participant);
+                    break;
+
+                default:
+                    throw new TransactionFlowError(
+                        `Cannot add part to transaction because transaction is ${this.status}`
+                    );
+            }
         }
     }
 
@@ -180,7 +186,7 @@ export class Transaction {
                 break;
 
             case Transaction.Status.Exclusive:
-                return;
+                break;
 
             default:
                 throw new ImplementationError(
@@ -200,10 +206,17 @@ export class Transaction {
      * refresh to the most recent value.
      */
     async commit() {
-        await this.#finish(
-            Transaction.Status.CommittingPhaseOne,
-            async () => await this.#executeCommit()
-        );
+        console.log("commit", this.#participants)
+        if (this.#status === Transaction.Status.Shared) {
+            // Use rollback() to inform participants to refresh state
+            await this.#executeRollback();
+        } else {
+            // Perform an actual commit
+            await this.#finish(
+                Transaction.Status.CommittingPhaseOne,
+                () => this.#executeCommit()
+            );
+        }
     }
 
     /**
@@ -212,17 +225,18 @@ export class Transaction {
      * Matter.js rolls back automatically when an interaction fails.  You may
      * roll back manually to undo your changes mid-interaction.
      * 
-     * After rollback an exclusive transactino becomes shared and data
+     * After rollback an exclusive transaction becomes shared and data
      * references refresh to the most recent value.
      */
     async rollback() {
         await this.#finish(
             Transaction.Status.RollingBack,
-            async () => await this.#executeRollback()
+            () => this.#executeRollback()
         );
     }
 
     async #finish(status: Transaction.Status, finalizer: () => Promise<void>) {
+        console.log("#finish");
         switch (this.status) {
             case Transaction.Status.Shared:
                 this.#reset();
@@ -257,20 +271,21 @@ export class Transaction {
     }
 
     #reset() {
+        console.log("#reset");
         const resolve = this.#resolve;
 
         this.#promise = undefined;
         this.#resolve = undefined;
-        this.#participants = new Set;
 
         resolve?.();
     }
 
     async #executeCommit() {
+        console.log("#executeCommit")
         // Commit phase 1
         for (const participant of this.participants) {
             try {
-                participant.commit1();
+                await participant.commit1();
             } catch (e) {
                 logger.error(
                     `Error committing ${
@@ -278,7 +293,7 @@ export class Transaction {
                     } (phase one), rolling back:`,
                     e
                 );
-                this.#executeRollback();
+                await this.#executeRollback();
                 return;
             }
         }
@@ -286,9 +301,10 @@ export class Transaction {
         // Commit phase 2.  We do this in reverse order so persistence
         // participants, which should be at the end of the list, can complete
         // before we update internal state
+        this.#coordinator.changeStatus(this, Transaction.Status.CommittingPhaseTwo);
         for (const participant of [ ...this.participants ].reverse()) {
             try {
-                participant.commit2();
+                await participant.commit2();
             } catch (e) {
                 logger.error(
                     `Error committing ${
@@ -302,6 +318,7 @@ export class Transaction {
     }
 
     async #executeRollback() {
+        console.log("#executeRollback", this.participants);
         for (const participant of this.participants) {
             try {
                 await participant.rollback();
@@ -358,7 +375,7 @@ export namespace Transaction {
     /**
      * Participant joining a transaction.
      */
-    export type JoiningParticipant = Participant | IndirectParticipant;
+    export type JoiningParticipant = Participant | IndirectParticipant | JoiningParticipant[];
 
     /**
      * The lifecycle of a transaction adheres to the following discrete stages.
@@ -386,11 +403,6 @@ export namespace Transaction {
         CommittingPhaseOne = "committing phase one",
 
         /**
-         * Transaction has committed phase one.
-         */
-        CommittedPhaseOne = "committed phase one",
-
-        /**
          * Transaction is in the process of committing, phase two.
          */
         CommittingPhaseTwo = "committing phase two",
@@ -402,7 +414,11 @@ export namespace Transaction {
     }
 }
 
-function directParticipantFor(participant: Transaction.JoiningParticipant) {
+function directParticipantsFor(participant: Transaction.JoiningParticipant): Transaction.Participant[] {
+    if (Array.isArray(participant)) {
+        return participant.flatMap(p => directParticipantsFor(p));
+    }
+
     while (true) {
         const referenced = (participant as Transaction.IndirectParticipant).transactionParticipant;
         if (referenced === undefined || referenced === participant) {

@@ -13,7 +13,7 @@ interface ParticipantState {
     exclusive?: Transaction;
 }
 
-interface ActivePartState extends ParticipantState {
+interface ActiveParticipantState extends ParticipantState {
     exclusive: Transaction;
 }
 
@@ -64,9 +64,11 @@ export class TransactionCoordinator {
 
                     default:
                         throw new TransactionFlowError(
-                            `Cannot transition ${
-                                transaction.status
-                            } transaction to shared`
+                            `Cannot transition transaction from ${
+                                this.#formatStatus(transaction.status)
+                            } to ${
+                                this.#formatStatus(status)
+                            }`
                         );
                 }
 
@@ -89,10 +91,28 @@ export class TransactionCoordinator {
                 break;
 
             case Transaction.Status.CommittingPhaseOne:
+                this.#assertStatus(
+                    transaction,
+                    [Transaction.Status.Exclusive],
+                    status
+                );
                 this.#assertExclusive(transaction, "commit");
                 break;
 
+            case Transaction.Status.CommittingPhaseTwo:
+                this.#assertStatus(
+                    transaction,
+                    [Transaction.Status.CommittingPhaseTwo],
+                    status
+                );
+                break;
+
             case Transaction.Status.RollingBack:
+                this.#assertStatus(
+                    transaction,
+                    [Transaction.Status.Exclusive, Transaction.Status.CommittingPhaseOne],
+                    status
+                );
                 this.#assertExclusive(transaction, "roll back");
                 break;
         }
@@ -100,40 +120,46 @@ export class TransactionCoordinator {
         return status;
     }
 
-    async addingParticipant(transaction: Transaction, participant: Transaction.Participant) {
-        const state = this.#stateFor(participant);
-        while (state.exclusive && transaction.status === Transaction.Status.Exclusive) {
+    async addingParticipant(transaction: Transaction, participants: Transaction.Participant[]) {
+        const states = participants.map(p => this.#stateFor(p));
+        while (states.some(s => s.exclusive) && transaction.status === Transaction.Status.Exclusive) {
             await this.#awaitExclusivity(
-                [ participant ],
+                participants,
                 () => {},
                 state
             );
         }
+    }
 
-        switch (transaction.status) {
-            case Transaction.Status.Shared:
-            case Transaction.Status.Exclusive:
-                break;
+    #addingParticipantWithShared(transaction: Transaction, participants: Transaction.Participant[]) {
+        for (const participant of participants) {
+            const state = this.#stateFor(participant);
 
-            default:
-                throw new TransactionFlowError(
-                    `Cannot add participant to transaction because transaction status became ${
-                        transaction.status
-                    } while waiting for exclusivity`
-                )
-        }
+            switch (transaction.status) {
+                case Transaction.Status.Shared:
+                case Transaction.Status.Exclusive:
+                    break;
 
-        state.transactions.add(transaction);
+                default:
+                    throw new TransactionFlowError(
+                        `Cannot add participants to transaction because transaction status became ${
+                            this.#formatStatus(transaction.status)
+                        } while awaiting exclusivity`
+                    )
+            }
 
-        if (transaction.status === Transaction.Status.Exclusive) {
-            this.#setExclusive([ participant ], transaction);
+            state.transactions.add(transaction);
+
+            if (transaction.status === Transaction.Status.Exclusive) {
+                this.#setExclusive([ participant ], transaction);
+            }
         }
     }
 
     async begin(transaction: Transaction) {
-        const parts = transaction.participants;
+        const participants = transaction.participants;
         await this.#awaitExclusivity(
-            parts,
+            participants,
             () => this.#setExclusive(transaction.participants, transaction)
         );
     }
@@ -152,7 +178,7 @@ export class TransactionCoordinator {
 
     /**
      * Ensure that a transaction that is committing or rolling back is in fact
-     * exclusive for all parts.
+     * exclusive for all participants.
      * 
      * This is just a sanity check.
      */
@@ -170,13 +196,13 @@ export class TransactionCoordinator {
     }
 
     /**
-     * Set the exclusive transaction for a list of parts.
+     * Set the exclusive transaction for a list of participants.
      * 
      * No part may have an active exclusive transaction or this call will fail.
      */
-    #setExclusive(parts: Iterable<Transaction.Participant>, transaction: Transaction) {
+    #setExclusive(participants: Iterable<Transaction.Participant>, transaction: Transaction) {
         // Sanity check
-        for (const participant of parts) {
+        for (const participant of participants) {
             const state = this.#stateFor(participant);
             if (state.exclusive) {
                 throw new InternalError(
@@ -186,14 +212,14 @@ export class TransactionCoordinator {
         }
 
         // Install
-        for (const participant of parts) {
+        for (const participant of participants) {
             const state = this.#stateFor(participant);
             state.exclusive = transaction;
         }
     }
 
     /**
-     * Wait until a list of parts exits exclusive transactions.
+     * Wait until a list of participants exits exclusive transactions.
      * 
      * Note that this method invokes a callback because otherwise exclusivity
      * could be lost in the ticks between returning and updating local state.
@@ -205,7 +231,7 @@ export class TransactionCoordinator {
         joining?: ParticipantState,
     ) {
         while (true) {
-            let toAwait: undefined | Set<ActivePartState>;
+            let toAwait: undefined | Set<ActiveParticipantState>;
 
             for (const participant of participants) {
                 const state = this.#stateFor(participant);
@@ -213,7 +239,7 @@ export class TransactionCoordinator {
                     if (!toAwait) {
                         toAwait = new Set;
                     }
-                    toAwait.add(state as ActivePartState);
+                    toAwait.add(state as ActiveParticipantState);
                 }
             }
 
@@ -223,7 +249,7 @@ export class TransactionCoordinator {
 
             if (joining?.exclusive) {
                 this.#preventAwaitCycles(
-                    joining as ActivePartState,
+                    joining as ActiveParticipantState,
                     toAwait
                 );
             }
@@ -247,8 +273,8 @@ export class TransactionCoordinator {
      * so, throw an error.
      */
     #preventAwaitCycles(
-        joining: ActivePartState,
-        blockedBy: Set<ActivePartState>
+        joining: ActiveParticipantState,
+        blockedBy: Set<ActiveParticipantState>
     ) {
         const allBlocking = new Set<ParticipantState>;
         this.#findAllBlocking(blockedBy, allBlocking);
@@ -282,5 +308,21 @@ export class TransactionCoordinator {
                 this.#findAllBlocking(waitingOn, allBlocking);
             }
         }
+    }
+
+    #assertStatus(transaction: Transaction, acceptable: Transaction.Status[], target: Transaction.Status) {
+        if (acceptable.indexOf(transaction.status) === -1) {
+            throw new TransactionFlowError(
+                `Cannot transition transaction from ${
+                    this.#formatStatus(transaction.status)
+                } to ${
+                    this.#formatStatus(target)
+                }`
+            )
+        }
+    }
+
+    #formatStatus(status: Transaction.Status) {
+        return `<${status}>`;
     }
 }
