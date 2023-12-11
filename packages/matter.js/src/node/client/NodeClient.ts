@@ -6,16 +6,11 @@
 
 import { Behavior } from "../../behavior/Behavior.js";
 import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
-import { TransactionCoordinator } from "../../behavior/state/transaction/Coordinator.js";
 import { ImplementationError, NotImplementedError } from "../../common/MatterError.js";
 import { Part } from "../../endpoint/Part.js";
 import { Node } from "../Node.js";
 
 export class NodeClient implements Node {
-    get transactionCoordinator(): TransactionCoordinator {
-        throw new NotImplementedError();
-    }
-
     get root(): Part {
         // TODO
         throw new NotImplementedError();

@@ -121,6 +121,9 @@ export function clusterPathToId({ nodeId, endpointId, clusterId }: TypeFromSchem
     return `${nodeId}/${endpointId}/${clusterId}`;
 }
 
+/**
+ * Translates interactions from the Matter protocol to Matter.js APIs.
+ */
 export class InteractionServer implements ProtocolHandler<MatterDevice> {
     private endpointStructure = new InteractionEndpointStructure();
     private nextSubscriptionId = Crypto.getRandomUInt32();
@@ -165,7 +168,7 @@ export class InteractionServer implements ProtocolHandler<MatterDevice> {
         );
     }
 
-    handleReadRequest(
+    async handleReadRequest(
         exchange: MessageExchange<MatterDevice>,
         {
             attributeRequests,
@@ -175,7 +178,7 @@ export class InteractionServer implements ProtocolHandler<MatterDevice> {
             isFabricFiltered,
             interactionModelRevision,
         }: ReadRequest,
-    ): DataReportPayload {
+    ): Promise<DataReportPayload> {
         logger.debug(
             `Received read request from ${exchange.channel.name}: attributes:${
                 attributeRequests?.map(path => this.endpointStructure.resolveAttributeName(path)).join(", ") ?? "none"
@@ -209,103 +212,107 @@ export class InteractionServer implements ProtocolHandler<MatterDevice> {
             );
         }
 
-        const attributeReportsPayload = attributeRequests?.flatMap(
-            (path: TypeFromSchema<typeof TlvAttributePath>): AttributeReportPayload[] => {
-                const attributes = this.endpointStructure.getAttributes([path]);
-                if (attributes.length === 0) {
-                    const { endpointId, clusterId, attributeId } = path;
-                    if (endpointId === undefined || clusterId === undefined || attributeId === undefined) {
-                        // Wildcard path: Just leave out values
-                        logger.debug(
-                            `Read from ${exchange.channel.name}: ${this.endpointStructure.resolveAttributeName(
-                                path,
-                            )}: ignore non-existing attribute`,
-                        );
-                    } else {
-                        // Else return correct status
-                        let status = StatusCode.UnsupportedAttribute;
-                        if (!this.endpointStructure.hasEndpoint(endpointId)) {
-                            status = StatusCode.UnsupportedEndpoint;
-                        } else if (!this.endpointStructure.hasClusterServer(endpointId, clusterId)) {
-                            status = StatusCode.UnsupportedCluster;
-                        }
-                        logger.debug(
-                            `Read attribute from ${
-                                exchange.channel.name
-                            }: ${this.endpointStructure.resolveAttributeName(
-                                path,
-                            )}: unsupported path: Status=${status}`,
-                        );
-                        return [{ attributeStatus: { path, status: { status } } }];
+        let attributeReportsPayload = new Array<AttributeReportPayload>;
+        for (const path of attributeRequests ?? []) {
+            const attributes = this.endpointStructure.getAttributes([path]);
+            if (attributes.length === 0) {
+                const { endpointId, clusterId, attributeId } = path;
+                if (endpointId === undefined || clusterId === undefined || attributeId === undefined) {
+                    // Wildcard path: Just leave out values
+                    logger.debug(
+                        `Read from ${exchange.channel.name}: ${this.endpointStructure.resolveAttributeName(
+                            path,
+                        )}: ignore non-existing attribute`,
+                    );
+                } else {
+                    // Else return correct status
+                    let status = StatusCode.UnsupportedAttribute;
+                    if (!this.endpointStructure.hasEndpoint(endpointId)) {
+                        status = StatusCode.UnsupportedEndpoint;
+                    } else if (!this.endpointStructure.hasClusterServer(endpointId, clusterId)) {
+                        status = StatusCode.UnsupportedCluster;
                     }
+                    logger.debug(
+                        `Read attribute from ${
+                            exchange.channel.name
+                        }: ${this.endpointStructure.resolveAttributeName(
+                            path,
+                        )}: unsupported path: Status=${status}`,
+                    );
+                    attributeReportsPayload.push({ attributeStatus: { path, status: { status } } });
+                }
+                continue;
+            }
+
+            for (const { path, attribute } of attributes) {
+                const { value, version } = attribute.getWithVersion(exchange.session, isFabricFiltered);
+                const { nodeId, endpointId, clusterId } = path;
+
+                const versionFilterValue =
+                    endpointId !== undefined && clusterId !== undefined
+                        ? dataVersionFilterMap.get(clusterPathToId({ nodeId, endpointId, clusterId }))
+                        : undefined;
+                if (versionFilterValue !== undefined && versionFilterValue === version) {
+                    logger.debug(
+                        `Read attribute from ${
+                            exchange.channel.name
+                        }: ${this.endpointStructure.resolveAttributeName(path)}=${Logger.toJSON(
+                            value,
+                        )} (version=${version}) ignored because of dataVersionFilter`,
+                    );
+                    continue;
                 }
 
-                return attributes.flatMap(({ path, attribute }) => {
-                    const { value, version } = attribute.getWithVersion(exchange.session, isFabricFiltered);
-                    const { nodeId, endpointId, clusterId } = path;
+                logger.debug(
+                    `Read attribute from ${exchange.channel.name}: ${this.endpointStructure.resolveAttributeName(
+                        path,
+                    )}=${Logger.toJSON(value)} (version=${version})`,
+                );
 
-                    const versionFilterValue =
-                        endpointId !== undefined && clusterId !== undefined
-                            ? dataVersionFilterMap.get(clusterPathToId({ nodeId, endpointId, clusterId }))
-                            : undefined;
-                    if (versionFilterValue !== undefined && versionFilterValue === version) {
-                        logger.debug(
-                            `Read attribute from ${
-                                exchange.channel.name
-                            }: ${this.endpointStructure.resolveAttributeName(path)}=${Logger.toJSON(
-                                value,
-                            )} (version=${version}) ignored because of dataVersionFilter`,
-                        );
-                        return [];
-                    }
+                const { schema } = attribute;
+                attributeReportsPayload.push({ attributeData: { path, dataVersion: version, payload: value, schema } });
+            }
+        }
 
-                    logger.debug(
-                        `Read attribute from ${exchange.channel.name}: ${this.endpointStructure.resolveAttributeName(
+        const eventReportsPayload = new Array;
+        for (const path of eventRequests ?? []) {
+            const events = this.endpointStructure.getEvents([path]);
+            if (events.length === 0) {
+                logger.debug(
+                    `Read event from ${exchange.channel.name}: ${this.endpointStructure.resolveEventName(
+                        path,
+                    )}: unsupported path`,
+                );
+                eventReportsPayload.push({ eventStatus: { path, status: { status: StatusCode.UnsupportedEvent } } }); // TODO: Find correct status code
+                continue;
+            }
+
+            const reportsForPath = new Array;
+            for (const { path, event } of events) {
+                const matchingEvents = this.eventHandler.getEvents(path, eventFilters);
+                logger.debug(
+                    `Read event from ${exchange.channel.name}:  ${this.endpointStructure.resolveEventName(
+                        path,
+                    )}=${Logger.toJSON(matchingEvents)}`,
+                );
+                const { schema } = event;
+                reportsForPath.push(
+                    ...matchingEvents.map(({ eventNumber, priority, epochTimestamp, data }) => ({
+                        eventData: {
                             path,
-                        )}=${Logger.toJSON(value)} (version=${version})`,
-                    );
-
-                    const { schema } = attribute;
-                    return [{ attributeData: { path, dataVersion: version, payload: value, schema } }];
-                });
-            },
-        );
-
-        const eventReportsPayload = eventRequests?.flatMap(
-            (path: TypeFromSchema<typeof TlvEventPath>): EventReportPayload[] => {
-                const events = this.endpointStructure.getEvents([path]);
-                if (events.length === 0) {
-                    logger.debug(
-                        `Read event from ${exchange.channel.name}: ${this.endpointStructure.resolveEventName(
-                            path,
-                        )}: unsupported path`,
-                    );
-                    return [{ eventStatus: { path, status: { status: StatusCode.UnsupportedEvent } } }]; // TODO: Find correct status code
-                }
-
-                return events
-                    .flatMap(({ path, event }) => {
-                        const matchingEvents = this.eventHandler.getEvents(path, eventFilters);
-                        logger.debug(
-                            `Read event from ${exchange.channel.name}:  ${this.endpointStructure.resolveEventName(
-                                path,
-                            )}=${Logger.toJSON(matchingEvents)}`,
-                        );
-                        const { schema } = event;
-                        return matchingEvents.map(({ eventNumber, priority, epochTimestamp, data }) => ({
-                            eventData: {
-                                path,
-                                eventNumber,
-                                priority,
-                                epochTimestamp,
-                                payload: data,
-                                schema,
-                            },
-                        }));
-                    })
-                    .sort((a, b) => a.eventData.eventNumber - b.eventData.eventNumber);
-            },
-        );
+                            eventNumber,
+                            priority,
+                            epochTimestamp,
+                            payload: data,
+                            schema,
+                        },
+                    }))
+                );
+            }
+            eventReportsPayload.push(
+                ...reportsForPath.sort((a, b) => a.eventData.eventNumber - b.eventData.eventNumber)
+            );
+        }
 
         // TODO support suppressResponse for responses
         return {
@@ -316,11 +323,11 @@ export class InteractionServer implements ProtocolHandler<MatterDevice> {
         };
     }
 
-    handleWriteRequest(
+    async handleWriteRequest(
         exchange: MessageExchange<MatterDevice>,
         { suppressResponse, timedRequest, writeRequests, interactionModelRevision }: WriteRequest,
         { packetHeader: { sessionType } }: Message,
-    ): WriteResponse {
+    ): Promise<WriteResponse> {
         logger.debug(
             `Received write request from ${exchange.channel.name}: ${writeRequests
                 .map(req => this.endpointStructure.resolveAttributeName(req.path))
@@ -841,7 +848,7 @@ export class InteractionServer implements ProtocolHandler<MatterDevice> {
         };
     }
 
-    handleTimedRequest(exchange: MessageExchange<MatterDevice>, { timeout, interactionModelRevision }: TimedRequest) {
+    async handleTimedRequest(exchange: MessageExchange<MatterDevice>, { timeout, interactionModelRevision }: TimedRequest) {
         logger.debug(`Received timed request (${timeout}ms) from ${exchange.channel.name}`);
 
         if (interactionModelRevision > INTERACTION_MODEL_REVISION) {

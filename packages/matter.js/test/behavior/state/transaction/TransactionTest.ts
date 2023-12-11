@@ -4,16 +4,20 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Participant } from "../../../../src/behavior/state/transaction/Participant.js";
+import { Resource } from "../../../../src/behavior/state/transaction/Resource.js";
+import { Status } from "../../../../src/behavior/state/transaction/Status.js";
 import { Transaction } from "../../../../src/behavior/state/transaction/Transaction.js";
-import { TransactionCoordinator } from "../../../../src/behavior/state/transaction/Coordinator.js";
 import { MaybePromise } from "../../../../src/util/Type.js";
 
-const Status = Transaction.Status;
+class TestResource implements Resource {
+    description = "Test";
+}
 
-class TestParticipant implements Transaction.Participant {
-    description = "test";
-
+class TestParticipant implements Participant {
     invoked = Array<string>();
+
+    resource = new TestResource();
 
     commit1(): MaybePromise<void> {
         this.invoked.push("commit1");
@@ -29,12 +33,10 @@ class TestParticipant implements Transaction.Participant {
 }
 
 class TestTransaction extends Transaction {
-    coordinator: TransactionCoordinator;
-    participant: Transaction.Participant;
+    participant: Participant;
 
-    constructor(coordinator?: TransactionCoordinator, participant?: Transaction.Participant) {
-        super(coordinator ?? (coordinator = new TransactionCoordinator));
-        this.coordinator = coordinator;
+    constructor(participant?: Participant) {
+        super();
         this.participant = participant ?? new TestParticipant;
     }
 
@@ -43,22 +45,14 @@ class TestTransaction extends Transaction {
     }
 }
 
-function create(
-    { coordinator, participant }:
-        { coordinator?: TransactionCoordinator, participant?: Transaction.Participant }
-        = {}
-) {
-    if (!coordinator) {
-        coordinator = new TransactionCoordinator;
-    }
+function create({ participant }: { participant?: Participant } = {}) {
     if (!participant) {
         participant = new TestParticipant;
     }
     
-    const transaction = new TestTransaction(coordinator);
+    const transaction = new TestTransaction();
 
-    transaction.join(participant);
-console.log([ ...transaction.participants ]);
+    transaction.addParticipants(participant);
 
     return transaction;
 }
@@ -66,11 +60,9 @@ console.log([ ...transaction.participants ]);
 describe("Transaction", () => {
     it("handles commit and rollback on shared", async () => {
         const transaction = create();
-console.log([ ...transaction.participants ]);
 
-        transaction.commit();
-        transaction.join(transaction.participant);
-        transaction.rollback();
+        await transaction.commit();
+        await transaction.rollback();
 
         transaction.expectInvoked("rollback", "rollback");
     })

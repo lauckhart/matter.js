@@ -22,10 +22,10 @@ const logger = Logger.get("Transaction");
  * will not be visible until the transaction completes.
  * 
  * Writes do block other writes.  Transactions start automatically when a write
- * occurs.  Since this potentially happens synchronously, the best Matter.js
- * can do is throw an error if two write transactions would conflict.  However,
- * you can avoid this by using {@link begin} which ensures writes
- * occur serially.
+ * occurs.  Since this usually happens synchronously, the best Matter.js can do
+ * is throw an error if two write transactions would conflict.  However, you
+ * can avoid this by using {@link begin} which will wait for other transactions
+ * to complete before acquiring resource locks.
  * 
  * Persistence is implemented by a list of participants.  Commits are two
  * phase.  If an error is thrown in phase one all participants roll back.
@@ -34,6 +34,7 @@ const logger = Logger.get("Transaction");
  */
 export class Transaction {
     #participants = new Set<Participant>();
+    #roles = new Map<{}, Participant>();
     #resources = new Set<Resource>();
     #status = Status.Shared;
     #promise?: Promise<void>;
@@ -82,78 +83,39 @@ export class Transaction {
     }
 
     /**
-     * Add a participant to the transaction.
+     * Add {@link Resources} to the transaction.
      * 
-     * The smallest granularity a transaction may have is at the participant
-     * level.  By default transactions do not cross participant boundaries.
-     * 
-     * In Matter.js, endpoint state is the primary transaction participant.
-     * Multiple endpoints may participate in a single transaction but it is up
-     * to the Matter.js library user to manage consistency in this case.
-     * 
-     * This would be reasonable for example if you are storing state for
-     * multiple endpoints in the same database, or if multiple Matter endpoints
-     * represent a single bridged device that you update atomically.
-     * 
-     * In addition to the issues of consistency, cross-endpoint transactions
-     * could potentially result in deadlocks.  Matter.js will detect this and
-     * throw an error.  You can avoid this by:
-     * 
-     *   1. Only adding participants to shared (non-exclusive) transactions,
-     *      *not* after a transaction becomes exclusive, or
-     * 
-     *   2. Ensuring that you always add endpoints to transactions in the same
-     *      order.
+     * If the transaction is exclusive (writing) the transaction will acquire
+     * the lock on each {@link Resource}, waiting for other writers to finish
+     * if necessary.
      */
-    async join(...participant: Participant.Joining[]) {
-        const participants = Participant.dereference(participant)
-            .filter(p => !this.#participants.has(p));
-
-        if (!participants.length) {
-            return;
-        }
-
+    async addResources(...resources: Resource[]) {
         if (this.#status === Status.Exclusive) {
-            const resources = ResourceSet.forParticipants(this, participants);
-            await resources.acquireLocks();
-        } else if (this.#status !== Status.Shared) {
-            throw new TransactionFlowError(
-                `Cannot join transaction that is ${this.status}`
-            );
+            const set = new ResourceSet(this, resources);
+            await set.acquireLocks();
         }
 
-        for (const participant of participants) {
-            this.#participants.add(participant);
-            this.#resources.add(participant.resource);
-        }
+        this.addResourcesSync(...resources);
     }
 
     /**
-     * Join a transaction in a synchronous context.
+     * Add {@link Resource}s to the transaction synchronously.
      * 
-     * Unlike {@link join}, this method will throw an error if any participant
-     * has already joined an exclusive transaction.
+     * Unlike {@link addResources}, this method will throw an error if the
+     * transaction is exclusive and the resources cannot be locked.
      */
-    joinSync(...participant: Participant.Joining[]) {
-        const participants = Participant.dereference(participant)
-            .filter(p => !this.#participants.has(p));
-
-        if (!participants.length) {
-            return;
-        }
-
+    async addResourcesSync(...resources: Resource[]) {
         if (this.#status === Status.Exclusive) {
-            const resources = ResourceSet.forParticipants(this, participants);
-            resources.acquireLocksSync();
+            const set = new ResourceSet(this, resources);
+            set.acquireLocksSync();
         } else if (this.#status !== Status.Shared) {
             throw new TransactionFlowError(
-                `Cannot join transaction that is ${this.status}`
+                `Cannot add resources to transaction that is ${this.status}`
             );
         }
 
-        for (const participant of participants) {
-            this.#participants.add(participant);
-            this.#resources.add(participant.resource);
+        for (const resource of resources) {
+            this.#resources.add(resource);
         }
     }
 
@@ -234,6 +196,35 @@ export class Transaction {
     }
 
     /**
+     * Add {@link Participant}s to the transaction.
+     */
+    addParticipants(...participants: Participant[]) {
+        for (const participant of participants) {
+            if (this.#participants.has(participant)) {
+                continue;
+            }
+
+            this.#participants.add(participant);
+
+            if (participant.role !== undefined) {
+                if (this.#roles.has(participant.role)) {
+                    throw new TransactionFlowError(
+                        `A participant is already registered for role ${
+                            participant.role
+                        }`)
+                }
+            }
+        }
+    }
+
+    /**
+     * Retrieve a participant with a specific roll.
+     */
+    getParticipant(role: {}) {
+        return this.#roles.get(role);
+    }
+
+    /**
      * Commit the transaction.
      * 
      * Matter.js commits automatically when an interaction completes.  You may
@@ -245,9 +236,9 @@ export class Transaction {
     async commit() {
         if (this.#status === Status.Shared) {
             // Use rollback() to inform participants to refresh state
-            this.rollback();
+            await this.rollback();
         } else {
-            // Perform an actual commit
+            // Perform the actual commit
             await this.#finish(
                 Status.CommittingPhaseOne,
                 () => this.#executeCommit()
@@ -291,15 +282,8 @@ export class Transaction {
      * Shared implementation for commit and rollback.
      */
     async #finish(status: Status, finalizer: () => Promise<void>) {
-        // If this is a shared transaction then just resolve the promise
-        if (this.status === Status.Shared) {
-            this.#resolvePromise();
-            return;
-        }
-
-        // Transaction must be exclusive as we are initiating commit or
-        // rollback
-        if (this.status !== Status.Exclusive) {
+        // Sanity check on status
+        if (this.status !== Status.Shared && this.status !== Status.Exclusive) {
             throw new TransactionFlowError(
                 `Illegal attempt to enter status ${
                     status
@@ -341,7 +325,7 @@ export class Transaction {
             } catch (e) {
                 logger.error(
                     `Error committing ${
-                        participant.resource.description
+                        participant.description
                     } (phase one), rolling back:`,
                     e
                 );
@@ -359,7 +343,7 @@ export class Transaction {
             } catch (e) {
                 logger.error(
                     `Error committing ${
-                        participant.resource.description
+                        participant.description
                     } (phase two), state may become inconsistent:`,
                     e
                 );
@@ -377,7 +361,7 @@ export class Transaction {
             } catch (e) {
                 logger.error(
                     `Error rolling back ${
-                        participant.resource.description
+                        participant.description
                     }, state may become inconsistent:`,
                     e
                 );

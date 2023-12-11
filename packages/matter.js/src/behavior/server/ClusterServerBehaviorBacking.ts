@@ -22,6 +22,7 @@ import type { ClusterBehavior } from "../cluster/ClusterBehavior.js";
 import { ClusterEvents } from "../cluster/ClusterEvents.js";
 import { ValidatedElements } from "../cluster/ValidatedElements.js";
 import { ServerBehaviorBacking } from "./ServerBehaviorBacking.js";
+import { Status } from "../state/transaction/Status.js";
 
 const logger = Logger.get("ClusterServer");
 
@@ -74,14 +75,14 @@ export class ClusterServerBehaviorBacking extends ServerBehaviorBacking {
     }
 }
 
-function transact<T>(
+async function transact<T>(
     backing: ClusterServerBehaviorBacking,
     session: Session<MatterDevice> | undefined,
     contextFields: Partial<InvocationContext>,
     fn: (behavior: Behavior) => T
-): T {
+): Promise<T> {
     const fabric = session?.isSecure() ? session.getAssociatedFabric() : undefined;
-    const transaction = new Transaction(backing.part.transactionCoordinator);
+    const transaction = new Transaction();
 
     const context: InvocationContext = {
         ...contextFields,
@@ -102,9 +103,9 @@ function transact<T>(
     } catch (e) {
         aborted = true;
 
-        if (transaction.status !== Transaction.Status.Shared) {
+        if (transaction.status !== Status.Shared) {
             try {
-                transaction.rollback();
+                await transaction.rollback();
             } catch (e) {
                 logger.error(`Error rolling back transaction for ${backing.part.description}:`, e);
             }
@@ -114,7 +115,7 @@ function transact<T>(
     } finally {
         if (!aborted) {
             try {
-                transaction.commit();
+                await transaction.commit();
             } catch (e) {
                 if (e instanceof StatusResponseError) {
                     throw e;
@@ -139,13 +140,11 @@ function createCommandHandler(
     name: string
 ): CommandHandler<any, any, any> {
     return ({ request, session, message }) => {
-        transact(
+        return transact(
             backing,
             session,
             { message },
-            behavior => {
-                return (behavior as unknown as Record<string, (arg: any) => any>)[name](request);
-            }
+            behavior => (behavior as unknown as Record<string, (arg: any) => any>)[name](request)
         )
     };
 }
@@ -183,7 +182,7 @@ function createAttributeAccessors(
 
                     // If the transaction is a write transaction, report that
                     // the attribute is updated
-                    return behavior.context.transaction?.status === Transaction.Status.Exclusive;
+                    return behavior.context.transaction?.status === Status.Exclusive;
                 }
             )
         }

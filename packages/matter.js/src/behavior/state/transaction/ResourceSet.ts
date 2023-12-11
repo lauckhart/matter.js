@@ -6,7 +6,6 @@
 
 import { describeList } from "../../../util/String.js";
 import { SynchronousTransactionConflictError, TransactionDeadlockError, TransactionFlowError } from "./Errors.js";
-import type { Participant } from "./Participant.js";
 import type { Resource } from "./Resource.js";
 import type { Transaction } from "./Transaction.js";
 
@@ -21,10 +20,6 @@ export class ResourceSet {
     constructor(transaction: Transaction, resources: Iterable<Resource> = transaction.resources) {
         this.#transaction = transaction;
         this.#resources = resources;
-    }
-
-    static forParticipants(transaction: Transaction, participants: Participant[]) {
-        return new ResourceSet(transaction, participants.map(p => p.resource))
     }
 
     /**

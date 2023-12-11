@@ -15,13 +15,14 @@ import { Observable } from "../../../util/Observable.js";
 import { Persistence } from "./Persistence.js";
 import { camelize, describeList } from "../../../util/String.js";
 import { StateType } from "../StateType.js";
+import { Resource } from "../transaction/Resource.js";
 
 /**
  * Datasource manages the canonical root of a state tree.
  * 
  * The "state" property of a Behavior is a reference to a Datasource.
  */
-export interface Datasource<T extends StateType = StateType> {
+export interface Datasource<T extends StateType = StateType> extends Resource {
     /**
      * Initialize from persisted state.
      */
@@ -42,18 +43,20 @@ export interface Datasource<T extends StateType = StateType> {
  * Create a new datasource.
  */
 export function Datasource<const T extends StateType = StateType>(options: Datasource.Options<T>): Datasource<T> {
-    const config = configure(options);
+    const internals = configure(options);
 
     return {
+        description: internals.name,
+
         async initialize() {
-            const persisted = await config.persistence?.get(config.name) as undefined | Val.Struct;
+            const persisted = await internals.persistence?.get(internals.name) as undefined | Val.Struct;
 
             if (typeof persisted === "object" && persisted !== null) {
                 for (const key in persisted) {
                     const value = persisted[key];
 
-                    if (value !== undefined && value !== config.values[key]) {
-                        config.values[key] = value;
+                    if (value !== undefined && value !== internals.values[key]) {
+                        internals.values[key] = value;
                     }
                 }
             }
@@ -61,13 +64,13 @@ export function Datasource<const T extends StateType = StateType>(options: Datas
 
         reference(session: Datasource.Session) {
             return options.manager.manage(
-                createRootReference(config, session),
+                createRootReference(this, internals, session),
                 session
             ) as InstanceType<T>;
         },
 
         get version() {
-            return config.version;
+            return internals.version;
         }
     }
 }
@@ -113,15 +116,19 @@ export namespace Datasource {
         events?: Events,
 
         /**
-         * Used for value persistence.
+         * Optional persistent value storage for non-volatile values.
          */
-        persistence?: Persistence;
+        persistence?: Persistence,
     }
 
     /**
      * Session information required for datasource management.
      */
     export interface Session extends AccessControl.Session {
+        /**
+         * An optional transaction.  If present writes will not be visible
+         * outside the transaction until the transaction commits.
+         */
         transaction?: Transaction;
     }
 
@@ -130,7 +137,7 @@ export namespace Datasource {
     }
 }
 
-interface Configuration extends Datasource.Options {
+interface Internals extends Datasource.Options {
     values: Val.Struct;
     name: string;
     version: number;
@@ -144,7 +151,7 @@ interface Changes {
     }>;
 }
 
-function configure(options: Datasource.Options): Configuration {
+function configure(options: Datasource.Options): Internals {
     return {
         ...options,
         name: options.name ?? options.manager.schema.name,
@@ -153,20 +160,20 @@ function configure(options: Datasource.Options): Configuration {
     }
 }
 
-function createRootReference(config: Configuration, session: Datasource.Session) {
-    if (config.version === undefined) {
-        config.version = Crypto.getRandomUInt32();
+function createRootReference(resource: Resource, internals: Internals, session: Datasource.Session) {
+    if (internals.version === undefined) {
+        internals.version = Crypto.getRandomUInt32();
     }
 
-    let values = config.values;
-    let version = config.version;
+    let values = internals.values;
+    let version = internals.version;
     let changes: Changes | undefined;
 
     const participant = {
+        description: internals.manager.schema.name,
         commit1,
         commit2,
         rollback,
-        description: config.manager.schema.name,
     };
 
     const transaction = session.transaction;
@@ -177,7 +184,7 @@ function createRootReference(config: Configuration, session: Datasource.Session)
     const fields = new Set<string>;
     const persistentFields = new Set<string>;
 
-    for (const field of config.manager.schema.members) {
+    for (const field of internals.manager.schema.members) {
         const name = camelize(field.name);
         fields.add(name);
         if (field.effectiveQuality.nonvolatile) {
@@ -187,7 +194,7 @@ function createRootReference(config: Configuration, session: Datasource.Session)
 
     const reference: Val.Reference<Val.Struct> = {
         get original() {
-            return config.values;
+            return internals.values;
         },
 
         get value() {
@@ -195,20 +202,21 @@ function createRootReference(config: Configuration, session: Datasource.Session)
         },
 
         set value(_value) {
-            throw new InternalError(`Cannot set root reference to ${config.name}`);
+            throw new InternalError(`Cannot set root reference to ${internals.name}`);
         },
 
         change(mutator) {
             // If we are transactional ensure transaction is exclusive and we
             // are participating
             if (transaction) {
-                transaction.joinSync(participant);
+                transaction.addResourcesSync(resource);
+                transaction.addParticipants(participant);
                 transaction.beginSync();
             }
 
             // Clone values if we haven't already
-            if (values === config.values) {
-                values = new config.type;
+            if (values === internals.values) {
+                values = new internals.type;
                 for (const field in fields) {
                     values[field] = values[field];
                 }
@@ -254,7 +262,7 @@ function createRootReference(config: Configuration, session: Datasource.Session)
         },
 
         refresh() {
-            throw new InternalError(`Cannot refresh root reference to ${config.name}`);
+            throw new InternalError(`Cannot refresh root reference to ${internals.name}`);
         }
     }
 
@@ -275,14 +283,14 @@ function createRootReference(config: Configuration, session: Datasource.Session)
     function computeChanges() {
         changes = undefined;
 
-        if (config.values === values) {
+        if (internals.values === values) {
             return;
         }
 
         for (const name in values) {
-            const oldval = config.values[name];
+            const oldval = internals.values[name];
             const newval = values[name];
-            if (oldval !== newval && !isDeepEqual(values[name], config.values[name])) {
+            if (oldval !== newval && !isDeepEqual(values[name], internals.values[name])) {
                 if (!changes) {
                     changes = { notifications: [] };
                 }
@@ -294,11 +302,11 @@ function createRootReference(config: Configuration, session: Datasource.Session)
                     changes.persistent[name] = values[name];
                 }
 
-                const event = config.events?.[name];
+                const event = internals.events?.[name];
                 if (event) {
                     changes.notifications.push({
                         event,
-                        params: [ values[name], config.values[name], session ]
+                        params: [ values[name], internals.values[name], session ]
                     });
                 }
             }
@@ -326,9 +334,9 @@ function createRootReference(config: Configuration, session: Datasource.Session)
                 );
             }
 
-            config.persistence?.set(
+            internals.persistence?.set(
                 session.transaction,
-                config.name,
+                internals.name,
                 changes.persistent
             );
         }
@@ -339,13 +347,13 @@ function createRootReference(config: Configuration, session: Datasource.Session)
      * listeners.
      */
     function commit2() {
-        config.values = values;
+        internals.values = values;
 
         if (!changes) {
             return;
         }
 
-        if (config.events) {
+        if (internals.events) {
             for (const notification of changes.notifications) {
                 notification.event.emit(...notification.params);
             }
@@ -357,7 +365,7 @@ function createRootReference(config: Configuration, session: Datasource.Session)
      * versions.
      */
     function rollback() {
-        ({ values, version} = config);
+        ({ values, version} = internals);
         refreshSubrefs();
     }
 
@@ -369,7 +377,7 @@ function createRootReference(config: Configuration, session: Datasource.Session)
      * to update to the latest value.
      */
     function reset() {
-        if (values !== config.values) {
+        if (values !== internals.values) {
             rollback();
         }
 

@@ -7,6 +7,7 @@
 import { StorageContext } from "../../../storage/StorageContext.js";
 import { SupportedStorageTypes } from "../../../storage/StringifyTools.js";
 import { MaybePromise } from "../../../util/Type.js";
+import { Participant } from "../transaction/Participant.js";
 import { Transaction } from "../transaction/Transaction.js";
 import { Val } from "./Val.js";
 
@@ -58,7 +59,7 @@ export namespace Persistence {
      * Adapt the persistence API to a {@link StorageContext}.
      */
     export function forStorage(storage: StorageContext): Persistence {
-        return new PersistentStorage(storage);
+        return PersistentStorage(storage);
     }
 }
 
@@ -67,100 +68,104 @@ export interface Operation {
     values?: Val.Struct;
 }
 
-class PersistentStorage implements Persistence, Transaction.Participant {
-    #storage: StorageContext;
-    #journal: undefined | Operation[];
+interface StorageParticipant extends Participant {
+    journal: Operation[];
+}
 
-    get description() {
-        return "PersistentStorage";
-    }
+function PersistentStorage(storage: StorageContext): Persistence {
+    return {
+        async get(path: Persistence.Path) {
+            const context = contextFor(storage, path);
 
-    constructor(storage: StorageContext) {
-        this.#storage = storage;
-    }
-
-    async get(path: Persistence.Path) {
-        const context = this.#contextFor(path);
-
-        const result = {} as Val.Struct;
-        for (const key of context.keys()) {
-            result[key] = context.get(key);
-        }
-
-        return result;
-    }
-
-    async set(transaction: Transaction, path: Persistence.Path, values: Val.Struct) {
-        this.#mutate(transaction, { path, values });
-    }
-
-    async delete(transaction: Transaction, path: Persistence.Path) {
-        this.#mutate(transaction, { path });
-    }
-
-    commit1(): MaybePromise<void> {
-        // Persistence serves phase one commit; values are added directly to
-        // the journal so nothing necessary here
-    }
-
-    commit2(): MaybePromise<void> {
-        // Commit the journal.  For real two-phase commit this would be writing
-        // a marker to the journal indicating successful commit, then it we'd
-        // consolidate into the primary store lazily.  For now we just let
-        // StorageContext do it's thing
-        if (!this.#journal) {
-            return;
-        }
-
-        for (const { path, values } of this.#journal) {
-            const context = this.#contextFor(path);
-            if (values) {
-                // Patch operation
-                for (const key in values) {
-                    const value = values[key];
-                    if (value === undefined) {
-                        context.delete(key);
-                    } else {
-                        context.set(key, values[key] as SupportedStorageTypes);
-                    }
-                }
-            } else {
-                // Delete operation
-                context.clear();
+            const result = {} as Val.Struct;
+            for (const key of context.keys()) {
+                result[key] = context.get(key);
             }
-        }
 
-        this.#journal = undefined;
+            return result;
+        },
+
+        async set(transaction: Transaction, path: Persistence.Path, values: Val.Struct) {
+            participantFor(transaction, storage).journal.push({ path, values });
+        },
+
+        async delete(transaction: Transaction, path: Persistence.Path) {
+            participantFor(transaction, storage).journal.push({ path });
+        },
+    }
+}
+
+function contextFor(storage: StorageContext, path: Persistence.Path) {
+    let context = storage;
+    
+    if (typeof path === "string") {
+        path = path.split(".");
+    } else {
+        path = path.flatMap(segment => segment.split("."));
     }
 
-    rollback(): MaybePromise<void> {
-        // For real two-phase commit we'd truncate the journal on disk
-        this.#journal = [];
+    for (const segment of path) {
+        context = context.createContext(segment);
     }
 
-    #mutate(transaction: Transaction, operation: Operation) {
-        transaction.join(this);
-        transaction.beginSync();
-        if (!this.#journal) {
-            this.#journal = [ operation ];
-        } else {
-            this.#journal.push(operation);
-        }
+    return context;
+}
+
+/**
+ * We create a single participant per storage/transaction pair.  This function
+ * handles setup and retrieval of this participant.
+ */
+function participantFor(transaction: Transaction, storage: StorageContext) {
+    let participant = transaction.getParticipant(storage) as StorageParticipant;
+    if (participant) {
+        return participant as StorageParticipant;
     }
 
-    #contextFor(path: Persistence.Path) {
-        let context = this.#storage;
-        
-        if (typeof path === "string") {
-            path = path.split(".");
-        } else {
-            path = path.flatMap(segment => segment.split("."));
-        }
+    participant = {
+        description: "Storage",
 
-        for (const segment of path) {
-            context = context.createContext(segment);
-        }
+        role: storage,
 
-        return context;
+        journal: Array<Operation>(),
+
+        commit1(): MaybePromise<void> {
+            // Persistence serves phase one commit; values are added directly to
+            // the journal so nothing necessary here
+        },
+    
+        commit2(): MaybePromise<void> {
+            // Commit the journal.  For real two-phase commit this would be writing
+            // a marker to the journal indicating successful commit, then it we'd
+            // consolidate into the primary store lazily.  For now we just let
+            // StorageContext do it's thing
+            for (const { path, values } of this.journal) {
+                const context = contextFor(storage, path);
+                if (values) {
+                    // Patch operation
+                    for (const key in values) {
+                        const value = values[key];
+                        if (value === undefined) {
+                            context.delete(key);
+                        } else {
+                            context.set(key, values[key] as SupportedStorageTypes);
+                        }
+                    }
+                } else {
+                    // Delete operation
+                    context.clear();
+                }
+            }
+    
+            this.journal = [];
+        },
+    
+        rollback(): MaybePromise<void> {
+            // For real two-phase commit we'd truncate the journal on disk
+            this.journal = [];
+        }
     }
+    
+    transaction.addParticipants(participant);
+
+    return participant;
 }

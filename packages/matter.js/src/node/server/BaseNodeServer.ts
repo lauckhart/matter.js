@@ -201,7 +201,7 @@ export abstract class BaseNodeServer extends MatterNode {
             throw new ImplementationError("BasicInformationCluster needs to be set!");
         }
 
-        this.interactionServer = new InteractionServer(this.storage, this.subscriptionConfig);
+        this.interactionServer = this.createInteractionServer(this.storage);
 
         this.nextEndpointId = this.endpointStructureStorage.get("nextEndpointId", this.nextEndpointId);
 
@@ -288,6 +288,10 @@ export abstract class BaseNodeServer extends MatterNode {
                 bootReason: generalDiagnostics.getBootReasonAttribute?.() ?? GeneralDiagnostics.BootReason.Unspecified,
             });
         }
+    }
+
+    protected createInteractionServer(storage: StorageContext) {
+        return new InteractionServer(storage, this.subscriptionConfig)
     }
 
     updateStructure() {
