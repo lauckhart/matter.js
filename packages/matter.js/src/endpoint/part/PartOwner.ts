@@ -7,7 +7,7 @@
 import type { Behavior } from "../../behavior/Behavior.js";
 import type { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import type { Part } from "../Part.js";
-import { TransactionCoordinator } from "../../behavior/state/transaction/TransactionCoordinator.js";
+import { TransactionCoordinator } from "../../behavior/state/transaction/Coordinator.js";
 
 /**
  * This is the interface used by {@link Agent} and {@link Behavior} to

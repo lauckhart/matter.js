@@ -25,7 +25,7 @@ import { DeviceCertification } from "../../behavior/definitions/operational-cred
 import { CommissioningOptions } from "../options/CommissioningOptions.js";
 import { ServerOptions } from "../options/ServerOptions.js";
 import { BaseNodeServer } from "./BaseNodeServer.js";
-import { TransactionCoordinator } from "../../behavior/state/transaction/TransactionCoordinator.js";
+import { TransactionCoordinator } from "../../behavior/state/transaction/Coordinator.js";
 
 const logger = Logger.get("NodeServer");
 

@@ -199,10 +199,11 @@ function createRootReference(config: Configuration, session: Datasource.Session)
         },
 
         change(mutator) {
-            // If we are transactional ensure transaction is exclusive
+            // If we are transactional ensure transaction is exclusive and we
+            // are participating
             if (transaction) {
+                transaction.joinSync(participant);
                 transaction.beginSync();
-                transaction.join(participant);
             }
 
             // Clone values if we haven't already

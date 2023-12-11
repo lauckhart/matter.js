@@ -5,7 +5,7 @@
  */
 
 import { Transaction } from "../../../../src/behavior/state/transaction/Transaction.js";
-import { TransactionCoordinator } from "../../../../src/behavior/state/transaction/TransactionCoordinator.js";
+import { TransactionCoordinator } from "../../../../src/behavior/state/transaction/Coordinator.js";
 import { MaybePromise } from "../../../../src/util/Type.js";
 
 const Status = Transaction.Status;

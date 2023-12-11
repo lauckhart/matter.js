@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ImplementationError, MatterError } from "../../../common/MatterError.js";
 import { Logger } from "../../../log/Logger.js";
 import { createPromise } from "../../../util/Promises.js";
-import { MaybePromise } from "../../../util/Type.js";
-import type { TransactionCoordinator } from "./TransactionCoordinator.js";
-
-export class TransactionFlowError extends MatterError {}
+import { TransactionFlowError } from "./Errors.js";
+import { Participant } from "./Participant.js";
+import type { Resource } from "./Resource.js";
+import { ResourceSet } from "./ResourceSet.js";
+import { Status } from "./Status.js";
 
 const logger = Logger.get("Transaction");
 
@@ -24,7 +24,7 @@ const logger = Logger.get("Transaction");
  * Writes do block other writes.  Transactions start automatically when a write
  * occurs.  Since this potentially happens synchronously, the best Matter.js
  * can do is throw an error if two write transactions would conflict.  However,
- * you can avoid this by using {@link Transaction.begin} which ensures writes
+ * you can avoid this by using {@link begin} which ensures writes
  * occur serially.
  * 
  * Persistence is implemented by a list of participants.  Commits are two
@@ -33,29 +33,39 @@ const logger = Logger.get("Transaction");
  * form of retry as of yet.
  */
 export class Transaction {
-    #participants = new Set<Transaction.Participant>();
-    #status = Transaction.Status.Shared;
-    #coordinator: TransactionCoordinator;
+    #participants = new Set<Participant>();
+    #resources = new Set<Resource>();
+    #status = Status.Shared;
     #promise?: Promise<void>;
     #resolve?: () => void;
-
-    constructor(coordinator: TransactionCoordinator) {
-        this.#coordinator = coordinator;
-        this.#coordinator.changeStatus(this, this.#status);
-    }
+    #waitingOn?: Iterable<Transaction>;
 
     /**
-     * Obtain the status of the transaction.
+     * The status of the transaction.
      */
     get status() {
         return this.#status;
     }
 
     /**
-     * Obtain the parts participating in the transaction.
+     * Transaction participants.
      */
     get participants() {
-        return this.#participants.keys();
+        return this.#participants;
+    }
+
+    /**
+     * Resources addressed by the participants.
+     */
+    get resources() {
+        return this.#resources;
+    }
+
+    /**
+     * The transactions currently blocking this transaction, if any.
+     */
+    get waitingOn() {
+        return this.#waitingOn;
     }
 
     /**
@@ -95,26 +105,55 @@ export class Transaction {
      *   2. Ensuring that you always add endpoints to transactions in the same
      *      order.
      */
-    async join(...participant: Transaction.JoiningParticipant[]) {
-        const participants = directParticipantsFor(participant);
+    async join(...participant: Participant.Joining[]) {
+        const participants = Participant.dereference(participant)
+            .filter(p => !this.#participants.has(p));
+
+        if (!participants.length) {
+            return;
+        }
+
+        if (this.#status === Status.Exclusive) {
+            const resources = ResourceSet.forParticipants(this, participants);
+            await resources.acquireLocks();
+        } else if (this.#status !== Status.Shared) {
+            throw new TransactionFlowError(
+                `Cannot join transaction that is ${this.status}`
+            );
+        }
 
         for (const participant of participants) {
-            if (this.#participants.has(participant)) {
-                continue;
-            }
+            this.#participants.add(participant);
+            this.#resources.add(participant.resource);
+        }
+    }
 
-            switch (this.#status) {
-                case Transaction.Status.Shared:
-                case Transaction.Status.Exclusive:
-                    await this.#coordinator.addingParticipant(this, participant);
-                    this.#participants.add(participant);
-                    break;
+    /**
+     * Join a transaction in a synchronous context.
+     * 
+     * Unlike {@link join}, this method will throw an error if any participant
+     * has already joined an exclusive transaction.
+     */
+    joinSync(...participant: Participant.Joining[]) {
+        const participants = Participant.dereference(participant)
+            .filter(p => !this.#participants.has(p));
 
-                default:
-                    throw new TransactionFlowError(
-                        `Cannot add part to transaction because transaction is ${this.status}`
-                    );
-            }
+        if (!participants.length) {
+            return;
+        }
+
+        if (this.#status === Status.Exclusive) {
+            const resources = ResourceSet.forParticipants(this, participants);
+            resources.acquireLocksSync();
+        } else if (this.#status !== Status.Shared) {
+            throw new TransactionFlowError(
+                `Cannot join transaction that is ${this.status}`
+            );
+        }
+
+        for (const participant of participants) {
+            this.#participants.add(participant);
+            this.#resources.add(participant.resource);
         }
     }
 
@@ -147,52 +186,50 @@ export class Transaction {
      * will suggest solutions.
      */
     async begin() {
-        switch (this.status) {
-            case Transaction.Status.Shared:
-                this.#status = Transaction.Status.Waiting;
-                try {
-                    await this.#coordinator.begin(this);
-                } catch (e) {
-                    this.#status = Transaction.Status.Shared;
-                    throw e;
-                }
-                this.#status = Transaction.Status.Exclusive;
-                break;
+        if (this.status === Status.Exclusive) {
+            return;
+        }
+        if (this.status !== Status.Shared) {
+            throw new TransactionFlowError(
+                `Cannot begin write transaction because transaction is ${
+                    this.#status
+                }`);
+        }
 
-            case Transaction.Status.Exclusive:
-                return;
-
-            default:
-                throw new ImplementationError(
-                    `Cannot become exclusive because transaction is ${
-                        this.#status
-                    }`);
+        this.#status = Status.Exclusive;
+        try {
+            const resources = new ResourceSet(this, this.#resources);
+            await resources.acquireLocks();
+        } catch (e) {
+            this.#status = Status.Shared;
+            throw e;
         }
     }
 
     /**
      * Begin an exclusive transaction in a synchronous context.
      * 
-     * Unlike {@link begin}, this method will throw an error if any part is
-     * already participating in an exclusive transaction.
+     * Unlike {@link begin}, this method will throw an error if any participant
+     * has already joined an exclusive transaction.
      */
     async beginSync() {
-        switch (this.status) {
-            case Transaction.Status.Shared:
-                this.#status = this.#coordinator.changeStatus(
-                    this,
-                    Transaction.Status.Exclusive
-                );
-                break;
+        if (this.status === Status.Exclusive) {
+            return;
+        }
+        if (this.status !== Status.Shared) {
+            throw new TransactionFlowError(
+                `Cannot begin write transaction because transaction is ${
+                    this.#status
+                }`);
+        }
 
-            case Transaction.Status.Exclusive:
-                break;
-
-            default:
-                throw new ImplementationError(
-                    `Cannot become exclusive because transaction is ${
-                        this.#status
-                    }`);
+        this.#status = Status.Exclusive;
+        try {
+            const resources = new ResourceSet(this, this.#resources);
+            resources.acquireLocksSync();
+        } catch (e) {
+            this.#status = Status.Shared;
+            throw e;
         }
     }
 
@@ -206,14 +243,13 @@ export class Transaction {
      * refresh to the most recent value.
      */
     async commit() {
-        console.log("commit", this.#participants)
-        if (this.#status === Transaction.Status.Shared) {
+        if (this.#status === Status.Shared) {
             // Use rollback() to inform participants to refresh state
-            await this.#executeRollback();
+            this.rollback();
         } else {
             // Perform an actual commit
             await this.#finish(
-                Transaction.Status.CommittingPhaseOne,
+                Status.CommittingPhaseOne,
                 () => this.#executeCommit()
             );
         }
@@ -230,48 +266,62 @@ export class Transaction {
      */
     async rollback() {
         await this.#finish(
-            Transaction.Status.RollingBack,
+            Status.RollingBack,
             () => this.#executeRollback()
         );
     }
 
-    async #finish(status: Transaction.Status, finalizer: () => Promise<void>) {
-        console.log("#finish");
-        switch (this.status) {
-            case Transaction.Status.Shared:
-                this.#reset();
-                break;
+    /**
+     * Wait for a set of transactions to complete.
+     */
+    async waitFor(others: Iterable<Transaction>) {
+        if (this.waitingOn) {
+            throw new TransactionFlowError("Attempted wait on a transaction that is already waiting");
+        }
 
-            case Transaction.Status.Exclusive:
-                this.#status = this.#coordinator.changeStatus(
-                    this,
-                    status
-                );
-
-                try {
-                    await finalizer();
-                } finally {
-                    this.#status = this.#coordinator.changeStatus(
-                        this,
-                        Transaction.Status.Shared
-                    )
-
-                    this.#reset();
-                };
-                break;
-
-            default:
-                throw new ImplementationError(
-                    `Cannot become ${
-                        status
-                    } because transaction is ${
-                        this.#status
-                    }`);
+        try {
+            this.#waitingOn = others;
+            await Promise.all([...others].map(other => other.promise));
+        } finally {
+            this.#waitingOn = undefined;
         }
     }
 
-    #reset() {
-        console.log("#reset");
+    /**
+     * Shared implementation for commit and rollback.
+     */
+    async #finish(status: Status, finalizer: () => Promise<void>) {
+        // If this is a shared transaction then just resolve the promise
+        if (this.status === Status.Shared) {
+            this.#resolvePromise();
+            return;
+        }
+
+        // Transaction must be exclusive as we are initiating commit or
+        // rollback
+        if (this.status !== Status.Exclusive) {
+            throw new TransactionFlowError(
+                `Illegal attempt to enter status ${
+                    status
+                } when transaction is ${
+                    this.#status
+                }`);
+        }
+
+        // Perform the commit or rollback
+        try {
+            this.#status = status;
+            await finalizer();
+        } finally {
+            this.#status = Status.Shared;
+            this.#resolvePromise();
+        }
+    }
+
+    /**
+     * Resolve the promise and clear the promise fields.
+     */
+    #resolvePromise() {
         const resolve = this.#resolve;
 
         this.#promise = undefined;
@@ -280,8 +330,10 @@ export class Transaction {
         resolve?.();
     }
 
+    /**
+     * Commit logic passed to #finish.
+     */
     async #executeCommit() {
-        console.log("#executeCommit")
         // Commit phase 1
         for (const participant of this.participants) {
             try {
@@ -289,142 +341,47 @@ export class Transaction {
             } catch (e) {
                 logger.error(
                     `Error committing ${
-                        participant.description
+                        participant.resource.description
                     } (phase one), rolling back:`,
                     e
                 );
+                this.#status = Status.RollingBack;
                 await this.#executeRollback();
                 return;
             }
         }
 
-        // Commit phase 2.  We do this in reverse order so persistence
-        // participants, which should be at the end of the list, can complete
-        // before we update internal state
-        this.#coordinator.changeStatus(this, Transaction.Status.CommittingPhaseTwo);
-        for (const participant of [ ...this.participants ].reverse()) {
+        // Commit phase 2
+        this.#status = Status.CommittingPhaseTwo;
+        for (const participant of this.participants) {
             try {
                 await participant.commit2();
             } catch (e) {
                 logger.error(
                     `Error committing ${
-                        participant.description
+                        participant.resource.description
                     } (phase two), state may become inconsistent:`,
                     e
                 );
-                return;
             }
         }
     }
 
+    /**
+     * Rollback logic passed to #finish.
+     */
     async #executeRollback() {
-        console.log("#executeRollback", this.participants);
         for (const participant of this.participants) {
             try {
                 await participant.rollback();
             } catch (e) {
                 logger.error(
                     `Error rolling back ${
-                        participant.description
+                        participant.resource.description
                     }, state may become inconsistent:`,
                     e
                 );
             }
         }
     }
-}
-
-export namespace Transaction {
-    /**
-     * Components with support for transactionality implement this interface.
-     */
-    export interface Participant {
-        /**
-         * Commit phase one.
-         */
-        commit1(): MaybePromise<void>;
-
-        /**
-         * Commit phase two.
-         */
-        commit2(): MaybePromise<void>;
-
-        /**
-         * Drop isolated writes and revert to original canonical source.
-         */
-        rollback(): MaybePromise<void>;
-
-        /**
-         * Textual description used in error messages.
-         */
-        readonly description: string;
-    }
-
-    /**
-     * Components may implement this interface to join transactions with a
-     * referenced participant.
-     */
-    export interface IndirectParticipant {
-        /**
-         * The participant the transaction will use in
-         * {@link Transaction.join}.
-         */
-        transactionParticipant: JoiningParticipant;
-    }
-
-    /**
-     * Participant joining a transaction.
-     */
-    export type JoiningParticipant = Participant | IndirectParticipant | JoiningParticipant[];
-
-    /**
-     * The lifecycle of a transaction adheres to the following discrete stages.
-     */
-    export enum Status {
-        /**
-         * Transaction is registered but there are no ACID guarantees.
-         */
-        Shared = "shared",
-
-        /**
-         * Transaction is waiting to obtain exclusive access.
-         */
-        Waiting = "waiting",
-
-        /**
-         * Transaction has exclusive access.  Reads will maintain consistency
-         * and writes are allowed.
-         */
-        Exclusive = "exclusive",
-
-        /**
-         * Transaction is in the process of committing, phase one.
-         */
-        CommittingPhaseOne = "committing phase one",
-
-        /**
-         * Transaction is in the process of committing, phase two.
-         */
-        CommittingPhaseTwo = "committing phase two",
-
-        /**
-         * Transaction is in the process of rolling back.
-         */
-        RollingBack = "rolling back",
-    }
-}
-
-function directParticipantsFor(participant: Transaction.JoiningParticipant): Transaction.Participant[] {
-    if (Array.isArray(participant)) {
-        return participant.flatMap(p => directParticipantsFor(p));
-    }
-
-    while (true) {
-        const referenced = (participant as Transaction.IndirectParticipant).transactionParticipant;
-        if (referenced === undefined || referenced === participant) {
-            break;
-        }
-        participant = referenced;
-    }
-    return participant as Transaction.Participant;
 }
