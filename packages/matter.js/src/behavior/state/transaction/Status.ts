@@ -17,7 +17,7 @@ export enum Status {
     Shared = "shared",
 
     /**
-     * Transaction is waiting to obtain exclusive access.
+     * Transaction is waiting to obtain exclusive access to resources.
      */
     Waiting = "waiting",
 

@@ -23,3 +23,8 @@ export class SynchronousTransactionConflictError extends MatterError {}
  * would lead to deadlock.
  */
 export class TransactionDeadlockError extends MatterError {}
+
+/**
+ * Thrown if an error occurs during commit or rollback.
+ */
+export class FinalizationError extends MatterError {}

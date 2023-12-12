@@ -45,7 +45,7 @@ export class ResourceSet {
 
             this.#detectDeadlock(blockedBy);
 
-            this.#transaction.waitFor(blockedBy);
+            await this.#transaction.waitFor(blockedBy);
         }
 
         this.acquireLocksSync();

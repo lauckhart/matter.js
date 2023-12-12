@@ -6,16 +6,17 @@
 
 import { Logger } from "../../../log/Logger.js";
 import { createPromise } from "../../../util/Promises.js";
-import { TransactionFlowError } from "./Errors.js";
-import { Participant } from "./Participant.js";
-import type { Resource } from "./Resource.js";
+import { describeList } from "../../../util/String.js";
+import { FinalizationError, TransactionFlowError } from "./Errors.js";
+import { Participant as ParticipantType } from "./Participant.js";
+import type { Resource as ResourceType } from "./Resource.js";
 import { ResourceSet } from "./ResourceSet.js";
 import { Status as StatusType } from "./Status.js";
 
 const logger = Logger.get("Transaction");
 
 /**
- * By default, updates to Matter.js state are transactional.
+ * By default, Matter.js state is transactional.
  * 
  * Transactions are either shared (for reads) or exclusive (for writes).
  * Exclusive transactions do not block shared transactions but state updates
@@ -33,9 +34,9 @@ const logger = Logger.get("Transaction");
  * form of retry as of yet.
  */
 export class Transaction {
-    #participants = new Set<Participant>();
-    #roles = new Map<{}, Participant>();
-    #resources = new Set<Resource>();
+    #participants = new Set<ParticipantType>();
+    #roles = new Map<{}, ParticipantType>();
+    #resources = new Set<ResourceType>();
     #status = StatusType.Shared;
     #promise?: Promise<void>;
     #resolve?: () => void;
@@ -72,6 +73,10 @@ export class Transaction {
     /**
      * Obtain a promise that resolves when the transaction commits or rolls
      * back.
+     * 
+     * When the transaction commits or rolls back it returns to a shared state
+     * and the promise is replaced.  So this is only useful prior to commit or
+     * rollback.
      */
     get promise() {
         if (this.#promise === undefined) {
@@ -86,10 +91,10 @@ export class Transaction {
      * Add {@link Resources} to the transaction.
      * 
      * If the transaction is exclusive (writing) the transaction will acquire
-     * the lock on each {@link Resource}, waiting for other writers to finish
+     * the lock on each {@link ResourceType}, waiting for other writers to finish
      * if necessary.
      */
-    async addResources(...resources: Resource[]) {
+    async addResources(...resources: ResourceType[]) {
         if (this.#status === StatusType.Exclusive) {
             const set = new ResourceSet(this, resources);
             await set.acquireLocks();
@@ -99,12 +104,12 @@ export class Transaction {
     }
 
     /**
-     * Add {@link Resource}s to the transaction synchronously.
+     * Add {@link ResourceType}s to the transaction synchronously.
      * 
      * Unlike {@link addResources}, this method will throw an error if the
      * transaction is exclusive and the resources cannot be locked.
      */
-    async addResourcesSync(...resources: Resource[]) {
+    addResourcesSync(...resources: ResourceType[]) {
         if (this.#status === StatusType.Exclusive) {
             const set = new ResourceSet(this, resources);
             set.acquireLocksSync();
@@ -158,10 +163,11 @@ export class Transaction {
                 }`);
         }
 
-        this.#status = StatusType.Exclusive;
+        this.#status = StatusType.Waiting;
         try {
             const resources = new ResourceSet(this, this.#resources);
             await resources.acquireLocks();
+            this.#status = StatusType.Exclusive;
         } catch (e) {
             this.#status = StatusType.Shared;
             throw e;
@@ -174,7 +180,7 @@ export class Transaction {
      * Unlike {@link begin}, this method will throw an error if any participant
      * has already joined an exclusive transaction.
      */
-    async beginSync() {
+    beginSync() {
         if (this.status === StatusType.Exclusive) {
             return;
         }
@@ -196,9 +202,9 @@ export class Transaction {
     }
 
     /**
-     * Add {@link Participant}s to the transaction.
+     * Add {@link ParticipantType}s to the transaction.
      */
-    addParticipants(...participants: Participant[]) {
+    addParticipants(...participants: ParticipantType[]) {
         for (const participant of participants) {
             if (this.#participants.has(participant)) {
                 continue;
@@ -239,7 +245,7 @@ export class Transaction {
             await this.rollback();
         } else {
             // Perform the actual commit
-            await this.#finish(
+            await this.#finalize(
                 StatusType.CommittingPhaseOne,
                 () => this.#executeCommit()
             );
@@ -256,7 +262,7 @@ export class Transaction {
      * references refresh to the most recent value.
      */
     async rollback() {
-        await this.#finish(
+        await this.#finalize(
             StatusType.RollingBack,
             () => this.#executeRollback()
         );
@@ -281,7 +287,7 @@ export class Transaction {
     /**
      * Shared implementation for commit and rollback.
      */
-    async #finish(status: StatusType, finalizer: () => Promise<void>) {
+    async #finalize(status: StatusType, finalizer: () => Promise<void>) {
         // Sanity check on status
         if (this.status !== StatusType.Shared && this.status !== StatusType.Exclusive) {
             throw new TransactionFlowError(
@@ -297,21 +303,25 @@ export class Transaction {
             this.#status = status;
             await finalizer();
         } finally {
+            // Release locks
+            for (const resource of this.#resources) {
+                if (resource.lockedBy === this) {
+                    delete resource.lockedBy;
+                }
+            }
+
+            // Release participants
+            this.#participants.clear();
+
+            // Revert to shared
             this.#status = StatusType.Shared;
-            this.#resolvePromise();
+
+            // Resolve the promise
+            const resolve = this.#resolve;
+            this.#promise = undefined;
+            this.#resolve = undefined;
+            resolve?.();
         }
-    }
-
-    /**
-     * Resolve the promise and clear the promise fields.
-     */
-    #resolvePromise() {
-        const resolve = this.#resolve;
-
-        this.#promise = undefined;
-        this.#resolve = undefined;
-
-        resolve?.();
     }
 
     /**
@@ -331,12 +341,18 @@ export class Transaction {
                 );
                 this.#status = StatusType.RollingBack;
                 await this.#executeRollback();
-                return;
+
+                throw new FinalizationError(
+                    `Transaction rolled back due to unhandled error in commit phase one participant ${
+                        participant.description
+                    }`
+                );
             }
         }
 
         // Commit phase 2
         this.#status = StatusType.CommittingPhaseTwo;
+        let errored = new Array<string>;
         for (const participant of this.participants) {
             try {
                 await participant.commit2();
@@ -347,14 +363,17 @@ export class Transaction {
                     } (phase two), state may become inconsistent:`,
                     e
                 );
+                errored.push(participant.description);
             }
         }
+        throwUnhandled(errored, "in commit phase 2");
     }
 
     /**
      * Rollback logic passed to #finish.
      */
     async #executeRollback() {
+        let errored = new Array<string>;
         for (const participant of this.participants) {
             try {
                 await participant.rollback();
@@ -365,12 +384,30 @@ export class Transaction {
                     }, state may become inconsistent:`,
                     e
                 );
+                errored.push(participant.description);
             }
         }
+        throwUnhandled(errored, "rolling back");
     }
+}
+
+function throwUnhandled(errored: Array<string>, when: string) {
+    if (!errored.length) {
+        return;
+    }
+    const suffix = errored.length > 1 ? "s" : "";
+    throw new FinalizationError(
+        `Unhandled error${suffix} ${when} participant${suffix}${
+            describeList("and", ...errored)
+        }`
+    )
 }
 
 export namespace Transaction {
     export const Status = StatusType;
     export type Status = StatusType;
+
+    export type Resource = ResourceType;
+
+    export type Participant = ParticipantType;
 }
