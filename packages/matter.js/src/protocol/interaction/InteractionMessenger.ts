@@ -148,7 +148,7 @@ export class InteractionServerMessenger extends InteractionMessenger<MatterDevic
         handleWriteRequest: (request: WriteRequest, message: Message) => Promise<WriteResponse>,
         handleSubscribeRequest: (request: SubscribeRequest, messenger: InteractionServerMessenger) => Promise<void>,
         handleInvokeRequest: (request: InvokeRequest, message: Message) => Promise<InvokeResponse>,
-        handleTimedRequest: (request: TimedRequest) => Promise<void>,
+        handleTimedRequest: (request: TimedRequest) => void,
     ) {
         let continueExchange = true; // are more messages expected in this "transaction"?
         try {

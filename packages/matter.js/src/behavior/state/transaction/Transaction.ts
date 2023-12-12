@@ -10,7 +10,7 @@ import { TransactionFlowError } from "./Errors.js";
 import { Participant } from "./Participant.js";
 import type { Resource } from "./Resource.js";
 import { ResourceSet } from "./ResourceSet.js";
-import { Status } from "./Status.js";
+import { Status as StatusType } from "./Status.js";
 
 const logger = Logger.get("Transaction");
 
@@ -36,7 +36,7 @@ export class Transaction {
     #participants = new Set<Participant>();
     #roles = new Map<{}, Participant>();
     #resources = new Set<Resource>();
-    #status = Status.Shared;
+    #status = StatusType.Shared;
     #promise?: Promise<void>;
     #resolve?: () => void;
     #waitingOn?: Iterable<Transaction>;
@@ -90,7 +90,7 @@ export class Transaction {
      * if necessary.
      */
     async addResources(...resources: Resource[]) {
-        if (this.#status === Status.Exclusive) {
+        if (this.#status === StatusType.Exclusive) {
             const set = new ResourceSet(this, resources);
             await set.acquireLocks();
         }
@@ -105,10 +105,10 @@ export class Transaction {
      * transaction is exclusive and the resources cannot be locked.
      */
     async addResourcesSync(...resources: Resource[]) {
-        if (this.#status === Status.Exclusive) {
+        if (this.#status === StatusType.Exclusive) {
             const set = new ResourceSet(this, resources);
             set.acquireLocksSync();
-        } else if (this.#status !== Status.Shared) {
+        } else if (this.#status !== StatusType.Shared) {
             throw new TransactionFlowError(
                 `Cannot add resources to transaction that is ${this.status}`
             );
@@ -148,22 +148,22 @@ export class Transaction {
      * will suggest solutions.
      */
     async begin() {
-        if (this.status === Status.Exclusive) {
+        if (this.status === StatusType.Exclusive) {
             return;
         }
-        if (this.status !== Status.Shared) {
+        if (this.status !== StatusType.Shared) {
             throw new TransactionFlowError(
                 `Cannot begin write transaction because transaction is ${
                     this.#status
                 }`);
         }
 
-        this.#status = Status.Exclusive;
+        this.#status = StatusType.Exclusive;
         try {
             const resources = new ResourceSet(this, this.#resources);
             await resources.acquireLocks();
         } catch (e) {
-            this.#status = Status.Shared;
+            this.#status = StatusType.Shared;
             throw e;
         }
     }
@@ -175,22 +175,22 @@ export class Transaction {
      * has already joined an exclusive transaction.
      */
     async beginSync() {
-        if (this.status === Status.Exclusive) {
+        if (this.status === StatusType.Exclusive) {
             return;
         }
-        if (this.status !== Status.Shared) {
+        if (this.status !== StatusType.Shared) {
             throw new TransactionFlowError(
                 `Cannot begin write transaction because transaction is ${
                     this.#status
                 }`);
         }
 
-        this.#status = Status.Exclusive;
+        this.#status = StatusType.Exclusive;
         try {
             const resources = new ResourceSet(this, this.#resources);
             resources.acquireLocksSync();
         } catch (e) {
-            this.#status = Status.Shared;
+            this.#status = StatusType.Shared;
             throw e;
         }
     }
@@ -234,13 +234,13 @@ export class Transaction {
      * refresh to the most recent value.
      */
     async commit() {
-        if (this.#status === Status.Shared) {
+        if (this.#status === StatusType.Shared) {
             // Use rollback() to inform participants to refresh state
             await this.rollback();
         } else {
             // Perform the actual commit
             await this.#finish(
-                Status.CommittingPhaseOne,
+                StatusType.CommittingPhaseOne,
                 () => this.#executeCommit()
             );
         }
@@ -257,7 +257,7 @@ export class Transaction {
      */
     async rollback() {
         await this.#finish(
-            Status.RollingBack,
+            StatusType.RollingBack,
             () => this.#executeRollback()
         );
     }
@@ -281,9 +281,9 @@ export class Transaction {
     /**
      * Shared implementation for commit and rollback.
      */
-    async #finish(status: Status, finalizer: () => Promise<void>) {
+    async #finish(status: StatusType, finalizer: () => Promise<void>) {
         // Sanity check on status
-        if (this.status !== Status.Shared && this.status !== Status.Exclusive) {
+        if (this.status !== StatusType.Shared && this.status !== StatusType.Exclusive) {
             throw new TransactionFlowError(
                 `Illegal attempt to enter status ${
                     status
@@ -297,7 +297,7 @@ export class Transaction {
             this.#status = status;
             await finalizer();
         } finally {
-            this.#status = Status.Shared;
+            this.#status = StatusType.Shared;
             this.#resolvePromise();
         }
     }
@@ -329,14 +329,14 @@ export class Transaction {
                     } (phase one), rolling back:`,
                     e
                 );
-                this.#status = Status.RollingBack;
+                this.#status = StatusType.RollingBack;
                 await this.#executeRollback();
                 return;
             }
         }
 
         // Commit phase 2
-        this.#status = Status.CommittingPhaseTwo;
+        this.#status = StatusType.CommittingPhaseTwo;
         for (const participant of this.participants) {
             try {
                 await participant.commit2();
@@ -368,4 +368,9 @@ export class Transaction {
             }
         }
     }
+}
+
+export namespace Transaction {
+    export const Status = StatusType;
+    export type Status = StatusType;
 }

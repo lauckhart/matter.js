@@ -10,7 +10,6 @@ import { DescriptorServer } from "../../src/behavior/definitions/descriptor/Desc
 import { LifecycleBehavior } from "../../src/behavior/definitions/lifecycle/LifecycleBehavior.js";
 import { PartsBehavior } from "../../src/behavior/definitions/parts/PartsBehavior.js";
 import { ServerBehaviorBacking } from "../../src/behavior/server/ServerBehaviorBacking.js";
-import { TransactionCoordinator } from "../../src/behavior/state/transaction/Coordinator.js";
 import { AccessLevel } from "../../src/cluster/Cluster.js";
 import { Part } from "../../src/endpoint/Part.js";
 import { PartOwner } from "../../src/endpoint/part/PartOwner.js";
@@ -30,8 +29,6 @@ class MockFabricImplementation {
 export const MockFabric = MockFabricImplementation as unknown as new (id?: number) => Fabric;
 
 export class MockOwner implements PartOwner {
-    readonly transactionCoordinator = new TransactionCoordinator();
-
     initializeBehavior(part: Part, behavior: Behavior.Type) {
         return new ServerBehaviorBacking(part, behavior);
     }

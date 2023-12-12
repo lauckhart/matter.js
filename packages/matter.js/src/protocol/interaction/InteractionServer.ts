@@ -29,12 +29,13 @@ import { MessageExchange } from "../../protocol/MessageExchange.js";
 import { ProtocolHandler } from "../../protocol/ProtocolHandler.js";
 import { EventHandler } from "../../protocol/interaction/EventHandler.js";
 import { SecureSession, assertSecureSession } from "../../session/SecureSession.js";
+import { Session } from "../../session/Session.js";
 import { StorageContext } from "../../storage/StorageContext.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { TypeFromSchema } from "../../tlv/TlvSchema.js";
 import { toHexString } from "../../util/Number.js";
 import { decodeAttributeValueWithSchema, normalizeAttributeData } from "./AttributeDataDecoder.js";
-import { AttributeReportPayload, DataReportPayload, EventReportPayload } from "./AttributeDataEncoder.js";
+import { AttributeReportPayload, DataReportPayload } from "./AttributeDataEncoder.js";
 import { InteractionEndpointStructure } from "./InteractionEndpointStructure.js";
 import {
     InteractionServerMessenger,
@@ -245,7 +246,7 @@ export class InteractionServer implements ProtocolHandler<MatterDevice> {
             }
 
             for (const { path, attribute } of attributes) {
-                const { value, version } = attribute.getWithVersion(exchange.session, isFabricFiltered);
+                const { value, version } = await this.readAttribute(attribute, exchange.session, isFabricFiltered);
                 const { nodeId, endpointId, clusterId } = path;
 
                 const versionFilterValue =
@@ -323,6 +324,14 @@ export class InteractionServer implements ProtocolHandler<MatterDevice> {
         };
     }
 
+    protected async readAttribute(
+        attribute: AnyAttributeServer<any>,
+        session: Session<MatterDevice>,
+        isFabricFiltered: boolean
+    ) {
+        return attribute.getWithVersion(session, isFabricFiltered);
+    }
+
     async handleWriteRequest(
         exchange: MessageExchange<MatterDevice>,
         { suppressResponse, timedRequest, writeRequests, interactionModelRevision }: WriteRequest,
@@ -373,145 +382,151 @@ export class InteractionServer implements ProtocolHandler<MatterDevice> {
 
         const writeData = normalizeAttributeData(writeRequests, true);
 
-        const writeResults = writeData.flatMap(
-            (
-                values,
-            ): {
-                path: TypeFromSchema<typeof TlvAttributePath>;
-                statusCode: StatusCode;
-                clusterStatusCode?: number;
-            }[] => {
-                const { path, dataVersion } = values[0];
-                const attributes = this.endpointStructure.getAttributes([path], true);
-                const { endpointId, clusterId, attributeId } = path;
-                if (attributes.length === 0) {
-                    // No attribute found
-                    // TODO: Also check nodeId
-                    if (endpointId === undefined || clusterId === undefined || attributeId === undefined) {
-                        // Wildcard path: Just ignore
-                        logger.debug(
-                            `Write from ${exchange.channel.name}: ${this.endpointStructure.resolveAttributeName(
-                                path,
-                            )}: ignore non-existing attribute`,
-                        );
-                    } else {
-                        // Else return correct status
-                        let statusCode = StatusCode.UnsupportedAttribute;
-                        if (this.endpointStructure.hasAttribute(endpointId, clusterId, attributeId)) {
-                            // If attribute exists but was not returned above, it is not writeable
-                            statusCode = StatusCode.UnsupportedWrite;
-                        } else if (!this.endpointStructure.hasEndpoint(endpointId)) {
-                            statusCode = StatusCode.UnsupportedEndpoint;
-                        } else if (!this.endpointStructure.hasClusterServer(endpointId, clusterId)) {
-                            statusCode = StatusCode.UnsupportedCluster;
-                        } else {
-                            // check if concrete path and just "not writable"
-                            const allAttributes = this.endpointStructure.getAttributes([path]);
-                            if (allAttributes.length > 0) {
-                                statusCode = StatusCode.UnsupportedWrite;
-                            }
-                        }
-                        logger.debug(
-                            `Write from ${exchange.channel.name}: ${this.endpointStructure.resolveAttributeName(
-                                path,
-                            )} not allowed: Status=${statusCode}`,
-                        );
-                        return [{ path, statusCode }];
-                    }
-                } else if (
-                    attributes.length === 1 &&
-                    endpointId !== undefined &&
-                    clusterId !== undefined &&
-                    attributeId !== undefined
-                ) {
-                    const { attribute } = attributes[0];
-                    // Concrete path
+        const writeResults = new Array<{
+            path: TypeFromSchema<typeof TlvAttributePath>;
+            statusCode: StatusCode;
+            clusterStatusCode?: number;
+        }>;
 
-                    // TODO Check ACL here
+        for (const values of writeData) {
+            const { path, dataVersion } = values[0];
+            const attributes = this.endpointStructure.getAttributes([path], true);
+            const { endpointId, clusterId, attributeId } = path;
+            if (attributes.length === 0) {
+                // No attribute found
+                // TODO: Also check nodeId
+                if (endpointId === undefined || clusterId === undefined || attributeId === undefined) {
+                    // Wildcard path: Just ignore
+                    logger.debug(
+                        `Write from ${exchange.channel.name}: ${this.endpointStructure.resolveAttributeName(
+                            path,
+                        )}: ignore non-existing attribute`,
+                    );
+                    continue;
+                } else {
+                    // Else return correct status
+                    let statusCode = StatusCode.UnsupportedAttribute;
+                    if (this.endpointStructure.hasAttribute(endpointId, clusterId, attributeId)) {
+                        // If attribute exists but was not returned above, it is not writeable
+                        statusCode = StatusCode.UnsupportedWrite;
+                    } else if (!this.endpointStructure.hasEndpoint(endpointId)) {
+                        statusCode = StatusCode.UnsupportedEndpoint;
+                    } else if (!this.endpointStructure.hasClusterServer(endpointId, clusterId)) {
+                        statusCode = StatusCode.UnsupportedCluster;
+                    } else {
+                        // check if concrete path and just "not writable"
+                        const allAttributes = this.endpointStructure.getAttributes([path]);
+                        if (allAttributes.length > 0) {
+                            statusCode = StatusCode.UnsupportedWrite;
+                        }
+                    }
+                    logger.debug(
+                        `Write from ${exchange.channel.name}: ${this.endpointStructure.resolveAttributeName(
+                            path,
+                        )} not allowed: Status=${statusCode}`,
+                    );
+                    writeResults.push({ path, statusCode });
+                    continue;
+                }
+            } else if (
+                attributes.length === 1 &&
+                endpointId !== undefined &&
+                clusterId !== undefined &&
+                attributeId !== undefined
+            ) {
+                const { attribute } = attributes[0];
+                // Concrete path
+
+                // TODO Check ACL here
+
+                if (attribute.requiresTimedInteraction && !receivedWithinTimedInteraction) {
+                    logger.debug(`This write requires a timed interaction which is not initialized.`);
+                    writeResults.push({ path, statusCode: StatusCode.NeedsTimedInteraction });
+                    continue;
+                }
+
+                if (
+                    attribute instanceof FabricScopedAttributeServer &&
+                    (!exchange.session.isSecure() || !(exchange.session as SecureSession<MatterDevice>).getFabric())
+                ) {
+                    logger.debug(`This write requires a secure session with a fabric assigned which is missing.`);
+                    writeResults.push({ path, statusCode: StatusCode.UnsupportedAccess });
+                    continue;
+                }
+
+                if (dataVersion !== undefined) {
+                    const cluster = this.endpointStructure.getClusterServer(endpointId, clusterId);
+                    if (cluster !== undefined && dataVersion !== cluster.clusterDataVersion) {
+                        logger.debug(
+                            `This write requires a specific data version (${dataVersion}) which do not match the current cluster data version (${cluster.clusterDataVersion}).`,
+                        );
+                        writeResults.push({ path, statusCode: StatusCode.DataVersionMismatch });
+                        continue;
+                    }
+                }
+            }
+
+            for (const { path, attribute } of attributes) {
+                const { schema, defaultValue } = attribute;
+
+                try {
+                    const value = decodeAttributeValueWithSchema(schema, values, defaultValue);
+                    logger.debug(
+                        `Handle write request from ${
+                            exchange.channel.name
+                        } resolved to: ${this.endpointStructure.resolveAttributeName(path)}=${Logger.toJSON(
+                            value,
+                        )} (Version=${dataVersion})`,
+                    );
+
+                    if (
+                        !(attribute instanceof AttributeServer) &&
+                        !(attribute instanceof FabricScopedAttributeServer)
+                    ) {
+                        throw new StatusResponseError(
+                            "Fixed attributes cannot be written",
+                            StatusCode.UnsupportedWrite,
+                        );
+                    }
+
+                    // TODO: ACL check here
 
                     if (attribute.requiresTimedInteraction && !receivedWithinTimedInteraction) {
                         logger.debug(`This write requires a timed interaction which is not initialized.`);
-                        return [{ path, statusCode: StatusCode.NeedsTimedInteraction }];
+                        throw new StatusResponseError(
+                            "This write requires a timed interaction which is not initialized.",
+                            StatusCode.NeedsTimedInteraction,
+                        );
                     }
 
-                    if (
-                        attribute instanceof FabricScopedAttributeServer &&
-                        (!exchange.session.isSecure() || !(exchange.session as SecureSession<MatterDevice>).getFabric())
-                    ) {
-                        logger.debug(`This write requires a secure session with a fabric assigned which is missing.`);
-                        return [{ path, statusCode: StatusCode.UnsupportedAccess }];
-                    }
-
-                    if (dataVersion !== undefined) {
-                        const cluster = this.endpointStructure.getClusterServer(endpointId, clusterId);
-                        if (cluster !== undefined && dataVersion !== cluster.clusterDataVersion) {
-                            logger.debug(
-                                `This write requires a specific data version (${dataVersion}) which do not match the current cluster data version (${cluster.clusterDataVersion}).`,
-                            );
-                            return [{ path, statusCode: StatusCode.DataVersionMismatch }];
+                    await this.writeAttribute(attribute, value, exchange.session);
+                } catch (error: any) {
+                    if (attributes.length === 1) {
+                        // For Multi-Attribute-Writes we ignore errors
+                        logger.error(
+                            `Error while handling write request from ${
+                                exchange.channel.name
+                            } to ${this.endpointStructure.resolveAttributeName(path)}: ${error.message}`,
+                        );
+                        if (error instanceof StatusResponseError) {
+                            writeResults.push({ path, statusCode: error.code, clusterStatusCode: error.clusterCode });
+                            continue;
                         }
+                        writeResults.push({ path, statusCode: StatusCode.ConstraintError });
+                        continue;
+                    } else {
+                        logger.debug(
+                            `While handling write request from ${
+                                exchange.channel.name
+                            } to ${this.endpointStructure.resolveAttributeName(path)} ignored: ${error.message}`,
+                        );
+                        continue;
                     }
                 }
-
-                return attributes.map(({ path, attribute }) => {
-                    const { schema, defaultValue } = attribute;
-
-                    try {
-                        const value = decodeAttributeValueWithSchema(schema, values, defaultValue);
-                        logger.debug(
-                            `Handle write request from ${
-                                exchange.channel.name
-                            } resolved to: ${this.endpointStructure.resolveAttributeName(path)}=${Logger.toJSON(
-                                value,
-                            )} (Version=${dataVersion})`,
-                        );
-
-                        if (
-                            !(attribute instanceof AttributeServer) &&
-                            !(attribute instanceof FabricScopedAttributeServer)
-                        ) {
-                            throw new StatusResponseError(
-                                "Fixed attributes cannot be written",
-                                StatusCode.UnsupportedWrite,
-                            );
-                        }
-
-                        // TODO: ACL check here
-
-                        if (attribute.requiresTimedInteraction && !receivedWithinTimedInteraction) {
-                            logger.debug(`This write requires a timed interaction which is not initialized.`);
-                            throw new StatusResponseError(
-                                "This write requires a timed interaction which is not initialized.",
-                                StatusCode.NeedsTimedInteraction,
-                            );
-                        }
-
-                        attribute.set(value, exchange.session);
-                    } catch (error: any) {
-                        if (attributes.length === 1) {
-                            // For Multi-Attribute-Writes we ignore errors
-                            logger.error(
-                                `Error while handling write request from ${
-                                    exchange.channel.name
-                                } to ${this.endpointStructure.resolveAttributeName(path)}: ${error.message}`,
-                            );
-                            if (error instanceof StatusResponseError) {
-                                return { path, statusCode: error.code, clusterStatusCode: error.clusterCode };
-                            }
-                            return { path, statusCode: StatusCode.ConstraintError };
-                        } else {
-                            logger.debug(
-                                `While handling write request from ${
-                                    exchange.channel.name
-                                } to ${this.endpointStructure.resolveAttributeName(path)} ignored: ${error.message}`,
-                            );
-                        }
-                    }
-                    return { path, statusCode: StatusCode.Success };
-                });
-                //.filter(({ statusCode }) => statusCode !== StatusCode.Success); // see https://github.com/project-chip/connectedhomeip/issues/26198
-            },
-        );
+                writeResults.push({ path, statusCode: StatusCode.Success });
+            }
+            //.filter(({ statusCode }) => statusCode !== StatusCode.Success); // see https://github.com/project-chip/connectedhomeip/issues/26198
+        }
 
         const errorResults = writeResults.filter(({ statusCode }) => statusCode !== StatusCode.Success);
         logger.debug(
@@ -534,6 +549,14 @@ export class InteractionServer implements ProtocolHandler<MatterDevice> {
                 status: { status: statusCode, clusterStatus: clusterStatusCode },
             })),
         };
+    }
+
+    protected async writeAttribute(
+        attribute: AttributeServer<any>,
+        value: any,
+        session: Session<MatterDevice>
+    ) {
+        attribute.set(value, session);
     }
 
     async handleSubscribeRequest(
@@ -800,14 +823,20 @@ export class InteractionServer implements ProtocolHandler<MatterDevice> {
                         continue;
                     }
 
+                    // await command.invoke(
+                    //     exchange.session,
+                    //     commandFields ?? TlvNoArguments.encodeTlv(commandFields),
+                    //     message,
+                    //     endpoint,
+                    // ),
                     const result = await tryCatchAsync(
-                        async () =>
-                            await command.invoke(
-                                exchange.session,
-                                commandFields ?? TlvNoArguments.encodeTlv(commandFields),
-                                message,
-                                endpoint,
-                            ),
+                        async () => await this.invokeCommand(
+                            command,
+                            exchange.session,
+                            commandFields ?? TlvNoArguments.encodeTlv(commandFields),
+                            message,
+                            endpoint
+                        ),
                         StatusResponseError,
                         async error => {
                             logger.info(
@@ -848,7 +877,17 @@ export class InteractionServer implements ProtocolHandler<MatterDevice> {
         };
     }
 
-    async handleTimedRequest(exchange: MessageExchange<MatterDevice>, { timeout, interactionModelRevision }: TimedRequest) {
+    protected async invokeCommand(
+        command: CommandServer<any, any>,
+        session: Session<MatterDevice>,
+        commandFields: any,
+        message: Message,
+        endpoint: EndpointInterface,
+    ) {
+        return command.invoke(session, commandFields, message, endpoint);
+    }
+
+    handleTimedRequest(exchange: MessageExchange<MatterDevice>, { timeout, interactionModelRevision }: TimedRequest) {
         logger.debug(`Received timed request (${timeout}ms) from ${exchange.channel.name}`);
 
         if (interactionModelRevision > INTERACTION_MODEL_REVISION) {

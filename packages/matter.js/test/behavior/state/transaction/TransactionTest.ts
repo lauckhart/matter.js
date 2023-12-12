@@ -11,10 +11,12 @@ import { Transaction } from "../../../../src/behavior/state/transaction/Transact
 import { MaybePromise } from "../../../../src/util/Type.js";
 
 class TestResource implements Resource {
-    description = "Test";
+    description = "TestResource";
 }
 
 class TestParticipant implements Participant {
+    description = "TestParticipant";
+
     invoked = Array<string>();
 
     resource = new TestResource();

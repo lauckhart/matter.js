@@ -25,6 +25,7 @@ import { DeviceCertification } from "../../behavior/definitions/operational-cred
 import { CommissioningOptions } from "../options/CommissioningOptions.js";
 import { ServerOptions } from "../options/ServerOptions.js";
 import { BaseNodeServer } from "./BaseNodeServer.js";
+import { TransactionalInteractionServer } from "./TransactionalInteractionServer.js";
 
 const logger = Logger.get("NodeServer");
 
@@ -224,5 +225,9 @@ export class NodeServer extends BaseNodeServer implements Node {
         setDefault("dataModelRevision", 1);
         setDefault("hardwareVersionString", bi.hardwareVersion.toString());
         setDefault("softwareVersionString", bi.softwareVersion.toString());
+    }
+
+    protected override createInteractionServer(storage: StorageContext) {
+        return new TransactionalInteractionServer(storage, this.subscriptionConfig)
     }
 }

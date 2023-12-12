@@ -11,9 +11,6 @@ import { ClusterServer } from "../../cluster/server/ClusterServer.js";
 import type { ClusterServerObj, CommandHandler, SupportedEventsList } from "../../cluster/server/ClusterServerTypes.js";
 import { EndpointInterface } from "../../endpoint/EndpointInterface.js";
 import type { Part } from "../../endpoint/Part.js";
-import { Transaction } from "../state/transaction/Transaction.js";
-import { Logger } from "../../log/Logger.js";
-import { StatusResponseError } from "../../protocol/interaction/InteractionMessenger.js";
 import { SecureSession, } from "../../session/SecureSession.js";
 import { Session } from "../../session/Session.js";
 import { Behavior } from "../Behavior.js";
@@ -23,8 +20,7 @@ import { ClusterEvents } from "../cluster/ClusterEvents.js";
 import { ValidatedElements } from "../cluster/ValidatedElements.js";
 import { ServerBehaviorBacking } from "./ServerBehaviorBacking.js";
 import { Status } from "../state/transaction/Status.js";
-
-const logger = Logger.get("ClusterServer");
+import { TransactionalInteractionServer } from "../../node/server/TransactionalInteractionServer.js";
 
 /**
  * Backing for cluster behaviors on servers.
@@ -75,14 +71,14 @@ export class ClusterServerBehaviorBacking extends ServerBehaviorBacking {
     }
 }
 
-async function transact<T>(
+function withBehavior<T>(
     backing: ClusterServerBehaviorBacking,
-    session: Session<MatterDevice> | undefined,
+    session: Session<MatterDevice>,
     contextFields: Partial<InvocationContext>,
     fn: (behavior: Behavior) => T
-): Promise<T> {
+): T {
     const fabric = session?.isSecure() ? session.getAssociatedFabric() : undefined;
-    const transaction = new Transaction();
+    const transaction = TransactionalInteractionServer.transactionFor(session);;
 
     const context: InvocationContext = {
         ...contextFields,
@@ -97,42 +93,7 @@ async function transact<T>(
 
     const agent = backing.part.getAgent(context);
 
-    let aborted = false;
-    try {
-        return fn(agent.get(backing.type));
-    } catch (e) {
-        aborted = true;
-
-        if (transaction.status !== Status.Shared) {
-            try {
-                await transaction.rollback();
-            } catch (e) {
-                logger.error(`Error rolling back transaction for ${backing.part.description}:`, e);
-            }
-        }
-
-        throw e;
-    } finally {
-        if (!aborted) {
-            try {
-                await transaction.commit();
-            } catch (e) {
-                if (e instanceof StatusResponseError) {
-                    throw e;
-                }
-
-                const error = e instanceof Error ? e : new Error(`${e}`);
-                error.message =
-                    `Error committing transaction for ${
-                        backing.part.description
-                    }: ${
-                        error.message
-                    }`;
-
-                throw error;
-            }
-        }
-    }
+    return fn(agent.get(backing.type));
 }
 
 function createCommandHandler(
@@ -140,7 +101,7 @@ function createCommandHandler(
     name: string
 ): CommandHandler<any, any, any> {
     return ({ request, session, message }) => {
-        return transact(
+        return withBehavior(
             backing,
             session,
             { message },
@@ -153,12 +114,12 @@ function createAttributeAccessors(
     backing: ClusterServerBehaviorBacking,
     name: string
 ): {
-    get: (session?: Session<MatterDevice>, endpoint?: EndpointInterface, isFabricFiltered?: boolean) => any;
-    set: (value: any, session?: Session<MatterDevice>, endpoint?: EndpointInterface) => boolean;
+    get: (session: Session<MatterDevice>, endpoint?: EndpointInterface, isFabricFiltered?: boolean) => any;
+    set: (value: any, session: Session<MatterDevice>, endpoint?: EndpointInterface) => boolean;
 } {
     return {
         get(session, _endpoint, isFabricFiltered) {
-            return transact(
+            return withBehavior(
                 backing,
                 session,
                 { fabricFiltered: isFabricFiltered },
@@ -171,7 +132,7 @@ function createAttributeAccessors(
         },
 
         set(value, session) {
-            return transact(
+            return withBehavior(
                 backing,
                 session,
                 {},
