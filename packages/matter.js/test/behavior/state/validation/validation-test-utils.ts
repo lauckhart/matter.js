@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { AssertionError } from "chai";
 import { OperationalSchema } from "../../../../src/behavior/schema/OperationalSchema.js";
 import { AttributeModel, ClusterModel, FeatureSet, FieldModel, Globals } from "../../../../src/model/index.js";
 import { StatusResponseError } from "../../../../src/protocol/interaction/InteractionMessenger.js";
@@ -13,8 +14,8 @@ export function Fields(...definition: { name?: string; type?: string; conformanc
     return definition.map(
         f =>
             new FieldModel({
-                name: "Test",
-                type: "number",
+                name: f.name ?? "Test",
+                type: f.type ?? "number",
                 ...f,
             }),
     );
@@ -75,7 +76,7 @@ function validate({ fields, features }: ClusterStructure, { supports, record, er
         manager.validate(record ?? {});
         expect(error).undefined;
     } catch (e) {
-        if (!error) {
+        if (!error || e instanceof AssertionError) {
             throw e;
         }
         expect(e).instanceof(error.type);

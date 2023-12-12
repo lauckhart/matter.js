@@ -4,10 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+export * from "./PropertyModel.js";
+export * from "./ValueModel.js";
+export * from "./FieldModel.js";
 export * from "./AttributeModel.js";
 export * from "./ClusterModel.js";
 export * from "./CommandModel.js";
-export * from "./FieldModel.js";
 export * from "./DatatypeModel.js";
 export * from "./DeviceTypeModel.js";
 export * from "./EndpointModel.js";
@@ -17,5 +19,3 @@ export * from "./MatterModel.js";
 export * from "./Model.js";
 export * from "./NodeModel.js";
 export * from "./RequirementModel.js";
-export * from "./ValueModel.js";
-export * from "./PropertyModel.js";

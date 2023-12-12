@@ -8,7 +8,7 @@ import { ValueModel } from "./ValueModel.js";
 
 /**
  * This is the base class for fields and attributes, both of which define
- * logical subvalues.
+ * subvalues of logical structs.
  */
 export abstract class PropertyModel extends ValueModel {
 }

@@ -13,6 +13,7 @@ import { FieldModel } from "./FieldModel.js";
 import { DeviceTypeModel } from "./DeviceTypeModel.js";
 import { FabricModel } from "./FabricModel.js";
 import { Model } from "./Model.js";
+import { ModelTraversal } from "../logic/ModelTraversal.js";
 
 /**
  * The root of a Matter model.
@@ -78,3 +79,5 @@ export class MatterModel extends Model implements MatterElement {
 export namespace MatterModel {
     export type Child = ClusterModel | DeviceTypeModel | FieldModel | DatatypeModel | AttributeModel | FabricModel;
 }
+
+ModelTraversal.defaultRoot = new MatterModel();

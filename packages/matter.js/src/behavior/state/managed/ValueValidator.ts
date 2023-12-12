@@ -34,7 +34,7 @@ export function ValueValidator(
     factory: OperationalSchema
 ): ValueManager.Validate {
     if (schema instanceof ClusterModel) {
-        return createStructValidator(schema.attributes, schema, factory) ?? (() => {});
+        return createStructValidator(schema, factory) ?? (() => {});
     }
 
     let validator: ValueManager.Validate | undefined;
@@ -63,7 +63,7 @@ export function ValueValidator(
             break;
 
         case Metatype.object:
-            validator = createStructValidator(schema.members, schema, factory);
+            validator = createStructValidator(schema, factory);
             break;
 
         case Metatype.array:
@@ -175,14 +175,18 @@ function createSimpleValidator(
 }
 
 function createStructValidator(
-    fields: ValueModel[],
     schema: Schema,
     factory: OperationalSchema
 ): ValueManager.Validate | undefined {
     const validators = {} as Record<string, ValueManager.Validate>;
 
-    for (const field of fields) {
-        validators[camelize(field.name)] = factory.get(schema).validate;
+    for (const field of schema.members) {
+        // Global fields currently handled internally
+        if (field.global) {
+            continue;
+        }
+
+        validators[camelize(field.name)] = factory.get(field).validate;
     }
 
     return value => {
@@ -193,10 +197,7 @@ function createStructValidator(
         }
 
         for (const name in validators) {
-            const propertyValue = value[name];
-            if (propertyValue !== undefined) {
-                validators[name](propertyValue, options);
-            }
+            validators[name](value[name], options);
         }
 
         for (const name in options.choices) {

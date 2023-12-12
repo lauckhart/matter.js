@@ -56,7 +56,7 @@ export class ConstraintError extends ValidateError {
     constructor(schema: Schema, message: string) {
         super(
             schema,
-            ` constraint "${(schema as ValueModel).constraint}": ${message}`,
+            `Constraint "${(schema as ValueModel).constraint}": ${message}`,
             StatusCode.ConstraintError,
         )
     }
@@ -69,7 +69,7 @@ export class ConformanceError extends ValidateError {
     constructor(schema: Schema, message: string) {
         super(
             schema,
-            ` conformance "${(schema as ValueModel).conformance}": ${message}`,
+            `Conformance "${(schema as ValueModel).conformance}": ${message}`,
             StatusCode.InvalidAction,
         )
     }

@@ -6,10 +6,11 @@
 
 import { Mei, Metatype } from "../definitions/index.js";
 import { FieldElement } from "../elements/index.js";
+import { PropertyModel } from "../index.js";
 import { Model } from "./Model.js";
 import { ValueModel } from "./ValueModel.js";
 
-export class FieldModel extends ValueModel implements FieldElement {
+export class FieldModel extends PropertyModel implements FieldElement {
     override tag: FieldElement.Tag = FieldElement.Tag;
     override id?: Mei;
 

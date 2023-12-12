@@ -49,7 +49,6 @@ export class OperationalSchema implements ValueManager {
      * @param managedBase the base class for managed value instances
      */
     constructor(root: Schema, managedBase?: new () => Val) {
-        this.#root = this.#createValueManager(root, managedBase);
         if (root instanceof ClusterModel) {
             this.#featureMap = root.featureMap;
             this.#supportedFeatures = root.supportedFeatures ?? new FeatureSet();
@@ -58,6 +57,8 @@ export class OperationalSchema implements ValueManager {
             this.#supportedFeatures = new FeatureSet();
         }
         this.#members = new Set(root.members);
+
+        this.#root = this.#createValueManager(root, managedBase);
     }
 
     get owner() {
@@ -108,7 +109,9 @@ export class OperationalSchema implements ValueManager {
      * @returns the I/O implementation
      */
     get(schema: Schema): ValueManager {
-        if (schema === this.#root.schema) {
+        // #root isn't set whilc we generate root schema so guard against
+        // this.#root === undefined
+        if (schema === this.#root?.schema) {
             return this;
         }
 
@@ -160,16 +163,20 @@ export class OperationalSchema implements ValueManager {
                 manage: deferGeneration("manage", ValueManager),
             }
         } else {
-            manager = {
-                owner: this,
-                schema: schema,
-                access: AccessControl(schema),
-                validate: ValueValidator(schema, this),
-                manage: ValueManager(schema, this, managedBase),
+            try {
+                this.#generating.add(schema);
+                manager = {
+                    owner: this,
+                    schema: schema,
+                    access: AccessControl(schema),
+                    validate: ValueValidator(schema, this),
+                    manage: ValueManager(schema, this, managedBase),
+                }
+            } finally {
+                this.#generating.delete(schema);
             }
         }
 
-        this.#generating.delete(schema);
         this.#cache.set(schema, manager);
 
         return manager;

@@ -66,23 +66,23 @@ export class ModelTraversal {
      * some datatypes based on their parent's type.
      */
     getTypeName(model: Model | undefined): string | undefined {
+        if (!model) {
+            return undefined;
+        }
+
+        if (model.type) {
+            return model.type;
+        }
+
+        // Commands and events always represent structs
+        if (model.tag === ElementTag.Command || model.tag === ElementTag.Event) {
+            return "struct";
+        }
+
         return this.operation(() => {
-            if (!model) {
-                return undefined;
-            }
-
-            if (model.type) {
-                return model.type;
-            }
-
-            // Commands and events always represent structs
-            if (model.tag === ElementTag.Command || model.tag === ElementTag.Event) {
-                return "struct";
-            }
-
             let result: string | undefined;
             const name = model.name;
-            this.visitInheritance(model.parent, ancestor => {
+            this.visitInheritance(parentOf(model), ancestor => {
                 // If parented by enum or bitmap, infer type as uint of same size
                 if ((ancestor as any).metatype) {
                     switch (ancestor.name) {
@@ -145,7 +145,7 @@ export class ModelTraversal {
                 // Allowed tags represent a priority so search each tag
                 // independently
                 for (const tag of model.allowedBaseTags) {
-                    const found = this.findType(model.parent, type, tag);
+                    const found = this.findType(parentOf(model), type, tag);
                     if (found) {
                         return found;
                     }
@@ -206,7 +206,7 @@ export class ModelTraversal {
             if (model.xref) {
                 return model.xref;
             }
-            return this.findXref(model.parent);
+            return this.findXref(parentOf(model));
         });
     }
 
@@ -238,7 +238,7 @@ export class ModelTraversal {
 
         let shadow: Model | undefined;
         this.operationWithDismissal(model, () => {
-            this.visitInheritance(this.findBase(model?.parent), parent => {
+            this.visitInheritance(this.findBase(parentOf(model)), parent => {
                 if (model.id !== undefined) {
                     shadow = this.findLocal(parent, model.id, [model.tag]);
                     if (shadow) {
@@ -256,7 +256,7 @@ export class ModelTraversal {
 
     /**
      * Get an aspect that reflects extension of any shadowed aspects.  Note
-     * that this searches parent's inheritance and the model's inheritance.
+     * that this searches the parent's inheritance and the model's inheritance.
      * This is because aspects can be inherited by overriding an element in
      * the parent or by direct type inheritance.  Aspects in shadowed elements
      * take priority as they are presumably more specific.
@@ -267,7 +267,7 @@ export class ModelTraversal {
         }
 
         return this.operation(() => {
-            let aspect = (model as any)[symbol] as Aspect<any>;
+            let aspect = (model as any)[symbol] as Aspect<any> | undefined;
 
             const shadowedAspect = this.findAspect(this.findShadow(model), symbol);
             if (shadowedAspect) {
@@ -311,7 +311,7 @@ export class ModelTraversal {
                     return;
                 }
 
-                const referenced = this.findMember(model.parent, name, [
+                const referenced = this.findMember(parentOf(model), name, [
                     ElementTag.Attribute,
                     ElementTag.Field,
                 ]) as ValueModel;
@@ -366,7 +366,15 @@ export class ModelTraversal {
         }
 
         return this.operation(() => {
-            let access = this.findAspect(model, symbol) as Access;
+            let access = this.findAspect(model, symbol) as Access | undefined;
+
+            if (!access) {
+                return this.findAccess(
+                    this.findOwner(VM, model),
+                    symbol,
+                    VM
+                );
+            }
 
             if (access.complete) {
                 return access;
@@ -429,7 +437,7 @@ export class ModelTraversal {
                 }
 
                 if ((scope as ValueModel).effectiveMetatype !== Metatype.bitmap) {
-                    scope = scope.parent;
+                    scope = parentOf(scope);
                     continue;
                 }
 
@@ -468,8 +476,9 @@ export class ModelTraversal {
                 }
 
                 // Search parent scope once all inherited scope is searched
-                if (scope.parent) {
-                    queue.push(scope.parent);
+                const parent = parentOf(scope);
+                if (parent) {
+                    queue.push(parent);
                 }
             }
         });
@@ -525,12 +534,14 @@ export class ModelTraversal {
      * Find an owning model of a specific type.
      */
     findOwner<T extends Model>(constructor: Model.Constructor<T>, model: Model | undefined): T | undefined {
-        if (!model || model instanceof constructor || !model.parent) {
-            return model as T | undefined;
+        const parent = parentOf(model);
+
+        if (!parent || parent instanceof constructor) {
+            return parent as T | undefined;
         }
 
         return this.operation(() => {
-            return this.findOwner(constructor, model.parent);
+            return this.findOwner(constructor, parent);
         });
     }
 
@@ -541,11 +552,14 @@ export class ModelTraversal {
         if (!model) {
             return undefined;
         }
-        if (!model.parent) {
+
+        const parent = parentOf(model);
+        if (!parent) {
             return model;
         }
+
         this.operation(() => {
-            return this.findRoot(model.parent);
+            return this.findRoot(parent);
         });
     }
 
@@ -592,6 +606,19 @@ export class ModelTraversal {
             }
         }
     }
+
+    /**
+     * If a model is not owned by a MatterModel, global resolution won't work.
+     * This model acts as a fallback to work around this.
+     */
+    static defaultRoot: Model;
+}
+
+function parentOf(model?: Model) {
+    if (model?.parent === undefined && model?.tag !== ElementTag.Matter) {
+        return ModelTraversal.defaultRoot;
+    }
+    return model?.parent;
 }
 
 export namespace ModelTraversal {
