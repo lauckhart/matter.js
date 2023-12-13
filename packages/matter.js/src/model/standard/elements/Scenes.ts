@@ -41,9 +41,8 @@ Matter.children.push(Cluster({
             name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.4.4" },
             children: [Field({
-                name: "SN", constraint: "0", default: true, description: "SceneNames",
-                details: "The ability to store a name for a scene.",
-                xref: { document: "cluster", section: "1.4.4" }
+                name: "SN", constraint: "0", default: 1, description: "SceneNames",
+                details: "The ability to store a name for a scene."
             })]
         }),
 
@@ -87,9 +86,8 @@ Matter.children.push(Cluster({
                 "bits shall be 0.",
             xref: { document: "cluster", section: "1.4.7.5" },
             children: [Field({
-                name: "NameSupport", constraint: "7", default: true,
-                description: "The ability to store a name for a scene.",
-                xref: { document: "cluster", section: "1.4.7.5" }
+                name: "NameSupport", constraint: "7", default: 1,
+                description: "The ability to store a name for a scene."
             })]
         }),
 
@@ -113,25 +111,12 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.4.9.2" },
 
             children: [
-                Field({
-                    name: "GroupId", id: 0x0, type: "group-id", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.2" }
-                }),
-                Field({
-                    name: "SceneId", id: 0x1, type: "uint8", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.2" }
-                }),
-                Field({
-                    name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.2" }
-                }),
-                Field({
-                    name: "SceneName", id: 0x3, type: "string", conformance: "M", constraint: "max 16",
-                    xref: { document: "cluster", section: "1.4.9.2" }
-                }),
+                Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M" }),
+                Field({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M" }),
+                Field({ name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M" }),
+                Field({ name: "SceneName", id: 0x3, type: "string", conformance: "M", constraint: "max 16" }),
                 Field({
                     name: "ExtensionFieldSets", id: 0x4, type: "list", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.2" },
                     children: [Field({ name: "entry", type: "ExtensionFieldSet" })]
                 })
             ]
@@ -141,16 +126,9 @@ Matter.children.push(Cluster({
             name: "ViewScene", id: 0x1, access: "O", conformance: "M", direction: "request",
             response: "ViewSceneResponse",
             xref: { document: "cluster", section: "1.4.9.3" },
-
             children: [
-                Field({
-                    name: "GroupId", id: 0x0, type: "group-id", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.3" }
-                }),
-                Field({
-                    name: "SceneId", id: 0x1, type: "uint8", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.3" }
-                })
+                Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M" }),
+                Field({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M" })
             ]
         }),
 
@@ -158,16 +136,9 @@ Matter.children.push(Cluster({
             name: "RemoveScene", id: 0x2, access: "M", conformance: "M", direction: "request",
             response: "RemoveSceneResponse",
             xref: { document: "cluster", section: "1.4.9.4" },
-
             children: [
-                Field({
-                    name: "GroupId", id: 0x0, type: "group-id", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.4" }
-                }),
-                Field({
-                    name: "SceneId", id: 0x1, type: "uint8", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.4" }
-                })
+                Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M" }),
+                Field({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M" })
             ]
         }),
 
@@ -175,26 +146,16 @@ Matter.children.push(Cluster({
             name: "RemoveAllScenes", id: 0x3, access: "M", conformance: "M", direction: "request",
             response: "RemoveAllScenesResponse",
             xref: { document: "cluster", section: "1.4.9.5" },
-            children: [Field({
-                name: "GroupId", id: 0x0, type: "group-id", conformance: "M",
-                xref: { document: "cluster", section: "1.4.9.5" }
-            })]
+            children: [Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M" })]
         }),
 
         Command({
             name: "StoreScene", id: 0x4, access: "M", conformance: "M", direction: "request",
             response: "StoreSceneResponse",
             xref: { document: "cluster", section: "1.4.9.6" },
-
             children: [
-                Field({
-                    name: "GroupId", id: 0x0, type: "group-id", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.6" }
-                }),
-                Field({
-                    name: "SceneId", id: 0x1, type: "uint8", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.6" }
-                })
+                Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M" }),
+                Field({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M" })
             ]
         }),
 
@@ -202,20 +163,10 @@ Matter.children.push(Cluster({
             name: "RecallScene", id: 0x5, access: "O", conformance: "M", direction: "request",
             response: "status",
             xref: { document: "cluster", section: "1.4.9.7" },
-
             children: [
-                Field({
-                    name: "GroupId", id: 0x0, type: "group-id", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.7" }
-                }),
-                Field({
-                    name: "SceneId", id: 0x1, type: "uint8", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.7" }
-                }),
-                Field({
-                    name: "TransitionTime", id: 0x2, type: "uint16", conformance: "O", quality: "X",
-                    xref: { document: "cluster", section: "1.4.9.7" }
-                })
+                Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M" }),
+                Field({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M" }),
+                Field({ name: "TransitionTime", id: 0x2, type: "uint16", conformance: "O", quality: "X" })
             ]
         }),
 
@@ -226,10 +177,7 @@ Matter.children.push(Cluster({
                 "group when no commissioning tool is in the network, or for a commissioning tool to get the used " +
                 "scene identifiers within a certain group, for the endpoint that implements this cluster.",
             xref: { document: "cluster", section: "1.4.9.8" },
-            children: [Field({
-                name: "GroupId", id: 0x0, type: "group-id", conformance: "M",
-                xref: { document: "cluster", section: "1.4.9.8" }
-            })]
+            children: [Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M" })]
         }),
 
         Command({
@@ -275,16 +223,9 @@ Matter.children.push(Cluster({
                         "SceneIdentifierTo fields shall be ignored. Otherwise this field is set to 0.",
 
                     xref: { document: "cluster", section: "1.4.9.11.1" },
-
                     children: [
-                        Field({
-                            name: "CopyAllScenes", constraint: "0",
-                            xref: { document: "cluster", section: "1.4.9.11.1" }
-                        }),
-                        Field({
-                            name: "Reserved", constraint: "1 to 8",
-                            xref: { document: "cluster", section: "1.4.9.11.1" }
-                        })
+                        Field({ name: "CopyAllScenes", constraint: "0" }),
+                        Field({ name: "Reserved", constraint: "1 to 8" })
                     ]
                 }),
 
@@ -325,20 +266,10 @@ Matter.children.push(Cluster({
         Command({
             name: "AddSceneResponse", id: 0x0, conformance: "M", direction: "response",
             xref: { document: "cluster", section: "1.4.9.12" },
-
             children: [
-                Field({
-                    name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "1.4.9.12" }
-                }),
-                Field({
-                    name: "GroupId", id: 0x1, type: "group-id", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.12" }
-                }),
-                Field({
-                    name: "SceneId", id: 0x2, type: "uint8", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.12" }
-                })
+                Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M" }),
+                Field({ name: "SceneId", id: 0x2, type: "uint8", conformance: "M" })
             ]
         }),
 
@@ -347,29 +278,13 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.4.9.13" },
 
             children: [
-                Field({
-                    name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "1.4.9.13" }
-                }),
-                Field({
-                    name: "GroupId", id: 0x1, type: "group-id", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.13" }
-                }),
-                Field({
-                    name: "SceneId", id: 0x2, type: "uint8", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.13" }
-                }),
-                Field({
-                    name: "TransitionTime", id: 0x3, type: "uint16", conformance: "desc",
-                    xref: { document: "cluster", section: "1.4.9.13" }
-                }),
-                Field({
-                    name: "SceneName", id: 0x4, type: "string", conformance: "desc", constraint: "max 16",
-                    xref: { document: "cluster", section: "1.4.9.13" }
-                }),
+                Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M" }),
+                Field({ name: "SceneId", id: 0x2, type: "uint8", conformance: "M" }),
+                Field({ name: "TransitionTime", id: 0x3, type: "uint16", conformance: "desc" }),
+                Field({ name: "SceneName", id: 0x4, type: "string", conformance: "desc", constraint: "max 16" }),
                 Field({
                     name: "ExtensionFieldSets", id: 0x5, type: "list", conformance: "desc",
-                    xref: { document: "cluster", section: "1.4.9.13" },
                     children: [Field({ name: "entry", type: "ExtensionFieldSet" })]
                 })
             ]
@@ -378,56 +293,29 @@ Matter.children.push(Cluster({
         Command({
             name: "RemoveSceneResponse", id: 0x2, conformance: "M", direction: "response",
             xref: { document: "cluster", section: "1.4.9.14" },
-
             children: [
-                Field({
-                    name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "1.4.9.14" }
-                }),
-                Field({
-                    name: "GroupId", id: 0x1, type: "group-id", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.14" }
-                }),
-                Field({
-                    name: "SceneId", id: 0x2, type: "uint8", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.14" }
-                })
+                Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M" }),
+                Field({ name: "SceneId", id: 0x2, type: "uint8", conformance: "M" })
             ]
         }),
 
         Command({
             name: "RemoveAllScenesResponse", id: 0x3, conformance: "M", direction: "response",
             xref: { document: "cluster", section: "1.4.9.15" },
-
             children: [
-                Field({
-                    name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "1.4.9.15" }
-                }),
-                Field({
-                    name: "GroupId", id: 0x1, type: "group-id", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.15" }
-                })
+                Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M" })
             ]
         }),
 
         Command({
             name: "StoreSceneResponse", id: 0x4, conformance: "M", direction: "response",
             xref: { document: "cluster", section: "1.4.9.16" },
-
             children: [
-                Field({
-                    name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "1.4.9.16" }
-                }),
-                Field({
-                    name: "GroupId", id: 0x1, type: "group-id", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.16" }
-                }),
-                Field({
-                    name: "SceneId", id: 0x2, type: "uint8", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.16" }
-                })
+                Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M" }),
+                Field({ name: "SceneId", id: 0x2, type: "uint8", conformance: "M" })
             ]
         }),
 
@@ -463,21 +351,11 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.4.9.17" },
 
             children: [
-                Field({
-                    name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "1.4.9.17" }
-                }),
-                Field({
-                    name: "Capacity", id: 0x1, type: "uint8", conformance: "M", quality: "X",
-                    xref: { document: "cluster", section: "1.4.9.17" }
-                }),
-                Field({
-                    name: "GroupId", id: 0x2, type: "group-id", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.9.17" }
-                }),
+                Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                Field({ name: "Capacity", id: 0x1, type: "uint8", conformance: "M", quality: "X" }),
+                Field({ name: "GroupId", id: 0x2, type: "group-id", conformance: "M" }),
                 Field({
                     name: "SceneList", id: 0x3, type: "list", conformance: "O",
-                    xref: { document: "cluster", section: "1.4.9.17" },
                     children: [Field({ name: "entry", type: "uint8" })]
                 })
             ]
@@ -572,13 +450,9 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.4.6.2" },
 
             children: [
-                Field({
-                    name: "ClusterId", id: 0x0, type: "cluster-id", access: "RW", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.6.2" }
-                }),
+                Field({ name: "ClusterId", id: 0x0, type: "cluster-id", access: "RW", conformance: "M" }),
                 Field({
                     name: "AttributeValueList", id: 0x1, type: "list", access: "RW", conformance: "M",
-                    xref: { document: "cluster", section: "1.4.6.2" },
                     children: [Field({ name: "entry", type: "AttributeValuePair" })]
                 })
             ]

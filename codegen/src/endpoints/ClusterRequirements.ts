@@ -121,12 +121,12 @@ export class ClusterRequirements {
             if (!elementSet) {
                 elementSet = this.alterations[`${requirement.element}s`] = {};
             }
-            elementSet[camelize(requirement.name, false)] = alteration;
+            elementSet[camelize(requirement.name)] = alteration;
         } else {
             if (!this.defaults) {
                 this.defaults = {};
             }
-            this.defaults[camelize(requirement.name, false)] = alteration.default;
+            this.defaults[camelize(requirement.name)] = alteration.default;
         }
     }
 }

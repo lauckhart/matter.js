@@ -35,15 +35,12 @@ Matter.children.push(Cluster({
                 Field({
                     name: "PKTCNT", constraint: "0", description: "PacketCounts",
                     details: "Node makes available the counts for the number of received and transmitted packets on the ethernet " +
-                        "interface.",
-                    xref: { document: "core", section: "11.15.4" }
+                        "interface."
                 }),
-
                 Field({
                     name: "ERRCNT", constraint: "1", description: "ErrorCounts",
                     details: "Node makes available the counts for the number of errors that have occurred during the reception " +
-                        "and transmission of packets on the ethernet interface.",
-                    xref: { document: "core", section: "11.15.4" }
+                        "and transmission of packets on the ethernet interface."
                 })
             ]
         }),
@@ -151,46 +148,16 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.15.5.1" },
 
             children: [
-                Field({
-                    name: "Rate10M", id: 0x0, conformance: "M", description: "PHY rate is 10Mbps",
-                    xref: { document: "core", section: "11.15.5.1" }
-                }),
-                Field({
-                    name: "Rate100M", id: 0x1, conformance: "M", description: "PHY rate is 100Mbps",
-                    xref: { document: "core", section: "11.15.5.1" }
-                }),
-                Field({
-                    name: "Rate1G", id: 0x2, conformance: "M", description: "PHY rate is 1Gbps",
-                    xref: { document: "core", section: "11.15.5.1" }
-                }),
-                Field({
-                    name: "Rate25G", id: 0x3, conformance: "M", description: "PHY rate is 2.5Gbps",
-                    xref: { document: "core", section: "11.15.5.1" }
-                }),
-                Field({
-                    name: "Rate5G", id: 0x4, conformance: "M", description: "PHY rate is 5Gbps",
-                    xref: { document: "core", section: "11.15.5.1" }
-                }),
-                Field({
-                    name: "Rate10G", id: 0x5, conformance: "M", description: "PHY rate is 10Gbps",
-                    xref: { document: "core", section: "11.15.5.1" }
-                }),
-                Field({
-                    name: "Rate40G", id: 0x6, conformance: "M", description: "PHY rate is 40Gbps",
-                    xref: { document: "core", section: "11.15.5.1" }
-                }),
-                Field({
-                    name: "Rate100G", id: 0x7, conformance: "M", description: "PHY rate is 100Gbps",
-                    xref: { document: "core", section: "11.15.5.1" }
-                }),
-                Field({
-                    name: "Rate200G", id: 0x8, conformance: "M", description: "PHY rate is 200Gbps",
-                    xref: { document: "core", section: "11.15.5.1" }
-                }),
-                Field({
-                    name: "Rate400G", id: 0x9, conformance: "M", description: "PHY rate is 400Gbps",
-                    xref: { document: "core", section: "11.15.5.1" }
-                })
+                Field({ name: "Rate10M", id: 0x0, conformance: "M", description: "PHY rate is 10Mbps" }),
+                Field({ name: "Rate100M", id: 0x1, conformance: "M", description: "PHY rate is 100Mbps" }),
+                Field({ name: "Rate1G", id: 0x2, conformance: "M", description: "PHY rate is 1Gbps" }),
+                Field({ name: "Rate25G", id: 0x3, conformance: "M", description: "PHY rate is 2.5Gbps" }),
+                Field({ name: "Rate5G", id: 0x4, conformance: "M", description: "PHY rate is 5Gbps" }),
+                Field({ name: "Rate10G", id: 0x5, conformance: "M", description: "PHY rate is 10Gbps" }),
+                Field({ name: "Rate40G", id: 0x6, conformance: "M", description: "PHY rate is 40Gbps" }),
+                Field({ name: "Rate100G", id: 0x7, conformance: "M", description: "PHY rate is 100Gbps" }),
+                Field({ name: "Rate200G", id: 0x8, conformance: "M", description: "PHY rate is 200Gbps" }),
+                Field({ name: "Rate400G", id: 0x9, conformance: "M", description: "PHY rate is 400Gbps" })
             ]
         })
     ]

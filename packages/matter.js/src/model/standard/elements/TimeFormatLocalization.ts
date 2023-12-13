@@ -37,8 +37,7 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.4.4" },
             children: [Field({
                 name: "CALFMT", constraint: "0", description: "CalendarFormat",
-                details: "The Node can be configured to use different calendar formats when conveying values to a user.",
-                xref: { document: "core", section: "11.4.4" }
+                details: "The Node can be configured to use different calendar formats when conveying values to a user."
             })]
         }),
 
@@ -75,16 +74,9 @@ Matter.children.push(Cluster({
         Datatype({
             name: "HourFormatEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "11.4.5.1" },
-
             children: [
-                Field({
-                    name: "12Hr", id: 0x0, conformance: "M", description: "Time conveyed with a 12-hour clock",
-                    xref: { document: "core", section: "11.4.5.1" }
-                }),
-                Field({
-                    name: "24Hr", id: 0x1, conformance: "M", description: "Time conveyed with a 24-hour clock",
-                    xref: { document: "core", section: "11.4.5.1" }
-                })
+                Field({ name: "12Hr", id: 0x0, conformance: "M", description: "Time conveyed with a 12-hour clock" }),
+                Field({ name: "24Hr", id: 0x1, conformance: "M", description: "Time conveyed with a 24-hour clock" })
             ]
         }),
 
@@ -95,59 +87,47 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Buddhist", id: 0x0, conformance: "M",
-                    description: "Dates conveyed using the Buddhist calendar",
-                    xref: { document: "core", section: "11.4.5.2" }
+                    description: "Dates conveyed using the Buddhist calendar"
                 }),
                 Field({
                     name: "Chinese", id: 0x1, conformance: "M",
-                    description: "Dates conveyed using the Chinese calendar",
-                    xref: { document: "core", section: "11.4.5.2" }
+                    description: "Dates conveyed using the Chinese calendar"
                 }),
                 Field({
-                    name: "Coptic", id: 0x2, conformance: "M", description: "Dates conveyed using the Coptic calendar",
-                    xref: { document: "core", section: "11.4.5.2" }
+                    name: "Coptic", id: 0x2, conformance: "M", description: "Dates conveyed using the Coptic calendar"
                 }),
                 Field({
                     name: "Ethiopian", id: 0x3, conformance: "M",
-                    description: "Dates conveyed using the Ethiopian calendar",
-                    xref: { document: "core", section: "11.4.5.2" }
+                    description: "Dates conveyed using the Ethiopian calendar"
                 }),
                 Field({
                     name: "Gregorian", id: 0x4, conformance: "M",
-                    description: "Dates conveyed using the Gregorian calendar",
-                    xref: { document: "core", section: "11.4.5.2" }
+                    description: "Dates conveyed using the Gregorian calendar"
                 }),
                 Field({
-                    name: "Hebrew", id: 0x5, conformance: "M", description: "Dates conveyed using the Hebrew calendar",
-                    xref: { document: "core", section: "11.4.5.2" }
+                    name: "Hebrew", id: 0x5, conformance: "M", description: "Dates conveyed using the Hebrew calendar"
                 }),
                 Field({
-                    name: "Indian", id: 0x6, conformance: "M", description: "Dates conveyed using the Indian calendar",
-                    xref: { document: "core", section: "11.4.5.2" }
+                    name: "Indian", id: 0x6, conformance: "M", description: "Dates conveyed using the Indian calendar"
                 }),
                 Field({
                     name: "Islamic", id: 0x7, conformance: "M",
-                    description: "Dates conveyed using the Islamic calendar",
-                    xref: { document: "core", section: "11.4.5.2" }
+                    description: "Dates conveyed using the Islamic calendar"
                 }),
                 Field({
                     name: "Japanese", id: 0x8, conformance: "M",
-                    description: "Dates conveyed using the Japanese calendar",
-                    xref: { document: "core", section: "11.4.5.2" }
+                    description: "Dates conveyed using the Japanese calendar"
                 }),
                 Field({
-                    name: "Korean", id: 0x9, conformance: "M", description: "Dates conveyed using the Korean calendar",
-                    xref: { document: "core", section: "11.4.5.2" }
+                    name: "Korean", id: 0x9, conformance: "M", description: "Dates conveyed using the Korean calendar"
                 }),
                 Field({
                     name: "Persian", id: 0xa, conformance: "M",
-                    description: "Dates conveyed using the Persian calendar",
-                    xref: { document: "core", section: "11.4.5.2" }
+                    description: "Dates conveyed using the Persian calendar"
                 }),
                 Field({
                     name: "Taiwanese", id: 0xb, conformance: "M",
-                    description: "Dates conveyed using the Taiwanese calendar",
-                    xref: { document: "core", section: "11.4.5.2" }
+                    description: "Dates conveyed using the Taiwanese calendar"
                 })
             ]
         })

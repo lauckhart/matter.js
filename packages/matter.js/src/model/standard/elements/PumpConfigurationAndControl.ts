@@ -33,38 +33,31 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "PRSCONST", conformance: "O.a+", constraint: "0", description: "ConstantPressure",
-                    details: "Supports operating in constant pressure mode",
-                    xref: { document: "cluster", section: "4.2.4" }
+                    details: "Supports operating in constant pressure mode"
                 }),
                 Field({
                     name: "PRSCOMP", conformance: "O.a+", constraint: "1", description: "CompensatedPressure",
-                    details: "Supports operating in compensated pressure mode",
-                    xref: { document: "cluster", section: "4.2.4" }
+                    details: "Supports operating in compensated pressure mode"
                 }),
                 Field({
                     name: "FLW", conformance: "O.a+", constraint: "2", description: "ConstantFlow",
-                    details: "Supports operating in constant flow mode",
-                    xref: { document: "cluster", section: "4.2.4" }
+                    details: "Supports operating in constant flow mode"
                 }),
                 Field({
                     name: "SPD", conformance: "O.a+", constraint: "3", description: "ConstantSpeed",
-                    details: "Supports operating in constant speed mode",
-                    xref: { document: "cluster", section: "4.2.4" }
+                    details: "Supports operating in constant speed mode"
                 }),
                 Field({
                     name: "TEMP", conformance: "O.a+", constraint: "4", description: "ConstantTemperature",
-                    details: "Supports operating in constant temperature mode",
-                    xref: { document: "cluster", section: "4.2.4" }
+                    details: "Supports operating in constant temperature mode"
                 }),
                 Field({
                     name: "AUTO", conformance: "O", constraint: "5", description: "Automatic",
-                    details: "Supports operating in automatic mode",
-                    xref: { document: "cluster", section: "4.2.4" }
+                    details: "Supports operating in automatic mode"
                 }),
                 Field({
                     name: "LOCAL", conformance: "O", constraint: "6", description: "LocalOperation",
-                    details: "Supports operating using local settings",
-                    xref: { document: "cluster", section: "4.2.4" }
+                    details: "Supports operating using local settings"
                 })
             ]
         }),
@@ -519,14 +512,8 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "4.2.6.1.2" }
                 }),
 
-                Field({
-                    name: "SpeedLow", constraint: "2", description: "Setpoint is too low to achieve.",
-                    xref: { document: "cluster", section: "4.2.6.1" }
-                }),
-                Field({
-                    name: "SpeedHigh", constraint: "3", description: "Setpoint is too high to achieve.",
-                    xref: { document: "cluster", section: "4.2.6.1" }
-                }),
+                Field({ name: "SpeedLow", constraint: "2", description: "Setpoint is too low to achieve." }),
+                Field({ name: "SpeedHigh", constraint: "3", description: "Setpoint is too high to achieve." }),
 
                 Field({
                     name: "LocalOverride", constraint: "4",
@@ -538,10 +525,7 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "4.2.6.1.3" }
                 }),
 
-                Field({
-                    name: "Running", constraint: "5", description: "Pump is currently running",
-                    xref: { document: "cluster", section: "4.2.6.1" }
-                }),
+                Field({ name: "Running", constraint: "5", description: "Pump is currently running" }),
 
                 Field({
                     name: "RemotePressure", constraint: "6",
@@ -587,18 +571,15 @@ Matter.children.push(Cluster({
 
                 Field({
                     name: "Minimum", id: 0x1, conformance: "SPD",
-                    description: "This value sets the pump to run at the minimum possible speed it can without being stopped.",
-                    xref: { document: "cluster", section: "4.2.6.2" }
+                    description: "This value sets the pump to run at the minimum possible speed it can without being stopped."
                 }),
                 Field({
                     name: "Maximum", id: 0x2, conformance: "SPD",
-                    description: "This value sets the pump to run at its maximum possible speed.",
-                    xref: { document: "cluster", section: "4.2.6.2" }
+                    description: "This value sets the pump to run at its maximum possible speed."
                 }),
                 Field({
                     name: "Local", id: 0x3, conformance: "LOCAL",
-                    description: "This value sets the pump to run with the local settings of the pump, regardless of what these are.",
-                    xref: { document: "cluster", section: "4.2.6.2" }
+                    description: "This value sets the pump to run with the local settings of the pump, regardless of what these are."
                 })
             ]
         }),

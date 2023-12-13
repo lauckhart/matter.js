@@ -48,14 +48,11 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "ProxyAllNodes", id: 0x1, type: "bool", access: "RW", conformance: "M", constraint: "desc",
-                    default: "false",
-                    xref: { document: "core", section: "9.15.14.4.1" }
+                    default: true
                 }),
-
                 Field({
                     name: "SourceList", id: 0x2, type: "list", access: "RW", conformance: "M", constraint: "desc",
-                    default: "empty",
-                    xref: { document: "core", section: "9.15.14.4.1" },
+                    default: [],
                     children: [Field({ name: "entry", type: "node-id" })]
                 })
             ]

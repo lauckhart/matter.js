@@ -86,22 +86,12 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.19.7.7.1" },
 
             children: [
+                Field({ name: "PreviousState", id: 0x0, type: "UpdateStateEnum", conformance: "M", default: 0 }),
+                Field({ name: "NewState", id: 0x1, type: "UpdateStateEnum", conformance: "M" }),
+                Field({ name: "Reason", id: 0x2, type: "ChangeReasonEnum", conformance: "M" }),
                 Field({
-                    name: "PreviousState", id: 0x0, type: "UpdateStateEnum", conformance: "M", default: "Unknown",
-                    xref: { document: "core", section: "11.19.7.7.1" }
-                }),
-                Field({
-                    name: "NewState", id: 0x1, type: "UpdateStateEnum", conformance: "M",
-                    xref: { document: "core", section: "11.19.7.7.1" }
-                }),
-                Field({
-                    name: "Reason", id: 0x2, type: "ChangeReasonEnum", conformance: "M",
-                    xref: { document: "core", section: "11.19.7.7.1" }
-                }),
-                Field({
-                    name: "TargetSoftwareVersion", id: 0x3, type: "uint32", conformance: "M", default: "null",
-                    quality: "X",
-                    xref: { document: "core", section: "11.19.7.7.1" }
+                    name: "TargetSoftwareVersion", id: 0x3, type: "uint32", conformance: "M", default: null,
+                    quality: "X"
                 })
             ]
         }),
@@ -112,16 +102,9 @@ Matter.children.push(Cluster({
                 "software update. This event SHOULD be generated even if a software update was done using means " +
                 "outside of this cluster.",
             xref: { document: "core", section: "11.19.7.7.6" },
-
             children: [
-                Field({
-                    name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M",
-                    xref: { document: "core", section: "11.19.7.7.6" }
-                }),
-                Field({
-                    name: "ProductId", id: 0x1, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "11.19.7.7.6" }
-                })
+                Field({ name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" }),
+                Field({ name: "ProductId", id: 0x1, type: "uint16", conformance: "M" })
             ]
         }),
 
@@ -134,23 +117,13 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.19.7.7.9" },
 
             children: [
-                Field({
-                    name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M",
-                    xref: { document: "core", section: "11.19.7.7.9" }
-                }),
-                Field({
-                    name: "BytesDownloaded", id: 0x1, type: "uint64", conformance: "M",
-                    xref: { document: "core", section: "11.19.7.7.9" }
-                }),
+                Field({ name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" }),
+                Field({ name: "BytesDownloaded", id: 0x1, type: "uint64", conformance: "M" }),
                 Field({
                     name: "ProgressPercent", id: 0x2, type: "uint8", conformance: "M", constraint: "0 to 100",
-                    default: "null", quality: "X",
-                    xref: { document: "core", section: "11.19.7.7.9" }
+                    default: null, quality: "X"
                 }),
-                Field({
-                    name: "PlatformCode", id: 0x3, type: "int64", conformance: "M", default: "null", quality: "X",
-                    xref: { document: "core", section: "11.19.7.7.9" }
-                })
+                Field({ name: "PlatformCode", id: 0x3, type: "int64", conformance: "M", default: null, quality: "X" })
             ]
         }),
 
@@ -170,27 +143,16 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.19.7.6.1" },
 
             children: [
+                Field({ name: "ProviderNodeId", id: 0x0, type: "node-id", access: "F", conformance: "M" }),
+                Field({ name: "VendorId", id: 0x1, type: "vendor-id", access: "F", conformance: "M" }),
                 Field({
-                    name: "ProviderNodeId", id: 0x0, type: "node-id", access: "F", conformance: "M",
-                    xref: { document: "core", section: "11.19.7.6.1" }
-                }),
-                Field({
-                    name: "VendorId", id: 0x1, type: "vendor-id", access: "F", conformance: "M",
-                    xref: { document: "core", section: "11.19.7.6.1" }
-                }),
-                Field({
-                    name: "AnnouncementReason", id: 0x2, type: "AnnouncementReasonEnum", access: "F", conformance: "M",
-                    xref: { document: "core", section: "11.19.7.6.1" }
+                    name: "AnnouncementReason", id: 0x2, type: "AnnouncementReasonEnum", access: "F", conformance: "M"
                 }),
                 Field({
                     name: "MetadataForNode", id: 0x3, type: "octstr", access: "F", conformance: "O",
-                    constraint: "max 512",
-                    xref: { document: "core", section: "11.19.7.6.1" }
+                    constraint: "max 512"
                 }),
-                Field({
-                    name: "Endpoint", id: 0x4, type: "endpoint-no", access: "F", conformance: "M",
-                    xref: { document: "core", section: "11.19.7.6.1" }
-                }),
+                Field({ name: "Endpoint", id: 0x4, type: "endpoint-no", access: "F", conformance: "M" }),
                 Field({
                     name: "FabricIndex", id: 0xfe, type: "fabric-idx", access: "R F V", conformance: "M",
                     constraint: "1 to 254"
@@ -205,18 +167,15 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "SimpleAnnouncement", id: 0x0, conformance: "M",
-                    description: "An OTA Provider is announcing its presence.",
-                    xref: { document: "core", section: "11.19.7.4.1" }
+                    description: "An OTA Provider is announcing its presence."
                 }),
                 Field({
                     name: "UpdateAvailable", id: 0x1, conformance: "M",
-                    description: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be available.",
-                    xref: { document: "core", section: "11.19.7.4.1" }
+                    description: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be available."
                 }),
                 Field({
                     name: "UrgentUpdateAvailable", id: 0x2, conformance: "M",
-                    description: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be available, which contains an update that needs to be applied urgently.",
-                    xref: { document: "core", section: "11.19.7.4.1" }
+                    description: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be available, which contains an update that needs to be applied urgently."
                 })
             ]
         }),
@@ -226,49 +185,38 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.19.7.4.5" },
 
             children: [
-                Field({
-                    name: "Unknown", id: 0x0, conformance: "M", description: "Current state is not yet determined.",
-                    xref: { document: "core", section: "11.19.7.4.5" }
-                }),
+                Field({ name: "Unknown", id: 0x0, conformance: "M", description: "Current state is not yet determined." }),
                 Field({
                     name: "Idle", id: 0x1, conformance: "M",
-                    description: "Indicate a Node not yet in the process of software update.",
-                    xref: { document: "core", section: "11.19.7.4.5" }
+                    description: "Indicate a Node not yet in the process of software update."
                 }),
                 Field({
                     name: "Querying", id: 0x2, conformance: "M",
-                    description: "Indicate a Node in the process of querying an OTA Provider.",
-                    xref: { document: "core", section: "11.19.7.4.5" }
+                    description: "Indicate a Node in the process of querying an OTA Provider."
                 }),
                 Field({
                     name: "DelayedOnQuery", id: 0x3, conformance: "M",
-                    description: "Indicate a Node waiting after a Busy response.",
-                    xref: { document: "core", section: "11.19.7.4.5" }
+                    description: "Indicate a Node waiting after a Busy response."
                 }),
                 Field({
                     name: "Downloading", id: 0x4, conformance: "M",
-                    description: "Indicate a Node currently in the process of downloading a software update.",
-                    xref: { document: "core", section: "11.19.7.4.5" }
+                    description: "Indicate a Node currently in the process of downloading a software update."
                 }),
                 Field({
                     name: "Applying", id: 0x5, conformance: "M",
-                    description: "Indicate a Node currently in the process of verifying and applying a software update.",
-                    xref: { document: "core", section: "11.19.7.4.5" }
+                    description: "Indicate a Node currently in the process of verifying and applying a software update."
                 }),
                 Field({
                     name: "DelayedOnApply", id: 0x6, conformance: "M",
-                    description: "Indicate a Node waiting caused by AwaitNextAction response.",
-                    xref: { document: "core", section: "11.19.7.4.5" }
+                    description: "Indicate a Node waiting caused by AwaitNextAction response."
                 }),
                 Field({
                     name: "RollingBack", id: 0x7, conformance: "M",
-                    description: "Indicate a Node in the process of recovering to a previous version.",
-                    xref: { document: "core", section: "11.19.7.4.5" }
+                    description: "Indicate a Node in the process of recovering to a previous version."
                 }),
                 Field({
                     name: "DelayedOnUserConsent", id: 0x8, conformance: "M",
-                    description: "Indicate a Node is capable of user consent.",
-                    xref: { document: "core", section: "11.19.7.4.5" }
+                    description: "Indicate a Node is capable of user consent."
                 })
             ]
         }),
@@ -281,28 +229,23 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Unknown", id: 0x0, conformance: "M",
-                    description: "The reason for a state change is unknown.",
-                    xref: { document: "core", section: "11.19.7.4.15" }
+                    description: "The reason for a state change is unknown."
                 }),
                 Field({
                     name: "Success", id: 0x1, conformance: "M",
-                    description: "The reason for a state change is the success of a prior operation.",
-                    xref: { document: "core", section: "11.19.7.4.15" }
+                    description: "The reason for a state change is the success of a prior operation."
                 }),
                 Field({
                     name: "Failure", id: 0x2, conformance: "M",
-                    description: "The reason for a state change is the failure of a prior operation.",
-                    xref: { document: "core", section: "11.19.7.4.15" }
+                    description: "The reason for a state change is the failure of a prior operation."
                 }),
                 Field({
                     name: "TimeOut", id: 0x3, conformance: "M",
-                    description: "The reason for a state change is a time-out.",
-                    xref: { document: "core", section: "11.19.7.4.15" }
+                    description: "The reason for a state change is a time-out."
                 }),
                 Field({
                     name: "DelayByProvider", id: 0x4, conformance: "O",
-                    description: "The reason for a state change is a request by the OTA Provider to wait.",
-                    xref: { document: "core", section: "11.19.7.4.15" }
+                    description: "The reason for a state change is a request by the OTA Provider to wait."
                 })
             ]
         }),
@@ -313,14 +256,8 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.19.7.4.20" },
 
             children: [
-                Field({
-                    name: "ProviderNodeId", id: 0x1, type: "node-id", access: "F", conformance: "M",
-                    xref: { document: "core", section: "11.19.7.4.20" }
-                }),
-                Field({
-                    name: "Endpoint", id: 0x2, type: "endpoint-no", access: "F", conformance: "M",
-                    xref: { document: "core", section: "11.19.7.4.20" }
-                }),
+                Field({ name: "ProviderNodeId", id: 0x1, type: "node-id", access: "F", conformance: "M" }),
+                Field({ name: "Endpoint", id: 0x2, type: "endpoint-no", access: "F", conformance: "M" }),
                 Field({
                     name: "FabricIndex", id: 0xfe, type: "fabric-idx", access: "R F V", conformance: "M",
                     constraint: "1 to 254"

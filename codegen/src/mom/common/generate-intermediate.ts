@@ -23,7 +23,7 @@ const logger = Logger.get("generate-model");
 export function generateIntermediateModel(source: string, elements: MatterElement.Child[]) {
     logger.info(`validate ${source}`);
     const matter = new MatterModel({
-        name: `${camelize(source)}Matter`,
+        name: `${camelize(source, true)}Matter`,
         children: elements,
     });
 
@@ -34,7 +34,7 @@ export function generateIntermediateModel(source: string, elements: MatterElemen
         file,
         "@project-chip/matter.js/model",
         matter,
-        `export const ${camelize(source)}Matter = `
+        `export const ${camelize(source, true)}Matter = `
     );
     file.save();
 

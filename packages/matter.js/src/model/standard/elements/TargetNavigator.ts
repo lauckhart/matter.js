@@ -113,19 +113,14 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "6.11.5.2" },
 
             children: [
-                Field({
-                    name: "Success", id: 0x0, conformance: "M", description: "Command succeeded",
-                    xref: { document: "cluster", section: "6.11.5.2" }
-                }),
+                Field({ name: "Success", id: 0x0, conformance: "M", description: "Command succeeded" }),
                 Field({
                     name: "TargetNotFound", id: 0x1, conformance: "M",
-                    description: "Requested target was not found in the TargetList",
-                    xref: { document: "cluster", section: "6.11.5.2" }
+                    description: "Requested target was not found in the TargetList"
                 }),
                 Field({
                     name: "NotAllowed", id: 0x2, conformance: "M",
-                    description: "Target request is not allowed in current state.",
-                    xref: { document: "cluster", section: "6.11.5.2" }
+                    description: "Target request is not allowed in current state."
                 })
             ]
         })

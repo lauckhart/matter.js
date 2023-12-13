@@ -30,38 +30,31 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "HEAT", conformance: "AUTO, O.a+", constraint: "0", description: "Heating",
-                    details: "Thermostat is capable of managing a heating device",
-                    xref: { document: "cluster", section: "4.3.3.1" }
+                    details: "Thermostat is capable of managing a heating device"
                 }),
                 Field({
                     name: "COOL", conformance: "AUTO, O.a+", constraint: "1", description: "Cooling",
-                    details: "Thermostat is capable of managing a cooling device",
-                    xref: { document: "cluster", section: "4.3.3.1" }
+                    details: "Thermostat is capable of managing a cooling device"
                 }),
                 Field({
                     name: "OCC", conformance: "O", constraint: "2", description: "Occupancy",
-                    details: "Supports Occupied and Unoccupied setpoints",
-                    xref: { document: "cluster", section: "4.3.3.1" }
+                    details: "Supports Occupied and Unoccupied setpoints"
                 }),
                 Field({
                     name: "SCH", conformance: "O", constraint: "3", description: "ScheduleConfiguration",
-                    details: "Supports remote configuration of a weekly schedule of setpoint transitions",
-                    xref: { document: "cluster", section: "4.3.3.1" }
+                    details: "Supports remote configuration of a weekly schedule of setpoint transitions"
                 }),
                 Field({
                     name: "SB", conformance: "O", constraint: "4", description: "Setback",
-                    details: "Supports configurable setback (or span)",
-                    xref: { document: "cluster", section: "4.3.3.1" }
+                    details: "Supports configurable setback (or span)"
                 }),
                 Field({
                     name: "AUTO", conformance: "O", constraint: "5", description: "AutoMode",
-                    details: "Supports a System Mode of Auto",
-                    xref: { document: "cluster", section: "4.3.3.1" }
+                    details: "Supports a System Mode of Auto"
                 }),
                 Field({
                     name: "LTNE", conformance: "O", constraint: "6", description: "LocalTemperatureNotExposed",
-                    details: "Thermostat does not expose the LocalTemperature Value in the LocalTemperature attribute",
-                    xref: { document: "cluster", section: "4.3.3.1" }
+                    details: "Thermostat does not expose the LocalTemperature Value in the LocalTemperature attribute"
                 })
             ]
         }),
@@ -182,22 +175,14 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "CoolingStage", constraint: "0 to 2",
-                    description: "00 – Cool Stage 101 – Cool Stage 210 – Cool Stage 311 – Reserved",
-                    xref: { document: "cluster", section: "4.3.7.11" }
+                    description: "00 – Cool Stage 101 – Cool Stage 210 – Cool Stage 311 – Reserved"
                 }),
                 Field({
                     name: "HeatingStage", constraint: "2 to 4",
-                    description: "00 – Heat Stage 101 – Heat Stage 210 – Heat Stage 311 – Reserved",
-                    xref: { document: "cluster", section: "4.3.7.11" }
+                    description: "00 – Heat Stage 101 – Heat Stage 210 – Heat Stage 311 – Reserved"
                 }),
-                Field({
-                    name: "HeatingType", constraint: "4", description: "0 – Conventional1 – Heat Pump",
-                    xref: { document: "cluster", section: "4.3.7.11" }
-                }),
-                Field({
-                    name: "HeatingFuel", constraint: "5", description: "0 – Electric / B1 – Gas / O",
-                    xref: { document: "cluster", section: "4.3.7.11" }
-                })
+                Field({ name: "HeatingType", constraint: "4", description: "0 – Conventional1 – Heat Pump" }),
+                Field({ name: "HeatingFuel", constraint: "5", description: "0 – Electric / B1 – Gas / O" })
             ]
         }),
 
@@ -392,18 +377,15 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "LocalTemperature", constraint: "0",
-                    description: "When set, LocalTemperature Value is derived from a remote node",
-                    xref: { document: "cluster", section: "4.3.7.22" }
+                    description: "When set, LocalTemperature Value is derived from a remote node"
                 }),
                 Field({
                     name: "OutdoorTemperature", constraint: "1",
-                    description: "When set, OutdoorTemperature is derived from a remote node",
-                    xref: { document: "cluster", section: "4.3.7.22" }
+                    description: "When set, OutdoorTemperature is derived from a remote node"
                 }),
                 Field({
                     name: "Occupancy", constraint: "2",
-                    description: "When set, Occupancy is derived from a remote node",
-                    xref: { document: "cluster", section: "4.3.7.22" }
+                    description: "When set, Occupancy is derived from a remote node"
                 })
             ]
         }),
@@ -433,33 +415,27 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "CoolingOnly", id: 0x0, conformance: "[COOL]",
-                    description: "Heat and Emergency are not possible",
-                    xref: { document: "cluster", section: "4.3.7.23" }
+                    description: "Heat and Emergency are not possible"
                 }),
                 Field({
                     name: "CoolingWithReheat", id: 0x1, conformance: "[COOL]",
-                    description: "Heat and Emergency are not possible",
-                    xref: { document: "cluster", section: "4.3.7.23" }
+                    description: "Heat and Emergency are not possible"
                 }),
                 Field({
                     name: "HeatingOnly", id: 0x2, conformance: "[HEAT]",
-                    description: "Cool and precooling (see Terms) are not possible",
-                    xref: { document: "cluster", section: "4.3.7.23" }
+                    description: "Cool and precooling (see Terms) are not possible"
                 }),
                 Field({
                     name: "HeatingWithReheat", id: 0x3, conformance: "[HEAT]",
-                    description: "Cool and precooling are not possible",
-                    xref: { document: "cluster", section: "4.3.7.23" }
+                    description: "Cool and precooling are not possible"
                 }),
                 Field({
                     name: "CoolingAndHeating", id: 0x4, conformance: "[HEAT & COOL]",
-                    description: "All modes are possible",
-                    xref: { document: "cluster", section: "4.3.7.23" }
+                    description: "All modes are possible"
                 }),
                 Field({
                     name: "CoolingAndHeatingWithReheat", id: 0x5, conformance: "[HEAT & COOL]",
-                    description: "All modes are possible",
-                    xref: { document: "cluster", section: "4.3.7.23" }
+                    description: "All modes are possible"
                 })
             ]
         }),
@@ -480,37 +456,26 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Off", id: 0x0, conformance: "O",
-                    description: "The Thermostat does not generate demand for Cooling or Heating",
-                    xref: { document: "cluster", section: "4.3.7.24" }
+                    description: "The Thermostat does not generate demand for Cooling or Heating"
                 }),
                 Field({
                     name: "Auto", id: 0x1, conformance: "AUTO",
-                    description: "Demand is generated for either Cooling or Heating, as required",
-                    xref: { document: "cluster", section: "4.3.7.24" }
+                    description: "Demand is generated for either Cooling or Heating, as required"
                 }),
                 Field({
-                    name: "Cool", id: 0x3, conformance: "[COOL]", description: "Demand is only generated for Cooling",
-                    xref: { document: "cluster", section: "4.3.7.24" }
+                    name: "Cool", id: 0x3, conformance: "[COOL]", description: "Demand is only generated for Cooling"
                 }),
                 Field({
-                    name: "Heat", id: 0x4, conformance: "[HEAT]", description: "Demand is only generated for Heating",
-                    xref: { document: "cluster", section: "4.3.7.24" }
+                    name: "Heat", id: 0x4, conformance: "[HEAT]", description: "Demand is only generated for Heating"
                 }),
                 Field({
                     name: "EmergencyHeat", id: 0x5, conformance: "[HEAT]",
-                    description: "2nd stage heating is in use to achieve desired temperature",
-                    xref: { document: "cluster", section: "4.3.7.24" }
+                    description: "2nd stage heating is in use to achieve desired temperature"
                 }),
-                Field({
-                    name: "Precooling", id: 0x6, conformance: "[COOL]", description: "(see Terms)",
-                    xref: { document: "cluster", section: "4.3.7.24" }
-                }),
-                Field({
-                    name: "FanOnly", id: 0x7, conformance: "O",
-                    xref: { document: "cluster", section: "4.3.7.24" }
-                }),
-                Field({ name: "Dry", id: 0x8, conformance: "O", xref: { document: "cluster", section: "4.3.7.24" } }),
-                Field({ name: "Sleep", id: 0x9, conformance: "O", xref: { document: "cluster", section: "4.3.7.24" } })
+                Field({ name: "Precooling", id: 0x6, conformance: "[COOL]", description: "(see Terms)" }),
+                Field({ name: "FanOnly", id: 0x7, conformance: "O" }),
+                Field({ name: "Dry", id: 0x8, conformance: "O" }),
+                Field({ name: "Sleep", id: 0x9, conformance: "O" })
             ]
         }),
 
@@ -529,17 +494,10 @@ Matter.children.push(Cluster({
                 "Table 76. Alarm Codes",
 
             xref: { document: "cluster", section: "4.3.7.25" },
-
             children: [
-                Field({
-                    name: "InitializationFailure", constraint: "0",
-                    xref: { document: "cluster", section: "4.3.7.25" }
-                }),
-                Field({ name: "HardwareFailure", constraint: "1", xref: { document: "cluster", section: "4.3.7.25" } }),
-                Field({
-                    name: "SelfCalibrationFailure", constraint: "2",
-                    xref: { document: "cluster", section: "4.3.7.25" }
-                })
+                Field({ name: "InitializationFailure", constraint: "0" }),
+                Field({ name: "HardwareFailure", constraint: "1" }),
+                Field({ name: "SelfCalibrationFailure", constraint: "2" })
             ]
         }),
 
@@ -570,34 +528,13 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "4.3.7.27" },
 
             children: [
-                Field({
-                    name: "Sunday", id: 0x0, conformance: "M",
-                    xref: { document: "cluster", section: "4.3.7.27" }
-                }),
-                Field({
-                    name: "Monday", id: 0x1, conformance: "M",
-                    xref: { document: "cluster", section: "4.3.7.27" }
-                }),
-                Field({
-                    name: "Tuesday", id: 0x2, conformance: "M",
-                    xref: { document: "cluster", section: "4.3.7.27" }
-                }),
-                Field({
-                    name: "Wednesday", id: 0x3, conformance: "M",
-                    xref: { document: "cluster", section: "4.3.7.27" }
-                }),
-                Field({
-                    name: "Thursday", id: 0x4, conformance: "M",
-                    xref: { document: "cluster", section: "4.3.7.27" }
-                }),
-                Field({
-                    name: "Friday", id: 0x5, conformance: "M",
-                    xref: { document: "cluster", section: "4.3.7.27" }
-                }),
-                Field({
-                    name: "Saturday", id: 0x6, conformance: "M",
-                    xref: { document: "cluster", section: "4.3.7.27" }
-                })
+                Field({ name: "Sunday", id: 0x0, conformance: "M" }),
+                Field({ name: "Monday", id: 0x1, conformance: "M" }),
+                Field({ name: "Tuesday", id: 0x2, conformance: "M" }),
+                Field({ name: "Wednesday", id: 0x3, conformance: "M" }),
+                Field({ name: "Thursday", id: 0x4, conformance: "M" }),
+                Field({ name: "Friday", id: 0x5, conformance: "M" }),
+                Field({ name: "Saturday", id: 0x6, conformance: "M" })
             ]
         }),
 
@@ -631,14 +568,10 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "4.3.7.30" },
 
             children: [
-                Field({
-                    name: "SetpointHoldOff", id: 0x0, conformance: "M", description: "Follow scheduling program",
-                    xref: { document: "cluster", section: "4.3.7.30" }
-                }),
+                Field({ name: "SetpointHoldOff", id: 0x0, conformance: "M", description: "Follow scheduling program" }),
                 Field({
                     name: "SetpointHoldOn", id: 0x1, conformance: "M",
-                    description: "Maintain current setpoint, regardless of schedule transitions",
-                    xref: { document: "cluster", section: "4.3.7.30" }
+                    description: "Maintain current setpoint, regardless of schedule transitions"
                 })
             ]
         }),
@@ -678,17 +611,10 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "ScheduleActive", constraint: "0",
-                    description: "Schedule programming mode. This enables any programmed weekly schedule configurations.",
-                    xref: { document: "cluster", section: "4.3.7.32" }
+                    description: "Schedule programming mode. This enables any programmed weekly schedule configurations."
                 }),
-                Field({
-                    name: "AutoRecovery", constraint: "1", description: "Auto/recovery mode",
-                    xref: { document: "cluster", section: "4.3.7.32" }
-                }),
-                Field({
-                    name: "Economy", constraint: "2", description: "Economy/EnergyStar mode",
-                    xref: { document: "cluster", section: "4.3.7.32" }
-                })
+                Field({ name: "AutoRecovery", constraint: "1", description: "Auto/recovery mode" }),
+                Field({ name: "Economy", constraint: "2", description: "Economy/EnergyStar mode" })
             ]
         }),
 
@@ -703,34 +629,13 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "4.3.7.33" },
 
             children: [
-                Field({
-                    name: "Heat", constraint: "0", description: "Heat State On",
-                    xref: { document: "cluster", section: "4.3.7.33" }
-                }),
-                Field({
-                    name: "Cool", constraint: "1", description: "Cool State On",
-                    xref: { document: "cluster", section: "4.3.7.33" }
-                }),
-                Field({
-                    name: "Fan", constraint: "2", description: "Fan State On",
-                    xref: { document: "cluster", section: "4.3.7.33" }
-                }),
-                Field({
-                    name: "HeatStage2", constraint: "3", description: "Heat 2nd Stage State On",
-                    xref: { document: "cluster", section: "4.3.7.33" }
-                }),
-                Field({
-                    name: "CoolStage2", constraint: "4", description: "Cool 2nd Stage State On",
-                    xref: { document: "cluster", section: "4.3.7.33" }
-                }),
-                Field({
-                    name: "FanStage2", constraint: "5", description: "Fan 2nd Stage State On",
-                    xref: { document: "cluster", section: "4.3.7.33" }
-                }),
-                Field({
-                    name: "FanStage3", constraint: "6", description: "Fan 3rd Stage Stage On",
-                    xref: { document: "cluster", section: "4.3.7.33" }
-                })
+                Field({ name: "Heat", constraint: "0", description: "Heat State On" }),
+                Field({ name: "Cool", constraint: "1", description: "Cool State On" }),
+                Field({ name: "Fan", constraint: "2", description: "Fan State On" }),
+                Field({ name: "HeatStage2", constraint: "3", description: "Heat 2nd Stage State On" }),
+                Field({ name: "CoolStage2", constraint: "4", description: "Cool 2nd Stage State On" }),
+                Field({ name: "FanStage2", constraint: "5", description: "Fan 2nd Stage State On" }),
+                Field({ name: "FanStage3", constraint: "6", description: "Fan 3rd Stage Stage On" })
             ]
         }),
 
@@ -753,18 +658,15 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Manual", id: 0x0, conformance: "O",
-                    description: "Manual, user-initiated setpoint change via the thermostat",
-                    xref: { document: "cluster", section: "4.3.7.34" }
+                    description: "Manual, user-initiated setpoint change via the thermostat"
                 }),
                 Field({
                     name: "Schedule", id: 0x1, conformance: "[SCH]",
-                    description: "Schedule/internal programming-initiated setpoint change",
-                    xref: { document: "cluster", section: "4.3.7.34" }
+                    description: "Schedule/internal programming-initiated setpoint change"
                 }),
                 Field({
                     name: "External", id: 0x2, conformance: "O",
-                    description: "Externally-initiated setpoint change (e.g., DRLC cluster command, attribute write)",
-                    xref: { document: "cluster", section: "4.3.7.34" }
+                    description: "Externally-initiated setpoint change (e.g., DRLC cluster command, attribute write)"
                 })
             ]
         }),
@@ -793,7 +695,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "OccupiedSetback", id: 0x34, type: "temp-u8", access: "RW VM", conformance: "SB",
-            constraint: "OccupiedSetbackMin to OccupiedSetbackMax", default: null, quality: "X N",
+            constraint: "occupiedSetbackMin to occupiedSetbackMax", default: null, quality: "X N",
 
             details: "This attribute specifies the amount that the Thermostat server will allow the LocalTemperature " +
                 "Value to float above the OccupiedCooling setpoint (i.e., OccupiedCooling + OccupiedSetback) or " +
@@ -822,7 +724,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "OccupiedSetbackMin", id: 0x35, type: "temp-u8", access: "R V", conformance: "SB",
-            constraint: "0 to OccupiedSetbackMax", default: null, quality: "X F",
+            constraint: "0 to occupiedSetbackMax", default: null, quality: "X F",
             details: "This attribute specifies the minimum value that the Thermostat server will allow the " +
                 "OccupiedSetback attribute to be configured by a user." +
                 "\n" +
@@ -832,7 +734,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "OccupiedSetbackMax", id: 0x36, type: "temp-u8", access: "R V", conformance: "SB",
-            constraint: "OccupiedSetbackMin to 25.4°C", default: null, quality: "X F",
+            constraint: "occupiedSetbackMin to 25.4°C", default: null, quality: "X F",
             details: "This attribute specifies the maximum value that the Thermostat server will allow the " +
                 "OccupiedSetback attribute to be configured by a user." +
                 "\n" +
@@ -842,7 +744,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "UnoccupiedSetback", id: 0x37, type: "temp-u8", access: "RW VM", conformance: "SB & OCC",
-            constraint: "UnoccupiedSetbackMin to UnoccupiedSetbackMax", default: null, quality: "X N",
+            constraint: "unoccupiedSetbackMin to unoccupiedSetbackMax", default: null, quality: "X N",
 
             details: "This attribute specifies the amount that the Thermostat server will allow the LocalTemperature " +
                 "Value to float above the UnoccupiedCooling setpoint (i.e., UnoccupiedCooling + UnoccupiedSetback) " +
@@ -871,7 +773,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "UnoccupiedSetbackMin", id: 0x38, type: "temp-u8", access: "R V", conformance: "SB & OCC",
-            constraint: "0 to UnoccupiedSetbackMax", default: null, quality: "X F",
+            constraint: "0 to unoccupiedSetbackMax", default: null, quality: "X F",
             details: "This attribute specifies the minimum value that the Thermostat server will allow the " +
                 "UnoccupiedSetback attribute to be configured by a user." +
                 "\n" +
@@ -881,7 +783,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "UnoccupiedSetbackMax", id: 0x39, type: "temp-u8", access: "R V", conformance: "SB & OCC",
-            constraint: "UnoccupiedSetbackMin to 25.4°C", default: null, quality: "X F",
+            constraint: "unoccupiedSetbackMin to 25.4°C", default: null, quality: "X F",
             details: "This attribute specifies the maximum value that the Thermostat server will allow the " +
                 "UnoccupiedSetback attribute to be configured by a user." +
                 "\n" +
@@ -932,26 +834,11 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "4.3.7.44" },
 
             children: [
-                Field({
-                    name: "Unknown", id: 0x0, conformance: "O", description: "Unknown AC Type",
-                    xref: { document: "cluster", section: "4.3.7.44" }
-                }),
-                Field({
-                    name: "CoolingFixed", id: 0x1, conformance: "O", description: "Cooling and Fixed Speed",
-                    xref: { document: "cluster", section: "4.3.7.44" }
-                }),
-                Field({
-                    name: "HeatPumpFixed", id: 0x2, conformance: "O", description: "Heat Pump and Fixed Speed",
-                    xref: { document: "cluster", section: "4.3.7.44" }
-                }),
-                Field({
-                    name: "CoolingInverter", id: 0x3, conformance: "O", description: "Cooling and Inverter",
-                    xref: { document: "cluster", section: "4.3.7.44" }
-                }),
-                Field({
-                    name: "HeatPumpInverter", id: 0x4, conformance: "O", description: "Heat Pump and Inverter",
-                    xref: { document: "cluster", section: "4.3.7.44" }
-                })
+                Field({ name: "Unknown", id: 0x0, conformance: "O", description: "Unknown AC Type" }),
+                Field({ name: "CoolingFixed", id: 0x1, conformance: "O", description: "Cooling and Fixed Speed" }),
+                Field({ name: "HeatPumpFixed", id: 0x2, conformance: "O", description: "Heat Pump and Fixed Speed" }),
+                Field({ name: "CoolingInverter", id: 0x3, conformance: "O", description: "Cooling and Inverter" }),
+                Field({ name: "HeatPumpInverter", id: 0x4, conformance: "O", description: "Heat Pump and Inverter" })
             ]
         }),
 
@@ -972,22 +859,10 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "4.3.7.46" },
 
             children: [
-                Field({
-                    name: "Unknown", id: 0x0, conformance: "O", description: "Unknown Refrigerant Type",
-                    xref: { document: "cluster", section: "4.3.7.46" }
-                }),
-                Field({
-                    name: "R22", id: 0x1, conformance: "O", description: "R22 Refrigerant",
-                    xref: { document: "cluster", section: "4.3.7.46" }
-                }),
-                Field({
-                    name: "R410A", id: 0x2, conformance: "O", description: "R410a Refrigerant",
-                    xref: { document: "cluster", section: "4.3.7.46" }
-                }),
-                Field({
-                    name: "R407C", id: 0x3, conformance: "O", description: "R407c Refrigerant",
-                    xref: { document: "cluster", section: "4.3.7.46" }
-                })
+                Field({ name: "Unknown", id: 0x0, conformance: "O", description: "Unknown Refrigerant Type" }),
+                Field({ name: "R22", id: 0x1, conformance: "O", description: "R22 Refrigerant" }),
+                Field({ name: "R410A", id: 0x2, conformance: "O", description: "R410a Refrigerant" }),
+                Field({ name: "R407C", id: 0x3, conformance: "O", description: "R407c Refrigerant" })
             ]
         }),
 
@@ -1000,22 +875,10 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "4.3.7.47" },
 
             children: [
-                Field({
-                    name: "Unknown", id: 0x0, conformance: "O", description: "Unknown compressor type",
-                    xref: { document: "cluster", section: "4.3.7.47" }
-                }),
-                Field({
-                    name: "T1", id: 0x1, conformance: "O", description: "Max working ambient 43 °C",
-                    xref: { document: "cluster", section: "4.3.7.47" }
-                }),
-                Field({
-                    name: "T2", id: 0x2, conformance: "O", description: "Max working ambient 35 °C",
-                    xref: { document: "cluster", section: "4.3.7.47" }
-                }),
-                Field({
-                    name: "T3", id: 0x3, conformance: "O", description: "Max working ambient 52 °C",
-                    xref: { document: "cluster", section: "4.3.7.47" }
-                })
+                Field({ name: "Unknown", id: 0x0, conformance: "O", description: "Unknown compressor type" }),
+                Field({ name: "T1", id: 0x1, conformance: "O", description: "Max working ambient 43 °C" }),
+                Field({ name: "T2", id: 0x2, conformance: "O", description: "Max working ambient 35 °C" }),
+                Field({ name: "T3", id: 0x3, conformance: "O", description: "Max working ambient 52 °C" })
             ]
         }),
 
@@ -1029,25 +892,12 @@ Matter.children.push(Cluster({
 
             children: [
                 Field({
-                    name: "CompressorFail", constraint: "0", description: "Compressor Failure or Refrigerant Leakage",
-                    xref: { document: "cluster", section: "4.3.7.48" }
+                    name: "CompressorFail", constraint: "0", description: "Compressor Failure or Refrigerant Leakage"
                 }),
-                Field({
-                    name: "RoomSensorFail", constraint: "1", description: "Room Temperature Sensor Failure",
-                    xref: { document: "cluster", section: "4.3.7.48" }
-                }),
-                Field({
-                    name: "OutdoorSensorFail", constraint: "2", description: "Outdoor Temperature Sensor Failure",
-                    xref: { document: "cluster", section: "4.3.7.48" }
-                }),
-                Field({
-                    name: "CoilSensorFail", constraint: "3", description: "Indoor Coil Temperature Sensor Failure",
-                    xref: { document: "cluster", section: "4.3.7.48" }
-                }),
-                Field({
-                    name: "FanFail", constraint: "4", description: "Fan Failure",
-                    xref: { document: "cluster", section: "4.3.7.48" }
-                })
+                Field({ name: "RoomSensorFail", constraint: "1", description: "Room Temperature Sensor Failure" }),
+                Field({ name: "OutdoorSensorFail", constraint: "2", description: "Outdoor Temperature Sensor Failure" }),
+                Field({ name: "CoilSensorFail", constraint: "3", description: "Indoor Coil Temperature Sensor Failure" }),
+                Field({ name: "FanFail", constraint: "4", description: "Fan Failure" })
             ]
         }),
 
@@ -1060,26 +910,11 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "4.3.7.49" },
 
             children: [
-                Field({
-                    name: "Closed", id: 0x1, conformance: "O", description: "Fully Closed",
-                    xref: { document: "cluster", section: "4.3.7.49" }
-                }),
-                Field({
-                    name: "Open", id: 0x2, conformance: "O", description: "Fully Open",
-                    xref: { document: "cluster", section: "4.3.7.49" }
-                }),
-                Field({
-                    name: "Quarter", id: 0x3, conformance: "O", description: "Quarter Open",
-                    xref: { document: "cluster", section: "4.3.7.49" }
-                }),
-                Field({
-                    name: "Half", id: 0x4, conformance: "O", description: "Half Open",
-                    xref: { document: "cluster", section: "4.3.7.49" }
-                }),
-                Field({
-                    name: "ThreeQuarters", id: 0x5, conformance: "O", description: "Three Quarters Open",
-                    xref: { document: "cluster", section: "4.3.7.49" }
-                })
+                Field({ name: "Closed", id: 0x1, conformance: "O", description: "Fully Closed" }),
+                Field({ name: "Open", id: 0x2, conformance: "O", description: "Fully Open" }),
+                Field({ name: "Quarter", id: 0x3, conformance: "O", description: "Quarter Open" }),
+                Field({ name: "Half", id: 0x4, conformance: "O", description: "Half Open" }),
+                Field({ name: "ThreeQuarters", id: 0x5, conformance: "O", description: "Three Quarters Open" })
             ]
         }),
 
@@ -1098,10 +933,7 @@ Matter.children.push(Cluster({
                 "\n" +
                 "Table 87. ACCapacity Values",
             xref: { document: "cluster", section: "4.3.7.51" },
-            children: [Field({
-                name: "BtUh", id: 0x0, conformance: "O", description: "British Thermal Unit per Hour",
-                xref: { document: "cluster", section: "4.3.7.51" }
-            })]
+            children: [Field({ name: "BtUh", id: 0x0, conformance: "O", description: "British Thermal Unit per Hour" })]
         }),
 
         Command({
@@ -1252,14 +1084,8 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "4.3.9.5.1" }
                 }),
 
-                Field({
-                    name: "HeatSetpoint", id: 0x1, type: "temperature", access: "RW", conformance: "M", quality: "X",
-                    xref: { document: "cluster", section: "4.3.9.5" }
-                }),
-                Field({
-                    name: "CoolSetpoint", id: 0x2, type: "temperature", access: "RW", conformance: "M", quality: "X",
-                    xref: { document: "cluster", section: "4.3.9.5" }
-                })
+                Field({ name: "HeatSetpoint", id: 0x1, type: "temperature", access: "RW", conformance: "M", quality: "X" }),
+                Field({ name: "CoolSetpoint", id: 0x2, type: "temperature", access: "RW", conformance: "M", quality: "X" })
             ]
         }),
 

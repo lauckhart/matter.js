@@ -237,7 +237,7 @@ export class TlvGenerator {
         if (globalMapping) {
             tlv = this.importTlv(...globalMapping);
         } else {
-            tlv = camelize(`tlv ${metabase.name}`).replace("Uint", "UInt");
+            tlv = camelize(`tlv ${metabase.name}`, true).replace("Uint", "UInt");
             this.importTlv("number", tlv);
         }
 
@@ -322,7 +322,7 @@ export class TlvGenerator {
 
                 this.importTlv("tlv/TlvObject", tlv);
                 struct
-                    .atom(camelize(field.name, false), `${tlv}(${field.effectiveId}, ${this.reference(field)})`)
+                    .atom(camelize(field.name), `${tlv}(${field.effectiveId}, ${this.reference(field)})`)
                     .document(field);
             });
         });
@@ -368,7 +368,7 @@ export class TlvGenerator {
                 continue;
             }
 
-            bitmap.atom(camelize(child.name, false), type).document(child);
+            bitmap.atom(camelize(child.name), type).document(child);
         }
 
         return bitmap;
@@ -450,7 +450,7 @@ export class TlvGenerator {
         switch (model.tag) {
             case ElementTag.Attribute:
                 definition.document({
-                    details: `The value of the ${this.cluster.name} ${camelize(model.name, false)} attribute`,
+                    details: `The value of the ${this.cluster.name} ${camelize(model.name)} attribute`,
                     xref: model.xref,
                 });
                 break;
@@ -461,7 +461,7 @@ export class TlvGenerator {
                     definition.document(model);
                 } else {
                     definition.document({
-                        details: `Input to the ${this.cluster.name} ${camelize(model.name, false)} command`,
+                        details: `Input to the ${this.cluster.name} ${camelize(model.name)} command`,
                         xref: model.xref,
                     });
                 }
@@ -469,7 +469,7 @@ export class TlvGenerator {
 
             case ElementTag.Event:
                 definition.document({
-                    details: `Body of the ${this.cluster.name} ${camelize(model.name, false)} event`,
+                    details: `Body of the ${this.cluster.name} ${camelize(model.name)} event`,
                     xref: model.xref,
                 });
                 break;
@@ -480,7 +480,7 @@ export class TlvGenerator {
                     definition.document(model);
                 } else {
                     definition.document({
-                        details: `The value of ${this.cluster.name}.${camelize(model.name, false)}`,
+                        details: `The value of ${this.cluster.name}.${camelize(model.name)}`,
                         xref: model.xref,
                     });
                 }

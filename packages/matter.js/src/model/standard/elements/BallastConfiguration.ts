@@ -45,13 +45,9 @@ Matter.children.push(Cluster({
                 "corresponding bit shall be set to 1. Where a function is not active, the corresponding bit shall be " +
                 "set to 0.",
             xref: { document: "cluster", section: "3.3.6.3" },
-
             children: [
-                Field({
-                    name: "BallastNonOperational", constraint: "0",
-                    xref: { document: "cluster", section: "3.3.6.3" }
-                }),
-                Field({ name: "LampFailure", constraint: "1", xref: { document: "cluster", section: "3.3.6.3" } })
+                Field({ name: "BallastNonOperational", constraint: "0" }),
+                Field({ name: "LampFailure", constraint: "1" })
             ]
         }),
 
@@ -109,7 +105,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "BallastFactorAdjustment", id: 0x15, type: "uint8", access: "RW VM", conformance: "O",
-            constraint: "100 to Ms", default: null, quality: "X",
+            constraint: "100 to ms", default: null, quality: "X",
 
             details: "The BallastFactorAdjustment attribute specifies the multiplication factor, as a percentage, to be " +
                 "applied to the configured light output of the lamps. A typical usage of this mechanism is to " +
@@ -184,9 +180,7 @@ Matter.children.push(Cluster({
                 "its associated attribute to be able to generate an alarm. (Note: All alarms are also logged in the " +
                 "alarm table – see Alarms cluster).",
             xref: { document: "cluster", section: "3.3.9.5" },
-            children: [
-                Field({ name: "LampBurnHours", constraint: "0", xref: { document: "cluster", section: "3.3.9.5" } })
-            ]
+            children: [Field({ name: "LampBurnHours", constraint: "0" })]
         }),
 
         Attribute({

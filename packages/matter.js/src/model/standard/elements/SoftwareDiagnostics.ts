@@ -32,8 +32,7 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.12.4" },
             children: [Field({
                 name: "WTRMRK", constraint: "0", description: "Watermarks",
-                details: "Node makes available the metrics for high watermark related to memory consumption.",
-                xref: { document: "core", section: "11.12.4" }
+                details: "Node makes available the metrics for high watermark related to memory consumption."
             })]
         }),
 
@@ -82,18 +81,11 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.12.8.1" },
 
             children: [
-                Field({
-                    name: "Id", id: 0x0, type: "uint64", conformance: "M", default: "0",
-                    xref: { document: "core", section: "11.12.8.1" }
-                }),
-                Field({
-                    name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8", default: "empty",
-                    xref: { document: "core", section: "11.12.8.1" }
-                }),
+                Field({ name: "Id", id: 0x0, type: "uint64", conformance: "M", default: 0 }),
+                Field({ name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8", default: "" }),
 
                 Field({
                     name: "FaultRecording", id: 0x2, type: "octstr", conformance: "O", constraint: "max 1024",
-                    default: "empty",
                     details: "The FaultRecording field shall be a manufacturer-specified payload intended to convey information " +
                         "to assist in further diagnosing or debugging a software fault. The FaultRecording field may be used " +
                         "to convey information such as, but not limited to, thread backtraces or register contents.",
@@ -139,7 +131,7 @@ Matter.children.push(Cluster({
                 }),
 
                 Field({
-                    name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8", default: "empty",
+                    name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8", default: "",
                     details: "The Name field shall be set to a vendor defined name or prefix of the software thread that is " +
                         "static for the duration of the thread.",
                     xref: { document: "core", section: "11.12.5.1.2" }

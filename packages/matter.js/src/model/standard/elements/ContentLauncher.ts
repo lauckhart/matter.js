@@ -31,13 +31,11 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "CS", constraint: "0", description: "ContentSearch",
-                    details: "Device supports content search (non-app specific)",
-                    xref: { document: "cluster", section: "6.7.2" }
+                    details: "Device supports content search (non-app specific)"
                 }),
                 Field({
                     name: "UP", constraint: "1", description: "UrlPlayback",
-                    details: "Device supports basic URL-based file playback",
-                    xref: { document: "cluster", section: "6.7.2" }
+                    details: "Device supports basic URL-based file playback"
                 })
             ]
         }),
@@ -59,13 +57,9 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Dash", constraint: "0",
-                    description: "Device supports Dynamic Adaptive Streaming over HTTP (DASH)",
-                    xref: { document: "cluster", section: "6.7.3.2.1" }
+                    description: "Device supports Dynamic Adaptive Streaming over HTTP (DASH)"
                 }),
-                Field({
-                    name: "Hls", constraint: "1", description: "Device supports HTTP Live Streaming (HLS)",
-                    xref: { document: "cluster", section: "6.7.3.2.1" }
-                })
+                Field({ name: "Hls", constraint: "1", description: "Device supports HTTP Live Streaming (HLS)" })
             ]
         }),
 
@@ -162,19 +156,14 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "6.7.5.1" },
 
             children: [
-                Field({
-                    name: "Success", id: 0x0, conformance: "M", description: "Command succeeded",
-                    xref: { document: "cluster", section: "6.7.5.1" }
-                }),
+                Field({ name: "Success", id: 0x0, conformance: "M", description: "Command succeeded" }),
                 Field({
                     name: "UrlNotAvailable", id: 0x1, conformance: "M",
-                    description: "Requested URL could not be reached by device.",
-                    xref: { document: "cluster", section: "6.7.5.1" }
+                    description: "Requested URL could not be reached by device."
                 }),
                 Field({
                     name: "AuthFailed", id: 0x2, conformance: "M",
-                    description: "Requested URL returned 401 error code.",
-                    xref: { document: "cluster", section: "6.7.5.1" }
+                    description: "Requested URL returned 401 error code."
                 })
             ]
         }),
@@ -185,7 +174,7 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "6.7.5.2" },
 
             children: [Field({
-                name: "ParameterList", id: 0x0, type: "list", conformance: "M", default: "0",
+                name: "ParameterList", id: 0x0, type: "list", conformance: "M",
                 details: "This shall indicate the list of parameters comprising the search. If multiple parameters are " +
                     "provided, the search parameters shall be joined with 'AND' logic. e.g. action movies with Tom " +
                     "Cruise will be represented as [{Actor: 'Tom Cruise'}, {Type: 'Movie'}, {Genre: 'Action'}]",
@@ -212,7 +201,7 @@ Matter.children.push(Cluster({
                 }),
 
                 Field({
-                    name: "ExternalIdList", id: 0x2, type: "list", conformance: "O", default: "empty",
+                    name: "ExternalIdList", id: 0x2, type: "list", conformance: "O", default: [],
                     details: "This shall indicate the list of additional external content identifiers.",
                     xref: { document: "cluster", section: "6.7.5.3.3" },
                     children: [Field({ name: "entry", type: "AdditionalInfoStruct" })]
@@ -227,73 +216,59 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Actor", id: 0x0, conformance: "M",
-                    description: "Actor represents an actor credited in video media content; for example, “Gaby sHoffman”",
-                    xref: { document: "cluster", section: "6.7.5.4" }
+                    description: "Actor represents an actor credited in video media content; for example, “Gaby sHoffman”"
                 }),
                 Field({
                     name: "Channel", id: 0x1, conformance: "M",
-                    description: "Channel represents the identifying data for a television channel; for example, \"PBS\"",
-                    xref: { document: "cluster", section: "6.7.5.4" }
+                    description: "Channel represents the identifying data for a television channel; for example, \"PBS\""
                 }),
                 Field({
                     name: "Character", id: 0x2, conformance: "M",
-                    description: "A character represented in video media content; for example, “Snow White”",
-                    xref: { document: "cluster", section: "6.7.5.4" }
+                    description: "A character represented in video media content; for example, “Snow White”"
                 }),
                 Field({
                     name: "Director", id: 0x3, conformance: "M",
-                    description: "A director of the video media content; for example, “Spike Lee”",
-                    xref: { document: "cluster", section: "6.7.5.4" }
+                    description: "A director of the video media content; for example, “Spike Lee”"
                 }),
                 Field({
                     name: "Event", id: 0x4, conformance: "M",
-                    description: "An event is a reference to a type of event; examples would include sports, music, or other types of events. For example, searching for \"Football games\" would search for a 'game' event entity and a 'football' sport entity.",
-                    xref: { document: "cluster", section: "6.7.5.4" }
+                    description: "An event is a reference to a type of event; examples would include sports, music, or other types of events. For example, searching for \"Football games\" would search for a 'game' event entity and a 'football' sport entity."
                 }),
                 Field({
                     name: "Franchise", id: 0x5, conformance: "M",
-                    description: "A franchise is a video entity which can represent a number of video entities, like movies or TV shows. For example, take the fictional franchise \"Intergalactic Wars\" which represents a collection of movie trilogies, as well as animated and live action TV shows. This entity type was introduced to account for requests by customers such as \"Find Intergalactic Wars movies\", which would search for all 'Intergalactic Wars' programs of the MOVIE MediaType, rather than attempting to match to a single title.",
-                    xref: { document: "cluster", section: "6.7.5.4" }
+                    description: "A franchise is a video entity which can represent a number of video entities, like movies or TV shows. For example, take the fictional franchise \"Intergalactic Wars\" which represents a collection of movie trilogies, as well as animated and live action TV shows. This entity type was introduced to account for requests by customers such as \"Find Intergalactic Wars movies\", which would search for all 'Intergalactic Wars' programs of the MOVIE MediaType, rather than attempting to match to a single title."
                 }),
                 Field({
                     name: "Genre", id: 0x6, conformance: "M",
-                    description: "Genre represents the genre of video media content such as action, drama or comedy.",
-                    xref: { document: "cluster", section: "6.7.5.4" }
+                    description: "Genre represents the genre of video media content such as action, drama or comedy."
                 }),
                 Field({
                     name: "League", id: 0x7, conformance: "M",
-                    description: "League represents the categorical information for a sporting league; for example, \"NCAA\"",
-                    xref: { document: "cluster", section: "6.7.5.4" }
+                    description: "League represents the categorical information for a sporting league; for example, \"NCAA\""
                 }),
                 Field({
                     name: "Popularity", id: 0x8, conformance: "M",
-                    description: "Popularity indicates whether the user asks for popular content.",
-                    xref: { document: "cluster", section: "6.7.5.4" }
+                    description: "Popularity indicates whether the user asks for popular content."
                 }),
                 Field({
                     name: "Provider", id: 0x9, conformance: "M",
-                    description: "The provider (MSP) the user wants this media to be played on; for example, \"Netflix\".",
-                    xref: { document: "cluster", section: "6.7.5.4" }
+                    description: "The provider (MSP) the user wants this media to be played on; for example, \"Netflix\"."
                 }),
                 Field({
                     name: "Sport", id: 0xa, conformance: "M",
-                    description: "Sport represents the categorical information of a sport; for example, football",
-                    xref: { document: "cluster", section: "6.7.5.4" }
+                    description: "Sport represents the categorical information of a sport; for example, football"
                 }),
                 Field({
                     name: "SportsTeam", id: 0xb, conformance: "M",
-                    description: "SportsTeam represents the categorical information of a professional sports team; for example, \"University of Washington Huskies\"",
-                    xref: { document: "cluster", section: "6.7.5.4" }
+                    description: "SportsTeam represents the categorical information of a professional sports team; for example, \"University of Washington Huskies\""
                 }),
                 Field({
                     name: "Type", id: 0xc, conformance: "M",
-                    description: "The type of content requested. Supported types are \"Movie\", \"MovieSeries\", \"TVSeries\", \"TVSeason\", \"TVEpisode\", \"SportsEvent\", and \"Video\"",
-                    xref: { document: "cluster", section: "6.7.5.4" }
+                    description: "The type of content requested. Supported types are \"Movie\", \"MovieSeries\", \"TVSeries\", \"TVSeason\", \"TVEpisode\", \"SportsEvent\", and \"Video\""
                 }),
                 Field({
                     name: "Video", id: 0xd, conformance: "M",
-                    description: "Video represents the identifying data for a specific piece of video content; for example, \"Manchester by the Sea\".",
-                    xref: { document: "cluster", section: "6.7.5.4" }
+                    description: "Video represents the identifying data for a specific piece of video content; for example, \"Manchester by the Sea\"."
                 })
             ]
         }),

@@ -9,6 +9,7 @@ import {
     AttributeModel,
     ClusterModel,
     CommandModel,
+    DatatypeModel,
     FieldModel,
     Globals,
     MatterModel,
@@ -109,7 +110,7 @@ function patchClusterTypes(cluster: ClusterModel) {
         }
 
         cluster.add(
-            new FieldModel({
+            new DatatypeModel({
                 name: model.name,
                 type: model.type,
                 xref: model.xref,

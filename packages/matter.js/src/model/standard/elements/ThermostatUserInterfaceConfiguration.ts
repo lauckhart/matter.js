@@ -31,16 +31,9 @@ Matter.children.push(Cluster({
                 "\n" +
                 "Table 92. DisplayMode Attribute Values",
             xref: { document: "cluster", section: "4.5.5.1" },
-
             children: [
-                Field({
-                    name: "Celsius", id: 0x0, conformance: "M", description: "Temperature displayed in °C",
-                    xref: { document: "cluster", section: "4.5.5.1" }
-                }),
-                Field({
-                    name: "Fahrenheit", id: 0x1, conformance: "M", description: "Temperature displayed in °F",
-                    xref: { document: "cluster", section: "4.5.5.1" }
-                })
+                Field({ name: "Celsius", id: 0x0, conformance: "M", description: "Temperature displayed in °C" }),
+                Field({ name: "Fahrenheit", id: 0x1, conformance: "M", description: "Temperature displayed in °F" })
             ]
         }),
 
@@ -60,29 +53,15 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "NoLockout", id: 0x0, conformance: "M",
-                    description: "All functionality available to the user",
-                    xref: { document: "cluster", section: "4.5.5.2" }
+                    description: "All functionality available to the user"
                 }),
-                Field({
-                    name: "Lockout1", id: 0x1, conformance: "M", description: "Level 1 reduced functionality",
-                    xref: { document: "cluster", section: "4.5.5.2" }
-                }),
-                Field({
-                    name: "Lockout2", id: 0x2, conformance: "M", description: "Level 2 reduced functionality",
-                    xref: { document: "cluster", section: "4.5.5.2" }
-                }),
-                Field({
-                    name: "Lockout3", id: 0x3, conformance: "M", description: "Level 3 reduced functionality",
-                    xref: { document: "cluster", section: "4.5.5.2" }
-                }),
-                Field({
-                    name: "Lockout4", id: 0x4, conformance: "M", description: "Level 4 reduced functionality",
-                    xref: { document: "cluster", section: "4.5.5.2" }
-                }),
+                Field({ name: "Lockout1", id: 0x1, conformance: "M", description: "Level 1 reduced functionality" }),
+                Field({ name: "Lockout2", id: 0x2, conformance: "M", description: "Level 2 reduced functionality" }),
+                Field({ name: "Lockout3", id: 0x3, conformance: "M", description: "Level 3 reduced functionality" }),
+                Field({ name: "Lockout4", id: 0x4, conformance: "M", description: "Level 4 reduced functionality" }),
                 Field({
                     name: "Lockout5", id: 0x5, conformance: "M",
-                    description: "Least functionality available to the user",
-                    xref: { document: "cluster", section: "4.5.5.2" }
+                    description: "Least functionality available to the user"
                 })
             ]
         }),
@@ -107,13 +86,11 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "ScheduleProgrammingPermitted", id: 0x0, conformance: "M",
-                    description: "Local schedule programming functionality is enabled at the thermostat",
-                    xref: { document: "cluster", section: "4.5.5.3" }
+                    description: "Local schedule programming functionality is enabled at the thermostat"
                 }),
                 Field({
                     name: "ScheduleProgrammingDenied", id: 0x1, conformance: "M",
-                    description: "Local schedule programming functionality is disabled at the thermostat",
-                    xref: { document: "cluster", section: "4.5.5.3" }
+                    description: "Local schedule programming functionality is disabled at the thermostat"
                 })
             ]
         })

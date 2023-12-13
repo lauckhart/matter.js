@@ -31,39 +31,17 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.19.6.5.1" },
 
             children: [
-                Field({
-                    name: "VendorId", id: 0x0, type: "vendor-id", conformance: "M",
-                    xref: { document: "core", section: "11.19.6.5.1" }
-                }),
-                Field({
-                    name: "ProductId", id: 0x1, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "11.19.6.5.1" }
-                }),
-                Field({
-                    name: "SoftwareVersion", id: 0x2, type: "uint32", conformance: "M",
-                    xref: { document: "core", section: "11.19.6.5.1" }
-                }),
+                Field({ name: "VendorId", id: 0x0, type: "vendor-id", conformance: "M" }),
+                Field({ name: "ProductId", id: 0x1, type: "uint16", conformance: "M" }),
+                Field({ name: "SoftwareVersion", id: 0x2, type: "uint32", conformance: "M" }),
                 Field({
                     name: "ProtocolsSupported", id: 0x3, type: "list", conformance: "M", constraint: "max 8",
-                    xref: { document: "core", section: "11.19.6.5.1" },
                     children: [Field({ name: "entry", type: "DownloadProtocolEnum" })]
                 }),
-                Field({
-                    name: "HardwareVersion", id: 0x4, type: "uint16", conformance: "O",
-                    xref: { document: "core", section: "11.19.6.5.1" }
-                }),
-                Field({
-                    name: "Location", id: 0x5, type: "string", conformance: "O", constraint: "2",
-                    xref: { document: "core", section: "11.19.6.5.1" }
-                }),
-                Field({
-                    name: "RequestorCanConsent", id: 0x6, type: "bool", conformance: "O", default: "False",
-                    xref: { document: "core", section: "11.19.6.5.1" }
-                }),
-                Field({
-                    name: "MetadataForProvider", id: 0x7, type: "octstr", conformance: "O", constraint: "max 512",
-                    xref: { document: "core", section: "11.19.6.5.1" }
-                })
+                Field({ name: "HardwareVersion", id: 0x4, type: "uint16", conformance: "O" }),
+                Field({ name: "Location", id: 0x5, type: "string", conformance: "O", constraint: "2" }),
+                Field({ name: "RequestorCanConsent", id: 0x6, type: "bool", conformance: "O", default: true }),
+                Field({ name: "MetadataForProvider", id: 0x7, type: "octstr", conformance: "O", constraint: "max 512" })
             ]
         }),
 
@@ -72,38 +50,14 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.19.6.5.10" },
 
             children: [
-                Field({
-                    name: "Status", id: 0x0, type: "StatusEnum", conformance: "M",
-                    xref: { document: "core", section: "11.19.6.5.10" }
-                }),
-                Field({
-                    name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "O",
-                    xref: { document: "core", section: "11.19.6.5.10" }
-                }),
-                Field({
-                    name: "ImageUri", id: 0x2, type: "string", conformance: "O", constraint: "max 256",
-                    xref: { document: "core", section: "11.19.6.5.10" }
-                }),
-                Field({
-                    name: "SoftwareVersion", id: 0x3, type: "uint32", conformance: "O",
-                    xref: { document: "core", section: "11.19.6.5.10" }
-                }),
-                Field({
-                    name: "SoftwareVersionString", id: 0x4, type: "string", conformance: "O", constraint: "1 to 64",
-                    xref: { document: "core", section: "11.19.6.5.10" }
-                }),
-                Field({
-                    name: "UpdateToken", id: 0x5, type: "octstr", conformance: "O", constraint: "8 to 32",
-                    xref: { document: "core", section: "11.19.6.5.10" }
-                }),
-                Field({
-                    name: "UserConsentNeeded", id: 0x6, type: "bool", conformance: "O", default: "False",
-                    xref: { document: "core", section: "11.19.6.5.10" }
-                }),
-                Field({
-                    name: "MetadataForRequestor", id: 0x7, type: "octstr", conformance: "O", constraint: "max 512",
-                    xref: { document: "core", section: "11.19.6.5.10" }
-                })
+                Field({ name: "Status", id: 0x0, type: "StatusEnum", conformance: "M" }),
+                Field({ name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "O" }),
+                Field({ name: "ImageUri", id: 0x2, type: "string", conformance: "O", constraint: "max 256" }),
+                Field({ name: "SoftwareVersion", id: 0x3, type: "uint32", conformance: "O" }),
+                Field({ name: "SoftwareVersionString", id: 0x4, type: "string", conformance: "O", constraint: "1 to 64" }),
+                Field({ name: "UpdateToken", id: 0x5, type: "octstr", conformance: "O", constraint: "8 to 32" }),
+                Field({ name: "UserConsentNeeded", id: 0x6, type: "bool", conformance: "O", default: true }),
+                Field({ name: "MetadataForRequestor", id: 0x7, type: "octstr", conformance: "O", constraint: "max 512" })
             ]
         }),
 
@@ -114,32 +68,18 @@ Matter.children.push(Cluster({
                 "This field may be used by the OTA Provider to track minimal lifecycle state to allow finer-grained " +
                 "scheduling of the application of Software Images by OTA Requestors.",
             xref: { document: "core", section: "11.19.6.5.18" },
-
             children: [
-                Field({
-                    name: "UpdateToken", id: 0x0, type: "octstr", conformance: "M", constraint: "8 to 32",
-                    xref: { document: "core", section: "11.19.6.5.18" }
-                }),
-                Field({
-                    name: "NewVersion", id: 0x1, type: "uint32", conformance: "M",
-                    xref: { document: "core", section: "11.19.6.5.18" }
-                })
+                Field({ name: "UpdateToken", id: 0x0, type: "octstr", conformance: "M", constraint: "8 to 32" }),
+                Field({ name: "NewVersion", id: 0x1, type: "uint32", conformance: "M" })
             ]
         }),
 
         Command({
             name: "ApplyUpdateResponse", id: 0x3, conformance: "M", direction: "response",
             xref: { document: "core", section: "11.19.6.5.20" },
-
             children: [
-                Field({
-                    name: "Action", id: 0x0, type: "ApplyUpdateActionEnum", conformance: "M",
-                    xref: { document: "core", section: "11.19.6.5.20" }
-                }),
-                Field({
-                    name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "M",
-                    xref: { document: "core", section: "11.19.6.5.20" }
-                })
+                Field({ name: "Action", id: 0x0, type: "ApplyUpdateActionEnum", conformance: "M" }),
+                Field({ name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "M" })
             ]
         }),
 
@@ -179,16 +119,9 @@ Matter.children.push(Cluster({
                 "cached Software Images, or use it for other similar administrative purposes.",
 
             xref: { document: "core", section: "11.19.6.5.22" },
-
             children: [
-                Field({
-                    name: "UpdateToken", id: 0x0, type: "octstr", conformance: "M", constraint: "8 to 32",
-                    xref: { document: "core", section: "11.19.6.5.22" }
-                }),
-                Field({
-                    name: "SoftwareVersion", id: 0x1, type: "uint32", conformance: "M",
-                    xref: { document: "core", section: "11.19.6.5.22" }
-                })
+                Field({ name: "UpdateToken", id: 0x0, type: "octstr", conformance: "M", constraint: "8 to 32" }),
+                Field({ name: "SoftwareVersion", id: 0x1, type: "uint32", conformance: "M" })
             ]
         }),
 
@@ -200,23 +133,19 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "UpdateAvailable", id: 0x0, conformance: "M",
-                    description: "Indicates that the OTA Provider has an update available.",
-                    xref: { document: "core", section: "11.19.6.4.1" }
+                    description: "Indicates that the OTA Provider has an update available."
                 }),
                 Field({
                     name: "Busy", id: 0x1, conformance: "M",
-                    description: "Indicates OTA Provider may have an update, but it is not ready yet.",
-                    xref: { document: "core", section: "11.19.6.4.1" }
+                    description: "Indicates OTA Provider may have an update, but it is not ready yet."
                 }),
                 Field({
                     name: "NotAvailable", id: 0x2, conformance: "M",
-                    description: "Indicates that there is definitely no update currently available from the OTA Provider.",
-                    xref: { document: "core", section: "11.19.6.4.1" }
+                    description: "Indicates that there is definitely no update currently available from the OTA Provider."
                 }),
                 Field({
                     name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M",
-                    description: "Indicates that the requested download protocol is not supported by the OTA Provider.",
-                    xref: { document: "core", section: "11.19.6.4.1" }
+                    description: "Indicates that the requested download protocol is not supported by the OTA Provider."
                 })
             ]
         }),
@@ -229,19 +158,14 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.19.6.4.2" },
 
             children: [
-                Field({
-                    name: "Proceed", id: 0x0, conformance: "M", description: "Apply the update.",
-                    xref: { document: "core", section: "11.19.6.4.2" }
-                }),
+                Field({ name: "Proceed", id: 0x0, conformance: "M", description: "Apply the update." }),
                 Field({
                     name: "AwaitNextAction", id: 0x1, conformance: "M",
-                    description: "Wait at least the given delay time.",
-                    xref: { document: "core", section: "11.19.6.4.2" }
+                    description: "Wait at least the given delay time."
                 }),
                 Field({
                     name: "Discontinue", id: 0x2, conformance: "M",
-                    description: "The OTA Provider is conveying a desire to rescind a previously provided Software Image.",
-                    xref: { document: "core", section: "11.19.6.4.2" }
+                    description: "The OTA Provider is conveying a desire to rescind a previously provided Software Image."
                 })
             ]
         }),
@@ -256,22 +180,16 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "BdxSynchronous", id: 0x0, conformance: "M",
-                    description: "Indicates support for synchronous BDX.",
-                    xref: { document: "core", section: "11.19.6.4.3" }
+                    description: "Indicates support for synchronous BDX."
                 }),
                 Field({
                     name: "BdxAsynchronous", id: 0x1, conformance: "O",
-                    description: "Indicates support for asynchronous BDX.",
-                    xref: { document: "core", section: "11.19.6.4.3" }
+                    description: "Indicates support for asynchronous BDX."
                 }),
-                Field({
-                    name: "Https", id: 0x2, conformance: "O", description: "Indicates support for HTTPS.",
-                    xref: { document: "core", section: "11.19.6.4.3" }
-                }),
+                Field({ name: "Https", id: 0x2, conformance: "O", description: "Indicates support for HTTPS." }),
                 Field({
                     name: "VendorSpecific", id: 0x3, conformance: "O",
-                    description: "Indicates support for vendor specific protocol.",
-                    xref: { document: "core", section: "11.19.6.4.3" }
+                    description: "Indicates support for vendor specific protocol."
                 })
             ]
         })

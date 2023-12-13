@@ -126,10 +126,7 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "9.14.7.1" },
 
             children: [
-                Field({
-                    name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "9.14.7.1" }
-                }),
+                Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
 
                 Field({
                     name: "InvokeId", id: 0x1, type: "uint32", conformance: "M",
@@ -187,18 +184,9 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "9.14.7.2" },
 
             children: [
-                Field({
-                    name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "9.14.7.2" }
-                }),
-                Field({
-                    name: "InvokeId", id: 0x1, type: "uint32", conformance: "M",
-                    xref: { document: "core", section: "9.14.7.2" }
-                }),
-                Field({
-                    name: "NewState", id: 0x2, type: "ActionStateEnum", conformance: "M",
-                    xref: { document: "core", section: "9.14.7.2" }
-                }),
+                Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "M" }),
+                Field({ name: "NewState", id: 0x2, type: "ActionStateEnum", conformance: "M" }),
                 Field({
                     name: "Error", id: 0x3, type: "ActionErrorEnum", conformance: "M",
                     details: "This field shall be set to indicate the reason for non-successful progress of the action.",
@@ -215,16 +203,9 @@ Matter.children.push(Cluster({
                 "\n" +
                 "Example: recall a scene on a number of lights.",
             xref: { document: "core", section: "9.14.6.1" },
-
             children: [
-                Field({
-                    name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "9.14.6.1" }
-                }),
-                Field({
-                    name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                    xref: { document: "core", section: "9.14.6.1" }
-                })
+                Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
             ]
         }),
 
@@ -245,14 +226,8 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "9.14.6.2" },
 
             children: [
-                Field({
-                    name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "9.14.6.2" }
-                }),
-                Field({
-                    name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                    xref: { document: "core", section: "9.14.6.2" }
-                }),
+                Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
                 Field({
                     name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M",
                     details: "This field shall indicate the transition time in 1/10th of seconds.",
@@ -275,16 +250,9 @@ Matter.children.push(Cluster({
                 "several brightness/color combinations and the window covering gradually opening.",
 
             xref: { document: "core", section: "9.14.6.3" },
-
             children: [
-                Field({
-                    name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "9.14.6.3" }
-                }),
-                Field({
-                    name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                    xref: { document: "core", section: "9.14.6.3" }
-                })
+                Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
             ]
         }),
 
@@ -302,14 +270,8 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "9.14.6.4" },
 
             children: [
-                Field({
-                    name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "9.14.6.4" }
-                }),
-                Field({
-                    name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                    xref: { document: "core", section: "9.14.6.4" }
-                }),
+                Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
                 Field({
                     name: "Duration", id: 0x2, type: "uint32", conformance: "M",
                     details: "This field shall indicate the requested duration in seconds.",
@@ -326,16 +288,9 @@ Matter.children.push(Cluster({
                 "\n" +
                 "Example: stop a dynamic lighting pattern which was previously started with StartAction.",
             xref: { document: "core", section: "9.14.6.5" },
-
             children: [
-                Field({
-                    name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "9.14.6.5" }
-                }),
-                Field({
-                    name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                    xref: { document: "core", section: "9.14.6.5" }
-                })
+                Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
             ]
         }),
 
@@ -347,16 +302,9 @@ Matter.children.push(Cluster({
                 "Example: pause a dynamic lighting effect (the lights stay at their current color) which was " +
                 "previously started with StartAction.",
             xref: { document: "core", section: "9.14.6.6" },
-
             children: [
-                Field({
-                    name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "9.14.6.6" }
-                }),
-                Field({
-                    name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                    xref: { document: "core", section: "9.14.6.6" }
-                })
+                Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
             ]
         }),
 
@@ -380,20 +328,10 @@ Matter.children.push(Cluster({
                 "This field shall indicate the requested duration in seconds.",
 
             xref: { document: "core", section: "9.14.6.7" },
-
             children: [
-                Field({
-                    name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "9.14.6.7" }
-                }),
-                Field({
-                    name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                    xref: { document: "core", section: "9.14.6.7" }
-                }),
-                Field({
-                    name: "Duration", id: 0x2, type: "uint32", conformance: "M",
-                    xref: { document: "core", section: "9.14.6.7" }
-                })
+                Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
+                Field({ name: "Duration", id: 0x2, type: "uint32", conformance: "M" })
             ]
         }),
 
@@ -410,16 +348,9 @@ Matter.children.push(Cluster({
                 "from the point they were paused).",
 
             xref: { document: "core", section: "9.14.6.8" },
-
             children: [
-                Field({
-                    name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "9.14.6.8" }
-                }),
-                Field({
-                    name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                    xref: { document: "core", section: "9.14.6.8" }
-                })
+                Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
             ]
         }),
 
@@ -430,16 +361,9 @@ Matter.children.push(Cluster({
                 "\n" +
                 "Example: enable a motion sensor to control the lights in an area.",
             xref: { document: "core", section: "9.14.6.9" },
-
             children: [
-                Field({
-                    name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "9.14.6.9" }
-                }),
-                Field({
-                    name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                    xref: { document: "core", section: "9.14.6.9" }
-                })
+                Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
             ]
         }),
 
@@ -458,20 +382,10 @@ Matter.children.push(Cluster({
                 "This field shall indicate the requested duration in seconds.",
 
             xref: { document: "core", section: "9.14.6.10" },
-
             children: [
-                Field({
-                    name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "9.14.6.10" }
-                }),
-                Field({
-                    name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                    xref: { document: "core", section: "9.14.6.10" }
-                }),
-                Field({
-                    name: "Duration", id: 0x2, type: "uint32", conformance: "M",
-                    xref: { document: "core", section: "9.14.6.10" }
-                })
+                Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
+                Field({ name: "Duration", id: 0x2, type: "uint32", conformance: "M" })
             ]
         }),
 
@@ -483,16 +397,9 @@ Matter.children.push(Cluster({
                 "\n" +
                 "Example: disable a motion sensor to no longer control the lights in an area.",
             xref: { document: "core", section: "9.14.6.11" },
-
             children: [
-                Field({
-                    name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "9.14.6.11" }
-                }),
-                Field({
-                    name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                    xref: { document: "core", section: "9.14.6.11" }
-                })
+                Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
             ]
         }),
 
@@ -511,20 +418,10 @@ Matter.children.push(Cluster({
                 "This field shall indicate the requested duration in seconds.",
 
             xref: { document: "core", section: "9.14.6.12" },
-
             children: [
-                Field({
-                    name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "9.14.6.12" }
-                }),
-                Field({
-                    name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                    xref: { document: "core", section: "9.14.6.12" }
-                }),
-                Field({
-                    name: "Duration", id: 0x2, type: "uint32", conformance: "M",
-                    xref: { document: "core", section: "9.14.6.12" }
-                })
+                Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
+                Field({ name: "Duration", id: 0x2, type: "uint32", conformance: "M" })
             ]
         }),
 
@@ -535,57 +432,35 @@ Matter.children.push(Cluster({
 
             children: [
                 Field({
-                    name: "InstantAction", constraint: "0", description: "Indicate support for InstantAction command",
-                    xref: { document: "core", section: "9.14.4.1" }
+                    name: "InstantAction", constraint: "0", description: "Indicate support for InstantAction command"
                 }),
                 Field({
                     name: "InstantActionWithTransition", constraint: "1",
-                    description: "Indicate support for InstantActionWithTransition command",
-                    xref: { document: "core", section: "9.14.4.1" }
+                    description: "Indicate support for InstantActionWithTransition command"
                 }),
-                Field({
-                    name: "StartAction", constraint: "2", description: "Indicate support for StartAction command",
-                    xref: { document: "core", section: "9.14.4.1" }
-                }),
+                Field({ name: "StartAction", constraint: "2", description: "Indicate support for StartAction command" }),
                 Field({
                     name: "StartActionWithDuration", constraint: "3",
-                    description: "Indicate support for StartActionWithDuration command",
-                    xref: { document: "core", section: "9.14.4.1" }
+                    description: "Indicate support for StartActionWithDuration command"
                 }),
-                Field({
-                    name: "StopAction", constraint: "4", description: "Indicate support for StopAction command",
-                    xref: { document: "core", section: "9.14.4.1" }
-                }),
-                Field({
-                    name: "PauseAction", constraint: "5", description: "Indicate support for PauseAction command",
-                    xref: { document: "core", section: "9.14.4.1" }
-                }),
+                Field({ name: "StopAction", constraint: "4", description: "Indicate support for StopAction command" }),
+                Field({ name: "PauseAction", constraint: "5", description: "Indicate support for PauseAction command" }),
                 Field({
                     name: "PauseActionWithDuration", constraint: "6",
-                    description: "Indicate support for PauseActionWithDuration command",
-                    xref: { document: "core", section: "9.14.4.1" }
+                    description: "Indicate support for PauseActionWithDuration command"
                 }),
-                Field({
-                    name: "ResumeAction", constraint: "7", description: "Indicate support for ResumeAction command",
-                    xref: { document: "core", section: "9.14.4.1" }
-                }),
-                Field({
-                    name: "EnableAction", constraint: "8", description: "Indicate support for EnableAction command",
-                    xref: { document: "core", section: "9.14.4.1" }
-                }),
+                Field({ name: "ResumeAction", constraint: "7", description: "Indicate support for ResumeAction command" }),
+                Field({ name: "EnableAction", constraint: "8", description: "Indicate support for EnableAction command" }),
                 Field({
                     name: "EnableActionWithDuration", constraint: "9",
-                    description: "Indicate support for EnableActionWithDuration command",
-                    xref: { document: "core", section: "9.14.4.1" }
+                    description: "Indicate support for EnableActionWithDuration command"
                 }),
                 Field({
-                    name: "DisableAction", constraint: "10", description: "Indicate support for DisableAction command",
-                    xref: { document: "core", section: "9.14.4.1" }
+                    name: "DisableAction", constraint: "10", description: "Indicate support for DisableAction command"
                 }),
                 Field({
                     name: "DisableActionWithDuration", constraint: "11",
-                    description: "Indicate support for DisableActionWithDuration command",
-                    xref: { document: "core", section: "9.14.4.1" }
+                    description: "Indicate support for DisableActionWithDuration command"
                 })
             ]
         }),
@@ -597,8 +472,7 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Other", id: 0x0, conformance: "M",
-                    description: "Use this only when none of the other values applies",
-                    xref: { document: "core", section: "9.14.4.2" }
+                    description: "Use this only when none of the other values applies"
                 }),
 
                 Field({
@@ -674,22 +548,10 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "9.14.4.3" },
 
             children: [
-                Field({
-                    name: "Inactive", id: 0x0, conformance: "M", description: "The action is not active",
-                    xref: { document: "core", section: "9.14.4.3" }
-                }),
-                Field({
-                    name: "Active", id: 0x1, conformance: "M", description: "The action is active",
-                    xref: { document: "core", section: "9.14.4.3" }
-                }),
-                Field({
-                    name: "Paused", id: 0x2, conformance: "M", description: "The action has been paused",
-                    xref: { document: "core", section: "9.14.4.3" }
-                }),
-                Field({
-                    name: "Disabled", id: 0x3, conformance: "M", description: "The action has been disabled",
-                    xref: { document: "core", section: "9.14.4.3" }
-                })
+                Field({ name: "Inactive", id: 0x0, conformance: "M", description: "The action is not active" }),
+                Field({ name: "Active", id: 0x1, conformance: "M", description: "The action is active" }),
+                Field({ name: "Paused", id: 0x2, conformance: "M", description: "The action has been paused" }),
+                Field({ name: "Disabled", id: 0x3, conformance: "M", description: "The action has been disabled" })
             ]
         }),
 
@@ -700,13 +562,11 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Unknown", id: 0x0, conformance: "M",
-                    description: "Other reason not listed in the row(s) below",
-                    xref: { document: "core", section: "9.14.4.4" }
+                    description: "Other reason not listed in the row(s) below"
                 }),
                 Field({
                     name: "Interrupted", id: 0x1, conformance: "M",
-                    description: "The action was interrupted by another command or interaction",
-                    xref: { document: "core", section: "9.14.4.4" }
+                    description: "The action was interrupted by another command or interaction"
                 })
             ]
         }),
@@ -825,18 +685,9 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "9.14.4.7" },
 
             children: [
-                Field({
-                    name: "EndpointListId", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "9.14.4.7" }
-                }),
-                Field({
-                    name: "Name", id: 0x1, type: "string", conformance: "M", constraint: "max 32[128]",
-                    xref: { document: "core", section: "9.14.4.7" }
-                }),
-                Field({
-                    name: "Type", id: 0x2, type: "EndpointListTypeEnum", conformance: "M",
-                    xref: { document: "core", section: "9.14.4.7" }
-                }),
+                Field({ name: "EndpointListId", id: 0x0, type: "uint16", conformance: "M" }),
+                Field({ name: "Name", id: 0x1, type: "string", conformance: "M", constraint: "max 32[128]" }),
+                Field({ name: "Type", id: 0x2, type: "EndpointListTypeEnum", conformance: "M" }),
 
                 Field({
                     name: "Endpoints", id: 0x3, type: "list", conformance: "M", constraint: "max 256",

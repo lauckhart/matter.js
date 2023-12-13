@@ -36,15 +36,12 @@ Matter.children.push(Cluster({
                 Field({
                     name: "PKTCNT", constraint: "0", description: "PacketCounts",
                     details: "Node makes available the counts for the number of received and transmitted packets on the Wi-Fi " +
-                        "interface.",
-                    xref: { document: "core", section: "11.14.4" }
+                        "interface."
                 }),
-
                 Field({
                     name: "ERRCNT", constraint: "1", description: "ErrorCounts",
                     details: "Node makes available the counts for the number of errors that have occurred during the reception " +
-                        "and transmission of packets on the Wi-Fi interface.",
-                    xref: { document: "core", section: "11.14.4" }
+                        "and transmission of packets on the Wi-Fi interface."
                 })
             ]
         }),
@@ -211,10 +208,7 @@ Matter.children.push(Cluster({
                 "changed. Connected, in this context, shall mean that a Node acting as a Wi-Fi station is " +
                 "successfully associated to a Wi-Fi Access Point.",
             xref: { document: "core", section: "11.14.8.3" },
-            children: [Field({
-                name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M",
-                xref: { document: "core", section: "11.14.8.3" }
-            })]
+            children: [Field({ name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M" })]
         }),
 
         Command({
@@ -247,28 +241,16 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Unspecified", id: 0x0, conformance: "M",
-                    description: "Indicate the usage of an unspecified Wi-Fi security type",
-                    xref: { document: "core", section: "11.14.5.1" }
+                    description: "Indicate the usage of an unspecified Wi-Fi security type"
+                }),
+                Field({ name: "None", id: 0x1, conformance: "M", description: "Indicate the usage of no Wi-Fi security" }),
+                Field({ name: "Wep", id: 0x2, conformance: "M", description: "Indicate the usage of WEP Wi-Fi security" }),
+                Field({ name: "Wpa", id: 0x3, conformance: "M", description: "Indicate the usage of WPA Wi-Fi security" }),
+                Field({
+                    name: "Wpa2", id: 0x4, conformance: "M", description: "Indicate the usage of WPA2 Wi-Fi security"
                 }),
                 Field({
-                    name: "None", id: 0x1, conformance: "M", description: "Indicate the usage of no Wi-Fi security",
-                    xref: { document: "core", section: "11.14.5.1" }
-                }),
-                Field({
-                    name: "Wep", id: 0x2, conformance: "M", description: "Indicate the usage of WEP Wi-Fi security",
-                    xref: { document: "core", section: "11.14.5.1" }
-                }),
-                Field({
-                    name: "Wpa", id: 0x3, conformance: "M", description: "Indicate the usage of WPA Wi-Fi security",
-                    xref: { document: "core", section: "11.14.5.1" }
-                }),
-                Field({
-                    name: "Wpa2", id: 0x4, conformance: "M", description: "Indicate the usage of WPA2 Wi-Fi security",
-                    xref: { document: "core", section: "11.14.5.1" }
-                }),
-                Field({
-                    name: "Wpa3", id: 0x5, conformance: "M", description: "Indicate the usage of WPA3 Wi-Fi security",
-                    xref: { document: "core", section: "11.14.5.1" }
+                    name: "Wpa3", id: 0x5, conformance: "M", description: "Indicate the usage of WPA3 Wi-Fi security"
                 })
             ]
         }),
@@ -280,33 +262,27 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "A", id: 0x0, conformance: "M",
-                    description: "Indicate the network interface is currently using 802.11a against the wireless access point.",
-                    xref: { document: "core", section: "11.14.5.2" }
+                    description: "Indicate the network interface is currently using 802.11a against the wireless access point."
                 }),
                 Field({
                     name: "B", id: 0x1, conformance: "M",
-                    description: "Indicate the network interface is currently using 802.11b against the wireless access point.",
-                    xref: { document: "core", section: "11.14.5.2" }
+                    description: "Indicate the network interface is currently using 802.11b against the wireless access point."
                 }),
                 Field({
                     name: "G", id: 0x2, conformance: "M",
-                    description: "Indicate the network interface is currently using 802.11g against the wireless access point.",
-                    xref: { document: "core", section: "11.14.5.2" }
+                    description: "Indicate the network interface is currently using 802.11g against the wireless access point."
                 }),
                 Field({
                     name: "N", id: 0x3, conformance: "M",
-                    description: "Indicate the network interface is currently using 802.11n against the wireless access point.",
-                    xref: { document: "core", section: "11.14.5.2" }
+                    description: "Indicate the network interface is currently using 802.11n against the wireless access point."
                 }),
                 Field({
                     name: "Ac", id: 0x4, conformance: "M",
-                    description: "Indicate the network interface is currently using 802.11ac against the wireless access point.",
-                    xref: { document: "core", section: "11.14.5.2" }
+                    description: "Indicate the network interface is currently using 802.11ac against the wireless access point."
                 }),
                 Field({
                     name: "Ax", id: 0x5, conformance: "M",
-                    description: "Indicate the network interface is currently using 802.11ax against the wireless access point.",
-                    xref: { document: "core", section: "11.14.5.2" }
+                    description: "Indicate the network interface is currently using 802.11ax against the wireless access point."
                 })
             ]
         }),
@@ -317,23 +293,19 @@ Matter.children.push(Cluster({
 
             children: [
                 Field({
-                    name: "Unknown", id: 0x0, conformance: "M", description: "The reason for the failure is unknown.",
-                    xref: { document: "core", section: "11.14.5.3" }
+                    name: "Unknown", id: 0x0, conformance: "M", description: "The reason for the failure is unknown."
                 }),
                 Field({
                     name: "AssociationFailed", id: 0x1, conformance: "M",
-                    description: "An error occurred during association.",
-                    xref: { document: "core", section: "11.14.5.3" }
+                    description: "An error occurred during association."
                 }),
                 Field({
                     name: "AuthenticationFailed", id: 0x2, conformance: "M",
-                    description: "An error occurred during authentication.",
-                    xref: { document: "core", section: "11.14.5.3" }
+                    description: "An error occurred during authentication."
                 }),
                 Field({
                     name: "SsidNotFound", id: 0x3, conformance: "M",
-                    description: "The specified SSID could not be found.",
-                    xref: { document: "core", section: "11.14.5.3" }
+                    description: "The specified SSID could not be found."
                 })
             ]
         }),
@@ -343,13 +315,9 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.14.5.4" },
 
             children: [
+                Field({ name: "Connected", id: 0x0, conformance: "M", description: "Indicate the node is connected" }),
                 Field({
-                    name: "Connected", id: 0x0, conformance: "M", description: "Indicate the node is connected",
-                    xref: { document: "core", section: "11.14.5.4" }
-                }),
-                Field({
-                    name: "NotConnected", id: 0x1, conformance: "M", description: "Indicate the node is not connected",
-                    xref: { document: "core", section: "11.14.5.4" }
+                    name: "NotConnected", id: 0x1, conformance: "M", description: "Indicate the node is not connected"
                 })
             ]
         })

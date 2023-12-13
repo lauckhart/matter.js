@@ -21,7 +21,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "MeasuredValue", id: 0x0, type: "int16", access: "R V", conformance: "M",
-            constraint: "MinMeasuredValue to MaxMeasuredValue", quality: "X P",
+            constraint: "minMeasuredValue to maxMeasuredValue", quality: "X P",
 
             details: "Represents the temperature in degrees Celsius as follows:" +
                 "\n" +
@@ -35,7 +35,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "MinMeasuredValue", id: 0x1, type: "int16", access: "R V", conformance: "M",
-            constraint: "-27315 to MaxMeasuredValue1", default: 32768, quality: "X",
+            constraint: "-27315 to maxMeasuredValue1", default: 32768, quality: "X",
             details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that is capable of " +
                 "being measured. See Measured Value for more details." +
                 "\n" +
@@ -45,7 +45,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "MaxMeasuredValue", id: 0x2, type: "int16", access: "R V", conformance: "M",
-            constraint: "MinMeasuredValue1 to 32767", default: 32768, quality: "X",
+            constraint: "minMeasuredValue1 to 32767", default: 32768, quality: "X",
             details: "The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that is capable of " +
                 "being measured. See Measured Value for more details." +
                 "\n" +

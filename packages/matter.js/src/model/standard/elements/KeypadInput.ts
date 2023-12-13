@@ -32,18 +32,15 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "NV", constraint: "0", description: "NavigationKeyCodes",
-                    details: "Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU",
-                    xref: { document: "cluster", section: "6.8.2" }
+                    details: "Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU"
                 }),
                 Field({
                     name: "LK", constraint: "1", description: "LocationKeys",
-                    details: "Supports CEC keys 0x0A (Settings) and 0x09 (Home)",
-                    xref: { document: "cluster", section: "6.8.2" }
+                    details: "Supports CEC keys 0x0A (Settings) and 0x09 (Home)"
                 }),
                 Field({
                     name: "NK", constraint: "2", description: "NumberKeys",
-                    details: "Supports numeric input 0..9",
-                    xref: { document: "cluster", section: "6.8.2" }
+                    details: "Supports numeric input 0..9"
                 })
             ]
         }),
@@ -80,19 +77,14 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "6.8.4.1" },
 
             children: [
-                Field({
-                    name: "Success", id: 0x0, conformance: "M", description: "Command succeeded",
-                    xref: { document: "cluster", section: "6.8.4.1" }
-                }),
+                Field({ name: "Success", id: 0x0, conformance: "M", description: "Command succeeded" }),
                 Field({
                     name: "UnsupportedKey", id: 0x1, conformance: "M",
-                    description: "Command failed: Key code is not supported.",
-                    xref: { document: "cluster", section: "6.8.4.1" }
+                    description: "Command failed: Key code is not supported."
                 }),
                 Field({
                     name: "InvalidKeyInCurrentState", id: 0x2, conformance: "M",
-                    description: "Command failed: Requested key code is invalid in the context of the responder’s current state.",
-                    xref: { document: "cluster", section: "6.8.4.1" }
+                    description: "Command failed: Requested key code is invalid in the context of the responder’s current state."
                 })
             ]
         }),

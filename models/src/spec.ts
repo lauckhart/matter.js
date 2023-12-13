@@ -48,8 +48,7 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.2.4" },
                     children: [Field({
                         name: "QRY", constraint: "0", description: "Query",
-                        details: "Multicast query for identification state",
-                        xref: { document: "cluster", section: "1.2.4" }
+                        details: "Multicast query for identification state"
                     })]
                 }),
 
@@ -80,27 +79,14 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.2.5.2" },
 
                     children: [
-                        Field({
-                            name: "None", id: 0x0, description: "No presentation.",
-                            xref: { document: "cluster", section: "1.2.5.2" }
-                        }),
-                        Field({
-                            name: "LightOutput", id: 0x1, description: "Light output of a lighting product.",
-                            xref: { document: "cluster", section: "1.2.5.2" }
-                        }),
-                        Field({
-                            name: "VisibleIndicator", id: 0x2, description: "Typically a small LED.",
-                            xref: { document: "cluster", section: "1.2.5.2" }
-                        }),
-                        Field({ name: "AudibleBeep", id: 0x3, xref: { document: "cluster", section: "1.2.5.2" } }),
-                        Field({
-                            name: "Display", id: 0x4, description: "Presentation will be visible on display screen.",
-                            xref: { document: "cluster", section: "1.2.5.2" }
-                        }),
+                        Field({ name: "None", id: 0x0, description: "No presentation." }),
+                        Field({ name: "LightOutput", id: 0x1, description: "Light output of a lighting product." }),
+                        Field({ name: "VisibleIndicator", id: 0x2, description: "Typically a small LED." }),
+                        Field({ name: "AudibleBeep", id: 0x3 }),
+                        Field({ name: "Display", id: 0x4, description: "Presentation will be visible on display screen." }),
                         Field({
                             name: "Actuator", id: 0x5,
-                            description: "Presentation will be conveyed by actuator functionality such as through a window blind operation or in-wall relay.",
-                            xref: { document: "cluster", section: "1.2.5.2" }
+                            description: "Presentation will be conveyed by actuator functionality such as through a window blind operation or in-wall relay."
                         })
                     ]
                 }),
@@ -109,10 +95,7 @@ export const SpecMatter = Matter({
                     name: "Identify", id: 0x0, access: "M", conformance: "M", direction: "request", response: "status",
                     details: "This command starts or stops the receiving device identifying itself.",
                     xref: { document: "cluster", section: "1.2.6.1" },
-                    children: [Field({
-                        name: "IdentifyTime", id: 0x0, type: "uint16", conformance: "M",
-                        xref: { document: "cluster", section: "1.2.6.1" }
-                    })]
+                    children: [Field({ name: "IdentifyTime", id: 0x0, type: "uint16", conformance: "M" })]
                 }),
 
                 Command({
@@ -153,33 +136,25 @@ export const SpecMatter = Matter({
                             xref: { document: "cluster", section: "1.2.6.3.1" },
 
                             children: [
-                                Field({
-                                    name: "Blink", id: 0x0, description: "e.g., Light is turned on/off once.",
-                                    xref: { document: "cluster", section: "1.2.6.3.1" }
-                                }),
+                                Field({ name: "Blink", id: 0x0, description: "e.g., Light is turned on/off once." }),
                                 Field({
                                     name: "Breathe", id: 0x1,
-                                    description: "e.g., Light is turned on/off over 1 second and repeated 15 times.",
-                                    xref: { document: "cluster", section: "1.2.6.3.1" }
+                                    description: "e.g., Light is turned on/off over 1 second and repeated 15 times."
                                 }),
                                 Field({
                                     name: "Okay", id: 0x2,
-                                    description: "e.g., Colored light turns green for 1 second; non-colored light flashes twice.",
-                                    xref: { document: "cluster", section: "1.2.6.3.1" }
+                                    description: "e.g., Colored light turns green for 1 second; non-colored light flashes twice."
                                 }),
                                 Field({
                                     name: "ChannelChange", id: 0xb,
-                                    description: "e.g., Colored light turns orange for 8 seconds; non-colored light switches to the maximum brightness for 0.5s and then minimum brightness for 7.5s.",
-                                    xref: { document: "cluster", section: "1.2.6.3.1" }
+                                    description: "e.g., Colored light turns orange for 8 seconds; non-colored light switches to the maximum brightness for 0.5s and then minimum brightness for 7.5s."
                                 }),
                                 Field({
                                     name: "FinishEffect", id: 0xfe,
-                                    description: "Complete the current effect sequence before terminating. e.g., if in the middle of a breathe effect (as above), first complete the current 1s breathe effect and then terminate the effect.",
-                                    xref: { document: "cluster", section: "1.2.6.3.1" }
+                                    description: "Complete the current effect sequence before terminating. e.g., if in the middle of a breathe effect (as above), first complete the current 1s breathe effect and then terminate the effect."
                                 }),
                                 Field({
-                                    name: "StopEffect", id: 0xff, description: "Terminate the effect as soon as possible.",
-                                    xref: { document: "cluster", section: "1.2.6.3.1" }
+                                    name: "StopEffect", id: 0xff, description: "Terminate the effect as soon as possible."
                                 })
                             ]
                         }),
@@ -192,7 +167,7 @@ export const SpecMatter = Matter({
                                 "\n" +
                                 "Table 4. Values of the EffectVariant Field of the TriggerEffect Command",
                             xref: { document: "cluster", section: "1.2.6.3.2" },
-                            children: [Field({ name: "Default", id: 0x0, xref: { document: "cluster", section: "1.2.6.3.2" } })]
+                            children: [Field({ name: "Default", id: 0x0 })]
                         })
                     ]
                 }),
@@ -243,9 +218,8 @@ export const SpecMatter = Matter({
                     name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "1.3.4" },
                     children: [Field({
-                        name: "GN", constraint: "0", default: "0", description: "GroupNames",
-                        details: "The ability to store a name for a group.",
-                        xref: { document: "cluster", section: "1.3.4" }
+                        name: "GN", constraint: "0", default: 0, description: "GroupNames",
+                        details: "The ability to store a name for a group."
                     })]
                 }),
 
@@ -256,10 +230,7 @@ export const SpecMatter = Matter({
                         "The most significant bit, bit 7, shall be equal to bit 0 of the FeatureMap attribute. All other " +
                         "bits shall be 0.",
                     xref: { document: "cluster", section: "1.3.6.1" },
-                    children: [Field({
-                        name: "GroupNames", constraint: "7", description: "The ability to store a name for a group.",
-                        xref: { document: "cluster", section: "1.3.6.1" }
-                    })]
+                    children: [Field({ name: "GroupNames", constraint: "7", description: "The ability to store a name for a group." })]
                 }),
 
                 Command({
@@ -268,16 +239,9 @@ export const SpecMatter = Matter({
                     details: "The AddGroup command allows a client to add group membership in a particular group for the server " +
                         "endpoint.",
                     xref: { document: "cluster", section: "1.3.7.1" },
-
                     children: [
-                        Field({
-                            name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1",
-                            xref: { document: "cluster", section: "1.3.7.1" }
-                        }),
-                        Field({
-                            name: "GroupName", id: 0x1, type: "string", conformance: "M", constraint: "max 16",
-                            xref: { document: "cluster", section: "1.3.7.1" }
-                        })
+                        Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" }),
+                        Field({ name: "GroupName", id: 0x1, type: "string", conformance: "M", constraint: "max 16" })
                     ]
                 }),
 
@@ -287,10 +251,9 @@ export const SpecMatter = Matter({
                     details: "The ViewGroup command allows a client to request that the server responds with a ViewGroupResponse " +
                         "command containing the name string for a particular group.",
                     xref: { document: "cluster", section: "1.3.7.2" },
-                    children: [Field({
-                        name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1",
-                        xref: { document: "cluster", section: "1.3.7.2" }
-                    })]
+                    children: [
+                        Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" })
+                    ]
                 }),
 
                 Command({
@@ -301,7 +264,6 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.3.7.3" },
                     children: [Field({
                         name: "GroupList", id: 0x0, type: "list", conformance: "M", constraint: "all[min 1]",
-                        xref: { document: "cluster", section: "1.3.7.3" },
                         children: [Field({ name: "entry", type: "group-id" })]
                     })]
                 }),
@@ -312,10 +274,9 @@ export const SpecMatter = Matter({
                     details: "The RemoveGroup command allows a client to request that the server removes the membership for the " +
                         "server endpoint, if any, in a particular group.",
                     xref: { document: "cluster", section: "1.3.7.4" },
-                    children: [Field({
-                        name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1",
-                        xref: { document: "cluster", section: "1.3.7.4" }
-                    })]
+                    children: [
+                        Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" })
+                    ]
                 }),
 
                 Command({
@@ -340,16 +301,9 @@ export const SpecMatter = Matter({
                         "tool.",
 
                     xref: { document: "cluster", section: "1.3.7.6" },
-
                     children: [
-                        Field({
-                            name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1",
-                            xref: { document: "cluster", section: "1.3.7.6" }
-                        }),
-                        Field({
-                            name: "GroupName", id: 0x1, type: "string", conformance: "M", constraint: "max 16",
-                            xref: { document: "cluster", section: "1.3.7.6" }
-                        })
+                        Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" }),
+                        Field({ name: "GroupName", id: 0x1, type: "string", conformance: "M", constraint: "max 16" })
                     ]
                 }),
 
@@ -357,16 +311,9 @@ export const SpecMatter = Matter({
                     name: "AddGroupResponse", id: 0x0, conformance: "M", direction: "response",
                     details: "The AddGroupResponse is sent by the Groups cluster server in response to an AddGroup command.",
                     xref: { document: "cluster", section: "1.3.7.7" },
-
                     children: [
-                        Field({
-                            name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                            xref: { document: "cluster", section: "1.3.7.7" }
-                        }),
-                        Field({
-                            name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1",
-                            xref: { document: "cluster", section: "1.3.7.7" }
-                        })
+                        Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                        Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1" })
                     ]
                 }),
 
@@ -375,20 +322,10 @@ export const SpecMatter = Matter({
                     details: "The ViewGroupResponse command is sent by the Groups cluster server in response to a ViewGroup " +
                         "command.",
                     xref: { document: "cluster", section: "1.3.7.8" },
-
                     children: [
-                        Field({
-                            name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                            xref: { document: "cluster", section: "1.3.7.8" }
-                        }),
-                        Field({
-                            name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1",
-                            xref: { document: "cluster", section: "1.3.7.8" }
-                        }),
-                        Field({
-                            name: "GroupName", id: 0x2, type: "string", conformance: "M", constraint: "max 16",
-                            xref: { document: "cluster", section: "1.3.7.8" }
-                        })
+                        Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                        Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1" }),
+                        Field({ name: "GroupName", id: 0x2, type: "string", conformance: "M", constraint: "max 16" })
                     ]
                 }),
 
@@ -424,13 +361,9 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.3.7.9" },
 
                     children: [
-                        Field({
-                            name: "Capacity", id: 0x0, type: "uint8", conformance: "M", quality: "X",
-                            xref: { document: "cluster", section: "1.3.7.9" }
-                        }),
+                        Field({ name: "Capacity", id: 0x0, type: "uint8", conformance: "M", quality: "X" }),
                         Field({
                             name: "GroupList", id: 0x1, type: "list", conformance: "M", constraint: "all[min 1]",
-                            xref: { document: "cluster", section: "1.3.7.9" },
                             children: [Field({ name: "entry", type: "group-id" })]
                         })
                     ]
@@ -441,16 +374,9 @@ export const SpecMatter = Matter({
                     details: "The RemoveGroupResponse command is generated by the server in response to the receipt of a " +
                         "RemoveGroup command.",
                     xref: { document: "cluster", section: "1.3.7.10" },
-
                     children: [
-                        Field({
-                            name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                            xref: { document: "cluster", section: "1.3.7.10" }
-                        }),
-                        Field({
-                            name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1",
-                            xref: { document: "cluster", section: "1.3.7.10" }
-                        })
+                        Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                        Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1" })
                     ]
                 })
             ]
@@ -482,9 +408,8 @@ export const SpecMatter = Matter({
                     name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "1.4.4" },
                     children: [Field({
-                        name: "SN", constraint: "0", default: "0", description: "SceneNames",
-                        details: "The ability to store a name for a scene.",
-                        xref: { document: "cluster", section: "1.4.4" }
+                        name: "SN", constraint: "0", default: 0, description: "SceneNames",
+                        details: "The ability to store a name for a scene."
                     })]
                 }),
 
@@ -527,10 +452,7 @@ export const SpecMatter = Matter({
                         "The most significant bit, bit 7, shall be equal to bit 0 of the FeatureMap attribute. All other " +
                         "bits shall be 0.",
                     xref: { document: "cluster", section: "1.4.7.5" },
-                    children: [Field({
-                        name: "SceneNames", constraint: "7", description: "The ability to store a name for a scene.",
-                        xref: { document: "cluster", section: "1.4.7.5" }
-                    })]
+                    children: [Field({ name: "SceneNames", constraint: "7", description: "The ability to store a name for a scene." })]
                 }),
 
                 Attribute({
@@ -553,25 +475,12 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.4.9.2" },
 
                     children: [
-                        Field({
-                            name: "GroupId", id: 0x0, type: "group-id", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.2" }
-                        }),
-                        Field({
-                            name: "SceneId", id: 0x1, type: "uint8", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.2" }
-                        }),
-                        Field({
-                            name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.2" }
-                        }),
-                        Field({
-                            name: "SceneName", id: 0x3, type: "string", conformance: "M", constraint: "max 16",
-                            xref: { document: "cluster", section: "1.4.9.2" }
-                        }),
+                        Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M" }),
+                        Field({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M" }),
+                        Field({ name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M" }),
+                        Field({ name: "SceneName", id: 0x3, type: "string", conformance: "M", constraint: "max 16" }),
                         Field({
                             name: "ExtensionFieldSets", id: 0x4, type: "list", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.2" },
                             children: [Field({ name: "entry", type: "ExtensionFieldSet" })]
                         })
                     ]
@@ -581,16 +490,9 @@ export const SpecMatter = Matter({
                     name: "ViewScene", id: 0x1, access: "O", conformance: "M", direction: "request",
                     response: "ViewSceneResponse",
                     xref: { document: "cluster", section: "1.4.9.3" },
-
                     children: [
-                        Field({
-                            name: "GroupId", id: 0x0, type: "group-id", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.3" }
-                        }),
-                        Field({
-                            name: "SceneId", id: 0x1, type: "uint8", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.3" }
-                        })
+                        Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M" }),
+                        Field({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M" })
                     ]
                 }),
 
@@ -598,16 +500,9 @@ export const SpecMatter = Matter({
                     name: "RemoveScene", id: 0x2, access: "M", conformance: "M", direction: "request",
                     response: "RemoveSceneResponse",
                     xref: { document: "cluster", section: "1.4.9.4" },
-
                     children: [
-                        Field({
-                            name: "GroupId", id: 0x0, type: "group-id", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.4" }
-                        }),
-                        Field({
-                            name: "SceneId", id: 0x1, type: "uint8", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.4" }
-                        })
+                        Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M" }),
+                        Field({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M" })
                     ]
                 }),
 
@@ -615,26 +510,16 @@ export const SpecMatter = Matter({
                     name: "RemoveAllScenes", id: 0x3, access: "M", conformance: "M", direction: "request",
                     response: "RemoveAllScenesResponse",
                     xref: { document: "cluster", section: "1.4.9.5" },
-                    children: [Field({
-                        name: "GroupId", id: 0x0, type: "group-id", conformance: "M",
-                        xref: { document: "cluster", section: "1.4.9.5" }
-                    })]
+                    children: [Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M" })]
                 }),
 
                 Command({
                     name: "StoreScene", id: 0x4, access: "M", conformance: "M", direction: "request",
                     response: "StoreSceneResponse",
                     xref: { document: "cluster", section: "1.4.9.6" },
-
                     children: [
-                        Field({
-                            name: "GroupId", id: 0x0, type: "group-id", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.6" }
-                        }),
-                        Field({
-                            name: "SceneId", id: 0x1, type: "uint8", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.6" }
-                        })
+                        Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M" }),
+                        Field({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M" })
                     ]
                 }),
 
@@ -642,20 +527,10 @@ export const SpecMatter = Matter({
                     name: "RecallScene", id: 0x5, access: "O", conformance: "M", direction: "request",
                     response: "status",
                     xref: { document: "cluster", section: "1.4.9.7" },
-
                     children: [
-                        Field({
-                            name: "GroupId", id: 0x0, type: "group-id", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.7" }
-                        }),
-                        Field({
-                            name: "SceneId", id: 0x1, type: "uint8", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.7" }
-                        }),
-                        Field({
-                            name: "TransitionTime", id: 0x2, type: "uint16", conformance: "O", quality: "X",
-                            xref: { document: "cluster", section: "1.4.9.7" }
-                        })
+                        Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M" }),
+                        Field({ name: "SceneId", id: 0x1, type: "uint8", conformance: "M" }),
+                        Field({ name: "TransitionTime", id: 0x2, type: "uint16", conformance: "O", quality: "X" })
                     ]
                 }),
 
@@ -666,10 +541,7 @@ export const SpecMatter = Matter({
                         "group when no commissioning tool is in the network, or for a commissioning tool to get the used " +
                         "scene identifiers within a certain group, for the endpoint that implements this cluster.",
                     xref: { document: "cluster", section: "1.4.9.8" },
-                    children: [Field({
-                        name: "GroupId", id: 0x0, type: "group-id", conformance: "M",
-                        xref: { document: "cluster", section: "1.4.9.8" }
-                    })]
+                    children: [Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M" })]
                 }),
 
                 Command({
@@ -715,16 +587,9 @@ export const SpecMatter = Matter({
                                 "SceneIdentifierTo fields shall be ignored. Otherwise this field is set to 0.",
 
                             xref: { document: "cluster", section: "1.4.9.11.1" },
-
                             children: [
-                                Field({
-                                    name: "CopyAllScenes", constraint: "0",
-                                    xref: { document: "cluster", section: "1.4.9.11.1" }
-                                }),
-                                Field({
-                                    name: "Reserved", constraint: "1 to 8",
-                                    xref: { document: "cluster", section: "1.4.9.11.1" }
-                                })
+                                Field({ name: "CopyAllScenes", constraint: "0" }),
+                                Field({ name: "Reserved", constraint: "1 to 8" })
                             ]
                         }),
 
@@ -765,20 +630,10 @@ export const SpecMatter = Matter({
                 Command({
                     name: "AddSceneResponse", id: 0x0, conformance: "M", direction: "response",
                     xref: { document: "cluster", section: "1.4.9.12" },
-
                     children: [
-                        Field({
-                            name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                            xref: { document: "cluster", section: "1.4.9.12" }
-                        }),
-                        Field({
-                            name: "GroupId", id: 0x1, type: "group-id", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.12" }
-                        }),
-                        Field({
-                            name: "SceneId", id: 0x2, type: "uint8", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.12" }
-                        })
+                        Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                        Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M" }),
+                        Field({ name: "SceneId", id: 0x2, type: "uint8", conformance: "M" })
                     ]
                 }),
 
@@ -787,29 +642,13 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.4.9.13" },
 
                     children: [
-                        Field({
-                            name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                            xref: { document: "cluster", section: "1.4.9.13" }
-                        }),
-                        Field({
-                            name: "GroupId", id: 0x1, type: "group-id", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.13" }
-                        }),
-                        Field({
-                            name: "SceneId", id: 0x2, type: "uint8", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.13" }
-                        }),
-                        Field({
-                            name: "TransitionTime", id: 0x3, type: "uint16", conformance: "desc",
-                            xref: { document: "cluster", section: "1.4.9.13" }
-                        }),
-                        Field({
-                            name: "SceneName", id: 0x4, type: "string", conformance: "desc", constraint: "max 16",
-                            xref: { document: "cluster", section: "1.4.9.13" }
-                        }),
+                        Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                        Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M" }),
+                        Field({ name: "SceneId", id: 0x2, type: "uint8", conformance: "M" }),
+                        Field({ name: "TransitionTime", id: 0x3, type: "uint16", conformance: "desc" }),
+                        Field({ name: "SceneName", id: 0x4, type: "string", conformance: "desc", constraint: "max 16" }),
                         Field({
                             name: "ExtensionFieldSets", id: 0x5, type: "list", conformance: "desc",
-                            xref: { document: "cluster", section: "1.4.9.13" },
                             children: [Field({ name: "entry", type: "ExtensionFieldSet" })]
                         })
                     ]
@@ -818,56 +657,29 @@ export const SpecMatter = Matter({
                 Command({
                     name: "RemoveSceneResponse", id: 0x2, conformance: "M", direction: "response",
                     xref: { document: "cluster", section: "1.4.9.14" },
-
                     children: [
-                        Field({
-                            name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                            xref: { document: "cluster", section: "1.4.9.14" }
-                        }),
-                        Field({
-                            name: "GroupId", id: 0x1, type: "group-id", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.14" }
-                        }),
-                        Field({
-                            name: "SceneId", id: 0x2, type: "uint8", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.14" }
-                        })
+                        Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                        Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M" }),
+                        Field({ name: "SceneId", id: 0x2, type: "uint8", conformance: "M" })
                     ]
                 }),
 
                 Command({
                     name: "RemoveAllScenesResponse", id: 0x3, conformance: "M", direction: "response",
                     xref: { document: "cluster", section: "1.4.9.15" },
-
                     children: [
-                        Field({
-                            name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                            xref: { document: "cluster", section: "1.4.9.15" }
-                        }),
-                        Field({
-                            name: "GroupId", id: 0x1, type: "group-id", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.15" }
-                        })
+                        Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                        Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M" })
                     ]
                 }),
 
                 Command({
                     name: "StoreSceneResponse", id: 0x4, conformance: "M", direction: "response",
                     xref: { document: "cluster", section: "1.4.9.16" },
-
                     children: [
-                        Field({
-                            name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                            xref: { document: "cluster", section: "1.4.9.16" }
-                        }),
-                        Field({
-                            name: "GroupId", id: 0x1, type: "group-id", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.16" }
-                        }),
-                        Field({
-                            name: "SceneId", id: 0x2, type: "uint8", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.16" }
-                        })
+                        Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                        Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M" }),
+                        Field({ name: "SceneId", id: 0x2, type: "uint8", conformance: "M" })
                     ]
                 }),
 
@@ -903,21 +715,11 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.4.9.17" },
 
                     children: [
-                        Field({
-                            name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                            xref: { document: "cluster", section: "1.4.9.17" }
-                        }),
-                        Field({
-                            name: "Capacity", id: 0x1, type: "uint8", conformance: "M", quality: "X",
-                            xref: { document: "cluster", section: "1.4.9.17" }
-                        }),
-                        Field({
-                            name: "GroupId", id: 0x2, type: "group-id", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.9.17" }
-                        }),
+                        Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                        Field({ name: "Capacity", id: 0x1, type: "uint8", conformance: "M", quality: "X" }),
+                        Field({ name: "GroupId", id: 0x2, type: "group-id", conformance: "M" }),
                         Field({
                             name: "SceneList", id: 0x3, type: "list", conformance: "O",
-                            xref: { document: "cluster", section: "1.4.9.17" },
                             children: [Field({ name: "entry", type: "uint8" })]
                         })
                     ]
@@ -1009,13 +811,9 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.4.6.2" },
 
                     children: [
-                        Field({
-                            name: "ClusterId", id: 0x0, type: "cluster-id", access: "RW", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.6.2" }
-                        }),
+                        Field({ name: "ClusterId", id: 0x0, type: "cluster-id", access: "RW", conformance: "M" }),
                         Field({
                             name: "AttributeValueList", id: 0x1, type: "list", access: "RW", conformance: "M",
-                            xref: { document: "cluster", section: "1.4.6.2" },
                             children: [Field({ name: "entry", type: "AttributeValuePair" })]
                         })
                     ]
@@ -1036,8 +834,7 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.5.4" },
                     children: [Field({
                         name: "LT", constraint: "0", description: "LevelControlForLighting",
-                        details: "Behavior that supports lighting applications.",
-                        xref: { document: "cluster", section: "1.5.4" }
+                        details: "Behavior that supports lighting applications."
                     })]
                 }),
 
@@ -1191,16 +988,9 @@ export const SpecMatter = Matter({
                                 "unconditionally.",
 
                             xref: { document: "cluster", section: "1.5.7.6.1" },
-
                             children: [
-                                Field({
-                                    name: "AcceptOnlyWhenOn", constraint: "0",
-                                    xref: { document: "cluster", section: "1.5.7.6.1" }
-                                }),
-                                Field({
-                                    name: "Reserved", constraint: "1 to 8",
-                                    xref: { document: "cluster", section: "1.5.7.6.1" }
-                                })
+                                Field({ name: "AcceptOnlyWhenOn", constraint: "0" }),
+                                Field({ name: "Reserved", constraint: "1 to 8" })
                             ]
                         }),
 
@@ -1222,18 +1012,11 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.5.5.1" },
 
                     children: [
-                        Field({
-                            name: "Off", id: 0x0, conformance: "M", description: "Set the OnOff attribute to FALSE",
-                            xref: { document: "cluster", section: "1.5.5.1" }
-                        }),
-                        Field({
-                            name: "On", id: 0x1, conformance: "M", description: "Set the OnOff attribute to TRUE",
-                            xref: { document: "cluster", section: "1.5.5.1" }
-                        }),
+                        Field({ name: "Off", id: 0x0, conformance: "M", description: "Set the OnOff attribute to FALSE" }),
+                        Field({ name: "On", id: 0x1, conformance: "M", description: "Set the OnOff attribute to TRUE" }),
                         Field({
                             name: "Toggle", id: 0x2, conformance: "M",
-                            description: "If the previous value of the OnOff attribute is equal to FALSE, set the OnOff attribute to TRUE. If the previous value of the OnOff attribute is equal to TRUE, set the OnOff attribute to FALSE (toggle).",
-                            xref: { document: "cluster", section: "1.5.5.1" }
+                            description: "If the previous value of the OnOff attribute is equal to FALSE, set the OnOff attribute to TRUE. If the previous value of the OnOff attribute is equal to TRUE, set the OnOff attribute to FALSE (toggle)."
                         })
                     ]
                 })
@@ -1256,28 +1039,24 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "OO", constraint: "0", default: "1", description: "OnOff",
-                            details: "Dependency with the On/Off cluster",
-                            xref: { document: "cluster", section: "1.6.4" }
+                            name: "OO", constraint: "0", default: 1, description: "OnOff",
+                            details: "Dependency with the On/Off cluster"
                         }),
                         Field({
-                            name: "LT", constraint: "1", default: "0", description: "Lighting",
-                            details: "Behavior that supports lighting applications",
-                            xref: { document: "cluster", section: "1.6.4" }
+                            name: "LT", constraint: "1", default: 0, description: "Lighting",
+                            details: "Behavior that supports lighting applications"
                         }),
-
                         Field({
-                            name: "FQ", constraint: "2", default: "0", description: "Frequency",
+                            name: "FQ", constraint: "2", default: 0, description: "Frequency",
                             details: "Supports frequency attributes and behavior. The Pulse Width Modulation cluster was created for " +
-                                "frequency control.",
-                            xref: { document: "cluster", section: "1.6.4" }
+                                "frequency control."
                         })
                     ]
                 }),
 
                 Attribute({
                     name: "CurrentLevel", id: 0x0, type: "uint8", access: "R V", conformance: "M",
-                    constraint: "MinLevel to MaxLevel", default: null, quality: "X N S",
+                    constraint: "minLevel to maxLevel", default: null, quality: "X N S",
                     details: "The CurrentLevel attribute represents the current level of this device. The meaning of 'level' is " +
                         "device dependent.",
                     xref: { document: "cluster", section: "1.6.5.1" }
@@ -1299,7 +1078,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MaxLevel", id: 0x3, type: "uint8", access: "R V", conformance: "O",
-                    constraint: "MinLevel to 254", default: 254,
+                    constraint: "minLevel to 254", default: 254,
                     details: "The MaxLevel attribute indicates the maximum value of CurrentLevel that is capable of being " +
                         "assigned.",
                     xref: { document: "cluster", section: "1.6.5.4" }
@@ -1307,7 +1086,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "CurrentFrequency", id: 0x4, type: "uint16", access: "R V", conformance: "FQ",
-                    constraint: "MinFrequency to MaxFrequency", default: 0, quality: "S P",
+                    constraint: "minFrequency to maxFrequency", default: 0, quality: "S P",
                     details: "The CurrentFrequency attribute represents the frequency at which the device is at CurrentLevel. A " +
                         "CurrentFrequency of 0 is unknown.",
                     xref: { document: "cluster", section: "1.6.5.5" }
@@ -1315,7 +1094,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MinFrequency", id: 0x5, type: "uint16", access: "R V", conformance: "FQ",
-                    constraint: "0 to MaxFrequency", default: 0,
+                    constraint: "0 to maxFrequency", default: 0,
                     details: "The MinFrequency attribute indicates the minimum value of CurrentFrequency that is capable of being " +
                         "assigned. MinFrequency shall be less than or equal to MaxFrequency. A value of 0 indicates " +
                         "undefined.",
@@ -1324,7 +1103,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MaxFrequency", id: 0x6, type: "uint16", access: "R V", conformance: "FQ",
-                    constraint: "min MinFrequency", default: 0,
+                    constraint: "min minFrequency", default: 0,
                     details: "The MaxFrequency attribute indicates the maximum value of CurrentFrequency that is capable of being " +
                         "assigned. MaxFrequency shall be greater than or equal to MinFrequency. A value of 0 indicates " +
                         "undefined.",
@@ -1348,7 +1127,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "OnLevel", id: 0x11, type: "uint8", access: "RW VO", conformance: "M",
-                    constraint: "MinLevel to MaxLevel", default: null, quality: "X",
+                    constraint: "minLevel to maxLevel", default: null, quality: "X",
                     details: "The OnLevel attribute determines the value that the CurrentLevel attribute is set to when the OnOff " +
                         "attribute of an On/Off cluster on the same endpoint is set to TRUE, as a result of processing an " +
                         "On/Off cluster command. If the OnLevel attribute is not implemented, or is set to the null value, " +
@@ -1399,16 +1178,9 @@ export const SpecMatter = Matter({
                         "Table 19. Options Attribute",
 
                     xref: { document: "cluster", section: "1.6.5.8" },
-
                     children: [
-                        Field({
-                            name: "ExecuteIfOff", constraint: "0",
-                            xref: { document: "cluster", section: "1.6.5.8" }
-                        }),
-                        Field({
-                            name: "CoupleColorTempToLevel", constraint: "1",
-                            xref: { document: "cluster", section: "1.6.5.8" }
-                        })
+                        Field({ name: "ExecuteIfOff", constraint: "0" }),
+                        Field({ name: "CoupleColorTempToLevel", constraint: "1" })
                     ]
                 }),
 
@@ -1434,22 +1206,13 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.6.6.1" },
 
                     children: [
+                        Field({ name: "Level", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254" }),
+                        Field({ name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", quality: "X" }),
                         Field({
-                            name: "Level", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254",
-                            xref: { document: "cluster", section: "1.6.6.1" }
+                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", quality: "X",
-                            xref: { document: "cluster", section: "1.6.6.1" }
-                        }),
-                        Field({
-                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "1.6.6.1" }
-                        }),
-                        Field({
-                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "1.6.6.1" }
+                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -1463,10 +1226,7 @@ export const SpecMatter = Matter({
                             name: "MoveMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
                             details: "The MoveMode field shall be one of the non-reserved values in Values of the MoveMode Field.",
                             xref: { document: "cluster", section: "1.6.6.2.1" },
-                            children: [
-                                Field({ name: "Up", id: 0x0, xref: { document: "cluster", section: "1.6.6.2.1" } }),
-                                Field({ name: "Down", id: 0x1, xref: { document: "cluster", section: "1.6.6.2.1" } })
-                            ]
+                            children: [Field({ name: "Up", id: 0x0 }), Field({ name: "Down", id: 0x1 })]
                         }),
 
                         Field({
@@ -1483,13 +1243,10 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "1.6.6.2" }
+                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "1.6.6.2" }
+                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -1509,26 +1266,14 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.6.6.3" },
 
                     children: [
+                        Field({ name: "StepMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" }),
+                        Field({ name: "StepSize", id: 0x1, type: "uint8", conformance: "M" }),
+                        Field({ name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", quality: "X" }),
                         Field({
-                            name: "StepMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
-                            xref: { document: "cluster", section: "1.6.6.3" }
+                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "StepSize", id: 0x1, type: "uint8", conformance: "M",
-                            xref: { document: "cluster", section: "1.6.6.3" }
-                        }),
-                        Field({
-                            name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", quality: "X",
-                            xref: { document: "cluster", section: "1.6.6.3" }
-                        }),
-                        Field({
-                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "1.6.6.3" }
-                        }),
-                        Field({
-                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "1.6.6.3" }
+                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -1539,13 +1284,10 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "OptionsMask", id: 0x0, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "1.6.6.4" }
+                            name: "OptionsMask", id: 0x0, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x1, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "1.6.6.4" }
+                            name: "OptionsOverride", id: 0x1, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -1575,10 +1317,7 @@ export const SpecMatter = Matter({
                     name: "MoveToClosestFrequency", id: 0x8, access: "O", conformance: "FQ", direction: "request",
                     response: "status",
                     xref: { document: "cluster", section: "1.6.6.5" },
-                    children: [Field({
-                        name: "Frequency", id: 0x0, type: "uint16", conformance: "M", default: "0",
-                        xref: { document: "cluster", section: "1.6.6.5" }
-                    })]
+                    children: [Field({ name: "Frequency", id: 0x0, type: "uint16", conformance: "M", default: 0 })]
                 })
             ]
         }),
@@ -1599,28 +1338,24 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "OO", constraint: "0", default: "1", description: "OnOff",
-                            details: "Dependency with the On/Off cluster",
-                            xref: { document: "cluster", section: "1.6.4" }
+                            name: "OO", constraint: "0", default: 1, description: "OnOff",
+                            details: "Dependency with the On/Off cluster"
                         }),
                         Field({
-                            name: "LT", constraint: "1", default: "0", description: "Lighting",
-                            details: "Behavior that supports lighting applications",
-                            xref: { document: "cluster", section: "1.6.4" }
+                            name: "LT", constraint: "1", default: 0, description: "Lighting",
+                            details: "Behavior that supports lighting applications"
                         }),
-
                         Field({
-                            name: "FQ", constraint: "2", default: "0", description: "Frequency",
+                            name: "FQ", constraint: "2", default: 0, description: "Frequency",
                             details: "Supports frequency attributes and behavior. The Pulse Width Modulation cluster was created for " +
-                                "frequency control.",
-                            xref: { document: "cluster", section: "1.6.4" }
+                                "frequency control."
                         })
                     ]
                 }),
 
                 Attribute({
                     name: "CurrentLevel", id: 0x0, type: "uint8", access: "R V", conformance: "M",
-                    constraint: "MinLevel to MaxLevel", default: null, quality: "X N S",
+                    constraint: "minLevel to maxLevel", default: null, quality: "X N S",
                     details: "The CurrentLevel attribute represents the current level of this device. The meaning of 'level' is " +
                         "device dependent.",
                     xref: { document: "cluster", section: "1.6.5.1" }
@@ -1642,7 +1377,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MaxLevel", id: 0x3, type: "uint8", access: "R V", conformance: "O",
-                    constraint: "MinLevel to 254", default: 254,
+                    constraint: "minLevel to 254", default: 254,
                     details: "The MaxLevel attribute indicates the maximum value of CurrentLevel that is capable of being " +
                         "assigned.",
                     xref: { document: "cluster", section: "1.6.5.4" }
@@ -1650,7 +1385,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "CurrentFrequency", id: 0x4, type: "uint16", access: "R V", conformance: "FQ",
-                    constraint: "MinFrequency to MaxFrequency", default: 0, quality: "S P",
+                    constraint: "minFrequency to maxFrequency", default: 0, quality: "S P",
                     details: "The CurrentFrequency attribute represents the frequency at which the device is at CurrentLevel. A " +
                         "CurrentFrequency of 0 is unknown.",
                     xref: { document: "cluster", section: "1.6.5.5" }
@@ -1658,7 +1393,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MinFrequency", id: 0x5, type: "uint16", access: "R V", conformance: "FQ",
-                    constraint: "0 to MaxFrequency", default: 0,
+                    constraint: "0 to maxFrequency", default: 0,
                     details: "The MinFrequency attribute indicates the minimum value of CurrentFrequency that is capable of being " +
                         "assigned. MinFrequency shall be less than or equal to MaxFrequency. A value of 0 indicates " +
                         "undefined.",
@@ -1667,7 +1402,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MaxFrequency", id: 0x6, type: "uint16", access: "R V", conformance: "FQ",
-                    constraint: "min MinFrequency", default: 0,
+                    constraint: "min minFrequency", default: 0,
                     details: "The MaxFrequency attribute indicates the maximum value of CurrentFrequency that is capable of being " +
                         "assigned. MaxFrequency shall be greater than or equal to MinFrequency. A value of 0 indicates " +
                         "undefined.",
@@ -1691,7 +1426,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "OnLevel", id: 0x11, type: "uint8", access: "RW VO", conformance: "M",
-                    constraint: "MinLevel to MaxLevel", default: null, quality: "X",
+                    constraint: "minLevel to maxLevel", default: null, quality: "X",
                     details: "The OnLevel attribute determines the value that the CurrentLevel attribute is set to when the OnOff " +
                         "attribute of an On/Off cluster on the same endpoint is set to TRUE, as a result of processing an " +
                         "On/Off cluster command. If the OnLevel attribute is not implemented, or is set to the null value, " +
@@ -1742,16 +1477,9 @@ export const SpecMatter = Matter({
                         "Table 19. Options Attribute",
 
                     xref: { document: "cluster", section: "1.6.5.8" },
-
                     children: [
-                        Field({
-                            name: "ExecuteIfOff", constraint: "0",
-                            xref: { document: "cluster", section: "1.6.5.8" }
-                        }),
-                        Field({
-                            name: "CoupleColorTempToLevel", constraint: "1",
-                            xref: { document: "cluster", section: "1.6.5.8" }
-                        })
+                        Field({ name: "ExecuteIfOff", constraint: "0" }),
+                        Field({ name: "CoupleColorTempToLevel", constraint: "1" })
                     ]
                 }),
 
@@ -1777,22 +1505,13 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.6.6.1" },
 
                     children: [
+                        Field({ name: "Level", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254" }),
+                        Field({ name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", quality: "X" }),
                         Field({
-                            name: "Level", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254",
-                            xref: { document: "cluster", section: "1.6.6.1" }
+                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", quality: "X",
-                            xref: { document: "cluster", section: "1.6.6.1" }
-                        }),
-                        Field({
-                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "1.6.6.1" }
-                        }),
-                        Field({
-                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "1.6.6.1" }
+                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -1806,10 +1525,7 @@ export const SpecMatter = Matter({
                             name: "MoveMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
                             details: "The MoveMode field shall be one of the non-reserved values in Values of the MoveMode Field.",
                             xref: { document: "cluster", section: "1.6.6.2.1" },
-                            children: [
-                                Field({ name: "Up", id: 0x0, xref: { document: "cluster", section: "1.6.6.2.1" } }),
-                                Field({ name: "Down", id: 0x1, xref: { document: "cluster", section: "1.6.6.2.1" } })
-                            ]
+                            children: [Field({ name: "Up", id: 0x0 }), Field({ name: "Down", id: 0x1 })]
                         }),
 
                         Field({
@@ -1826,13 +1542,10 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "1.6.6.2" }
+                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "1.6.6.2" }
+                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -1852,26 +1565,14 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.6.6.3" },
 
                     children: [
+                        Field({ name: "StepMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc" }),
+                        Field({ name: "StepSize", id: 0x1, type: "uint8", conformance: "M" }),
+                        Field({ name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", quality: "X" }),
                         Field({
-                            name: "StepMode", id: 0x0, type: "enum8", conformance: "M", constraint: "desc",
-                            xref: { document: "cluster", section: "1.6.6.3" }
+                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "StepSize", id: 0x1, type: "uint8", conformance: "M",
-                            xref: { document: "cluster", section: "1.6.6.3" }
-                        }),
-                        Field({
-                            name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", quality: "X",
-                            xref: { document: "cluster", section: "1.6.6.3" }
-                        }),
-                        Field({
-                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "1.6.6.3" }
-                        }),
-                        Field({
-                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "1.6.6.3" }
+                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -1882,13 +1583,10 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "OptionsMask", id: 0x0, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "1.6.6.4" }
+                            name: "OptionsMask", id: 0x0, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x1, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "1.6.6.4" }
+                            name: "OptionsOverride", id: 0x1, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -1918,10 +1616,7 @@ export const SpecMatter = Matter({
                     name: "MoveToClosestFrequency", id: 0x8, access: "O", conformance: "FQ", direction: "request",
                     response: "status",
                     xref: { document: "cluster", section: "1.6.6.5" },
-                    children: [Field({
-                        name: "Frequency", id: 0x0, type: "uint16", conformance: "M", default: "0",
-                        xref: { document: "cluster", section: "1.6.6.5" }
-                    })]
+                    children: [Field({ name: "Frequency", id: 0x0, type: "uint16", conformance: "M", default: 0 })]
                 })
             ]
         }),
@@ -1945,10 +1640,7 @@ export const SpecMatter = Matter({
                         "\n" +
                         "The StateValue field shall indicate the new value of the StateValue attribute.",
                     xref: { document: "cluster", section: "1.7.5.1" },
-                    children: [Field({
-                        name: "StateValue", id: 0x0, type: "bool", conformance: "M",
-                        xref: { document: "cluster", section: "1.7.5.1" }
-                    })]
+                    children: [Field({ name: "StateValue", id: 0x0, type: "bool", conformance: "M" })]
                 })
             ]
         }),
@@ -1986,8 +1678,7 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.8.4" },
                     children: [Field({
                         name: "DEPONOFF", constraint: "0", description: "OnOff",
-                        details: "Dependency with the On/Off cluster",
-                        xref: { document: "cluster", section: "1.8.4" }
+                        details: "Dependency with the On/Off cluster"
                     })]
                 }),
 
@@ -2083,10 +1774,7 @@ export const SpecMatter = Matter({
                         "\n" +
                         "server shall respond with an INVALID_COMMAND status response.",
                     xref: { document: "cluster", section: "1.8.6.1" },
-                    children: [Field({
-                        name: "NewMode", id: 0x0, type: "uint8", conformance: "M", constraint: "desc",
-                        xref: { document: "cluster", section: "1.8.6.1" }
-                    })]
+                    children: [Field({ name: "NewMode", id: 0x0, type: "uint8", conformance: "M", constraint: "desc" })]
                 }),
 
                 Datatype({
@@ -2241,25 +1929,14 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.11.4" },
 
                     children: [
+                        Field({ name: "LS", conformance: "O.a", constraint: "0", description: "LatchingSwitch" }),
+                        Field({ name: "MS", conformance: "O.a", constraint: "1", description: "MomentarySwitch" }),
+                        Field({ name: "MSR", conformance: "[MS]", constraint: "2", description: "MomentarySwitchRelease" }),
                         Field({
-                            name: "LS", conformance: "O.a", constraint: "0", description: "LatchingSwitch",
-                            xref: { document: "cluster", section: "1.11.4" }
+                            name: "MSL", conformance: "[MS & MSR]", constraint: "3", description: "MomentarySwitchLongPress"
                         }),
                         Field({
-                            name: "MS", conformance: "O.a", constraint: "1", description: "MomentarySwitch",
-                            xref: { document: "cluster", section: "1.11.4" }
-                        }),
-                        Field({
-                            name: "MSR", conformance: "[MS]", constraint: "2", description: "MomentarySwitchRelease",
-                            xref: { document: "cluster", section: "1.11.4" }
-                        }),
-                        Field({
-                            name: "MSL", conformance: "[MS & MSR]", constraint: "3", description: "MomentarySwitchLongPress",
-                            xref: { document: "cluster", section: "1.11.4" }
-                        }),
-                        Field({
-                            name: "MSM", conformance: "[MS & MSR]", constraint: "4", description: "MomentarySwitchMultiPress",
-                            xref: { document: "cluster", section: "1.11.4" }
+                            name: "MSM", conformance: "[MS & MSR]", constraint: "4", description: "MomentarySwitchMultiPress"
                         })
                     ]
                 }),
@@ -2275,7 +1952,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "CurrentPosition", id: 0x1, type: "uint8", conformance: "M",
-                    constraint: "0 to NumberOfPositions1", default: 0, quality: "N",
+                    constraint: "0 to numberOfPositions1", default: 0, quality: "N",
                     details: "This attribute shall indicate the position of the switch. The valid range is zero to " +
                         "NumberOfPositions-1. CurrentPosition value 0 shall be assigned to the default position of the " +
                         "switch: for example the \"open\" state of a rocker switch, or the \"idle\" state of a push button " +
@@ -2302,8 +1979,7 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.11.7.1" },
                     children: [Field({
                         name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
-                        constraint: "0 to NumberOfPositions1",
-                        xref: { document: "cluster", section: "1.11.7.1" }
+                        constraint: "0 to numberOfPositions1"
                     })]
                 }),
 
@@ -2316,8 +1992,7 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.11.7.2" },
                     children: [Field({
                         name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
-                        constraint: "0 to NumberOfPositions1",
-                        xref: { document: "cluster", section: "1.11.7.2" }
+                        constraint: "0 to numberOfPositions1"
                     })]
                 }),
 
@@ -2331,8 +2006,7 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.11.7.3" },
                     children: [Field({
                         name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
-                        constraint: "0 to NumberOfPositions1",
-                        xref: { document: "cluster", section: "1.11.7.3" }
+                        constraint: "0 to numberOfPositions1"
                     })]
                 }),
 
@@ -2356,8 +2030,7 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.11.7.4" },
                     children: [Field({
                         name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M",
-                        constraint: "0 to NumberOfPositions1",
-                        xref: { document: "cluster", section: "1.11.7.4" }
+                        constraint: "0 to numberOfPositions1"
                     })]
                 }),
 
@@ -2375,8 +2048,7 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "1.11.7.5" },
                     children: [Field({
                         name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M",
-                        constraint: "0 to NumberOfPositions1",
-                        xref: { document: "cluster", section: "1.11.7.5" }
+                        constraint: "0 to numberOfPositions1"
                     })]
                 }),
 
@@ -2403,13 +2075,11 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
-                            constraint: "0 to NumberOfPositions1",
-                            xref: { document: "cluster", section: "1.11.7.6" }
+                            constraint: "0 to numberOfPositions1"
                         }),
                         Field({
                             name: "CurrentNumberOfPressesCounted", id: 0x1, type: "uint8", conformance: "M",
-                            constraint: "2 to MultiPressMax",
-                            xref: { document: "cluster", section: "1.11.7.6" }
+                            constraint: "2 to multiPressMax"
                         })
                     ]
                 }),
@@ -2444,13 +2114,11 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M",
-                            constraint: "0 to NumberOfPositions1",
-                            xref: { document: "cluster", section: "1.11.7.7" }
+                            constraint: "0 to numberOfPositions1"
                         }),
                         Field({
                             name: "TotalNumberOfPressesCounted", id: 0x1, type: "uint8", conformance: "M",
-                            constraint: "1 to MultiPressMax",
-                            xref: { document: "cluster", section: "1.11.7.7" }
+                            constraint: "1 to multiPressMax"
                         })
                     ]
                 })
@@ -2466,7 +2134,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0, MinMeasuredValue to MaxMeasuredValue", default: 0, quality: "X P",
+                    constraint: "0, minMeasuredValue to maxMeasuredValue", default: 0, quality: "X P",
 
                     details: "The MeasuredValue attribute represents the illuminance in Lux (symbol lx) as follows:" +
                         "\n" +
@@ -2488,7 +2156,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MinMeasuredValue", id: 0x1, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "1 to MaxMeasuredValue1", quality: "X",
+                    constraint: "1 to maxMeasuredValue1", quality: "X",
                     details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. A " +
                         "value of null indicates that this attribute is not defined. See Measured Value for more details.",
                     xref: { document: "cluster", section: "2.2.5.2" }
@@ -2496,7 +2164,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MaxMeasuredValue", id: 0x2, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "MinMeasuredValue1 to 65534", quality: "X",
+                    constraint: "minMeasuredValue1 to 65534", quality: "X",
                     details: "The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. A " +
                         "value of null indicates that this attribute is not defined. See Measured Value for more details.",
                     xref: { document: "cluster", section: "2.2.5.3" }
@@ -2515,10 +2183,7 @@ export const SpecMatter = Matter({
                     details: "The LightSensorType attribute specifies the electronic type of the light sensor. This attribute " +
                         "shall be set to one of the non-reserved values listed in Values of the LightSensorType Attribute.",
                     xref: { document: "cluster", section: "2.2.5.5" },
-                    children: [
-                        Field({ name: "Photodiode", id: 0x0, xref: { document: "cluster", section: "2.2.5.5" } }),
-                        Field({ name: "Cmos", id: 0x1, xref: { document: "cluster", section: "2.2.5.5" } })
-                    ]
+                    children: [Field({ name: "Photodiode", id: 0x0 }), Field({ name: "Cmos", id: 0x1 })]
                 })
             ]
         }),
@@ -2534,7 +2199,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MeasuredValue", id: 0x0, type: "int16", access: "R V", conformance: "M",
-                    constraint: "MinMeasuredValue to MaxMeasuredValue", quality: "X P",
+                    constraint: "minMeasuredValue to maxMeasuredValue", quality: "X P",
 
                     details: "Represents the temperature in degrees Celsius as follows:" +
                         "\n" +
@@ -2548,7 +2213,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MinMeasuredValue", id: 0x1, type: "int16", access: "R V", conformance: "M",
-                    constraint: "-27315 to MaxMeasuredValue1", quality: "X",
+                    constraint: "-27315 to maxMeasuredValue1", quality: "X",
                     details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that is capable of " +
                         "being measured. See Measured Value for more details." +
                         "\n" +
@@ -2558,7 +2223,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MaxMeasuredValue", id: 0x2, type: "int16", access: "R V", conformance: "M",
-                    constraint: "MinMeasuredValue1 to 32767", quality: "X",
+                    constraint: "minMeasuredValue1 to 32767", quality: "X",
                     details: "The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that is capable of " +
                         "being measured. See Measured Value for more details." +
                         "\n" +
@@ -2589,14 +2254,13 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "2.4.4" },
                     children: [Field({
                         name: "EXT", conformance: "O", constraint: "0", description: "Extended",
-                        details: "The cluster is capable of extended range and resolution",
-                        xref: { document: "cluster", section: "2.4.4" }
+                        details: "The cluster is capable of extended range and resolution"
                     })]
                 }),
 
                 Attribute({
                     name: "MeasuredValue", id: 0x0, type: "int16", access: "R V", conformance: "M",
-                    constraint: "MinMeasuredValue to MaxMeasuredValue", quality: "X P",
+                    constraint: "minMeasuredValue to maxMeasuredValue", quality: "X P",
                     details: "This attribute represents the pressure in kPa as follows:" +
                         "\n" +
                         "MeasuredValue = 10 x Pressure [kPa]" +
@@ -2607,7 +2271,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MinMeasuredValue", id: 0x1, type: "int16", access: "R V", conformance: "M",
-                    constraint: "-32767 to MaxMeasuredValue1", quality: "X",
+                    constraint: "-32767 to maxMeasuredValue1", quality: "X",
                     details: "This attribute indicates the minimum value of MeasuredValue that can be measured. See Measured " +
                         "Value for more details." +
                         "\n" +
@@ -2617,7 +2281,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MaxMeasuredValue", id: 0x2, type: "int16", access: "R V", conformance: "M",
-                    constraint: "MinMeasuredValue1 to 32767", quality: "X",
+                    constraint: "minMeasuredValue1 to 32767", quality: "X",
                     details: "This attribute indicates the maximum value of MeasuredValue that can be measured. See Measured " +
                         "Value for more details." +
                         "\n" +
@@ -2636,7 +2300,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "ScaledValue", id: 0x10, type: "int16", access: "R V", conformance: "EXT",
-                    constraint: "MinScaledValue to MaxScaledValue", default: 0, quality: "X",
+                    constraint: "minScaledValue to maxScaledValue", default: 0, quality: "X",
                     details: "ScaledValue represents the pressure in Pascals as follows:" +
                         "\n" +
                         "ScaledValue = 10Scale x Pressure [Pa]" +
@@ -2647,7 +2311,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MinScaledValue", id: 0x11, type: "int16", access: "R V", conformance: "EXT",
-                    constraint: "-32767 to MaxScaledValue1", default: 0, quality: "X",
+                    constraint: "-32767 to maxScaledValue1", default: 0, quality: "X",
                     details: "The MinScaledValue attribute indicates the minimum value of ScaledValue that can be measured. The " +
                         "null value indicates that the value is not available.",
                     xref: { document: "cluster", section: "2.4.5.6" }
@@ -2655,7 +2319,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MaxScaledValue", id: 0x12, type: "int16", access: "R V", conformance: "EXT",
-                    constraint: "MinScaledValue1 to 32767", default: 0, quality: "X",
+                    constraint: "minScaledValue1 to 32767", default: 0, quality: "X",
                     details: "This attribute indicates the maximum value of ScaledValue that can be measured. MaxScaledValue " +
                         "shall be greater than MinScaledValue." +
                         "\n" +
@@ -2694,7 +2358,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "MinMeasuredValue to MaxMeasuredValue", default: null, quality: "X P",
+                    constraint: "minMeasuredValue to maxMeasuredValue", default: null, quality: "X P",
                     details: "MeasuredValue represents the flow in m/h as follows: MeasuredValue = 10 x Flow" +
                         "\n" +
                         "The null value indicates that the flow measurement is unknown, otherwise the range shall be as " +
@@ -2704,7 +2368,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MinMeasuredValue", id: 0x1, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0 to MaxMeasuredValue1", quality: "X",
+                    constraint: "0 to maxMeasuredValue1", quality: "X",
                     details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. " +
                         "See Measured Value for more details." +
                         "\n" +
@@ -2714,7 +2378,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MaxMeasuredValue", id: 0x2, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "MinMeasuredValue1 to 65534", quality: "X",
+                    constraint: "minMeasuredValue1 to 65534", quality: "X",
                     details: "The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. " +
                         "See Measured Value for more details." +
                         "\n" +
@@ -2743,7 +2407,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "MinMeasuredValue to MaxMeasuredValue", quality: "X P",
+                    constraint: "minMeasuredValue to maxMeasuredValue", quality: "X P",
 
                     details: "MeasuredValue represents the water content in % as follows:" +
                         "\n" +
@@ -2764,7 +2428,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MinMeasuredValue", id: 0x1, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0 to MaxMeasuredValue1", quality: "X",
+                    constraint: "0 to maxMeasuredValue1", quality: "X",
                     details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. " +
                         "The null value means this attribute is not defined. See Measured Value for more details.",
                     xref: { document: "cluster", section: "2.6.4.2" }
@@ -2772,7 +2436,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MaxMeasuredValue", id: 0x2, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "MinMeasuredValue1 to 10000", quality: "X",
+                    constraint: "minMeasuredValue1 to 10000", quality: "X",
                     details: "The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. " +
                         "The null value means this attribute is not defined. See Measured Value for more details.",
                     xref: { document: "cluster", section: "2.6.4.3" }
@@ -2799,7 +2463,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "MinMeasuredValue to MaxMeasuredValue", quality: "X P",
+                    constraint: "minMeasuredValue to maxMeasuredValue", quality: "X P",
 
                     details: "MeasuredValue represents the water content in % as follows:" +
                         "\n" +
@@ -2820,7 +2484,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MinMeasuredValue", id: 0x1, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0 to MaxMeasuredValue1", quality: "X",
+                    constraint: "0 to maxMeasuredValue1", quality: "X",
                     details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. " +
                         "The null value means this attribute is not defined. See Measured Value for more details.",
                     xref: { document: "cluster", section: "2.6.4.2" }
@@ -2828,7 +2492,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MaxMeasuredValue", id: 0x2, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "MinMeasuredValue1 to 10000", quality: "X",
+                    constraint: "minMeasuredValue1 to 10000", quality: "X",
                     details: "The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. " +
                         "The null value means this attribute is not defined. See Measured Value for more details.",
                     xref: { document: "cluster", section: "2.6.4.3" }
@@ -2855,7 +2519,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "MinMeasuredValue to MaxMeasuredValue", quality: "X P",
+                    constraint: "minMeasuredValue to maxMeasuredValue", quality: "X P",
 
                     details: "MeasuredValue represents the water content in % as follows:" +
                         "\n" +
@@ -2876,7 +2540,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MinMeasuredValue", id: 0x1, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "0 to MaxMeasuredValue1", quality: "X",
+                    constraint: "0 to maxMeasuredValue1", quality: "X",
                     details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. " +
                         "The null value means this attribute is not defined. See Measured Value for more details.",
                     xref: { document: "cluster", section: "2.6.4.2" }
@@ -2884,7 +2548,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "MaxMeasuredValue", id: 0x2, type: "uint16", access: "R V", conformance: "M",
-                    constraint: "MinMeasuredValue1 to 10000", quality: "X",
+                    constraint: "minMeasuredValue1 to 10000", quality: "X",
                     details: "The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. " +
                         "The null value means this attribute is not defined. See Measured Value for more details.",
                     xref: { document: "cluster", section: "2.6.4.3" }
@@ -3029,8 +2693,7 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Occupied", constraint: "0",
-                            description: "Indicates the sensed occupancy state; 1 = occupied, 0 = unoccupied.",
-                            xref: { document: "cluster", section: "2.7.5.1" }
+                            description: "Indicates the sensed occupancy state; 1 = occupied, 0 = unoccupied."
                         })
                     ]
                 }),
@@ -3041,22 +2704,18 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "Pir", id: 0x0, conformance: "M", description: "Indicates a passive infrared sensor.",
-                            xref: { document: "cluster", section: "2.7.5.2" }
+                            name: "Pir", id: 0x0, conformance: "M", description: "Indicates a passive infrared sensor."
                         }),
                         Field({
-                            name: "Ultrasonic", id: 0x1, conformance: "M", description: "Indicates a ultrasonic sensor.",
-                            xref: { document: "cluster", section: "2.7.5.2" }
+                            name: "Ultrasonic", id: 0x1, conformance: "M", description: "Indicates a ultrasonic sensor."
                         }),
                         Field({
                             name: "PirAndUltrasonic", id: 0x2, conformance: "M",
-                            description: "Indicates a passive infrared and ultrasonic sensor.",
-                            xref: { document: "cluster", section: "2.7.5.2" }
+                            description: "Indicates a passive infrared and ultrasonic sensor."
                         }),
                         Field({
                             name: "PhysicalContact", id: 0x3, conformance: "M",
-                            description: "Indicates a physical contact sensor.",
-                            xref: { document: "cluster", section: "2.7.5.2" }
+                            description: "Indicates a physical contact sensor."
                         })
                     ]
                 }),
@@ -3066,17 +2725,10 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "2.7.5.3" },
 
                     children: [
+                        Field({ name: "Pir", constraint: "0", description: "Indicates a passive infrared sensor." }),
+                        Field({ name: "Ultrasonic", constraint: "1", description: "Indicates a ultrasonic sensor." }),
                         Field({
-                            name: "Pir", constraint: "0", description: "Indicates a passive infrared sensor.",
-                            xref: { document: "cluster", section: "2.7.5.3" }
-                        }),
-                        Field({
-                            name: "Ultrasonic", constraint: "1", description: "Indicates a ultrasonic sensor.",
-                            xref: { document: "cluster", section: "2.7.5.3" }
-                        }),
-                        Field({
-                            name: "PhysicalContact", constraint: "2", description: "Indicates a physical contact sensor.",
-                            xref: { document: "cluster", section: "2.7.5.3" }
+                            name: "PhysicalContact", constraint: "2", description: "Indicates a physical contact sensor."
                         })
                     ]
                 })
@@ -3097,28 +2749,23 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "HS", constraint: "0", description: "HueSaturation",
-                            details: "Supports color specification via hue/saturation.",
-                            xref: { document: "cluster", section: "3.2.5" }
+                            details: "Supports color specification via hue/saturation."
                         }),
                         Field({
                             name: "EHUE", constraint: "1", description: "EnhancedHue",
-                            details: "Enhanced hue is supported.",
-                            xref: { document: "cluster", section: "3.2.5" }
+                            details: "Enhanced hue is supported."
                         }),
                         Field({
                             name: "CL", constraint: "2", description: "ColorLoop",
-                            details: "Color loop is supported.",
-                            xref: { document: "cluster", section: "3.2.5" }
+                            details: "Color loop is supported."
                         }),
                         Field({
                             name: "XY", constraint: "3", description: "Xy",
-                            details: "Supports color specification via XY.",
-                            xref: { document: "cluster", section: "3.2.5" }
+                            details: "Supports color specification via XY."
                         }),
                         Field({
                             name: "CT", constraint: "4", description: "ColorTemperature",
-                            details: "Supports specification of color temperature.",
-                            xref: { document: "cluster", section: "3.2.5" }
+                            details: "Supports specification of color temperature."
                         })
                     ]
                 }),
@@ -3200,20 +2847,11 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "3.2.7.6" },
 
                     children: [
-                        Field({ name: "None", id: 0x0, xref: { document: "cluster", section: "3.2.7.6" } }),
-                        Field({ name: "OtherUnknown", id: 0x1, xref: { document: "cluster", section: "3.2.7.6" } }),
-                        Field({
-                            name: "TemperatureMonitoring", id: 0x2,
-                            xref: { document: "cluster", section: "3.2.7.6" }
-                        }),
-                        Field({
-                            name: "OpticalLuminanceMonitoringAndFeedback", id: 0x3,
-                            xref: { document: "cluster", section: "3.2.7.6" }
-                        }),
-                        Field({
-                            name: "OpticalColorMonitoringAndFeedback", id: 0x4,
-                            xref: { document: "cluster", section: "3.2.7.6" }
-                        })
+                        Field({ name: "None", id: 0x0 }),
+                        Field({ name: "OtherUnknown", id: 0x1 }),
+                        Field({ name: "TemperatureMonitoring", id: 0x2 }),
+                        Field({ name: "OpticalLuminanceMonitoringAndFeedback", id: 0x3 }),
+                        Field({ name: "OpticalColorMonitoringAndFeedback", id: 0x4 })
                     ]
                 }),
 
@@ -3259,20 +2897,10 @@ export const SpecMatter = Matter({
                         "Table 39. Values of the ColorMode Attribute",
 
                     xref: { document: "cluster", section: "3.2.7.9" },
-
                     children: [
-                        Field({
-                            name: "CurrentHueAndCurrentSaturation", id: 0x0,
-                            xref: { document: "cluster", section: "3.2.7.9" }
-                        }),
-                        Field({
-                            name: "CurrentXAndCurrentY", id: 0x1,
-                            xref: { document: "cluster", section: "3.2.7.9" }
-                        }),
-                        Field({
-                            name: "ColorTemperatureMireds", id: 0x2,
-                            xref: { document: "cluster", section: "3.2.7.9" }
-                        })
+                        Field({ name: "CurrentHueAndCurrentSaturation", id: 0x0 }),
+                        Field({ name: "CurrentXAndCurrentY", id: 0x1 }),
+                        Field({ name: "ColorTemperatureMireds", id: 0x2 })
                     ]
                 }),
 
@@ -3301,10 +2929,7 @@ export const SpecMatter = Matter({
                         "  • The value of the ExecuteIfOff bit is 0.",
 
                     xref: { document: "cluster", section: "3.2.7.10" },
-                    children: [Field({
-                        name: "ExecuteIfOff", constraint: "0",
-                        xref: { document: "cluster", section: "3.2.7.10" }
-                    })]
+                    children: [Field({ name: "ExecuteIfOff", constraint: "0" })]
                 }),
 
                 Attribute({
@@ -3339,22 +2964,10 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "3.2.7.12" },
 
                     children: [
-                        Field({
-                            name: "CurrentHueAndCurrentSaturation", id: 0x0,
-                            xref: { document: "cluster", section: "3.2.7.12" }
-                        }),
-                        Field({
-                            name: "CurrentXAndCurrentY", id: 0x1,
-                            xref: { document: "cluster", section: "3.2.7.12" }
-                        }),
-                        Field({
-                            name: "ColorTemperatureMireds", id: 0x2,
-                            xref: { document: "cluster", section: "3.2.7.12" }
-                        }),
-                        Field({
-                            name: "EnhancedCurrentHueAndCurrentSaturation", id: 0x3,
-                            xref: { document: "cluster", section: "3.2.7.12" }
-                        })
+                        Field({ name: "CurrentHueAndCurrentSaturation", id: 0x0 }),
+                        Field({ name: "CurrentXAndCurrentY", id: 0x1 }),
+                        Field({ name: "ColorTemperatureMireds", id: 0x2 }),
+                        Field({ name: "EnhancedCurrentHueAndCurrentSaturation", id: 0x3 })
                     ]
                 }),
 
@@ -3433,7 +3046,7 @@ export const SpecMatter = Matter({
                 Attribute({
                     name: "CoupleColorTempToLevelMinMireds", id: 0x400d, type: "uint16", access: "R V",
                     conformance: "CT | ColorTemperatureMireds",
-                    constraint: "ColorTempPhysicalMinMireds to ColorTemperatureMireds",
+                    constraint: "colorTempPhysicalMinMireds to colorTemperatureMireds",
 
                     details: "The CoupleColorTempToLevelMinMireds attribute specifies a lower bound on the value of the " +
                         "ColorTemperatureMireds attribute for the purposes of coupling the ColorTemperatureMireds attribute " +
@@ -3702,13 +3315,10 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.4" }
+                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.4" }
+                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -3736,13 +3346,10 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.5" }
+                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.5" }
+                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -3777,13 +3384,10 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.6" }
+                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.6" }
+                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -3794,22 +3398,15 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "3.2.11.7" },
 
                     children: [
+                        Field({ name: "Saturation", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254" }),
                         Field({
-                            name: "Saturation", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254",
-                            xref: { document: "cluster", section: "3.2.11.7" }
+                            name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", constraint: "0 to 65534"
                         }),
                         Field({
-                            name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", constraint: "0 to 65534",
-                            xref: { document: "cluster", section: "3.2.11.7" }
+                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.7" }
-                        }),
-                        Field({
-                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.7" }
+                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -3842,13 +3439,10 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.8" }
+                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.8" }
+                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -3881,13 +3475,10 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.9" }
+                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.9" }
+                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -3898,26 +3489,16 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "3.2.11.10" },
 
                     children: [
+                        Field({ name: "Hue", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254" }),
+                        Field({ name: "Saturation", id: 0x1, type: "uint8", conformance: "M", constraint: "0 to 254" }),
                         Field({
-                            name: "Hue", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254",
-                            xref: { document: "cluster", section: "3.2.11.10" }
+                            name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", constraint: "0 to 65534"
                         }),
                         Field({
-                            name: "Saturation", id: 0x1, type: "uint8", conformance: "M", constraint: "0 to 254",
-                            xref: { document: "cluster", section: "3.2.11.10" }
+                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", constraint: "0 to 65534",
-                            xref: { document: "cluster", section: "3.2.11.10" }
-                        }),
-                        Field({
-                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.10" }
-                        }),
-                        Field({
-                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.10" }
+                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -3928,26 +3509,16 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "3.2.11.11" },
 
                     children: [
+                        Field({ name: "ColorX", id: 0x0, type: "uint16", conformance: "M", constraint: "0 to 65279" }),
+                        Field({ name: "ColorY", id: 0x1, type: "uint16", conformance: "M", constraint: "0 to 65279" }),
                         Field({
-                            name: "ColorX", id: 0x0, type: "uint16", conformance: "M", constraint: "0 to 65279",
-                            xref: { document: "cluster", section: "3.2.11.11" }
+                            name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", constraint: "0 to 65534"
                         }),
                         Field({
-                            name: "ColorY", id: 0x1, type: "uint16", conformance: "M", constraint: "0 to 65279",
-                            xref: { document: "cluster", section: "3.2.11.11" }
+                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", constraint: "0 to 65534",
-                            xref: { document: "cluster", section: "3.2.11.11" }
-                        }),
-                        Field({
-                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.11" }
-                        }),
-                        Field({
-                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.11" }
+                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -3973,13 +3544,10 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.12" }
+                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.12" }
+                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -3990,14 +3558,8 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "3.2.11.13" },
 
                     children: [
-                        Field({
-                            name: "StepX", id: 0x0, type: "int16", conformance: "M",
-                            xref: { document: "cluster", section: "3.2.11.13" }
-                        }),
-                        Field({
-                            name: "StepY", id: 0x1, type: "int16", conformance: "M",
-                            xref: { document: "cluster", section: "3.2.11.13" }
-                        }),
+                        Field({ name: "StepX", id: 0x0, type: "int16", conformance: "M" }),
+                        Field({ name: "StepY", id: 0x1, type: "int16", conformance: "M" }),
 
                         Field({
                             name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", constraint: "0 to 65534",
@@ -4007,13 +3569,10 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.13" }
+                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.13" }
+                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -4025,21 +3584,16 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "ColorTemperatureMireds", id: 0x0, type: "uint16", conformance: "M", constraint: "0 to 65279",
-                            xref: { document: "cluster", section: "3.2.11.14" }
+                            name: "ColorTemperatureMireds", id: 0x0, type: "uint16", conformance: "M", constraint: "0 to 65279"
                         }),
                         Field({
-                            name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", constraint: "0 to 65534",
-                            xref: { document: "cluster", section: "3.2.11.14" }
+                            name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", constraint: "0 to 65534"
                         }),
                         Field({
-                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.14" }
+                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.14" }
+                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -4073,13 +3627,10 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.15" }
+                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.15" }
+                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -4111,13 +3662,10 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.16" }
+                            name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.16" }
+                            name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -4158,13 +3706,10 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.17" }
+                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.17" }
+                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -4199,13 +3744,10 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.18" }
+                            name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.18" }
+                            name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -4247,26 +3789,11 @@ export const SpecMatter = Matter({
                             xref: { document: "cluster", section: "3.2.11.19.1" },
 
                             children: [
-                                Field({
-                                    name: "UpdateAction", constraint: "0",
-                                    xref: { document: "cluster", section: "3.2.11.19.1" }
-                                }),
-                                Field({
-                                    name: "UpdateDirection", constraint: "1",
-                                    xref: { document: "cluster", section: "3.2.11.19.1" }
-                                }),
-                                Field({
-                                    name: "UpdateTime", constraint: "2",
-                                    xref: { document: "cluster", section: "3.2.11.19.1" }
-                                }),
-                                Field({
-                                    name: "UpdateStartHue", constraint: "3",
-                                    xref: { document: "cluster", section: "3.2.11.19.1" }
-                                }),
-                                Field({
-                                    name: "Reserved", constraint: "4 to 8",
-                                    xref: { document: "cluster", section: "3.2.11.19.1" }
-                                })
+                                Field({ name: "UpdateAction", constraint: "0" }),
+                                Field({ name: "UpdateDirection", constraint: "1" }),
+                                Field({ name: "UpdateTime", constraint: "2" }),
+                                Field({ name: "UpdateStartHue", constraint: "3" }),
+                                Field({ name: "Reserved", constraint: "4 to 8" })
                             ]
                         }),
 
@@ -4278,17 +3805,12 @@ export const SpecMatter = Matter({
                             xref: { document: "cluster", section: "3.2.11.19.2" },
 
                             children: [
+                                Field({ name: "DeActivateTheColorLoop", id: 0x0 }),
                                 Field({
-                                    name: "DeActivateTheColorLoop", id: 0x0,
-                                    xref: { document: "cluster", section: "3.2.11.19.2" }
+                                    name: "ActivateTheColorLoopFromTheValueInTheColorLoopStartEnhancedHueField", id: 0x1
                                 }),
                                 Field({
-                                    name: "ActivateTheColorLoopFromTheValueInTheColorLoopStartEnhancedHueField", id: 0x1,
-                                    xref: { document: "cluster", section: "3.2.11.19.2" }
-                                }),
-                                Field({
-                                    name: "ActivateTheColorLoopFromTheValueOfTheEnhancedCurrentHueAttribute", id: 0x2,
-                                    xref: { document: "cluster", section: "3.2.11.19.2" }
+                                    name: "ActivateTheColorLoopFromTheValueOfTheEnhancedCurrentHueAttribute", id: 0x2
                                 })
                             ]
                         }),
@@ -4299,16 +3821,9 @@ export const SpecMatter = Matter({
                                 "UpdateFlags field is set to 1. This field shall be set to one of the non-reserved values listed in " +
                                 "Values of the Direction Field of the ColorLoopSet Command.",
                             xref: { document: "cluster", section: "3.2.11.19.3" },
-
                             children: [
-                                Field({
-                                    name: "DecrementTheHueInTheColorLoop", id: 0x0,
-                                    xref: { document: "cluster", section: "3.2.11.19.3" }
-                                }),
-                                Field({
-                                    name: "IncrementTheHueInTheColorLoop", id: 0x1,
-                                    xref: { document: "cluster", section: "3.2.11.19.3" }
-                                })
+                                Field({ name: "DecrementTheHueInTheColorLoop", id: 0x0 }),
+                                Field({ name: "IncrementTheHueInTheColorLoop", id: 0x1 })
                             ]
                         }),
 
@@ -4319,18 +3834,12 @@ export const SpecMatter = Matter({
                             xref: { document: "cluster", section: "3.2.11.19.4" }
                         }),
 
+                        Field({ name: "StartHue", id: 0x4, type: "uint16", conformance: "M" }),
                         Field({
-                            name: "StartHue", id: 0x4, type: "uint16", conformance: "M",
-                            xref: { document: "cluster", section: "3.2.11.19" }
+                            name: "OptionsMask", id: 0x5, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsMask", id: 0x5, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.19" }
-                        }),
-                        Field({
-                            name: "OptionsOverride", id: 0x6, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.19" }
+                            name: "OptionsOverride", id: 0x6, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -4346,13 +3855,10 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "OptionsMask", id: 0x0, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.20" }
+                            name: "OptionsMask", id: 0x0, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x1, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.20" }
+                            name: "OptionsOverride", id: 0x1, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -4419,13 +3925,10 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "OptionsMask", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.21" }
+                            name: "OptionsMask", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x5, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.21" }
+                            name: "OptionsOverride", id: 0x5, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
@@ -4495,51 +3998,39 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "OptionsMask", id: 0x5, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                            xref: { document: "cluster", section: "3.2.11.22" }
+                            name: "OptionsMask", id: 0x5, type: "Options", conformance: "M", constraint: "desc", default: 0
                         }),
                         Field({
-                            name: "OptionsOverride", id: 0x6, type: "Options", conformance: "M", constraint: "desc",
-                            default: "0",
-                            xref: { document: "cluster", section: "3.2.11.22" }
+                            name: "OptionsOverride", id: 0x6, type: "Options", conformance: "M", constraint: "desc", default: 0
                         })
                     ]
                 }),
 
-                Field({
+                Datatype({
                     name: "MoveMode", type: "enum8",
                     xref: { document: "cluster", section: "3.2.11.5.1" },
                     children: [
-                        Field({ name: "Stop", id: 0x0, xref: { document: "cluster", section: "3.2.11.5.1" } }),
-                        Field({ name: "Up", id: 0x1, xref: { document: "cluster", section: "3.2.11.5.1" } }),
-                        Field({ name: "Down", id: 0x3, xref: { document: "cluster", section: "3.2.11.5.1" } })
+                        Field({ name: "Stop", id: 0x0 }),
+                        Field({ name: "Up", id: 0x1 }),
+                        Field({ name: "Down", id: 0x3 })
                     ]
                 }),
 
-                Field({
+                Datatype({
                     name: "StepMode", type: "enum8",
                     xref: { document: "cluster", section: "3.2.11.6.1" },
-                    children: [
-                        Field({ name: "Up", id: 0x1, xref: { document: "cluster", section: "3.2.11.6.1" } }),
-                        Field({ name: "Down", id: 0x3, xref: { document: "cluster", section: "3.2.11.6.1" } })
-                    ]
+                    children: [Field({ name: "Up", id: 0x1 }), Field({ name: "Down", id: 0x3 })]
                 }),
 
-                Field({
+                Datatype({
                     name: "Direction", type: "enum8",
                     xref: { document: "cluster", section: "3.2.11.4.2" },
 
                     children: [
-                        Field({
-                            name: "ShortestDistance", id: 0x0,
-                            xref: { document: "cluster", section: "3.2.11.4.2" }
-                        }),
-                        Field({
-                            name: "LongestDistance", id: 0x1,
-                            xref: { document: "cluster", section: "3.2.11.4.2" }
-                        }),
-                        Field({ name: "Up", id: 0x2, xref: { document: "cluster", section: "3.2.11.4.2" } }),
-                        Field({ name: "Down", id: 0x3, xref: { document: "cluster", section: "3.2.11.4.2" } })
+                        Field({ name: "ShortestDistance", id: 0x0 }),
+                        Field({ name: "LongestDistance", id: 0x1 }),
+                        Field({ name: "Up", id: 0x2 }),
+                        Field({ name: "Down", id: 0x3 })
                     ]
                 })
             ]
@@ -4575,16 +4066,9 @@ export const SpecMatter = Matter({
                         "corresponding bit shall be set to 1. Where a function is not active, the corresponding bit shall be " +
                         "set to 0.",
                     xref: { document: "cluster", section: "3.3.6.3" },
-
                     children: [
-                        Field({
-                            name: "BallastNonOperational", constraint: "0",
-                            xref: { document: "cluster", section: "3.3.6.3" }
-                        }),
-                        Field({
-                            name: "LampFailure", constraint: "1",
-                            xref: { document: "cluster", section: "3.3.6.3" }
-                        })
+                        Field({ name: "BallastNonOperational", constraint: "0" }),
+                        Field({ name: "LampFailure", constraint: "1" })
                     ]
                 }),
 
@@ -4642,7 +4126,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "BallastFactorAdjustment", id: 0x15, type: "uint8", access: "RW VM", conformance: "O",
-                    constraint: "100 to Ms", default: null, quality: "X",
+                    constraint: "100 to ms", default: null, quality: "X",
 
                     details: "The BallastFactorAdjustment attribute specifies the multiplication factor, as a percentage, to be " +
                         "applied to the configured light output of the lamps. A typical usage of this mechanism is to " +
@@ -4717,10 +4201,7 @@ export const SpecMatter = Matter({
                         "its associated attribute to be able to generate an alarm. (Note: All alarms are also logged in the " +
                         "alarm table – see Alarms cluster).",
                     xref: { document: "cluster", section: "3.3.9.5" },
-                    children: [Field({
-                        name: "LampBurnHours", constraint: "0",
-                        xref: { document: "cluster", section: "3.3.9.5" }
-                    })]
+                    children: [Field({ name: "LampBurnHours", constraint: "0" })]
                 }),
 
                 Attribute({
@@ -4759,38 +4240,31 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "PRSCONST", conformance: "O.a+", constraint: "0", description: "ConstantPressure",
-                            details: "Supports operating in constant pressure mode",
-                            xref: { document: "cluster", section: "4.2.4" }
+                            details: "Supports operating in constant pressure mode"
                         }),
                         Field({
                             name: "PRSCOMP", conformance: "O.a+", constraint: "1", description: "CompensatedPressure",
-                            details: "Supports operating in compensated pressure mode",
-                            xref: { document: "cluster", section: "4.2.4" }
+                            details: "Supports operating in compensated pressure mode"
                         }),
                         Field({
                             name: "FLW", conformance: "O.a+", constraint: "2", description: "ConstantFlow",
-                            details: "Supports operating in constant flow mode",
-                            xref: { document: "cluster", section: "4.2.4" }
+                            details: "Supports operating in constant flow mode"
                         }),
                         Field({
                             name: "SPD", conformance: "O.a+", constraint: "3", description: "ConstantSpeed",
-                            details: "Supports operating in constant speed mode",
-                            xref: { document: "cluster", section: "4.2.4" }
+                            details: "Supports operating in constant speed mode"
                         }),
                         Field({
                             name: "TEMP", conformance: "O.a+", constraint: "4", description: "ConstantTemperature",
-                            details: "Supports operating in constant temperature mode",
-                            xref: { document: "cluster", section: "4.2.4" }
+                            details: "Supports operating in constant temperature mode"
                         }),
                         Field({
                             name: "AUTO", conformance: "O", constraint: "5", description: "Automatic",
-                            details: "Supports operating in automatic mode",
-                            xref: { document: "cluster", section: "4.2.4" }
+                            details: "Supports operating in automatic mode"
                         }),
                         Field({
                             name: "LOCAL", conformance: "O", constraint: "6", description: "LocalOperation",
-                            details: "Supports operating using local settings",
-                            xref: { document: "cluster", section: "4.2.4" }
+                            details: "Supports operating using local settings"
                         })
                     ]
                 }),
@@ -5229,14 +4703,8 @@ export const SpecMatter = Matter({
                             xref: { document: "cluster", section: "4.2.6.1.2" }
                         }),
 
-                        Field({
-                            name: "SpeedLow", constraint: "2", description: "Setpoint is too low to achieve.",
-                            xref: { document: "cluster", section: "4.2.6.1" }
-                        }),
-                        Field({
-                            name: "SpeedHigh", constraint: "3", description: "Setpoint is too high to achieve.",
-                            xref: { document: "cluster", section: "4.2.6.1" }
-                        }),
+                        Field({ name: "SpeedLow", constraint: "2", description: "Setpoint is too low to achieve." }),
+                        Field({ name: "SpeedHigh", constraint: "3", description: "Setpoint is too high to achieve." }),
 
                         Field({
                             name: "LocalOverride", constraint: "4",
@@ -5248,10 +4716,7 @@ export const SpecMatter = Matter({
                             xref: { document: "cluster", section: "4.2.6.1.3" }
                         }),
 
-                        Field({
-                            name: "Running", constraint: "5", description: "Pump is currently running",
-                            xref: { document: "cluster", section: "4.2.6.1" }
-                        }),
+                        Field({ name: "Running", constraint: "5", description: "Pump is currently running" }),
 
                         Field({
                             name: "RemotePressure", constraint: "6",
@@ -5297,18 +4762,15 @@ export const SpecMatter = Matter({
 
                         Field({
                             name: "Minimum", id: 0x1, conformance: "SPD",
-                            description: "This value sets the pump to run at the minimum possible speed it can without being stopped.",
-                            xref: { document: "cluster", section: "4.2.6.2" }
+                            description: "This value sets the pump to run at the minimum possible speed it can without being stopped."
                         }),
                         Field({
                             name: "Maximum", id: 0x2, conformance: "SPD",
-                            description: "This value sets the pump to run at its maximum possible speed.",
-                            xref: { document: "cluster", section: "4.2.6.2" }
+                            description: "This value sets the pump to run at its maximum possible speed."
                         }),
                         Field({
                             name: "Local", id: 0x3, conformance: "LOCAL",
-                            description: "This value sets the pump to run with the local settings of the pump, regardless of what these are.",
-                            xref: { document: "cluster", section: "4.2.6.2" }
+                            description: "This value sets the pump to run with the local settings of the pump, regardless of what these are."
                         })
                     ]
                 }),
@@ -5393,38 +4855,31 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "HEAT", conformance: "AUTO, O.a+", constraint: "0", description: "Heating",
-                            details: "Thermostat is capable of managing a heating device",
-                            xref: { document: "cluster", section: "4.3.3.1" }
+                            details: "Thermostat is capable of managing a heating device"
                         }),
                         Field({
                             name: "COOL", conformance: "AUTO, O.a+", constraint: "1", description: "Cooling",
-                            details: "Thermostat is capable of managing a cooling device",
-                            xref: { document: "cluster", section: "4.3.3.1" }
+                            details: "Thermostat is capable of managing a cooling device"
                         }),
                         Field({
                             name: "OCC", conformance: "O", constraint: "2", description: "Occupancy",
-                            details: "Supports Occupied and Unoccupied setpoints",
-                            xref: { document: "cluster", section: "4.3.3.1" }
+                            details: "Supports Occupied and Unoccupied setpoints"
                         }),
                         Field({
                             name: "SCH", conformance: "O", constraint: "3", description: "ScheduleConfiguration",
-                            details: "Supports remote configuration of a weekly schedule of setpoint transitions",
-                            xref: { document: "cluster", section: "4.3.3.1" }
+                            details: "Supports remote configuration of a weekly schedule of setpoint transitions"
                         }),
                         Field({
                             name: "SB", conformance: "O", constraint: "4", description: "Setback",
-                            details: "Supports configurable setback (or span)",
-                            xref: { document: "cluster", section: "4.3.3.1" }
+                            details: "Supports configurable setback (or span)"
                         }),
                         Field({
                             name: "AUTO", conformance: "O", constraint: "5", description: "AutoMode",
-                            details: "Supports a System Mode of Auto",
-                            xref: { document: "cluster", section: "4.3.3.1" }
+                            details: "Supports a System Mode of Auto"
                         }),
                         Field({
                             name: "LTNE", conformance: "O", constraint: "6", description: "LocalTemperatureNotExposed",
-                            details: "Thermostat does not expose the LocalTemperature Value in the LocalTemperature attribute",
-                            xref: { document: "cluster", section: "4.3.3.1" }
+                            details: "Thermostat does not expose the LocalTemperature Value in the LocalTemperature attribute"
                         })
                     ]
                 }),
@@ -5544,22 +4999,14 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "CoolingStage", constraint: "0 to 2",
-                            description: "00 – Cool Stage 101 – Cool Stage 210 – Cool Stage 311 – Reserved",
-                            xref: { document: "cluster", section: "4.3.7.11" }
+                            description: "00 – Cool Stage 101 – Cool Stage 210 – Cool Stage 311 – Reserved"
                         }),
                         Field({
                             name: "HeatingStage", constraint: "2 to 4",
-                            description: "00 – Heat Stage 101 – Heat Stage 210 – Heat Stage 311 – Reserved",
-                            xref: { document: "cluster", section: "4.3.7.11" }
+                            description: "00 – Heat Stage 101 – Heat Stage 210 – Heat Stage 311 – Reserved"
                         }),
-                        Field({
-                            name: "HeatingType", constraint: "4", description: "0 – Conventional1 – Heat Pump",
-                            xref: { document: "cluster", section: "4.3.7.11" }
-                        }),
-                        Field({
-                            name: "HeatingFuel", constraint: "5", description: "0 – Electric / B1 – Gas / O",
-                            xref: { document: "cluster", section: "4.3.7.11" }
-                        })
+                        Field({ name: "HeatingType", constraint: "4", description: "0 – Conventional1 – Heat Pump" }),
+                        Field({ name: "HeatingFuel", constraint: "5", description: "0 – Electric / B1 – Gas / O" })
                     ]
                 }),
 
@@ -5748,18 +5195,15 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "LocalTemperature", constraint: "0",
-                            description: "When set, LocalTemperature Value is derived from a remote node",
-                            xref: { document: "cluster", section: "4.3.7.22" }
+                            description: "When set, LocalTemperature Value is derived from a remote node"
                         }),
                         Field({
                             name: "OutdoorTemperature", constraint: "1",
-                            description: "When set, OutdoorTemperature is derived from a remote node",
-                            xref: { document: "cluster", section: "4.3.7.22" }
+                            description: "When set, OutdoorTemperature is derived from a remote node"
                         }),
                         Field({
                             name: "Occupancy", constraint: "2",
-                            description: "When set, Occupancy is derived from a remote node",
-                            xref: { document: "cluster", section: "4.3.7.22" }
+                            description: "When set, Occupancy is derived from a remote node"
                         })
                     ]
                 }),
@@ -5789,33 +5233,27 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "CoolingOnly", id: 0x0, conformance: "[COOL]",
-                            description: "Heat and Emergency are not possible",
-                            xref: { document: "cluster", section: "4.3.7.23" }
+                            description: "Heat and Emergency are not possible"
                         }),
                         Field({
                             name: "CoolingWithReheat", id: 0x1, conformance: "[COOL]",
-                            description: "Heat and Emergency are not possible",
-                            xref: { document: "cluster", section: "4.3.7.23" }
+                            description: "Heat and Emergency are not possible"
                         }),
                         Field({
                             name: "HeatingOnly", id: 0x2, conformance: "[HEAT]",
-                            description: "Cool and precooling (see Terms) are not possible",
-                            xref: { document: "cluster", section: "4.3.7.23" }
+                            description: "Cool and precooling (see Terms) are not possible"
                         }),
                         Field({
                             name: "HeatingWithReheat", id: 0x3, conformance: "[HEAT]",
-                            description: "Cool and precooling are not possible",
-                            xref: { document: "cluster", section: "4.3.7.23" }
+                            description: "Cool and precooling are not possible"
                         }),
                         Field({
                             name: "CoolingAndHeating", id: 0x4, conformance: "[HEAT & COOL]",
-                            description: "All modes are possible",
-                            xref: { document: "cluster", section: "4.3.7.23" }
+                            description: "All modes are possible"
                         }),
                         Field({
                             name: "CoolingAndHeatingWithReheat", id: 0x5, conformance: "[HEAT & COOL]",
-                            description: "All modes are possible",
-                            xref: { document: "cluster", section: "4.3.7.23" }
+                            description: "All modes are possible"
                         })
                     ]
                 }),
@@ -5836,43 +5274,26 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Off", id: 0x0, conformance: "O",
-                            description: "The Thermostat does not generate demand for Cooling or Heating",
-                            xref: { document: "cluster", section: "4.3.7.24" }
+                            description: "The Thermostat does not generate demand for Cooling or Heating"
                         }),
                         Field({
                             name: "Auto", id: 0x1, conformance: "AUTO",
-                            description: "Demand is generated for either Cooling or Heating, as required",
-                            xref: { document: "cluster", section: "4.3.7.24" }
+                            description: "Demand is generated for either Cooling or Heating, as required"
                         }),
                         Field({
-                            name: "Cool", id: 0x3, conformance: "[COOL]", description: "Demand is only generated for Cooling",
-                            xref: { document: "cluster", section: "4.3.7.24" }
+                            name: "Cool", id: 0x3, conformance: "[COOL]", description: "Demand is only generated for Cooling"
                         }),
                         Field({
-                            name: "Heat", id: 0x4, conformance: "[HEAT]", description: "Demand is only generated for Heating",
-                            xref: { document: "cluster", section: "4.3.7.24" }
+                            name: "Heat", id: 0x4, conformance: "[HEAT]", description: "Demand is only generated for Heating"
                         }),
                         Field({
                             name: "EmergencyHeat", id: 0x5, conformance: "[HEAT]",
-                            description: "2nd stage heating is in use to achieve desired temperature",
-                            xref: { document: "cluster", section: "4.3.7.24" }
+                            description: "2nd stage heating is in use to achieve desired temperature"
                         }),
-                        Field({
-                            name: "Precooling", id: 0x6, conformance: "[COOL]", description: "(see Terms)",
-                            xref: { document: "cluster", section: "4.3.7.24" }
-                        }),
-                        Field({
-                            name: "FanOnly", id: 0x7, conformance: "O",
-                            xref: { document: "cluster", section: "4.3.7.24" }
-                        }),
-                        Field({
-                            name: "Dry", id: 0x8, conformance: "O",
-                            xref: { document: "cluster", section: "4.3.7.24" }
-                        }),
-                        Field({
-                            name: "Sleep", id: 0x9, conformance: "O",
-                            xref: { document: "cluster", section: "4.3.7.24" }
-                        })
+                        Field({ name: "Precooling", id: 0x6, conformance: "[COOL]", description: "(see Terms)" }),
+                        Field({ name: "FanOnly", id: 0x7, conformance: "O" }),
+                        Field({ name: "Dry", id: 0x8, conformance: "O" }),
+                        Field({ name: "Sleep", id: 0x9, conformance: "O" })
                     ]
                 }),
 
@@ -5891,20 +5312,10 @@ export const SpecMatter = Matter({
                         "Table 76. Alarm Codes",
 
                     xref: { document: "cluster", section: "4.3.7.25" },
-
                     children: [
-                        Field({
-                            name: "InitializationFailure", constraint: "0",
-                            xref: { document: "cluster", section: "4.3.7.25" }
-                        }),
-                        Field({
-                            name: "HardwareFailure", constraint: "1",
-                            xref: { document: "cluster", section: "4.3.7.25" }
-                        }),
-                        Field({
-                            name: "SelfCalibrationFailure", constraint: "2",
-                            xref: { document: "cluster", section: "4.3.7.25" }
-                        })
+                        Field({ name: "InitializationFailure", constraint: "0" }),
+                        Field({ name: "HardwareFailure", constraint: "1" }),
+                        Field({ name: "SelfCalibrationFailure", constraint: "2" })
                     ]
                 }),
 
@@ -5930,34 +5341,13 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "4.3.7.27" },
 
                     children: [
-                        Field({
-                            name: "Sunday", id: 0x0, conformance: "M",
-                            xref: { document: "cluster", section: "4.3.7.27" }
-                        }),
-                        Field({
-                            name: "Monday", id: 0x1, conformance: "M",
-                            xref: { document: "cluster", section: "4.3.7.27" }
-                        }),
-                        Field({
-                            name: "Tuesday", id: 0x2, conformance: "M",
-                            xref: { document: "cluster", section: "4.3.7.27" }
-                        }),
-                        Field({
-                            name: "Wednesday", id: 0x3, conformance: "M",
-                            xref: { document: "cluster", section: "4.3.7.27" }
-                        }),
-                        Field({
-                            name: "Thursday", id: 0x4, conformance: "M",
-                            xref: { document: "cluster", section: "4.3.7.27" }
-                        }),
-                        Field({
-                            name: "Friday", id: 0x5, conformance: "M",
-                            xref: { document: "cluster", section: "4.3.7.27" }
-                        }),
-                        Field({
-                            name: "Saturday", id: 0x6, conformance: "M",
-                            xref: { document: "cluster", section: "4.3.7.27" }
-                        })
+                        Field({ name: "Sunday", id: 0x0, conformance: "M" }),
+                        Field({ name: "Monday", id: 0x1, conformance: "M" }),
+                        Field({ name: "Tuesday", id: 0x2, conformance: "M" }),
+                        Field({ name: "Wednesday", id: 0x3, conformance: "M" }),
+                        Field({ name: "Thursday", id: 0x4, conformance: "M" }),
+                        Field({ name: "Friday", id: 0x5, conformance: "M" }),
+                        Field({ name: "Saturday", id: 0x6, conformance: "M" })
                     ]
                 }),
 
@@ -5992,13 +5382,11 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "SetpointHoldOff", id: 0x0, conformance: "M", description: "Follow scheduling program",
-                            xref: { document: "cluster", section: "4.3.7.30" }
+                            name: "SetpointHoldOff", id: 0x0, conformance: "M", description: "Follow scheduling program"
                         }),
                         Field({
                             name: "SetpointHoldOn", id: 0x1, conformance: "M",
-                            description: "Maintain current setpoint, regardless of schedule transitions",
-                            xref: { document: "cluster", section: "4.3.7.30" }
+                            description: "Maintain current setpoint, regardless of schedule transitions"
                         })
                     ]
                 }),
@@ -6038,17 +5426,10 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "ScheduleActive", constraint: "0",
-                            description: "Schedule programming mode. This enables any programmed weekly schedule configurations.",
-                            xref: { document: "cluster", section: "4.3.7.32" }
+                            description: "Schedule programming mode. This enables any programmed weekly schedule configurations."
                         }),
-                        Field({
-                            name: "AutoRecovery", constraint: "1", description: "Auto/recovery mode",
-                            xref: { document: "cluster", section: "4.3.7.32" }
-                        }),
-                        Field({
-                            name: "Economy", constraint: "2", description: "Economy/EnergyStar mode",
-                            xref: { document: "cluster", section: "4.3.7.32" }
-                        })
+                        Field({ name: "AutoRecovery", constraint: "1", description: "Auto/recovery mode" }),
+                        Field({ name: "Economy", constraint: "2", description: "Economy/EnergyStar mode" })
                     ]
                 }),
 
@@ -6063,34 +5444,13 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "4.3.7.33" },
 
                     children: [
-                        Field({
-                            name: "Heat", constraint: "0", description: "Heat State On",
-                            xref: { document: "cluster", section: "4.3.7.33" }
-                        }),
-                        Field({
-                            name: "Cool", constraint: "1", description: "Cool State On",
-                            xref: { document: "cluster", section: "4.3.7.33" }
-                        }),
-                        Field({
-                            name: "Fan", constraint: "2", description: "Fan State On",
-                            xref: { document: "cluster", section: "4.3.7.33" }
-                        }),
-                        Field({
-                            name: "HeatStage2", constraint: "3", description: "Heat 2nd Stage State On",
-                            xref: { document: "cluster", section: "4.3.7.33" }
-                        }),
-                        Field({
-                            name: "CoolStage2", constraint: "4", description: "Cool 2nd Stage State On",
-                            xref: { document: "cluster", section: "4.3.7.33" }
-                        }),
-                        Field({
-                            name: "FanStage2", constraint: "5", description: "Fan 2nd Stage State On",
-                            xref: { document: "cluster", section: "4.3.7.33" }
-                        }),
-                        Field({
-                            name: "FanStage3", constraint: "6", description: "Fan 3rd Stage Stage On",
-                            xref: { document: "cluster", section: "4.3.7.33" }
-                        })
+                        Field({ name: "Heat", constraint: "0", description: "Heat State On" }),
+                        Field({ name: "Cool", constraint: "1", description: "Cool State On" }),
+                        Field({ name: "Fan", constraint: "2", description: "Fan State On" }),
+                        Field({ name: "HeatStage2", constraint: "3", description: "Heat 2nd Stage State On" }),
+                        Field({ name: "CoolStage2", constraint: "4", description: "Cool 2nd Stage State On" }),
+                        Field({ name: "FanStage2", constraint: "5", description: "Fan 2nd Stage State On" }),
+                        Field({ name: "FanStage3", constraint: "6", description: "Fan 3rd Stage Stage On" })
                     ]
                 }),
 
@@ -6113,18 +5473,15 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Manual", id: 0x0, conformance: "O",
-                            description: "Manual, user-initiated setpoint change via the thermostat",
-                            xref: { document: "cluster", section: "4.3.7.34" }
+                            description: "Manual, user-initiated setpoint change via the thermostat"
                         }),
                         Field({
                             name: "Schedule", id: 0x1, conformance: "[SCH]",
-                            description: "Schedule/internal programming-initiated setpoint change",
-                            xref: { document: "cluster", section: "4.3.7.34" }
+                            description: "Schedule/internal programming-initiated setpoint change"
                         }),
                         Field({
                             name: "External", id: 0x2, conformance: "O",
-                            description: "Externally-initiated setpoint change (e.g., DRLC cluster command, attribute write)",
-                            xref: { document: "cluster", section: "4.3.7.34" }
+                            description: "Externally-initiated setpoint change (e.g., DRLC cluster command, attribute write)"
                         })
                     ]
                 }),
@@ -6153,7 +5510,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "OccupiedSetback", id: 0x34, type: "temp-u8", access: "RW VM", conformance: "SB",
-                    constraint: "OccupiedSetbackMin to OccupiedSetbackMax", default: null, quality: "X N",
+                    constraint: "occupiedSetbackMin to occupiedSetbackMax", default: null, quality: "X N",
 
                     details: "This attribute specifies the amount that the Thermostat server will allow the LocalTemperature " +
                         "Value to float above the OccupiedCooling setpoint (i.e., OccupiedCooling + OccupiedSetback) or " +
@@ -6182,7 +5539,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "OccupiedSetbackMin", id: 0x35, type: "temp-u8", access: "R V", conformance: "SB",
-                    constraint: "0 to OccupiedSetbackMax", default: null, quality: "X F",
+                    constraint: "0 to occupiedSetbackMax", default: null, quality: "X F",
                     details: "This attribute specifies the minimum value that the Thermostat server will allow the " +
                         "OccupiedSetback attribute to be configured by a user." +
                         "\n" +
@@ -6192,7 +5549,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "OccupiedSetbackMax", id: 0x36, type: "temp-u8", access: "R V", conformance: "SB",
-                    constraint: "OccupiedSetbackMin to 25.4°C", default: null, quality: "X F",
+                    constraint: "occupiedSetbackMin to 25.4°C", default: null, quality: "X F",
                     details: "This attribute specifies the maximum value that the Thermostat server will allow the " +
                         "OccupiedSetback attribute to be configured by a user." +
                         "\n" +
@@ -6202,7 +5559,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "UnoccupiedSetback", id: 0x37, type: "temp-u8", access: "RW VM", conformance: "SB & OCC",
-                    constraint: "UnoccupiedSetbackMin to UnoccupiedSetbackMax", default: null, quality: "X N",
+                    constraint: "unoccupiedSetbackMin to unoccupiedSetbackMax", default: null, quality: "X N",
 
                     details: "This attribute specifies the amount that the Thermostat server will allow the LocalTemperature " +
                         "Value to float above the UnoccupiedCooling setpoint (i.e., UnoccupiedCooling + UnoccupiedSetback) " +
@@ -6231,7 +5588,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "UnoccupiedSetbackMin", id: 0x38, type: "temp-u8", access: "R V", conformance: "SB & OCC",
-                    constraint: "0 to UnoccupiedSetbackMax", default: null, quality: "X F",
+                    constraint: "0 to unoccupiedSetbackMax", default: null, quality: "X F",
                     details: "This attribute specifies the minimum value that the Thermostat server will allow the " +
                         "UnoccupiedSetback attribute to be configured by a user." +
                         "\n" +
@@ -6241,7 +5598,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "UnoccupiedSetbackMax", id: 0x39, type: "temp-u8", access: "R V", conformance: "SB & OCC",
-                    constraint: "UnoccupiedSetbackMin to 25.4°C", default: null, quality: "X F",
+                    constraint: "unoccupiedSetbackMin to 25.4°C", default: null, quality: "X F",
                     details: "This attribute specifies the maximum value that the Thermostat server will allow the " +
                         "UnoccupiedSetback attribute to be configured by a user." +
                         "\n" +
@@ -6292,25 +5649,14 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "4.3.7.44" },
 
                     children: [
+                        Field({ name: "Unknown", id: 0x0, conformance: "O", description: "Unknown AC Type" }),
+                        Field({ name: "CoolingFixed", id: 0x1, conformance: "O", description: "Cooling and Fixed Speed" }),
                         Field({
-                            name: "Unknown", id: 0x0, conformance: "O", description: "Unknown AC Type",
-                            xref: { document: "cluster", section: "4.3.7.44" }
+                            name: "HeatPumpFixed", id: 0x2, conformance: "O", description: "Heat Pump and Fixed Speed"
                         }),
+                        Field({ name: "CoolingInverter", id: 0x3, conformance: "O", description: "Cooling and Inverter" }),
                         Field({
-                            name: "CoolingFixed", id: 0x1, conformance: "O", description: "Cooling and Fixed Speed",
-                            xref: { document: "cluster", section: "4.3.7.44" }
-                        }),
-                        Field({
-                            name: "HeatPumpFixed", id: 0x2, conformance: "O", description: "Heat Pump and Fixed Speed",
-                            xref: { document: "cluster", section: "4.3.7.44" }
-                        }),
-                        Field({
-                            name: "CoolingInverter", id: 0x3, conformance: "O", description: "Cooling and Inverter",
-                            xref: { document: "cluster", section: "4.3.7.44" }
-                        }),
-                        Field({
-                            name: "HeatPumpInverter", id: 0x4, conformance: "O", description: "Heat Pump and Inverter",
-                            xref: { document: "cluster", section: "4.3.7.44" }
+                            name: "HeatPumpInverter", id: 0x4, conformance: "O", description: "Heat Pump and Inverter"
                         })
                     ]
                 }),
@@ -6332,22 +5678,10 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "4.3.7.46" },
 
                     children: [
-                        Field({
-                            name: "Unknown", id: 0x0, conformance: "O", description: "Unknown Refrigerant Type",
-                            xref: { document: "cluster", section: "4.3.7.46" }
-                        }),
-                        Field({
-                            name: "R22", id: 0x1, conformance: "O", description: "R22 Refrigerant",
-                            xref: { document: "cluster", section: "4.3.7.46" }
-                        }),
-                        Field({
-                            name: "R410A", id: 0x2, conformance: "O", description: "R410a Refrigerant",
-                            xref: { document: "cluster", section: "4.3.7.46" }
-                        }),
-                        Field({
-                            name: "R407C", id: 0x3, conformance: "O", description: "R407c Refrigerant",
-                            xref: { document: "cluster", section: "4.3.7.46" }
-                        })
+                        Field({ name: "Unknown", id: 0x0, conformance: "O", description: "Unknown Refrigerant Type" }),
+                        Field({ name: "R22", id: 0x1, conformance: "O", description: "R22 Refrigerant" }),
+                        Field({ name: "R410A", id: 0x2, conformance: "O", description: "R410a Refrigerant" }),
+                        Field({ name: "R407C", id: 0x3, conformance: "O", description: "R407c Refrigerant" })
                     ]
                 }),
 
@@ -6360,22 +5694,10 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "4.3.7.47" },
 
                     children: [
-                        Field({
-                            name: "Unknown", id: 0x0, conformance: "O", description: "Unknown compressor type",
-                            xref: { document: "cluster", section: "4.3.7.47" }
-                        }),
-                        Field({
-                            name: "T1", id: 0x1, conformance: "O", description: "Max working ambient 43 °C",
-                            xref: { document: "cluster", section: "4.3.7.47" }
-                        }),
-                        Field({
-                            name: "T2", id: 0x2, conformance: "O", description: "Max working ambient 35 °C",
-                            xref: { document: "cluster", section: "4.3.7.47" }
-                        }),
-                        Field({
-                            name: "T3", id: 0x3, conformance: "O", description: "Max working ambient 52 °C",
-                            xref: { document: "cluster", section: "4.3.7.47" }
-                        })
+                        Field({ name: "Unknown", id: 0x0, conformance: "O", description: "Unknown compressor type" }),
+                        Field({ name: "T1", id: 0x1, conformance: "O", description: "Max working ambient 43 °C" }),
+                        Field({ name: "T2", id: 0x2, conformance: "O", description: "Max working ambient 35 °C" }),
+                        Field({ name: "T3", id: 0x3, conformance: "O", description: "Max working ambient 52 °C" })
                     ]
                 }),
 
@@ -6389,25 +5711,16 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "CompressorFail", constraint: "0", description: "Compressor Failure or Refrigerant Leakage",
-                            xref: { document: "cluster", section: "4.3.7.48" }
+                            name: "CompressorFail", constraint: "0", description: "Compressor Failure or Refrigerant Leakage"
+                        }),
+                        Field({ name: "RoomSensorFail", constraint: "1", description: "Room Temperature Sensor Failure" }),
+                        Field({
+                            name: "OutdoorSensorFail", constraint: "2", description: "Outdoor Temperature Sensor Failure"
                         }),
                         Field({
-                            name: "RoomSensorFail", constraint: "1", description: "Room Temperature Sensor Failure",
-                            xref: { document: "cluster", section: "4.3.7.48" }
+                            name: "CoilSensorFail", constraint: "3", description: "Indoor Coil Temperature Sensor Failure"
                         }),
-                        Field({
-                            name: "OutdoorSensorFail", constraint: "2", description: "Outdoor Temperature Sensor Failure",
-                            xref: { document: "cluster", section: "4.3.7.48" }
-                        }),
-                        Field({
-                            name: "CoilSensorFail", constraint: "3", description: "Indoor Coil Temperature Sensor Failure",
-                            xref: { document: "cluster", section: "4.3.7.48" }
-                        }),
-                        Field({
-                            name: "FanFail", constraint: "4", description: "Fan Failure",
-                            xref: { document: "cluster", section: "4.3.7.48" }
-                        })
+                        Field({ name: "FanFail", constraint: "4", description: "Fan Failure" })
                     ]
                 }),
 
@@ -6420,26 +5733,11 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "4.3.7.49" },
 
                     children: [
-                        Field({
-                            name: "Closed", id: 0x1, conformance: "O", description: "Fully Closed",
-                            xref: { document: "cluster", section: "4.3.7.49" }
-                        }),
-                        Field({
-                            name: "Open", id: 0x2, conformance: "O", description: "Fully Open",
-                            xref: { document: "cluster", section: "4.3.7.49" }
-                        }),
-                        Field({
-                            name: "Quarter", id: 0x3, conformance: "O", description: "Quarter Open",
-                            xref: { document: "cluster", section: "4.3.7.49" }
-                        }),
-                        Field({
-                            name: "Half", id: 0x4, conformance: "O", description: "Half Open",
-                            xref: { document: "cluster", section: "4.3.7.49" }
-                        }),
-                        Field({
-                            name: "ThreeQuarters", id: 0x5, conformance: "O", description: "Three Quarters Open",
-                            xref: { document: "cluster", section: "4.3.7.49" }
-                        })
+                        Field({ name: "Closed", id: 0x1, conformance: "O", description: "Fully Closed" }),
+                        Field({ name: "Open", id: 0x2, conformance: "O", description: "Fully Open" }),
+                        Field({ name: "Quarter", id: 0x3, conformance: "O", description: "Quarter Open" }),
+                        Field({ name: "Half", id: 0x4, conformance: "O", description: "Half Open" }),
+                        Field({ name: "ThreeQuarters", id: 0x5, conformance: "O", description: "Three Quarters Open" })
                     ]
                 }),
 
@@ -6458,10 +5756,9 @@ export const SpecMatter = Matter({
                         "\n" +
                         "Table 87. ACCapacity Values",
                     xref: { document: "cluster", section: "4.3.7.51" },
-                    children: [Field({
-                        name: "BtUh", id: 0x0, conformance: "O", description: "British Thermal Unit per Hour",
-                        xref: { document: "cluster", section: "4.3.7.51" }
-                    })]
+                    children: [
+                        Field({ name: "BtUh", id: 0x0, conformance: "O", description: "British Thermal Unit per Hour" })
+                    ]
                 }),
 
                 Command({
@@ -6579,14 +5876,8 @@ export const SpecMatter = Matter({
                             xref: { document: "cluster", section: "4.3.9.5.1" }
                         }),
 
-                        Field({
-                            name: "HeatSetpoint", id: 0x1, type: "temperature", access: "RW", conformance: "M",
-                            xref: { document: "cluster", section: "4.3.9.5" }
-                        }),
-                        Field({
-                            name: "CoolSetpoint", id: 0x2, type: "temperature", access: "RW", conformance: "M",
-                            xref: { document: "cluster", section: "4.3.9.5" }
-                        })
+                        Field({ name: "HeatSetpoint", id: 0x1, type: "temperature", access: "RW", conformance: "M" }),
+                        Field({ name: "CoolSetpoint", id: 0x2, type: "temperature", access: "RW", conformance: "M" })
                     ]
                 })
             ]
@@ -6604,25 +5895,18 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "4.4.5" },
 
                     children: [
-                        Field({
-                            name: "SPD", constraint: "0", description: "MultiSpeed",
-                            details: "1-100 speeds",
-                            xref: { document: "cluster", section: "4.4.5" }
-                        }),
+                        Field({ name: "SPD", constraint: "0", description: "MultiSpeed", details: "1-100 speeds" }),
                         Field({
                             name: "AUT", constraint: "1", description: "Auto",
-                            details: "Automatic mode supported for fan speed",
-                            xref: { document: "cluster", section: "4.4.5" }
+                            details: "Automatic mode supported for fan speed"
                         }),
                         Field({
                             name: "RCK", constraint: "2", description: "Rocking",
-                            details: "Rocking movement supported",
-                            xref: { document: "cluster", section: "4.4.5" }
+                            details: "Rocking movement supported"
                         }),
                         Field({
                             name: "WND", constraint: "3", description: "Wind",
-                            details: "Wind emulation supported",
-                            xref: { document: "cluster", section: "4.4.5" }
+                            details: "Wind emulation supported"
                         })
                     ]
                 }),
@@ -6679,22 +5963,10 @@ export const SpecMatter = Matter({
                             xref: { document: "cluster", section: "4.4.6.1.1" }
                         }),
 
-                        Field({
-                            name: "Low", id: 0x1, conformance: "desc",
-                            xref: { document: "cluster", section: "4.4.6.1" }
-                        }),
-                        Field({
-                            name: "Medium", id: 0x2, conformance: "desc",
-                            xref: { document: "cluster", section: "4.4.6.1" }
-                        }),
-                        Field({
-                            name: "High", id: 0x3, conformance: "desc",
-                            xref: { document: "cluster", section: "4.4.6.1" }
-                        }),
-                        Field({
-                            name: "On", id: 0x4, conformance: "D",
-                            xref: { document: "cluster", section: "4.4.6.1" }
-                        }),
+                        Field({ name: "Low", id: 0x1, conformance: "desc" }),
+                        Field({ name: "Medium", id: 0x2, conformance: "desc" }),
+                        Field({ name: "High", id: 0x3, conformance: "desc" }),
+                        Field({ name: "On", id: 0x4, conformance: "D" }),
 
                         Field({
                             name: "Auto", id: 0x5, conformance: "AUT",
@@ -6714,10 +5986,7 @@ export const SpecMatter = Matter({
                             xref: { document: "cluster", section: "4.4.6.1.3" }
                         }),
 
-                        Field({
-                            name: "Smart", id: 0x6, conformance: "D",
-                            xref: { document: "cluster", section: "4.4.6.1" }
-                        })
+                        Field({ name: "Smart", id: 0x6, conformance: "D" })
                     ]
                 }),
 
@@ -6728,30 +5997,12 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "4.4.6.2" },
 
                     children: [
-                        Field({
-                            name: "OffLowMedHigh", id: 0x0, conformance: "O.a",
-                            xref: { document: "cluster", section: "4.4.6.2" }
-                        }),
-                        Field({
-                            name: "OffLowHigh", id: 0x1, conformance: "O.a",
-                            xref: { document: "cluster", section: "4.4.6.2" }
-                        }),
-                        Field({
-                            name: "OffLowMedHighAuto", id: 0x2, conformance: "[AUT].a",
-                            xref: { document: "cluster", section: "4.4.6.2" }
-                        }),
-                        Field({
-                            name: "OffLowHighAuto", id: 0x3, conformance: "[AUT].a",
-                            xref: { document: "cluster", section: "4.4.6.2" }
-                        }),
-                        Field({
-                            name: "OffOnAuto", id: 0x4, conformance: "[AUT].a",
-                            xref: { document: "cluster", section: "4.4.6.2" }
-                        }),
-                        Field({
-                            name: "OffOn", id: 0x5, conformance: "O.a",
-                            xref: { document: "cluster", section: "4.4.6.2" }
-                        })
+                        Field({ name: "OffLowMedHigh", id: 0x0, conformance: "O.a" }),
+                        Field({ name: "OffLowHigh", id: 0x1, conformance: "O.a" }),
+                        Field({ name: "OffLowMedHighAuto", id: 0x2, conformance: "[AUT].a" }),
+                        Field({ name: "OffLowHighAuto", id: 0x3, conformance: "[AUT].a" }),
+                        Field({ name: "OffOnAuto", id: 0x4, conformance: "[AUT].a" }),
+                        Field({ name: "OffOn", id: 0x5, conformance: "O.a" })
                     ]
                 }),
 
@@ -6783,7 +6034,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "SpeedSetting", id: 0x5, type: "uint8", access: "RW VO", conformance: "SPD",
-                    constraint: "0 to SpeedMax", default: 0, quality: "X",
+                    constraint: "0 to speedMax", default: 0, quality: "X",
                     details: "This attribute shall indicate the speed setting for the fan. This attribute may be written by the " +
                         "client to indicate a new fan speed. If the client writes null to this attribute, the attribute " +
                         "value shall NOT change. If this is set to 0, the server shall set the FanMode attribute value to " +
@@ -6793,7 +6044,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "SpeedCurrent", id: 0x6, type: "uint8", access: "R V", conformance: "SPD",
-                    constraint: "0 to SpeedMax", quality: "P",
+                    constraint: "0 to speedMax", quality: "P",
                     details: "This attribute shall indicate the actual currently operating fan speed, or zero to indicate that " +
                         "the fan is off.",
                     xref: { document: "cluster", section: "4.4.6.7" }
@@ -6805,20 +6056,10 @@ export const SpecMatter = Matter({
                     details: "This attribute is a bitmap that indicates what rocking motions the server supports. The bitmap is " +
                         "shown in the table below.",
                     xref: { document: "cluster", section: "4.4.6.8" },
-
                     children: [
-                        Field({
-                            name: "RockLeftRight", constraint: "0",
-                            xref: { document: "cluster", section: "4.4.6.8" }
-                        }),
-                        Field({
-                            name: "RockUpDown", constraint: "1",
-                            xref: { document: "cluster", section: "4.4.6.8" }
-                        }),
-                        Field({
-                            name: "RockRound", constraint: "2",
-                            xref: { document: "cluster", section: "4.4.6.8" }
-                        })
+                        Field({ name: "RockLeftRight", constraint: "0" }),
+                        Field({ name: "RockUpDown", constraint: "1" }),
+                        Field({ name: "RockRound", constraint: "2" })
                     ]
                 }),
 
@@ -6840,20 +6081,10 @@ export const SpecMatter = Matter({
                         "The bitmap is shown in the table below.",
 
                     xref: { document: "cluster", section: "4.4.6.9" },
-
                     children: [
-                        Field({
-                            name: "RockLeftRight", constraint: "0",
-                            xref: { document: "cluster", section: "4.4.6.9" }
-                        }),
-                        Field({
-                            name: "RockUpDown", constraint: "1",
-                            xref: { document: "cluster", section: "4.4.6.9" }
-                        }),
-                        Field({
-                            name: "RockRound", constraint: "2",
-                            xref: { document: "cluster", section: "4.4.6.9" }
-                        })
+                        Field({ name: "RockLeftRight", constraint: "0" }),
+                        Field({ name: "RockUpDown", constraint: "1" }),
+                        Field({ name: "RockRound", constraint: "2" })
                     ]
                 }),
 
@@ -6863,16 +6094,9 @@ export const SpecMatter = Matter({
                     details: "This attribute is a bitmap that indicates what wind modes the server supports. At least one wind " +
                         "mode bit shall be set. The bitmap is shown in the table below.",
                     xref: { document: "cluster", section: "4.4.6.10" },
-
                     children: [
-                        Field({
-                            name: "SleepWind", constraint: "0",
-                            xref: { document: "cluster", section: "4.4.6.10" }
-                        }),
-                        Field({
-                            name: "NaturalWind", constraint: "1",
-                            xref: { document: "cluster", section: "4.4.6.10" }
-                        })
+                        Field({ name: "SleepWind", constraint: "0" }),
+                        Field({ name: "NaturalWind", constraint: "1" })
                     ]
                 }),
 
@@ -6894,16 +6118,9 @@ export const SpecMatter = Matter({
                         "The bitmap is shown in the table below.",
 
                     xref: { document: "cluster", section: "4.4.6.11" },
-
                     children: [
-                        Field({
-                            name: "SleepWind", constraint: "0",
-                            xref: { document: "cluster", section: "4.4.6.11" }
-                        }),
-                        Field({
-                            name: "NaturalWind", constraint: "1",
-                            xref: { document: "cluster", section: "4.4.6.11" }
-                        })
+                        Field({ name: "SleepWind", constraint: "0" }),
+                        Field({ name: "NaturalWind", constraint: "1" })
                     ]
                 })
             ]
@@ -6928,13 +6145,9 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "4.5.5.1" },
 
                     children: [
+                        Field({ name: "Celsius", id: 0x0, conformance: "M", description: "Temperature displayed in °C" }),
                         Field({
-                            name: "Celsius", id: 0x0, conformance: "M", description: "Temperature displayed in °C",
-                            xref: { document: "cluster", section: "4.5.5.1" }
-                        }),
-                        Field({
-                            name: "Fahrenheit", id: 0x1, conformance: "M", description: "Temperature displayed in °F",
-                            xref: { document: "cluster", section: "4.5.5.1" }
+                            name: "Fahrenheit", id: 0x1, conformance: "M", description: "Temperature displayed in °F"
                         })
                     ]
                 }),
@@ -6955,29 +6168,23 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "NoLockout", id: 0x0, conformance: "M",
-                            description: "All functionality available to the user",
-                            xref: { document: "cluster", section: "4.5.5.2" }
+                            description: "All functionality available to the user"
                         }),
                         Field({
-                            name: "Lockout1", id: 0x1, conformance: "M", description: "Level 1 reduced functionality",
-                            xref: { document: "cluster", section: "4.5.5.2" }
+                            name: "Lockout1", id: 0x1, conformance: "M", description: "Level 1 reduced functionality"
                         }),
                         Field({
-                            name: "Lockout2", id: 0x2, conformance: "M", description: "Level 2 reduced functionality",
-                            xref: { document: "cluster", section: "4.5.5.2" }
+                            name: "Lockout2", id: 0x2, conformance: "M", description: "Level 2 reduced functionality"
                         }),
                         Field({
-                            name: "Lockout3", id: 0x3, conformance: "M", description: "Level 3 reduced functionality",
-                            xref: { document: "cluster", section: "4.5.5.2" }
+                            name: "Lockout3", id: 0x3, conformance: "M", description: "Level 3 reduced functionality"
                         }),
                         Field({
-                            name: "Lockout4", id: 0x4, conformance: "M", description: "Level 4 reduced functionality",
-                            xref: { document: "cluster", section: "4.5.5.2" }
+                            name: "Lockout4", id: 0x4, conformance: "M", description: "Level 4 reduced functionality"
                         }),
                         Field({
                             name: "Lockout5", id: 0x5, conformance: "M",
-                            description: "Least functionality available to the user",
-                            xref: { document: "cluster", section: "4.5.5.2" }
+                            description: "Least functionality available to the user"
                         })
                     ]
                 }),
@@ -7002,13 +6209,11 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "ScheduleProgrammingPermitted", id: 0x0, conformance: "M",
-                            description: "Local schedule programming functionality is enabled at the thermostat",
-                            xref: { document: "cluster", section: "4.5.5.3" }
+                            description: "Local schedule programming functionality is enabled at the thermostat"
                         }),
                         Field({
                             name: "ScheduleProgrammingDenied", id: 0x1, conformance: "M",
-                            description: "Local schedule programming functionality is disabled at the thermostat",
-                            xref: { document: "cluster", section: "4.5.5.3" }
+                            description: "Local schedule programming functionality is disabled at the thermostat"
                         })
                     ]
                 })
@@ -7029,63 +6234,51 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "PIN", conformance: "O", constraint: "0", description: "PinCredential",
-                            details: "Lock supports PIN credentials (via keypad, or over- the-air)",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports PIN credentials (via keypad, or over- the-air)"
                         }),
                         Field({
                             name: "RID", conformance: "O", constraint: "1", description: "RfidCredential",
-                            details: "Lock supports RFID credentials",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports RFID credentials"
                         }),
                         Field({
                             name: "FGP", conformance: "P, O", constraint: "2", description: "FingerCredentials",
-                            details: "Lock supports finger related credentials (fingerprint, finger vein)",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports finger related credentials (fingerprint, finger vein)"
                         }),
                         Field({
                             name: "LOG", conformance: "O", constraint: "3", description: "Logging",
-                            details: "Lock supports local/on-lock logging when Events are not supported",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports local/on-lock logging when Events are not supported"
                         }),
                         Field({
                             name: "WDSCH", conformance: "O", constraint: "4", description: "WeekDayAccessSchedules",
-                            details: "Lock supports week day user access schedules",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports week day user access schedules"
                         }),
                         Field({
                             name: "DPS", conformance: "O", constraint: "5", description: "DoorPositionSensor",
-                            details: "Lock supports a door position sensor that indicates door’s state",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports a door position sensor that indicates door’s state"
                         }),
                         Field({
                             name: "FACE", conformance: "P, O", constraint: "6", description: "FaceCredentials",
-                            details: "Lock supports face related credentials (face, iris, retina)",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports face related credentials (face, iris, retina)"
                         }),
                         Field({
                             name: "COTA", conformance: "O", constraint: "7", description: "CredentialOverTheAirAccess",
-                            details: "PIN codes over- the-air supported for lock/unlock operations",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "PIN codes over- the-air supported for lock/unlock operations"
                         }),
                         Field({
                             name: "USR", conformance: "[PIN | RID | FGP | FACE]", constraint: "8", description: "User",
-                            details: "Lock supports the user commands and database",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports the user commands and database"
                         }),
                         Field({
                             name: "NOT", conformance: "O", constraint: "9", description: "Notification",
-                            details: "Operation and Programming Notifications",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Operation and Programming Notifications"
                         }),
                         Field({
                             name: "YDSCH", conformance: "O", constraint: "10", description: "YearDayAccessSchedules",
-                            details: "Lock supports year day user access schedules",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports year day user access schedules"
                         }),
                         Field({
                             name: "HDSCH", conformance: "O", constraint: "11", description: "HolidaySchedules",
-                            details: "Lock supports holiday schedules",
-                            xref: { document: "cluster", section: "5.2.2" }
+                            details: "Lock supports holiday schedules"
                         })
                     ]
                 }),
@@ -7120,17 +6313,10 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "NotFullyLocked", id: 0x0, conformance: "M", description: "Lock state is not fully locked",
-                            xref: { document: "cluster", section: "5.2.3.1" }
+                            name: "NotFullyLocked", id: 0x0, conformance: "M", description: "Lock state is not fully locked"
                         }),
-                        Field({
-                            name: "Locked", id: 0x1, conformance: "M", description: "Lock state is fully locked",
-                            xref: { document: "cluster", section: "5.2.3.1" }
-                        }),
-                        Field({
-                            name: "Unlocked", id: 0x2, conformance: "M", description: "Lock state is fully unlocked",
-                            xref: { document: "cluster", section: "5.2.3.1" }
-                        })
+                        Field({ name: "Locked", id: 0x1, conformance: "M", description: "Lock state is fully locked" }),
+                        Field({ name: "Unlocked", id: 0x2, conformance: "M", description: "Lock state is fully unlocked" })
                     ]
                 }),
 
@@ -7139,50 +6325,19 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.3.2" },
 
                     children: [
+                        Field({ name: "Deadbolt", id: 0x0, description: "Physical lock type is dead bolt" }),
+                        Field({ name: "Magnetic", id: 0x1, description: "Physical lock type is magnetic" }),
+                        Field({ name: "Other", id: 0x2, description: "Physical lock type is other" }),
+                        Field({ name: "Mortise", id: 0x3, description: "Physical lock type is mortise" }),
+                        Field({ name: "Rim", id: 0x4, description: "Physical lock type is rim" }),
+                        Field({ name: "LatchBolt", id: 0x5, description: "Physical lock type is latch bolt" }),
+                        Field({ name: "CylindricalLock", id: 0x6, description: "Physical lock type is cylindrical lock" }),
+                        Field({ name: "TubularLock", id: 0x7, description: "Physical lock type is tubular lock" }),
                         Field({
-                            name: "Deadbolt", id: 0x0, description: "Physical lock type is dead bolt",
-                            xref: { document: "cluster", section: "5.2.3.2" }
+                            name: "InterconnectedLock", id: 0x8, description: "Physical lock type is interconnected lock"
                         }),
-                        Field({
-                            name: "Magnetic", id: 0x1, description: "Physical lock type is magnetic",
-                            xref: { document: "cluster", section: "5.2.3.2" }
-                        }),
-                        Field({
-                            name: "Other", id: 0x2, description: "Physical lock type is other",
-                            xref: { document: "cluster", section: "5.2.3.2" }
-                        }),
-                        Field({
-                            name: "Mortise", id: 0x3, description: "Physical lock type is mortise",
-                            xref: { document: "cluster", section: "5.2.3.2" }
-                        }),
-                        Field({
-                            name: "Rim", id: 0x4, description: "Physical lock type is rim",
-                            xref: { document: "cluster", section: "5.2.3.2" }
-                        }),
-                        Field({
-                            name: "LatchBolt", id: 0x5, description: "Physical lock type is latch bolt",
-                            xref: { document: "cluster", section: "5.2.3.2" }
-                        }),
-                        Field({
-                            name: "CylindricalLock", id: 0x6, description: "Physical lock type is cylindrical lock",
-                            xref: { document: "cluster", section: "5.2.3.2" }
-                        }),
-                        Field({
-                            name: "TubularLock", id: 0x7, description: "Physical lock type is tubular lock",
-                            xref: { document: "cluster", section: "5.2.3.2" }
-                        }),
-                        Field({
-                            name: "InterconnectedLock", id: 0x8, description: "Physical lock type is interconnected lock",
-                            xref: { document: "cluster", section: "5.2.3.2" }
-                        }),
-                        Field({
-                            name: "DeadLatch", id: 0x9, description: "Physical lock type is dead latch",
-                            xref: { document: "cluster", section: "5.2.3.2" }
-                        }),
-                        Field({
-                            name: "DoorFurniture", id: 0xa, description: "Physical lock type is door furniture",
-                            xref: { document: "cluster", section: "5.2.3.2" }
-                        })
+                        Field({ name: "DeadLatch", id: 0x9, description: "Physical lock type is dead latch" }),
+                        Field({ name: "DoorFurniture", id: 0xa, description: "Physical lock type is door furniture" })
                     ]
                 }),
 
@@ -7303,9 +6458,9 @@ export const SpecMatter = Matter({
                     details: "This bitmap contains a bit for every value of CredentialRuleEnum supported on this device.",
                     xref: { document: "cluster", section: "5.2.3.19" },
                     children: [
-                        Field({ name: "Single", constraint: "0", xref: { document: "cluster", section: "5.2.3.19" } }),
-                        Field({ name: "Dual", constraint: "1", xref: { document: "cluster", section: "5.2.3.19" } }),
-                        Field({ name: "Tri", constraint: "2", xref: { document: "cluster", section: "5.2.3.19" } })
+                        Field({ name: "Single", constraint: "0" }),
+                        Field({ name: "Dual", constraint: "1" }),
+                        Field({ name: "Tri", constraint: "2" })
                     ]
                 }),
 
@@ -7383,17 +6538,11 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.3.24" },
 
                     children: [
-                        Field({ name: "Normal", constraint: "0", xref: { document: "cluster", section: "5.2.3.24" } }),
-                        Field({
-                            name: "Vacation", constraint: "1",
-                            xref: { document: "cluster", section: "5.2.3.24" }
-                        }),
-                        Field({ name: "Privacy", constraint: "2", xref: { document: "cluster", section: "5.2.3.24" } }),
-                        Field({
-                            name: "NoRemoteLockUnlock", constraint: "3",
-                            xref: { document: "cluster", section: "5.2.3.24" }
-                        }),
-                        Field({ name: "Passage", constraint: "4", xref: { document: "cluster", section: "5.2.3.24" } })
+                        Field({ name: "Normal", constraint: "0" }),
+                        Field({ name: "Vacation", constraint: "1" }),
+                        Field({ name: "Privacy", constraint: "2" }),
+                        Field({ name: "NoRemoteLockUnlock", constraint: "3" }),
+                        Field({ name: "Passage", constraint: "4" })
                     ]
                 }),
 
@@ -7552,34 +6701,13 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.3.39" },
 
                     children: [
-                        Field({
-                            name: "LockingMechanismJammed", constraint: "0",
-                            xref: { document: "cluster", section: "5.2.3.39" }
-                        }),
-                        Field({
-                            name: "LockResetToFactoryDefaults", constraint: "1",
-                            xref: { document: "cluster", section: "5.2.3.39" }
-                        }),
-                        Field({
-                            name: "Reserved", constraint: "2",
-                            xref: { document: "cluster", section: "5.2.3.39" }
-                        }),
-                        Field({
-                            name: "RfModulePowerCycled", constraint: "3",
-                            xref: { document: "cluster", section: "5.2.3.39" }
-                        }),
-                        Field({
-                            name: "TamperAlarmWrongCodeEntryLimit", constraint: "4",
-                            xref: { document: "cluster", section: "5.2.3.39" }
-                        }),
-                        Field({
-                            name: "TamperAlarmFrontEscutcheonRemovedFromMain", constraint: "5",
-                            xref: { document: "cluster", section: "5.2.3.39" }
-                        }),
-                        Field({
-                            name: "ForcedDoorOpenUnderDoorLockedCondition", constraint: "6",
-                            xref: { document: "cluster", section: "5.2.3.39" }
-                        })
+                        Field({ name: "LockingMechanismJammed", constraint: "0" }),
+                        Field({ name: "LockResetToFactoryDefaults", constraint: "1" }),
+                        Field({ name: "Reserved", constraint: "2" }),
+                        Field({ name: "RfModulePowerCycled", constraint: "3" }),
+                        Field({ name: "TamperAlarmWrongCodeEntryLimit", constraint: "4" }),
+                        Field({ name: "TamperAlarmFrontEscutcheonRemovedFromMain", constraint: "5" }),
+                        Field({ name: "ForcedDoorOpenUnderDoorLockedCondition", constraint: "6" })
                     ]
                 }),
 
@@ -7594,38 +6722,14 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.3.40" },
 
                     children: [
-                        Field({
-                            name: "UnknownOrManufacturerSpecificKeypadOperationEvent", constraint: "0",
-                            xref: { document: "cluster", section: "5.2.3.40" }
-                        }),
-                        Field({
-                            name: "LockSourceKeypad", constraint: "1",
-                            xref: { document: "cluster", section: "5.2.3.40" }
-                        }),
-                        Field({
-                            name: "UnlockSourceKeypad", constraint: "2",
-                            xref: { document: "cluster", section: "5.2.3.40" }
-                        }),
-                        Field({
-                            name: "LockSourceKeypadErrorInvalidPin", constraint: "3",
-                            xref: { document: "cluster", section: "5.2.3.40" }
-                        }),
-                        Field({
-                            name: "LockSourceKeypadErrorInvalidSchedule", constraint: "4",
-                            xref: { document: "cluster", section: "5.2.3.40" }
-                        }),
-                        Field({
-                            name: "UnlockSourceKeypadErrorInvalidCode", constraint: "5",
-                            xref: { document: "cluster", section: "5.2.3.40" }
-                        }),
-                        Field({
-                            name: "UnlockSourceKeypadErrorInvalidSchedule", constraint: "6",
-                            xref: { document: "cluster", section: "5.2.3.40" }
-                        }),
-                        Field({
-                            name: "NonAccessUserOperationEventSourceKeypad", constraint: "15",
-                            xref: { document: "cluster", section: "5.2.3.40" }
-                        })
+                        Field({ name: "UnknownOrManufacturerSpecificKeypadOperationEvent", constraint: "0" }),
+                        Field({ name: "LockSourceKeypad", constraint: "1" }),
+                        Field({ name: "UnlockSourceKeypad", constraint: "2" }),
+                        Field({ name: "LockSourceKeypadErrorInvalidPin", constraint: "3" }),
+                        Field({ name: "LockSourceKeypadErrorInvalidSchedule", constraint: "4" }),
+                        Field({ name: "UnlockSourceKeypadErrorInvalidCode", constraint: "5" }),
+                        Field({ name: "UnlockSourceKeypadErrorInvalidSchedule", constraint: "6" }),
+                        Field({ name: "NonAccessUserOperationEventSourceKeypad", constraint: "15" })
                     ]
                 }),
 
@@ -7643,34 +6747,13 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.3.41" },
 
                     children: [
-                        Field({
-                            name: "UnknownOrManufacturerSpecificRemoteOperationEvent", constraint: "0",
-                            xref: { document: "cluster", section: "5.2.3.41" }
-                        }),
-                        Field({
-                            name: "LockSourceRemote", constraint: "1",
-                            xref: { document: "cluster", section: "5.2.3.41" }
-                        }),
-                        Field({
-                            name: "UnlockSourceRemote", constraint: "2",
-                            xref: { document: "cluster", section: "5.2.3.41" }
-                        }),
-                        Field({
-                            name: "LockSourceRemoteErrorInvalidCode", constraint: "3",
-                            xref: { document: "cluster", section: "5.2.3.41" }
-                        }),
-                        Field({
-                            name: "LockSourceRemoteErrorInvalidSchedule", constraint: "4",
-                            xref: { document: "cluster", section: "5.2.3.41" }
-                        }),
-                        Field({
-                            name: "UnlockSourceRemoteErrorInvalidCode", constraint: "5",
-                            xref: { document: "cluster", section: "5.2.3.41" }
-                        }),
-                        Field({
-                            name: "UnlockSourceRemoteErrorInvalidSchedule", constraint: "6",
-                            xref: { document: "cluster", section: "5.2.3.41" }
-                        })
+                        Field({ name: "UnknownOrManufacturerSpecificRemoteOperationEvent", constraint: "0" }),
+                        Field({ name: "LockSourceRemote", constraint: "1" }),
+                        Field({ name: "UnlockSourceRemote", constraint: "2" }),
+                        Field({ name: "LockSourceRemoteErrorInvalidCode", constraint: "3" }),
+                        Field({ name: "LockSourceRemoteErrorInvalidSchedule", constraint: "4" }),
+                        Field({ name: "UnlockSourceRemoteErrorInvalidCode", constraint: "5" }),
+                        Field({ name: "UnlockSourceRemoteErrorInvalidSchedule", constraint: "6" })
                     ]
                 }),
 
@@ -7684,47 +6767,17 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.3.42" },
 
                     children: [
-                        Field({
-                            name: "UnknownOrManufacturerSpecificManualOperationEvent", constraint: "0",
-                            xref: { document: "cluster", section: "5.2.3.42" }
-                        }),
-                        Field({
-                            name: "ThumbturnLock", constraint: "1",
-                            xref: { document: "cluster", section: "5.2.3.42" }
-                        }),
-                        Field({
-                            name: "ThumbturnUnlock", constraint: "2",
-                            xref: { document: "cluster", section: "5.2.3.42" }
-                        }),
-                        Field({
-                            name: "OneTouchLock", constraint: "7",
-                            xref: { document: "cluster", section: "5.2.3.42" }
-                        }),
-                        Field({ name: "KeyLock", constraint: "8", xref: { document: "cluster", section: "5.2.3.42" } }),
-                        Field({
-                            name: "KeyUnlock", constraint: "9",
-                            xref: { document: "cluster", section: "5.2.3.42" }
-                        }),
-                        Field({
-                            name: "AutoLock", constraint: "10",
-                            xref: { document: "cluster", section: "5.2.3.42" }
-                        }),
-                        Field({
-                            name: "ScheduleLock", constraint: "11",
-                            xref: { document: "cluster", section: "5.2.3.42" }
-                        }),
-                        Field({
-                            name: "ScheduleUnlock", constraint: "12",
-                            xref: { document: "cluster", section: "5.2.3.42" }
-                        }),
-                        Field({
-                            name: "ManualLock", constraint: "13",
-                            xref: { document: "cluster", section: "5.2.3.42" }
-                        }),
-                        Field({
-                            name: "ManualUnlock", constraint: "14",
-                            xref: { document: "cluster", section: "5.2.3.42" }
-                        })
+                        Field({ name: "UnknownOrManufacturerSpecificManualOperationEvent", constraint: "0" }),
+                        Field({ name: "ThumbturnLock", constraint: "1" }),
+                        Field({ name: "ThumbturnUnlock", constraint: "2" }),
+                        Field({ name: "OneTouchLock", constraint: "7" }),
+                        Field({ name: "KeyLock", constraint: "8" }),
+                        Field({ name: "KeyUnlock", constraint: "9" }),
+                        Field({ name: "AutoLock", constraint: "10" }),
+                        Field({ name: "ScheduleLock", constraint: "11" }),
+                        Field({ name: "ScheduleUnlock", constraint: "12" }),
+                        Field({ name: "ManualLock", constraint: "13" }),
+                        Field({ name: "ManualUnlock", constraint: "14" })
                     ]
                 }),
 
@@ -7738,34 +6791,13 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.3.43" },
 
                     children: [
-                        Field({
-                            name: "UnknownOrManufacturerSpecificKeypadOperationEvent", constraint: "0",
-                            xref: { document: "cluster", section: "5.2.3.43" }
-                        }),
-                        Field({
-                            name: "LockSourceRfid", constraint: "1",
-                            xref: { document: "cluster", section: "5.2.3.43" }
-                        }),
-                        Field({
-                            name: "UnlockSourceRfid", constraint: "2",
-                            xref: { document: "cluster", section: "5.2.3.43" }
-                        }),
-                        Field({
-                            name: "LockSourceRfidErrorInvalidRfidId", constraint: "3",
-                            xref: { document: "cluster", section: "5.2.3.43" }
-                        }),
-                        Field({
-                            name: "LockSourceRfidErrorInvalidSchedule", constraint: "4",
-                            xref: { document: "cluster", section: "5.2.3.43" }
-                        }),
-                        Field({
-                            name: "UnlockSourceRfidErrorInvalidRfidId", constraint: "5",
-                            xref: { document: "cluster", section: "5.2.3.43" }
-                        }),
-                        Field({
-                            name: "UnlockSourceRfidErrorInvalidSchedule", constraint: "6",
-                            xref: { document: "cluster", section: "5.2.3.43" }
-                        })
+                        Field({ name: "UnknownOrManufacturerSpecificKeypadOperationEvent", constraint: "0" }),
+                        Field({ name: "LockSourceRfid", constraint: "1" }),
+                        Field({ name: "UnlockSourceRfid", constraint: "2" }),
+                        Field({ name: "LockSourceRfidErrorInvalidRfidId", constraint: "3" }),
+                        Field({ name: "LockSourceRfidErrorInvalidSchedule", constraint: "4" }),
+                        Field({ name: "UnlockSourceRfidErrorInvalidRfidId", constraint: "5" }),
+                        Field({ name: "UnlockSourceRfidErrorInvalidSchedule", constraint: "6" })
                     ]
                 }),
 
@@ -7780,25 +6812,12 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.3.44" },
 
                     children: [
+                        Field({ name: "UnknownOrManufacturerSpecificKeypadProgrammingEvent", constraint: "0" }),
+                        Field({ name: "ProgrammingPinCodeChangedSourceKeypadUserIdProgrammingUserId", constraint: "1" }),
+                        Field({ name: "PinAddedSourceKeypadUserIdUserIdThatWasAdded", constraint: "2" }),
+                        Field({ name: "PinClearedSourceKeypadUserIdUserIdThatWasCleared", constraint: "3" }),
                         Field({
-                            name: "UnknownOrManufacturerSpecificKeypadProgrammingEvent", constraint: "0",
-                            xref: { document: "cluster", section: "5.2.3.44" }
-                        }),
-                        Field({
-                            name: "ProgrammingPinCodeChangedSourceKeypadUserIdProgrammingUserId", constraint: "1",
-                            xref: { document: "cluster", section: "5.2.3.44" }
-                        }),
-                        Field({
-                            name: "PinAddedSourceKeypadUserIdUserIdThatWasAdded", constraint: "2",
-                            xref: { document: "cluster", section: "5.2.3.44" }
-                        }),
-                        Field({
-                            name: "PinClearedSourceKeypadUserIdUserIdThatWasCleared", constraint: "3",
-                            xref: { document: "cluster", section: "5.2.3.44" }
-                        }),
-                        Field({
-                            name: "PinChangedSourceKeypadUserIdUserIdThatWasChangedPinCodeThatWasChanged", constraint: "4",
-                            xref: { document: "cluster", section: "5.2.3.44" }
+                            name: "PinChangedSourceKeypadUserIdUserIdThatWasChangedPinCodeThatWasChanged", constraint: "4"
                         })
                     ]
                 }),
@@ -7814,30 +6833,12 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.3.45" },
 
                     children: [
-                        Field({
-                            name: "UnknownOrManufacturerSpecificRemoteProgrammingEvent", constraint: "0",
-                            xref: { document: "cluster", section: "5.2.3.45" }
-                        }),
-                        Field({
-                            name: "PinAddedSourceRemoteSameAsKeypadSourceAbove", constraint: "2",
-                            xref: { document: "cluster", section: "5.2.3.45" }
-                        }),
-                        Field({
-                            name: "PinClearedSourceRemoteSameAsKeypadSourceAbove", constraint: "3",
-                            xref: { document: "cluster", section: "5.2.3.45" }
-                        }),
-                        Field({
-                            name: "PinChangedSourceRemoteSameAsKeypadSourceabove", constraint: "4",
-                            xref: { document: "cluster", section: "5.2.3.45" }
-                        }),
-                        Field({
-                            name: "RfidCodeAddedSourceRemote", constraint: "5",
-                            xref: { document: "cluster", section: "5.2.3.45" }
-                        }),
-                        Field({
-                            name: "RfidCodeClearedSourceRemote", constraint: "6",
-                            xref: { document: "cluster", section: "5.2.3.45" }
-                        })
+                        Field({ name: "UnknownOrManufacturerSpecificRemoteProgrammingEvent", constraint: "0" }),
+                        Field({ name: "PinAddedSourceRemoteSameAsKeypadSourceAbove", constraint: "2" }),
+                        Field({ name: "PinClearedSourceRemoteSameAsKeypadSourceAbove", constraint: "3" }),
+                        Field({ name: "PinChangedSourceRemoteSameAsKeypadSourceabove", constraint: "4" }),
+                        Field({ name: "RfidCodeAddedSourceRemote", constraint: "5" }),
+                        Field({ name: "RfidCodeClearedSourceRemote", constraint: "6" })
                     ]
                 }),
 
@@ -7849,20 +6850,10 @@ export const SpecMatter = Matter({
                         "\n" +
                         "This mask DOES NOT apply to the Events mechanism of this cluster.",
                     xref: { document: "cluster", section: "5.2.3.46" },
-
                     children: [
-                        Field({
-                            name: "UnknownOrManufacturerSpecificKeypadProgrammingEvent", constraint: "0",
-                            xref: { document: "cluster", section: "5.2.3.46" }
-                        }),
-                        Field({
-                            name: "IdAddedSourceRfidUserIdUserIdThatWasAdded", constraint: "5",
-                            xref: { document: "cluster", section: "5.2.3.46" }
-                        }),
-                        Field({
-                            name: "IdClearedSourceRfidUserIdUserIdThatWasCleared", constraint: "6",
-                            xref: { document: "cluster", section: "5.2.3.46" }
-                        })
+                        Field({ name: "UnknownOrManufacturerSpecificKeypadProgrammingEvent", constraint: "0" }),
+                        Field({ name: "IdAddedSourceRfidUserIdUserIdThatWasAdded", constraint: "5" }),
+                        Field({ name: "IdClearedSourceRfidUserIdUserIdThatWasCleared", constraint: "6" })
                     ]
                 }),
 
@@ -7935,7 +6926,7 @@ export const SpecMatter = Matter({
 
                         Field({
                             name: "Credentials", id: 0x5, type: "list", conformance: "[USR]",
-                            constraint: "1 to NumberOfCredentialsSupportedPerUser", quality: "X",
+                            constraint: "1 to numberOfCredentialsSupportedPerUser", quality: "X",
                             details: "The list of credentials used in performing the lock operation. This shall be null if no credentials " +
                                 "were involved.",
                             xref: { document: "cluster", section: "5.2.5.3.6" },
@@ -7993,7 +6984,7 @@ export const SpecMatter = Matter({
 
                         Field({
                             name: "Credentials", id: 0x6, type: "list", conformance: "[USR]",
-                            constraint: "1 to NumberOfCredentialsSupportedPerUser", quality: "X",
+                            constraint: "1 to numberOfCredentialsSupportedPerUser", quality: "X",
                             details: "The list of credentials used in performing the lock operation. This shall be null if no credentials " +
                                 "were involved.",
                             xref: { document: "cluster", section: "5.2.5.4.7" },
@@ -8022,7 +7013,7 @@ export const SpecMatter = Matter({
 
                         Field({
                             name: "OperationSource", id: 0x2, type: "OperationSourceEnum", conformance: "M",
-                            constraint: "Unspecified, Keypad, Remote",
+                            constraint: "unspecified, keypad, remote",
                             details: "The source of the user data change.",
                             xref: { document: "cluster", section: "5.2.5.5.3" }
                         }),
@@ -8281,41 +7272,27 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.6.1" },
 
                     children: [
+                        Field({ name: "LockJammed", id: 0x0, conformance: "M", description: "Locking Mechanism Jammed" }),
                         Field({
-                            name: "LockJammed", id: 0x0, conformance: "M", description: "Locking Mechanism Jammed",
-                            xref: { document: "cluster", section: "5.2.6.1" }
+                            name: "LockFactoryReset", id: 0x1, conformance: "O", description: "Lock Reset to Factory Defaults"
                         }),
                         Field({
-                            name: "LockFactoryReset", id: 0x1, conformance: "O", description: "Lock Reset to Factory Defaults",
-                            xref: { document: "cluster", section: "5.2.6.1" }
-                        }),
-                        Field({
-                            name: "LockRadioPowerCycled", id: 0x3, conformance: "O", description: "Lock Radio Power Cycled",
-                            xref: { document: "cluster", section: "5.2.6.1" }
+                            name: "LockRadioPowerCycled", id: 0x3, conformance: "O", description: "Lock Radio Power Cycled"
                         }),
                         Field({
                             name: "WrongCodeEntryLimit", id: 0x4, conformance: "[USR]",
-                            description: "Tamper Alarm - wrong code entry limit",
-                            xref: { document: "cluster", section: "5.2.6.1" }
+                            description: "Tamper Alarm - wrong code entry limit"
                         }),
                         Field({
                             name: "FrontEsceutcheonRemoved", id: 0x5, conformance: "O",
-                            description: "Tamper Alarm - front escutcheon removed from main",
-                            xref: { document: "cluster", section: "5.2.6.1" }
+                            description: "Tamper Alarm - front escutcheon removed from main"
                         }),
                         Field({
                             name: "DoorForcedOpen", id: 0x6, conformance: "[DPS]",
-                            description: "Forced Door Open under Door Locked Condition",
-                            xref: { document: "cluster", section: "5.2.6.1" }
+                            description: "Forced Door Open under Door Locked Condition"
                         }),
-                        Field({
-                            name: "DoorAjar", id: 0x7, conformance: "[DPS]", description: "Door ajar",
-                            xref: { document: "cluster", section: "5.2.6.1" }
-                        }),
-                        Field({
-                            name: "ForcedUser", id: 0x8, conformance: "[USR]", description: "Force User SOS alarm",
-                            xref: { document: "cluster", section: "5.2.6.1" }
-                        })
+                        Field({ name: "DoorAjar", id: 0x7, conformance: "[DPS]", description: "Door ajar" }),
+                        Field({ name: "ForcedUser", id: 0x8, conformance: "[USR]", description: "Force User SOS alarm" })
                     ]
                 }),
 
@@ -8324,20 +7301,10 @@ export const SpecMatter = Matter({
                     details: "The CredentialRule enum used in various commands shall indicate the credential rule that can be " +
                         "applied to a particular user.",
                     xref: { document: "cluster", section: "5.2.6.2" },
-
                     children: [
-                        Field({
-                            name: "Single", id: 0x0, conformance: "USR",
-                            xref: { document: "cluster", section: "5.2.6.2" }
-                        }),
-                        Field({
-                            name: "Dual", id: 0x1, conformance: "[USR]",
-                            xref: { document: "cluster", section: "5.2.6.2" }
-                        }),
-                        Field({
-                            name: "Tri", id: 0x2, conformance: "[USR]",
-                            xref: { document: "cluster", section: "5.2.6.2" }
-                        })
+                        Field({ name: "Single", id: 0x0, conformance: "USR" }),
+                        Field({ name: "Dual", id: 0x1, conformance: "[USR]" }),
+                        Field({ name: "Tri", id: 0x2, conformance: "[USR]" })
                     ]
                 }),
 
@@ -8355,7 +7322,7 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "CredentialIndex", id: 0x1, type: "uint16", conformance: "M", default: "0",
+                            name: "CredentialIndex", id: 0x1, type: "uint16", conformance: "M", default: 0,
                             details: "This is the index of the specific credential used to authorize the lock operation in the list of " +
                                 "credentials identified by CredentialType (e.g. schedule, PIN, RFID, etc.). This shall be set to 0 " +
                                 "if CredentialType is ProgrammingPIN or does not correspond to a list that can be indexed into.",
@@ -8370,30 +7337,12 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.6.4" },
 
                     children: [
-                        Field({
-                            name: "ProgrammingPin", id: 0x0, conformance: "O",
-                            xref: { document: "cluster", section: "5.2.6.4" }
-                        }),
-                        Field({
-                            name: "Pin", id: 0x1, conformance: "PIN",
-                            xref: { document: "cluster", section: "5.2.6.4" }
-                        }),
-                        Field({
-                            name: "Rfid", id: 0x2, conformance: "RID",
-                            xref: { document: "cluster", section: "5.2.6.4" }
-                        }),
-                        Field({
-                            name: "Fingerprint", id: 0x3, conformance: "FGP",
-                            xref: { document: "cluster", section: "5.2.6.4" }
-                        }),
-                        Field({
-                            name: "FingerVein", id: 0x4, conformance: "FGP",
-                            xref: { document: "cluster", section: "5.2.6.4" }
-                        }),
-                        Field({
-                            name: "Face", id: 0x5, conformance: "FACE",
-                            xref: { document: "cluster", section: "5.2.6.4" }
-                        })
+                        Field({ name: "ProgrammingPin", id: 0x0, conformance: "O" }),
+                        Field({ name: "Pin", id: 0x1, conformance: "PIN" }),
+                        Field({ name: "Rfid", id: 0x2, conformance: "RID" }),
+                        Field({ name: "Fingerprint", id: 0x3, conformance: "FGP" }),
+                        Field({ name: "FingerVein", id: 0x4, conformance: "FGP" }),
+                        Field({ name: "Face", id: 0x5, conformance: "FACE" })
                     ]
                 }),
 
@@ -8403,17 +7352,12 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.6.5" },
 
                     children: [
+                        Field({ name: "Add", id: 0x0, conformance: "M", description: "Data is being added or was added" }),
                         Field({
-                            name: "Add", id: 0x0, conformance: "M", description: "Data is being added or was added",
-                            xref: { document: "cluster", section: "5.2.6.5" }
+                            name: "Clear", id: 0x1, conformance: "M", description: "Data is being cleared or was cleared"
                         }),
                         Field({
-                            name: "Clear", id: 0x1, conformance: "M", description: "Data is being cleared or was cleared",
-                            xref: { document: "cluster", section: "5.2.6.5" }
-                        }),
-                        Field({
-                            name: "Modify", id: 0x2, conformance: "M", description: "Data is being modified or was modified",
-                            xref: { document: "cluster", section: "5.2.6.5" }
+                            name: "Modify", id: 0x2, conformance: "M", description: "Data is being modified or was modified"
                         })
                     ]
                 }),
@@ -8425,16 +7369,13 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.6.6" },
 
                     children: [
-                        Field({ name: "Sunday", constraint: "0", xref: { document: "cluster", section: "5.2.6.6" } }),
-                        Field({ name: "Monday", constraint: "1", xref: { document: "cluster", section: "5.2.6.6" } }),
-                        Field({ name: "Tuesday", constraint: "2", xref: { document: "cluster", section: "5.2.6.6" } }),
-                        Field({
-                            name: "Wednesday", constraint: "3",
-                            xref: { document: "cluster", section: "5.2.6.6" }
-                        }),
-                        Field({ name: "Thursday", constraint: "4", xref: { document: "cluster", section: "5.2.6.6" } }),
-                        Field({ name: "Friday", constraint: "5", xref: { document: "cluster", section: "5.2.6.6" } }),
-                        Field({ name: "Saturday", constraint: "6", xref: { document: "cluster", section: "5.2.6.6" } })
+                        Field({ name: "Sunday", constraint: "0" }),
+                        Field({ name: "Monday", constraint: "1" }),
+                        Field({ name: "Tuesday", constraint: "2" }),
+                        Field({ name: "Wednesday", constraint: "3" }),
+                        Field({ name: "Thursday", constraint: "4" }),
+                        Field({ name: "Friday", constraint: "5" }),
+                        Field({ name: "Saturday", constraint: "6" })
                     ]
                 }),
 
@@ -8446,32 +7387,18 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.6.7" },
 
                     children: [
-                        Field({
-                            name: "DoorOpen", id: 0x0, conformance: "DPS", description: "Door state is open",
-                            xref: { document: "cluster", section: "5.2.6.7" }
-                        }),
-                        Field({
-                            name: "DoorClosed", id: 0x1, conformance: "DPS", description: "Door state is closed",
-                            xref: { document: "cluster", section: "5.2.6.7" }
-                        }),
-                        Field({
-                            name: "DoorJammed", id: 0x2, conformance: "[DPS]", description: "Door state is jammed",
-                            xref: { document: "cluster", section: "5.2.6.7" }
-                        }),
+                        Field({ name: "DoorOpen", id: 0x0, conformance: "DPS", description: "Door state is open" }),
+                        Field({ name: "DoorClosed", id: 0x1, conformance: "DPS", description: "Door state is closed" }),
+                        Field({ name: "DoorJammed", id: 0x2, conformance: "[DPS]", description: "Door state is jammed" }),
                         Field({
                             name: "DoorForcedOpen", id: 0x3, conformance: "[DPS]",
-                            description: "Door state is currently forced open",
-                            xref: { document: "cluster", section: "5.2.6.7" }
+                            description: "Door state is currently forced open"
                         }),
                         Field({
                             name: "DoorUnspecifiedError", id: 0x4, conformance: "[DPS]",
-                            description: "Door state is invalid for unspecified reason",
-                            xref: { document: "cluster", section: "5.2.6.7" }
+                            description: "Door state is invalid for unspecified reason"
                         }),
-                        Field({
-                            name: "DoorAjar", id: 0x5, conformance: "[DPS]", description: "Door state is ajar",
-                            xref: { document: "cluster", section: "5.2.6.7" }
-                        })
+                        Field({ name: "DoorAjar", id: 0x5, conformance: "[DPS]", description: "Door state is ajar" })
                     ]
                 }),
 
@@ -8489,58 +7416,47 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Unspecified", id: 0x0, conformance: "O",
-                            description: "Unspecified or manufacturer specific lock user data added, cleared, or modified.",
-                            xref: { document: "cluster", section: "5.2.6.9" }
+                            description: "Unspecified or manufacturer specific lock user data added, cleared, or modified."
                         }),
                         Field({
                             name: "ProgrammingCode", id: 0x1, conformance: "O",
-                            description: "Lock programming PIN code was added, cleared, or modified.",
-                            xref: { document: "cluster", section: "5.2.6.9" }
+                            description: "Lock programming PIN code was added, cleared, or modified."
                         }),
                         Field({
                             name: "UserIndex", id: 0x2, conformance: "M",
-                            description: "Lock user index was added, cleared, or modified.",
-                            xref: { document: "cluster", section: "5.2.6.9" }
+                            description: "Lock user index was added, cleared, or modified."
                         }),
                         Field({
                             name: "WeekDaySchedule", id: 0x3, conformance: "WDSCH",
-                            description: "Lock user week day schedule was added, cleared, or modified.",
-                            xref: { document: "cluster", section: "5.2.6.9" }
+                            description: "Lock user week day schedule was added, cleared, or modified."
                         }),
                         Field({
                             name: "YearDaySchedule", id: 0x4, conformance: "YDSCH",
-                            description: "Lock user year day schedule was added, cleared, or modified.",
-                            xref: { document: "cluster", section: "5.2.6.9" }
+                            description: "Lock user year day schedule was added, cleared, or modified."
                         }),
                         Field({
                             name: "HolidaySchedule", id: 0x5, conformance: "HDSCH",
-                            description: "Lock holiday schedule was added, cleared, or modified.",
-                            xref: { document: "cluster", section: "5.2.6.9" }
+                            description: "Lock holiday schedule was added, cleared, or modified."
                         }),
                         Field({
                             name: "Pin", id: 0x6, conformance: "PIN",
-                            description: "Lock user PIN code was added, cleared, or modified.",
-                            xref: { document: "cluster", section: "5.2.6.9" }
+                            description: "Lock user PIN code was added, cleared, or modified."
                         }),
                         Field({
                             name: "Rfid", id: 0x7, conformance: "RID",
-                            description: "Lock user RFID code was added, cleared, or modified.",
-                            xref: { document: "cluster", section: "5.2.6.9" }
+                            description: "Lock user RFID code was added, cleared, or modified."
                         }),
                         Field({
                             name: "Fingerprint", id: 0x8, conformance: "FGP",
-                            description: "Lock user fingerprint was added, cleared, or modified.",
-                            xref: { document: "cluster", section: "5.2.6.9" }
+                            description: "Lock user fingerprint was added, cleared, or modified."
                         }),
                         Field({
                             name: "FingerVein", id: 0x9, conformance: "FGP",
-                            description: "Lock user finger-vein information was added, cleared, or modified.",
-                            xref: { document: "cluster", section: "5.2.6.9" }
+                            description: "Lock user finger-vein information was added, cleared, or modified."
                         }),
                         Field({
                             name: "Face", id: 0xa, conformance: "FACE",
-                            description: "Lock user face information was added, cleared, or modified.",
-                            xref: { document: "cluster", section: "5.2.6.9" }
+                            description: "Lock user face information was added, cleared, or modified."
                         })
                     ]
                 }),
@@ -8551,22 +7467,10 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.6.10" },
 
                     children: [
-                        Field({
-                            name: "Lock", id: 0x0, conformance: "M",
-                            xref: { document: "cluster", section: "5.2.6.10" }
-                        }),
-                        Field({
-                            name: "Unlock", id: 0x1, conformance: "M",
-                            xref: { document: "cluster", section: "5.2.6.10" }
-                        }),
-                        Field({
-                            name: "NonAccessUserEvent", id: 0x2, conformance: "O",
-                            xref: { document: "cluster", section: "5.2.6.10" }
-                        }),
-                        Field({
-                            name: "ForcedUserEvent", id: 0x3, conformance: "O",
-                            xref: { document: "cluster", section: "5.2.6.10" }
-                        })
+                        Field({ name: "Lock", id: 0x0, conformance: "M" }),
+                        Field({ name: "Unlock", id: 0x1, conformance: "M" }),
+                        Field({ name: "NonAccessUserEvent", id: 0x2, conformance: "O" }),
+                        Field({ name: "ForcedUserEvent", id: 0x3, conformance: "O" })
                     ]
                 }),
 
@@ -8577,26 +7481,11 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.6.11" },
 
                     children: [
-                        Field({
-                            name: "Unspecified", id: 0x0, conformance: "O",
-                            xref: { document: "cluster", section: "5.2.6.11" }
-                        }),
-                        Field({
-                            name: "InvalidCredential", id: 0x1, conformance: "USR",
-                            xref: { document: "cluster", section: "5.2.6.11" }
-                        }),
-                        Field({
-                            name: "DisabledUserDenied", id: 0x2, conformance: "M",
-                            xref: { document: "cluster", section: "5.2.6.11" }
-                        }),
-                        Field({
-                            name: "Restricted", id: 0x3, conformance: "WDSCH | YDSCH",
-                            xref: { document: "cluster", section: "5.2.6.11" }
-                        }),
-                        Field({
-                            name: "InsufficientBattery", id: 0x4, conformance: "O",
-                            xref: { document: "cluster", section: "5.2.6.11" }
-                        })
+                        Field({ name: "Unspecified", id: 0x0, conformance: "O" }),
+                        Field({ name: "InvalidCredential", id: 0x1, conformance: "USR" }),
+                        Field({ name: "DisabledUserDenied", id: 0x2, conformance: "M" }),
+                        Field({ name: "Restricted", id: 0x3, conformance: "WDSCH | YDSCH" }),
+                        Field({ name: "InsufficientBattery", id: 0x4, conformance: "O" })
                     ]
                 }),
 
@@ -8667,46 +7556,16 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.2.6.13" },
 
                     children: [
-                        Field({
-                            name: "Unspecified", id: 0x0, conformance: "O",
-                            xref: { document: "cluster", section: "5.2.6.13" }
-                        }),
-                        Field({
-                            name: "Manual", id: 0x1, conformance: "O",
-                            xref: { document: "cluster", section: "5.2.6.13" }
-                        }),
-                        Field({
-                            name: "ProprietaryRemote", id: 0x2, conformance: "O",
-                            xref: { document: "cluster", section: "5.2.6.13" }
-                        }),
-                        Field({
-                            name: "Keypad", id: 0x3, conformance: "O",
-                            xref: { document: "cluster", section: "5.2.6.13" }
-                        }),
-                        Field({
-                            name: "Auto", id: 0x4, conformance: "O",
-                            xref: { document: "cluster", section: "5.2.6.13" }
-                        }),
-                        Field({
-                            name: "Button", id: 0x5, conformance: "O",
-                            xref: { document: "cluster", section: "5.2.6.13" }
-                        }),
-                        Field({
-                            name: "Schedule", id: 0x6, conformance: "HDSCH",
-                            xref: { document: "cluster", section: "5.2.6.13" }
-                        }),
-                        Field({
-                            name: "Remote", id: 0x7, conformance: "M",
-                            xref: { document: "cluster", section: "5.2.6.13" }
-                        }),
-                        Field({
-                            name: "Rfid", id: 0x8, conformance: "RID",
-                            xref: { document: "cluster", section: "5.2.6.13" }
-                        }),
-                        Field({
-                            name: "Biometric", id: 0x9, conformance: "[USR]",
-                            xref: { document: "cluster", section: "5.2.6.13" }
-                        })
+                        Field({ name: "Unspecified", id: 0x0, conformance: "O" }),
+                        Field({ name: "Manual", id: 0x1, conformance: "O" }),
+                        Field({ name: "ProprietaryRemote", id: 0x2, conformance: "O" }),
+                        Field({ name: "Keypad", id: 0x3, conformance: "O" }),
+                        Field({ name: "Auto", id: 0x4, conformance: "O" }),
+                        Field({ name: "Button", id: 0x5, conformance: "O" }),
+                        Field({ name: "Schedule", id: 0x6, conformance: "HDSCH" }),
+                        Field({ name: "Remote", id: 0x7, conformance: "M" }),
+                        Field({ name: "Rfid", id: 0x8, conformance: "RID" }),
+                        Field({ name: "Biometric", id: 0x9, conformance: "[USR]" })
                     ]
                 }),
 
@@ -8715,20 +7574,10 @@ export const SpecMatter = Matter({
                     details: "The UserStatus enum used in various commands shall indicate what the status is for a specific user " +
                         "ID.",
                     xref: { document: "cluster", section: "5.2.6.15" },
-
                     children: [
-                        Field({
-                            name: "Available", id: 0x0, conformance: "M",
-                            xref: { document: "cluster", section: "5.2.6.15" }
-                        }),
-                        Field({
-                            name: "OccupiedEnabled", id: 0x1, conformance: "M",
-                            xref: { document: "cluster", section: "5.2.6.15" }
-                        }),
-                        Field({
-                            name: "OccupiedDisabled", id: 0x3, conformance: "O",
-                            xref: { document: "cluster", section: "5.2.6.15" }
-                        })
+                        Field({ name: "Available", id: 0x0, conformance: "M" }),
+                        Field({ name: "OccupiedEnabled", id: 0x1, conformance: "M" }),
+                        Field({ name: "OccupiedDisabled", id: 0x3, conformance: "O" })
                     ]
                 }),
 
@@ -8831,28 +7680,23 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "LF", conformance: "O.a+", constraint: "0", description: "Lift",
-                            details: "Lift Control and behavior for lifting/sliding window coverings",
-                            xref: { document: "cluster", section: "5.3.4" }
+                            details: "Lift Control and behavior for lifting/sliding window coverings"
                         }),
                         Field({
                             name: "TL", conformance: "O.a+", constraint: "1", description: "Tilt",
-                            details: "Tilt Control and behavior for tilting window coverings",
-                            xref: { document: "cluster", section: "5.3.4" }
+                            details: "Tilt Control and behavior for tilting window coverings"
                         }),
                         Field({
                             name: "PA_LF", conformance: "[LF]", constraint: "2", description: "PositionAwareLift",
-                            details: "Position Aware lift control is supported.",
-                            xref: { document: "cluster", section: "5.3.4" }
+                            details: "Position Aware lift control is supported."
                         }),
                         Field({
                             name: "ABS", conformance: "O", constraint: "3", description: "AbsolutePosition",
-                            details: "Absolute positioning is supported.",
-                            xref: { document: "cluster", section: "5.3.4" }
+                            details: "Absolute positioning is supported."
                         }),
                         Field({
                             name: "PA_TL", conformance: "[TL]", constraint: "4", description: "PositionAwareTilt",
-                            details: "Position Aware tilt control is supported.",
-                            xref: { document: "cluster", section: "5.3.4" }
+                            details: "Position Aware tilt control is supported."
                         })
                     ]
                 }),
@@ -8865,29 +7709,17 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.3.5.1" },
 
                     children: [
-                        Field({ name: "Rollershade", id: 0x0, xref: { document: "cluster", section: "5.3.5.1" } }),
-                        Field({
-                            name: "Rollershade2Motor", id: 0x1,
-                            xref: { document: "cluster", section: "5.3.5.1" }
-                        }),
-                        Field({
-                            name: "RollershadeExterior", id: 0x2,
-                            xref: { document: "cluster", section: "5.3.5.1" }
-                        }),
-                        Field({
-                            name: "RollershadeExterior2Motor", id: 0x3,
-                            xref: { document: "cluster", section: "5.3.5.1" }
-                        }),
-                        Field({ name: "Drapery", id: 0x4, xref: { document: "cluster", section: "5.3.5.1" } }),
-                        Field({ name: "Awning", id: 0x5, xref: { document: "cluster", section: "5.3.5.1" } }),
-                        Field({ name: "Shutter", id: 0x6, xref: { document: "cluster", section: "5.3.5.1" } }),
-                        Field({
-                            name: "TiltBlindTiltOnly", id: 0x7,
-                            xref: { document: "cluster", section: "5.3.5.1" }
-                        }),
-                        Field({ name: "TiltBlindLift", id: 0x8, xref: { document: "cluster", section: "5.3.5.1" } }),
-                        Field({ name: "ProjectorScreen", id: 0x9, xref: { document: "cluster", section: "5.3.5.1" } }),
-                        Field({ name: "Unknown", id: 0xff, xref: { document: "cluster", section: "5.3.5.1" } })
+                        Field({ name: "Rollershade", id: 0x0 }),
+                        Field({ name: "Rollershade2Motor", id: 0x1 }),
+                        Field({ name: "RollershadeExterior", id: 0x2 }),
+                        Field({ name: "RollershadeExterior2Motor", id: 0x3 }),
+                        Field({ name: "Drapery", id: 0x4 }),
+                        Field({ name: "Awning", id: 0x5 }),
+                        Field({ name: "Shutter", id: 0x6 }),
+                        Field({ name: "TiltBlindTiltOnly", id: 0x7 }),
+                        Field({ name: "TiltBlindLift", id: 0x8 }),
+                        Field({ name: "ProjectorScreen", id: 0x9 }),
+                        Field({ name: "Unknown", id: 0xff })
                     ]
                 }),
 
@@ -8909,7 +7741,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "CurrentPositionLift", id: 0x3, type: "uint16", access: "R V",
-                    conformance: "[LF & PA_LF & ABS]", constraint: "InstalledOpenLimitLift to InstalledClosedLimitLift",
+                    conformance: "[LF & PA_LF & ABS]", constraint: "installedOpenLimitLift to installedClosedLimitLift",
                     default: null, quality: "X N",
                     details: "The CurrentPositionLift attribute identifies the actual Lift position (in centimeters) of the " +
                         "window covering from the fully-open position.",
@@ -8918,7 +7750,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "CurrentPositionTilt", id: 0x4, type: "uint16", access: "R V",
-                    conformance: "[TL & PA_TL & ABS]", constraint: "InstalledOpenLimitTilt to InstalledClosedLimitTilt",
+                    conformance: "[TL & PA_TL & ABS]", constraint: "installedOpenLimitTilt to installedClosedLimitTilt",
                     default: null, quality: "X N",
                     details: "The CurrentPositionTilt attribute identifies the actual Tilt position (in tenth of an degree) of " +
                         "the window covering from the fully-open position.",
@@ -9045,61 +7877,31 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "5.3.5.16" },
 
                     children: [
-                        Field({ name: "RollerShade", id: 0x0, xref: { document: "cluster", section: "5.3.5.16" } }),
-                        Field({ name: "RomanShade", id: 0x1, xref: { document: "cluster", section: "5.3.5.16" } }),
-                        Field({ name: "BalloonShade", id: 0x2, xref: { document: "cluster", section: "5.3.5.16" } }),
-                        Field({ name: "WovenWood", id: 0x3, xref: { document: "cluster", section: "5.3.5.16" } }),
-                        Field({ name: "PleatedShade", id: 0x4, xref: { document: "cluster", section: "5.3.5.16" } }),
-                        Field({ name: "CellularShade", id: 0x5, xref: { document: "cluster", section: "5.3.5.16" } }),
-                        Field({ name: "LayeredShade", id: 0x6, xref: { document: "cluster", section: "5.3.5.16" } }),
-                        Field({ name: "LayeredShade2D", id: 0x7, xref: { document: "cluster", section: "5.3.5.16" } }),
-                        Field({ name: "SheerShade", id: 0x8, xref: { document: "cluster", section: "5.3.5.16" } }),
-                        Field({
-                            name: "TiltOnlyInteriorBlind", id: 0x9,
-                            xref: { document: "cluster", section: "5.3.5.16" }
-                        }),
-                        Field({ name: "InteriorBlind", id: 0xa, xref: { document: "cluster", section: "5.3.5.16" } }),
-                        Field({
-                            name: "VerticalBlindStripCurtain", id: 0xb,
-                            xref: { document: "cluster", section: "5.3.5.16" }
-                        }),
-                        Field({
-                            name: "InteriorVenetianBlind", id: 0xc,
-                            xref: { document: "cluster", section: "5.3.5.16" }
-                        }),
-                        Field({
-                            name: "ExteriorVenetianBlind", id: 0xd,
-                            xref: { document: "cluster", section: "5.3.5.16" }
-                        }),
-                        Field({
-                            name: "LateralLeftCurtain", id: 0xe,
-                            xref: { document: "cluster", section: "5.3.5.16" }
-                        }),
-                        Field({
-                            name: "LateralRightCurtain", id: 0xf,
-                            xref: { document: "cluster", section: "5.3.5.16" }
-                        }),
-                        Field({ name: "CentralCurtain", id: 0x10, xref: { document: "cluster", section: "5.3.5.16" } }),
-                        Field({ name: "RollerShutter", id: 0x11, xref: { document: "cluster", section: "5.3.5.16" } }),
-                        Field({
-                            name: "ExteriorVerticalScreen", id: 0x12,
-                            xref: { document: "cluster", section: "5.3.5.16" }
-                        }),
-                        Field({ name: "AwningTerrace", id: 0x13, xref: { document: "cluster", section: "5.3.5.16" } }),
-                        Field({
-                            name: "AwningVerticalScreen", id: 0x14,
-                            xref: { document: "cluster", section: "5.3.5.16" }
-                        }),
-                        Field({
-                            name: "TiltOnlyPergola", id: 0x15,
-                            xref: { document: "cluster", section: "5.3.5.16" }
-                        }),
-                        Field({
-                            name: "SwingingShutter", id: 0x16,
-                            xref: { document: "cluster", section: "5.3.5.16" }
-                        }),
-                        Field({ name: "SlidingShutter", id: 0x17, xref: { document: "cluster", section: "5.3.5.16" } }),
-                        Field({ name: "Unknown", id: 0xff, xref: { document: "cluster", section: "5.3.5.16" } })
+                        Field({ name: "RollerShade", id: 0x0 }),
+                        Field({ name: "RomanShade", id: 0x1 }),
+                        Field({ name: "BalloonShade", id: 0x2 }),
+                        Field({ name: "WovenWood", id: 0x3 }),
+                        Field({ name: "PleatedShade", id: 0x4 }),
+                        Field({ name: "CellularShade", id: 0x5 }),
+                        Field({ name: "LayeredShade", id: 0x6 }),
+                        Field({ name: "LayeredShade2D", id: 0x7 }),
+                        Field({ name: "SheerShade", id: 0x8 }),
+                        Field({ name: "TiltOnlyInteriorBlind", id: 0x9 }),
+                        Field({ name: "InteriorBlind", id: 0xa }),
+                        Field({ name: "VerticalBlindStripCurtain", id: 0xb }),
+                        Field({ name: "InteriorVenetianBlind", id: 0xc }),
+                        Field({ name: "ExteriorVenetianBlind", id: 0xd }),
+                        Field({ name: "LateralLeftCurtain", id: 0xe }),
+                        Field({ name: "LateralRightCurtain", id: 0xf }),
+                        Field({ name: "CentralCurtain", id: 0x10 }),
+                        Field({ name: "RollerShutter", id: 0x11 }),
+                        Field({ name: "ExteriorVerticalScreen", id: 0x12 }),
+                        Field({ name: "AwningTerrace", id: 0x13 }),
+                        Field({ name: "AwningVerticalScreen", id: 0x14 }),
+                        Field({ name: "TiltOnlyPergola", id: 0x15 }),
+                        Field({ name: "SwingingShutter", id: 0x16 }),
+                        Field({ name: "SlidingShutter", id: 0x17 }),
+                        Field({ name: "Unknown", id: 0xff })
                     ]
                 }),
 
@@ -9216,62 +8018,48 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "RemoteLockout", constraint: "0",
-                            description: "Movement commands are ignored (locked out). e.g. not granted authorization, outside some time/date range.",
-                            xref: { document: "cluster", section: "5.3.5.22" }
+                            description: "Movement commands are ignored (locked out). e.g. not granted authorization, outside some time/date range."
                         }),
                         Field({
                             name: "TamperDetection", constraint: "1",
-                            description: "Tampering detected on sensors or any other safety equipment. Ex: a device has been forcedly moved without its actuator(s).",
-                            xref: { document: "cluster", section: "5.3.5.22" }
+                            description: "Tampering detected on sensors or any other safety equipment. Ex: a device has been forcedly moved without its actuator(s)."
                         }),
                         Field({
                             name: "FailedCommunication", constraint: "2",
-                            description: "Communication failure to sensors or other safety equipment.",
-                            xref: { document: "cluster", section: "5.3.5.22" }
+                            description: "Communication failure to sensors or other safety equipment."
                         }),
                         Field({
                             name: "PositionFailure", constraint: "3",
-                            description: "Device has failed to reach the desired position. e.g. with Position Aware device, time expired before TargetPosition is reached.",
-                            xref: { document: "cluster", section: "5.3.5.22" }
+                            description: "Device has failed to reach the desired position. e.g. with Position Aware device, time expired before TargetPosition is reached."
                         }),
                         Field({
                             name: "ThermalProtection", constraint: "4",
-                            description: "Motor(s) and/or electric circuit thermal protection activated.",
-                            xref: { document: "cluster", section: "5.3.5.22" }
+                            description: "Motor(s) and/or electric circuit thermal protection activated."
                         }),
                         Field({
                             name: "ObstacleDetected", constraint: "5",
-                            description: "An obstacle is preventing actuator movement.",
-                            xref: { document: "cluster", section: "5.3.5.22" }
+                            description: "An obstacle is preventing actuator movement."
                         }),
                         Field({
                             name: "Power", constraint: "6",
-                            description: "Device has power related issue or limitation e.g. device is running w/ the help of a backup battery or power might not be fully available at the moment.",
-                            xref: { document: "cluster", section: "5.3.5.22" }
+                            description: "Device has power related issue or limitation e.g. device is running w/ the help of a backup battery or power might not be fully available at the moment."
                         }),
                         Field({
                             name: "StopInput", constraint: "7",
-                            description: "Local safety sensor (not a direct obstacle) is preventing movements (e.g. Safety EU Standard EN60335).",
-                            xref: { document: "cluster", section: "5.3.5.22" }
+                            description: "Local safety sensor (not a direct obstacle) is preventing movements (e.g. Safety EU Standard EN60335)."
                         }),
                         Field({
                             name: "MotorJammed", constraint: "8",
-                            description: "Mechanical problem related to the motor(s) detected.",
-                            xref: { document: "cluster", section: "5.3.5.22" }
+                            description: "Mechanical problem related to the motor(s) detected."
                         }),
                         Field({
-                            name: "HardwareFailure", constraint: "9", description: "PCB, fuse and other electrics problems.",
-                            xref: { document: "cluster", section: "5.3.5.22" }
+                            name: "HardwareFailure", constraint: "9", description: "PCB, fuse and other electrics problems."
                         }),
                         Field({
                             name: "ManualOperation", constraint: "10",
-                            description: "Actuator is manually operated and is preventing actuator movement (e.g. actuator is disengaged/decoupled).",
-                            xref: { document: "cluster", section: "5.3.5.22" }
+                            description: "Actuator is manually operated and is preventing actuator movement (e.g. actuator is disengaged/decoupled)."
                         }),
-                        Field({
-                            name: "Protection", constraint: "11", description: "Protection is activated.",
-                            xref: { document: "cluster", section: "5.3.5.22" }
-                        })
+                        Field({ name: "Protection", constraint: "11", description: "Protection is activated." })
                     ]
                 }),
 
@@ -9371,10 +8159,9 @@ export const SpecMatter = Matter({
                         "will be returned.",
 
                     xref: { document: "cluster", section: "5.3.6.4" },
-                    children: [Field({
-                        name: "LiftValue", id: 0x0, type: "uint16", conformance: "M", constraint: "desc",
-                        xref: { document: "cluster", section: "5.3.6.4" }
-                    })]
+                    children: [
+                        Field({ name: "LiftValue", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" })
+                    ]
                 }),
 
                 Command({
@@ -9401,13 +8188,11 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "LiftPercentageValue", id: 0x0, type: "percent", conformance: "O.a", constraint: "desc",
-                            xref: { document: "cluster", section: "5.3.6.5" }
+                            name: "LiftPercentageValue", id: 0x0, type: "percent", conformance: "O.a", constraint: "desc"
                         }),
                         Field({
                             name: "LiftPercent100thsValue", id: 0x1, type: "percent100ths", conformance: "O.a",
-                            constraint: "desc",
-                            xref: { document: "cluster", section: "5.3.6.5" }
+                            constraint: "desc"
                         })
                     ]
                 }),
@@ -9424,10 +8209,9 @@ export const SpecMatter = Matter({
                         "CONSTRAINT_ERROR will be returned.",
 
                     xref: { document: "cluster", section: "5.3.6.6" },
-                    children: [Field({
-                        name: "TiltValue", id: 0x0, type: "uint16", conformance: "M", constraint: "desc",
-                        xref: { document: "cluster", section: "5.3.6.6" }
-                    })]
+                    children: [
+                        Field({ name: "TiltValue", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" })
+                    ]
                 }),
 
                 Command({
@@ -9455,13 +8239,11 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "TiltPercentageValue", id: 0x0, type: "percent", conformance: "O.a", constraint: "desc",
-                            xref: { document: "cluster", section: "5.3.6.7" }
+                            name: "TiltPercentageValue", id: 0x0, type: "percent", conformance: "O.a", constraint: "desc"
                         }),
                         Field({
                             name: "TiltPercent100thsValue", id: 0x1, type: "percent100ths", conformance: "O.a",
-                            constraint: "desc",
-                            xref: { document: "cluster", section: "5.3.6.7" }
+                            constraint: "desc"
                         })
                     ]
                 })
@@ -9686,7 +8468,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "AllowedVendorList", id: 0x7, type: "list", access: "R A", conformance: "M",
-                    constraint: "None", quality: "F",
+                    constraint: "none", quality: "F",
                     details: "This is a list of vendor IDs. Each entry is a vendor-id.",
                     xref: { document: "cluster", section: "6.3.3.8" },
                     children: [Field({ name: "entry", type: "vendor-id" })]
@@ -9727,24 +8509,18 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "6.3.4.2" },
 
                     children: [
-                        Field({
-                            name: "Stopped", id: 0x0, conformance: "M", description: "Application is not running.",
-                            xref: { document: "cluster", section: "6.3.4.2" }
-                        }),
+                        Field({ name: "Stopped", id: 0x0, conformance: "M", description: "Application is not running." }),
                         Field({
                             name: "ActiveVisibleFocus", id: 0x1, conformance: "M",
-                            description: "Application is running, is visible to the user, and is the active target for input.",
-                            xref: { document: "cluster", section: "6.3.4.2" }
+                            description: "Application is running, is visible to the user, and is the active target for input."
                         }),
                         Field({
                             name: "ActiveHidden", id: 0x2, conformance: "M",
-                            description: "Application is running but not visible to the user.",
-                            xref: { document: "cluster", section: "6.3.4.2" }
+                            description: "Application is running but not visible to the user."
                         }),
                         Field({
                             name: "ActiveVisibleNotFocus", id: 0x3, conformance: "M",
-                            description: "Application is running and visible, but is not the active target for input.",
-                            xref: { document: "cluster", section: "6.3.4.2" }
+                            description: "Application is running and visible, but is not the active target for input."
                         })
                     ]
                 })
@@ -9762,17 +8538,15 @@ export const SpecMatter = Matter({
                 Attribute({
                     name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
                     xref: { document: "cluster", section: "6.4.2" },
-
                     children: [Field({
                         name: "AP", constraint: "0", description: "ApplicationPlatform",
                         details: "Support for attributes and commands required for endpoint to support launching any application " +
-                            "within the supported application catalogs",
-                        xref: { document: "cluster", section: "6.4.2" }
+                            "within the supported application catalogs"
                     })]
                 }),
 
                 Attribute({
-                    name: "CatalogList", id: 0x0, type: "list", access: "R V", conformance: "AP", constraint: "None",
+                    name: "CatalogList", id: 0x0, type: "list", access: "R V", conformance: "AP", constraint: "none",
                     quality: "N",
 
                     details: "This attribute shall specify the list of supported application catalogs, where each entry in the " +
@@ -9914,18 +8688,13 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "6.4.5.1" },
 
                     children: [
+                        Field({ name: "Success", id: 0x0, conformance: "M", description: "Command succeeded" }),
                         Field({
-                            name: "Success", id: 0x0, conformance: "M", description: "Command succeeded",
-                            xref: { document: "cluster", section: "6.4.5.1" }
-                        }),
-                        Field({
-                            name: "AppNotAvailable", id: 0x1, conformance: "M", description: "Requested app is not available.",
-                            xref: { document: "cluster", section: "6.4.5.1" }
+                            name: "AppNotAvailable", id: 0x1, conformance: "M", description: "Requested app is not available."
                         }),
                         Field({
                             name: "SystemBusy", id: 0x2, conformance: "M",
-                            description: "Video platform unable to honor command.",
-                            xref: { document: "cluster", section: "6.4.5.1" }
+                            description: "Video platform unable to honor command."
                         })
                     ]
                 }),
@@ -9961,16 +8730,9 @@ export const SpecMatter = Matter({
                     name: "ApplicationEPStruct", type: "struct",
                     details: "This specifies an app along with its corresponding endpoint.",
                     xref: { document: "cluster", section: "6.4.5.3" },
-
                     children: [
-                        Field({
-                            name: "Application", id: 0x0, type: "ApplicationStruct", conformance: "M",
-                            xref: { document: "cluster", section: "6.4.5.3" }
-                        }),
-                        Field({
-                            name: "Endpoint", id: 0x1, type: "endpoint-no", conformance: "O",
-                            xref: { document: "cluster", section: "6.4.5.3" }
-                        })
+                        Field({ name: "Application", id: 0x0, type: "ApplicationStruct", conformance: "M" }),
+                        Field({ name: "Endpoint", id: 0x1, type: "endpoint-no", conformance: "O" })
                     ]
                 })
             ]
@@ -9989,13 +8751,12 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "6.5.2" },
                     children: [Field({
                         name: "NU", constraint: "0", description: "NameUpdates",
-                        details: "Supports updates to output names",
-                        xref: { document: "cluster", section: "6.5.2" }
+                        details: "Supports updates to output names"
                     })]
                 }),
 
                 Attribute({
-                    name: "OutputList", id: 0x0, type: "list", access: "R V", conformance: "M", constraint: "None",
+                    name: "OutputList", id: 0x0, type: "list", access: "R V", conformance: "M", constraint: "none",
                     details: "This list provides the outputs supported by the device.",
                     xref: { document: "cluster", section: "6.5.3.1" },
                     children: [Field({ name: "entry", type: "OutputInfoStruct" })]
@@ -10020,16 +8781,9 @@ export const SpecMatter = Matter({
                         "Updates to the output name shall appear in the device’s settings menus. Name updates may " +
                         "automatically be sent to the actual device to which the output connects.",
                     xref: { document: "cluster", section: "6.5.4.2" },
-
                     children: [
-                        Field({
-                            name: "Index", id: 0x0, type: "uint8", conformance: "M",
-                            xref: { document: "cluster", section: "6.5.4.2" }
-                        }),
-                        Field({
-                            name: "Name", id: 0x1, type: "string", conformance: "M",
-                            xref: { document: "cluster", section: "6.5.4.2" }
-                        })
+                        Field({ name: "Index", id: 0x0, type: "uint8", conformance: "M" }),
+                        Field({ name: "Name", id: 0x1, type: "string", conformance: "M" })
                     ]
                 }),
 
@@ -10065,30 +8819,12 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "6.5.5.2" },
 
                     children: [
-                        Field({
-                            name: "Hdmi", id: 0x0, conformance: "M", description: "HDMI",
-                            xref: { document: "cluster", section: "6.5.5.2" }
-                        }),
-                        Field({
-                            name: "Bt", id: 0x1, conformance: "M",
-                            xref: { document: "cluster", section: "6.5.5.2" }
-                        }),
-                        Field({
-                            name: "Optical", id: 0x2, conformance: "M",
-                            xref: { document: "cluster", section: "6.5.5.2" }
-                        }),
-                        Field({
-                            name: "Headphone", id: 0x3, conformance: "M",
-                            xref: { document: "cluster", section: "6.5.5.2" }
-                        }),
-                        Field({
-                            name: "Internal", id: 0x4, conformance: "M",
-                            xref: { document: "cluster", section: "6.5.5.2" }
-                        }),
-                        Field({
-                            name: "Other", id: 0x5, conformance: "M",
-                            xref: { document: "cluster", section: "6.5.5.2" }
-                        })
+                        Field({ name: "Hdmi", id: 0x0, conformance: "M", description: "HDMI" }),
+                        Field({ name: "Bt", id: 0x1, conformance: "M" }),
+                        Field({ name: "Optical", id: 0x2, conformance: "M" }),
+                        Field({ name: "Headphone", id: 0x3, conformance: "M" }),
+                        Field({ name: "Internal", id: 0x4, conformance: "M" }),
+                        Field({ name: "Other", id: 0x5, conformance: "M" })
                     ]
                 })
             ]
@@ -10109,19 +8845,17 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "CL", constraint: "0", description: "ChannelList",
-                            details: "Provides list of available channels.",
-                            xref: { document: "cluster", section: "6.6.2" }
+                            details: "Provides list of available channels."
                         }),
                         Field({
                             name: "LI", constraint: "1", description: "LineupInfo",
-                            details: "Provides lineup info, which is a reference to an external source of lineup information.",
-                            xref: { document: "cluster", section: "6.6.2" }
+                            details: "Provides lineup info, which is a reference to an external source of lineup information."
                         })
                     ]
                 }),
 
                 Attribute({
-                    name: "ChannelList", id: 0x0, type: "list", access: "R V", conformance: "CL", constraint: "None",
+                    name: "ChannelList", id: 0x0, type: "list", access: "R V", conformance: "CL", constraint: "none",
                     default: [],
                     details: "This optional list provides the channels supported.",
                     xref: { document: "cluster", section: "6.6.3.1" },
@@ -10251,21 +8985,21 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "Name", id: 0x2, type: "string", conformance: "O", default: "empty",
+                            name: "Name", id: 0x2, type: "string", conformance: "O", default: "",
                             details: "This shall indicate the marketing name for the channel, such as “The CW\" or \"Comedy Central\". This " +
                                 "field is optional, but SHOULD be provided when known.",
                             xref: { document: "cluster", section: "6.6.5.1.3" }
                         }),
 
                         Field({
-                            name: "CallSign", id: 0x3, type: "string", conformance: "O", default: "empty",
+                            name: "CallSign", id: 0x3, type: "string", conformance: "O", default: "",
                             details: "This shall indicate the call sign of the channel, such as \"PBS\". This field is optional, but SHOULD " +
                                 "be provided when known.",
                             xref: { document: "cluster", section: "6.6.5.1.4" }
                         }),
 
                         Field({
-                            name: "AffiliateCallSign", id: 0x4, type: "string", conformance: "O", default: "empty",
+                            name: "AffiliateCallSign", id: 0x4, type: "string", conformance: "O", default: "",
                             details: "This shall indicate the local affiliate call sign, such as \"KCTS\". This field is optional, but " +
                                 "SHOULD be provided when known.",
                             xref: { document: "cluster", section: "6.6.5.1.5" }
@@ -10285,14 +9019,8 @@ export const SpecMatter = Matter({
                             details: "This shall indicate the name of the operator, for example “Comcast”.",
                             xref: { document: "cluster", section: "6.6.5.2.1" }
                         }),
-                        Field({
-                            name: "LineupName", id: 0x1, type: "string", conformance: "O", default: "empty",
-                            xref: { document: "cluster", section: "6.6.5.2" }
-                        }),
-                        Field({
-                            name: "PostalCode", id: 0x2, type: "string", conformance: "O", default: "empty",
-                            xref: { document: "cluster", section: "6.6.5.2" }
-                        }),
+                        Field({ name: "LineupName", id: 0x1, type: "string", conformance: "O", default: "" }),
+                        Field({ name: "PostalCode", id: 0x2, type: "string", conformance: "O", default: "" }),
                         Field({
                             name: "LineupInfoType", id: 0x3, type: "LineupInfoTypeEnum", conformance: "M", constraint: "desc",
                             details: "This shall indicate the type of lineup. This field is optional, but SHOULD be provided when known.",
@@ -10304,10 +9032,7 @@ export const SpecMatter = Matter({
                 Datatype({
                     name: "LineupInfoTypeEnum", type: "enum8",
                     xref: { document: "cluster", section: "6.6.5.3" },
-                    children: [Field({
-                        name: "Mso", id: 0x0, conformance: "M", description: "MultiSystemOperator",
-                        xref: { document: "cluster", section: "6.6.5.3" }
-                    })]
+                    children: [Field({ name: "Mso", id: 0x0, conformance: "M", description: "MultiSystemOperator" })]
                 }),
 
                 Datatype({
@@ -10315,19 +9040,14 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "6.6.5.4" },
 
                     children: [
-                        Field({
-                            name: "Success", id: 0x0, conformance: "M", description: "Command succeeded",
-                            xref: { document: "cluster", section: "6.6.5.4" }
-                        }),
+                        Field({ name: "Success", id: 0x0, conformance: "M", description: "Command succeeded" }),
                         Field({
                             name: "MultipleMatches", id: 0x1, conformance: "M",
-                            description: "More than one equal match for the ChannelInfoStruct passed in.",
-                            xref: { document: "cluster", section: "6.6.5.4" }
+                            description: "More than one equal match for the ChannelInfoStruct passed in."
                         }),
                         Field({
                             name: "NoMatches", id: 0x2, conformance: "M",
-                            description: "No matches for the ChannelInfoStruct passed in.",
-                            xref: { document: "cluster", section: "6.6.5.4" }
+                            description: "No matches for the ChannelInfoStruct passed in."
                         })
                     ]
                 })
@@ -10350,13 +9070,11 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "CS", constraint: "0", description: "ContentSearch",
-                            details: "Device supports content search (non-app specific)",
-                            xref: { document: "cluster", section: "6.7.2" }
+                            details: "Device supports content search (non-app specific)"
                         }),
                         Field({
                             name: "UP", constraint: "1", description: "UrlPlayback",
-                            details: "Device supports basic URL-based file playback",
-                            xref: { document: "cluster", section: "6.7.2" }
+                            details: "Device supports basic URL-based file playback"
                         })
                     ]
                 }),
@@ -10378,13 +9096,9 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Dash", constraint: "0",
-                            description: "Device supports Dynamic Adaptive Streaming over HTTP (DASH)",
-                            xref: { document: "cluster", section: "6.7.3.2.1" }
+                            description: "Device supports Dynamic Adaptive Streaming over HTTP (DASH)"
                         }),
-                        Field({
-                            name: "Hls", constraint: "1", description: "Device supports HTTP Live Streaming (HLS)",
-                            xref: { document: "cluster", section: "6.7.3.2.1" }
-                        })
+                        Field({ name: "Hls", constraint: "1", description: "Device supports HTTP Live Streaming (HLS)" })
                     ]
                 }),
 
@@ -10481,19 +9195,14 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "6.7.5.1" },
 
                     children: [
-                        Field({
-                            name: "Success", id: 0x0, conformance: "M", description: "Command succeeded",
-                            xref: { document: "cluster", section: "6.7.5.1" }
-                        }),
+                        Field({ name: "Success", id: 0x0, conformance: "M", description: "Command succeeded" }),
                         Field({
                             name: "UrlNotAvailable", id: 0x1, conformance: "M",
-                            description: "Requested URL could not be reached by device.",
-                            xref: { document: "cluster", section: "6.7.5.1" }
+                            description: "Requested URL could not be reached by device."
                         }),
                         Field({
                             name: "AuthFailed", id: 0x2, conformance: "M",
-                            description: "Requested URL returned 401 error code.",
-                            xref: { document: "cluster", section: "6.7.5.1" }
+                            description: "Requested URL returned 401 error code."
                         })
                     ]
                 }),
@@ -10504,7 +9213,7 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "6.7.5.2" },
 
                     children: [Field({
-                        name: "ParameterList", id: 0x0, type: "list", conformance: "M", default: "0",
+                        name: "ParameterList", id: 0x0, type: "list", conformance: "M",
                         details: "This shall indicate the list of parameters comprising the search. If multiple parameters are " +
                             "provided, the search parameters shall be joined with 'AND' logic. e.g. action movies with Tom " +
                             "Cruise will be represented as [{Actor: 'Tom Cruise'}, {Type: 'Movie'}, {Genre: 'Action'}]",
@@ -10531,7 +9240,7 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "ExternalIdList", id: 0x2, type: "list", conformance: "O", default: "empty",
+                            name: "ExternalIdList", id: 0x2, type: "list", conformance: "O", default: [],
                             details: "This shall indicate the list of additional external content identifiers.",
                             xref: { document: "cluster", section: "6.7.5.3.3" },
                             children: [Field({ name: "entry", type: "AdditionalInfoStruct" })]
@@ -10546,73 +9255,59 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Actor", id: 0x0, conformance: "M",
-                            description: "Actor represents an actor credited in video media content; for example, “Gaby sHoffman”",
-                            xref: { document: "cluster", section: "6.7.5.4" }
+                            description: "Actor represents an actor credited in video media content; for example, “Gaby sHoffman”"
                         }),
                         Field({
                             name: "Channel", id: 0x1, conformance: "M",
-                            description: "Channel represents the identifying data for a television channel; for example, \"PBS\"",
-                            xref: { document: "cluster", section: "6.7.5.4" }
+                            description: "Channel represents the identifying data for a television channel; for example, \"PBS\""
                         }),
                         Field({
                             name: "Character", id: 0x2, conformance: "M",
-                            description: "A character represented in video media content; for example, “Snow White”",
-                            xref: { document: "cluster", section: "6.7.5.4" }
+                            description: "A character represented in video media content; for example, “Snow White”"
                         }),
                         Field({
                             name: "Director", id: 0x3, conformance: "M",
-                            description: "A director of the video media content; for example, “Spike Lee”",
-                            xref: { document: "cluster", section: "6.7.5.4" }
+                            description: "A director of the video media content; for example, “Spike Lee”"
                         }),
                         Field({
                             name: "Event", id: 0x4, conformance: "M",
-                            description: "An event is a reference to a type of event; examples would include sports, music, or other types of events. For example, searching for \"Football games\" would search for a 'game' event entity and a 'football' sport entity.",
-                            xref: { document: "cluster", section: "6.7.5.4" }
+                            description: "An event is a reference to a type of event; examples would include sports, music, or other types of events. For example, searching for \"Football games\" would search for a 'game' event entity and a 'football' sport entity."
                         }),
                         Field({
                             name: "Franchise", id: 0x5, conformance: "M",
-                            description: "A franchise is a video entity which can represent a number of video entities, like movies or TV shows. For example, take the fictional franchise \"Intergalactic Wars\" which represents a collection of movie trilogies, as well as animated and live action TV shows. This entity type was introduced to account for requests by customers such as \"Find Intergalactic Wars movies\", which would search for all 'Intergalactic Wars' programs of the MOVIE MediaType, rather than attempting to match to a single title.",
-                            xref: { document: "cluster", section: "6.7.5.4" }
+                            description: "A franchise is a video entity which can represent a number of video entities, like movies or TV shows. For example, take the fictional franchise \"Intergalactic Wars\" which represents a collection of movie trilogies, as well as animated and live action TV shows. This entity type was introduced to account for requests by customers such as \"Find Intergalactic Wars movies\", which would search for all 'Intergalactic Wars' programs of the MOVIE MediaType, rather than attempting to match to a single title."
                         }),
                         Field({
                             name: "Genre", id: 0x6, conformance: "M",
-                            description: "Genre represents the genre of video media content such as action, drama or comedy.",
-                            xref: { document: "cluster", section: "6.7.5.4" }
+                            description: "Genre represents the genre of video media content such as action, drama or comedy."
                         }),
                         Field({
                             name: "League", id: 0x7, conformance: "M",
-                            description: "League represents the categorical information for a sporting league; for example, \"NCAA\"",
-                            xref: { document: "cluster", section: "6.7.5.4" }
+                            description: "League represents the categorical information for a sporting league; for example, \"NCAA\""
                         }),
                         Field({
                             name: "Popularity", id: 0x8, conformance: "M",
-                            description: "Popularity indicates whether the user asks for popular content.",
-                            xref: { document: "cluster", section: "6.7.5.4" }
+                            description: "Popularity indicates whether the user asks for popular content."
                         }),
                         Field({
                             name: "Provider", id: 0x9, conformance: "M",
-                            description: "The provider (MSP) the user wants this media to be played on; for example, \"Netflix\".",
-                            xref: { document: "cluster", section: "6.7.5.4" }
+                            description: "The provider (MSP) the user wants this media to be played on; for example, \"Netflix\"."
                         }),
                         Field({
                             name: "Sport", id: 0xa, conformance: "M",
-                            description: "Sport represents the categorical information of a sport; for example, football",
-                            xref: { document: "cluster", section: "6.7.5.4" }
+                            description: "Sport represents the categorical information of a sport; for example, football"
                         }),
                         Field({
                             name: "SportsTeam", id: 0xb, conformance: "M",
-                            description: "SportsTeam represents the categorical information of a professional sports team; for example, \"University of Washington Huskies\"",
-                            xref: { document: "cluster", section: "6.7.5.4" }
+                            description: "SportsTeam represents the categorical information of a professional sports team; for example, \"University of Washington Huskies\""
                         }),
                         Field({
                             name: "Type", id: 0xc, conformance: "M",
-                            description: "The type of content requested. Supported types are \"Movie\", \"MovieSeries\", \"TVSeries\", \"TVSeason\", \"TVEpisode\", \"SportsEvent\", and \"Video\"",
-                            xref: { document: "cluster", section: "6.7.5.4" }
+                            description: "The type of content requested. Supported types are \"Movie\", \"MovieSeries\", \"TVSeries\", \"TVSeason\", \"TVEpisode\", \"SportsEvent\", and \"Video\""
                         }),
                         Field({
                             name: "Video", id: 0xd, conformance: "M",
-                            description: "Video represents the identifying data for a specific piece of video content; for example, \"Manchester by the Sea\".",
-                            xref: { document: "cluster", section: "6.7.5.4" }
+                            description: "Video represents the identifying data for a specific piece of video content; for example, \"Manchester by the Sea\"."
                         })
                     ]
                 }),
@@ -10790,18 +9485,15 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "NV", constraint: "0", description: "NavigationKeyCodes",
-                            details: "Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU",
-                            xref: { document: "cluster", section: "6.8.2" }
+                            details: "Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU"
                         }),
                         Field({
                             name: "LK", constraint: "1", description: "LocationKeys",
-                            details: "Supports CEC keys 0x0A (Settings) and 0x09 (Home)",
-                            xref: { document: "cluster", section: "6.8.2" }
+                            details: "Supports CEC keys 0x0A (Settings) and 0x09 (Home)"
                         }),
                         Field({
                             name: "NK", constraint: "2", description: "NumberKeys",
-                            details: "Supports numeric input 0..9",
-                            xref: { document: "cluster", section: "6.8.2" }
+                            details: "Supports numeric input 0..9"
                         })
                     ]
                 }),
@@ -10838,19 +9530,14 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "6.8.4.1" },
 
                     children: [
-                        Field({
-                            name: "Success", id: 0x0, conformance: "M", description: "Command succeeded",
-                            xref: { document: "cluster", section: "6.8.4.1" }
-                        }),
+                        Field({ name: "Success", id: 0x0, conformance: "M", description: "Command succeeded" }),
                         Field({
                             name: "UnsupportedKey", id: 0x1, conformance: "M",
-                            description: "Command failed: Key code is not supported.",
-                            xref: { document: "cluster", section: "6.8.4.1" }
+                            description: "Command failed: Key code is not supported."
                         }),
                         Field({
                             name: "InvalidKeyInCurrentState", id: 0x2, conformance: "M",
-                            description: "Command failed: Requested key code is invalid in the context of the responder’s current state.",
-                            xref: { document: "cluster", section: "6.8.4.1" }
+                            description: "Command failed: Requested key code is invalid in the context of the responder’s current state."
                         })
                     ]
                 })
@@ -10871,8 +9558,7 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "6.9.2" },
                     children: [Field({
                         name: "NU", constraint: "0", description: "NameUpdates",
-                        details: "Supports updates to the input names",
-                        xref: { document: "cluster", section: "6.9.2" }
+                        details: "Supports updates to the input names"
                     })]
                 }),
 
@@ -10924,16 +9610,9 @@ export const SpecMatter = Matter({
                     details: "Upon receipt, this shall rename the input at a specific index in the Input List. Updates to the " +
                         "input name shall appear in the device’s settings menus.",
                     xref: { document: "cluster", section: "6.9.4.4" },
-
                     children: [
-                        Field({
-                            name: "Index", id: 0x0, type: "uint8", conformance: "M",
-                            xref: { document: "cluster", section: "6.9.4.4" }
-                        }),
-                        Field({
-                            name: "Name", id: 0x1, type: "string", conformance: "M",
-                            xref: { document: "cluster", section: "6.9.4.4" }
-                        })
+                        Field({ name: "Index", id: 0x0, type: "uint8", conformance: "M" }),
+                        Field({ name: "Name", id: 0x1, type: "string", conformance: "M" })
                     ]
                 }),
 
@@ -10978,53 +9657,19 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Internal", id: 0x0, conformance: "M",
-                            description: "Indicates content not coming from a physical input.",
-                            xref: { document: "cluster", section: "6.9.5.2" }
+                            description: "Indicates content not coming from a physical input."
                         }),
-                        Field({
-                            name: "Aux", id: 0x1, conformance: "M",
-                            xref: { document: "cluster", section: "6.9.5.2" }
-                        }),
-                        Field({
-                            name: "Coax", id: 0x2, conformance: "M",
-                            xref: { document: "cluster", section: "6.9.5.2" }
-                        }),
-                        Field({
-                            name: "Composite", id: 0x3, conformance: "M",
-                            xref: { document: "cluster", section: "6.9.5.2" }
-                        }),
-                        Field({
-                            name: "Hdmi", id: 0x4, conformance: "M",
-                            xref: { document: "cluster", section: "6.9.5.2" }
-                        }),
-                        Field({
-                            name: "Input", id: 0x5, conformance: "M",
-                            xref: { document: "cluster", section: "6.9.5.2" }
-                        }),
-                        Field({
-                            name: "Line", id: 0x6, conformance: "M",
-                            xref: { document: "cluster", section: "6.9.5.2" }
-                        }),
-                        Field({
-                            name: "Optical", id: 0x7, conformance: "M",
-                            xref: { document: "cluster", section: "6.9.5.2" }
-                        }),
-                        Field({
-                            name: "Video", id: 0x8, conformance: "M",
-                            xref: { document: "cluster", section: "6.9.5.2" }
-                        }),
-                        Field({
-                            name: "Scart", id: 0x9, conformance: "M",
-                            xref: { document: "cluster", section: "6.9.5.2" }
-                        }),
-                        Field({
-                            name: "Usb", id: 0xa, conformance: "M",
-                            xref: { document: "cluster", section: "6.9.5.2" }
-                        }),
-                        Field({
-                            name: "Other", id: 0xb, conformance: "M",
-                            xref: { document: "cluster", section: "6.9.5.2" }
-                        })
+                        Field({ name: "Aux", id: 0x1, conformance: "M" }),
+                        Field({ name: "Coax", id: 0x2, conformance: "M" }),
+                        Field({ name: "Composite", id: 0x3, conformance: "M" }),
+                        Field({ name: "Hdmi", id: 0x4, conformance: "M" }),
+                        Field({ name: "Input", id: 0x5, conformance: "M" }),
+                        Field({ name: "Line", id: 0x6, conformance: "M" }),
+                        Field({ name: "Optical", id: 0x7, conformance: "M" }),
+                        Field({ name: "Video", id: 0x8, conformance: "M" }),
+                        Field({ name: "Scart", id: 0x9, conformance: "M" }),
+                        Field({ name: "Usb", id: 0xa, conformance: "M" }),
+                        Field({ name: "Other", id: 0xb, conformance: "M" })
                     ]
                 })
             ]
@@ -11047,14 +9692,11 @@ export const SpecMatter = Matter({
                         Field({
                             name: "AS", constraint: "0", description: "AdvancedSeek",
                             details: "Enables clients to implement more advanced media seeking behavior in their user interface, such as " +
-                                "for example a \"seek bar\". Adds support for Attributes and Commands related to advanced seek support",
-                            xref: { document: "cluster", section: "6.10.2" }
+                                "for example a \"seek bar\". Adds support for Attributes and Commands related to advanced seek support"
                         }),
-
                         Field({
                             name: "VS", constraint: "1", description: "VariableSpeed",
-                            details: "Support for commands to support variable speed playback on media that supports it.",
-                            xref: { document: "cluster", section: "6.10.2" }
+                            details: "Support for commands to support variable speed playback on media that supports it."
                         })
                     ]
                 }),
@@ -11345,21 +9987,15 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Playing", id: 0x0, conformance: "M",
-                            description: "Media is currently playing (includes FF and REW)",
-                            xref: { document: "cluster", section: "6.10.5.1" }
+                            description: "Media is currently playing (includes FF and REW)"
                         }),
+                        Field({ name: "Paused", id: 0x1, conformance: "M", description: "Media is currently paused" }),
                         Field({
-                            name: "Paused", id: 0x1, conformance: "M", description: "Media is currently paused",
-                            xref: { document: "cluster", section: "6.10.5.1" }
-                        }),
-                        Field({
-                            name: "NotPlaying", id: 0x2, conformance: "M", description: "Media is not currently playing",
-                            xref: { document: "cluster", section: "6.10.5.1" }
+                            name: "NotPlaying", id: 0x2, conformance: "M", description: "Media is not currently playing"
                         }),
                         Field({
                             name: "Buffering", id: 0x3, conformance: "M",
-                            description: "Media is not currently buffering and playback will start when buffer has been filled",
-                            xref: { document: "cluster", section: "6.10.5.1" }
+                            description: "Media is not currently buffering and playback will start when buffer has been filled"
                         })
                     ]
                 }),
@@ -11369,34 +10005,26 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "6.10.5.2" },
 
                     children: [
-                        Field({
-                            name: "Success", id: 0x0, conformance: "M", description: "Command succeeded",
-                            xref: { document: "cluster", section: "6.10.5.2" }
-                        }),
+                        Field({ name: "Success", id: 0x0, conformance: "M", description: "Command succeeded" }),
                         Field({
                             name: "InvalidStateForCommand", id: 0x1, conformance: "M",
-                            description: "Command failed: Requested playback command is invalid in the current playback state.",
-                            xref: { document: "cluster", section: "6.10.5.2" }
+                            description: "Command failed: Requested playback command is invalid in the current playback state."
                         }),
                         Field({
                             name: "NotAllowed", id: 0x2, conformance: "M",
-                            description: "Command failed: Requested playback command is not allowed in the current playback state. For example, attempting to fast-forward during a commercial might return NotAllowed.",
-                            xref: { document: "cluster", section: "6.10.5.2" }
+                            description: "Command failed: Requested playback command is not allowed in the current playback state. For example, attempting to fast-forward during a commercial might return NotAllowed."
                         }),
                         Field({
                             name: "NotActive", id: 0x3, conformance: "M",
-                            description: "Command failed: This endpoint is not active for playback.",
-                            xref: { document: "cluster", section: "6.10.5.2" }
+                            description: "Command failed: This endpoint is not active for playback."
                         }),
                         Field({
                             name: "SpeedOutOfRange", id: 0x4, conformance: "VS",
-                            description: "Command failed: The FastForward or Rewind Command was issued but the media is already playing back at the fastest speed supported by the server in the respective direction.",
-                            xref: { document: "cluster", section: "6.10.5.2" }
+                            description: "Command failed: The FastForward or Rewind Command was issued but the media is already playing back at the fastest speed supported by the server in the respective direction."
                         }),
                         Field({
                             name: "SeekOutOfRange", id: 0x5, conformance: "AS",
-                            description: "Command failed: The Seek Command was issued with a value of position outside of the allowed seek range of the media.",
-                            xref: { document: "cluster", section: "6.10.5.2" }
+                            description: "Command failed: The Seek Command was issued with a value of position outside of the allowed seek range of the media."
                         })
                     ]
                 }),
@@ -11531,19 +10159,14 @@ export const SpecMatter = Matter({
                     xref: { document: "cluster", section: "6.11.5.2" },
 
                     children: [
-                        Field({
-                            name: "Success", id: 0x0, conformance: "M", description: "Command succeeded",
-                            xref: { document: "cluster", section: "6.11.5.2" }
-                        }),
+                        Field({ name: "Success", id: 0x0, conformance: "M", description: "Command succeeded" }),
                         Field({
                             name: "TargetNotFound", id: 0x1, conformance: "M",
-                            description: "Requested target was not found in the TargetList",
-                            xref: { document: "cluster", section: "6.11.5.2" }
+                            description: "Requested target was not found in the TargetList"
                         }),
                         Field({
                             name: "NotAllowed", id: 0x2, conformance: "M",
-                            description: "Target request is not allowed in current state.",
-                            xref: { document: "cluster", section: "6.11.5.2" }
+                            description: "Target request is not allowed in current state."
                         })
                     ]
                 })
@@ -11736,7 +10359,7 @@ export const SpecMatter = Matter({
                 Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
                 Attribute({
-                    name: "LabelList", id: 0x0, type: "list", conformance: "M", constraint: "Derived", default: [],
+                    name: "LabelList", id: 0x0, type: "list", conformance: "M", constraint: "derived", default: [],
                     details: "This is a list of string tuples. Each entry is a LabelStruct.",
                     xref: { document: "core", section: "9.7.5.1" },
                     children: [Field({ name: "entry", type: "LabelStruct" })]
@@ -11749,14 +10372,14 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "Label", id: 0x0, type: "string", conformance: "M", constraint: "max 16", default: "empty",
+                            name: "Label", id: 0x0, type: "string", conformance: "M", constraint: "max 16", default: "",
                             details: "The Label or Value semantic is not defined here. Label examples: \"room\", \"zone\", \"group\", " +
                                 "\"direction\".",
                             xref: { document: "core", section: "9.7.4.1.1" }
                         }),
 
                         Field({
-                            name: "Value", id: 0x1, type: "string", conformance: "M", constraint: "max 16", default: "empty",
+                            name: "Value", id: 0x1, type: "string", conformance: "M", constraint: "max 16", default: "",
                             details: "The Label or Value semantic is not defined here. The Value is a discriminator for a Label that may " +
                                 "have multiple instances. Label:Value examples: \"room\":\"bedroom 2\", \"orientation\":\"North\", " +
                                 "\"floor\":\"2\", \"direction\":\"up\"",
@@ -12004,22 +10627,16 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "AdminNodeId", id: 0x1, type: "node-id", access: "S", conformance: "M", constraint: "desc",
-                            quality: "X",
-                            xref: { document: "core", section: "9.10.7.2" }
+                            quality: "X"
                         }),
                         Field({
                             name: "AdminPasscodeId", id: 0x2, type: "uint16", access: "S", conformance: "M", constraint: "desc",
-                            quality: "X",
-                            xref: { document: "core", section: "9.10.7.2" }
+                            quality: "X"
                         }),
-                        Field({
-                            name: "ChangeType", id: 0x3, type: "ChangeTypeEnum", access: "S", conformance: "M",
-                            xref: { document: "core", section: "9.10.7.2" }
-                        }),
+                        Field({ name: "ChangeType", id: 0x3, type: "ChangeTypeEnum", access: "S", conformance: "M" }),
                         Field({
                             name: "LatestValue", id: 0x4, type: "AccessControlExtensionStruct", access: "S", conformance: "M",
-                            quality: "X",
-                            xref: { document: "core", section: "9.10.7.2" }
+                            quality: "X"
                         }),
                         Field({
                             name: "FabricIndex", id: 0xfe, type: "fabric-idx", access: "R F V", conformance: "M",
@@ -12034,16 +10651,11 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "Changed", id: 0x0, conformance: "M", description: "Entry or extension was changed",
-                            xref: { document: "core", section: "9.10.4.1" }
+                            name: "Changed", id: 0x0, conformance: "M", description: "Entry or extension was changed"
                         }),
+                        Field({ name: "Added", id: 0x1, conformance: "M", description: "Entry or extension was added" }),
                         Field({
-                            name: "Added", id: 0x1, conformance: "M", description: "Entry or extension was added",
-                            xref: { document: "core", section: "9.10.4.1" }
-                        }),
-                        Field({
-                            name: "Removed", id: 0x2, conformance: "M", description: "Entry or extension was removed",
-                            xref: { document: "core", section: "9.10.4.1" }
+                            name: "Removed", id: 0x2, conformance: "M", description: "Entry or extension was removed"
                         })
                     ]
                 }),
@@ -12058,13 +10670,11 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "View", id: 0x1, conformance: "M",
-                            description: "Can read and observe all (except Access Control Cluster and as seen by a non-Proxy)",
-                            xref: { document: "core", section: "9.10.4.2" }
+                            description: "Can read and observe all (except Access Control Cluster and as seen by a non-Proxy)"
                         }),
                         Field({
                             name: "ProxyView", id: 0x2, conformance: "P, M",
-                            description: "Can read and observe all (as seen by a Proxy)",
-                            xref: { document: "core", section: "9.10.4.2" }
+                            description: "Can read and observe all (as seen by a Proxy)"
                         }),
 
                         Field({
@@ -12095,38 +10705,21 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "9.10.4.3" },
 
                     children: [
+                        Field({ name: "Pase", id: 0x1, conformance: "M", description: "Passcode authenticated session" }),
                         Field({
-                            name: "Pase", id: 0x1, conformance: "M", description: "Passcode authenticated session",
-                            xref: { document: "core", section: "9.10.4.3" }
+                            name: "Case", id: 0x2, conformance: "M", description: "Certificate authenticated session"
                         }),
-                        Field({
-                            name: "Case", id: 0x2, conformance: "M", description: "Certificate authenticated session",
-                            xref: { document: "core", section: "9.10.4.3" }
-                        }),
-                        Field({
-                            name: "Group", id: 0x3, conformance: "M", description: "Group authenticated session",
-                            xref: { document: "core", section: "9.10.4.3" }
-                        })
+                        Field({ name: "Group", id: 0x3, conformance: "M", description: "Group authenticated session" })
                     ]
                 }),
 
                 Datatype({
                     name: "AccessControlTargetStruct", type: "struct",
                     xref: { document: "core", section: "9.10.4.4" },
-
                     children: [
-                        Field({
-                            name: "Cluster", id: 0x0, type: "cluster-id", conformance: "M", quality: "X",
-                            xref: { document: "core", section: "9.10.4.4" }
-                        }),
-                        Field({
-                            name: "Endpoint", id: 0x1, type: "endpoint-no", conformance: "M", quality: "X",
-                            xref: { document: "core", section: "9.10.4.4" }
-                        }),
-                        Field({
-                            name: "DeviceType", id: 0x2, type: "devtype-id", conformance: "M", quality: "X",
-                            xref: { document: "core", section: "9.10.4.4" }
-                        })
+                        Field({ name: "Cluster", id: 0x0, type: "cluster-id", conformance: "M", quality: "X" }),
+                        Field({ name: "Endpoint", id: 0x1, type: "endpoint-no", conformance: "M", quality: "X" }),
+                        Field({ name: "DeviceType", id: 0x2, type: "devtype-id", conformance: "M", quality: "X" })
                     ]
                 }),
 
@@ -12172,7 +10765,7 @@ export const SpecMatter = Matter({
 
                         Field({
                             name: "Subjects", id: 0x3, type: "list", access: "S", conformance: "M",
-                            constraint: "max SubjectsPerAccessControlEntry", quality: "X",
+                            constraint: "max subjectsPerAccessControlEntry", quality: "X",
 
                             details: "The subjects field shall specify a list of Subject IDs, to which this Access Control Entry grants " +
                                 "access." +
@@ -12214,7 +10807,7 @@ export const SpecMatter = Matter({
 
                         Field({
                             name: "Targets", id: 0x4, type: "list", access: "S", conformance: "M",
-                            constraint: "max TargetsPerAccessControlEntry", quality: "X",
+                            constraint: "max targetsPerAccessControlEntry", quality: "X",
 
                             details: "The targets field shall specify a list of AccessControlTargetStruct, which define the clusters on " +
                                 "this Node to which this Access Control Entry grants access." +
@@ -12526,10 +11119,7 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "9.14.7.1" },
 
                     children: [
-                        Field({
-                            name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "9.14.7.1" }
-                        }),
+                        Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
 
                         Field({
                             name: "InvokeId", id: 0x1, type: "uint32", conformance: "M",
@@ -12587,18 +11177,9 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "9.14.7.2" },
 
                     children: [
-                        Field({
-                            name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "9.14.7.2" }
-                        }),
-                        Field({
-                            name: "InvokeId", id: 0x1, type: "uint32", conformance: "M",
-                            xref: { document: "core", section: "9.14.7.2" }
-                        }),
-                        Field({
-                            name: "NewState", id: 0x2, type: "ActionStateEnum", conformance: "M",
-                            xref: { document: "core", section: "9.14.7.2" }
-                        }),
+                        Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                        Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "M" }),
+                        Field({ name: "NewState", id: 0x2, type: "ActionStateEnum", conformance: "M" }),
                         Field({
                             name: "Error", id: 0x3, type: "ActionErrorEnum", conformance: "M",
                             details: "This field shall be set to indicate the reason for non-successful progress of the action.",
@@ -12615,16 +11196,9 @@ export const SpecMatter = Matter({
                         "\n" +
                         "Example: recall a scene on a number of lights.",
                     xref: { document: "core", section: "9.14.6.1" },
-
                     children: [
-                        Field({
-                            name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "9.14.6.1" }
-                        }),
-                        Field({
-                            name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                            xref: { document: "core", section: "9.14.6.1" }
-                        })
+                        Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                        Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
                     ]
                 }),
 
@@ -12645,14 +11219,8 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "9.14.6.2" },
 
                     children: [
-                        Field({
-                            name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "9.14.6.2" }
-                        }),
-                        Field({
-                            name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                            xref: { document: "core", section: "9.14.6.2" }
-                        }),
+                        Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                        Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
                         Field({
                             name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M",
                             details: "This field shall indicate the transition time in 1/10th of seconds.",
@@ -12675,16 +11243,9 @@ export const SpecMatter = Matter({
                         "several brightness/color combinations and the window covering gradually opening.",
 
                     xref: { document: "core", section: "9.14.6.3" },
-
                     children: [
-                        Field({
-                            name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "9.14.6.3" }
-                        }),
-                        Field({
-                            name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                            xref: { document: "core", section: "9.14.6.3" }
-                        })
+                        Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                        Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
                     ]
                 }),
 
@@ -12702,14 +11263,8 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "9.14.6.4" },
 
                     children: [
-                        Field({
-                            name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "9.14.6.4" }
-                        }),
-                        Field({
-                            name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                            xref: { document: "core", section: "9.14.6.4" }
-                        }),
+                        Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                        Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
                         Field({
                             name: "Duration", id: 0x2, type: "uint32", conformance: "M",
                             details: "This field shall indicate the requested duration in seconds.",
@@ -12726,16 +11281,9 @@ export const SpecMatter = Matter({
                         "\n" +
                         "Example: stop a dynamic lighting pattern which was previously started with StartAction.",
                     xref: { document: "core", section: "9.14.6.5" },
-
                     children: [
-                        Field({
-                            name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "9.14.6.5" }
-                        }),
-                        Field({
-                            name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                            xref: { document: "core", section: "9.14.6.5" }
-                        })
+                        Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                        Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
                     ]
                 }),
 
@@ -12747,16 +11295,9 @@ export const SpecMatter = Matter({
                         "Example: pause a dynamic lighting effect (the lights stay at their current color) which was " +
                         "previously started with StartAction.",
                     xref: { document: "core", section: "9.14.6.6" },
-
                     children: [
-                        Field({
-                            name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "9.14.6.6" }
-                        }),
-                        Field({
-                            name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                            xref: { document: "core", section: "9.14.6.6" }
-                        })
+                        Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                        Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
                     ]
                 }),
 
@@ -12780,20 +11321,10 @@ export const SpecMatter = Matter({
                         "This field shall indicate the requested duration in seconds.",
 
                     xref: { document: "core", section: "9.14.6.7" },
-
                     children: [
-                        Field({
-                            name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "9.14.6.7" }
-                        }),
-                        Field({
-                            name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                            xref: { document: "core", section: "9.14.6.7" }
-                        }),
-                        Field({
-                            name: "Duration", id: 0x2, type: "uint32", conformance: "M",
-                            xref: { document: "core", section: "9.14.6.7" }
-                        })
+                        Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                        Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
+                        Field({ name: "Duration", id: 0x2, type: "uint32", conformance: "M" })
                     ]
                 }),
 
@@ -12810,16 +11341,9 @@ export const SpecMatter = Matter({
                         "from the point they were paused).",
 
                     xref: { document: "core", section: "9.14.6.8" },
-
                     children: [
-                        Field({
-                            name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "9.14.6.8" }
-                        }),
-                        Field({
-                            name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                            xref: { document: "core", section: "9.14.6.8" }
-                        })
+                        Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                        Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
                     ]
                 }),
 
@@ -12830,16 +11354,9 @@ export const SpecMatter = Matter({
                         "\n" +
                         "Example: enable a motion sensor to control the lights in an area.",
                     xref: { document: "core", section: "9.14.6.9" },
-
                     children: [
-                        Field({
-                            name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "9.14.6.9" }
-                        }),
-                        Field({
-                            name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                            xref: { document: "core", section: "9.14.6.9" }
-                        })
+                        Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                        Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
                     ]
                 }),
 
@@ -12858,20 +11375,10 @@ export const SpecMatter = Matter({
                         "This field shall indicate the requested duration in seconds.",
 
                     xref: { document: "core", section: "9.14.6.10" },
-
                     children: [
-                        Field({
-                            name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "9.14.6.10" }
-                        }),
-                        Field({
-                            name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                            xref: { document: "core", section: "9.14.6.10" }
-                        }),
-                        Field({
-                            name: "Duration", id: 0x2, type: "uint32", conformance: "M",
-                            xref: { document: "core", section: "9.14.6.10" }
-                        })
+                        Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                        Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
+                        Field({ name: "Duration", id: 0x2, type: "uint32", conformance: "M" })
                     ]
                 }),
 
@@ -12883,16 +11390,9 @@ export const SpecMatter = Matter({
                         "\n" +
                         "Example: disable a motion sensor to no longer control the lights in an area.",
                     xref: { document: "core", section: "9.14.6.11" },
-
                     children: [
-                        Field({
-                            name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "9.14.6.11" }
-                        }),
-                        Field({
-                            name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                            xref: { document: "core", section: "9.14.6.11" }
-                        })
+                        Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                        Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" })
                     ]
                 }),
 
@@ -12911,20 +11411,10 @@ export const SpecMatter = Matter({
                         "This field shall indicate the requested duration in seconds.",
 
                     xref: { document: "core", section: "9.14.6.12" },
-
                     children: [
-                        Field({
-                            name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "9.14.6.12" }
-                        }),
-                        Field({
-                            name: "InvokeId", id: 0x1, type: "uint32", conformance: "O",
-                            xref: { document: "core", section: "9.14.6.12" }
-                        }),
-                        Field({
-                            name: "Duration", id: 0x2, type: "uint32", conformance: "M",
-                            xref: { document: "core", section: "9.14.6.12" }
-                        })
+                        Field({ name: "ActionId", id: 0x0, type: "uint16", conformance: "M" }),
+                        Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
+                        Field({ name: "Duration", id: 0x2, type: "uint32", conformance: "M" })
                     ]
                 }),
 
@@ -12935,57 +11425,45 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "InstantAction", constraint: "0", description: "Indicate support for InstantAction command",
-                            xref: { document: "core", section: "9.14.4.1" }
+                            name: "InstantAction", constraint: "0", description: "Indicate support for InstantAction command"
                         }),
                         Field({
                             name: "InstantActionWithTransition", constraint: "1",
-                            description: "Indicate support for InstantActionWithTransition command",
-                            xref: { document: "core", section: "9.14.4.1" }
+                            description: "Indicate support for InstantActionWithTransition command"
                         }),
                         Field({
-                            name: "StartAction", constraint: "2", description: "Indicate support for StartAction command",
-                            xref: { document: "core", section: "9.14.4.1" }
+                            name: "StartAction", constraint: "2", description: "Indicate support for StartAction command"
                         }),
                         Field({
                             name: "StartActionWithDuration", constraint: "3",
-                            description: "Indicate support for StartActionWithDuration command",
-                            xref: { document: "core", section: "9.14.4.1" }
+                            description: "Indicate support for StartActionWithDuration command"
                         }),
                         Field({
-                            name: "StopAction", constraint: "4", description: "Indicate support for StopAction command",
-                            xref: { document: "core", section: "9.14.4.1" }
+                            name: "StopAction", constraint: "4", description: "Indicate support for StopAction command"
                         }),
                         Field({
-                            name: "PauseAction", constraint: "5", description: "Indicate support for PauseAction command",
-                            xref: { document: "core", section: "9.14.4.1" }
+                            name: "PauseAction", constraint: "5", description: "Indicate support for PauseAction command"
                         }),
                         Field({
                             name: "PauseActionWithDuration", constraint: "6",
-                            description: "Indicate support for PauseActionWithDuration command",
-                            xref: { document: "core", section: "9.14.4.1" }
+                            description: "Indicate support for PauseActionWithDuration command"
                         }),
                         Field({
-                            name: "ResumeAction", constraint: "7", description: "Indicate support for ResumeAction command",
-                            xref: { document: "core", section: "9.14.4.1" }
+                            name: "ResumeAction", constraint: "7", description: "Indicate support for ResumeAction command"
                         }),
                         Field({
-                            name: "EnableAction", constraint: "8", description: "Indicate support for EnableAction command",
-                            xref: { document: "core", section: "9.14.4.1" }
+                            name: "EnableAction", constraint: "8", description: "Indicate support for EnableAction command"
                         }),
                         Field({
                             name: "EnableActionWithDuration", constraint: "9",
-                            description: "Indicate support for EnableActionWithDuration command",
-                            xref: { document: "core", section: "9.14.4.1" }
+                            description: "Indicate support for EnableActionWithDuration command"
                         }),
                         Field({
-                            name: "DisableAction", constraint: "10", description: "Indicate support for DisableAction command",
-                            xref: { document: "core", section: "9.14.4.1" }
+                            name: "DisableAction", constraint: "10", description: "Indicate support for DisableAction command"
                         }),
                         Field({
                             name: "DisableActionWithDuration", constraint: "11",
-                            description: "Indicate support for DisableActionWithDuration command",
-                            xref: { document: "core", section: "9.14.4.1" }
+                            description: "Indicate support for DisableActionWithDuration command"
                         })
                     ]
                 }),
@@ -12997,8 +11475,7 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Other", id: 0x0, conformance: "M",
-                            description: "Use this only when none of the other values applies",
-                            xref: { document: "core", section: "9.14.4.2" }
+                            description: "Use this only when none of the other values applies"
                         }),
 
                         Field({
@@ -13074,22 +11551,10 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "9.14.4.3" },
 
                     children: [
-                        Field({
-                            name: "Inactive", id: 0x0, conformance: "M", description: "The action is not active",
-                            xref: { document: "core", section: "9.14.4.3" }
-                        }),
-                        Field({
-                            name: "Active", id: 0x1, conformance: "M", description: "The action is active",
-                            xref: { document: "core", section: "9.14.4.3" }
-                        }),
-                        Field({
-                            name: "Paused", id: 0x2, conformance: "M", description: "The action has been paused",
-                            xref: { document: "core", section: "9.14.4.3" }
-                        }),
-                        Field({
-                            name: "Disabled", id: 0x3, conformance: "M", description: "The action has been disabled",
-                            xref: { document: "core", section: "9.14.4.3" }
-                        })
+                        Field({ name: "Inactive", id: 0x0, conformance: "M", description: "The action is not active" }),
+                        Field({ name: "Active", id: 0x1, conformance: "M", description: "The action is active" }),
+                        Field({ name: "Paused", id: 0x2, conformance: "M", description: "The action has been paused" }),
+                        Field({ name: "Disabled", id: 0x3, conformance: "M", description: "The action has been disabled" })
                     ]
                 }),
 
@@ -13100,13 +11565,11 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Unknown", id: 0x0, conformance: "M",
-                            description: "Other reason not listed in the row(s) below",
-                            xref: { document: "core", section: "9.14.4.4" }
+                            description: "Other reason not listed in the row(s) below"
                         }),
                         Field({
                             name: "Interrupted", id: 0x1, conformance: "M",
-                            description: "The action was interrupted by another command or interaction",
-                            xref: { document: "core", section: "9.14.4.4" }
+                            description: "The action was interrupted by another command or interaction"
                         })
                     ]
                 }),
@@ -13225,18 +11688,9 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "9.14.4.7" },
 
                     children: [
-                        Field({
-                            name: "EndpointListId", id: 0x0, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "9.14.4.7" }
-                        }),
-                        Field({
-                            name: "Name", id: 0x1, type: "string", conformance: "M", constraint: "max 32[128]",
-                            xref: { document: "core", section: "9.14.4.7" }
-                        }),
-                        Field({
-                            name: "Type", id: 0x2, type: "EndpointListTypeEnum", conformance: "M",
-                            xref: { document: "core", section: "9.14.4.7" }
-                        }),
+                        Field({ name: "EndpointListId", id: 0x0, type: "uint16", conformance: "M" }),
+                        Field({ name: "Name", id: 0x1, type: "string", conformance: "M", constraint: "max 32[128]" }),
+                        Field({ name: "Type", id: 0x2, type: "EndpointListTypeEnum", conformance: "M" }),
 
                         Field({
                             name: "Endpoints", id: 0x3, type: "list", conformance: "M", constraint: "max 256",
@@ -13303,14 +11757,11 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "ProxyAllNodes", id: 0x1, type: "bool", access: "RW", conformance: "M", constraint: "desc",
-                            default: "false",
-                            xref: { document: "core", section: "9.15.14.4.1" }
+                            default: true
                         }),
-
                         Field({
                             name: "SourceList", id: 0x2, type: "list", access: "RW", conformance: "M", constraint: "desc",
-                            default: "empty",
-                            xref: { document: "core", section: "9.15.14.4.1" },
+                            default: [],
                             children: [Field({ name: "entry", type: "node-id" })]
                         })
                     ]
@@ -13349,10 +11800,7 @@ export const SpecMatter = Matter({
                     name: "ValidProxyStruct", type: "struct",
                     details: "Encapsulates the Node ID of a Valid Proxy.",
                     xref: { document: "core", section: "9.15.15.4.1" },
-                    children: [Field({
-                        name: "NodeId", id: 0x1, type: "node-id", access: "RW", conformance: "M",
-                        xref: { document: "core", section: "9.15.15.4.1" }
-                    })]
+                    children: [Field({ name: "NodeId", id: 0x1, type: "node-id", access: "RW", conformance: "M" })]
                 })
             ]
         }),
@@ -13658,7 +12106,7 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "CaseSessionsPerFabric", id: 0x0, type: "uint16", conformance: "M", constraint: "min 3",
-                            default: "3",
+                            default: 3,
                             details: "This field shall indicate the actual minimum number of concurrent CASE sessions that are supported " +
                                 "per fabric." +
                                 "\n" +
@@ -13669,7 +12117,7 @@ export const SpecMatter = Matter({
 
                         Field({
                             name: "SubscriptionsPerFabric", id: 0x1, type: "uint16", conformance: "M", constraint: "min 3",
-                            default: "3",
+                            default: 3,
                             details: "This field shall indicate the actual minimum number of concurrent subscriptions supported per " +
                                 "fabric." +
                                 "\n" +
@@ -13694,8 +12142,7 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.2.5" },
                     children: [Field({
                         name: "CS", constraint: "0", description: "CacheAndSync",
-                        details: "The ability to support CacheAndSync security policy and MCSP.",
-                        xref: { document: "core", section: "11.2.5" }
+                        details: "The ability to support CacheAndSync security policy and MCSP."
                     })]
                 }),
 
@@ -13785,10 +12232,7 @@ export const SpecMatter = Matter({
                         "  • Otherwise, this status code shall be set to FAILURE.",
 
                     xref: { document: "core", section: "11.2.8.1" },
-                    children: [Field({
-                        name: "GroupKeySet", id: 0x0, type: "GroupKeySetStruct", conformance: "M",
-                        xref: { document: "core", section: "11.2.8.1" }
-                    })]
+                    children: [Field({ name: "GroupKeySet", id: 0x0, type: "GroupKeySetStruct", conformance: "M" })]
                 }),
 
                 Command({
@@ -13808,10 +12252,7 @@ export const SpecMatter = Matter({
                         "fabric, then this command shall fail with a NOT_FOUND status code.",
 
                     xref: { document: "core", section: "11.2.8.2" },
-                    children: [Field({
-                        name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M",
-                        xref: { document: "core", section: "11.2.8.2" }
-                    })]
+                    children: [Field({ name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M" })]
                 }),
 
                 Command({
@@ -13820,10 +12261,7 @@ export const SpecMatter = Matter({
                         "found. It shall contain the configuration of the requested Group Key Set, with the EpochKey0, " +
                         "EpochKey1 and EpochKey2 key contents replaced by null.",
                     xref: { document: "core", section: "11.2.8.3" },
-                    children: [Field({
-                        name: "GroupKeySet", id: 0x0, type: "GroupKeySetStruct", conformance: "M",
-                        xref: { document: "core", section: "11.2.8.3" }
-                    })]
+                    children: [Field({ name: "GroupKeySet", id: 0x0, type: "GroupKeySetStruct", conformance: "M" })]
                 }),
 
                 Command({
@@ -13850,10 +12288,7 @@ export const SpecMatter = Matter({
                         "GroupKeySetID requested did not exist.",
 
                     xref: { document: "core", section: "11.2.8.4" },
-                    children: [Field({
-                        name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M",
-                        xref: { document: "core", section: "11.2.8.4" }
-                    })]
+                    children: [Field({ name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M" })]
                 }),
 
                 Command({
@@ -13888,7 +12323,6 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.2.8.6" },
                     children: [Field({
                         name: "GroupKeySetIDs", id: 0x0, type: "list", conformance: "M",
-                        xref: { document: "core", section: "11.2.8.6" },
                         children: [Field({ name: "entry", type: "uint16" })]
                     })]
                 }),
@@ -13900,13 +12334,11 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "TrustFirst", id: 0x0, conformance: "M",
-                            description: "Message counter synchronization using trust-first",
-                            xref: { document: "core", section: "11.2.6.1" }
+                            description: "Message counter synchronization using trust-first"
                         }),
                         Field({
                             name: "CacheAndSync", id: 0x1, conformance: "CS",
-                            description: "Message counter synchronization using cache-and-sync",
-                            xref: { document: "core", section: "11.2.6.1" }
+                            description: "Message counter synchronization using cache-and-sync"
                         })
                     ]
                 }),
@@ -13968,10 +12400,7 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.2.6.4" },
 
                     children: [
-                        Field({
-                            name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "11.2.6.4" }
-                        }),
+                        Field({ name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M" }),
 
                         Field({
                             name: "GroupKeySecurityPolicy", id: 0x1, type: "GroupKeySecurityPolicyEnum", access: "S",
@@ -14058,10 +12487,7 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.2.6.5" },
 
                     children: [
-                        Field({
-                            name: "GroupId", id: 0x1, type: "group-id", access: "R F", conformance: "M",
-                            xref: { document: "core", section: "11.2.6.5" }
-                        }),
+                        Field({ name: "GroupId", id: 0x1, type: "group-id", access: "R F", conformance: "M" }),
 
                         Field({
                             name: "Endpoints", id: 0x2, type: "list", access: "R F", conformance: "M", constraint: "min 1",
@@ -14152,8 +12578,7 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.4.4" },
                     children: [Field({
                         name: "CALFMT", constraint: "0", description: "CalendarFormat",
-                        details: "The Node can be configured to use different calendar formats when conveying values to a user.",
-                        xref: { document: "core", section: "11.4.4" }
+                        details: "The Node can be configured to use different calendar formats when conveying values to a user."
                     })]
                 }),
 
@@ -14193,12 +12618,10 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "12Hr", id: 0x0, conformance: "M", description: "Time conveyed with a 12-hour clock",
-                            xref: { document: "core", section: "11.4.5.1" }
+                            name: "12Hr", id: 0x0, conformance: "M", description: "Time conveyed with a 12-hour clock"
                         }),
                         Field({
-                            name: "24Hr", id: 0x1, conformance: "M", description: "Time conveyed with a 24-hour clock",
-                            xref: { document: "core", section: "11.4.5.1" }
+                            name: "24Hr", id: 0x1, conformance: "M", description: "Time conveyed with a 24-hour clock"
                         })
                     ]
                 }),
@@ -14210,59 +12633,47 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Buddhist", id: 0x0, conformance: "M",
-                            description: "Dates conveyed using the Buddhist calendar",
-                            xref: { document: "core", section: "11.4.5.2" }
+                            description: "Dates conveyed using the Buddhist calendar"
                         }),
                         Field({
                             name: "Chinese", id: 0x1, conformance: "M",
-                            description: "Dates conveyed using the Chinese calendar",
-                            xref: { document: "core", section: "11.4.5.2" }
+                            description: "Dates conveyed using the Chinese calendar"
                         }),
                         Field({
-                            name: "Coptic", id: 0x2, conformance: "M", description: "Dates conveyed using the Coptic calendar",
-                            xref: { document: "core", section: "11.4.5.2" }
+                            name: "Coptic", id: 0x2, conformance: "M", description: "Dates conveyed using the Coptic calendar"
                         }),
                         Field({
                             name: "Ethiopian", id: 0x3, conformance: "M",
-                            description: "Dates conveyed using the Ethiopian calendar",
-                            xref: { document: "core", section: "11.4.5.2" }
+                            description: "Dates conveyed using the Ethiopian calendar"
                         }),
                         Field({
                             name: "Gregorian", id: 0x4, conformance: "M",
-                            description: "Dates conveyed using the Gregorian calendar",
-                            xref: { document: "core", section: "11.4.5.2" }
+                            description: "Dates conveyed using the Gregorian calendar"
                         }),
                         Field({
-                            name: "Hebrew", id: 0x5, conformance: "M", description: "Dates conveyed using the Hebrew calendar",
-                            xref: { document: "core", section: "11.4.5.2" }
+                            name: "Hebrew", id: 0x5, conformance: "M", description: "Dates conveyed using the Hebrew calendar"
                         }),
                         Field({
-                            name: "Indian", id: 0x6, conformance: "M", description: "Dates conveyed using the Indian calendar",
-                            xref: { document: "core", section: "11.4.5.2" }
+                            name: "Indian", id: 0x6, conformance: "M", description: "Dates conveyed using the Indian calendar"
                         }),
                         Field({
                             name: "Islamic", id: 0x7, conformance: "M",
-                            description: "Dates conveyed using the Islamic calendar",
-                            xref: { document: "core", section: "11.4.5.2" }
+                            description: "Dates conveyed using the Islamic calendar"
                         }),
                         Field({
                             name: "Japanese", id: 0x8, conformance: "M",
-                            description: "Dates conveyed using the Japanese calendar",
-                            xref: { document: "core", section: "11.4.5.2" }
+                            description: "Dates conveyed using the Japanese calendar"
                         }),
                         Field({
-                            name: "Korean", id: 0x9, conformance: "M", description: "Dates conveyed using the Korean calendar",
-                            xref: { document: "core", section: "11.4.5.2" }
+                            name: "Korean", id: 0x9, conformance: "M", description: "Dates conveyed using the Korean calendar"
                         }),
                         Field({
                             name: "Persian", id: 0xa, conformance: "M",
-                            description: "Dates conveyed using the Persian calendar",
-                            xref: { document: "core", section: "11.4.5.2" }
+                            description: "Dates conveyed using the Persian calendar"
                         }),
                         Field({
                             name: "Taiwanese", id: 0xb, conformance: "M",
-                            description: "Dates conveyed using the Taiwanese calendar",
-                            xref: { document: "core", section: "11.4.5.2" }
+                            description: "Dates conveyed using the Taiwanese calendar"
                         })
                     ]
                 })
@@ -14290,8 +12701,7 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.5.4" },
                     children: [Field({
                         name: "TEMP", constraint: "0", description: "TemperatureUnit",
-                        details: "The Node can be configured to use different units of temperature when conveying values to a user.",
-                        xref: { document: "core", section: "11.5.4" }
+                        details: "The Node can be configured to use different units of temperature when conveying values to a user."
                     })]
                 }),
 
@@ -14310,17 +12720,12 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "Fahrenheit", id: 0x0, conformance: "M", description: "Temperature conveyed in Fahrenheit",
-                            xref: { document: "core", section: "11.5.5.1" }
+                            name: "Fahrenheit", id: 0x0, conformance: "M", description: "Temperature conveyed in Fahrenheit"
                         }),
                         Field({
-                            name: "Celsius", id: 0x1, conformance: "M", description: "Temperature conveyed in Celsius",
-                            xref: { document: "core", section: "11.5.5.1" }
+                            name: "Celsius", id: 0x1, conformance: "M", description: "Temperature conveyed in Celsius"
                         }),
-                        Field({
-                            name: "Kelvin", id: 0x2, conformance: "M", description: "Temperature conveyed in Kelvin",
-                            xref: { document: "core", section: "11.5.5.1" }
-                        })
+                        Field({ name: "Kelvin", id: 0x2, conformance: "M", description: "Temperature conveyed in Kelvin" })
                     ]
                 })
             ]
@@ -14374,23 +12779,19 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "WIRED", constraint: "0", description: "Wired",
-                            details: "A wired power source",
-                            xref: { document: "core", section: "11.7.4" }
+                            details: "A wired power source"
                         }),
                         Field({
                             name: "BAT", constraint: "1", description: "Battery",
-                            details: "A battery power source",
-                            xref: { document: "core", section: "11.7.4" }
+                            details: "A battery power source"
                         }),
                         Field({
                             name: "RECHG", constraint: "2", description: "Rechargeable",
-                            details: "A rechargeable battery power source (requires Battery feature)",
-                            xref: { document: "core", section: "11.7.4" }
+                            details: "A rechargeable battery power source (requires Battery feature)"
                         }),
                         Field({
                             name: "REPLC", constraint: "3", description: "Replaceable",
-                            details: "A replaceable battery power source (requires Battery feature)",
-                            xref: { document: "core", section: "11.7.4" }
+                            details: "A replaceable battery power source (requires Battery feature)"
                         })
                     ]
                 }),
@@ -14691,7 +13092,7 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 8", default: "empty",
+                            name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 8", default: [],
                             details: "This field shall represent the set of faults currently detected, as per Section 11.7.6.11, " +
                                 "“ActiveWiredFaults Attribute”.",
                             xref: { document: "core", section: "11.7.7.1.1" },
@@ -14699,7 +13100,7 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 8", default: "empty",
+                            name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 8", default: [],
                             details: "This field shall represent the set of faults detected prior to this change event, as per Section " +
                                 "11.7.6.11, “ActiveWiredFaults Attribute”.",
                             xref: { document: "core", section: "11.7.7.1.2" },
@@ -14725,13 +13126,11 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 8", default: "empty",
-                            xref: { document: "core", section: "11.7.7.2" },
+                            name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 8", default: [],
                             children: [Field({ name: "entry", type: "BatFaultEnum" })]
                         }),
                         Field({
-                            name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 8", default: "empty",
-                            xref: { document: "core", section: "11.7.7.2" },
+                            name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 8", default: [],
                             children: [Field({ name: "entry", type: "BatFaultEnum" })]
                         })
                     ]
@@ -14755,13 +13154,11 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 16", default: "empty",
-                            xref: { document: "core", section: "11.7.7.3" },
+                            name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 16", default: [],
                             children: [Field({ name: "entry", type: "BatChargeFaultEnum" })]
                         }),
                         Field({
-                            name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 16", default: "empty",
-                            xref: { document: "core", section: "11.7.7.3" },
+                            name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 16", default: [],
                             children: [Field({ name: "entry", type: "BatChargeFaultEnum" })]
                         })
                     ]
@@ -14774,18 +13171,15 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Unspecified", id: 0x0, conformance: "M",
-                            description: "The Node detects an unspecified fault on this wired power source.",
-                            xref: { document: "core", section: "11.7.5.1" }
+                            description: "The Node detects an unspecified fault on this wired power source."
                         }),
                         Field({
                             name: "OverVoltage", id: 0x1, conformance: "M",
-                            description: "The Node detects the supplied voltage is above maximum supported value for this wired power source.",
-                            xref: { document: "core", section: "11.7.5.1" }
+                            description: "The Node detects the supplied voltage is above maximum supported value for this wired power source."
                         }),
                         Field({
                             name: "UnderVoltage", id: 0x2, conformance: "M",
-                            description: "The Node detects the supplied voltage is below maximum supported value for this wired power source.",
-                            xref: { document: "core", section: "11.7.5.1" }
+                            description: "The Node detects the supplied voltage is below maximum supported value for this wired power source."
                         })
                     ]
                 }),
@@ -14797,18 +13191,15 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Unspecified", id: 0x0, conformance: "M",
-                            description: "The Node detects an unspecified fault on this battery power source.",
-                            xref: { document: "core", section: "11.7.5.2" }
+                            description: "The Node detects an unspecified fault on this battery power source."
                         }),
                         Field({
                             name: "OverTemp", id: 0x1, conformance: "M",
-                            description: "The Node detects the temperature of this battery power source is above ideal operating conditions.",
-                            xref: { document: "core", section: "11.7.5.2" }
+                            description: "The Node detects the temperature of this battery power source is above ideal operating conditions."
                         }),
                         Field({
                             name: "UnderTemp", id: 0x2, conformance: "M",
-                            description: "The Node detects the temperature of this battery power source is below ideal operating conditions.",
-                            xref: { document: "core", section: "11.7.5.2" }
+                            description: "The Node detects the temperature of this battery power source is below ideal operating conditions."
                         })
                     ]
                 }),
@@ -14820,58 +13211,47 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Unspecified", id: 0x0, conformance: "M",
-                            description: "The Node detects an unspecified fault on this battery source.",
-                            xref: { document: "core", section: "11.7.5.3" }
+                            description: "The Node detects an unspecified fault on this battery source."
                         }),
                         Field({
                             name: "AmbientTooHot", id: 0x1, conformance: "M",
-                            description: "The Node detects the ambient temperature is above the nominal range for this battery source.",
-                            xref: { document: "core", section: "11.7.5.3" }
+                            description: "The Node detects the ambient temperature is above the nominal range for this battery source."
                         }),
                         Field({
                             name: "AmbientTooCold", id: 0x2, conformance: "M",
-                            description: "The Node detects the ambient temperature is below the nominal range for this battery source.",
-                            xref: { document: "core", section: "11.7.5.3" }
+                            description: "The Node detects the ambient temperature is below the nominal range for this battery source."
                         }),
                         Field({
                             name: "BatteryTooHot", id: 0x3, conformance: "M",
-                            description: "The Node detects the temperature of this battery source is above the nominal range.",
-                            xref: { document: "core", section: "11.7.5.3" }
+                            description: "The Node detects the temperature of this battery source is above the nominal range."
                         }),
                         Field({
                             name: "BatteryTooCold", id: 0x4, conformance: "M",
-                            description: "The Node detects the temperature of this battery source is below the nominal range.",
-                            xref: { document: "core", section: "11.7.5.3" }
+                            description: "The Node detects the temperature of this battery source is below the nominal range."
                         }),
                         Field({
                             name: "BatteryAbsent", id: 0x5, conformance: "M",
-                            description: "The Node detects this battery source is not present.",
-                            xref: { document: "core", section: "11.7.5.3" }
+                            description: "The Node detects this battery source is not present."
                         }),
                         Field({
                             name: "BatteryOverVoltage", id: 0x6, conformance: "M",
-                            description: "The Node detects this battery source is over voltage.",
-                            xref: { document: "core", section: "11.7.5.3" }
+                            description: "The Node detects this battery source is over voltage."
                         }),
                         Field({
                             name: "BatteryUnderVoltage", id: 0x7, conformance: "M",
-                            description: "The Node detects this battery source is under voltage.",
-                            xref: { document: "core", section: "11.7.5.3" }
+                            description: "The Node detects this battery source is under voltage."
                         }),
                         Field({
                             name: "ChargerOverVoltage", id: 0x8, conformance: "M",
-                            description: "The Node detects the charger for this battery source is over voltage.",
-                            xref: { document: "core", section: "11.7.5.3" }
+                            description: "The Node detects the charger for this battery source is over voltage."
                         }),
                         Field({
                             name: "ChargerUnderVoltage", id: 0x9, conformance: "M",
-                            description: "The Node detects the charger for this battery source is under voltage.",
-                            xref: { document: "core", section: "11.7.5.3" }
+                            description: "The Node detects the charger for this battery source is under voltage."
                         }),
                         Field({
                             name: "SafetyTimeout", id: 0xa, conformance: "M",
-                            description: "The Node detects a charging safety timeout for this battery source.",
-                            xref: { document: "core", section: "11.7.5.3" }
+                            description: "The Node detects a charging safety timeout for this battery source."
                         })
                     ]
                 }),
@@ -14883,23 +13263,19 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Unspecified", id: 0x0, conformance: "M",
-                            description: "Indicate the source status is not specified",
-                            xref: { document: "core", section: "11.7.5.4" }
+                            description: "Indicate the source status is not specified"
                         }),
                         Field({
                             name: "Active", id: 0x1, conformance: "M",
-                            description: "Indicate the source is available and currently supplying power",
-                            xref: { document: "core", section: "11.7.5.4" }
+                            description: "Indicate the source is available and currently supplying power"
                         }),
                         Field({
                             name: "Standby", id: 0x2, conformance: "M",
-                            description: "Indicate the source is available, but is not currently supplying power",
-                            xref: { document: "core", section: "11.7.5.4" }
+                            description: "Indicate the source is available, but is not currently supplying power"
                         }),
                         Field({
                             name: "Unavailable", id: 0x3, conformance: "M",
-                            description: "Indicate the source is not currently available to supply power",
-                            xref: { document: "core", section: "11.7.5.4" }
+                            description: "Indicate the source is not currently available to supply power"
                         })
                     ]
                 }),
@@ -14907,16 +13283,9 @@ export const SpecMatter = Matter({
                 Datatype({
                     name: "WiredCurrentTypeEnum", type: "enum8",
                     xref: { document: "core", section: "11.7.5.5" },
-
                     children: [
-                        Field({
-                            name: "Ac", id: 0x0, conformance: "M", description: "Indicates AC current",
-                            xref: { document: "core", section: "11.7.5.5" }
-                        }),
-                        Field({
-                            name: "Dc", id: 0x1, conformance: "M", description: "Indicates DC current",
-                            xref: { document: "core", section: "11.7.5.5" }
-                        })
+                        Field({ name: "Ac", id: 0x0, conformance: "M", description: "Indicates AC current" }),
+                        Field({ name: "Dc", id: 0x1, conformance: "M", description: "Indicates DC current" })
                     ]
                 }),
 
@@ -14925,19 +13294,14 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.7.5.6" },
 
                     children: [
-                        Field({
-                            name: "Ok", id: 0x0, conformance: "M", description: "Charge level is nominal",
-                            xref: { document: "core", section: "11.7.5.6" }
-                        }),
+                        Field({ name: "Ok", id: 0x0, conformance: "M", description: "Charge level is nominal" }),
                         Field({
                             name: "Warning", id: 0x1, conformance: "M",
-                            description: "Charge level is low, intervention may soon be required.",
-                            xref: { document: "core", section: "11.7.5.6" }
+                            description: "Charge level is low, intervention may soon be required."
                         }),
                         Field({
                             name: "Critical", id: 0x2, conformance: "M",
-                            description: "Charge level is critical, immediate intervention is required",
-                            xref: { document: "core", section: "11.7.5.6" }
+                            description: "Charge level is critical, immediate intervention is required"
                         })
                     ]
                 }),
@@ -14949,22 +13313,18 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Unspecified", id: 0x0, conformance: "M",
-                            description: "The replaceability is unspecified or unknown.",
-                            xref: { document: "core", section: "11.7.5.7" }
+                            description: "The replaceability is unspecified or unknown."
                         }),
                         Field({
-                            name: "NotReplaceable", id: 0x1, conformance: "M", description: "The battery is not replaceable.",
-                            xref: { document: "core", section: "11.7.5.7" }
+                            name: "NotReplaceable", id: 0x1, conformance: "M", description: "The battery is not replaceable."
                         }),
                         Field({
                             name: "UserReplaceable", id: 0x2, conformance: "M",
-                            description: "The battery is replaceable by the user or customer.",
-                            xref: { document: "core", section: "11.7.5.7" }
+                            description: "The battery is replaceable by the user or customer."
                         }),
                         Field({
                             name: "FactoryReplaceable", id: 0x3, conformance: "M",
-                            description: "The battery is replaceable by an authorized factory technician.",
-                            xref: { document: "core", section: "11.7.5.7" }
+                            description: "The battery is replaceable by an authorized factory technician."
                         })
                     ]
                 }),
@@ -14976,329 +13336,88 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Unspecified", id: 0x0, conformance: "M",
-                            description: "Common type is unknown or unspecified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Aaa", id: 0x1, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Aa", id: 0x2, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "C", id: 0x3, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "D", id: 0x4, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "4V5", id: 0x5, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "6V0", id: 0x6, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "9V0", id: 0x7, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "12Aa", id: 0x8, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Aaaa", id: 0x9, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "A", id: 0xa, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "B", id: 0xb, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "F", id: 0xc, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "N", id: 0xd, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "No6", id: 0xe, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "SubC", id: 0xf, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "A23", id: 0x10, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "A27", id: 0x11, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Ba5800", id: 0x12, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Duplex", id: 0x13, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "4Sr44", id: 0x14, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "523", id: 0x15, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "531", id: 0x16, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "15V0", id: 0x17, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "22V5", id: 0x18, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "30V0", id: 0x19, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "45V0", id: 0x1a, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "67V5", id: 0x1b, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "J", id: 0x1c, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Cr123A", id: 0x1d, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Cr2", id: 0x1e, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "2Cr5", id: 0x1f, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "CrP2", id: 0x20, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "CrV3", id: 0x21, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr41", id: 0x22, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr43", id: 0x23, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr44", id: 0x24, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr45", id: 0x25, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr48", id: 0x26, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr54", id: 0x27, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr55", id: 0x28, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr57", id: 0x29, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr58", id: 0x2a, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr59", id: 0x2b, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr60", id: 0x2c, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr63", id: 0x2d, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr64", id: 0x2e, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr65", id: 0x2f, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr66", id: 0x30, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr67", id: 0x31, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr68", id: 0x32, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr69", id: 0x33, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr516", id: 0x34, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr731", id: 0x35, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Sr712", id: 0x36, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Lr932", id: 0x37, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "A5", id: 0x38, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "A10", id: 0x39, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "A13", id: 0x3a, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "A312", id: 0x3b, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "A675", id: 0x3c, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Ac41E", id: 0x3d, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "10180", id: 0x3e, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "10280", id: 0x3f, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "10440", id: 0x40, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "14250", id: 0x41, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "14430", id: 0x42, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "14500", id: 0x43, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "14650", id: 0x44, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "15270", id: 0x45, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "16340", id: 0x46, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "Rcr123A", id: 0x47, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "17500", id: 0x48, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "17670", id: 0x49, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "18350", id: 0x4a, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "18500", id: 0x4b, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "18650", id: 0x4c, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "19670", id: 0x4d, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "25500", id: 0x4e, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "26650", id: 0x4f, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        }),
-                        Field({
-                            name: "32600", id: 0x50, conformance: "M", description: "Common type is as specified",
-                            xref: { document: "core", section: "11.7.5.8" }
-                        })
+                            description: "Common type is unknown or unspecified"
+                        }),
+                        Field({ name: "Aaa", id: 0x1, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Aa", id: 0x2, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "C", id: 0x3, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "D", id: 0x4, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "4V5", id: 0x5, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "6V0", id: 0x6, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "9V0", id: 0x7, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "12Aa", id: 0x8, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Aaaa", id: 0x9, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "A", id: 0xa, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "B", id: 0xb, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "F", id: 0xc, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "N", id: 0xd, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "No6", id: 0xe, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "SubC", id: 0xf, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "A23", id: 0x10, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "A27", id: 0x11, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Ba5800", id: 0x12, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Duplex", id: 0x13, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "4Sr44", id: 0x14, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "523", id: 0x15, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "531", id: 0x16, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "15V0", id: 0x17, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "22V5", id: 0x18, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "30V0", id: 0x19, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "45V0", id: 0x1a, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "67V5", id: 0x1b, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "J", id: 0x1c, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Cr123A", id: 0x1d, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Cr2", id: 0x1e, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "2Cr5", id: 0x1f, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "CrP2", id: 0x20, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "CrV3", id: 0x21, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr41", id: 0x22, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr43", id: 0x23, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr44", id: 0x24, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr45", id: 0x25, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr48", id: 0x26, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr54", id: 0x27, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr55", id: 0x28, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr57", id: 0x29, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr58", id: 0x2a, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr59", id: 0x2b, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr60", id: 0x2c, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr63", id: 0x2d, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr64", id: 0x2e, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr65", id: 0x2f, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr66", id: 0x30, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr67", id: 0x31, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr68", id: 0x32, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr69", id: 0x33, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr516", id: 0x34, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr731", id: 0x35, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Sr712", id: 0x36, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Lr932", id: 0x37, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "A5", id: 0x38, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "A10", id: 0x39, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "A13", id: 0x3a, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "A312", id: 0x3b, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "A675", id: 0x3c, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Ac41E", id: 0x3d, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "10180", id: 0x3e, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "10280", id: 0x3f, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "10440", id: 0x40, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "14250", id: 0x41, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "14430", id: 0x42, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "14500", id: 0x43, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "14650", id: 0x44, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "15270", id: 0x45, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "16340", id: 0x46, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "Rcr123A", id: 0x47, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "17500", id: 0x48, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "17670", id: 0x49, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "18350", id: 0x4a, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "18500", id: 0x4b, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "18650", id: 0x4c, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "19670", id: 0x4d, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "25500", id: 0x4e, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "26650", id: 0x4f, conformance: "M", description: "Common type is as specified" }),
+                        Field({ name: "32600", id: 0x50, conformance: "M", description: "Common type is as specified" })
                     ]
                 }),
 
@@ -15309,150 +13428,109 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Unspecified", id: 0x0, conformance: "M",
-                            description: "Cell chemistry is unspecified or unknown",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            description: "Cell chemistry is unspecified or unknown"
                         }),
-                        Field({
-                            name: "Alkaline", id: 0x1, conformance: "M", description: "Cell chemistry is alkaline",
-                            xref: { document: "core", section: "11.7.5.9" }
-                        }),
+                        Field({ name: "Alkaline", id: 0x1, conformance: "M", description: "Cell chemistry is alkaline" }),
                         Field({
                             name: "LithiumCarbonFluoride", id: 0x2, conformance: "M",
-                            description: "Cell chemistry is lithium carbon fluoride",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            description: "Cell chemistry is lithium carbon fluoride"
                         }),
                         Field({
                             name: "LithiumChromiumOxide", id: 0x3, conformance: "M",
-                            description: "Cell chemistry is lithium chromium oxide",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            description: "Cell chemistry is lithium chromium oxide"
                         }),
                         Field({
                             name: "LithiumCopperOxide", id: 0x4, conformance: "M",
-                            description: "Cell chemistry is lithium copper oxide",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            description: "Cell chemistry is lithium copper oxide"
                         }),
                         Field({
                             name: "LithiumIronDisulfide", id: 0x5, conformance: "M",
-                            description: "Cell chemistry is lithium iron disulfide",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            description: "Cell chemistry is lithium iron disulfide"
                         }),
                         Field({
                             name: "LithiumManganeseDioxide", id: 0x6, conformance: "M",
-                            description: "Cell chemistry is lithium manganese dioxide",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            description: "Cell chemistry is lithium manganese dioxide"
                         }),
                         Field({
                             name: "LithiumThionylChloride", id: 0x7, conformance: "M",
-                            description: "Cell chemistry is lithium thionyl chloride",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            description: "Cell chemistry is lithium thionyl chloride"
                         }),
+                        Field({ name: "Magnesium", id: 0x8, conformance: "M", description: "Cell chemistry is magnesium" }),
                         Field({
-                            name: "Magnesium", id: 0x8, conformance: "M", description: "Cell chemistry is magnesium",
-                            xref: { document: "core", section: "11.7.5.9" }
-                        }),
-                        Field({
-                            name: "MercuryOxide", id: 0x9, conformance: "M", description: "Cell chemistry is mercury oxide",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            name: "MercuryOxide", id: 0x9, conformance: "M", description: "Cell chemistry is mercury oxide"
                         }),
                         Field({
                             name: "NickelOxyhydride", id: 0xa, conformance: "M",
-                            description: "Cell chemistry is nickel oxyhydride",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            description: "Cell chemistry is nickel oxyhydride"
                         }),
                         Field({
-                            name: "SilverOxide", id: 0xb, conformance: "M", description: "Cell chemistry is silver oxide",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            name: "SilverOxide", id: 0xb, conformance: "M", description: "Cell chemistry is silver oxide"
+                        }),
+                        Field({ name: "ZincAir", id: 0xc, conformance: "M", description: "Cell chemistry is zinc air" }),
+                        Field({
+                            name: "ZincCarbon", id: 0xd, conformance: "M", description: "Cell chemistry is zinc carbon"
                         }),
                         Field({
-                            name: "ZincAir", id: 0xc, conformance: "M", description: "Cell chemistry is zinc air",
-                            xref: { document: "core", section: "11.7.5.9" }
-                        }),
-                        Field({
-                            name: "ZincCarbon", id: 0xd, conformance: "M", description: "Cell chemistry is zinc carbon",
-                            xref: { document: "core", section: "11.7.5.9" }
-                        }),
-                        Field({
-                            name: "ZincChloride", id: 0xe, conformance: "M", description: "Cell chemistry is zinc chloride",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            name: "ZincChloride", id: 0xe, conformance: "M", description: "Cell chemistry is zinc chloride"
                         }),
                         Field({
                             name: "ZincManganeseDioxide", id: 0xf, conformance: "M",
-                            description: "Cell chemistry is zinc manganese dioxide",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            description: "Cell chemistry is zinc manganese dioxide"
                         }),
-                        Field({
-                            name: "LeadAcid", id: 0x10, conformance: "M", description: "Cell chemistry is lead acid",
-                            xref: { document: "core", section: "11.7.5.9" }
-                        }),
+                        Field({ name: "LeadAcid", id: 0x10, conformance: "M", description: "Cell chemistry is lead acid" }),
                         Field({
                             name: "LithiumCobaltOxide", id: 0x11, conformance: "M",
-                            description: "Cell chemistry is lithium cobalt oxide",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            description: "Cell chemistry is lithium cobalt oxide"
                         }),
                         Field({
-                            name: "LithiumIon", id: 0x12, conformance: "M", description: "Cell chemistry is lithium ion",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            name: "LithiumIon", id: 0x12, conformance: "M", description: "Cell chemistry is lithium ion"
                         }),
                         Field({
                             name: "LithiumIonPolymer", id: 0x13, conformance: "M",
-                            description: "Cell chemistry is lithium ion polymer",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            description: "Cell chemistry is lithium ion polymer"
                         }),
                         Field({
                             name: "LithiumIronPhosphate", id: 0x14, conformance: "M",
-                            description: "Cell chemistry is lithium iron phosphate",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            description: "Cell chemistry is lithium iron phosphate"
                         }),
                         Field({
-                            name: "LithiumSulfur", id: 0x15, conformance: "M", description: "Cell chemistry is lithium sulfur",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            name: "LithiumSulfur", id: 0x15, conformance: "M", description: "Cell chemistry is lithium sulfur"
                         }),
                         Field({
                             name: "LithiumTitanate", id: 0x16, conformance: "M",
-                            description: "Cell chemistry is lithium titanate",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            description: "Cell chemistry is lithium titanate"
                         }),
                         Field({
-                            name: "NickelCadmium", id: 0x17, conformance: "M", description: "Cell chemistry is nickel cadmium",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            name: "NickelCadmium", id: 0x17, conformance: "M", description: "Cell chemistry is nickel cadmium"
                         }),
                         Field({
                             name: "NickelHydrogen", id: 0x18, conformance: "M",
-                            description: "Cell chemistry is nickel hydrogen",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            description: "Cell chemistry is nickel hydrogen"
                         }),
                         Field({
-                            name: "NickelIron", id: 0x19, conformance: "M", description: "Cell chemistry is nickel iron",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            name: "NickelIron", id: 0x19, conformance: "M", description: "Cell chemistry is nickel iron"
                         }),
                         Field({
                             name: "NickelMetalHydride", id: 0x1a, conformance: "M",
-                            description: "Cell chemistry is nickel metal hydride",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            description: "Cell chemistry is nickel metal hydride"
                         }),
                         Field({
-                            name: "NickelZinc", id: 0x1b, conformance: "M", description: "Cell chemistry is nickel zinc",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            name: "NickelZinc", id: 0x1b, conformance: "M", description: "Cell chemistry is nickel zinc"
                         }),
                         Field({
-                            name: "SilverZinc", id: 0x1c, conformance: "M", description: "Cell chemistry is silver zinc",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            name: "SilverZinc", id: 0x1c, conformance: "M", description: "Cell chemistry is silver zinc"
                         }),
                         Field({
-                            name: "SodiumIon", id: 0x1d, conformance: "M", description: "Cell chemistry is sodium ion",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            name: "SodiumIon", id: 0x1d, conformance: "M", description: "Cell chemistry is sodium ion"
                         }),
                         Field({
-                            name: "SodiumSulfur", id: 0x1e, conformance: "M", description: "Cell chemistry is sodium sulfur",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            name: "SodiumSulfur", id: 0x1e, conformance: "M", description: "Cell chemistry is sodium sulfur"
                         }),
                         Field({
-                            name: "ZincBromide", id: 0x1f, conformance: "M", description: "Cell chemistry is zinc bromide",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            name: "ZincBromide", id: 0x1f, conformance: "M", description: "Cell chemistry is zinc bromide"
                         }),
                         Field({
-                            name: "ZincCerium", id: 0x20, conformance: "M", description: "Cell chemistry is zinc cerium",
-                            xref: { document: "core", section: "11.7.5.9" }
+                            name: "ZincCerium", id: 0x20, conformance: "M", description: "Cell chemistry is zinc cerium"
                         })
                     ]
                 }),
@@ -15463,20 +13541,14 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "Unknown", id: 0x0, conformance: "M", description: "Unable to determine the charging state",
-                            xref: { document: "core", section: "11.7.5.10" }
+                            name: "Unknown", id: 0x0, conformance: "M", description: "Unable to determine the charging state"
+                        }),
+                        Field({ name: "IsCharging", id: 0x1, conformance: "M", description: "The battery is charging" }),
+                        Field({
+                            name: "IsAtFullCharge", id: 0x2, conformance: "M", description: "The battery is at full charge"
                         }),
                         Field({
-                            name: "IsCharging", id: 0x1, conformance: "M", description: "The battery is charging",
-                            xref: { document: "core", section: "11.7.5.10" }
-                        }),
-                        Field({
-                            name: "IsAtFullCharge", id: 0x2, conformance: "M", description: "The battery is at full charge",
-                            xref: { document: "core", section: "11.7.5.10" }
-                        }),
-                        Field({
-                            name: "IsNotCharging", id: 0x3, conformance: "M", description: "The battery is not charging",
-                            xref: { document: "core", section: "11.7.5.10" }
+                            name: "IsNotCharging", id: 0x3, conformance: "M", description: "The battery is not charging"
                         })
                     ]
                 })
@@ -15512,18 +13584,15 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "WI", conformance: "O.a", constraint: "0", description: "WiFiNetworkInterface",
-                            details: "Wi-Fi related features",
-                            xref: { document: "core", section: "11.8.4" }
+                            details: "Wi-Fi related features"
                         }),
                         Field({
                             name: "TH", conformance: "O.a", constraint: "1", description: "ThreadNetworkInterface",
-                            details: "Thread related features",
-                            xref: { document: "core", section: "11.8.4" }
+                            details: "Thread related features"
                         }),
                         Field({
                             name: "ET", conformance: "O.a", constraint: "2", description: "EthernetNetworkInterface",
-                            details: "Ethernet related features",
-                            xref: { document: "core", section: "11.8.4" }
+                            details: "Ethernet related features"
                         })
                     ]
                 }),
@@ -15539,7 +13608,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "Networks", id: 0x1, type: "list", access: "R A", conformance: "M",
-                    constraint: "max MaxNetworks", default: [],
+                    constraint: "max maxNetworks", default: [],
 
                     details: "This attribute shall indicate the network configurations that are usable on the network interface " +
                         "represented by this cluster server instance." +
@@ -15699,7 +13768,7 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "Ssid", id: 0x0, type: "octstr", conformance: "[WI]", constraint: "1 to 32", default: "null",
+                            name: "Ssid", id: 0x0, type: "octstr", conformance: "[WI]", constraint: "1 to 32", default: null,
                             quality: "X",
                             details: "This field, if present, shall contain the SSID for a directed scan of that particular Wi-Fi SSID. " +
                                 "Otherwise, if the field is absent, or it is null, this shall indicate scanning of all BSSID in " +
@@ -15824,10 +13893,7 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.8.7.3" },
 
                     children: [
-                        Field({
-                            name: "Ssid", id: 0x0, type: "octstr", conformance: "M", constraint: "max 32",
-                            xref: { document: "core", section: "11.8.7.3" }
-                        }),
+                        Field({ name: "Ssid", id: 0x0, type: "octstr", conformance: "M", constraint: "max 32" }),
 
                         Field({
                             name: "Credentials", id: 0x1, type: "octstr", conformance: "M", constraint: "max 64",
@@ -15873,10 +13939,7 @@ export const SpecMatter = Matter({
                             xref: { document: "core", section: "11.8.7.3.1" }
                         }),
 
-                        Field({
-                            name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O",
-                            xref: { document: "core", section: "11.8.7.3" }
-                        })
+                        Field({ name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O" })
                     ]
                 }),
 
@@ -15917,10 +13980,7 @@ export const SpecMatter = Matter({
                             xref: { document: "core", section: "11.8.7.4.1" }
                         }),
 
-                        Field({
-                            name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O",
-                            xref: { document: "core", section: "11.8.7.4" }
-                        })
+                        Field({ name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O" })
                     ]
                 }),
 
@@ -15950,16 +14010,9 @@ export const SpecMatter = Matter({
                         "See Section 11.8.7.1.2, “Breadcrumb Field” for usage.",
 
                     xref: { document: "core", section: "11.8.7.7" },
-
                     children: [
-                        Field({
-                            name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32",
-                            xref: { document: "core", section: "11.8.7.7" }
-                        }),
-                        Field({
-                            name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O",
-                            xref: { document: "core", section: "11.8.7.7" }
-                        })
+                        Field({ name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32" }),
+                        Field({ name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O" })
                     ]
                 }),
 
@@ -15999,13 +14052,9 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum", conformance: "M",
-                            constraint: "desc",
-                            xref: { document: "core", section: "11.8.7.8" }
+                            constraint: "desc"
                         }),
-                        Field({
-                            name: "DebugText", id: 0x1, type: "string", conformance: "O", constraint: "max 512",
-                            xref: { document: "core", section: "11.8.7.8" }
-                        }),
+                        Field({ name: "DebugText", id: 0x1, type: "string", conformance: "O", constraint: "max 512" }),
 
                         Field({
                             name: "NetworkIndex", id: 0x2, type: "uint8", conformance: "O",
@@ -16093,16 +14142,9 @@ export const SpecMatter = Matter({
                         "See Section 11.8.7.1.2, “Breadcrumb Field” for usage.",
 
                     xref: { document: "core", section: "11.8.7.9" },
-
                     children: [
-                        Field({
-                            name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32",
-                            xref: { document: "core", section: "11.8.7.9" }
-                        }),
-                        Field({
-                            name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O",
-                            xref: { document: "core", section: "11.8.7.9" }
-                        })
+                        Field({ name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32" }),
+                        Field({ name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O" })
                     ]
                 }),
 
@@ -16146,13 +14188,9 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum", conformance: "M",
-                            xref: { document: "core", section: "11.8.7.10" }
+                            name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum", conformance: "M"
                         }),
-                        Field({
-                            name: "DebugText", id: 0x1, type: "string", conformance: "O",
-                            xref: { document: "core", section: "11.8.7.10" }
-                        }),
+                        Field({ name: "DebugText", id: 0x1, type: "string", conformance: "O" }),
 
                         Field({
                             name: "ErrorValue", id: 0x2, type: "int32", conformance: "M", quality: "X",
@@ -16246,20 +14284,10 @@ export const SpecMatter = Matter({
                         "lowest priority network in the list.",
 
                     xref: { document: "core", section: "11.8.7.11" },
-
                     children: [
-                        Field({
-                            name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32",
-                            xref: { document: "core", section: "11.8.7.11" }
-                        }),
-                        Field({
-                            name: "NetworkIndex", id: 0x1, type: "uint8", conformance: "M", constraint: "desc",
-                            xref: { document: "core", section: "11.8.7.11" }
-                        }),
-                        Field({
-                            name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O",
-                            xref: { document: "core", section: "11.8.7.11" }
-                        })
+                        Field({ name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32" }),
+                        Field({ name: "NetworkIndex", id: 0x1, type: "uint8", conformance: "M", constraint: "desc" }),
+                        Field({ name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O" })
                     ]
                 }),
 
@@ -16270,25 +14298,16 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.8.5.1" },
 
                     children: [
+                        Field({ name: "Unencrypted", constraint: "0", description: "Supports unencrypted Wi-Fi" }),
+                        Field({ name: "Wep", constraint: "1", description: "Supports Wi-Fi using WEP security" }),
                         Field({
-                            name: "Unencrypted", constraint: "0", description: "Supports unencrypted Wi-Fi",
-                            xref: { document: "core", section: "11.8.5.1" }
+                            name: "WpaPersonal", constraint: "2", description: "Supports Wi-Fi using WPA-Personal security"
                         }),
                         Field({
-                            name: "Wep", constraint: "1", description: "Supports Wi-Fi using WEP security",
-                            xref: { document: "core", section: "11.8.5.1" }
+                            name: "Wpa2Personal", constraint: "3", description: "Supports Wi-Fi using WPA2-Personal security"
                         }),
                         Field({
-                            name: "WpaPersonal", constraint: "2", description: "Supports Wi-Fi using WPA-Personal security",
-                            xref: { document: "core", section: "11.8.5.1" }
-                        }),
-                        Field({
-                            name: "Wpa2Personal", constraint: "3", description: "Supports Wi-Fi using WPA2-Personal security",
-                            xref: { document: "core", section: "11.8.5.1" }
-                        }),
-                        Field({
-                            name: "Wpa3Personal", constraint: "4", description: "Supports Wi-Fi using WPA3-Personal security",
-                            xref: { document: "core", section: "11.8.5.1" }
+                            name: "Wpa3Personal", constraint: "4", description: "Supports Wi-Fi using WPA3-Personal security"
                         })
                     ]
                 }),
@@ -16302,26 +14321,21 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "2G4", id: 0x0, conformance: "O.a+",
-                            description: "2.4GHz - 2.401GHz to2.495GHz(802.11b/g/n/ax)",
-                            xref: { document: "core", section: "11.8.5.2" }
+                            description: "2.4GHz - 2.401GHz to2.495GHz(802.11b/g/n/ax)"
                         }),
                         Field({
-                            name: "3G65", id: 0x1, conformance: "O.a+", description: "3.65GHz - 3.655GHz to3.695GHz (802.11y)",
-                            xref: { document: "core", section: "11.8.5.2" }
+                            name: "3G65", id: 0x1, conformance: "O.a+", description: "3.65GHz - 3.655GHz to3.695GHz (802.11y)"
                         }),
                         Field({
                             name: "5G", id: 0x2, conformance: "O.a+",
-                            description: "5GHz - 5.150GHz to5.895GHz(802.11a/n/ac/ax)",
-                            xref: { document: "core", section: "11.8.5.2" }
+                            description: "5GHz - 5.150GHz to5.895GHz(802.11a/n/ac/ax)"
                         }),
                         Field({
                             name: "6G", id: 0x3, conformance: "O.a+",
-                            description: "6GHz - 5.925GHz to7.125GHz (802.11ax / WiFi 6E)",
-                            xref: { document: "core", section: "11.8.5.2" }
+                            description: "6GHz - 5.925GHz to7.125GHz (802.11ax / WiFi 6E)"
                         }),
                         Field({
-                            name: "60G", id: 0x4, conformance: "O.a+", description: "60GHz - 57.24GHz to70.20GHz (802.11ad/ay)",
-                            xref: { document: "core", section: "11.8.5.2" }
+                            name: "60G", id: 0x4, conformance: "O.a+", description: "60GHz - 57.24GHz to70.20GHz (802.11ad/ay)"
                         })
                     ]
                 }),
@@ -16331,62 +14345,33 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.8.5.3" },
 
                     children: [
-                        Field({
-                            name: "Success", id: 0x0, description: "OK, no error",
-                            xref: { document: "core", section: "11.8.5.3" }
-                        }),
-                        Field({
-                            name: "OutOfRange", id: 0x1, description: "Value Outside Range",
-                            xref: { document: "core", section: "11.8.5.3" }
-                        }),
-                        Field({
-                            name: "BoundsExceeded", id: 0x2, description: "A collection would exceed its size limit",
-                            xref: { document: "core", section: "11.8.5.3" }
-                        }),
+                        Field({ name: "Success", id: 0x0, description: "OK, no error" }),
+                        Field({ name: "OutOfRange", id: 0x1, description: "Value Outside Range" }),
+                        Field({ name: "BoundsExceeded", id: 0x2, description: "A collection would exceed its size limit" }),
                         Field({
                             name: "NetworkIdNotFound", id: 0x3,
-                            description: "The NetworkID is not among the collection of added networks",
-                            xref: { document: "core", section: "11.8.5.3" }
+                            description: "The NetworkID is not among the collection of added networks"
                         }),
                         Field({
                             name: "DuplicateNetworkId", id: 0x4,
-                            description: "The NetworkID is already among the collection of added networks",
-                            xref: { document: "core", section: "11.8.5.3" }
+                            description: "The NetworkID is already among the collection of added networks"
                         }),
-                        Field({
-                            name: "NetworkNotFound", id: 0x5, description: "Cannot find AP: SSID Not found",
-                            xref: { document: "core", section: "11.8.5.3" }
-                        }),
+                        Field({ name: "NetworkNotFound", id: 0x5, description: "Cannot find AP: SSID Not found" }),
                         Field({
                             name: "RegulatoryError", id: 0x6,
-                            description: "Cannot find AP: Mismatch on band/channels/regulatory domain / 2.4GHz vs 5GHz",
-                            xref: { document: "core", section: "11.8.5.3" }
+                            description: "Cannot find AP: Mismatch on band/channels/regulatory domain / 2.4GHz vs 5GHz"
                         }),
                         Field({
-                            name: "AuthFailure", id: 0x7, description: "Cannot associate due to authentication failure",
-                            xref: { document: "core", section: "11.8.5.3" }
+                            name: "AuthFailure", id: 0x7, description: "Cannot associate due to authentication failure"
                         }),
                         Field({
                             name: "UnsupportedSecurity", id: 0x8,
-                            description: "Cannot associate due to unsupported security mode",
-                            xref: { document: "core", section: "11.8.5.3" }
+                            description: "Cannot associate due to unsupported security mode"
                         }),
-                        Field({
-                            name: "OtherConnectionFailure", id: 0x9, description: "Other association failure",
-                            xref: { document: "core", section: "11.8.5.3" }
-                        }),
-                        Field({
-                            name: "Ipv6Failed", id: 0xa, description: "Failure to generate an IPv6 address",
-                            xref: { document: "core", section: "11.8.5.3" }
-                        }),
-                        Field({
-                            name: "IpBindFailed", id: 0xb, description: "Failure to bind Wi-Fi <-> IP interfaces",
-                            xref: { document: "core", section: "11.8.5.3" }
-                        }),
-                        Field({
-                            name: "UnknownError", id: 0xc, description: "Unknown error",
-                            xref: { document: "core", section: "11.8.5.3" }
-                        })
+                        Field({ name: "OtherConnectionFailure", id: 0x9, description: "Other association failure" }),
+                        Field({ name: "Ipv6Failed", id: 0xa, description: "Failure to generate an IPv6 address" }),
+                        Field({ name: "IpBindFailed", id: 0xb, description: "Failure to bind Wi-Fi <-> IP interfaces" }),
+                        Field({ name: "UnknownError", id: 0xc, description: "Unknown error" })
                     ]
                 }),
 
@@ -16444,22 +14429,10 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.8.5.5" },
 
                     children: [
-                        Field({
-                            name: "Security", id: 0x0, type: "WiFiSecurityBitmap", conformance: "WI",
-                            xref: { document: "core", section: "11.8.5.5" }
-                        }),
-                        Field({
-                            name: "Ssid", id: 0x1, type: "octstr", conformance: "WI", constraint: "max 32",
-                            xref: { document: "core", section: "11.8.5.5" }
-                        }),
-                        Field({
-                            name: "Bssid", id: 0x2, type: "octstr", conformance: "WI", constraint: "6",
-                            xref: { document: "core", section: "11.8.5.5" }
-                        }),
-                        Field({
-                            name: "Channel", id: 0x3, type: "uint16", conformance: "WI",
-                            xref: { document: "core", section: "11.8.5.5" }
-                        }),
+                        Field({ name: "Security", id: 0x0, type: "WiFiSecurityBitmap", conformance: "WI" }),
+                        Field({ name: "Ssid", id: 0x1, type: "octstr", conformance: "WI", constraint: "max 32" }),
+                        Field({ name: "Bssid", id: 0x2, type: "octstr", conformance: "WI", constraint: "6" }),
+                        Field({ name: "Channel", id: 0x3, type: "uint16", conformance: "WI" }),
 
                         Field({
                             name: "WiFiBand", id: 0x4, type: "WiFiBandEnum", conformance: "[WI]",
@@ -16482,39 +14455,18 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.8.5.6" },
 
                     children: [
-                        Field({
-                            name: "PanId", id: 0x0, type: "uint16", conformance: "TH", constraint: "0 to 65534",
-                            xref: { document: "core", section: "11.8.5.6" }
-                        }),
-                        Field({
-                            name: "ExtendedPanId", id: 0x1, type: "uint64", conformance: "TH",
-                            xref: { document: "core", section: "11.8.5.6" }
-                        }),
-                        Field({
-                            name: "NetworkName", id: 0x2, type: "string", conformance: "TH", constraint: "1 to 16",
-                            xref: { document: "core", section: "11.8.5.6" }
-                        }),
-                        Field({
-                            name: "Channel", id: 0x3, type: "uint16", conformance: "TH",
-                            xref: { document: "core", section: "11.8.5.6" }
-                        }),
-                        Field({
-                            name: "Version", id: 0x4, type: "uint8", conformance: "TH",
-                            xref: { document: "core", section: "11.8.5.6" }
-                        }),
+                        Field({ name: "PanId", id: 0x0, type: "uint16", conformance: "TH", constraint: "0 to 65534" }),
+                        Field({ name: "ExtendedPanId", id: 0x1, type: "uint64", conformance: "TH" }),
+                        Field({ name: "NetworkName", id: 0x2, type: "string", conformance: "TH", constraint: "1 to 16" }),
+                        Field({ name: "Channel", id: 0x3, type: "uint16", conformance: "TH" }),
+                        Field({ name: "Version", id: 0x4, type: "uint8", conformance: "TH" }),
                         Field({
                             name: "ExtendedAddress", id: 0x5, type: "hwadr", conformance: "TH",
                             details: "ExtendedAddress stands for an IEEE 802.15.4 Extended Address.",
                             xref: { document: "core", section: "11.8.5.6.1" }
                         }),
-                        Field({
-                            name: "Rssi", id: 0x6, type: "int8", conformance: "TH",
-                            xref: { document: "core", section: "11.8.5.6" }
-                        }),
-                        Field({
-                            name: "Lqi", id: 0x7, type: "uint8", conformance: "TH",
-                            xref: { document: "core", section: "11.8.5.6" }
-                        })
+                        Field({ name: "Rssi", id: 0x6, type: "int8", conformance: "TH" }),
+                        Field({ name: "Lqi", id: 0x7, type: "uint8", conformance: "TH" })
                     ]
                 })
             ]
@@ -16733,16 +14685,9 @@ export const SpecMatter = Matter({
                         "     Node rollback the state of all non fabric-scoped data present in the Fail-Safe context.",
 
                     xref: { document: "core", section: "11.9.6.2" },
-
                     children: [
-                        Field({
-                            name: "ExpiryLengthSeconds", id: 0x0, type: "uint16", conformance: "M", default: "900",
-                            xref: { document: "core", section: "11.9.6.2" }
-                        }),
-                        Field({
-                            name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "M",
-                            xref: { document: "core", section: "11.9.6.2" }
-                        })
+                        Field({ name: "ExpiryLengthSeconds", id: 0x0, type: "uint16", conformance: "M", default: 900 }),
+                        Field({ name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "M" })
                     ]
                 }),
 
@@ -16752,7 +14697,7 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M", default: "OK",
+                            name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M", default: 0,
                             details: "This field shall contain the result of the operation, based on the behavior specified in the " +
                                 "functional description of the ArmFailSafe command.",
                             xref: { document: "core", section: "11.9.6.3.1" }
@@ -16806,17 +14751,10 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "NewRegulatoryConfig", id: 0x0, type: "RegulatoryLocationTypeEnum", conformance: "M",
-                            xref: { document: "core", section: "11.9.6.4" }
+                            name: "NewRegulatoryConfig", id: 0x0, type: "RegulatoryLocationTypeEnum", conformance: "M"
                         }),
-                        Field({
-                            name: "CountryCode", id: 0x1, type: "string", conformance: "M", constraint: "2",
-                            xref: { document: "core", section: "11.9.6.4" }
-                        }),
-                        Field({
-                            name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "M",
-                            xref: { document: "core", section: "11.9.6.4" }
-                        })
+                        Field({ name: "CountryCode", id: 0x1, type: "string", conformance: "M", constraint: "2" }),
+                        Field({ name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "M" })
                     ]
                 }),
 
@@ -16827,16 +14765,9 @@ export const SpecMatter = Matter({
                         "\n" +
                         "See Section 11.9.6.1, “Common fields in General Commissioning cluster responses”.",
                     xref: { document: "core", section: "11.9.6.5" },
-
                     children: [
-                        Field({
-                            name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M", default: "OK",
-                            xref: { document: "core", section: "11.9.6.5" }
-                        }),
-                        Field({
-                            name: "DebugText", id: 0x1, type: "string", conformance: "M", default: "",
-                            xref: { document: "core", section: "11.9.6.5" }
-                        })
+                        Field({ name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M", default: 0 }),
+                        Field({ name: "DebugText", id: 0x1, type: "string", conformance: "M", default: "" })
                     ]
                 }),
 
@@ -16910,16 +14841,9 @@ export const SpecMatter = Matter({
                         "\n" +
                         "See Section 11.9.6.1, “Common fields in General Commissioning cluster responses”.",
                     xref: { document: "core", section: "11.9.6.7" },
-
                     children: [
-                        Field({
-                            name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M", default: "OK",
-                            xref: { document: "core", section: "11.9.6.7" }
-                        }),
-                        Field({
-                            name: "DebugText", id: 0x1, type: "string", conformance: "M", default: "",
-                            xref: { document: "core", section: "11.9.6.7" }
-                        })
+                        Field({ name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M", default: 0 }),
+                        Field({ name: "DebugText", id: 0x1, type: "string", conformance: "M", default: "" })
                     ]
                 }),
 
@@ -16929,29 +14853,22 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.9.4.1" },
 
                     children: [
-                        Field({
-                            name: "Ok", id: 0x0, conformance: "M", description: "No error",
-                            xref: { document: "core", section: "11.9.4.1" }
-                        }),
+                        Field({ name: "Ok", id: 0x0, conformance: "M", description: "No error" }),
                         Field({
                             name: "ValueOutsideRange", id: 0x1, conformance: "M",
-                            description: "Attempting to set regulatory configuration to a region or indoor/outdoor mode for which the server does not have proper configuration.",
-                            xref: { document: "core", section: "11.9.4.1" }
+                            description: "Attempting to set regulatory configuration to a region or indoor/outdoor mode for which the server does not have proper configuration."
                         }),
                         Field({
                             name: "InvalidAuthentication", id: 0x2, conformance: "M",
-                            description: "Executed CommissioningComplete outside CASE session.",
-                            xref: { document: "core", section: "11.9.4.1" }
+                            description: "Executed CommissioningComplete outside CASE session."
                         }),
                         Field({
                             name: "NoFailSafe", id: 0x3, conformance: "M",
-                            description: "Executed CommissioningComplete when there was no active Fail-Safe context.",
-                            xref: { document: "core", section: "11.9.4.1" }
+                            description: "Executed CommissioningComplete when there was no active Fail-Safe context."
                         }),
                         Field({
                             name: "BusyWithOtherAdmin", id: 0x4, conformance: "M",
-                            description: "Attempting to arm fail- safe or execute CommissioningComplete from a fabric different than the one associated with the current fail- safe context.",
-                            xref: { document: "core", section: "11.9.4.1" }
+                            description: "Attempting to arm fail- safe or execute CommissioningComplete from a fabric different than the one associated with the current fail- safe context."
                         })
                     ]
                 }),
@@ -16961,20 +14878,10 @@ export const SpecMatter = Matter({
                     details: "This enumeration is used by the RegulatoryConfig and LocationCapability attributes to indicate " +
                         "possible radio usage.",
                     xref: { document: "core", section: "11.9.4.2" },
-
                     children: [
-                        Field({
-                            name: "Indoor", id: 0x0, conformance: "M", description: "Indoor only",
-                            xref: { document: "core", section: "11.9.4.2" }
-                        }),
-                        Field({
-                            name: "Outdoor", id: 0x1, conformance: "M", description: "Outdoor only",
-                            xref: { document: "core", section: "11.9.4.2" }
-                        }),
-                        Field({
-                            name: "IndoorOutdoor", id: 0x2, conformance: "M", description: "Indoor/Outdoor",
-                            xref: { document: "core", section: "11.9.4.2" }
-                        })
+                        Field({ name: "Indoor", id: 0x0, conformance: "M", description: "Indoor only" }),
+                        Field({ name: "Outdoor", id: 0x1, conformance: "M", description: "Outdoor only" }),
+                        Field({ name: "IndoorOutdoor", id: 0x2, conformance: "M", description: "Indoor/Outdoor" })
                     ]
                 }),
 
@@ -17393,12 +15300,10 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 7",
-                            xref: { document: "core", section: "11.11.8.2" },
                             children: [Field({ name: "entry", type: "RadioFaultEnum" })]
                         }),
                         Field({
                             name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 7",
-                            xref: { document: "core", section: "11.11.8.2" },
                             children: [Field({ name: "entry", type: "RadioFaultEnum" })]
                         })
                     ]
@@ -17421,12 +15326,10 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 4",
-                            xref: { document: "core", section: "11.11.8.3" },
                             children: [Field({ name: "entry", type: "NetworkFaultEnum" })]
                         }),
                         Field({
                             name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 4",
-                            xref: { document: "core", section: "11.11.8.3" },
                             children: [Field({ name: "entry", type: "NetworkFaultEnum" })]
                         })
                     ]
@@ -17524,58 +15427,47 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Unspecified", id: 0x0, conformance: "M",
-                            description: "The Node has encountered an unspecified fault.",
-                            xref: { document: "core", section: "11.11.4.1" }
+                            description: "The Node has encountered an unspecified fault."
                         }),
                         Field({
                             name: "Radio", id: 0x1, conformance: "O",
-                            description: "The Node has encountered a fault with at least one of its radios.",
-                            xref: { document: "core", section: "11.11.4.1" }
+                            description: "The Node has encountered a fault with at least one of its radios."
                         }),
                         Field({
                             name: "Sensor", id: 0x2, conformance: "O",
-                            description: "The Node has encountered a fault with at least one of its sensors.",
-                            xref: { document: "core", section: "11.11.4.1" }
+                            description: "The Node has encountered a fault with at least one of its sensors."
                         }),
                         Field({
                             name: "ResettableOverTemp", id: 0x3, conformance: "O",
-                            description: "The Node has encountered an over-temperature fault that is resettable.",
-                            xref: { document: "core", section: "11.11.4.1" }
+                            description: "The Node has encountered an over-temperature fault that is resettable."
                         }),
                         Field({
                             name: "NonResettableOverTemp", id: 0x4, conformance: "O",
-                            description: "The Node has encountered an over-temperature fault that is not resettable.",
-                            xref: { document: "core", section: "11.11.4.1" }
+                            description: "The Node has encountered an over-temperature fault that is not resettable."
                         }),
                         Field({
                             name: "PowerSource", id: 0x5, conformance: "O",
-                            description: "The Node has encountered a fault with at least one of its power sources.",
-                            xref: { document: "core", section: "11.11.4.1" }
+                            description: "The Node has encountered a fault with at least one of its power sources."
                         }),
                         Field({
                             name: "VisualDisplayFault", id: 0x6, conformance: "O",
-                            description: "The Node has encountered a fault with at least one of its visual displays.",
-                            xref: { document: "core", section: "11.11.4.1" }
+                            description: "The Node has encountered a fault with at least one of its visual displays."
                         }),
                         Field({
                             name: "AudioOutputFault", id: 0x7, conformance: "O",
-                            description: "The Node has encountered a fault with at least one of its audio outputs.",
-                            xref: { document: "core", section: "11.11.4.1" }
+                            description: "The Node has encountered a fault with at least one of its audio outputs."
                         }),
                         Field({
                             name: "UserInterfaceFault", id: 0x8, conformance: "O",
-                            description: "The Node has encountered a fault with at least one of its user interfaces.",
-                            xref: { document: "core", section: "11.11.4.1" }
+                            description: "The Node has encountered a fault with at least one of its user interfaces."
                         }),
                         Field({
                             name: "NonVolatileMemoryError", id: 0x9, conformance: "O",
-                            description: "The Node has encountered a fault with its non-volatile memory.",
-                            xref: { document: "core", section: "11.11.4.1" }
+                            description: "The Node has encountered a fault with its non-volatile memory."
                         }),
                         Field({
                             name: "TamperDetected", id: 0xa, conformance: "O",
-                            description: "The Node has encountered disallowed physical tampering.",
-                            xref: { document: "core", section: "11.11.4.1" }
+                            description: "The Node has encountered disallowed physical tampering."
                         })
                     ]
                 }),
@@ -17587,38 +15479,31 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Unspecified", id: 0x0, conformance: "M",
-                            description: "The Node has encountered an unspecified radio fault.",
-                            xref: { document: "core", section: "11.11.4.2" }
+                            description: "The Node has encountered an unspecified radio fault."
                         }),
                         Field({
                             name: "WiFiFault", id: 0x1, conformance: "O",
-                            description: "The Node has encountered a fault with its Wi-Fi radio.",
-                            xref: { document: "core", section: "11.11.4.2" }
+                            description: "The Node has encountered a fault with its Wi-Fi radio."
                         }),
                         Field({
                             name: "CellularFault", id: 0x2, conformance: "O",
-                            description: "The Node has encountered a fault with its cellular radio.",
-                            xref: { document: "core", section: "11.11.4.2" }
+                            description: "The Node has encountered a fault with its cellular radio."
                         }),
                         Field({
                             name: "ThreadFault", id: 0x3, conformance: "O",
-                            description: "The Node has encountered a fault with its802.15.4 radio.",
-                            xref: { document: "core", section: "11.11.4.2" }
+                            description: "The Node has encountered a fault with its802.15.4 radio."
                         }),
                         Field({
                             name: "NfcFault", id: 0x4, conformance: "O",
-                            description: "The Node has encountered a fault with its NFC radio.",
-                            xref: { document: "core", section: "11.11.4.2" }
+                            description: "The Node has encountered a fault with its NFC radio."
                         }),
                         Field({
                             name: "BleFault", id: 0x5, conformance: "O",
-                            description: "The Node has encountered a fault with its BLE radio.",
-                            xref: { document: "core", section: "11.11.4.2" }
+                            description: "The Node has encountered a fault with its BLE radio."
                         }),
                         Field({
                             name: "EthernetFault", id: 0x6, conformance: "O",
-                            description: "The Node has encountered a fault with its Ethernet controller.",
-                            xref: { document: "core", section: "11.11.4.2" }
+                            description: "The Node has encountered a fault with its Ethernet controller."
                         })
                     ]
                 }),
@@ -17630,23 +15515,19 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Unspecified", id: 0x0, conformance: "M",
-                            description: "The Node has encountered an unspecified fault.",
-                            xref: { document: "core", section: "11.11.4.3" }
+                            description: "The Node has encountered an unspecified fault."
                         }),
                         Field({
                             name: "HardwareFailure", id: 0x1, conformance: "O",
-                            description: "The Node has encountered a network fault as a result of a hardware failure.",
-                            xref: { document: "core", section: "11.11.4.3" }
+                            description: "The Node has encountered a network fault as a result of a hardware failure."
                         }),
                         Field({
                             name: "NetworkJammed", id: 0x2, conformance: "O",
-                            description: "The Node has encountered a network fault as a result of a jammed network.",
-                            xref: { document: "core", section: "11.11.4.3" }
+                            description: "The Node has encountered a network fault as a result of a jammed network."
                         }),
                         Field({
                             name: "ConnectionFailed", id: 0x3, conformance: "O",
-                            description: "The Node has encountered a network fault as a result of a failure to establish a connection.",
-                            xref: { document: "core", section: "11.11.4.3" }
+                            description: "The Node has encountered a network fault as a result of a failure to establish a connection."
                         })
                     ]
                 }),
@@ -17658,25 +15539,16 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Unspecified", id: 0x0, conformance: "M",
-                            description: "Indicates an interface of an unspecified type.",
-                            xref: { document: "core", section: "11.11.4.4" }
+                            description: "Indicates an interface of an unspecified type."
+                        }),
+                        Field({ name: "WiFi", id: 0x1, conformance: "O", description: "Indicates a Wi-Fi interface." }),
+                        Field({
+                            name: "Ethernet", id: 0x2, conformance: "O", description: "Indicates a Ethernet interface."
                         }),
                         Field({
-                            name: "WiFi", id: 0x1, conformance: "O", description: "Indicates a Wi-Fi interface.",
-                            xref: { document: "core", section: "11.11.4.4" }
+                            name: "Cellular", id: 0x3, conformance: "O", description: "Indicates a Cellular interface."
                         }),
-                        Field({
-                            name: "Ethernet", id: 0x2, conformance: "O", description: "Indicates a Ethernet interface.",
-                            xref: { document: "core", section: "11.11.4.4" }
-                        }),
-                        Field({
-                            name: "Cellular", id: 0x3, conformance: "O", description: "Indicates a Cellular interface.",
-                            xref: { document: "core", section: "11.11.4.4" }
-                        }),
-                        Field({
-                            name: "Thread", id: 0x4, conformance: "O", description: "Indicates a Thread interface.",
-                            xref: { document: "core", section: "11.11.4.4" }
-                        })
+                        Field({ name: "Thread", id: 0x4, conformance: "O", description: "Indicates a Thread interface." })
                     ]
                 }),
 
@@ -17687,38 +15559,31 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Unspecified", id: 0x0, conformance: "M",
-                            description: "The Node is unable to identify the Power-On reason as one of the other provided enumeration values.",
-                            xref: { document: "core", section: "11.11.4.5" }
+                            description: "The Node is unable to identify the Power-On reason as one of the other provided enumeration values."
                         }),
                         Field({
                             name: "PowerOnReboot", id: 0x1, conformance: "M",
-                            description: "The Node has booted as the result of physical interaction with the device resulting in a reboot.",
-                            xref: { document: "core", section: "11.11.4.5" }
+                            description: "The Node has booted as the result of physical interaction with the device resulting in a reboot."
                         }),
                         Field({
                             name: "BrownOutReset", id: 0x2, conformance: "M",
-                            description: "The Node has rebooted as the result of a brown-out of the Node’s power supply.",
-                            xref: { document: "core", section: "11.11.4.5" }
+                            description: "The Node has rebooted as the result of a brown-out of the Node’s power supply."
                         }),
                         Field({
                             name: "SoftwareWatchdogReset", id: 0x3, conformance: "M",
-                            description: "The Node has rebooted as the result of a software watchdog timer.",
-                            xref: { document: "core", section: "11.11.4.5" }
+                            description: "The Node has rebooted as the result of a software watchdog timer."
                         }),
                         Field({
                             name: "HardwareWatchdogReset", id: 0x4, conformance: "M",
-                            description: "The Node has rebooted as the result of a hardware watchdog timer.",
-                            xref: { document: "core", section: "11.11.4.5" }
+                            description: "The Node has rebooted as the result of a hardware watchdog timer."
                         }),
                         Field({
                             name: "SoftwareUpdateCompleted", id: 0x5, conformance: "M",
-                            description: "The Node has rebooted as the result of a completed software update.",
-                            xref: { document: "core", section: "11.11.4.5" }
+                            description: "The Node has rebooted as the result of a completed software update."
                         }),
                         Field({
                             name: "SoftwareReset", id: 0x6, conformance: "M",
-                            description: "The Node has rebooted as the result of a software initiated reboot.",
-                            xref: { document: "core", section: "11.11.4.5" }
+                            description: "The Node has rebooted as the result of a software initiated reboot."
                         })
                     ]
                 }),
@@ -17746,7 +15611,7 @@ export const SpecMatter = Matter({
 
                         Field({
                             name: "OffPremiseServicesReachableIPv4", id: 0x2, type: "bool", access: "R V", conformance: "M",
-                            default: "null", quality: "X",
+                            default: null, quality: "X",
                             details: "This field shall indicate whether the Node is currently able to reach off-premise services it uses " +
                                 "by utilizing IPv4. The value shall be null if the Node does not use such services or does not know " +
                                 "whether it can reach them.",
@@ -17755,7 +15620,7 @@ export const SpecMatter = Matter({
 
                         Field({
                             name: "OffPremiseServicesReachableIPv6", id: 0x3, type: "bool", access: "R V", conformance: "M",
-                            default: "null", quality: "X",
+                            default: null, quality: "X",
                             details: "This field shall indicate whether the Node is currently able to reach off-premise services it uses " +
                                 "by utilizing IPv6. The value shall be null if the Node does not use such services or does not know " +
                                 "whether it can reach them.",
@@ -17815,8 +15680,7 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.12.4" },
                     children: [Field({
                         name: "WTRMRK", constraint: "0", description: "Watermarks",
-                        details: "Node makes available the metrics for high watermark related to memory consumption.",
-                        xref: { document: "core", section: "11.12.4" }
+                        details: "Node makes available the metrics for high watermark related to memory consumption."
                     })]
                 }),
 
@@ -17864,18 +15728,13 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.12.8.1" },
 
                     children: [
+                        Field({ name: "Id", id: 0x0, type: "uint64", conformance: "M", default: 0 }),
                         Field({
-                            name: "Id", id: 0x0, type: "uint64", conformance: "M", default: "0",
-                            xref: { document: "core", section: "11.12.8.1" }
-                        }),
-                        Field({
-                            name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8", default: "empty",
-                            xref: { document: "core", section: "11.12.8.1" }
+                            name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8", default: ""
                         }),
 
                         Field({
                             name: "FaultRecording", id: 0x2, type: "octstr", conformance: "O", constraint: "max 1024",
-                            default: "empty",
                             details: "The FaultRecording field shall be a manufacturer-specified payload intended to convey information " +
                                 "to assist in further diagnosing or debugging a software fault. The FaultRecording field may be used " +
                                 "to convey information such as, but not limited to, thread backtraces or register contents.",
@@ -17921,7 +15780,7 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8", default: "empty",
+                            name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8", default: "",
                             details: "The Name field shall be set to a vendor defined name or prefix of the software thread that is " +
                                 "static for the duration of the thread.",
                             xref: { document: "core", section: "11.12.5.1.2" }
@@ -17974,26 +15833,20 @@ export const SpecMatter = Matter({
                         Field({
                             name: "PKTCNT", constraint: "0", description: "PacketCounts",
                             details: "Server supports the counts for the number of received and transmitted packets on the Thread " +
-                                "interface.",
-                            xref: { document: "core", section: "11.13.4" }
+                                "interface."
                         }),
-
                         Field({
                             name: "ERRCNT", constraint: "1", description: "ErrorCounts",
                             details: "Server supports the counts for the number of errors that have occurred during the reception and " +
-                                "transmission of packets on the Thread interface.",
-                            xref: { document: "core", section: "11.13.4" }
+                                "transmission of packets on the Thread interface."
                         }),
-
                         Field({
                             name: "MLECNT", constraint: "2", description: "MleCounts",
-                            details: "Server supports the counts for various MLE layer happenings.",
-                            xref: { document: "core", section: "11.13.4" }
+                            details: "Server supports the counts for various MLE layer happenings."
                         }),
                         Field({
                             name: "MACCNT", constraint: "3", description: "MacCounts",
-                            details: "Server supports the counts for various MAC layer happenings.",
-                            xref: { document: "core", section: "11.13.4" }
+                            details: "Server supports the counts for various MAC layer happenings."
                         })
                     ]
                 }),
@@ -18566,10 +16419,9 @@ export const SpecMatter = Matter({
                     details: "The ConnectionStatus Event shall indicate that a Node’s connection status to a Thread network has " +
                         "changed.",
                     xref: { document: "core", section: "11.13.8.2" },
-                    children: [Field({
-                        name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M",
-                        xref: { document: "core", section: "11.13.8.2" }
-                    })]
+                    children: [
+                        Field({ name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M" })
+                    ]
                 }),
 
                 Event({
@@ -18617,22 +16469,18 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "Unspecified", id: 0x0, conformance: "M", description: "Indicates an unspecified fault.",
-                            xref: { document: "core", section: "11.13.5.1" }
+                            name: "Unspecified", id: 0x0, conformance: "M", description: "Indicates an unspecified fault."
                         }),
                         Field({
-                            name: "LinkDown", id: 0x1, conformance: "M", description: "Indicates the Thread link is down.",
-                            xref: { document: "core", section: "11.13.5.1" }
+                            name: "LinkDown", id: 0x1, conformance: "M", description: "Indicates the Thread link is down."
                         }),
                         Field({
                             name: "HardwareFailure", id: 0x2, conformance: "M",
-                            description: "Indicates there has been Thread hardware failure.",
-                            xref: { document: "core", section: "11.13.5.1" }
+                            description: "Indicates there has been Thread hardware failure."
                         }),
                         Field({
                             name: "NetworkJammed", id: 0x3, conformance: "M",
-                            description: "Indicates the Thread network is jammed.",
-                            xref: { document: "core", section: "11.13.5.1" }
+                            description: "Indicates the Thread network is jammed."
                         })
                     ]
                 }),
@@ -18640,16 +16488,9 @@ export const SpecMatter = Matter({
                 Datatype({
                     name: "ConnectionStatusEnum", type: "enum8",
                     xref: { document: "core", section: "11.13.5.2" },
-
                     children: [
-                        Field({
-                            name: "Connected", id: 0x0, conformance: "M", description: "Node is connected",
-                            xref: { document: "core", section: "11.13.5.2" }
-                        }),
-                        Field({
-                            name: "NotConnected", id: 0x1, conformance: "M", description: "Node is not connected",
-                            xref: { document: "core", section: "11.13.5.2" }
-                        })
+                        Field({ name: "Connected", id: 0x0, conformance: "M", description: "Node is connected" }),
+                        Field({ name: "NotConnected", id: 0x1, conformance: "M", description: "Node is not connected" })
                     ]
                 }),
 
@@ -18658,37 +16499,28 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.13.5.3" },
 
                     children: [
-                        Field({
-                            name: "Unspecified", id: 0x0, conformance: "M", description: "Unspecified routing role.",
-                            xref: { document: "core", section: "11.13.5.3" }
-                        }),
+                        Field({ name: "Unspecified", id: 0x0, conformance: "M", description: "Unspecified routing role." }),
                         Field({
                             name: "Unassigned", id: 0x1, conformance: "M",
-                            description: "The Node does not currently have a role as a result of the Thread interface not currently being configured or operational.",
-                            xref: { document: "core", section: "11.13.5.3" }
+                            description: "The Node does not currently have a role as a result of the Thread interface not currently being configured or operational."
                         }),
                         Field({
                             name: "SleepyEndDevice", id: 0x2, conformance: "M",
-                            description: "The Node acts as a Sleepy End Device with RX-off-when-idle sleepy radio behavior.",
-                            xref: { document: "core", section: "11.13.5.3" }
+                            description: "The Node acts as a Sleepy End Device with RX-off-when-idle sleepy radio behavior."
                         }),
                         Field({
                             name: "EndDevice", id: 0x3, conformance: "M",
-                            description: "The Node acts as an End Device without RX- off-when-idle sleepy radio behavior.",
-                            xref: { document: "core", section: "11.13.5.3" }
+                            description: "The Node acts as an End Device without RX- off-when-idle sleepy radio behavior."
                         }),
                         Field({
                             name: "Reed", id: 0x4, conformance: "M",
-                            description: "The Node acts as an Router Eligible End Device.",
-                            xref: { document: "core", section: "11.13.5.3" }
+                            description: "The Node acts as an Router Eligible End Device."
                         }),
                         Field({
-                            name: "Router", id: 0x5, conformance: "M", description: "The Node acts as a Router Device.",
-                            xref: { document: "core", section: "11.13.5.3" }
+                            name: "Router", id: 0x5, conformance: "M", description: "The Node acts as a Router Device."
                         }),
                         Field({
-                            name: "Leader", id: 0x6, conformance: "M", description: "The Node acts as a Leader Device.",
-                            xref: { document: "core", section: "11.13.5.3" }
+                            name: "Leader", id: 0x6, conformance: "M", description: "The Node acts as a Leader Device."
                         })
                     ]
                 }),
@@ -18740,7 +16572,7 @@ export const SpecMatter = Matter({
 
                         Field({
                             name: "AverageRssi", id: 0x6, type: "int8", conformance: "M", constraint: "-128 to 0",
-                            default: "null", quality: "X",
+                            default: null, quality: "X",
                             details: "This field SHOULD specify the average RSSI across all received frames from the neighboring Node " +
                                 "since the receiving Node’s last reboot. If there is no known received frames this field SHOULD have" +
                                 "\n" +
@@ -18749,7 +16581,7 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "LastRssi", id: 0x7, type: "int8", conformance: "M", constraint: "-128 to 0", default: "null",
+                            name: "LastRssi", id: 0x7, type: "int8", conformance: "M", constraint: "-128 to 0", default: null,
                             quality: "X",
                             details: "This field shall specify the RSSI of the most recently received frame from the neighboring Node. If " +
                                 "there is no known last received frame the LastRssi field SHOULD have the value of null. This field " +
@@ -18759,7 +16591,7 @@ export const SpecMatter = Matter({
 
                         Field({
                             name: "FrameErrorRate", id: 0x8, type: "uint8", conformance: "O", constraint: "0 to 100",
-                            default: "0",
+                            default: 0,
                             details: "This field shall specify the percentage of received frames from the neighboring Node that have " +
                                 "resulted in errors.",
                             xref: { document: "core", section: "11.13.5.4.9" }
@@ -18767,7 +16599,7 @@ export const SpecMatter = Matter({
 
                         Field({
                             name: "MessageErrorRate", id: 0x9, type: "uint8", conformance: "O", constraint: "0 to 100",
-                            default: "0",
+                            default: 0,
                             details: "This field shall specify the percentage of received messages from the neighboring Node that have " +
                                 "resulted in errors.",
                             xref: { document: "core", section: "11.13.5.4.10" }
@@ -18811,14 +16643,8 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.13.5.5" },
 
                     children: [
-                        Field({
-                            name: "ExtAddress", id: 0x0, type: "uint64", conformance: "M",
-                            xref: { document: "core", section: "11.13.5.5" }
-                        }),
-                        Field({
-                            name: "Rloc16", id: 0x1, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "11.13.5.5" }
-                        }),
+                        Field({ name: "ExtAddress", id: 0x0, type: "uint64", conformance: "M" }),
+                        Field({ name: "Rloc16", id: 0x1, type: "uint16", conformance: "M" }),
                         Field({
                             name: "RouterId", id: 0x2, type: "uint8", conformance: "M",
                             details: "This field shall specify the Router ID for the Node for which this route table entry corresponds.",
@@ -18859,10 +16685,7 @@ export const SpecMatter = Matter({
                             xref: { document: "core", section: "11.13.5.5.5" }
                         }),
 
-                        Field({
-                            name: "Age", id: 0x7, type: "uint8", conformance: "M",
-                            xref: { document: "core", section: "11.13.5.5" }
-                        }),
+                        Field({ name: "Age", id: 0x7, type: "uint8", conformance: "M" }),
                         Field({
                             name: "Allocated", id: 0x8, type: "bool", conformance: "M",
                             details: "This field shall specify if the router ID as defined within the RouterId field has been allocated.",
@@ -18994,15 +16817,12 @@ export const SpecMatter = Matter({
                         Field({
                             name: "PKTCNT", constraint: "0", description: "PacketCounts",
                             details: "Node makes available the counts for the number of received and transmitted packets on the Wi-Fi " +
-                                "interface.",
-                            xref: { document: "core", section: "11.14.4" }
+                                "interface."
                         }),
-
                         Field({
                             name: "ERRCNT", constraint: "1", description: "ErrorCounts",
                             details: "Node makes available the counts for the number of errors that have occurred during the reception " +
-                                "and transmission of packets on the Wi-Fi interface.",
-                            xref: { document: "core", section: "11.14.4" }
+                                "and transmission of packets on the Wi-Fi interface."
                         })
                     ]
                 }),
@@ -19169,10 +16989,9 @@ export const SpecMatter = Matter({
                         "changed. Connected, in this context, shall mean that a Node acting as a Wi-Fi station is " +
                         "successfully associated to a Wi-Fi Access Point.",
                     xref: { document: "core", section: "11.14.8.3" },
-                    children: [Field({
-                        name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M",
-                        xref: { document: "core", section: "11.14.8.3" }
-                    })]
+                    children: [
+                        Field({ name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M" })
+                    ]
                 }),
 
                 Command({
@@ -19205,28 +17024,22 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Unspecified", id: 0x0, conformance: "M",
-                            description: "Indicate the usage of an unspecified Wi-Fi security type",
-                            xref: { document: "core", section: "11.14.5.1" }
+                            description: "Indicate the usage of an unspecified Wi-Fi security type"
                         }),
                         Field({
-                            name: "None", id: 0x1, conformance: "M", description: "Indicate the usage of no Wi-Fi security",
-                            xref: { document: "core", section: "11.14.5.1" }
+                            name: "None", id: 0x1, conformance: "M", description: "Indicate the usage of no Wi-Fi security"
                         }),
                         Field({
-                            name: "Wep", id: 0x2, conformance: "M", description: "Indicate the usage of WEP Wi-Fi security",
-                            xref: { document: "core", section: "11.14.5.1" }
+                            name: "Wep", id: 0x2, conformance: "M", description: "Indicate the usage of WEP Wi-Fi security"
                         }),
                         Field({
-                            name: "Wpa", id: 0x3, conformance: "M", description: "Indicate the usage of WPA Wi-Fi security",
-                            xref: { document: "core", section: "11.14.5.1" }
+                            name: "Wpa", id: 0x3, conformance: "M", description: "Indicate the usage of WPA Wi-Fi security"
                         }),
                         Field({
-                            name: "Wpa2", id: 0x4, conformance: "M", description: "Indicate the usage of WPA2 Wi-Fi security",
-                            xref: { document: "core", section: "11.14.5.1" }
+                            name: "Wpa2", id: 0x4, conformance: "M", description: "Indicate the usage of WPA2 Wi-Fi security"
                         }),
                         Field({
-                            name: "Wpa3", id: 0x5, conformance: "M", description: "Indicate the usage of WPA3 Wi-Fi security",
-                            xref: { document: "core", section: "11.14.5.1" }
+                            name: "Wpa3", id: 0x5, conformance: "M", description: "Indicate the usage of WPA3 Wi-Fi security"
                         })
                     ]
                 }),
@@ -19238,33 +17051,27 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "A", id: 0x0, conformance: "M",
-                            description: "Indicate the network interface is currently using 802.11a against the wireless access point.",
-                            xref: { document: "core", section: "11.14.5.2" }
+                            description: "Indicate the network interface is currently using 802.11a against the wireless access point."
                         }),
                         Field({
                             name: "B", id: 0x1, conformance: "M",
-                            description: "Indicate the network interface is currently using 802.11b against the wireless access point.",
-                            xref: { document: "core", section: "11.14.5.2" }
+                            description: "Indicate the network interface is currently using 802.11b against the wireless access point."
                         }),
                         Field({
                             name: "G", id: 0x2, conformance: "M",
-                            description: "Indicate the network interface is currently using 802.11g against the wireless access point.",
-                            xref: { document: "core", section: "11.14.5.2" }
+                            description: "Indicate the network interface is currently using 802.11g against the wireless access point."
                         }),
                         Field({
                             name: "N", id: 0x3, conformance: "M",
-                            description: "Indicate the network interface is currently using 802.11n against the wireless access point.",
-                            xref: { document: "core", section: "11.14.5.2" }
+                            description: "Indicate the network interface is currently using 802.11n against the wireless access point."
                         }),
                         Field({
                             name: "Ac", id: 0x4, conformance: "M",
-                            description: "Indicate the network interface is currently using 802.11ac against the wireless access point.",
-                            xref: { document: "core", section: "11.14.5.2" }
+                            description: "Indicate the network interface is currently using 802.11ac against the wireless access point."
                         }),
                         Field({
                             name: "Ax", id: 0x5, conformance: "M",
-                            description: "Indicate the network interface is currently using 802.11ax against the wireless access point.",
-                            xref: { document: "core", section: "11.14.5.2" }
+                            description: "Indicate the network interface is currently using 802.11ax against the wireless access point."
                         })
                     ]
                 }),
@@ -19275,23 +17082,19 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "Unknown", id: 0x0, conformance: "M", description: "The reason for the failure is unknown.",
-                            xref: { document: "core", section: "11.14.5.3" }
+                            name: "Unknown", id: 0x0, conformance: "M", description: "The reason for the failure is unknown."
                         }),
                         Field({
                             name: "AssociationFailed", id: 0x1, conformance: "M",
-                            description: "An error occurred during association.",
-                            xref: { document: "core", section: "11.14.5.3" }
+                            description: "An error occurred during association."
                         }),
                         Field({
                             name: "AuthenticationFailed", id: 0x2, conformance: "M",
-                            description: "An error occurred during authentication.",
-                            xref: { document: "core", section: "11.14.5.3" }
+                            description: "An error occurred during authentication."
                         }),
                         Field({
                             name: "SsidNotFound", id: 0x3, conformance: "M",
-                            description: "The specified SSID could not be found.",
-                            xref: { document: "core", section: "11.14.5.3" }
+                            description: "The specified SSID could not be found."
                         })
                     ]
                 }),
@@ -19302,12 +17105,10 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "Connected", id: 0x0, conformance: "M", description: "Indicate the node is connected",
-                            xref: { document: "core", section: "11.14.5.4" }
+                            name: "Connected", id: 0x0, conformance: "M", description: "Indicate the node is connected"
                         }),
                         Field({
-                            name: "NotConnected", id: 0x1, conformance: "M", description: "Indicate the node is not connected",
-                            xref: { document: "core", section: "11.14.5.4" }
+                            name: "NotConnected", id: 0x1, conformance: "M", description: "Indicate the node is not connected"
                         })
                     ]
                 })
@@ -19333,15 +17134,12 @@ export const SpecMatter = Matter({
                         Field({
                             name: "PKTCNT", constraint: "0", description: "PacketCounts",
                             details: "Node makes available the counts for the number of received and transmitted packets on the ethernet " +
-                                "interface.",
-                            xref: { document: "core", section: "11.15.4" }
+                                "interface."
                         }),
-
                         Field({
                             name: "ERRCNT", constraint: "1", description: "ErrorCounts",
                             details: "Node makes available the counts for the number of errors that have occurred during the reception " +
-                                "and transmission of packets on the ethernet interface.",
-                            xref: { document: "core", section: "11.15.4" }
+                                "and transmission of packets on the ethernet interface."
                         })
                     ]
                 }),
@@ -19449,46 +17247,16 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.15.5.1" },
 
                     children: [
-                        Field({
-                            name: "Rate10M", id: 0x0, conformance: "M", description: "PHY rate is 10Mbps",
-                            xref: { document: "core", section: "11.15.5.1" }
-                        }),
-                        Field({
-                            name: "Rate100M", id: 0x1, conformance: "M", description: "PHY rate is 100Mbps",
-                            xref: { document: "core", section: "11.15.5.1" }
-                        }),
-                        Field({
-                            name: "Rate1G", id: 0x2, conformance: "M", description: "PHY rate is 1Gbps",
-                            xref: { document: "core", section: "11.15.5.1" }
-                        }),
-                        Field({
-                            name: "Rate25G", id: 0x3, conformance: "M", description: "PHY rate is 2.5Gbps",
-                            xref: { document: "core", section: "11.15.5.1" }
-                        }),
-                        Field({
-                            name: "Rate5G", id: 0x4, conformance: "M", description: "PHY rate is 5Gbps",
-                            xref: { document: "core", section: "11.15.5.1" }
-                        }),
-                        Field({
-                            name: "Rate10G", id: 0x5, conformance: "M", description: "PHY rate is 10Gbps",
-                            xref: { document: "core", section: "11.15.5.1" }
-                        }),
-                        Field({
-                            name: "Rate40G", id: 0x6, conformance: "M", description: "PHY rate is 40Gbps",
-                            xref: { document: "core", section: "11.15.5.1" }
-                        }),
-                        Field({
-                            name: "Rate100G", id: 0x7, conformance: "M", description: "PHY rate is 100Gbps",
-                            xref: { document: "core", section: "11.15.5.1" }
-                        }),
-                        Field({
-                            name: "Rate200G", id: 0x8, conformance: "M", description: "PHY rate is 200Gbps",
-                            xref: { document: "core", section: "11.15.5.1" }
-                        }),
-                        Field({
-                            name: "Rate400G", id: 0x9, conformance: "M", description: "PHY rate is 400Gbps",
-                            xref: { document: "core", section: "11.15.5.1" }
-                        })
+                        Field({ name: "Rate10M", id: 0x0, conformance: "M", description: "PHY rate is 10Mbps" }),
+                        Field({ name: "Rate100M", id: 0x1, conformance: "M", description: "PHY rate is 100Mbps" }),
+                        Field({ name: "Rate1G", id: 0x2, conformance: "M", description: "PHY rate is 1Gbps" }),
+                        Field({ name: "Rate25G", id: 0x3, conformance: "M", description: "PHY rate is 2.5Gbps" }),
+                        Field({ name: "Rate5G", id: 0x4, conformance: "M", description: "PHY rate is 5Gbps" }),
+                        Field({ name: "Rate10G", id: 0x5, conformance: "M", description: "PHY rate is 10Gbps" }),
+                        Field({ name: "Rate40G", id: 0x6, conformance: "M", description: "PHY rate is 40Gbps" }),
+                        Field({ name: "Rate100G", id: 0x7, conformance: "M", description: "PHY rate is 100Gbps" }),
+                        Field({ name: "Rate200G", id: 0x8, conformance: "M", description: "PHY rate is 200Gbps" }),
+                        Field({ name: "Rate400G", id: 0x9, conformance: "M", description: "PHY rate is 400Gbps" })
                     ]
                 })
             ]
@@ -19519,18 +17287,15 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "TZ", constraint: "0", description: "TimeZone",
-                            details: "Server supports time zone.",
-                            xref: { document: "core", section: "11.16.5" }
+                            details: "Server supports time zone."
                         }),
                         Field({
                             name: "NTPC", constraint: "1", description: "NtpClient",
-                            details: "Server supports an NTP or SNTP client.",
-                            xref: { document: "core", section: "11.16.5" }
+                            details: "Server supports an NTP or SNTP client."
                         }),
                         Field({
                             name: "NTPS", constraint: "2", description: "NtpServer",
-                            details: "Server supports an NTP server role.",
-                            xref: { document: "core", section: "11.16.5" }
+                            details: "Server supports an NTP server role."
                         })
                     ]
                 }),
@@ -19716,16 +17481,9 @@ export const SpecMatter = Matter({
                         "zone database [https://www.iana.org/time-zones].",
 
                     xref: { document: "core", section: "11.16.10.3" },
-
                     children: [
-                        Field({
-                            name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "-43200 to 50400",
-                            xref: { document: "core", section: "11.16.10.3" }
-                        }),
-                        Field({
-                            name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "0 to 64",
-                            xref: { document: "core", section: "11.16.10.3" }
-                        })
+                        Field({ name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "-43200 to 50400" }),
+                        Field({ name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "0 to 64" })
                     ]
                 }),
 
@@ -19753,21 +17511,20 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "UtcTime", id: 0x0, type: "epoch-us", conformance: "M", default: "0",
+                            name: "UtcTime", id: 0x0, type: "epoch-us", conformance: "M", default: 0,
                             details: "This shall give the Client’s UTC Time.",
                             xref: { document: "core", section: "11.16.9.1.1" }
                         }),
 
                         Field({
-                            name: "Granularity", id: 0x1, type: "GranularityEnum", conformance: "M",
-                            default: "NoTimeGranularity",
+                            name: "Granularity", id: 0x1, type: "GranularityEnum", conformance: "M", default: 0,
                             details: "This shall give the Client’s Granularity, as described in Section 11.16.8.2, “Granularity " +
                                 "Attribute”.",
                             xref: { document: "core", section: "11.16.9.1.2" }
                         }),
 
                         Field({
-                            name: "TimeSource", id: 0x2, type: "TimeSourceEnum", conformance: "O", default: "None",
+                            name: "TimeSource", id: 0x2, type: "TimeSourceEnum", conformance: "O", default: 0,
                             details: "This shall give the Client’s TimeSource, as described in Section 11.16.8.3, “TimeSource Attribute”.",
                             xref: { document: "core", section: "11.16.9.1.3" }
                         })
@@ -19790,28 +17547,23 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "NoTimeGranularity", id: 0x0, conformance: "M",
-                            description: "This indicates that the server is not currently synchronized with a UTC Time source and its clock is based on the Last Known Good UTC Time only.",
-                            xref: { document: "core", section: "11.16.6.1" }
+                            description: "This indicates that the server is not currently synchronized with a UTC Time source and its clock is based on the Last Known Good UTC Time only."
                         }),
                         Field({
                             name: "MinutesGranularity", id: 0x1, conformance: "M",
-                            description: "This indicates the server was synchronized to an upstream source in the past, but sufficient clock drift has occurred such that the clock error is now > 5 seconds.",
-                            xref: { document: "core", section: "11.16.6.1" }
+                            description: "This indicates the server was synchronized to an upstream source in the past, but sufficient clock drift has occurred such that the clock error is now > 5 seconds."
                         }),
                         Field({
                             name: "SecondsGranularity", id: 0x2, conformance: "M",
-                            description: "This indicates the server is synchronized to an upstream source using a low resolution protocol. UTC Time is accurate to ± 5 seconds.",
-                            xref: { document: "core", section: "11.16.6.1" }
+                            description: "This indicates the server is synchronized to an upstream source using a low resolution protocol. UTC Time is accurate to ± 5 seconds."
                         }),
                         Field({
                             name: "MillisecondsGranularity", id: 0x3, conformance: "M",
-                            description: "This indicates the server is synchronized to an upstream source using high resolution time-synchronization protocol such as NTP, or has built-in GNSS with some amount of jitter applying its GNSS timestamp. UTC Time is accurate to ± 50ms.",
-                            xref: { document: "core", section: "11.16.6.1" }
+                            description: "This indicates the server is synchronized to an upstream source using high resolution time-synchronization protocol such as NTP, or has built-in GNSS with some amount of jitter applying its GNSS timestamp. UTC Time is accurate to ± 50ms."
                         }),
                         Field({
                             name: "MicrosecondsGranularity", id: 0x4, conformance: "M",
-                            description: "This indicates the server is synchronized to an upstream source using a highly precise time-synchronization protocol such as PTP, or has built-in GNSS. UTC time is accurate to ± 10 μs.",
-                            xref: { document: "core", section: "11.16.6.1" }
+                            description: "This indicates the server is synchronized to an upstream source using a highly precise time-synchronization protocol such as PTP, or has built-in GNSS. UTC time is accurate to ± 10 μs."
                         })
                     ]
                 }),
@@ -19823,86 +17575,69 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "None", id: 0x0, conformance: "M",
-                            description: "Server is not currently synchronized with a UTC Time source.",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            description: "Server is not currently synchronized with a UTC Time source."
                         }),
                         Field({
-                            name: "Unknown", id: 0x1, conformance: "M", description: "Server uses an unlisted time source.",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            name: "Unknown", id: 0x1, conformance: "M", description: "Server uses an unlisted time source."
                         }),
                         Field({
                             name: "Admin", id: 0x2, conformance: "M",
-                            description: "Server received time from the Section 11.16.9.1, “SetUtcTime Command”.",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            description: "Server received time from the Section 11.16.9.1, “SetUtcTime Command”."
                         }),
                         Field({
                             name: "NodeTimeCluster", id: 0x3, conformance: "M",
-                            description: "Synchronized time by querying the Time Cluster of another Node.",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            description: "Synchronized time by querying the Time Cluster of another Node."
                         }),
                         Field({
                             name: "NonFabricSntp", id: 0x4, conformance: "M",
-                            description: "SNTP from a server not in the Fabric. NTS is not used.",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            description: "SNTP from a server not in the Fabric. NTS is not used."
                         }),
                         Field({
                             name: "NonFabricNtp", id: 0x5, conformance: "M",
-                            description: "NTP from servers not in the Fabric. None of the servers used NTS.",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            description: "NTP from servers not in the Fabric. None of the servers used NTS."
                         }),
                         Field({
                             name: "FabricSntp", id: 0x6, conformance: "M",
-                            description: "SNTP from a server within the Fabric. NTS is not used.",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            description: "SNTP from a server within the Fabric. NTS is not used."
                         }),
                         Field({
                             name: "FabricNtp", id: 0x7, conformance: "M",
-                            description: "NTP from a servers within the Fabric. None of the servers used NTS.",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            description: "NTP from a servers within the Fabric. None of the servers used NTS."
                         }),
                         Field({
                             name: "MixedNtp", id: 0x8, conformance: "M",
-                            description: "NTP from multiple servers on Fabric and external. None of the servers used NTS.",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            description: "NTP from multiple servers on Fabric and external. None of the servers used NTS."
                         }),
                         Field({
                             name: "NonFabricSntpNts", id: 0x9, conformance: "M",
-                            description: "SNTP from a server not in the Fabric. NTS is used.",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            description: "SNTP from a server not in the Fabric. NTS is used."
                         }),
                         Field({
                             name: "NonFabricNtpNts", id: 0xa, conformance: "M",
-                            description: "NTP from servers not in the Fabric. NTS is used on at least one server.",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            description: "NTP from servers not in the Fabric. NTS is used on at least one server."
                         }),
                         Field({
                             name: "FabricSntpNts", id: 0xb, conformance: "M",
-                            description: "SNTP from a server within the Fabric. NTS is used.",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            description: "SNTP from a server within the Fabric. NTS is used."
                         }),
                         Field({
                             name: "FabricNtpNts", id: 0xc, conformance: "M",
-                            description: "NTP from a server within the Fabric. NTS is used on at least one server.",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            description: "NTP from a server within the Fabric. NTS is used on at least one server."
                         }),
                         Field({
                             name: "MixedNtpNts", id: 0xd, conformance: "M",
-                            description: "NTP from multiple servers on the Fabric and external. NTS is used on at least one server.",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            description: "NTP from multiple servers on the Fabric and external. NTS is used on at least one server."
                         }),
                         Field({
                             name: "CloudSource", id: 0xe, conformance: "M",
-                            description: "Time synchronization comes from a vendor cloud-based source (e.g. \"Date\" header in authenticated HTTPS connection).",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            description: "Time synchronization comes from a vendor cloud-based source (e.g. \"Date\" header in authenticated HTTPS connection)."
                         }),
                         Field({
-                            name: "Ptp", id: 0xf, conformance: "M", description: "Time synchronization comes from PTP.",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            name: "Ptp", id: 0xf, conformance: "M", description: "Time synchronization comes from PTP."
                         }),
                         Field({
                             name: "Gnss", id: 0x10, conformance: "M",
-                            description: "Time synchronization comes from a GNSS source.",
-                            xref: { document: "core", section: "11.16.6.2" }
+                            description: "Time synchronization comes from a GNSS source."
                         })
                     ]
                 }),
@@ -19940,10 +17675,7 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.16.6.4" },
 
                     children: [
-                        Field({
-                            name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "desc",
-                            xref: { document: "core", section: "11.16.6.4" }
-                        }),
+                        Field({ name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "desc" }),
                         Field({
                             name: "ValidStarting", id: 0x1, type: "epoch-us", conformance: "M",
                             details: "The UTC time when the offset shall be applied.",
@@ -19972,7 +17704,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "NoCs", id: 0x0, type: "list", access: "R F A", conformance: "M",
-                    constraint: "max SupportedFabrics", quality: "N C",
+                    constraint: "max supportedFabrics", quality: "N C",
 
                     details: "This attribute contains all NOCs applicable to this Node, encoded as a read-only list of NOCStruct." +
                         "\n" +
@@ -19989,7 +17721,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "Fabrics", id: 0x1, type: "list", access: "R F V", conformance: "M",
-                    constraint: "max SupportedFabrics", quality: "N",
+                    constraint: "max supportedFabrics", quality: "N",
 
                     details: "This attribute describes all fabrics to which this Node is commissioned, encoded as a read-only " +
                         "list of FabricDescriptorStruct. This information may be computed directly from the NOCs attribute." +
@@ -20012,7 +17744,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "CommissionedFabrics", id: 0x3, type: "uint8", access: "R V", conformance: "M",
-                    constraint: "max SupportedFabrics", quality: "N",
+                    constraint: "max supportedFabrics", quality: "N",
 
                     details: "This attribute contains the number of Fabrics to which the device is currently commissioned. This " +
                         "attribute shall be equal to the following:" +
@@ -20028,7 +17760,7 @@ export const SpecMatter = Matter({
 
                 Attribute({
                     name: "TrustedRootCertificates", id: 0x4, type: "list", access: "R V", conformance: "M",
-                    constraint: "max SupportedFabrics[max 400]", quality: "N C",
+                    constraint: "max supportedFabrics[max 400]", quality: "N C",
 
                     details: "This attribute shall contain a read-only list of Trusted Root CA Certificates installed on the " +
                         "Node, as octet strings containing their Matter Certificate Encoding representation." +
@@ -20069,10 +17801,9 @@ export const SpecMatter = Matter({
                         "recipient shall fail the command with a Status Code of INVALID_COMMAND. The AttestationNonce field " +
                         "shall be used in the computation of the Attestation Information.",
                     xref: { document: "core", section: "11.17.6.1" },
-                    children: [Field({
-                        name: "AttestationNonce", id: 0x0, type: "octstr", conformance: "M", constraint: "32",
-                        xref: { document: "core", section: "11.17.6.1" }
-                    })]
+                    children: [
+                        Field({ name: "AttestationNonce", id: 0x0, type: "octstr", conformance: "M", constraint: "32" })
+                    ]
                 }),
 
                 Command({
@@ -20090,7 +17821,7 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "AttestationElements", id: 0x0, type: "octstr", conformance: "M", constraint: "max RespMax",
+                            name: "AttestationElements", id: 0x0, type: "octstr", conformance: "M", constraint: "max respMax",
                             details: "This field shall contain the octet string of the serialized attestation_elements_message.",
                             xref: { document: "core", section: "11.17.6.2.1" }
                         }),
@@ -20112,8 +17843,7 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.17.6.3" },
                     children: [Field({
                         name: "CertificateType", id: 0x0, type: "CertificateChainTypeEnum", conformance: "M",
-                        constraint: "desc",
-                        xref: { document: "core", section: "11.17.6.3" }
+                        constraint: "desc"
                     })]
                 }),
 
@@ -20163,16 +17893,9 @@ export const SpecMatter = Matter({
                         "initiator.",
 
                     xref: { document: "core", section: "11.17.6.5" },
-
                     children: [
-                        Field({
-                            name: "CsrNonce", id: 0x0, type: "octstr", conformance: "M", constraint: "32",
-                            xref: { document: "core", section: "11.17.6.5" }
-                        }),
-                        Field({
-                            name: "IsForUpdateNoc", id: 0x1, type: "bool", conformance: "O", default: "false",
-                            xref: { document: "core", section: "11.17.6.5" }
-                        })
+                        Field({ name: "CsrNonce", id: 0x0, type: "octstr", conformance: "M", constraint: "32" }),
+                        Field({ name: "IsForUpdateNoc", id: 0x1, type: "bool", conformance: "O", default: true })
                     ]
                 }),
 
@@ -20191,7 +17914,7 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "NocsrElements", id: 0x0, type: "octstr", conformance: "M", constraint: "max RespMax",
+                            name: "NocsrElements", id: 0x0, type: "octstr", conformance: "M", constraint: "max respMax",
                             details: "This field shall contain the octet string of the serialized nocsr_elements_message." +
                                 "\n" +
                                 "This field shall contain the octet string of the necessary attestation_signature as described in " +
@@ -20200,8 +17923,7 @@ export const SpecMatter = Matter({
                         }),
 
                         Field({
-                            name: "AttestationSignature", id: 0x1, type: "octstr", conformance: "M", constraint: "64",
-                            xref: { document: "core", section: "11.17.6.6" }
+                            name: "AttestationSignature", id: 0x1, type: "octstr", conformance: "M", constraint: "64"
                         })
                     ]
                 }),
@@ -20224,14 +17946,8 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.17.6.8" },
 
                     children: [
-                        Field({
-                            name: "NocValue", id: 0x0, type: "octstr", conformance: "M", constraint: "max 400",
-                            xref: { document: "core", section: "11.17.6.8" }
-                        }),
-                        Field({
-                            name: "IcacValue", id: 0x1, type: "octstr", conformance: "O", constraint: "max 400",
-                            xref: { document: "core", section: "11.17.6.8" }
-                        }),
+                        Field({ name: "NocValue", id: 0x0, type: "octstr", conformance: "M", constraint: "max 400" }),
+                        Field({ name: "IcacValue", id: 0x1, type: "octstr", conformance: "O", constraint: "max 400" }),
 
                         Field({
                             name: "IpkValue", id: 0x2, type: "octstr", conformance: "M", constraint: "16",
@@ -20443,12 +18159,10 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "NocValue", id: 0x0, type: "octstr", access: "F", conformance: "M", constraint: "max 400",
-                            xref: { document: "core", section: "11.17.6.9" }
+                            name: "NocValue", id: 0x0, type: "octstr", access: "F", conformance: "M", constraint: "max 400"
                         }),
                         Field({
-                            name: "IcacValue", id: 0x1, type: "octstr", access: "F", conformance: "O", constraint: "max 400",
-                            xref: { document: "core", section: "11.17.6.9" }
+                            name: "IcacValue", id: 0x1, type: "octstr", access: "F", conformance: "O", constraint: "max 400"
                         }),
                         Field({
                             name: "FabricIndex", id: 0xfe, type: "fabric-idx", access: "R F V", conformance: "M",
@@ -20531,8 +18245,7 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "Label", id: 0x0, type: "string", access: "F", conformance: "M", constraint: "max 32",
-                            xref: { document: "core", section: "11.17.6.11" }
+                            name: "Label", id: 0x0, type: "string", access: "F", conformance: "M", constraint: "max 32"
                         }),
                         Field({
                             name: "FabricIndex", id: 0xfe, type: "fabric-idx", access: "R F V", conformance: "M",
@@ -20601,10 +18314,7 @@ export const SpecMatter = Matter({
                         "session with the target.",
 
                     xref: { document: "core", section: "11.17.6.12" },
-                    children: [Field({
-                        name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M", constraint: "1 to 254",
-                        xref: { document: "core", section: "11.17.6.12" }
-                    })]
+                    children: [Field({ name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M", constraint: "1 to 254" })]
                 }),
 
                 Command({
@@ -20639,10 +18349,7 @@ export const SpecMatter = Matter({
                         "root of trust using the RemoveFabric command.",
 
                     xref: { document: "core", section: "11.17.6.13" },
-                    children: [Field({
-                        name: "RootCaCertificate", id: 0x0, type: "octstr", conformance: "M", constraint: "max 400",
-                        xref: { document: "core", section: "11.17.6.13" }
-                    })]
+                    children: [Field({ name: "RootCaCertificate", id: 0x0, type: "octstr", conformance: "M", constraint: "max 400" })]
                 }),
 
                 Datatype({
@@ -20654,13 +18361,11 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "DacCertificate", id: 0x1, conformance: "M",
-                            description: "Request the DER- encoded DAC certificate",
-                            xref: { document: "core", section: "11.17.4.2" }
+                            description: "Request the DER- encoded DAC certificate"
                         }),
                         Field({
                             name: "PaiCertificate", id: 0x2, conformance: "M",
-                            description: "Request the DER- encoded PAI certificate",
-                            xref: { document: "core", section: "11.17.4.2" }
+                            description: "Request the DER- encoded PAI certificate"
                         })
                     ]
                 }),
@@ -20673,54 +18378,42 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.17.4.3" },
 
                     children: [
-                        Field({
-                            name: "Ok", id: 0x0, conformance: "M", description: "OK, no error",
-                            xref: { document: "core", section: "11.17.4.3" }
-                        }),
+                        Field({ name: "Ok", id: 0x0, conformance: "M", description: "OK, no error" }),
                         Field({
                             name: "InvalidPublicKey", id: 0x1, conformance: "M",
-                            description: "Public Key in the NOC does not match the public key in the NOCSR",
-                            xref: { document: "core", section: "11.17.4.3" }
+                            description: "Public Key in the NOC does not match the public key in the NOCSR"
                         }),
                         Field({
                             name: "InvalidNodeOpId", id: 0x2, conformance: "M",
-                            description: "The Node Operational ID in the NOC is not formatted correctly.",
-                            xref: { document: "core", section: "11.17.4.3" }
+                            description: "The Node Operational ID in the NOC is not formatted correctly."
                         }),
                         Field({
                             name: "InvalidNoc", id: 0x3, conformance: "M",
-                            description: "Any other validation error in NOC chain",
-                            xref: { document: "core", section: "11.17.4.3" }
+                            description: "Any other validation error in NOC chain"
                         }),
                         Field({
                             name: "MissingCsr", id: 0x4, conformance: "M",
-                            description: "No record of prior CSR for which this NOC could match",
-                            xref: { document: "core", section: "11.17.4.3" }
+                            description: "No record of prior CSR for which this NOC could match"
                         }),
                         Field({
                             name: "TableFull", id: 0x5, conformance: "M",
-                            description: "NOCs table full, cannot add another one",
-                            xref: { document: "core", section: "11.17.4.3" }
+                            description: "NOCs table full, cannot add another one"
                         }),
                         Field({
                             name: "InvalidAdminSubject", id: 0x6, conformance: "M",
-                            description: "Invalid CaseAdminSubject field for an AddNOC command.",
-                            xref: { document: "core", section: "11.17.4.3" }
+                            description: "Invalid CaseAdminSubject field for an AddNOC command."
                         }),
                         Field({
                             name: "FabricConflict", id: 0x9, conformance: "M",
-                            description: "Trying to AddNOC instead of UpdateNOC against an existing Fabric.",
-                            xref: { document: "core", section: "11.17.4.3" }
+                            description: "Trying to AddNOC instead of UpdateNOC against an existing Fabric."
                         }),
                         Field({
                             name: "LabelConflict", id: 0xa, conformance: "M",
-                            description: "Label already exists on another Fabric.",
-                            xref: { document: "core", section: "11.17.4.3" }
+                            description: "Label already exists on another Fabric."
                         }),
                         Field({
                             name: "InvalidFabricIndex", id: 0xb, conformance: "M",
-                            description: "FabricIndex argument is invalid.",
-                            xref: { document: "core", section: "11.17.4.3" }
+                            description: "FabricIndex argument is invalid."
                         })
                     ]
                 }),
@@ -20836,8 +18529,7 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.18.4" },
                     children: [Field({
                         name: "BC", constraint: "0", description: "Basic",
-                        details: "Node supports Basic Commissioning Method.",
-                        xref: { document: "core", section: "11.18.4" }
+                        details: "Node supports Basic Commissioning Method."
                     })]
                 }),
 
@@ -21026,10 +18718,7 @@ export const SpecMatter = Matter({
                         "TIVE_INTERVAL for at least the entire duration of the CommissioningTimeout.",
 
                     xref: { document: "core", section: "11.18.8.2" },
-                    children: [Field({
-                        name: "CommissioningTimeout", id: 0x0, type: "uint16", conformance: "M", constraint: "desc",
-                        xref: { document: "core", section: "11.18.8.2" }
-                    })]
+                    children: [Field({ name: "CommissioningTimeout", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" })]
                 }),
 
                 Command({
@@ -21076,18 +18765,15 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "WindowNotOpen", id: 0x0, conformance: "M", description: "Commissioning window not open",
-                            xref: { document: "core", section: "11.18.5.1" }
+                            name: "WindowNotOpen", id: 0x0, conformance: "M", description: "Commissioning window not open"
                         }),
                         Field({
                             name: "EnhancedWindowOpen", id: 0x1, conformance: "M",
-                            description: "An Enhanced Commissioning Method window is open",
-                            xref: { document: "core", section: "11.18.5.1" }
+                            description: "An Enhanced Commissioning Method window is open"
                         }),
                         Field({
                             name: "BasicWindowOpen", id: 0x2, conformance: "BC",
-                            description: "A Basic Commissioning Method window is open",
-                            xref: { document: "core", section: "11.18.5.1" }
+                            description: "A Basic Commissioning Method window is open"
                         })
                     ]
                 })
@@ -21108,38 +18794,18 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.19.6.5.1" },
 
                     children: [
-                        Field({
-                            name: "VendorId", id: 0x0, type: "vendor-id", conformance: "M",
-                            xref: { document: "core", section: "11.19.6.5.1" }
-                        }),
-                        Field({
-                            name: "ProductId", id: 0x1, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "11.19.6.5.1" }
-                        }),
-                        Field({
-                            name: "SoftwareVersion", id: 0x2, type: "uint32", conformance: "M",
-                            xref: { document: "core", section: "11.19.6.5.1" }
-                        }),
+                        Field({ name: "VendorId", id: 0x0, type: "vendor-id", conformance: "M" }),
+                        Field({ name: "ProductId", id: 0x1, type: "uint16", conformance: "M" }),
+                        Field({ name: "SoftwareVersion", id: 0x2, type: "uint32", conformance: "M" }),
                         Field({
                             name: "ProtocolsSupported", id: 0x3, type: "list", conformance: "M", constraint: "max 8",
-                            xref: { document: "core", section: "11.19.6.5.1" },
                             children: [Field({ name: "entry", type: "DownloadProtocolEnum" })]
                         }),
+                        Field({ name: "HardwareVersion", id: 0x4, type: "uint16", conformance: "O" }),
+                        Field({ name: "Location", id: 0x5, type: "string", conformance: "O", constraint: "2" }),
+                        Field({ name: "RequestorCanConsent", id: 0x6, type: "bool", conformance: "O", default: true }),
                         Field({
-                            name: "HardwareVersion", id: 0x4, type: "uint16", conformance: "O",
-                            xref: { document: "core", section: "11.19.6.5.1" }
-                        }),
-                        Field({
-                            name: "Location", id: 0x5, type: "string", conformance: "O", constraint: "2",
-                            xref: { document: "core", section: "11.19.6.5.1" }
-                        }),
-                        Field({
-                            name: "RequestorCanConsent", id: 0x6, type: "bool", conformance: "O", default: "False",
-                            xref: { document: "core", section: "11.19.6.5.1" }
-                        }),
-                        Field({
-                            name: "MetadataForProvider", id: 0x7, type: "octstr", conformance: "O", constraint: "max 512",
-                            xref: { document: "core", section: "11.19.6.5.1" }
+                            name: "MetadataForProvider", id: 0x7, type: "octstr", conformance: "O", constraint: "max 512"
                         })
                     ]
                 }),
@@ -21149,37 +18815,17 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.19.6.5.10" },
 
                     children: [
+                        Field({ name: "Status", id: 0x0, type: "StatusEnum", conformance: "M" }),
+                        Field({ name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "O" }),
+                        Field({ name: "ImageUri", id: 0x2, type: "string", conformance: "O", constraint: "max 256" }),
+                        Field({ name: "SoftwareVersion", id: 0x3, type: "uint32", conformance: "O" }),
                         Field({
-                            name: "Status", id: 0x0, type: "StatusEnum", conformance: "M",
-                            xref: { document: "core", section: "11.19.6.5.10" }
+                            name: "SoftwareVersionString", id: 0x4, type: "string", conformance: "O", constraint: "1 to 64"
                         }),
+                        Field({ name: "UpdateToken", id: 0x5, type: "octstr", conformance: "O", constraint: "8 to 32" }),
+                        Field({ name: "UserConsentNeeded", id: 0x6, type: "bool", conformance: "O", default: true }),
                         Field({
-                            name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "O",
-                            xref: { document: "core", section: "11.19.6.5.10" }
-                        }),
-                        Field({
-                            name: "ImageUri", id: 0x2, type: "string", conformance: "O", constraint: "max 256",
-                            xref: { document: "core", section: "11.19.6.5.10" }
-                        }),
-                        Field({
-                            name: "SoftwareVersion", id: 0x3, type: "uint32", conformance: "O",
-                            xref: { document: "core", section: "11.19.6.5.10" }
-                        }),
-                        Field({
-                            name: "SoftwareVersionString", id: 0x4, type: "string", conformance: "O", constraint: "1 to 64",
-                            xref: { document: "core", section: "11.19.6.5.10" }
-                        }),
-                        Field({
-                            name: "UpdateToken", id: 0x5, type: "octstr", conformance: "O", constraint: "8 to 32",
-                            xref: { document: "core", section: "11.19.6.5.10" }
-                        }),
-                        Field({
-                            name: "UserConsentNeeded", id: 0x6, type: "bool", conformance: "O", default: "False",
-                            xref: { document: "core", section: "11.19.6.5.10" }
-                        }),
-                        Field({
-                            name: "MetadataForRequestor", id: 0x7, type: "octstr", conformance: "O", constraint: "max 512",
-                            xref: { document: "core", section: "11.19.6.5.10" }
+                            name: "MetadataForRequestor", id: 0x7, type: "octstr", conformance: "O", constraint: "max 512"
                         })
                     ]
                 }),
@@ -21191,32 +18837,18 @@ export const SpecMatter = Matter({
                         "This field may be used by the OTA Provider to track minimal lifecycle state to allow finer-grained " +
                         "scheduling of the application of Software Images by OTA Requestors.",
                     xref: { document: "core", section: "11.19.6.5.18" },
-
                     children: [
-                        Field({
-                            name: "UpdateToken", id: 0x0, type: "octstr", conformance: "M", constraint: "8 to 32",
-                            xref: { document: "core", section: "11.19.6.5.18" }
-                        }),
-                        Field({
-                            name: "NewVersion", id: 0x1, type: "uint32", conformance: "M",
-                            xref: { document: "core", section: "11.19.6.5.18" }
-                        })
+                        Field({ name: "UpdateToken", id: 0x0, type: "octstr", conformance: "M", constraint: "8 to 32" }),
+                        Field({ name: "NewVersion", id: 0x1, type: "uint32", conformance: "M" })
                     ]
                 }),
 
                 Command({
                     name: "ApplyUpdateResponse", id: 0x3, conformance: "M", direction: "response",
                     xref: { document: "core", section: "11.19.6.5.20" },
-
                     children: [
-                        Field({
-                            name: "Action", id: 0x0, type: "ApplyUpdateActionEnum", conformance: "M",
-                            xref: { document: "core", section: "11.19.6.5.20" }
-                        }),
-                        Field({
-                            name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "M",
-                            xref: { document: "core", section: "11.19.6.5.20" }
-                        })
+                        Field({ name: "Action", id: 0x0, type: "ApplyUpdateActionEnum", conformance: "M" }),
+                        Field({ name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "M" })
                     ]
                 }),
 
@@ -21256,16 +18888,9 @@ export const SpecMatter = Matter({
                         "cached Software Images, or use it for other similar administrative purposes.",
 
                     xref: { document: "core", section: "11.19.6.5.22" },
-
                     children: [
-                        Field({
-                            name: "UpdateToken", id: 0x0, type: "octstr", conformance: "M", constraint: "8 to 32",
-                            xref: { document: "core", section: "11.19.6.5.22" }
-                        }),
-                        Field({
-                            name: "SoftwareVersion", id: 0x1, type: "uint32", conformance: "M",
-                            xref: { document: "core", section: "11.19.6.5.22" }
-                        })
+                        Field({ name: "UpdateToken", id: 0x0, type: "octstr", conformance: "M", constraint: "8 to 32" }),
+                        Field({ name: "SoftwareVersion", id: 0x1, type: "uint32", conformance: "M" })
                     ]
                 }),
 
@@ -21277,23 +18902,19 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "UpdateAvailable", id: 0x0, conformance: "M",
-                            description: "Indicates that the OTA Provider has an update available.",
-                            xref: { document: "core", section: "11.19.6.4.1" }
+                            description: "Indicates that the OTA Provider has an update available."
                         }),
                         Field({
                             name: "Busy", id: 0x1, conformance: "M",
-                            description: "Indicates OTA Provider may have an update, but it is not ready yet.",
-                            xref: { document: "core", section: "11.19.6.4.1" }
+                            description: "Indicates OTA Provider may have an update, but it is not ready yet."
                         }),
                         Field({
                             name: "NotAvailable", id: 0x2, conformance: "M",
-                            description: "Indicates that there is definitely no update currently available from the OTA Provider.",
-                            xref: { document: "core", section: "11.19.6.4.1" }
+                            description: "Indicates that there is definitely no update currently available from the OTA Provider."
                         }),
                         Field({
                             name: "DownloadProtocolNotSupported", id: 0x3, conformance: "M",
-                            description: "Indicates that the requested download protocol is not supported by the OTA Provider.",
-                            xref: { document: "core", section: "11.19.6.4.1" }
+                            description: "Indicates that the requested download protocol is not supported by the OTA Provider."
                         })
                     ]
                 }),
@@ -21306,19 +18927,14 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.19.6.4.2" },
 
                     children: [
-                        Field({
-                            name: "Proceed", id: 0x0, conformance: "M", description: "Apply the update.",
-                            xref: { document: "core", section: "11.19.6.4.2" }
-                        }),
+                        Field({ name: "Proceed", id: 0x0, conformance: "M", description: "Apply the update." }),
                         Field({
                             name: "AwaitNextAction", id: 0x1, conformance: "M",
-                            description: "Wait at least the given delay time.",
-                            xref: { document: "core", section: "11.19.6.4.2" }
+                            description: "Wait at least the given delay time."
                         }),
                         Field({
                             name: "Discontinue", id: 0x2, conformance: "M",
-                            description: "The OTA Provider is conveying a desire to rescind a previously provided Software Image.",
-                            xref: { document: "core", section: "11.19.6.4.2" }
+                            description: "The OTA Provider is conveying a desire to rescind a previously provided Software Image."
                         })
                     ]
                 }),
@@ -21333,22 +18949,16 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "BdxSynchronous", id: 0x0, conformance: "M",
-                            description: "Indicates support for synchronous BDX.",
-                            xref: { document: "core", section: "11.19.6.4.3" }
+                            description: "Indicates support for synchronous BDX."
                         }),
                         Field({
                             name: "BdxAsynchronous", id: 0x1, conformance: "O",
-                            description: "Indicates support for asynchronous BDX.",
-                            xref: { document: "core", section: "11.19.6.4.3" }
+                            description: "Indicates support for asynchronous BDX."
                         }),
-                        Field({
-                            name: "Https", id: 0x2, conformance: "O", description: "Indicates support for HTTPS.",
-                            xref: { document: "core", section: "11.19.6.4.3" }
-                        }),
+                        Field({ name: "Https", id: 0x2, conformance: "O", description: "Indicates support for HTTPS." }),
                         Field({
                             name: "VendorSpecific", id: 0x3, conformance: "O",
-                            description: "Indicates support for vendor specific protocol.",
-                            xref: { document: "core", section: "11.19.6.4.3" }
+                            description: "Indicates support for vendor specific protocol."
                         })
                     ]
                 })
@@ -21423,22 +19033,12 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.19.7.7.1" },
 
                     children: [
+                        Field({ name: "PreviousState", id: 0x0, type: "UpdateStateEnum", conformance: "M", default: 0 }),
+                        Field({ name: "NewState", id: 0x1, type: "UpdateStateEnum", conformance: "M" }),
+                        Field({ name: "Reason", id: 0x2, type: "ChangeReasonEnum", conformance: "M" }),
                         Field({
-                            name: "PreviousState", id: 0x0, type: "UpdateStateEnum", conformance: "M", default: "Unknown",
-                            xref: { document: "core", section: "11.19.7.7.1" }
-                        }),
-                        Field({
-                            name: "NewState", id: 0x1, type: "UpdateStateEnum", conformance: "M",
-                            xref: { document: "core", section: "11.19.7.7.1" }
-                        }),
-                        Field({
-                            name: "Reason", id: 0x2, type: "ChangeReasonEnum", conformance: "M",
-                            xref: { document: "core", section: "11.19.7.7.1" }
-                        }),
-                        Field({
-                            name: "TargetSoftwareVersion", id: 0x3, type: "uint32", conformance: "M", default: "null",
-                            quality: "X",
-                            xref: { document: "core", section: "11.19.7.7.1" }
+                            name: "TargetSoftwareVersion", id: 0x3, type: "uint32", conformance: "M", default: null,
+                            quality: "X"
                         })
                     ]
                 }),
@@ -21449,16 +19049,9 @@ export const SpecMatter = Matter({
                         "software update. This event SHOULD be generated even if a software update was done using means " +
                         "outside of this cluster.",
                     xref: { document: "core", section: "11.19.7.7.6" },
-
                     children: [
-                        Field({
-                            name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M",
-                            xref: { document: "core", section: "11.19.7.7.6" }
-                        }),
-                        Field({
-                            name: "ProductId", id: 0x1, type: "uint16", conformance: "M",
-                            xref: { document: "core", section: "11.19.7.7.6" }
-                        })
+                        Field({ name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" }),
+                        Field({ name: "ProductId", id: 0x1, type: "uint16", conformance: "M" })
                     ]
                 }),
 
@@ -21471,22 +19064,14 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.19.7.7.9" },
 
                     children: [
-                        Field({
-                            name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M",
-                            xref: { document: "core", section: "11.19.7.7.9" }
-                        }),
-                        Field({
-                            name: "BytesDownloaded", id: 0x1, type: "uint64", conformance: "M",
-                            xref: { document: "core", section: "11.19.7.7.9" }
-                        }),
+                        Field({ name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" }),
+                        Field({ name: "BytesDownloaded", id: 0x1, type: "uint64", conformance: "M" }),
                         Field({
                             name: "ProgressPercent", id: 0x2, type: "uint8", conformance: "M", constraint: "0 to 100",
-                            default: "null", quality: "X",
-                            xref: { document: "core", section: "11.19.7.7.9" }
+                            default: null, quality: "X"
                         }),
                         Field({
-                            name: "PlatformCode", id: 0x3, type: "int64", conformance: "M", default: "null", quality: "X",
-                            xref: { document: "core", section: "11.19.7.7.9" }
+                            name: "PlatformCode", id: 0x3, type: "int64", conformance: "M", default: null, quality: "X"
                         })
                     ]
                 }),
@@ -21507,27 +19092,16 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.19.7.6.1" },
 
                     children: [
+                        Field({ name: "ProviderNodeId", id: 0x0, type: "node-id", access: "F", conformance: "M" }),
+                        Field({ name: "VendorId", id: 0x1, type: "vendor-id", access: "F", conformance: "M" }),
                         Field({
-                            name: "ProviderNodeId", id: 0x0, type: "node-id", access: "F", conformance: "M",
-                            xref: { document: "core", section: "11.19.7.6.1" }
-                        }),
-                        Field({
-                            name: "VendorId", id: 0x1, type: "vendor-id", access: "F", conformance: "M",
-                            xref: { document: "core", section: "11.19.7.6.1" }
-                        }),
-                        Field({
-                            name: "AnnouncementReason", id: 0x2, type: "AnnouncementReasonEnum", access: "F", conformance: "M",
-                            xref: { document: "core", section: "11.19.7.6.1" }
+                            name: "AnnouncementReason", id: 0x2, type: "AnnouncementReasonEnum", access: "F", conformance: "M"
                         }),
                         Field({
                             name: "MetadataForNode", id: 0x3, type: "octstr", access: "F", conformance: "O",
-                            constraint: "max 512",
-                            xref: { document: "core", section: "11.19.7.6.1" }
+                            constraint: "max 512"
                         }),
-                        Field({
-                            name: "Endpoint", id: 0x4, type: "endpoint-no", access: "F", conformance: "M",
-                            xref: { document: "core", section: "11.19.7.6.1" }
-                        }),
+                        Field({ name: "Endpoint", id: 0x4, type: "endpoint-no", access: "F", conformance: "M" }),
                         Field({
                             name: "FabricIndex", id: 0xfe, type: "fabric-idx", access: "R F V", conformance: "M",
                             constraint: "1 to 254"
@@ -21542,18 +19116,15 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "SimpleAnnouncement", id: 0x0, conformance: "M",
-                            description: "An OTA Provider is announcing its presence.",
-                            xref: { document: "core", section: "11.19.7.4.1" }
+                            description: "An OTA Provider is announcing its presence."
                         }),
                         Field({
                             name: "UpdateAvailable", id: 0x1, conformance: "M",
-                            description: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be available.",
-                            xref: { document: "core", section: "11.19.7.4.1" }
+                            description: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be available."
                         }),
                         Field({
                             name: "UrgentUpdateAvailable", id: 0x2, conformance: "M",
-                            description: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be available, which contains an update that needs to be applied urgently.",
-                            xref: { document: "core", section: "11.19.7.4.1" }
+                            description: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be available, which contains an update that needs to be applied urgently."
                         })
                     ]
                 }),
@@ -21564,48 +19135,39 @@ export const SpecMatter = Matter({
 
                     children: [
                         Field({
-                            name: "Unknown", id: 0x0, conformance: "M", description: "Current state is not yet determined.",
-                            xref: { document: "core", section: "11.19.7.4.5" }
+                            name: "Unknown", id: 0x0, conformance: "M", description: "Current state is not yet determined."
                         }),
                         Field({
                             name: "Idle", id: 0x1, conformance: "M",
-                            description: "Indicate a Node not yet in the process of software update.",
-                            xref: { document: "core", section: "11.19.7.4.5" }
+                            description: "Indicate a Node not yet in the process of software update."
                         }),
                         Field({
                             name: "Querying", id: 0x2, conformance: "M",
-                            description: "Indicate a Node in the process of querying an OTA Provider.",
-                            xref: { document: "core", section: "11.19.7.4.5" }
+                            description: "Indicate a Node in the process of querying an OTA Provider."
                         }),
                         Field({
                             name: "DelayedOnQuery", id: 0x3, conformance: "M",
-                            description: "Indicate a Node waiting after a Busy response.",
-                            xref: { document: "core", section: "11.19.7.4.5" }
+                            description: "Indicate a Node waiting after a Busy response."
                         }),
                         Field({
                             name: "Downloading", id: 0x4, conformance: "M",
-                            description: "Indicate a Node currently in the process of downloading a software update.",
-                            xref: { document: "core", section: "11.19.7.4.5" }
+                            description: "Indicate a Node currently in the process of downloading a software update."
                         }),
                         Field({
                             name: "Applying", id: 0x5, conformance: "M",
-                            description: "Indicate a Node currently in the process of verifying and applying a software update.",
-                            xref: { document: "core", section: "11.19.7.4.5" }
+                            description: "Indicate a Node currently in the process of verifying and applying a software update."
                         }),
                         Field({
                             name: "DelayedOnApply", id: 0x6, conformance: "M",
-                            description: "Indicate a Node waiting caused by AwaitNextAction response.",
-                            xref: { document: "core", section: "11.19.7.4.5" }
+                            description: "Indicate a Node waiting caused by AwaitNextAction response."
                         }),
                         Field({
                             name: "RollingBack", id: 0x7, conformance: "M",
-                            description: "Indicate a Node in the process of recovering to a previous version.",
-                            xref: { document: "core", section: "11.19.7.4.5" }
+                            description: "Indicate a Node in the process of recovering to a previous version."
                         }),
                         Field({
                             name: "DelayedOnUserConsent", id: 0x8, conformance: "M",
-                            description: "Indicate a Node is capable of user consent.",
-                            xref: { document: "core", section: "11.19.7.4.5" }
+                            description: "Indicate a Node is capable of user consent."
                         })
                     ]
                 }),
@@ -21618,28 +19180,23 @@ export const SpecMatter = Matter({
                     children: [
                         Field({
                             name: "Unknown", id: 0x0, conformance: "M",
-                            description: "The reason for a state change is unknown.",
-                            xref: { document: "core", section: "11.19.7.4.15" }
+                            description: "The reason for a state change is unknown."
                         }),
                         Field({
                             name: "Success", id: 0x1, conformance: "M",
-                            description: "The reason for a state change is the success of a prior operation.",
-                            xref: { document: "core", section: "11.19.7.4.15" }
+                            description: "The reason for a state change is the success of a prior operation."
                         }),
                         Field({
                             name: "Failure", id: 0x2, conformance: "M",
-                            description: "The reason for a state change is the failure of a prior operation.",
-                            xref: { document: "core", section: "11.19.7.4.15" }
+                            description: "The reason for a state change is the failure of a prior operation."
                         }),
                         Field({
                             name: "TimeOut", id: 0x3, conformance: "M",
-                            description: "The reason for a state change is a time-out.",
-                            xref: { document: "core", section: "11.19.7.4.15" }
+                            description: "The reason for a state change is a time-out."
                         }),
                         Field({
                             name: "DelayByProvider", id: 0x4, conformance: "O",
-                            description: "The reason for a state change is a request by the OTA Provider to wait.",
-                            xref: { document: "core", section: "11.19.7.4.15" }
+                            description: "The reason for a state change is a request by the OTA Provider to wait."
                         })
                     ]
                 }),
@@ -21650,14 +19207,8 @@ export const SpecMatter = Matter({
                     xref: { document: "core", section: "11.19.7.4.20" },
 
                     children: [
-                        Field({
-                            name: "ProviderNodeId", id: 0x1, type: "node-id", access: "F", conformance: "M",
-                            xref: { document: "core", section: "11.19.7.4.20" }
-                        }),
-                        Field({
-                            name: "Endpoint", id: 0x2, type: "endpoint-no", access: "F", conformance: "M",
-                            xref: { document: "core", section: "11.19.7.4.20" }
-                        }),
+                        Field({ name: "ProviderNodeId", id: 0x1, type: "node-id", access: "F", conformance: "M" }),
+                        Field({ name: "Endpoint", id: 0x2, type: "endpoint-no", access: "F", conformance: "M" }),
                         Field({
                             name: "FabricIndex", id: 0xfe, type: "fabric-idx", access: "R F V", conformance: "M",
                             constraint: "1 to 254"

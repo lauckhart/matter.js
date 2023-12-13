@@ -27,7 +27,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "Nocs", id: 0x0, type: "list", access: "R U A", conformance: "M",
-            constraint: "max SupportedFabrics", quality: "N C",
+            constraint: "max supportedFabrics", quality: "N C",
 
             details: "This attribute contains all NOCs applicable to this Node, encoded as a read-only list of NOCStruct." +
                 "\n" +
@@ -44,7 +44,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "Fabrics", id: 0x1, type: "list", access: "R U V", conformance: "M",
-            constraint: "max SupportedFabrics", quality: "N",
+            constraint: "max supportedFabrics", quality: "N",
 
             details: "This attribute describes all fabrics to which this Node is commissioned, encoded as a read-only " +
                 "list of FabricDescriptorStruct. This information may be computed directly from the NOCs attribute." +
@@ -67,7 +67,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "CommissionedFabrics", id: 0x3, type: "uint8", access: "R V", conformance: "M",
-            constraint: "max SupportedFabrics", quality: "N",
+            constraint: "max supportedFabrics", quality: "N",
 
             details: "This attribute contains the number of Fabrics to which the device is currently commissioned. This " +
                 "attribute shall be equal to the following:" +
@@ -83,7 +83,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "TrustedRootCertificates", id: 0x4, type: "list", access: "R V", conformance: "M",
-            constraint: "max SupportedFabrics[max 400]", quality: "N C",
+            constraint: "max supportedFabrics[max 400]", quality: "N C",
 
             details: "This attribute shall contain a read-only list of Trusted Root CA Certificates installed on the " +
                 "Node, as octet strings containing their Matter Certificate Encoding representation." +
@@ -125,10 +125,7 @@ Matter.children.push(Cluster({
                 "recipient shall fail the command with a Status Code of INVALID_COMMAND. The AttestationNonce field " +
                 "shall be used in the computation of the Attestation Information.",
             xref: { document: "core", section: "11.17.6.1" },
-            children: [Field({
-                name: "AttestationNonce", id: 0x0, type: "octstr", conformance: "M", constraint: "32",
-                xref: { document: "core", section: "11.17.6.1" }
-            })]
+            children: [Field({ name: "AttestationNonce", id: 0x0, type: "octstr", conformance: "M", constraint: "32" })]
         }),
 
         Command({
@@ -168,8 +165,7 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.17.6.3" },
             children: [Field({
                 name: "CertificateType", id: 0x0, type: "CertificateChainTypeEnum", conformance: "M",
-                constraint: "desc",
-                xref: { document: "core", section: "11.17.6.3" }
+                constraint: "desc"
             })]
         }),
 
@@ -219,16 +215,9 @@ Matter.children.push(Cluster({
                 "initiator.",
 
             xref: { document: "core", section: "11.17.6.5" },
-
             children: [
-                Field({
-                    name: "CsrNonce", id: 0x0, type: "octstr", conformance: "M", constraint: "32",
-                    xref: { document: "core", section: "11.17.6.5" }
-                }),
-                Field({
-                    name: "IsForUpdateNoc", id: 0x1, type: "bool", conformance: "O", default: "false",
-                    xref: { document: "core", section: "11.17.6.5" }
-                })
+                Field({ name: "CsrNonce", id: 0x0, type: "octstr", conformance: "M", constraint: "32" }),
+                Field({ name: "IsForUpdateNoc", id: 0x1, type: "bool", conformance: "O", default: true })
             ]
         }),
 
@@ -255,10 +244,7 @@ Matter.children.push(Cluster({
                     xref: { document: "core", section: "11.17.6.6.1" }
                 }),
 
-                Field({
-                    name: "AttestationSignature", id: 0x1, type: "octstr", conformance: "M", constraint: "64",
-                    xref: { document: "core", section: "11.17.6.6" }
-                })
+                Field({ name: "AttestationSignature", id: 0x1, type: "octstr", conformance: "M", constraint: "64" })
             ]
         }),
 
@@ -280,14 +266,8 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.17.6.8" },
 
             children: [
-                Field({
-                    name: "NocValue", id: 0x0, type: "octstr", conformance: "M", constraint: "max 400",
-                    xref: { document: "core", section: "11.17.6.8" }
-                }),
-                Field({
-                    name: "IcacValue", id: 0x1, type: "octstr", conformance: "O", constraint: "max 400",
-                    xref: { document: "core", section: "11.17.6.8" }
-                }),
+                Field({ name: "NocValue", id: 0x0, type: "octstr", conformance: "M", constraint: "max 400" }),
+                Field({ name: "IcacValue", id: 0x1, type: "octstr", conformance: "O", constraint: "max 400" }),
 
                 Field({
                     name: "IpkValue", id: 0x2, type: "octstr", conformance: "M", constraint: "16",
@@ -498,14 +478,8 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.17.6.9" },
 
             children: [
-                Field({
-                    name: "NocValue", id: 0x0, type: "octstr", access: "F", conformance: "M", constraint: "max 400",
-                    xref: { document: "core", section: "11.17.6.9" }
-                }),
-                Field({
-                    name: "IcacValue", id: 0x1, type: "octstr", access: "F", conformance: "O", constraint: "max 400",
-                    xref: { document: "core", section: "11.17.6.9" }
-                }),
+                Field({ name: "NocValue", id: 0x0, type: "octstr", access: "F", conformance: "M", constraint: "max 400" }),
+                Field({ name: "IcacValue", id: 0x1, type: "octstr", access: "F", conformance: "O", constraint: "max 400" }),
                 Field({
                     name: "FabricIndex", id: 0xfe, type: "fabric-idx", access: "R F V", conformance: "M",
                     constraint: "1 to 254"
@@ -586,10 +560,7 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.17.6.11" },
 
             children: [
-                Field({
-                    name: "Label", id: 0x0, type: "string", access: "F", conformance: "M", constraint: "max 32",
-                    xref: { document: "core", section: "11.17.6.11" }
-                }),
+                Field({ name: "Label", id: 0x0, type: "string", access: "F", conformance: "M", constraint: "max 32" }),
                 Field({
                     name: "FabricIndex", id: 0xfe, type: "fabric-idx", access: "R F V", conformance: "M",
                     constraint: "1 to 254"
@@ -657,10 +628,9 @@ Matter.children.push(Cluster({
                 "session with the target.",
 
             xref: { document: "core", section: "11.17.6.12" },
-            children: [Field({
-                name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M", constraint: "1 to 254",
-                xref: { document: "core", section: "11.17.6.12" }
-            })]
+            children: [
+                Field({ name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M", constraint: "1 to 254" })
+            ]
         }),
 
         Command({
@@ -695,10 +665,9 @@ Matter.children.push(Cluster({
                 "root of trust using the RemoveFabric command.",
 
             xref: { document: "core", section: "11.17.6.13" },
-            children: [Field({
-                name: "RootCaCertificate", id: 0x0, type: "octstr", conformance: "M", constraint: "max 400",
-                xref: { document: "core", section: "11.17.6.13" }
-            })]
+            children: [
+                Field({ name: "RootCaCertificate", id: 0x0, type: "octstr", conformance: "M", constraint: "max 400" })
+            ]
         }),
 
         Datatype({
@@ -710,13 +679,11 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "DacCertificate", id: 0x1, conformance: "M",
-                    description: "Request the DER- encoded DAC certificate",
-                    xref: { document: "core", section: "11.17.4.2" }
+                    description: "Request the DER- encoded DAC certificate"
                 }),
                 Field({
                     name: "PaiCertificate", id: 0x2, conformance: "M",
-                    description: "Request the DER- encoded PAI certificate",
-                    xref: { document: "core", section: "11.17.4.2" }
+                    description: "Request the DER- encoded PAI certificate"
                 })
             ]
         }),
@@ -729,54 +696,42 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.17.4.3" },
 
             children: [
-                Field({
-                    name: "Ok", id: 0x0, conformance: "M", description: "OK, no error",
-                    xref: { document: "core", section: "11.17.4.3" }
-                }),
+                Field({ name: "Ok", id: 0x0, conformance: "M", description: "OK, no error" }),
                 Field({
                     name: "InvalidPublicKey", id: 0x1, conformance: "M",
-                    description: "Public Key in the NOC does not match the public key in the NOCSR",
-                    xref: { document: "core", section: "11.17.4.3" }
+                    description: "Public Key in the NOC does not match the public key in the NOCSR"
                 }),
                 Field({
                     name: "InvalidNodeOpId", id: 0x2, conformance: "M",
-                    description: "The Node Operational ID in the NOC is not formatted correctly.",
-                    xref: { document: "core", section: "11.17.4.3" }
+                    description: "The Node Operational ID in the NOC is not formatted correctly."
                 }),
                 Field({
                     name: "InvalidNoc", id: 0x3, conformance: "M",
-                    description: "Any other validation error in NOC chain",
-                    xref: { document: "core", section: "11.17.4.3" }
+                    description: "Any other validation error in NOC chain"
                 }),
                 Field({
                     name: "MissingCsr", id: 0x4, conformance: "M",
-                    description: "No record of prior CSR for which this NOC could match",
-                    xref: { document: "core", section: "11.17.4.3" }
+                    description: "No record of prior CSR for which this NOC could match"
                 }),
                 Field({
                     name: "TableFull", id: 0x5, conformance: "M",
-                    description: "NOCs table full, cannot add another one",
-                    xref: { document: "core", section: "11.17.4.3" }
+                    description: "NOCs table full, cannot add another one"
                 }),
                 Field({
                     name: "InvalidAdminSubject", id: 0x6, conformance: "M",
-                    description: "Invalid CaseAdminSubject field for an AddNOC command.",
-                    xref: { document: "core", section: "11.17.4.3" }
+                    description: "Invalid CaseAdminSubject field for an AddNOC command."
                 }),
                 Field({
                     name: "FabricConflict", id: 0x9, conformance: "M",
-                    description: "Trying to AddNOC instead of UpdateNOC against an existing Fabric.",
-                    xref: { document: "core", section: "11.17.4.3" }
+                    description: "Trying to AddNOC instead of UpdateNOC against an existing Fabric."
                 }),
                 Field({
                     name: "LabelConflict", id: 0xa, conformance: "M",
-                    description: "Label already exists on another Fabric.",
-                    xref: { document: "core", section: "11.17.4.3" }
+                    description: "Label already exists on another Fabric."
                 }),
                 Field({
                     name: "InvalidFabricIndex", id: 0xb, conformance: "M",
-                    description: "FabricIndex argument is invalid.",
-                    xref: { document: "core", section: "11.17.4.3" }
+                    description: "FabricIndex argument is invalid."
                 })
             ]
         }),

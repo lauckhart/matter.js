@@ -180,12 +180,10 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 7",
-                    xref: { document: "core", section: "11.11.8.2" },
                     children: [Field({ name: "entry", type: "RadioFaultEnum" })]
                 }),
                 Field({
                     name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 7",
-                    xref: { document: "core", section: "11.11.8.2" },
                     children: [Field({ name: "entry", type: "RadioFaultEnum" })]
                 })
             ]
@@ -208,12 +206,10 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 4",
-                    xref: { document: "core", section: "11.11.8.3" },
                     children: [Field({ name: "entry", type: "NetworkFaultEnum" })]
                 }),
                 Field({
                     name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 4",
-                    xref: { document: "core", section: "11.11.8.3" },
                     children: [Field({ name: "entry", type: "NetworkFaultEnum" })]
                 })
             ]
@@ -311,58 +307,47 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Unspecified", id: 0x0, conformance: "M",
-                    description: "The Node has encountered an unspecified fault.",
-                    xref: { document: "core", section: "11.11.4.1" }
+                    description: "The Node has encountered an unspecified fault."
                 }),
                 Field({
                     name: "Radio", id: 0x1, conformance: "O",
-                    description: "The Node has encountered a fault with at least one of its radios.",
-                    xref: { document: "core", section: "11.11.4.1" }
+                    description: "The Node has encountered a fault with at least one of its radios."
                 }),
                 Field({
                     name: "Sensor", id: 0x2, conformance: "O",
-                    description: "The Node has encountered a fault with at least one of its sensors.",
-                    xref: { document: "core", section: "11.11.4.1" }
+                    description: "The Node has encountered a fault with at least one of its sensors."
                 }),
                 Field({
                     name: "ResettableOverTemp", id: 0x3, conformance: "O",
-                    description: "The Node has encountered an over-temperature fault that is resettable.",
-                    xref: { document: "core", section: "11.11.4.1" }
+                    description: "The Node has encountered an over-temperature fault that is resettable."
                 }),
                 Field({
                     name: "NonResettableOverTemp", id: 0x4, conformance: "O",
-                    description: "The Node has encountered an over-temperature fault that is not resettable.",
-                    xref: { document: "core", section: "11.11.4.1" }
+                    description: "The Node has encountered an over-temperature fault that is not resettable."
                 }),
                 Field({
                     name: "PowerSource", id: 0x5, conformance: "O",
-                    description: "The Node has encountered a fault with at least one of its power sources.",
-                    xref: { document: "core", section: "11.11.4.1" }
+                    description: "The Node has encountered a fault with at least one of its power sources."
                 }),
                 Field({
                     name: "VisualDisplayFault", id: 0x6, conformance: "O",
-                    description: "The Node has encountered a fault with at least one of its visual displays.",
-                    xref: { document: "core", section: "11.11.4.1" }
+                    description: "The Node has encountered a fault with at least one of its visual displays."
                 }),
                 Field({
                     name: "AudioOutputFault", id: 0x7, conformance: "O",
-                    description: "The Node has encountered a fault with at least one of its audio outputs.",
-                    xref: { document: "core", section: "11.11.4.1" }
+                    description: "The Node has encountered a fault with at least one of its audio outputs."
                 }),
                 Field({
                     name: "UserInterfaceFault", id: 0x8, conformance: "O",
-                    description: "The Node has encountered a fault with at least one of its user interfaces.",
-                    xref: { document: "core", section: "11.11.4.1" }
+                    description: "The Node has encountered a fault with at least one of its user interfaces."
                 }),
                 Field({
                     name: "NonVolatileMemoryError", id: 0x9, conformance: "O",
-                    description: "The Node has encountered a fault with its non-volatile memory.",
-                    xref: { document: "core", section: "11.11.4.1" }
+                    description: "The Node has encountered a fault with its non-volatile memory."
                 }),
                 Field({
                     name: "TamperDetected", id: 0xa, conformance: "O",
-                    description: "The Node has encountered disallowed physical tampering.",
-                    xref: { document: "core", section: "11.11.4.1" }
+                    description: "The Node has encountered disallowed physical tampering."
                 })
             ]
         }),
@@ -374,38 +359,31 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Unspecified", id: 0x0, conformance: "M",
-                    description: "The Node has encountered an unspecified radio fault.",
-                    xref: { document: "core", section: "11.11.4.2" }
+                    description: "The Node has encountered an unspecified radio fault."
                 }),
                 Field({
                     name: "WiFiFault", id: 0x1, conformance: "O",
-                    description: "The Node has encountered a fault with its Wi-Fi radio.",
-                    xref: { document: "core", section: "11.11.4.2" }
+                    description: "The Node has encountered a fault with its Wi-Fi radio."
                 }),
                 Field({
                     name: "CellularFault", id: 0x2, conformance: "O",
-                    description: "The Node has encountered a fault with its cellular radio.",
-                    xref: { document: "core", section: "11.11.4.2" }
+                    description: "The Node has encountered a fault with its cellular radio."
                 }),
                 Field({
                     name: "ThreadFault", id: 0x3, conformance: "O",
-                    description: "The Node has encountered a fault with its802.15.4 radio.",
-                    xref: { document: "core", section: "11.11.4.2" }
+                    description: "The Node has encountered a fault with its802.15.4 radio."
                 }),
                 Field({
                     name: "NfcFault", id: 0x4, conformance: "O",
-                    description: "The Node has encountered a fault with its NFC radio.",
-                    xref: { document: "core", section: "11.11.4.2" }
+                    description: "The Node has encountered a fault with its NFC radio."
                 }),
                 Field({
                     name: "BleFault", id: 0x5, conformance: "O",
-                    description: "The Node has encountered a fault with its BLE radio.",
-                    xref: { document: "core", section: "11.11.4.2" }
+                    description: "The Node has encountered a fault with its BLE radio."
                 }),
                 Field({
                     name: "EthernetFault", id: 0x6, conformance: "O",
-                    description: "The Node has encountered a fault with its Ethernet controller.",
-                    xref: { document: "core", section: "11.11.4.2" }
+                    description: "The Node has encountered a fault with its Ethernet controller."
                 })
             ]
         }),
@@ -417,23 +395,19 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Unspecified", id: 0x0, conformance: "M",
-                    description: "The Node has encountered an unspecified fault.",
-                    xref: { document: "core", section: "11.11.4.3" }
+                    description: "The Node has encountered an unspecified fault."
                 }),
                 Field({
                     name: "HardwareFailure", id: 0x1, conformance: "O",
-                    description: "The Node has encountered a network fault as a result of a hardware failure.",
-                    xref: { document: "core", section: "11.11.4.3" }
+                    description: "The Node has encountered a network fault as a result of a hardware failure."
                 }),
                 Field({
                     name: "NetworkJammed", id: 0x2, conformance: "O",
-                    description: "The Node has encountered a network fault as a result of a jammed network.",
-                    xref: { document: "core", section: "11.11.4.3" }
+                    description: "The Node has encountered a network fault as a result of a jammed network."
                 }),
                 Field({
                     name: "ConnectionFailed", id: 0x3, conformance: "O",
-                    description: "The Node has encountered a network fault as a result of a failure to establish a connection.",
-                    xref: { document: "core", section: "11.11.4.3" }
+                    description: "The Node has encountered a network fault as a result of a failure to establish a connection."
                 })
             ]
         }),
@@ -445,25 +419,12 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Unspecified", id: 0x0, conformance: "M",
-                    description: "Indicates an interface of an unspecified type.",
-                    xref: { document: "core", section: "11.11.4.4" }
+                    description: "Indicates an interface of an unspecified type."
                 }),
-                Field({
-                    name: "WiFi", id: 0x1, conformance: "O", description: "Indicates a Wi-Fi interface.",
-                    xref: { document: "core", section: "11.11.4.4" }
-                }),
-                Field({
-                    name: "Ethernet", id: 0x2, conformance: "O", description: "Indicates a Ethernet interface.",
-                    xref: { document: "core", section: "11.11.4.4" }
-                }),
-                Field({
-                    name: "Cellular", id: 0x3, conformance: "O", description: "Indicates a Cellular interface.",
-                    xref: { document: "core", section: "11.11.4.4" }
-                }),
-                Field({
-                    name: "Thread", id: 0x4, conformance: "O", description: "Indicates a Thread interface.",
-                    xref: { document: "core", section: "11.11.4.4" }
-                })
+                Field({ name: "WiFi", id: 0x1, conformance: "O", description: "Indicates a Wi-Fi interface." }),
+                Field({ name: "Ethernet", id: 0x2, conformance: "O", description: "Indicates a Ethernet interface." }),
+                Field({ name: "Cellular", id: 0x3, conformance: "O", description: "Indicates a Cellular interface." }),
+                Field({ name: "Thread", id: 0x4, conformance: "O", description: "Indicates a Thread interface." })
             ]
         }),
 
@@ -474,38 +435,31 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Unspecified", id: 0x0, conformance: "M",
-                    description: "The Node is unable to identify the Power-On reason as one of the other provided enumeration values.",
-                    xref: { document: "core", section: "11.11.4.5" }
+                    description: "The Node is unable to identify the Power-On reason as one of the other provided enumeration values."
                 }),
                 Field({
                     name: "PowerOnReboot", id: 0x1, conformance: "M",
-                    description: "The Node has booted as the result of physical interaction with the device resulting in a reboot.",
-                    xref: { document: "core", section: "11.11.4.5" }
+                    description: "The Node has booted as the result of physical interaction with the device resulting in a reboot."
                 }),
                 Field({
                     name: "BrownOutReset", id: 0x2, conformance: "M",
-                    description: "The Node has rebooted as the result of a brown-out of the Node’s power supply.",
-                    xref: { document: "core", section: "11.11.4.5" }
+                    description: "The Node has rebooted as the result of a brown-out of the Node’s power supply."
                 }),
                 Field({
                     name: "SoftwareWatchdogReset", id: 0x3, conformance: "M",
-                    description: "The Node has rebooted as the result of a software watchdog timer.",
-                    xref: { document: "core", section: "11.11.4.5" }
+                    description: "The Node has rebooted as the result of a software watchdog timer."
                 }),
                 Field({
                     name: "HardwareWatchdogReset", id: 0x4, conformance: "M",
-                    description: "The Node has rebooted as the result of a hardware watchdog timer.",
-                    xref: { document: "core", section: "11.11.4.5" }
+                    description: "The Node has rebooted as the result of a hardware watchdog timer."
                 }),
                 Field({
                     name: "SoftwareUpdateCompleted", id: 0x5, conformance: "M",
-                    description: "The Node has rebooted as the result of a completed software update.",
-                    xref: { document: "core", section: "11.11.4.5" }
+                    description: "The Node has rebooted as the result of a completed software update."
                 }),
                 Field({
                     name: "SoftwareReset", id: 0x6, conformance: "M",
-                    description: "The Node has rebooted as the result of a software initiated reboot.",
-                    xref: { document: "core", section: "11.11.4.5" }
+                    description: "The Node has rebooted as the result of a software initiated reboot."
                 })
             ]
         }),
@@ -533,7 +487,7 @@ Matter.children.push(Cluster({
 
                 Field({
                     name: "OffPremiseServicesReachableIPv4", id: 0x2, type: "bool", access: "R V", conformance: "M",
-                    default: "null", quality: "X",
+                    default: null, quality: "X",
                     details: "This field shall indicate whether the Node is currently able to reach off-premise services it uses " +
                         "by utilizing IPv4. The value shall be null if the Node does not use such services or does not know " +
                         "whether it can reach them.",
@@ -542,7 +496,7 @@ Matter.children.push(Cluster({
 
                 Field({
                     name: "OffPremiseServicesReachableIPv6", id: 0x3, type: "bool", access: "R V", conformance: "M",
-                    default: "null", quality: "X",
+                    default: null, quality: "X",
                     details: "This field shall indicate whether the Node is currently able to reach off-premise services it uses " +
                         "by utilizing IPv6. The value shall be null if the Node does not use such services or does not know " +
                         "whether it can reach them.",

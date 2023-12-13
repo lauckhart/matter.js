@@ -40,25 +40,12 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.11.4" },
 
             children: [
+                Field({ name: "LS", conformance: "O.a", constraint: "0", description: "LatchingSwitch" }),
+                Field({ name: "MS", conformance: "O.a", constraint: "1", description: "MomentarySwitch" }),
+                Field({ name: "MSR", conformance: "[MS]", constraint: "2", description: "MomentarySwitchRelease" }),
+                Field({ name: "MSL", conformance: "[MS & MSR]", constraint: "3", description: "MomentarySwitchLongPress" }),
                 Field({
-                    name: "LS", conformance: "O.a", constraint: "0", description: "LatchingSwitch",
-                    xref: { document: "cluster", section: "1.11.4" }
-                }),
-                Field({
-                    name: "MS", conformance: "O.a", constraint: "1", description: "MomentarySwitch",
-                    xref: { document: "cluster", section: "1.11.4" }
-                }),
-                Field({
-                    name: "MSR", conformance: "[MS]", constraint: "2", description: "MomentarySwitchRelease",
-                    xref: { document: "cluster", section: "1.11.4" }
-                }),
-                Field({
-                    name: "MSL", conformance: "[MS & MSR]", constraint: "3", description: "MomentarySwitchLongPress",
-                    xref: { document: "cluster", section: "1.11.4" }
-                }),
-                Field({
-                    name: "MSM", conformance: "[MS & MSR]", constraint: "4", description: "MomentarySwitchMultiPress",
-                    xref: { document: "cluster", section: "1.11.4" }
+                    name: "MSM", conformance: "[MS & MSR]", constraint: "4", description: "MomentarySwitchMultiPress"
                 })
             ]
         }),
@@ -74,7 +61,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "CurrentPosition", id: 0x1, type: "uint8", conformance: "M",
-            constraint: "0 to NumberOfPositions1", default: 0, quality: "N",
+            constraint: "0 to numberOfPositions1", default: 0, quality: "N",
             details: "This attribute shall indicate the position of the switch. The valid range is zero to " +
                 "NumberOfPositions-1. CurrentPosition value 0 shall be assigned to the default position of the " +
                 "switch: for example the \"open\" state of a rocker switch, or the \"idle\" state of a push button " +
@@ -101,8 +88,7 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.11.7.1" },
             children: [Field({
                 name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
-                constraint: "0 to NumberOfPositions1",
-                xref: { document: "cluster", section: "1.11.7.1" }
+                constraint: "0 to numberOfPositions1"
             })]
         }),
 
@@ -115,8 +101,7 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.11.7.2" },
             children: [Field({
                 name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
-                constraint: "0 to NumberOfPositions1",
-                xref: { document: "cluster", section: "1.11.7.2" }
+                constraint: "0 to numberOfPositions1"
             })]
         }),
 
@@ -130,8 +115,7 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.11.7.3" },
             children: [Field({
                 name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
-                constraint: "0 to NumberOfPositions1",
-                xref: { document: "cluster", section: "1.11.7.3" }
+                constraint: "0 to numberOfPositions1"
             })]
         }),
 
@@ -155,8 +139,7 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.11.7.4" },
             children: [Field({
                 name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M",
-                constraint: "0 to NumberOfPositions1",
-                xref: { document: "cluster", section: "1.11.7.4" }
+                constraint: "0 to numberOfPositions1"
             })]
         }),
 
@@ -174,8 +157,7 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.11.7.5" },
             children: [Field({
                 name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M",
-                constraint: "0 to NumberOfPositions1",
-                xref: { document: "cluster", section: "1.11.7.5" }
+                constraint: "0 to numberOfPositions1"
             })]
         }),
 
@@ -202,13 +184,11 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "NewPosition", id: 0x0, type: "uint8", conformance: "M",
-                    constraint: "0 to NumberOfPositions1",
-                    xref: { document: "cluster", section: "1.11.7.6" }
+                    constraint: "0 to numberOfPositions1"
                 }),
                 Field({
                     name: "CurrentNumberOfPressesCounted", id: 0x1, type: "uint8", conformance: "M",
-                    constraint: "2 to MultiPressMax",
-                    xref: { document: "cluster", section: "1.11.7.6" }
+                    constraint: "2 to multiPressMax"
                 })
             ]
         }),
@@ -243,13 +223,11 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "PreviousPosition", id: 0x0, type: "uint8", conformance: "M",
-                    constraint: "0 to NumberOfPositions1",
-                    xref: { document: "cluster", section: "1.11.7.7" }
+                    constraint: "0 to numberOfPositions1"
                 }),
                 Field({
                     name: "TotalNumberOfPressesCounted", id: 0x1, type: "uint8", conformance: "M",
-                    constraint: "1 to MultiPressMax",
-                    xref: { document: "cluster", section: "1.11.7.7" }
+                    constraint: "1 to multiPressMax"
                 })
             ]
         })

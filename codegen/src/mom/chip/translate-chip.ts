@@ -189,7 +189,7 @@ function mapType(chipType: string | undefined) {
     if (mapped) {
         return mapped;
     }
-    return camelize(chipType);
+    return camelize(chipType, true);
 }
 
 function setBounds(source: Element, element: ValueElement) {
@@ -374,7 +374,7 @@ const translators: { [name: string]: Translator } = {
         });
 
         const response = str(source.getAttribute("response"));
-        if (response) command.response = camelize(response);
+        if (response) command.response = camelize(response, true);
 
         const src = str(source.getAttribute("source"));
         if (src === "client") {
@@ -463,7 +463,7 @@ const translators: { [name: string]: Translator } = {
         const name = need("cluster name", str(child(source, "name"))).replace(/Cluster$/, "");
         const cluster = ClusterElement({
             id: need("cluster id", id),
-            name: camelize(name),
+            name: camelize(name, true),
             description: name,
             details: str(child(source, "description")),
         });

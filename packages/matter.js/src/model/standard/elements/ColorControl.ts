@@ -30,28 +30,20 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "HS", constraint: "0", description: "HueSaturation",
-                    details: "Supports color specification via hue/saturation.",
-                    xref: { document: "cluster", section: "3.2.5" }
+                    details: "Supports color specification via hue/saturation."
                 }),
                 Field({
                     name: "EHUE", constraint: "1", description: "EnhancedHue",
-                    details: "Enhanced hue is supported.",
-                    xref: { document: "cluster", section: "3.2.5" }
+                    details: "Enhanced hue is supported."
                 }),
-                Field({
-                    name: "CL", constraint: "2", description: "ColorLoop",
-                    details: "Color loop is supported.",
-                    xref: { document: "cluster", section: "3.2.5" }
-                }),
+                Field({ name: "CL", constraint: "2", description: "ColorLoop", details: "Color loop is supported." }),
                 Field({
                     name: "XY", constraint: "3", description: "Xy",
-                    details: "Supports color specification via XY.",
-                    xref: { document: "cluster", section: "3.2.5" }
+                    details: "Supports color specification via XY."
                 }),
                 Field({
                     name: "CT", constraint: "4", description: "ColorTemperature",
-                    details: "Supports specification of color temperature.",
-                    xref: { document: "cluster", section: "3.2.5" }
+                    details: "Supports specification of color temperature."
                 })
             ]
         }),
@@ -133,17 +125,11 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "3.2.7.6" },
 
             children: [
-                Field({ name: "None", id: 0x0, xref: { document: "cluster", section: "3.2.7.6" } }),
-                Field({ name: "OtherUnknown", id: 0x1, xref: { document: "cluster", section: "3.2.7.6" } }),
-                Field({ name: "TemperatureMonitoring", id: 0x2, xref: { document: "cluster", section: "3.2.7.6" } }),
-                Field({
-                    name: "OpticalLuminanceMonitoringAndFeedback", id: 0x3,
-                    xref: { document: "cluster", section: "3.2.7.6" }
-                }),
-                Field({
-                    name: "OpticalColorMonitoringAndFeedback", id: 0x4,
-                    xref: { document: "cluster", section: "3.2.7.6" }
-                })
+                Field({ name: "None", id: 0x0 }),
+                Field({ name: "OtherUnknown", id: 0x1 }),
+                Field({ name: "TemperatureMonitoring", id: 0x2 }),
+                Field({ name: "OpticalLuminanceMonitoringAndFeedback", id: 0x3 }),
+                Field({ name: "OpticalColorMonitoringAndFeedback", id: 0x4 })
             ]
         }),
 
@@ -189,14 +175,10 @@ Matter.children.push(Cluster({
                 "Table 39. Values of the ColorMode Attribute",
 
             xref: { document: "cluster", section: "3.2.7.9" },
-
             children: [
-                Field({
-                    name: "CurrentHueAndCurrentSaturation", id: 0x0,
-                    xref: { document: "cluster", section: "3.2.7.9" }
-                }),
-                Field({ name: "CurrentXAndCurrentY", id: 0x1, xref: { document: "cluster", section: "3.2.7.9" } }),
-                Field({ name: "ColorTemperatureMireds", id: 0x2, xref: { document: "cluster", section: "3.2.7.9" } })
+                Field({ name: "CurrentHueAndCurrentSaturation", id: 0x0 }),
+                Field({ name: "CurrentXAndCurrentY", id: 0x1 }),
+                Field({ name: "ColorTemperatureMireds", id: 0x2 })
             ]
         }),
 
@@ -225,10 +207,7 @@ Matter.children.push(Cluster({
                 "  • The value of the ExecuteIfOff bit is 0.",
 
             xref: { document: "cluster", section: "3.2.7.10" },
-            children: [Field({
-                name: "ExecuteIfOff", id: 0x1, conformance: "M", constraint: "0",
-                xref: { document: "cluster", section: "3.2.7.10" }
-            })]
+            children: [Field({ name: "ExecuteIfOff", id: 0x1, conformance: "M", constraint: "0" })]
         }),
 
         Attribute({
@@ -263,16 +242,10 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "3.2.7.12" },
 
             children: [
-                Field({
-                    name: "CurrentHueAndCurrentSaturation", id: 0x0,
-                    xref: { document: "cluster", section: "3.2.7.12" }
-                }),
-                Field({ name: "CurrentXAndCurrentY", id: 0x1, xref: { document: "cluster", section: "3.2.7.12" } }),
-                Field({ name: "ColorTemperatureMireds", id: 0x2, xref: { document: "cluster", section: "3.2.7.12" } }),
-                Field({
-                    name: "EnhancedCurrentHueAndCurrentSaturation", id: 0x3,
-                    xref: { document: "cluster", section: "3.2.7.12" }
-                })
+                Field({ name: "CurrentHueAndCurrentSaturation", id: 0x0 }),
+                Field({ name: "CurrentXAndCurrentY", id: 0x1 }),
+                Field({ name: "ColorTemperatureMireds", id: 0x2 }),
+                Field({ name: "EnhancedCurrentHueAndCurrentSaturation", id: 0x3 })
             ]
         }),
 
@@ -351,7 +324,7 @@ Matter.children.push(Cluster({
         Attribute({
             name: "CoupleColorTempToLevelMinMireds", id: 0x400d, type: "uint16", access: "R V",
             conformance: "CT & ColorTemperatureMireds",
-            constraint: "ColorTempPhysicalMinMireds to ColorTemperatureMireds",
+            constraint: "colorTempPhysicalMinMireds to colorTemperatureMireds",
 
             details: "The CoupleColorTempToLevelMinMireds attribute specifies a lower bound on the value of the " +
                 "ColorTemperatureMireds attribute for the purposes of coupling the ColorTemperatureMireds attribute " +
@@ -622,14 +595,9 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "3.2.11.4.3" }
                 }),
 
+                Field({ name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.4" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.4" }
+                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -656,14 +624,9 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "3.2.11.5.2" }
                 }),
 
+                Field({ name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.5" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.5" }
+                    name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -697,14 +660,9 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "3.2.11.6.3" }
                 }),
 
+                Field({ name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.6" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.6" }
+                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -715,22 +673,11 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "3.2.11.7" },
 
             children: [
+                Field({ name: "Saturation", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254" }),
+                Field({ name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", constraint: "0 to 65534" }),
+                Field({ name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "Saturation", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254",
-                    xref: { document: "cluster", section: "3.2.11.7" }
-                }),
-                Field({
-                    name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", constraint: "0 to 65534",
-                    xref: { document: "cluster", section: "3.2.11.7" }
-                }),
-                Field({
-                    name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.7" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.7" }
+                    name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -762,14 +709,9 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "3.2.11.8.2" }
                 }),
 
+                Field({ name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.8" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.8" }
+                    name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -801,14 +743,9 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "3.2.11.9.3" }
                 }),
 
+                Field({ name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.9" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.9" }
+                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -819,26 +756,12 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "3.2.11.10" },
 
             children: [
+                Field({ name: "Hue", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254" }),
+                Field({ name: "Saturation", id: 0x1, type: "uint8", conformance: "M", constraint: "0 to 254" }),
+                Field({ name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", constraint: "0 to 65534" }),
+                Field({ name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "Hue", id: 0x0, type: "uint8", conformance: "M", constraint: "0 to 254",
-                    xref: { document: "cluster", section: "3.2.11.10" }
-                }),
-                Field({
-                    name: "Saturation", id: 0x1, type: "uint8", conformance: "M", constraint: "0 to 254",
-                    xref: { document: "cluster", section: "3.2.11.10" }
-                }),
-                Field({
-                    name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", constraint: "0 to 65534",
-                    xref: { document: "cluster", section: "3.2.11.10" }
-                }),
-                Field({
-                    name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.10" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.10" }
+                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -849,26 +772,12 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "3.2.11.11" },
 
             children: [
+                Field({ name: "ColorX", id: 0x0, type: "uint16", conformance: "M", constraint: "0 to 65279" }),
+                Field({ name: "ColorY", id: 0x1, type: "uint16", conformance: "M", constraint: "0 to 65279" }),
+                Field({ name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", constraint: "0 to 65534" }),
+                Field({ name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "ColorX", id: 0x0, type: "uint16", conformance: "M", constraint: "0 to 65279",
-                    xref: { document: "cluster", section: "3.2.11.11" }
-                }),
-                Field({
-                    name: "ColorY", id: 0x1, type: "uint16", conformance: "M", constraint: "0 to 65279",
-                    xref: { document: "cluster", section: "3.2.11.11" }
-                }),
-                Field({
-                    name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", constraint: "0 to 65534",
-                    xref: { document: "cluster", section: "3.2.11.11" }
-                }),
-                Field({
-                    name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.11" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.11" }
+                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -893,14 +802,9 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "3.2.11.12.2" }
                 }),
 
+                Field({ name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.12" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.12" }
+                    name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -911,14 +815,8 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "3.2.11.13" },
 
             children: [
-                Field({
-                    name: "StepX", id: 0x0, type: "int16", conformance: "M",
-                    xref: { document: "cluster", section: "3.2.11.13" }
-                }),
-                Field({
-                    name: "StepY", id: 0x1, type: "int16", conformance: "M",
-                    xref: { document: "cluster", section: "3.2.11.13" }
-                }),
+                Field({ name: "StepX", id: 0x0, type: "int16", conformance: "M" }),
+                Field({ name: "StepY", id: 0x1, type: "int16", conformance: "M" }),
 
                 Field({
                     name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", constraint: "0 to 65534",
@@ -927,14 +825,9 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "3.2.11.13.2" }
                 }),
 
+                Field({ name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.13" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.13" }
+                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -946,21 +839,12 @@ Matter.children.push(Cluster({
 
             children: [
                 Field({
-                    name: "ColorTemperatureMireds", id: 0x0, type: "uint16", conformance: "M", constraint: "0 to 65279",
-                    xref: { document: "cluster", section: "3.2.11.14" }
+                    name: "ColorTemperatureMireds", id: 0x0, type: "uint16", conformance: "M", constraint: "0 to 65279"
                 }),
+                Field({ name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", constraint: "0 to 65534" }),
+                Field({ name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "TransitionTime", id: 0x1, type: "uint16", conformance: "M", constraint: "0 to 65534",
-                    xref: { document: "cluster", section: "3.2.11.14" }
-                }),
-                Field({
-                    name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.14" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.14" }
+                    name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -993,14 +877,9 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "3.2.11.15.3" }
                 }),
 
+                Field({ name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.15" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.15" }
+                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -1031,14 +910,9 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "3.2.11.16.2" }
                 }),
 
+                Field({ name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "OptionsMask", id: 0x2, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.16" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.16" }
+                    name: "OptionsOverride", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -1078,14 +952,9 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "3.2.11.17.3" }
                 }),
 
+                Field({ name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.17" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.17" }
+                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -1119,14 +988,9 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "3.2.11.18.3" }
                 }),
 
+                Field({ name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "OptionsMask", id: 0x3, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.18" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.18" }
+                    name: "OptionsOverride", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -1168,26 +1032,11 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "3.2.11.19.1" },
 
                     children: [
-                        Field({
-                            name: "UpdateAction", constraint: "0",
-                            xref: { document: "cluster", section: "3.2.11.19.1" }
-                        }),
-                        Field({
-                            name: "UpdateDirection", constraint: "1",
-                            xref: { document: "cluster", section: "3.2.11.19.1" }
-                        }),
-                        Field({
-                            name: "UpdateTime", constraint: "2",
-                            xref: { document: "cluster", section: "3.2.11.19.1" }
-                        }),
-                        Field({
-                            name: "UpdateStartHue", constraint: "3",
-                            xref: { document: "cluster", section: "3.2.11.19.1" }
-                        }),
-                        Field({
-                            name: "Reserved", constraint: "4 to 8",
-                            xref: { document: "cluster", section: "3.2.11.19.1" }
-                        })
+                        Field({ name: "UpdateAction", constraint: "0" }),
+                        Field({ name: "UpdateDirection", constraint: "1" }),
+                        Field({ name: "UpdateTime", constraint: "2" }),
+                        Field({ name: "UpdateStartHue", constraint: "3" }),
+                        Field({ name: "Reserved", constraint: "4 to 8" })
                     ]
                 }),
 
@@ -1197,20 +1046,10 @@ Matter.children.push(Cluster({
                         "the UpdateFlags field is set to 1. This field shall be set to one of the non-reserved values listed " +
                         "in Values of the Action Field of the ColorLoopSet Command.",
                     xref: { document: "cluster", section: "3.2.11.19.2" },
-
                     children: [
-                        Field({
-                            name: "DeActivateTheColorLoop", id: 0x0,
-                            xref: { document: "cluster", section: "3.2.11.19.2" }
-                        }),
-                        Field({
-                            name: "ActivateTheColorLoopFromTheValueInTheColorLoopStartEnhancedHueField", id: 0x1,
-                            xref: { document: "cluster", section: "3.2.11.19.2" }
-                        }),
-                        Field({
-                            name: "ActivateTheColorLoopFromTheValueOfTheEnhancedCurrentHueAttribute", id: 0x2,
-                            xref: { document: "cluster", section: "3.2.11.19.2" }
-                        })
+                        Field({ name: "DeActivateTheColorLoop", id: 0x0 }),
+                        Field({ name: "ActivateTheColorLoopFromTheValueInTheColorLoopStartEnhancedHueField", id: 0x1 }),
+                        Field({ name: "ActivateTheColorLoopFromTheValueOfTheEnhancedCurrentHueAttribute", id: 0x2 })
                     ]
                 }),
 
@@ -1220,16 +1059,9 @@ Matter.children.push(Cluster({
                         "UpdateFlags field is set to 1. This field shall be set to one of the non-reserved values listed in " +
                         "Values of the Direction Field of the ColorLoopSet Command.",
                     xref: { document: "cluster", section: "3.2.11.19.3" },
-
                     children: [
-                        Field({
-                            name: "DecrementTheHueInTheColorLoop", id: 0x0,
-                            xref: { document: "cluster", section: "3.2.11.19.3" }
-                        }),
-                        Field({
-                            name: "IncrementTheHueInTheColorLoop", id: 0x1,
-                            xref: { document: "cluster", section: "3.2.11.19.3" }
-                        })
+                        Field({ name: "DecrementTheHueInTheColorLoop", id: 0x0 }),
+                        Field({ name: "IncrementTheHueInTheColorLoop", id: 0x1 })
                     ]
                 }),
 
@@ -1240,18 +1072,10 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "3.2.11.19.4" }
                 }),
 
+                Field({ name: "StartHue", id: 0x4, type: "uint16", conformance: "M" }),
+                Field({ name: "OptionsMask", id: 0x5, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "StartHue", id: 0x4, type: "uint16", conformance: "M",
-                    xref: { document: "cluster", section: "3.2.11.19" }
-                }),
-                Field({
-                    name: "OptionsMask", id: 0x5, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.19" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x6, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.19" }
+                    name: "OptionsOverride", id: 0x6, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -1266,14 +1090,9 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "3.2.11.20" },
 
             children: [
+                Field({ name: "OptionsMask", id: 0x0, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "OptionsMask", id: 0x0, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.20" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x1, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.20" }
+                    name: "OptionsOverride", id: 0x1, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -1339,14 +1158,9 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "3.2.11.21.4" }
                 }),
 
+                Field({ name: "OptionsMask", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "OptionsMask", id: 0x4, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.21" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x5, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.21" }
+                    name: "OptionsOverride", id: 0x5, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
@@ -1415,51 +1229,35 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "3.2.11.22.5" }
                 }),
 
+                Field({ name: "OptionsMask", id: 0x5, type: "Options", conformance: "M", constraint: "desc", default: 0 }),
                 Field({
-                    name: "OptionsMask", id: 0x5, type: "Options", conformance: "M", constraint: "desc", default: "0",
-                    xref: { document: "cluster", section: "3.2.11.22" }
-                }),
-                Field({
-                    name: "OptionsOverride", id: 0x6, type: "Options", conformance: "M", constraint: "desc",
-                    default: "0",
-                    xref: { document: "cluster", section: "3.2.11.22" }
+                    name: "OptionsOverride", id: 0x6, type: "Options", conformance: "M", constraint: "desc", default: 0
                 })
             ]
         }),
 
-        Field({
-            name: "MoveMode", type: "enum8",
+        Datatype({
+            name: "MoveMode", type: "enum8", conformance: "M",
             xref: { document: "cluster", section: "3.2.11.5.1" },
             children: [
-                Field({ name: "Stop", id: 0x0, xref: { document: "cluster", section: "3.2.11.5.1" } }),
-                Field({ name: "Up", id: 0x1, xref: { document: "cluster", section: "3.2.11.5.1" } }),
-                Field({ name: "Down", id: 0x3, xref: { document: "cluster", section: "3.2.11.5.1" } })
-            ]
-        }),
-
-        Field({
-            name: "StepMode", type: "enum8",
-            xref: { document: "cluster", section: "3.2.11.6.1" },
-            children: [
-                Field({ name: "Up", id: 0x1, xref: { document: "cluster", section: "3.2.11.6.1" } }),
-                Field({ name: "Down", id: 0x3, xref: { document: "cluster", section: "3.2.11.6.1" } })
-            ]
-        }),
-
-        Field({
-            name: "Direction", type: "enum8",
-            xref: { document: "cluster", section: "3.2.11.4.2" },
-
-            children: [
-                Field({ name: "ShortestDistance", id: 0x0, xref: { document: "cluster", section: "3.2.11.4.2" } }),
-                Field({ name: "LongestDistance", id: 0x1, xref: { document: "cluster", section: "3.2.11.4.2" } }),
-                Field({ name: "Up", id: 0x2, xref: { document: "cluster", section: "3.2.11.4.2" } }),
-                Field({ name: "Down", id: 0x3, xref: { document: "cluster", section: "3.2.11.4.2" } })
+                Field({ name: "Stop", id: 0x0, conformance: "M" }),
+                Field({ name: "Up", id: 0x1, conformance: "M" }),
+                Field({ name: "Down", id: 0x3, conformance: "M" })
             ]
         }),
 
         Datatype({
-            name: "HueDirection", type: "enum8", conformance: "M",
+            name: "StepMode", type: "enum8", conformance: "M",
+            xref: { document: "cluster", section: "3.2.11.6.1" },
+            children: [
+                Field({ name: "Up", id: 0x1, conformance: "M" }),
+                Field({ name: "Down", id: 0x3, conformance: "M" })
+            ]
+        }),
+
+        Datatype({
+            name: "Direction", type: "enum8", conformance: "M",
+            xref: { document: "cluster", section: "3.2.11.4.2" },
 
             children: [
                 Field({ name: "ShortestDistance", id: 0x0, conformance: "M" }),
@@ -1480,23 +1278,6 @@ Matter.children.push(Cluster({
 
         Datatype({
             name: "HueStepMode", type: "enum8", conformance: "M",
-            children: [
-                Field({ name: "Up", id: 0x1, conformance: "M" }),
-                Field({ name: "Down", id: 0x3, conformance: "M" })
-            ]
-        }),
-
-        Datatype({
-            name: "SaturationMoveMode", type: "enum8", conformance: "M",
-            children: [
-                Field({ name: "Stop", id: 0x0, conformance: "M" }),
-                Field({ name: "Up", id: 0x1, conformance: "M" }),
-                Field({ name: "Down", id: 0x3, conformance: "M" })
-            ]
-        }),
-
-        Datatype({
-            name: "SaturationStepMode", type: "enum8", conformance: "M",
             children: [
                 Field({ name: "Up", id: 0x1, conformance: "M" }),
                 Field({ name: "Down", id: 0x3, conformance: "M" })

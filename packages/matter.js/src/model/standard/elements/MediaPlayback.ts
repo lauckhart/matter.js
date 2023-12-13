@@ -32,14 +32,11 @@ Matter.children.push(Cluster({
                 Field({
                     name: "AS", constraint: "0", description: "AdvancedSeek",
                     details: "Enables clients to implement more advanced media seeking behavior in their user interface, such as " +
-                        "for example a \"seek bar\". Adds support for Attributes and Commands related to advanced seek support",
-                    xref: { document: "cluster", section: "6.10.2" }
+                        "for example a \"seek bar\". Adds support for Attributes and Commands related to advanced seek support"
                 }),
-
                 Field({
                     name: "VS", constraint: "1", description: "VariableSpeed",
-                    details: "Support for commands to support variable speed playback on media that supports it.",
-                    xref: { document: "cluster", section: "6.10.2" }
+                    details: "Support for commands to support variable speed playback on media that supports it."
                 })
             ]
         }),
@@ -330,21 +327,13 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Playing", id: 0x0, conformance: "M",
-                    description: "Media is currently playing (includes FF and REW)",
-                    xref: { document: "cluster", section: "6.10.5.1" }
+                    description: "Media is currently playing (includes FF and REW)"
                 }),
-                Field({
-                    name: "Paused", id: 0x1, conformance: "M", description: "Media is currently paused",
-                    xref: { document: "cluster", section: "6.10.5.1" }
-                }),
-                Field({
-                    name: "NotPlaying", id: 0x2, conformance: "M", description: "Media is not currently playing",
-                    xref: { document: "cluster", section: "6.10.5.1" }
-                }),
+                Field({ name: "Paused", id: 0x1, conformance: "M", description: "Media is currently paused" }),
+                Field({ name: "NotPlaying", id: 0x2, conformance: "M", description: "Media is not currently playing" }),
                 Field({
                     name: "Buffering", id: 0x3, conformance: "M",
-                    description: "Media is not currently buffering and playback will start when buffer has been filled",
-                    xref: { document: "cluster", section: "6.10.5.1" }
+                    description: "Media is not currently buffering and playback will start when buffer has been filled"
                 })
             ]
         }),
@@ -354,34 +343,26 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "6.10.5.2" },
 
             children: [
-                Field({
-                    name: "Success", id: 0x0, conformance: "M", description: "Command succeeded",
-                    xref: { document: "cluster", section: "6.10.5.2" }
-                }),
+                Field({ name: "Success", id: 0x0, conformance: "M", description: "Command succeeded" }),
                 Field({
                     name: "InvalidStateForCommand", id: 0x1, conformance: "M",
-                    description: "Command failed: Requested playback command is invalid in the current playback state.",
-                    xref: { document: "cluster", section: "6.10.5.2" }
+                    description: "Command failed: Requested playback command is invalid in the current playback state."
                 }),
                 Field({
                     name: "NotAllowed", id: 0x2, conformance: "M",
-                    description: "Command failed: Requested playback command is not allowed in the current playback state. For example, attempting to fast-forward during a commercial might return NotAllowed.",
-                    xref: { document: "cluster", section: "6.10.5.2" }
+                    description: "Command failed: Requested playback command is not allowed in the current playback state. For example, attempting to fast-forward during a commercial might return NotAllowed."
                 }),
                 Field({
                     name: "NotActive", id: 0x3, conformance: "M",
-                    description: "Command failed: This endpoint is not active for playback.",
-                    xref: { document: "cluster", section: "6.10.5.2" }
+                    description: "Command failed: This endpoint is not active for playback."
                 }),
                 Field({
                     name: "SpeedOutOfRange", id: 0x4, conformance: "VS",
-                    description: "Command failed: The FastForward or Rewind Command was issued but the media is already playing back at the fastest speed supported by the server in the respective direction.",
-                    xref: { document: "cluster", section: "6.10.5.2" }
+                    description: "Command failed: The FastForward or Rewind Command was issued but the media is already playing back at the fastest speed supported by the server in the respective direction."
                 }),
                 Field({
                     name: "SeekOutOfRange", id: 0x5, conformance: "AS",
-                    description: "Command failed: The Seek Command was issued with a value of position outside of the allowed seek range of the media.",
-                    xref: { document: "cluster", section: "6.10.5.2" }
+                    description: "Command failed: The Seek Command was issued with a value of position outside of the allowed seek range of the media."
                 })
             ]
         }),

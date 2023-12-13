@@ -31,63 +31,51 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "PIN", conformance: "O", constraint: "0", description: "PinCredential",
-                    details: "Lock supports PIN credentials (via keypad, or over- the-air)",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    details: "Lock supports PIN credentials (via keypad, or over- the-air)"
                 }),
                 Field({
                     name: "RID", conformance: "O", constraint: "1", description: "RfidCredential",
-                    details: "Lock supports RFID credentials",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    details: "Lock supports RFID credentials"
                 }),
                 Field({
                     name: "FGP", conformance: "P, O", constraint: "2", description: "FingerCredentials",
-                    details: "Lock supports finger related credentials (fingerprint, finger vein)",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    details: "Lock supports finger related credentials (fingerprint, finger vein)"
                 }),
                 Field({
                     name: "LOG", conformance: "O", constraint: "3", description: "Logging",
-                    details: "Lock supports local/on-lock logging when Events are not supported",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    details: "Lock supports local/on-lock logging when Events are not supported"
                 }),
                 Field({
                     name: "WDSCH", conformance: "O", constraint: "4", description: "WeekDayAccessSchedules",
-                    details: "Lock supports week day user access schedules",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    details: "Lock supports week day user access schedules"
                 }),
                 Field({
                     name: "DPS", conformance: "O", constraint: "5", description: "DoorPositionSensor",
-                    details: "Lock supports a door position sensor that indicates door’s state",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    details: "Lock supports a door position sensor that indicates door’s state"
                 }),
                 Field({
                     name: "FACE", conformance: "P, O", constraint: "6", description: "FaceCredentials",
-                    details: "Lock supports face related credentials (face, iris, retina)",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    details: "Lock supports face related credentials (face, iris, retina)"
                 }),
                 Field({
                     name: "COTA", conformance: "O", constraint: "7", description: "CredentialOverTheAirAccess",
-                    details: "PIN codes over- the-air supported for lock/unlock operations",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    details: "PIN codes over- the-air supported for lock/unlock operations"
                 }),
                 Field({
                     name: "USR", conformance: "[PIN | RID | FGP | FACE]", constraint: "8", description: "User",
-                    details: "Lock supports the user commands and database",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    details: "Lock supports the user commands and database"
                 }),
                 Field({
                     name: "NOT", conformance: "O", constraint: "9", description: "Notification",
-                    details: "Operation and Programming Notifications",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    details: "Operation and Programming Notifications"
                 }),
                 Field({
                     name: "YDSCH", conformance: "O", constraint: "10", description: "YearDayAccessSchedules",
-                    details: "Lock supports year day user access schedules",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    details: "Lock supports year day user access schedules"
                 }),
                 Field({
                     name: "HDSCH", conformance: "O", constraint: "11", description: "HolidaySchedules",
-                    details: "Lock supports holiday schedules",
-                    xref: { document: "cluster", section: "5.2.2" }
+                    details: "Lock supports holiday schedules"
                 })
             ]
         }),
@@ -119,20 +107,10 @@ Matter.children.push(Cluster({
                 "Locks that do not have an actuation mechanism SHOULD not support the Scene table extension.",
 
             xref: { document: "cluster", section: "5.2.3.1" },
-
             children: [
-                Field({
-                    name: "NotFullyLocked", id: 0x0, conformance: "M", description: "Lock state is not fully locked",
-                    xref: { document: "cluster", section: "5.2.3.1" }
-                }),
-                Field({
-                    name: "Locked", id: 0x1, conformance: "M", description: "Lock state is fully locked",
-                    xref: { document: "cluster", section: "5.2.3.1" }
-                }),
-                Field({
-                    name: "Unlocked", id: 0x2, conformance: "M", description: "Lock state is fully unlocked",
-                    xref: { document: "cluster", section: "5.2.3.1" }
-                })
+                Field({ name: "NotFullyLocked", id: 0x0, conformance: "M", description: "Lock state is not fully locked" }),
+                Field({ name: "Locked", id: 0x1, conformance: "M", description: "Lock state is fully locked" }),
+                Field({ name: "Unlocked", id: 0x2, conformance: "M", description: "Lock state is fully unlocked" })
             ]
         }),
 
@@ -141,52 +119,27 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.2.3.2" },
 
             children: [
-                Field({
-                    name: "Deadbolt", id: 0x0, conformance: "M", description: "Physical lock type is dead bolt",
-                    xref: { document: "cluster", section: "5.2.3.2" }
-                }),
-                Field({
-                    name: "Magnetic", id: 0x1, conformance: "M", description: "Physical lock type is magnetic",
-                    xref: { document: "cluster", section: "5.2.3.2" }
-                }),
-                Field({
-                    name: "Other", id: 0x2, conformance: "M", description: "Physical lock type is other",
-                    xref: { document: "cluster", section: "5.2.3.2" }
-                }),
-                Field({
-                    name: "Mortise", id: 0x3, conformance: "M", description: "Physical lock type is mortise",
-                    xref: { document: "cluster", section: "5.2.3.2" }
-                }),
-                Field({
-                    name: "Rim", id: 0x4, conformance: "M", description: "Physical lock type is rim",
-                    xref: { document: "cluster", section: "5.2.3.2" }
-                }),
-                Field({
-                    name: "LatchBolt", id: 0x5, conformance: "M", description: "Physical lock type is latch bolt",
-                    xref: { document: "cluster", section: "5.2.3.2" }
-                }),
+                Field({ name: "Deadbolt", id: 0x0, conformance: "M", description: "Physical lock type is dead bolt" }),
+                Field({ name: "Magnetic", id: 0x1, conformance: "M", description: "Physical lock type is magnetic" }),
+                Field({ name: "Other", id: 0x2, conformance: "M", description: "Physical lock type is other" }),
+                Field({ name: "Mortise", id: 0x3, conformance: "M", description: "Physical lock type is mortise" }),
+                Field({ name: "Rim", id: 0x4, conformance: "M", description: "Physical lock type is rim" }),
+                Field({ name: "LatchBolt", id: 0x5, conformance: "M", description: "Physical lock type is latch bolt" }),
                 Field({
                     name: "CylindricalLock", id: 0x6, conformance: "M",
-                    description: "Physical lock type is cylindrical lock",
-                    xref: { document: "cluster", section: "5.2.3.2" }
+                    description: "Physical lock type is cylindrical lock"
                 }),
                 Field({
-                    name: "TubularLock", id: 0x7, conformance: "M", description: "Physical lock type is tubular lock",
-                    xref: { document: "cluster", section: "5.2.3.2" }
+                    name: "TubularLock", id: 0x7, conformance: "M", description: "Physical lock type is tubular lock"
                 }),
                 Field({
                     name: "InterconnectedLock", id: 0x8, conformance: "M",
-                    description: "Physical lock type is interconnected lock",
-                    xref: { document: "cluster", section: "5.2.3.2" }
+                    description: "Physical lock type is interconnected lock"
                 }),
-                Field({
-                    name: "DeadLatch", id: 0x9, conformance: "M", description: "Physical lock type is dead latch",
-                    xref: { document: "cluster", section: "5.2.3.2" }
-                }),
+                Field({ name: "DeadLatch", id: 0x9, conformance: "M", description: "Physical lock type is dead latch" }),
                 Field({
                     name: "DoorFurniture", id: 0xa, conformance: "M",
-                    description: "Physical lock type is door furniture",
-                    xref: { document: "cluster", section: "5.2.3.2" }
+                    description: "Physical lock type is door furniture"
                 })
             ]
         }),
@@ -308,9 +261,9 @@ Matter.children.push(Cluster({
             details: "This bitmap contains a bit for every value of CredentialRuleEnum supported on this device.",
             xref: { document: "cluster", section: "5.2.3.19" },
             children: [
-                Field({ name: "Single", constraint: "0", xref: { document: "cluster", section: "5.2.3.19" } }),
-                Field({ name: "Dual", constraint: "1", xref: { document: "cluster", section: "5.2.3.19" } }),
-                Field({ name: "Tri", constraint: "2", xref: { document: "cluster", section: "5.2.3.19" } })
+                Field({ name: "Single", constraint: "0" }),
+                Field({ name: "Dual", constraint: "1" }),
+                Field({ name: "Tri", constraint: "2" })
             ]
         }),
 
@@ -388,14 +341,11 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.2.3.24" },
 
             children: [
-                Field({ name: "Normal", constraint: "0", xref: { document: "cluster", section: "5.2.3.24" } }),
-                Field({ name: "Vacation", constraint: "1", xref: { document: "cluster", section: "5.2.3.24" } }),
-                Field({ name: "Privacy", constraint: "2", xref: { document: "cluster", section: "5.2.3.24" } }),
-                Field({
-                    name: "NoRemoteLockUnlock", constraint: "3",
-                    xref: { document: "cluster", section: "5.2.3.24" }
-                }),
-                Field({ name: "Passage", constraint: "4", xref: { document: "cluster", section: "5.2.3.24" } })
+                Field({ name: "Normal", constraint: "0" }),
+                Field({ name: "Vacation", constraint: "1" }),
+                Field({ name: "Privacy", constraint: "2" }),
+                Field({ name: "NoRemoteLockUnlock", constraint: "3" }),
+                Field({ name: "Passage", constraint: "4" })
             ]
         }),
 
@@ -570,31 +520,13 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.2.3.39" },
 
             children: [
-                Field({
-                    name: "LockingMechanismJammed", constraint: "0",
-                    xref: { document: "cluster", section: "5.2.3.39" }
-                }),
-                Field({
-                    name: "LockResetToFactoryDefaults", constraint: "1",
-                    xref: { document: "cluster", section: "5.2.3.39" }
-                }),
-                Field({ name: "Reserved", constraint: "2", xref: { document: "cluster", section: "5.2.3.39" } }),
-                Field({
-                    name: "RfModulePowerCycled", constraint: "3",
-                    xref: { document: "cluster", section: "5.2.3.39" }
-                }),
-                Field({
-                    name: "TamperAlarmWrongCodeEntryLimit", constraint: "4",
-                    xref: { document: "cluster", section: "5.2.3.39" }
-                }),
-                Field({
-                    name: "TamperAlarmFrontEscutcheonRemovedFromMain", constraint: "5",
-                    xref: { document: "cluster", section: "5.2.3.39" }
-                }),
-                Field({
-                    name: "ForcedDoorOpenUnderDoorLockedCondition", constraint: "6",
-                    xref: { document: "cluster", section: "5.2.3.39" }
-                })
+                Field({ name: "LockingMechanismJammed", constraint: "0" }),
+                Field({ name: "LockResetToFactoryDefaults", constraint: "1" }),
+                Field({ name: "Reserved", constraint: "2" }),
+                Field({ name: "RfModulePowerCycled", constraint: "3" }),
+                Field({ name: "TamperAlarmWrongCodeEntryLimit", constraint: "4" }),
+                Field({ name: "TamperAlarmFrontEscutcheonRemovedFromMain", constraint: "5" }),
+                Field({ name: "ForcedDoorOpenUnderDoorLockedCondition", constraint: "6" })
             ]
         }),
 
@@ -609,38 +541,14 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.2.3.40" },
 
             children: [
-                Field({
-                    name: "UnknownOrManufacturerSpecificKeypadOperationEvent", constraint: "0",
-                    xref: { document: "cluster", section: "5.2.3.40" }
-                }),
-                Field({
-                    name: "LockSourceKeypad", constraint: "1",
-                    xref: { document: "cluster", section: "5.2.3.40" }
-                }),
-                Field({
-                    name: "UnlockSourceKeypad", constraint: "2",
-                    xref: { document: "cluster", section: "5.2.3.40" }
-                }),
-                Field({
-                    name: "LockSourceKeypadErrorInvalidPin", constraint: "3",
-                    xref: { document: "cluster", section: "5.2.3.40" }
-                }),
-                Field({
-                    name: "LockSourceKeypadErrorInvalidSchedule", constraint: "4",
-                    xref: { document: "cluster", section: "5.2.3.40" }
-                }),
-                Field({
-                    name: "UnlockSourceKeypadErrorInvalidCode", constraint: "5",
-                    xref: { document: "cluster", section: "5.2.3.40" }
-                }),
-                Field({
-                    name: "UnlockSourceKeypadErrorInvalidSchedule", constraint: "6",
-                    xref: { document: "cluster", section: "5.2.3.40" }
-                }),
-                Field({
-                    name: "NonAccessUserOperationEventSourceKeypad", constraint: "15",
-                    xref: { document: "cluster", section: "5.2.3.40" }
-                })
+                Field({ name: "UnknownOrManufacturerSpecificKeypadOperationEvent", constraint: "0" }),
+                Field({ name: "LockSourceKeypad", constraint: "1" }),
+                Field({ name: "UnlockSourceKeypad", constraint: "2" }),
+                Field({ name: "LockSourceKeypadErrorInvalidPin", constraint: "3" }),
+                Field({ name: "LockSourceKeypadErrorInvalidSchedule", constraint: "4" }),
+                Field({ name: "UnlockSourceKeypadErrorInvalidCode", constraint: "5" }),
+                Field({ name: "UnlockSourceKeypadErrorInvalidSchedule", constraint: "6" }),
+                Field({ name: "NonAccessUserOperationEventSourceKeypad", constraint: "15" })
             ]
         }),
 
@@ -658,34 +566,13 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.2.3.41" },
 
             children: [
-                Field({
-                    name: "UnknownOrManufacturerSpecificRemoteOperationEvent", constraint: "0",
-                    xref: { document: "cluster", section: "5.2.3.41" }
-                }),
-                Field({
-                    name: "LockSourceRemote", constraint: "1",
-                    xref: { document: "cluster", section: "5.2.3.41" }
-                }),
-                Field({
-                    name: "UnlockSourceRemote", constraint: "2",
-                    xref: { document: "cluster", section: "5.2.3.41" }
-                }),
-                Field({
-                    name: "LockSourceRemoteErrorInvalidCode", constraint: "3",
-                    xref: { document: "cluster", section: "5.2.3.41" }
-                }),
-                Field({
-                    name: "LockSourceRemoteErrorInvalidSchedule", constraint: "4",
-                    xref: { document: "cluster", section: "5.2.3.41" }
-                }),
-                Field({
-                    name: "UnlockSourceRemoteErrorInvalidCode", constraint: "5",
-                    xref: { document: "cluster", section: "5.2.3.41" }
-                }),
-                Field({
-                    name: "UnlockSourceRemoteErrorInvalidSchedule", constraint: "6",
-                    xref: { document: "cluster", section: "5.2.3.41" }
-                })
+                Field({ name: "UnknownOrManufacturerSpecificRemoteOperationEvent", constraint: "0" }),
+                Field({ name: "LockSourceRemote", constraint: "1" }),
+                Field({ name: "UnlockSourceRemote", constraint: "2" }),
+                Field({ name: "LockSourceRemoteErrorInvalidCode", constraint: "3" }),
+                Field({ name: "LockSourceRemoteErrorInvalidSchedule", constraint: "4" }),
+                Field({ name: "UnlockSourceRemoteErrorInvalidCode", constraint: "5" }),
+                Field({ name: "UnlockSourceRemoteErrorInvalidSchedule", constraint: "6" })
             ]
         }),
 
@@ -699,20 +586,17 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.2.3.42" },
 
             children: [
-                Field({
-                    name: "UnknownOrManufacturerSpecificManualOperationEvent", constraint: "0",
-                    xref: { document: "cluster", section: "5.2.3.42" }
-                }),
-                Field({ name: "ThumbturnLock", constraint: "1", xref: { document: "cluster", section: "5.2.3.42" } }),
-                Field({ name: "ThumbturnUnlock", constraint: "2", xref: { document: "cluster", section: "5.2.3.42" } }),
-                Field({ name: "OneTouchLock", constraint: "7", xref: { document: "cluster", section: "5.2.3.42" } }),
-                Field({ name: "KeyLock", constraint: "8", xref: { document: "cluster", section: "5.2.3.42" } }),
-                Field({ name: "KeyUnlock", constraint: "9", xref: { document: "cluster", section: "5.2.3.42" } }),
-                Field({ name: "AutoLock", constraint: "10", xref: { document: "cluster", section: "5.2.3.42" } }),
-                Field({ name: "ScheduleLock", constraint: "11", xref: { document: "cluster", section: "5.2.3.42" } }),
-                Field({ name: "ScheduleUnlock", constraint: "12", xref: { document: "cluster", section: "5.2.3.42" } }),
-                Field({ name: "ManualLock", constraint: "13", xref: { document: "cluster", section: "5.2.3.42" } }),
-                Field({ name: "ManualUnlock", constraint: "14", xref: { document: "cluster", section: "5.2.3.42" } })
+                Field({ name: "UnknownOrManufacturerSpecificManualOperationEvent", constraint: "0" }),
+                Field({ name: "ThumbturnLock", constraint: "1" }),
+                Field({ name: "ThumbturnUnlock", constraint: "2" }),
+                Field({ name: "OneTouchLock", constraint: "7" }),
+                Field({ name: "KeyLock", constraint: "8" }),
+                Field({ name: "KeyUnlock", constraint: "9" }),
+                Field({ name: "AutoLock", constraint: "10" }),
+                Field({ name: "ScheduleLock", constraint: "11" }),
+                Field({ name: "ScheduleUnlock", constraint: "12" }),
+                Field({ name: "ManualLock", constraint: "13" }),
+                Field({ name: "ManualUnlock", constraint: "14" })
             ]
         }),
 
@@ -726,31 +610,13 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.2.3.43" },
 
             children: [
-                Field({
-                    name: "UnknownOrManufacturerSpecificKeypadOperationEvent", constraint: "0",
-                    xref: { document: "cluster", section: "5.2.3.43" }
-                }),
-                Field({ name: "LockSourceRfid", constraint: "1", xref: { document: "cluster", section: "5.2.3.43" } }),
-                Field({
-                    name: "UnlockSourceRfid", constraint: "2",
-                    xref: { document: "cluster", section: "5.2.3.43" }
-                }),
-                Field({
-                    name: "LockSourceRfidErrorInvalidRfidId", constraint: "3",
-                    xref: { document: "cluster", section: "5.2.3.43" }
-                }),
-                Field({
-                    name: "LockSourceRfidErrorInvalidSchedule", constraint: "4",
-                    xref: { document: "cluster", section: "5.2.3.43" }
-                }),
-                Field({
-                    name: "UnlockSourceRfidErrorInvalidRfidId", constraint: "5",
-                    xref: { document: "cluster", section: "5.2.3.43" }
-                }),
-                Field({
-                    name: "UnlockSourceRfidErrorInvalidSchedule", constraint: "6",
-                    xref: { document: "cluster", section: "5.2.3.43" }
-                })
+                Field({ name: "UnknownOrManufacturerSpecificKeypadOperationEvent", constraint: "0" }),
+                Field({ name: "LockSourceRfid", constraint: "1" }),
+                Field({ name: "UnlockSourceRfid", constraint: "2" }),
+                Field({ name: "LockSourceRfidErrorInvalidRfidId", constraint: "3" }),
+                Field({ name: "LockSourceRfidErrorInvalidSchedule", constraint: "4" }),
+                Field({ name: "UnlockSourceRfidErrorInvalidRfidId", constraint: "5" }),
+                Field({ name: "UnlockSourceRfidErrorInvalidSchedule", constraint: "6" })
             ]
         }),
 
@@ -765,11 +631,11 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.2.3.44" },
 
             children: [
-                Field({ name: "Unknown", constraint: "0", xref: { document: "cluster", section: "5.2.3.44" } }),
-                Field({ name: "PinCodeChanged", constraint: "1", xref: { document: "cluster", section: "5.2.3.44" } }),
-                Field({ name: "PinAdded", constraint: "2", xref: { document: "cluster", section: "5.2.3.44" } }),
-                Field({ name: "PinCleared", constraint: "3", xref: { document: "cluster", section: "5.2.3.44" } }),
-                Field({ name: "PinChanged", constraint: "4", xref: { document: "cluster", section: "5.2.3.44" } })
+                Field({ name: "Unknown", constraint: "0" }),
+                Field({ name: "PinCodeChanged", constraint: "1" }),
+                Field({ name: "PinAdded", constraint: "2" }),
+                Field({ name: "PinCleared", constraint: "3" }),
+                Field({ name: "PinChanged", constraint: "4" })
             ]
         }),
 
@@ -784,12 +650,12 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.2.3.45" },
 
             children: [
-                Field({ name: "Unknown", constraint: "0", xref: { document: "cluster", section: "5.2.3.45" } }),
-                Field({ name: "PinAdded", constraint: "2", xref: { document: "cluster", section: "5.2.3.45" } }),
-                Field({ name: "PinCleared", constraint: "3", xref: { document: "cluster", section: "5.2.3.45" } }),
-                Field({ name: "PinChanged", constraint: "4", xref: { document: "cluster", section: "5.2.3.45" } }),
-                Field({ name: "RfidCodeAdded", constraint: "5", xref: { document: "cluster", section: "5.2.3.45" } }),
-                Field({ name: "RfidCodeCleared", constraint: "6", xref: { document: "cluster", section: "5.2.3.45" } })
+                Field({ name: "Unknown", constraint: "0" }),
+                Field({ name: "PinAdded", constraint: "2" }),
+                Field({ name: "PinCleared", constraint: "3" }),
+                Field({ name: "PinChanged", constraint: "4" }),
+                Field({ name: "RfidCodeAdded", constraint: "5" }),
+                Field({ name: "RfidCodeCleared", constraint: "6" })
             ]
         }),
 
@@ -802,9 +668,9 @@ Matter.children.push(Cluster({
                 "This mask DOES NOT apply to the Events mechanism of this cluster.",
             xref: { document: "cluster", section: "5.2.3.46" },
             children: [
-                Field({ name: "Unknown", constraint: "0", xref: { document: "cluster", section: "5.2.3.46" } }),
-                Field({ name: "IdAdded", constraint: "5", xref: { document: "cluster", section: "5.2.3.46" } }),
-                Field({ name: "IdCleared", constraint: "6", xref: { document: "cluster", section: "5.2.3.46" } })
+                Field({ name: "Unknown", constraint: "0" }),
+                Field({ name: "IdAdded", constraint: "5" }),
+                Field({ name: "IdCleared", constraint: "6" })
             ]
         }),
 
@@ -877,7 +743,7 @@ Matter.children.push(Cluster({
 
                 Field({
                     name: "Credentials", id: 0x5, type: "list", conformance: "[USR]",
-                    constraint: "1 to NumberOfCredentialsSupportedPerUser", quality: "X",
+                    constraint: "1 to numberOfCredentialsSupportedPerUser", quality: "X",
                     details: "The list of credentials used in performing the lock operation. This shall be null if no credentials " +
                         "were involved.",
                     xref: { document: "cluster", section: "5.2.5.3.6" },
@@ -935,7 +801,7 @@ Matter.children.push(Cluster({
 
                 Field({
                     name: "Credentials", id: 0x6, type: "list", conformance: "[USR]",
-                    constraint: "1 to NumberOfCredentialsSupportedPerUser", quality: "X",
+                    constraint: "1 to numberOfCredentialsSupportedPerUser", quality: "X",
                     details: "The list of credentials used in performing the lock operation. This shall be null if no credentials " +
                         "were involved.",
                     xref: { document: "cluster", section: "5.2.5.4.7" },
@@ -964,7 +830,7 @@ Matter.children.push(Cluster({
 
                 Field({
                     name: "OperationSource", id: 0x2, type: "OperationSourceEnum", conformance: "M",
-                    constraint: "Unspecified, Keypad, Remote",
+                    constraint: "unspecified, keypad, remote",
                     details: "The source of the user data change.",
                     xref: { document: "cluster", section: "5.2.5.5.3" }
                 }),
@@ -1377,41 +1243,25 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.2.6.1" },
 
             children: [
+                Field({ name: "LockJammed", id: 0x0, conformance: "M", description: "Locking Mechanism Jammed" }),
                 Field({
-                    name: "LockJammed", id: 0x0, conformance: "M", description: "Locking Mechanism Jammed",
-                    xref: { document: "cluster", section: "5.2.6.1" }
+                    name: "LockFactoryReset", id: 0x1, conformance: "O", description: "Lock Reset to Factory Defaults"
                 }),
-                Field({
-                    name: "LockFactoryReset", id: 0x1, conformance: "O", description: "Lock Reset to Factory Defaults",
-                    xref: { document: "cluster", section: "5.2.6.1" }
-                }),
-                Field({
-                    name: "LockRadioPowerCycled", id: 0x3, conformance: "O", description: "Lock Radio Power Cycled",
-                    xref: { document: "cluster", section: "5.2.6.1" }
-                }),
+                Field({ name: "LockRadioPowerCycled", id: 0x3, conformance: "O", description: "Lock Radio Power Cycled" }),
                 Field({
                     name: "WrongCodeEntryLimit", id: 0x4, conformance: "[USR]",
-                    description: "Tamper Alarm - wrong code entry limit",
-                    xref: { document: "cluster", section: "5.2.6.1" }
+                    description: "Tamper Alarm - wrong code entry limit"
                 }),
                 Field({
                     name: "FrontEsceutcheonRemoved", id: 0x5, conformance: "O",
-                    description: "Tamper Alarm - front escutcheon removed from main",
-                    xref: { document: "cluster", section: "5.2.6.1" }
+                    description: "Tamper Alarm - front escutcheon removed from main"
                 }),
                 Field({
                     name: "DoorForcedOpen", id: 0x6, conformance: "[DPS]",
-                    description: "Forced Door Open under Door Locked Condition",
-                    xref: { document: "cluster", section: "5.2.6.1" }
+                    description: "Forced Door Open under Door Locked Condition"
                 }),
-                Field({
-                    name: "DoorAjar", id: 0x7, conformance: "[DPS]", description: "Door ajar",
-                    xref: { document: "cluster", section: "5.2.6.1" }
-                }),
-                Field({
-                    name: "ForcedUser", id: 0x8, conformance: "[USR]", description: "Force User SOS alarm",
-                    xref: { document: "cluster", section: "5.2.6.1" }
-                })
+                Field({ name: "DoorAjar", id: 0x7, conformance: "[DPS]", description: "Door ajar" }),
+                Field({ name: "ForcedUser", id: 0x8, conformance: "[USR]", description: "Force User SOS alarm" })
             ]
         }),
 
@@ -1420,20 +1270,10 @@ Matter.children.push(Cluster({
             details: "The CredentialRule enum used in various commands shall indicate the credential rule that can be " +
                 "applied to a particular user.",
             xref: { document: "cluster", section: "5.2.6.2" },
-
             children: [
-                Field({
-                    name: "Single", id: 0x0, conformance: "USR",
-                    xref: { document: "cluster", section: "5.2.6.2" }
-                }),
-                Field({
-                    name: "Dual", id: 0x1, conformance: "[USR]",
-                    xref: { document: "cluster", section: "5.2.6.2" }
-                }),
-                Field({
-                    name: "Tri", id: 0x2, conformance: "[USR]",
-                    xref: { document: "cluster", section: "5.2.6.2" }
-                })
+                Field({ name: "Single", id: 0x0, conformance: "USR" }),
+                Field({ name: "Dual", id: 0x1, conformance: "[USR]" }),
+                Field({ name: "Tri", id: 0x2, conformance: "[USR]" })
             ]
         }),
 
@@ -1451,7 +1291,7 @@ Matter.children.push(Cluster({
                 }),
 
                 Field({
-                    name: "CredentialIndex", id: 0x1, type: "uint16", conformance: "M", default: "0",
+                    name: "CredentialIndex", id: 0x1, type: "uint16", conformance: "M", default: 0,
                     details: "This is the index of the specific credential used to authorize the lock operation in the list of " +
                         "credentials identified by CredentialType (e.g. schedule, PIN, RFID, etc.). This shall be set to 0 " +
                         "if CredentialType is ProgrammingPIN or does not correspond to a list that can be indexed into.",
@@ -1466,24 +1306,12 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.2.6.4" },
 
             children: [
-                Field({
-                    name: "ProgrammingPin", id: 0x0, conformance: "O",
-                    xref: { document: "cluster", section: "5.2.6.4" }
-                }),
-                Field({ name: "Pin", id: 0x1, conformance: "PIN", xref: { document: "cluster", section: "5.2.6.4" } }),
-                Field({ name: "Rfid", id: 0x2, conformance: "RID", xref: { document: "cluster", section: "5.2.6.4" } }),
-                Field({
-                    name: "Fingerprint", id: 0x3, conformance: "FGP",
-                    xref: { document: "cluster", section: "5.2.6.4" }
-                }),
-                Field({
-                    name: "FingerVein", id: 0x4, conformance: "FGP",
-                    xref: { document: "cluster", section: "5.2.6.4" }
-                }),
-                Field({
-                    name: "Face", id: 0x5, conformance: "FACE",
-                    xref: { document: "cluster", section: "5.2.6.4" }
-                })
+                Field({ name: "ProgrammingPin", id: 0x0, conformance: "O" }),
+                Field({ name: "Pin", id: 0x1, conformance: "PIN" }),
+                Field({ name: "Rfid", id: 0x2, conformance: "RID" }),
+                Field({ name: "Fingerprint", id: 0x3, conformance: "FGP" }),
+                Field({ name: "FingerVein", id: 0x4, conformance: "FGP" }),
+                Field({ name: "Face", id: 0x5, conformance: "FACE" })
             ]
         }),
 
@@ -1491,20 +1319,10 @@ Matter.children.push(Cluster({
             name: "DataOperationTypeEnum", type: "enum8", conformance: "M",
             details: "The DataOperationType enum shall indicate the data operation performed.",
             xref: { document: "cluster", section: "5.2.6.5" },
-
             children: [
-                Field({
-                    name: "Add", id: 0x0, conformance: "M", description: "Data is being added or was added",
-                    xref: { document: "cluster", section: "5.2.6.5" }
-                }),
-                Field({
-                    name: "Clear", id: 0x1, conformance: "M", description: "Data is being cleared or was cleared",
-                    xref: { document: "cluster", section: "5.2.6.5" }
-                }),
-                Field({
-                    name: "Modify", id: 0x2, conformance: "M", description: "Data is being modified or was modified",
-                    xref: { document: "cluster", section: "5.2.6.5" }
-                })
+                Field({ name: "Add", id: 0x0, conformance: "M", description: "Data is being added or was added" }),
+                Field({ name: "Clear", id: 0x1, conformance: "M", description: "Data is being cleared or was cleared" }),
+                Field({ name: "Modify", id: 0x2, conformance: "M", description: "Data is being modified or was modified" })
             ]
         }),
 
@@ -1515,13 +1333,13 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.2.6.6" },
 
             children: [
-                Field({ name: "Sunday", constraint: "0", xref: { document: "cluster", section: "5.2.6.6" } }),
-                Field({ name: "Monday", constraint: "1", xref: { document: "cluster", section: "5.2.6.6" } }),
-                Field({ name: "Tuesday", constraint: "2", xref: { document: "cluster", section: "5.2.6.6" } }),
-                Field({ name: "Wednesday", constraint: "3", xref: { document: "cluster", section: "5.2.6.6" } }),
-                Field({ name: "Thursday", constraint: "4", xref: { document: "cluster", section: "5.2.6.6" } }),
-                Field({ name: "Friday", constraint: "5", xref: { document: "cluster", section: "5.2.6.6" } }),
-                Field({ name: "Saturday", constraint: "6", xref: { document: "cluster", section: "5.2.6.6" } })
+                Field({ name: "Sunday", constraint: "0" }),
+                Field({ name: "Monday", constraint: "1" }),
+                Field({ name: "Tuesday", constraint: "2" }),
+                Field({ name: "Wednesday", constraint: "3" }),
+                Field({ name: "Thursday", constraint: "4" }),
+                Field({ name: "Friday", constraint: "5" }),
+                Field({ name: "Saturday", constraint: "6" })
             ]
         }),
 
@@ -1533,32 +1351,18 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.2.6.7" },
 
             children: [
-                Field({
-                    name: "DoorOpen", id: 0x0, conformance: "DPS", description: "Door state is open",
-                    xref: { document: "cluster", section: "5.2.6.7" }
-                }),
-                Field({
-                    name: "DoorClosed", id: 0x1, conformance: "DPS", description: "Door state is closed",
-                    xref: { document: "cluster", section: "5.2.6.7" }
-                }),
-                Field({
-                    name: "DoorJammed", id: 0x2, conformance: "[DPS]", description: "Door state is jammed",
-                    xref: { document: "cluster", section: "5.2.6.7" }
-                }),
+                Field({ name: "DoorOpen", id: 0x0, conformance: "DPS", description: "Door state is open" }),
+                Field({ name: "DoorClosed", id: 0x1, conformance: "DPS", description: "Door state is closed" }),
+                Field({ name: "DoorJammed", id: 0x2, conformance: "[DPS]", description: "Door state is jammed" }),
                 Field({
                     name: "DoorForcedOpen", id: 0x3, conformance: "[DPS]",
-                    description: "Door state is currently forced open",
-                    xref: { document: "cluster", section: "5.2.6.7" }
+                    description: "Door state is currently forced open"
                 }),
                 Field({
                     name: "DoorUnspecifiedError", id: 0x4, conformance: "[DPS]",
-                    description: "Door state is invalid for unspecified reason",
-                    xref: { document: "cluster", section: "5.2.6.7" }
+                    description: "Door state is invalid for unspecified reason"
                 }),
-                Field({
-                    name: "DoorAjar", id: 0x5, conformance: "[DPS]", description: "Door state is ajar",
-                    xref: { document: "cluster", section: "5.2.6.7" }
-                })
+                Field({ name: "DoorAjar", id: 0x5, conformance: "[DPS]", description: "Door state is ajar" })
             ]
         }),
 
@@ -1576,58 +1380,47 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Unspecified", id: 0x0, conformance: "O",
-                    description: "Unspecified or manufacturer specific lock user data added, cleared, or modified.",
-                    xref: { document: "cluster", section: "5.2.6.9" }
+                    description: "Unspecified or manufacturer specific lock user data added, cleared, or modified."
                 }),
                 Field({
                     name: "ProgrammingCode", id: 0x1, conformance: "O",
-                    description: "Lock programming PIN code was added, cleared, or modified.",
-                    xref: { document: "cluster", section: "5.2.6.9" }
+                    description: "Lock programming PIN code was added, cleared, or modified."
                 }),
                 Field({
                     name: "UserIndex", id: 0x2, conformance: "M",
-                    description: "Lock user index was added, cleared, or modified.",
-                    xref: { document: "cluster", section: "5.2.6.9" }
+                    description: "Lock user index was added, cleared, or modified."
                 }),
                 Field({
                     name: "WeekDaySchedule", id: 0x3, conformance: "WDSCH",
-                    description: "Lock user week day schedule was added, cleared, or modified.",
-                    xref: { document: "cluster", section: "5.2.6.9" }
+                    description: "Lock user week day schedule was added, cleared, or modified."
                 }),
                 Field({
                     name: "YearDaySchedule", id: 0x4, conformance: "YDSCH",
-                    description: "Lock user year day schedule was added, cleared, or modified.",
-                    xref: { document: "cluster", section: "5.2.6.9" }
+                    description: "Lock user year day schedule was added, cleared, or modified."
                 }),
                 Field({
                     name: "HolidaySchedule", id: 0x5, conformance: "HDSCH",
-                    description: "Lock holiday schedule was added, cleared, or modified.",
-                    xref: { document: "cluster", section: "5.2.6.9" }
+                    description: "Lock holiday schedule was added, cleared, or modified."
                 }),
                 Field({
                     name: "Pin", id: 0x6, conformance: "PIN",
-                    description: "Lock user PIN code was added, cleared, or modified.",
-                    xref: { document: "cluster", section: "5.2.6.9" }
+                    description: "Lock user PIN code was added, cleared, or modified."
                 }),
                 Field({
                     name: "Rfid", id: 0x7, conformance: "RID",
-                    description: "Lock user RFID code was added, cleared, or modified.",
-                    xref: { document: "cluster", section: "5.2.6.9" }
+                    description: "Lock user RFID code was added, cleared, or modified."
                 }),
                 Field({
                     name: "Fingerprint", id: 0x8, conformance: "FGP",
-                    description: "Lock user fingerprint was added, cleared, or modified.",
-                    xref: { document: "cluster", section: "5.2.6.9" }
+                    description: "Lock user fingerprint was added, cleared, or modified."
                 }),
                 Field({
                     name: "FingerVein", id: 0x9, conformance: "FGP",
-                    description: "Lock user finger-vein information was added, cleared, or modified.",
-                    xref: { document: "cluster", section: "5.2.6.9" }
+                    description: "Lock user finger-vein information was added, cleared, or modified."
                 }),
                 Field({
                     name: "Face", id: 0xa, conformance: "FACE",
-                    description: "Lock user face information was added, cleared, or modified.",
-                    xref: { document: "cluster", section: "5.2.6.9" }
+                    description: "Lock user face information was added, cleared, or modified."
                 })
             ]
         }),
@@ -1638,19 +1431,10 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.2.6.10" },
 
             children: [
-                Field({ name: "Lock", id: 0x0, conformance: "M", xref: { document: "cluster", section: "5.2.6.10" } }),
-                Field({
-                    name: "Unlock", id: 0x1, conformance: "M",
-                    xref: { document: "cluster", section: "5.2.6.10" }
-                }),
-                Field({
-                    name: "NonAccessUserEvent", id: 0x2, conformance: "O",
-                    xref: { document: "cluster", section: "5.2.6.10" }
-                }),
-                Field({
-                    name: "ForcedUserEvent", id: 0x3, conformance: "O",
-                    xref: { document: "cluster", section: "5.2.6.10" }
-                })
+                Field({ name: "Lock", id: 0x0, conformance: "M" }),
+                Field({ name: "Unlock", id: 0x1, conformance: "M" }),
+                Field({ name: "NonAccessUserEvent", id: 0x2, conformance: "O" }),
+                Field({ name: "ForcedUserEvent", id: 0x3, conformance: "O" })
             ]
         }),
 
@@ -1661,26 +1445,11 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.2.6.11" },
 
             children: [
-                Field({
-                    name: "Unspecified", id: 0x0, conformance: "O",
-                    xref: { document: "cluster", section: "5.2.6.11" }
-                }),
-                Field({
-                    name: "InvalidCredential", id: 0x1, conformance: "USR",
-                    xref: { document: "cluster", section: "5.2.6.11" }
-                }),
-                Field({
-                    name: "DisabledUserDenied", id: 0x2, conformance: "M",
-                    xref: { document: "cluster", section: "5.2.6.11" }
-                }),
-                Field({
-                    name: "Restricted", id: 0x3, conformance: "WDSCH | YDSCH",
-                    xref: { document: "cluster", section: "5.2.6.11" }
-                }),
-                Field({
-                    name: "InsufficientBattery", id: 0x4, conformance: "O",
-                    xref: { document: "cluster", section: "5.2.6.11" }
-                })
+                Field({ name: "Unspecified", id: 0x0, conformance: "O" }),
+                Field({ name: "InvalidCredential", id: 0x1, conformance: "USR" }),
+                Field({ name: "DisabledUserDenied", id: 0x2, conformance: "M" }),
+                Field({ name: "Restricted", id: 0x3, conformance: "WDSCH | YDSCH" }),
+                Field({ name: "InsufficientBattery", id: 0x4, conformance: "O" })
             ]
         }),
 
@@ -1751,43 +1520,16 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.2.6.13" },
 
             children: [
-                Field({
-                    name: "Unspecified", id: 0x0, conformance: "O",
-                    xref: { document: "cluster", section: "5.2.6.13" }
-                }),
-                Field({
-                    name: "Manual", id: 0x1, conformance: "O",
-                    xref: { document: "cluster", section: "5.2.6.13" }
-                }),
-                Field({
-                    name: "ProprietaryRemote", id: 0x2, conformance: "O",
-                    xref: { document: "cluster", section: "5.2.6.13" }
-                }),
-                Field({
-                    name: "Keypad", id: 0x3, conformance: "O",
-                    xref: { document: "cluster", section: "5.2.6.13" }
-                }),
-                Field({ name: "Auto", id: 0x4, conformance: "O", xref: { document: "cluster", section: "5.2.6.13" } }),
-                Field({
-                    name: "Button", id: 0x5, conformance: "O",
-                    xref: { document: "cluster", section: "5.2.6.13" }
-                }),
-                Field({
-                    name: "Schedule", id: 0x6, conformance: "HDSCH",
-                    xref: { document: "cluster", section: "5.2.6.13" }
-                }),
-                Field({
-                    name: "Remote", id: 0x7, conformance: "M",
-                    xref: { document: "cluster", section: "5.2.6.13" }
-                }),
-                Field({
-                    name: "Rfid", id: 0x8, conformance: "RID",
-                    xref: { document: "cluster", section: "5.2.6.13" }
-                }),
-                Field({
-                    name: "Biometric", id: 0x9, conformance: "[USR]",
-                    xref: { document: "cluster", section: "5.2.6.13" }
-                })
+                Field({ name: "Unspecified", id: 0x0, conformance: "O" }),
+                Field({ name: "Manual", id: 0x1, conformance: "O" }),
+                Field({ name: "ProprietaryRemote", id: 0x2, conformance: "O" }),
+                Field({ name: "Keypad", id: 0x3, conformance: "O" }),
+                Field({ name: "Auto", id: 0x4, conformance: "O" }),
+                Field({ name: "Button", id: 0x5, conformance: "O" }),
+                Field({ name: "Schedule", id: 0x6, conformance: "HDSCH" }),
+                Field({ name: "Remote", id: 0x7, conformance: "M" }),
+                Field({ name: "Rfid", id: 0x8, conformance: "RID" }),
+                Field({ name: "Biometric", id: 0x9, conformance: "[USR]" })
             ]
         }),
 
@@ -1796,20 +1538,10 @@ Matter.children.push(Cluster({
             details: "The UserStatus enum used in various commands shall indicate what the status is for a specific user " +
                 "ID.",
             xref: { document: "cluster", section: "5.2.6.15" },
-
             children: [
-                Field({
-                    name: "Available", id: 0x0, conformance: "M",
-                    xref: { document: "cluster", section: "5.2.6.15" }
-                }),
-                Field({
-                    name: "OccupiedEnabled", id: 0x1, conformance: "M",
-                    xref: { document: "cluster", section: "5.2.6.15" }
-                }),
-                Field({
-                    name: "OccupiedDisabled", id: 0x3, conformance: "O",
-                    xref: { document: "cluster", section: "5.2.6.15" }
-                })
+                Field({ name: "Available", id: 0x0, conformance: "M" }),
+                Field({ name: "OccupiedEnabled", id: 0x1, conformance: "M" }),
+                Field({ name: "OccupiedDisabled", id: 0x3, conformance: "O" })
             ]
         }),
 

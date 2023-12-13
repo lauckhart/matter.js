@@ -28,8 +28,7 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.5.4" },
             children: [Field({
                 name: "LT", constraint: "0", description: "LevelControlForLighting",
-                details: "Behavior that supports lighting applications.",
-                xref: { document: "cluster", section: "1.5.4" }
+                details: "Behavior that supports lighting applications."
             })]
         }),
 
@@ -184,16 +183,9 @@ Matter.children.push(Cluster({
                         "unconditionally.",
 
                     xref: { document: "cluster", section: "1.5.7.6.1" },
-
                     children: [
-                        Field({
-                            name: "AcceptOnlyWhenOn", constraint: "0",
-                            xref: { document: "cluster", section: "1.5.7.6.1" }
-                        }),
-                        Field({
-                            name: "Reserved", constraint: "1 to 8",
-                            xref: { document: "cluster", section: "1.5.7.6.1" }
-                        })
+                        Field({ name: "AcceptOnlyWhenOn", constraint: "0" }),
+                        Field({ name: "Reserved", constraint: "1 to 8" })
                     ]
                 }),
 
@@ -215,18 +207,11 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.5.5.1" },
 
             children: [
-                Field({
-                    name: "Off", id: 0x0, conformance: "M", description: "Set the OnOff attribute to FALSE",
-                    xref: { document: "cluster", section: "1.5.5.1" }
-                }),
-                Field({
-                    name: "On", id: 0x1, conformance: "M", description: "Set the OnOff attribute to TRUE",
-                    xref: { document: "cluster", section: "1.5.5.1" }
-                }),
+                Field({ name: "Off", id: 0x0, conformance: "M", description: "Set the OnOff attribute to FALSE" }),
+                Field({ name: "On", id: 0x1, conformance: "M", description: "Set the OnOff attribute to TRUE" }),
                 Field({
                     name: "Toggle", id: 0x2, conformance: "M",
-                    description: "If the previous value of the OnOff attribute is equal to FALSE, set the OnOff attribute to TRUE. If the previous value of the OnOff attribute is equal to TRUE, set the OnOff attribute to FALSE (toggle).",
-                    xref: { document: "cluster", section: "1.5.5.1" }
+                    description: "If the previous value of the OnOff attribute is equal to FALSE, set the OnOff attribute to TRUE. If the previous value of the OnOff attribute is equal to TRUE, set the OnOff attribute to FALSE (toggle)."
                 })
             ]
         }),

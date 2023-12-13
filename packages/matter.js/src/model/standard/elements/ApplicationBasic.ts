@@ -82,7 +82,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "AllowedVendorList", id: 0x7, type: "list", access: "R A", conformance: "M",
-            constraint: "None", quality: "F",
+            constraint: "none", quality: "F",
             details: "This is a list of vendor IDs. Each entry is a vendor-id.",
             xref: { document: "cluster", section: "6.3.3.8" },
             children: [Field({ name: "entry", type: "vendor-id" })]
@@ -123,24 +123,18 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "6.3.4.2" },
 
             children: [
-                Field({
-                    name: "Stopped", id: 0x0, conformance: "M", description: "Application is not running.",
-                    xref: { document: "cluster", section: "6.3.4.2" }
-                }),
+                Field({ name: "Stopped", id: 0x0, conformance: "M", description: "Application is not running." }),
                 Field({
                     name: "ActiveVisibleFocus", id: 0x1, conformance: "M",
-                    description: "Application is running, is visible to the user, and is the active target for input.",
-                    xref: { document: "cluster", section: "6.3.4.2" }
+                    description: "Application is running, is visible to the user, and is the active target for input."
                 }),
                 Field({
                     name: "ActiveHidden", id: 0x2, conformance: "M",
-                    description: "Application is running but not visible to the user.",
-                    xref: { document: "cluster", section: "6.3.4.2" }
+                    description: "Application is running but not visible to the user."
                 }),
                 Field({
                     name: "ActiveVisibleNotFocus", id: 0x3, conformance: "M",
-                    description: "Application is running and visible, but is not the active target for input.",
-                    xref: { document: "cluster", section: "6.3.4.2" }
+                    description: "Application is running and visible, but is not the active target for input."
                 })
             ]
         })

@@ -74,8 +74,8 @@ export class ModelTraversal {
             return model.type;
         }
 
-        // Commands and events always represent structs
-        if (model.tag === ElementTag.Command || model.tag === ElementTag.Event) {
+        // Commands, events and clusters always represent structs
+        if (model.tag === ElementTag.Command || model.tag === ElementTag.Event || model.tag === ElementTag.Cluster) {
             return "struct";
         }
 

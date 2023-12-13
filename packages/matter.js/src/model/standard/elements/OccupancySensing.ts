@@ -146,8 +146,7 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Occupied", constraint: "0",
-                    description: "Indicates the sensed occupancy state; 1 = occupied, 0 = unoccupied.",
-                    xref: { document: "cluster", section: "2.7.5.1" }
+                    description: "Indicates the sensed occupancy state; 1 = occupied, 0 = unoccupied."
                 })
             ]
         }),
@@ -157,23 +156,15 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "2.7.5.2" },
 
             children: [
-                Field({
-                    name: "Pir", id: 0x0, conformance: "M", description: "Indicates a passive infrared sensor.",
-                    xref: { document: "cluster", section: "2.7.5.2" }
-                }),
-                Field({
-                    name: "Ultrasonic", id: 0x1, conformance: "M", description: "Indicates a ultrasonic sensor.",
-                    xref: { document: "cluster", section: "2.7.5.2" }
-                }),
+                Field({ name: "Pir", id: 0x0, conformance: "M", description: "Indicates a passive infrared sensor." }),
+                Field({ name: "Ultrasonic", id: 0x1, conformance: "M", description: "Indicates a ultrasonic sensor." }),
                 Field({
                     name: "PirAndUltrasonic", id: 0x2, conformance: "M",
-                    description: "Indicates a passive infrared and ultrasonic sensor.",
-                    xref: { document: "cluster", section: "2.7.5.2" }
+                    description: "Indicates a passive infrared and ultrasonic sensor."
                 }),
                 Field({
                     name: "PhysicalContact", id: 0x3, conformance: "M",
-                    description: "Indicates a physical contact sensor.",
-                    xref: { document: "cluster", section: "2.7.5.2" }
+                    description: "Indicates a physical contact sensor."
                 })
             ]
         }),
@@ -181,20 +172,10 @@ Matter.children.push(Cluster({
         Datatype({
             name: "OccupancySensorTypeBitmap", type: "map8", conformance: "M",
             xref: { document: "cluster", section: "2.7.5.3" },
-
             children: [
-                Field({
-                    name: "Pir", constraint: "0", description: "Indicates a passive infrared sensor.",
-                    xref: { document: "cluster", section: "2.7.5.3" }
-                }),
-                Field({
-                    name: "Ultrasonic", constraint: "1", description: "Indicates a ultrasonic sensor.",
-                    xref: { document: "cluster", section: "2.7.5.3" }
-                }),
-                Field({
-                    name: "PhysicalContact", constraint: "2", description: "Indicates a physical contact sensor.",
-                    xref: { document: "cluster", section: "2.7.5.3" }
-                })
+                Field({ name: "Pir", constraint: "0", description: "Indicates a passive infrared sensor." }),
+                Field({ name: "Ultrasonic", constraint: "1", description: "Indicates a ultrasonic sensor." }),
+                Field({ name: "PhysicalContact", constraint: "2", description: "Indicates a physical contact sensor." })
             ]
         })
     ]

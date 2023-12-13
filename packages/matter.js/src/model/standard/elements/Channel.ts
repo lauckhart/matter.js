@@ -30,19 +30,17 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "CL", constraint: "0", description: "ChannelList",
-                    details: "Provides list of available channels.",
-                    xref: { document: "cluster", section: "6.6.2" }
+                    details: "Provides list of available channels."
                 }),
                 Field({
                     name: "LI", constraint: "1", description: "LineupInfo",
-                    details: "Provides lineup info, which is a reference to an external source of lineup information.",
-                    xref: { document: "cluster", section: "6.6.2" }
+                    details: "Provides lineup info, which is a reference to an external source of lineup information."
                 })
             ]
         }),
 
         Attribute({
-            name: "ChannelList", id: 0x0, type: "list", access: "R V", conformance: "CL", constraint: "None",
+            name: "ChannelList", id: 0x0, type: "list", access: "R V", conformance: "CL", constraint: "none",
             default: [],
             details: "This optional list provides the channels supported.",
             xref: { document: "cluster", section: "6.6.3.1" },
@@ -172,21 +170,21 @@ Matter.children.push(Cluster({
                 }),
 
                 Field({
-                    name: "Name", id: 0x2, type: "string", conformance: "O", default: "empty",
+                    name: "Name", id: 0x2, type: "string", conformance: "O", default: "",
                     details: "This shall indicate the marketing name for the channel, such as “The CW\" or \"Comedy Central\". This " +
                         "field is optional, but SHOULD be provided when known.",
                     xref: { document: "cluster", section: "6.6.5.1.3" }
                 }),
 
                 Field({
-                    name: "CallSign", id: 0x3, type: "string", conformance: "O", default: "empty",
+                    name: "CallSign", id: 0x3, type: "string", conformance: "O", default: "",
                     details: "This shall indicate the call sign of the channel, such as \"PBS\". This field is optional, but SHOULD " +
                         "be provided when known.",
                     xref: { document: "cluster", section: "6.6.5.1.4" }
                 }),
 
                 Field({
-                    name: "AffiliateCallSign", id: 0x4, type: "string", conformance: "O", default: "empty",
+                    name: "AffiliateCallSign", id: 0x4, type: "string", conformance: "O", default: "",
                     details: "This shall indicate the local affiliate call sign, such as \"KCTS\". This field is optional, but " +
                         "SHOULD be provided when known.",
                     xref: { document: "cluster", section: "6.6.5.1.5" }
@@ -206,14 +204,8 @@ Matter.children.push(Cluster({
                     details: "This shall indicate the name of the operator, for example “Comcast”.",
                     xref: { document: "cluster", section: "6.6.5.2.1" }
                 }),
-                Field({
-                    name: "LineupName", id: 0x1, type: "string", conformance: "O", default: "empty",
-                    xref: { document: "cluster", section: "6.6.5.2" }
-                }),
-                Field({
-                    name: "PostalCode", id: 0x2, type: "string", conformance: "O", default: "empty",
-                    xref: { document: "cluster", section: "6.6.5.2" }
-                }),
+                Field({ name: "LineupName", id: 0x1, type: "string", conformance: "O", default: "" }),
+                Field({ name: "PostalCode", id: 0x2, type: "string", conformance: "O", default: "" }),
                 Field({
                     name: "LineupInfoType", id: 0x3, type: "LineupInfoTypeEnum", conformance: "M", constraint: "desc",
                     details: "This shall indicate the type of lineup. This field is optional, but SHOULD be provided when known.",
@@ -225,10 +217,7 @@ Matter.children.push(Cluster({
         Datatype({
             name: "LineupInfoTypeEnum", type: "enum8", conformance: "M",
             xref: { document: "cluster", section: "6.6.5.3" },
-            children: [Field({
-                name: "Mso", id: 0x0, conformance: "M", description: "MultiSystemOperator",
-                xref: { document: "cluster", section: "6.6.5.3" }
-            })]
+            children: [Field({ name: "Mso", id: 0x0, conformance: "M", description: "MultiSystemOperator" })]
         }),
 
         Datatype({
@@ -236,19 +225,14 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "6.6.5.4" },
 
             children: [
-                Field({
-                    name: "Success", id: 0x0, conformance: "M", description: "Command succeeded",
-                    xref: { document: "cluster", section: "6.6.5.4" }
-                }),
+                Field({ name: "Success", id: 0x0, conformance: "M", description: "Command succeeded" }),
                 Field({
                     name: "MultipleMatches", id: 0x1, conformance: "M",
-                    description: "More than one equal match for the ChannelInfoStruct passed in.",
-                    xref: { document: "cluster", section: "6.6.5.4" }
+                    description: "More than one equal match for the ChannelInfoStruct passed in."
                 }),
                 Field({
                     name: "NoMatches", id: 0x2, conformance: "M",
-                    description: "No matches for the ChannelInfoStruct passed in.",
-                    xref: { document: "cluster", section: "6.6.5.4" }
+                    description: "No matches for the ChannelInfoStruct passed in."
                 })
             ]
         })

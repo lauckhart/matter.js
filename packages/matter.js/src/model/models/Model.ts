@@ -303,7 +303,7 @@ export abstract class Model {
      * Retrieve a model of a specific type from the ownership hierarchy.
      */
     owner<T extends Model>(constructor: Model.Constructor<T>) {
-        return new ModelTraversal().findOwner(constructor, this.parent);
+        return new ModelTraversal().findOwner(constructor, this);
     }
 
     /**

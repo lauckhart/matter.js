@@ -107,7 +107,7 @@ export function generateCluster(file: ClusterFile) {
             features.forEach(feature => {
                 if (typeof feature.constraint.value === "number") {
                     if (supportedFeatures & (1 << feature.constraint.value)) {
-                        const name = camelize(feature.description ?? feature.name, false);
+                        const name = camelize(feature.description ?? feature.name);
                         supportedFeatureBlock.atom(name, "true");
                     }
                 }
@@ -167,7 +167,7 @@ function generateExtensibleClusterBase(file: ClusterFile) {
         const featureBlock = base.expressions("features: {", "}");
         base.file.addImport("schema/BitmapSchema.js", "BitFlag");
         features.forEach(feature => {
-            const name = camelize(feature.description ?? feature.name, false);
+            const name = camelize(feature.description ?? feature.name);
             featureBlock.atom(name, `BitFlag(${feature.constraint.value})`).document(feature);
         });
     }
@@ -264,7 +264,7 @@ function generateExhaustive(file: ClusterFile, variance: ClusterVariance) {
                 }
 
                 if (!elements.has(element)) {
-                    elements.set(element, `${component.name}Component.${tag}s.${camelize(element.name, false)}`);
+                    elements.set(element, `${component.name}Component.${tag}s.${camelize(element.name)}`);
                 }
             }
         }
@@ -296,7 +296,7 @@ function generateExhaustive(file: ClusterFile, variance: ClusterVariance) {
         // Add the elements
         for (const model of ordered) {
             const elementBlock = block.expressions(
-                `${camelize(model.name, false)}: MutableCluster.AsConditional(`,
+                `${camelize(model.name)}: MutableCluster.AsConditional(`,
                 ")",
             );
             elementBlock.atom(`${elements.get(model)}`);

@@ -33,8 +33,7 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.18.4" },
             children: [Field({
                 name: "BC", constraint: "0", description: "Basic",
-                details: "Node supports Basic Commissioning Method.",
-                xref: { document: "core", section: "11.18.4" }
+                details: "Node supports Basic Commissioning Method."
             })]
         }),
 
@@ -223,10 +222,9 @@ Matter.children.push(Cluster({
                 "TIVE_INTERVAL for at least the entire duration of the CommissioningTimeout.",
 
             xref: { document: "core", section: "11.18.8.2" },
-            children: [Field({
-                name: "CommissioningTimeout", id: 0x0, type: "uint16", conformance: "M", constraint: "desc",
-                xref: { document: "core", section: "11.18.8.2" }
-            })]
+            children: [
+                Field({ name: "CommissioningTimeout", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" })
+            ]
         }),
 
         Command({
@@ -272,19 +270,14 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.18.5.1" },
 
             children: [
-                Field({
-                    name: "WindowNotOpen", id: 0x0, conformance: "M", description: "Commissioning window not open",
-                    xref: { document: "core", section: "11.18.5.1" }
-                }),
+                Field({ name: "WindowNotOpen", id: 0x0, conformance: "M", description: "Commissioning window not open" }),
                 Field({
                     name: "EnhancedWindowOpen", id: 0x1, conformance: "M",
-                    description: "An Enhanced Commissioning Method window is open",
-                    xref: { document: "core", section: "11.18.5.1" }
+                    description: "An Enhanced Commissioning Method window is open"
                 }),
                 Field({
                     name: "BasicWindowOpen", id: 0x2, conformance: "BC",
-                    description: "A Basic Commissioning Method window is open",
-                    xref: { document: "core", section: "11.18.5.1" }
+                    description: "A Basic Commissioning Method window is open"
                 })
             ]
         })

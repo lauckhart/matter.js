@@ -322,7 +322,7 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "CaseSessionsPerFabric", id: 0x0, type: "uint16", conformance: "M", constraint: "min 3",
-                    default: "3",
+                    default: 3,
                     details: "This field shall indicate the actual minimum number of concurrent CASE sessions that are supported " +
                         "per fabric." +
                         "\n" +
@@ -333,7 +333,7 @@ Matter.children.push(Cluster({
 
                 Field({
                     name: "SubscriptionsPerFabric", id: 0x1, type: "uint16", conformance: "M", constraint: "min 3",
-                    default: "3",
+                    default: 3,
                     details: "This field shall indicate the actual minimum number of concurrent subscriptions supported per " +
                         "fabric." +
                         "\n" +

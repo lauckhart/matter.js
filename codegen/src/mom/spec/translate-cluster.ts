@@ -128,7 +128,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
                 // Level control table is just kind of fubar
                 uniqueIds.set(id, "LevelControl");
             } else {
-                uniqueIds.set(id, camelize(record.name || definition.name));
+                uniqueIds.set(id, camelize(record.name || definition.name, true));
             }
         }
 
@@ -160,7 +160,7 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
         let derivesFrom = classifications[0]?.hierarchy;
         if (derivesFrom) {
             derivesFrom = derivesFrom.replace(/^derive[sd] from /i, "");
-            derivesFrom = camelize(derivesFrom);
+            derivesFrom = camelize(derivesFrom, true);
             if (derivesFrom === "Base") {
                 derivesFrom = undefined;
             }

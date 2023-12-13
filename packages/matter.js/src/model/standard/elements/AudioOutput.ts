@@ -28,13 +28,12 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "6.5.2" },
             children: [Field({
                 name: "NU", constraint: "0", description: "NameUpdates",
-                details: "Supports updates to output names",
-                xref: { document: "cluster", section: "6.5.2" }
+                details: "Supports updates to output names"
             })]
         }),
 
         Attribute({
-            name: "OutputList", id: 0x0, type: "list", access: "R V", conformance: "M", constraint: "None",
+            name: "OutputList", id: 0x0, type: "list", access: "R V", conformance: "M", constraint: "none",
             details: "This list provides the outputs supported by the device.",
             xref: { document: "cluster", section: "6.5.3.1" },
             children: [Field({ name: "entry", type: "OutputInfoStruct" })]
@@ -61,16 +60,9 @@ Matter.children.push(Cluster({
                 "Updates to the output name shall appear in the device’s settings menus. Name updates may " +
                 "automatically be sent to the actual device to which the output connects.",
             xref: { document: "cluster", section: "6.5.4.2" },
-
             children: [
-                Field({
-                    name: "Index", id: 0x0, type: "uint8", conformance: "M",
-                    xref: { document: "cluster", section: "6.5.4.2" }
-                }),
-                Field({
-                    name: "Name", id: 0x1, type: "string", conformance: "M",
-                    xref: { document: "cluster", section: "6.5.4.2" }
-                })
+                Field({ name: "Index", id: 0x0, type: "uint8", conformance: "M" }),
+                Field({ name: "Name", id: 0x1, type: "string", conformance: "M" })
             ]
         }),
 
@@ -106,24 +98,12 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "6.5.5.2" },
 
             children: [
-                Field({
-                    name: "Hdmi", id: 0x0, conformance: "M", description: "HDMI",
-                    xref: { document: "cluster", section: "6.5.5.2" }
-                }),
-                Field({ name: "Bt", id: 0x1, conformance: "M", xref: { document: "cluster", section: "6.5.5.2" } }),
-                Field({
-                    name: "Optical", id: 0x2, conformance: "M",
-                    xref: { document: "cluster", section: "6.5.5.2" }
-                }),
-                Field({
-                    name: "Headphone", id: 0x3, conformance: "M",
-                    xref: { document: "cluster", section: "6.5.5.2" }
-                }),
-                Field({
-                    name: "Internal", id: 0x4, conformance: "M",
-                    xref: { document: "cluster", section: "6.5.5.2" }
-                }),
-                Field({ name: "Other", id: 0x5, conformance: "M", xref: { document: "cluster", section: "6.5.5.2" } })
+                Field({ name: "Hdmi", id: 0x0, conformance: "M", description: "HDMI" }),
+                Field({ name: "Bt", id: 0x1, conformance: "M" }),
+                Field({ name: "Optical", id: 0x2, conformance: "M" }),
+                Field({ name: "Headphone", id: 0x3, conformance: "M" }),
+                Field({ name: "Internal", id: 0x4, conformance: "M" }),
+                Field({ name: "Other", id: 0x5, conformance: "M" })
             ]
         })
     ]

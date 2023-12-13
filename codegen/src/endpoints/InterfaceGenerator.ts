@@ -41,7 +41,7 @@ export class InterfaceGenerator {
 
             const response = this.types.reference(command.responseModel, "void");
 
-            intf.atom(`${camelize(command.name, false)}(${request}): MaybePromise<${response}>`).document(command);
+            intf.atom(`${camelize(command.name)}(${request}): MaybePromise<${response}>`).document(command);
         }
     }
 

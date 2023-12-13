@@ -29,8 +29,7 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "6.9.2" },
             children: [Field({
                 name: "NU", constraint: "0", description: "NameUpdates",
-                details: "Supports updates to the input names",
-                xref: { document: "cluster", section: "6.9.2" }
+                details: "Supports updates to the input names"
             })]
         }),
 
@@ -82,16 +81,9 @@ Matter.children.push(Cluster({
             details: "Upon receipt, this shall rename the input at a specific index in the Input List. Updates to the " +
                 "input name shall appear in the device’s settings menus.",
             xref: { document: "cluster", section: "6.9.4.4" },
-
             children: [
-                Field({
-                    name: "Index", id: 0x0, type: "uint8", conformance: "M",
-                    xref: { document: "cluster", section: "6.9.4.4" }
-                }),
-                Field({
-                    name: "Name", id: 0x1, type: "string", conformance: "M",
-                    xref: { document: "cluster", section: "6.9.4.4" }
-                })
+                Field({ name: "Index", id: 0x0, type: "uint8", conformance: "M" }),
+                Field({ name: "Name", id: 0x1, type: "string", conformance: "M" })
             ]
         }),
 
@@ -136,26 +128,19 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Internal", id: 0x0, conformance: "M",
-                    description: "Indicates content not coming from a physical input.",
-                    xref: { document: "cluster", section: "6.9.5.2" }
+                    description: "Indicates content not coming from a physical input."
                 }),
-                Field({ name: "Aux", id: 0x1, conformance: "M", xref: { document: "cluster", section: "6.9.5.2" } }),
-                Field({ name: "Coax", id: 0x2, conformance: "M", xref: { document: "cluster", section: "6.9.5.2" } }),
-                Field({
-                    name: "Composite", id: 0x3, conformance: "M",
-                    xref: { document: "cluster", section: "6.9.5.2" }
-                }),
-                Field({ name: "Hdmi", id: 0x4, conformance: "M", xref: { document: "cluster", section: "6.9.5.2" } }),
-                Field({ name: "Input", id: 0x5, conformance: "M", xref: { document: "cluster", section: "6.9.5.2" } }),
-                Field({ name: "Line", id: 0x6, conformance: "M", xref: { document: "cluster", section: "6.9.5.2" } }),
-                Field({
-                    name: "Optical", id: 0x7, conformance: "M",
-                    xref: { document: "cluster", section: "6.9.5.2" }
-                }),
-                Field({ name: "Video", id: 0x8, conformance: "M", xref: { document: "cluster", section: "6.9.5.2" } }),
-                Field({ name: "Scart", id: 0x9, conformance: "M", xref: { document: "cluster", section: "6.9.5.2" } }),
-                Field({ name: "Usb", id: 0xa, conformance: "M", xref: { document: "cluster", section: "6.9.5.2" } }),
-                Field({ name: "Other", id: 0xb, conformance: "M", xref: { document: "cluster", section: "6.9.5.2" } })
+                Field({ name: "Aux", id: 0x1, conformance: "M" }),
+                Field({ name: "Coax", id: 0x2, conformance: "M" }),
+                Field({ name: "Composite", id: 0x3, conformance: "M" }),
+                Field({ name: "Hdmi", id: 0x4, conformance: "M" }),
+                Field({ name: "Input", id: 0x5, conformance: "M" }),
+                Field({ name: "Line", id: 0x6, conformance: "M" }),
+                Field({ name: "Optical", id: 0x7, conformance: "M" }),
+                Field({ name: "Video", id: 0x8, conformance: "M" }),
+                Field({ name: "Scart", id: 0x9, conformance: "M" }),
+                Field({ name: "Usb", id: 0xa, conformance: "M" }),
+                Field({ name: "Other", id: 0xb, conformance: "M" })
             ]
         })
     ]

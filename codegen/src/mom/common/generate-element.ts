@@ -9,7 +9,7 @@ import { Block } from "../../util/TsFile.js";
 import { camelize, serialize, wordWrap } from "../../util/string.js";
 
 export function generateElement(target: Block, importFrom: string, element: AnyElement, prefix = "", suffix = "") {
-    const factory = camelize(element.tag);
+    const factory = camelize(element.tag, true);
     target.file.addImport(importFrom, `${factory}Element as ${factory}`);
     const block = target.expressions(`${prefix}${factory}({`, `})${suffix}`);
 

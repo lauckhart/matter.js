@@ -24,7 +24,7 @@ Matter.children.push(Cluster({
         Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
 
         Attribute({
-            name: "LabelList", id: 0x0, type: "list", conformance: "M", constraint: "Derived", default: [],
+            name: "LabelList", id: 0x0, type: "list", conformance: "M", constraint: "derived", default: [],
             details: "This is a list of string tuples. Each entry is a LabelStruct.",
             xref: { document: "core", section: "9.7.5.1" },
             children: [Field({ name: "entry", type: "LabelStruct" })]
@@ -37,14 +37,14 @@ Matter.children.push(Cluster({
 
             children: [
                 Field({
-                    name: "Label", id: 0x0, type: "string", conformance: "M", constraint: "max 16", default: "empty",
+                    name: "Label", id: 0x0, type: "string", conformance: "M", constraint: "max 16", default: "",
                     details: "The Label or Value semantic is not defined here. Label examples: \"room\", \"zone\", \"group\", " +
                         "\"direction\".",
                     xref: { document: "core", section: "9.7.4.1.1" }
                 }),
 
                 Field({
-                    name: "Value", id: 0x1, type: "string", conformance: "M", constraint: "max 16", default: "empty",
+                    name: "Value", id: 0x1, type: "string", conformance: "M", constraint: "max 16", default: "",
                     details: "The Label or Value semantic is not defined here. The Value is a discriminator for a Label that may " +
                         "have multiple instances. Label:Value examples: \"room\":\"bedroom 2\", \"orientation\":\"North\", " +
                         "\"floor\":\"2\", \"direction\":\"up\"",

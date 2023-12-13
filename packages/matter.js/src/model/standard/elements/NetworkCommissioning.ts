@@ -45,18 +45,15 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "WI", conformance: "O.a", constraint: "0", description: "WiFiNetworkInterface",
-                    details: "Wi-Fi related features",
-                    xref: { document: "core", section: "11.8.4" }
+                    details: "Wi-Fi related features"
                 }),
                 Field({
                     name: "TH", conformance: "O.a", constraint: "1", description: "ThreadNetworkInterface",
-                    details: "Thread related features",
-                    xref: { document: "core", section: "11.8.4" }
+                    details: "Thread related features"
                 }),
                 Field({
                     name: "ET", conformance: "O.a", constraint: "2", description: "EthernetNetworkInterface",
-                    details: "Ethernet related features",
-                    xref: { document: "core", section: "11.8.4" }
+                    details: "Ethernet related features"
                 })
             ]
         }),
@@ -72,7 +69,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "Networks", id: 0x1, type: "list", access: "R A", conformance: "M",
-            constraint: "max MaxNetworks", default: [],
+            constraint: "max maxNetworks", default: [],
 
             details: "This attribute shall indicate the network configurations that are usable on the network interface " +
                 "represented by this cluster server instance." +
@@ -232,7 +229,7 @@ Matter.children.push(Cluster({
 
             children: [
                 Field({
-                    name: "Ssid", id: 0x0, type: "octstr", conformance: "[WI]", constraint: "1 to 32", default: "null",
+                    name: "Ssid", id: 0x0, type: "octstr", conformance: "[WI]", constraint: "1 to 32", default: null,
                     quality: "X",
                     details: "This field, if present, shall contain the SSID for a directed scan of that particular Wi-Fi SSID. " +
                         "Otherwise, if the field is absent, or it is null, this shall indicate scanning of all BSSID in " +
@@ -357,10 +354,7 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.8.7.3" },
 
             children: [
-                Field({
-                    name: "Ssid", id: 0x0, type: "octstr", conformance: "M", constraint: "max 32",
-                    xref: { document: "core", section: "11.8.7.3" }
-                }),
+                Field({ name: "Ssid", id: 0x0, type: "octstr", conformance: "M", constraint: "max 32" }),
 
                 Field({
                     name: "Credentials", id: 0x1, type: "octstr", conformance: "M", constraint: "max 64",
@@ -406,10 +400,7 @@ Matter.children.push(Cluster({
                     xref: { document: "core", section: "11.8.7.3.1" }
                 }),
 
-                Field({
-                    name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O",
-                    xref: { document: "core", section: "11.8.7.3" }
-                })
+                Field({ name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O" })
             ]
         }),
 
@@ -450,10 +441,7 @@ Matter.children.push(Cluster({
                     xref: { document: "core", section: "11.8.7.4.1" }
                 }),
 
-                Field({
-                    name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O",
-                    xref: { document: "core", section: "11.8.7.4" }
-                })
+                Field({ name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O" })
             ]
         }),
 
@@ -483,16 +471,9 @@ Matter.children.push(Cluster({
                 "See Section 11.8.7.1.2, “Breadcrumb Field” for usage.",
 
             xref: { document: "core", section: "11.8.7.7" },
-
             children: [
-                Field({
-                    name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32",
-                    xref: { document: "core", section: "11.8.7.7" }
-                }),
-                Field({
-                    name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O",
-                    xref: { document: "core", section: "11.8.7.7" }
-                })
+                Field({ name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32" }),
+                Field({ name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O" })
             ]
         }),
 
@@ -532,13 +513,9 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum", conformance: "M",
-                    constraint: "desc",
-                    xref: { document: "core", section: "11.8.7.8" }
+                    constraint: "desc"
                 }),
-                Field({
-                    name: "DebugText", id: 0x1, type: "string", conformance: "O", constraint: "max 512",
-                    xref: { document: "core", section: "11.8.7.8" }
-                }),
+                Field({ name: "DebugText", id: 0x1, type: "string", conformance: "O", constraint: "max 512" }),
 
                 Field({
                     name: "NetworkIndex", id: 0x2, type: "uint8", conformance: "O",
@@ -626,16 +603,9 @@ Matter.children.push(Cluster({
                 "See Section 11.8.7.1.2, “Breadcrumb Field” for usage.",
 
             xref: { document: "core", section: "11.8.7.9" },
-
             children: [
-                Field({
-                    name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32",
-                    xref: { document: "core", section: "11.8.7.9" }
-                }),
-                Field({
-                    name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O",
-                    xref: { document: "core", section: "11.8.7.9" }
-                })
+                Field({ name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32" }),
+                Field({ name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O" })
             ]
         }),
 
@@ -678,14 +648,8 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.8.7.10" },
 
             children: [
-                Field({
-                    name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum", conformance: "M",
-                    xref: { document: "core", section: "11.8.7.10" }
-                }),
-                Field({
-                    name: "DebugText", id: 0x1, type: "string", conformance: "O",
-                    xref: { document: "core", section: "11.8.7.10" }
-                }),
+                Field({ name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum", conformance: "M" }),
+                Field({ name: "DebugText", id: 0x1, type: "string", conformance: "O" }),
 
                 Field({
                     name: "ErrorValue", id: 0x2, type: "int32", conformance: "M", quality: "X",
@@ -779,20 +743,10 @@ Matter.children.push(Cluster({
                 "lowest priority network in the list.",
 
             xref: { document: "core", section: "11.8.7.11" },
-
             children: [
-                Field({
-                    name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32",
-                    xref: { document: "core", section: "11.8.7.11" }
-                }),
-                Field({
-                    name: "NetworkIndex", id: 0x1, type: "uint8", conformance: "M", constraint: "desc",
-                    xref: { document: "core", section: "11.8.7.11" }
-                }),
-                Field({
-                    name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O",
-                    xref: { document: "core", section: "11.8.7.11" }
-                })
+                Field({ name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32" }),
+                Field({ name: "NetworkIndex", id: 0x1, type: "uint8", conformance: "M", constraint: "desc" }),
+                Field({ name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O" })
             ]
         }),
 
@@ -803,25 +757,14 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.8.5.1" },
 
             children: [
+                Field({ name: "Unencrypted", constraint: "0", description: "Supports unencrypted Wi-Fi" }),
+                Field({ name: "Wep", constraint: "1", description: "Supports Wi-Fi using WEP security" }),
+                Field({ name: "WpaPersonal", constraint: "2", description: "Supports Wi-Fi using WPA-Personal security" }),
                 Field({
-                    name: "Unencrypted", constraint: "0", description: "Supports unencrypted Wi-Fi",
-                    xref: { document: "core", section: "11.8.5.1" }
+                    name: "Wpa2Personal", constraint: "3", description: "Supports Wi-Fi using WPA2-Personal security"
                 }),
                 Field({
-                    name: "Wep", constraint: "1", description: "Supports Wi-Fi using WEP security",
-                    xref: { document: "core", section: "11.8.5.1" }
-                }),
-                Field({
-                    name: "WpaPersonal", constraint: "2", description: "Supports Wi-Fi using WPA-Personal security",
-                    xref: { document: "core", section: "11.8.5.1" }
-                }),
-                Field({
-                    name: "Wpa2Personal", constraint: "3", description: "Supports Wi-Fi using WPA2-Personal security",
-                    xref: { document: "core", section: "11.8.5.1" }
-                }),
-                Field({
-                    name: "Wpa3Personal", constraint: "4", description: "Supports Wi-Fi using WPA3-Personal security",
-                    xref: { document: "core", section: "11.8.5.1" }
+                    name: "Wpa3Personal", constraint: "4", description: "Supports Wi-Fi using WPA3-Personal security"
                 })
             ]
         }),
@@ -835,26 +778,21 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "2G4", id: 0x0, conformance: "O.a+",
-                    description: "2.4GHz - 2.401GHz to2.495GHz(802.11b/g/n/ax)",
-                    xref: { document: "core", section: "11.8.5.2" }
+                    description: "2.4GHz - 2.401GHz to2.495GHz(802.11b/g/n/ax)"
                 }),
                 Field({
-                    name: "3G65", id: 0x1, conformance: "O.a+", description: "3.65GHz - 3.655GHz to3.695GHz (802.11y)",
-                    xref: { document: "core", section: "11.8.5.2" }
+                    name: "3G65", id: 0x1, conformance: "O.a+", description: "3.65GHz - 3.655GHz to3.695GHz (802.11y)"
                 }),
                 Field({
                     name: "5G", id: 0x2, conformance: "O.a+",
-                    description: "5GHz - 5.150GHz to5.895GHz(802.11a/n/ac/ax)",
-                    xref: { document: "core", section: "11.8.5.2" }
+                    description: "5GHz - 5.150GHz to5.895GHz(802.11a/n/ac/ax)"
                 }),
                 Field({
                     name: "6G", id: 0x3, conformance: "O.a+",
-                    description: "6GHz - 5.925GHz to7.125GHz (802.11ax / WiFi 6E)",
-                    xref: { document: "core", section: "11.8.5.2" }
+                    description: "6GHz - 5.925GHz to7.125GHz (802.11ax / WiFi 6E)"
                 }),
                 Field({
-                    name: "60G", id: 0x4, conformance: "O.a+", description: "60GHz - 57.24GHz to70.20GHz (802.11ad/ay)",
-                    xref: { document: "core", section: "11.8.5.2" }
+                    name: "60G", id: 0x4, conformance: "O.a+", description: "60GHz - 57.24GHz to70.20GHz (802.11ad/ay)"
                 })
             ]
         }),
@@ -864,65 +802,46 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.8.5.3" },
 
             children: [
-                Field({
-                    name: "Success", id: 0x0, conformance: "M", description: "OK, no error",
-                    xref: { document: "core", section: "11.8.5.3" }
-                }),
-                Field({
-                    name: "OutOfRange", id: 0x1, conformance: "M", description: "Value Outside Range",
-                    xref: { document: "core", section: "11.8.5.3" }
-                }),
+                Field({ name: "Success", id: 0x0, conformance: "M", description: "OK, no error" }),
+                Field({ name: "OutOfRange", id: 0x1, conformance: "M", description: "Value Outside Range" }),
                 Field({
                     name: "BoundsExceeded", id: 0x2, conformance: "M",
-                    description: "A collection would exceed its size limit",
-                    xref: { document: "core", section: "11.8.5.3" }
+                    description: "A collection would exceed its size limit"
                 }),
                 Field({
                     name: "NetworkIdNotFound", id: 0x3, conformance: "M",
-                    description: "The NetworkID is not among the collection of added networks",
-                    xref: { document: "core", section: "11.8.5.3" }
+                    description: "The NetworkID is not among the collection of added networks"
                 }),
                 Field({
                     name: "DuplicateNetworkId", id: 0x4, conformance: "M",
-                    description: "The NetworkID is already among the collection of added networks",
-                    xref: { document: "core", section: "11.8.5.3" }
+                    description: "The NetworkID is already among the collection of added networks"
                 }),
                 Field({
-                    name: "NetworkNotFound", id: 0x5, conformance: "M", description: "Cannot find AP: SSID Not found",
-                    xref: { document: "core", section: "11.8.5.3" }
+                    name: "NetworkNotFound", id: 0x5, conformance: "M", description: "Cannot find AP: SSID Not found"
                 }),
                 Field({
                     name: "RegulatoryError", id: 0x6, conformance: "M",
-                    description: "Cannot find AP: Mismatch on band/channels/regulatory domain / 2.4GHz vs 5GHz",
-                    xref: { document: "core", section: "11.8.5.3" }
+                    description: "Cannot find AP: Mismatch on band/channels/regulatory domain / 2.4GHz vs 5GHz"
                 }),
                 Field({
                     name: "AuthFailure", id: 0x7, conformance: "M",
-                    description: "Cannot associate due to authentication failure",
-                    xref: { document: "core", section: "11.8.5.3" }
+                    description: "Cannot associate due to authentication failure"
                 }),
                 Field({
                     name: "UnsupportedSecurity", id: 0x8, conformance: "M",
-                    description: "Cannot associate due to unsupported security mode",
-                    xref: { document: "core", section: "11.8.5.3" }
+                    description: "Cannot associate due to unsupported security mode"
                 }),
                 Field({
-                    name: "OtherConnectionFailure", id: 0x9, conformance: "M", description: "Other association failure",
-                    xref: { document: "core", section: "11.8.5.3" }
+                    name: "OtherConnectionFailure", id: 0x9, conformance: "M", description: "Other association failure"
                 }),
                 Field({
-                    name: "Ipv6Failed", id: 0xa, conformance: "M", description: "Failure to generate an IPv6 address",
-                    xref: { document: "core", section: "11.8.5.3" }
+                    name: "Ipv6Failed", id: 0xa, conformance: "M", description: "Failure to generate an IPv6 address"
                 }),
                 Field({
                     name: "IpBindFailed", id: 0xb, conformance: "M",
-                    description: "Failure to bind Wi-Fi <-> IP interfaces",
-                    xref: { document: "core", section: "11.8.5.3" }
+                    description: "Failure to bind Wi-Fi <-> IP interfaces"
                 }),
-                Field({
-                    name: "UnknownError", id: 0xc, conformance: "M", description: "Unknown error",
-                    xref: { document: "core", section: "11.8.5.3" }
-                })
+                Field({ name: "UnknownError", id: 0xc, conformance: "M", description: "Unknown error" })
             ]
         }),
 
@@ -980,22 +899,10 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.8.5.5" },
 
             children: [
-                Field({
-                    name: "Security", id: 0x0, type: "WiFiSecurityBitmap", conformance: "WI",
-                    xref: { document: "core", section: "11.8.5.5" }
-                }),
-                Field({
-                    name: "Ssid", id: 0x1, type: "octstr", conformance: "WI", constraint: "max 32",
-                    xref: { document: "core", section: "11.8.5.5" }
-                }),
-                Field({
-                    name: "Bssid", id: 0x2, type: "octstr", conformance: "WI", constraint: "6",
-                    xref: { document: "core", section: "11.8.5.5" }
-                }),
-                Field({
-                    name: "Channel", id: 0x3, type: "uint16", conformance: "WI",
-                    xref: { document: "core", section: "11.8.5.5" }
-                }),
+                Field({ name: "Security", id: 0x0, type: "WiFiSecurityBitmap", conformance: "WI" }),
+                Field({ name: "Ssid", id: 0x1, type: "octstr", conformance: "WI", constraint: "max 32" }),
+                Field({ name: "Bssid", id: 0x2, type: "octstr", conformance: "WI", constraint: "6" }),
+                Field({ name: "Channel", id: 0x3, type: "uint16", conformance: "WI" }),
 
                 Field({
                     name: "WiFiBand", id: 0x4, type: "WiFiBandEnum", conformance: "[WI]",
@@ -1018,39 +925,18 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.8.5.6" },
 
             children: [
-                Field({
-                    name: "PanId", id: 0x0, type: "uint16", conformance: "TH", constraint: "0 to 65534",
-                    xref: { document: "core", section: "11.8.5.6" }
-                }),
-                Field({
-                    name: "ExtendedPanId", id: 0x1, type: "uint64", conformance: "TH",
-                    xref: { document: "core", section: "11.8.5.6" }
-                }),
-                Field({
-                    name: "NetworkName", id: 0x2, type: "string", conformance: "TH", constraint: "1 to 16",
-                    xref: { document: "core", section: "11.8.5.6" }
-                }),
-                Field({
-                    name: "Channel", id: 0x3, type: "uint16", conformance: "TH",
-                    xref: { document: "core", section: "11.8.5.6" }
-                }),
-                Field({
-                    name: "Version", id: 0x4, type: "uint8", conformance: "TH",
-                    xref: { document: "core", section: "11.8.5.6" }
-                }),
+                Field({ name: "PanId", id: 0x0, type: "uint16", conformance: "TH", constraint: "0 to 65534" }),
+                Field({ name: "ExtendedPanId", id: 0x1, type: "uint64", conformance: "TH" }),
+                Field({ name: "NetworkName", id: 0x2, type: "string", conformance: "TH", constraint: "1 to 16" }),
+                Field({ name: "Channel", id: 0x3, type: "uint16", conformance: "TH" }),
+                Field({ name: "Version", id: 0x4, type: "uint8", conformance: "TH" }),
                 Field({
                     name: "ExtendedAddress", id: 0x5, type: "hwadr", conformance: "TH",
                     details: "ExtendedAddress stands for an IEEE 802.15.4 Extended Address.",
                     xref: { document: "core", section: "11.8.5.6.1" }
                 }),
-                Field({
-                    name: "Rssi", id: 0x6, type: "int8", conformance: "TH",
-                    xref: { document: "core", section: "11.8.5.6" }
-                }),
-                Field({
-                    name: "Lqi", id: 0x7, type: "uint8", conformance: "TH",
-                    xref: { document: "core", section: "11.8.5.6" }
-                })
+                Field({ name: "Rssi", id: 0x6, type: "int8", conformance: "TH" }),
+                Field({ name: "Lqi", id: 0x7, type: "uint8", conformance: "TH" })
             ]
         })
     ]

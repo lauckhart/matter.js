@@ -204,22 +204,16 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "AdminNodeId", id: 0x1, type: "node-id", access: "S", conformance: "M", constraint: "desc",
-                    quality: "X",
-                    xref: { document: "core", section: "9.10.7.2" }
+                    quality: "X"
                 }),
                 Field({
                     name: "AdminPasscodeId", id: 0x2, type: "uint16", access: "S", conformance: "M", constraint: "desc",
-                    quality: "X",
-                    xref: { document: "core", section: "9.10.7.2" }
+                    quality: "X"
                 }),
-                Field({
-                    name: "ChangeType", id: 0x3, type: "ChangeTypeEnum", access: "S", conformance: "M",
-                    xref: { document: "core", section: "9.10.7.2" }
-                }),
+                Field({ name: "ChangeType", id: 0x3, type: "ChangeTypeEnum", access: "S", conformance: "M" }),
                 Field({
                     name: "LatestValue", id: 0x4, type: "AccessControlExtensionStruct", access: "S", conformance: "M",
-                    quality: "X",
-                    xref: { document: "core", section: "9.10.7.2" }
+                    quality: "X"
                 }),
                 Field({
                     name: "FabricIndex", id: 0xfe, type: "fabric-idx", access: "R F V", conformance: "M",
@@ -231,20 +225,10 @@ Matter.children.push(Cluster({
         Datatype({
             name: "ChangeTypeEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "9.10.4.1" },
-
             children: [
-                Field({
-                    name: "Changed", id: 0x0, conformance: "M", description: "Entry or extension was changed",
-                    xref: { document: "core", section: "9.10.4.1" }
-                }),
-                Field({
-                    name: "Added", id: 0x1, conformance: "M", description: "Entry or extension was added",
-                    xref: { document: "core", section: "9.10.4.1" }
-                }),
-                Field({
-                    name: "Removed", id: 0x2, conformance: "M", description: "Entry or extension was removed",
-                    xref: { document: "core", section: "9.10.4.1" }
-                })
+                Field({ name: "Changed", id: 0x0, conformance: "M", description: "Entry or extension was changed" }),
+                Field({ name: "Added", id: 0x1, conformance: "M", description: "Entry or extension was added" }),
+                Field({ name: "Removed", id: 0x2, conformance: "M", description: "Entry or extension was removed" })
             ]
         }),
 
@@ -258,13 +242,11 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "View", id: 0x1, conformance: "M",
-                    description: "Can read and observe all (except Access Control Cluster and as seen by a non-Proxy)",
-                    xref: { document: "core", section: "9.10.4.2" }
+                    description: "Can read and observe all (except Access Control Cluster and as seen by a non-Proxy)"
                 }),
                 Field({
                     name: "ProxyView", id: 0x2, conformance: "P, M",
-                    description: "Can read and observe all (as seen by a Proxy)",
-                    xref: { document: "core", section: "9.10.4.2" }
+                    description: "Can read and observe all (as seen by a Proxy)"
                 }),
 
                 Field({
@@ -293,40 +275,20 @@ Matter.children.push(Cluster({
         Datatype({
             name: "AccessControlEntryAuthModeEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "9.10.4.3" },
-
             children: [
-                Field({
-                    name: "Pase", id: 0x1, conformance: "M", description: "Passcode authenticated session",
-                    xref: { document: "core", section: "9.10.4.3" }
-                }),
-                Field({
-                    name: "Case", id: 0x2, conformance: "M", description: "Certificate authenticated session",
-                    xref: { document: "core", section: "9.10.4.3" }
-                }),
-                Field({
-                    name: "Group", id: 0x3, conformance: "M", description: "Group authenticated session",
-                    xref: { document: "core", section: "9.10.4.3" }
-                })
+                Field({ name: "Pase", id: 0x1, conformance: "M", description: "Passcode authenticated session" }),
+                Field({ name: "Case", id: 0x2, conformance: "M", description: "Certificate authenticated session" }),
+                Field({ name: "Group", id: 0x3, conformance: "M", description: "Group authenticated session" })
             ]
         }),
 
         Datatype({
             name: "AccessControlTargetStruct", type: "struct", conformance: "M",
             xref: { document: "core", section: "9.10.4.4" },
-
             children: [
-                Field({
-                    name: "Cluster", id: 0x0, type: "cluster-id", conformance: "M", quality: "X",
-                    xref: { document: "core", section: "9.10.4.4" }
-                }),
-                Field({
-                    name: "Endpoint", id: 0x1, type: "endpoint-no", conformance: "M", quality: "X",
-                    xref: { document: "core", section: "9.10.4.4" }
-                }),
-                Field({
-                    name: "DeviceType", id: 0x2, type: "devtype-id", conformance: "M", quality: "X",
-                    xref: { document: "core", section: "9.10.4.4" }
-                })
+                Field({ name: "Cluster", id: 0x0, type: "cluster-id", conformance: "M", quality: "X" }),
+                Field({ name: "Endpoint", id: 0x1, type: "endpoint-no", conformance: "M", quality: "X" }),
+                Field({ name: "DeviceType", id: 0x2, type: "devtype-id", conformance: "M", quality: "X" })
             ]
         }),
 
@@ -372,7 +334,7 @@ Matter.children.push(Cluster({
 
                 Field({
                     name: "Subjects", id: 0x3, type: "list", access: "S", conformance: "M",
-                    constraint: "max SubjectsPerAccessControlEntry", quality: "X",
+                    constraint: "max subjectsPerAccessControlEntry", quality: "X",
 
                     details: "The subjects field shall specify a list of Subject IDs, to which this Access Control Entry grants " +
                         "access." +
@@ -414,7 +376,7 @@ Matter.children.push(Cluster({
 
                 Field({
                     name: "Targets", id: 0x4, type: "list", access: "S", conformance: "M",
-                    constraint: "max TargetsPerAccessControlEntry", quality: "X",
+                    constraint: "max targetsPerAccessControlEntry", quality: "X",
 
                     details: "The targets field shall specify a list of AccessControlTargetStruct, which define the clusters on " +
                         "this Node to which this Access Control Entry grants access." +

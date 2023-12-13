@@ -35,8 +35,7 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.5.4" },
             children: [Field({
                 name: "TEMP", constraint: "0", description: "TemperatureUnit",
-                details: "The Node can be configured to use different units of temperature when conveying values to a user.",
-                xref: { document: "core", section: "11.5.4" }
+                details: "The Node can be configured to use different units of temperature when conveying values to a user."
             })]
         }),
 
@@ -52,20 +51,10 @@ Matter.children.push(Cluster({
         Datatype({
             name: "TempUnitEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "11.5.5.1" },
-
             children: [
-                Field({
-                    name: "Fahrenheit", id: 0x0, conformance: "M", description: "Temperature conveyed in Fahrenheit",
-                    xref: { document: "core", section: "11.5.5.1" }
-                }),
-                Field({
-                    name: "Celsius", id: 0x1, conformance: "M", description: "Temperature conveyed in Celsius",
-                    xref: { document: "core", section: "11.5.5.1" }
-                }),
-                Field({
-                    name: "Kelvin", id: 0x2, conformance: "M", description: "Temperature conveyed in Kelvin",
-                    xref: { document: "core", section: "11.5.5.1" }
-                })
+                Field({ name: "Fahrenheit", id: 0x0, conformance: "M", description: "Temperature conveyed in Fahrenheit" }),
+                Field({ name: "Celsius", id: 0x1, conformance: "M", description: "Temperature conveyed in Celsius" }),
+                Field({ name: "Kelvin", id: 0x2, conformance: "M", description: "Temperature conveyed in Kelvin" })
             ]
         })
     ]

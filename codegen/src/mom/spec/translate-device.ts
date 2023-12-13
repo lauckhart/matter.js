@@ -234,7 +234,7 @@ function addClusters(device: DeviceTypeElement, deviceRef: DeviceReference) {
             if (!cluster.children) {
                 cluster.children = [];
             }
-            const element = camelize(record.element, false) as RequirementElement.ElementType;
+            const element = camelize(record.element) as RequirementElement.ElementType;
             if (element === RequirementElement.ElementType.Feature) {
                 record.name = record.name.toUpperCase();
             }

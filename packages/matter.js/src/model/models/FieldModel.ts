@@ -6,7 +6,7 @@
 
 import { Mei, Metatype } from "../definitions/index.js";
 import { FieldElement } from "../elements/index.js";
-import { PropertyModel } from "../index.js";
+import { PropertyModel } from "./PropertyModel.js";
 import { Model } from "./Model.js";
 import { ValueModel } from "./ValueModel.js";
 

@@ -40,8 +40,7 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.2.4" },
             children: [Field({
                 name: "QRY", constraint: "0", description: "Query",
-                details: "Multicast query for identification state",
-                xref: { document: "cluster", section: "1.2.4" }
+                details: "Multicast query for identification state"
             })]
         }),
 
@@ -72,31 +71,19 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.2.5.2" },
 
             children: [
+                Field({ name: "None", id: 0x0, conformance: "M", description: "No presentation." }),
                 Field({
-                    name: "None", id: 0x0, conformance: "M", description: "No presentation.",
-                    xref: { document: "cluster", section: "1.2.5.2" }
+                    name: "LightOutput", id: 0x1, conformance: "M", description: "Light output of a lighting product."
                 }),
-                Field({
-                    name: "LightOutput", id: 0x1, conformance: "M", description: "Light output of a lighting product.",
-                    xref: { document: "cluster", section: "1.2.5.2" }
-                }),
-                Field({
-                    name: "VisibleIndicator", id: 0x2, conformance: "M", description: "Typically a small LED.",
-                    xref: { document: "cluster", section: "1.2.5.2" }
-                }),
-                Field({
-                    name: "AudibleBeep", id: 0x3, conformance: "M",
-                    xref: { document: "cluster", section: "1.2.5.2" }
-                }),
+                Field({ name: "VisibleIndicator", id: 0x2, conformance: "M", description: "Typically a small LED." }),
+                Field({ name: "AudibleBeep", id: 0x3, conformance: "M" }),
                 Field({
                     name: "Display", id: 0x4, conformance: "M",
-                    description: "Presentation will be visible on display screen.",
-                    xref: { document: "cluster", section: "1.2.5.2" }
+                    description: "Presentation will be visible on display screen."
                 }),
                 Field({
                     name: "Actuator", id: 0x5, conformance: "M",
-                    description: "Presentation will be conveyed by actuator functionality such as through a window blind operation or in-wall relay.",
-                    xref: { document: "cluster", section: "1.2.5.2" }
+                    description: "Presentation will be conveyed by actuator functionality such as through a window blind operation or in-wall relay."
                 })
             ]
         }),
@@ -105,10 +92,7 @@ Matter.children.push(Cluster({
             name: "Identify", id: 0x0, access: "M", conformance: "M", direction: "request", response: "status",
             details: "This command starts or stops the receiving device identifying itself.",
             xref: { document: "cluster", section: "1.2.6.1" },
-            children: [Field({
-                name: "IdentifyTime", id: 0x0, type: "uint16", conformance: "M",
-                xref: { document: "cluster", section: "1.2.6.1" }
-            })]
+            children: [Field({ name: "IdentifyTime", id: 0x0, type: "uint16", conformance: "M" })]
         }),
 
         Command({
@@ -150,33 +134,27 @@ Matter.children.push(Cluster({
 
                     children: [
                         Field({
-                            name: "Blink", id: 0x0, conformance: "M", description: "e.g., Light is turned on/off once.",
-                            xref: { document: "cluster", section: "1.2.6.3.1" }
+                            name: "Blink", id: 0x0, conformance: "M", description: "e.g., Light is turned on/off once."
                         }),
                         Field({
                             name: "Breathe", id: 0x1, conformance: "M",
-                            description: "e.g., Light is turned on/off over 1 second and repeated 15 times.",
-                            xref: { document: "cluster", section: "1.2.6.3.1" }
+                            description: "e.g., Light is turned on/off over 1 second and repeated 15 times."
                         }),
                         Field({
                             name: "Okay", id: 0x2, conformance: "M",
-                            description: "e.g., Colored light turns green for 1 second; non-colored light flashes twice.",
-                            xref: { document: "cluster", section: "1.2.6.3.1" }
+                            description: "e.g., Colored light turns green for 1 second; non-colored light flashes twice."
                         }),
                         Field({
                             name: "ChannelChange", id: 0xb, conformance: "M",
-                            description: "e.g., Colored light turns orange for 8 seconds; non-colored light switches to the maximum brightness for 0.5s and then minimum brightness for 7.5s.",
-                            xref: { document: "cluster", section: "1.2.6.3.1" }
+                            description: "e.g., Colored light turns orange for 8 seconds; non-colored light switches to the maximum brightness for 0.5s and then minimum brightness for 7.5s."
                         }),
                         Field({
                             name: "FinishEffect", id: 0xfe, conformance: "M",
-                            description: "Complete the current effect sequence before terminating. e.g., if in the middle of a breathe effect (as above), first complete the current 1s breathe effect and then terminate the effect.",
-                            xref: { document: "cluster", section: "1.2.6.3.1" }
+                            description: "Complete the current effect sequence before terminating. e.g., if in the middle of a breathe effect (as above), first complete the current 1s breathe effect and then terminate the effect."
                         }),
                         Field({
                             name: "StopEffect", id: 0xff, conformance: "M",
-                            description: "Terminate the effect as soon as possible.",
-                            xref: { document: "cluster", section: "1.2.6.3.1" }
+                            description: "Terminate the effect as soon as possible."
                         })
                     ]
                 }),
@@ -189,10 +167,7 @@ Matter.children.push(Cluster({
                         "\n" +
                         "Table 4. Values of the EffectVariant Field of the TriggerEffect Command",
                     xref: { document: "cluster", section: "1.2.6.3.2" },
-                    children: [Field({
-                        name: "Default", id: 0x0, conformance: "M",
-                        xref: { document: "cluster", section: "1.2.6.3.2" }
-                    })]
+                    children: [Field({ name: "Default", id: 0x0, conformance: "M" })]
                 })
             ]
         }),

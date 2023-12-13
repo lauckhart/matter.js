@@ -46,10 +46,7 @@ Matter.children.push(Cluster({
             name: "ValidProxyStruct", type: "struct",
             details: "Encapsulates the Node ID of a Valid Proxy.",
             xref: { document: "core", section: "9.15.15.4.1" },
-            children: [Field({
-                name: "NodeId", id: 0x1, type: "node-id", access: "RW", conformance: "M",
-                xref: { document: "core", section: "9.15.15.4.1" }
-            })]
+            children: [Field({ name: "NodeId", id: 0x1, type: "node-id", access: "RW", conformance: "M" })]
         })
     ]
 }));

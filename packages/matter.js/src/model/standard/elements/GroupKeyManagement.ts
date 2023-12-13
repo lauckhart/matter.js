@@ -28,8 +28,7 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.2.5" },
             children: [Field({
                 name: "CS", constraint: "0", description: "CacheAndSync",
-                details: "The ability to support CacheAndSync security policy and MCSP.",
-                xref: { document: "core", section: "11.2.5" }
+                details: "The ability to support CacheAndSync security policy and MCSP."
             })]
         }),
 
@@ -119,10 +118,7 @@ Matter.children.push(Cluster({
                 "  • Otherwise, this status code shall be set to FAILURE.",
 
             xref: { document: "core", section: "11.2.8.1" },
-            children: [Field({
-                name: "GroupKeySet", id: 0x0, type: "GroupKeySetStruct", conformance: "M",
-                xref: { document: "core", section: "11.2.8.1" }
-            })]
+            children: [Field({ name: "GroupKeySet", id: 0x0, type: "GroupKeySetStruct", conformance: "M" })]
         }),
 
         Command({
@@ -142,10 +138,7 @@ Matter.children.push(Cluster({
                 "fabric, then this command shall fail with a NOT_FOUND status code.",
 
             xref: { document: "core", section: "11.2.8.2" },
-            children: [Field({
-                name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M",
-                xref: { document: "core", section: "11.2.8.2" }
-            })]
+            children: [Field({ name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M" })]
         }),
 
         Command({
@@ -154,10 +147,7 @@ Matter.children.push(Cluster({
                 "found. It shall contain the configuration of the requested Group Key Set, with the EpochKey0, " +
                 "EpochKey1 and EpochKey2 key contents replaced by null.",
             xref: { document: "core", section: "11.2.8.3" },
-            children: [Field({
-                name: "GroupKeySet", id: 0x0, type: "GroupKeySetStruct", conformance: "M",
-                xref: { document: "core", section: "11.2.8.3" }
-            })]
+            children: [Field({ name: "GroupKeySet", id: 0x0, type: "GroupKeySetStruct", conformance: "M" })]
         }),
 
         Command({
@@ -184,10 +174,7 @@ Matter.children.push(Cluster({
                 "GroupKeySetID requested did not exist.",
 
             xref: { document: "core", section: "11.2.8.4" },
-            children: [Field({
-                name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M",
-                xref: { document: "core", section: "11.2.8.4" }
-            })]
+            children: [Field({ name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M" })]
         }),
 
         Command({
@@ -226,7 +213,6 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.2.8.6" },
             children: [Field({
                 name: "GroupKeySetIDs", id: 0x0, type: "list", conformance: "M",
-                xref: { document: "core", section: "11.2.8.6" },
                 children: [Field({ name: "entry", type: "uint16" })]
             })]
         }),
@@ -238,13 +224,11 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "TrustFirst", id: 0x0, conformance: "M",
-                    description: "Message counter synchronization using trust-first",
-                    xref: { document: "core", section: "11.2.6.1" }
+                    description: "Message counter synchronization using trust-first"
                 }),
                 Field({
                     name: "CacheAndSync", id: 0x1, conformance: "CS",
-                    description: "Message counter synchronization using cache-and-sync",
-                    xref: { document: "core", section: "11.2.6.1" }
+                    description: "Message counter synchronization using cache-and-sync"
                 })
             ]
         }),
@@ -306,10 +290,7 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.2.6.4" },
 
             children: [
-                Field({
-                    name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "11.2.6.4" }
-                }),
+                Field({ name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M" }),
 
                 Field({
                     name: "GroupKeySecurityPolicy", id: 0x1, type: "GroupKeySecurityPolicyEnum", access: "S",
@@ -396,10 +377,7 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.2.6.5" },
 
             children: [
-                Field({
-                    name: "GroupId", id: 0x1, type: "group-id", access: "R F", conformance: "M",
-                    xref: { document: "core", section: "11.2.6.5" }
-                }),
+                Field({ name: "GroupId", id: 0x1, type: "group-id", access: "R F", conformance: "M" }),
 
                 Field({
                     name: "Endpoints", id: 0x2, type: "list", access: "R F", conformance: "M", constraint: "min 1",

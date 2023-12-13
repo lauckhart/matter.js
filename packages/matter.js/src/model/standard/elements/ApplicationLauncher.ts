@@ -27,17 +27,15 @@ Matter.children.push(Cluster({
         Attribute({
             name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "6.4.2" },
-
             children: [Field({
                 name: "AP", constraint: "0", description: "ApplicationPlatform",
                 details: "Support for attributes and commands required for endpoint to support launching any application " +
-                    "within the supported application catalogs",
-                xref: { document: "cluster", section: "6.4.2" }
+                    "within the supported application catalogs"
             })]
         }),
 
         Attribute({
-            name: "CatalogList", id: 0x0, type: "list", access: "R V", conformance: "AP", constraint: "None",
+            name: "CatalogList", id: 0x0, type: "list", access: "R V", conformance: "AP", constraint: "none",
             quality: "N",
 
             details: "This attribute shall specify the list of supported application catalogs, where each entry in the " +
@@ -179,18 +177,13 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "6.4.5.1" },
 
             children: [
+                Field({ name: "Success", id: 0x0, conformance: "M", description: "Command succeeded" }),
                 Field({
-                    name: "Success", id: 0x0, conformance: "M", description: "Command succeeded",
-                    xref: { document: "cluster", section: "6.4.5.1" }
-                }),
-                Field({
-                    name: "AppNotAvailable", id: 0x1, conformance: "M", description: "Requested app is not available.",
-                    xref: { document: "cluster", section: "6.4.5.1" }
+                    name: "AppNotAvailable", id: 0x1, conformance: "M", description: "Requested app is not available."
                 }),
                 Field({
                     name: "SystemBusy", id: 0x2, conformance: "M",
-                    description: "Video platform unable to honor command.",
-                    xref: { document: "cluster", section: "6.4.5.1" }
+                    description: "Video platform unable to honor command."
                 })
             ]
         }),
@@ -226,16 +219,9 @@ Matter.children.push(Cluster({
             name: "ApplicationEPStruct", type: "struct", conformance: "M",
             details: "This specifies an app along with its corresponding endpoint.",
             xref: { document: "cluster", section: "6.4.5.3" },
-
             children: [
-                Field({
-                    name: "Application", id: 0x0, type: "ApplicationStruct", conformance: "M",
-                    xref: { document: "cluster", section: "6.4.5.3" }
-                }),
-                Field({
-                    name: "Endpoint", id: 0x1, type: "endpoint-no", conformance: "O",
-                    xref: { document: "cluster", section: "6.4.5.3" }
-                })
+                Field({ name: "Application", id: 0x0, type: "ApplicationStruct", conformance: "M" }),
+                Field({ name: "Endpoint", id: 0x1, type: "endpoint-no", conformance: "O" })
             ]
         })
     ]

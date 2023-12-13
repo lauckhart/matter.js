@@ -31,28 +31,23 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "LF", conformance: "O.a+", constraint: "0", description: "Lift",
-                    details: "Lift Control and behavior for lifting/sliding window coverings",
-                    xref: { document: "cluster", section: "5.3.4" }
+                    details: "Lift Control and behavior for lifting/sliding window coverings"
                 }),
                 Field({
                     name: "TL", conformance: "O.a+", constraint: "1", description: "Tilt",
-                    details: "Tilt Control and behavior for tilting window coverings",
-                    xref: { document: "cluster", section: "5.3.4" }
+                    details: "Tilt Control and behavior for tilting window coverings"
                 }),
                 Field({
                     name: "PA_LF", conformance: "[LF]", constraint: "2", description: "PositionAwareLift",
-                    details: "Position Aware lift control is supported.",
-                    xref: { document: "cluster", section: "5.3.4" }
+                    details: "Position Aware lift control is supported."
                 }),
                 Field({
                     name: "ABS", conformance: "O", constraint: "3", description: "AbsolutePosition",
-                    details: "Absolute positioning is supported.",
-                    xref: { document: "cluster", section: "5.3.4" }
+                    details: "Absolute positioning is supported."
                 }),
                 Field({
                     name: "PA_TL", conformance: "[TL]", constraint: "4", description: "PositionAwareTilt",
-                    details: "Position Aware tilt control is supported.",
-                    xref: { document: "cluster", section: "5.3.4" }
+                    details: "Position Aware tilt control is supported."
                 })
             ]
         }),
@@ -65,47 +60,17 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.3.5.1" },
 
             children: [
-                Field({
-                    name: "Rollershade", id: 0x0, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.1" }
-                }),
-                Field({
-                    name: "Rollershade2Motor", id: 0x1, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.1" }
-                }),
-                Field({
-                    name: "RollershadeExterior", id: 0x2, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.1" }
-                }),
-                Field({
-                    name: "RollershadeExterior2Motor", id: 0x3, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.1" }
-                }),
-                Field({
-                    name: "Drapery", id: 0x4, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.1" }
-                }),
-                Field({ name: "Awning", id: 0x5, conformance: "M", xref: { document: "cluster", section: "5.3.5.1" } }),
-                Field({
-                    name: "Shutter", id: 0x6, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.1" }
-                }),
-                Field({
-                    name: "TiltBlindTiltOnly", id: 0x7, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.1" }
-                }),
-                Field({
-                    name: "TiltBlindLift", id: 0x8, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.1" }
-                }),
-                Field({
-                    name: "ProjectorScreen", id: 0x9, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.1" }
-                }),
-                Field({
-                    name: "Unknown", id: 0xff, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.1" }
-                })
+                Field({ name: "Rollershade", id: 0x0, conformance: "M" }),
+                Field({ name: "Rollershade2Motor", id: 0x1, conformance: "M" }),
+                Field({ name: "RollershadeExterior", id: 0x2, conformance: "M" }),
+                Field({ name: "RollershadeExterior2Motor", id: 0x3, conformance: "M" }),
+                Field({ name: "Drapery", id: 0x4, conformance: "M" }),
+                Field({ name: "Awning", id: 0x5, conformance: "M" }),
+                Field({ name: "Shutter", id: 0x6, conformance: "M" }),
+                Field({ name: "TiltBlindTiltOnly", id: 0x7, conformance: "M" }),
+                Field({ name: "TiltBlindLift", id: 0x8, conformance: "M" }),
+                Field({ name: "ProjectorScreen", id: 0x9, conformance: "M" }),
+                Field({ name: "Unknown", id: 0xff, conformance: "M" })
             ]
         }),
 
@@ -127,7 +92,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "CurrentPositionLift", id: 0x3, type: "uint16", access: "R V",
-            conformance: "[LF & PA_LF & ABS]", constraint: "InstalledOpenLimitLift to InstalledClosedLimitLift",
+            conformance: "[LF & PA_LF & ABS]", constraint: "installedOpenLimitLift to installedClosedLimitLift",
             default: null, quality: "X N",
             details: "The CurrentPositionLift attribute identifies the actual Lift position (in centimeters) of the " +
                 "window covering from the fully-open position.",
@@ -136,7 +101,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "CurrentPositionTilt", id: 0x4, type: "uint16", access: "R V",
-            conformance: "[TL & PA_TL & ABS]", constraint: "InstalledOpenLimitTilt to InstalledClosedLimitTilt",
+            conformance: "[TL & PA_TL & ABS]", constraint: "installedOpenLimitTilt to installedClosedLimitTilt",
             default: null, quality: "X N",
             details: "The CurrentPositionTilt attribute identifies the actual Tilt position (in tenth of an degree) of " +
                 "the window covering from the fully-open position.",
@@ -263,106 +228,31 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.3.5.16" },
 
             children: [
-                Field({
-                    name: "RollerShade", id: 0x0, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "RomanShade", id: 0x1, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "BalloonShade", id: 0x2, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "WovenWood", id: 0x3, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "PleatedShade", id: 0x4, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "CellularShade", id: 0x5, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "LayeredShade", id: 0x6, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "LayeredShade2D", id: 0x7, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "SheerShade", id: 0x8, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "TiltOnlyInteriorBlind", id: 0x9, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "InteriorBlind", id: 0xa, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "VerticalBlindStripCurtain", id: 0xb, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "InteriorVenetianBlind", id: 0xc, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "ExteriorVenetianBlind", id: 0xd, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "LateralLeftCurtain", id: 0xe, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "LateralRightCurtain", id: 0xf, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "CentralCurtain", id: 0x10, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "RollerShutter", id: 0x11, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "ExteriorVerticalScreen", id: 0x12, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "AwningTerrace", id: 0x13, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "AwningVerticalScreen", id: 0x14, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "TiltOnlyPergola", id: 0x15, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "SwingingShutter", id: 0x16, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "SlidingShutter", id: 0x17, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                }),
-                Field({
-                    name: "Unknown", id: 0xff, conformance: "M",
-                    xref: { document: "cluster", section: "5.3.5.16" }
-                })
+                Field({ name: "RollerShade", id: 0x0, conformance: "M" }),
+                Field({ name: "RomanShade", id: 0x1, conformance: "M" }),
+                Field({ name: "BalloonShade", id: 0x2, conformance: "M" }),
+                Field({ name: "WovenWood", id: 0x3, conformance: "M" }),
+                Field({ name: "PleatedShade", id: 0x4, conformance: "M" }),
+                Field({ name: "CellularShade", id: 0x5, conformance: "M" }),
+                Field({ name: "LayeredShade", id: 0x6, conformance: "M" }),
+                Field({ name: "LayeredShade2D", id: 0x7, conformance: "M" }),
+                Field({ name: "SheerShade", id: 0x8, conformance: "M" }),
+                Field({ name: "TiltOnlyInteriorBlind", id: 0x9, conformance: "M" }),
+                Field({ name: "InteriorBlind", id: 0xa, conformance: "M" }),
+                Field({ name: "VerticalBlindStripCurtain", id: 0xb, conformance: "M" }),
+                Field({ name: "InteriorVenetianBlind", id: 0xc, conformance: "M" }),
+                Field({ name: "ExteriorVenetianBlind", id: 0xd, conformance: "M" }),
+                Field({ name: "LateralLeftCurtain", id: 0xe, conformance: "M" }),
+                Field({ name: "LateralRightCurtain", id: 0xf, conformance: "M" }),
+                Field({ name: "CentralCurtain", id: 0x10, conformance: "M" }),
+                Field({ name: "RollerShutter", id: 0x11, conformance: "M" }),
+                Field({ name: "ExteriorVerticalScreen", id: 0x12, conformance: "M" }),
+                Field({ name: "AwningTerrace", id: 0x13, conformance: "M" }),
+                Field({ name: "AwningVerticalScreen", id: 0x14, conformance: "M" }),
+                Field({ name: "TiltOnlyPergola", id: 0x15, conformance: "M" }),
+                Field({ name: "SwingingShutter", id: 0x16, conformance: "M" }),
+                Field({ name: "SlidingShutter", id: 0x17, conformance: "M" }),
+                Field({ name: "Unknown", id: 0xff, conformance: "M" })
             ]
         }),
 
@@ -482,62 +372,46 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "RemoteLockout", constraint: "0",
-                    description: "Movement commands are ignored (locked out). e.g. not granted authorization, outside some time/date range.",
-                    xref: { document: "cluster", section: "5.3.5.22" }
+                    description: "Movement commands are ignored (locked out). e.g. not granted authorization, outside some time/date range."
                 }),
                 Field({
                     name: "TamperDetection", constraint: "1",
-                    description: "Tampering detected on sensors or any other safety equipment. Ex: a device has been forcedly moved without its actuator(s).",
-                    xref: { document: "cluster", section: "5.3.5.22" }
+                    description: "Tampering detected on sensors or any other safety equipment. Ex: a device has been forcedly moved without its actuator(s)."
                 }),
                 Field({
                     name: "FailedCommunication", constraint: "2",
-                    description: "Communication failure to sensors or other safety equipment.",
-                    xref: { document: "cluster", section: "5.3.5.22" }
+                    description: "Communication failure to sensors or other safety equipment."
                 }),
                 Field({
                     name: "PositionFailure", constraint: "3",
-                    description: "Device has failed to reach the desired position. e.g. with Position Aware device, time expired before TargetPosition is reached.",
-                    xref: { document: "cluster", section: "5.3.5.22" }
+                    description: "Device has failed to reach the desired position. e.g. with Position Aware device, time expired before TargetPosition is reached."
                 }),
                 Field({
                     name: "ThermalProtection", constraint: "4",
-                    description: "Motor(s) and/or electric circuit thermal protection activated.",
-                    xref: { document: "cluster", section: "5.3.5.22" }
+                    description: "Motor(s) and/or electric circuit thermal protection activated."
                 }),
                 Field({
                     name: "ObstacleDetected", constraint: "5",
-                    description: "An obstacle is preventing actuator movement.",
-                    xref: { document: "cluster", section: "5.3.5.22" }
+                    description: "An obstacle is preventing actuator movement."
                 }),
                 Field({
                     name: "Power", constraint: "6",
-                    description: "Device has power related issue or limitation e.g. device is running w/ the help of a backup battery or power might not be fully available at the moment.",
-                    xref: { document: "cluster", section: "5.3.5.22" }
+                    description: "Device has power related issue or limitation e.g. device is running w/ the help of a backup battery or power might not be fully available at the moment."
                 }),
                 Field({
                     name: "StopInput", constraint: "7",
-                    description: "Local safety sensor (not a direct obstacle) is preventing movements (e.g. Safety EU Standard EN60335).",
-                    xref: { document: "cluster", section: "5.3.5.22" }
+                    description: "Local safety sensor (not a direct obstacle) is preventing movements (e.g. Safety EU Standard EN60335)."
                 }),
                 Field({
                     name: "MotorJammed", constraint: "8",
-                    description: "Mechanical problem related to the motor(s) detected.",
-                    xref: { document: "cluster", section: "5.3.5.22" }
+                    description: "Mechanical problem related to the motor(s) detected."
                 }),
-                Field({
-                    name: "HardwareFailure", constraint: "9", description: "PCB, fuse and other electrics problems.",
-                    xref: { document: "cluster", section: "5.3.5.22" }
-                }),
+                Field({ name: "HardwareFailure", constraint: "9", description: "PCB, fuse and other electrics problems." }),
                 Field({
                     name: "ManualOperation", constraint: "10",
-                    description: "Actuator is manually operated and is preventing actuator movement (e.g. actuator is disengaged/decoupled).",
-                    xref: { document: "cluster", section: "5.3.5.22" }
+                    description: "Actuator is manually operated and is preventing actuator movement (e.g. actuator is disengaged/decoupled)."
                 }),
-                Field({
-                    name: "Protection", constraint: "11", description: "Protection is activated.",
-                    xref: { document: "cluster", section: "5.3.5.22" }
-                })
+                Field({ name: "Protection", constraint: "11", description: "Protection is activated." })
             ]
         }),
 
@@ -637,10 +511,7 @@ Matter.children.push(Cluster({
                 "will be returned.",
 
             xref: { document: "cluster", section: "5.3.6.4" },
-            children: [Field({
-                name: "LiftValue", id: 0x0, type: "uint16", conformance: "M", constraint: "desc",
-                xref: { document: "cluster", section: "5.3.6.4" }
-            })]
+            children: [Field({ name: "LiftValue", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" })]
         }),
 
         Command({
@@ -666,14 +537,10 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.3.6.5" },
 
             children: [
-                Field({
-                    name: "LiftPercentageValue", id: 0x0, type: "percent", conformance: "O.a", constraint: "desc",
-                    xref: { document: "cluster", section: "5.3.6.5" }
-                }),
+                Field({ name: "LiftPercentageValue", id: 0x0, type: "percent", conformance: "O.a", constraint: "desc" }),
                 Field({
                     name: "LiftPercent100thsValue", id: 0x1, type: "percent100ths", conformance: "O.a",
-                    constraint: "desc",
-                    xref: { document: "cluster", section: "5.3.6.5" }
+                    constraint: "desc"
                 })
             ]
         }),
@@ -690,10 +557,7 @@ Matter.children.push(Cluster({
                 "CONSTRAINT_ERROR will be returned.",
 
             xref: { document: "cluster", section: "5.3.6.6" },
-            children: [Field({
-                name: "TiltValue", id: 0x0, type: "uint16", conformance: "M", constraint: "desc",
-                xref: { document: "cluster", section: "5.3.6.6" }
-            })]
+            children: [Field({ name: "TiltValue", id: 0x0, type: "uint16", conformance: "M", constraint: "desc" })]
         }),
 
         Command({
@@ -720,14 +584,10 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "5.3.6.7" },
 
             children: [
-                Field({
-                    name: "TiltPercentageValue", id: 0x0, type: "percent", conformance: "O.a", constraint: "desc",
-                    xref: { document: "cluster", section: "5.3.6.7" }
-                }),
+                Field({ name: "TiltPercentageValue", id: 0x0, type: "percent", conformance: "O.a", constraint: "desc" }),
                 Field({
                     name: "TiltPercent100thsValue", id: 0x1, type: "percent100ths", conformance: "O.a",
-                    constraint: "desc",
-                    xref: { document: "cluster", section: "5.3.6.7" }
+                    constraint: "desc"
                 })
             ]
         }),

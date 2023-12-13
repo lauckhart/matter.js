@@ -21,7 +21,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
-            constraint: "0, MinMeasuredValue to MaxMeasuredValue", default: 0, quality: "X P",
+            constraint: "0, minMeasuredValue to maxMeasuredValue", default: 0, quality: "X P",
 
             details: "The MeasuredValue attribute represents the illuminance in Lux (symbol lx) as follows:" +
                 "\n" +
@@ -43,7 +43,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "MinMeasuredValue", id: 0x1, type: "uint16", access: "R V", conformance: "M",
-            constraint: "1 to MaxMeasuredValue1", quality: "X",
+            constraint: "1 to maxMeasuredValue1", quality: "X",
             details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. A " +
                 "value of null indicates that this attribute is not defined. See Measured Value for more details.",
             xref: { document: "cluster", section: "2.2.5.2" }
@@ -51,7 +51,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "MaxMeasuredValue", id: 0x2, type: "uint16", access: "R V", conformance: "M",
-            constraint: "MinMeasuredValue1 to 65534", quality: "X",
+            constraint: "minMeasuredValue1 to 65534", quality: "X",
             details: "The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. A " +
                 "value of null indicates that this attribute is not defined. See Measured Value for more details.",
             xref: { document: "cluster", section: "2.2.5.3" }

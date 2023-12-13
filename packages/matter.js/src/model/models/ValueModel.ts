@@ -178,6 +178,11 @@ export abstract class ValueModel extends Model implements ValueElement {
      * Datatype models.
      */
     override get allowedBaseTags() {
+        if (this.tag === ElementTag.Field) {
+            // Allow fields to derive from attributes.  We use this for
+            // referencing options in masks and bitmaps
+            return [ElementTag.Field, ElementTag.Datatype, ElementTag.Attribute];
+        }
         return [this.tag, ElementTag.Datatype];
     }
 

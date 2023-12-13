@@ -33,10 +33,7 @@ Matter.children.push(Cluster({
                 "\n" +
                 "The StateValue field shall indicate the new value of the StateValue attribute.",
             xref: { document: "cluster", section: "1.7.5.1" },
-            children: [Field({
-                name: "StateValue", id: 0x0, type: "bool", conformance: "M",
-                xref: { document: "cluster", section: "1.7.5.1" }
-            })]
+            children: [Field({ name: "StateValue", id: 0x0, type: "bool", conformance: "M" })]
         })
     ]
 }));

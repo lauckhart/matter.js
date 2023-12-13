@@ -39,20 +39,14 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.16.5" },
 
             children: [
-                Field({
-                    name: "TZ", constraint: "0", description: "TimeZone",
-                    details: "Server supports time zone.",
-                    xref: { document: "core", section: "11.16.5" }
-                }),
+                Field({ name: "TZ", constraint: "0", description: "TimeZone", details: "Server supports time zone." }),
                 Field({
                     name: "NTPC", constraint: "1", description: "NtpClient",
-                    details: "Server supports an NTP or SNTP client.",
-                    xref: { document: "core", section: "11.16.5" }
+                    details: "Server supports an NTP or SNTP client."
                 }),
                 Field({
                     name: "NTPS", constraint: "2", description: "NtpServer",
-                    details: "Server supports an NTP server role.",
-                    xref: { document: "core", section: "11.16.5" }
+                    details: "Server supports an NTP server role."
                 })
             ]
         }),
@@ -238,16 +232,9 @@ Matter.children.push(Cluster({
                 "zone database [https://www.iana.org/time-zones].",
 
             xref: { document: "core", section: "11.16.10.3" },
-
             children: [
-                Field({
-                    name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "-43200 to 50400",
-                    xref: { document: "core", section: "11.16.10.3" }
-                }),
-                Field({
-                    name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "0 to 64",
-                    xref: { document: "core", section: "11.16.10.3" }
-                })
+                Field({ name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "-43200 to 50400" }),
+                Field({ name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "0 to 64" })
             ]
         }),
 
@@ -275,21 +262,20 @@ Matter.children.push(Cluster({
 
             children: [
                 Field({
-                    name: "UtcTime", id: 0x0, type: "epoch-us", conformance: "M", default: "0",
+                    name: "UtcTime", id: 0x0, type: "epoch-us", conformance: "M", default: 0,
                     details: "This shall give the Client’s UTC Time.",
                     xref: { document: "core", section: "11.16.9.1.1" }
                 }),
 
                 Field({
-                    name: "Granularity", id: 0x1, type: "GranularityEnum", conformance: "M",
-                    default: "NoTimeGranularity",
+                    name: "Granularity", id: 0x1, type: "GranularityEnum", conformance: "M", default: 0,
                     details: "This shall give the Client’s Granularity, as described in Section 11.16.8.2, “Granularity " +
                         "Attribute”.",
                     xref: { document: "core", section: "11.16.9.1.2" }
                 }),
 
                 Field({
-                    name: "TimeSource", id: 0x2, type: "TimeSourceEnum", conformance: "O", default: "None",
+                    name: "TimeSource", id: 0x2, type: "TimeSourceEnum", conformance: "O", default: 0,
                     details: "This shall give the Client’s TimeSource, as described in Section 11.16.8.3, “TimeSource Attribute”.",
                     xref: { document: "core", section: "11.16.9.1.3" }
                 })
@@ -312,28 +298,23 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "NoTimeGranularity", id: 0x0, conformance: "M",
-                    description: "This indicates that the server is not currently synchronized with a UTC Time source and its clock is based on the Last Known Good UTC Time only.",
-                    xref: { document: "core", section: "11.16.6.1" }
+                    description: "This indicates that the server is not currently synchronized with a UTC Time source and its clock is based on the Last Known Good UTC Time only."
                 }),
                 Field({
                     name: "MinutesGranularity", id: 0x1, conformance: "M",
-                    description: "This indicates the server was synchronized to an upstream source in the past, but sufficient clock drift has occurred such that the clock error is now > 5 seconds.",
-                    xref: { document: "core", section: "11.16.6.1" }
+                    description: "This indicates the server was synchronized to an upstream source in the past, but sufficient clock drift has occurred such that the clock error is now > 5 seconds."
                 }),
                 Field({
                     name: "SecondsGranularity", id: 0x2, conformance: "M",
-                    description: "This indicates the server is synchronized to an upstream source using a low resolution protocol. UTC Time is accurate to ± 5 seconds.",
-                    xref: { document: "core", section: "11.16.6.1" }
+                    description: "This indicates the server is synchronized to an upstream source using a low resolution protocol. UTC Time is accurate to ± 5 seconds."
                 }),
                 Field({
                     name: "MillisecondsGranularity", id: 0x3, conformance: "M",
-                    description: "This indicates the server is synchronized to an upstream source using high resolution time-synchronization protocol such as NTP, or has built-in GNSS with some amount of jitter applying its GNSS timestamp. UTC Time is accurate to ± 50ms.",
-                    xref: { document: "core", section: "11.16.6.1" }
+                    description: "This indicates the server is synchronized to an upstream source using high resolution time-synchronization protocol such as NTP, or has built-in GNSS with some amount of jitter applying its GNSS timestamp. UTC Time is accurate to ± 50ms."
                 }),
                 Field({
                     name: "MicrosecondsGranularity", id: 0x4, conformance: "M",
-                    description: "This indicates the server is synchronized to an upstream source using a highly precise time-synchronization protocol such as PTP, or has built-in GNSS. UTC time is accurate to ± 10 μs.",
-                    xref: { document: "core", section: "11.16.6.1" }
+                    description: "This indicates the server is synchronized to an upstream source using a highly precise time-synchronization protocol such as PTP, or has built-in GNSS. UTC time is accurate to ± 10 μs."
                 })
             ]
         }),
@@ -345,86 +326,65 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "None", id: 0x0, conformance: "M",
-                    description: "Server is not currently synchronized with a UTC Time source.",
-                    xref: { document: "core", section: "11.16.6.2" }
+                    description: "Server is not currently synchronized with a UTC Time source."
                 }),
-                Field({
-                    name: "Unknown", id: 0x1, conformance: "M", description: "Server uses an unlisted time source.",
-                    xref: { document: "core", section: "11.16.6.2" }
-                }),
+                Field({ name: "Unknown", id: 0x1, conformance: "M", description: "Server uses an unlisted time source." }),
                 Field({
                     name: "Admin", id: 0x2, conformance: "M",
-                    description: "Server received time from the Section 11.16.9.1, “SetUtcTime Command”.",
-                    xref: { document: "core", section: "11.16.6.2" }
+                    description: "Server received time from the Section 11.16.9.1, “SetUtcTime Command”."
                 }),
                 Field({
                     name: "NodeTimeCluster", id: 0x3, conformance: "M",
-                    description: "Synchronized time by querying the Time Cluster of another Node.",
-                    xref: { document: "core", section: "11.16.6.2" }
+                    description: "Synchronized time by querying the Time Cluster of another Node."
                 }),
                 Field({
                     name: "NonFabricSntp", id: 0x4, conformance: "M",
-                    description: "SNTP from a server not in the Fabric. NTS is not used.",
-                    xref: { document: "core", section: "11.16.6.2" }
+                    description: "SNTP from a server not in the Fabric. NTS is not used."
                 }),
                 Field({
                     name: "NonFabricNtp", id: 0x5, conformance: "M",
-                    description: "NTP from servers not in the Fabric. None of the servers used NTS.",
-                    xref: { document: "core", section: "11.16.6.2" }
+                    description: "NTP from servers not in the Fabric. None of the servers used NTS."
                 }),
                 Field({
                     name: "FabricSntp", id: 0x6, conformance: "M",
-                    description: "SNTP from a server within the Fabric. NTS is not used.",
-                    xref: { document: "core", section: "11.16.6.2" }
+                    description: "SNTP from a server within the Fabric. NTS is not used."
                 }),
                 Field({
                     name: "FabricNtp", id: 0x7, conformance: "M",
-                    description: "NTP from a servers within the Fabric. None of the servers used NTS.",
-                    xref: { document: "core", section: "11.16.6.2" }
+                    description: "NTP from a servers within the Fabric. None of the servers used NTS."
                 }),
                 Field({
                     name: "MixedNtp", id: 0x8, conformance: "M",
-                    description: "NTP from multiple servers on Fabric and external. None of the servers used NTS.",
-                    xref: { document: "core", section: "11.16.6.2" }
+                    description: "NTP from multiple servers on Fabric and external. None of the servers used NTS."
                 }),
                 Field({
                     name: "NonFabricSntpNts", id: 0x9, conformance: "M",
-                    description: "SNTP from a server not in the Fabric. NTS is used.",
-                    xref: { document: "core", section: "11.16.6.2" }
+                    description: "SNTP from a server not in the Fabric. NTS is used."
                 }),
                 Field({
                     name: "NonFabricNtpNts", id: 0xa, conformance: "M",
-                    description: "NTP from servers not in the Fabric. NTS is used on at least one server.",
-                    xref: { document: "core", section: "11.16.6.2" }
+                    description: "NTP from servers not in the Fabric. NTS is used on at least one server."
                 }),
                 Field({
                     name: "FabricSntpNts", id: 0xb, conformance: "M",
-                    description: "SNTP from a server within the Fabric. NTS is used.",
-                    xref: { document: "core", section: "11.16.6.2" }
+                    description: "SNTP from a server within the Fabric. NTS is used."
                 }),
                 Field({
                     name: "FabricNtpNts", id: 0xc, conformance: "M",
-                    description: "NTP from a server within the Fabric. NTS is used on at least one server.",
-                    xref: { document: "core", section: "11.16.6.2" }
+                    description: "NTP from a server within the Fabric. NTS is used on at least one server."
                 }),
                 Field({
                     name: "MixedNtpNts", id: 0xd, conformance: "M",
-                    description: "NTP from multiple servers on the Fabric and external. NTS is used on at least one server.",
-                    xref: { document: "core", section: "11.16.6.2" }
+                    description: "NTP from multiple servers on the Fabric and external. NTS is used on at least one server."
                 }),
                 Field({
                     name: "CloudSource", id: 0xe, conformance: "M",
-                    description: "Time synchronization comes from a vendor cloud-based source (e.g. \"Date\" header in authenticated HTTPS connection).",
-                    xref: { document: "core", section: "11.16.6.2" }
+                    description: "Time synchronization comes from a vendor cloud-based source (e.g. \"Date\" header in authenticated HTTPS connection)."
                 }),
-                Field({
-                    name: "Ptp", id: 0xf, conformance: "M", description: "Time synchronization comes from PTP.",
-                    xref: { document: "core", section: "11.16.6.2" }
-                }),
+                Field({ name: "Ptp", id: 0xf, conformance: "M", description: "Time synchronization comes from PTP." }),
                 Field({
                     name: "Gnss", id: 0x10, conformance: "M",
-                    description: "Time synchronization comes from a GNSS source.",
-                    xref: { document: "core", section: "11.16.6.2" }
+                    description: "Time synchronization comes from a GNSS source."
                 })
             ]
         }),
@@ -462,10 +422,7 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.16.6.4" },
 
             children: [
-                Field({
-                    name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "desc",
-                    xref: { document: "core", section: "11.16.6.4" }
-                }),
+                Field({ name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "desc" }),
                 Field({
                     name: "ValidStarting", id: 0x1, type: "epoch-us", conformance: "M",
                     details: "The UTC time when the offset shall be applied.",

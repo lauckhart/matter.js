@@ -28,14 +28,13 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "2.4.4" },
             children: [Field({
                 name: "EXT", conformance: "O", constraint: "0", description: "Extended",
-                details: "The cluster is capable of extended range and resolution",
-                xref: { document: "cluster", section: "2.4.4" }
+                details: "The cluster is capable of extended range and resolution"
             })]
         }),
 
         Attribute({
             name: "MeasuredValue", id: 0x0, type: "int16", access: "R V", conformance: "M",
-            constraint: "MinMeasuredValue to MaxMeasuredValue", quality: "X P",
+            constraint: "minMeasuredValue to maxMeasuredValue", quality: "X P",
             details: "This attribute represents the pressure in kPa as follows:" +
                 "\n" +
                 "MeasuredValue = 10 x Pressure [kPa]" +
@@ -46,7 +45,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "MinMeasuredValue", id: 0x1, type: "int16", access: "R V", conformance: "M",
-            constraint: "-32767 to MaxMeasuredValue1", quality: "X",
+            constraint: "-32767 to maxMeasuredValue1", quality: "X",
             details: "This attribute indicates the minimum value of MeasuredValue that can be measured. See Measured " +
                 "Value for more details." +
                 "\n" +
@@ -56,7 +55,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "MaxMeasuredValue", id: 0x2, type: "int16", access: "R V", conformance: "M",
-            constraint: "MinMeasuredValue1 to 32767", quality: "X",
+            constraint: "minMeasuredValue1 to 32767", quality: "X",
             details: "This attribute indicates the maximum value of MeasuredValue that can be measured. See Measured " +
                 "Value for more details." +
                 "\n" +
@@ -75,7 +74,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "ScaledValue", id: 0x10, type: "int16", access: "R V", conformance: "EXT",
-            constraint: "MinScaledValue to MaxScaledValue", default: 0, quality: "X",
+            constraint: "minScaledValue to maxScaledValue", default: 0, quality: "X",
             details: "ScaledValue represents the pressure in Pascals as follows:" +
                 "\n" +
                 "ScaledValue = 10Scale x Pressure [Pa]" +
@@ -86,7 +85,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "MinScaledValue", id: 0x11, type: "int16", access: "R V", conformance: "EXT",
-            constraint: "-32767 to MaxScaledValue1", default: 0, quality: "X",
+            constraint: "-32767 to maxScaledValue1", default: 0, quality: "X",
             details: "The MinScaledValue attribute indicates the minimum value of ScaledValue that can be measured. The " +
                 "null value indicates that the value is not available.",
             xref: { document: "cluster", section: "2.4.5.6" }
@@ -94,7 +93,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "MaxScaledValue", id: 0x12, type: "int16", access: "R V", conformance: "EXT",
-            constraint: "MinScaledValue1 to 32767", default: 0, quality: "X",
+            constraint: "minScaledValue1 to 32767", default: 0, quality: "X",
             details: "This attribute indicates the maximum value of ScaledValue that can be measured. MaxScaledValue " +
                 "shall be greater than MinScaledValue." +
                 "\n" +

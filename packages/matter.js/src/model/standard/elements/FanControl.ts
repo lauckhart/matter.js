@@ -26,26 +26,13 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "4.4.5" },
 
             children: [
-                Field({
-                    name: "SPD", constraint: "0", description: "MultiSpeed",
-                    details: "1-100 speeds",
-                    xref: { document: "cluster", section: "4.4.5" }
-                }),
+                Field({ name: "SPD", constraint: "0", description: "MultiSpeed", details: "1-100 speeds" }),
                 Field({
                     name: "AUT", constraint: "1", description: "Auto",
-                    details: "Automatic mode supported for fan speed",
-                    xref: { document: "cluster", section: "4.4.5" }
+                    details: "Automatic mode supported for fan speed"
                 }),
-                Field({
-                    name: "RCK", constraint: "2", description: "Rocking",
-                    details: "Rocking movement supported",
-                    xref: { document: "cluster", section: "4.4.5" }
-                }),
-                Field({
-                    name: "WND", constraint: "3", description: "Wind",
-                    details: "Wind emulation supported",
-                    xref: { document: "cluster", section: "4.4.5" }
-                })
+                Field({ name: "RCK", constraint: "2", description: "Rocking", details: "Rocking movement supported" }),
+                Field({ name: "WND", constraint: "3", description: "Wind", details: "Wind emulation supported" })
             ]
         }),
 
@@ -101,16 +88,10 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "4.4.6.1.1" }
                 }),
 
-                Field({ name: "Low", id: 0x1, conformance: "desc", xref: { document: "cluster", section: "4.4.6.1" } }),
-                Field({
-                    name: "Medium", id: 0x2, conformance: "desc",
-                    xref: { document: "cluster", section: "4.4.6.1" }
-                }),
-                Field({
-                    name: "High", id: 0x3, conformance: "desc",
-                    xref: { document: "cluster", section: "4.4.6.1" }
-                }),
-                Field({ name: "On", id: 0x4, conformance: "D", xref: { document: "cluster", section: "4.4.6.1" } }),
+                Field({ name: "Low", id: 0x1, conformance: "desc" }),
+                Field({ name: "Medium", id: 0x2, conformance: "desc" }),
+                Field({ name: "High", id: 0x3, conformance: "desc" }),
+                Field({ name: "On", id: 0x4, conformance: "D" }),
 
                 Field({
                     name: "Auto", id: 0x5, conformance: "AUT",
@@ -130,7 +111,7 @@ Matter.children.push(Cluster({
                     xref: { document: "cluster", section: "4.4.6.1.3" }
                 }),
 
-                Field({ name: "Smart", id: 0x6, conformance: "D", xref: { document: "cluster", section: "4.4.6.1" } })
+                Field({ name: "Smart", id: 0x6, conformance: "D" })
             ]
         }),
 
@@ -141,30 +122,12 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "4.4.6.2" },
 
             children: [
-                Field({
-                    name: "OffLowMedHigh", id: 0x0, conformance: "O.a",
-                    xref: { document: "cluster", section: "4.4.6.2" }
-                }),
-                Field({
-                    name: "OffLowHigh", id: 0x1, conformance: "O.a",
-                    xref: { document: "cluster", section: "4.4.6.2" }
-                }),
-                Field({
-                    name: "OffLowMedHighAuto", id: 0x2, conformance: "[AUT].a",
-                    xref: { document: "cluster", section: "4.4.6.2" }
-                }),
-                Field({
-                    name: "OffLowHighAuto", id: 0x3, conformance: "[AUT].a",
-                    xref: { document: "cluster", section: "4.4.6.2" }
-                }),
-                Field({
-                    name: "OffOnAuto", id: 0x4, conformance: "[AUT].a",
-                    xref: { document: "cluster", section: "4.4.6.2" }
-                }),
-                Field({
-                    name: "OffOn", id: 0x5, conformance: "O.a",
-                    xref: { document: "cluster", section: "4.4.6.2" }
-                })
+                Field({ name: "OffLowMedHigh", id: 0x0, conformance: "O.a" }),
+                Field({ name: "OffLowHigh", id: 0x1, conformance: "O.a" }),
+                Field({ name: "OffLowMedHighAuto", id: 0x2, conformance: "[AUT].a" }),
+                Field({ name: "OffLowHighAuto", id: 0x3, conformance: "[AUT].a" }),
+                Field({ name: "OffOnAuto", id: 0x4, conformance: "[AUT].a" }),
+                Field({ name: "OffOn", id: 0x5, conformance: "O.a" })
             ]
         }),
 
@@ -196,7 +159,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "SpeedSetting", id: 0x5, type: "uint8", access: "RW VO", conformance: "SPD",
-            constraint: "0 to SpeedMax", default: 0, quality: "X",
+            constraint: "0 to speedMax", default: 0, quality: "X",
             details: "This attribute shall indicate the speed setting for the fan. This attribute may be written by the " +
                 "client to indicate a new fan speed. If the client writes null to this attribute, the attribute " +
                 "value shall NOT change. If this is set to 0, the server shall set the FanMode attribute value to " +
@@ -206,7 +169,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "SpeedCurrent", id: 0x6, type: "uint8", access: "R V", conformance: "SPD",
-            constraint: "0 to SpeedMax", default: 0, quality: "P",
+            constraint: "0 to speedMax", default: 0, quality: "P",
             details: "This attribute shall indicate the actual currently operating fan speed, or zero to indicate that " +
                 "the fan is off.",
             xref: { document: "cluster", section: "4.4.6.7" }
@@ -219,9 +182,9 @@ Matter.children.push(Cluster({
                 "shown in the table below.",
             xref: { document: "cluster", section: "4.4.6.8" },
             children: [
-                Field({ name: "RockLeftRight", constraint: "0", xref: { document: "cluster", section: "4.4.6.8" } }),
-                Field({ name: "RockUpDown", constraint: "1", xref: { document: "cluster", section: "4.4.6.8" } }),
-                Field({ name: "RockRound", constraint: "2", xref: { document: "cluster", section: "4.4.6.8" } })
+                Field({ name: "RockLeftRight", constraint: "0" }),
+                Field({ name: "RockUpDown", constraint: "1" }),
+                Field({ name: "RockRound", constraint: "2" })
             ]
         }),
 
@@ -244,9 +207,9 @@ Matter.children.push(Cluster({
 
             xref: { document: "cluster", section: "4.4.6.9" },
             children: [
-                Field({ name: "RockLeftRight", constraint: "0", xref: { document: "cluster", section: "4.4.6.9" } }),
-                Field({ name: "RockUpDown", constraint: "1", xref: { document: "cluster", section: "4.4.6.9" } }),
-                Field({ name: "RockRound", constraint: "2", xref: { document: "cluster", section: "4.4.6.9" } })
+                Field({ name: "RockLeftRight", constraint: "0" }),
+                Field({ name: "RockUpDown", constraint: "1" }),
+                Field({ name: "RockRound", constraint: "2" })
             ]
         }),
 
@@ -257,8 +220,8 @@ Matter.children.push(Cluster({
                 "mode bit shall be set. The bitmap is shown in the table below.",
             xref: { document: "cluster", section: "4.4.6.10" },
             children: [
-                Field({ name: "SleepWind", constraint: "0", xref: { document: "cluster", section: "4.4.6.10" } }),
-                Field({ name: "NaturalWind", constraint: "1", xref: { document: "cluster", section: "4.4.6.10" } })
+                Field({ name: "SleepWind", constraint: "0" }),
+                Field({ name: "NaturalWind", constraint: "1" })
             ]
         }),
 
@@ -281,8 +244,8 @@ Matter.children.push(Cluster({
 
             xref: { document: "cluster", section: "4.4.6.11" },
             children: [
-                Field({ name: "SleepWind", constraint: "0", xref: { document: "cluster", section: "4.4.6.11" } }),
-                Field({ name: "NaturalWind", constraint: "1", xref: { document: "cluster", section: "4.4.6.11" } })
+                Field({ name: "SleepWind", constraint: "0" }),
+                Field({ name: "NaturalWind", constraint: "1" })
             ]
         })
     ]

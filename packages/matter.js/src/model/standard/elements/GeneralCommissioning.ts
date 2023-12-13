@@ -229,16 +229,9 @@ Matter.children.push(Cluster({
                 "     Node rollback the state of all non fabric-scoped data present in the Fail-Safe context.",
 
             xref: { document: "core", section: "11.9.6.2" },
-
             children: [
-                Field({
-                    name: "ExpiryLengthSeconds", id: 0x0, type: "uint16", conformance: "M", default: "900",
-                    xref: { document: "core", section: "11.9.6.2" }
-                }),
-                Field({
-                    name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "M",
-                    xref: { document: "core", section: "11.9.6.2" }
-                })
+                Field({ name: "ExpiryLengthSeconds", id: 0x0, type: "uint16", conformance: "M", default: 900 }),
+                Field({ name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "M" })
             ]
         }),
 
@@ -248,7 +241,7 @@ Matter.children.push(Cluster({
 
             children: [
                 Field({
-                    name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M", default: "OK",
+                    name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M", default: 0,
                     details: "This field shall contain the result of the operation, based on the behavior specified in the " +
                         "functional description of the ArmFailSafe command.",
                     xref: { document: "core", section: "11.9.6.3.1" }
@@ -299,20 +292,10 @@ Matter.children.push(Cluster({
                 "the Breadcrumb attribute shall be left unchanged.",
 
             xref: { document: "core", section: "11.9.6.4" },
-
             children: [
-                Field({
-                    name: "NewRegulatoryConfig", id: 0x0, type: "RegulatoryLocationTypeEnum", conformance: "M",
-                    xref: { document: "core", section: "11.9.6.4" }
-                }),
-                Field({
-                    name: "CountryCode", id: 0x1, type: "string", conformance: "M", constraint: "2",
-                    xref: { document: "core", section: "11.9.6.4" }
-                }),
-                Field({
-                    name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "M",
-                    xref: { document: "core", section: "11.9.6.4" }
-                })
+                Field({ name: "NewRegulatoryConfig", id: 0x0, type: "RegulatoryLocationTypeEnum", conformance: "M" }),
+                Field({ name: "CountryCode", id: 0x1, type: "string", conformance: "M", constraint: "2" }),
+                Field({ name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "M" })
             ]
         }),
 
@@ -323,16 +306,9 @@ Matter.children.push(Cluster({
                 "\n" +
                 "See Section 11.9.6.1, “Common fields in General Commissioning cluster responses”.",
             xref: { document: "core", section: "11.9.6.5" },
-
             children: [
-                Field({
-                    name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M", default: "OK",
-                    xref: { document: "core", section: "11.9.6.5" }
-                }),
-                Field({
-                    name: "DebugText", id: 0x1, type: "string", conformance: "M", default: "",
-                    xref: { document: "core", section: "11.9.6.5" }
-                })
+                Field({ name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M", default: 0 }),
+                Field({ name: "DebugText", id: 0x1, type: "string", conformance: "M", default: "" })
             ]
         }),
 
@@ -406,16 +382,9 @@ Matter.children.push(Cluster({
                 "\n" +
                 "See Section 11.9.6.1, “Common fields in General Commissioning cluster responses”.",
             xref: { document: "core", section: "11.9.6.7" },
-
             children: [
-                Field({
-                    name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M", default: "OK",
-                    xref: { document: "core", section: "11.9.6.7" }
-                }),
-                Field({
-                    name: "DebugText", id: 0x1, type: "string", conformance: "M", default: "",
-                    xref: { document: "core", section: "11.9.6.7" }
-                })
+                Field({ name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M", default: 0 }),
+                Field({ name: "DebugText", id: 0x1, type: "string", conformance: "M", default: "" })
             ]
         }),
 
@@ -425,29 +394,22 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.9.4.1" },
 
             children: [
-                Field({
-                    name: "Ok", id: 0x0, conformance: "M", description: "No error",
-                    xref: { document: "core", section: "11.9.4.1" }
-                }),
+                Field({ name: "Ok", id: 0x0, conformance: "M", description: "No error" }),
                 Field({
                     name: "ValueOutsideRange", id: 0x1, conformance: "M",
-                    description: "Attempting to set regulatory configuration to a region or indoor/outdoor mode for which the server does not have proper configuration.",
-                    xref: { document: "core", section: "11.9.4.1" }
+                    description: "Attempting to set regulatory configuration to a region or indoor/outdoor mode for which the server does not have proper configuration."
                 }),
                 Field({
                     name: "InvalidAuthentication", id: 0x2, conformance: "M",
-                    description: "Executed CommissioningComplete outside CASE session.",
-                    xref: { document: "core", section: "11.9.4.1" }
+                    description: "Executed CommissioningComplete outside CASE session."
                 }),
                 Field({
                     name: "NoFailSafe", id: 0x3, conformance: "M",
-                    description: "Executed CommissioningComplete when there was no active Fail-Safe context.",
-                    xref: { document: "core", section: "11.9.4.1" }
+                    description: "Executed CommissioningComplete when there was no active Fail-Safe context."
                 }),
                 Field({
                     name: "BusyWithOtherAdmin", id: 0x4, conformance: "M",
-                    description: "Attempting to arm fail- safe or execute CommissioningComplete from a fabric different than the one associated with the current fail- safe context.",
-                    xref: { document: "core", section: "11.9.4.1" }
+                    description: "Attempting to arm fail- safe or execute CommissioningComplete from a fabric different than the one associated with the current fail- safe context."
                 })
             ]
         }),
@@ -457,20 +419,10 @@ Matter.children.push(Cluster({
             details: "This enumeration is used by the RegulatoryConfig and LocationCapability attributes to indicate " +
                 "possible radio usage.",
             xref: { document: "core", section: "11.9.4.2" },
-
             children: [
-                Field({
-                    name: "Indoor", id: 0x0, conformance: "M", description: "Indoor only",
-                    xref: { document: "core", section: "11.9.4.2" }
-                }),
-                Field({
-                    name: "Outdoor", id: 0x1, conformance: "M", description: "Outdoor only",
-                    xref: { document: "core", section: "11.9.4.2" }
-                }),
-                Field({
-                    name: "IndoorOutdoor", id: 0x2, conformance: "M", description: "Indoor/Outdoor",
-                    xref: { document: "core", section: "11.9.4.2" }
-                })
+                Field({ name: "Indoor", id: 0x0, conformance: "M", description: "Indoor only" }),
+                Field({ name: "Outdoor", id: 0x1, conformance: "M", description: "Outdoor only" }),
+                Field({ name: "IndoorOutdoor", id: 0x2, conformance: "M", description: "Indoor/Outdoor" })
             ]
         }),
 

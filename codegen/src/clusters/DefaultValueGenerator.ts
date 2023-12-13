@@ -110,7 +110,7 @@ export class DefaultValueGenerator {
 
         const properties = {} as { [name: string]: boolean | number | string };
         for (const [field, bits] of fields) {
-            const name = camelize(field.name, false);
+            const name = camelize(field.name);
             const constraint = field.effectiveConstraint;
             if (typeof constraint.value === "number") {
                 properties[name] = true;
@@ -144,7 +144,7 @@ export class DefaultValueGenerator {
         const alreadyProcessed = new Set<string>();
         let result: Properties | undefined;
         for (const member of model.members) {
-            const name = camelize(member.name, false);
+            const name = camelize(member.name);
 
             // Members are listed with overrides first so we ignore subsequent
             // definitions for the same name

@@ -44,9 +44,8 @@ Matter.children.push(Cluster({
             name: "FeatureMap", id: 0xfffc, type: "FeatureMap",
             xref: { document: "cluster", section: "1.3.4" },
             children: [Field({
-                name: "GN", constraint: "0", default: true, description: "GroupNames",
-                details: "The ability to store a name for a group.",
-                xref: { document: "cluster", section: "1.3.4" }
+                name: "GN", constraint: "0", default: 1, description: "GroupNames",
+                details: "The ability to store a name for a group."
             })]
         }),
 
@@ -58,9 +57,8 @@ Matter.children.push(Cluster({
                 "bits shall be 0.",
             xref: { document: "cluster", section: "1.3.6.1" },
             children: [Field({
-                name: "NameSupport", constraint: "7", default: true,
-                description: "The ability to store a name for a group.",
-                xref: { document: "cluster", section: "1.3.6.1" }
+                name: "NameSupport", constraint: "7", default: 1,
+                description: "The ability to store a name for a group."
             })]
         }),
 
@@ -70,16 +68,9 @@ Matter.children.push(Cluster({
             details: "The AddGroup command allows a client to add group membership in a particular group for the server " +
                 "endpoint.",
             xref: { document: "cluster", section: "1.3.7.1" },
-
             children: [
-                Field({
-                    name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1",
-                    xref: { document: "cluster", section: "1.3.7.1" }
-                }),
-                Field({
-                    name: "GroupName", id: 0x1, type: "string", conformance: "M", constraint: "max 16",
-                    xref: { document: "cluster", section: "1.3.7.1" }
-                })
+                Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" }),
+                Field({ name: "GroupName", id: 0x1, type: "string", conformance: "M", constraint: "max 16" })
             ]
         }),
 
@@ -89,10 +80,7 @@ Matter.children.push(Cluster({
             details: "The ViewGroup command allows a client to request that the server responds with a ViewGroupResponse " +
                 "command containing the name string for a particular group.",
             xref: { document: "cluster", section: "1.3.7.2" },
-            children: [Field({
-                name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1",
-                xref: { document: "cluster", section: "1.3.7.2" }
-            })]
+            children: [Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" })]
         }),
 
         Command({
@@ -103,7 +91,6 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.3.7.3" },
             children: [Field({
                 name: "GroupList", id: 0x0, type: "list", conformance: "M", constraint: "all[min 1]",
-                xref: { document: "cluster", section: "1.3.7.3" },
                 children: [Field({ name: "entry", type: "group-id" })]
             })]
         }),
@@ -114,10 +101,7 @@ Matter.children.push(Cluster({
             details: "The RemoveGroup command allows a client to request that the server removes the membership for the " +
                 "server endpoint, if any, in a particular group.",
             xref: { document: "cluster", section: "1.3.7.4" },
-            children: [Field({
-                name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1",
-                xref: { document: "cluster", section: "1.3.7.4" }
-            })]
+            children: [Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" })]
         }),
 
         Command({
@@ -142,16 +126,9 @@ Matter.children.push(Cluster({
                 "tool.",
 
             xref: { document: "cluster", section: "1.3.7.6" },
-
             children: [
-                Field({
-                    name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1",
-                    xref: { document: "cluster", section: "1.3.7.6" }
-                }),
-                Field({
-                    name: "GroupName", id: 0x1, type: "string", conformance: "M", constraint: "max 16",
-                    xref: { document: "cluster", section: "1.3.7.6" }
-                })
+                Field({ name: "GroupId", id: 0x0, type: "group-id", conformance: "M", constraint: "min 1" }),
+                Field({ name: "GroupName", id: 0x1, type: "string", conformance: "M", constraint: "max 16" })
             ]
         }),
 
@@ -159,16 +136,9 @@ Matter.children.push(Cluster({
             name: "AddGroupResponse", id: 0x0, conformance: "M", direction: "response",
             details: "The AddGroupResponse is sent by the Groups cluster server in response to an AddGroup command.",
             xref: { document: "cluster", section: "1.3.7.7" },
-
             children: [
-                Field({
-                    name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "1.3.7.7" }
-                }),
-                Field({
-                    name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1",
-                    xref: { document: "cluster", section: "1.3.7.7" }
-                })
+                Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1" })
             ]
         }),
 
@@ -177,20 +147,10 @@ Matter.children.push(Cluster({
             details: "The ViewGroupResponse command is sent by the Groups cluster server in response to a ViewGroup " +
                 "command.",
             xref: { document: "cluster", section: "1.3.7.8" },
-
             children: [
-                Field({
-                    name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "1.3.7.8" }
-                }),
-                Field({
-                    name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1",
-                    xref: { document: "cluster", section: "1.3.7.8" }
-                }),
-                Field({
-                    name: "GroupName", id: 0x2, type: "string", conformance: "M", constraint: "max 16",
-                    xref: { document: "cluster", section: "1.3.7.8" }
-                })
+                Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1" }),
+                Field({ name: "GroupName", id: 0x2, type: "string", conformance: "M", constraint: "max 16" })
             ]
         }),
 
@@ -226,13 +186,9 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.3.7.9" },
 
             children: [
-                Field({
-                    name: "Capacity", id: 0x0, type: "uint8", conformance: "M", quality: "X",
-                    xref: { document: "cluster", section: "1.3.7.9" }
-                }),
+                Field({ name: "Capacity", id: 0x0, type: "uint8", conformance: "M", quality: "X" }),
                 Field({
                     name: "GroupList", id: 0x1, type: "list", conformance: "M", constraint: "all[min 1]",
-                    xref: { document: "cluster", section: "1.3.7.9" },
                     children: [Field({ name: "entry", type: "group-id" })]
                 })
             ]
@@ -243,16 +199,9 @@ Matter.children.push(Cluster({
             details: "The RemoveGroupResponse command is generated by the server in response to the receipt of a " +
                 "RemoveGroup command.",
             xref: { document: "cluster", section: "1.3.7.10" },
-
             children: [
-                Field({
-                    name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc",
-                    xref: { document: "cluster", section: "1.3.7.10" }
-                }),
-                Field({
-                    name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1",
-                    xref: { document: "cluster", section: "1.3.7.10" }
-                })
+                Field({ name: "Status", id: 0x0, type: "status", conformance: "M", constraint: "desc" }),
+                Field({ name: "GroupId", id: 0x1, type: "group-id", conformance: "M", constraint: "min 1" })
             ]
         })
     ]

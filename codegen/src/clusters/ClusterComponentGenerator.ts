@@ -215,7 +215,7 @@ export class ClusterComponentGenerator {
         const definitions = target.expressions(`${type.Tag}s: {`, "}");
         for (const model of typed) {
             define(model as InstanceType<T>, factory =>
-                definitions.expressions(`${camelize(model.name, false)}: ${factory}(`, ")").document(model),
+                definitions.expressions(`${camelize(model.name, true)}: ${factory}(`, ")").document(model),
             );
         }
         if (!definitions.length) {

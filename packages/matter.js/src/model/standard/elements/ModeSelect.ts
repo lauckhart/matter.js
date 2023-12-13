@@ -48,8 +48,7 @@ Matter.children.push(Cluster({
             xref: { document: "cluster", section: "1.8.4" },
             children: [Field({
                 name: "DEPONOFF", constraint: "0", description: "OnOff",
-                details: "Dependency with the On/Off cluster",
-                xref: { document: "cluster", section: "1.8.4" }
+                details: "Dependency with the On/Off cluster"
             })]
         }),
 
@@ -145,10 +144,7 @@ Matter.children.push(Cluster({
                 "\n" +
                 "server shall respond with an INVALID_COMMAND status response.",
             xref: { document: "cluster", section: "1.8.6.1" },
-            children: [Field({
-                name: "NewMode", id: 0x0, type: "uint8", conformance: "M", constraint: "desc",
-                xref: { document: "cluster", section: "1.8.6.1" }
-            })]
+            children: [Field({ name: "NewMode", id: 0x0, type: "uint8", conformance: "M", constraint: "desc" })]
         }),
 
         Datatype({

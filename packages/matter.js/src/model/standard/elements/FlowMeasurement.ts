@@ -20,7 +20,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
-            constraint: "MinMeasuredValue to MaxMeasuredValue", default: null, quality: "X P",
+            constraint: "minMeasuredValue to maxMeasuredValue", default: null, quality: "X P",
             details: "MeasuredValue represents the flow in m/h as follows: MeasuredValue = 10 x Flow" +
                 "\n" +
                 "The null value indicates that the flow measurement is unknown, otherwise the range shall be as " +
@@ -30,7 +30,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "MinMeasuredValue", id: 0x1, type: "uint16", access: "R V", conformance: "M",
-            constraint: "0 to MaxMeasuredValue1", quality: "X",
+            constraint: "0 to maxMeasuredValue1", quality: "X",
             details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. " +
                 "See Measured Value for more details." +
                 "\n" +
@@ -40,7 +40,7 @@ Matter.children.push(Cluster({
 
         Attribute({
             name: "MaxMeasuredValue", id: 0x2, type: "uint16", access: "R V", conformance: "M",
-            constraint: "MinMeasuredValue1 to 65534", quality: "X",
+            constraint: "minMeasuredValue1 to 65534", quality: "X",
             details: "The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. " +
                 "See Measured Value for more details." +
                 "\n" +

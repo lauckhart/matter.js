@@ -36,26 +36,20 @@ Matter.children.push(Cluster({
                 Field({
                     name: "PKTCNT", constraint: "0", description: "PacketCounts",
                     details: "Server supports the counts for the number of received and transmitted packets on the Thread " +
-                        "interface.",
-                    xref: { document: "core", section: "11.13.4" }
+                        "interface."
                 }),
-
                 Field({
                     name: "ERRCNT", constraint: "1", description: "ErrorCounts",
                     details: "Server supports the counts for the number of errors that have occurred during the reception and " +
-                        "transmission of packets on the Thread interface.",
-                    xref: { document: "core", section: "11.13.4" }
+                        "transmission of packets on the Thread interface."
                 }),
-
                 Field({
                     name: "MLECNT", constraint: "2", description: "MleCounts",
-                    details: "Server supports the counts for various MLE layer happenings.",
-                    xref: { document: "core", section: "11.13.4" }
+                    details: "Server supports the counts for various MLE layer happenings."
                 }),
                 Field({
                     name: "MACCNT", constraint: "3", description: "MacCounts",
-                    details: "Server supports the counts for various MAC layer happenings.",
-                    xref: { document: "core", section: "11.13.4" }
+                    details: "Server supports the counts for various MAC layer happenings."
                 })
             ]
         }),
@@ -631,10 +625,7 @@ Matter.children.push(Cluster({
             details: "The ConnectionStatus Event shall indicate that a Node’s connection status to a Thread network has " +
                 "changed.",
             xref: { document: "core", section: "11.13.8.2" },
-            children: [Field({
-                name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M",
-                xref: { document: "core", section: "11.13.8.2" }
-            })]
+            children: [Field({ name: "ConnectionStatus", id: 0x0, type: "ConnectionStatusEnum", conformance: "M" })]
         }),
 
         Event({
@@ -681,23 +672,15 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.13.5.1" },
 
             children: [
-                Field({
-                    name: "Unspecified", id: 0x0, conformance: "M", description: "Indicates an unspecified fault.",
-                    xref: { document: "core", section: "11.13.5.1" }
-                }),
-                Field({
-                    name: "LinkDown", id: 0x1, conformance: "M", description: "Indicates the Thread link is down.",
-                    xref: { document: "core", section: "11.13.5.1" }
-                }),
+                Field({ name: "Unspecified", id: 0x0, conformance: "M", description: "Indicates an unspecified fault." }),
+                Field({ name: "LinkDown", id: 0x1, conformance: "M", description: "Indicates the Thread link is down." }),
                 Field({
                     name: "HardwareFailure", id: 0x2, conformance: "M",
-                    description: "Indicates there has been Thread hardware failure.",
-                    xref: { document: "core", section: "11.13.5.1" }
+                    description: "Indicates there has been Thread hardware failure."
                 }),
                 Field({
                     name: "NetworkJammed", id: 0x3, conformance: "M",
-                    description: "Indicates the Thread network is jammed.",
-                    xref: { document: "core", section: "11.13.5.1" }
+                    description: "Indicates the Thread network is jammed."
                 })
             ]
         }),
@@ -705,16 +688,9 @@ Matter.children.push(Cluster({
         Datatype({
             name: "ConnectionStatusEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "11.13.5.2" },
-
             children: [
-                Field({
-                    name: "Connected", id: 0x0, conformance: "M", description: "Node is connected",
-                    xref: { document: "core", section: "11.13.5.2" }
-                }),
-                Field({
-                    name: "NotConnected", id: 0x1, conformance: "M", description: "Node is not connected",
-                    xref: { document: "core", section: "11.13.5.2" }
-                })
+                Field({ name: "Connected", id: 0x0, conformance: "M", description: "Node is connected" }),
+                Field({ name: "NotConnected", id: 0x1, conformance: "M", description: "Node is not connected" })
             ]
         }),
 
@@ -723,38 +699,25 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.13.5.3" },
 
             children: [
-                Field({
-                    name: "Unspecified", id: 0x0, conformance: "M", description: "Unspecified routing role.",
-                    xref: { document: "core", section: "11.13.5.3" }
-                }),
+                Field({ name: "Unspecified", id: 0x0, conformance: "M", description: "Unspecified routing role." }),
                 Field({
                     name: "Unassigned", id: 0x1, conformance: "M",
-                    description: "The Node does not currently have a role as a result of the Thread interface not currently being configured or operational.",
-                    xref: { document: "core", section: "11.13.5.3" }
+                    description: "The Node does not currently have a role as a result of the Thread interface not currently being configured or operational."
                 }),
                 Field({
                     name: "SleepyEndDevice", id: 0x2, conformance: "M",
-                    description: "The Node acts as a Sleepy End Device with RX-off-when-idle sleepy radio behavior.",
-                    xref: { document: "core", section: "11.13.5.3" }
+                    description: "The Node acts as a Sleepy End Device with RX-off-when-idle sleepy radio behavior."
                 }),
                 Field({
                     name: "EndDevice", id: 0x3, conformance: "M",
-                    description: "The Node acts as an End Device without RX- off-when-idle sleepy radio behavior.",
-                    xref: { document: "core", section: "11.13.5.3" }
+                    description: "The Node acts as an End Device without RX- off-when-idle sleepy radio behavior."
                 }),
                 Field({
                     name: "Reed", id: 0x4, conformance: "M",
-                    description: "The Node acts as an Router Eligible End Device.",
-                    xref: { document: "core", section: "11.13.5.3" }
+                    description: "The Node acts as an Router Eligible End Device."
                 }),
-                Field({
-                    name: "Router", id: 0x5, conformance: "M", description: "The Node acts as a Router Device.",
-                    xref: { document: "core", section: "11.13.5.3" }
-                }),
-                Field({
-                    name: "Leader", id: 0x6, conformance: "M", description: "The Node acts as a Leader Device.",
-                    xref: { document: "core", section: "11.13.5.3" }
-                })
+                Field({ name: "Router", id: 0x5, conformance: "M", description: "The Node acts as a Router Device." }),
+                Field({ name: "Leader", id: 0x6, conformance: "M", description: "The Node acts as a Leader Device." })
             ]
         }),
 
@@ -805,7 +768,7 @@ Matter.children.push(Cluster({
 
                 Field({
                     name: "AverageRssi", id: 0x6, type: "int8", conformance: "M", constraint: "-128 to 0",
-                    default: "null", quality: "X",
+                    default: null, quality: "X",
                     details: "This field SHOULD specify the average RSSI across all received frames from the neighboring Node " +
                         "since the receiving Node’s last reboot. If there is no known received frames this field SHOULD have" +
                         "\n" +
@@ -814,7 +777,7 @@ Matter.children.push(Cluster({
                 }),
 
                 Field({
-                    name: "LastRssi", id: 0x7, type: "int8", conformance: "M", constraint: "-128 to 0", default: "null",
+                    name: "LastRssi", id: 0x7, type: "int8", conformance: "M", constraint: "-128 to 0", default: null,
                     quality: "X",
                     details: "This field shall specify the RSSI of the most recently received frame from the neighboring Node. If " +
                         "there is no known last received frame the LastRssi field SHOULD have the value of null. This field " +
@@ -824,7 +787,7 @@ Matter.children.push(Cluster({
 
                 Field({
                     name: "FrameErrorRate", id: 0x8, type: "uint8", conformance: "O", constraint: "0 to 100",
-                    default: "0",
+                    default: 0,
                     details: "This field shall specify the percentage of received frames from the neighboring Node that have " +
                         "resulted in errors.",
                     xref: { document: "core", section: "11.13.5.4.9" }
@@ -832,7 +795,7 @@ Matter.children.push(Cluster({
 
                 Field({
                     name: "MessageErrorRate", id: 0x9, type: "uint8", conformance: "O", constraint: "0 to 100",
-                    default: "0",
+                    default: 0,
                     details: "This field shall specify the percentage of received messages from the neighboring Node that have " +
                         "resulted in errors.",
                     xref: { document: "core", section: "11.13.5.4.10" }
@@ -876,14 +839,8 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.13.5.5" },
 
             children: [
-                Field({
-                    name: "ExtAddress", id: 0x0, type: "uint64", conformance: "M",
-                    xref: { document: "core", section: "11.13.5.5" }
-                }),
-                Field({
-                    name: "Rloc16", id: 0x1, type: "uint16", conformance: "M",
-                    xref: { document: "core", section: "11.13.5.5" }
-                }),
+                Field({ name: "ExtAddress", id: 0x0, type: "uint64", conformance: "M" }),
+                Field({ name: "Rloc16", id: 0x1, type: "uint16", conformance: "M" }),
                 Field({
                     name: "RouterId", id: 0x2, type: "uint8", conformance: "M",
                     details: "This field shall specify the Router ID for the Node for which this route table entry corresponds.",
@@ -924,10 +881,7 @@ Matter.children.push(Cluster({
                     xref: { document: "core", section: "11.13.5.5.5" }
                 }),
 
-                Field({
-                    name: "Age", id: 0x7, type: "uint8", conformance: "M",
-                    xref: { document: "core", section: "11.13.5.5" }
-                }),
+                Field({ name: "Age", id: 0x7, type: "uint8", conformance: "M" }),
                 Field({
                     name: "Allocated", id: 0x8, type: "bool", conformance: "M",
                     details: "This field shall specify if the router ID as defined within the RouterId field has been allocated.",

@@ -31,25 +31,15 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.7.4" },
 
             children: [
-                Field({
-                    name: "WIRED", constraint: "0", description: "Wired",
-                    details: "A wired power source",
-                    xref: { document: "core", section: "11.7.4" }
-                }),
-                Field({
-                    name: "BAT", constraint: "1", description: "Battery",
-                    details: "A battery power source",
-                    xref: { document: "core", section: "11.7.4" }
-                }),
+                Field({ name: "WIRED", constraint: "0", description: "Wired", details: "A wired power source" }),
+                Field({ name: "BAT", constraint: "1", description: "Battery", details: "A battery power source" }),
                 Field({
                     name: "RECHG", constraint: "2", description: "Rechargeable",
-                    details: "A rechargeable battery power source (requires Battery feature)",
-                    xref: { document: "core", section: "11.7.4" }
+                    details: "A rechargeable battery power source (requires Battery feature)"
                 }),
                 Field({
                     name: "REPLC", constraint: "3", description: "Replaceable",
-                    details: "A replaceable battery power source (requires Battery feature)",
-                    xref: { document: "core", section: "11.7.4" }
+                    details: "A replaceable battery power source (requires Battery feature)"
                 })
             ]
         }),
@@ -350,7 +340,7 @@ Matter.children.push(Cluster({
 
             children: [
                 Field({
-                    name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 8", default: "empty",
+                    name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 8", default: [],
                     details: "This field shall represent the set of faults currently detected, as per Section 11.7.6.11, " +
                         "“ActiveWiredFaults Attribute”.",
                     xref: { document: "core", section: "11.7.7.1.1" },
@@ -358,7 +348,7 @@ Matter.children.push(Cluster({
                 }),
 
                 Field({
-                    name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 8", default: "empty",
+                    name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 8", default: [],
                     details: "This field shall represent the set of faults detected prior to this change event, as per Section " +
                         "11.7.6.11, “ActiveWiredFaults Attribute”.",
                     xref: { document: "core", section: "11.7.7.1.2" },
@@ -384,13 +374,11 @@ Matter.children.push(Cluster({
 
             children: [
                 Field({
-                    name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 8", default: "empty",
-                    xref: { document: "core", section: "11.7.7.2" },
+                    name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 8", default: [],
                     children: [Field({ name: "entry", type: "BatFaultEnum" })]
                 }),
                 Field({
-                    name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 8", default: "empty",
-                    xref: { document: "core", section: "11.7.7.2" },
+                    name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 8", default: [],
                     children: [Field({ name: "entry", type: "BatFaultEnum" })]
                 })
             ]
@@ -414,13 +402,11 @@ Matter.children.push(Cluster({
 
             children: [
                 Field({
-                    name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 16", default: "empty",
-                    xref: { document: "core", section: "11.7.7.3" },
+                    name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 16", default: [],
                     children: [Field({ name: "entry", type: "BatChargeFaultEnum" })]
                 }),
                 Field({
-                    name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 16", default: "empty",
-                    xref: { document: "core", section: "11.7.7.3" },
+                    name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 16", default: [],
                     children: [Field({ name: "entry", type: "BatChargeFaultEnum" })]
                 })
             ]
@@ -433,18 +419,15 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Unspecified", id: 0x0, conformance: "M",
-                    description: "The Node detects an unspecified fault on this wired power source.",
-                    xref: { document: "core", section: "11.7.5.1" }
+                    description: "The Node detects an unspecified fault on this wired power source."
                 }),
                 Field({
                     name: "OverVoltage", id: 0x1, conformance: "M",
-                    description: "The Node detects the supplied voltage is above maximum supported value for this wired power source.",
-                    xref: { document: "core", section: "11.7.5.1" }
+                    description: "The Node detects the supplied voltage is above maximum supported value for this wired power source."
                 }),
                 Field({
                     name: "UnderVoltage", id: 0x2, conformance: "M",
-                    description: "The Node detects the supplied voltage is below maximum supported value for this wired power source.",
-                    xref: { document: "core", section: "11.7.5.1" }
+                    description: "The Node detects the supplied voltage is below maximum supported value for this wired power source."
                 })
             ]
         }),
@@ -456,18 +439,15 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Unspecified", id: 0x0, conformance: "M",
-                    description: "The Node detects an unspecified fault on this battery power source.",
-                    xref: { document: "core", section: "11.7.5.2" }
+                    description: "The Node detects an unspecified fault on this battery power source."
                 }),
                 Field({
                     name: "OverTemp", id: 0x1, conformance: "M",
-                    description: "The Node detects the temperature of this battery power source is above ideal operating conditions.",
-                    xref: { document: "core", section: "11.7.5.2" }
+                    description: "The Node detects the temperature of this battery power source is above ideal operating conditions."
                 }),
                 Field({
                     name: "UnderTemp", id: 0x2, conformance: "M",
-                    description: "The Node detects the temperature of this battery power source is below ideal operating conditions.",
-                    xref: { document: "core", section: "11.7.5.2" }
+                    description: "The Node detects the temperature of this battery power source is below ideal operating conditions."
                 })
             ]
         }),
@@ -479,58 +459,47 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Unspecified", id: 0x0, conformance: "M",
-                    description: "The Node detects an unspecified fault on this battery source.",
-                    xref: { document: "core", section: "11.7.5.3" }
+                    description: "The Node detects an unspecified fault on this battery source."
                 }),
                 Field({
                     name: "AmbientTooHot", id: 0x1, conformance: "M",
-                    description: "The Node detects the ambient temperature is above the nominal range for this battery source.",
-                    xref: { document: "core", section: "11.7.5.3" }
+                    description: "The Node detects the ambient temperature is above the nominal range for this battery source."
                 }),
                 Field({
                     name: "AmbientTooCold", id: 0x2, conformance: "M",
-                    description: "The Node detects the ambient temperature is below the nominal range for this battery source.",
-                    xref: { document: "core", section: "11.7.5.3" }
+                    description: "The Node detects the ambient temperature is below the nominal range for this battery source."
                 }),
                 Field({
                     name: "BatteryTooHot", id: 0x3, conformance: "M",
-                    description: "The Node detects the temperature of this battery source is above the nominal range.",
-                    xref: { document: "core", section: "11.7.5.3" }
+                    description: "The Node detects the temperature of this battery source is above the nominal range."
                 }),
                 Field({
                     name: "BatteryTooCold", id: 0x4, conformance: "M",
-                    description: "The Node detects the temperature of this battery source is below the nominal range.",
-                    xref: { document: "core", section: "11.7.5.3" }
+                    description: "The Node detects the temperature of this battery source is below the nominal range."
                 }),
                 Field({
                     name: "BatteryAbsent", id: 0x5, conformance: "M",
-                    description: "The Node detects this battery source is not present.",
-                    xref: { document: "core", section: "11.7.5.3" }
+                    description: "The Node detects this battery source is not present."
                 }),
                 Field({
                     name: "BatteryOverVoltage", id: 0x6, conformance: "M",
-                    description: "The Node detects this battery source is over voltage.",
-                    xref: { document: "core", section: "11.7.5.3" }
+                    description: "The Node detects this battery source is over voltage."
                 }),
                 Field({
                     name: "BatteryUnderVoltage", id: 0x7, conformance: "M",
-                    description: "The Node detects this battery source is under voltage.",
-                    xref: { document: "core", section: "11.7.5.3" }
+                    description: "The Node detects this battery source is under voltage."
                 }),
                 Field({
                     name: "ChargerOverVoltage", id: 0x8, conformance: "M",
-                    description: "The Node detects the charger for this battery source is over voltage.",
-                    xref: { document: "core", section: "11.7.5.3" }
+                    description: "The Node detects the charger for this battery source is over voltage."
                 }),
                 Field({
                     name: "ChargerUnderVoltage", id: 0x9, conformance: "M",
-                    description: "The Node detects the charger for this battery source is under voltage.",
-                    xref: { document: "core", section: "11.7.5.3" }
+                    description: "The Node detects the charger for this battery source is under voltage."
                 }),
                 Field({
                     name: "SafetyTimeout", id: 0xa, conformance: "M",
-                    description: "The Node detects a charging safety timeout for this battery source.",
-                    xref: { document: "core", section: "11.7.5.3" }
+                    description: "The Node detects a charging safety timeout for this battery source."
                 })
             ]
         }),
@@ -542,23 +511,19 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Unspecified", id: 0x0, conformance: "M",
-                    description: "Indicate the source status is not specified",
-                    xref: { document: "core", section: "11.7.5.4" }
+                    description: "Indicate the source status is not specified"
                 }),
                 Field({
                     name: "Active", id: 0x1, conformance: "M",
-                    description: "Indicate the source is available and currently supplying power",
-                    xref: { document: "core", section: "11.7.5.4" }
+                    description: "Indicate the source is available and currently supplying power"
                 }),
                 Field({
                     name: "Standby", id: 0x2, conformance: "M",
-                    description: "Indicate the source is available, but is not currently supplying power",
-                    xref: { document: "core", section: "11.7.5.4" }
+                    description: "Indicate the source is available, but is not currently supplying power"
                 }),
                 Field({
                     name: "Unavailable", id: 0x3, conformance: "M",
-                    description: "Indicate the source is not currently available to supply power",
-                    xref: { document: "core", section: "11.7.5.4" }
+                    description: "Indicate the source is not currently available to supply power"
                 })
             ]
         }),
@@ -566,16 +531,9 @@ Matter.children.push(Cluster({
         Datatype({
             name: "WiredCurrentTypeEnum", type: "enum8", conformance: "M",
             xref: { document: "core", section: "11.7.5.5" },
-
             children: [
-                Field({
-                    name: "Ac", id: 0x0, conformance: "M", description: "Indicates AC current",
-                    xref: { document: "core", section: "11.7.5.5" }
-                }),
-                Field({
-                    name: "Dc", id: 0x1, conformance: "M", description: "Indicates DC current",
-                    xref: { document: "core", section: "11.7.5.5" }
-                })
+                Field({ name: "Ac", id: 0x0, conformance: "M", description: "Indicates AC current" }),
+                Field({ name: "Dc", id: 0x1, conformance: "M", description: "Indicates DC current" })
             ]
         }),
 
@@ -584,19 +542,14 @@ Matter.children.push(Cluster({
             xref: { document: "core", section: "11.7.5.6" },
 
             children: [
-                Field({
-                    name: "Ok", id: 0x0, conformance: "M", description: "Charge level is nominal",
-                    xref: { document: "core", section: "11.7.5.6" }
-                }),
+                Field({ name: "Ok", id: 0x0, conformance: "M", description: "Charge level is nominal" }),
                 Field({
                     name: "Warning", id: 0x1, conformance: "M",
-                    description: "Charge level is low, intervention may soon be required.",
-                    xref: { document: "core", section: "11.7.5.6" }
+                    description: "Charge level is low, intervention may soon be required."
                 }),
                 Field({
                     name: "Critical", id: 0x2, conformance: "M",
-                    description: "Charge level is critical, immediate intervention is required",
-                    xref: { document: "core", section: "11.7.5.6" }
+                    description: "Charge level is critical, immediate intervention is required"
                 })
             ]
         }),
@@ -608,22 +561,18 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Unspecified", id: 0x0, conformance: "M",
-                    description: "The replaceability is unspecified or unknown.",
-                    xref: { document: "core", section: "11.7.5.7" }
+                    description: "The replaceability is unspecified or unknown."
                 }),
                 Field({
-                    name: "NotReplaceable", id: 0x1, conformance: "M", description: "The battery is not replaceable.",
-                    xref: { document: "core", section: "11.7.5.7" }
+                    name: "NotReplaceable", id: 0x1, conformance: "M", description: "The battery is not replaceable."
                 }),
                 Field({
                     name: "UserReplaceable", id: 0x2, conformance: "M",
-                    description: "The battery is replaceable by the user or customer.",
-                    xref: { document: "core", section: "11.7.5.7" }
+                    description: "The battery is replaceable by the user or customer."
                 }),
                 Field({
                     name: "FactoryReplaceable", id: 0x3, conformance: "M",
-                    description: "The battery is replaceable by an authorized factory technician.",
-                    xref: { document: "core", section: "11.7.5.7" }
+                    description: "The battery is replaceable by an authorized factory technician."
                 })
             ]
         }),
@@ -635,329 +584,88 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Unspecified", id: 0x0, conformance: "M",
-                    description: "Common type is unknown or unspecified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Aaa", id: 0x1, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Aa", id: 0x2, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "C", id: 0x3, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "D", id: 0x4, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "4V5", id: 0x5, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "6V0", id: 0x6, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "9V0", id: 0x7, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "12Aa", id: 0x8, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Aaaa", id: 0x9, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "A", id: 0xa, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "B", id: 0xb, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "F", id: 0xc, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "N", id: 0xd, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "No6", id: 0xe, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "SubC", id: 0xf, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "A23", id: 0x10, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "A27", id: 0x11, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Ba5800", id: 0x12, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Duplex", id: 0x13, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "4Sr44", id: 0x14, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "523", id: 0x15, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "531", id: 0x16, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "15V0", id: 0x17, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "22V5", id: 0x18, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "30V0", id: 0x19, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "45V0", id: 0x1a, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "67V5", id: 0x1b, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "J", id: 0x1c, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Cr123A", id: 0x1d, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Cr2", id: 0x1e, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "2Cr5", id: 0x1f, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "CrP2", id: 0x20, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "CrV3", id: 0x21, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr41", id: 0x22, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr43", id: 0x23, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr44", id: 0x24, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr45", id: 0x25, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr48", id: 0x26, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr54", id: 0x27, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr55", id: 0x28, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr57", id: 0x29, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr58", id: 0x2a, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr59", id: 0x2b, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr60", id: 0x2c, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr63", id: 0x2d, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr64", id: 0x2e, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr65", id: 0x2f, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr66", id: 0x30, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr67", id: 0x31, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr68", id: 0x32, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr69", id: 0x33, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr516", id: 0x34, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr731", id: 0x35, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Sr712", id: 0x36, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Lr932", id: 0x37, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "A5", id: 0x38, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "A10", id: 0x39, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "A13", id: 0x3a, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "A312", id: 0x3b, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "A675", id: 0x3c, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Ac41E", id: 0x3d, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "10180", id: 0x3e, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "10280", id: 0x3f, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "10440", id: 0x40, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "14250", id: 0x41, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "14430", id: 0x42, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "14500", id: 0x43, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "14650", id: 0x44, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "15270", id: 0x45, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "16340", id: 0x46, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "Rcr123A", id: 0x47, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "17500", id: 0x48, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "17670", id: 0x49, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "18350", id: 0x4a, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "18500", id: 0x4b, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "18650", id: 0x4c, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "19670", id: 0x4d, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "25500", id: 0x4e, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "26650", id: 0x4f, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                }),
-                Field({
-                    name: "32600", id: 0x50, conformance: "M", description: "Common type is as specified",
-                    xref: { document: "core", section: "11.7.5.8" }
-                })
+                    description: "Common type is unknown or unspecified"
+                }),
+                Field({ name: "Aaa", id: 0x1, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Aa", id: 0x2, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "C", id: 0x3, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "D", id: 0x4, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "4V5", id: 0x5, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "6V0", id: 0x6, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "9V0", id: 0x7, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "12Aa", id: 0x8, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Aaaa", id: 0x9, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "A", id: 0xa, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "B", id: 0xb, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "F", id: 0xc, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "N", id: 0xd, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "No6", id: 0xe, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "SubC", id: 0xf, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "A23", id: 0x10, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "A27", id: 0x11, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Ba5800", id: 0x12, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Duplex", id: 0x13, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "4Sr44", id: 0x14, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "523", id: 0x15, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "531", id: 0x16, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "15V0", id: 0x17, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "22V5", id: 0x18, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "30V0", id: 0x19, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "45V0", id: 0x1a, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "67V5", id: 0x1b, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "J", id: 0x1c, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Cr123A", id: 0x1d, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Cr2", id: 0x1e, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "2Cr5", id: 0x1f, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "CrP2", id: 0x20, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "CrV3", id: 0x21, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr41", id: 0x22, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr43", id: 0x23, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr44", id: 0x24, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr45", id: 0x25, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr48", id: 0x26, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr54", id: 0x27, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr55", id: 0x28, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr57", id: 0x29, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr58", id: 0x2a, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr59", id: 0x2b, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr60", id: 0x2c, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr63", id: 0x2d, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr64", id: 0x2e, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr65", id: 0x2f, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr66", id: 0x30, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr67", id: 0x31, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr68", id: 0x32, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr69", id: 0x33, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr516", id: 0x34, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr731", id: 0x35, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Sr712", id: 0x36, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Lr932", id: 0x37, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "A5", id: 0x38, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "A10", id: 0x39, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "A13", id: 0x3a, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "A312", id: 0x3b, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "A675", id: 0x3c, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Ac41E", id: 0x3d, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "10180", id: 0x3e, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "10280", id: 0x3f, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "10440", id: 0x40, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "14250", id: 0x41, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "14430", id: 0x42, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "14500", id: 0x43, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "14650", id: 0x44, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "15270", id: 0x45, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "16340", id: 0x46, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "Rcr123A", id: 0x47, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "17500", id: 0x48, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "17670", id: 0x49, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "18350", id: 0x4a, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "18500", id: 0x4b, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "18650", id: 0x4c, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "19670", id: 0x4d, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "25500", id: 0x4e, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "26650", id: 0x4f, conformance: "M", description: "Common type is as specified" }),
+                Field({ name: "32600", id: 0x50, conformance: "M", description: "Common type is as specified" })
             ]
         }),
 
@@ -968,151 +676,86 @@ Matter.children.push(Cluster({
             children: [
                 Field({
                     name: "Unspecified", id: 0x0, conformance: "M",
-                    description: "Cell chemistry is unspecified or unknown",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    description: "Cell chemistry is unspecified or unknown"
                 }),
-                Field({
-                    name: "Alkaline", id: 0x1, conformance: "M", description: "Cell chemistry is alkaline",
-                    xref: { document: "core", section: "11.7.5.9" }
-                }),
+                Field({ name: "Alkaline", id: 0x1, conformance: "M", description: "Cell chemistry is alkaline" }),
                 Field({
                     name: "LithiumCarbonFluoride", id: 0x2, conformance: "M",
-                    description: "Cell chemistry is lithium carbon fluoride",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    description: "Cell chemistry is lithium carbon fluoride"
                 }),
                 Field({
                     name: "LithiumChromiumOxide", id: 0x3, conformance: "M",
-                    description: "Cell chemistry is lithium chromium oxide",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    description: "Cell chemistry is lithium chromium oxide"
                 }),
                 Field({
                     name: "LithiumCopperOxide", id: 0x4, conformance: "M",
-                    description: "Cell chemistry is lithium copper oxide",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    description: "Cell chemistry is lithium copper oxide"
                 }),
                 Field({
                     name: "LithiumIronDisulfide", id: 0x5, conformance: "M",
-                    description: "Cell chemistry is lithium iron disulfide",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    description: "Cell chemistry is lithium iron disulfide"
                 }),
                 Field({
                     name: "LithiumManganeseDioxide", id: 0x6, conformance: "M",
-                    description: "Cell chemistry is lithium manganese dioxide",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    description: "Cell chemistry is lithium manganese dioxide"
                 }),
                 Field({
                     name: "LithiumThionylChloride", id: 0x7, conformance: "M",
-                    description: "Cell chemistry is lithium thionyl chloride",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    description: "Cell chemistry is lithium thionyl chloride"
                 }),
-                Field({
-                    name: "Magnesium", id: 0x8, conformance: "M", description: "Cell chemistry is magnesium",
-                    xref: { document: "core", section: "11.7.5.9" }
-                }),
-                Field({
-                    name: "MercuryOxide", id: 0x9, conformance: "M", description: "Cell chemistry is mercury oxide",
-                    xref: { document: "core", section: "11.7.5.9" }
-                }),
+                Field({ name: "Magnesium", id: 0x8, conformance: "M", description: "Cell chemistry is magnesium" }),
+                Field({ name: "MercuryOxide", id: 0x9, conformance: "M", description: "Cell chemistry is mercury oxide" }),
                 Field({
                     name: "NickelOxyhydride", id: 0xa, conformance: "M",
-                    description: "Cell chemistry is nickel oxyhydride",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    description: "Cell chemistry is nickel oxyhydride"
                 }),
-                Field({
-                    name: "SilverOxide", id: 0xb, conformance: "M", description: "Cell chemistry is silver oxide",
-                    xref: { document: "core", section: "11.7.5.9" }
-                }),
-                Field({
-                    name: "ZincAir", id: 0xc, conformance: "M", description: "Cell chemistry is zinc air",
-                    xref: { document: "core", section: "11.7.5.9" }
-                }),
-                Field({
-                    name: "ZincCarbon", id: 0xd, conformance: "M", description: "Cell chemistry is zinc carbon",
-                    xref: { document: "core", section: "11.7.5.9" }
-                }),
-                Field({
-                    name: "ZincChloride", id: 0xe, conformance: "M", description: "Cell chemistry is zinc chloride",
-                    xref: { document: "core", section: "11.7.5.9" }
-                }),
+                Field({ name: "SilverOxide", id: 0xb, conformance: "M", description: "Cell chemistry is silver oxide" }),
+                Field({ name: "ZincAir", id: 0xc, conformance: "M", description: "Cell chemistry is zinc air" }),
+                Field({ name: "ZincCarbon", id: 0xd, conformance: "M", description: "Cell chemistry is zinc carbon" }),
+                Field({ name: "ZincChloride", id: 0xe, conformance: "M", description: "Cell chemistry is zinc chloride" }),
                 Field({
                     name: "ZincManganeseDioxide", id: 0xf, conformance: "M",
-                    description: "Cell chemistry is zinc manganese dioxide",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    description: "Cell chemistry is zinc manganese dioxide"
                 }),
-                Field({
-                    name: "LeadAcid", id: 0x10, conformance: "M", description: "Cell chemistry is lead acid",
-                    xref: { document: "core", section: "11.7.5.9" }
-                }),
+                Field({ name: "LeadAcid", id: 0x10, conformance: "M", description: "Cell chemistry is lead acid" }),
                 Field({
                     name: "LithiumCobaltOxide", id: 0x11, conformance: "M",
-                    description: "Cell chemistry is lithium cobalt oxide",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    description: "Cell chemistry is lithium cobalt oxide"
                 }),
-                Field({
-                    name: "LithiumIon", id: 0x12, conformance: "M", description: "Cell chemistry is lithium ion",
-                    xref: { document: "core", section: "11.7.5.9" }
-                }),
+                Field({ name: "LithiumIon", id: 0x12, conformance: "M", description: "Cell chemistry is lithium ion" }),
                 Field({
                     name: "LithiumIonPolymer", id: 0x13, conformance: "M",
-                    description: "Cell chemistry is lithium ion polymer",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    description: "Cell chemistry is lithium ion polymer"
                 }),
                 Field({
                     name: "LithiumIronPhosphate", id: 0x14, conformance: "M",
-                    description: "Cell chemistry is lithium iron phosphate",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    description: "Cell chemistry is lithium iron phosphate"
                 }),
                 Field({
-                    name: "LithiumSulfur", id: 0x15, conformance: "M", description: "Cell chemistry is lithium sulfur",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    name: "LithiumSulfur", id: 0x15, conformance: "M", description: "Cell chemistry is lithium sulfur"
                 }),
                 Field({
                     name: "LithiumTitanate", id: 0x16, conformance: "M",
-                    description: "Cell chemistry is lithium titanate",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    description: "Cell chemistry is lithium titanate"
                 }),
                 Field({
-                    name: "NickelCadmium", id: 0x17, conformance: "M", description: "Cell chemistry is nickel cadmium",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    name: "NickelCadmium", id: 0x17, conformance: "M", description: "Cell chemistry is nickel cadmium"
                 }),
                 Field({
                     name: "NickelHydrogen", id: 0x18, conformance: "M",
-                    description: "Cell chemistry is nickel hydrogen",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    description: "Cell chemistry is nickel hydrogen"
                 }),
-                Field({
-                    name: "NickelIron", id: 0x19, conformance: "M", description: "Cell chemistry is nickel iron",
-                    xref: { document: "core", section: "11.7.5.9" }
-                }),
+                Field({ name: "NickelIron", id: 0x19, conformance: "M", description: "Cell chemistry is nickel iron" }),
                 Field({
                     name: "NickelMetalHydride", id: 0x1a, conformance: "M",
-                    description: "Cell chemistry is nickel metal hydride",
-                    xref: { document: "core", section: "11.7.5.9" }
+                    description: "Cell chemistry is nickel metal hydride"
                 }),
-                Field({
-                    name: "NickelZinc", id: 0x1b, conformance: "M", description: "Cell chemistry is nickel zinc",
-                    xref: { document: "core", section: "11.7.5.9" }
-                }),
-                Field({
-                    name: "SilverZinc", id: 0x1c, conformance: "M", description: "Cell chemistry is silver zinc",
-                    xref: { document: "core", section: "11.7.5.9" }
-                }),
-                Field({
-                    name: "SodiumIon", id: 0x1d, conformance: "M", description: "Cell chemistry is sodium ion",
-                    xref: { document: "core", section: "11.7.5.9" }
-                }),
-                Field({
-                    name: "SodiumSulfur", id: 0x1e, conformance: "M", description: "Cell chemistry is sodium sulfur",
-                    xref: { document: "core", section: "11.7.5.9" }
-                }),
-                Field({
-                    name: "ZincBromide", id: 0x1f, conformance: "M", description: "Cell chemistry is zinc bromide",
-                    xref: { document: "core", section: "11.7.5.9" }
-                }),
-                Field({
-                    name: "ZincCerium", id: 0x20, conformance: "M", description: "Cell chemistry is zinc cerium",
-                    xref: { document: "core", section: "11.7.5.9" }
-                })
+                Field({ name: "NickelZinc", id: 0x1b, conformance: "M", description: "Cell chemistry is nickel zinc" }),
+                Field({ name: "SilverZinc", id: 0x1c, conformance: "M", description: "Cell chemistry is silver zinc" }),
+                Field({ name: "SodiumIon", id: 0x1d, conformance: "M", description: "Cell chemistry is sodium ion" }),
+                Field({ name: "SodiumSulfur", id: 0x1e, conformance: "M", description: "Cell chemistry is sodium sulfur" }),
+                Field({ name: "ZincBromide", id: 0x1f, conformance: "M", description: "Cell chemistry is zinc bromide" }),
+                Field({ name: "ZincCerium", id: 0x20, conformance: "M", description: "Cell chemistry is zinc cerium" })
             ]
         }),
 
@@ -1122,21 +765,11 @@ Matter.children.push(Cluster({
 
             children: [
                 Field({
-                    name: "Unknown", id: 0x0, conformance: "M", description: "Unable to determine the charging state",
-                    xref: { document: "core", section: "11.7.5.10" }
+                    name: "Unknown", id: 0x0, conformance: "M", description: "Unable to determine the charging state"
                 }),
-                Field({
-                    name: "IsCharging", id: 0x1, conformance: "M", description: "The battery is charging",
-                    xref: { document: "core", section: "11.7.5.10" }
-                }),
-                Field({
-                    name: "IsAtFullCharge", id: 0x2, conformance: "M", description: "The battery is at full charge",
-                    xref: { document: "core", section: "11.7.5.10" }
-                }),
-                Field({
-                    name: "IsNotCharging", id: 0x3, conformance: "M", description: "The battery is not charging",
-                    xref: { document: "core", section: "11.7.5.10" }
-                })
+                Field({ name: "IsCharging", id: 0x1, conformance: "M", description: "The battery is charging" }),
+                Field({ name: "IsAtFullCharge", id: 0x2, conformance: "M", description: "The battery is at full charge" }),
+                Field({ name: "IsNotCharging", id: 0x3, conformance: "M", description: "The battery is not charging" })
             ]
         })
     ]
