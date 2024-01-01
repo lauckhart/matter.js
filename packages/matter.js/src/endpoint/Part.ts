@@ -82,8 +82,6 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
             throw new ImplementationError("No part number assigned after initialization");
         }
 
-        this.lifecycle.state.installed = true;
-
         for (const type of Object.values(this.behaviors.supported)) {
             if (type.immediate) {
                 this.agent.load(type);
@@ -145,22 +143,33 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
         if (number < 0 || number > 0xffff) {
             throw new ImplementationError(`Endpoint number ${number} is out of bounds`);
         }
-        if (this.#number !== undefined && this.#number !== number) {
+        if (this.#number !== undefined){
+            if (this.#number === number) {
+                return;
+            }
             throw new ImplementationError(`Illegal attempt to reassign endpoint number ${this.#number} to ${number}`);
         }
 
-        this.root?.agent.get(IndexBehavior).assertNumberAvailable(number, this);
+        if (this.type.deviceClass === RootEndpoint.deviceClass) {
+            if (number !== 0) {
+                throw new ImplementationError("The root endpoint must have ID 0");
+            }
+        } else {
+            if (this.type.deviceClass !== RootEndpoint.deviceClass) {
+                throw new ImplementationError("Only the root endpoint may have ID 0");
+            }
+
+            this.root?.agent.get(IndexBehavior).assertNumberAvailable(number, this);
+        }
 
         this.#number = number;
 
-        if (this.#owner !== undefined) {
-            this.lifecycle.state.installed = true;
+        if (this.#behaviors.isActive(LifecycleBehavior)) {
+            this.lifecycle.events.structure$Change.emit(
+                StructuralChangeType.NumberAssigned,
+                this
+            );
         }
-
-        this.lifecycle.events.structure$Change.emit(
-            StructuralChangeType.NumberAssigned,
-            this
-        );
     }
 
     /**
@@ -190,10 +199,6 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
             throw new ImplementationError("Cannot reparent installed part");
         }
         this.#owner = owner;
-
-        if (this.#number !== undefined) {
-            this.lifecycle.state.installed = true;
-        }
     }
 
     /**

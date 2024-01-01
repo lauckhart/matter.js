@@ -64,28 +64,27 @@ export class Behaviors {
      * {@link Agent.require}.
      */
     require<T extends Behavior.Type>(type: T, options?: Behavior.Options<T>) {
+        if (options) {
+            this.#options[type.id] = options;
+        }
+
         if (this.#supported[type.id]) {
             if (!this.has(type)) {
                 throw new ImplementationError(
                     `Cannot require behavior ${type.id} because incompatible implementation already exists`,
                 );
             }
-        } else {
-            if (!type.supports(LifecycleBehavior)) {
-                if (this.#part.agent.get(LifecycleBehavior).state.online) {
-                    throw new ImplementationError(`Cannot add behavior ${type.id} after part is online`);
-                }
-            }
-            this.#supported[type.id] = type;
+            return;
+        }
+
+        this.#supported[type.id] = type;
+
+        if (!type.supports(LifecycleBehavior) && this.#backings.lifecycle) {
             this.#part.lifecycle.events.structure$Change.emit(StructuralChangeType.ServersChanged, this.#part);
-        }
-
-        if (options) {
-            this.#options[type.id] = options;
-        }
-
-        if (type.immediate && this.#part.owner) {
-            this.#part.agent.load(type);
+            
+            if (type.immediate) {
+                this.#part.agent.load(type);
+            }
         }
     }
 

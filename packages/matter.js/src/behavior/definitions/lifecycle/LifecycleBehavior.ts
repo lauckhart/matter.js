@@ -13,11 +13,6 @@ import { StructuralChangeType } from "./StructuralChangeType.js";
 /**
  * This behavior manages state related to the owning {@link Part}'s lifecycle.
  *
- * {@link LifecycleBehavior.state} includes:
- *     - Whether the part is installed into an owner
- *     - Whether the part's behaviors are initialized
- *     - Whether the part is online (addressable from a network)
- *
  * Other components that depend on this information may react to changes via
  * {@link LifecycleBehavior.events}.
  */
@@ -42,12 +37,10 @@ export class LifecycleBehavior extends Behavior {
                 return;
             }
 
-            if (state.installed && !state.initializingBehaviors.size) {
+            if (!state.initializingBehaviors.size) {
                 state.initialized = true;
             }
         }
-
-        this.events.installed$Change.on(() => updateStatus());
 
         this.state.initializingBehaviors.deleted.on(updateStatus);
     }
@@ -55,14 +48,6 @@ export class LifecycleBehavior extends Behavior {
 
 export namespace LifecycleBehavior {
     export class State {
-        /**
-         * True when the part is installed into a parent and the parent has
-         * been initialized.
-         *
-         * Updated by the part when its owner is set.
-         */
-        installed = false;
-
         /**
          * True when the part and all child parts have completed
          * initialization.
@@ -88,10 +73,7 @@ export namespace LifecycleBehavior {
     }
 
     export class Events extends EventEmitter {
-        number$Change = Observable<[number: number ]>();
-        installed$Change = Observable<[installed: boolean ]>();
         initialized$Change = Observable<[initialized: boolean ]>();
-        online$Change = Observable<[online: boolean]>();
 
         /**
          * This event is special cased in Part.  It is invoked after all

@@ -7,7 +7,6 @@
 import { Behavior } from "../../behavior/Behavior.js";
 import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import { CommissioningBehavior } from "../../behavior/definitions/commissioning/CommissioningBehavior.js";
-import { LifecycleBehavior } from "../../behavior/definitions/lifecycle/LifecycleBehavior.js";
 import { PartsBehavior } from "../../behavior/definitions/parts/PartsBehavior.js";
 import { ImplementationError, InternalError } from "../../common/MatterError.js";
 import { EndpointNumber } from "../../datatype/EndpointNumber.js";
@@ -120,7 +119,6 @@ export class NodeServer extends BaseNodeServer implements Node {
 
         await super.start();
 
-        agent.get(LifecycleBehavior).state.online = true;
         logger.info(`Node "${this.description}" is online`);
     }
 
@@ -243,11 +241,6 @@ export class NodeServer extends BaseNodeServer implements Node {
      */
     get description() {
         return this.commissioningConfig.productDescription.name;
-    }
-
-    override async close() {
-        this.#root.agent.get(LifecycleBehavior).state.online = false;
-        await super.close();
     }
 
     protected override get commissioningConfig() {

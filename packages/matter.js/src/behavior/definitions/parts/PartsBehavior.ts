@@ -43,13 +43,6 @@ export class PartsBehavior extends Behavior implements MutableSet<Part, Part | A
         for (const part of this.state.children) {
             this.#adoptPart(part);
         }
-
-        // Monitor online state so we can propagate to children
-        this.part.lifecycle.events.online$Change.on(online => {
-            for (const child of this.state.children) {
-                child.lifecycle.state.online = online;
-            }
-        });
     }
 
     has(child: Part | Agent | EndpointType) {
@@ -130,7 +123,7 @@ export class PartsBehavior extends Behavior implements MutableSet<Part, Part | A
         childLifecycle.events.structure$Change.on(this.internal.structureChanged);
         childLifecycle.events.destroyed.on(this.internal.childDestroyed);
 
-        this.#assertUniqueIdentities(child);
+        this.#validateInsertion(child);
 
         this.#emitChange(
             StructuralChangeType.PartAdded,
@@ -168,8 +161,6 @@ export class PartsBehavior extends Behavior implements MutableSet<Part, Part | A
         if (child.number === undefined) {
             throw new InternalError("Part reports as initialized but has no assigned ID");
         }
-
-        child.lifecycle.state.online = this.part.lifecycle.state.online;
     }
 
     /**
@@ -184,7 +175,7 @@ export class PartsBehavior extends Behavior implements MutableSet<Part, Part | A
         this.part.lifecycle.events.structure$Change.emit(type, part)
     }
 
-    #assertUniqueIdentities(part: Part, usedIds?: Set<string>, usedNumbers?: Set<number>) {
+    #validateInsertion(part: Part, usedIds?: Set<string>, usedNumbers?: Set<number>) {
         // If there is no index then we aren't yet installed.  This test
         // will occur instead when we're installed
         const index = this.part.root?.agent.get(IndexBehavior);
@@ -210,23 +201,32 @@ export class PartsBehavior extends Behavior implements MutableSet<Part, Part | A
             }
         }
 
-        const children = this.state.children;
-        if (children.size) {
-            if (!usedIds) {
-                usedIds = new Set;
-            }
-            if (part.id) {
-                usedIds.add(part.id);
-            }
-            if (!usedNumbers) {
-                usedNumbers = new Set;
-            }
-            if (part.number) {
-                usedNumbers.add(part.number);
-            }
-            for (const child of children) {
-                this.#assertUniqueIdentities(child, usedIds, usedNumbers);
-            }
+        if (!part.behaviors.isActive(PartsBehavior)) {
+            return;
+        }
+
+        const children = part.parts;
+        if (!children.size) {
+            return;
+        }
+
+        // We cannot rely on index to track identity of incoming part hierarchy
+        // because the entries are not yet present in the index
+        if (!usedIds) {
+            usedIds = new Set;
+        }
+        if (part.id) {
+            usedIds.add(part.id);
+        }
+        if (!usedNumbers) {
+            usedNumbers = new Set;
+        }
+        if (part.number) {
+            usedNumbers.add(part.number);
+        }
+
+        for (const child of children) {
+            this.#validateInsertion(child, usedIds, usedNumbers);
         }
     }
 }
