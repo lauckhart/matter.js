@@ -51,7 +51,7 @@ interface InternalSession extends Session<MatterDevice> {
 export class TransactionalInteractionServer extends InteractionServer {
     constructor(root: Part, store: NodeStore, subscriptionOptions: SubscriptionOptions) {
         const structure = new InteractionEndpointStructure;
-        root.lifecycle.events.structure$Change.on(() => structure.initializeFromEndpoint(PartServer.forPart(root)))
+        root.lifecycle.events.change.on(() => structure.initializeFromEndpoint(PartServer.forPart(root)))
         super({
             eventHandler: store.eventHandler,
             endpointStructure: structure,

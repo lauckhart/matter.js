@@ -8,7 +8,7 @@ import { Behavior } from "../../behavior/Behavior.js";
 import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import { CommissioningBehavior } from "../../behavior/definitions/commissioning/CommissioningBehavior.js";
 import { PartsBehavior } from "../../behavior/definitions/parts/PartsBehavior.js";
-import { ImplementationError, InternalError } from "../../common/MatterError.js";
+import { ImplementationError, InternalError, NotInitializedError } from "../../common/MatterError.js";
 import { EndpointNumber } from "../../datatype/EndpointNumber.js";
 import { FabricIndex } from "../../datatype/FabricIndex.js";
 import { Part } from "../../endpoint/Part.js";
@@ -26,6 +26,8 @@ import { ServerOptions } from "../options/ServerOptions.js";
 import { BaseNodeServer } from "./BaseNodeServer.js";
 import { NodeStore } from "./NodeStore.js";
 import { TransactionalInteractionServer } from "./TransactionalInteractionServer.js";
+import { AsyncConstruction, asyncNew } from "../../util/AsyncConstructable.js";
+import { Lifecycle } from "../../endpoint/part/Lifecycle.js";
 
 const logger = Logger.get("NodeServer");
 
@@ -40,17 +42,21 @@ const logger = Logger.get("NodeServer");
  */
 export class NodeServer extends BaseNodeServer implements Node {
     #configuration: ServerOptions.Configuration;
-    #root: Part<RootEndpoint>;
+    #root?: Part<RootEndpoint>;
     #rootServer?: PartServer;
     #nextEndpointId: EndpointNumber;
     #host?: Host;
     #store?: NodeStore;
+    #construction: AsyncConstruction<NodeServer>;
 
     get owner() {
         return undefined;
     }
 
     get root() {
+        if (!this.#root) {
+            throw new NotInitializedError("Root part is unavailable because initialization is incomplete; await the NodeServer to avoid this error");
+        }
         return this.#root;
     }
 
@@ -63,6 +69,10 @@ export class NodeServer extends BaseNodeServer implements Node {
         return this.#configuration;
     }
 
+    get construction() {
+        return this.#construction;
+    }
+
     /**
      * Create a new NodeServer.
      * 
@@ -72,45 +82,43 @@ export class NodeServer extends BaseNodeServer implements Node {
         super();
 
         this.#configuration = ServerOptions.configurationFor(options);
-        this.#root = this.#configuration.root;
-        this.#root.owner = this;
-        this.#root.number = EndpointNumber(0);
-        this.#root.behaviors.require(PartsBehavior);
-        this.#root.behaviors.require(CommissioningBehavior);
-        this.#root.behaviors.require(IndexBehavior);
+
+        const root = this.#root = Part.partFor(this.#configuration.root);
+
+        if (root.type.deviceType !== RootEndpoint.deviceType) {
+            throw new ImplementationError(`Root node device type must be a ${RootEndpoint.deviceType}`);
+        }
+    
+        if (root.number === undefined) {
+            root.number = EndpointNumber(0);
+        } else if (root.number !== 0) {
+            throw new ImplementationError(`Root node ID must be 0`);
+        }
+    
+        root.behaviors.require(PartsBehavior);
+        root.behaviors.require(CommissioningBehavior);
+        root.behaviors.require(IndexBehavior);
         this.#nextEndpointId = this.#configuration.nextEndpointNumber;
+
+        this.#construction = AsyncConstruction(
+            this,
+            async () => {
+                this.#store = await NodeStore.create(this.#configuration);
+                root.lifecycle.change(Lifecycle.Change.Installed);
+            });
     }
 
-    /**
-     * Initialize the node.
-     * 
-     * Loads persisted state and prepares parts for use.  This is separate
-     * from construction because persistence is asynchronous.
-     * 
-     * You cannot use the agent API until the NodeServer is initialized.
-     *
-     * Invoked automatically on start but you may invoke manually to enable
-     * agent API prior to startup.
-     */
-    override async initialize() {
-        if (this.#store) {
-            // Already initialized
-            return;
-        }
-
-        this.#store = new NodeStore(this.#configuration);
-        await this.#store.initialize();
-
-        this.#root.initialize();
+    static async create(options?: ServerOptions.Configuration) {
+        return asyncNew(NodeServer, options);
     }
 
     /**
      * Bring the device online.
      */
     override async start() {
-        await this.initialize();
+        await this.construction;
 
-        const agent = this.#root.agent;
+        const agent = this.root.agent;
 
         if (!this.commissioned) {
             const commissioning = await agent.waitFor(CommissioningBehavior);
@@ -146,8 +154,8 @@ export class NodeServer extends BaseNodeServer implements Node {
      */
     add(part: Part): void;
 
-    add(endpoint: Part | EndpointType, options?: Part.Options) {
-        this.root.agent.get(PartsBehavior).add(endpoint, options);
+    add(endpoint: Part.Definition) {
+        this.root.parts.add(endpoint);
     }
 
     /**
@@ -184,10 +192,10 @@ export class NodeServer extends BaseNodeServer implements Node {
     }
 
     /**
-     * Set a Part's ID, number and storage.
+     * Initialize part state.
      */
     initializePart(part: Part) {
-        if (part.id === undefined) {
+        if (!part.lifecycle.hasId) {
             part.id = this.#identifyPart(part);
         }
 
@@ -199,12 +207,8 @@ export class NodeServer extends BaseNodeServer implements Node {
             this.#initializedStore.eventHandler,
         )
 
-        if (part.number === undefined) {
-            if (part === this.#root) {
-                part.number = EndpointNumber(1);
-            } else {
-                part.number = EndpointNumber(store.number ?? this.#initializedStore.allocateNumber());
-            }
+        if (!part.lifecycle.hasNumber) {
+            part.number = EndpointNumber(store.number ?? this.#initializedStore.allocateNumber());
         }
     }
 
@@ -253,7 +257,7 @@ export class NodeServer extends BaseNodeServer implements Node {
 
     protected override get rootEndpoint() {
         if (!this.#rootServer) {
-            this.#rootServer = PartServer.forPart(this.#root);
+            this.#rootServer = PartServer.forPart(this.root);
         }
         return this.#rootServer;
     }
@@ -267,7 +271,7 @@ export class NodeServer extends BaseNodeServer implements Node {
     }
 
     protected override get advertiseOnStartup() {
-        return !!this.#root.agent.get(CommissioningBehavior).state.automaticAnnouncement;
+        return !!this.root.agent.get(CommissioningBehavior).state.automaticAnnouncement;
     }
 
     protected override emitCommissioningChanged(_fabric: FabricIndex): void {}
@@ -276,7 +280,7 @@ export class NodeServer extends BaseNodeServer implements Node {
 
     protected override createInteractionServer() {
         return new TransactionalInteractionServer(
-            this.#root,
+            this.root,
             this.#initializedStore,
             this.#configuration.subscription
         );
@@ -293,7 +297,7 @@ export class NodeServer extends BaseNodeServer implements Node {
     protected override initializeEndpoints(): void {
         throw new Error("Method not implemented.");
     }
-    
+
     protected override clearStorage(): Promise<void> {
         throw new Error("Method not implemented.");
     }
@@ -343,8 +347,9 @@ export class NodeServer extends BaseNodeServer implements Node {
             throw new InternalError("Cannot determine ID for part because parent does not list as child");
         }
 
+        // Should we throw here instead?
         const id = `${part.owner.id}#${index}`;
-        logger.warn(`Assigning ID ${id} for anonymous part based on index within parent`);
+        logger.warn(`Using fallback ID of ${id} for anonymous part based on index within parent; assign ID to remove this warning`);
 
         return id;
     }

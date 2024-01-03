@@ -4,16 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../../common/MatterError.js";
 import { Part } from "../../endpoint/Part.js";
 import { PersistenceBehavior } from "../../endpoint/server/PersistenceBehavior.js";
 import { EventHandler } from "../../protocol/interaction/EventHandler.js";
+import { AsyncConstruction } from "../../util/AsyncConstructable.js";
 import { MaybePromise } from "../../util/Type.js";
 import { Behavior } from "../Behavior.js";
 import { BehaviorBacking } from "../BehaviorBacking.js";
 import { InvocationContext } from "../InvocationContext.js";
 import { Datasource } from "../state/managed/Datasource.js";
-import { Transaction } from "../state/transaction/Transaction.js";
 
 /**
  * This class backs the server implementation of a behavior.
@@ -22,40 +21,42 @@ export class ServerBehaviorBacking extends BehaviorBacking {
     #store?: Datasource.Store;
     #eventHandler?: EventHandler;
     #datasource?: Datasource;
-    #loadingState = false;
+    #construction: AsyncConstruction<ServerBehaviorBacking>;
 
-    constructor(part: Part, type: Behavior.Type) {
-        super(part, type);
+    get construction() {
+        return this.#construction;
     }
 
-    protected override invokeInitializer(behavior: Behavior, transaction: Transaction, options?: Behavior.Options) {
+    constructor(part: Part, type: Behavior.Type, options?: Behavior.Options) {
+        super(part, type);
+
+        this.#construction = AsyncConstruction(
+            this,
+            () => this.initialize(options),
+        );
+    }
+
+    protected override invokeInitializer(behavior: Behavior, options?: Behavior.Options) {
         // If we have persistent fields install a store before initializing.
-        // Loading of persistence may be asynchronous; chain promises if so.
-        //
-        // The default persistence implementation relies on async load of all
-        // state during node initialization.  But we support async persistence
-        // initialization for alternate persistence implementations
+        // Loading of persistence may be asynchronous; chain promises if so
         if (this.type.supervisor.persists) {
             this.part.agent.require(PersistenceBehavior);
             const persistence = this.part.agent.waitFor(PersistenceBehavior);
             
             if (MaybePromise.is(persistence)) {
-                this.#loadingState = true;
                 return persistence
                     .then(persistence => {
-                        this.#loadingState = false;
                         this.#store = persistence.storeFor(this.type);
                         this.#eventHandler = persistence.eventHandler;
-                        return super.invokeInitializer(behavior, transaction, options);
+                        return super.invokeInitializer(behavior, options);
                     })
-                    .finally(() => (this.#loadingState = false));
             }
 
             this.#store = persistence.storeFor(this.type);
             this.#eventHandler = persistence.eventHandler;
         }
 
-        return super.invokeInitializer(behavior, transaction, options);
+        return super.invokeInitializer(behavior, options);
     }
 
     /**
@@ -69,7 +70,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
      * The source of raw data that backs managed state instances.
      */
     get datasource() {
-        this.#assertLoaded();
+        this.construction.assertAvailable();
 
         if (!this.#datasource) {
             this.#datasource = Datasource({
@@ -88,16 +89,8 @@ export class ServerBehaviorBacking extends BehaviorBacking {
      * The target for events.
      */
     get eventHandler() {
-        this.#assertLoaded();
+        this.construction.assertAvailable();
         
         return this.#eventHandler as EventHandler;
-    }
-
-    #assertLoaded() {
-        if (this.#loadingState) {
-            throw new InternalError(
-                "Cannot access behavior state because state is still loading; use agent.waitFor() to avoid this error"
-            );
-        }
     }
 }

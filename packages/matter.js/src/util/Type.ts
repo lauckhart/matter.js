@@ -81,12 +81,17 @@ export type Immutable<T> = T extends (...args: any[]) => any
  */
 export type MaybePromise<T = void> = T | Promise<T>;
 
+/**
+ * Promise-like version of above.
+ */
+export type MaybePromiseLike<T = void> = T | PromiseLike<T>;
+
 export namespace MaybePromise {
     /**
-     * Determine whether a {@link MaybePromise} is a {@link Promise}.
+     * Determine whether a {@link MaybePromiseLike} is a {@link Promise}.
      */
-    export function is<T>(value: MaybePromise<T>): value is Promise<T> {
-        return !!(value as { then?: {} }).then;
+    export function is<T>(value: MaybePromiseLike<T>): value is PromiseLike<T> {
+        return typeof (value as { then?: any }).then === "function";
     }
 
     /**

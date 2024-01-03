@@ -5,9 +5,8 @@
  */
 
 import { Environment } from "../../common/Environment.js";
-import { ImplementationError } from "../../common/MatterError.js";
 import { EndpointNumber } from "../../datatype/EndpointNumber.js";
-import { Part } from "../../endpoint/Part.js";
+import type { Part } from "../../endpoint/Part.js";
 import { RootEndpoint } from "../../endpoint/definitions/system/RootEndpoint.js";
 import type { NodeServer } from "../server/NodeServer.js";
 import { NetworkOptions } from "./NetworkOptions.js";
@@ -25,7 +24,7 @@ export type ServerOptions = {
     /**
      * Initial endpoints published by the server.
      */
-    readonly root?: Part<RootEndpoint>;
+    readonly root?: Part.Definition<RootEndpoint>;
 
     /**
      * The next ID assigned to a new endpoint.
@@ -51,7 +50,7 @@ export namespace ServerOptions {
 
         return {
             environment: options?.environment ?? Environment.default,
-            root: configureRoot(options),
+            root: options?.root ?? RootEndpoint,
             network: NetworkOptions.configurationFor(options.network),
             subscription: SubscriptionOptions.configurationFor(options.subscription),
             nextEndpointNumber: EndpointNumber(options.nextEndpointNumber ?? 1),
@@ -59,20 +58,4 @@ export namespace ServerOptions {
     }
 
     export interface Configuration extends ReturnType<typeof configurationFor> {}
-}
-
-function configureRoot(options?: ServerOptions) {
-    const root = options?.root ?? new Part(RootEndpoint);
-
-    if (root.type.deviceType !== RootEndpoint.deviceType) {
-        throw new ImplementationError(`Root node device type must be a ${RootEndpoint.deviceType}`);
-    }
-
-    if (root.number === undefined) {
-        root.number = EndpointNumber(0);
-    } else if (root.number !== 0) {
-        throw new ImplementationError(`Root node ID must be 0`);
-    }
-
-    return root;
 }

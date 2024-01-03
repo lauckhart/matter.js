@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from "../behavior/definitions/lifecycle/LifecycleBehavior.js";
+export * from "./part/Lifecycle.js";
 export * from "../behavior/definitions/parts/PartsBehavior.js";
 export * from "./Agent.js";
 export * from "./EndpointInterface.js";

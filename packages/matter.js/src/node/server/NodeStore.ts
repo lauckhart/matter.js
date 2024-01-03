@@ -15,6 +15,7 @@ import { StorageManager } from "../../storage/StorageManager.js";
 import { ServerOptions } from "../options/ServerOptions.js";
 import { Environment } from "../../common/Environment.js";
 import { PartStore } from "../../endpoint/part/PartStore.js";
+import { AsyncConstruction, asyncNew } from "../../util/AsyncConstructable.js";
 
 const logger = Logger.get("NodeStore");
 
@@ -36,10 +37,24 @@ export class NodeStore {
     #endpointStorage?: StorageContext;
     #parameterStorage?: StorageContext;
     #partStores = {} as Record<string, NodePartStore>;
+    #construction: AsyncConstruction<NodeStore>;
+
+    get construction() {
+        return this.#construction;
+    }
 
     constructor(configuration: ServerOptions.Configuration) {
         this.#environment = configuration.environment;
         this.#nextNumber = (configuration.nextEndpointNumber ?? 1) % 0xffff;
+
+        this.#construction = AsyncConstruction(
+            this,
+            () => this.#initialize(),
+        )
+    }
+
+    static async create(configuration: ServerOptions.Configuration) {
+        return await asyncNew(this, configuration);
     }
 
     /**
@@ -48,7 +63,7 @@ export class NodeStore {
      * TODO - implement conversion from 0.7 format so people can change API
      * seamlessly
      */
-    async initialize() {
+    async #initialize() {
         this.#storage = await this.#environment.createStorage();
 
         this.#nextNumber = this.parameterStorage.get("nextEndpointNumber", this.#nextNumber);

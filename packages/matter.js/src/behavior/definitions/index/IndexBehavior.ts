@@ -6,8 +6,8 @@
 
 import { ImplementationError } from "../../../common/MatterError.js";
 import type { Part } from "../../../endpoint/Part.js";
+import { Lifecycle } from "../../../endpoint/part/Lifecycle.js";
 import { Behavior } from "../../Behavior.js";
-import { StructuralChangeType } from "../lifecycle/StructuralChangeType.js";
 
 /**
  * Thrown when there is a part ID or number conflict.
@@ -31,15 +31,15 @@ export class IndexBehavior extends Behavior {
             this.#add(part);
         }
 
-        this.part.lifecycle.events.structure$Change.on((type, part) => {
+        this.part.lifecycle.events.change.on((type, part) => {
             switch (type) {
-                case StructuralChangeType.IdAssigned:
-                case StructuralChangeType.NumberAssigned:
-                case StructuralChangeType.PartAdded:
+                case Lifecycle.Change.IdAssigned:
+                case Lifecycle.Change.NumberAssigned:
+                case Lifecycle.Change.PartAdded:
                     this.#add(part);
                     break;
 
-                case StructuralChangeType.PartDeleted:
+                case Lifecycle.Change.PartDeleted:
                     this.#remove(part);
                     break;
             }

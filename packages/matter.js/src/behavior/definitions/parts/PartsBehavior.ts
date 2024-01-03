@@ -4,14 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ImplementationError, InternalError } from "../../../common/MatterError.js";
 import { Agent } from "../../../endpoint/Agent.js";
 import { Part } from "../../../endpoint/Part.js";
+import { Lifecycle } from "../../../endpoint/part/Lifecycle.js";
 import { EndpointType } from "../../../endpoint/type/EndpointType.js";
 import { BasicSet, MutableSet } from "../../../util/Set.js";
 import { Behavior } from "../../Behavior.js";
 import { IdentityConflictError, IndexBehavior } from "../index/IndexBehavior.js";
-import { StructuralChangeType } from "../lifecycle/StructuralChangeType.js";
 
 /**
  * Manages parent-child relationship between endpoints.
@@ -20,7 +19,7 @@ import { StructuralChangeType } from "../lifecycle/StructuralChangeType.js";
  * interface.
  *
  * Notifications of structural change bubble via
- * {@link LifecycleBehavior.events.structure$Change}.
+ * {@link Part.lifecycle.events.change}.
  */
 export class PartsBehavior extends Behavior implements MutableSet<Part, Part | Agent> {
     static override readonly id = "parts";
@@ -29,15 +28,21 @@ export class PartsBehavior extends Behavior implements MutableSet<Part, Part | A
     declare readonly state: PartsBehavior.State;
 
     override initialize() {
-        this.internal.structureChanged = (type: StructuralChangeType, part: Part) =>
-            this.#emitChange(type, part);
-        this.internal.childDestroyed = (part: Part) =>
-            this.#childDestroyed(part);
+        const change = this.part.lifecycle.events.change;
+        this.internal.emitChange = (type, part) => change.emit(type, part);
+        this.internal.disownPart = (part) => this.#disownPart(part);
 
-        // Update state in response to the mutation state.parts
+        // Update state in response to mutation of state.parts
         const children = this.state.children;
         children.added.on(child => this.#adoptPart(child));
         children.deleted.on(child => this.#disownPart(child));
+
+        // Propagate "installed" status changes to children
+        this.part.lifecycle.events.installed.on(() => {
+            for (const part of this.state.children) {
+                part.lifecycle.change(Lifecycle.Change.Installed);
+            }
+        })
 
         // Immediately adopt any parts present in state upon initialization
         for (const part of this.state.children) {
@@ -45,24 +50,24 @@ export class PartsBehavior extends Behavior implements MutableSet<Part, Part | A
         }
     }
 
-    has(child: Part | Agent | EndpointType) {
-        return this.state.children.has(partFor(child));
+    add(child: Part.Definition | Agent) {
+        this.state.children.add(this.#partFor(child));
     }
 
-    add(child: Part | Agent | EndpointType, options?: Part.Options) {
-        this.state.children.add(partFor(child, options));
+    delete(child: Part | Agent) {
+        return this.state.children.delete(this.#partFor(child));
     }
-
-    delete(child: Part | Agent | EndpointType) {
-        return this.state.children.delete(partFor(child));
-    }
-
+ 
     clear() {
         this.state.children.clear();
     }
 
-    indexOf(child: Part | Agent | EndpointType) {
-        const part = partFor(child);
+    has(child: Part | Agent) {
+        return this.state.children.has(this.#partFor(child));
+    }
+
+    indexOf(child: Part | Agent) {
+        const part = this.#partFor(child);
         let index = 0;
 
         for (const other of this.state.children) {
@@ -96,85 +101,34 @@ export class PartsBehavior extends Behavior implements MutableSet<Part, Part | A
      * {@link state.children}.
      */
     #adoptPart(child: Part) {
-        const lifecycle = this.part.lifecycle;
-
+        this.#validateInsertion(child);
         child.owner = this.agent.part;
 
-        const registerIfInitialized = () => {
-            if (!lifecycle.state.initialized) {
-                return;
-            }
+        child.lifecycle.events.change.on(this.internal.emitChange);
+        child.lifecycle.events.destroyed.on(this.internal.disownPart);
 
-            lifecycle.events.initialized$Change.off(registerIfInitialized);
-            this.state.initializing.delete(child);
-
-            this.#partReady(child);
-        };
-
-        lifecycle.events.initialized$Change.on(registerIfInitialized);
-        registerIfInitialized();
-
-        const childLifecycle = child.lifecycle;
-
-        if (!this.internal.structureChanged || !this.internal.childDestroyed) {
-            throw new InternalError("Part adoption failed because PartsBehavior is not initialized");
+        if (this.part.lifecycle.installed) {
+            child.lifecycle.change(Lifecycle.Change.Installed);
         }
 
-        childLifecycle.events.structure$Change.on(this.internal.structureChanged);
-        childLifecycle.events.destroyed.on(this.internal.childDestroyed);
-
-        this.#validateInsertion(child);
-
-        this.#emitChange(
-            StructuralChangeType.PartAdded,
+        this.internal.emitChange(
+            Lifecycle.Change.PartAdded,
             child,
         );
     }
 
     /**
-     * Terminate ownership of a part.  Invoked when a part is removed from
-     * state.parts.
+     * Terminate ownership of a part.  Invoked when a part is destroyed or
+     * removed from state.parts.
      */
     #disownPart(child: Part) {
-        if (child.number === undefined) {
-            return;
-        }
-
-        if (!this.internal.structureChanged || !this.internal.childDestroyed) {
-            throw new InternalError("Part disown failed because PartsBehavior is not initialized");
-        }
-
         const childLifeCycle = child.lifecycle;
-        childLifeCycle.events.structure$Change.off(this.internal.structureChanged);
-        childLifeCycle.events.destroyed.off(this.internal.childDestroyed);
+        childLifeCycle.events.change.off(this.internal.emitChange);
+        childLifeCycle.events.destroyed.off(this.internal.disownPart);
 
-        this.internal.structureChanged?.(
-            StructuralChangeType.PartDeleted,
-            child
-        );
+        this.internal.emitChange(Lifecycle.Change.PartDeleted, child)
     }
-
-    /**
-     * Validates and updates part status.
-     */
-    #partReady(child: Part) {
-        if (child.number === undefined) {
-            throw new InternalError("Part reports as initialized but has no assigned ID");
-        }
-    }
-
-    /**
-     * Remove a destroyed part.  Invoked in response to the child's "destroyed"
-     * event.
-     */
-    #childDestroyed(part: Part) {
-        this.state.children.delete(part);
-    }
-
-    #emitChange(type: StructuralChangeType, part: Part) {
-        this.part.lifecycle.events.structure$Change.emit(type, part)
-    }
-
+    
     #validateInsertion(part: Part, usedIds?: Set<string>, usedNumbers?: Set<number>) {
         // If there is no index then we aren't yet installed.  This test
         // will occur instead when we're installed
@@ -229,12 +183,34 @@ export class PartsBehavior extends Behavior implements MutableSet<Part, Part | A
             this.#validateInsertion(child, usedIds, usedNumbers);
         }
     }
+
+    #partFor(child: Part.Definition | Agent) {
+        if (child instanceof Agent) {
+            child = child.part;
+        }
+
+        if (!(child instanceof Part)) {
+            if ((child as any).type) {
+                (child as any).owner = this.part;
+            } else {
+                child = {
+                    type: child as EndpointType,
+                    owner: this.part,
+                }
+            }
+        }
+
+        return Part.partFor(child);
+    }
 }
 
 export namespace PartsBehavior {
     export class Internal {
-        structureChanged?: (type: StructuralChangeType, part: Part) => void;
-        childDestroyed?: (part: Part) => void;
+        emitChange: (type: Lifecycle.Change, part: Part) => void
+            = () => {};
+
+        disownPart: (part: Part) => void
+            = () => {};
     }
 
     export class State {
@@ -242,26 +218,5 @@ export namespace PartsBehavior {
          * Child parts of the endpoint.
          */
         children = new BasicSet<Part>();
-
-        /**
-         * The behavior stores parts undergoing initialization here.
-         */
-        initializing = new Set<Part>();
     }
-}
-
-function partFor(child: Part | Agent | EndpointType, options?: Part.Options) {
-    if (child instanceof Agent) {
-        child = child.part;
-    }
-
-    if (child instanceof Part) {
-        return child;
-    }
-
-    if (child.name != undefined && child.deviceType !== undefined && child.deviceRevision !== undefined) {
-        return new Part(child, options);
-    }
-
-    throw new ImplementationError(`Illegal part value type`);
 }

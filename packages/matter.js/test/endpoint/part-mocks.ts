@@ -1,6 +1,5 @@
 import { Behavior } from "../../src/behavior/Behavior.js";
 import { Part } from "../../src/endpoint/Part.js";
-import { PartOwner } from "../../src/endpoint/part/PartOwner.js";
 import { EndpointType } from "../../src/endpoint/type/EndpointType.js";
 import { MockContext, MockEndpoint, MockOwner } from "../behavior/behavior-mocks.js";
 
@@ -27,23 +26,25 @@ export namespace MockBehavior2 {
 }
 
 export class MockPart<T extends EndpointType> extends Part<T> {
-    constructor(type: T, options?: MockPart.Options<T>) {
-        super(type, options);
+    constructor(definition: T | Part.Configuration<T>);
 
-        let owner;
-        if (options && "owner" in options) {
-            if (options.owner !== undefined) {
-                owner = options.owner;
-            }
-        } else {
-            owner = new MockOwner();
+    constructor(type: T, options: Part.Options<T>);
+
+    constructor(definition: T | Part.Configuration<T>, options?: Part.Options<T>) {
+        if (Part.isConfiguration(definition)) {
+            options = definition;
+            definition = definition.type;
+        }
+        if (!options) {
+            options = {};
+        }
+        if (!options.owner) {
+            options.owner = new MockOwner();
         }
 
-        // Testing logic is synchronous so we can safely initialize here
-        if (owner) {
-            this.owner = owner;
-            this.initialize();
-        }
+        super(definition, options);
+
+        this.construction.assertAvailable();
     }
 
     get mockAgent() {
@@ -54,12 +55,4 @@ export class MockPart<T extends EndpointType> extends Part<T> {
         const part = new MockPart(MockEndpoint.with(type));
         return part.mockAgent.get(type);
     }
-}
-
-export namespace MockPart {
-    export type Options<T extends EndpointType> =
-        & Part.Options<T>
-        & {
-            owner?: PartOwner;
-        };
 }

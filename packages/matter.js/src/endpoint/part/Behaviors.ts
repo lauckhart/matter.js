@@ -7,15 +7,18 @@
 import { Behavior } from "../../behavior/Behavior.js";
 import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import type { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { LifecycleBehavior } from "../../behavior/definitions/lifecycle/LifecycleBehavior.js";
-import { StructuralChangeType } from "../../behavior/definitions/lifecycle/StructuralChangeType.js";
+import { Lifecycle } from "./Lifecycle.js";
 import { Val } from "../../behavior/state/managed/Val.js";
 import { ImplementationError } from "../../common/MatterError.js";
+import { Logger } from "../../log/Logger.js";
+import { BasicSet } from "../../util/Set.js";
 import { camelize, describeList } from "../../util/String.js";
 import { MaybePromise } from "../../util/Type.js";
 import type { Agent } from "../Agent.js";
 import type { Part } from "../Part.js";
 import type { SupportedBehaviors } from "./SupportedBehaviors.js";
+
+const logger = Logger.get("Behaviors");
 
 /**
  * This class manages {@link Behavior} instances owned by a {@link Part}.
@@ -25,6 +28,7 @@ export class Behaviors {
     #supported: SupportedBehaviors;
     #backings: Record<string, BehaviorBacking> = {};
     #options: Record<string, object | undefined>;
+    #initializing?: BasicSet<BehaviorBacking>;
 
     /**
      * List the {@link SupportedBehaviors} of the {@link Part}.
@@ -49,6 +53,34 @@ export class Behaviors {
         this.#part = part;
         this.#supported = supported;
         this.#options = options;
+    }
+
+    /**
+     * Activate any behaviors designated for immediate activation.  Returns a
+     * promise iff any behaviors have ongoing initialization.
+     */
+    initialize(): MaybePromise {
+        for (const type of Object.values(this.supported)) {
+            if (type.immediate) {
+                this.#part.agent.activate(type);
+            }
+        }
+
+        const initializing = this.#initializing;
+        if (!initializing?.size) {
+            return;
+        }
+
+        return new Promise<void>((fulfilled) => {
+            const initializationListener = () => {
+                if (initializing.size === 0) {
+                    initializing.deleted.off(initializationListener);
+                    fulfilled();
+                }
+            }
+
+            initializing.deleted.on(initializationListener);
+        });
     }
 
     /**
@@ -79,12 +111,10 @@ export class Behaviors {
 
         this.#supported[type.id] = type;
 
-        if (!type.supports(LifecycleBehavior) && this.#backings.lifecycle) {
-            this.#part.lifecycle.events.structure$Change.emit(StructuralChangeType.ServersChanged, this.#part);
+        this.#part.lifecycle.change(Lifecycle.Change.ServersChanged, this.#part);
             
-            if (type.immediate) {
-                this.#part.agent.load(type);
-            }
+        if (type.immediate && this.#part.lifecycle.installed) {
+            this.#part.agent.activate(type);
         }
     }
 
@@ -92,7 +122,7 @@ export class Behaviors {
      * Create a behavior.  {@link Agent} obtains behaviors via this method.
      */
     create(type: Behavior.Type, agent: Agent) {
-        const behavior = this.createWhenReady(type, agent);
+        const behavior = this.createAsync(type, agent);
         if (MaybePromise.is(behavior)) {
             throw new ImplementationError(`Cannot access behavior ${type.id} because it is still initializing`);
         }
@@ -103,20 +133,28 @@ export class Behaviors {
      * Create a behavior, waiting for the behavior to initialize if necessary.
      *
      * This method returns a {@link Promise} only if await is necessary so the
-     * behavior can be used immediately if necessary.
+     * behavior can be used immediately if possible.
      */
-    createWhenReady(type: Behavior.Type, agent: Agent): MaybePromise<Behavior> {
+    createAsync(type: Behavior.Type, agent: Agent): MaybePromise<Behavior> {
+        this.activate(type);
+        let backing = this.#backings[type.id];
+
+        if (!backing.construction.ready) {
+            return Promise.resolve(backing.construction).then(() => backing.createBehavior(agent, type));
+        }
+
+        return backing.createBehavior(agent, type);
+    }
+
+    /**
+     * Activate a behavior.
+     */
+    activate(type: Behavior.Type) {
         let backing = this.#backings[type.id];
 
         if (!backing) {
             backing = this.#createBacking(type);
         }
-
-        if (backing.initializing) {
-            return backing.initializing.then(() => backing.createBehavior(agent, type));
-        }
-
-        return backing.createBehavior(agent, type);
     }
 
     /**
@@ -205,7 +243,21 @@ export class Behaviors {
         this.#backings[type.id] = backing;
 
         // Initialize backing state
-        backing.initialize(this.#options[myType.id]);
+        if (!backing.construction.ready) {
+            if (!this.#initializing) {
+                this.#initializing = new BasicSet;
+            }
+            this.#initializing.add(backing);
+
+            backing.construction
+                .catch(e => {
+                    logger.error(`${this.#part.description}: Error initializing behavior ${myType.name}`, e);
+                    throw e;
+                })
+                .finally(() => {
+                    this.#initializing?.delete(backing);
+                });
+        }
 
         // Our shiny new backing is ready
         return backing;

@@ -8,7 +8,6 @@ import { Behavior } from "../../behavior/Behavior.js";
 import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
 import { DescriptorServer } from "../../behavior/definitions/descriptor/DescriptorServer.js";
-import { LifecycleBehavior } from "../../behavior/definitions/lifecycle/LifecycleBehavior.js";
 import { PartsBehavior } from "../../behavior/definitions/parts/PartsBehavior.js";
 import { ClusterServerBehaviorBacking } from "../../behavior/server/ClusterServerBehaviorBacking.js";
 import { ServerBehaviorBacking } from "../../behavior/server/ServerBehaviorBacking.js";
@@ -45,15 +44,15 @@ export class PartServer implements EndpointInterface {
 
         part.behaviors.require(DescriptorServer);
 
+        part.lifecycle.events.change.on(() => this.#structureChangedCallback?.());
+
         const agent = this.#part.agent;
 
-        agent.get(LifecycleBehavior).events.structure$Change.on(() => this.#structureChangedCallback?.());
-
         agent.require(PersistenceBehavior);
-        agent.load(PersistenceBehavior);
+        agent.activate(PersistenceBehavior);
 
         agent.require(DescriptorServer);
-        agent.load(DescriptorServer);
+        agent.activate(DescriptorServer);
     }
 
     createBacking(behavior: Behavior.Type): BehaviorBacking {
@@ -76,10 +75,6 @@ export class PartServer implements EndpointInterface {
 
     get number() {
         return this.#part.number;
-    }
-
-    set number(value: EndpointNumber | undefined) {
-        this.#part.number = value;
     }
 
     get name() {

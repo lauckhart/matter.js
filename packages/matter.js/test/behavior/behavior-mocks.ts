@@ -7,7 +7,6 @@
 import { Behavior } from "../../src/behavior/Behavior.js";
 import { InvocationContext } from "../../src/behavior/InvocationContext.js";
 import { DescriptorServer } from "../../src/behavior/definitions/descriptor/DescriptorServer.js";
-import { LifecycleBehavior } from "../../src/behavior/definitions/lifecycle/LifecycleBehavior.js";
 import { PartsBehavior } from "../../src/behavior/definitions/parts/PartsBehavior.js";
 import { ServerBehaviorBacking } from "../../src/behavior/server/ServerBehaviorBacking.js";
 import { AccessLevel } from "../../src/cluster/Cluster.js";
@@ -53,10 +52,10 @@ export class MockOwner implements PartOwner {
     }
 
     initializePart(part: Part) {
-        if (part.number === undefined) {
+        if (!part.lifecycle.hasNumber) {
             part.number = EndpointNumber(this.#nextId++);
         }
-        if (part.id === undefined) {
+        if (!part.lifecycle.hasId) {
             part.id = part.number.toString();
         }
     }
@@ -78,7 +77,7 @@ export const MockEndpoint = MutableEndpoint({
     name: "MyEndpoint",
     deviceType: 1,
     deviceRevision: 1,
-}).with(LifecycleBehavior, DescriptorServer);
+}).with(DescriptorServer);
 
 export const MockParentEndpoint = MockEndpoint.with(PartsBehavior);
 

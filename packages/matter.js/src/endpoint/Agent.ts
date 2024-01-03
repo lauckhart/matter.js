@@ -87,7 +87,7 @@ export class Agent {
             return behavior as InstanceType<T>;
         }
 
-        return this.#part.behaviors.createWhenReady(type, this) as MaybePromise<InstanceType<T>>;
+        return this.#part.behaviors.createAsync(type, this) as MaybePromise<InstanceType<T>>;
     }
 
     /**
@@ -95,10 +95,8 @@ export class Agent {
      * 
      * Functionally identical to {@link waitFor} but has no return value.
      */
-    load(type: Behavior.Type): void {
-        // This may return a promise but it's tracked internally by the
-        // backing so we can safely ignore
-        this.#part.behaviors.createWhenReady(type, this);
+    activate(type: Behavior.Type): void {
+        this.#part.behaviors.activate(type);
     }
 
     /**

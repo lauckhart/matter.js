@@ -8,10 +8,10 @@ import { Descriptor } from "../../../cluster/definitions/DescriptorCluster.js";
 import { ClusterId } from "../../../datatype/ClusterId.js";
 import { EndpointNumber } from "../../../datatype/EndpointNumber.js";
 import { Part } from "../../../endpoint/Part.js";
+import { Lifecycle } from "../../../endpoint/part/Lifecycle.js";
 import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { isDeepEqual } from "../../../util/DeepEqual.js";
 import { IndexBehavior } from "../index/IndexBehavior.js";
-import { StructuralChangeType } from "../lifecycle/StructuralChangeType.js";
 import { PartsBehavior } from "../parts/PartsBehavior.js";
 import { DescriptorBehavior } from "./DescriptorBehavior.js";
 
@@ -19,10 +19,8 @@ import { DescriptorBehavior } from "./DescriptorBehavior.js";
  * This is the default server implementation of DescriptorBehavior.
  */
 export class DescriptorServer extends DescriptorBehavior {
-    static override immediate = true;
-
     override initialize() {
-        this.part.lifecycle.events.structure$Change.on(
+        this.part.lifecycle.events.change.on(
             (type, part) => this.#applyChange(type, part)
         );
 
@@ -57,18 +55,18 @@ export class DescriptorServer extends DescriptorBehavior {
     /**
      * Process a structure change event and trigger state updates if necessary.
      */
-    #applyChange(type: StructuralChangeType, part: Part) {
+    #applyChange(type: Lifecycle.Change, part: Part) {
         switch (type) {
-            case StructuralChangeType.PartAdded:
-            case StructuralChangeType.NumberAssigned:
-            case StructuralChangeType.PartDeleted:
+            case Lifecycle.Change.PartAdded:
+            case Lifecycle.Change.NumberAssigned:
+            case Lifecycle.Change.PartDeleted:
                 if (part === this.part) {
                     return;
                 }
                 this.state.partsList = this.#partsList;
                 break;
 
-            case StructuralChangeType.ServersChanged:
+            case Lifecycle.Change.ServersChanged:
                 if (part !== this.part) {
                     return;
                 }
@@ -88,7 +86,7 @@ export class DescriptorServer extends DescriptorBehavior {
 
         // The presence of IndexBehavior indicates a flat namespace as
         // required by Matter standard for root and aggregator endpoints
-        if (part.behaviors.isActive(IndexBehavior)) {
+        if (part.behaviors.has(IndexBehavior)) {
             const index = part.agent.get(IndexBehavior);
             return Object.keys(index.state.partsByNumber).map(Number.parseInt) as EndpointNumber[];
         }

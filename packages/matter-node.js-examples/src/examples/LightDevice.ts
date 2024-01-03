@@ -53,7 +53,7 @@ const ExampleLight = OnOffLightDevice.with(ReportingOnOffServer);
 // to take default values here.
 //
 // TODO - reference more verbose example
-const server = new NodeServer();
+const server = await NodeServer.create();
 
 // Nodes are a composition of endpoints.  Add a single endpoint to the node,
 // our example light device.

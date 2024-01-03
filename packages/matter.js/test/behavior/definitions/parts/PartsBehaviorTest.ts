@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { StructuralChangeType } from "../../../../src/behavior/definitions/lifecycle/StructuralChangeType.js";
 import { Part } from "../../../../src/endpoint/Part.js";
+import { Lifecycle } from "../../../../src/endpoint/part/Lifecycle.js";
 import { MockPart } from "../../../endpoint/part-mocks.js";
 import { MockEndpoint, MockParentEndpoint } from "../../behavior-mocks.js";
 
@@ -58,8 +58,8 @@ describe("PartsBehavior", () => {
         parent.parts.add(child);
 
         let bubbled: Part | undefined;
-        parent.lifecycle.events.structure$Change.on((type, part) => {
-            expect(type).equals(StructuralChangeType.PartAdded);
+        parent.part.lifecycle.events.change.on((type, part) => {
+            expect(type).equals(Lifecycle.Change.PartAdded);
             bubbled = part;
         });
 
@@ -77,8 +77,8 @@ describe("PartsBehavior", () => {
         child.parts.add(grandchild);
 
         let bubbled: Part | undefined;
-        parent.lifecycle.events.structure$Change.on((type, part) => {
-            expect(type).equals(StructuralChangeType.PartDeleted);
+        parent.part.lifecycle.events.change.on((type, part) => {
+            expect(type).equals(Lifecycle.Change.PartDeleted);
             (bubbled = part)
         });
 

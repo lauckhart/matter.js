@@ -14,9 +14,12 @@ import { MockPart } from "../../../endpoint/part-mocks.js";
 import { MockEndpoint, MockParentEndpoint } from "../../behavior-mocks.js";
 
 function createFamily() {
-    const parent = new MockPart(MockParentEndpoint, { number: 1 }).agent;
+    const parent = new MockPart({
+        type: MockParentEndpoint,
+        number: 1,
+    }).agent;
 
-    const child = new MockPart(MockEndpoint, { number: 2, owner: undefined }).agent;
+    const child = new MockPart({ type: MockEndpoint, number: 2, owner: undefined }).agent;
 
     parent.parts.add(child);
 
