@@ -758,9 +758,9 @@ describe("InteractionProtocol", () => {
         }
 
         if (cluster) {
-            addClusterServer(cluster);
+            addClusterServer(cluster as any);
             if (cluster2) {
-                addClusterServer(cluster2);
+                addClusterServer(cluster2 as any);
             }
         } else {
             basicInfoClusterServer = ClusterServer(

@@ -42,7 +42,7 @@ export class PartsBehavior extends Behavior implements MutableSet<Part, Part | A
             for (const part of this.state.children) {
                 part.lifecycle.change(Lifecycle.Change.Installed);
             }
-        })
+        });
 
         // Immediately adopt any parts present in state upon initialization
         for (const part of this.state.children) {

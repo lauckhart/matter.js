@@ -239,8 +239,9 @@ export class Behaviors {
         if (!this.#part.owner) {
             throw new ImplementationError(`Attempted initialization of behavior ${type.id} of uninstalled part`);
         }
-        const backing = this.#part.owner.initializeBehavior(this.#part, myType);
+        const backing = this.#part.owner.createBacking(this.#part, myType);
         this.#backings[type.id] = backing;
+        backing.initialize();
 
         // Initialize backing state
         if (!backing.construction.ready) {

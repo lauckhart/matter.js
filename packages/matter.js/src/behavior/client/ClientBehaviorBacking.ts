@@ -5,7 +5,7 @@
  */
 
 import { Part } from "../../endpoint/Part.js";
-import { AsyncConstruction } from "../../util/AsyncConstructable.js";
+import { AsyncConstruction } from "../../util/AsyncConstruction.js";
 import { Behavior } from "../Behavior.js";
 import { BehaviorBacking } from "../BehaviorBacking.js";
 import { InvocationContext } from "../InvocationContext.js";

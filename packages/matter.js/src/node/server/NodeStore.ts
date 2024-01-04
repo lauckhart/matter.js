@@ -15,7 +15,7 @@ import { StorageManager } from "../../storage/StorageManager.js";
 import { ServerOptions } from "../options/ServerOptions.js";
 import { Environment } from "../../common/Environment.js";
 import { PartStore } from "../../endpoint/part/PartStore.js";
-import { AsyncConstruction, asyncNew } from "../../util/AsyncConstructable.js";
+import { AsyncConstruction, asyncNew } from "../../util/AsyncConstruction.js";
 
 const logger = Logger.get("NodeStore");
 

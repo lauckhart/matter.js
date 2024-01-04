@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NotInitializedError } from "../common/MatterError.js";
+import { ImplementationError, NotInitializedError } from "../common/MatterError.js";
 import { MaybePromise } from "./Type.js";
 
 /**
@@ -48,9 +48,31 @@ export interface AsyncConstructable<T> {
  * The promise implemented by an {@link AsyncConstructable}.
  */
 export interface AsyncConstruction<T> extends Promise<T> {
+    /**
+     * Becomes true when construction is finished.
+     */
     readonly ready: boolean;
+
+    /**
+     * If construction ends with an error, the error is saved here.
+     */
     readonly error?: Error;
+
+    /**
+     * If you omit the initializer parameter to {@link AsyncConstruction}
+     * execution is deferred until you invoke this method.
+     */
+    start(initializer: () => MaybePromise<void>): void;
+
+    /**
+     * AsyncConstruction may be cancellable.  If not this method does nothing.
+     * Regardless you must wait for promise resolution even if canceled.
+     */
     cancel(): void;
+
+    /**
+     * Throws an error if construction is ongoing or incomplete.
+     */
     assertAvailable(): void;
 }
 
@@ -59,31 +81,48 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
     initializer?: () => MaybePromise<void>,
     cancel?: () => void
 ): AsyncConstruction<T> {
-    const initialization = initializer?.();
+    let promise: MaybePromise;
     let error: any;
-    let ready: boolean;
+    let started = false;
+    let ready = false;
     let canceled = false;
+    let placeholderResolve: undefined | (() => void);
+    let placeholderReject: undefined | ((error: any) => void)
 
-    if (MaybePromise.is(initialization)) {
-        ready = false;
-        initialization.then(
-            () => ready = true,
-            e => {
-                error = e;
-                ready = true
-            }
-        );
-    } else {
-        ready = true;
-    }
-
-    return {
+    const self: AsyncConstruction<any> = {
         get ready() {
             return ready;
         },
 
         get error() {
             return error;
+        },
+
+        start(initializer: () => MaybePromise<void>) {
+            if (started) {
+                throw new ImplementationError("Initialization has already started");
+            }
+            started = true;
+
+            const initialization = initializer();
+
+            if (MaybePromise.is(initialization)) {
+                ready = false;
+                if (promise) {
+                    initialization.then(placeholderResolve, placeholderReject);
+                } else {
+                    promise = initialization;
+                }
+                initialization.then(
+                    () => ready = true,
+                    e => {
+                        error = e;
+                        ready = true
+                    }
+                );
+            } else {
+                ready = true;
+            }
         },
 
         cancel: () => {
@@ -112,11 +151,19 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
             onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
             onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
         ): Promise<TResult1 | TResult2> {
-            if (MaybePromise.is(initialization)) {
-                return initialization.then(() => target).then(onfulfilled, onrejected);
+            if (!started) {
+                // Initialization has not started so we need to create a
+                // placeholder promise
+                promise = new Promise((resolve, reject) => {
+                    placeholderResolve = resolve;
+                    placeholderReject = reject;
+                });
             }
-            return Promise.resolve(target).then(onfulfilled, onrejected);
+            if (promise) {
+                return promise.then(() => target).then(onfulfilled, onrejected);
+            }
 
+            return Promise.resolve(target).then(onfulfilled, onrejected);
         },
 
         catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult> {
@@ -131,4 +178,10 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
             return "Promise";
         },
     };
+
+    if (initializer) {
+        self.start(initializer);
+    }
+
+    return self;
 }

@@ -57,9 +57,18 @@ export class Lifecycle {
         switch (type) {
             case Lifecycle.Change.Installed:
                 this.#installed = true;
+                this.events.installed.emit(this.#part);
 
-                // We do not trigger an event for installation as this becomes
-                // true for all parts simultaneously
+                // We do not bubble installation as this becomes true for all
+                // parts simultaneously
+                return;
+
+            case Lifecycle.Change.Destroyed:
+                this.events.destroyed.emit(this.#part);
+
+                // We do not bubble destruction as it is redundant with
+                // PartDeleted and at this point the part is no longer part of
+                // a hierarchy
                 return;
 
             case Lifecycle.Change.IdAssigned:
@@ -95,6 +104,7 @@ export namespace Lifecycle {
 
     export enum Change {
         Installed = "installed",
+        Destroyed = "destroyed",
         PartAdded = "added",
         PartDeleted = "removed",
         ServersChanged = "servers-changed",

@@ -32,5 +32,5 @@ export interface PartOwner {
      * @param defaults default values for behavior state
      * @returns a new {@link BehaviorBacking}
      */
-    initializeBehavior(part: Part, behavior: Behavior.Type): BehaviorBacking;
+    createBacking(part: Part, behavior: Behavior.Type): BehaviorBacking;
 }

@@ -10,9 +10,9 @@ import { BehaviorBacking } from "../behavior/BehaviorBacking.js";
 import type { InvocationContext } from "../behavior/InvocationContext.js";
 import { IndexBehavior } from "../behavior/definitions/index/IndexBehavior.js";
 import { PartsBehavior } from "../behavior/definitions/parts/PartsBehavior.js";
-import { ImplementationError, InternalError, NotInitializedError } from "../common/MatterError.js";
+import { ImplementationError, NotInitializedError } from "../common/MatterError.js";
 import { EndpointNumber } from "../datatype/EndpointNumber.js";
-import { AsyncConstruction } from "../util/AsyncConstructable.js";
+import { AsyncConstruction } from "../util/AsyncConstruction.js";
 import { Agent } from "./Agent.js";
 import { RootEndpoint } from "./definitions/system/RootEndpoint.js";
 import { Behaviors } from "./part/Behaviors.js";
@@ -162,7 +162,8 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
             throw new ImplementationError('Endpoint ID may not include "."');
         }
 
-        this.root.agent.get(IndexBehavior).assertIdAvailable(id, this);
+        const index = this.root?.agent.get(IndexBehavior);
+        index?.assertIdAvailable(id, this);
         
         this.#id = id;
         this.lifecycle.change(
@@ -194,7 +195,8 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
                 throw new ImplementationError("Root endpoint must be a ");
             }
 
-            this.root.agent.get(IndexBehavior).assertNumberAvailable(number, this);
+            const index = this.root?.agent.get(IndexBehavior);
+            index?.assertNumberAvailable(number, this);
         }
 
         this.#number = EndpointNumber(number);
@@ -261,15 +263,14 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
     }
 
     /**
-     * Access the root of the part hierarchy.
+     * Access the root of the part hierarchy, if any.
      */
-    get root(): Part<RootEndpoint> {
+    get root(): Part<RootEndpoint> | undefined {
         for (let part: PartOwner | undefined = this; part = part; part = part.owner) {
             if (part instanceof Part && part.type.deviceClass === RootEndpoint.deviceClass) {
                 return part as Part<RootEndpoint>;
             }
         }
-        throw new InternalError("No root part found in ancestory hierarchy");
     }
 
     /**
@@ -329,11 +330,11 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
         this.owner.initializePart(part);
     }
 
-    initializeBehavior(part: Part, behavior: Behavior.Type): BehaviorBacking {
+    createBacking(part: Part, behavior: Behavior.Type): BehaviorBacking {
         if (!this.owner) {
             throw new ImplementationError("Cannot initialize behavior because parent is not installed");
         }
-        return this.owner.initializeBehavior(part, behavior);
+        return this.owner.createBacking(part, behavior);
     }
 
     get #resolvedAgentType() {

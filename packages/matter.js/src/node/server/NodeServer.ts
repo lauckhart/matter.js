@@ -26,7 +26,7 @@ import { ServerOptions } from "../options/ServerOptions.js";
 import { BaseNodeServer } from "./BaseNodeServer.js";
 import { NodeStore } from "./NodeStore.js";
 import { TransactionalInteractionServer } from "./TransactionalInteractionServer.js";
-import { AsyncConstruction, asyncNew } from "../../util/AsyncConstructable.js";
+import { AsyncConstruction, asyncNew } from "../../util/AsyncConstruction.js";
 import { Lifecycle } from "../../endpoint/part/Lifecycle.js";
 
 const logger = Logger.get("NodeServer");
@@ -219,7 +219,7 @@ export class NodeServer extends BaseNodeServer implements Node {
      * 
      * This is where we adapt parts and behaviors for a server role.
      */
-    initializeBehavior(part: Part, behavior: Behavior.Type): BehaviorBacking {
+    createBacking(part: Part, behavior: Behavior.Type): BehaviorBacking {
         return PartServer.forPart(part).createBacking(behavior);
     }
 

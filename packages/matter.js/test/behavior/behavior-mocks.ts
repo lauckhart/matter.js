@@ -60,7 +60,7 @@ export class MockOwner implements PartOwner {
         }
     }
 
-    initializeBehavior(part: Part, behavior: Behavior.Type) {
+    createBacking(part: Part, behavior: Behavior.Type) {
         return new ServerBehaviorBacking(part, behavior);
     }
 

@@ -33,7 +33,7 @@ export class NodeClient implements Node {
         throw new NotImplementedError();
     }
 
-    initializeBehavior(_part: Part, _type: Behavior.Type): BehaviorBacking {
+    createBacking(_part: Part, _type: Behavior.Type): BehaviorBacking {
         // TODO
         throw new NotImplementedError();
     }

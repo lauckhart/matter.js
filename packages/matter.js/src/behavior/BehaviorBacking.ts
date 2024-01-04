@@ -8,7 +8,7 @@ import { AccessLevel } from "../cluster/Cluster.js";
 import { ImplementationError } from "../common/MatterError.js";
 import { Agent } from "../endpoint/Agent.js";
 import type { Part } from "../endpoint/Part.js";
-import { AsyncConstruction } from "../util/AsyncConstructable.js";
+import { AsyncConstruction } from "../util/AsyncConstruction.js";
 import { EventEmitter } from "../util/Observable.js";
 import { MaybePromise } from "../util/Type.js";
 import type { Behavior } from "./Behavior.js";
@@ -25,69 +25,77 @@ export abstract class BehaviorBacking {
     #type: Behavior.Type;
     #internal?: object;
     #events?: EventEmitter;
+    #options?: Behavior.Options;
 
     abstract readonly construction: AsyncConstruction<BehaviorBacking>;
 
-    constructor(part: Part, type: Behavior.Type) {
+    constructor(part: Part, type: Behavior.Type, options?: Behavior.Options) {
         this.#part = part;
         this.#type = type;
+        this.#options = options;
     }
 
     /**
      * Initialize state by applying values from options and invoking the
      * behavior's initialize() function.
+     * 
+     * Called by Behaviors once the backing is installed.
      */
-    protected initialize(options?: Behavior.Options): MaybePromise {
-        // We initialize in a transaction so behaviors can update persistent
-        // state values during initialization
-        const transaction = new Transaction();
+    initialize() {
+        this.construction.start(() => {
+            // We initialize in a transaction so behaviors can update persistent
+            // state values during initialization
+            const transaction = new Transaction();
 
-        // Create a transactional offline agent
-        const agent = this.#part.getAgent({
-            offline: true,
-            accessLevel: AccessLevel.View,
-            transaction,
+            // Create a transactional offline agent
+            const agent = this.#part.getAgent({
+                offline: true,
+                accessLevel: AccessLevel.View,
+                transaction,
+            });
+
+            // We use this behavior for initialization.  Do not use agent.get()
+            // to access the behavior because it will throw if the behavior
+            // isn't initialized
+            const behavior = this.createBehavior(agent, this.#type);
+
+            // Perform actual initialization
+            let promise: MaybePromise;
+            try {
+                promise = this.invokeInitializer(behavior, this.#options);
+
+                if (MaybePromise.is(promise)) {
+                    promise.then(
+                        () => {
+                            if (transaction.status === Transaction.Status.Exclusive) {
+                                return transaction.commit();
+                            }
+                        },
+
+                        error => {
+                            if (transaction.status === Transaction.Status.Exclusive) {
+                                return transaction.rollback().then(() => { throw error });
+                            }
+                        }
+                    )
+                } else if (transaction.status === Transaction.Status.Exclusive) {
+                    promise = transaction.commit();
+                }
+            } catch (e) {
+                // We don't commit here because initialization may be async.
+                // However if there's a synchronous error we do want to perform
+                // rollback if in a write transaction
+                if (transaction.status === Transaction.Status.Exclusive) {
+                    // Rollback is asynchronous so return the promise that will
+                    // register as initializing just so we track the promise
+                    promise = transaction.rollback().then(() => { throw e });
+                } else {
+                    throw e;
+                }
+            }
+
+            return promise;
         });
-
-        // We use this behavior for initialization
-        const behavior = agent.get(this.#type);
-
-        // Perform actual initialization
-        let promise;
-        try {
-            promise = this.invokeInitializer(behavior, options);
-
-            if (MaybePromise.is(promise)) {
-                promise.then(
-                    () => {
-                        if (transaction.status === Transaction.Status.Exclusive) {
-                            return transaction.commit();
-                        }
-                    },
-
-                    error => {
-                        if (transaction.status === Transaction.Status.Exclusive) {
-                            return transaction.rollback().then(() => { throw error });
-                        }
-                    }
-                )
-            } else if (transaction.status === Transaction.Status.Exclusive) {
-                return transaction.commit();
-            }
-        } catch (e) {
-            // We don't commit here because initialization may be async.
-            // However if there's a synchronous error we do want to perform
-            // rollback if in a write transaction
-            if (transaction.status === Transaction.Status.Exclusive) {
-                // Rollback is asynchronous so return the promise that will
-                // register as initializing just so we track the promise
-                return transaction.rollback().then(() => { throw e });
-            } else {
-                throw e;
-            }
-        }
-
-        return promise;
     }
 
     /**

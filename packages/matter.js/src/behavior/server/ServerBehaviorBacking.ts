@@ -7,7 +7,7 @@
 import { Part } from "../../endpoint/Part.js";
 import { PersistenceBehavior } from "../../endpoint/server/PersistenceBehavior.js";
 import { EventHandler } from "../../protocol/interaction/EventHandler.js";
-import { AsyncConstruction } from "../../util/AsyncConstructable.js";
+import { AsyncConstruction } from "../../util/AsyncConstruction.js";
 import { MaybePromise } from "../../util/Type.js";
 import { Behavior } from "../Behavior.js";
 import { BehaviorBacking } from "../BehaviorBacking.js";
@@ -21,19 +21,16 @@ export class ServerBehaviorBacking extends BehaviorBacking {
     #store?: Datasource.Store;
     #eventHandler?: EventHandler;
     #datasource?: Datasource;
-    #construction: AsyncConstruction<ServerBehaviorBacking>;
+    #construction: AsyncConstruction<BehaviorBacking>;
 
     get construction() {
         return this.#construction;
     }
 
     constructor(part: Part, type: Behavior.Type, options?: Behavior.Options) {
-        super(part, type);
+        super(part, type, options);
 
-        this.#construction = AsyncConstruction(
-            this,
-            () => this.initialize(options),
-        );
+        this.#construction = AsyncConstruction(this);
     }
 
     protected override invokeInitializer(behavior: Behavior, options?: Behavior.Options) {
@@ -70,8 +67,6 @@ export class ServerBehaviorBacking extends BehaviorBacking {
      * The source of raw data that backs managed state instances.
      */
     get datasource() {
-        this.construction.assertAvailable();
-
         if (!this.#datasource) {
             this.#datasource = Datasource({
                 supervisor: this.type.supervisor,
