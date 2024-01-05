@@ -17,8 +17,13 @@ import { ClusterServerObj, asClusterServerInternal } from "../cluster/server/Clu
 import { ImplementationError, InternalError, NotImplementedError } from "../common/MatterError.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 import { EndpointNumber } from "../datatype/EndpointNumber.js";
+import { Logger } from "../log/Logger.js";
+import { IdentityService } from "../node/server/IdentityService.js";
+import { ServerPartStoreService } from "../node/server/storage/ServerPartStoreService.js";
 import { EndpointInterface } from "./EndpointInterface.js";
 import { Part } from "./Part.js";
+
+const logger = Logger.get("PartServer");
 
 const SERVER = Symbol("server");
 interface ServerPart extends Part {
@@ -40,6 +45,12 @@ export class PartServer implements EndpointInterface {
 
         this.#part = part;
 
+        if (part.lifecycle.isReady) {
+            this.#logPart();
+        } else {
+            part.lifecycle.ready.once(() => this.#logPart());
+        }
+
         part.lifecycle.changed.on(() => this.#structureChangedCallback?.());
     }
 
@@ -49,7 +60,7 @@ export class PartServer implements EndpointInterface {
             const cluster = (behavior as ClusterBehavior.Type).cluster;
             if (this.#clusterServers.has(cluster.id)) {
                 throw new InternalError(
-                    `${this.#part.description} behavior ${behavior.name} cluster ${cluster.id} initialized multiple times`,
+                    `Part ${this.#part.description} behavior ${behavior.name} cluster ${cluster.id} initialized multiple times`,
                 );
             }
             backing = new ClusterServerBehaviorBacking(this.#part, behavior as ClusterBehavior.Type);
@@ -177,11 +188,45 @@ export class PartServer implements EndpointInterface {
         }
     }
 
+    /**
+     * Retrieve the server for a part.
+     */
     static forPart(part: Part) {
         let server = (part as ServerPart)[SERVER];
         if (!server) {
             server = (part as ServerPart)[SERVER] = new PartServer(part);
         }
         return server;
+    }
+
+    /**
+     * Log details of fully initialized part.
+     */
+    #logPart() {
+        const isNew = this.#part.owner
+            .serviceFor(ServerPartStoreService)
+            .storeForPart(this.#part)
+            .isNew;
+
+        const port = this.#part.owner
+            .serviceFor(IdentityService)
+            .port;
+
+        const { active, inactive } = this.#part.behaviors;
+
+        logger.info(
+            // Temporary easter egg for Ingo
+            "🎉 Part",
+            Logger.em(this.#part.id),
+            "ready",
+            Logger.dict({
+                "endpoint#": this.#part.number,
+                type: `${this.#part.type.name} (0x${this.#part.type.deviceType.toString(16)})`,
+                port,
+                "known": !isNew,
+                "active": active.length ? this.#part.behaviors.active.join(", ") : "(none)",
+                "inactive": inactive.length ? this.#part.behaviors.inactive.join(", ") : "(none)",
+            })
+        );
     }
 }

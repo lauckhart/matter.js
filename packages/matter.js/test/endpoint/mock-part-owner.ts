@@ -12,7 +12,7 @@ import { EndpointNumber } from "../../src/datatype/EndpointNumber.js";
 import { ImplementationError, InternalError } from "../../src/common/MatterError.js";
 import { BehaviorInitializer } from "../../src/endpoint/part/BehaviorInitializer.js";
 import { MockPartStore } from "../behavior/mock-behavior.js";
-import { ServerPartStores } from "../../src/node/server/storage/ServerPartStores.js";
+import { ServerPartStoreService } from "../../src/node/server/storage/ServerPartStoreService.js";
 import { StorageBackendMemory } from "../../src/storage/StorageBackendMemory.js";
 import { StorageManager } from "../../src/storage/StorageManager.js";
 import { EventHandler } from "../../src/protocol/interaction/EventHandler.js";
@@ -40,16 +40,16 @@ export class MockOwner implements PartOwner {
     #root?: Part;
     #behaviorInitializer = new MockBehaviorInitializer();
     #storage = new StorageManager(new StorageBackendMemory());
-    #partStores: ServerPartStores;
+    #partStores: ServerPartStoreService;
     #eventHandler: EventHandler;
     #identityService?: IdentityService;
 
     constructor() {
         (this.#storage as any).initialized = true;
-        this.#partStores = new ServerPartStores(
-            this.#storage.createContext("endpoint"),
-            1,
-        );
+        this.#partStores = new ServerPartStoreService({
+            storage: this.#storage.createContext("endpoint"),
+            loadKnown: false,
+        });
         this.#eventHandler = new EventHandler(this.#storage.createContext("events"));
     }
 
@@ -88,7 +88,7 @@ export class MockOwner implements PartOwner {
                 }
                 return this.#identityService as T;
 
-            case ServerPartStores:
+            case ServerPartStoreService:
                 return this.#partStores as T;
 
             case EventHandler:

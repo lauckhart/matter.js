@@ -13,7 +13,7 @@ import { ServerOptions } from "../../options/ServerOptions.js";
 import { Environment } from "../../../common/Environment.js";
 import { AsyncConstruction, asyncNew } from "../../../util/AsyncConstruction.js";
 import type { NodeServer } from "../NodeServer.js";
-import { ServerPartStores } from "./ServerPartStores.js";
+import { ServerPartStoreService } from "./ServerPartStoreService.js";
 
 export const logger = Logger.get("NodeStore");
 
@@ -30,7 +30,7 @@ export class ServerStore {
     #eventHandler?: EventHandler;
     #sessionStorage?: StorageContext;
     #fabricStorage?: StorageContext;
-    #partStores?: ServerPartStores;
+    #partStores?: ServerPartStoreService;
     #construction: AsyncConstruction<ServerStore>;
 
     get construction() {
@@ -53,9 +53,11 @@ export class ServerStore {
                 this.#storage = await this.#environment.createStorage();
         
                 this.#partStores = await asyncNew(
-                    ServerPartStores,
-                    this.#storage.createContext("endpoints"),
-                    nextNumber
+                    ServerPartStoreService,
+                    {
+                        storage: this.#storage.createContext("endpoints"),
+                        nextNumber,
+                    }
                 );
             }
         )

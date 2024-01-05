@@ -26,12 +26,21 @@ export async function asyncNew<
  * {@link AsyncConstruction}.  You invoke in your constructor and place in a
  * property called "construction".
  * 
- * If construction is not in fact asynchronous, the initializer can return
- * undefined and AsyncConstruction will complete synchronously.
+ * If construction is not in fact asynchronous (does not return a Promise)
+ * AsyncConstruction will complete synchronously.
  * 
  * To ensure an instance is initialized prior to use you may await
  * construction, so e.g. `await new MyConstructable().construction`.
  * {@link asyncNew} is shorthand for this.
+ * 
+ * Public APIs should provide a static async create() that performs an
+ * asyncNew().  The class will then adhere to Matter.js conventions and
+ * library users can ignore the complexities associated with async creation.
+ * 
+ * Methods that cannot be used prior to construction can use
+ * {@link AsyncConstruction.assert} to ensure construction has completed.
+ * High-visibility public APIs can instead check
+ * {@link AsyncConstruction.ready} and throw a more specific error.
  * 
  * Setup optionally supports cancellation of initialization.  To implement,
  * provide a "cancel" function to {@link AsyncConstruction}.  Then

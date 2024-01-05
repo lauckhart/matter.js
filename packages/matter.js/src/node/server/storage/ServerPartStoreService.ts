@@ -22,11 +22,11 @@ const KNOWN_KEY = "__known__";
  * 
  * TODO - cleanup of storage for permanently removed endpoints
  */
-export class ServerPartStores {
+export class ServerPartStoreService {
     #storage: StorageContext;
     #stores = {} as Record<string, ServerPartStore>;
     #allocatedNumbers = new Set<number>;
-    #construction: AsyncConstruction<ServerPartStores>;
+    #construction: AsyncConstruction<ServerPartStoreService>;
     #nextNumber: number;
     #numbersPersisted?: Promise<void>;
     #numbersToPersist?: Record<string, number>;
@@ -39,7 +39,7 @@ export class ServerPartStores {
         return this.#construction;
     }
 
-    constructor(storage: StorageContext, nextNumber: number) {
+    constructor({storage, nextNumber, loadKnown }: ServerPartStoreService.Options) {
         this.#storage = storage;
 
         // Load next number with excessive validation for the off-chance it somehow gets corrupted
@@ -53,11 +53,9 @@ export class ServerPartStores {
 
         this.#construction = AsyncConstruction(
             this,
-            async () => {
-                this.#knownParts = new Set(storage.get(KNOWN_KEY, Array<string>()));
-
-                for (const partId in this.#knownParts) {
-                    await this.#loadPartStore(partId);
+            () => {
+                if (loadKnown !== false) {
+                    return this.#loadKnown();
                 }
             }
         );
@@ -70,13 +68,22 @@ export class ServerPartStores {
         }
     }
 
-    async #loadPartStore(partId: string) {
+    async #loadKnown() {
+        this.#knownParts = new Set(this.storage.get(KNOWN_KEY, Array<string>()));
+
+        for (const partId of this.#knownParts) {
+            await this.#loadKnownStore(partId);
+        }
+    }
+
+    async #loadKnownStore(partId: string) {
         const partStore = new ServerPartStore(
             partId,
             this.#storage,
-            true,
+            false,
         );
         this.#stores[partId] = partStore;
+        await partStore.construction;
     }
 
     get storage() {
@@ -90,6 +97,8 @@ export class ServerPartStores {
      * persistence fails so we persist lazily and return synchronously.
      */
     assignNumber(part: Part) {
+        this.#construction.assert();
+
         const startNumber = this.#nextNumber;
         
         while (this.#nextNumber < 2 || this.#allocatedNumbers.has(this.#nextNumber)) {
@@ -123,6 +132,8 @@ export class ServerPartStores {
     }
 
     #storeForPartId(partId: string) {
+        this.#construction.assert();
+
         let store = this.#stores[partId];
         if (store === undefined) {
             store = this.#stores[partId] = new ServerPartStore(
@@ -152,10 +163,14 @@ export class ServerPartStores {
         }
 
         const numberPersister = async () => {
+            await this.#construction;
+
             const numbersToPersist = this.#numbersToPersist;
             this.#numbersToPersist = undefined;
             for (const partId in numbersToPersist) {
-                await this.#storeForPartId(partId).setNumber(numbersToPersist[partId]);
+                const store = this.#storeForPartId(partId);
+                await store.construction;
+                store.setNumber(numbersToPersist[partId]);
             }
             this.#storage.set(NEXT_NUMBER_KEY, this.#nextNumber);
         }
@@ -170,5 +185,13 @@ export class ServerPartStores {
         } else {
             this.#numbersPersisted = numberPersister();
         }
+    }
+}
+
+export namespace ServerPartStoreService {
+    export interface Options {
+        storage: StorageContext,
+        nextNumber?: number,
+        loadKnown?: boolean,
     }
 }

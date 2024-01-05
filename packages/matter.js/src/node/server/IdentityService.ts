@@ -14,9 +14,12 @@ import { Part } from "../../endpoint/Part.js";
 export class IdentityConflictError extends ImplementationError {};
 
 export class IdentityService {
+    #port?: number;
     #index?: IndexBehavior;
 
-    constructor(root: Part) {
+    constructor(root: Part, port?: number) {
+        this.#port = port;
+
         const acquireIndex = () => {
             root.behaviors.require(IndexBehavior);
             this.#index = root.agent.get(IndexBehavior);
@@ -30,6 +33,14 @@ export class IdentityService {
         } else {
             root.lifecycle.ready.once(acquireIndex);
         }
+    }
+
+    /**
+     * This is the best we currently have in terms of a well-known node
+     * identifier.
+     */
+    get port() {
+        return this.#port;
     }
 
     /**

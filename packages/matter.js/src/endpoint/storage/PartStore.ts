@@ -26,7 +26,7 @@ export interface PartStore {
      * See {@link Datasource.Store.set} for the patch semantics the individual
      * structs use.
      */
-    set(values: Record<string, Val.Struct>): Promise<void>;
+    set(values: Record<string, Val.Struct | undefined>): Promise<void>;
 
     /**
      * Remove persisted values for the {@link Part}

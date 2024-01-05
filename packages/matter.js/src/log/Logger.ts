@@ -14,9 +14,10 @@ const ANSI_INDENT_PREFIX = "".padStart(51);
 export enum Level {
     DEBUG = 0,
     INFO = 1,
-    WARN = 2,
-    ERROR = 3,
-    FATAL = 4,
+    NOTICE = 2,
+    WARN = 3,
+    ERROR = 4,
+    FATAL = 5,
 }
 
 /**
@@ -35,11 +36,10 @@ export enum Format {
 
 function formatValue(
     value: any,
-    keyFormatter: typeof defaultKeyFormatter,
-    valueFormatter: typeof defaultValueFormatter,
+    formatter: typeof defaultFormatter,
 ) {
     if (value instanceof ByteArray) {
-        return valueFormatter(value.toHex());
+        return formatter.value(value.toHex());
     }
     if (value instanceof Error) {
         let stack;
@@ -57,10 +57,13 @@ function formatValue(
                 return stack.slice(7);
             }
         }
-        return valueFormatter(stack);
+        return formatter.value(stack);
     }
-    if (value instanceof DiagnosticDictionary) {
-        return value.serialize(keyFormatter, valueFormatter);
+    if (value instanceof SpecialLogValue) {
+        return value.serialize(formatter);
+    }
+    if (value instanceof EmphasizedValue) {
+        return value
     }
     if (value === undefined) {
         return "undefined";
@@ -68,11 +71,11 @@ function formatValue(
     if (value === null) {
         return "null";
     }
-    return valueFormatter(value.toString());
+    return formatter.value(value.toString());
 }
 
-function formatValues(values: any[], keyFormatter = defaultKeyFormatter, valueFormatter = defaultValueFormatter) {
-    return values.map(value => formatValue(value, keyFormatter, valueFormatter)).join(" ");
+function formatValues(values: any[], formatter = defaultFormatter) {
+    return values.map(value => formatValue(value, formatter)).join(" ");
 }
 
 function formatTime(time: Date) {
@@ -105,11 +108,13 @@ const ANSI_CODES = {
     PREFIX: "\x1b[90m\x1b[2m", // dark gray, dim
     FACILITY: "\x1b[90m\x1b[1m", // dark grey, bold
     LEVEL_DEBUG: "\x1b[90m", // dark gray
-    LEVEL_INFO: "\x1b[32m", // green
+    LEVEL_INFO: "\x1b[0m", // normal (reset)
+    LEVEL_NOTICE: "\x1b[32m", // green
     LEVEL_WARN: "\x1b[33m", // yellow
     LEVEL_ERROR: "\x1b[31m", // red
     LEVEL_FATAL: "\x1b[31m\x1b[1m", // red, bold
     KEY: "\x1b[34m", // blue
+    EMPHASIZED: "\x1b[1m", // bold
     NONE: "\x1b[0m", // reset
 };
 
@@ -124,11 +129,14 @@ function ansiLogFormatter(now: Date, level: Level, facility: string, values: any
 
     let formattedValues = formatValues(
         values,
-        key => `${ANSI_CODES.KEY}${key}:${levelCode} `,
-        value =>
-            value
-                .replace(/([✓✔])/g, `${ANSI_CODES.LEVEL_INFO}$1${levelCode}`)
-                .replace(/([✗✘])/g, `${ANSI_CODES.LEVEL_ERROR}$1${levelCode}`),
+        {
+            key: key => `${ANSI_CODES.KEY}${key}:${levelCode} `,
+            value: value =>
+                value
+                    .replace(/([✓✔])/g, `${ANSI_CODES.LEVEL_INFO}$1${levelCode}`)
+                    .replace(/([✗✘])/g, `${ANSI_CODES.LEVEL_ERROR}$1${levelCode}`),
+            emphasis: value => `${ANSI_CODES.EMPHASIZED}${value}${ANSI_CODES.NONE}${levelCode}`
+        }
     );
 
     formattedValues = formattedValues.replace(/\n\t/g, `\n${ANSI_INDENT_PREFIX}`)
@@ -156,8 +164,11 @@ function htmlEscape(value: string) {
 function htmlLogFormatter(now: Date, level: Level, facility: string, values: any[]) {
     const formattedValues = formatValues(
         values,
-        key => htmlSpan("key", htmlEscape(`${key}:`)) + " ",
-        value => htmlSpan("value", htmlEscape(value)),
+        {
+            key: key => htmlSpan("key", htmlEscape(`${key}:`)) + " ",
+            value: value => htmlSpan("value", htmlEscape(value)),
+            emphasis: value => `<em>${htmlEscape(value)}</em>`,
+        }
     );
 
     const np = nestingPrefix().replace(/ /g, "&nbsp;");
@@ -183,6 +194,9 @@ export function consoleLogger(level: Level, formattedLog: string) {
         case Level.INFO:
             console.info(formattedLog);
             break;
+        case Level.NOTICE:
+            console.info(formattedLog);
+            break;
         case Level.WARN:
             console.warn(formattedLog);
             break;
@@ -204,20 +218,29 @@ export namespace consoleLogger {
     export let console = globalConsole;
 }
 
-const defaultKeyFormatter = (key: string) => `${key}: `;
-const defaultValueFormatter = (value: string) => value;
+const defaultFormatter = {
+    key: (key: string) => `${key}: `,
+    value: (value: string) => value,
+    emphasis: (value: string) => value,
+}
+
+export abstract class SpecialLogValue {
+    abstract serialize(formatter: typeof defaultFormatter): string;
+}
 
 /**
  * Pass this dictionary type as a logging parameter to improve formatting of
  * log output.  See Logger.dict() for maximal convenience.
  */
-export class DiagnosticDictionary {
+export class DiagnosticDictionary extends SpecialLogValue {
     /**
      * Create a new dictionary with optional entry values.
      *
      * @param entries the entries as [ "KEY", value ] tuples
      */
-    constructor(private readonly entries: { [KEY: string]: any } = {}) {}
+    constructor(private readonly entries: { [KEY: string]: any } = {}) {
+        super();
+    }
 
     /**
      * Format the dictionary for human consumption.
@@ -226,19 +249,38 @@ export class DiagnosticDictionary {
      * @param valueFormatter formats values
      * @returns the formatted value
      */
-    public serialize(keyFormatter = defaultKeyFormatter, valueFormatter = defaultValueFormatter): string {
+    serialize(
+        formatter = defaultFormatter,
+    ): string {
         return Object.getOwnPropertyNames(this.entries)
             .map(k =>
                 this.entries[k] === undefined
                     ? undefined
-                    : `${keyFormatter(k)}${formatValue(this.entries[k], keyFormatter, valueFormatter)}`,
+                    : `${formatter.key(k)}${formatValue(this.entries[k], formatter)}`,
             )
             .filter(v => v !== undefined)
             .join(" ");
     }
 
-    public toString() {
+    override toString() {
         return this.serialize();
+    }
+}
+
+/**
+ * Pass this type as a logging parameter to emphasize the contained value.
+ */
+export class EmphasizedValue extends SpecialLogValue {
+    constructor(private readonly value: string) {
+        super();
+    }
+
+    serialize(formatter = defaultFormatter): string {
+        return formatter.emphasis(this.toString());
+    }
+
+    override toString() {
+        return this.value;
     }
 }
 
@@ -365,6 +407,15 @@ export class Logger {
     }
 
     /**
+     * Shortcut for new EmphasizedValue().
+     * 
+     * @param value the value to emphasize
+     */
+    static em(value: any) {
+        return new EmphasizedValue(value);
+    }
+
+    /**
      * Perform operations in a nested logging context.  Messages will be
      * indented while the context executes.
      */
@@ -393,6 +444,7 @@ export class Logger {
 
     debug = (...values: any[]) => this.log(Level.DEBUG, values);
     info = (...values: any[]) => this.log(Level.INFO, values);
+    notice = (...values: any[]) => this.log(Level.NOTICE, values);
     warn = (...values: any[]) => this.log(Level.WARN, values);
     error = (...values: any[]) => this.log(Level.ERROR, values);
     fatal = (...values: any[]) => this.log(Level.FATAL, values);

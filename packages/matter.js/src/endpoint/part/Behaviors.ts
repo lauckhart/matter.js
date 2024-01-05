@@ -33,10 +33,28 @@ export class Behaviors {
     #initializing?: BasicSet<BehaviorBacking>;
 
     /**
-     * List the {@link SupportedBehaviors} of the {@link Part}.
+     * The {@link SupportedBehaviors} of the {@link Part}.
      */
     get supported() {
         return this.#supported;
+    }
+
+    /**
+     * The IDs of active {@link Behavior}s. 
+     */
+    get active() {
+        return Object.keys(this.#backings);
+    }
+
+    /**
+     * The IDs of inactive {@link Behavior}s.
+     */
+    get inactive() {
+        const inactive = new Set(Object.keys(this.#supported));
+        for (const key of Object.keys(this.#backings)) {
+            inactive.delete(key);
+        }
+        return [ ...inactive ];
     }
 
     constructor(part: Part, supported: SupportedBehaviors, options: Record<string, object | undefined>) {
@@ -203,7 +221,7 @@ export class Behaviors {
 
         if (missing.length) {
             throw new ImplementationError(
-                `${this.#part.description} is missing required behaviors: ${describeList("and", ...missing)}`,
+                `Part ${this.#part.description} is missing required behaviors: ${describeList("and", ...missing)}`,
             );
         }
     }
@@ -263,7 +281,7 @@ export class Behaviors {
 
             backing.construction
                 .catch(e => {
-                    logger.error(`${this.#part.description}: Error initializing behavior "${myType.id}"`, e);
+                    logger.error(`Error initializing part ${this.#part.description} behavior "${myType.id}"`, e);
                     throw e;
                 })
                 .finally(() => {

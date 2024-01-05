@@ -98,7 +98,7 @@ export class Parts implements MutableSet<Part, Part | Agent>, ObservableSet<Part
         // TODO - It's an edge case but we may miss the case where a part is
         // owned but the parent is not yet initialized
         if (this.#part.lifecycle.isInstalled) {
-            this.#validateInsertion(child);
+            this.#validateInsertion(child, child);
         }
 
         child.owner = this.#part;
@@ -122,12 +122,12 @@ export class Parts implements MutableSet<Part, Part | Agent>, ObservableSet<Part
         this.#children.delete(child);
     }
     
-    #validateInsertion(part: Part, usedIds?: Set<string>, usedNumbers?: Set<number>) {
+    #validateInsertion(forefather: Part, part: Part, usedIds?: Set<string>, usedNumbers?: Set<number>) {
         if (part.lifecycle.hasId) {
             this.#part.serviceFor(IdentityService).assertIdAvailable(part.id, part);
             if (usedIds?.has(part.id)) {
                 throw new IdentityConflictError(
-                    `${part.description}: Cannot add part because descendents have conflicting definitions for ID ${part.id}`
+                    `Cannot add part ${forefather.description} because descendents have conflicting definitions for ID ${part.id}`
                 );
             }
         }
@@ -136,7 +136,7 @@ export class Parts implements MutableSet<Part, Part | Agent>, ObservableSet<Part
             this.#part.serviceFor(IdentityService).assertNumberAvailable(part.number, part);
             if (usedNumbers?.has(part.number)) {
                 throw new IdentityConflictError(
-                    `${part.description}: Cannot add part because descendents have conflicting definitions for endpoint number ${part.number}`
+                    `Cannot add part ${forefather.description} because descendents have conflicting definitions for endpoint number ${part.number}`
                 );
             }
         }
@@ -166,7 +166,7 @@ export class Parts implements MutableSet<Part, Part | Agent>, ObservableSet<Part
         }
 
         for (const child of children) {
-            this.#validateInsertion(child, usedIds, usedNumbers);
+            this.#validateInsertion(forefather, child, usedIds, usedNumbers);
         }
     }
 

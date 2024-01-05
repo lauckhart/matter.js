@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ServerPartStores } from "../../node/server/storage/ServerPartStores.js";
+import { ServerPartStoreService } from "../../node/server/storage/ServerPartStoreService.js";
 import { EventHandler } from "../../protocol/interaction/EventHandler.js";
 import { BehaviorBacking } from "../BehaviorBacking.js";
 import { Datasource } from "../state/managed/Datasource.js";
@@ -17,7 +17,7 @@ export class ServerBehaviorBacking extends BehaviorBacking {
 
     override get store() {
         if (!this.#store) {
-            this.#store = this.part.serviceFor(ServerPartStores)
+            this.#store = this.part.serviceFor(ServerPartStoreService)
                 .storeForPart(this.part)
                 .storeForBehavior(this.type.id);
         }

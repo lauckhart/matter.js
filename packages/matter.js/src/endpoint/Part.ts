@@ -168,7 +168,7 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
             return;
         }
         if (this.#id !== undefined) {
-            throw new ImplementationError(`${this.description}: ID is already assigned, cannot reassign`);
+            throw new ImplementationError(`Part ${this.description} ID is already assigned, cannot reassign`);
         }
         if (typeof id !== "string") {
             throw new ImplementationError(`Illegal endpoint ID type "${typeof id}"`);
@@ -193,7 +193,7 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
             return;
         }
         if (this.#number !== undefined) {
-            throw new ImplementationError(`${this.description}: Endpoint number is already assigned, cannot reassign`)
+            throw new ImplementationError(`Part ${this.description} endpoint number is already assigned, cannot reassign`)
         }
         if (typeof number !== "number") {
             throw new ImplementationError(`Illegal endpoint number type "${typeof number}"`);
@@ -277,22 +277,38 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
      * Returns a human-readable name for the part.
      */
     get description() {
-        let description;
+        let desc: string | undefined;
+        let detail: string | undefined;
+
         if (this.#lifecycle.hasId) {
-            description = ` ${this.id}`;
+            desc = this.id;
         }
+
         if (this.#lifecycle.hasNumber) {
-            if (description) {
-                description = `${description} (#${this.number})`;
+            const number = `#${this.#number}`;
+            if (desc) {
+                detail = number;
             } else {
-                description = ` #${this.number}`;
+                desc = number;
             }
         }
-        description = `Endpoint ${description ?? ""} of type ${
-            this.type.name
-        } (device type 0x${this.type.deviceType.toString(16)})`;
 
-        return description;
+        if (!desc) {
+            desc = "<unknown>";
+        }
+
+        const type = `type ${this.type.name}`;
+        if (detail) {
+            detail = `${detail}, ${type}`;
+        } else {
+            detail = type;
+        }
+
+        if (detail) {
+            desc = `${desc} (${detail})`;
+        }
+
+        return detail;
     }
 
     /**

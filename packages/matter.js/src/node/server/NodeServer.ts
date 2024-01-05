@@ -27,7 +27,7 @@ import { Lifecycle } from "../../endpoint/part/Lifecycle.js";
 import { Transaction } from "../../behavior/state/transaction/Transaction.js";
 import { BehaviorInitializer } from "../../endpoint/part/BehaviorInitializer.js";
 import { ServerBehaviorInitializer } from "./ServerBehaviorInitializer.js";
-import { ServerPartStores } from "./storage/ServerPartStores.js";
+import { ServerPartStoreService } from "./storage/ServerPartStoreService.js";
 import { EventHandler } from "../../protocol/interaction/EventHandler.js";
 import { IdentityService } from "./IdentityService.js";
 
@@ -246,7 +246,7 @@ export class NodeServer extends BaseNodeServer implements Node {
                 }
                 return this.#behaviorInitializer as T;
 
-            case ServerPartStores:
+            case ServerPartStoreService:
                 return this.store.partStores as T;
 
             case EventHandler:
@@ -254,7 +254,7 @@ export class NodeServer extends BaseNodeServer implements Node {
 
             case IdentityService:
                 if (!this.#identityService) {
-                    this.#identityService = new IdentityService(this.#root);
+                    this.#identityService = new IdentityService(this.#root, this.port);
                 }
                 return this.#identityService as T;
         }
