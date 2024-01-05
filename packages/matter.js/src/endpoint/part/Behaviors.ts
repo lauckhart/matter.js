@@ -13,10 +13,12 @@ import { ImplementationError } from "../../common/MatterError.js";
 import { Logger } from "../../log/Logger.js";
 import { BasicSet } from "../../util/Set.js";
 import { camelize, describeList } from "../../util/String.js";
-import { MaybePromise } from "../../util/Type.js";
+import { MaybePromise } from "../../util/Promises.js";
 import type { Agent } from "../Agent.js";
 import type { Part } from "../Part.js";
 import type { SupportedBehaviors } from "./SupportedBehaviors.js";
+import { Transaction } from "../../behavior/state/transaction/Transaction.js";
+import { BehaviorInitializer } from "./BehaviorInitializer.js";
 
 const logger = Logger.get("Behaviors");
 
@@ -43,10 +45,10 @@ export class Behaviors {
         }
         for (const id in supported) {
             if (!(supported[id].prototype instanceof Behavior)) {
-                throw new ImplementationError(`Part behavior #${id} is not a Behavior.Type`);
+                throw new ImplementationError(`Part behavior "${id}" is not a Behavior.Type`);
             }
             if (typeof supported[id].id !== "string") {
-                throw new ImplementationError(`Part behavior #${id} has no ID`);
+                throw new ImplementationError(`Part behavior "${id}" has no ID`);
             }
         }
 
@@ -103,7 +105,7 @@ export class Behaviors {
         if (this.#supported[type.id]) {
             if (!this.has(type)) {
                 throw new ImplementationError(
-                    `Cannot require behavior ${type.id} because incompatible implementation already exists`,
+                    `Cannot require behavior "${type.id}" because incompatible implementation already exists`,
                 );
             }
             return;
@@ -111,7 +113,7 @@ export class Behaviors {
 
         this.#supported[type.id] = type;
 
-        this.#part.lifecycle.change(Lifecycle.Change.ServersChanged, this.#part);
+        this.#part.lifecycle.change(Lifecycle.Change.ServersChanged);
             
         if (type.immediate && this.#part.lifecycle.installed) {
             this.#part.agent.activate(type);
@@ -124,7 +126,7 @@ export class Behaviors {
     create(type: Behavior.Type, agent: Agent) {
         const behavior = this.createAsync(type, agent);
         if (MaybePromise.is(behavior)) {
-            throw new ImplementationError(`Cannot access behavior ${type.id} because it is still initializing`);
+            throw new ImplementationError(`Cannot access behavior "${type.id}" because it is still initializing`);
         }
         return behavior;
     }
@@ -140,7 +142,7 @@ export class Behaviors {
         let backing = this.#backings[type.id];
 
         if (!backing.construction.ready) {
-            return Promise.resolve(backing.construction).then(() => backing.createBehavior(agent, type));
+            return backing.construction.then(() => backing.createBehavior(agent, type));
         }
 
         return backing.createBehavior(agent, type);
@@ -225,21 +227,30 @@ export class Behaviors {
         return defaults;
     }
 
+    /**
+     * If there are dirty values, join a transaction to save them.
+     */
+    save(transaction: Transaction) {
+        for (const index in this.#backings) {
+            this.#backings[index].save(transaction);
+        }
+    }
+
     #createBacking(type: Behavior.Type) {
         // Ensure the type is supported.  If it is, we instantiate with our
         // type rather than the specified type because our type might be an
         // extension
         const myType = this.#getBehaviorType(type);
         if (!myType) {
-            throw new ImplementationError(`Request for unsupported behavior ${type.id}`);
+            throw new ImplementationError(`Request for unsupported behavior "${type.id}"`);
         }
 
         // Ask the owner to create the backing.  This is specialized for the
         // owner (e.g. client or server)
         if (!this.#part.owner) {
-            throw new ImplementationError(`Attempted initialization of behavior ${type.id} of uninstalled part`);
+            throw new ImplementationError(`Attempted initialization of behavior "${type.id}" of uninstalled part`);
         }
-        const backing = this.#part.owner.createBacking(this.#part, myType);
+        const backing = this.#part.serviceFor(BehaviorInitializer).createBacking(this.#part, myType);
         this.#backings[type.id] = backing;
         backing.initialize();
 
@@ -252,7 +263,7 @@ export class Behaviors {
 
             backing.construction
                 .catch(e => {
-                    logger.error(`${this.#part.description}: Error initializing behavior ${myType.name}`, e);
+                    logger.error(`${this.#part.description}: Error initializing behavior "${myType.id}"`, e);
                     throw e;
                 })
                 .finally(() => {
@@ -272,7 +283,7 @@ export class Behaviors {
         }
 
         if (typeof myType !== "function" || !(myType.prototype instanceof Behavior)) {
-            throw new ImplementationError(`Endpoint behavior ${type.id} implementation is not a Behavior`);
+            throw new ImplementationError(`Endpoint behavior "${type.id}" implementation is not a Behavior`);
         }
 
         return myType;

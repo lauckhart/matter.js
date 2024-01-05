@@ -168,27 +168,40 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
         set(this: Wrapper, value: Val) {
             access.authorizeWrite(this[SESSION], this[CONTEXT]);
 
-            const struct = this[REF].value;
+            const oldValue = this[REF].value[name];
 
-            // Note: We validate fully for nested structs but *not* for the
-            // current struct.  This is because choice conformance may be
-            // violated temporarily as individual fields change.
-            //
-            // Also, validating fully would require us to validate across all
-            // properties for every property write.
-            //
-            // I think this is OK for now.  If it becomes an issue we'll
-            // probably want to wire in a separate validation step that is
-            // performed on commit when choice conformance is in play.
-            validate(value, { siblings: struct });
+            this[REF].change(() => {
+                const struct = this[REF].value;
 
-            const oldValue = struct[name];
+                // Change the value
+                this[REF].change(() => (struct[name] = value));
 
-            this[REF].change(() => (struct[name] = value));
+                // Note: We validate fully for nested structs but *not* for the
+                // current struct.  This is because choice conformance may be
+                // violated temporarily as individual fields change.
+                //
+                // Also, validating fully would require us to validate across all
+                // properties for every property write.
+                //
+                // I think this is OK for now.  If it becomes an issue we'll
+                // probably want to wire in a separate validation step that is
+                // performed on commit when choice conformance is in play.
+                try {
+                    validate(value, { siblings: struct });
+                } catch (e) {
+                    // Undo our change on error.  Rollback will take care of
+                    // this when transactional but this handles the cases of
+                    // 1.) no transaction, and 2.) error is caught within
+                    // transaction
+                    struct[name] = oldValue;
 
-            if (!this[SESSION].transaction) {
-                this[REF].notify(name, oldValue, value);
-            }
+                    throw e;
+                }
+
+                if (!this[SESSION].transaction) {
+                    this[REF].notify(name, oldValue, value);
+                }
+            });
         },
     };
 

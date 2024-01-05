@@ -9,9 +9,9 @@ import { Datasource } from "../../behavior/state/managed/Datasource.js";
 import { Val } from "../../behavior/state/managed/Val.js";
 import { Participant } from "../../behavior/state/transaction/Participant.js";
 import { Transaction } from "../../behavior/state/transaction/Transaction.js";
-import { ImplementationError } from "../../common/MatterError.js";
+import { NodeStore } from "../../node/server/NodeStore.js";
 import { EventHandler } from "../../protocol/interaction/EventHandler.js";
-import { MaybePromise } from "../../util/Type.js";
+import { MaybePromise } from "../../util/Promises.js";
 import { PartStore } from "../part/PartStore.js";
 import { PartServer } from "./PartServer.js";
 
@@ -29,16 +29,15 @@ export class PersistenceBehavior extends Behavior {
      * Obtain a {@link Datasource.Store} for a specific {@link Behavior.Type}.
      */
     storeFor(type: Behavior.Type) {
-        const partStore = this.internal.partStore;
-        if (!partStore) {
-            throw new ImplementationError("Part storage accessed before initialization");
+        if (!this.internal.partStore) {
+            this.internal.partStore = this.part.serviceFor(NodeStore).storeFor(this.part);
         }
         let store = this.internal.datasourceStores[type.id];
         if (!store) {
             store = this.internal.datasourceStores[type.id] = DatasourceStore(
-                partStore,
+                this.internal.partStore,
                 type.id,
-                partStore.initialValues[type.id]
+                this.internal.partStore.initialValues[type.id]
             );
         }
         return store;
@@ -48,28 +47,13 @@ export class PersistenceBehavior extends Behavior {
      * Access the {@link EventHandler} for the node.
      */
     get eventHandler() {
-        const eventHandler = this.internal.eventHandler;
-        if (eventHandler === undefined) {
-            throw new ImplementationError("Event storage accessed before initialization");
-        }
-        return eventHandler;
-    }
-
-    /**
-     * Configure storage targets for the {@link Part}'s state and events.
-     * 
-     * Sets the the {@link PartStore} and {@link EventHandler}.
-     */
-    configureStorage(partStore: PartStore, eventHandler: EventHandler) {
-        this.internal.partStore = partStore;
-        this.internal.eventHandler = eventHandler;
+        return this.part.serviceFor(EventHandler);
     }
 }
 
 export namespace PersistenceBehavior {
     export class Internal {
         partStore?: PartStore;
-        eventHandler?: EventHandler;
         datasourceStores = {} as Record<string, Datasource.Store>;
     }
 }

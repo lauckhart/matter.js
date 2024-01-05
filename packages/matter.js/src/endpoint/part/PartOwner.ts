@@ -5,7 +5,6 @@
  */
 
 import type { Behavior } from "../../behavior/Behavior.js";
-import type { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import type { Part } from "../Part.js";
 
 /**
@@ -20,17 +19,12 @@ export interface PartOwner {
     readonly owner: PartOwner | undefined;
 
     /**
-     * Initialize a {@link Part}.
+     * Adopt a {@link Part} as a direct descendent.
      */
-    initializePart(part: Part): void;
+    adoptChild(part: Part): void;
 
     /**
-     * Initialize a behavior's backing.
-     *
-     * @param part the {@link Part} the behavior belongs to
-     * @param type the {@link Behavior} type
-     * @param defaults default values for behavior state
-     * @returns a new {@link BehaviorBacking}
+     * Access a service component supported by the owner.
      */
-    createBacking(part: Part, behavior: Behavior.Type): BehaviorBacking;
+    serviceFor<T>(type: abstract new (...args: any) => T): T;
 }

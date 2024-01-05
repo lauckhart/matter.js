@@ -4,6 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Agent } from "../endpoint/Agent.js";
+import { Part } from "../endpoint/Part.js";
+import { RootEndpoint } from "../endpoint/definitions/system/RootEndpoint.js";
 import { PartOwner } from "../endpoint/part/PartOwner.js";
 
 /**
@@ -16,6 +19,19 @@ export interface Node extends PartOwner {
      * Clean up node resources.
      */
     [Symbol.asyncDispose](): Promise<void>;
+
+    /**
+     * Access the root endpoint.
+     */
+    readonly root: Agent.Instance<RootEndpoint["behaviors"]>;
+
+    /**
+     * Access the root endpoint as a {@link Part}.
+     * 
+     * This is a lower-level API than the {@link Agent} API available with
+     * {@link root}.
+     */
+    readonly rootPart: Part;
 
     // The batch interface that follows would be an efficiency win but most
     // features are marked as provisional as of Matter 1.2 implying they are

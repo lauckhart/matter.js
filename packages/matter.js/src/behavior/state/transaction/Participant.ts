@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MaybePromise } from "../../../util/Type.js";
+import { MaybePromise } from "../../../util/Promises.js";
 
 /**
  * Components with support for transactionality implement this interface.

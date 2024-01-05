@@ -31,15 +31,15 @@ export class IndexBehavior extends Behavior {
             this.#add(part);
         }
 
-        this.part.lifecycle.events.change.on((type, part) => {
+        this.part.lifecycle.changed.on((type, part) => {
             switch (type) {
                 case Lifecycle.Change.IdAssigned:
                 case Lifecycle.Change.NumberAssigned:
-                case Lifecycle.Change.PartAdded:
+                case Lifecycle.Change.Ready:
                     this.#add(part);
                     break;
 
-                case Lifecycle.Change.PartDeleted:
+                case Lifecycle.Change.Destroyed:
                     this.#remove(part);
                     break;
             }
@@ -53,7 +53,7 @@ export class IndexBehavior extends Behavior {
      * method will return it if the ID matches.
      */
     forId(id: string) {
-        if (id === this.part.id) {
+        if (this.part.lifecycle.hasId && id === this.part.id) {
             return this.part;
         }
         return this.state.partsById[id];
@@ -66,7 +66,7 @@ export class IndexBehavior extends Behavior {
      * this method will return it if the number matches.
      */
     forNumber(number: number) {
-        if (number === this.part.number) {
+        if (this.part.lifecycle.hasNumber && number === this.part.number) {
             return this.part;
         }
         return this.state.partsByNumber[number];
@@ -98,12 +98,12 @@ export class IndexBehavior extends Behavior {
     #add(part: Part) {
         // The assertions herein are sanity checks; if there is a conflict then
         // state is already corrupted
-        if (part.id !== undefined) {
+        if (part.lifecycle.hasId) {
             this.assertIdAvailable(part.id, part);
             this.state.partsById[part.id] = part;
         }
 
-        if (part.number !== undefined) {
+        if (part.lifecycle.hasNumber) {
             this.assertNumberAvailable(part.number, part);
             this.state.partsByNumber[part.number] = part;
         }

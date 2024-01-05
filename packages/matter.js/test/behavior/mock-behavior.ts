@@ -4,20 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Behavior } from "../../src/behavior/Behavior.js";
 import { InvocationContext } from "../../src/behavior/InvocationContext.js";
 import { DescriptorServer } from "../../src/behavior/definitions/descriptor/DescriptorServer.js";
-import { PartsBehavior } from "../../src/behavior/definitions/parts/PartsBehavior.js";
-import { ServerBehaviorBacking } from "../../src/behavior/server/ServerBehaviorBacking.js";
 import { AccessLevel } from "../../src/cluster/Cluster.js";
 import { FabricIndex } from "../../src/datatype/FabricIndex.js";
-import { Part } from "../../src/endpoint/Part.js";
-import { PartOwner } from "../../src/endpoint/part/PartOwner.js";
 import { MutableEndpoint } from "../../src/endpoint/type/MutableEndpoint.js";
 import type { Fabric } from "../../src/fabric/Fabric.js";
 import { PartStore } from "../../src/endpoint/part/PartStore.js";
 import { Val } from "../../src/behavior/state/managed/Val.js";
-import { EndpointNumber } from "../../src/datatype/EndpointNumber.js";
 
 class MockFabricImplementation {
     fabricIndex;
@@ -43,43 +37,11 @@ export class MockPartStore implements PartStore {
     }
 }
 
-export class MockOwner implements PartOwner {
-    #stores = new Map<Part, MockPartStore>();
-    #nextId = 1;
-
-    get owner() {
-        return undefined;
-    }
-
-    initializePart(part: Part) {
-        if (!part.lifecycle.hasNumber) {
-            part.number = EndpointNumber(this.#nextId++);
-        }
-        if (!part.lifecycle.hasId) {
-            part.id = part.number.toString();
-        }
-    }
-
-    createBacking(part: Part, behavior: Behavior.Type) {
-        return new ServerBehaviorBacking(part, behavior);
-    }
-
-    storeFor(part: Part) {
-        let store = this.#stores.get(part);
-        if (!store) {
-            this.#stores.set(part, store = new MockPartStore());
-        }
-        return store;
-    }
-}
-
 export const MockEndpoint = MutableEndpoint({
     name: "MyEndpoint",
     deviceType: 1,
     deviceRevision: 1,
 }).with(DescriptorServer);
-
-export const MockParentEndpoint = MockEndpoint.with(PartsBehavior);
 
 export class MockContext implements InvocationContext {
     accessLevel = AccessLevel.Operate;

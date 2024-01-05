@@ -4,14 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Part } from "../../endpoint/Part.js";
 import { PersistenceBehavior } from "../../endpoint/server/PersistenceBehavior.js";
 import { EventHandler } from "../../protocol/interaction/EventHandler.js";
-import { AsyncConstruction } from "../../util/AsyncConstruction.js";
-import { MaybePromise } from "../../util/Type.js";
+import { MaybePromise } from "../../util/Promises.js";
 import { Behavior } from "../Behavior.js";
 import { BehaviorBacking } from "../BehaviorBacking.js";
-import { InvocationContext } from "../InvocationContext.js";
 import { Datasource } from "../state/managed/Datasource.js";
 
 /**
@@ -21,17 +18,6 @@ export class ServerBehaviorBacking extends BehaviorBacking {
     #store?: Datasource.Store;
     #eventHandler?: EventHandler;
     #datasource?: Datasource;
-    #construction: AsyncConstruction<BehaviorBacking>;
-
-    get construction() {
-        return this.#construction;
-    }
-
-    constructor(part: Part, type: Behavior.Type, options?: Behavior.Options) {
-        super(part, type, options);
-
-        this.#construction = AsyncConstruction(this);
-    }
 
     protected override invokeInitializer(behavior: Behavior, options?: Behavior.Options) {
         // If we have persistent fields install a store before initializing.
@@ -57,27 +43,10 @@ export class ServerBehaviorBacking extends BehaviorBacking {
     }
 
     /**
-     * Obtain a managed state instance.
+     * Are there dirty values requiring persistence?
      */
-    referenceState(context: InvocationContext) {
-        return this.datasource.reference(context);
-    }
-
-    /**
-     * The source of raw data that backs managed state instances.
-     */
-    get datasource() {
-        if (!this.#datasource) {
-            this.#datasource = Datasource({
-                supervisor: this.type.supervisor,
-                type: this.type.State,
-                events: this.events as unknown as Datasource.Events,
-                defaults: this.part.behaviors.defaultsFor(this.type),
-                store: this.#store,
-            });
-        }
-
-        return this.#datasource;
+    get hasDirty() {
+        return !!this.#datasource?.dirty;
     }
 
     /**
@@ -87,5 +56,9 @@ export class ServerBehaviorBacking extends BehaviorBacking {
         this.construction.assertAvailable();
         
         return this.#eventHandler as EventHandler;
+    }
+
+    override get store() {
+        return this.#store;
     }
 }

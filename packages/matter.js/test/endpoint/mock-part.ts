@@ -1,7 +1,8 @@
 import { Behavior } from "../../src/behavior/Behavior.js";
 import { Part } from "../../src/endpoint/Part.js";
 import { EndpointType } from "../../src/endpoint/type/EndpointType.js";
-import { MockContext, MockEndpoint, MockOwner } from "../behavior/behavior-mocks.js";
+import { MockContext, MockEndpoint } from "../behavior/mock-behavior.js";
+import { MockOwner } from "./mock-part-owner.js";
 
 export class MockBehavior1 extends Behavior {
     static override readonly id = "one";
@@ -38,13 +39,11 @@ export class MockPart<T extends EndpointType> extends Part<T> {
         if (!options) {
             options = {};
         }
-        if (!options.owner) {
+        if (!("owner" in options)) {
             options.owner = new MockOwner();
         }
 
         super(definition, options);
-
-        this.construction.assertAvailable();
     }
 
     get mockAgent() {

@@ -12,7 +12,6 @@ import { Lifecycle } from "../../../endpoint/part/Lifecycle.js";
 import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { isDeepEqual } from "../../../util/DeepEqual.js";
 import { IndexBehavior } from "../index/IndexBehavior.js";
-import { PartsBehavior } from "../parts/PartsBehavior.js";
 import { DescriptorBehavior } from "./DescriptorBehavior.js";
 
 /**
@@ -20,9 +19,18 @@ import { DescriptorBehavior } from "./DescriptorBehavior.js";
  */
 export class DescriptorServer extends DescriptorBehavior {
     override initialize() {
-        this.part.lifecycle.events.change.on(
+        this.part.lifecycle.changed.on(
             (type, part) => this.#applyChange(type, part)
         );
+
+        this.state.serverList = this.#serverList;
+
+        if (this.part.hasParts) { 
+            for (const part of this.part.parts) {
+                this.#monitorDestruction(part);
+            }
+            this.state.partsList = this.#partsList;
+        }
 
         if (!this.state.deviceTypeList?.length) {
             const partType = this.part.type;
@@ -57,13 +65,12 @@ export class DescriptorServer extends DescriptorBehavior {
      */
     #applyChange(type: Lifecycle.Change, part: Part) {
         switch (type) {
-            case Lifecycle.Change.PartAdded:
-            case Lifecycle.Change.NumberAssigned:
-            case Lifecycle.Change.PartDeleted:
-                if (part === this.part) {
+            case Lifecycle.Change.Ready:
+                if (!this.part.parts.has(part)) {
                     return;
                 }
                 this.state.partsList = this.#partsList;
+                this.#monitorDestruction(part);
                 break;
 
             case Lifecycle.Change.ServersChanged:
@@ -72,10 +79,16 @@ export class DescriptorServer extends DescriptorBehavior {
                 }
                 this.state.serverList = this.#serverList;
                 break;
-
-            default:
-                return;
         }
+    }
+
+    /**
+     * Monitor part for removal.
+     */
+    #monitorDestruction(part: Part) {
+        part.lifecycle.destroyed.once(() => {
+            this.state.partsList = this.#partsList;
+        });
     }
 
     /**
@@ -93,7 +106,7 @@ export class DescriptorServer extends DescriptorBehavior {
 
         // If IndexBehavior is not present then just list direct
         // descendants
-        if (part.behaviors.isActive(PartsBehavior)) {
+        if (part.hasParts) {
             return [ ...part.parts ].map(part => part.number) as EndpointNumber[];
         }
 

@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { MaybePromise } from "../../../util/Type.js";
+import { MaybePromise } from "../../../util/Promises.js";
 import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { NetworkCommissioning } from "../../../cluster/definitions/NetworkCommissioningCluster.js";
 import { MatterCoreSpecificationV1_1 } from "../../../spec/Specifications.js";

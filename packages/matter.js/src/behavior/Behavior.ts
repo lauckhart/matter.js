@@ -10,7 +10,7 @@ import { Agent } from "../endpoint/Agent.js";
 import { assertSecureSession } from "../session/SecureSession.js";
 import { GeneratedClass } from "../util/GeneratedClass.js";
 import { EventEmitter } from "../util/Observable.js";
-import { MaybePromise } from "../util/Type.js";
+import { MaybePromise } from "../util/Promises.js";
 import type { BehaviorBacking } from "./BehaviorBacking.js";
 import { DerivedState, EmptyState } from "./state/StateType.js";
 import { BehaviorSupervisor } from "./supervision/BehaviorSupervisor.js";
@@ -238,7 +238,7 @@ Object.defineProperties(Behavior.prototype, {
     state: {
         get(this: Internal) {
             if (!this[STATE]) {
-                this[STATE] = this[BACKING].referenceState(this.context);
+                this[STATE] = this[BACKING].datasource.reference(this.context);
             }
             return this[STATE];
         },

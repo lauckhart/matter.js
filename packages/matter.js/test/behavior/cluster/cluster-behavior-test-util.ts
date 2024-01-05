@@ -21,7 +21,7 @@ import { BitFlag } from "../../../src/schema/BitmapSchema.js";
 import { TlvBoolean } from "../../../src/tlv/TlvBoolean.js";
 import { TlvUInt8 } from "../../../src/tlv/TlvNumber.js";
 import { TlvString } from "../../../src/tlv/TlvString.js";
-import { MaybePromise } from "../../../src/util/Type.js";
+import { MaybePromise } from "../../../src/util/Promises.js";
 
 export namespace My {
     export enum Feature {

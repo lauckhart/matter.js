@@ -10,8 +10,8 @@ import { ClusterBehavior } from "../../../src/behavior/cluster/ClusterBehavior.j
 import { StateType } from "../../../src/behavior/state/StateType.js";
 import { ElementModifier } from "../../../src/cluster/mutation/ElementModifier.js";
 import { Observable } from "../../../src/util/Observable.js";
-import { MaybePromise } from "../../../src/util/Type.js";
-import { MockPart } from "../../endpoint/part-mocks.js";
+import { MaybePromise } from "../../../src/util/Promises.js";
+import { MockPart } from "../../endpoint/mock-part.js";
 import { My, MyBehavior, MyCluster } from "./cluster-behavior-test-util.js";
 
 describe("ClusterBehavior", () => {

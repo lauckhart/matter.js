@@ -7,7 +7,7 @@
 import { Behavior } from "../behavior/Behavior.js";
 import { InvocationContext } from "../behavior/InvocationContext.js";
 import { GeneratedClass } from "../util/GeneratedClass.js";
-import { MaybePromise } from "../util/Type.js";
+import { MaybePromise } from "../util/Promises.js";
 import type { Part } from "./Part.js";
 import type { SupportedBehaviors } from "./part/SupportedBehaviors.js";
 
@@ -37,7 +37,7 @@ export class Agent {
     }
 
     /**
-     * Access {@link Part} this agent acts on behalf of.
+     * Access the {@link Part} this agent acts on behalf of.
      */
     get part() {
         return this.#part;

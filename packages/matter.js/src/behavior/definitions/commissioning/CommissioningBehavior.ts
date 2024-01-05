@@ -17,7 +17,6 @@ import { AggregatorEndpoint } from "../../../endpoint/definitions/system/Aggrega
 import { QrCode } from "../../../schema/QrCodeSchema.js";
 import { CommissioningFlowType, DiscoveryCapabilitiesBitmap, DiscoveryCapabilitiesSchema, ManualPairingCodeCodec, QrPairingCodeCodec } from "../../../schema/PairingCodeSchema.js";
 import { DeviceClasses } from "../../../device/DeviceTypes.js";
-import { PartsBehavior } from "../parts/PartsBehavior.js";
 import { RootEndpoint } from "../../../endpoint/definitions/system/RootEndpoint.js";
 import { BasicInformationBehavior } from "../basic-information/BasicInformationBehavior.js";
 import { ByteArray } from "../../../util/ByteArray.js";
@@ -170,12 +169,11 @@ function inferDeviceType(part: Part): DeviceTypeId | undefined {
         }
     }
 
-    if (!recurse) {
+    if (!recurse || !part.hasParts) {
         return;
     }
     
-    const parts = agent.get(PartsBehavior);
-    for (const child of parts) {
+    for (const child of part.parts) {
         const deviceType = inferDeviceType(child);
         if (deviceType !== undefined) {
             return deviceType;

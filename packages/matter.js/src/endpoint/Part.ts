@@ -6,18 +6,19 @@
 
 import { AccessControl } from "../behavior/AccessControl.js";
 import { Behavior } from "../behavior/Behavior.js";
-import { BehaviorBacking } from "../behavior/BehaviorBacking.js";
 import type { InvocationContext } from "../behavior/InvocationContext.js";
 import { IndexBehavior } from "../behavior/definitions/index/IndexBehavior.js";
-import { PartsBehavior } from "../behavior/definitions/parts/PartsBehavior.js";
-import { ImplementationError, NotInitializedError } from "../common/MatterError.js";
+import { ImplementationError, InternalError, NotInitializedError } from "../common/MatterError.js";
 import { EndpointNumber } from "../datatype/EndpointNumber.js";
 import { AsyncConstruction } from "../util/AsyncConstruction.js";
+import { MaybePromise } from "../util/Promises.js";
 import { Agent } from "./Agent.js";
 import { RootEndpoint } from "./definitions/system/RootEndpoint.js";
+import { BehaviorInitializer } from "./part/BehaviorInitializer.js";
 import { Behaviors } from "./part/Behaviors.js";
 import { Lifecycle } from "./part/Lifecycle.js";
 import type { PartOwner } from "./part/PartOwner.js";
+import { Parts } from "./part/Parts.js";
 import { EndpointType } from "./type/EndpointType.js";
 
 /**
@@ -40,9 +41,8 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
     #offlineAgent?: Agent.Instance<T["behaviors"]>;
     #behaviors?: Behaviors;
     #lifecycle: Lifecycle;
-    #parts?: PartsBehavior;
+    #parts?: Parts;
     #construction: AsyncConstruction<Part<T>>;
-    #ownerReady?: () => void;
 
     /**
      * A string that uniquely identifies a part.  This ID must be unique across
@@ -73,10 +73,11 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
     /**
      * The owner of the part.
      */
-    get owner() {
-        if (this.#owner === undefined) {
-            throw new NotInitializedError(
-                "Part owner is not yet assigned; add part to parent to avoid this error");
+    get owner(): PartOwner {
+        if (!this.#owner) {
+            throw new ImplementationError(
+                "Part owner is not available until node is installed"
+            );
         }
         return this.#owner;
     }
@@ -108,7 +109,12 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
         }
 
         this.#type = definition;
-        this.#owner = options?.owner;
+        const behaviors = this.#type.behaviors ?? [];
+        this.#behaviors = new Behaviors(this, behaviors, { ...options?.config });
+
+        if (options?.owner) {
+            this.owner = options.owner;
+        }
         this.#lifecycle = new Lifecycle(this);
 
         if (options?.id !== undefined) {
@@ -119,30 +125,41 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
             this.number = options?.number;
         }
 
-        const behaviors = this.#type.behaviors ?? [];
-        this.#behaviors = new Behaviors(this, behaviors, { ...options?.config });
+        if (options?.parts) {
+            for (const part of options.parts) {
+                this.parts.add(part);
+            }
+        }
 
         this.#construction = AsyncConstruction(this, () => {
-            if (this.#owner) {
+            if (this.#lifecycle.isInstalled) {
                 // Immediate initialization
                 return this.#initialize();
             }
 
             // Deferred initialization -- wait for installation
-            const installed = new Promise<void>(fulfilled => {
-                const installationListener = () => {
-                    this.#lifecycle.events.installed.off(installationListener);
-                    fulfilled();
-                }
-                this.#lifecycle.events.installed.on(installationListener);
+            return new Promise<void>(fulfilled => {
+                this.#lifecycle.installed.once(() => {
+                    this.#initialize();
+                    fulfilled()
+                });
             });
-            return installed.then(() => this.#initialize());
         });
     }
 
     #initialize() {
-        this.owner.initializePart(this);
-        return this.behaviors.initialize();
+        if (!this.owner) {
+            // Shouldn't be possible
+            throw new InternalError("Part initialized without owner");
+        }
+
+        this.owner.serviceFor(BehaviorInitializer).initializeDescendent(this);
+
+        const promise = this.behaviors.initialize();
+        MaybePromise.then(
+            promise,
+            () => this.lifecycle.change(Lifecycle.Change.Ready),
+        )
     }
 
     set id(id: string) {
@@ -162,14 +179,12 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
             throw new ImplementationError('Endpoint ID may not include "."');
         }
 
-        const index = this.root?.agent.get(IndexBehavior);
-        index?.assertIdAvailable(id, this);
+        if (this.lifecycle.isInstalled) {
+            this.owner.serviceFor(IndexBehavior).assertIdAvailable(id, this);
+        }
         
         this.#id = id;
-        this.lifecycle.change(
-            Lifecycle.Change.IdAssigned,
-            this
-        );
+        this.lifecycle.change(Lifecycle.Change.IdAssigned);
     }
 
     set number(number: number) {
@@ -192,27 +207,38 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
             }
         } else {
             if (number === 0) {
-                throw new ImplementationError("Root endpoint must be a ");
+                throw new ImplementationError("Only root endpoint may have ID 0");
             }
 
-            const index = this.root?.agent.get(IndexBehavior);
-            index?.assertNumberAvailable(number, this);
+            if (this.lifecycle.isInstalled) {
+                this.serviceFor(IndexBehavior).assertNumberAvailable(number, this);
+            }
         }
 
         this.#number = EndpointNumber(number);
 
-        this.lifecycle.change(
-            Lifecycle.Change.NumberAssigned,
-            this
-        );
+        this.lifecycle.change(Lifecycle.Change.NumberAssigned);
     }
 
-    set owner(owner: PartOwner) {
-        if (this.#owner !== undefined) {
+    set owner(owner: PartOwner | undefined) {
+        if (this.#owner === owner) {
+            return;
+        }
+        if (this.#owner) {
             throw new ImplementationError("Part owner cannot be reassigned");
         }
+        if (owner === undefined) {
+            throw new ImplementationError("Part owner must be defined");
+        }
+
         this.#owner = owner;
-        this.#ownerReady?.();
+        
+        try {
+            owner.adoptChild(this);
+        } catch (e) {
+            this.#owner = undefined;
+            throw e;
+        }
     }
 
     /**
@@ -227,10 +253,16 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
      */
     get parts() {
         if (!this.#parts) {
-            this.#agent.require(PartsBehavior);
-            this.#parts = this.#agent.get(PartsBehavior);
+            this.#parts = new Parts(this);
         }
         return this.#parts;
+    }
+
+    /**
+     * Is this a parent Part?
+     */
+    get hasParts() {
+        return !!this.#parts?.size;
     }
 
     /**
@@ -263,17 +295,6 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
     }
 
     /**
-     * Access the root of the part hierarchy, if any.
-     */
-    get root(): Part<RootEndpoint> | undefined {
-        for (let part: PartOwner | undefined = this; part = part; part = part.owner) {
-            if (part instanceof Part && part.type.deviceClass === RootEndpoint.deviceClass) {
-                return part as Part<RootEndpoint>;
-            }
-        }
-    }
-
-    /**
      * Create an {@link Agent}.  This is the primary means of
      * interacting with an endpoint.
      *
@@ -293,6 +314,18 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
      */
     get agent() {
         return this.#agent;
+    }
+
+    /**
+     * Apply a depth-first visitor function to myself and all descendents.
+     */
+    visit(visitor: (part: Part) => void) {
+        visitor(this);
+        if (this.hasParts) {
+            for (const part of this.parts) {
+                part.visit(visitor);
+            }
+        }
     }
 
     toString() {
@@ -321,20 +354,20 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
     }
 
     async [Symbol.asyncDispose]() {
-        const destroyedEvent = this.lifecycle.events.destroyed;
         await this.behaviors[Symbol.asyncDispose]();
-        destroyedEvent.emit(this);
+        this.lifecycle.change(Lifecycle.Change.Destroyed);
+        this.#owner = undefined;
     }
 
-    initializePart(part: Part) {
-        this.owner.initializePart(part);
+    adoptChild(part: Part) {
+        this.parts.add(part);
     }
 
-    createBacking(part: Part, behavior: Behavior.Type): BehaviorBacking {
-        if (!this.owner) {
-            throw new ImplementationError("Cannot initialize behavior because parent is not installed");
+    serviceFor<T>(type: abstract new(...args: any[]) => T): T {
+        if (!this.#owner) {
+            throw new ImplementationError("Cannot access services because owner is not installed");
         }
-        return this.owner.createBacking(part, behavior);
+        return this.#owner.serviceFor(type);
     }
 
     get #resolvedAgentType() {
@@ -355,6 +388,7 @@ export namespace Part {
             id?: string;
             number?: number;
             config?: BehaviorConfigurations<T>;
+            parts?: Iterable<Part.Definition>;
         };
 
     /**

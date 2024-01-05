@@ -4,18 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Behavior } from "../../behavior/Behavior.js";
-import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import { CommissioningBehavior } from "../../behavior/definitions/commissioning/CommissioningBehavior.js";
-import { PartsBehavior } from "../../behavior/definitions/parts/PartsBehavior.js";
-import { ImplementationError, InternalError, NotInitializedError } from "../../common/MatterError.js";
+import { ImplementationError, NotImplementedError, NotInitializedError } from "../../common/MatterError.js";
 import { EndpointNumber } from "../../datatype/EndpointNumber.js";
 import { FabricIndex } from "../../datatype/FabricIndex.js";
 import { Part } from "../../endpoint/Part.js";
 import { RootEndpoint } from "../../endpoint/definitions/system/RootEndpoint.js";
 import { IndexBehavior } from "../../behavior/definitions/index/IndexBehavior.js";
 import { PartServer } from "../../endpoint/server/PartServer.js";
-import { PersistenceBehavior } from "../../endpoint/server/PersistenceBehavior.js";
 import { EndpointType } from "../../endpoint/type/EndpointType.js";
 import { Logger } from "../../log/Logger.js";
 import { StorageContext } from "../../storage/StorageContext.js";
@@ -28,6 +24,9 @@ import { NodeStore } from "./NodeStore.js";
 import { TransactionalInteractionServer } from "./TransactionalInteractionServer.js";
 import { AsyncConstruction, asyncNew } from "../../util/AsyncConstruction.js";
 import { Lifecycle } from "../../endpoint/part/Lifecycle.js";
+import { Transaction } from "../../behavior/state/transaction/Transaction.js";
+import { BehaviorInitializer } from "../../endpoint/part/BehaviorInitializer.js";
+import { ServerBehaviorInitializer } from "./ServerBehaviorInitializer.js";
 
 const logger = Logger.get("NodeServer");
 
@@ -48,16 +47,30 @@ export class NodeServer extends BaseNodeServer implements Node {
     #host?: Host;
     #store?: NodeStore;
     #construction: AsyncConstruction<NodeServer>;
+    #behaviorInitializer?: BehaviorInitializer;
 
     get owner() {
         return undefined;
     }
 
     get root() {
+        return this.rootPart.agent;
+    }
+
+    get rootPart() {
         if (!this.#root) {
-            throw new NotInitializedError("Root part is unavailable because initialization is incomplete; await the NodeServer to avoid this error");
+            throw new NotInitializedError(
+                "Root part is unavailable because initialization is incomplete; await the NodeServer to avoid this error"
+            );
         }
         return this.#root;
+    }
+
+    get store() {
+        if (this.#store === undefined) {
+            throw new ImplementationError(`${this.description}: Storage accessed prior to initialization`);
+        }
+        return this.#store;
     }
 
     /**
@@ -88,14 +101,15 @@ export class NodeServer extends BaseNodeServer implements Node {
         if (root.type.deviceType !== RootEndpoint.deviceType) {
             throw new ImplementationError(`Root node device type must be a ${RootEndpoint.deviceType}`);
         }
+
+        root.owner = this;
     
-        if (root.number === undefined) {
+        if (!root.lifecycle.hasNumber) {
             root.number = EndpointNumber(0);
         } else if (root.number !== 0) {
             throw new ImplementationError(`Root node ID must be 0`);
         }
     
-        root.behaviors.require(PartsBehavior);
         root.behaviors.require(CommissioningBehavior);
         root.behaviors.require(IndexBehavior);
         this.#nextEndpointId = this.#configuration.nextEndpointNumber;
@@ -104,8 +118,10 @@ export class NodeServer extends BaseNodeServer implements Node {
             this,
             async () => {
                 this.#store = await NodeStore.create(this.#configuration);
+                
                 root.lifecycle.change(Lifecycle.Change.Installed);
-            });
+            }
+        );
     }
 
     static async create(options?: ServerOptions.Configuration) {
@@ -118,12 +134,14 @@ export class NodeServer extends BaseNodeServer implements Node {
     override async start() {
         await this.construction;
 
-        const agent = this.root.agent;
+        const agent = this.root;
 
         if (!this.commissioned) {
             const commissioning = await agent.waitFor(CommissioningBehavior);
             commissioning.initiateCommissioning();
         }
+
+        await this.#saveInitialValues();
 
         await super.start();
 
@@ -155,7 +173,7 @@ export class NodeServer extends BaseNodeServer implements Node {
     add(part: Part): void;
 
     add(endpoint: Part.Definition) {
-        this.root.parts.add(endpoint);
+        this.rootPart.parts.add(endpoint);
     }
 
     /**
@@ -172,14 +190,14 @@ export class NodeServer extends BaseNodeServer implements Node {
      * An index of all parts.
      */
     get index() {
-        return this.root.agent.get(IndexBehavior);
+        return this.root.get(IndexBehavior);
     }
 
     /**
      * Retrieve a part by number.
      */
     partForNumber(number: number) {
-       return this.root.agent.get(IndexBehavior).forNumber(number);
+       return this.root.get(IndexBehavior).forNumber(number);
     }
 
     /**
@@ -191,36 +209,10 @@ export class NodeServer extends BaseNodeServer implements Node {
         await this.#store?.[Symbol.asyncDispose]();
     }
 
-    /**
-     * Initialize part state.
-     */
-    initializePart(part: Part) {
-        if (!part.lifecycle.hasId) {
-            part.id = this.#identifyPart(part);
+    adoptChild(part: Part) {
+        if (part !== this.#root) {
+            throw new ImplementationError("NodeServer may only have a single root part installed");
         }
-
-        const store = this.#initializedStore.storeFor(part);
-
-        part.agent.require(PersistenceBehavior);
-        part.agent.get(PersistenceBehavior).configureStorage(
-            store,
-            this.#initializedStore.eventHandler,
-        )
-
-        if (!part.lifecycle.hasNumber) {
-            part.number = EndpointNumber(store.number ?? this.#initializedStore.allocateNumber());
-        }
-    }
-
-    /**
-     * If a {@link Part} does not yet have a {@link PartServer}, create one
-     * now, then create a {@link BehaviorBacking} for a specific
-     * {@link Behavior}.
-     * 
-     * This is where we adapt parts and behaviors for a server role.
-     */
-    createBacking(part: Part, behavior: Behavior.Type): BehaviorBacking {
-        return PartServer.forPart(part).createBacking(behavior);
     }
 
     fallbackIdFor(part: Part) {
@@ -240,6 +232,28 @@ export class NodeServer extends BaseNodeServer implements Node {
         throw new ImplementationError(`${part.description}: Cannot determine ID`);
     }
 
+    serviceFor<T>(type: abstract new (...args: any[]) => T): T {
+        // Not sure why the cast to unknown is necessary here, TS complains
+        // that type may not instantiate to T without it which seems incorrect
+        switch (type as unknown) {
+            case BehaviorInitializer:
+                if (!this.#behaviorInitializer) {
+                    this.#behaviorInitializer = new ServerBehaviorInitializer(this);
+                }
+                return this.#behaviorInitializer as T;
+
+            case NodeStore:
+                return this.store as T;
+
+            case IndexBehavior:
+                // Child nodes may have indices but only the root node is
+                // supported as a service
+                return this.root.get(IndexBehavior) as T;
+        }
+
+        throw new ImplementationError(`Unsupported service ${type.name}`);
+    }
+
     /**
      * Textual description of the node used in diagnostic messages.
      */
@@ -248,7 +262,7 @@ export class NodeServer extends BaseNodeServer implements Node {
     }
 
     protected override get commissioningConfig() {
-        return this.root.agent.get(CommissioningBehavior).state as CommissioningOptions.Configuration;
+        return this.root.get(CommissioningBehavior).state as CommissioningOptions.Configuration;
     }
 
     protected override get networkConfig() {
@@ -257,7 +271,7 @@ export class NodeServer extends BaseNodeServer implements Node {
 
     protected override get rootEndpoint() {
         if (!this.#rootServer) {
-            this.#rootServer = PartServer.forPart(this.root);
+            this.#rootServer = PartServer.forPart(this.rootPart);
         }
         return this.#rootServer;
     }
@@ -271,7 +285,7 @@ export class NodeServer extends BaseNodeServer implements Node {
     }
 
     protected override get advertiseOnStartup() {
-        return !!this.root.agent.get(CommissioningBehavior).state.automaticAnnouncement;
+        return !!this.root.get(CommissioningBehavior).state.automaticAnnouncement;
     }
 
     protected override emitCommissioningChanged(_fabric: FabricIndex): void {}
@@ -280,77 +294,39 @@ export class NodeServer extends BaseNodeServer implements Node {
 
     protected override createInteractionServer() {
         return new TransactionalInteractionServer(
-            this.root,
-            this.#initializedStore,
+            this.rootPart,
+            this.store,
             this.#configuration.subscription
         );
     }
 
     protected override get sessionStorage(): StorageContext {
-        return this.#initializedStore.sessionStorage;
+        return this.store.sessionStorage;
     }
 
     protected override get fabricStorage(): StorageContext {
-        return this.#initializedStore.fabricStorage;
+        return this.store.fabricStorage;
     }
 
     protected override initializeEndpoints(): void {
-        throw new Error("Method not implemented.");
+        // Nothing to do
     }
 
     protected override clearStorage(): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-
-    get #initializedStore() {
-        if (this.#store === undefined) {
-            throw new ImplementationError(`${this.description}: Storage accessed prior to initialization`);
-        }
-        return this.#store;
+        // TODO
+        throw new NotImplementedError();
     }
 
     /**
-     * Select an ID for a part automatically based on available metadata.
+     * We don't run behavior initializers transactionally.
+     * 
+     * Instead we save dirty values at server startup.
      */
-    #identifyPart(part: Part) {
-        const basicInfo = part.behaviors.supported.basicInformation ?? part.behaviors.supported.bridgedDeviceBasicInformation;
-        if (basicInfo) {
-            const defaults = {
-                ...new basicInfo.State,
-                ...part.behaviors.defaultsFor(basicInfo),
-            }
-
-            let id = (defaults as Record<string, string>).uniqueId;
-            if (id) {
-                return id;
-            }
-
-            id = (defaults as Record<string, string>).serialNumber;
-            if (id) {
-                return id;
-            }
+    async #saveInitialValues() {
+        const transaction = new Transaction();
+        this.rootPart.visit(part => part.behaviors.save(transaction));
+        if (transaction.status === Transaction.Status.Exclusive) {
+            await transaction.commit();
         }
-
-        if (part === this.#root) {
-            return "root";
-        }
-
-        if (!(part.owner instanceof Part)) {
-            throw new InternalError("Cannot determine ID for part with unknown parent type");
-        }
-        if (part.owner.id === undefined) {
-            throw new InternalError("Cannot determine ID for part because parent has no ID");
-        }
-
-        const index = part.owner.parts.indexOf(part);
-        if (index === -1) {
-            throw new InternalError("Cannot determine ID for part because parent does not list as child");
-        }
-
-        // Should we throw here instead?
-        const id = `${part.owner.id}#${index}`;
-        logger.warn(`Using fallback ID of ${id} for anonymous part based on index within parent; assign ID to remove this warning`);
-
-        return id;
     }
 }

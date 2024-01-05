@@ -77,37 +77,6 @@ export type Immutable<T> = T extends (...args: any[]) => any
       : T;
 
 /**
- * Return type for functions that are optionally asynchronous.
- */
-export type MaybePromise<T = void> = T | Promise<T>;
-
-/**
- * Promise-like version of above.
- */
-export type MaybePromiseLike<T = void> = T | PromiseLike<T>;
-
-export namespace MaybePromise {
-    /**
-     * Determine whether a {@link MaybePromiseLike} is a {@link Promise}.
-     */
-    export function is<T>(value: MaybePromiseLike<T>): value is PromiseLike<T> {
-        return typeof value === "object" && typeof (value as { then?: any }).then === "function";
-    }
-
-    /**
-     * Chained MaybePromise.  Invokes the resolve function immediately if the
-     * {@link MaybePromise} is not a {@link Promise}, otherwise the same as a
-     * normal {@link Promise.then}.
-     */
-    export function then<I, O>(value: MaybePromise<I>, resolve: (input: I) => O): MaybePromise<O> {
-        if (is(value)) {
-            return value.then(resolve);
-        }
-        return resolve(value);
-    }
-}
-
-/**
  * Convert a union to an interface.
  *
  * {@see {@link https://stackoverflow.com/questions/50374908}}

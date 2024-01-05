@@ -13,7 +13,7 @@ import { Participant } from "../../../../src/behavior/state/transaction/Particip
 import { Resource } from "../../../../src/behavior/state/transaction/Resource.js";
 import { Status } from "../../../../src/behavior/state/transaction/Status.js";
 import { Transaction } from "../../../../src/behavior/state/transaction/Transaction.js";
-import { MaybePromise } from "../../../../src/util/Type.js";
+import { MaybePromise } from "../../../../src/util/Promises.js";
 
 class TestResource implements Resource {
     lockedBy?: Transaction;
@@ -134,20 +134,38 @@ describe("Transaction", () => {
         });
     });
 
-    it("rolls back and throws on commit error", async () => {
-        const transaction = create({
-            participant: TestParticipant({
-                async commit1() {
-                    throw new Error("oops");
-                },
-            }),
+    it("rolls back and throws on commit phase 1 error", () => {
+        it("synchronously", () => {
+            const transaction = create({
+                participant: TestParticipant({
+                    commit1() {
+                        throw new Error("oops");
+                    },
+                }),
+            });
+
+            transaction.beginSync();
+
+            expect(() => transaction.commit()).throws(FinalizationError);
+
+            transaction.expectInvoked("commit1", "rollback");
         });
 
-        await transaction.begin();
+        it("asychonously", async () => {
+            const transaction = create({
+                participant: TestParticipant({
+                    async commit1() {
+                        throw new Error("oops");
+                    },
+                }),
+            });
 
-        await expect(transaction.commit()).rejectedWith(FinalizationError);
+            await transaction.begin();
 
-        transaction.expectInvoked("commit1", "rollback");
+            await expect(transaction.commit()).rejectedWith(FinalizationError);
+
+            transaction.expectInvoked("commit1", "rollback");
+        });
     });
 
     describe("locks and unlocks resource", async () => {

@@ -5,35 +5,68 @@
  */
 
 import type { Part } from "../Part.js";
-import { EventEmitter, Observable } from "../../util/Observable.js";
+import { Observable } from "../../util/Observable.js";
 import type { Node } from "../../node/Node.js";
+import { ImplementationError } from "../../common/MatterError.js";
 
 /**
  * State related to a {@link Part}'s lifecycle.
  */
 export class Lifecycle {
     #part: Part;
-    #events = new Lifecycle.Events;
-    #installed = false;
+    #isInstalled = false;
+    #isReady = false;
     #hasId = false;
     #hasNumber = false;
+    #installed = new Observable<[]>();
+    #ready = new Observable<[]>();
+    #destroyed = new Observable<[]>();
+    #changed = new Observable<[type: Lifecycle.Change, part: Part]>();
+    #queuedUpdates?: Array<Lifecycle.Change>;
 
-    constructor(part: Part) {
-        this.#part = part;
+    /**
+     * Emitted when a part is installed into an initialized owner.
+     */
+    get installed() {
+        return this.#installed;
     }
 
     /**
-     * Events emitted for changes in {@link Part} lifecycle.
+     * Emitted when a part is fully initialized (excepting children).
      */
-    get events() {
-        return this.#events;
+    get ready() {
+        return this.#ready;
+    }
+
+    /**
+     * Emitted when the part is destroyed.
+     */
+    get destroyed() {
+        return this.#destroyed;
+    }
+
+    /**
+     * Bubbling event indicating changes to part structure.
+     * 
+     * All {@link Lifecycle.Change}s bubble here except for Installed,
+     * Destroyed and Ready.
+     */
+    get changed() {
+        return this.#changed;
     }
 
     /**
      * Is the {@link Part} installed in a {@link Node}?
      */
-    get installed() {
-        return this.#installed;
+    get isInstalled() {
+        return this.#isInstalled;
+    }
+
+    /**
+     * Is the {@link Part} fully initialized (excepting children)?
+     */
+    get isReady() {
+        return this.#isReady;
     }
 
     /**
@@ -50,26 +83,38 @@ export class Lifecycle {
         return this.#hasNumber;
     }
 
+    constructor(part: Part) {
+        this.#part = part;
+    }
+
     /**
      * Inform the Lifecycle of a change in lifecycle.
      */
-    change(type: Lifecycle.Change, part = this.#part) {
+    change(type: Lifecycle.Change) {
+        // Update state
         switch (type) {
             case Lifecycle.Change.Installed:
-                this.#installed = true;
-                this.events.installed.emit(this.#part);
+                // Sanity checks
+                if (!this.#part.owner) {
+                    throw new ImplementationError("Part reports as installed but has no owner assigned");
+                }
 
-                // We do not bubble installation as this becomes true for all
-                // parts simultaneously
-                return;
+                this.#isInstalled = true;
+                break;
 
-            case Lifecycle.Change.Destroyed:
-                this.events.destroyed.emit(this.#part);
-
-                // We do not bubble destruction as it is redundant with
-                // PartDeleted and at this point the part is no longer part of
-                // a hierarchy
-                return;
+            case Lifecycle.Change.Ready:
+                // Sanity checks
+                if (!this.#part.owner) {
+                    throw new ImplementationError("Part reports as ready but has no owner assigned");
+                }
+                if (!this.#hasId) {
+                    throw new ImplementationError("Part reports as ready but has no ID assigned");
+                }
+                if (!this.#hasNumber) {
+                    throw new ImplementationError("Part reports as ready but has no number assigned");
+                }
+                this.#isReady = true;
+                break;
 
             case Lifecycle.Change.IdAssigned:
                 this.#hasId = true;
@@ -80,33 +125,42 @@ export class Lifecycle {
                 break;
         }
 
-        this.events.change.emit(type, part);
+        // We want events to trigger in correct order but some of them cascade.
+        // So if we're currently emitting, enqueue
+        if (this.#queuedUpdates) {
+            this.#queuedUpdates?.push(type);
+            return;
+        }
+
+        // Emit events
+        this.#queuedUpdates = [ type ];
+        try {
+            while (this.#queuedUpdates.length) {
+                const type = this.#queuedUpdates[0];
+                this.#queuedUpdates.shift();
+
+                // Emit bubbling event
+                this.changed.emit(type, this.#part);
+
+                // Emit part-specific events
+                const observable = (this as unknown as Record<string, Observable>)[type];
+                if (observable) {
+                    observable.emit();
+                }
+
+                this.#queuedUpdates.shift();
+            }
+        } finally {
+            this.#queuedUpdates = undefined;
+        }
     }
 }
 
 export namespace Lifecycle {
-    export class Events extends EventEmitter {
-        /**
-         * Emitted when a part is installed into a Node.
-         */
-        installed = new Observable<[part: Part]>();
-
-        /**
-         * Emitted when the part is destroyed.
-         */
-        destroyed = new Observable<[part: Part]>();
-
-        /**
-         * Bubbling event indicating changes to part structure.
-         */
-        change = new Observable<[type: Lifecycle.Change, part: Part]>();
-    }
-
     export enum Change {
         Installed = "installed",
+        Ready = "ready",
         Destroyed = "destroyed",
-        PartAdded = "added",
-        PartDeleted = "removed",
         ServersChanged = "servers-changed",
         ClientsChanged = "clients-changed",
         IdAssigned = "id-assigned",

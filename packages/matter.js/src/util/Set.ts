@@ -18,7 +18,7 @@ export interface ImmutableSet<T> {
 /**
  * A write-only set.
  */
-export interface MutableSet<T, AddT = T> extends ObservableSet<T> {
+export interface MutableSet<T, AddT = T> {
     add(definition: AddT): void;
     delete(definition: T): boolean;
     clear(): void;

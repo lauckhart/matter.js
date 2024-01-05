@@ -7,6 +7,7 @@
 import { Logger } from "../../../log/Logger.js";
 import { createPromise } from "../../../util/Promises.js";
 import { describeList } from "../../../util/String.js";
+import { MaybePromise } from "../../../util/Promises.js";
 import { FinalizationError, TransactionFlowError } from "./Errors.js";
 import { Participant as ParticipantType } from "./Participant.js";
 import type { Resource as ResourceType } from "./Resource.js";
@@ -228,13 +229,13 @@ export class Transaction {
      * After commit an exclusive transaction becomes shared and data references
      * refresh to the most recent value.
      */
-    async commit() {
+    commit() {
         if (this.#status === StatusType.Shared) {
             // Use rollback() to inform participants to refresh state
-            await this.rollback();
+            return this.rollback();
         } else {
             // Perform the actual commit
-            await this.#finalize(StatusType.CommittingPhaseOne, () => this.#executeCommit());
+            return this.#finalize(StatusType.CommittingPhaseOne, () => this.#executeCommit());
         }
     }
 
@@ -247,8 +248,8 @@ export class Transaction {
      * After rollback an exclusive transaction becomes shared and data
      * references refresh to the most recent value.
      */
-    async rollback() {
-        await this.#finalize(StatusType.RollingBack, () => this.#executeRollback());
+    rollback() {
+        return this.#finalize(StatusType.RollingBack, () => this.#executeRollback());
     }
 
     /**
@@ -270,7 +271,7 @@ export class Transaction {
     /**
      * Shared implementation for commit and rollback.
      */
-    async #finalize(status: StatusType, finalizer: () => Promise<void>) {
+    #finalize(status: StatusType, finalizer: () => MaybePromise<void>) {
         // Sanity check on status
         if (this.status !== StatusType.Shared && this.status !== StatusType.Exclusive) {
             throw new TransactionFlowError(
@@ -278,11 +279,8 @@ export class Transaction {
             );
         }
 
-        // Perform the commit or rollback
-        try {
-            this.#status = status;
-            await finalizer();
-        } finally {
+        // Post-finalization state reset
+        const cleanup = () => {
             // Release locks
             for (const resource of this.#resources) {
                 if (resource.lockedBy === this) {
@@ -296,69 +294,140 @@ export class Transaction {
             // Revert to shared
             this.#status = StatusType.Shared;
 
-            // Resolve the promise
+            // Resolve the transaction promise
             const resolve = this.#resolve;
             this.#promise = undefined;
             this.#resolve = undefined;
             resolve?.();
         }
+
+        // Perform the commit or rollback
+        let promise: MaybePromise<void> = undefined;
+        try {
+            this.#status = status;
+            promise = finalizer();
+            if (MaybePromise.is(promise)) {
+                promise = promise.finally(cleanup);
+            }
+        } finally {
+            if (!promise) {
+                cleanup();
+            }
+        }
+
+        // If synchronous we're done, if async this promise resolves at
+        // completion
+        return promise;
     }
 
     /**
      * Commit logic passed to #finish.
      */
-    async #executeCommit() {
+    #executeCommit() {
         // Commit phase 1
+        const phase1Error = (participant: string, error: any) => {
+            logger.error(`Error committing ${participant} (phase one), rolling back:`, error);
+            this.#status = StatusType.RollingBack;
+            return MaybePromise.then(this.#executeRollback(), () => {
+                throw new FinalizationError(
+                    `Transaction rolled back due to unhandled error in commit (phase one) participant ${participant}`,
+                );
+            });
+        }
+
         for (const participant of this.participants) {
             try {
-                await participant.commit1();
+                const promise = participant.commit1();
+                if (MaybePromise.is(promise)) {
+                    const description = participant.description;
+                    return promise.catch(e => phase1Error(description, e));
+                }
             } catch (e) {
-                logger.error(`Error committing ${participant.description} (phase one), rolling back:`, e);
-                this.#status = StatusType.RollingBack;
-                await this.#executeRollback();
-
-                throw new FinalizationError(
-                    `Transaction rolled back due to unhandled error in commit phase one participant ${participant.description}`,
-                );
+                return phase1Error(participant.description, e);
             }
         }
 
         // Commit phase 2
-        this.#status = StatusType.CommittingPhaseTwo;
-        let errored = new Array<string>();
-        for (const participant of this.participants) {
-            try {
-                await participant.commit2();
-            } catch (e) {
-                logger.error(
-                    `Error committing ${participant.description} (phase two), state may become inconsistent:`,
-                    e,
-                );
-                errored.push(participant.description);
+        const phase2Error = (participant: string, error: any) => {
+            logger.error(
+                `Error committing (phase two) ${participant}, state may become inconsistent:`,
+                error,
+            );
+
+            if (errored) {
+                errored.push(participant);
+            } else {
+                errored = [ participant ];
             }
         }
-        throwUnhandled(errored, "in commit phase 2");
+
+        this.#status = StatusType.CommittingPhaseTwo;
+        let errored: undefined |Array<string>;
+        let ongoing: undefined | Array<Promise<void>>;
+        for (const participant of this.participants) {
+            try {
+                let promise = participant.commit2();
+                if (MaybePromise.is(promise)) {
+                    const description = participant.description;
+                    promise = promise.catch(e => phase2Error(description, e));
+                    if (ongoing) {
+                        ongoing.push(promise);
+                    } else {
+                        ongoing = [ promise ];
+                    }
+                }
+            } catch (e) {
+                return phase2Error(participant.description, e);
+            }
+        }
+
+        if (ongoing) {
+            // Async commit
+            return Promise.all(ongoing).then(() => throwIfErrored(errored, "in commit phase 2"));
+        } else {
+            // Synchronous commit
+            throwIfErrored(errored, "in commit phase 2");
+        }
     }
 
     /**
      * Rollback logic passed to #finish.
      */
-    async #executeRollback() {
-        let errored = new Array<string>();
+    #executeRollback() {
+        let errored: undefined | Array<string>;
+        let ongoing: undefined | Array<Promise<void>>;
         for (const participant of this.participants) {
             try {
-                await participant.rollback();
+                let promise = participant.rollback();
+                if (MaybePromise.is(promise)) {
+                    const description = participant.description;
+                    promise = promise.catch(e => error(description, e));
+                    if (ongoing) {
+                        ongoing.push(promise);
+                    } else {
+                        ongoing = [ promise ];
+                    }
+                }
             } catch (e) {
-                logger.error(`Error rolling back ${participant.description}, state may become inconsistent:`, e);
-                errored.push(participant.description);
+                error(participant.description, e);
             }
         }
-        throwUnhandled(errored, "rolling back");
+        throwIfErrored(errored, "rolling back");
+
+        function error(participant: string, error: any) {
+            logger.error(`Error rolling back ${participant}, state may become inconsistent:`, error);
+
+            if (errored) {
+                errored.push(participant);
+            } else {
+                errored = [ participant ];
+            }
+        }
     }
 }
 
-function throwUnhandled(errored: Array<string>, when: string) {
-    if (!errored.length) {
+function throwIfErrored(errored: undefined | Array<string>, when: string) {
+    if (!errored?.length) {
         return;
     }
     const suffix = errored.length > 1 ? "s" : "";

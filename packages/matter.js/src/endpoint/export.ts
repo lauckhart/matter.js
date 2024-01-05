@@ -5,7 +5,7 @@
  */
 
 export * from "./part/Lifecycle.js";
-export * from "../behavior/definitions/parts/PartsBehavior.js";
+export * from "./part/Parts.js";
 export * from "./Agent.js";
 export * from "./EndpointInterface.js";
 export * from "./Part.js";

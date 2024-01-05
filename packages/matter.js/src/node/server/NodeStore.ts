@@ -182,8 +182,10 @@ class NodePartStore implements PartStore {
             }
         }
 
-        this.#number = this.#storage.get("number") as number | undefined;
-        if (!isNew && this.#number === undefined) {
+        const number = this.#storage.get("number", -1) as number | undefined;
+        if (number !== -1) {
+            this.#number = number;
+        } else if (!isNew) {
             logger.warn(`No endpoint number persisted for part ${partId}`);
         }
     }

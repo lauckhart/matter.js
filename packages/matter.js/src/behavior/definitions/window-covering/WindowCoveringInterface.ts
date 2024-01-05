@@ -6,7 +6,7 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { MaybePromise } from "../../../util/Type.js";
+import { MaybePromise } from "../../../util/Promises.js";
 import { MatterApplicationClusterSpecificationV1_1 } from "../../../spec/Specifications.js";
 import { TypeFromSchema } from "../../../tlv/TlvSchema.js";
 import { WindowCovering } from "../../../cluster/definitions/WindowCoveringCluster.js";

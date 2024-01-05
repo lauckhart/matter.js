@@ -4,16 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AccessLevel } from "../cluster/Cluster.js";
 import { ImplementationError } from "../common/MatterError.js";
 import { Agent } from "../endpoint/Agent.js";
 import type { Part } from "../endpoint/Part.js";
 import { AsyncConstruction } from "../util/AsyncConstruction.js";
 import { EventEmitter } from "../util/Observable.js";
-import { MaybePromise } from "../util/Type.js";
 import type { Behavior } from "./Behavior.js";
-import type { InvocationContext } from "./InvocationContext.js";
-import { Val } from "./state/managed/Val.js";
+import { Datasource } from "./state/managed/Datasource.js";
 import { Transaction } from "./state/transaction/Transaction.js";
 
 /**
@@ -26,13 +23,19 @@ export abstract class BehaviorBacking {
     #internal?: object;
     #events?: EventEmitter;
     #options?: Behavior.Options;
+    #datasource?: Datasource;
+    #construction: AsyncConstruction<BehaviorBacking>;
 
-    abstract readonly construction: AsyncConstruction<BehaviorBacking>;
+    get construction() {
+        return this.#construction;
+    }
 
     constructor(part: Part, type: Behavior.Type, options?: Behavior.Options) {
         this.#part = part;
         this.#type = type;
         this.#options = options;
+
+        this.#construction = AsyncConstruction(this);
     }
 
     /**
@@ -43,58 +46,13 @@ export abstract class BehaviorBacking {
      */
     initialize() {
         this.construction.start(() => {
-            // We initialize in a transaction so behaviors can update persistent
-            // state values during initialization
-            const transaction = new Transaction();
-
-            // Create a transactional offline agent
-            const agent = this.#part.getAgent({
-                offline: true,
-                accessLevel: AccessLevel.View,
-                transaction,
-            });
-
             // We use this behavior for initialization.  Do not use agent.get()
             // to access the behavior because it will throw if the behavior
             // isn't initialized
-            const behavior = this.createBehavior(agent, this.#type);
+            const behavior = this.createBehavior(this.part.agent, this.#type);
 
             // Perform actual initialization
-            let promise: MaybePromise;
-            try {
-                promise = this.invokeInitializer(behavior, this.#options);
-
-                if (MaybePromise.is(promise)) {
-                    promise.then(
-                        () => {
-                            if (transaction.status === Transaction.Status.Exclusive) {
-                                return transaction.commit();
-                            }
-                        },
-
-                        error => {
-                            if (transaction.status === Transaction.Status.Exclusive) {
-                                return transaction.rollback().then(() => { throw error });
-                            }
-                        }
-                    )
-                } else if (transaction.status === Transaction.Status.Exclusive) {
-                    promise = transaction.commit();
-                }
-            } catch (e) {
-                // We don't commit here because initialization may be async.
-                // However if there's a synchronous error we do want to perform
-                // rollback if in a write transaction
-                if (transaction.status === Transaction.Status.Exclusive) {
-                    // Rollback is asynchronous so return the promise that will
-                    // register as initializing just so we track the promise
-                    promise = transaction.rollback().then(() => { throw e });
-                } else {
-                    throw e;
-                }
-            }
-
-            return promise;
+            return this.invokeInitializer(behavior, this.#options);
         });
     }
 
@@ -137,9 +95,35 @@ export abstract class BehaviorBacking {
     }
 
     /**
-     * Obtain state for a behavior instance.
+     * The source of raw data that backs managed state instances.
      */
-    abstract referenceState(context: InvocationContext): Val.Struct;
+    get datasource() {
+        if (!this.#datasource) {
+            this.#datasource = Datasource({
+                supervisor: this.type.supervisor,
+                type: this.type.State,
+                events: this.events as unknown as Datasource.Events,
+                defaults: this.part.behaviors.defaultsFor(this.type),
+                store: this.store,
+            });
+        }
+
+        return this.#datasource;
+    }
+
+    /**
+     * Persist dirty values.
+     */
+    save(transaction: Transaction) {
+        if (this.#datasource?.dirty) {
+            this.#datasource.save(transaction);
+        }
+    }
+
+    /**
+     * The data provider for {@link datasource}.
+     */
+    protected abstract readonly store?: Datasource.Store;
 
     /**
      * Obtain internal state for a behavior instance.

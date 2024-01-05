@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ImplementationError, InternalError } from "../../../common/MatterError.js";
+import { InternalError } from "../../../common/MatterError.js";
 import { Crypto } from "../../../crypto/Crypto.js";
 import { isDeepEqual } from "../../../util/DeepEqual.js";
 import { Observable } from "../../../util/Observable.js";
@@ -21,11 +21,11 @@ import { Val } from "./Val.js";
  *
  * Datasource behavior differs if there is a transaction present:
  *
- *   - Outside a transaction, properties update immediately when set
+ *   - Outside a transaction, properties update immediately when set.
+ *     Non-volatile values become dirty but do not persist automatically.
  *
  *   - Inside a transaction the root reference is isolated.  Changes are queued
- *     until commit.  On commit changes are persisted and change events
- *     triggered.
+ *     until commit.  On commit changes are persisted and change events emit.
  *
  * Datasources maintain a version number and trigger change events.  If
  * modified in a transaction they compute changes and persist values as
@@ -41,6 +41,24 @@ export interface Datasource<T extends StateType = StateType> extends Resource {
      * The data's version.
      */
     readonly version: number;
+
+    /**
+     * If non-volatile values change without a transaction, the store is marked
+     * dirty and you must use {@link save} to persist the values.
+     */
+    readonly dirty: boolean;
+
+    /**
+     * Persist non-volatile values modified without a transaction.
+     * 
+     * Currently will throw an error if resources cannot be locked.  And
+     * transaction isolation means values may be overwritten in a shared
+     * environment.
+     * 
+     * So this is intended for use in non-shared contexts like behavior
+     * initialization.
+     */
+    save(transaction: Transaction): void;
 }
 
 /**
@@ -58,6 +76,14 @@ export function Datasource<const T extends StateType = StateType>(options: Datas
 
         get version() {
             return internals.version;
+        },
+
+        get dirty() {
+            return !!internals.dirty;
+        },
+
+        save(transaction: Transaction) {
+            save(this, internals, transaction);
         },
     };
 }
@@ -133,6 +159,7 @@ export namespace Datasource {
 interface Internals extends Datasource.Options {
     values: Val.Struct;
     version: number;
+    dirty?: Val.Struct;
 }
 
 interface Changes {
@@ -212,15 +239,18 @@ function createRootReference(resource: Resource, internals: Internals, session: 
             // If we are transactional ensure transaction is exclusive and we
             // are participating
             if (transaction) {
+                // Join the transaction
                 transaction.addResourcesSync(resource);
                 transaction.addParticipants(participant);
-                transaction.beginSync();
 
+                // Upgrade transaction if not already exclusive
+                transaction.beginSync();
+        
                 // Clone values if we haven't already
                 if (values === internals.values) {
                     const old = values;
                     values = new internals.type();
-                    for (const index in fields) {
+                    for (const index of fields) {
                         values[index] = old[index];
                     }
                 }
@@ -234,7 +264,8 @@ function createRootReference(resource: Resource, internals: Internals, session: 
         },
 
         /**
-         * Post-processing for non-transactional changes.
+         * Post-processing for non-transactional changes, which take immediate
+         * effect.
          */
         notify(index?: string, oldValue?: Val, newValue?: Val) {
             // Index should be set because we only parent a struct reference
@@ -242,13 +273,12 @@ function createRootReference(resource: Resource, internals: Internals, session: 
                 return;
             }
 
-            // We do not currently support modifying nonvolatile values without
-            // a transaction
+            // Persistent values become dirty
             if (persistentFields.has(index)) {
-                values[index] = oldValue;
-                throw new ImplementationError(
-                    `Cannot update nonvolatile value ${index} because there is no active transaction to perform persistence`,
-                );
+                if (!internals.dirty) {
+                    internals.dirty = {};
+                }
+                internals.dirty[index] = newValue;
             }
 
             incrementVersion();
@@ -334,7 +364,7 @@ function createRootReference(resource: Resource, internals: Internals, session: 
     /**
      * For commit phase one we pass values to the persistence layer if present.
      */
-    async function commit1() {
+    function commit1() {
         computeChanges();
 
         // No phase one commit if there are not persistent changes
@@ -347,7 +377,7 @@ function createRootReference(resource: Resource, internals: Internals, session: 
             throw new InternalError("Datasource commit triggered without transaction");
         }
 
-        await internals.store?.set(session.transaction, persistent);
+        return internals.store?.set(session.transaction, persistent);
     }
 
     /**
@@ -356,6 +386,9 @@ function createRootReference(resource: Resource, internals: Internals, session: 
      */
     function commit2() {
         internals.values = values;
+
+        // Any lingering changes we are not responsible for persist here
+        delete internals.dirty;
 
         if (!changes) {
             return;
@@ -391,4 +424,28 @@ function createRootReference(resource: Resource, internals: Internals, session: 
 
         transaction?.promise.finally(reset);
     }
+}
+
+function save(resource: Resource, internals: Internals, transaction: Transaction) {
+    const dirty = internals.dirty;
+    if (!dirty) {
+        return;
+    }
+
+    transaction.addResourcesSync(resource);
+    transaction.addParticipants({
+        description: internals.supervisor.schema.name,
+
+        commit1() {
+            internals.store?.set(transaction, dirty);
+        },
+
+        // Best we can do for phase 2 is mark values as clean
+        commit2() {
+            delete internals.dirty;
+        },
+
+        // We cannot roll-back dirty values
+        rollback() {},
+    })
 }

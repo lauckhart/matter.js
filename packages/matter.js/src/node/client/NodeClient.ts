@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Behavior } from "../../behavior/Behavior.js";
-import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import { ImplementationError, NotImplementedError } from "../../common/MatterError.js";
+import { Agent } from "../../endpoint/Agent.js";
 import { Part } from "../../endpoint/Part.js";
 import type { RootEndpoint } from "../../endpoint/definitions/system/RootEndpoint.js";
 import { Node } from "../Node.js";
@@ -16,8 +15,12 @@ export class NodeClient implements Node {
         return undefined;
     }
 
-    get root(): Part<RootEndpoint> {
-        throw new ImplementationError("No root endpoint detected");
+    get root(): Agent.Instance<RootEndpoint["behaviors"]> {
+        return this.rootPart.agent;
+    }
+
+    get rootPart(): Part<RootEndpoint> {
+        throw new NotImplementedError();
     }
 
     constructor() {
@@ -27,14 +30,13 @@ export class NodeClient implements Node {
     async [Symbol.asyncDispose](): Promise<void> {
     }
 
-    initializePart(part: Part) {
+    adoptChild(part: Part) {
         // TODO
         part;
         throw new NotImplementedError();
     }
 
-    createBacking(_part: Part, _type: Behavior.Type): BehaviorBacking {
-        // TODO
-        throw new NotImplementedError();
+    serviceFor<T>(service: abstract new (...args: any[]) => T): T {
+        throw new ImplementationError(`Unsupported service ${service.name}`);
     }
 }

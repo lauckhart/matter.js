@@ -10,16 +10,16 @@ import { ClusterId } from "../../../../src/datatype/ClusterId.js";
 import { DeviceTypeId } from "../../../../src/datatype/DeviceTypeId.js";
 import { EndpointNumber } from "../../../../src/datatype/EndpointNumber.js";
 import { MutableEndpoint } from "../../../../src/endpoint/type/MutableEndpoint.js";
-import { MockPart } from "../../../endpoint/part-mocks.js";
-import { MockEndpoint, MockParentEndpoint } from "../../behavior-mocks.js";
+import { MockPart } from "../../../endpoint/mock-part.js";
+import { MockEndpoint } from "../../mock-behavior.js";
 
 function createFamily() {
     const parent = new MockPart({
-        type: MockParentEndpoint,
+        type: MockEndpoint,
         number: 1,
-    }).agent;
+    });
 
-    const child = new MockPart({ type: MockEndpoint, number: 2, owner: undefined }).agent;
+    const child = new MockPart({ type: MockEndpoint, number: 2, owner: undefined });
 
     parent.parts.add(child);
 
@@ -79,17 +79,17 @@ describe("DescriptorServer", () => {
     it("adds parts automatically", () => {
         const { parent } = createFamily();
 
-        const partsList = parent.descriptor.state.partsList;
+        const partsList = parent.agent.descriptor.state.partsList;
         expect(partsList).deep.equals([2]);
     });
 
-    it("remove parts automatically", async () => {
+    it("removes parts automatically", async () => {
         const { parent, child } = createFamily();
 
-        const partsState = parent.descriptor.state;
+        const partsState = parent.agent.descriptor.state;
         expect(partsState.partsList).deep.equals([2]);
 
-        await child.part.destroy();
+        await child.destroy();
         expect(partsState.partsList).deep.equals([]);
     });
 });

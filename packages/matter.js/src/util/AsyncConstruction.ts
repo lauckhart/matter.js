@@ -5,7 +5,7 @@
  */
 
 import { ImplementationError, NotInitializedError } from "../common/MatterError.js";
-import { MaybePromise } from "./Type.js";
+import { MaybePromise } from "./Promises.js";
 
 /**
  * Create an instance of a class implementing the {@link AsyncConstructable}

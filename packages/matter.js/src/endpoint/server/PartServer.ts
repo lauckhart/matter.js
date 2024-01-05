@@ -8,7 +8,6 @@ import { Behavior } from "../../behavior/Behavior.js";
 import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
 import { DescriptorServer } from "../../behavior/definitions/descriptor/DescriptorServer.js";
-import { PartsBehavior } from "../../behavior/definitions/parts/PartsBehavior.js";
 import { ClusterServerBehaviorBacking } from "../../behavior/server/ClusterServerBehaviorBacking.js";
 import { ServerBehaviorBacking } from "../../behavior/server/ServerBehaviorBacking.js";
 import { Attributes, Commands, Events } from "../../cluster/Cluster.js";
@@ -44,7 +43,7 @@ export class PartServer implements EndpointInterface {
 
         part.behaviors.require(DescriptorServer);
 
-        part.lifecycle.events.change.on(() => this.#structureChangedCallback?.());
+        part.lifecycle.changed.on(() => this.#structureChangedCallback?.());
 
         const agent = this.#part.agent;
 
@@ -98,15 +97,14 @@ export class PartServer implements EndpointInterface {
     }
 
     updatePartsList(): EndpointNumber[] {
-        // No actual update, parts list is maintained by PartsBehavior
+        // No actual update, parts list is maintained by Parts
         const descriptor = this.#part.agent.get(DescriptorServer);
         return descriptor.state.partsList;
     }
 
     getChildEndpoints(): EndpointInterface[] {
-        const agent = this.#part.agent;
-        if (agent.has(PartsBehavior)) {
-            const parts = agent.get(PartsBehavior);
+        if (this.#part.hasParts) {
+            const parts = this.#part.parts;
             return [...parts].map(part => PartServer.forPart(part));
         }
         return [];
@@ -173,15 +171,17 @@ export class PartServer implements EndpointInterface {
 
     addChildEndpoint(endpoint: EndpointInterface): void {
         if (endpoint instanceof PartServer) {
-            this.#part.agent.get(PartsBehavior).add(endpoint.#part);
+            this.#part.parts.add(endpoint.#part);
         } else {
             throw new ImplementationError("Attempt to add unmanaged endpoint as child of Part");
         }
     }
 
     getChildEndpoint(id: EndpointNumber): EndpointInterface | undefined {
-        const parts = this.#part.agent.get(PartsBehavior).state.children;
-        for (const part of parts) {
+        if (!this.#part.hasParts) {
+            return;
+        }
+        for (const part of this.#part.parts) {
             if (part.number === id) {
                 return PartServer.forPart(part);
             }

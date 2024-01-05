@@ -8,7 +8,7 @@ import { InvocationContext } from "../../../src/behavior/InvocationContext.js";
 import { ClusterInterface } from "../../../src/behavior/cluster/ClusterInterface.js";
 import { ClusterType } from "../../../src/cluster/ClusterType.js";
 import { BitFlag } from "../../../src/schema/BitmapSchema.js";
-import { MaybePromise } from "../../../src/util/Type.js";
+import { MaybePromise } from "../../../src/util/Promises.js";
 import { MyCluster } from "./cluster-behavior-test-util.js";
 
 const FeaturedCluster = ClusterType({
