@@ -11,6 +11,6 @@ export * from "./EndpointInterface.js";
 export * from "./Part.js";
 export * from "./part/PartOwner.js";
 export * from "./part/SupportedBehaviors.js";
-export * from "./server/PartServer.js";
+export * from "./PartServer.js";
 export * from "./type/EndpointType.js";
 export * from "./type/MutableEndpoint.js";

@@ -115,7 +115,7 @@ export class Behaviors {
 
         this.#part.lifecycle.change(Lifecycle.Change.ServersChanged);
             
-        if (type.immediate && this.#part.lifecycle.installed) {
+        if (type.immediate && this.#part.lifecycle.isInstalled) {
             this.#part.agent.activate(type);
         }
     }
@@ -203,7 +203,7 @@ export class Behaviors {
 
         if (missing.length) {
             throw new ImplementationError(
-                `${this.#part.description} is missing required clusters: ${describeList("and", ...missing)}`,
+                `${this.#part.description} is missing required behaviors: ${describeList("and", ...missing)}`,
             );
         }
     }

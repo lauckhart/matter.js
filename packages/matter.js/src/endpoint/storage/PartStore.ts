@@ -31,5 +31,10 @@ export interface PartStore {
     /**
      * Remove persisted values for the {@link Part}
      */
-    delete(): Promise<void>
+    delete(): Promise<void>;
+
+    /**
+     * Obtain a {@link Datasource.Store} for a behavior.
+     */
+    storeForBehavior(behaviorId: string): Datasource.Store;
 }

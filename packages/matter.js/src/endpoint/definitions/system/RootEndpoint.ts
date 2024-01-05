@@ -50,6 +50,7 @@ import { DeviceClasses } from "../../../device/DeviceTypes.js";
 import { SupportedBehaviors } from "../../part/SupportedBehaviors.js";
 import { Identity } from "../../../util/Type.js";
 import { MatterDeviceLibrarySpecificationV1_1 } from "../../../spec/Specifications.js";
+import { IndexBehavior } from "../../../behavior/definitions/index/IndexBehavior.js";
 
 export const RootRequirements = {
     /**
@@ -58,6 +59,7 @@ export const RootRequirements = {
     server: {
         mandatory: {
             Parts: PartsBehavior,
+            Index: IndexBehavior,
             BasicInformation: BasicInformationServer,
             AccessControl: AccessControlServer,
             GroupKeyManagement: GroupKeyManagementServer,
@@ -91,6 +93,8 @@ export const RootEndpointDefinition = MutableEndpoint({
     requirements: RootRequirements,
 
     behaviors: SupportedBehaviors(
+        RootRequirements.server.mandatory.Parts,
+        RootRequirements.server.mandatory.Index,
         RootRequirements.server.mandatory.BasicInformation,
         RootRequirements.server.mandatory.AccessControl,
         RootRequirements.server.mandatory.GroupKeyManagement,

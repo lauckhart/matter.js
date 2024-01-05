@@ -4,22 +4,21 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Behavior } from "../../behavior/Behavior.js";
-import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
-import { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
-import { DescriptorServer } from "../../behavior/definitions/descriptor/DescriptorServer.js";
-import { ClusterServerBehaviorBacking } from "../../behavior/server/ClusterServerBehaviorBacking.js";
-import { ServerBehaviorBacking } from "../../behavior/server/ServerBehaviorBacking.js";
-import { Attributes, Commands, Events } from "../../cluster/Cluster.js";
-import { ClusterType } from "../../cluster/ClusterType.js";
-import { ClusterClientObj } from "../../cluster/client/ClusterClientTypes.js";
-import { ClusterServerObj, asClusterServerInternal } from "../../cluster/server/ClusterServerTypes.js";
-import { ImplementationError, InternalError, NotImplementedError } from "../../common/MatterError.js";
-import { ClusterId } from "../../datatype/ClusterId.js";
-import { EndpointNumber } from "../../datatype/EndpointNumber.js";
-import { EndpointInterface } from "../EndpointInterface.js";
-import { Part } from "../Part.js";
-import { PersistenceBehavior } from "./PersistenceBehavior.js";
+import { Behavior } from "../behavior/Behavior.js";
+import { BehaviorBacking } from "../behavior/BehaviorBacking.js";
+import { ClusterBehavior } from "../behavior/cluster/ClusterBehavior.js";
+import { DescriptorServer } from "../behavior/definitions/descriptor/DescriptorServer.js";
+import { ClusterServerBehaviorBacking } from "../behavior/server/ClusterServerBehaviorBacking.js";
+import { ServerBehaviorBacking } from "../behavior/server/ServerBehaviorBacking.js";
+import { Attributes, Commands, Events } from "../cluster/Cluster.js";
+import { ClusterType } from "../cluster/ClusterType.js";
+import { ClusterClientObj } from "../cluster/client/ClusterClientTypes.js";
+import { ClusterServerObj, asClusterServerInternal } from "../cluster/server/ClusterServerTypes.js";
+import { ImplementationError, InternalError, NotImplementedError } from "../common/MatterError.js";
+import { ClusterId } from "../datatype/ClusterId.js";
+import { EndpointNumber } from "../datatype/EndpointNumber.js";
+import { EndpointInterface } from "./EndpointInterface.js";
+import { Part } from "./Part.js";
 
 const SERVER = Symbol("server");
 interface ServerPart extends Part {
@@ -41,17 +40,7 @@ export class PartServer implements EndpointInterface {
 
         this.#part = part;
 
-        part.behaviors.require(DescriptorServer);
-
         part.lifecycle.changed.on(() => this.#structureChangedCallback?.());
-
-        const agent = this.#part.agent;
-
-        agent.require(PersistenceBehavior);
-        agent.activate(PersistenceBehavior);
-
-        agent.require(DescriptorServer);
-        agent.activate(DescriptorServer);
     }
 
     createBacking(behavior: Behavior.Type): BehaviorBacking {

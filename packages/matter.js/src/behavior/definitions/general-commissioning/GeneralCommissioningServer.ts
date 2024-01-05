@@ -7,7 +7,7 @@
 import { AdministratorCommissioning } from "../../../cluster/definitions/AdministratorCommissioningCluster.js";
 import { GeneralCommissioning } from "../../../cluster/definitions/GeneralCommissioningCluster.js";
 import { MatterFlowError } from "../../../common/MatterError.js";
-import { PartServer } from "../../../endpoint/server/PartServer.js";
+import { PartServer } from "../../../endpoint/PartServer.js";
 import { Logger } from "../../../log/Logger.js";
 import { StatusResponseError } from "../../../protocol/interaction/InteractionMessenger.js";
 import { StatusCode } from "../../../protocol/interaction/InteractionProtocol.js";

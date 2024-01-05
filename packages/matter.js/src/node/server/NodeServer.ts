@@ -11,7 +11,7 @@ import { FabricIndex } from "../../datatype/FabricIndex.js";
 import { Part } from "../../endpoint/Part.js";
 import { RootEndpoint } from "../../endpoint/definitions/system/RootEndpoint.js";
 import { IndexBehavior } from "../../behavior/definitions/index/IndexBehavior.js";
-import { PartServer } from "../../endpoint/server/PartServer.js";
+import { PartServer } from "../../endpoint/PartServer.js";
 import { EndpointType } from "../../endpoint/type/EndpointType.js";
 import { Logger } from "../../log/Logger.js";
 import { StorageContext } from "../../storage/StorageContext.js";
@@ -20,13 +20,16 @@ import { Node } from "../Node.js";
 import { CommissioningOptions } from "../options/CommissioningOptions.js";
 import { ServerOptions } from "../options/ServerOptions.js";
 import { BaseNodeServer } from "./BaseNodeServer.js";
-import { NodeStore } from "./NodeStore.js";
+import { ServerStore } from "./storage/ServerStore.js";
 import { TransactionalInteractionServer } from "./TransactionalInteractionServer.js";
 import { AsyncConstruction, asyncNew } from "../../util/AsyncConstruction.js";
 import { Lifecycle } from "../../endpoint/part/Lifecycle.js";
 import { Transaction } from "../../behavior/state/transaction/Transaction.js";
 import { BehaviorInitializer } from "../../endpoint/part/BehaviorInitializer.js";
 import { ServerBehaviorInitializer } from "./ServerBehaviorInitializer.js";
+import { ServerPartStores } from "./storage/ServerPartStores.js";
+import { EventHandler } from "../../protocol/interaction/EventHandler.js";
+import { IdentityService } from "./IdentityService.js";
 
 const logger = Logger.get("NodeServer");
 
@@ -41,13 +44,14 @@ const logger = Logger.get("NodeServer");
  */
 export class NodeServer extends BaseNodeServer implements Node {
     #configuration: ServerOptions.Configuration;
-    #root?: Part<RootEndpoint>;
+    #root: Part<RootEndpoint>;
     #rootServer?: PartServer;
     #nextEndpointId: EndpointNumber;
     #host?: Host;
-    #store?: NodeStore;
+    #store?: ServerStore;
     #construction: AsyncConstruction<NodeServer>;
     #behaviorInitializer?: BehaviorInitializer;
+    #identityService?: IdentityService;
 
     get owner() {
         return undefined;
@@ -117,7 +121,7 @@ export class NodeServer extends BaseNodeServer implements Node {
         this.#construction = AsyncConstruction(
             this,
             async () => {
-                this.#store = await NodeStore.create(this.#configuration);
+                this.#store = await ServerStore.create(this.#configuration);
                 
                 root.lifecycle.change(Lifecycle.Change.Installed);
             }
@@ -242,13 +246,17 @@ export class NodeServer extends BaseNodeServer implements Node {
                 }
                 return this.#behaviorInitializer as T;
 
-            case NodeStore:
-                return this.store as T;
+            case ServerPartStores:
+                return this.store.partStores as T;
 
-            case IndexBehavior:
-                // Child nodes may have indices but only the root node is
-                // supported as a service
-                return this.root.get(IndexBehavior) as T;
+            case EventHandler:
+                return this.store.eventHandler as T;
+
+            case IdentityService:
+                if (!this.#identityService) {
+                    this.#identityService = new IdentityService(this.#root);
+                }
+                return this.#identityService as T;
         }
 
         throw new ImplementationError(`Unsupported service ${type.name}`);

@@ -4,67 +4,29 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Behavior } from "../../behavior/Behavior.js";
 import { Datasource } from "../../behavior/state/managed/Datasource.js";
 import { Val } from "../../behavior/state/managed/Val.js";
 import { Participant } from "../../behavior/state/transaction/Participant.js";
 import { Transaction } from "../../behavior/state/transaction/Transaction.js";
-import { NodeStore } from "../../node/server/NodeStore.js";
-import { EventHandler } from "../../protocol/interaction/EventHandler.js";
 import { MaybePromise } from "../../util/Promises.js";
-import { PartStore } from "../part/PartStore.js";
-import { PartServer } from "./PartServer.js";
-
-/**
- * Handles persistence of state for a {@link PartServer}.
- */
-export class PersistenceBehavior extends Behavior {
-    static override readonly id = "persistence";
-
-    declare internal: PersistenceBehavior.Internal;
-
-    static override immediate = true;
-
-    /**
-     * Obtain a {@link Datasource.Store} for a specific {@link Behavior.Type}.
-     */
-    storeFor(type: Behavior.Type) {
-        if (!this.internal.partStore) {
-            this.internal.partStore = this.part.serviceFor(NodeStore).storeFor(this.part);
-        }
-        let store = this.internal.datasourceStores[type.id];
-        if (!store) {
-            store = this.internal.datasourceStores[type.id] = DatasourceStore(
-                this.internal.partStore,
-                type.id,
-                this.internal.partStore.initialValues[type.id]
-            );
-        }
-        return store;
-    }
-
-    /**
-     * Access the {@link EventHandler} for the node.
-     */
-    get eventHandler() {
-        return this.part.serviceFor(EventHandler);
-    }
-}
-
-export namespace PersistenceBehavior {
-    export class Internal {
-        partStore?: PartStore;
-        datasourceStores = {} as Record<string, Datasource.Store>;
-    }
-}
+import type { PartStore } from "./PartStore.js";
 
 interface StorageParticipant extends Participant {
     mutations?: Record<string, Val.Struct>;
 }
 
-function DatasourceStore(partStore: PartStore, behaviorId: string, initialValues: Val.Struct = {}): Datasource.Store {
+/**
+ * Factory function for the default implementation of {@link Datasource.Store}.
+ * 
+ * Performs read & write for non-volatile values for a single behavior via
+ * the {@link PartStore} interface.
+ */
+export function DatasourceStore(
+    partStore: PartStore,
+    behaviorId: string,
+): Datasource.Store {
     return {
-        initialValues,
+        initialValues: partStore.initialValues[behaviorId],
 
         async set(transaction: Transaction, values: Val.Struct) {
             const participant = participantFor(transaction, partStore);
@@ -80,7 +42,6 @@ function DatasourceStore(partStore: PartStore, behaviorId: string, initialValues
         },
     };
 }
-
 /**
  * We create a single participant per storage/transaction pair.  This function
  * handles setup and retrieval of this participant.

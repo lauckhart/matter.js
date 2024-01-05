@@ -40,7 +40,7 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
 
         this.internal.certification = new DeviceCertification(
             this.state.certification,
-            commissioning.productDescription
+            commissioning.state.productDescription
         );
     }
 

@@ -107,10 +107,11 @@ export class EndpointFile extends TsFile {
         this.addImport("endpoint/part/SupportedBehaviors.js", "SupportedBehaviors");
         definition.atom(`requirements: ${this.requirementsName}`);
         const behaviors = definition.expressions("behaviors: SupportedBehaviors(", ")");
+        behaviors.atom("");
 
         if (requirements.default.length) {
-            for (const cluster of requirements.default) {
-                behaviors.atom(requirements.reference(cluster));
+            for (const behavior of requirements.default) {
+                behaviors.atom(requirements.reference(behavior));
             }
         }
 

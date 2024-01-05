@@ -95,6 +95,10 @@ export namespace BehaviorSupervisor {
  * Note 2: Finding fields isn't as simple as just using "for ... in" because
  * ES6 class accessors are non-enumerable.  So we instead search the prototype
  * chain for read/write descriptors.
+ * 
+ * Note 3: We can't do anything with types either.  This means e.g. writing to
+ * subfields won't behave as expected.  Really to do things correctly behavior
+ * authors should hand-craft schema.  Or maybe we do something with decorators?.
  */
 function addExtensionFields(base: Schema, defaultState: Val.Struct, children: ValueModel[]) {
     const props = new Set<string>();
@@ -114,25 +118,25 @@ function addExtensionFields(base: Schema, defaultState: Val.Struct, children: Va
                 continue;
             }
 
-            const descriptor = descriptors[name];
-
-            if ((!descriptor.value || !descriptor.writable) && (!descriptor.get || !descriptor.set)) {
-                continue;
-            }
-
             if (!props.has(name)) {
                 props.add(name);
-                children.push(
-                    new FieldModel({
-                        name,
-                        type: "any",
 
-                        access: new Access({
-                            readPriv: Access.Privilege.View,
-                            writePriv: Access.Privilege.Operate,
-                        }),
+                const field = new FieldModel({
+                    name,
+                    type: "any",
+
+                    access: new Access({
+                        readPriv: Access.Privilege.View,
+                        writePriv: Access.Privilege.Operate,
                     }),
-                );
+                });
+
+                const descriptor = descriptors[name];
+                if (!descriptor.writable && !descriptor.set) {
+                    field.quality = "F";
+                }
+    
+                children.push(field);
             }
         }
 

@@ -5,7 +5,7 @@
  */
 
 import { Behavior } from "../../Behavior.js";
-import type { PartServer } from "../../../endpoint/server/PartServer.js";
+import type { PartServer } from "../../../endpoint/PartServer.js";
 import { CommissioningOptions } from "../../../node/options/CommissioningOptions.js";
 import { DatatypeModel, FieldElement } from "../../../model/index.js";
 import { Logger } from "../../../log/Logger.js";
@@ -50,30 +50,7 @@ export class CommissioningBehavior extends Behavior {
         if (this.state.ble === undefined) {
             this.state.ble = Ble.enabled;
         }
-    }
 
-    /**
-     * The server invokes this method if the node is not yet commissioned.
-     * 
-     * An uncommissioned node is not yet associated with fabrics.  It cannot
-     * be used until commissioned by a controller.
-     */
-    initiateCommissioning() {
-        const { passcode, discriminator } = this.state;
-
-        logger.info(`Node is uncommissioned`);
-        logger.info(`Passcode is ${passcode}, discriminator is ${discriminator}`);
-
-        const { qrPairingCode, manualPairingCode } = this.pairingCodes;
-
-        logger.info(QrCode.get(qrPairingCode));
-        logger.info(
-            `QR code URL: https://project-chip.github.io/connectedhomeip/qrcode.html?data=${qrPairingCode}`,
-        );
-        logger.info(`Manual pairing code: ${manualPairingCode}`);
-    }
-
-    get productDescription() {
         if (!this.state.productDescription) {
             const bi = this.agent.get(BasicInformationBehavior).state;
 
@@ -92,8 +69,27 @@ export class CommissioningBehavior extends Behavior {
                 productId: bi.productId,
             }
         }
-    
-        return this.state.productDescription;
+    }
+
+    /**
+     * The server invokes this method if the node is not yet commissioned.
+     * 
+     * An uncommissioned node is not yet associated with fabrics.  It cannot
+     * be used until commissioned by a controller.
+     */
+    initiateCommissioning() {
+        const { passcode, discriminator } = this.state;
+
+        logger.info(`Node is uncommissioned`);
+        logger.info(`Passcode is ${passcode}, discriminator is ${discriminator}`);
+
+        const { qrPairingCode, manualPairingCode } = this.pairingCodes;
+
+        logger.info(QrCode.get(qrPairingCode).replace(/\n/g, "\n\t"));
+        logger.info(
+            `QR code URL: https://project-chip.github.io/connectedhomeip/qrcode.html?data=${qrPairingCode}`,
+        );
+        logger.info(`Manual pairing code: ${manualPairingCode}`);
     }
 
     /**

@@ -9,7 +9,7 @@ import { Part } from "../Part.js";
 import { Lifecycle } from "./Lifecycle.js";
 import { EndpointType } from "../type/EndpointType.js";
 import { BasicSet, MutableSet, ObservableSet } from "../../util/Set.js";
-import { IdentityConflictError, IndexBehavior } from "../../behavior/definitions/index/IndexBehavior.js";
+import { IdentityConflictError, IdentityService } from "../../node/server/IdentityService.js";
 
 /**
  * Manages parent-child relationship between endpoints.
@@ -97,7 +97,7 @@ export class Parts implements MutableSet<Part, Part | Agent>, ObservableSet<Part
         //
         // TODO - It's an edge case but we may miss the case where a part is
         // owned but the parent is not yet initialized
-        if (this.#part.lifecycle.installed) {
+        if (this.#part.lifecycle.isInstalled) {
             this.#validateInsertion(child);
         }
 
@@ -106,7 +106,7 @@ export class Parts implements MutableSet<Part, Part | Agent>, ObservableSet<Part
         child.lifecycle.changed.on((type, part) => this.#bubbleChange(type, part));
         child.lifecycle.destroyed.once(() => this.#disownPart(child));
 
-        if (this.#part.lifecycle.ready) {
+        if (this.#part.lifecycle.isReady) {
             child.lifecycle.change(Lifecycle.Change.Installed);
         }
     }
@@ -123,10 +123,8 @@ export class Parts implements MutableSet<Part, Part | Agent>, ObservableSet<Part
     }
     
     #validateInsertion(part: Part, usedIds?: Set<string>, usedNumbers?: Set<number>) {
-        const index = this.#part.serviceFor(IndexBehavior);
-
         if (part.lifecycle.hasId) {
-            index.assertIdAvailable(part.id, part);
+            this.#part.serviceFor(IdentityService).assertIdAvailable(part.id, part);
             if (usedIds?.has(part.id)) {
                 throw new IdentityConflictError(
                     `${part.description}: Cannot add part because descendents have conflicting definitions for ID ${part.id}`
@@ -135,7 +133,7 @@ export class Parts implements MutableSet<Part, Part | Agent>, ObservableSet<Part
         }
 
         if (part.lifecycle.hasNumber) {
-            index.assertNumberAvailable(part.number, part);
+            this.#part.serviceFor(IdentityService).assertNumberAvailable(part.number, part);
             if (usedNumbers?.has(part.number)) {
                 throw new IdentityConflictError(
                     `${part.description}: Cannot add part because descendents have conflicting definitions for endpoint number ${part.number}`

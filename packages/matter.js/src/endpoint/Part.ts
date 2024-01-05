@@ -7,9 +7,9 @@
 import { AccessControl } from "../behavior/AccessControl.js";
 import { Behavior } from "../behavior/Behavior.js";
 import type { InvocationContext } from "../behavior/InvocationContext.js";
-import { IndexBehavior } from "../behavior/definitions/index/IndexBehavior.js";
 import { ImplementationError, InternalError, NotInitializedError } from "../common/MatterError.js";
 import { EndpointNumber } from "../datatype/EndpointNumber.js";
+import { IdentityService } from "../node/server/IdentityService.js";
 import { AsyncConstruction } from "../util/AsyncConstruction.js";
 import { MaybePromise } from "../util/Promises.js";
 import { Agent } from "./Agent.js";
@@ -112,9 +112,6 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
         const behaviors = this.#type.behaviors ?? [];
         this.#behaviors = new Behaviors(this, behaviors, { ...options?.config });
 
-        if (options?.owner) {
-            this.owner = options.owner;
-        }
         this.#lifecycle = new Lifecycle(this);
 
         if (options?.id !== undefined) {
@@ -123,6 +120,10 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
 
         if (options?.number !== undefined) {
             this.number = options?.number;
+        }
+
+        if (options?.owner) {
+            this.owner = options.owner;
         }
 
         if (options?.parts) {
@@ -180,7 +181,7 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
         }
 
         if (this.lifecycle.isInstalled) {
-            this.owner.serviceFor(IndexBehavior).assertIdAvailable(id, this);
+            this.owner.serviceFor(IdentityService).assertIdAvailable(id, this);
         }
         
         this.#id = id;
@@ -211,7 +212,7 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
             }
 
             if (this.lifecycle.isInstalled) {
-                this.serviceFor(IndexBehavior).assertNumberAvailable(number, this);
+                this.serviceFor(IdentityService).assertNumberAvailable(number, this);
             }
         }
 
@@ -277,10 +278,10 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
      */
     get description() {
         let description;
-        if (this.id) {
+        if (this.#lifecycle.hasId) {
             description = ` ${this.id}`;
         }
-        if (this.number) {
+        if (this.#lifecycle.hasNumber) {
             if (description) {
                 description = `${description} (#${this.number})`;
             } else {

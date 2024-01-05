@@ -8,6 +8,9 @@ import { ImplementationError } from "../common/MatterError.js";
 import { Time } from "../time/Time.js";
 import { ByteArray } from "../util/ByteArray.js";
 
+// Replaces tabs following newlines so following lines indent
+const ANSI_INDENT_PREFIX = "".padStart(51);
+
 export enum Level {
     DEBUG = 0,
     INFO = 1,
@@ -127,6 +130,9 @@ function ansiLogFormatter(now: Date, level: Level, facility: string, values: any
                 .replace(/([✓✔])/g, `${ANSI_CODES.LEVEL_INFO}$1${levelCode}`)
                 .replace(/([✗✘])/g, `${ANSI_CODES.LEVEL_ERROR}$1${levelCode}`),
     );
+
+    formattedValues = formattedValues.replace(/\n\t/g, `\n${ANSI_INDENT_PREFIX}`)
+
     formattedValues = `${nestingPrefix()}${formattedValues}`;
     const prefixedMatch = formattedValues.match(/^(⎸? *\d+ )(.*)$/);
     if (prefixedMatch) {

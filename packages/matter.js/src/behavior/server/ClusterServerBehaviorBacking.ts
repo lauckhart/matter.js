@@ -13,6 +13,7 @@ import type { Part } from "../../endpoint/Part.js";
 import { TransactionalInteractionServer } from "../../node/server/TransactionalInteractionServer.js";
 import { SecureSession } from "../../session/SecureSession.js";
 import { Session } from "../../session/Session.js";
+import { MaybePromise } from "../../util/Promises.js";
 import { Behavior } from "../Behavior.js";
 import { InvocationContext } from "../InvocationContext.js";
 import type { ClusterBehavior } from "../cluster/ClusterBehavior.js";
@@ -69,29 +70,33 @@ export class ClusterServerBehaviorBacking extends ServerBehaviorBacking {
     }
 
     protected override invokeInitializer(behavior: Behavior, options?: Behavior.Options) {
-        super.invokeInitializer(behavior, options);
+        MaybePromise.then(
+            super.invokeInitializer(behavior, options),
 
-        // After initialization our datasource is available so configure the
-        // cluster server's datasource
-        const datasource = this.datasource;
-        const eventHandler = this.eventHandler;
-        this.#clusterServer.datasource = {
-            get version() {
-                return datasource.version
-            },
+            () => {
+                // After initialization our datasource is available so we may configure the
+                // cluster server's datasource
+                const datasource = this.datasource;
+                const eventHandler = this.eventHandler;
+                this.#clusterServer.datasource = {
+                    get version() {
+                        return datasource.version
+                    },
 
-            get eventHandler() {
-                return eventHandler;
-            },
+                    get eventHandler() {
+                        return eventHandler;
+                    },
 
-            // We handle change management ourselves
-            changed() {},
+                    // We handle change management ourselves
+                    changed() {},
 
-            // We handle version management ourselves
-            increaseVersion() {
-                return datasource.version;
-            },
-        }
+                    // We handle version management ourselves
+                    increaseVersion() {
+                        return datasource.version;
+                    },
+                }
+            }
+        );
     }
 }
 

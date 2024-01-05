@@ -25,6 +25,9 @@ export interface PartOwner {
 
     /**
      * Access a service component supported by the owner.
+     * 
+     * This simple form of dependency injection acts as a bridge between parts
+     * and the hosting node.
      */
     serviceFor<T>(type: abstract new (...args: any) => T): T;
 }

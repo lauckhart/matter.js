@@ -4,15 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ImplementationError } from "../../../common/MatterError.js";
 import type { Part } from "../../../endpoint/Part.js";
 import { Lifecycle } from "../../../endpoint/part/Lifecycle.js";
+import { IdentityService } from "../../../node/server/IdentityService.js";
 import { Behavior } from "../../Behavior.js";
-
-/**
- * Thrown when there is a part ID or number conflict.
- */
-export class IdentityConflictError extends ImplementationError {};
 
 /**
  * This behavior indexes all descendents of a {@link Part} by ID and number.
@@ -72,39 +67,16 @@ export class IndexBehavior extends Behavior {
         return this.state.partsByNumber[number];
     }
 
-    /**
-     * Ensure that an ID is available for assignment to a {@link Part}.
-     */
-    assertIdAvailable(id: string, part: Part) {
-        const other = this.forId(id);
-        if (other && other !== part) {
-            throw new IdentityConflictError(`Another part already exists with ID ${id}`)
-        }
-    }
-
-    /**
-     * Ensure that a number is available for assignment to a {@link Part}.
-     */
-    assertNumberAvailable(number: number, part: Part) {
-        const other = this.forNumber(number);
-        if (number === 0) {
-
-        }
-        if (other && other !== part) {
-            throw new IdentityConflictError(`Another part already exists with number ${number}`)
-        }
-    }
-
     #add(part: Part) {
         // The assertions herein are sanity checks; if there is a conflict then
         // state is already corrupted
         if (part.lifecycle.hasId) {
-            this.assertIdAvailable(part.id, part);
+            this.part.serviceFor(IdentityService).assertIdAvailable(part.id, part);
             this.state.partsById[part.id] = part;
         }
 
         if (part.lifecycle.hasNumber) {
-            this.assertNumberAvailable(part.number, part);
+            this.part.serviceFor(IdentityService).assertNumberAvailable(part.number, part);
             this.state.partsByNumber[part.number] = part;
         }
 

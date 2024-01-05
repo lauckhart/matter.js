@@ -64,12 +64,11 @@ export function anyPromise<T>(promises: ((() => Promise<T>) | Promise<T>)[]): Pr
 /**
  * Return type for functions that are optionally asynchronous.
  */
-
 export type MaybePromise<T = void> = T | Promise<T>;
+
 /**
  * Promise-like version of above.
  */
-
 export type MaybePromiseLike<T = void> = T | PromiseLike<T>;
 
 export namespace MaybePromise {

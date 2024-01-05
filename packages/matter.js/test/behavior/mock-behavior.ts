@@ -10,7 +10,7 @@ import { AccessLevel } from "../../src/cluster/Cluster.js";
 import { FabricIndex } from "../../src/datatype/FabricIndex.js";
 import { MutableEndpoint } from "../../src/endpoint/type/MutableEndpoint.js";
 import type { Fabric } from "../../src/fabric/Fabric.js";
-import { PartStore } from "../../src/endpoint/part/PartStore.js";
+import { PartStore } from "../../src/endpoint/storage/PartStore.js";
 import { Val } from "../../src/behavior/state/managed/Val.js";
 
 class MockFabricImplementation {
@@ -34,6 +34,15 @@ export class MockPartStore implements PartStore {
     
     async delete(): Promise<void> {
         // No tests for this yet
+    }
+
+    storeForBehavior() {
+        return {
+            set() {
+                // No test for this yet
+                return Promise.resolve();
+            }
+        }
     }
 }
 

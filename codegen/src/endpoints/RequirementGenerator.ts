@@ -24,7 +24,7 @@ type ClusterDetail = {
  * Analyzes endpoint clusters and generates definitions.
  */
 export class RequirementGenerator {
-    default = Array<ClusterModel>();
+    default = Array<string>();
     mandatoryWithExtension?: ClusterModel[];
 
     #mandatory = Array<ClusterDetail>();
@@ -45,13 +45,9 @@ export class RequirementGenerator {
         const clusterReqs = this.file.model.requirements.filter(r => r.element === `${type}Cluster`);
 
         if (type === "server" && MANDATORY_PART_ENDPOINTS.includes(file.definitionName)) {
-            switch (file.definitionName) {
-                case "RootEndpoint":
-                case "AggregatorEndpoint":
-                case "BridgedNodeEndpoint":
-                    this.#mandatoryParts = true;
-                    break;
-            }
+            this.#mandatoryParts = true;
+            this.default.push("Parts");
+            this.default.push("Index");
         }
 
         for (const requirement of clusterReqs) {
@@ -73,7 +69,7 @@ export class RequirementGenerator {
                     }
                     this.mandatoryWithExtension.push(definition);
                 } else {
-                    this.default.push(definition);
+                    this.default.push(definition.name);
                 }
 
                 this.#mandatory.push({ requirement, definition });
@@ -85,8 +81,10 @@ export class RequirementGenerator {
 
     generate() {
         if (this.#mandatoryParts) {
-            this.file.addImport(`behavior/definitions/parts/PartsBehavior.js`, "PartsBehavior");
+            this.file.addImport("behavior/definitions/parts/PartsBehavior.js", "PartsBehavior");
+            this.file.addImport("behavior/definitions/index/IndexBehavior.js", "IndexBehavior");
             this.mandatoryBlock.atom("Parts", "PartsBehavior");
+            this.mandatoryBlock.atom("Index", "IndexBehavior");
         }
 
         for (const detail of this.#mandatory) {
@@ -100,8 +98,8 @@ export class RequirementGenerator {
         return this.#clusterBlock;
     }
 
-    reference(cluster: ClusterModel, mandatory = true) {
-        return `${this.file.requirementsName}.${this.type}.${mandatory ? "mandatory" : "optional"}.${cluster.name}`;
+    reference(name: string, mandatory = true) {
+        return `${this.file.requirementsName}.${this.type}.${mandatory ? "mandatory" : "optional"}.${name}`;
     }
 
     private get mandatoryBlock() {

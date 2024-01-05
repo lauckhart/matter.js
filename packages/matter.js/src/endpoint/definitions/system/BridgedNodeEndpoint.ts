@@ -6,7 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { PartsBehavior } from "../../../behavior/definitions/parts/PartsBehavior.js";
 import {
     BridgedDeviceBasicInformationServer
 } from "../../../behavior/definitions/bridged-device-basic-information/BridgedDeviceBasicInformationServer.js";
@@ -24,7 +23,7 @@ export const BridgedNodeRequirements = {
      * An implementation for each server cluster supported by the endpoint per the Matter specification.
      */
     server: {
-        mandatory: { Parts: PartsBehavior, BridgedDeviceBasicInformation: BridgedDeviceBasicInformationServer },
+        mandatory: { BridgedDeviceBasicInformation: BridgedDeviceBasicInformationServer },
         optional: { PowerSourceConfiguration: PowerSourceConfigurationServer, PowerSource: PowerSourceServer }
     }
 };

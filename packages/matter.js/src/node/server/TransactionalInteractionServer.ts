@@ -11,13 +11,13 @@ import { CommandServer } from "../../cluster/server/CommandServer.js";
 import { Message } from "../../codec/MessageCodec.js";
 import { EndpointInterface } from "../../endpoint/EndpointInterface.js";
 import { Part } from "../../endpoint/Part.js";
-import { PartServer } from "../../endpoint/server/PartServer.js";
+import { PartServer } from "../../endpoint/PartServer.js";
 import { Logger } from "../../log/Logger.js";
 import { InteractionEndpointStructure } from "../../protocol/interaction/InteractionEndpointStructure.js";
 import { InteractionServer } from "../../protocol/interaction/InteractionServer.js";
 import { Session } from "../../session/Session.js";
 import { SubscriptionOptions } from "../options/SubscriptionOptions.js";
-import { NodeStore } from "./NodeStore.js";
+import { ServerStore } from "./storage/ServerStore.js";
 
 const TRANSACTION = Symbol("transaction");
 
@@ -49,7 +49,7 @@ interface InternalSession extends Session<MatterDevice> {
  * light for now.
  */
 export class TransactionalInteractionServer extends InteractionServer {
-    constructor(root: Part, store: NodeStore, subscriptionOptions: SubscriptionOptions) {
+    constructor(root: Part, store: ServerStore, subscriptionOptions: SubscriptionOptions) {
         const structure = new InteractionEndpointStructure;
         root.lifecycle.changed.on(() => structure.initializeFromEndpoint(PartServer.forPart(root)))
         super({
