@@ -6,6 +6,8 @@ import { logger } from "./ServerStore.js";
 import { DatasourceStore } from "../../../endpoint/storage/DatasourceStore.js";
 import { Datasource } from "../../../behavior/state/managed/Datasource.js";
 
+const NUMBER_KEY = "__number__";
+
 /**
  * The server implementation of {@link PartStore}.
  * 
@@ -19,8 +21,6 @@ export class ServerPartStore implements PartStore {
     constructor(partId: string, storage: StorageContext, isNew: boolean) {
         this.#storage = storage.createContext(partId);
 
-        this.#storage.set("defined", true);
-
         for (const behaviorId of this.#storage.keys()) {
             const behaviorValues = this.#initialValues[behaviorId] = {} as Val.Struct;
             const behaviorStorage = this.#storage.createContext(behaviorId);
@@ -30,7 +30,7 @@ export class ServerPartStore implements PartStore {
             }
         }
 
-        const number = this.#storage.get("number", -1) as number | undefined;
+        const number = this.#storage.get(NUMBER_KEY, -1) as number | undefined;
         if (number !== -1) {
             this.#number = number;
         } else if (!isNew) {
@@ -51,15 +51,13 @@ export class ServerPartStore implements PartStore {
     }
 
     async setNumber(number: number) {
-        this.#storage.set("number", number);
+        this.#storage.set(NUMBER_KEY, number);
     }
 
     async set(values: Record<string, Val.Struct>) {
         for (const behaviorId in values) {
             const behaviorValues = values[behaviorId];
             const behaviorStorage = this.#storage.createContext(behaviorId);
-
-            behaviorStorage.set("defined", true);
 
             for (const key in behaviorValues) {
                 const value = behaviorValues[key];

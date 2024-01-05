@@ -323,7 +323,15 @@ export class Transaction {
     /**
      * Commit logic passed to #finish.
      */
-    #executeCommit() {
+    #executeCommit(): MaybePromise<void> {
+        const result = this.#executeCommit1();
+        if (MaybePromise.is(result)) {
+            return result.then(() => this.#executeCommit2());
+        }
+        return this.#executeCommit2();
+    }
+
+    #executeCommit1(): MaybePromise<void> {
         // Commit phase 1
         const phase1Error = (participant: string, error: any) => {
             logger.error(`Error committing ${participant} (phase one), rolling back:`, error);
@@ -335,18 +343,37 @@ export class Transaction {
             });
         }
 
-        for (const participant of this.participants) {
+        // Ugh.  Iterating with MaybePromise sucks, need to make a proper
+        // sync/async wrapper that acts like a promise
+        const participantIterator = this.participants[Symbol.iterator]();
+
+        function commitNextParticipant() {
+            const next = participantIterator.next();
+
+            if (next.done) {
+                return;
+            }
+
+            const participant = next.value;
+
             try {
                 const promise = participant.commit1();
                 if (MaybePromise.is(promise)) {
-                    const description = participant.description;
-                    return promise.catch(e => phase1Error(description, e));
+                    return promise
+                        .then(() => { commitNextParticipant() })
+                        .catch(e => phase1Error(participant.description, e));
+                } else {
+                    commitNextParticipant();
                 }
             } catch (e) {
                 return phase1Error(participant.description, e);
             }
         }
 
+        return commitNextParticipant();
+    }
+
+    #executeCommit2() {
         // Commit phase 2
         const phase2Error = (participant: string, error: any) => {
             logger.error(

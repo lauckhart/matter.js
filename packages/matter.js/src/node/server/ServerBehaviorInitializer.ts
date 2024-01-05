@@ -8,14 +8,13 @@ import { Behavior } from "../../behavior/Behavior.js";
 import { BehaviorBacking } from "../../behavior/BehaviorBacking.js";
 import { DescriptorServer } from "../../behavior/definitions/descriptor/DescriptorServer.js";
 import { InternalError } from "../../common/MatterError.js";
-import { EndpointNumber } from "../../datatype/EndpointNumber.js";
 import { Part } from "../../endpoint/Part.js";
 import { BehaviorInitializer } from "../../endpoint/part/BehaviorInitializer.js";
 import { PartServer } from "../../endpoint/PartServer.js";
 import { Logger } from "../../log/Logger.js";
 import type { NodeServer } from "./NodeServer.js";
 
-const logger = Logger.get("ServerBehaviorInitializer");
+const logger = Logger.get("BehaviorInit");
 
 export class ServerBehaviorInitializer extends BehaviorInitializer {
     #server: NodeServer;
@@ -30,10 +29,8 @@ export class ServerBehaviorInitializer extends BehaviorInitializer {
             part.id = this.#identifyPart(part);
         }
 
-        const store = this.#server.store.partStores.storeForPart(part);
-
         if (!part.lifecycle.hasNumber) {
-            part.number = EndpointNumber(store.number ?? this.#server.store.allocateNumber());
+            this.#server.store.partStores.assignNumber(part);
         }
 
         part.behaviors.require(DescriptorServer);

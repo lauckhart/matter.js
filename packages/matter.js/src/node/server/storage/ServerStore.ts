@@ -26,14 +26,10 @@ export const logger = Logger.get("NodeStore");
  */
 export class ServerStore {
     #environment: Environment;
-    #nextNumber: number;
-    #allocatedNumbers = new Set<number>;
     #storage?: StorageManager;
     #eventHandler?: EventHandler;
     #sessionStorage?: StorageContext;
     #fabricStorage?: StorageContext;
-    #endpointStorage?: StorageContext;
-    #parameterStorage?: StorageContext;
     #partStores?: ServerPartStores;
     #construction: AsyncConstruction<ServerStore>;
 
@@ -41,60 +37,32 @@ export class ServerStore {
         return this.#construction;
     }
 
-    constructor(configuration: ServerOptions.Configuration) {
+   /**
+    * Create a new store.
+    * 
+    * TODO - implement conversion from 0.7 format so people can change API
+    * seamlessly
+    */
+   constructor(configuration: ServerOptions.Configuration) {
         this.#environment = configuration.environment;
-        this.#nextNumber = (configuration.nextEndpointNumber ?? 1) % 0xffff;
+        let nextNumber = configuration.nextEndpointNumber;
 
         this.#construction = AsyncConstruction(
             this,
-            () => this.#initialize(),
+            async () => {
+                this.#storage = await this.#environment.createStorage();
+        
+                this.#partStores = await asyncNew(
+                    ServerPartStores,
+                    this.#storage.createContext("endpoints"),
+                    nextNumber
+                );
+            }
         )
     }
 
     static async create(configuration: ServerOptions.Configuration) {
         return await asyncNew(this, configuration);
-    }
-
-    /**
-     * Initialize the store.
-     * 
-     * TODO - implement conversion from 0.7 format so people can change API
-     * seamlessly
-     */
-    async #initialize() {
-        this.#storage = await this.#environment.createStorage();
-
-        this.#nextNumber = this.parameterStorage.get("nextEndpointNumber", this.#nextNumber);
-
-        this.#partStores = new ServerPartStores(this.#storage.createContext("endpoints"));
-
-        for (const partId in this.#endpointStorage) {
-            const partStore = await this.#partStores.loadFromStorage(partId);
-
-            const number = partStore.number;
-            if (number !== undefined) {
-                this.#allocatedNumbers.add(number);
-                if (number < this.#nextNumber) {
-                    this.#nextNumber = number + 1;
-                }
-            }
-        }
-    }
-
-    allocateNumber() {
-        const startNumber = this.#nextNumber;
-        
-        while (this.#nextNumber < 2 || this.#allocatedNumbers.has(this.#nextNumber)) {
-            this.#nextNumber = (this.#nextNumber + 1) % 0xffff;
-            if (this.#nextNumber === startNumber) {
-                throw new ImplementationError("Cannot add additional parts because part numbers are exhausted");
-            }
-        }
-
-        const number = this.#nextNumber++;
-        this.#allocatedNumbers.add(number);
-        this.#endpointStorage?.set("nextEndpointNumber", this.#nextNumber);
-        return number;
     }
 
     async [Symbol.asyncDispose]() {
@@ -120,13 +88,6 @@ export class ServerStore {
             this.#fabricStorage = this.#initializedStorage.createContext("fabrics");
         }
         return this.#fabricStorage;
-    }
-
-    get parameterStorage() {
-        if (!this.#parameterStorage) {
-            this.#parameterStorage = this.#initializedStorage.createContext("parameters");
-        }
-        return this.#parameterStorage;
     }
 
     get partStores() {

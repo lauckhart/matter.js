@@ -10,6 +10,7 @@ import { AttributeServer, FabricScopedAttributeServer } from "../../cluster/serv
 import { ClusterServer } from "../../cluster/server/ClusterServer.js";
 import type { ClusterServerObj, CommandHandler, SupportedEventsList } from "../../cluster/server/ClusterServerTypes.js";
 import type { Part } from "../../endpoint/Part.js";
+import { Logger } from "../../log/Logger.js";
 import { TransactionalInteractionServer } from "../../node/server/TransactionalInteractionServer.js";
 import { SecureSession } from "../../session/SecureSession.js";
 import { Session } from "../../session/Session.js";
@@ -23,6 +24,8 @@ import { Val } from "../state/managed/Val.js";
 import { StructManager } from "../state/managed/values/StructManager.js";
 import { Status } from "../state/transaction/Status.js";
 import { ServerBehaviorBacking } from "./ServerBehaviorBacking.js";
+
+const logger = Logger.get("Behavior");
 
 /**
  * Backing for cluster behaviors on servers.
@@ -136,6 +139,10 @@ function withBehavior<T>(
 
 function createCommandHandler(backing: ClusterServerBehaviorBacking, name: string): CommandHandler<any, any, any> {
     return ({ request, session, message }) => {
+        logger.debug(
+            `Invoke <part ${backing.part.id}>.${backing.type.id}.${name}`,
+            typeof request === "object" ? Logger.dict(request as object) : request
+        );
         return withBehavior(backing, session, { message }, behavior =>
             (behavior as unknown as Record<string, (arg: any) => any>)[name](request),
         );

@@ -46,7 +46,10 @@ export class MockOwner implements PartOwner {
 
     constructor() {
         (this.#storage as any).initialized = true;
-        this.#partStores = new ServerPartStores(this.#storage.createContext("endpoint"));
+        this.#partStores = new ServerPartStores(
+            this.#storage.createContext("endpoint"),
+            1,
+        );
         this.#eventHandler = new EventHandler(this.#storage.createContext("events"));
     }
 

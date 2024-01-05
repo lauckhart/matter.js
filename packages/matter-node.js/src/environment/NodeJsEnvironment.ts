@@ -58,9 +58,10 @@ export class NodeJsEnvironment extends Environment {
     protected override loadStorage() {
         let path = this.variables.storage?.path;
         if (path === undefined || path === "") {
-            path = "storage";
+            path = this.variables.path.root;
+        } else {
+            path = resolve(this.variables.path.root, path);
         }
-        path = resolve(this.variables.path.root, path);
         return new StorageBackendDisk(path, this.variables.storage?.clear === "true");
     }
 }

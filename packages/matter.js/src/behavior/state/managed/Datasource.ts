@@ -436,8 +436,8 @@ function save(resource: Resource, internals: Internals, transaction: Transaction
     transaction.addParticipants({
         description: internals.supervisor.schema.name,
 
-        commit1() {
-            internals.store?.set(transaction, dirty);
+        async commit1() {
+            await internals.store?.set(transaction, dirty);
         },
 
         // Best we can do for phase 2 is mark values as clean
@@ -447,5 +447,6 @@ function save(resource: Resource, internals: Internals, transaction: Transaction
 
         // We cannot roll-back dirty values
         rollback() {},
-    })
+    });
+    transaction.beginSync();
 }

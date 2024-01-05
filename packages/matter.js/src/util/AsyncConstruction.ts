@@ -73,7 +73,7 @@ export interface AsyncConstruction<T> extends Promise<T> {
     /**
      * Throws an error if construction is ongoing or incomplete.
      */
-    assertAvailable(): void;
+    assert(): void;
 }
 
 export function AsyncConstruction<T extends AsyncConstructable<any>>(
@@ -135,7 +135,7 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
             }
         },
 
-        assertAvailable() {
+        assert() {
             if (error) {
                 throw new NotInitializedError(`Resource unavailable because of initialization failure: ${error}`);
             }

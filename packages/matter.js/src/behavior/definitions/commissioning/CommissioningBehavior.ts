@@ -26,10 +26,12 @@ import { Ble } from "../../../ble/Ble.js";
 import { TypeFromPartialBitSchema } from "../../../schema/BitmapSchema.js";
 import { FORBIDDEN_PASSCODES } from "../../../CommissioningServer.js";
 
-const logger = Logger.get("CommissioningBehavior");
+const logger = Logger.get("Commissioning");
 
 /**
  * Server functionality related to commissioning used by {@link PartServer}.
+ * 
+ * Better name would be CommissioningServer but we already have one of those.
  */
 export class CommissioningBehavior extends Behavior {
     static override id = "commissioning";
