@@ -25,7 +25,11 @@ import { EndpointType } from "./type/EndpointType.js";
 /**
  * Endpoints consist of a hierarchy of parts.  This class manages the current state of a single part.
  *
+<<<<<<< Updated upstream
  * You can interact with endpoints using an {@link Agent} created with {@link Part.agentFor}.  Agents are stateless and
+=======
+ * You can interact with endpoints using an {@link Agent} created with {@link Part.getAgent}.  Agents are stateless and
+>>>>>>> Stashed changes
  * designed for quick instantiation so you can create them as needed then discard.
  *
  * Most often direct access to {@link Agent} is transparent as Matter.js acquires an agent as necessary for
@@ -74,6 +78,11 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
 
     /**
      * The owner of the part.
+     * 
+     * A part with an owner that is not a part is considered a "root" Part.  Root parts assume their owner knows about
+     * them.  Non-root parts install themselves into their owner's {@link parts} set if not already present.
+     * 
+     * Once installed into an owner the owner is responsible for the Part's lifecycle.  Ownership is non-transferrable.
      */
     get owner(): PartOwner {
         if (!this.#owner) {
@@ -252,7 +261,9 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
         this.#owner = owner;
         
         try {
-            owner.adoptChild(this);
+            if (owner instanceof Part) {
+                owner.parts.add(this);
+            }
         } catch (e) {
             this.#owner = undefined;
             throw e;
@@ -331,13 +342,10 @@ export class Part<T extends EndpointType = EndpointType.Empty> implements PartOw
     }
 
     async [Symbol.asyncDispose]() {
+        await this.parts[Symbol.asyncDispose]();
         await this.behaviors[Symbol.asyncDispose]();
-        this.lifecycle.change(PartLifecycle.Change.Destroyed);
         this.#owner = undefined;
-    }
-
-    adoptChild(part: Part) {
-        this.parts.add(part);
+        this.lifecycle.change(PartLifecycle.Change.Destroyed);
     }
 
     serviceFor<T>(type: abstract new(...args: any[]) => T): T {
@@ -406,13 +414,13 @@ export namespace Part {
     export function isConfiguration<T extends EndpointType>(
         definition: Definition<T>
     ): definition is Configuration<T> {
-        return !(definition instanceof Part) && !!(definition as Configuration<T>).type;
+        return !(definition instanceof Part) && typeof (definition as Configuration<T>).type === "object";
     }
 
     /**
      * Obtain a part for the given {@link Definition}.
      */
-    export function partFor<T extends EndpointType>(definition: Definition<T>): Part<T> {
+    export function from<T extends EndpointType>(definition: Definition<T>): Part<T> {
         if (definition instanceof Part) {
             return definition;
         }

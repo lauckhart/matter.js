@@ -37,11 +37,9 @@ export class MockPart<T extends EndpointType> extends Part<T> {
             options = definition;
             definition = definition.type;
         }
+
         if (!options) {
             options = {};
-        }
-        if (!("owner" in options)) {
-            options.owner = new MockOwner();
         }
 
         super(definition, options);

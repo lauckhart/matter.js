@@ -63,12 +63,6 @@ export class NodeClient implements Node {
         this.#host;
     }
 
-    adoptChild(part: Part) {
-        // TODO
-        part;
-        throw new NotImplementedError();
-    }
-
     serviceFor<T>(service: abstract new (...args: any[]) => T): T {
         throw new ImplementationError(`Unsupported service ${service.name}`);
     }

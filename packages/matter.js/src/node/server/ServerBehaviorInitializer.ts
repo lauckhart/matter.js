@@ -13,6 +13,7 @@ import { PartInitializer } from "../../endpoint/part/PartInitializer.js";
 import { PartServer } from "../../endpoint/PartServer.js";
 import { Logger } from "../../log/Logger.js";
 import type { NodeServer } from "./NodeServer.js";
+import { PartStoreService } from "./storage/PartStoreService.js";
 
 const logger = Logger.get("BehaviorInit");
 
@@ -29,7 +30,7 @@ export class ServerBehaviorInitializer extends PartInitializer {
             part.id = this.#identifyPart(part);
         }
 
-        this.#server.store.partStores.assignNumber(part);
+        this.#server.serviceFor(PartStoreService).assignNumber(part);
 
         part.behaviors.require(DescriptorServer);
     }

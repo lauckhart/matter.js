@@ -11,7 +11,8 @@ import type { Storage } from "../storage/Storage.js";
 import { StorageManager } from "../storage/StorageManager.js";
 import { Time } from "../time/Time.js";
 import { BasicSet } from "../util/Set.js";
-import { NoProviderError } from "./MatterError.js";
+import { NoProviderError } from "../common/MatterError.js";
+import { VariableService } from "./VariableService.js";
 
 const logger = Logger.get("Environment");
 
@@ -21,13 +22,42 @@ const logger = Logger.get("Environment");
  * TODO - could remove global singletons by moving here
  */
 export class Environment {
-    #variables?: Record<string, any>;
     #tasks?: BasicSet<Environment.Task>;
+    #services?: Map<Environment.ServiceFactory<any>, Environment.Service>;
     #name: string;
-    #nextNodeNumber = 0;
 
     constructor(name: string) {
         this.#name = name;
+    }
+
+    /**
+     * Access an environmental service.
+     */
+    get<T extends Environment.Service>(type: Environment.ServiceFactory<T>): T {
+        const instance = this.#services?.get(type);
+        if (instance) {
+            return instance as T;
+        }
+        return new type(this);
+    }
+
+    /**
+     * Access an environmental service, waiting for any async initialization to complete.
+     */
+    async load<T extends Environment.Service>(type: Environment.ServiceFactory<T>) {
+        const instance = this.get(type);
+        await instance.construction;
+        return instance;
+    }
+
+    /**
+     * Install a preinitialized version of an environmental service.
+     */
+    set<T extends Environment.Service>(type: Environment.ServiceFactory<T>, instance: T) {
+        if (!this.#services) {
+            this.#services = new Map();
+        }
+        this.#services.set(type, instance);
     }
 
     /**
@@ -64,8 +94,8 @@ export class Environment {
     static set default(env: Environment) {
         global = env;
 
-        Logger.level = global.variables.log?.level;
-        Logger.format = global.variables.log?.format;
+        Logger.level = env.vars.string("log.level");
+        Logger.format = env.vars.string("format");
 
         if (global.variables.log?.stack?.limit) {
             Error.stackTraceLimit = Number.parseInt(global.variables?.log?.stack?.limit);
@@ -73,13 +103,10 @@ export class Environment {
     }
 
     /**
-     * Configuration values.
+     * Shortcut for accessing {@link VariableService.vars}.
      */
-    get variables() {
-        if (!this.#variables) {
-            this.#variables = this.loadVariables();
-        }
-        return this.#variables;
+    get vars() {
+        return this.get(VariableService);
     }
 
     /**
@@ -114,7 +141,7 @@ export class Environment {
         if (this.#tasks) {
             for (const task of this.#tasks) {
                 try {
-                    task.abort?.();
+                    task.cancel?.();
                 } catch (e) {
                     logger.error(`Unhandled error aborting "${task.name}":`, e);
                 }
@@ -135,13 +162,6 @@ export class Environment {
         }).start();
     }
 
-    /**
-     * If the root part of a node has no ID allocated we use this method to allocate one.
-     */
-    allocateFallbackNodeId() {
-        return `node${this.#nextNodeNumber++}`;
-    }
-
     protected loadVariables(): Record<string, any> {
         return {};
     }
@@ -158,8 +178,19 @@ export class Environment {
 export namespace Environment {
     export interface Task {
         name: string;
-        abort?: () => void;
+        cancel?: () => void;
         [Diagnostic.value]: {};
+    }
+
+    export interface Service {
+        construction?: Promise<any>;
+        [Symbol.asyncDispose]?: () => Promise<any>;
+        [Diagnostic.presentation]?: Diagnostic.Presentation;
+        [Diagnostic.value]?: unknown;
+    }
+
+    export interface ServiceFactory<T extends Service> {
+        new (environment: Environment): T;
     }
 }
 

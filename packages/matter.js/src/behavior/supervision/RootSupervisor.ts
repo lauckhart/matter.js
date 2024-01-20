@@ -14,18 +14,17 @@ import { Schema } from "./Schema.js";
 import { ValueSupervisor } from "./ValueSupervisor.js";
 
 /**
- * A RootSupervisor is a {@link ValueSupervisor} that supervises a specific
- * root {@link Schema}.  It acts as a factory for {@link ValueSupervisor}s
- * for sub-schemas of the root schema.
+ * A RootSupervisor is a {@link ValueSupervisor} that supervises a specific root {@link Schema}.  It acts as a factory
+ * for {@link ValueSupervisor}s for sub-schemas of the root schema.
  *
- * You can produce an ValueSupervisor for any schema using this factory.
- * However, there are specific customizations controlled by the root schema:
+ * You can produce an ValueSupervisor for any schema using this factory. However, there are specific customizations
+ * controlled by the root schema:
  *
- * - Change eventing occur for root schema members.  In the case of a cluster
- *   this means you can monitor for changes on a per-attribute basis.
+ * - Change eventing occur for root schema members.  In the case of a cluster this means you can monitor for changes on
+ *   a per-attribute basis.
  *
- * - If the root schema defines a cluster, the cluster's featureMap and
- *   supportedFeatures affect conformance-based validation.
+ * - If the root schema defines a cluster, the cluster's featureMap and supportedFeatures affect conformance-based
+ *   validation.
  */
 export class RootSupervisor implements ValueSupervisor {
     #generating = new Set<Schema>();
@@ -133,11 +132,9 @@ export class RootSupervisor implements ValueSupervisor {
     }
 
     #createValueSupervisor(schema: Schema, managed?: new () => Val) {
-        // Implements deferred generation (see comments below).  Proxies to
-        // the real generator, installs the generated function, then invokes.
-        // Since I/O functions are properties and not methods, we then continue
-        // to proxy to the generated function for places where the function is
-        // held directly.
+        // Implements deferred generation (see comments below).  Proxies to the real generator, installs the generated
+        // function, then invokes. Since I/O functions are properties and not methods, we then continue to proxy to the
+        // generated function for places where the function is held directly.
         const deferGeneration = (
             name: string,
             generator: (schema: Schema, factory: RootSupervisor, base?: new () => Val) => any,
@@ -189,12 +186,11 @@ export class RootSupervisor implements ValueSupervisor {
     }
 
     /**
-     * If a schema has circular references, code generation may need to defer
-     * generation of child functions to avoid infinite loops.
+     * If a schema has circular references, code generation may need to defer generation of child functions to avoid
+     * infinite loops.
      *
-     * In order to keep generation code simpler we use this method to detect
-     * when lazy generation is necessary and install stubs that bootstrap each
-     * method.
+     * In order to keep generation code simpler we use this method to detect when lazy generation is necessary and
+     * install stubs that bootstrap each method.
      */
     #isGenerating(schema: Schema) {
         return this.#generating.has(schema);

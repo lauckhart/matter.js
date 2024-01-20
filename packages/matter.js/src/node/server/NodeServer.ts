@@ -7,19 +7,14 @@
 import { CommissioningBehavior } from "../../behavior/definitions/commissioning/CommissioningBehavior.js";
 import { ImplementationError, InternalError } from "../../common/MatterError.js";
 import { EndpointNumber } from "../../datatype/EndpointNumber.js";
-import { FabricIndex } from "../../datatype/FabricIndex.js";
 import { Part } from "../../endpoint/Part.js";
 import { RootEndpoint } from "../../endpoint/definitions/system/RootEndpoint.js";
 import { IndexBehavior } from "../../behavior/definitions/index/IndexBehavior.js";
 import { PartServer } from "../../endpoint/PartServer.js";
-import { EndpointType } from "../../endpoint/type/EndpointType.js";
 import { Logger } from "../../log/Logger.js";
-import { StorageContext } from "../../storage/StorageContext.js";
 import { Host } from "../Host.js";
 import { Node } from "../Node.js";
-import { CommissioningOptions } from "../options/CommissioningOptions.js";
 import { ServerOptions } from "../options/ServerOptions.js";
-import { BaseNodeServer } from "./BaseNodeServer.js";
 import { ServerStore } from "./storage/ServerStore.js";
 import { AsyncConstruction, asyncNew } from "../../util/AsyncConstruction.js";
 import { PartLifecycle } from "../../endpoint/part/PartLifecycle.js";
@@ -29,34 +24,31 @@ import { PartStoreService } from "./storage/PartStoreService.js";
 import { EventHandler } from "../../protocol/interaction/EventHandler.js";
 import { IdentityService } from "./IdentityService.js";
 import { Diagnostic } from "../../log/Diagnostic.js";
-import { TransactionalInteractionServer } from "./TransactionalInteractionServer.js";
-import { UninitializedDependencyError } from "../../common/Lifecycle.js";
+import { LifecycleStatus, UninitializedDependencyError } from "../../common/Lifecycle.js";
 import { ServerResetService } from "./ServerResetService.js";
+import { RootServer } from "../../behavior/definitions/root/RootServer.js";
+import { VariableService } from "../../environment/VariableService.js";
 
 const logger = Logger.get("NodeServer");
 
 /**
  * Implementation of a Matter Node server.
  *
- * This is this highest-level API Matter.js offers for implementing a Matter
- * Node.
+ * This is this highest-level API Matter.js offers for implementing a Matter Node.
  *
- * This is perhaps more appropriately called "ServerNode" but that gets
- * confusing with the conventions of matter-node.js.
+ * This is perhaps more appropriately called "ServerNode" but that gets confusing with the conventions of
+ * matter-node.js.
  */
-export class NodeServer extends BaseNodeServer implements Node {
+export class NodeServer implements Node {
     #configuration: ServerOptions.Configuration;
     #root: Part<RootEndpoint>;
-    #rootServer?: PartServer;
-    #nextEndpointId: EndpointNumber;
     #host?: Host;
-    #resetService?: ServerResetService;
-    #store?: ServerStore;
     #construction: AsyncConstruction<NodeServer>;
-    #behaviorInitializer?: PartInitializer;
+    #runtime?: RootServer;
+    #store?: ServerStore;
+    #partInitializer?: PartInitializer;
     #identityService?: IdentityService;
-    #uptime?: Diagnostic.Elapsed;
-    #interactionServer?: TransactionalInteractionServer;
+    #resetService?: ServerResetService;
 
     get id() {
         return this.#root.id;
@@ -80,13 +72,6 @@ export class NodeServer extends BaseNodeServer implements Node {
         return this.#root;
     }
 
-    get store() {
-        if (this.#store === undefined) {
-            throw new ImplementationError(`Storage for ${this} accessed prior to initialization`);
-        }
-        return this.#store;
-    }
-
     /**
      * The configuration of the server.
      * 
@@ -100,20 +85,24 @@ export class NodeServer extends BaseNodeServer implements Node {
         return this.#construction;
     }
 
+    #allocateFallbackId() {
+        const vars = this.#configuration.environment.get(VariableService);
+        const number = vars.increment("node.nextFallbackId");
+        return `node${number}`;
+    }
+
     /**
      * Create a new NodeServer.
      * 
      * @param options server configuration options
      */
     constructor(options?: ServerOptions.Configuration) {
-        super();
-
         this.#configuration = ServerOptions.configurationFor(options);
 
-        const root = this.#root = Part.partFor(this.#configuration.root);
+        const root = this.#root = Part.from(this.#configuration.root);
 
         if (!root.lifecycle.hasId) {
-            root.id = this.#configuration.environment.allocateFallbackNodeId();
+            root.id = this.#allocateFallbackId();
         }
 
         if (root.type.deviceType !== RootEndpoint.deviceType) {
@@ -129,12 +118,11 @@ export class NodeServer extends BaseNodeServer implements Node {
         }
 
         if (!root.lifecycle.hasId) {
-            root.id = this.#configuration.environment.allocateFallbackNodeId();
+            root.id = this.#allocateFallbackId();
         }
     
         root.behaviors.require(CommissioningBehavior);
         root.behaviors.require(IndexBehavior);
-        this.#nextEndpointId = this.#configuration.nextEndpointNumber;
 
         this.#construction = AsyncConstruction(
             this,
@@ -160,35 +148,20 @@ export class NodeServer extends BaseNodeServer implements Node {
     }
 
     /**
-     * Bring the device online.
+     * Bring the server online.
      * 
-     * TODO - should acquire some type of OS- or FS-level while running
+     * TODO - should acquire some type of OS- or FS-level lock while running
      */
-    override async start() {
-        if (this.#uptime) {
-            throw new ImplementationError("Already started");
-        }
-        this.#uptime = Diagnostic.elapsed();
-
+    async start() {
         await this.construction;
+        await this.serviceFor(RootServer).start();
+    }
 
-        const agent = this.root;
-
-        await this.advertise();
-
-        if (!this.commissioned) {
-            try {
-                const commissioning = await agent.load(CommissioningBehavior);
-                commissioning.initiateCommissioning();
-            } catch (e) {
-                if (e instanceof Error) {
-                    Diagnostic.prefixError("Cannot initiate commissioning", e);
-                }
-                throw e;
-            }
-        }
-
-        logger.notice(Diagnostic.strong(this.toString()), "is online");
+    /**
+     * Take the server offline.
+     */
+    async stop() {
+        await this.serviceFor(RootServer).stop();
     }
 
     /**
@@ -211,24 +184,10 @@ export class NodeServer extends BaseNodeServer implements Node {
     }
 
     /**
-     * Add an endpoint that implements a {@link EndpointType}.
+     * Add a {@link Part} to the {@link root}.
      */
-    add<T extends EndpointType>(type: T, options?: Part.Options<T>): void;
-
-    /**
-     * Add an endpoint implemented by a {@link Part}.
-     */
-    add(part: Part): void;
-
     add(endpoint: Part.Definition) {
         this.rootPart.parts.add(endpoint);
-    }
-
-    /**
-     * An index of all parts.
-     */
-    get index() {
-        return this.root.get(IndexBehavior);
     }
 
     /**
@@ -239,26 +198,18 @@ export class NodeServer extends BaseNodeServer implements Node {
     }
 
     /**
-     * Support for JS "async using".  Cleans up resources when the server is
-     * no longer needed.
+     * Support for JS "async using".  Cleans up resources when the server is no longer needed.
      */
     async [Symbol.asyncDispose]() {
-        logger.notice("Node", Diagnostic.strong(this.toString()), "going offline");
+        await this.#runtime?.[Symbol.asyncDispose]();
+        this.#runtime = undefined;
 
-        await this.close();
-    }
-
-    override async close() {
-        await super.close();
-        await this.#interactionServer?.[Symbol.asyncDispose]();
-        await this.#rootServer?.[Symbol.asyncDispose]();
+        await this.#root[Symbol.asyncDispose]();
+        
         await this.#store?.[Symbol.asyncDispose]();
-    }
+        this.#store = undefined;
 
-    adoptChild(part: Part) {
-        if (part !== this.#root) {
-            throw new ImplementationError("NodeServer may only have a single root part installed");
-        }
+        this.construction.setStatus(LifecycleStatus.Destroyed);
     }
 
     fallbackIdFor(part: Part) {
@@ -281,21 +232,27 @@ export class NodeServer extends BaseNodeServer implements Node {
 
     serviceFor<T>(type: abstract new (...args: any[]) => T): T {
         switch (type as unknown) {
-            case PartInitializer:
-                if (!this.#behaviorInitializer) {
-                    this.#behaviorInitializer = new ServerBehaviorInitializer(this);
+            case RootServer:
+                if (!this.#runtime) {
+                    this.#runtime = new RootServer(this);
                 }
-                return this.#behaviorInitializer as T;
+                return this.#runtime as T;
+
+            case PartInitializer:
+                if (!this.#partInitializer) {
+                    this.#partInitializer = new ServerBehaviorInitializer(this);
+                }
+                return this.#partInitializer as T;
 
             case PartStoreService:
-                return this.store.partStores as T;
+                return this.#initializedStore.partStores as T;
 
             case EventHandler:
-                return this.store.eventHandler as T;
+                return this.#initializedStore.eventHandler as T;
 
             case IdentityService:
                 if (!this.#identityService) {
-                    this.#identityService = new IdentityService(this.#root, this.toString(), this.port);
+                    this.#identityService = new IdentityService(this.#root, this.toString());
                 }
                 return this.#identityService as T;
 
@@ -335,71 +292,24 @@ export class NodeServer extends BaseNodeServer implements Node {
     /**
      * Textual description of the node used in diagnostic messages.
      */
-    override toString() {
+    toString() {
         return `${this.constructor.name}#${this.id}`
     }
 
     get [Diagnostic.value]() {
         return [
             this.toString(),
-            Diagnostic.dict({ port: this.port, uptime: this.#uptime }),
+            this.#runtime,
             Diagnostic.list([
-                this.rootEndpoint[Diagnostic.value],
+                PartServer.forPart(this.#root)[Diagnostic.value],
             ])
         ]
     }
 
-    protected override get commissioningConfig() {
-        return this.root.get(CommissioningBehavior).state as CommissioningOptions.Configuration;
-    }
-
-    protected override get networkConfig() {
-        return this.#configuration.network;
-    }
-
-    protected override get rootEndpoint() {
-        if (!this.#rootServer) {
-            this.#rootServer = PartServer.forPart(this.rootPart);
+    get #initializedStore() {
+        if (this.#store === undefined) {
+            throw new ImplementationError(`Storage for ${this} accessed prior to initialization`);
         }
-        return this.#rootServer;
-    }
-
-    protected override get nextEndpointId() {
-        return this.#nextEndpointId;
-    }
-
-    protected override set nextEndpointId(id: EndpointNumber) {
-        this.#nextEndpointId = id;
-    }
-
-    protected override get advertiseOnStartup() {
-        return !!this.root.get(CommissioningBehavior).state.automaticAnnouncement;
-    }
-
-    protected override emitCommissioningChanged(_fabric: FabricIndex): void {}
-
-    protected override emitActiveSessionsChanged(_fabric: FabricIndex): void {}
-
-    protected override get sessionStorage(): StorageContext {
-        return this.store.sessionStorage;
-    }
-
-    protected override get fabricStorage(): StorageContext {
-        return this.store.fabricStorage;
-    }
-
-    protected override async clearStorage() {
-        await this.serviceFor(ServerResetService).factoryReset();
-    }
-
-    protected override async createMatterDevice() {
-        this.#interactionServer = new TransactionalInteractionServer(
-            this.rootPart,
-            this.store,
-            this.#configuration.subscription
-        );
-
-        return (await super.createMatterDevice())
-            .addProtocolHandler(this.#interactionServer);
+        return this.#store;
     }
 }

@@ -5,7 +5,7 @@
  */
 
 import { ImplementationError } from "../common/MatterError.js";
-import { LifecycleStatus } from "../common/Lifecycle.js";
+import { DependencyLifecycleError, LifecycleStatus } from "../common/Lifecycle.js";
 import { Tracker, MaybePromise } from "./Promises.js";
 import { Observable } from "./Observable.js";
 
@@ -87,6 +87,11 @@ export interface AsyncConstruction<T> extends Promise<T> {
      * Throws an error if construction is ongoing or incomplete.
      */
     assert(description?: string): void;
+
+    /**
+     * Asserts construction is complete and that an object is defined.
+     */
+    assert<T>(description: string, dependency: T | undefined): T;
 
     /**
      * Manually force a specific {@link status}.
@@ -211,8 +216,27 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
             }
         },
 
-        assert(description) {
-            LifecycleStatus.assertActive(status, description ?? subject.constructor.name)
+        assert(description?: string, dependency?: any) {
+            if (arguments.length === 1) {
+                LifecycleStatus.assertActive(status, description ?? subject.constructor.name);
+                return;
+            }
+
+            try {
+                this.assert();
+                if (dependency === undefined) {
+                    throw new ImplementationError(`Property is undefined`);
+                }
+            } catch (e) {
+                if (!(e instanceof Error)) {
+                    e = new ImplementationError((e ?? "(unknown error)").toString())
+                }
+                if (e instanceof Error) {
+                    e.message = `Cannot access ${description}: ${e.message}`;
+                }
+                throw e;
+            }
+            return dependency;
         },
         
         then<TResult1 = T, TResult2 = never>(

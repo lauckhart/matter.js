@@ -9,7 +9,7 @@ import { ServerBehaviorBacking } from "../../src/behavior/server/ServerBehaviorB
 import { Part } from "../../src/endpoint/Part.js";
 import { PartOwner } from "../../src/endpoint/part/PartOwner.js";
 import { EndpointNumber } from "../../src/datatype/EndpointNumber.js";
-import { ImplementationError, InternalError } from "../../src/common/MatterError.js";
+import { ImplementationError } from "../../src/common/MatterError.js";
 import { PartInitializer } from "../../src/endpoint/part/PartInitializer.js";
 import { PartStoreService } from "../../src/node/server/storage/PartStoreService.js";
 import { StorageBackendMemory } from "../../src/storage/StorageBackendMemory.js";
@@ -110,29 +110,28 @@ class MockPartStoreService extends PartStoreService {
 }
 
 export class MockOwner implements PartOwner {
-    #root?: Part;
+    #root: Part;
     #behaviorInitializer = new MockBehaviorInitializer();
     #storage = new StorageManager(new StorageBackendMemory());
     #partStores = new MockPartStoreService;
     #eventHandler: EventHandler;
     #identityService?: IdentityService;
 
-    constructor() {
+    constructor<RootT>(root: Part.Definition) {
+        this.#root = Part.from(root);
+        this.#root.number = 1;
         (this.#storage as any).initialized = true;
         this.#eventHandler = new EventHandler(this.#storage.createContext("events"));
+        this.#identityService = new IdentityService(this.#root, "Test node");
+        this.#root.lifecycle.change(PartLifecycle.Change.Installed);
     }
 
     get owner() {
         return undefined;
     }
 
-    adoptChild(part: Part) {
-        if (this.#root !== undefined) {
-            throw new InternalError("Multiple roots disallowed");
-        }
-        this.#root = part;
-        this.#identityService = new IdentityService(part, "Test node");
-        part.lifecycle.change(PartLifecycle.Change.Installed);
+    get root() {
+        return this.#root;
     }
 
     serviceFor<T>(type: abstract new (...args: any[]) => T): T {
@@ -141,9 +140,6 @@ export class MockOwner implements PartOwner {
                 return this.#behaviorInitializer as T;
 
             case IdentityService:
-                if (!this.#root) {
-                    throw new ImplementationError(`No root so can't provice IndexBehavior`);
-                }
                 if (!this.#identityService) {
                     this.#identityService = new IdentityService(this.#root, "Test node");
                 }

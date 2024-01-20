@@ -9,7 +9,7 @@ import { Logger } from "../../../log/Logger.js";
 import { EventHandler } from "../../../protocol/interaction/EventHandler.js";
 import { StorageContext } from "../../../storage/StorageContext.js";
 import { StorageManager } from "../../../storage/StorageManager.js";
-import { Environment } from "../../../common/Environment.js";
+import { Environment } from "../../../environment/Environment.js";
 import { AsyncConstruction, asyncNew } from "../../../util/AsyncConstruction.js";
 import type { NodeServer } from "../NodeServer.js";
 import { PartStoreFactory } from "./PartStoreService.js";

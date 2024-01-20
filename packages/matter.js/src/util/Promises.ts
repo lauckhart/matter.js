@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { Environment } from "../common/Environment.js";
+import type { Environment } from "../environment/Environment.js";
 import { ImplementationError, InternalError } from "../common/MatterError.js";
 import { Diagnostic } from "../log/Diagnostic.js";
 import { DiagnosticSource } from "../log/DiagnosticSource.js";

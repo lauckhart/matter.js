@@ -27,12 +27,14 @@ import { TypeFromPartialBitSchema } from "../../../schema/BitmapSchema.js";
 import { FORBIDDEN_PASSCODES } from "../../../CommissioningServer.js";
 import { Diagnostic } from "../../../log/Diagnostic.js";
 import { IdentityService } from "../../../node/server/IdentityService.js";
+import { RootServer } from "../root/RootServer.js";
+import { OperationalCredentialsBehavior } from "../operational-credentials/OperationalCredentialsBehavior.js";
 
 const logger = Logger.get("Commissioning");
 
 /**
  * Server functionality related to commissioning used by {@link PartServer}.
- * 
+ *
  * Better name would be CommissioningServer but we already have one of those.
  */
 export class CommissioningBehavior extends Behavior {
@@ -56,6 +58,13 @@ export class CommissioningBehavior extends Behavior {
         if (this.state.ble === undefined) {
             this.state.ble = Ble.enabled;
         }
+
+        this.part.owner.serviceFor(RootServer).started.on(() => {
+            const operationalCredentials = this.agent.get(OperationalCredentialsBehavior);
+            if (!operationalCredentials.state.commissionedFabrics) {
+                this.initiateCommissioning();
+            }
+        });
     }
 
     /**
@@ -88,11 +97,10 @@ export class CommissioningBehavior extends Behavior {
 
     /**
      * The server invokes this method if the node is not yet commissioned.
-     * 
-     * An uncommissioned node is not yet associated with fabrics.  It cannot
-     * be used until commissioned by a controller.
+     *
+     * An uncommissioned node is not yet associated with fabrics.  It cannot be used until commissioned by a controller.
      */
-    initiateCommissioning() {
+    protected initiateCommissioning() {
         const { passcode, discriminator } = this.state;
 
         const { qrPairingCode, manualPairingCode } = this.pairingCodes;

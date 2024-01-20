@@ -7,22 +7,21 @@
 import { Behavior } from "../behavior/Behavior.js";
 import { BehaviorBacking } from "../behavior/BehaviorBacking.js";
 import { ClusterBehavior } from "../behavior/cluster/ClusterBehavior.js";
-import { DescriptorServer } from "../behavior/definitions/descriptor/DescriptorServer.js";
 import { ClusterServerBehaviorBacking } from "../behavior/server/ClusterServerBehaviorBacking.js";
 import { ServerBehaviorBacking } from "../behavior/server/ServerBehaviorBacking.js";
 import { Attributes, Commands, Events } from "../cluster/Cluster.js";
 import { ClusterType } from "../cluster/ClusterType.js";
 import { ClusterClientObj } from "../cluster/client/ClusterClientTypes.js";
-import { ClusterServerObj } from "../cluster/server/ClusterServerTypes.js";
+import { ClusterServerObj, ClusterServerObjInternal } from "../cluster/server/ClusterServerTypes.js";
 import { ImplementationError, InternalError, NotImplementedError } from "../common/MatterError.js";
 import { ClusterId } from "../datatype/ClusterId.js";
 import { EndpointNumber } from "../datatype/EndpointNumber.js";
 import { Diagnostic } from "../log/Diagnostic.js";
 import { Logger } from "../log/Logger.js";
-import { IdentityService } from "../node/server/IdentityService.js";
 import { PartStoreService } from "../node/server/storage/PartStoreService.js";
 import { EndpointInterface } from "./EndpointInterface.js";
 import { Part } from "./Part.js";
+import type { NodeServer } from "../node/server/NodeServer.js";
 
 const logger = Logger.get("PartServer");
 
@@ -33,11 +32,13 @@ interface ServerPart extends Part {
 
 /**
  * PartServer makes a {@link Part} available for remote access as an Endpoint on a Matter network.
+ * 
+ * PartServer contains functionality applicable to all parts.  See {@link NodeServer} for functionality specific
+ * to root parts.
  */
 export class PartServer implements EndpointInterface {
     #part: Part;
     #name = "";
-    #structureChangedCallback?: () => void;
     readonly #clusterServers = new Map<ClusterId, ClusterServerObj<Attributes, Events>>;
 
     get part() {
@@ -55,8 +56,6 @@ export class PartServer implements EndpointInterface {
         if (part.lifecycle.isReady) {
             this.#logPart();
         }
-
-        part.lifecycle.changed.on(() => this.#structureChangedCallback?.());
     }
 
     createBacking(type: Behavior.Type): BehaviorBacking {
@@ -97,17 +96,6 @@ export class PartServer implements EndpointInterface {
         return this.number;
     }
 
-    removeFromStructure(): void {
-        //this.destroy();
-        this.#structureChangedCallback = undefined;
-    }
-
-    updatePartsList(): EndpointNumber[] {
-        // No actual update, parts list is maintained by Parts
-        const descriptor = this.#part.agent.get(DescriptorServer);
-        return descriptor.state.partsList;
-    }
-
     getChildEndpoints(): EndpointInterface[] {
         if (this.#part.hasParts) {
             const parts = this.#part.parts;
@@ -129,11 +117,9 @@ export class PartServer implements EndpointInterface {
     }
 
     async [Symbol.asyncDispose]() {
-        await this.#part[Symbol.asyncDispose]();
-    }
-
-    setStructureChangedCallback(callback: () => void): void {
-        this.#structureChangedCallback = callback;
+        for (const clusterServer of this.#clusterServers.values()) {
+            (clusterServer as ClusterServerObjInternal<any, any, any>)._destroy;
+        }
     }
 
     addClusterServer<A extends Attributes, E extends Events>(server: ClusterServerObj<A, E>): void {
@@ -234,14 +220,9 @@ export class PartServer implements EndpointInterface {
             .storeForPart(this.#part)
             .isNew;
 
-        const port = this.#part.owner
-            .serviceFor(IdentityService)
-            .port;
-
         return Diagnostic.dict({
             "endpoint#": this.#part.number,
             type: `${this.#part.type.name} (0x${this.#part.type.deviceType.toString(16)})`,
-            port,
             "known": !isNew,
             "behaviors": this.#part.behaviors,
         })

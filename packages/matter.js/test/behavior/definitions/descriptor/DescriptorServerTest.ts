@@ -10,6 +10,7 @@ import { ClusterId } from "../../../../src/datatype/ClusterId.js";
 import { DeviceTypeId } from "../../../../src/datatype/DeviceTypeId.js";
 import { EndpointNumber } from "../../../../src/datatype/EndpointNumber.js";
 import { MutableEndpoint } from "../../../../src/endpoint/type/MutableEndpoint.js";
+import { MockOwner } from "../../../endpoint/mock-part-owner.js";
 import { MockPart } from "../../../endpoint/mock-part.js";
 import { MockEndpoint } from "../../mock-behavior.js";
 
@@ -21,7 +22,7 @@ async function createFamily() {
 
     const child = await MockPart.create({ type: MockEndpoint, number: 2, owner: parent.part });
 
-    return { parent, child };
+    return { parent: owner.root, child };
 }
 
 describe("DescriptorServer", () => {

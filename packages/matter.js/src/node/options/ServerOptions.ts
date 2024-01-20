@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Environment } from "../../common/Environment.js";
+import { Environment } from "../../environment/Environment.js";
 import { EndpointNumber } from "../../datatype/EndpointNumber.js";
 import type { Part } from "../../endpoint/Part.js";
 import { RootEndpoint } from "../../endpoint/definitions/system/RootEndpoint.js";

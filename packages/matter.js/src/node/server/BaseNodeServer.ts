@@ -93,34 +93,6 @@ export abstract class BaseNodeServer {
     }
 
     /**
-     * Add a cluster client to the root endpoint. This is mainly used internally and not needed to be called by the
-     * user.
-     *
-     * @param cluster ClusterClient object to add
-     */
-    addRootClusterClient<F extends BitSchema, A extends Attributes, C extends Commands, E extends Events>(
-        cluster: ClusterClientObj<F, A, C, E>,
-    ) {
-        this.rootEndpoint.addClusterClient(cluster);
-    }
-
-    /**
-     * Get a cluster client from the root endpoint. This is mainly used internally and not needed to be called by the
-     * user.
-     *
-     * @param cluster ClusterClient to get or undefined if not existing
-     */
-    getRootClusterClient<
-        F extends BitSchema,
-        SF extends TypeFromPartialBitSchema<F>,
-        A extends Attributes,
-        C extends Commands,
-        E extends Events,
-    >(cluster: Cluster<F, SF, A, C, E>): ClusterClientObj<F, A, C, E> | undefined {
-        return this.rootEndpoint.getClusterClient(cluster);
-    }
-
-    /**
      * Advertise the node via all available interfaces (Ethernet/MDNS, BLE, ...) and start the commissioning process
      *
      * @param limitTo Limit the advertisement to the given discovery capabilities. Default is to advertise on ethernet
@@ -196,22 +168,6 @@ export abstract class BaseNodeServer {
     }
 
     /**
-     * Is the device commissioned?
-     * 
-     * This is true if the device is paired with at least one controller.
-     */
-    get commissioned() {
-        return this.#deviceInstance?.isCommissioned() ?? false;
-    }
-
-    /**
-     * Get the port the server is configured for (before startup) or listening on (after startup).
-     */
-    get port() {
-        return this.#primaryNetInterface ? this.#primaryNetInterface.port : this.networkConfig.port;
-    }
-
-    /**
      * Close network connections of the device and stop responding to requests
      */
     async close() {
@@ -239,58 +195,6 @@ export abstract class BaseNodeServer {
     }
 
     protected abstract clearStorage(): Promise<void>;
-
-    /**
-     * Add a new command handler for the given command
-     *
-     * @param command Command to add the handler for
-     * @param handler Handler function to add
-     */
-    addCommandHandler<K extends keyof CommissioningServerCommands>(
-        command: K,
-        handler: CommissioningServerCommands[K],
-    ) {
-        this.commandHandler.addHandler(command, handler);
-    }
-
-    /**
-     * Remove a command handler for the given command
-     *
-     * @param command Command to remove the handler for
-     * @param handler Handler function to remove
-     */
-    removeCommandHandler<K extends keyof CommissioningServerCommands>(
-        command: K,
-        handler: CommissioningServerCommands[K],
-    ) {
-        this.commandHandler.removeHandler(command, handler);
-    }
-
-    /**
-     * Set the reachability of the commissioning server aka "the main matter device". This call only has effect when
-     * the reachability flag was set in the BasicInformationCluster or in the BasicInformation data in the constructor!
-     *
-     * @param reachable true if reachable, false otherwise
-     */
-    setReachability(reachable: boolean) {
-        const basicInformationCluster = this.getRootClusterServer(BasicInformationCluster);
-        if (basicInformationCluster === undefined) {
-            throw new ImplementationError("BasicInformationCluster needs to be set!");
-        }
-        if (basicInformationCluster.attributes.reachable !== undefined) {
-            basicInformationCluster.setReachableAttribute(reachable);
-        }
-    }
-
-    /** used internally by MatterServer to initialize the state of the device. */
-    initialize(ipv4Disabled: boolean) {
-        if (this.networkConfig.disableIpv4 !== undefined && this.networkConfig.disableIpv4 !== ipv4Disabled) {
-            throw new ImplementationError(
-                "Changing the IPv4 disabled flag after starting the device is not supported.",
-            );
-        }
-        this.networkConfig.disableIpv4 = ipv4Disabled;
-    }
 
     /** Starts the Matter device and advertises it. */
     async start() {

@@ -22,13 +22,10 @@ export interface EndpointInterface {
     name: string;
     number: EndpointNumber | undefined;
     getNumber(): EndpointNumber;
-    removeFromStructure(): void;
-    updatePartsList(): EndpointNumber[];
     getChildEndpoints(): EndpointInterface[];
     determineUniqueID(): string | undefined;
     verifyRequiredClusters(): void;
     destroy(): void;
-    setStructureChangedCallback(callback: () => void): void;
 
     addClusterServer<A extends Attributes, E extends Events>(server: ClusterServerObj<A, E>): void;
     hasClusterServer(cluster: ClusterType): boolean;

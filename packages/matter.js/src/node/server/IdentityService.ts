@@ -18,12 +18,10 @@ export class IdentityConflictError extends ImplementationError {};
  */
 export class IdentityService {
     #nodeDescription: string;
-    #port?: number;
     #index?: IndexBehavior;
 
-    constructor(root: Part, nodeDescription: string, port?: number) {
+    constructor(root: Part, nodeDescription: string) {
         this.#nodeDescription = nodeDescription;
-        this.#port = port;
 
         const acquireIndex = () => {
             root.behaviors.require(IndexBehavior);
@@ -44,13 +42,6 @@ export class IdentityService {
      */
     get nodeDescription() {
         return this.#nodeDescription;
-    }
-
-    /**
-     * The network port the node is listening on.
-     */
-    get port() {
-        return this.#port;
     }
 
     /**

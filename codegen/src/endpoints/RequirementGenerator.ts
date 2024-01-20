@@ -32,7 +32,6 @@ export class RequirementGenerator {
     #mandatoryBlock?: Block;
     #optionalBlock?: Block;
     #requirementsBlock: Block | undefined;
-    #mandatoryParts = false;
 
     constructor(
         private file: EndpointFile,
@@ -45,9 +44,16 @@ export class RequirementGenerator {
         const clusterReqs = this.file.model.requirements.filter(r => r.element === `${type}Cluster`);
 
         if (type === "server" && MANDATORY_PART_ENDPOINTS.includes(file.definitionName)) {
-            this.#mandatoryParts = true;
-            this.default.push("Parts");
-            this.default.push("Index");
+            if (file.definitionName === "RootEndpoint") {
+                this.file.addImport("behavior/definitions/root/RootServer.js", "RootServer");
+                this.default.push("RootServer");
+            }
+            
+            this.file.addImport("behavior/definitions/parts/PartsBehavior.js", "PartsBehavior");
+            this.default.push("PartsBehavior");
+
+            this.file.addImport("behavior/definitions/index/IndexBehavior.js", "IndexBehavior");
+            this.default.push("IndexBehavior");
         }
 
         for (const requirement of clusterReqs) {
@@ -80,13 +86,6 @@ export class RequirementGenerator {
     }
 
     generate() {
-        if (this.#mandatoryParts) {
-            this.file.addImport("behavior/definitions/parts/PartsBehavior.js", "PartsBehavior");
-            this.file.addImport("behavior/definitions/index/IndexBehavior.js", "IndexBehavior");
-            this.mandatoryBlock.atom("Parts", "PartsBehavior");
-            this.mandatoryBlock.atom("Index", "IndexBehavior");
-        }
-
         for (const detail of this.#mandatory) {
             this.#generateOne(detail, this.mandatoryBlock);
         }

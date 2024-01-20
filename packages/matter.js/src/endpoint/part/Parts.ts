@@ -53,6 +53,12 @@ export class Parts implements MutableSet<Part, Part | Agent>, ObservableSet<Part
         });
     }
 
+    async [Symbol.asyncDispose]() {
+        for (const part of this) {
+            await part[Symbol.asyncDispose]();
+        }
+    }
+
     get(id: string) {
         for (const part of this) {
             if (part.lifecycle.hasId && part.id === id) {
@@ -205,6 +211,6 @@ export class Parts implements MutableSet<Part, Part | Agent>, ObservableSet<Part
             }
         }
 
-        return Part.partFor(child);
+        return Part.from(child);
     }
 }
