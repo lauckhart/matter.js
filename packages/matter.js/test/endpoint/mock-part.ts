@@ -47,9 +47,9 @@ export class MockPart<T extends EndpointType> extends Part<T> {
         super(definition, options);
     }
 
-    static create<const T extends EndpointType>(definition: T | Part.Configuration<T>): Promise<Agent.Instance<T["behaviors"]>>;
+    static create<const T extends EndpointType>(definition: T | Part.Configuration<T>): Promise<Agent.Instance<T>>;
 
-    static create<const T extends EndpointType>(type: T, options: Part.Options<T>): Promise<Agent.Instance<T["behaviors"]>>;
+    static create<const T extends EndpointType>(type: T, options: Part.Options<T>): Promise<Agent.Instance<T>>;
 
     static async create(definition: EndpointType | Part.Configuration<EndpointType>, options?: Part.Options) {
         const part = new MockPart(definition as any, options as any);
@@ -58,7 +58,7 @@ export class MockPart<T extends EndpointType> extends Part<T> {
     }
 
     static async createBehavior<T extends Behavior.Type>(type: T) {
-        const part = (await MockPart.create(MockEndpoint.with(type))).part.getAgent(new MockContext());
+        const part = (await MockPart.create(MockEndpoint.with(type))).part.agentFor(new MockContext());
         return part.get(type);
     }
 }

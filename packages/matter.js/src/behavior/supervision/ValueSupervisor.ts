@@ -62,13 +62,9 @@ export namespace ValueSupervisor {
      */
     export interface Session extends AccessControl.Session {
         /**
-         * An optional transaction.  If present writes will not be visible
-         * outside the transaction until the transaction commits.
-         *
-         * The supervisor isolates reads and writes if a transaction is present
-         * but commit and rollback is a separate concern.
+         * The transaction used for isolating state changes associated with this session.
          */
-        transaction?: Transaction;
+        transaction: Transaction;
     }
 
     export type Validate = (value: Val, session: Session, context?: ValidationContext) => void;

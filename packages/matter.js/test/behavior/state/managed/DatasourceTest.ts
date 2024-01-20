@@ -244,6 +244,8 @@ describe("Datasource", () => {
 
         await tx.commit();
 
+        expect(changed).true;
+
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         expect(result).eventually.deep.equal(["BAR", "bar", context]);
     })

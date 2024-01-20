@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ActionContext } from "../../src/behavior/ActionContext.js";
+import { ActionContext } from "../../src/behavior/server/context/ActionContext.js";
 import { DescriptorServer } from "../../src/behavior/definitions/descriptor/DescriptorServer.js";
 import { AccessLevel } from "../../src/cluster/Cluster.js";
 import { FabricIndex } from "../../src/datatype/FabricIndex.js";

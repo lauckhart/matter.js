@@ -299,14 +299,9 @@ function createRootReference(resource: Resource, internals: Internals, session: 
         /**
          * Post-processing for non-transactional changes, which take immediate effect.
          */
-        notify(index?: string, oldValue?: Val, newValue?: Val) {
-            // Index should be set because we only parent a struct reference
-            if (!index) {
-                return;
-            }
-
-            // Ignore no-op changes
-            if (isDeepEqual(oldValue, newValue)) {
+        notify(index: number | string) {
+            // Index should be a string because we only parent a struct reference
+            if (typeof index !== "string") {
                 return;
             }
 
@@ -315,7 +310,7 @@ function createRootReference(resource: Resource, internals: Internals, session: 
                 if (!internals.dirty) {
                     internals.dirty = {};
                 }
-                internals.dirty[index] = newValue;
+                internals.dirty[index] = values[index];
             }
 
             // Increment version.  Need to store it as dirty as well
@@ -328,7 +323,9 @@ function createRootReference(resource: Resource, internals: Internals, session: 
                 internals.dirty[VERSION_KEY] = internals.version;
             }
 
-            refreshSubrefs();
+            // Do not refresh subreferences.  Non-transactional writes mutate state directly so the only manager that
+            // needs to worry about subreferences is the one that actually made the change
+            //refreshSubrefs();
 
             const event = internals.events?.[`${index}$Change`];
             if (event) {
@@ -385,7 +382,7 @@ function createRootReference(resource: Resource, internals: Internals, session: 
                     changes.persistent[name] = values[name];
                 }
 
-                const event = internals.events?.[name];
+                const event = internals.events?.[`${name}$Change`];
                 if (event) {
                     changes.notifications.push({
                         event,

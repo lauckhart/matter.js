@@ -5,7 +5,7 @@
  */
 
 import { MatterDevice } from "../../MatterDevice.js";
-import { AccessLevel, Attributes, Events } from "../../cluster/Cluster.js";
+import { Attributes, Events } from "../../cluster/Cluster.js";
 import { AttributeServer, FabricScopedAttributeServer } from "../../cluster/server/AttributeServer.js";
 import { ClusterServer } from "../../cluster/server/ClusterServer.js";
 import {
@@ -25,7 +25,8 @@ import { Session } from "../../session/Session.js";
 import { MaybePromise } from "../../util/Promises.js";
 import { camelize } from "../../util/String.js";
 import { AccessControl } from "../AccessControl.js";
-import { ActionContext } from "../ActionContext.js";
+import { ActionContext } from "./context/ActionContext.js";
+import { OfflineContext } from "./context/OfflineContext.js";
 import { Behavior } from "../Behavior.js";
 import type { ClusterBehavior } from "../cluster/ClusterBehavior.js";
 import { ClusterEvents } from "../cluster/ClusterEvents.js";
@@ -33,7 +34,7 @@ import { ValidatedElements } from "../cluster/ValidatedElements.js";
 import { Val } from "../state/managed/Val.js";
 import { StructManager } from "../state/managed/values/StructManager.js";
 import { Status } from "../state/transaction/Status.js";
-import { ServerActionContext } from "./ServerActionContext.js";
+import { OnlineContext } from "./context/OnlineContext.js";
 import { ServerBehaviorBacking } from "./ServerBehaviorBacking.js";
 
 const logger = Logger.get("Behavior");
@@ -91,10 +92,7 @@ export class ClusterServerBehaviorBacking extends ServerBehaviorBacking {
         // can be cleaned up as we factor out legacy code but for now just pass our validated state and use
         // ClusterServer's TLV validation as backup
         const datasource = this.datasource;
-        const initialValues = datasource.reference({
-            accessLevel: AccessLevel.View,
-            offline: true,
-        });
+        const initialValues = datasource.reference(OfflineContext());
 
         // Create the cluster server
         const clusterServer = ClusterServer(type.cluster, initialValues, handlers, supportedEvents);
@@ -136,14 +134,14 @@ export class ClusterServerBehaviorBacking extends ServerBehaviorBacking {
 
 function withBehavior<T>(
     backing: ClusterServerBehaviorBacking,
-    session: Session<MatterDevice> | undefined,
-    contextFields: Partial<ActionContext>,
+    session: Session<MatterDevice>,
+    contextFields: Partial<ActionContext> & { message: Message },
     invoke: boolean,
     fn: (behavior: Behavior) => T,
 ): T {
-    const context = ServerActionContext(contextFields, invoke, session);
+    const context = OnlineContext(contextFields, invoke, session);
 
-    let agent = backing.part.getAgent(context);
+    let agent = backing.part.agentFor(context);
 
     try {
         return fn(agent.get(backing.type));

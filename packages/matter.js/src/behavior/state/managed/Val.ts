@@ -51,8 +51,8 @@ export namespace Val {
          * reference.
          *
          * Then runs the specified mutator to make the actual changes.
-         *
-         * Immediately commits if non-transactional.
+         * 
+         * @param mutator the mutation logic, may freely modify {@link value}
          */
         change(mutator: () => void): void;
 
@@ -63,11 +63,9 @@ export namespace Val {
          *
          * Inside a transaction change events trigger after commit.
          *
-         * @param index the index for struct property changes
-         * @param oldValue the previous value of the property
-         * @param newValue the new value
+         * @param index the index changed
          */
-        notify(index?: string, oldValue?: Val, newValue?: Val): void;
+        notify(index: string, newValue: Val, oldValue: Val): void;
 
         /**
          * Refresh any internal cache from the referenced container.

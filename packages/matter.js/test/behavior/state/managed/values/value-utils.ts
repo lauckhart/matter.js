@@ -57,10 +57,12 @@ export function listOf(entryType: string | Partial<FieldElement>, listType?: Par
 /**
  * A simplified source for managed structs, similar to Datasource but provides access to the raw underlying values.
  */
-export function TestStruct(fields: Record<string, string | Partial<FieldElement>>) {
+export function TestStruct(fields: Record<string, string | Partial<FieldElement>>, defaults: Val.Struct = {}) {
     const supervisor = new RootSupervisor(new DatatypeModel(structOf(fields)));
 
-    const struct = {} as Val.Struct;
+    const struct = { ...defaults } as Val.Struct;
+
+    const notifies: { index: string | undefined, oldValue: Val, newValue: Val }[] = [];
 
     const rootRef: Val.Reference = {
         value: struct,
@@ -70,13 +72,16 @@ export function TestStruct(fields: Record<string, string | Partial<FieldElement>
             mutator();
         },
 
-        notify() {},
+        notify(index, oldValue, newValue) {
+            notifies.push({ index, oldValue, newValue });
+        },
 
         refresh() {},
     }
 
     return {
         fields: struct,
+        notifies,
 
         expect(expected: Val.Struct) {
             expect(struct).deep.equals(expected);

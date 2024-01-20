@@ -173,7 +173,7 @@ function configureProperty(
             this[REF].change(() => {
                 const struct = this[REF].value;
 
-                // Change the value
+                // Identify the target.  Usually just "struct" except when struct supports Val.Dynamic
                 let target;
                 if ((struct as Val.Dynamic)[Val.properties]) {
                     const properties = (struct as Val.Dynamic)[Val.properties](this[SESSION]);
@@ -185,8 +185,10 @@ function configureProperty(
                 } else {
                     target = struct;
                 }
+
+                // Modify the value
                 target[name] = value;
-              
+
                 // Note: We validate fully for nested structs but *not* for the current struct.  This is because choice
                 // conformance may be violated temporarily as individual fields change.
                 //
@@ -202,10 +204,6 @@ function configureProperty(
                     target[name] = oldValue;
 
                     throw e;
-                }
-
-                if (!this[SESSION].transaction) {
-                    this[REF].notify(name, oldValue, value);
                 }
             });
         },
@@ -283,7 +281,7 @@ function configureProperty(
                 this[REF],
                 name,
                 assertWriteOk,
-                this[SESSION].transaction ? cloneContainer : undefined,
+                cloneContainer,
             );
 
             ref.owner = manage(ref, this[SESSION], this[CONTEXT]);

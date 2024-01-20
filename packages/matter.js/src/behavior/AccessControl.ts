@@ -10,6 +10,7 @@ import { Access } from "../model/aspects/index.js";
 import { ElementTag } from "../model/index.js";
 import { Model, ValueModel } from "../model/models/index.js";
 import { StatusCode } from "../protocol/interaction/StatusCode.js";
+import { Behavior } from "./Behavior.js";
 import { InvokeError, ReadError, SchemaImplementationError, WriteError } from "./errors.js";
 import { Schema } from "./supervision/Schema.js";
 
@@ -99,13 +100,29 @@ export namespace AccessControl {
     export type Verification = (session: Session, context?: Context) => boolean;
 
     /**
+     * Metadata that varies with position in the data model.
+     */
+    export interface Context {
+        /**
+         * The owning behavior.
+         */
+        behavior: Behavior;
+
+        /**
+         * The fabric that owns the data subtree.  Undefined or {@link FabricIndex.NO_FABRIC} disable fabric
+         * enforcement.
+         */
+        owningFabric?: FabricIndex;
+    }
+
+    /**
      * Authorization metadata that varies with session.
      */
-    export type Session = {
+    export interface Session {
         /**
          * The access level of the authorized client.
          */
-        readonly accessLevel: AccessLevel;
+        accessLevelFor(context: Context): AccessLevel;
 
         /**
          * The fabric of the authorized client.
@@ -137,33 +154,9 @@ export namespace AccessControl {
          */
         offline?: boolean;
     };
-
-    /**
-     * An offline session that disables access controls.
-     */
-    export const OfflineSession: Session = {
-        // Set access level as low as possible.  It should be ignored due to offline status but make faulty logic fail
-        // early
-        accessLevel: AccessLevel.View,
-
-        // Disable access level enforcement
-        offline: true,
-    };
-
-    /**
-     * Metadata that varies with data structure position.
-     */
-    export interface Context {
-        /**
-         * The fabric that owns the data subtree.  Undefined or {@link FabricIndex.NO_FABRIC} disable fabric
-         * enforcement.
-         */
-        owningFabric?: FabricIndex;
-    }
 }
 
 Object.freeze(AccessControl);
-Object.freeze(AccessControl.OfflineSession);
 
 function enforcerFor(schema: Schema): AccessControl {
     if (schema.tag === ElementTag.Command) {

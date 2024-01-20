@@ -95,10 +95,6 @@ function createProxy(
         }
 
         reference.change(() => (reference.value.length = length));
-
-        if (!session.transaction) {
-            reference.notify();
-        }
     };
     let hasEntry = (index: number) => reference.value[index] !== undefined;
     // Create the base entry reader.  The reader is different for containers vs. primitive values
@@ -131,15 +127,12 @@ function createProxy(
                     index,
                     () => true,
 
-                    // Provide a clone function if we have a transaction. Otherwise we write directly to the field
-                    session.transaction
-                        ? val =>
-                              Array.isArray(val)
-                                  ? [...(val as Val.List)]
-                                  : typeof val === "object" && val !== null
-                                    ? { ...val }
-                                    : val
-                        : undefined,
+                    val =>
+                        Array.isArray(val)
+                            ? [...(val as Val.List)]
+                            : typeof val === "object" && val !== null
+                            ? { ...val }
+                            : val
                 );
 
                 subref.owner = manageEntry(subref, session, context);
@@ -172,10 +165,6 @@ function createProxy(
         }
 
         reference.change(() => (reference.value[index] = value));
-
-        if (!session.transaction) {
-            reference.notify();
-        }
     };
 
     // If the list is fabric-scoped, wrap read and write to map indices
@@ -262,6 +251,7 @@ function createProxy(
                 }
                 return length;
             };
+            
             setListLength = (length: number) => {
                 const formerLength = getListLength();
 
@@ -282,10 +272,6 @@ function createProxy(
                         }
                     }
                 });
-
-                if (!session.transaction) {
-                    reference.notify();
-                }
             };
         }
     }

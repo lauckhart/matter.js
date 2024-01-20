@@ -11,7 +11,7 @@ import { PartStoreService } from "../../node/server/storage/PartStoreService.js"
 import { EventHandler } from "../../protocol/interaction/EventHandler.js";
 import { MaybePromise } from "../../util/Promises.js";
 import { camelize } from "../../util/String.js";
-import { ActionContext } from "../ActionContext.js";
+import { ActionContext } from "./context/ActionContext.js";
 import { Behavior } from "../Behavior.js";
 import { BehaviorBacking } from "../BehaviorBacking.js";
 import { Datasource } from "../state/managed/Datasource.js";
