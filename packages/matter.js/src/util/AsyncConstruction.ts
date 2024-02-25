@@ -144,7 +144,7 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
     // captures the original error but also the trace for the secondary error.
     function crashedError() {
         let what;
-        if (subject.toString === Object.toString) {
+        if (subject.toString === Object.prototype.toString) {
             what = subject.constructor.name;
         } else {
             what = subject.toString();
@@ -160,9 +160,7 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
     }
 
     const self: AsyncConstruction<any> = {
-        toString() {
-            return `construction<${subject}>`;
-        },
+        [Symbol.toStringTag]: "AsyncConstruction",
 
         get ready() {
             return ready;
@@ -213,21 +211,24 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
 
             if (MaybePromise.is(initialization)) {
                 ready = false;
-                initialization = initialization.then(
-                    () => {
-                        ready = true;
-                        if (status === Lifecycle.Status.Initializing) {
-                            setStatus(Lifecycle.Status.Active);
-                        }
-                    },
-                    e => {
-                        ready = true;
-                        if (status !== Lifecycle.Status.Destroying && status !== Lifecycle.Status.Destroyed) {
-                            this.crashed(e);
-                        }
-                        throw crashedError();
-                    },
-                );
+
+                const initSuccess = () => {
+                    ready = true;
+                    if (status === Lifecycle.Status.Initializing) {
+                        setStatus(Lifecycle.Status.Active);
+                    }
+                };
+
+                const initFailure = (cause: any) => {
+                    ready = true;
+                    if (status !== Lifecycle.Status.Destroying && status !== Lifecycle.Status.Destroyed) {
+                        this.crashed(cause);
+                    }
+                    throw crashedError();
+                };
+
+                initialization = initialization.then(initSuccess, initFailure);
+                
                 if (promise) {
                     initialization.then(placeholderResolve, placeholderReject);
                 } else {
@@ -392,10 +393,6 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
             setStatus(status);
 
             return this;
-        },
-
-        get [Symbol.toStringTag]() {
-            return "Promise";
         },
     };
 

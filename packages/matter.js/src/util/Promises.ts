@@ -178,9 +178,7 @@ export const MaybePromise = {
         return producer;
     },
 
-    toString() {
-        return "MaybePromise";
-    },
+    [Symbol.toStringTag]: "MaybePromise",
 };
 
 /**
@@ -251,6 +249,8 @@ export class Tracker {
         return MaybePromise.finally(promise, () => { this.#tracked.delete(promise as Promise<T>) });
     }
 }
+
+MaybePromise.toString = () => "MaybePromise";
 
 function labelFor(value: unknown) {
     if (value === undefined || value === null || value === "") {

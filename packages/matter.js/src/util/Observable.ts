@@ -97,31 +97,27 @@ class Emitter<T extends any[] = any[], R = void> implements Observable<T, R> {
         // Iterate over a clone of observers so we do not trigger new observers added during observation
         const iterator = [...this.#observers][Symbol.iterator]();
 
-        const emitOne = (observer: Observer<T, R>) => {
-            let result;
-
-            try {
-                result = observer(...payload);
-            } catch (e) {
-                if (e instanceof Error) {
-                    this.#errorHandler(e, observer);
-                } else {
-                    this.#errorHandler(new Error(`${e}`), observer);
-                }
-            }
-
-            if (this.#once?.has(observer)) {
-                this.#once.delete(observer);
-                this.#observers?.delete(observer);
-            }
-
-            return result;
-        };
-
-        function emitNext(): R | undefined {
+        const emitNext = (): R | undefined => {
             for (let iteration = iterator.next(); !iteration.done; iteration = iterator.next()) {
-                const result = emitOne(iteration.value);
+                let result;
 
+                const observer = iteration.value;
+
+                try {
+                    result = observer(...payload);
+                } catch (e) {
+                    if (e instanceof Error) {
+                        this.#errorHandler(e, observer);
+                    } else {
+                        this.#errorHandler(new Error(`${e}`), observer);
+                    }
+                }
+    
+                if (this.#once?.has(observer)) {
+                    this.#once.delete(observer);
+                    this.#observers?.delete(observer);
+                }
+    
                 if (result === undefined) {
                     continue;
                 }

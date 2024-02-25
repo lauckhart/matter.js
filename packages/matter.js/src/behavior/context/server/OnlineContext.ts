@@ -51,7 +51,7 @@ export function OnlineContext(options: OnlineContext.Options) {
                 `online#${message?.packetHeader?.messageId?.toString(16) ?? "?"}@${subject.toString(16)}`,
             );
 
-            return Transaction.act(via, transaction => {
+            const actOnline = (transaction: Transaction) => {
                 const context = {
                     ...options,
                     session,
@@ -89,8 +89,12 @@ export function OnlineContext(options: OnlineContext.Options) {
                         Contextual.setContextOf(message, undefined);
                     }
                 }
-            });
+            }
+
+            return Transaction.act(via, actOnline);
         },
+
+        [Symbol.toStringTag]: "OnlineContext",
     };
 }
 

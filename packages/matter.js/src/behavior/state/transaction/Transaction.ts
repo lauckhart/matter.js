@@ -8,7 +8,7 @@ import { MaybePromise } from "../../../util/Promises.js";
 import { Participant } from "./Participant.js";
 import type { Resource } from "./Resource.js";
 import { Status } from "./Status.js";
-import { ReadOnlyTransaction, executeTransaction } from "./Tx.js";
+import { ReadOnlyTransaction, act } from "./Tx.js";
 
 /**
  * By default, Matter.js state is transactional.
@@ -153,7 +153,7 @@ const StatusEnum = Status;
 type ResourceType = Resource;
 type ParticipantType = Participant;
 
-export namespace Transaction {
+export const Transaction = {
     /**
      * Perform a transactional operation.  This is the only way to obtain a read/write transaction.
      *
@@ -162,16 +162,25 @@ export namespace Transaction {
      * The transaction is destroyed when {@link act} returns.  You will receive an error if you access it after it is
      * destroyed.
      */
-    export function act<T>(via: string, actor: (transaction: Transaction) => MaybePromise<T>): MaybePromise<T> {
-        return executeTransaction(via, actor);
-    }
+    act<T>(via: string, actor: (transaction: Transaction) => MaybePromise<T>): MaybePromise<T> {
+        // This function is replaced below so do not edit
+        return act(via, actor);
+    },
 
     /**
      * A read-only transaction you may use without context.
      */
-    export const ReadOnly = ReadOnlyTransaction;
+    ReadOnly: ReadOnlyTransaction,
 
-    export const Status = StatusEnum;
+    Status: StatusEnum,
+
+    [Symbol.toStringTag]: "Transaction",
+}
+
+// This is functionally equivalent to the definition above but removes a stack frame 
+Transaction.act = act;
+
+export namespace Transaction {
     export type Status = StatusType;
 
     export type Resource = ResourceType;

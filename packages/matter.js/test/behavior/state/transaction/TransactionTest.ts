@@ -170,9 +170,9 @@ describe("Transaction", () => {
                 Transaction.act("test", tx => {
                     tx.addParticipants(p);
                     tx.beginSync();
-                    throw "oops";
+                    throw new Error("oops in sync actor");
                 }),
-            ).throws("oops");
+            ).throws("oops in sync actor");
 
             p.expect("rollback");
         });
@@ -184,9 +184,9 @@ describe("Transaction", () => {
                 Transaction.act("test", async tx => {
                     tx.addParticipants(p);
                     tx.beginSync();
-                    throw "oops";
+                    throw new Error("oops in async actor");
                 }),
-            ).rejectedWith("oops");
+            ).rejectedWith("oops in async actor");
 
             p.expect("rollback");
         });
@@ -256,7 +256,7 @@ describe("Transaction", () => {
         test("synchronously", () => {
             const p = join({
                 commit1() {
-                    throw new Error("oops");
+                    throw new Error("oops in sync participant");
                 },
             });
 
@@ -270,7 +270,7 @@ describe("Transaction", () => {
         test("asychonously", async () => {
             const p = join({
                 async commit1() {
-                    throw new Error("oops");
+                    throw new Error("oops in async participant");
                 },
 
                 async rollback() {},

@@ -45,7 +45,9 @@ Crypto.get().hkdf = async () => {
 
 export class MockServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint> extends ServerNode<T> {
     constructor(type: T = ServerNode.RootEndpoint as T, options?: Node.Options<T>) {
-        const environment = new Environment("test");
+        const config = Node.nodeConfigFor(ServerNode.RootEndpoint, type, options);
+
+        const environment = config.environment ?? new Environment("test");
 
         const storage = environment.get(StorageService);
         storage.location = "(memory)";
@@ -53,13 +55,9 @@ export class MockServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootE
 
         environment.set(Network, MockServerNode.createNetwork(1));
 
-        const config = {
-            type,
-            environment,
-            ...options,
-        } as Node.Configuration<T>;
+        config.environment = environment;
 
-        super(config);
+        super(config as any);
     }
 
     /**
