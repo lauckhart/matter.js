@@ -11,7 +11,6 @@ import { Time, Timer } from "../../../time/Time.js";
 import { EventEmitter, Observable } from "../../../util/Observable.js";
 import { Behavior } from "../../Behavior.js";
 import { ActionContext } from "../../context/ActionContext.js";
-import { OfflineContext } from "../../context/server/OfflineContext.js";
 
 /**
  * This behavior indexes all descendents of a {@link Endpoint} by number.
@@ -111,7 +110,7 @@ export class IndexBehavior extends Behavior {
 
         this.internal.changeBroadcaster = Time.getTimer(`Update ${this.endpoint} index`, 0, () => {
             delete this.internal.changeBroadcaster;
-            OfflineContext.act("index-change", context => this.events.change.emit(context));
+            this.endpoint.act(agent => this.events.change.emit(agent.context));
         });
     }
 }

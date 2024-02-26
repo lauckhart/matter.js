@@ -6,9 +6,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError } from "../common/MatterError.js";
+import { InternalError, MatterError } from "../common/MatterError.js";
 import { Diagnostic } from "../log/Diagnostic.js";
 import { DiagnosticSource } from "../log/DiagnosticSource.js";
+import { Time } from "../time/Time.js";
 
 /**
  * Obtain a promise with functions to resolve and reject.
@@ -62,6 +63,66 @@ export function anyPromise<T>(promises: ((() => Promise<T>) | Promise<T>)[]): Pr
                 });
         }
     });
+}
+
+/**
+ * Thrown when a timed promise times out.
+ */
+export class PromiseTimeoutError extends MatterError {
+    constructor(message = "Operation timed out") {
+        super(message);
+    }
+}
+
+/**
+ * Create a promise with a timeout.
+ * 
+ * By default rejects with {@link PromiseTimeoutError} on timeout but you can override by supplying {@link cancel}.
+ * 
+ * @param timeoutMs the timeout in milliseconds
+ * @param promise a promise that resolves or rejects when the timed task completes
+ * @param cancel invoked on timeout (default implementation throws {@link PromiseTimeoutError})
+ */
+export async function withTimeout<T>(timeoutMs: number, promise: Promise<T>, cancel?: () => void): Promise<T> {
+    if (!cancel) {
+        cancel = () => { throw new PromiseTimeoutError() }
+    }
+
+    let cancelTimer: undefined | (() => void);
+
+    // Sub-promise 1, the timer
+    const timeout = new Promise<void>((resolve, reject) => {
+        const timer = Time.getTimer("promise-timeout", timeoutMs, () => reject(cancel));
+
+        cancelTimer = () => {
+            timer.stop();
+            resolve();
+        }
+
+        timer.start();
+    });
+
+    let result: undefined | T;
+
+    // Sub-promise 2, captures result and cancels timer
+    const producer = promise.then(
+        r => {
+            cancelTimer?.();
+            result = r;
+        },
+        e => {
+            cancelTimer?.();
+            throw e;
+        }
+    );
+
+    // Output promise, resolves like input promise unless timed out
+    await Promise.all([
+        timeout,
+        producer
+    ]);
+
+    return result as T;
 }
 
 /**

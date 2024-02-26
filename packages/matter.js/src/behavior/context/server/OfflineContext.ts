@@ -9,6 +9,7 @@ import { ReadOnlyTransaction } from "../../state/transaction/Tx.js";
 import { ActionContext } from "../ActionContext.js";
 import { ActionTracer } from "../ActionTracer.js";
 import { Contextual } from "../Contextual.js";
+import { NodeActivity } from "./ActiveContexts.js";
 import { ContextAgents } from "./ContextAgents.js";
 
 export let nextInternalId = 1;
@@ -32,20 +33,40 @@ export const OfflineContext = {
      */
     act<T>(
         purpose: string,
+        activity: NodeActivity,
         actor: (context: ActionContext) => MaybePromise<T>,
         options?: OfflineContext.Options,
-    ): MaybePromise<T> {
+    ) {
         const id = nextInternalId;
         nextInternalId = (nextInternalId + 1) % 65535;
         const via = Diagnostic.via(`${purpose}#${id.toString(16)}`);
 
-        const actOffline = (transaction: Transaction) => {
-            const context = createOfflineContext(transaction, options);
+        let context: ActionContext | undefined;
 
+        const actOffline = (transaction: Transaction) => {
+            context = createOfflineContext(transaction, options);
             return actor(context);
         };
 
-        return Transaction.act(via, actOffline);
+        let isAsync = false;
+        try {
+            const result = Transaction.act(via, actOffline);
+
+            if (MaybePromise.is(result)) {
+                isAsync = true;
+                return Promise.resolve(result).finally(() => {
+                    if (context) {
+                        activity.delete(context)
+                    }
+                });
+            }
+
+            return result;
+        } finally {
+            if (!isAsync && context) {
+                activity.delete(context);
+            }
+        }
     },
 
     /**

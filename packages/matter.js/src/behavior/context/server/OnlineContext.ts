@@ -1,3 +1,9 @@
+/**
+ * @license
+ * Copyright 2022-2023 Project CHIP Authors
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { MatterDevice } from "../../../MatterDevice.js";
 import { AccessLevel } from "../../../cluster/Cluster.js";
 import type { Message } from "../../../codec/MessageCodec.js";
@@ -16,6 +22,7 @@ import { Transaction } from "../../state/transaction/Transaction.js";
 import { ActionContext } from "../ActionContext.js";
 import { ActionTracer } from "../ActionTracer.js";
 import { Contextual } from "../Contextual.js";
+import { NodeActivity } from "./ActiveContexts.js";
 import { ContextAgents } from "./ContextAgents.js";
 
 /**
@@ -51,8 +58,19 @@ export function OnlineContext(options: OnlineContext.Options) {
                 `online#${message?.packetHeader?.messageId?.toString(16) ?? "?"}@${subject.toString(16)}`,
             );
 
+            let context: undefined | ActionContext;
+
+            const close = () => {
+                if (message) {
+                    Contextual.setContextOf(message, undefined);
+                }
+                if (context) {
+                    options.activity.delete(context);
+                }
+            }
+
             const actOnline = (transaction: Transaction) => {
-                const context = {
+                context = {
                     ...options,
                     session,
                     subject,
@@ -82,16 +100,22 @@ export function OnlineContext(options: OnlineContext.Options) {
                     Contextual.setContextOf(message, context);
                 }
 
-                try {
-                    return actor(context);
-                } finally {
-                    if (message) {
-                        Contextual.setContextOf(message, undefined);
-                    }
-                }
+                return actor(context);
             }
 
-            return Transaction.act(via, actOnline);
+            let isAsync = false;
+            try {
+                const result = Transaction.act(via, actOnline);
+                if (MaybePromise.is(result)) {
+                    isAsync = true;
+                    return Promise.resolve(result).finally(close);
+                }
+                return result;
+            } finally {
+                if (!isAsync && context) {
+                    close();
+                }
+            }
         },
 
         [Symbol.toStringTag]: "OnlineContext",
@@ -100,6 +124,7 @@ export function OnlineContext(options: OnlineContext.Options) {
 
 export namespace OnlineContext {
     export type Options = {
+        activity: NodeActivity,
         command?: boolean;
         timed?: boolean;
         fabricFiltered?: boolean;

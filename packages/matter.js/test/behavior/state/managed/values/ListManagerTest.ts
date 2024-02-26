@@ -5,6 +5,7 @@
  */
 
 import { ActionContext } from "../../../../../src/behavior/context/ActionContext.js";
+import { NodeActivity } from "../../../../../src/behavior/context/server/ActiveContexts.js";
 import { FabricIndex } from "../../../../../src/datatype/FabricIndex.js";
 import { NodeId } from "../../../../../src/datatype/NodeId.js";
 import { MaybePromise } from "../../../../../src/util/Promises.js";
@@ -35,13 +36,17 @@ export async function testFabricScoped(actor: (struct: TestStruct, lists: TwoLis
         },
     );
 
+    const activity = new NodeActivity();
+
     const cx1 = {
+        activity,
         fabricFiltered: true,
         fabric: FabricIndex(1),
         subject: NodeId(1),
     };
 
     const cx2 = {
+        activity,
         fabricFiltered: true,
         fabric: FabricIndex(2),
         subject: NodeId(2),
@@ -68,7 +73,7 @@ describe("ListManager", () => {
     it("basic get/set", async () => {
         const struct = TestStruct({ list: listOf("string") }, { list: [] });
 
-        await struct.online({ subject: NodeId(1), fabric: FabricIndex(1) }, async ref => {
+        await struct.online({ activity: new NodeActivity, subject: NodeId(1), fabric: FabricIndex(1) }, async ref => {
             const list = ref.list as string[];
 
             list[0] = "hi";
@@ -86,7 +91,7 @@ describe("ListManager", () => {
     it("basic array functions", async () => {
         const struct = TestStruct({ list: listOf("string") }, { list: [] });
 
-        await struct.online({ subject: NodeId(1), fabric: FabricIndex(1) }, async (ref, cx) => {
+        await struct.online({ activity: new NodeActivity, subject: NodeId(1), fabric: FabricIndex(1) }, async (ref, cx) => {
             const list = ref.list as string[];
 
             list[0] = "hi";
@@ -114,7 +119,7 @@ describe("ListManager", () => {
     it("basic array iteration", async () => {
         const struct = TestStruct({ list: listOf("string") }, { list: [] });
 
-        await struct.online({ subject: NodeId(1), fabric: FabricIndex(1) }, async ref => {
+        await struct.online({ activity: new NodeActivity, subject: NodeId(1), fabric: FabricIndex(1) }, async ref => {
             const list = ref.list as string[];
 
             (list[0] = "hi"), (list[1] = "there");

@@ -8,7 +8,7 @@ import { ImplementationError } from "../../../../common/MatterError.js";
 import { FabricIndex } from "../../../../datatype/FabricIndex.js";
 import { Access, Metatype, ValueModel } from "../../../../model/index.js";
 import { GeneratedClass } from "../../../../util/GeneratedClass.js";
-import { camelize, serialize } from "../../../../util/String.js";
+import { camelize } from "../../../../util/String.js";
 import { AccessControl } from "../../../AccessControl.js";
 import { PhantomReferenceError, SchemaImplementationError } from "../../../errors.js";
 import type { RootSupervisor } from "../../../supervision/RootSupervisor.js";
@@ -92,11 +92,11 @@ export function StructManager(owner: RootSupervisor, schema: Schema, _managed?: 
                 value: name,
             },
 
-            toString: {
-                value() {
-                    return serialize(this);
-                }
-            },
+            // toString: {
+            //     value() {
+            //         return serialize(this);
+            //     }
+            // },
 
             // AUTHORIZE_READ is effectively a protected method, see StructManager.assertDirectReadAuthorized below
             [AUTHORIZE_READ]: {

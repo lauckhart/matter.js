@@ -7,6 +7,7 @@
 import { Behavior } from "../../behavior/Behavior.js";
 import type { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
 import { ActionContext } from "../../behavior/context/ActionContext.js";
+import { NodeActivity } from "../../behavior/context/server/ActiveContexts.js";
 import { OfflineContext } from "../../behavior/context/server/OfflineContext.js";
 import { DescriptorServer } from "../../behavior/definitions/descriptor/DescriptorServer.js";
 import { BehaviorBacking } from "../../behavior/internal/BehaviorBacking.js";
@@ -297,7 +298,12 @@ export class Behaviors {
             }
         };
 
-        await OfflineContext.act("dispose-behaviors", dispose, { unversionedVolatiles: true });
+        await OfflineContext.act(
+            "dispose-behaviors",
+            this.#endpoint.env.get(NodeActivity),
+            dispose,
+            { unversionedVolatiles: true }
+        );
     }
 
     /**
@@ -376,7 +382,11 @@ export class Behaviors {
     }
 
     #activateLate(type: Behavior.Type) {
-        OfflineContext.act("behavior-late-activation", context => this.activate(type, context.agentFor(this.#endpoint)), {
+        OfflineContext.act(
+            "behavior-late-activation",
+            this.#endpoint.env.get(NodeActivity),
+            context => this.activate(type, context.agentFor(this.#endpoint)
+        ), {
             unversionedVolatiles: true,
         });
     }

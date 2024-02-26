@@ -7,6 +7,7 @@
 import { Behavior } from "../behavior/Behavior.js";
 import { ActionContext } from "../behavior/context/ActionContext.js";
 import { ActionTracer } from "../behavior/context/ActionTracer.js";
+import { NodeActivity } from "../behavior/context/server/ActiveContexts.js";
 import { OfflineContext } from "../behavior/context/server/OfflineContext.js";
 import { CrashedDependencyError, Lifecycle, UninitializedDependencyError } from "../common/Lifecycle.js";
 import { ImplementationError } from "../common/MatterError.js";
@@ -51,6 +52,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     #construction: AsyncConstruction<Endpoint<T>>;
     #stateView = {} as SupportedBehaviors.StateOf<T["behaviors"]>;
     #eventsView = {} as SupportedBehaviors.EventsOf<T["behaviors"]>;
+    #activity?: NodeActivity;
 
     /**
      * A string that uniquely identifies an endpoint.
@@ -469,9 +471,17 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     act<R>(actor: (agent: Agent.Instance<T>) => MaybePromise<R>): MaybePromise<R> {
         this.construction.assert("Endpoint");
 
-        return OfflineContext.act("offline", context => {
-            return actor(context.agentFor(this));
-        });
+        if (!this.#activity) {
+            this.#activity = this.env.get(NodeActivity);
+        }
+
+        return OfflineContext.act(
+            "offline",
+            this.#activity,
+            context => {
+                return actor(context.agentFor(this));
+            }
+        );
     }
 
     /**
@@ -599,10 +609,19 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
 
         const initializeEndpoint = (context: ActionContext) => this.initialize(context.agentFor(this));
 
-        const result = OfflineContext.act(`initialize`, initializeEndpoint, {
-            unversionedVolatiles: true,
-            trace,
-        });
+        if (!this.#activity) {
+            this.#activity = this.env.get(NodeActivity);
+        }
+
+        const result = OfflineContext.act(
+            "initialize",
+            this.#activity,
+            initializeEndpoint,
+            {
+                unversionedVolatiles: true,
+                trace,
+            }
+        );
 
         if (MaybePromise.is(result)) {
             return result.then(afterEndpointInitialized);

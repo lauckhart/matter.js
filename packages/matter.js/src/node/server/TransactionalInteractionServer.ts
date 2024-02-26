@@ -22,6 +22,7 @@ import { Session } from "../../session/Session.js";
 import { MaybePromise, track } from "../../util/Promises.js";
 import { ServerStore } from "./storage/ServerStore.js";
 import { ServerNode } from "../ServerNode.js";
+import { NodeActivity } from "../../behavior/context/server/ActiveContexts.js";
 
 /**
  * Wire up an InteractionServer that initializes an InvocationContext earlier than the cluster API supports.
@@ -40,6 +41,7 @@ export class TransactionalInteractionServer extends InteractionServer {
     #changeListener: (type: EndpointLifecycle.Change) => void;
     #endpoint: Endpoint;
     #tracer?: ActionTracer;
+    #activity: NodeActivity;
 
     constructor(endpoint: Endpoint<ServerNode.RootEndpoint>) {
         const structure = new InteractionEndpointStructure();
@@ -49,6 +51,8 @@ export class TransactionalInteractionServer extends InteractionServer {
             endpointStructure: structure,
             subscriptionOptions: endpoint.state.network.subscriptionOptions,
         });
+
+        this.#activity = endpoint.env.get(NodeActivity);
 
         if (endpoint.env.has(ActionTracer)) {
             this.#tracer = endpoint.env.get(ActionTracer);
@@ -88,6 +92,7 @@ export class TransactionalInteractionServer extends InteractionServer {
         return this.#transact(
             "Read",
             {
+                activity: this.#activity,
                 fabricFiltered,
                 message,
                 session,
@@ -106,6 +111,7 @@ export class TransactionalInteractionServer extends InteractionServer {
         return this.#transact(
             "Write",
             {
+                activity: this.#activity,
                 timed,
                 message,
                 session,
@@ -126,6 +132,7 @@ export class TransactionalInteractionServer extends InteractionServer {
         return this.#transact(
             "Invoke",
             {
+                activity: this.#activity,
                 command: true,
                 timed,
                 message,

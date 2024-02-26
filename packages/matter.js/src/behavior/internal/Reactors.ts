@@ -11,6 +11,7 @@ import { MaybePromise } from "../../util/Promises.js";
 import { Reactor } from "../Reactor.js";
 import { ActionContext } from "../context/ActionContext.js";
 import { Contextual } from "../context/Contextual.js";
+import { NodeActivity } from "../context/server/ActiveContexts.js";
 import { OfflineContext } from "../context/server/OfflineContext.js";
 import { Resource } from "../state/transaction/Resource.js";
 import type { BehaviorBacking } from "./BehaviorBacking.js";
@@ -24,13 +25,19 @@ export class Reactors {
     #backing: BehaviorBacking;
     #backings = new Set<ReactorBacking<any, any>>();
     #destructionComplete?: () => void;
+    #activity: NodeActivity;
 
     constructor(backing: BehaviorBacking) {
         this.#backing = backing;
+        this.#activity = backing.endpoint.env.get(NodeActivity);
     }
 
     get backing() {
         return this.#backing;
+    }
+
+    get activity() {
+        return this.#activity;
     }
 
     async close() {
@@ -187,7 +194,11 @@ class ReactorBacking<T extends any[], R> {
             if (this.#reactor.name) {
                 purpose = `${purpose}<${this.#reactor.name}>`;
             }
-            const result = OfflineContext.act(purpose, context => this.#reactWithContext(context, this.#reactors.backing, args));
+            const result = OfflineContext.act(
+                purpose,
+                this.#reactors.activity,
+                context => this.#reactWithContext(context, this.#reactors.backing, args)
+            );
             if (MaybePromise.is(result)) {
                 return Promise.resolve(result).catch(e => logger.error(this.#augmentError(e)));
             }

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { NodeActivity } from "../behavior/context/server/ActiveContexts.js";
 import { CommissioningBehavior } from "../behavior/system/commissioning/CommissioningBehavior.js";
 import { NetworkServer } from "../behavior/system/network/NetworkServer.js";
 import { ServerNetworkRuntime } from "../behavior/system/network/ServerNetworkRuntime.js";
@@ -89,7 +90,14 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
     ) {
         const node = new this(definition, options);
 
-        await node.lifecycle.treeReady;
+        if (!node.lifecycle.isTreeReady) {
+            await node.lifecycle.treeReady;
+        }
+
+        const activity = node.env.get(NodeActivity);
+        if (activity.isActive) {
+            await activity.inactive;
+        }
 
         return node as ServerNode<T>;
     }
