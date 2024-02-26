@@ -104,33 +104,46 @@ class ReactorBacking<T extends any[], R> {
             this.#lock = lock as Resource[];
         }
 
-        this.#handler = ((...args: T) => {
-            // If there is an ongoing reaction this will wait until it completes before initiating the next reaction
-            const result = MaybePromise.finally(
-                this.#reaction,
+        const reactorListener = ((...args: T) => {
+            // In "once" mode we destroy ourselves once the reaction completes
+            const triggerReactorOnce = () => {
+                this.#destroying = true;
 
-                () => {
-                    // In "once" mode we destroy ourselves after the reaction is complete
-                    if (once) {
-                        this.#destroying = true;
-                        return MaybePromise.finally(
-                            () => this.#react(args),
-                            () => { this.close() },
-                        );
+                let isAsync = false;
+                try {
+                    const result = this.#react(args);
+                    if (MaybePromise.is(result)) {
+                        isAsync = true;
+                        return result.finally(this.close.bind(this));
                     }
-
-                    // Normal mode -- just react
-                    return this.#react(args);
-                },
-            );
-            if (MaybePromise.is(result)) {
-                this.#reaction = result as Promise<unknown>;
+                    return;
+                } finally {
+                    if (!isAsync) {
+                        this.close();
+                    }
+                }
             }
 
-            return result;
+            // If there is an ongoing reaction, wait until it completes before initiating the next reaction
+            if (this.#reaction) {
+                this.#reaction = this.#reaction.finally(() => {
+                    if (once) {
+                        triggerReactorOnce();
+                    } else {
+                        this.#react(args);
+                    }
+                });
+                return;
+            }
+
+            // If there is no ongoing reaction, react immediately
+            if (once) {
+                return this.#reaction = triggerReactorOnce();
+            }
+            return this.#reaction = this.#react(args) ?? undefined;
         }) as Observer<T, R>;
 
-        observable.on(this.#handler);
+        observable.on(this.#handler = reactorListener);
     }
 
     is(observable: Observable<unknown[], unknown>, reactor: Reactor) {
@@ -157,22 +170,31 @@ class ReactorBacking<T extends any[], R> {
 
         // If the emitter's context is available, execute in that
         if (context) {
-            return MaybePromise.catch(
-                () => this.#reactWithContext(context as ActionContext, this.#reactors.backing, args),
-                error => {
-                    throw this.#augmentError(error);
-                },
-            );
+            try {
+                const result = this.#reactWithContext(context, this.#reactors.backing, args);
+                if (MaybePromise.is(result)) {
+                    return Promise.resolve(result).catch(e => { throw this.#augmentError(e) });
+                }
+                return result;
+            } catch (e) {
+                throw this.#augmentError(e);
+            }
         }
 
         // Otherwise run in independent context and errors do not interfere with emitter
-        return MaybePromise.catch(
-            () => OfflineContext.act("react", context => this.#reactWithContext(context, this.#reactors.backing, args)),
-
-            error => {
-                logger.error(this.#augmentError(error));
-            },
-        );
+        try {
+            let purpose = "react";
+            if (this.#reactor.name) {
+                purpose = `${purpose}<${this.#reactor.name}>`;
+            }
+            const result = OfflineContext.act(purpose, context => this.#reactWithContext(context, this.#reactors.backing, args));
+            if (MaybePromise.is(result)) {
+                return Promise.resolve(result).catch(e => logger.error(this.#augmentError(e)));
+            }
+            return result;
+        } catch (e) {
+            logger.error(this.#augmentError(e));
+        }
     }
 
     toString() {

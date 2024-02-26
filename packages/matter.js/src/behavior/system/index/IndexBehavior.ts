@@ -101,26 +101,19 @@ export class IndexBehavior extends Behavior {
         this.#change();
     }
 
+    /**
+     * Trigger change event lazily so transactions complete and we can coalesce into fewer events.
+     */
     #change() {
         if (this.internal.changeBroadcaster) {
             return;
         }
-        broadcastChange(`Update ${this.endpoint} index`, this.internal, this.events.change);
-    }
-}
 
-/**
- * Trigger change event lazily so transactions complete and we can coalesce into fewer events.
- */
-function broadcastChange(name: string, internal: IndexBehavior.Internal, change: Observable<[context: ActionContext]>) {
-    if (internal.changeBroadcaster) {
-        return;
+        this.internal.changeBroadcaster = Time.getTimer(`Update ${this.endpoint} index`, 0, () => {
+            delete this.internal.changeBroadcaster;
+            OfflineContext.act("index-change", context => this.events.change.emit(context));
+        });
     }
-
-    internal.changeBroadcaster = Time.getTimer(name, 0, () => {
-        delete internal.changeBroadcaster;
-        OfflineContext.act("index-change", context => change.emit(context));
-    });
 }
 
 export namespace IndexBehavior {

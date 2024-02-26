@@ -89,7 +89,7 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
     ) {
         const node = new this(definition, options);
 
-        await node.construction;
+        await node.lifecycle.treeReady;
 
         return node as ServerNode<T>;
     }

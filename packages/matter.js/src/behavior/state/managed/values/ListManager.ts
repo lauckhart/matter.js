@@ -13,9 +13,11 @@ import type { RootSupervisor } from "../../../supervision/RootSupervisor.js";
 import { Schema } from "../../../supervision/Schema.js";
 import type { ValueSupervisor } from "../../../supervision/ValueSupervisor.js";
 import { Val } from "../../Val.js";
+import { Instrumentation } from "../Instrumentation.js";
 import { ManagedReference } from "../ManagedReference.js";
 import { PrimitiveManager } from "./PrimitiveManager.js";
-import { InternalCollection, REF } from "./internals.js";
+import { Internal } from "../Internal.js";
+import { serialize } from "../../../../util/String.js";
 
 /**
  * We must use a proxy to properly encapsulate array data.
@@ -145,7 +147,7 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
                               : val,
                 );
 
-                subref.owner = manageEntry(subref, session);
+                manageEntry(subref, session);
             }
 
             return subref.owner;
@@ -175,8 +177,8 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
         }
 
         // Unwrap incoming managed values
-        if (value && (value as InternalCollection)[REF]) {
-            value = (value as InternalCollection)[REF].value;
+        if (value && (value as Internal.Collection)[Internal.reference]) {
+            value = (value as Internal.Collection)[Internal.reference].value;
         }
 
         reference.change(() => (reference.value[index] = value));
@@ -352,18 +354,30 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
         }
     }
 
-    return new Proxy([], {
+    const target = [] as Val.List;
+    const handlers: ProxyHandler<Val.List> = {
         get(_target, property, receiver) {
             if (typeof property === "string" && property.match(/^[0-9]+/)) {
                 sublocation.path.id = property;
                 return readEntry(Number.parseInt(property), sublocation);
-            } else if (property === "length") {
-                return getListLength();
-            } else if (property === Symbol.iterator) {
-                return getIteratorFn();
-            } else if (property === REF) {
-                return reference;
             }
+            
+            switch (property) {
+                case "length":
+                    return getListLength();
+
+                case Symbol.iterator:
+                    return getIteratorFn();
+
+                case Internal.reference:
+                    return reference;
+
+                case "toString":
+                    return function(this: Val.List) {
+                        return serialize(this);
+                    };
+            }
+
             return Reflect.get(reference.value, property, receiver);
         },
 
@@ -402,5 +416,11 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
 
         ownKeys,
         getOwnPropertyDescriptor,
-    });
+    };
+
+    const factory = Instrumentation.instrumentList((handlers, target) => new Proxy(target, handlers) );
+
+    reference.owner = factory(handlers, target);
+
+    return reference.owner;
 }

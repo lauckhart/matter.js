@@ -112,8 +112,8 @@ describe("DescriptorServer", () => {
             const parent = [ ...node.parts ][0];
             const child = [ ...parent.parts ][0];
             const extraNumbers = [ ...extraChildren ].map(child => child.number);
-            expect(node.stateOf(DescriptorBehavior).partsList).deep.equals([ parent.id, child.id, ...extraNumbers ]);
-            expect(parent.stateOf(DescriptorBehavior).partsList).deep.equals([ child.id, ...extraNumbers ]);
+            expect(node.stateOf(DescriptorBehavior).partsList).deep.equals([ parent.number, child.number, ...extraNumbers ]);
+            expect(parent.stateOf(DescriptorBehavior).partsList).deep.equals([ child.number, ...extraNumbers ]);
         }
 
         it("when constructed with full hierarchy (auto ID)", async () => {

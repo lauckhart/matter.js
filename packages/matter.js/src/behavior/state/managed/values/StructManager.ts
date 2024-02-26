@@ -8,16 +8,17 @@ import { ImplementationError } from "../../../../common/MatterError.js";
 import { FabricIndex } from "../../../../datatype/FabricIndex.js";
 import { Access, Metatype, ValueModel } from "../../../../model/index.js";
 import { GeneratedClass } from "../../../../util/GeneratedClass.js";
-import { camelize } from "../../../../util/String.js";
+import { camelize, serialize } from "../../../../util/String.js";
 import { AccessControl } from "../../../AccessControl.js";
 import { PhantomReferenceError, SchemaImplementationError } from "../../../errors.js";
 import type { RootSupervisor } from "../../../supervision/RootSupervisor.js";
 import type { Schema } from "../../../supervision/Schema.js";
 import type { ValueSupervisor } from "../../../supervision/ValueSupervisor.js";
 import { Val } from "../../Val.js";
+import { Instrumentation } from "../Instrumentation.js";
 import { ManagedReference } from "../ManagedReference.js";
 import { PrimitiveManager } from "./PrimitiveManager.js";
-import { InternalCollection, REF } from "./internals.js";
+import { Internal } from "../Internal.js";
 
 const SESSION = Symbol("options");
 const AUTHORIZE_READ = Symbol("authorize-read");
@@ -48,8 +49,10 @@ export function StructManager(owner: RootSupervisor, schema: Schema, _managed?: 
         }
     }
 
+    let name = schema.effectiveType;
+
     const Wrapper = GeneratedClass({
-        name: `${schema.name}$Managed`,
+        name,
 
         // Inheriting from managed class increases complexity with little benefit
         // base: managed,
@@ -70,7 +73,7 @@ export function StructManager(owner: RootSupervisor, schema: Schema, _managed?: 
             }
 
             Object.defineProperties(this, {
-                [REF]: {
+                [Internal.reference]: {
                     value: ref as Val.Reference<Val.Struct>,
                 },
                 [SESSION]: {
@@ -85,6 +88,16 @@ export function StructManager(owner: RootSupervisor, schema: Schema, _managed?: 
         },
 
         instanceDescriptors: {
+            [Symbol.toStringTag]: {
+                value: name,
+            },
+
+            toString: {
+                value() {
+                    return serialize(this);
+                }
+            },
+
             // AUTHORIZE_READ is effectively a protected method, see StructManager.assertDirectReadAuthorized below
             [AUTHORIZE_READ]: {
                 value(this: Wrapper, index: string) {
@@ -94,11 +107,13 @@ export function StructManager(owner: RootSupervisor, schema: Schema, _managed?: 
                         throw new ImplementationError(`Direct read of unknown property ${index}`);
                     }
 
-                    access.authorizeRead(this[SESSION], this[REF].location);
+                    access.authorizeRead(this[SESSION], this[Internal.reference].location);
                 },
             },
         },
     }) as new (value: Val, session: AccessControl.Session) => Val.Struct;
+
+    Instrumentation.instrumentStruct(Wrapper);
 
     return (reference, session) => {
         reference.owner = new Wrapper(reference, session);
@@ -123,11 +138,11 @@ export namespace StructManager {
     }
 }
 
-interface Wrapper extends Val.Struct, InternalCollection {
+interface Wrapper extends Val.Struct, Internal.Collection {
     /**
      * A reference to the raw value.
      */
-    [REF]: Val.Reference<Val.Struct>;
+    [Internal.reference]: Val.Reference<Val.Struct>;
 
     /**
      * Information regarding the current user session.
@@ -152,14 +167,14 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
         enumerable: true,
 
         set(this: Wrapper, value: Val) {
-            access.authorizeWrite(this[SESSION], this[REF].location);
+            access.authorizeWrite(this[SESSION], this[Internal.reference].location);
 
-            const oldValue = this[REF].value[name];
+            const oldValue = this[Internal.reference].value[name];
 
             const self = this;
 
-            this[REF].change(() => {
-                const struct = this[REF].value;
+            this[Internal.reference].change(() => {
+                const struct = this[Internal.reference].value;
 
                 // Identify the target.  Usually just "struct" except when struct supports Val.Dynamic
                 let target;
@@ -175,8 +190,8 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
                 }
 
                 // Unwrap if incoming value is managed
-                if (value && (value as InternalCollection)[REF]) {
-                    value = (value as InternalCollection)[REF].value;
+                if (value && (value as Internal.Collection)[Internal.reference]) {
+                    value = (value as Internal.Collection)[Internal.reference].value;
                 }
 
                 // Modify the value
@@ -202,7 +217,7 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
                     // I think this is OK for now.  If it becomes an issue we'll probably want to wire in a separate
                     // validation step that is performed on commit when choice conformance is in play.
                     try {
-                        validate(value, this[SESSION], { path: this[REF].location.path, siblings: struct });
+                        validate(value, this[SESSION], { path: this[Internal.reference].location.path, siblings: struct });
                     } catch (e) {
                         // Undo our change on error.  Rollback will take care of this when transactional but this handles
                         // the cases of 1.) no transaction, and 2.) error is caught within transaction
@@ -218,10 +233,10 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
     if (manage === PrimitiveManager) {
         // For primitives we don't need a manager so just proxy reads directly
         descriptor.get = function (this: Wrapper) {
-            if (access.mayRead(this[SESSION], this[REF].location)) {
-                const struct = this[REF].value as Val.Dynamic;
+            if (access.mayRead(this[SESSION], this[Internal.reference].location)) {
+                const struct = this[Internal.reference].value as Val.Dynamic;
                 if (struct === undefined) {
-                    throw new PhantomReferenceError(this[REF].location);
+                    throw new PhantomReferenceError(this[Internal.reference].location);
                 }
                 if (struct[Val.properties]) {
                     const properties = struct[Val.properties](this[SESSION]);
@@ -246,7 +261,7 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
             let value;
 
             // Obtain the value.  Normally just struct[name] except in the case of Val.Dynamic
-            const struct = this[REF].value;
+            const struct = this[Internal.reference].value;
             if ((struct as Val.Dynamic)[Val.properties]) {
                 const properties = (struct as Val.Dynamic)[Val.properties](this[SESSION]);
                 if (name in properties) {
@@ -265,7 +280,7 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
             // Note that we only mask values that are unreadable.  This is appropriate when the parent object is
             // visible.  For direct access to a property we should throw an error but that must be implemented at a
             // higher level because we cannot differentiate here
-            if (!access.mayRead(this[SESSION], this[REF].location)) {
+            if (!access.mayRead(this[SESSION], this[Internal.reference].location)) {
                 return undefined;
             }
 
@@ -273,22 +288,22 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
                 return value;
             }
 
-            const managed = this[REF].subrefs?.[name];
+            const managed = this[Internal.reference].subrefs?.[name];
             if (managed) {
                 return managed.owner;
             }
 
             const assertWriteOk = (value: Val) => {
                 // Note - this needs to mirror behavior in the setter above
-                access.authorizeWrite(this[SESSION], this[REF].location);
+                access.authorizeWrite(this[SESSION], this[Internal.reference].location);
                 validate(value, this[SESSION], {
-                    path: this[REF].location.path,
-                    siblings: this[REF].value,
+                    path: this[Internal.reference].location.path,
+                    siblings: this[Internal.reference].value,
                 });
             };
 
             // Clone the container before write
-            const ref = ManagedReference(this[REF], name, assertWriteOk, cloneContainer);
+            const ref = ManagedReference(this[Internal.reference], name, assertWriteOk, cloneContainer);
 
             ref.owner = manage(ref, this[SESSION]);
 
