@@ -175,9 +175,9 @@ export const Transaction = {
     Status: StatusEnum,
 
     [Symbol.toStringTag]: "Transaction",
-}
+};
 
-// This is functionally equivalent to the definition above but removes a stack frame 
+// This is functionally equivalent to the definition above but removes a stack frame
 Transaction.act = act;
 
 export namespace Transaction {

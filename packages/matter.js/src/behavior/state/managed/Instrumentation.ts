@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { Val } from "../Val.js";
 import type { Behavior } from "../../Behavior.js";
 import type { ValueSupervisor } from "../../supervision/ValueSupervisor.js";
+import type { Val } from "../Val.js";
 
 /**
  * Instrumentation points for the managed values used for {@link Behavior.state}.
@@ -25,12 +25,9 @@ export namespace Instrumentation {
     }
 
     /**
-     * Creation function for generating proxies for Matter lists. 
+     * Creation function for generating proxies for Matter lists.
      */
-    export type ListFactory = (
-        handlers: ProxyHandler<Val.List>,
-        target: Val.List
-    ) => Val.List;
+    export type ListFactory = (handlers: ProxyHandler<Val.List>, target: Val.List) => Val.List;
 
     /**
      * Instrument Matter list creation.

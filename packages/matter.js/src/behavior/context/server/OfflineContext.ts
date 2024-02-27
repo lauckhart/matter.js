@@ -9,8 +9,8 @@ import { ReadOnlyTransaction } from "../../state/transaction/Tx.js";
 import { ActionContext } from "../ActionContext.js";
 import { ActionTracer } from "../ActionTracer.js";
 import { Contextual } from "../Contextual.js";
-import { NodeActivity } from "./ActiveContexts.js";
 import { ContextAgents } from "./ContextAgents.js";
+import { NodeActivity } from "./NodeActivity.js";
 
 export let nextInternalId = 1;
 
@@ -34,9 +34,9 @@ export const OfflineContext = {
     act<T>(
         purpose: string,
         activity: NodeActivity,
-        actor: (context: ActionContext) => MaybePromise<T>,
+        actor: (context: ActionContext) => T,
         options?: OfflineContext.Options,
-    ) {
+    ): T {
         const id = nextInternalId;
         nextInternalId = (nextInternalId + 1) % 65535;
         const via = Diagnostic.via(`${purpose}#${id.toString(16)}`);
@@ -50,21 +50,23 @@ export const OfflineContext = {
 
         let isAsync = false;
         try {
+            activity.add(via);
+
             const result = Transaction.act(via, actOffline);
 
             if (MaybePromise.is(result)) {
                 isAsync = true;
                 return Promise.resolve(result).finally(() => {
                     if (context) {
-                        activity.delete(context)
+                        activity.delete(via);
                     }
-                });
+                }) as T;
             }
 
             return result;
         } finally {
-            if (!isAsync && context) {
-                activity.delete(context);
+            if (!isAsync) {
+                activity.delete(via);
             }
         }
     },
@@ -79,7 +81,7 @@ export const OfflineContext = {
     ReadOnly: createOfflineContext(ReadOnlyTransaction),
 
     [Symbol.toStringTag]: "OfflineContext",
-}
+};
 
 export namespace OfflineContext {
     /**

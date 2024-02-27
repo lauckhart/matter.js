@@ -228,7 +228,7 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
                 };
 
                 initialization = initialization.then(initSuccess, initFailure);
-                
+
                 if (promise) {
                     initialization.then(placeholderResolve, placeholderReject);
                 } else {

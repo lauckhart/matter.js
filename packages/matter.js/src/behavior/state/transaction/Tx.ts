@@ -23,10 +23,7 @@ const MAX_CHAINED_COMMITS = 5;
 /**
  * This is the only public interface to this file.
  */
-export function act<T>(
-    via: string,
-    actor: (transaction: Transaction) => MaybePromise<T>,
-): MaybePromise<T> {
+export function act<T>(via: string, actor: (transaction: Transaction) => T): T {
     const tx = new Tx(via);
     let commits = 0;
 
@@ -42,7 +39,7 @@ export function act<T>(
         }
 
         // Avoid MaybePromise.then to shorten stack traces
-        let result = tx.commit();
+        const result = tx.commit();
         if (MaybePromise.is(result)) {
             return result.then(() => {
                 if (tx.status === Transaction.Status.Exclusive) {
@@ -81,25 +78,12 @@ export function act<T>(
             }
         }
 
-        return MaybePromise.then(
-            () => {
-                return tx.rollback();
-            },
-            () => {
-                throw error;
-            },
-            error2 => {
-                if (error !== error2) {
-                    logger.error("Secondary error in", tx.via, "rollback:", error2);
-                }
-                throw error;
-            },
-        );
+        throw error;
     }) as (error: any) => MaybePromise<T>; // Cast because otherwise type is MaybePromise<void>
 
     const closeTransaction = () => {
         tx.close();
-    }
+    };
 
     let isAsync = false;
     try {
@@ -111,16 +95,14 @@ export function act<T>(
             isAsync = true;
             return Promise.resolve(actorResult)
                 .then(commitTransaction, handleTransactionError)
-                .finally(closeTransaction);
+                .finally(closeTransaction) as T;
         }
 
         // Actor is not async but if commit is, chain closeTransaction
         const commitResult = commitTransaction(actorResult);
         if (MaybePromise.is(commitResult)) {
             isAsync = true;
-            return Promise.resolve(commitResult)
-                .catch(handleTransactionError)
-                .finally(closeTransaction);
+            return Promise.resolve(commitResult).catch(handleTransactionError).finally(closeTransaction) as T;
         }
 
         // Fully synchronous action
@@ -130,27 +112,12 @@ export function act<T>(
 
         // Above throws if synchronous so this is async code path
         isAsync = true;
-        return Promise.resolve(result).finally(closeTransaction);
+        return Promise.resolve(result).finally(closeTransaction) as T;
     } finally {
         if (!isAsync) {
             tx.close();
         }
     }
-
-    // return MaybePromise.finally(
-    //     () =>
-    //         MaybePromise.then(
-    //             () => actor(tx),
-
-    //             commitTransaction,
-
-    //             handleTransactionError,
-    //         ),
-
-    //     () => {
-    //         tx.close();
-    //     },
-    // );
 }
 
 /**
@@ -382,7 +349,7 @@ class Tx implements Transaction {
             // Release locks
             const set = new ResourceSet(this, this.#resources);
             const unlocked = set.releaseLocks();
-            this.#locksChanged(unlocked, `${why}; unlocked`);
+            this.#locksChanged(unlocked, `${why} and unlocked`);
 
             // Release participants
             this.#participants.clear();
@@ -434,7 +401,7 @@ class Tx implements Transaction {
             const handleParticipantError = (error: any) => {
                 logger.error(`Error committing ${participant} (phase one):`, error);
                 needRollback = true;
-            }
+            };
 
             try {
                 const result = participant.commit1();
@@ -453,16 +420,16 @@ class Tx implements Transaction {
         const abortIfFailed = () => {
             if (needRollback) {
                 const result = this.#executeRollback();
-    
+
                 if (MaybePromise.is(result)) {
                     return result.then(() => {
                         throw new FinalizationError("Rolled back due to commit phase one error");
                     });
                 }
-    
+
                 throw new FinalizationError("Rolled back due to commit phase one error");
             }
-        }
+        };
 
         if (asyncCommits) {
             return Promise.allSettled(asyncCommits).then(abortIfFailed);
@@ -591,7 +558,13 @@ class Tx implements Transaction {
             return;
         }
 
-        this.#log(how, Diagnostic.strong(describeList("and", ...[...resources].map(r => r.toString()))));
+        let resourceDescription;
+        if (how === "locked") {
+            resourceDescription = Diagnostic.strong(describeList("and", ...[...resources].map(r => r.toString())));
+        } else {
+            resourceDescription = `${resources.size} resource${resources.size === 1 ? "" : "s"}`;
+        }
+        this.#log(how, resourceDescription);
     }
 
     #assertAvailable() {

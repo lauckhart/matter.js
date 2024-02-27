@@ -4,5 +4,4 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from "./Instrumentation.js";
-export * from "./Internal.js";
+class MockSelf

@@ -16,9 +16,9 @@ import type { Schema } from "../../../supervision/Schema.js";
 import type { ValueSupervisor } from "../../../supervision/ValueSupervisor.js";
 import { Val } from "../../Val.js";
 import { Instrumentation } from "../Instrumentation.js";
+import { Internal } from "../Internal.js";
 import { ManagedReference } from "../ManagedReference.js";
 import { PrimitiveManager } from "./PrimitiveManager.js";
-import { Internal } from "../Internal.js";
 
 const SESSION = Symbol("options");
 const AUTHORIZE_READ = Symbol("authorize-read");
@@ -49,10 +49,8 @@ export function StructManager(owner: RootSupervisor, schema: Schema, _managed?: 
         }
     }
 
-    let name = schema.effectiveType;
-
     const Wrapper = GeneratedClass({
-        name,
+        name: schema.effectiveType,
 
         // Inheriting from managed class increases complexity with little benefit
         // base: managed,
@@ -88,10 +86,13 @@ export function StructManager(owner: RootSupervisor, schema: Schema, _managed?: 
         },
 
         instanceDescriptors: {
-            [Symbol.toStringTag]: {
-                value: name,
-            },
+            // TODO - interferes with Chai deep equal.  Best fix would probably be a custom deep equal assertion but
+            // leaving out for now
+            // [Symbol.toStringTag]: {
+            //     value: name,
+            // },
 
+            // TODO - makes Mocha diffs pretty useless.  Best fix is probably customized diff but leaving out for now
             // toString: {
             //     value() {
             //         return serialize(this);
@@ -217,7 +218,10 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
                     // I think this is OK for now.  If it becomes an issue we'll probably want to wire in a separate
                     // validation step that is performed on commit when choice conformance is in play.
                     try {
-                        validate(value, this[SESSION], { path: this[Internal.reference].location.path, siblings: struct });
+                        validate(value, this[SESSION], {
+                            path: this[Internal.reference].location.path,
+                            siblings: struct,
+                        });
                     } catch (e) {
                         // Undo our change on error.  Rollback will take care of this when transactional but this handles
                         // the cases of 1.) no transaction, and 2.) error is caught within transaction

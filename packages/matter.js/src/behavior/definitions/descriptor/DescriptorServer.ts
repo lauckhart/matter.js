@@ -19,7 +19,7 @@ import { DescriptorBehavior } from "./DescriptorBehavior.js";
  * This is the default server implementation of DescriptorBehavior.
  */
 export class DescriptorServer extends DescriptorBehavior {
-    override initialize() {
+    override async initialize() {
         // We update PartsList differently if there's an index
         if (this.endpoint.behaviors.has(IndexBehavior)) {
             // Note - do not use lock here because this reactor triggers frequently so it pollutes the logs.  Instead
@@ -30,7 +30,7 @@ export class DescriptorServer extends DescriptorBehavior {
                 this.#monitorDestruction(endpoint);
             }
         }
-        this.#updatePartsList();
+        await this.#updatePartsList();
 
         // Handle lifecycle changes
         this.reactTo(this.endpoint.lifecycle.changed, this.#updateDescriptor);
@@ -90,7 +90,7 @@ export class DescriptorServer extends DescriptorBehavior {
                     return;
                 }
 
-                this.context.transaction.addResources(this);
+                await this.context.transaction.addResources(this);
                 await this.context.transaction.begin();
                 this.state.serverList = this.#serverList;
                 break;
@@ -125,7 +125,8 @@ export class DescriptorServer extends DescriptorBehavior {
             }
         } else if (endpoint.hasParts) {
             // No IndexBehavior, just direct descendents
-            numbers = [...endpoint.parts].map(endpoint => endpoint.number);
+            numbers = [...endpoint.parts].map(endpoint => endpoint.lifecycle.hasNumber ? endpoint.number : undefined)
+                .filter(n => n !== undefined) as number[];
         } else {
             // No sub-parts
             numbers = [];
@@ -147,8 +148,9 @@ export class DescriptorServer extends DescriptorBehavior {
             }
         }
         
-        this.context.transaction.addResources(this);
+        await this.context.transaction.addResources(this);
         await this.context.transaction.begin();
+        console.log(numbers);
         this.state.partsList = numbers as EndpointNumber[];
     }
 

@@ -22,8 +22,8 @@ import { Transaction } from "../../state/transaction/Transaction.js";
 import { ActionContext } from "../ActionContext.js";
 import { ActionTracer } from "../ActionTracer.js";
 import { Contextual } from "../Contextual.js";
-import { NodeActivity } from "./ActiveContexts.js";
 import { ContextAgents } from "./ContextAgents.js";
+import { NodeActivity } from "./NodeActivity.js";
 
 /**
  * Operate in online context.  Public Matter API interactions happen in online context.
@@ -65,9 +65,9 @@ export function OnlineContext(options: OnlineContext.Options) {
                     Contextual.setContextOf(message, undefined);
                 }
                 if (context) {
-                    options.activity.delete(context);
+                    options.activity.delete(via);
                 }
-            }
+            };
 
             const actOnline = (transaction: Transaction) => {
                 context = {
@@ -101,10 +101,11 @@ export function OnlineContext(options: OnlineContext.Options) {
                 }
 
                 return actor(context);
-            }
+            };
 
             let isAsync = false;
             try {
+                options.activity.add(via);
                 const result = Transaction.act(via, actOnline);
                 if (MaybePromise.is(result)) {
                     isAsync = true;
@@ -124,7 +125,7 @@ export function OnlineContext(options: OnlineContext.Options) {
 
 export namespace OnlineContext {
     export type Options = {
-        activity: NodeActivity,
+        activity: NodeActivity;
         command?: boolean;
         timed?: boolean;
         fabricFiltered?: boolean;

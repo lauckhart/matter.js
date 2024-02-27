@@ -7,7 +7,7 @@
 import { Behavior } from "../behavior/Behavior.js";
 import { ActionContext } from "../behavior/context/ActionContext.js";
 import { ActionTracer } from "../behavior/context/ActionTracer.js";
-import { NodeActivity } from "../behavior/context/server/ActiveContexts.js";
+import { NodeActivity } from "../behavior/context/server/NodeActivity.js";
 import { OfflineContext } from "../behavior/context/server/OfflineContext.js";
 import { CrashedDependencyError, Lifecycle, UninitializedDependencyError } from "../common/Lifecycle.js";
 import { ImplementationError } from "../common/MatterError.js";
@@ -85,7 +85,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
 
     /**
      * The owner of the endpoint.
-     * 
+     *
      * Every endpoint but the root endpoint (the "node") is owned by another endpoint.
      */
     get owner(): Endpoint | undefined {
@@ -174,9 +174,9 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
 
     /**
      * Update state values for a single behavior.
-     * 
+     *
      * The patch semantics used here are identical to {@link set}.
-     * 
+     *
      * @param type the {@link Behavior} to patch
      * @param values the values to change
      */
@@ -285,7 +285,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
                         rejected(e);
                     }
                     fulfilled();
-                }
+                };
 
                 this.lifecycle.installed.once(initializeOnInstall);
             });
@@ -394,7 +394,10 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      */
     async add<T extends EndpointType>(type: T, options?: Endpoint.Options<T>): Promise<Endpoint<T>>;
 
-    async add<T extends EndpointType>(definition: T | Endpoint<T> | Endpoint.Configuration<T>, options?: Endpoint.Options<T>) {
+    async add<T extends EndpointType>(
+        definition: T | Endpoint<T> | Endpoint.Configuration<T>,
+        options?: Endpoint.Options<T>,
+    ) {
         let endpoint;
         if (definition instanceof Endpoint) {
             endpoint = definition;
@@ -475,13 +478,9 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
             this.#activity = this.env.get(NodeActivity);
         }
 
-        return OfflineContext.act(
-            "offline",
-            this.#activity,
-            context => {
-                return actor(context.agentFor(this));
-            }
-        );
+        return OfflineContext.act("offline", this.#activity, context => {
+            return actor(context.agentFor(this));
+        });
     }
 
     /**
@@ -605,7 +604,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
             if (this.behaviors.hasCrashed) {
                 this.behaviorCrash();
             }
-        }
+        };
 
         const initializeEndpoint = (context: ActionContext) => this.initialize(context.agentFor(this));
 
@@ -613,15 +612,10 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
             this.#activity = this.env.get(NodeActivity);
         }
 
-        const result = OfflineContext.act(
-            "initialize",
-            this.#activity,
-            initializeEndpoint,
-            {
-                unversionedVolatiles: true,
-                trace,
-            }
-        );
+        const result = OfflineContext.act("initialize", this.#activity, initializeEndpoint, {
+            unversionedVolatiles: true,
+            trace,
+        });
 
         if (MaybePromise.is(result)) {
             return result.then(afterEndpointInitialized);

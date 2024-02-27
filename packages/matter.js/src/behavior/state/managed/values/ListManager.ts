@@ -7,17 +7,17 @@
 import { DataModelPath } from "../../../../endpoint/DataModelPath.js";
 import { Access, ValueModel } from "../../../../model/index.js";
 import { StatusCode } from "../../../../protocol/interaction/StatusCode.js";
+import { serialize } from "../../../../util/String.js";
 import { AccessControl } from "../../../AccessControl.js";
-import { ReadError, SchemaImplementationError, WriteError } from "../../../errors.js";
+import { ExpiredReferenceError, ReadError, SchemaImplementationError, WriteError } from "../../../errors.js";
 import type { RootSupervisor } from "../../../supervision/RootSupervisor.js";
 import { Schema } from "../../../supervision/Schema.js";
 import type { ValueSupervisor } from "../../../supervision/ValueSupervisor.js";
 import { Val } from "../../Val.js";
 import { Instrumentation } from "../Instrumentation.js";
+import { Internal } from "../Internal.js";
 import { ManagedReference } from "../ManagedReference.js";
 import { PrimitiveManager } from "./PrimitiveManager.js";
-import { Internal } from "../Internal.js";
-import { serialize } from "../../../../util/String.js";
 
 /**
  * We must use a proxy to properly encapsulate array data.
@@ -83,26 +83,38 @@ interface ListConfig {
 function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, session: ValueSupervisor.Session) {
     const { manageEntry, validateEntry, authorizeRead, authorizeWrite } = config;
 
-    let getListLength = () => reference.value.length;
+    // On read we treat nullish as an empty array.  This prevents errors on expired references
+    const readVal = () => reference.value ?? [];
+
+    // On write we throw an error if the reference is expired
+    const writeVal = () => {
+        if (reference.expired) {
+            throw new ExpiredReferenceError(reference.location);
+        }
+
+        return reference.value;
+    };
+
+    let getListLength = () => readVal().length;
     let setListLength = (length: number) => {
         if (length > 65535) {
             throw new WriteError(reference.location, `Index ${length} is greater than allowed maximum of 65535`);
         }
 
-        reference.change(() => (reference.value.length = length));
+        reference.change(() => (writeVal().length = length));
     };
-    let hasEntry = (index: number) => reference.value[index] !== undefined;
+    let hasEntry = (index: number) => readVal()[index] !== undefined;
 
     // Create the base entry reader.  The reader is different for containers vs. primitive values
     let readEntry: (index: number, location: AccessControl.Location) => Val;
 
     // Iteration is different for fabric-scoped read but otherwise
-    let getIteratorFn = () => reference.value[Symbol.iterator];
+    let getIteratorFn = () => readVal()[Symbol.iterator];
 
     // These two are needed to support "for in" loops.  And good for completeness
-    let ownKeys = () => Reflect.ownKeys(reference.value);
+    let ownKeys = () => Reflect.ownKeys(readVal());
     let getOwnPropertyDescriptor = (_target: object, key: PropertyKey) =>
-        Reflect.getOwnPropertyDescriptor(reference.value, key);
+        Reflect.getOwnPropertyDescriptor(readVal(), key);
 
     // Template used to convey sub-location information
     const sublocation = {
@@ -115,7 +127,7 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
         readEntry = index => {
             authorizeRead(session, reference.location);
 
-            if (index < 0 || index >= reference.value.length) {
+            if (index < 0 || index >= readVal().length) {
                 throw new ReadError(reference.location, `Index ${index} is out of bounds`);
             }
 
@@ -125,7 +137,7 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
 
             // AFAICT spec doesn't contemplate sparse arrays but it's kind of assumed.  If the value is nullish then
             // treat like a primitive and no management necessary
-            const value = reference.value[index];
+            const value = readVal()[index];
             if (value === undefined || value === null) {
                 return value;
             }
@@ -156,11 +168,11 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
         // Primitive value -- no management necessary
         readEntry = (index, location) => {
             authorizeRead(session, location);
-            if (index < 0 || index > reference.value.length) {
+            if (index < 0 || index > readVal().length) {
                 throw new WriteError(location, `Index ${index} is out of bounds`);
             }
 
-            return reference.value[index];
+            return readVal()[index];
         };
     }
 
@@ -168,7 +180,7 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
     let writeEntry = (index: number, value: Val, location: AccessControl.Location) => {
         authorizeWrite(session, location);
 
-        if (index < 0 || index > reference.value.length + 1) {
+        if (index < 0 || index > readVal().length + 1) {
             throw new WriteError(location, `Index ${index} is out of bounds`);
         }
 
@@ -181,7 +193,7 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
             value = (value as Internal.Collection)[Internal.reference].value;
         }
 
-        reference.change(() => (reference.value[index] = value));
+        reference.change(() => (writeVal()[index] = value));
     };
 
     // If the list is fabric-scoped, wrap read and write to map indices
@@ -192,9 +204,9 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
             }
 
             let nextPos = 0;
-            for (let i = 0; i < reference.value.length; i++) {
+            for (let i = 0; i < readVal().length; i++) {
                 // Skip invalid data
-                const entry = reference.value[i] as undefined | { fabricIndex?: number };
+                const entry = readVal()[i] as undefined | { fabricIndex?: number };
                 if (typeof entry !== "object") {
                     continue;
                 }
@@ -217,7 +229,7 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
 
             if (nextPos === index) {
                 // Adding to end of list
-                return reference.value.length;
+                return readVal().length;
             }
 
             throw new WriteError(reference.location, `Index ${index} would leave gaps in fabric-filtered list`);
@@ -242,7 +254,7 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
             writeEntry = (index: number, value: Val, location: AccessControl.Location) => {
                 if (value === undefined) {
                     const valueIndex = mapScopedToActual(index, false);
-                    reference.value.splice(valueIndex, 1);
+                    writeVal().splice(valueIndex, 1);
                 } else {
                     if (typeof value !== "object") {
                         throw new WriteError(location, `Fabric scoped list value is not an object`, StatusCode.Failure);
@@ -254,8 +266,8 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
 
             getListLength = () => {
                 let length = 0;
-                for (let i = 0; i < reference.value.length; i++) {
-                    const entry = reference.value[i] as undefined | { fabricIndex?: number };
+                for (let i = 0; i < readVal().length; i++) {
+                    const entry = readVal()[i] as undefined | { fabricIndex?: number };
                     if (
                         typeof entry === "object" &&
                         (session.offline || !entry.fabricIndex || entry.fabricIndex === session.fabric)
@@ -271,12 +283,12 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
 
                 reference.change(() => {
                     for (let i = length; i < formerLength; i++) {
-                        const entry = reference.value[i] as undefined | { fabricIndex?: number };
+                        const entry = writeVal()[i] as undefined | { fabricIndex?: number };
                         if (
                             typeof entry === "object" &&
                             (session.offline || !entry.fabricIndex || entry.fabricIndex === session.fabric)
                         ) {
-                            reference.value.splice(mapScopedToActual(i, false), 1);
+                            writeVal().splice(mapScopedToActual(i, false), 1);
                         } else {
                             throw new WriteError(
                                 reference.location,
@@ -293,7 +305,7 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
             // optimization
             getIteratorFn = () => () => {
                 // The iterator for the actual collection
-                const iterator = reference.value[Symbol.iterator]();
+                const iterator = readVal()[Symbol.iterator]();
 
                 // An iterator that skips inapplicable entries
                 return {
@@ -325,7 +337,7 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
             ownKeys = () => {
                 const length = getListLength();
 
-                const keys = Reflect.ownKeys(reference.value).filter(k => {
+                const keys = Reflect.ownKeys(readVal()).filter(k => {
                     if (typeof k !== "string") {
                         return true;
                     }
@@ -346,10 +358,10 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
                     key = Number.parseInt(key);
                 }
                 if (typeof key !== "number") {
-                    return Reflect.getOwnPropertyDescriptor(reference.value, key);
+                    return Reflect.getOwnPropertyDescriptor(readVal(), key);
                 }
 
-                return Reflect.getOwnPropertyDescriptor(reference.value, mapScopedToActual(key, true));
+                return Reflect.getOwnPropertyDescriptor(readVal(), mapScopedToActual(key, true));
             };
         }
     }
@@ -361,7 +373,7 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
                 sublocation.path.id = property;
                 return readEntry(Number.parseInt(property), sublocation);
             }
-            
+
             switch (property) {
                 case "length":
                     return getListLength();
@@ -373,12 +385,15 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
                     return reference;
 
                 case "toString":
-                    return function(this: Val.List) {
+                    return function (this: Val.List) {
                         return serialize(this);
                     };
+
+                case Symbol.toStringTag:
+                    return undefined;
             }
 
-            return Reflect.get(reference.value, property, receiver);
+            return Reflect.get(readVal(), property, receiver);
         },
 
         // On write we enter a transaction
@@ -393,7 +408,7 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
                 return true;
             }
 
-            return Reflect.set(reference.value, property, newValue, receiver);
+            return Reflect.set(writeVal(), property, newValue, receiver);
         },
 
         has(_target, property) {
@@ -401,7 +416,7 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
                 return hasEntry(Number.parseInt(property));
             }
 
-            return Reflect.has(reference.value, property);
+            return Reflect.has(readVal(), property);
         },
 
         deleteProperty: (_target, property) => {
@@ -411,14 +426,14 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
                 return true;
             }
 
-            return Reflect.deleteProperty(reference.value, property);
+            return Reflect.deleteProperty(writeVal(), property);
         },
 
         ownKeys,
         getOwnPropertyDescriptor,
     };
 
-    const factory = Instrumentation.instrumentList((handlers, target) => new Proxy(target, handlers) );
+    const factory = Instrumentation.instrumentList((handlers, target) => new Proxy(target, handlers));
 
     reference.owner = factory(handlers, target);
 

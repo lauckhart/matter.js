@@ -184,13 +184,7 @@ export namespace Diagnostic {
 
             const match2 = line.match(/^at\s+(.+)(:\d+:\d+)$/);
             if (match2) {
-                lines.push(
-                    Diagnostic.squash(
-                        Diagnostic.weak("at "),
-                        match2[1],
-                        Diagnostic.weak(match2[2]),
-                    )
-                );
+                lines.push(Diagnostic.squash(Diagnostic.weak("at "), match2[1], Diagnostic.weak(match2[2])));
                 continue;
             }
 

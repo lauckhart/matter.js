@@ -112,12 +112,12 @@ class Emitter<T extends any[] = any[], R = void> implements Observable<T, R> {
                         this.#errorHandler(new Error(`${e}`), observer);
                     }
                 }
-    
+
                 if (this.#once?.has(observer)) {
                     this.#once.delete(observer);
                     this.#observers?.delete(observer);
                 }
-    
+
                 if (result === undefined) {
                     continue;
                 }
@@ -133,7 +133,7 @@ class Emitter<T extends any[] = any[], R = void> implements Observable<T, R> {
 
                 return result;
             }
-        }
+        };
 
         return emitNext();
     }

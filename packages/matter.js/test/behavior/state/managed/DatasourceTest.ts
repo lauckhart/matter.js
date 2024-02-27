@@ -5,7 +5,7 @@
  */
 
 import { ActionContext } from "../../../../src/behavior/context/ActionContext.js";
-import { NodeActivity } from "../../../../src/behavior/context/server/ActiveContexts.js";
+import { NodeActivity } from "../../../../src/behavior/context/server/NodeActivity.js";
 import { OfflineContext } from "../../../../src/behavior/context/server/OfflineContext.js";
 import { StateType } from "../../../../src/behavior/state/StateType.js";
 import { Val } from "../../../../src/behavior/state/Val.js";
@@ -250,7 +250,11 @@ describe("Datasource", () => {
             }),
         );
 
+        let actualContext: ActionContext | undefined;
+
         await withDatasourceAndReference({ events }, async ({ context, state }) => {
+            actualContext = context;
+
             await context.transaction.commit();
 
             expect(changed).false;
@@ -264,7 +268,6 @@ describe("Datasource", () => {
 
         expect(changed).true;
 
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        expect(result).eventually.deep.equal(["BAR", "bar", context]);
+        await expect(result).eventually.deep.equal(["BAR", "bar", actualContext]);
     });
 });

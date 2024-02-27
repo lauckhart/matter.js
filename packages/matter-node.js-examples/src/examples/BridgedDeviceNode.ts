@@ -185,7 +185,7 @@ for (let i = 1; i <= numDevices; i++) {
 
     /**
      * Register state change handlers of the endpoint for identify and onoff states to react to the commands.
-     * 
+     *
      * If the code in these change handlers fail then the change is also rolled back and not executed and an error is
      * reported back to the controller.
      */

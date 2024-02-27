@@ -76,16 +76,18 @@ export class PromiseTimeoutError extends MatterError {
 
 /**
  * Create a promise with a timeout.
- * 
+ *
  * By default rejects with {@link PromiseTimeoutError} on timeout but you can override by supplying {@link cancel}.
- * 
+ *
  * @param timeoutMs the timeout in milliseconds
  * @param promise a promise that resolves or rejects when the timed task completes
  * @param cancel invoked on timeout (default implementation throws {@link PromiseTimeoutError})
  */
 export async function withTimeout<T>(timeoutMs: number, promise: Promise<T>, cancel?: () => void): Promise<T> {
     if (!cancel) {
-        cancel = () => { throw new PromiseTimeoutError() }
+        cancel = () => {
+            throw new PromiseTimeoutError();
+        };
     }
 
     let cancelTimer: undefined | (() => void);
@@ -97,7 +99,7 @@ export async function withTimeout<T>(timeoutMs: number, promise: Promise<T>, can
         cancelTimer = () => {
             timer.stop();
             resolve();
-        }
+        };
 
         timer.start();
     });
@@ -113,14 +115,11 @@ export async function withTimeout<T>(timeoutMs: number, promise: Promise<T>, can
         e => {
             cancelTimer?.();
             throw e;
-        }
+        },
     );
 
     // Output promise, resolves like input promise unless timed out
-    await Promise.all([
-        timeout,
-        producer
-    ]);
+    await Promise.all([timeout, producer]);
 
     return result as T;
 }
@@ -307,7 +306,9 @@ export class Tracker {
             },
         });
 
-        return MaybePromise.finally(promise, () => { this.#tracked.delete(promise as Promise<T>) });
+        return MaybePromise.finally(promise, () => {
+            this.#tracked.delete(promise as Promise<T>);
+        });
     }
 }
 

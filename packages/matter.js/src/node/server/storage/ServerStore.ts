@@ -62,7 +62,7 @@ export class ServerStore implements Destructable {
             });
 
             this.#logChange("Opened");
-        }
+        };
 
         this.#construction = AsyncConstruction(this, initializeStorage);
     }

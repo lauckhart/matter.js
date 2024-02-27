@@ -5,7 +5,7 @@
  */
 
 import { MatterDevice } from "../../src/MatterDevice.js";
-import { NodeActivity } from "../../src/behavior/context/server/ActiveContexts.js";
+import { NodeActivity } from "../../src/behavior/context/server/NodeActivity.js";
 import { OnlineContext } from "../../src/behavior/context/server/OnlineContext.js";
 import { Crypto } from "../../src/crypto/Crypto.js";
 import { Key, PrivateKey } from "../../src/crypto/Key.js";
@@ -82,7 +82,9 @@ export class MockServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootE
         return OnlineContext(options as OnlineContext.Options).act(context => actor(context.agentFor(this)));
     }
 
-    static async createOnline<T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint>(options?: MockServerNode.Options<T>) {
+    static async createOnline<T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint>(
+        options?: MockServerNode.Options<T>,
+    ) {
         let { online, config, device } = options ?? {};
 
         if (!config) {

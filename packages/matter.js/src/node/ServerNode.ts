@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NodeActivity } from "../behavior/context/server/ActiveContexts.js";
+import { NodeActivity } from "../behavior/context/server/NodeActivity.js";
 import { CommissioningBehavior } from "../behavior/system/commissioning/CommissioningBehavior.js";
 import { NetworkServer } from "../behavior/system/network/NetworkServer.js";
 import { ServerNetworkRuntime } from "../behavior/system/network/ServerNetworkRuntime.js";
@@ -67,27 +67,25 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
      * @param type the variation of {@link RootEndpoint} that defines the root endpoint's behavior
      * @param options root endpoint configuration and, optionally, the node's environment
      */
-    static async create<This extends typeof ServerNode<any>, T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint>(
-        this: This,
-        type?: T,
-        options?: Node.Options<T>,
-    ): Promise<ServerNode<T>>;
+    static async create<
+        This extends typeof ServerNode<any>,
+        T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint,
+    >(this: This, type?: T, options?: Node.Options<T>): Promise<ServerNode<T>>;
 
     /**
      * Create a new ServerNode.
      *
      * @param config root endpoint configuration and, optionally, the node's {@link Environment}
      */
-    static async create<This extends typeof ServerNode<any>, T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint>(
-        this: This,
-        config: Partial<Node.Configuration<T>>,
-    ): Promise<ServerNode<T>>;
+    static async create<
+        This extends typeof ServerNode<any>,
+        T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint,
+    >(this: This, config: Partial<Node.Configuration<T>>): Promise<ServerNode<T>>;
 
-    static async create<This extends typeof ServerNode<any>, T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint>(
-        this: This,
-        definition?: T | Node.Configuration<T>,
-        options?: Node.Options<T>,
-    ) {
+    static async create<
+        This extends typeof ServerNode<any>,
+        T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint,
+    >(this: This, definition?: T | Node.Configuration<T>, options?: Node.Options<T>) {
         const node = new this(definition, options);
 
         if (!node.lifecycle.isTreeReady) {

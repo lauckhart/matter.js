@@ -7,12 +7,13 @@
 import { MatterDevice } from "../../MatterDevice.js";
 import { ActionContext } from "../../behavior/context/ActionContext.js";
 import { ActionTracer } from "../../behavior/context/ActionTracer.js";
+import { NodeActivity } from "../../behavior/context/server/NodeActivity.js";
 import { OnlineContext } from "../../behavior/context/server/OnlineContext.js";
 import { AnyAttributeServer, AttributeServer } from "../../cluster/server/AttributeServer.js";
 import { CommandServer } from "../../cluster/server/CommandServer.js";
 import { Message } from "../../codec/MessageCodec.js";
-import { EndpointInterface } from "../../endpoint/EndpointInterface.js";
 import { Endpoint } from "../../endpoint/Endpoint.js";
+import { EndpointInterface } from "../../endpoint/EndpointInterface.js";
 import { EndpointServer } from "../../endpoint/EndpointServer.js";
 import { EndpointLifecycle } from "../../endpoint/properties/EndpointLifecycle.js";
 import { InteractionEndpointStructure } from "../../protocol/interaction/InteractionEndpointStructure.js";
@@ -20,9 +21,8 @@ import { InteractionServer } from "../../protocol/interaction/InteractionServer.
 import { StatusResponseError } from "../../protocol/interaction/StatusCode.js";
 import { Session } from "../../session/Session.js";
 import { MaybePromise, track } from "../../util/Promises.js";
-import { ServerStore } from "./storage/ServerStore.js";
 import { ServerNode } from "../ServerNode.js";
-import { NodeActivity } from "../../behavior/context/server/ActiveContexts.js";
+import { ServerStore } from "./storage/ServerStore.js";
 
 /**
  * Wire up an InteractionServer that initializes an InvocationContext earlier than the cluster API supports.
