@@ -150,15 +150,21 @@ class ReactorBacking<T extends any[], R> {
     }
 
     close() {
-        if (this.#closing) {
-            return;
+        if (!this.#closing) {
+            this.#close();
         }
 
+        return this.#reacting;
+    }
+
+    #close() {
         this.#observable.off(this.#listener);
-
         this.#closing = true;
-
-        return MaybePromise.finally(this.#reacting, () => this.#owner.remove(this));
+        if (this.#reacting) {
+            this.#reacting = this.#reacting.finally(() => this.#owner.remove(this));
+        } else {
+            this.#owner.remove(this);
+        }
     }
 
     toString() {
@@ -275,16 +281,17 @@ class ReactorBacking<T extends any[], R> {
 
         let isAsync = false;
         try {
-            let result = this.#react(args);
+            const result = this.#react(args);
 
             // If reaction is async, wait until it completes to close
             if (MaybePromise.is(result)) {
                 isAsync = true;
 
-                this.#reacting = Promise.resolve(result);
+                // Do not use this.close() here because it will result in cyclical promises since close() waits on the
+                // reaction.  this.#close() does not return a promise so is safe
+                this.#reacting = Promise.resolve(result).finally(() => this.#close());
 
-                // Close will wait for the reaction to complete so just convert its promise into Promise<R>
-                result = Promise.resolve(this.close()).then(() => result);
+                return this.#reacting as Promise<R | undefined>;
             }
 
             return result;
@@ -334,7 +341,7 @@ class ReactorBacking<T extends any[], R> {
      * Invoke the actual reactor.
      */
     #reactWithLocks(agent: Agent, backing: BehaviorBacking, args: T): MaybePromise<R | undefined> {
-        const behavior = backing.createBehavior(agent, backing.type);
+        const behavior = agent.get(backing.type);
         return this.#reactor.apply(behavior, args) as MaybePromise<R>;
     }
 

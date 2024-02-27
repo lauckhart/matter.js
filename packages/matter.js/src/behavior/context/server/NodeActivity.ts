@@ -11,12 +11,12 @@ import { Observable } from "../../../util/Observable.js";
  * Tracks activity associated with a node.
  */
 export class NodeActivity {
-    #tasks = new Map<{}, NodeActivity.Task>();
+    #actors = new Map<{}, NodeActivity.Actor>();
     #active = new Observable<[]>();
     #inactive = new Observable<[]>();
 
     get isActive() {
-        return this.#tasks.size !== 0;
+        return this.#actors.size !== 0;
     }
 
     get active() {
@@ -27,13 +27,13 @@ export class NodeActivity {
         return this.#inactive;
     }
 
-    get tasks() {
-        return this.#tasks.values();
+    get actors() {
+        return [...this.#actors.values()];
     }
 
     add(host: {}) {
         const elapsed = Diagnostic.elapsed();
-        this.#tasks.set(host, {
+        this.#actors.set(host, {
             get name() {
                 return Diagnostic.via(host.toString());
             },
@@ -42,21 +42,21 @@ export class NodeActivity {
             },
         });
 
-        if (this.#tasks.size === 1) {
+        if (this.#actors.size === 1) {
             this.#active.emit();
         }
     }
 
     delete(host: {}) {
-        this.#tasks.delete(host);
-        if (this.#tasks.size === 0) {
+        this.#actors.delete(host);
+        if (this.#actors.size === 0) {
             this.#inactive.emit();
         }
     }
 }
 
 export namespace NodeActivity {
-    export interface Task {
+    export interface Actor {
         readonly name: string;
         readonly elapsed: Diagnostic.Elapsed;
     }
