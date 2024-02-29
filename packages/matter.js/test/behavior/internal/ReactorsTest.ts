@@ -60,6 +60,9 @@ class MockEndpoint {
         type: {} as Behavior.Type,
         endpoint: this,
         datasource: {},
+        createBehavior(agent: MockAgent) {
+            return agent.behavior;
+        },
     } as unknown as BehaviorBacking;
     reactors: Reactors;
     results = new Array<string>();
@@ -98,7 +101,7 @@ class MockEndpoint {
         this.results.push(text);
     };
 
-    expectActivity(active = 2) {
+    expectActivity(active = 1) {
         expect(this.activity.isActive).equals(!!active);
         expect(this.activity.actors.length).equals(active);
     }
@@ -146,6 +149,10 @@ describe("Reactors", () => {
         endpoint.expectActivity();
 
         await promise2;
+        endpoint.expectActivity();
+
+        // Node activity should only stop once all reaction stops
+        await MockTime.yield();
         endpoint.expectActivity(0);
 
         expect(endpoint.results).deep.equals(["foo", "bar"]);

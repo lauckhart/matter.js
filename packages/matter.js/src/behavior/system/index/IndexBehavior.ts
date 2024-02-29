@@ -7,10 +7,9 @@
 import type { Endpoint } from "../../../endpoint/Endpoint.js";
 import { EndpointLifecycle } from "../../../endpoint/properties/EndpointLifecycle.js";
 import { IdentityService } from "../../../node/server/IdentityService.js";
-import { Time, Timer } from "../../../time/Time.js";
+import { Timer } from "../../../time/Time.js";
 import { EventEmitter, Observable } from "../../../util/Observable.js";
 import { Behavior } from "../../Behavior.js";
-import { ActionContext } from "../../context/ActionContext.js";
 
 /**
  * This behavior indexes all descendents of a {@link Endpoint} by number.
@@ -62,10 +61,12 @@ export class IndexBehavior extends Behavior {
             case EndpointLifecycle.Change.NumberAssigned:
             case EndpointLifecycle.Change.Installed:
                 this.#add(endpoint);
+                this.#change();
                 break;
 
             case EndpointLifecycle.Change.Destroyed:
                 this.#remove(endpoint);
+                this.#change();
                 break;
         }
     }
@@ -80,8 +81,6 @@ export class IndexBehavior extends Behavior {
         for (const child of endpoint.parts) {
             this.#add(child);
         }
-
-        this.#change();
     }
 
     #remove(endpoint: Endpoint) {
@@ -108,9 +107,8 @@ export class IndexBehavior extends Behavior {
             return;
         }
 
-        this.internal.changeBroadcaster = Time.getTimer(`Update ${this.endpoint} index`, 0, () => {
-            delete this.internal.changeBroadcaster;
-            this.endpoint.act(agent => this.events.change.emit(agent.context));
+        void Promise.resolve().then(() => {
+            this.events.change.emit();
         });
     }
 }
@@ -134,6 +132,6 @@ export namespace IndexBehavior {
         /**
          * Emitted when the index changes.
          */
-        change = new Observable<[context: ActionContext]>();
+        change = new Observable<[]>();
     }
 }

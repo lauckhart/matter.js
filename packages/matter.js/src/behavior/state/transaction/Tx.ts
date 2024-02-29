@@ -322,16 +322,25 @@ class Tx implements Transaction {
             throw new TransactionFlowError("Attempted wait on a transaction that is already waiting");
         }
 
+        logger.debug(
+            "Transaction",
+            this.via,
+            "waiting on",
+            describeList("and", ...[...others].map(other => other.via)),
+        );
+
+        this.#waitingOn = others;
         return new Promise<void>(resolve => {
             for (const other of others) {
                 other.onShared(() => {
                     others.delete(other);
                     if (!others.size) {
+                        this.#waitingOn = undefined;
                         resolve();
                     }
                 }, true);
             }
-        });
+        }).finally(() => (this.#waitingOn = undefined));
     }
 
     toString() {

@@ -61,7 +61,7 @@ export class NetworkServer extends NetworkBehavior {
 
         this.reactTo((this.endpoint.lifecycle as NodeLifecycle).commissioned, this.#enterCommissionedMode);
 
-        super.initialize();
+        return super.initialize();
     }
 
     /**

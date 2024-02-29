@@ -106,8 +106,9 @@ function join3(options?: JoinOptions) {
 /**
  * Run a test against {@link transaction}.
  */
-function test(what: string, actor: () => MaybePromise) {
-    it(what, () =>
+function test(what: string, actor: () => MaybePromise, only?: boolean) {
+    const initiator = only ? it.only : it;
+    initiator(what, () =>
         Transaction.act("test", tx => {
             transaction = tx;
             return actor();
@@ -115,29 +116,41 @@ function test(what: string, actor: () => MaybePromise) {
     );
 }
 
+test.only = (what: string, actor: () => MaybePromise) => test(what, actor, true);
+
 /**
  * Run a test against {@link transaction} and {@link transaction2}.
  */
-function test2(what: string, actor: () => MaybePromise) {
-    test(what, () =>
-        Transaction.act("test2", tx => {
-            transaction2 = tx;
-            return actor();
-        }),
+function test2(what: string, actor: () => MaybePromise, only?: boolean) {
+    test(
+        what,
+        () =>
+            Transaction.act("test2", tx => {
+                transaction2 = tx;
+                return actor();
+            }),
+        only,
     );
 }
+
+test2.only = (what: string, actor: () => MaybePromise) => test2(what, actor, true);
 
 /**
  * Run a test against all three transactions.
  */
-function test3(what: string, actor: () => MaybePromise) {
-    test2(what, () =>
-        Transaction.act("test3", tx => {
-            transaction3 = tx;
-            return actor();
-        }),
+function test3(what: string, actor: () => MaybePromise, only?: boolean) {
+    test2(
+        what,
+        () =>
+            Transaction.act("test3", tx => {
+                transaction3 = tx;
+                return actor();
+            }),
+        only,
     );
 }
+
+test3.only = (what: string, actor: () => MaybePromise) => test3(what, actor, true);
 
 describe("Transaction", () => {
     describe("automatic resolution", () => {
@@ -392,7 +405,6 @@ describe("Transaction", () => {
 
                 expect(resource.lockedBy).equals(transaction);
                 await transaction.commit();
-                expect(resource.lockedBy).undefined;
                 await t2begin;
                 expect(resource.lockedBy).equals(transaction2);
             });
@@ -480,7 +492,9 @@ describe("Transaction", () => {
 
         function destroyedAsync(description: string, fn: () => Promise<void>) {
             it(description, async () => {
-                await Transaction.act("destroyedAsync", tx => (transaction = tx));
+                await Transaction.act("destroyedAsync", async tx => {
+                    transaction = tx;
+                });
 
                 await expect(fn()).rejectedWith("Transaction destroyedAsync is destroyed");
             });

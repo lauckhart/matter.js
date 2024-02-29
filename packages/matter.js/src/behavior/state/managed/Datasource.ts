@@ -78,7 +78,11 @@ export function Datasource<const T extends StateType = StateType>(options: Datas
         },
 
         validate(session: ValueSupervisor.Session, values?: Val.Struct) {
-            internals.supervisor.validate(values ?? internals.values, session, { path: internals.path });
+            const validate = internals.supervisor.validate;
+            if (!validate) {
+                return;
+            }
+            validate(values ?? internals.values, session, { path: internals.path });
         },
 
         get view() {

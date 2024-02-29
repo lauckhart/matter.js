@@ -474,7 +474,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      * {@link actor} may be async.  If so, the acting context will remain open until the returned {@link Promise}
      * resolves.
      */
-    act<R>(actor: (agent: Agent.Instance<T>) => R): R {
+    act<R>(actor: (agent: Agent.Instance<T>) => MaybePromise<R>): MaybePromise<R> {
         this.construction.assert(this.toString());
 
         if (!this.#activity) {

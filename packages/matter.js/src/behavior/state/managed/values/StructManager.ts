@@ -212,7 +212,7 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
                     target[name] = value;
                 }
 
-                if (!this[SESSION].acceptInvalid) {
+                if (!this[SESSION].acceptInvalid && validate) {
                     // Note: We validate fully for nested structs but *not* for the current struct.  This is because choice
                     // conformance may be violated temporarily as individual fields change.
                     //
@@ -306,10 +306,12 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
             const assertWriteOk = (value: Val) => {
                 // Note - this needs to mirror behavior in the setter above
                 access.authorizeWrite(this[SESSION], this[Internal.reference].location);
-                validate(value, this[SESSION], {
-                    path: this[Internal.reference].location.path,
-                    siblings: this[Internal.reference].value,
-                });
+                if (validate) {
+                    validate(value, this[SESSION], {
+                        path: this[Internal.reference].location.path,
+                        siblings: this[Internal.reference].value,
+                    });
+                }
             };
 
             // Clone the container before write

@@ -161,7 +161,7 @@ export const Transaction = {
      * The transaction is destroyed when {@link act} returns.  You will receive an error if you access it after it is
      * destroyed.
      */
-    act<T>(via: string, actor: (transaction: Transaction) => T): T {
+    act<T>(via: string, actor: (transaction: Transaction) => MaybePromise<T>): MaybePromise<T> {
         // This function is replaced below so do not edit
         return act(via, actor);
     },

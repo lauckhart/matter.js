@@ -361,6 +361,17 @@ export class Behaviors {
     }
 
     /**
+     * Access internal state for a {@link Behavior}.
+     *
+     * Internal state is not stable API and not intended for consumption outside of the behavior.  However it is not
+     * truly private and may be accessed by tightly coupled implementation.
+     */
+    internalsOf<T extends Behavior.Type>(type: T) {
+        const backing = this.#backingFor("internals", type);
+        return backing.getInternal() as InstanceType<T["Internal"]>;
+    }
+
+    /**
      * Destroy in-memory state, resetting behaviors to uninitialized state.
      */
     async reset() {
@@ -377,7 +388,7 @@ export class Behaviors {
     }
 
     #activateLate(type: Behavior.Type) {
-        OfflineContext.act(
+        const result = OfflineContext.act(
             "behavior-late-activation",
             this.#endpoint.env.get(NodeActivity),
             context => this.activate(type, context.agentFor(this.#endpoint)),
@@ -385,6 +396,19 @@ export class Behaviors {
                 unversionedVolatiles: true,
             },
         );
+
+        if (MaybePromise.is(result)) {
+            result.then(undefined, error => {
+                // The backing should handle its own errors so assume this is a commit error and crash the backing.  If
+                // there's no backing then there shouldn't be a promise so this is effectively an internal error
+                const backing = this.#backings[type.id];
+                if (backing) {
+                    backing.construction.crashed(error);
+                } else {
+                    logger.error("Unexpected rejection of late activation", error);
+                }
+            });
+        }
     }
 
     /**

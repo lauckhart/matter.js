@@ -126,7 +126,6 @@ export class EndpointLifecycle {
      * Bubble a lifecycle change event from a child.
      */
     bubble(type: EndpointLifecycle.Change, endpoint: Endpoint) {
-        console.log(">>>", type, endpoint.toString(), "->", this.#endpoint.toString());
         this.#changed.emit(type, endpoint);
 
         if (type === EndpointLifecycle.Change.TreeReady) {

@@ -347,7 +347,7 @@ if (environment.vars.has("ble.enable")) {
  * If the node is not commissioned already we display the QR code on console. The QR code is also logged
  */
 if (!server.lifecycle.isCommissioned) {
-    const { qrPairingCode, manualPairingCode } = await server.act(agent => agent.commissioning.pairingCodes);
+    const { qrPairingCode, manualPairingCode } = server.state.commissioning.pairingCodes;
 
     console.log(QrCode.get(qrPairingCode));
     logger.info(`QR Code URL: https://project-chip.github.io/connectedhomeip/qrcode.html?data=${qrPairingCode}`);

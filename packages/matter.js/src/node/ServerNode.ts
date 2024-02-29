@@ -127,12 +127,14 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
      * This happens automatically on close.
      */
     cancel() {
-        let network: ServerNetworkRuntime | undefined;
-        this.act(agent => (network = agent.network.internal.runtime));
-        if (network) {
-            // Note if runtime is present we call close() immediately, not once the mutex is free, because the mutex is
-            // probably held by the network's run() promise
-            this.#mutex.run(network.close());
+        if (this.behaviors.isActive(NetworkServer)) {
+            const runtime = this.behaviors.internalsOf(NetworkServer).runtime;
+
+            if (runtime) {
+                // Note that we call close() immediately -- not once the mutex is free -- because the mutex is probably
+                // held by the network's run() promise
+                this.#mutex.run(runtime.close());
+            }
         }
     }
 

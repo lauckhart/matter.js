@@ -161,6 +161,7 @@ export abstract class BehaviorBacking {
             defaults: this.#endpoint.behaviors.defaultsFor(this.type),
             store: this.store,
             versioning: this.type.versioning,
+            owner: this.#endpoint,
         };
     }
 

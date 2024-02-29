@@ -8,7 +8,7 @@ import { CrashedDependencyError, Lifecycle } from "../common/Lifecycle.js";
 import { ImplementationError } from "../common/MatterError.js";
 import { Logger } from "../log/Logger.js";
 import { Observable } from "./Observable.js";
-import { MaybePromise, Tracker } from "./Promises.js";
+import { MaybePromise } from "./Promises.js";
 
 /**
  * Create an instance of a class implementing the {@link AsyncConstructable} pattern.
@@ -143,7 +143,7 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
     initializer?: () => MaybePromise,
     options?: AsyncConstruction.Options,
 ): AsyncConstruction<T> {
-    let promise: MaybePromise;
+    let promise: Promise<void> | undefined;
     let error: any;
     let started = false;
     let ready = false;
@@ -253,7 +253,7 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
                 if (promise) {
                     void initialization.then(placeholderResolve, placeholderReject);
                 } else {
-                    promise = Tracker.global.track(initialization, `${subject.constructor.name} construction`);
+                    promise = Promise.resolve(initialization);
                 }
             } else {
                 ready = true;
@@ -316,15 +316,11 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
                     placeholderResolve = resolve;
                     placeholderReject = reject;
                 });
-
-                promise = Tracker.global.track(promise, `${subject.constructor.name} construction`);
             }
 
             // If there is a promise then construction is ongoing
             if (promise) {
-                return Promise.resolve(promise)
-                    .then(() => subject)
-                    .then(onfulfilled, onrejected);
+                return Promise.resolve(promise.then(() => subject).then(onfulfilled, onrejected));
             }
 
             // If there is an error then construction crashed
@@ -399,7 +395,8 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
 
             error = undefined;
             status = Lifecycle.Status.Destroying;
-            promise = MaybePromise.finally(
+
+            const destruction = MaybePromise.finally(
                 promise,
 
                 () =>
@@ -408,6 +405,10 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
                         () => setStatus(Lifecycle.Status.Destroyed),
                     ),
             );
+
+            if (destruction) {
+                promise = Promise.resolve(destruction);
+            }
 
             return this;
         },

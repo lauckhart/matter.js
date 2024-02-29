@@ -5,11 +5,10 @@
  */
 
 import { InternalError } from "../../common/MatterError.js";
-import { Agent } from "../../endpoint/Agent.js";
 import { Endpoint } from "../../endpoint/Endpoint.js";
 import { Logger } from "../../log/Logger.js";
 import type { Observable, Observer } from "../../util/Observable.js";
-import { MaybePromise, createPromise } from "../../util/Promises.js";
+import { MaybePromise } from "../../util/Promises.js";
 import { Reactor } from "../Reactor.js";
 import { ActionContext } from "../context/ActionContext.js";
 import { Contextual } from "../context/Contextual.js";
@@ -27,19 +26,13 @@ export class Reactors {
     #backing: BehaviorBacking;
     #backings = new Set<ReactorBacking<any, any>>();
     #destructionComplete?: () => void;
-    #activity: NodeActivity;
 
     constructor(backing: BehaviorBacking) {
         this.#backing = backing;
-        this.#activity = backing.endpoint.env.get(NodeActivity);
     }
 
     get backing() {
         return this.#backing;
-    }
-
-    get activity() {
-        return this.#activity;
     }
 
     async close() {
@@ -87,18 +80,14 @@ class ReactorBacking<T extends any[], R> {
     #owner: Reactors;
     #endpoint: Endpoint;
     #listener: Observer<T, R>;
-    #reactor: Reactor<T, R>;
+    #reactor: Reactor<T, Awaited<R>>;
     #observable: Observable<T, R>;
     #offline?: boolean;
     #closing?: boolean;
     #lock?: Iterable<Resource>;
-    #queue = Array<{
-        args: T;
-        resolve: (result: R | undefined) => void;
-        reject: (cause: any) => void;
-    }>();
-    #reacting?: Promise<unknown>;
-    #resolveReacting?: () => void;
+    #deferred = Array<() => Promise<void>>();
+    #trampoline?: Promise<void>;
+    #resolveTrampoline?: () => void;
     #activity?: NodeActivity;
 
     constructor(
@@ -123,31 +112,76 @@ class ReactorBacking<T extends any[], R> {
         }
 
         const reactorListener = ((...args: T) => {
-            // In "once" mode we stop listening immediately and destroy ourselves once the reaction completes
-            if (once) {
-                return this.#reactOnce(args);
-            }
+            let resolution: MaybePromise<unknown>;
+            let rejection: any;
 
-            // Ongoing asynchronous reaction means we must wait our turn
-            if (this.#reacting) {
-                const { promise, resolver, rejecter } = createPromise<R | undefined>();
-                this.#queue.push({
-                    args,
-                    resolve: resolver,
-                    reject: rejecter,
-                });
+            let alreadyReacting = true;
 
-                // If the emitter is async return the promise.  Otherwise we only track internally and observation won't
-                // affect the emitter
-                if (this.#observable.isAsync) {
-                    return promise;
+            try {
+                if (!this.#trampoline) {
+                    alreadyReacting = false;
+
+                    if (!this.#activity) {
+                        this.#activity = this.#endpoint.env.get(NodeActivity);
+                    }
+                    this.#activity.add(this);
+                    this.#trampoline = new Promise<void>(resolve => {
+                        this.#resolveTrampoline = () => {
+                            resolve();
+                            this.#trampoline = undefined;
+                        };
+                    });
                 }
 
-                return;
+                if (once) {
+                    // In "once" mode we stop listening immediately and destroy ourselves once the reaction completes
+                    resolution = this.#reactOnce(args);
+                } else if (alreadyReacting) {
+                    // An ongoing reaction means we must wait our turn
+                    resolution = this.#reactDeferred(args);
+                } else {
+                    // No ongoing reaction so react immediately
+                    resolution = this.#react(args);
+                }
+            } catch (e) {
+                // An error here means a synchronous reactor that was not trampolined crashed.  We cannot just throw
+                // because there may have been additional reactions triggered by the synchronous reactor so we still
+                // need the trampoline
+                e = this.#augmentError(e);
+                if (this.#observable.isAsync) {
+                    // Async observable with sync reactor
+                    resolution = Promise.reject(e);
+                } else {
+                    // Sync observable with sync reactor
+                    rejection = e;
+                }
             }
 
-            // There is no ongoing reaction so react immediately
-            return this.#react(args);
+            if (!alreadyReacting) {
+                if (MaybePromise.is(resolution)) {
+                    // Do not catch resolution errors, they are passed to the emitter.  Do initiate the trampoline once
+                    // they complete
+                    void Promise.resolve(resolution).finally(this.#afterReaction.bind(this));
+                } else {
+                    this.#afterReaction();
+                }
+            }
+
+            if (rejection) {
+                throw rejection;
+            }
+
+            // Ensure resolution is a promise (or not) based on expectation of emitter
+            if (this.#observable.isAsync) {
+                // Async observable - convert to promise
+                resolution = Promise.resolve(resolution);
+            } else if (MaybePromise.is(resolution)) {
+                // Sync observable with async reactor - reactor cannot return a value to emitter
+                resolution.then(undefined, this.#unhandledError.bind(this));
+                resolution = undefined;
+            }
+
+            return resolution;
         }) as Observer<T, R>;
 
         observable.on((this.#listener = reactorListener));
@@ -162,17 +196,7 @@ class ReactorBacking<T extends any[], R> {
             this.#close();
         }
 
-        return this.#reacting;
-    }
-
-    #close() {
-        this.#observable.off(this.#listener);
-        this.#closing = true;
-        if (this.#reacting) {
-            this.#reacting = this.#reacting.finally(() => this.#owner.remove(this));
-        } else {
-            this.#owner.remove(this);
-        }
+        return this.#trampoline;
     }
 
     toString() {
@@ -180,12 +204,50 @@ class ReactorBacking<T extends any[], R> {
         return `reactor<${this.#owner.backing}${reactorName}>`;
     }
 
+    #unhandledError(error: unknown) {
+        if (!(error instanceof Error)) {
+            error = new Error(`${error}`);
+        }
+        logger.error("Unhandled", this.#augmentError(error));
+    }
+
+    #close() {
+        this.#observable.off(this.#listener);
+        this.#closing = true;
+        if (this.#trampoline) {
+            this.#trampoline = this.#trampoline.finally(() => this.#owner.remove(this));
+        } else {
+            this.#owner.remove(this);
+        }
+    }
+
+    /**
+     * Trampoline the next reaction or resolve the trampoline promise.
+     */
+    #afterReaction() {
+        if (this.#deferred.length) {
+            const next = this.#deferred.shift() as () => Promise<void>;
+
+            void next()
+                .catch(e => {
+                    // Reactors should not throw because they have error handling.  So any error here is internal
+                    logger.error("Internal reaction error", e);
+                })
+                .finally(this.#afterReaction.bind(this));
+
+            return;
+        }
+
+        this.#resolveTrampoline?.();
+        this.#activity?.delete(this);
+    }
+
     /**
      * Invoke a single reactor when no other reactor is active.
      *
      * If the reaction is asynchronous it is tracked via {@link #reactAsync}.
      */
-    #react(args: T): MaybePromise<R | undefined> {
+    #react(args: T): MaybePromise<Awaited<R> | undefined> {
         let context: undefined | ActionContext;
         if (!this.#offline) {
             context = Contextual.contextOf(args[args.length - 1]);
@@ -196,15 +258,7 @@ class ReactorBacking<T extends any[], R> {
         // TODO - if emitter doesn't await promise, things will probably go wrong so async reactors need to use the
         // offline option.  Can probably enforce that with types
         if (context) {
-            try {
-                const result = this.#reactWithAgent(context.agentFor(this.#endpoint), this.#owner.backing, args);
-                if (MaybePromise.is(result)) {
-                    this.#reactAsync(result);
-                }
-                return result;
-            } catch (e) {
-                throw this.#augmentError(e);
-            }
+            return this.#reactWithContext(context, this.#owner.backing, args);
         }
 
         // Otherwise run in independent context and errors do not interfere with emitter
@@ -214,89 +268,44 @@ class ReactorBacking<T extends any[], R> {
                 purpose = `${purpose}<${this.#reactor.name}>`;
             }
 
-            if (!this.#activity) {
-                this.#activity = this.#endpoint.env.get(NodeActivity);
-            }
-
             const reactor = (context: ActionContext) => {
-                const agent = context.agentFor(this.#endpoint);
-                return this.#reactWithAgent(agent, this.#owner.backing, args);
+                return this.#reactWithContext(context, this.#owner.backing, args);
             };
 
             // We use OfflineContext directly rather than via this.#endpoint.act because act() is unavailable during
             // construction and destruction
-            let result = OfflineContext.act(this.toString(), this.#activity, reactor);
+            //
+            // Also, do not inject activity here.  No reason to have both the reactor and the context registered
+            let result: MaybePromise<Awaited<R> | undefined> = OfflineContext.act(this.toString(), undefined, reactor);
 
             if (MaybePromise.is(result)) {
-                result = result.then(undefined, e => {
-                    logger.error(this.#augmentError(e));
-                    return undefined;
-                });
-                this.#reactAsync(result);
-
-                // Only return a promise if the emitter is explicitly async
-                if (!this.#observable.isAsync) {
-                    result = undefined;
-                }
+                result = result.then(undefined, this.#unhandledError.bind(this)) as PromiseLike<undefined>;
             }
             return result;
         } catch (e) {
-            logger.error(this.#augmentError(e));
+            this.#unhandledError(e);
         }
     }
 
     /**
-     * Handle the promise from an asynchronous reaction.
-     */
-    #reactAsync(reaction: PromiseLike<R | undefined>) {
-        // We cannot use the input promise to await because we don't want this.#reacting to resolve until all reactions
-        // complete
-        if (!this.#reacting) {
-            this.#owner.activity.add(this);
-            this.#reacting = new Promise<void>(resolve => (this.#resolveReacting = resolve));
-        }
-
-        // Wait for reaction to complete then pass control to #afterAsyncReaction
-        //
-        // Errors from the reaction promise are either caught by the emitter (when using a parent context), logged in
-        // #react (for offline context) or unhandled.  So do not add a catch handler here
-        void Promise.resolve(reaction).finally(this.#afterAsyncReaction.bind(this));
-    }
-
-    /**
-     * Invoked after an asynchronous reactor completes.
+     * Invoked by the listener when there are already ongoing reactions.
      *
-     * Invoke next reactor and resolve the reacting promise if complete.
+     * Installs a trampoline function and returns a placeholder promise.  The trampolined functions are always async
+     * regardless of the emitter and listener because by necessity they do not act immediately.
      */
-    #afterAsyncReaction() {
-        while (true) {
-            // Load next reactor
-            const next = this.#queue.shift();
-            if (!next) {
-                this.#owner.activity.delete(this);
-                this.#resolveReacting?.();
-                return;
-            }
-
-            const { args, resolve, reject } = next;
-
-            // React
-            try {
-                const result = this.#react(args);
-
-                // If Reactor is asynchronous, #reactAsync is re-invoked so my job is done
-                if (MaybePromise.is(result)) {
-                    result.then(resolve, reject);
-                    return;
+    #reactDeferred(args: T): MaybePromise<unknown> {
+        return new Promise((resolve, reject) => {
+            const deferredReaction = async () => {
+                try {
+                    const result = await this.#react(args);
+                    resolve(result);
+                } catch (e) {
+                    reject(e);
                 }
+            };
 
-                // Reactor returned synchronously
-                resolve(result);
-            } catch (e) {
-                // Reactor threw synchronously
-                reject(e);
-            }
-        }
+            this.#deferred.push(deferredReaction);
+        });
     }
 
     /**
@@ -315,14 +324,12 @@ class ReactorBacking<T extends any[], R> {
 
                 // Do not use this.close() here because it will result in cyclical promises since close() waits on the
                 // reaction.  this.#close() does not return a promise so is safe
-                this.#reacting = Promise.resolve(result).finally(() => this.#close());
-
-                return this.#reacting as Promise<R | undefined>;
+                return Promise.resolve(result).finally(() => this.#close()) as PromiseLike<undefined>;
             }
 
             return result;
         } finally {
-            // If reaction is not async, close now
+            // If reaction is not async, close immediately
             if (!isAsync) {
                 // Close should not be async
                 void this.close();
@@ -333,23 +340,21 @@ class ReactorBacking<T extends any[], R> {
     /**
      * Invoked by #react once it obtains a context.
      */
-    #reactWithAgent(agent: Agent, backing: BehaviorBacking, args: T): MaybePromise<R | undefined> {
+    #reactWithContext(context: ActionContext, backing: BehaviorBacking, args: T): MaybePromise<Awaited<R> | undefined> {
         if (this.#lock) {
-            return this.#lockThenReact(agent, backing, args);
+            return this.#lockThenReact(context, backing, args);
         }
 
-        return this.#reactWithLocks(agent, backing, args);
+        return this.#reactWithLocks(context, backing, args);
     }
 
     /**
      * Grab locks if so configured before performing reaction.
      */
-    async #lockThenReact(agent: Agent, backing: BehaviorBacking, args: T): Promise<R | undefined> {
+    async #lockThenReact(context: ActionContext, backing: BehaviorBacking, args: T): Promise<Awaited<R> | undefined> {
         if (!this.#lock) {
             throw new InternalError("No locks to acquire");
         }
-
-        const { context } = agent;
 
         await context.transaction.addResources(...this.#lock);
         await context.transaction.begin();
@@ -360,15 +365,19 @@ class ReactorBacking<T extends any[], R> {
             }
         }
 
-        return await this.#reactWithLocks(agent, backing, args);
+        return await this.#reactWithLocks(context, backing, args);
     }
 
     /**
      * Invoke the actual reactor.
      */
-    #reactWithLocks(agent: Agent, backing: BehaviorBacking, args: T): MaybePromise<R | undefined> {
-        const behavior = agent.get(backing.type);
-        return this.#reactor.apply(behavior, args) as MaybePromise<R>;
+    #reactWithLocks(context: ActionContext, backing: BehaviorBacking, args: T): MaybePromise<Awaited<R> | undefined> {
+        const agent = context.agentFor(this.#endpoint);
+
+        // Do not use Agent.get because it will throw during initialization
+        const behavior = backing.createBehavior(agent, backing.type);
+
+        return this.#reactor.apply(behavior, args);
     }
 
     /**

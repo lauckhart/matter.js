@@ -150,7 +150,7 @@ export class DescriptorServer extends DescriptorBehavior {
         
         await this.context.transaction.addResources(this);
         await this.context.transaction.begin();
-        console.log(numbers);
+
         this.state.partsList = numbers as EndpointNumber[];
     }
 

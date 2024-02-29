@@ -33,10 +33,10 @@ export const OfflineContext = {
      */
     act<T>(
         purpose: string,
-        activity: NodeActivity,
-        actor: (context: ActionContext) => T,
+        activity: NodeActivity | undefined,
+        actor: (context: ActionContext) => MaybePromise<T>,
         options?: OfflineContext.Options,
-    ): T {
+    ): MaybePromise<T> {
         const id = nextInternalId;
         nextInternalId = (nextInternalId + 1) % 65535;
         const via = Diagnostic.via(`${purpose}#${id.toString(16)}`);
@@ -50,7 +50,7 @@ export const OfflineContext = {
 
         let isAsync = false;
         try {
-            activity.add(via);
+            activity?.add(via);
 
             const result = Transaction.act(via, actOffline);
 
@@ -58,7 +58,7 @@ export const OfflineContext = {
                 isAsync = true;
                 return Promise.resolve(result).finally(() => {
                     if (context) {
-                        activity.delete(via);
+                        activity?.delete(via);
                     }
                 }) as T;
             }
@@ -66,7 +66,7 @@ export const OfflineContext = {
             return result;
         } finally {
             if (!isAsync) {
-                activity.delete(via);
+                activity?.delete(via);
             }
         }
     },

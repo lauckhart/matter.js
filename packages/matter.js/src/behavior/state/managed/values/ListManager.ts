@@ -75,7 +75,7 @@ interface ListConfig {
     fabricSensitive: boolean;
     manageEntries: boolean;
     manageEntry: ValueSupervisor.Manage;
-    validateEntry: ValueSupervisor.Validate;
+    validateEntry?: ValueSupervisor.Validate;
     authorizeRead: AccessControl["authorizeRead"];
     authorizeWrite: AccessControl["authorizeWrite"];
 }
@@ -400,7 +400,7 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
         set(_target, property, newValue, receiver) {
             if (typeof property === "string" && property.match(/^[0-9]+/)) {
                 sublocation.path.id = property;
-                validateEntry(newValue, session, sublocation);
+                validateEntry?.(newValue, session, sublocation);
                 writeEntry(Number.parseInt(property), newValue, sublocation);
                 return true;
             } else if (property === "length") {

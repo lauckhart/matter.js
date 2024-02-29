@@ -49,15 +49,15 @@ function testNested(
 }
 
 describe("StructManager", () => {
-    it("deep equals according to mocha", () => {
+    it("deep equals according to mocha", async () => {
         // If this fails the rest of the tests are just going to be annoying
-        testNested(({ ref }) => {
+        await testNested(({ ref }) => {
             expect(ref.substruct).deep.equals({ foo: "bar" });
         });
     });
 
-    it("applies nested defaults", () => {
-        testNested(({ ref }) => {
+    it("applies nested defaults", async () => {
+        await testNested(({ ref }) => {
             expect(typeof ref.substruct).equals("object");
             expect(ref.substruct.foo).equals("bar");
         });

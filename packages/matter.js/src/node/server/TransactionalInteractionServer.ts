@@ -5,7 +5,6 @@
  */
 
 import { MatterDevice } from "../../MatterDevice.js";
-import { ActionContext } from "../../behavior/context/ActionContext.js";
 import { ActionTracer } from "../../behavior/context/ActionTracer.js";
 import { NodeActivity } from "../../behavior/context/server/NodeActivity.js";
 import { OnlineContext } from "../../behavior/context/server/OnlineContext.js";
@@ -20,7 +19,7 @@ import { InteractionEndpointStructure } from "../../protocol/interaction/Interac
 import { InteractionServer } from "../../protocol/interaction/InteractionServer.js";
 import { StatusResponseError } from "../../protocol/interaction/StatusCode.js";
 import { Session } from "../../session/Session.js";
-import { MaybePromise, track } from "../../util/Promises.js";
+import { MaybePromise } from "../../util/Promises.js";
 import { ServerNode } from "../ServerNode.js";
 import { ServerStore } from "./storage/ServerStore.js";
 
@@ -152,9 +151,8 @@ export class TransactionalInteractionServer extends InteractionServer {
     async #transact<T extends Promise<any>>(
         why: "Read" | "Write" | "Invoke",
         options: OnlineContext.Options,
-        fn: () => T,
+        actor: () => T,
     ) {
-        const actor = (context: ActionContext) => track(fn(), [why, context.transaction.via]);
         if (!this.#tracer) {
             return OnlineContext(options).act(actor);
         }
