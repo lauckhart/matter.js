@@ -67,7 +67,7 @@ describe("Parts", () => {
         expect(parts.size).equals(0);
     });
 
-    it("bubbles initialization", async () => {
+    it.only("bubbles initialization", async () => {
         const parent = createParent();
         await parent.construction;
 

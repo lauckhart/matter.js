@@ -12,6 +12,7 @@ import { RootSupervisor } from "../../supervision/RootSupervisor.js";
 import { Schema } from "../../supervision/Schema.js";
 import type { ValueSupervisor } from "../../supervision/ValueSupervisor.js";
 import { Val } from "../Val.js";
+import { Internal } from "../managed/Internal.js";
 import {
     assertArray,
     assertBoolean,
@@ -208,7 +209,8 @@ function createStructValidator(schema: Schema, factory: RootSupervisor): ValueSu
             let value;
 
             if ((struct as Val.Dynamic)[Val.properties]) {
-                const properties = (struct as Val.Dynamic)[Val.properties](session);
+                const rootOwner = (struct as unknown as Internal.Collection)[Internal.reference];
+                const properties = (struct as Val.Dynamic)[Val.properties](rootOwner, session);
                 if (name in properties) {
                     value = properties[name];
                 } else {

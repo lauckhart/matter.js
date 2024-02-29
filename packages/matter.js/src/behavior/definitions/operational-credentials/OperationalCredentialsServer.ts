@@ -420,7 +420,7 @@ export namespace OperationalCredentialsServer {
          */
         certification?: DeviceCertification.Configuration;
 
-        [Val.properties](session: ValueSupervisor.Session) {
+        [Val.properties](_endpoint: any, session: ValueSupervisor.Session) {
             return {
                 get currentFabricIndex() {
                     return session.fabric ?? FabricIndex.NO_FABRIC;

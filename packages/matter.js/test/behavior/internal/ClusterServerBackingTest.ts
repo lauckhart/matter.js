@@ -63,7 +63,7 @@ async function performWrite(
 ) {
     const exchange = await node.createExchange({ fabric });
 
-    const interactionServer = await node.act(agent => agent.network.internal.runtime.interactionServer);
+    const interactionServer = node.act(agent => agent.network.internal.runtime.interactionServer);
 
     await interactionServer.handleWriteRequest(
         exchange,
@@ -87,7 +87,7 @@ async function performRead(
 ) {
     const exchange = await node.createExchange({ fabric });
 
-    const interactionServer = await node.act(agent => agent.network.internal.runtime.interactionServer);
+    const interactionServer = node.act(agent => agent.network.internal.runtime.interactionServer);
 
     const result = await interactionServer.handleReadRequest(
         exchange,

@@ -11,24 +11,32 @@ import { Contextual } from "../../../src/behavior/context/Contextual.js";
 import { NodeActivity } from "../../../src/behavior/context/server/NodeActivity.js";
 import { BehaviorBacking } from "../../../src/behavior/internal/BehaviorBacking.js";
 import { Reactors } from "../../../src/behavior/internal/Reactors.js";
-import { Agent } from "../../../src/endpoint/Agent.js";
 import { Environment } from "../../../src/environment/Environment.js";
 import { Observable } from "../../../src/util/Observable.js";
 import { MaybePromise } from "../../../src/util/Promises.js";
 
-function MockContext(offline = true) {
-    const behavior = {} as Behavior;
+class MockAgent {
+    behavior: Behavior;
 
-    const agent = {
-        get(this: Agent) {
-            return behavior;
-        },
-    } as unknown as Agent;
+    constructor(_endpoint: any, context: ActionContext) {
+        this.behavior = { context } as Behavior;
+    }
+
+    get() {
+        return this.behavior;
+    }
+}
+
+function MockContext(offline = true) {
+    let agent: MockAgent | undefined;
 
     const context = {
         offline,
 
         agentFor() {
+            if (agent === undefined) {
+                agent = new MockAgent(undefined, this as ActionContext);
+            }
             return agent;
         },
 
@@ -40,8 +48,6 @@ function MockContext(offline = true) {
             return this;
         },
     } as unknown as ActionContext;
-
-    Object.assign(behavior, { context });
 
     return context;
 }
@@ -57,16 +63,16 @@ class MockEndpoint {
     } as unknown as BehaviorBacking;
     reactors: Reactors;
     results = new Array<string>();
+    promise?: Promise<void>;
 
-    constructor() {
-        this.env.set(NodeActivity, this.activity);
-        this.reactors = new Reactors(this.backing);
+    get agentType() {
+        return MockAgent;
     }
 
-    act<T>(actor: (agent: Agent) => T) {
-        const context = MockContext();
-
-        return actor(context.agentFor({} as any));
+    constructor(isAsync = false) {
+        this.event.isAsync = isAsync;
+        this.env.set(NodeActivity, this.activity);
+        this.reactors = new Reactors(this.backing);
     }
 
     reactTo(observable: Observable<any, any> = this.event, reactor: Reactor = this.reactor, options?: Reactor.Options) {
@@ -76,7 +82,10 @@ class MockEndpoint {
     reactAsync(options?: Reactor.Options) {
         this.reactTo(
             this.event,
-            async (text: string) => await Promise.resolve().then(() => this.reactor(text)),
+            async (text: string) => {
+                this.promise = Promise.resolve().then(() => this.reactor(text));
+                await this.promise;
+            },
             options,
         );
     }
@@ -89,7 +98,7 @@ class MockEndpoint {
         this.results.push(text);
     };
 
-    expectActivity(active = 1) {
+    expectActivity(active = 2) {
         expect(this.activity.isActive).equals(!!active);
         expect(this.activity.actors.length).equals(active);
     }
@@ -122,7 +131,7 @@ describe("Reactors", () => {
     });
 
     it("reacts asynchronously", async () => {
-        const endpoint = new MockEndpoint();
+        const endpoint = new MockEndpoint(true);
         endpoint.reactAsync();
 
         const promise1 = endpoint.emit("foo") as PromiseLike<string>;
@@ -143,7 +152,7 @@ describe("Reactors", () => {
     });
 
     it("reacts asynchronously once", async () => {
-        const endpoint = new MockEndpoint();
+        const endpoint = new MockEndpoint(true);
         endpoint.reactAsync({ once: true });
 
         const promise1 = endpoint.emit("foo") as PromiseLike<string>;
@@ -162,6 +171,38 @@ describe("Reactors", () => {
         expect(endpoint.results).deep.equals(["foo"]);
     });
 
+    it("reacts asynchronously with synchronous emitter", async () => {
+        const endpoint = new MockEndpoint();
+        endpoint.reactAsync();
+
+        const result1 = endpoint.emit("foo") as PromiseLike<string>;
+        expect(result1).equals(undefined);
+        const promise1 = endpoint.promise;
+        endpoint.expectActivity();
+        expect(typeof promise1?.then).equals("function");
+
+        const result2 = endpoint.emit("bar") as PromiseLike<string>;
+        expect(result2).equals(undefined);
+        const promise2 = endpoint.promise;
+        endpoint.expectActivity();
+        expect(typeof promise2?.then).equals("function");
+
+        await promise1;
+        endpoint.expectActivity();
+
+        await promise2;
+
+        // Since the promises come from the emitter function rather than the reactor we must wait for activity to stop
+        // to ensure state is updated
+        if (endpoint.activity.isActive) {
+            await endpoint.activity.inactive;
+        }
+
+        endpoint.expectActivity(0);
+
+        expect(endpoint.results).deep.equals(["foo", "bar"]);
+    });
+
     it("waits for reaction on close", async () => {
         const endpoint = new MockEndpoint();
         endpoint.reactAsync();
@@ -169,7 +210,7 @@ describe("Reactors", () => {
         void endpoint.emit("foo");
         void endpoint.emit("bar");
 
-        endpoint.expectActivity(1);
+        endpoint.expectActivity();
         expect(endpoint.results).deep.equals([]);
 
         await endpoint.reactors.close();
@@ -186,7 +227,7 @@ describe("Reactors", () => {
         void endpoint.emit("foo");
         void endpoint.emit("bar");
 
-        endpoint.expectActivity(1);
+        endpoint.expectActivity();
         expect(endpoint.results).deep.equals([]);
 
         await endpoint.reactors.close();

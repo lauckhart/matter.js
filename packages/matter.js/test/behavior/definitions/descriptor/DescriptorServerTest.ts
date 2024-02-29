@@ -108,7 +108,7 @@ describe("DescriptorServer", () => {
         expect(partsState.partsList).deep.equals([]);
     });
 
-    describe("adds parts automatically with indexed grandparent and parent", async () => {
+    describe("adds parts automatically with indexed grandparent and parent", () => {
         async function expectFullPartsLists(node: Node, ...extraChildren: Endpoint[]) {
             const parent = [...node.parts][0];
             const child = [...parent.parts][0];
@@ -127,7 +127,7 @@ describe("DescriptorServer", () => {
             expect(parent.stateOf(DescriptorBehavior).partsList).deep.equals([child.number, ...extraNumbers]);
         }
 
-        it.only("when constructed with full hierarchy (auto ID)", async () => {
+        it("when constructed with full hierarchy (auto ID)", async () => {
             const node = await MockServerNode.create({
                 parts: [
                     {

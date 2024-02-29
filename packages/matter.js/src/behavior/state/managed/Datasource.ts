@@ -151,6 +151,11 @@ export namespace Datasource {
          * The cluster used for access control checks.
          */
         cluster?: ClusterId;
+
+        /**
+         * The object that owns the datasource.  This is passed as the "owner" parameter to {@link Val.Dynamic}.
+         */
+        owner?: any;
     }
 
     /**
@@ -252,7 +257,20 @@ function createRootReference(resource: Resource, internals: Internals, session: 
     };
 
     const transaction = session.transaction;
-    transaction.promise.finally(reset);
+
+    // Refresh to newest values whenever the transaction commits or rolls back
+    void transaction.onShared(() => {
+        if (values !== internals.values) {
+            try {
+                rollback();
+            } catch (e) {
+                logger.error(
+                    `Error resetting reference to ${internals.path} after reset of transaction ${transaction.via}:`,
+                    e,
+                );
+            }
+        }
+    });
 
     // Register a listener on the datasource so we can update our reference when the datasource changes
     const changeListener = (oldValues: Val.Struct) => {
@@ -267,10 +285,17 @@ function createRootReference(resource: Resource, internals: Internals, session: 
     internals.changed.on(changeListener);
 
     // When the transaction is destroyed, decouple from the datasource and expire
-    transaction.destroyed.then(() => {
-        internals.changed?.off(changeListener);
-        expired = true;
-        refreshSubrefs();
+    void transaction.onClose(() => {
+        try {
+            internals.changed?.off(changeListener);
+            expired = true;
+            refreshSubrefs();
+        } catch (e) {
+            logger.error(
+                `Error detaching reference to ${internals.path} from closed transaction ${transaction.via}:`,
+                e,
+            );
+        }
     });
 
     const fields = internals.supervisor.memberNames;
@@ -324,6 +349,10 @@ function createRootReference(resource: Resource, internals: Internals, session: 
 
         set location(_loc: AccessControl.Location) {
             throw new ImplementationError("Root reference location is immutable");
+        },
+
+        get rootOwner() {
+            return internals.owner;
         },
 
         change(mutator) {
@@ -508,18 +537,5 @@ function createRootReference(resource: Resource, internals: Internals, session: 
     function rollback() {
         ({ values } = internals);
         refreshSubrefs();
-    }
-
-    /**
-     * Whenever the transaction commits or rolls back we refresh to newest values.
-     *
-     * There should be no changes in this state so the rollback below is only to update to the latest value.
-     */
-    function reset() {
-        if (values !== internals.values) {
-            rollback();
-        }
-
-        transaction.promise.finally(reset);
     }
 }

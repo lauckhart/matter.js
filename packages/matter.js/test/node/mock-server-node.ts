@@ -85,7 +85,7 @@ export class MockServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootE
     static async createOnline<T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint>(
         options?: MockServerNode.Options<T>,
     ) {
-        let { online, config, device } = options ?? {};
+        let { config, device } = options ?? {};
 
         if (!config) {
             config = { type: ServerNode.RootEndpoint as T } as Node.Configuration<T>;
@@ -101,7 +101,7 @@ export class MockServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootE
             await node.add(device);
         }
 
-        if (online === false) {
+        if (options?.online === false) {
             await node.construction;
             return node;
         }

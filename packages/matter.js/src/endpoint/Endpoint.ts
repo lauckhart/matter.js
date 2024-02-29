@@ -470,9 +470,12 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      *
      * The {@link Agent} is destroyed after {@link actor} exits so you should not maintain references to the agent, its
      * behaviors or associated state.
+     *
+     * {@link actor} may be async.  If so, the acting context will remain open until the returned {@link Promise}
+     * resolves.
      */
-    act<R>(actor: (agent: Agent.Instance<T>) => MaybePromise<R>): MaybePromise<R> {
-        this.construction.assert("Endpoint");
+    act<R>(actor: (agent: Agent.Instance<T>) => R): R {
+        this.construction.assert(this.toString());
 
         if (!this.#activity) {
             this.#activity = this.env.get(NodeActivity);
@@ -573,7 +576,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      * The default implementation crashes the endpoint.
      */
     protected behaviorCrash() {
-        this.construction.then(() => {
+        this.construction.onSuccess(() => {
             logger.info(
                 "Endpoint",
                 Diagnostic.strong(this.toString()),
@@ -594,6 +597,17 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
             ? { type: ActionTracer.ActionType.Initialize }
             : undefined;
 
+        const initializeEndpoint = (context: ActionContext) => this.initialize(context.agentFor(this));
+
+        if (!this.#activity) {
+            this.#activity = this.env.get(NodeActivity);
+        }
+
+        const result = OfflineContext.act("initialize", this.#activity, initializeEndpoint, {
+            unversionedVolatiles: true,
+            trace,
+        });
+
         const afterEndpointInitialized = () => {
             this.lifecycle.change(EndpointLifecycle.Change.Ready);
             if (trace) {
@@ -606,22 +620,9 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
             }
         };
 
-        const initializeEndpoint = (context: ActionContext) => this.initialize(context.agentFor(this));
+        this.#construction.onSuccess(afterEndpointInitialized);
 
-        if (!this.#activity) {
-            this.#activity = this.env.get(NodeActivity);
-        }
-
-        const result = OfflineContext.act("initialize", this.#activity, initializeEndpoint, {
-            unversionedVolatiles: true,
-            trace,
-        });
-
-        if (MaybePromise.is(result)) {
-            return result.then(afterEndpointInitialized);
-        }
-
-        afterEndpointInitialized();
+        return result;
     }
 
     #logReady() {

@@ -9,8 +9,7 @@ import { ImplementationError } from "../../common/MatterError.js";
 import { Diagnostic } from "../../log/Diagnostic.js";
 import { Logger } from "../../log/Logger.js";
 import type { Node } from "../../node/Node.js";
-import { Observable } from "../../util/Observable.js";
-import { MaybePromise } from "../../util/Promises.js";
+import { AsyncObservable, Observable } from "../../util/Observable.js";
 import type { Endpoint } from "../Endpoint.js";
 
 const logger = Logger.get("PartLifecycle");
@@ -32,7 +31,7 @@ export class EndpointLifecycle {
     #changed = new Observable<[type: EndpointLifecycle.Change, endpoint: Endpoint]>(error =>
         this.emitError("changed", error),
     );
-    #reset = new Observable<[], MaybePromise>();
+    #reset = new AsyncObservable<[]>();
     #queuedUpdates?: Array<EndpointLifecycle.Change>;
 
     /**
@@ -127,6 +126,7 @@ export class EndpointLifecycle {
      * Bubble a lifecycle change event from a child.
      */
     bubble(type: EndpointLifecycle.Change, endpoint: Endpoint) {
+        console.log(">>>", type, endpoint.toString(), "->", this.#endpoint.toString());
         this.#changed.emit(type, endpoint);
 
         if (type === EndpointLifecycle.Change.TreeReady) {
@@ -180,7 +180,7 @@ export class EndpointLifecycle {
                 this.#queuedUpdates.shift();
 
                 // Emit change event
-                this.changed.emit(type, this.#endpoint);
+                this.#changed.emit(type, this.#endpoint);
 
                 // Emit endpoint-specific events
                 const observable = (this as unknown as Record<string, Observable>)[type];

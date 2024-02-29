@@ -54,17 +54,14 @@ export interface Transaction {
     readonly waitingOn: Iterable<Transaction> | undefined;
 
     /**
-     * Resolves when the transaction commits or rolls back.
-     *
-     * When the transaction commits or rolls back it returns to a shared state and the promise is replaced.  So this is
-     * only useful prior to commit or rollback.
+     * Listen for transaction commit or roll back.  This may occur more than once for a given.
      */
-    readonly promise: Promise<void>;
+    onShared(actor: () => void, once?: boolean): void;
 
     /**
-     * Resolves when the {@link Transaction.status} becomes {@link Status.Destroyed}.
+     * Listen for {@link Transaction.status} close.
      */
-    readonly destroyed: Promise<void>;
+    onClose(actor: () => void): void;
 
     /**
      * Add {@link Resources} to the transaction.
@@ -144,8 +141,10 @@ export interface Transaction {
 
     /**
      * Wait for a set of transactions to complete.
+     *
+     * @param others the set of transactions to await; cleared on return
      */
-    waitFor(others: Iterable<Transaction>): Promise<void>;
+    waitFor(others: Set<Transaction>): Promise<void>;
 }
 
 type StatusType = Status;
@@ -162,7 +161,7 @@ export const Transaction = {
      * The transaction is destroyed when {@link act} returns.  You will receive an error if you access it after it is
      * destroyed.
      */
-    act<T>(via: string, actor: (transaction: Transaction) => MaybePromise<T>): MaybePromise<T> {
+    act<T>(via: string, actor: (transaction: Transaction) => T): T {
         // This function is replaced below so do not edit
         return act(via, actor);
     },

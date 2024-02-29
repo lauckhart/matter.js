@@ -227,7 +227,7 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
 
     #reportCrashTermination() {
         logger.info("Aborting", Diagnostic.strong(this.toString()), "due to endpoint error");
-        this.construction.then(() => this.construction.crashed(new Error(`Aborted ${this} due to error`), false));
+        this.construction.onSuccess(() => this.construction.crashed(new Error(`Aborted ${this} due to error`), false));
     }
 }
 

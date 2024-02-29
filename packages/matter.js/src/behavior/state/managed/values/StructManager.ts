@@ -180,7 +180,10 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
                 // Identify the target.  Usually just "struct" except when struct supports Val.Dynamic
                 let target;
                 if ((struct as Val.Dynamic)[Val.properties]) {
-                    const properties = (struct as Val.Dynamic)[Val.properties](this[SESSION]);
+                    const properties = (struct as Val.Dynamic)[Val.properties](
+                        this[Internal.reference].rootOwner,
+                        this[SESSION],
+                    );
                     if (name in properties) {
                         target = properties;
                     } else {
@@ -243,7 +246,7 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
                     throw new PhantomReferenceError(this[Internal.reference].location);
                 }
                 if (struct[Val.properties]) {
-                    const properties = struct[Val.properties](this[SESSION]);
+                    const properties = struct[Val.properties](this[Internal.reference].rootOwner, this[SESSION]);
                     if (name in properties) {
                         return properties[name];
                     }
@@ -267,7 +270,10 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
             // Obtain the value.  Normally just struct[name] except in the case of Val.Dynamic
             const struct = this[Internal.reference].value;
             if ((struct as Val.Dynamic)[Val.properties]) {
-                const properties = (struct as Val.Dynamic)[Val.properties](this[SESSION]);
+                const properties = (struct as Val.Dynamic)[Val.properties](
+                    this[Internal.reference].rootOwner,
+                    this[SESSION],
+                );
                 if (name in properties) {
                     value = properties[name];
                 } else {

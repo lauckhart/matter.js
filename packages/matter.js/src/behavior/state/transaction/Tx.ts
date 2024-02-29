@@ -7,7 +7,8 @@
 import { ImplementationError, ReadOnlyError } from "../../../common/MatterError.js";
 import { Diagnostic } from "../../../log/Diagnostic.js";
 import { Logger } from "../../../log/Logger.js";
-import { MaybePromise, createPromise } from "../../../util/Promises.js";
+import { Observable } from "../../../util/Observable.js";
+import { MaybePromise } from "../../../util/Promises.js";
 import { describeList } from "../../../util/String.js";
 import { FinalizationError, TransactionDestroyedError, TransactionFlowError } from "./Errors.js";
 import type { Participant } from "./Participant.js";
@@ -128,12 +129,10 @@ class Tx implements Transaction {
     #roles = new Map<{}, Participant>();
     #resources = new Set<Resource>();
     #status;
-    #promise?: Promise<void>;
-    #resolve?: () => void;
     #waitingOn?: Iterable<Transaction>;
     #via: string;
-    #destroyed?: Promise<void>;
-    #resolveDestroyed?: () => void;
+    #shared?: Observable<[]>;
+    #closed?: Observable<[]>;
 
     constructor(via: string, readonly = false) {
         this.#via = Diagnostic.via(via);
@@ -146,11 +145,10 @@ class Tx implements Transaction {
 
     close() {
         this.#status = Status.Destroyed;
-        this.#promise = this.#resolve = this.#waitingOn = undefined;
         this.#resources.clear();
         this.#roles.clear();
         this.#participants.clear();
-        this.#resolveDestroyed?.();
+        this.#closed?.emit();
     }
 
     get via() {
@@ -173,23 +171,22 @@ class Tx implements Transaction {
         return this.#waitingOn;
     }
 
-    get promise() {
-        if (this.#promise === undefined) {
-            const { promise, resolver } = createPromise<void>();
-            this.#promise = promise;
-            this.#resolve = resolver;
+    onShared(listener: () => void, once?: boolean) {
+        if (this.#shared === undefined) {
+            this.#shared = Observable();
         }
-        return this.#promise;
+
+        this.#shared[once ? "once" : "on"](listener);
     }
 
-    get destroyed() {
+    onClose(listener: () => void) {
         if (this.status === Status.Destroyed) {
-            return Promise.resolve();
+            listener();
         }
-        if (this.#destroyed === undefined) {
-            this.#destroyed = new Promise(resolve => (this.#resolveDestroyed = resolve));
+        if (this.#closed === undefined) {
+            this.#closed = Observable();
         }
-        return this.#destroyed;
+        this.#closed.once(listener);
     }
 
     async addResources(...resources: Resource[]) {
@@ -318,19 +315,27 @@ class Tx implements Transaction {
         return this.#finalize(Status.RollingBack, "rolled back", () => this.#executeRollback());
     }
 
-    async waitFor(others: Iterable<Transaction>) {
+    waitFor(others: Set<Transaction>) {
         this.#assertAvailable();
 
         if (this.waitingOn) {
             throw new TransactionFlowError("Attempted wait on a transaction that is already waiting");
         }
 
-        try {
-            this.#waitingOn = others;
-            await Promise.all([...others].map(other => other.promise));
-        } finally {
-            this.#waitingOn = undefined;
-        }
+        return new Promise<void>(resolve => {
+            for (const other of others) {
+                other.onShared(() => {
+                    others.delete(other);
+                    if (!others.size) {
+                        resolve();
+                    }
+                }, true);
+            }
+        });
+    }
+
+    toString() {
+        return `transaction<${this.via}>`;
     }
 
     /**
@@ -357,11 +362,8 @@ class Tx implements Transaction {
             // Revert to shared
             this.#status = Status.Shared;
 
-            // Resolve the transaction promise
-            const resolve = this.#resolve;
-            this.#promise = undefined;
-            this.#resolve = undefined;
-            resolve?.();
+            // Notify listeners
+            this.#shared?.emit();
         };
 
         // Perform the commit or rollback

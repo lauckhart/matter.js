@@ -144,10 +144,11 @@ describe("Transaction", () => {
         it("commits synchronously", () => {
             const p = TestParticipant();
 
-            Transaction.act("test", tx => {
+            const result = Transaction.act("test", tx => {
                 tx.addParticipants(p);
                 tx.beginSync();
             });
+            expect(result).undefined;
 
             p.expect("commit1", "commit2");
         });
@@ -230,25 +231,27 @@ describe("Transaction", () => {
         p.expect("rollback");
     });
 
-    describe("keeps its promises", () => {
+    describe("invokes onShared", () => {
         test("after commit", async () => {
             join();
 
             await transaction.begin();
-            const promise = transaction.promise;
-            transaction.commit();
 
-            await expect(promise).eventually.equals(undefined);
+            const promise = new Promise<void>(resolve => transaction.onShared(resolve));
+            await transaction.commit();
+
+            await expect(promise).eventually.undefined;
         });
 
         test("after rolling back", async () => {
             join();
 
             await transaction.begin();
-            const promise = transaction.promise;
+
+            const promise = new Promise<void>(resolve => transaction.onShared(resolve));
             await transaction.rollback();
 
-            await expect(promise).eventually.equals(undefined);
+            await expect(promise).eventually.undefined;
         });
     });
 
@@ -389,7 +392,7 @@ describe("Transaction", () => {
 
                 expect(resource.lockedBy).equals(transaction);
                 await transaction.commit();
-                expect(resource.lockedBy).equals(undefined);
+                expect(resource.lockedBy).undefined;
                 await t2begin;
                 expect(resource.lockedBy).equals(transaction2);
             });
@@ -461,17 +464,23 @@ describe("Transaction", () => {
     });
 
     describe("after destruction", () => {
-        function destroyedSync(description: string, fn: () => void) {
+        function destroyedSync(description: string, fn: () => MaybePromise<void>) {
             it(description, () => {
-                Transaction.act("destroyedSync", tx => (transaction = tx));
+                const result = Transaction.act("destroyedSync", tx => {
+                    transaction = tx;
+                });
+                expect(result).undefined;
 
-                expect(fn).throws("Transaction destroyedSync is destroyed");
+                expect(() => {
+                    const result = fn();
+                    expect(result).undefined;
+                }).throws("Transaction destroyedSync is destroyed");
             });
         }
 
-        async function destroyedAsync(description: string, fn: () => Promise<void>) {
+        function destroyedAsync(description: string, fn: () => Promise<void>) {
             it(description, async () => {
-                Transaction.act("destroyedAsync", tx => (transaction = tx));
+                await Transaction.act("destroyedAsync", tx => (transaction = tx));
 
                 await expect(fn()).rejectedWith("Transaction destroyedAsync is destroyed");
             });
@@ -489,15 +498,18 @@ describe("Transaction", () => {
     });
 
     describe("read-only", () => {
-        function readonlySync(description: string, fn: () => void) {
+        function readonlySync(description: string, fn: () => MaybePromise<void>) {
             it(description, () => {
                 transaction = Transaction.ReadOnly;
 
-                expect(fn).throws("This view is read-only");
+                expect(() => {
+                    const result = fn();
+                    expect(result).undefined;
+                }).throws("This view is read-only");
             });
         }
 
-        async function readonlyAsync(description: string, fn: () => Promise<void>) {
+        function readonlyAsync(description: string, fn: () => Promise<void>) {
             it(description, async () => {
                 transaction = Transaction.ReadOnly;
 

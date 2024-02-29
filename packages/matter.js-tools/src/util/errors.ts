@@ -5,7 +5,7 @@
  */
 
 function notCode(code: string | string[], cause: any) {
-    const causeCode = (cause as any)?.code;
+    const causeCode = cause?.code;
     if (typeof code === "string") {
         return code !== causeCode;
     }

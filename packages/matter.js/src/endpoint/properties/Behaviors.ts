@@ -202,7 +202,7 @@ export class Behaviors {
      */
     createMaybeAsync(type: Behavior.Type, agent: Agent): MaybePromise<Behavior> {
         this.activate(type, agent);
-        let backing = this.#backings[type.id];
+        const backing = this.#backings[type.id];
 
         // On first activation the backing will create the behavior to initialize.  Otherwise we need to create now.
         // This function obtains the behavior in both cases
@@ -246,8 +246,6 @@ export class Behaviors {
         if (!backing) {
             backing = this.#createBacking(type, agent);
         }
-
-        return backing.construction;
     }
 
     /**
@@ -442,7 +440,7 @@ export class Behaviors {
             }
             this.#initializing.add(backing);
 
-            backing.construction.finally(() => {
+            backing.construction.onCompletion(() => {
                 this.#initializing?.delete(backing);
             });
         }

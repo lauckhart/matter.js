@@ -14,6 +14,7 @@ import { Reactor } from "../Reactor.js";
 import { ActionContext } from "../context/ActionContext.js";
 import { Contextual } from "../context/Contextual.js";
 import { NodeActivity } from "../context/server/NodeActivity.js";
+import { OfflineContext } from "../context/server/OfflineContext.js";
 import { Resource } from "../state/transaction/Resource.js";
 import type { BehaviorBacking } from "./BehaviorBacking.js";
 
@@ -98,6 +99,7 @@ class ReactorBacking<T extends any[], R> {
     }>();
     #reacting?: Promise<unknown>;
     #resolveReacting?: () => void;
+    #activity?: NodeActivity;
 
     constructor(
         reactors: Reactors,
@@ -135,7 +137,13 @@ class ReactorBacking<T extends any[], R> {
                     reject: rejecter,
                 });
 
-                return promise;
+                // If the emitter is async return the promise.  Otherwise we only track internally and observation won't
+                // affect the emitter
+                if (this.#observable.isAsync) {
+                    return promise;
+                }
+
+                return;
             }
 
             // There is no ongoing reaction so react immediately
@@ -205,13 +213,31 @@ class ReactorBacking<T extends any[], R> {
             if (this.#reactor.name) {
                 purpose = `${purpose}<${this.#reactor.name}>`;
             }
-            let result = this.#endpoint.act(agent => this.#reactWithAgent(agent, this.#owner.backing, args));
+
+            if (!this.#activity) {
+                this.#activity = this.#endpoint.env.get(NodeActivity);
+            }
+
+            const reactor = (context: ActionContext) => {
+                const agent = context.agentFor(this.#endpoint);
+                return this.#reactWithAgent(agent, this.#owner.backing, args);
+            };
+
+            // We use OfflineContext directly rather than via this.#endpoint.act because act() is unavailable during
+            // construction and destruction
+            let result = OfflineContext.act(this.toString(), this.#activity, reactor);
+
             if (MaybePromise.is(result)) {
                 result = result.then(undefined, e => {
                     logger.error(this.#augmentError(e));
                     return undefined;
                 });
                 this.#reactAsync(result);
+
+                // Only return a promise if the emitter is explicitly async
+                if (!this.#observable.isAsync) {
+                    result = undefined;
+                }
             }
             return result;
         } catch (e) {

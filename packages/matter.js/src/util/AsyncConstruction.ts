@@ -76,7 +76,7 @@ export interface AsyncConstruction<T> extends Promise<T> {
      * If you omit the initializer parameter to {@link AsyncConstruction} execution is deferred until you invoke this
      * method.
      */
-    start(initializer?: () => MaybePromise): this;
+    start(initializer?: () => MaybePromise): void;
 
     /**
      * Invoke destruction logic then move to destroyed status.
@@ -107,12 +107,33 @@ export interface AsyncConstruction<T> extends Promise<T> {
      *
      * This method fails if initialization is ongoing; await completion first.
      */
-    setStatus(status: Lifecycle.Status): this;
+    setStatus(status: Lifecycle.Status): void;
 
     /**
      * Force "crashed" state with the specified error.
      */
-    crashed(cause: any, invokeDefaultHandler?: boolean): this;
+    crashed(cause: any, invokeDefaultHandler?: boolean): void;
+
+    /**
+     * Invoke a method after construction completes successfully.
+     *
+     * Any error in this callback will crash construction.
+     */
+    onSuccess(actor: () => MaybePromise<void>): void;
+
+    /**
+     * Invoke a method after construction completes unsuccessfully.
+     *
+     * Any error in this callback will replace the crash cause.
+     */
+    onError(actor: (error: Error) => MaybePromise<void>): void;
+
+    /**
+     * Invoke a method after construction completes successfully or onsuccessfully.
+     *
+     * Any error in this callback will crash construction or replace the crash cause.
+     */
+    onCompletion(actor: () => void): void;
 
     toString(): string;
 }
@@ -230,7 +251,7 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
                 initialization = initialization.then(initSuccess, initFailure);
 
                 if (promise) {
-                    initialization.then(placeholderResolve, placeholderReject);
+                    void initialization.then(placeholderResolve, placeholderReject);
                 } else {
                     promise = Tracker.global.track(initialization, `${subject.constructor.name} construction`);
                 }
@@ -246,8 +267,6 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
                     resolve();
                 }
             }
-
-            return this;
         },
 
         cancel: () => {
@@ -275,13 +294,14 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
                     throw new ImplementationError(`Property is undefined`);
                 }
             } catch (e) {
-                if (!(e instanceof Error)) {
-                    e = new ImplementationError((e ?? "(unknown error)").toString());
-                }
+                let error;
                 if (e instanceof Error) {
-                    e.message = `Cannot access ${description}: ${e.message}`;
+                    error = e;
+                } else {
+                    error = new ImplementationError(e?.toString() ?? "(unknown error)");
                 }
-                throw e;
+                error.message = `Cannot access ${description}: ${error.message}`;
+                throw error;
             }
             return dependency;
         },
@@ -290,10 +310,8 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
             onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
             onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null,
         ): Promise<TResult1 | TResult2> {
+            // If initialization has not started we need to create a placeholder promise
             if (!started) {
-                // Initialization has not started so we need to create a
-                // placeholder promise
-
                 promise = new Promise((resolve, reject) => {
                     placeholderResolve = resolve;
                     placeholderReject = reject;
@@ -301,25 +319,77 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
 
                 promise = Tracker.global.track(promise, `${subject.constructor.name} construction`);
             }
+
+            // If there is a promise then construction is ongoing
             if (promise) {
                 return Promise.resolve(promise)
                     .then(() => subject)
                     .then(onfulfilled, onrejected);
             }
 
+            // If there is an error then construction crashed
             if (error) {
-                onrejected?.(error);
-            } else {
-                onfulfilled?.(subject);
+                return Promise.reject(error).catch(onrejected);
             }
 
-            return this;
+            // Construction is complete
+            return Promise.resolve(subject).then(onfulfilled);
         },
 
         catch<TResult = never>(
             onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null,
         ): Promise<T | TResult> {
             return this.then(undefined, onrejected);
+        },
+
+        onSuccess(actor: () => MaybePromise<void>) {
+            const onSuccess = () => {
+                const errorHandler = hookErrorHandler("onSuccess");
+
+                try {
+                    const result = actor();
+                    if (MaybePromise.is(result)) {
+                        return Promise.resolve(result).catch(errorHandler);
+                    }
+                } catch (e) {
+                    errorHandler(e);
+                }
+            };
+
+            // Do not catch this "promise" because we catch hook errors and other errors are handled elsewhere or are
+            // uncuaght
+            void this.then(onSuccess);
+        },
+
+        onError(actor: (error: Error) => MaybePromise<void>) {
+            const onError = (error: any) => {
+                const errorHandler = hookErrorHandler("onError");
+
+                try {
+                    const result = actor(error);
+                    if (MaybePromise.is(result)) {
+                        return Promise.resolve(result).catch(errorHandler);
+                    }
+                } catch (e) {
+                    errorHandler(e);
+                }
+            };
+
+            this.catch(onError);
+        },
+
+        onCompletion(actor: () => void) {
+            const onCompletion = () => {
+                const errorHandler = hookErrorHandler("onCompletion");
+
+                try {
+                    actor();
+                } catch (e) {
+                    errorHandler(e);
+                }
+            };
+
+            this.finally(onCompletion);
         },
 
         close(destructor) {
@@ -350,12 +420,11 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
             error = cause;
             setStatus(Lifecycle.Status.Crashed);
             onerror(error);
-            return this;
         },
 
         setStatus(newStatus: Lifecycle.Status) {
             if (this.status === newStatus) {
-                return this;
+                return;
             }
 
             if (status === Lifecycle.Status.Destroyed) {
@@ -391,10 +460,19 @@ export function AsyncConstruction<T extends AsyncConstructable<any>>(
             }
 
             setStatus(status);
-
-            return this;
         },
     };
+
+    function hookErrorHandler(name: string) {
+        return (e: any) => {
+            if (e instanceof Error) {
+                e.message = `Uhandled error in ${self}.${name} hook: ${e.message}`;
+            } else {
+                e = new Error(`Unhandled error in ${self}.${name} hook: ${e}`);
+            }
+            self.crashed(e);
+        };
+    }
 
     if (initializer) {
         self.start(initializer);
