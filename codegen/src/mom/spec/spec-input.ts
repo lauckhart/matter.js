@@ -21,7 +21,7 @@ import { JSDOM } from "jsdom";
 import { homedir } from "os";
 import { resolve } from "path";
 
-const SPECIFICATION_PATH = process.env.MATTER_SPECIFICATION_PATH ?? resolve(homedir(), "Dropbox", "iot", "matter-1.1");
+const SPECIFICATION_PATH = process.env.MATTER_SPECIFICATION_PATH ?? resolve(homedir(), "Dropbox", "iot", "matter-1.2");
 
 export function loadHtml(...paths: string[]) {
     const path = resolve(SPECIFICATION_PATH, ...paths);
