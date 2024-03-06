@@ -31,7 +31,16 @@ export namespace NetworkBehavior {
     }
 
     export class State {
+        /**
+         * The port the server will listen on by default.  Set to 0 for automatic port selection.
+         *
+         * Configurable with variable "network.port".
+         */
         port = 5540;
+
+        /**
+         * The port the server is listening on once online.  Will equal {@link port} unless the port is set to 0.
+         */
         operationalPort = -1;
     }
 }

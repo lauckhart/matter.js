@@ -13,7 +13,6 @@ import { MdnsScanner } from "../../src/mdns/MdnsScanner.js";
 import { NetworkFake } from "../../src/net/fake/NetworkFake.js";
 import { FAKE_INTERFACE_NAME } from "../../src/net/fake/SimulatedNetwork.js";
 import { UdpChannelFake } from "../../src/net/fake/UdpChannelFake.js";
-import { Network } from "../../src/net/Network.js";
 import { UdpChannel } from "../../src/net/UdpChannel.js";
 import { ByteArray } from "../../src/util/ByteArray.js";
 import { createPromise } from "../../src/util/Promises.js";
@@ -78,8 +77,7 @@ const NODE_ID = NodeId(BigInt(1));
         let broadcasterChannel: UdpChannel;
 
         beforeEach(async () => {
-            Network.get = () => clientNetwork;
-            scanner = await MdnsScanner.create(Network.get(), {
+            scanner = await MdnsScanner.create(clientNetwork, {
                 enableIpv4: testIpv4Enabled,
                 netInterface: FAKE_INTERFACE_NAME,
             });
@@ -89,8 +87,7 @@ const NODE_ID = NodeId(BigInt(1));
                 type: testIpv4Enabled ? "udp4" : "udp6",
             });
 
-            Network.get = () => serverNetwork;
-            broadcaster = await MdnsBroadcaster.create(Network.get(), {
+            broadcaster = await MdnsBroadcaster.create(serverNetwork, {
                 enableIpv4: testIpv4Enabled,
                 multicastInterface: FAKE_INTERFACE_NAME,
             });
@@ -99,10 +96,6 @@ const NODE_ID = NodeId(BigInt(1));
                 listeningAddress: testIpv4Enabled ? "224.0.0.251" : "ff02::fb",
                 type: testIpv4Enabled ? "udp4" : "udp6",
             });
-
-            Network.get = () => {
-                throw new Error("Network should not be requested post creation");
-            };
         });
 
         afterEach(async () => {
