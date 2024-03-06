@@ -286,6 +286,7 @@ if (!serverNode.lifecycle.isCommissioned) {
 ```
 
 ### Which events are available to get notified on commissioning changes?
+
 The Lagacy API used callbacks included in the CommissioningServer configuration. The new API uses the `lifecycle` property of the ServerNode to get notified on commissioning changes.
 
 ```javascript
@@ -321,6 +322,7 @@ server.events.commissioning.commissionedFabricsChanged.on((fabricIndex, fabricAc
 ```
 
 ### Which events are available to get notified that a node is online or offline?
+
 The new API provides this information also via events on the ServerNode instance.
 
 ```javascript
@@ -332,6 +334,7 @@ server.lifecycle.offline.on(() => console.log("Server is offline"));
 ```
 
 ### Which events are available to get an overview on controller connections/sessions that are established?
+
 Events on session changes are available on the sessions behavior of the ServerNode instance.
 
 ```javascript
@@ -363,9 +366,19 @@ Take a look at the [DeviceNodeFull.ts](../packages/matter-node.js-examples/src/e
 The devices itself and functionality are at least equal - if not better with the new API because we also did some fixes that were not in the 7.7.x versions.
 But most important is that the storage structure has changed between legacy and New API - this means that data are stored in a different way and so a device commissioned with the Legacy API will not work with the new API. You need to delete and recommission the device when migrating!
 
+## Changelog 0.8 (WIP)
+
+-   The new Environment concept allows (for node.js) the handling of CLI parameters in parallel to (new) Environment variables and config file to pass in configurations
+-   Introducing new High Level Device building API with full support for all Matter 1.1 device types
+-   Add Transactionality ... Rollback on Exception
+-   Add a specification fix for Network Commissioning Cluster
+-   Change BLE library (Bleno/Noble) to a more maintained one
+
 ## TOPICS/DISCUSSIONS/TODOs:
+
+-   (A) Missing: Adjust Commissioning Callbacks - Ingo
+-   (A) Make CommissioningController Environment aware - Ingo
 -   (A) Make matter.js peerDep? - Ingo
--   (B) Missing: multiple nodes duplicate port check missing
 -   (B) Have BLE package register itself when included - Greg
 -   Discussion: async store?
 -   Later: Generator options for custom clusters into own projects

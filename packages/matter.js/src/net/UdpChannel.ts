@@ -9,10 +9,11 @@ import { ByteArray } from "../util/ByteArray.js";
 
 export interface UdpChannelOptions {
     listeningPort?: number;
-    type: "udp4" | "udp6";
+    type?: "udp4" | "udp6";
     listeningAddress?: string;
     netInterface?: string;
     membershipAddresses?: string[];
+    reuseAddress?: boolean;
 }
 
 export interface UdpChannel {

@@ -32,7 +32,7 @@ export class ServerNetworkRuntime extends NetworkRuntime {
     #interactionServer?: TransactionalInteractionServer;
     #matterDevice?: MatterDevice;
     #mdnsBroadcaster?: MdnsInstanceBroadcaster;
-    #primaryNetInterface?: UdpInterface;
+    #udpInterfaces?: UdpInterface[];
     #bleBroadcaster?: InstanceBroadcaster;
     #bleTransport?: TransportInterface;
     #commissionedListener?: () => void;
@@ -81,11 +81,11 @@ export class ServerNetworkRuntime extends NetworkRuntime {
     }
 
     /**
-     * The IPv6 {@link UdpInterface}.  We create this interface independently of the server so the OS can select a port
-     * before we are fully online.
+     * The {@link UdpInterface} instances we listen on.  We create these independently of the server so the OS can
+     * select a port before we are fully online.
      */
-    protected async getPrimaryNetInterface() {
-        if (this.#primaryNetInterface === undefined) {
+    protected async getUdpInterfaces() {
+        if (this.#udpInterfaces === undefined) {
             const port = this.owner.state.network.port;
             this.#primaryNetInterface = await UdpInterface.create(
                 this.owner.env.get(Network),
@@ -124,7 +124,7 @@ export class ServerNetworkRuntime extends NetworkRuntime {
      * Add transports to the {@link MatterDevice}.
      */
     protected async addTransports(device: MatterDevice) {
-        device.addTransportInterface(await this.getPrimaryNetInterface());
+        device.addTransportInterface(await this.getUdpInterfaces());
 
         const netconf = this.owner.state.network;
 
