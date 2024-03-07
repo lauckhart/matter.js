@@ -69,7 +69,7 @@ export function scanIndex(path: string) {
 
     const versionEl = titleEl.nextElementSibling;
     if (!versionEl || !versionEl.textContent || !versionEl.textContent.match(/version (?:\d\.)+/i)) {
-        logger.error(`version element unrecognized`);
+        logger.error("version element unrecognized");
         return result;
     }
     const version = versionEl.textContent.replace(/.*version ([\d.]+).*/i, "$1");
@@ -101,7 +101,7 @@ export function scanIndex(path: string) {
         }
 
         // Core spec convention for clusters is heading suffixed with "Cluster"
-        if (heading.name.endsWith(" Cluster")) {
+        if (spec === Specification.Core && heading.name.endsWith(" Cluster")) {
             if (Number.parseInt(heading.section) < 3) {
                 // There's some noise in early sections
                 return;
@@ -120,13 +120,13 @@ export function scanIndex(path: string) {
             return;
         }
 
-        // Cluster spec convention is one cluster per sub-section except the
-        // first sub-section which summarizes the section
+        // Cluster spec convention is one cluster per sub-section except the first sub-section which summarizes the
+        // section
         if (spec === Specification.Cluster) {
             const sectionPath = heading.section.split(".");
             if (sectionPath.length === 2 && sectionPath[1] !== "1") {
                 const cluster = {
-                    name: heading.name,
+                    name: heading.name.replace(/\s+Clusters?$/, ""),
                     path: a.href,
                     xref,
                 };
@@ -135,8 +135,8 @@ export function scanIndex(path: string) {
             return;
         }
 
-        // Having learned our lesson with clusters, don't bother with the index
-        // for devices.  Just scan the entire document
+        // Having learned our lesson with clusters, don't bother with the index for devices.  Just scan the entire
+        // document
         if (spec === Specification.Device) {
             result.device = {
                 name: heading.name,
