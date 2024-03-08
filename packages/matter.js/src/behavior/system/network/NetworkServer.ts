@@ -101,12 +101,6 @@ export class NetworkServer extends NetworkBehavior {
     }
 
     #configureListeners(config: unknown[]) {
-        const defaultListen = [{ protocol: "udp" }];
-
-        if (this.state.ble !== undefined && Ble.enabled) {
-            defaultListen.push({ protocol: "ble" });
-        }
-
         const listen = Array<NetworkServer.Address>();
         let hasUdp = false;
         let hasBle = false;
@@ -243,7 +237,7 @@ export namespace NetworkServer {
          *
          * Once the server starts this value reflects the current state of BLE for the node.
          */
-        ble: boolean = true;
+        ble?: boolean = undefined;
 
         /**
          * The Matter capabilities the server broadcasts.
