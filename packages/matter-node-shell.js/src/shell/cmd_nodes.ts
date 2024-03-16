@@ -157,9 +157,8 @@ export default function commands(theNode: MatterNode) {
                             await theNode.commissioningController.connectNode(nodeIdToProcess, {
                                 autoSubscribe,
                                 subscribeMinIntervalFloorSeconds: autoSubscribe ? minSubscriptionInterval : undefined,
-                                subscribeMaxIntervalCeilingSeconds: autoSubscribe
-                                    ? maxSubscriptionInterval ?? 30
-                                    : undefined,
+                                subscribeMaxIntervalCeilingSeconds:
+                                    autoSubscribe ? maxSubscriptionInterval ?? 30 : undefined,
                                 ...createDiagnosticCallbacks(),
                             });
                         }

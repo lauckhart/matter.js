@@ -40,9 +40,8 @@ export class NodeJsActionTracer extends ActionTracer {
         const raw = {
             ...action,
             path: action.path?.toString(false),
-            mutations: action.mutations
-                ? action.mutations.map(m => ({ ...m, path: m.path.toString(false) }))
-                : undefined,
+            mutations:
+                action.mutations ? action.mutations.map(m => ({ ...m, path: m.path.toString(false) })) : undefined,
         };
         this.#write = MaybePromise.then(this.#write, () => this.#record(raw));
     }

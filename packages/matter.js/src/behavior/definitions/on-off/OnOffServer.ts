@@ -25,9 +25,9 @@ export class OnOffServer extends Base {
         const currentOnOffStatus = this.state.onOff;
         if (startUpOnOffValue !== null) {
             const targetOnOffValue =
-                startUpOnOffValue === OnOff.StartUpOnOff.Toggle
-                    ? !currentOnOffStatus
-                    : startUpOnOffValue === OnOff.StartUpOnOff.On;
+                startUpOnOffValue === OnOff.StartUpOnOff.Toggle ?
+                    !currentOnOffStatus
+                :   startUpOnOffValue === OnOff.StartUpOnOff.On;
             if (targetOnOffValue !== currentOnOffStatus) {
                 this.state.onOff = targetOnOffValue;
             }

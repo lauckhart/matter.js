@@ -104,11 +104,13 @@ export class MdnsServer {
 
             // Only send additional records if the query is not for A or AAAA records
             let additionalRecords =
-                queries.find(
-                    query => query.recordType !== DnsRecordType.A && query.recordType !== DnsRecordType.AAAA,
-                ) !== undefined
-                    ? portRecords.filter(record => !answers.includes(record) && record.recordType !== DnsRecordType.PTR)
-                    : [];
+                (
+                    queries.find(
+                        query => query.recordType !== DnsRecordType.A && query.recordType !== DnsRecordType.AAAA,
+                    ) !== undefined
+                ) ?
+                    portRecords.filter(record => !answers.includes(record) && record.recordType !== DnsRecordType.PTR)
+                :   [];
             if (knownAnswers.length > 0) {
                 for (const knownAnswersRecord of knownAnswers) {
                     answers = answers.filter(record => !isDeepEqual(record, knownAnswersRecord));

@@ -683,9 +683,8 @@ export class MatterController {
         return Array.from(this.commissionedNodes.entries()).map(
             ([nodeId, { operationalServerAddress, discoveryData, basicInformationData }]) => ({
                 nodeId,
-                operationalAddress: operationalServerAddress
-                    ? serverAddressToString(operationalServerAddress)
-                    : undefined,
+                operationalAddress:
+                    operationalServerAddress ? serverAddressToString(operationalServerAddress) : undefined,
                 advertisedName: discoveryData?.DN,
                 discoveryData,
                 basicInformationData,

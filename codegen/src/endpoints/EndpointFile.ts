@@ -134,9 +134,9 @@ export class EndpointFile extends TsFile {
                     "and",
                     ...requirements.mandatoryWithExtension.map(c => c.name),
                 )} cluster${requirements.mandatoryWithExtension.length === 1 ? "" : "s"} but ${
-                    requirements.mandatoryWithExtension.length === 1
-                        ? `${requirements.mandatoryWithExtension[0].name} is`
-                        : "they are"
+                    requirements.mandatoryWithExtension.length === 1 ?
+                        `${requirements.mandatoryWithExtension[0].name} is`
+                    :   "they are"
                 } not added by default because you must select the features your device supports.  You can add manually using ${
                     this.definitionName
                 }.with().`,

@@ -45,13 +45,10 @@ type TableSchema = {
 };
 
 type FieldType<F> =
-    F extends Optional<infer W>
-        ? W | undefined
-        : F extends Alias<infer W> | Translator<infer W> | Constant<infer W>
-          ? W
-          : F extends Children
-            ? FieldElement[]
-            : never;
+    F extends Optional<infer W> ? W | undefined
+    : F extends Alias<infer W> | Translator<infer W> | Constant<infer W> ? W
+    : F extends Children ? FieldElement[]
+    : never;
 
 // Create TS object type from schema definition
 type TableRecord<T extends TableSchema> = {

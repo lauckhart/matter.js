@@ -146,9 +146,9 @@ class Device {
             const isSocket = deviceStorage.get(`isSocket${i}`, getParameter(`type${i}`) === "socket");
             const deviceName = `Matter ${getParameter(`type${i}`) ?? "light"} device ${i}`;
             const deviceType =
-                getParameter(`type${i}`) === "socket"
-                    ? DeviceTypes.ON_OFF_PLUGIN_UNIT.code
-                    : DeviceTypes.ON_OFF_LIGHT.code;
+                getParameter(`type${i}`) === "socket" ?
+                    DeviceTypes.ON_OFF_PLUGIN_UNIT.code
+                :   DeviceTypes.ON_OFF_LIGHT.code;
             const vendorName = "matter-node.js";
             const passcode = getIntParameter(`passcode${i}`) ?? deviceStorage.get(`passcode${i}`, defaultPasscode++);
             const discriminator =

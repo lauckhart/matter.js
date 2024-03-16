@@ -70,9 +70,9 @@ export class DerCodec {
         } else if (typeof value === "object" && value[TAG_ID_KEY] !== undefined) {
             return this.encodeAnsi1(
                 value[TAG_ID_KEY],
-                value[BITS_PADDING] === undefined
-                    ? value[BYTES_KEY]
-                    : ByteArray.concat(ByteArray.of(value[BITS_PADDING]), value[BYTES_KEY]),
+                value[BITS_PADDING] === undefined ?
+                    value[BYTES_KEY]
+                :   ByteArray.concat(ByteArray.of(value[BITS_PADDING]), value[BYTES_KEY]),
             );
         } else if (typeof value === "object") {
             return this.encodeObject(value);

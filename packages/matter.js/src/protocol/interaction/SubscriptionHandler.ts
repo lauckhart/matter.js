@@ -491,9 +491,9 @@ export class SubscriptionHandler {
             const { nodeId, endpointId, clusterId } = path;
 
             const versionFilterValue =
-                endpointId !== undefined && clusterId !== undefined
-                    ? dataVersionFilterMap.get(clusterPathToId({ nodeId, endpointId, clusterId }))
-                    : undefined;
+                endpointId !== undefined && clusterId !== undefined ?
+                    dataVersionFilterMap.get(clusterPathToId({ nodeId, endpointId, clusterId }))
+                :   undefined;
             if (versionFilterValue !== undefined && versionFilterValue === version) continue;
 
             attributes.push({ path, value, version, schema: attribute.schema });

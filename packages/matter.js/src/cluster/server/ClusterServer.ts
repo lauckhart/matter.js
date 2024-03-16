@@ -298,33 +298,33 @@ export function ClusterServer<
                 attributeName,
                 (attributesInitialValues as any)[attributeName],
                 datasourceProxy,
-                getter
-                    ? (session, endpoint, isFabricFiltered, message) =>
-                          getter({
-                              attributes,
-                              endpoint,
-                              session,
-                              isFabricFiltered,
-                              message,
-                          })
-                    : undefined,
-                setter
-                    ? (value, session, endpoint, message) =>
-                          setter(value, {
-                              attributes,
-                              endpoint,
-                              session,
-                              message,
-                          })
-                    : undefined,
-                validator
-                    ? (value, session, endpoint) =>
-                          validator(value, {
-                              attributes,
-                              endpoint,
-                              session,
-                          })
-                    : undefined,
+                getter ?
+                    (session, endpoint, isFabricFiltered, message) =>
+                        getter({
+                            attributes,
+                            endpoint,
+                            session,
+                            isFabricFiltered,
+                            message,
+                        })
+                :   undefined,
+                setter ?
+                    (value, session, endpoint, message) =>
+                        setter(value, {
+                            attributes,
+                            endpoint,
+                            session,
+                            message,
+                        })
+                :   undefined,
+                validator ?
+                    (value, session, endpoint) =>
+                        validator(value, {
+                            attributes,
+                            endpoint,
+                            session,
+                        })
+                :   undefined,
             );
 
             // Add the relevant convenient methods to the ClusterServerObj

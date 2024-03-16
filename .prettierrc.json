@@ -9,6 +9,7 @@
     "bracketSpacing": true,
     "arrowParens": "avoid",
     "quoteProps": "as-needed",
+    "experimentalTernaries": true,
     "plugins": [
         "prettier-plugin-organize-imports"
     ]

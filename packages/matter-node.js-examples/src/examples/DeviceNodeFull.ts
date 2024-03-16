@@ -208,13 +208,13 @@ class MyFancyOwnFunctionalityServer extends MyFancyOwnFunctionalityBehavior {
 //
 // In this case we are using with() to install our On/Off cluster behavior.
 // .with("LevelControlForLighting") not needed because we always have it in by default because we have default implementation
-const OnOffDevice = isSocket
-    ? vendorId === 0xfff4
-        ? OnOffPlugInUnitDevice.with(OnOffShellExecServer, MyFancyOwnFunctionalityServer)
-        : OnOffPlugInUnitDevice.with(OnOffShellExecServer)
-    : vendorId === 0xfff4
-      ? OnOffLightDevice.with(OnOffShellExecServer, MyFancyOwnFunctionalityServer)
-      : OnOffLightDevice.with(OnOffShellExecServer);
+const OnOffDevice =
+    isSocket ?
+        vendorId === 0xfff4 ?
+            OnOffPlugInUnitDevice.with(OnOffShellExecServer, MyFancyOwnFunctionalityServer)
+        :   OnOffPlugInUnitDevice.with(OnOffShellExecServer)
+    : vendorId === 0xfff4 ? OnOffLightDevice.with(OnOffShellExecServer, MyFancyOwnFunctionalityServer)
+    : OnOffLightDevice.with(OnOffShellExecServer);
 
 /**
  * Modify automatically added clusters of the Root endpoint if needed

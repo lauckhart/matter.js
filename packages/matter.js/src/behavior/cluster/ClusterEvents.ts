@@ -32,21 +32,19 @@ export namespace ClusterEvents {
         EventObservables<ClusterType.EventsOf<C>>;
 
     export type AttributeObservables<A extends Record<string, ClusterType.Attribute>> = {
-        [K in keyof A as string extends K
-            ? never
-            : K extends string
-              ? A[K] extends { optional: true }
-                  ? never
-                  : `${K}$Change`
-              : never]: AttributeObservable<A[K]>;
+        [K in keyof A as string extends K ? never
+        : K extends string ?
+            A[K] extends { optional: true } ?
+                never
+            :   `${K}$Change`
+        :   never]: AttributeObservable<A[K]>;
     } & {
-        [K in keyof A as string extends K
-            ? never
-            : K extends string
-              ? A[K] extends { optional: true }
-                  ? `${K}$Change`
-                  : never
-              : never]?: AttributeObservable<A[K]>;
+        [K in keyof A as string extends K ? never
+        : K extends string ?
+            A[K] extends { optional: true } ?
+                `${K}$Change`
+            :   never
+        :   never]?: AttributeObservable<A[K]>;
     };
 
     export type AttributeObservable<A extends ClusterType.Attribute = ClusterType.Attribute> = Observable<
@@ -54,21 +52,19 @@ export namespace ClusterEvents {
     >;
 
     export type EventObservables<E extends Record<string, ClusterType.Event>> = {
-        [K in keyof E as string extends K
-            ? never
-            : K extends string
-              ? E[K] extends { optional: true }
-                  ? never
-                  : K
-              : never]: EventObservable<E[K]>;
+        [K in keyof E as string extends K ? never
+        : K extends string ?
+            E[K] extends { optional: true } ?
+                never
+            :   K
+        :   never]: EventObservable<E[K]>;
     } & {
-        [K in keyof E as string extends K
-            ? never
-            : K extends string
-              ? E[K] extends { optional: true }
-                  ? K
-                  : never
-              : never]?: EventObservable<E[K]>;
+        [K in keyof E as string extends K ? never
+        : K extends string ?
+            E[K] extends { optional: true } ?
+                K
+            :   never
+        :   never]?: EventObservable<E[K]>;
     };
 
     export type EventObservable<E extends ClusterType.Event = ClusterType.Event> = Observable<

@@ -140,9 +140,9 @@ export const GeneralCommissioningClusterHandler: (options?: {
                 return {
                     errorCode: GeneralCommissioning.CommissioningError.ValueOutsideRange,
                     debugText: `Invalid regulatory location: ${
-                        newRegulatoryConfig === GeneralCommissioning.RegulatoryLocationType.Indoor
-                            ? "Indoor"
-                            : "Outdoor"
+                        newRegulatoryConfig === GeneralCommissioning.RegulatoryLocationType.Indoor ?
+                            "Indoor"
+                        :   "Outdoor"
                     }`,
                 };
         }

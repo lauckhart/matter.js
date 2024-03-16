@@ -200,11 +200,9 @@ class ControllerNode {
                 discovery: {
                     knownAddress: ip !== undefined && port !== undefined ? { ip, port, type: "udp" } : undefined,
                     identifierData:
-                        longDiscriminator !== undefined
-                            ? { longDiscriminator }
-                            : shortDiscriminator !== undefined
-                              ? { shortDiscriminator }
-                              : {},
+                        longDiscriminator !== undefined ? { longDiscriminator }
+                        : shortDiscriminator !== undefined ? { shortDiscriminator }
+                        : {},
                     discoveryCapabilities: {
                         ble,
                     },

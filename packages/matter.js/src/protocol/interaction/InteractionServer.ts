@@ -274,9 +274,9 @@ export class InteractionServer implements ProtocolHandler<MatterDevice> {
                 );
 
                 const versionFilterValue =
-                    endpointId !== undefined && clusterId !== undefined
-                        ? dataVersionFilterMap.get(clusterPathToId({ nodeId, endpointId, clusterId }))
-                        : undefined;
+                    endpointId !== undefined && clusterId !== undefined ?
+                        dataVersionFilterMap.get(clusterPathToId({ nodeId, endpointId, clusterId }))
+                    :   undefined;
                 if (versionFilterValue !== undefined && versionFilterValue === version) {
                     logger.debug(
                         `Read attribute from ${exchange.channel.name}: ${this.#endpointStructure.resolveAttributeName(
@@ -643,14 +643,14 @@ export class InteractionServer implements ProtocolHandler<MatterDevice> {
         const errorResults = writeResults.filter(({ statusCode }) => statusCode !== StatusCode.Success);
         logger.debug(
             `Write request from ${exchange.channel.name} done ${
-                errorResults.length
-                    ? `with following errors: ${errorResults
-                          .map(
-                              ({ path, statusCode }) =>
-                                  `${this.#endpointStructure.resolveAttributeName(path)}=${Logger.toJSON(statusCode)}`,
-                          )
-                          .join(", ")}`
-                    : "without errors"
+                errorResults.length ?
+                    `with following errors: ${errorResults
+                        .map(
+                            ({ path, statusCode }) =>
+                                `${this.#endpointStructure.resolveAttributeName(path)}=${Logger.toJSON(statusCode)}`,
+                        )
+                        .join(", ")}`
+                :   "without errors"
             }`,
         );
 

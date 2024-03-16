@@ -43,10 +43,14 @@ export const BitFieldEnum = <E extends number>(offset: number, length: number): 
 
 export type BitSchema = { [key: string]: BitFlag | BitField | BitFieldEnum<any> };
 export type TypeFromBitSchema<T extends BitSchema> = {
-    [K in keyof T]: T[K] extends BitFieldEnum<infer E> ? E : T[K] extends BitField ? number : boolean;
+    [K in keyof T]: T[K] extends BitFieldEnum<infer E> ? E
+    : T[K] extends BitField ? number
+    : boolean;
 };
 export type TypeFromPartialBitSchema<T extends BitSchema> = {
-    [K in keyof T]?: T[K] extends BitFieldEnum<infer E> ? E : T[K] extends BitField ? number : boolean;
+    [K in keyof T]?: T[K] extends BitFieldEnum<infer E> ? E
+    : T[K] extends BitField ? number
+    : boolean;
 };
 export type TypeFromBitmapSchema<S extends Schema<any, any>> = S extends Schema<infer T, any> ? T : never;
 

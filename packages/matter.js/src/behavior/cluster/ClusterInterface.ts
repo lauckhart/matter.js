@@ -59,36 +59,29 @@ export namespace ClusterInterface {
             // Fall back to mapping for ommands not defined in an interface
             Omit<MappedMethodsOf<C["commands"]>, keyof InterfaceMethodsOf<I, C["supportedFeatures"]>>;
 
-    export type InterfaceMethodsOf<
-        I extends ClusterInterface,
-        S extends ClusterComposer.FeatureFlags,
-    > = ClusterInterface extends I ? {} : AppliedMethodsOf<ApplicableComponents<I["components"], S>>;
+    export type InterfaceMethodsOf<I extends ClusterInterface, S extends ClusterComposer.FeatureFlags> =
+        ClusterInterface extends I ? {} : AppliedMethodsOf<ApplicableComponents<I["components"], S>>;
 
-    export type AppliedMethodsOf<CA extends Component[]> = CA extends [
-        infer C extends Component,
-        ...infer R extends Component[],
-    ]
-        ? C["methods"] & AppliedMethodsOf<R>
-        : {};
+    export type AppliedMethodsOf<CA extends Component[]> =
+        CA extends [infer C extends Component, ...infer R extends Component[]] ? C["methods"] & AppliedMethodsOf<R>
+        :   {};
 
-    export type ApplicableComponents<CA extends Component[], S extends ClusterComposer.FeatureFlags> = CA extends [
-        infer C extends Component,
-        ...infer R extends Component[],
-    ]
-        ? S extends C["flags"]
-            ? [C, ...ApplicableComponents<R, S>]
-            : ApplicableComponents<R, S>
-        : [];
+    export type ApplicableComponents<CA extends Component[], S extends ClusterComposer.FeatureFlags> =
+        CA extends [infer C extends Component, ...infer R extends Component[]] ?
+            S extends C["flags"] ?
+                [C, ...ApplicableComponents<R, S>]
+            :   ApplicableComponents<R, S>
+        :   [];
 
     export type MethodForCommand<C extends ClusterType.Command> = (
         request: TypeFromSchema<C["requestSchema"]>,
     ) => MaybePromise<TypeFromSchema<C["responseSchema"]>>;
 
-    export type MappedMethodsOf<C extends Record<string, ClusterType.Command>> = string extends keyof C
-        ? {}
-        : {
-              readonly [K in keyof C as C[K] extends { optional: true } ? never : K]: MethodForCommand<C[K]>;
-          } & {
-              readonly [K in keyof C as C[K] extends { optional: true } ? K : never]?: MethodForCommand<C[K]>;
-          };
+    export type MappedMethodsOf<C extends Record<string, ClusterType.Command>> =
+        string extends keyof C ? {}
+        :   {
+                readonly [K in keyof C as C[K] extends { optional: true } ? never : K]: MethodForCommand<C[K]>;
+            } & {
+                readonly [K in keyof C as C[K] extends { optional: true } ? K : never]?: MethodForCommand<C[K]>;
+            };
 }

@@ -57,10 +57,10 @@ export class EventHandler {
 
     getEvents(eventPath: TypeFromSchema<typeof TlvEventPath>, filters?: TypeFromSchema<typeof TlvEventFilter>[]) {
         const eventFilter =
-            filters !== undefined && filters.length > 0
-                ? (event: EventStorageData<any>) =>
-                      filters.some(filter => filter.eventMin !== undefined && event.eventNumber >= filter.eventMin)
-                : () => true; // TODO also add Node Id check
+            filters !== undefined && filters.length > 0 ?
+                (event: EventStorageData<any>) =>
+                    filters.some(filter => filter.eventMin !== undefined && event.eventNumber >= filter.eventMin)
+            :   () => true; // TODO also add Node Id check
         const events = new Array<EventStorageData<any>>();
         const { endpointId, clusterId, eventId } = eventPath;
         for (const priority of [EventPriority.Critical, EventPriority.Info, EventPriority.Debug]) {

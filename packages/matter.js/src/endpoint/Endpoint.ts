@@ -639,9 +639,8 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     }
 
     #initialize() {
-        const trace: ActionTracer.Action | undefined = this.env.has(ActionTracer)
-            ? { type: ActionTracer.ActionType.Initialize }
-            : undefined;
+        const trace: ActionTracer.Action | undefined =
+            this.env.has(ActionTracer) ? { type: ActionTracer.ActionType.Initialize } : undefined;
 
         const initializeEndpoint = (context: ActionContext) => this.initialize(context.agentFor(this));
 

@@ -152,11 +152,9 @@ function createProxy(config: ListConfig, reference: Val.Reference<Val.List>, ses
                     () => true,
 
                     val =>
-                        Array.isArray(val)
-                            ? [...(val as Val.List)]
-                            : typeof val === "object" && val !== null
-                              ? { ...val }
-                              : val,
+                        Array.isArray(val) ? [...(val as Val.List)]
+                        : typeof val === "object" && val !== null ? { ...val }
+                        : val,
                 );
 
                 manageEntry(subref, session);

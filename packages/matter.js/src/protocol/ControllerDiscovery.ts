@@ -177,9 +177,8 @@ export class ControllerDiscovery {
 
         if (lastKnownAddress !== undefined) {
             const knownKey = serverAddressToString(lastKnownAddress);
-            const knownDevice = addresses.has(serverAddressToString(lastKnownAddress))
-                ? addresses.get(knownKey)?.device
-                : undefined;
+            const knownDevice =
+                addresses.has(serverAddressToString(lastKnownAddress)) ? addresses.get(knownKey)?.device : undefined;
             addresses.delete(knownKey);
             const result = await processOneAddress(lastKnownAddress, knownDevice);
             if (result !== undefined) {

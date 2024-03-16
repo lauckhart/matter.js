@@ -201,9 +201,8 @@ export class SecureSession<T> extends Session<T> {
         const { header, applicationPayload } = MessageCodec.encodePayload(message);
         const headerBytes = MessageCodec.encodePacketHeader(message.packetHeader);
         const securityFlags = headerBytes[3];
-        const sessionNodeId = this.isPase
-            ? NodeId.UNSPECIFIED_NODE_ID
-            : this.#fabric?.nodeId ?? NodeId.UNSPECIFIED_NODE_ID;
+        const sessionNodeId =
+            this.isPase ? NodeId.UNSPECIFIED_NODE_ID : this.#fabric?.nodeId ?? NodeId.UNSPECIFIED_NODE_ID;
         const nonce = this.generateNonce(securityFlags, header.messageId, sessionNodeId);
         return { header, applicationPayload: Crypto.encrypt(this.#encryptKey, applicationPayload, nonce, headerBytes) };
     }

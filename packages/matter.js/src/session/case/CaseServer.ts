@@ -80,9 +80,9 @@ export class CaseServer implements ProtocolHandler<MatterDevice> {
         const resumptionId = Crypto.getRandomData(16);
 
         const resumptionRecord =
-            peerResumptionId !== undefined && peerResumeMic !== undefined
-                ? server.findResumptionRecordById(peerResumptionId)
-                : undefined;
+            peerResumptionId !== undefined && peerResumeMic !== undefined ?
+                server.findResumptionRecordById(peerResumptionId)
+            :   undefined;
         // We try to resume the session
         if (peerResumptionId !== undefined && peerResumeMic !== undefined && resumptionRecord !== undefined) {
             const { sharedSecret, fabric, peerNodeId } = resumptionRecord;

@@ -162,15 +162,15 @@ export const MaybePromise = {
             if (MaybePromise.is(value)) {
                 return value.then(
                     resolve,
-                    reject
-                        ? error => {
-                              // If reject() is not async then we will catch rejection errors below but should not
-                              // reject again
-                              rejected = true;
+                    reject ?
+                        error => {
+                            // If reject() is not async then we will catch rejection errors below but should not
+                            // reject again
+                            rejected = true;
 
-                              return reject?.(error);
-                          }
-                        : undefined,
+                            return reject?.(error);
+                        }
+                    :   undefined,
                 );
             }
             if (resolve) {

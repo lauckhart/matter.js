@@ -116,9 +116,10 @@ class ControllerNode {
         const controllerStorage = storageManager.createContext("Controller");
         const ip = controllerStorage.has("ip") ? controllerStorage.get<string>("ip") : getParameter("ip");
         const port = controllerStorage.has("port") ? controllerStorage.get<number>("port") : getIntParameter("port");
-        const uniqueId = controllerStorage.has("uniqueid")
-            ? controllerStorage.get<string>("uniqueid")
-            : getParameter("uniqueid") ?? Time.nowMs().toString();
+        const uniqueId =
+            controllerStorage.has("uniqueid") ?
+                controllerStorage.get<string>("uniqueid")
+            :   getParameter("uniqueid") ?? Time.nowMs().toString();
         controllerStorage.set("uniqueid", uniqueId);
 
         const pairingCode = getParameter("pairingcode");
@@ -206,11 +207,9 @@ class ControllerNode {
                 discovery: {
                     knownAddress: ip !== undefined && port !== undefined ? { ip, port, type: "udp" } : undefined,
                     identifierData:
-                        longDiscriminator !== undefined
-                            ? { longDiscriminator }
-                            : shortDiscriminator !== undefined
-                              ? { shortDiscriminator }
-                              : {},
+                        longDiscriminator !== undefined ? { longDiscriminator }
+                        : shortDiscriminator !== undefined ? { shortDiscriminator }
+                        : {},
                     discoveryCapabilities: {
                         ble,
                     },

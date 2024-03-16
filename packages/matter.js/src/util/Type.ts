@@ -19,26 +19,26 @@ export function Merge<A extends Properties, B extends Properties>(a: A, b: B): M
 export type ClassExtends<C> = { new (...args: any[]): C };
 
 /** Merge an array of objects into one.  Currently assumes unique elements */
-export type MergeAll<T> = T extends [infer O extends Properties | undefined, ...infer R]
-    ? O extends undefined
-        ? MergeAll<R>
-        : O & MergeAll<R>
-    : T extends []
-      ? {}
-      : never;
+export type MergeAll<T> =
+    T extends [infer O extends Properties | undefined, ...infer R] ?
+        O extends undefined ?
+            MergeAll<R>
+        :   O & MergeAll<R>
+    : T extends [] ? {}
+    : never;
 
 export function MergeAll<T extends (Properties | undefined)[]>(...objects: readonly [...T]): MergeAll<T> {
     return Object.assign({}, ...objects);
 }
 
 /** Pluck an item from an array of objects if present */
-export type Pluck<K, T extends readonly [...any]> = T extends [infer O, ...infer R]
-    ? K extends keyof O
-        ? [O[K], ...Pluck<K, R>]
-        : Pluck<K, R>
-    : T extends []
-      ? T
-      : never;
+export type Pluck<K, T extends readonly [...any]> =
+    T extends [infer O, ...infer R] ?
+        K extends keyof O ?
+            [O[K], ...Pluck<K, R>]
+        :   Pluck<K, R>
+    : T extends [] ? T
+    : never;
 
 export function Pluck<T extends Properties[], K extends keyof T[number]>(
     key: K,
@@ -70,11 +70,10 @@ export type Branded<T, B> = T & Brand<B>;
 /**
  * Make a type immutable.
  */
-export type Immutable<T> = T extends (...args: any[]) => any
-    ? T
-    : T extends object
-      ? { readonly [K in keyof T]: Immutable<T[K]> }
-      : T;
+export type Immutable<T> =
+    T extends (...args: any[]) => any ? T
+    : T extends object ? { readonly [K in keyof T]: Immutable<T[K]> }
+    : T;
 
 /**
  * Convert a union to an interface.

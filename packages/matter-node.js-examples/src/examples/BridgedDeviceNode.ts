@@ -97,10 +97,10 @@ for (let idx = 0; idx < isSocket.length; idx++) {
     const name = `OnOff ${isASocket ? "Socket" : "Light"} ${i}`;
 
     const endpoint = new Endpoint(
-        isASocket
-            ? // For a Bridged Device we need to add a BridgedDeviceBasicInformation cluster as server
-              OnOffPlugInUnitDevice.with(BridgedDeviceBasicInformationServer)
-            : OnOffLightDevice.with(BridgedDeviceBasicInformationServer),
+        isASocket ?
+            // For a Bridged Device we need to add a BridgedDeviceBasicInformation cluster as server
+            OnOffPlugInUnitDevice.with(BridgedDeviceBasicInformationServer)
+        :   OnOffLightDevice.with(BridgedDeviceBasicInformationServer),
         {
             id: `onoff-${i}`,
             bridgedDeviceBasicInformation: {

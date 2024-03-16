@@ -58,11 +58,11 @@ export namespace SupportedBehaviors {
     /**
      * Convert a List to BehaviorTypes.
      */
-    export type MapOf<T extends List> = T extends readonly [infer F extends Behavior.Type]
-        ? { readonly [K in F["id"]]: F }
-        : T extends readonly [infer F extends Behavior.Type, ...infer R extends List]
-          ? { readonly [K in F["id"]]: F } & MapOf<R>
-          : {};
+    export type MapOf<T extends List> =
+        T extends readonly [infer F extends Behavior.Type] ? { readonly [K in F["id"]]: F }
+        : T extends readonly [infer F extends Behavior.Type, ...infer R extends List] ?
+            { readonly [K in F["id"]]: F } & MapOf<R>
+        :   {};
 
     /**
      * Properties of an endpoint contributed by listed behaviors.

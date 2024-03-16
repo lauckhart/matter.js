@@ -187,9 +187,10 @@ export class ExchangeManager<ContextT> {
 
         const aad = messageBytes.slice(0, messageBytes.length - packet.applicationPayload.length); // Header+Extensions
         const message = session.decode(packet, aad);
-        const exchangeIndex = message.payloadHeader.isInitiatorMessage
-            ? message.payloadHeader.exchangeId
-            : message.payloadHeader.exchangeId | 0x10000;
+        const exchangeIndex =
+            message.payloadHeader.isInitiatorMessage ?
+                message.payloadHeader.exchangeId
+            :   message.payloadHeader.exchangeId | 0x10000;
         let exchange = this.exchanges.get(exchangeIndex);
 
         if (

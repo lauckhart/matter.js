@@ -83,9 +83,9 @@ export namespace ClusterType {
         revision: T["revision"];
         features: T["features"] extends {} ? T["features"] : {};
         supportedFeatures: T["supportedFeatures"] extends {} ? T["supportedFeatures"] : {};
-        attributes: T["attributes"] extends infer A extends {}
-            ? Merge<A, GlobalAttributes<T["features"] extends {} ? T["features"] : {}>>
-            : {};
+        attributes: T["attributes"] extends infer A extends {} ?
+            Merge<A, GlobalAttributes<T["features"] extends {} ? T["features"] : {}>>
+        :   {};
         commands: T["commands"] extends {} ? T["commands"] : {};
         events: T["events"] extends {} ? T["events"] : {};
         unknown: T["unknown"] extends boolean ? T["unknown"] : false;
@@ -175,33 +175,34 @@ export namespace ClusterType {
     /**
      * Extract the type of a cluster's attributes (excluding global attributes).
      */
-    export type AttributesOf<C> = C extends { attributes: infer E extends { [K in string]: ClusterType.Attribute } }
-        ? {
-              -readonly [K in keyof E as string extends K
-                  ? never
-                  : K extends keyof GlobalAttributes<any>
-                    ? never
-                    : K]: C["attributes"][K];
-          }
-        : EmptyElementSet<Attribute>;
+    export type AttributesOf<C> =
+        C extends { attributes: infer E extends { [K in string]: ClusterType.Attribute } } ?
+            {
+                -readonly [K in keyof E as string extends K ? never
+                : K extends keyof GlobalAttributes<any> ? never
+                : K]: C["attributes"][K];
+            }
+        :   EmptyElementSet<Attribute>;
 
     /**
      * Extract the type of a cluster's commands.
      */
-    export type CommandsOf<C> = C extends { commands: infer E extends { [K in string]: ClusterType.Command } }
-        ? {
-              -readonly [K in keyof E as string extends K ? never : K]: E[K];
-          }
-        : EmptyElementSet<Command>;
+    export type CommandsOf<C> =
+        C extends { commands: infer E extends { [K in string]: ClusterType.Command } } ?
+            {
+                -readonly [K in keyof E as string extends K ? never : K]: E[K];
+            }
+        :   EmptyElementSet<Command>;
 
     /**
      * Extract the type of a cluster's events.
      */
-    export type EventsOf<C> = C extends { events: infer E extends { [K in string]: ClusterType.Event } }
-        ? {
-              -readonly [K in keyof E as string extends K ? never : K]: E[K];
-          }
-        : EmptyElementSet<Event>;
+    export type EventsOf<C> =
+        C extends { events: infer E extends { [K in string]: ClusterType.Event } } ?
+            {
+                -readonly [K in keyof E as string extends K ? never : K]: E[K];
+            }
+        :   EmptyElementSet<Event>;
 
     /**
      * This bit of hackery describes a set that has no elements but for which typescript thinks it knows the type if you
@@ -215,40 +216,43 @@ export namespace ClusterType {
     export type AttributeValues<T> = ValuesOfAttributes<ClusterType.AttributesOf<T>>;
 
     export type ValuesOfAttributes<AttrsT extends { [K: string]: Attribute }> = {
-        [K in keyof AttrsT as [AttrsT[K]] extends [{ optional: true }] ? never : K]: AttrsT[K] extends {
-            schema: TlvSchema<infer T>;
-        }
-            ? T
-            : never;
+        [K in keyof AttrsT as [AttrsT[K]] extends [{ optional: true }] ? never : K]: AttrsT[K] extends (
+            {
+                schema: TlvSchema<infer T>;
+            }
+        ) ?
+            T
+        :   never;
     } & {
-        [K in keyof AttrsT as [AttrsT[K]] extends [{ optional: true }] ? K : never]?: AttrsT[K] extends {
-            schema: TlvSchema<infer T>;
-        }
-            ? T
-            : never;
+        [K in keyof AttrsT as [AttrsT[K]] extends [{ optional: true }] ? K : never]?: AttrsT[K] extends (
+            {
+                schema: TlvSchema<infer T>;
+            }
+        ) ?
+            T
+        :   never;
     };
 
-    export type RelaxTypes<V> = V extends number
-        ? number
-        : V extends object
-          ? V extends (...args: any[]) => any
-              ? V
-              : {
+    export type RelaxTypes<V> =
+        V extends number ? number
+        : V extends object ?
+            V extends (...args: any[]) => any ?
+                V
+            :   {
                     [K in keyof V]: RelaxTypes<V[K]>;
                 }
-          : V;
+        :   V;
 
-    export type PatchType<V> = V extends (infer E)[]
-        ? Record<`${number}`, PatchType<E>> | PatchType<E>[]
-        : V extends number
-          ? number
-          : V extends object
-            ? V extends (...args: any[]) => any
-                ? never
-                : {
-                      [K in keyof V]?: PatchType<V[K]>;
-                  }
-            : V;
+    export type PatchType<V> =
+        V extends (infer E)[] ? Record<`${number}`, PatchType<E>> | PatchType<E>[]
+        : V extends number ? number
+        : V extends object ?
+            V extends (...args: any[]) => any ?
+                never
+            :   {
+                    [K in keyof V]?: PatchType<V[K]>;
+                }
+        :   V;
 
     /**
      * A slightly relaxed version of AttributeValues for input.

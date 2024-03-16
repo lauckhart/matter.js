@@ -145,9 +145,9 @@ export class GeneralCommissioningServer extends GeneralCommissioningBehavior {
                 return {
                     errorCode: GeneralCommissioning.CommissioningError.ValueOutsideRange,
                     debugText: `Invalid regulatory location: ${
-                        newRegulatoryConfig === GeneralCommissioning.RegulatoryLocationType.Indoor
-                            ? "Indoor"
-                            : "Outdoor"
+                        newRegulatoryConfig === GeneralCommissioning.RegulatoryLocationType.Indoor ?
+                            "Indoor"
+                        :   "Outdoor"
                     }`,
                 };
         }

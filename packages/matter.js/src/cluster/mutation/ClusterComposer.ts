@@ -168,11 +168,14 @@ export namespace ClusterComposer {
     /**
      * Describes the output of {@link ClusterComposer.compose}.
      */
-    export type Of<ClusterT extends ClusterType, FeaturesT extends FeatureSelection<ClusterT>> = ClusterT extends {
-        extensions: {};
-    }
-        ? WithFeatures<ClusterT, FeaturesT>
-        : ClusterT;
+    export type Of<ClusterT extends ClusterType, FeaturesT extends FeatureSelection<ClusterT>> =
+        ClusterT extends (
+            {
+                extensions: {};
+            }
+        ) ?
+            WithFeatures<ClusterT, FeaturesT>
+        :   ClusterT;
 
     /**
      * The base of a cluster.
@@ -207,28 +210,23 @@ export namespace ClusterComposer {
     /**
      * Choose elements from applicable extensions.
      */
-    export type SelectedElements<
-        FlagsT extends FeatureFlags,
-        extensionsT extends readonly ClusterType.Extension[],
-    > = extensionsT extends readonly [
-        infer S extends ClusterType.Extension,
-        ...infer R extends readonly ClusterType.Extension[],
-    ]
-        ? SelectorContribution<FlagsT, S> & SelectedElements<FlagsT, R>
-        : {};
+    export type SelectedElements<FlagsT extends FeatureFlags, extensionsT extends readonly ClusterType.Extension[]> =
+        extensionsT extends (
+            readonly [infer S extends ClusterType.Extension, ...infer R extends readonly ClusterType.Extension[]]
+        ) ?
+            SelectorContribution<FlagsT, S> & SelectedElements<FlagsT, R>
+        :   {};
 
     /**
      * Determine the type contributed to feature selection by a specific
      * selector.
      */
-    export type SelectorContribution<
-        FlagsT extends FeatureFlags,
-        SelectorT extends ClusterType.Extension,
-    > = FlagsT extends SelectorT["flags"]
-        ? SelectorT["component"] extends false
-            ? never
-            : SelectorT["component"] & { attributes: {}; commands: {}; events: {} }
-        : { attributes: {}; commands: {}; events: {} };
+    export type SelectorContribution<FlagsT extends FeatureFlags, SelectorT extends ClusterType.Extension> =
+        FlagsT extends SelectorT["flags"] ?
+            SelectorT["component"] extends false ?
+                never
+            :   SelectorT["component"] & { attributes: {}; commands: {}; events: {} }
+        :   { attributes: {}; commands: {}; events: {} };
 
     /**
      * Merge elements from the base, selected features and an original cluster
@@ -238,20 +236,20 @@ export namespace ClusterComposer {
      * cluster.  If we are removing features, we want to maintain only
      * those features present in the base or selected components.
      */
-    export type WithSelected<ClusterT extends ClusterType, SelectedT extends Component> = [SelectedT] extends [never]
-        ? never
-        : {
-              [TypeT in ElementType]: Pick<
-                  // and extensions // Include elements in current cluster if valid according to base
-                  ClusterT[TypeT],
-                  keyof ClusterT[TypeT] & (keyof BaseOf<ClusterT>[TypeT] | keyof SelectedT[TypeT])
-              > &
-                  // Include extension elements if not present in current cluster
-                  Omit<SelectedT[TypeT], keyof ClusterT[TypeT]> &
-                  // Include base elements if not present in current cluster or
-                  // extensions
-                  Omit<BaseOf<ClusterT>[TypeT], keyof ClusterT[TypeT] | keyof SelectedT[TypeT]>;
-          };
+    export type WithSelected<ClusterT extends ClusterType, SelectedT extends Component> =
+        [SelectedT] extends [never] ? never
+        :   {
+                [TypeT in ElementType]: Pick<
+                    // and extensions // Include elements in current cluster if valid according to base
+                    ClusterT[TypeT],
+                    keyof ClusterT[TypeT] & (keyof BaseOf<ClusterT>[TypeT] | keyof SelectedT[TypeT])
+                > &
+                    // Include extension elements if not present in current cluster
+                    Omit<SelectedT[TypeT], keyof ClusterT[TypeT]> &
+                    // Include base elements if not present in current cluster or
+                    // extensions
+                    Omit<BaseOf<ClusterT>[TypeT], keyof ClusterT[TypeT] | keyof SelectedT[TypeT]>;
+            };
 
     /**
      * A "WritableDefinition" is a Cluster with fields that may be modified.

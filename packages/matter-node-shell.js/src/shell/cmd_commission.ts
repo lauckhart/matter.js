@@ -75,17 +75,14 @@ export default function commands(theNode: MatterNode) {
                                     const options = {
                                         discovery: {
                                             knownAddress:
-                                                ip !== undefined && ipPort !== undefined
-                                                    ? { ip, port: ipPort, type: "udp" }
-                                                    : undefined,
+                                                ip !== undefined && ipPort !== undefined ?
+                                                    { ip, port: ipPort, type: "udp" }
+                                                :   undefined,
                                             identifierData:
-                                                instanceId !== undefined
-                                                    ? { instanceId }
-                                                    : discriminator !== undefined
-                                                      ? { longDiscriminator: discriminator }
-                                                      : shortDiscriminator !== undefined
-                                                        ? { shortDiscriminator }
-                                                        : {},
+                                                instanceId !== undefined ? { instanceId }
+                                                : discriminator !== undefined ? { longDiscriminator: discriminator }
+                                                : shortDiscriminator !== undefined ? { shortDiscriminator }
+                                                : {},
                                             discoveryCapabilities: {
                                                 ble,
                                                 onIpNetwork: true,

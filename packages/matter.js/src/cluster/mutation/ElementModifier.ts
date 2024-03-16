@@ -86,11 +86,11 @@ export namespace ElementModifier {
      * Alterations applied to a specific element set, element or element field.
      */
     export type AlteredElements<OriginalT, ElementT, AlterationT> = {
-        [name in keyof OriginalT]: OriginalT[name] extends infer OrigT extends ElementT
-            ? AlterationT extends { [n in name]: { optional: infer O extends boolean } }
-                ? Omit<OrigT, "optional"> & { optional: O }
-                : OrigT
-            : never;
+        [name in keyof OriginalT]: OriginalT[name] extends infer OrigT extends ElementT ?
+            AlterationT extends { [n in name]: { optional: infer O extends boolean } } ?
+                Omit<OrigT, "optional"> & { optional: O }
+            :   OrigT
+        :   never;
     };
 
     /**
@@ -143,9 +143,9 @@ export namespace ElementModifier {
         events?: ElementSetFlags<ClusterType.EventsOf<ClusterT>>;
     };
 
-    export type ElementSetFlagAlterations<ElementsT extends ElementSetFlags<any> | undefined> = ElementsT extends {}
-        ? { [key in keyof ElementsT]: { optional: ElementsT[key] extends true ? false : true } }
-        : undefined;
+    export type ElementSetFlagAlterations<ElementsT extends ElementSetFlags<any> | undefined> =
+        ElementsT extends {} ? { [key in keyof ElementsT]: { optional: ElementsT[key] extends true ? false : true } }
+        :   undefined;
 
     /**
      * Alterations implied by ElementFlags.

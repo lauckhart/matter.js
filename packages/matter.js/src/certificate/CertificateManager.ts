@@ -555,9 +555,9 @@ export class CertificateManager {
                 keyUsage: KeyUsage_Signature_ContentCommited_X509,
                 subjectKeyIdentifier: SubjectKeyIdentifier_X509(subjectKeyIdentifier),
                 authorityKeyIdentifier:
-                    authorityKeyIdentifier === undefined
-                        ? undefined
-                        : AuthorityKeyIdentifier_X509(authorityKeyIdentifier),
+                    authorityKeyIdentifier === undefined ? undefined : (
+                        AuthorityKeyIdentifier_X509(authorityKeyIdentifier)
+                    ),
             }),
         };
         return DerCodec.encode({

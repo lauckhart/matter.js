@@ -42,7 +42,10 @@ function test(what: string, fn: (behavior: TestBehavior) => void) {
 }
 
 describe("Behavior", () => {
-    type IsObject<T> = T extends undefined ? false : T extends object ? true : false;
+    type IsObject<T> =
+        T extends undefined ? false
+        : T extends object ? true
+        : false;
 
     test("instantiates with correct properties", behavior => {
         expect(behavior.agent.get(TestBehavior)).equals(behavior);

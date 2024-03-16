@@ -536,9 +536,9 @@ export class InteractionClient {
                 interactionModelRevision: INTERACTION_MODEL_REVISION,
                 attributeRequests: [{ endpointId, clusterId, attributeId }],
                 dataVersionFilters:
-                    knownDataVersion !== undefined
-                        ? [{ path: { endpointId, clusterId }, dataVersion: knownDataVersion }]
-                        : undefined,
+                    knownDataVersion !== undefined ?
+                        [{ path: { endpointId, clusterId }, dataVersion: knownDataVersion }]
+                    :   undefined,
                 keepSubscriptions,
                 minIntervalFloorSeconds,
                 maxIntervalCeilingSeconds,
@@ -807,13 +807,13 @@ export class InteractionClient {
             this.registerSubscriptionListener(subscriptionId, dataReport => {
                 subscriptionListener({
                     attributeReports:
-                        dataReport.attributeReports !== undefined
-                            ? normalizeAndDecodeReadAttributeReport(dataReport.attributeReports)
-                            : undefined,
+                        dataReport.attributeReports !== undefined ?
+                            normalizeAndDecodeReadAttributeReport(dataReport.attributeReports)
+                        :   undefined,
                     eventReports:
-                        dataReport.eventReports !== undefined
-                            ? normalizeAndDecodeReadEventReport(dataReport.eventReports)
-                            : undefined,
+                        dataReport.eventReports !== undefined ?
+                            normalizeAndDecodeReadEventReport(dataReport.eventReports)
+                        :   undefined,
                 });
             });
 
@@ -823,13 +823,13 @@ export class InteractionClient {
 
             const seedReport = {
                 attributeReports:
-                    report.attributeReports !== undefined
-                        ? normalizeAndDecodeReadAttributeReport(report.attributeReports)
-                        : undefined,
+                    report.attributeReports !== undefined ?
+                        normalizeAndDecodeReadAttributeReport(report.attributeReports)
+                    :   undefined,
                 eventReports:
-                    report.eventReports !== undefined
-                        ? normalizeAndDecodeReadEventReport(report.eventReports)
-                        : undefined,
+                    report.eventReports !== undefined ?
+                        normalizeAndDecodeReadEventReport(report.eventReports)
+                    :   undefined,
             };
             subscriptionListener(seedReport);
             return seedReport;
@@ -880,9 +880,9 @@ export class InteractionClient {
                     suppressResponse: false,
                     interactionModelRevision: INTERACTION_MODEL_REVISION,
                 },
-                useExtendedFailSafeMessageResponseTimeout
-                    ? DEFAULT_MINIMUM_RESPONSE_TIMEOUT_WITH_FAILSAFE_MS
-                    : undefined,
+                useExtendedFailSafeMessageResponseTimeout ?
+                    DEFAULT_MINIMUM_RESPONSE_TIMEOUT_WITH_FAILSAFE_MS
+                :   undefined,
             );
             if (invokeResponse === undefined) {
                 throw new MatterFlowError("No response received from invoke interaction but expected.");

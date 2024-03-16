@@ -303,9 +303,9 @@ export class MdnsScanner implements Scanner {
     private async registerWaiterPromise(queryId: string, timeoutSeconds?: number, resolveOnUpdatedRecords = true) {
         const { promise, resolver } = createPromise<void>();
         const timer =
-            timeoutSeconds !== undefined
-                ? Time.getTimer("MDNS timeout", timeoutSeconds * 1000, () => this.finishWaiter(queryId, true)).start()
-                : undefined;
+            timeoutSeconds !== undefined ?
+                Time.getTimer("MDNS timeout", timeoutSeconds * 1000, () => this.finishWaiter(queryId, true)).start()
+            :   undefined;
         this.recordWaiters.set(queryId, { resolver, timer, resolveOnUpdatedRecords });
         logger.debug(
             `Registered waiter for query ${queryId} with ${
@@ -550,9 +550,10 @@ export class MdnsScanner implements Scanner {
         timeoutSeconds = 5,
         ignoreExistingRecords = false,
     ): Promise<CommissionableDevice[]> {
-        let storedRecords = ignoreExistingRecords
-            ? []
-            : this.getCommissionableDeviceRecords(identifier).filter(({ addresses }) => addresses.length > 0);
+        let storedRecords =
+            ignoreExistingRecords ?
+                []
+            :   this.getCommissionableDeviceRecords(identifier).filter(({ addresses }) => addresses.length > 0);
         if (storedRecords.length === 0) {
             const queryId = this.buildCommissionableQueryIdentifier(identifier);
             const { promise } = await this.registerWaiterPromise(queryId, timeoutSeconds);

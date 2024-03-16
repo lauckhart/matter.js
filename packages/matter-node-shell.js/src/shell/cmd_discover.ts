@@ -89,17 +89,12 @@ export default function commands(theNode: MatterNode) {
                         }
 
                         const identifierData: CommissionableDeviceIdentifiers =
-                            discriminator !== undefined
-                                ? { longDiscriminator: discriminator }
-                                : shortDiscriminator !== undefined
-                                  ? { shortDiscriminator }
-                                  : vendorId !== undefined
-                                    ? { vendorId: VendorId(vendorId) }
-                                    : productId !== undefined
-                                      ? { productId }
-                                      : deviceType !== undefined
-                                        ? { deviceType }
-                                        : {};
+                            discriminator !== undefined ? { longDiscriminator: discriminator }
+                            : shortDiscriminator !== undefined ? { shortDiscriminator }
+                            : vendorId !== undefined ? { vendorId: VendorId(vendorId) }
+                            : productId !== undefined ? { productId }
+                            : deviceType !== undefined ? { deviceType }
+                            : {};
 
                         console.log(
                             `Discover devices with identifier ${Logger.toJSON(

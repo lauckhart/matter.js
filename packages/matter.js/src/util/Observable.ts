@@ -350,13 +350,11 @@ export namespace EventEmitter {
      * Arguments for an event.  If there are no events defined, assume this is
      * an untyped emitter and allow any argument.
      */
-    export type PayloadOf<This, E extends string> = [EventPayload<This, E>] extends [never]
-        ? any[]
-        : EventPayload<This, E>;
+    export type PayloadOf<This, E extends string> =
+        [EventPayload<This, E>] extends [never] ? any[] : EventPayload<This, E>;
 
-    export type EventPayload<This, E extends string> = This extends { [K in E]: Observable<infer T extends any[]> }
-        ? T
-        : never;
+    export type EventPayload<This, E extends string> =
+        This extends { [K in E]: Observable<infer T extends any[]> } ? T : never;
 
     export type ObserverOf<This, E extends string> = Observable<PayloadOf<This, E>>;
 }
