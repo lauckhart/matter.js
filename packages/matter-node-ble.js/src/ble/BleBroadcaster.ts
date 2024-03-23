@@ -4,15 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ProductDescription } from "@project-chip/matter.js/behavior/system/product-description";
 import { BtpCodec } from "@project-chip/matter.js/codec";
-import {
-    CommissionerInstanceData,
-    CommissioningModeInstanceData,
-    ImplementationError,
-    InstanceBroadcaster,
-} from "@project-chip/matter.js/common";
-import { VendorId } from "@project-chip/matter.js/datatype";
-import { Logger } from "@project-chip/matter.js/log";
+import { ImplementationError, InstanceBroadcaster } from "@project-chip/matter.js/common";
+import { Diagnostic, Logger } from "@project-chip/matter.js/log";
 import { ByteArray } from "@project-chip/matter.js/util";
 import { BlenoBleServer } from "./BlenoBleServer.js";
 
@@ -20,42 +15,45 @@ const logger = Logger.get("BleBroadcaster");
 
 export class BleBroadcaster implements InstanceBroadcaster {
     #blenoServer: BlenoBleServer;
+    #product: ProductDescription;
+    #discriminator: number;
     #additionalAdvertisementData?: ByteArray;
-    #vendorId: VendorId | undefined;
-    #productId: number | undefined;
-    #discriminator: number | undefined;
     #advertise = false;
     #isClosed = false;
 
-    constructor(blenoServer: BlenoBleServer, additionalAdvertisementData?: ByteArray) {
+    constructor(
+        blenoServer: BlenoBleServer,
+        product: ProductDescription,
+        discriminator: number,
+        additionalAdvertisementData?: ByteArray,
+    ) {
+        this.#product = product;
+        this.#discriminator = discriminator;
         this.#blenoServer = blenoServer;
         this.#additionalAdvertisementData = additionalAdvertisementData;
     }
 
-    async setCommissionMode(
-        mode: number,
-        { name: deviceName, deviceType, vendorId, productId, discriminator }: CommissioningModeInstanceData,
-    ) {
+    async enterCommissioningMode(mode: number) {
         this.#assertOpen();
+
+        const diagnostic = Diagnostic.dict({
+            ...this.#product,
+            discriminator: this.#discriminator,
+        });
+
         if (mode !== 1) {
             this.#advertise = false;
-            logger.info(
-                `skip BLE announce because of commissioning mode ${mode} ${deviceName} ${deviceType} ${vendorId} ${productId} ${discriminator}`,
-            );
+            logger.info(`skip BLE announce because of commissioning mode ${mode}`, diagnostic);
             await this.#blenoServer.stopAdvertising();
             return;
         }
-        logger.debug(
-            `set data for commissioning mode ${mode} ${deviceName} ${deviceType} ${vendorId} ${productId} ${discriminator}`,
-        );
-        this.#productId = productId;
-        this.#vendorId = vendorId;
-        this.#discriminator = discriminator;
-        process.env["BLENO_DEVICE_NAME"] = deviceName;
+        logger.debug(`set commissioning mode ${mode}`, diagnostic);
+
+        process.env["BLENO_DEVICE_NAME"] = this.#product.name;
         this.#advertise = true;
     }
 
-    async setFabrics() {
+    async enterOperationalMode() {
         this.#assertOpen();
         this.#advertise = false;
         logger.info(`skip BLE announce because announcing an operational device is not supported`);
@@ -63,7 +61,7 @@ export class BleBroadcaster implements InstanceBroadcaster {
         return; // Not needed because we only advertise un-commissioned devices
     }
 
-    async setCommissionerInfo(_commissionerData: CommissionerInstanceData) {
+    async enterCommissionerDiscoveryMode() {
         this.#assertOpen();
         this.#advertise = false;
         logger.error(`skip BLE announce because announcing a commissioner is not supported`);
@@ -71,12 +69,6 @@ export class BleBroadcaster implements InstanceBroadcaster {
 
     async announce() {
         this.#assertOpen();
-        if (this.#vendorId === undefined || this.#productId === undefined || this.#discriminator === undefined) {
-            logger.debug(
-                `skip BLE announce because of missing commissioning data vendorId, productId or discriminator`,
-            );
-            return;
-        }
         if (!this.#advertise) {
             logger.debug(`skip BLE announce because nothing to advertise`);
             return;
@@ -84,8 +76,8 @@ export class BleBroadcaster implements InstanceBroadcaster {
 
         const advertisementData = BtpCodec.encodeBleAdvertisementData(
             this.#discriminator,
-            this.#vendorId,
-            this.#productId,
+            this.#product.vendorId,
+            this.#product.productId,
             this.#additionalAdvertisementData !== undefined && this.#additionalAdvertisementData.length > 0,
         );
 

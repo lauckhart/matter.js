@@ -11,6 +11,8 @@ import { Cache, isIPv6, onSameNetwork } from "@project-chip/matter.js/util";
 import { NetworkInterfaceInfo, networkInterfaces } from "os";
 import { UdpChannelNode } from "./UdpChannelNode.js";
 
+import { lookup } from "dns/promises";
+
 const logger = Logger.get("NetworkNode");
 
 export class NetworkNode extends Network {
@@ -63,7 +65,7 @@ export class NetworkNode extends Network {
 
     private static readonly netInterfaces = new Cache<string | undefined>(
         "Network interface",
-        (ip: string) => this.getNetInterfaceForRemoveAddress(ip),
+        (ip: string) => this.getNetInterfaceForRemoteAddress(ip),
         5 * 60 * 1000 /* 5mn */,
     );
 
@@ -71,7 +73,7 @@ export class NetworkNode extends Network {
         await NetworkNode.netInterfaces.close();
     }
 
-    private static getNetInterfaceForRemoveAddress(ip: string) {
+    private static getNetInterfaceForRemoteAddress(ip: string) {
         if (ip.includes("%")) {
             // IPv6 address with scope
             return ip.split("%")[1];
@@ -88,7 +90,7 @@ export class NetworkNode extends Network {
             if (isIPv6(ip)) {
                 if (ip.startsWith("fd")) {
                     // IPv6 address is an ULA
-                    return ""; // consider it as being ok and using the "Default interface"
+                    return Network.ANY_INTERFACE; // consider it as being ok and using the "Default interface"
                 }
             }
             return undefined;
@@ -118,6 +120,60 @@ export class NetworkNode extends Network {
             result.push(name);
         }
         return result;
+    }
+
+    async lookup(host: string, family?: "ipv4" | "ipv6") {
+        let familyNo;
+        switch (family) {
+            case "ipv4":
+                familyNo = 4;
+                break;
+
+            case "ipv6":
+                familyNo = 6;
+                break;
+
+            default:
+                familyNo = 0;
+                break;
+        }
+        try {
+            const addrs = await lookup(host, { family: familyNo, all: true });
+            return addrs.map(({ address }) => address);
+        } catch (e) {
+            throw new NetworkError(`Cannot determine IP address for host "${host}": ${e}`);
+        }
+    }
+
+    async interfaceWithLocalAddress(ip: string) {
+        let interfaces;
+        try {
+            interfaces = networkInterfaces();
+        } catch (e) {
+            throw new NetworkError(`Could not load network interfaces ${ip}: ${e}`);
+        }
+        for (const name in interfaces) {
+            const info = interfaces[name];
+            if (!info) {
+                continue;
+            }
+            for (const i of info) {
+                if (i.address === ip) {
+                    return name;
+                }
+            }
+        }
+
+        throw new NetworkError(`Could not find IP address ${ip} on a local interfaces`);
+    }
+
+    async interfaceForRemoteAddress(ip: string) {
+        const address = NetworkNode.getNetInterfaceForIp(ip);
+        if (address) {
+            return address;
+        }
+
+        throw new NetworkError(`No route to IP address ${ip}`);
     }
 
     getIpMac(netInterface: string): { mac: string; ips: string[] } | undefined {

@@ -50,7 +50,7 @@ import { ProcessManager } from "./ProcessManager.js";
  * * `runtime.exitcode` - by default we set the process.exitcode to 0 (ok) or 1 (crash), set to false if not wanted
  */
 export function NodeJsEnvironment() {
-    const env = new Environment("default");
+    const env = Environment.default;
 
     loadVariables(env);
     configureRuntime(env);

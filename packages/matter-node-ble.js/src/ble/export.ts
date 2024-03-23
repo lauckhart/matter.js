@@ -7,3 +7,4 @@
 export * from "./BleBroadcaster.js";
 export * from "./BleNode.js";
 export * from "./BleScanner.js";
+import "./register.js";

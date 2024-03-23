@@ -6,7 +6,7 @@
 
 export * from "./Environment.js";
 export * from "./Environmental.js";
-export * from "./MdnsService.js";
 export * from "./RuntimeService.js";
 export * from "./StorageService.js";
+export * from "./TransportService.js";
 export * from "./VariableService.js";

@@ -19,7 +19,7 @@ import { NodeId } from "./datatype/NodeId.js";
 import { VendorId } from "./datatype/VendorId.js";
 import { CommissioningControllerNodeOptions, PairedNode } from "./device/PairedNode.js";
 import { Environment } from "./environment/Environment.js";
-import { MdnsService } from "./environment/MdnsService.js";
+import { TransportService } from "./environment/TransportService.js";
 import { Logger } from "./log/Logger.js";
 import { MdnsBroadcaster } from "./mdns/MdnsBroadcaster.js";
 import { MdnsScanner } from "./mdns/MdnsScanner.js";
@@ -225,8 +225,8 @@ export class CommissioningController extends MatterNode {
             mdnsScanner,
             this.ipv4Disabled
                 ? undefined
-                : await UdpInterface.create(Network.get(), "udp4", localPort, this.listeningAddressIpv4),
-            await UdpInterface.create(Network.get(), "udp6", localPort, this.listeningAddressIpv6),
+                : await UdpInterface.create(Network.get(), "ipv4", localPort, this.listeningAddressIpv4),
+            await UdpInterface.create(Network.get(), "ipv6", localPort, this.listeningAddressIpv6),
             peerNodeId => {
                 logger.info(`Session for peer node ${peerNodeId} disconnected ...`);
                 const handler = this.sessionDisconnectedHandler.get(peerNodeId);
@@ -509,7 +509,7 @@ export class CommissioningController extends MatterNode {
 
             environment.set(ControllerStore, controllerStore);
 
-            const mdnsService = await environment.load(MdnsService);
+            const mdnsService = await environment.load(TransportService);
             this.ipv4Disabled = !mdnsService.enableIpv4;
             console.log("Init ipv4: ", this.ipv4Disabled);
             this.setMdnsBroadcaster(mdnsService.broadcaster);

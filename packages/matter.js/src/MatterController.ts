@@ -378,7 +378,7 @@ export class MatterController {
         }
 
         // Do PASE paring
-        const unsecureSession = this.sessionManager.createUnsecureSession({
+        const unsecureSession = this.sessionManager.createInsecureSession({
             sessionParameters: {
                 idleIntervalMs: device?.SII,
                 activeIntervalMs: device?.SAI,
@@ -635,7 +635,7 @@ export class MatterController {
 
         const operationalChannel = await operationalInterface.openChannel(operationalServerAddress);
         const { sessionParameters } = this.findResumptionRecordByNodeId(peerNodeId) ?? {};
-        const unsecureSession = this.sessionManager.createUnsecureSession({
+        const unsecureSession = this.sessionManager.createInsecureSession({
             sessionParameters: {
                 idleIntervalMs: discoveryData?.SII ?? sessionParameters?.idleIntervalMs,
                 activeIntervalMs: discoveryData?.SAI ?? sessionParameters?.activeIntervalMs,

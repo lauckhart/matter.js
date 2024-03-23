@@ -9,13 +9,7 @@ import { MatterError, MatterFlowError } from "../common/MatterError.js";
 import { NodeId } from "../datatype/NodeId.js";
 import { Diagnostic } from "../log/Diagnostic.js";
 import { Logger } from "../log/Logger.js";
-import {
-    MRP_MAX_TRANSMISSIONS,
-    SESSION_ACTIVE_INTERVAL_MS,
-    SESSION_ACTIVE_THRESHOLD_MS,
-    SESSION_IDLE_INTERVAL_MS,
-    Session,
-} from "../session/Session.js";
+import { MRP_MAX_TRANSMISSIONS, Session, SessionParameters } from "../session/Session.js";
 import { MatterCoreSpecificationV1_0 } from "../spec/Specifications.js";
 import { Time, Timer } from "../time/Time.js";
 import { ByteArray } from "../util/ByteArray.js";
@@ -119,9 +113,7 @@ export class MessageExchange<ContextT> {
         );
     }
 
-    private readonly activeIntervalMs: number;
-    private readonly idleIntervalMs: number;
-    private readonly activeThresholdMs: number;
+    private readonly sessionParameters: SessionParameters;
     private readonly retransmissionRetries: number;
     private readonly messagesQueue = new Queue<Message>();
     private receivedMessageToAck: Message | undefined;
@@ -153,10 +145,8 @@ export class MessageExchange<ContextT> {
         private readonly protocolId: number,
         private readonly closeCallback: () => Promise<void>,
     ) {
-        const { activeIntervalMs, idleIntervalMs, activeThresholdMs } = session.getSessionParameters();
-        this.activeIntervalMs = activeIntervalMs ?? SESSION_ACTIVE_INTERVAL_MS;
-        this.idleIntervalMs = idleIntervalMs ?? SESSION_IDLE_INTERVAL_MS;
-        this.activeThresholdMs = activeThresholdMs ?? SESSION_ACTIVE_THRESHOLD_MS;
+        this.sessionParameters = session.sessionParameters;
+
         this.retransmissionRetries = MRP_MAX_TRANSMISSIONS;
         logger.debug(
             "New exchange",
@@ -165,9 +155,9 @@ export class MessageExchange<ContextT> {
                 id: this.exchangeId,
                 session: session.name,
                 peerSessionId: this.peerSessionId,
-                "active threshold ms": this.activeThresholdMs,
-                "active interval ms": this.activeIntervalMs,
-                "idle interval ms": this.idleIntervalMs,
+                "active threshold ms": this.sessionParameters.activeThresholdMs,
+                "active interval ms": this.sessionParameters.activeIntervalMs,
+                "idle interval ms": this.sessionParameters.idleIntervalMs,
                 retries: this.retransmissionRetries,
             }),
         );
@@ -352,7 +342,9 @@ export class MessageExchange<ContextT> {
 
     /** @see {@link MatterCoreSpecificationV1_0}, section 4.11.2.1 */
     private getResubmissionBackOffTime(retransmissionCount: number) {
-        const baseInterval = this.session.isPeerActive() ? this.activeIntervalMs : this.idleIntervalMs;
+        const baseInterval = this.session.isPeerActive()
+            ? this.sessionParameters.activeIntervalMs
+            : this.sessionParameters.idleIntervalMs;
         return Math.floor(
             MRP_BACKOFF_MARGIN *
                 baseInterval *

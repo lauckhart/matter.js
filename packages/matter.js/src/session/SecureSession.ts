@@ -144,11 +144,7 @@ export class SecureSession<T> extends Session<T> {
         logger.debug(
             `Created secure ${this.isPase ? "PASE" : "CASE"} session for fabric index ${fabric?.fabricIndex}`,
             this.name,
-            Diagnostic.dict({
-                idleIntervalMs: this.idleIntervalMs,
-                activeIntervalMs: this.activeIntervalMs,
-                activeThresholdMs: this.activeThresholdMs,
-            }),
+            Diagnostic.dict(this.sessionParameters),
         );
     }
 

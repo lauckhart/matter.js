@@ -154,7 +154,7 @@ export class ExchangeManager<ContextT> {
                 const initiatorNodeId = packet.header.sourceNodeId ?? NodeId.UNSPECIFIED_NODE_ID;
                 session =
                     this.sessionManager.getUnsecureSession(initiatorNodeId) ??
-                    this.sessionManager.createUnsecureSession({
+                    this.sessionManager.createInsecureSession({
                         initiatorNodeId,
                     });
             } else {

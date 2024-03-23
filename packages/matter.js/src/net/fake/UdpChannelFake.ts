@@ -15,7 +15,7 @@ import { FAKE_INTERFACE_NAME, SimulatedNetwork } from "./SimulatedNetwork.js";
 export class UdpChannelFake implements UdpChannel {
     static async create(
         network: NetworkFake,
-        { listeningAddress, listeningPort, netInterface, type }: UdpChannelOptions,
+        { listeningAddress, listeningPort, multicastInterface: netInterface, type }: UdpChannelOptions,
     ) {
         const { ips } = network.getIpMac(netInterface ?? FAKE_INTERFACE_NAME);
         const ipv4 = type === "udp4";

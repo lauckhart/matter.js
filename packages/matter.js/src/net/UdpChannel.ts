@@ -9,10 +9,10 @@ import { ByteArray } from "../util/ByteArray.js";
 
 export interface UdpChannelOptions {
     /**
-     * UDP channel type.  "udp4" and "udp6" mean IPv4 and IPv6 respectively.  "udp" is dual-mode IPv4/IPv6.
-     * {@link listeningAddress} in this case must be undefined or "::".
+     * IP address family.  Leave undefined for automatic family selection.  If undefined and {@link listeningAddress} is
+     * undefined or "::" then the socket will operate in dual-mode ipv4/ipv6.
      */
-    type: "udp" | "udp4" | "udp6";
+    family?: "ipv4" | "ipv6";
 
     /**
      * The port to listen on.  undefined or 0 directs the operating system to select an open port.
@@ -30,11 +30,19 @@ export interface UdpChannelOptions {
     reuseAddress?: boolean;
 
     /**
-     * The network interface, required for multicast.
+     * The interface for outbound multicast.
      */
-    netInterface?: string;
+    multicastInterface?: string;
 
+    /**
+     * Multicast membership IP addresses.
+     */
     membershipAddresses?: string[];
+
+    /**
+     * Multicast membership interfaces.
+     */
+    membershipInterfaces?: string[];
 }
 
 export interface UdpChannel {

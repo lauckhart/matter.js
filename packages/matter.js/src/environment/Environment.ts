@@ -58,8 +58,7 @@ export class Environment {
         }
 
         if ((type as Environmental.Factory<T>)[Environmental.create]) {
-            this.set(type, (instance = (type as any)[Environmental.create](this)));
-            return instance as T;
+            return (instance = (type as any)[Environmental.create](this)) as T;
         }
 
         throw new UnsupportedDependencyError(`Required dependency ${type.name}`, "is not available");
@@ -188,6 +187,13 @@ export class Environment {
      */
     get runtime() {
         return this.get(RuntimeService);
+    }
+
+    /**
+     * Access the "root" environment (an ancestor with the greatest scope; this if unparented).
+     */
+    get root(): Environment {
+        return this.#parent?.root ?? this;
     }
 
     /**

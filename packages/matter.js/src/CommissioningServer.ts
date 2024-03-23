@@ -655,13 +655,13 @@ export class CommissioningServer extends MatterNode {
             (fabricIndex: FabricIndex) => this.options.activeSessionsChangedCallback?.(fabricIndex),
         )
             .addTransportInterface(
-                await UdpInterface.create(Network.get(), "udp6", this.port, this.options.listeningAddressIpv6),
+                await UdpInterface.create(Network.get(), "ipv6", this.port, this.options.listeningAddressIpv6),
             )
             .addScanner(this.mdnsScanner)
             .addProtocolHandler(this.interactionServer);
         if (!this.ipv4Disabled) {
             this.deviceInstance.addTransportInterface(
-                await UdpInterface.create(Network.get(), "udp4", this.port, this.options.listeningAddressIpv4),
+                await UdpInterface.create(Network.get(), "ipv4", this.port, this.options.listeningAddressIpv4),
             );
         }
 
@@ -674,7 +674,11 @@ export class CommissioningServer extends MatterNode {
                 this.deviceInstance.addTransportInterface(ble.getBlePeripheralInterface());
                 if (limitTo === undefined || limitTo.ble) {
                     this.deviceInstance.addBroadcaster(
-                        ble.getBleBroadcaster(this.options.additionalBleAdvertisementData),
+                        ble.getBleBroadcaster(
+                            this.productDescription,
+                            this.discriminator,
+                            this.options.additionalBleAdvertisementData,
+                        ),
                     );
                 }
             } catch (error) {

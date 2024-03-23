@@ -228,7 +228,7 @@ export class CaseServer implements ProtocolHandler<MatterDevice> {
                 fabric,
                 sharedSecret,
                 resumptionId,
-                sessionParameters: secureSession.getSessionParameters(),
+                sessionParameters: secureSession.sessionParameters,
             };
 
             await messenger.close();

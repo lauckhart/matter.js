@@ -56,7 +56,7 @@ export class PaseClient {
             throw new UnexpectedDataError("Missing requested PbkdfParameters in the response.");
 
         const sessionParameters = {
-            ...exchange.session.getSessionParameters(),
+            ...exchange.session.sessionParameters,
             ...(pbkdfSessionParams ?? {}),
         };
 

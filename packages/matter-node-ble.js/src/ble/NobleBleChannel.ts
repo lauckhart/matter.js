@@ -57,6 +57,8 @@ export class NobleBleCentralInterface implements NetInterface {
     private openChannels: Map<ServerAddress, Peripheral> = new Map();
     private onMatterMessageListener: ((socket: Channel<ByteArray>, data: ByteArray) => void) | undefined;
 
+    constructor(private ble: Ble) {}
+
     async openChannel(address: ServerAddress): Promise<Channel<ByteArray>> {
         if (address.type !== "ble") {
             throw new InternalError(`Unsupported address type ${address.type}.`);
@@ -67,7 +69,7 @@ export class NobleBleCentralInterface implements NetInterface {
 
         // Get the peripheral by address and connect to it.
         const { peripheral, hasAdditionalAdvertisementData } = (
-            Ble.get().getBleScanner() as BleScanner
+            this.ble.getBleScanner() as BleScanner
         ).getDiscoveredDevice(address.peripheralAddress);
         logger.debug("BLE peripheral state", peripheral.state);
         if (peripheral.state === "connected" || peripheral.state === "connecting") {

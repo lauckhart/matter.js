@@ -76,12 +76,12 @@ const START_ANNOUNCE_INTERVAL_SECONDS = 1.5;
  * It sends out queries to discover various types of Matter device types and listens for announcements.
  */
 export class MdnsScanner implements Scanner {
-    static async create(network: Network, options?: { enableIpv4?: boolean; netInterface?: string }) {
-        const { enableIpv4, netInterface } = options ?? {};
+    static async create(network: Network, options?: { enableIpv4?: boolean; interfaces?: string[] }) {
+        const { enableIpv4, interfaces } = options ?? {};
         return new MdnsScanner(
             await UdpMulticastServer.create({
                 network,
-                netInterface: netInterface,
+                interfaces,
                 broadcastAddressIpv4: enableIpv4 ? MDNS_BROADCAST_IPV4 : undefined,
                 broadcastAddressIpv6: MDNS_BROADCAST_IPV6,
                 listeningPort: MDNS_BROADCAST_PORT,

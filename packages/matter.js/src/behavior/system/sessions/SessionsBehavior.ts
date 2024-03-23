@@ -8,6 +8,7 @@ import { NodeId } from "../../../datatype/NodeId.js";
 import { ExposedFabricInformation } from "../../../fabric/Fabric.js";
 import type { ServerNode } from "../../../node/ServerNode.js";
 import { SecureSession } from "../../../session/SecureSession.js";
+import { SessionParameterOptions } from "../../../session/Session.js";
 import { SessionManager } from "../../../session/SessionManager.js";
 import { EventEmitter, Observable } from "../../../util/Observable.js";
 import { Behavior } from "../../Behavior.js";
@@ -99,6 +100,7 @@ export namespace SessionsBehavior {
     }
 
     export class State {
+        defaultParameters: SessionParameterOptions = {};
         sessions: Record<number, Session> = {};
     }
 

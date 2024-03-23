@@ -38,7 +38,7 @@ import { ExchangeManager } from "./protocol/ExchangeManager.js";
 import { ProtocolHandler } from "./protocol/ProtocolHandler.js";
 import { StatusCode, StatusResponseError } from "./protocol/interaction/StatusCode.js";
 import { SecureChannelProtocol } from "./protocol/securechannel/SecureChannelProtocol.js";
-import { Session } from "./session/Session.js";
+import { Session, SessionParameterOptions } from "./session/Session.js";
 import { ResumptionRecord, SessionManager } from "./session/SessionManager.js";
 import { PaseServer } from "./session/pase/PaseServer.js";
 import { StorageContext } from "./storage/StorageContext.js";
@@ -75,6 +75,7 @@ export class MatterDevice {
         private readonly getCommissioningConfig: () => CommissioningOptions.Configuration,
         private readonly commissioningChangedCallback: (fabricIndex: FabricIndex, fabricAction: FabricAction) => void,
         private readonly sessionChangedCallback: (fabricIndex: FabricIndex) => void,
+        defaultSessionParameters?: SessionParameterOptions,
     ) {
         this.#fabricManager = new FabricManager(fabricStorage);
         this.#fabricManager.events.deleted.on(fabric => {
@@ -90,7 +91,7 @@ export class MatterDevice {
             this.commissioningChangedCallback(fabricIndex, FabricAction.Updated),
         );
 
-        this.#sessionManager = new SessionManager(this, sessionStorage);
+        this.#sessionManager = new SessionManager(this, sessionStorage, defaultSessionParameters);
         this.#sessionManager.initFromStorage(this.#fabricManager.getFabrics());
 
         this.#exchangeManager = new ExchangeManager<MatterDevice>(this.#sessionManager, this.channelManager);
@@ -272,7 +273,7 @@ export class MatterDevice {
                 }
             }
             for (const broadcaster of this.broadcasters) {
-                await broadcaster.setFabrics(fabrics);
+                await broadcaster.enterOperationalMode(fabrics);
                 if (fabricsWithoutSessions > 0) {
                     await broadcaster.announce();
                 }
@@ -317,7 +318,7 @@ export class MatterDevice {
     ) {
         const commissioningConfig = this.getCommissioningConfig();
         for (const broadcaster of this.broadcasters) {
-            await broadcaster.setCommissionMode(
+            await broadcaster.enterCommissioningMode(
                 mode === AdministratorCommissioning.CommissioningWindowStatus.EnhancedWindowOpen ? 2 : 1,
                 {
                     ...commissioningConfig.productDescription,
@@ -338,7 +339,7 @@ export class MatterDevice {
 
     async sendFabricAnnouncements(fabrics: Fabric[], expireCommissioningAnnouncement = false) {
         for (const broadcaster of this.broadcasters) {
-            await broadcaster.setFabrics(fabrics, expireCommissioningAnnouncement);
+            await broadcaster.enterOperationalMode(fabrics, expireCommissioningAnnouncement);
             await broadcaster.announce();
         }
     }

@@ -18,12 +18,12 @@ export interface UdpMulticastServerOptions {
     listeningPort: number;
     broadcastAddressIpv6: string;
     broadcastAddressIpv4?: string;
-    netInterface?: string;
+    interfaces?: string[];
 }
 
 export class UdpMulticastServer {
     static async create({
-        netInterface,
+        interfaces,
         broadcastAddressIpv4,
         broadcastAddressIpv6,
         listeningPort,
@@ -37,20 +37,20 @@ export class UdpMulticastServer {
             broadcastAddressIpv4 === undefined
                 ? undefined
                 : await network.createUdpChannel({
-                      type: "udp4",
-                      netInterface,
+                      family: "ipv4",
                       listeningPort,
                       membershipAddresses: [broadcastAddressIpv4],
+                      membershipInterfaces: interfaces,
                       reuseAddress: true,
                   }),
             await network.createUdpChannel({
-                type: "udp6",
-                netInterface,
+                family: "ipv6",
                 listeningPort,
                 membershipAddresses: [broadcastAddressIpv6],
+                membershipInterfaces: interfaces,
                 reuseAddress: true,
             }),
-            netInterface,
+            interfaces,
         );
     }
 
@@ -68,7 +68,7 @@ export class UdpMulticastServer {
         private readonly broadcastPort: number,
         private readonly serverIpv4: UdpChannel | undefined,
         private readonly serverIpv6: UdpChannel,
-        private readonly netInterface: string | undefined,
+        private readonly interfaces: string[] | undefined,
     ) {}
 
     onMessage(listener: (message: ByteArray, peerAddress: string, netInterface: string) => void) {
@@ -80,50 +80,68 @@ export class UdpMulticastServer {
         );
     }
 
-    async send(message: ByteArray, netInterface?: string, uniCastTarget?: string) {
-        netInterface = netInterface ?? this.netInterface;
-
-        // When we know the network interface and the unicast target, we can send unicast
-        if (uniCastTarget !== undefined && netInterface !== undefined) {
+    async send(message: ByteArray, interfaces?: string[], uniCastTarget?: string) {
+        // Handle unicast
+        if (uniCastTarget !== undefined) {
             try {
+                // Interface selection is irrelevant for unicast as we can rely on ARP/NDP
+                const intf = await this.network.interfaceForRemoteAddress(uniCastTarget);
                 await (
-                    await this.broadcastChannels.get(netInterface, isIPv4(uniCastTarget))
+                    await this.broadcastChannels.get(intf, isIPv4(uniCastTarget))
                 ).send(uniCastTarget, this.broadcastPort, message);
             } catch (error) {
-                logger.info(`${netInterface} ${uniCastTarget}: ${(error as Error).message}`);
+                logger.info(`Unicast to ${uniCastTarget}: ${(error as Error).message}`);
             }
-        } else {
-            const netInterfaces = netInterface !== undefined ? [netInterface] : this.network.getNetInterfaces();
-            await Promise.all(
-                netInterfaces.map(async netInterface => {
-                    const { ips } = this.network.getIpMac(netInterface) ?? { ips: [] };
-                    await Promise.all(
-                        ips.map(async ip => {
-                            const iPv4 = isIPv4(ip);
-                            const broadcastTarget = iPv4 ? this.broadcastAddressIpv4 : this.broadcastAddressIpv6;
-                            if (broadcastTarget == undefined) {
-                                // IPv4 but disabled, so just resolve
-                                return;
-                            }
-                            try {
-                                await (
-                                    await this.broadcastChannels.get(netInterface, iPv4)
-                                ).send(broadcastTarget, this.broadcastPort, message);
-                            } catch (error) {
-                                logger.info(`${netInterface}: ${(error as Error).message}`);
-                            }
-                        }),
-                    );
-                }),
-            );
+
+            return;
         }
+
+        // Determine interfaces for multicast
+        if (interfaces === undefined) {
+            interfaces = this.interfaces ?? this.network.getNetInterfaces();
+        }
+
+        // Determine which interfaces support IPv4 and/or IPv6
+        const broadcasts = [];
+        for (const intf of interfaces) {
+            const { ips } = this.network.getIpMac(intf) ?? { ips: [] };
+
+            let has4 = false,
+                has6 = false;
+            for (const ip of ips) {
+                if (isIPv4(ip)) {
+                    has4 = true;
+                } else {
+                    has6 = true;
+                }
+            }
+
+            if (has4 && this.broadcastAddressIpv4) {
+                broadcasts.push({ intf, addr: this.broadcastAddressIpv4, ipv4: true });
+            }
+            if (has6) {
+                broadcasts.push({ intf, addr: this.broadcastAddressIpv6 });
+            }
+        }
+
+        // Perform the broadcast
+        await Promise.all(
+            broadcasts.map(async ({ intf, addr, ipv4 }) => {
+                try {
+                    const channel = await this.broadcastChannels.get(intf, ipv4);
+                    await channel.send(addr, this.broadcastPort, message);
+                } catch (e) {
+                    logger.error(`Multicast to ${addr} on ${intf}:`, e);
+                }
+            }),
+        );
     }
 
     private async createBroadcastChannel(netInterface: string, iPv4: string): Promise<UdpChannel> {
         return await this.network.createUdpChannel({
-            type: iPv4 ? "udp4" : "udp6",
+            family: iPv4 ? "ipv4" : "ipv6",
             listeningPort: this.broadcastPort,
-            netInterface,
+            multicastInterface: netInterface,
             reuseAddress: true,
         });
     }

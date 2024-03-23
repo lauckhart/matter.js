@@ -223,18 +223,21 @@ export class MatterServer {
      * be announced/paired immediately.
      */
     async start() {
+        const announceInterface = this.options?.mdnsInterface ?? this.options?.mdnsAnnounceInterface;
         if (this.mdnsBroadcaster === undefined) {
             this.mdnsBroadcaster = await MdnsBroadcaster.create(Network.get(), {
                 enableIpv4: !this.ipv4Disabled,
-                multicastInterface: this.options?.mdnsInterface ?? this.options?.mdnsAnnounceInterface,
+                interfaces: announceInterface ? [announceInterface] : undefined,
             });
         }
+
         if (this.mdnsScanner === undefined) {
             this.mdnsScanner = await MdnsScanner.create(Network.get(), {
                 enableIpv4: !this.ipv4Disabled,
-                netInterface: this.options?.mdnsInterface,
+                interfaces: this.options?.mdnsInterface ? [this.options?.mdnsInterface] : undefined,
             });
         }
+
         this.started = true;
         for (const [key, node] of this.nodes.entries()) {
             try {

@@ -7,6 +7,7 @@
 import { Ble } from "../../../ble/Ble.js";
 import { ImplementationError, NotImplementedError } from "../../../common/MatterError.js";
 import { Logger } from "../../../log/Logger.js";
+import { NetworkAddress } from "../../../net/NetworkAddress.js";
 import { SubscriptionOptions } from "../../../protocol/interaction/SubscriptionOptions.js";
 import { TypeFromPartialBitSchema } from "../../../schema/BitmapSchema.js";
 import { DiscoveryCapabilitiesBitmap } from "../../../schema/PairingCodeSchema.js";
@@ -169,51 +170,13 @@ export class NetworkServer extends NetworkBehavior {
 }
 
 export namespace NetworkServer {
-    /**
-     * A UDP listening address.
-     */
-    export interface UdpAddress {
-        transport: "udp" | "udp4" | "udp6";
-
-        /**
-         * The hostname or IP address.  Leave undefined for all addresses, "0.0.0.0" for all IPv4 addresses, and "::"
-         * for all IPv6 addresses.
-         */
-        address?: string;
-
-        /**
-         * The port to listen on.  Defaults to {@link State.port}.
-         */
-        port?: number;
-    }
-
-    /**
-     * A Bluetooth LE listening address,
-     *
-     * TODO - currently only a single BLE transport is supported
-     */
-    export interface BleAddress {
-        transport: "ble";
-
-        /**
-         * The HCI ID of the bluetooth adapter.
-         *
-         * By default selects the first adapter on the system.
-         *
-         * TODO - currently you cannot specify HCI ID here
-         */
-        address?: string;
-    }
-
-    export type Address = BleAddress | UdpAddress;
-
     export class Internal extends NetworkBehavior.Internal {
         declare runtime: ServerNetworkRuntime;
     }
 
     export class State extends NetworkBehavior.State {
         /**
-         * An array of {@link Address} objects configuring the interfaces the server listens on.
+         * An array of {@link NetworkAddress} objects configuring the interfaces the server listens on.
          *
          * Configurable also with variable "network.listen".  You may configure a single listener using:
          *
@@ -229,7 +192,7 @@ export namespace NetworkServer {
          * If {@link ble} is true, the server will add a BLE listener as well if none are present and Matter.js supports
          * BLE on the current platform.
          */
-        listen = Array<Address>();
+        listen = Array<NetworkAddress>();
 
         /**
          * Controls whether BLE is added to the default configuration.  If undefined, BLE is enabled if present on the

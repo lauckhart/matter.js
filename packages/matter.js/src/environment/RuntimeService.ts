@@ -119,7 +119,7 @@ export class RuntimeService implements Multiplex {
     }
 
     static [Environmental.create](environment: Environment) {
-        return new this(environment);
+        new this(environment);
     }
 
     /**

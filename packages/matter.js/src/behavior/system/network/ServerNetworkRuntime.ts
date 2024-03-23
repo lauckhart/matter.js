@@ -11,7 +11,7 @@ import { ImplementationError, InternalError } from "../../../common/MatterError.
 import { TransportInterface } from "../../../common/TransportInterface.js";
 import { FabricIndex } from "../../../datatype/FabricIndex.js";
 import { EndpointServer } from "../../../endpoint/EndpointServer.js";
-import { MdnsService } from "../../../environment/MdnsService.js";
+import { TransportService } from "../../../environment/TransportService.js";
 import { FabricAction, FabricManager } from "../../../fabric/FabricManager.js";
 import { MdnsInstanceBroadcaster } from "../../../mdns/MdnsInstanceBroadcaster.js";
 import { Network } from "../../../net/Network.js";
@@ -58,7 +58,7 @@ export class ServerNetworkRuntime extends NetworkRuntime {
     get mdnsBroadcaster() {
         if (!this.#mdnsBroadcaster) {
             this.#mdnsBroadcaster = this.owner.env
-                .get(MdnsService)
+                .get(TransportService)
                 .createInstanceBroadcaster(this.owner.state.network.operationalPort);
         }
         return this.#mdnsBroadcaster;
@@ -96,13 +96,11 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         for (const address of this.owner.state.network.listen) {
             switch (address.transport) {
                 case "udp":
-                case "udp4":
-                case "udp6":
                     const udp = await UdpInterface.create(
                         this.owner.env.get(Network),
-                        address.transport,
+                        address.family,
                         address.port,
-                        address.address,
+                        address.host,
                     );
 
                     transports.add(udp);
@@ -114,7 +112,6 @@ export class ServerNetworkRuntime extends NetworkRuntime {
                             state.operationalPort = udp.port;
                         }
                     });
-
                     break;
 
                 case "ble":
@@ -228,7 +225,7 @@ export class ServerNetworkRuntime extends NetworkRuntime {
     }
 
     protected override async start() {
-        const mdnsScanner = (await this.owner.env.load(MdnsService)).scanner;
+        const mdnsScanner = (await this.owner.env.load(TransportService)).scanner;
 
         this.#interactionServer = new TransactionalInteractionServer(this.owner);
 
@@ -248,6 +245,7 @@ export class ServerNetworkRuntime extends NetworkRuntime {
             (_fabricIndex: FabricIndex) => {
                 // Wired differently using SessionBehavior
             },
+            this.owner.state.sessions.defaultParameters,
         )
             .addProtocolHandler(this.#interactionServer)
             .addScanner(mdnsScanner);

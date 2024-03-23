@@ -132,10 +132,14 @@ const NODE_ID = NodeId(BigInt(1));
                     resolver(data),
                 );
 
-                await broadcaster.setFabrics(PORT, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric], {
-                    sessionIdleInterval: 100,
-                    sessionActiveInterval: 200,
-                });
+                await broadcaster.enterOperationalMode(
+                    PORT,
+                    [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric],
+                    {
+                        sessionIdleInterval: 100,
+                        sessionActiveInterval: 200,
+                    },
+                );
                 await broadcaster.announce(PORT);
 
                 const result = DnsCodec.decode(await promise);
@@ -280,7 +284,7 @@ const NODE_ID = NodeId(BigInt(1));
                     resolver(data),
                 );
 
-                await broadcaster.setCommissionMode(PORT, 1, {
+                await broadcaster.enterCommissioningMode(PORT, 1, {
                     name: "Test Device",
                     deviceType: 1,
                     vendorId: VendorId(1),
@@ -440,7 +444,7 @@ const NODE_ID = NodeId(BigInt(1));
                     resolver(data),
                 );
 
-                await broadcaster.setCommissionerInfo(PORT, {
+                await broadcaster.enterCommissionerDiscoveryMode(PORT, {
                     deviceName: "Test Commissioner",
                     deviceType: 1,
                     vendorId: VendorId(1),
@@ -541,15 +545,17 @@ const NODE_ID = NodeId(BigInt(1));
                     if (dataArr.length === 3) resolver();
                 });
 
-                await broadcaster.setFabrics(PORT, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric]);
-                await broadcaster.setCommissionMode(PORT2, 1, {
+                await broadcaster.enterOperationalMode(PORT, [
+                    { operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric,
+                ]);
+                await broadcaster.enterCommissioningMode(PORT2, 1, {
                     name: "Test Device",
                     deviceType: 1,
                     vendorId: VendorId(1),
                     productId: 0x8000,
                     discriminator: 1234,
                 });
-                await broadcaster.setCommissionerInfo(PORT3, {
+                await broadcaster.enterCommissionerDiscoveryMode(PORT3, {
                     deviceName: "Test Commissioner",
                     deviceType: 1,
                     vendorId: VendorId(1),
@@ -857,7 +863,9 @@ const NODE_ID = NodeId(BigInt(1));
                         queryReceived = true;
                     }
                 });
-                await broadcaster.setFabrics(PORT, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric]);
+                await broadcaster.enterOperationalMode(PORT, [
+                    { operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric,
+                ]);
                 await broadcaster.announce(PORT);
 
                 await MockTime.yield3(); // Make sure data were broadcasted async
@@ -895,7 +903,9 @@ const NODE_ID = NodeId(BigInt(1));
                     sentData.push(data),
                 );
 
-                await broadcaster.setFabrics(PORT, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric]);
+                await broadcaster.enterOperationalMode(PORT, [
+                    { operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric,
+                ]);
 
                 const findPromise = scanner.findOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID);
 
@@ -945,14 +955,16 @@ const NODE_ID = NodeId(BigInt(1));
                     netData.push(data);
                 });
 
-                await broadcaster.setCommissionMode(PORT, 1, {
+                await broadcaster.enterCommissioningMode(PORT, 1, {
                     name: "Test Device",
                     deviceType: 1,
                     vendorId: VendorId(1),
                     productId: 0x8000,
                     discriminator: 1234,
                 });
-                await broadcaster.setFabrics(PORT2, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric]);
+                await broadcaster.enterOperationalMode(PORT2, [
+                    { operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric,
+                ]);
 
                 const findPromise = scanner.findOperationalDevice({ operationalId: OPERATIONAL_ID } as Fabric, NODE_ID);
 
@@ -1043,14 +1055,16 @@ const NODE_ID = NodeId(BigInt(1));
                     }
                 });
 
-                await broadcaster.setCommissionMode(PORT, 1, {
+                await broadcaster.enterCommissioningMode(PORT, 1, {
                     name: "Test Device",
                     deviceType: 1,
                     vendorId: VendorId(1),
                     productId: 0x8000,
                     discriminator: 1234,
                 });
-                await broadcaster.setFabrics(PORT2, [{ operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric]);
+                await broadcaster.enterOperationalMode(PORT2, [
+                    { operationalId: OPERATIONAL_ID, nodeId: NODE_ID } as Fabric,
+                ]);
 
                 await broadcaster.announce(PORT);
                 await broadcaster.announce(PORT2);

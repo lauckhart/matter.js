@@ -5,29 +5,16 @@
  */
 
 import { AAAARecord, ARecord, DnsRecord, PtrRecord, SrvRecord, TxtRecord } from "../codec/DnsCodec.js";
-import {
-    CommissionerInstanceData,
-    CommissioningModeInstanceData,
-    OperationalInstanceData,
-    PairingHintBitmap,
-    PairingHintBitmapSchema,
-} from "../common/InstanceBroadcaster.js";
 import { ImplementationError } from "../common/MatterError.js";
 import { Crypto } from "../crypto/Crypto.js";
-import { FabricIndex } from "../datatype/FabricIndex.js";
 import { NodeId } from "../datatype/NodeId.js";
 import { Fabric } from "../fabric/Fabric.js";
 import { Diagnostic } from "../log/Diagnostic.js";
 import { Logger } from "../log/Logger.js";
 import { Network } from "../net/Network.js";
-import { TypeFromPartialBitSchema } from "../schema/BitmapSchema.js";
-import {
-    SESSION_ACTIVE_INTERVAL_MS,
-    SESSION_ACTIVE_THRESHOLD_MS,
-    SESSION_IDLE_INTERVAL_MS,
-} from "../session/Session.js";
 import { isIPv4, isIPv6 } from "../util/Ip.js";
 import { BasicSet } from "../util/Set.js";
+import { BroadcastHostGenerator } from "./BroadcastHostGenerator.js";
 import {
     MATTER_COMMISSIONER_SERVICE_QNAME,
     MATTER_COMMISSION_SERVICE_QNAME,
@@ -44,6 +31,7 @@ import {
 } from "./MdnsConsts.js";
 import { MdnsInstanceBroadcaster } from "./MdnsInstanceBroadcaster.js";
 import { AnnouncementType, MdnsServer } from "./MdnsServer.js";
+import { PairingHint, PairingHintBitmapSchema } from "./PairingHint.js";
 
 const logger = Logger.get("MdnsBroadcaster");
 
@@ -55,33 +43,29 @@ const DEFAULT_PAIRING_HINT = {
 };
 
 /**
- * This class is handing MDNS Announcements for multiple instances/devices
+ * Handle MDNS announcement for multiple instances/devices
  */
 export class MdnsBroadcaster {
-    readonly #activeCommissioningAnnouncements = new Set<number>();
-    readonly #activeOperationalAnnouncements = new Map<number, FabricIndex[]>();
+    readonly #activeCommissioningInstances = new Set<MdnsInstanceBroadcaster>();
+    readonly #activeOperationalInstances = new Set<MdnsInstanceBroadcaster>();
     readonly #network: Network;
     readonly #mdnsServer: MdnsServer;
-    readonly #enableIpv4?: boolean;
     readonly #instances = new BasicSet<MdnsInstanceBroadcaster>();
+    readonly #hostGenerator: BroadcastHostGenerator;
 
-    static async create(network: Network, options?: { enableIpv4?: boolean; multicastInterface?: string }) {
-        const { enableIpv4, multicastInterface } = options ?? {};
-        return new MdnsBroadcaster(
-            network,
-            await MdnsServer.create(network, { enableIpv4, netInterface: multicastInterface }),
-            enableIpv4,
-        );
+    static async create(network: Network, options?: { enableIpv4?: boolean; interfaces?: string[] }) {
+        const { enableIpv4, interfaces } = options ?? {};
+        return new MdnsBroadcaster(network, await MdnsServer.create(network, { enableIpv4, interfaces }));
     }
 
-    constructor(network: Network, mdnsServer: MdnsServer, enableIpv4?: boolean) {
+    constructor(network: Network, mdnsServer: MdnsServer) {
         this.#network = network;
         this.#mdnsServer = mdnsServer;
-        this.#enableIpv4 = enableIpv4;
+        this.#hostGenerator = new BroadcastHostGenerator(network);
     }
 
-    createInstanceBroadcaster(port: number) {
-        const instance = new MdnsInstanceBroadcaster(port, this, () => {
+    createInstanceBroadcaster(configuration: MdnsInstanceBroadcaster.Configuration) {
+        const instance = new MdnsInstanceBroadcaster(this, configuration, () => {
             this.#instances.delete(instance);
         });
         this.#instances.add(instance);
@@ -89,10 +73,7 @@ export class MdnsBroadcaster {
         return instance;
     }
 
-    validatePairingInstructions(
-        pairingHint: TypeFromPartialBitSchema<typeof PairingHintBitmap>,
-        pairingInstructions: string,
-    ) {
+    validatePairingInstructions(pairingHint: PairingHint, pairingInstructions: string) {
         const needsInstructions = [
             "customInstruction",
             "pressRestButtonForNumberOfSeconds",
@@ -113,59 +94,33 @@ export class MdnsBroadcaster {
         }
     }
 
-    private getIpRecords(hostname: string, ips: string[]) {
-        const records = new Array<DnsRecord<any>>();
-        ips.forEach(ip => {
-            if (isIPv6(ip)) {
-                records.push(AAAARecord(hostname, ip));
-            } else if (isIPv4(ip)) {
-                if (this.#enableIpv4) {
-                    records.push(ARecord(hostname, ip));
-                }
-            } else {
-                logger.warn(`Unknown IP address type: ${ip}`);
-            }
-        });
-        return records;
-    }
-
     /** Set the Broadcaster data to announce a device ready for commissioning in a special mode */
-    async setCommissionMode(
-        announcedNetPort: number,
-        mode: number,
-        {
-            name: deviceName,
-            deviceType,
-            vendorId,
-            productId,
-            discriminator,
-            sessionIdleInterval = SESSION_ACTIVE_INTERVAL_MS,
-            sessionActiveInterval = SESSION_IDLE_INTERVAL_MS,
-            sessionActiveThreshold = SESSION_ACTIVE_THRESHOLD_MS,
-            pairingHint = DEFAULT_PAIRING_HINT,
-            pairingInstructions = "",
-        }: CommissioningModeInstanceData,
-    ) {
+    async enterCommissioningMode(instance: MdnsInstanceBroadcaster, mode: number) {
+        const { product, defaultSessionParameters } = instance;
+
         // When doing a commission announcement, we need to expire any previous commissioning announcements
-        await this.expireCommissioningAnnouncement(announcedNetPort);
+        await this.expireCommissioningAnnouncement(instance);
 
         logger.debug(
-            `Announce commissioning mode ${mode} ${deviceName} ${deviceType} ${vendorId} ${productId} ${discriminator} ${announcedNetPort}`,
+            `Announce commissioning mode ${mode} ${product.name} ${product.deviceType} ${product.vendorId} ${product.productId} ${instance.discriminator} ${instance.id}`,
         );
-        this.#activeCommissioningAnnouncements.add(announcedNetPort);
+        this.#activeCommissioningInstances.add(instance);
 
-        const shortDiscriminator = (discriminator >> 8) & 0x0f;
+        const shortDiscriminator = (instance.discriminator >> 8) & 0x0f;
         const instanceId = Crypto.getRandomData(8).toHex().toUpperCase();
-        const vendorQname = getVendorQname(vendorId);
-        const deviceTypeQname = getDeviceTypeQname(deviceType);
+        const vendorQname = getVendorQname(product.vendorId);
+        const deviceTypeQname = getDeviceTypeQname(product.deviceType);
         const shortDiscriminatorQname = getShortDiscriminatorQname(shortDiscriminator);
-        const longDiscriminatorQname = getLongDiscriminatorQname(discriminator);
+        const longDiscriminatorQname = getLongDiscriminatorQname(instance.discriminator);
         const commissionModeQname = getCommissioningModeQname();
         const deviceQname = getDeviceInstanceQname(instanceId);
 
+        const pairingHint = instance.pairingHint ?? DEFAULT_PAIRING_HINT;
+        const pairingInstructions = instance.pairingInstructions ?? "";
+
         this.validatePairingInstructions(pairingHint, pairingInstructions); // Throws error if invalid!
 
-        await this.#mdnsServer.setRecordsGenerator(announcedNetPort, AnnouncementType.Commissionable, netInterface => {
+        await this.#mdnsServer.setRecordsGenerator(instance.id, AnnouncementType.Commissionable, netInterface => {
             const ipMac = this.#network.getIpMac(netInterface);
             if (ipMac === undefined) return [];
             const { mac, ips } = ipMac;
@@ -176,7 +131,7 @@ export class MdnsBroadcaster {
                 Diagnostic.dict({
                     mode,
                     qname: deviceQname,
-                    port: announcedNetPort,
+                    instance: instance.id,
                     interface: netInterface,
                 }),
             );
@@ -196,14 +151,14 @@ export class MdnsBroadcaster {
                 PtrRecord(commissionModeQname, deviceQname),
                 SrvRecord(deviceQname, { priority: 0, weight: 0, port: announcedNetPort, target: hostname }),
                 TxtRecord(deviceQname, [
-                    `VP=${vendorId}+${productId}` /* Vendor / Product */,
-                    `DT=${deviceType}` /* Device Type */,
-                    `DN=${deviceName}` /* Device Name */,
-                    `SII=${sessionIdleInterval}` /* Session Idle Interval */,
-                    `SAI=${sessionActiveInterval}` /* Session Active Interval */,
-                    `SAT=${sessionActiveThreshold}` /* Session Active Threshold */,
+                    `VP=${product.vendorId}+${product.productId}` /* Vendor / Product */,
+                    `DT=${product.deviceType}` /* Device Type */,
+                    `DN=${product.name}` /* Device Name */,
+                    `SII=${defaultSessionParameters.idleIntervalMs}` /* Session Idle Interval */,
+                    `SAI=${defaultSessionParameters.activeIntervalMs}` /* Session Active Interval */,
+                    `SAT=${defaultSessionParameters.activeThresholdMs}` /* Session Active Threshold */,
                     `T=${TCP_SUPPORTED}` /* TCP not supported */,
-                    `D=${discriminator}` /* Discriminator */,
+                    `D=${instance.discriminator}` /* Discriminator */,
                     `CM=${mode}` /* Commission Mode */,
                     `PH=${PairingHintBitmapSchema.encode(pairingHint)}` /* Pairing Hint */,
                     `PI=${pairingInstructions}` /* Pairing Instruction */,
@@ -215,39 +170,82 @@ export class MdnsBroadcaster {
         });
     }
 
-    /** Set the Broadcaster Data to announce a device for operative discovery (aka "already paired") */
-    async setFabrics(
-        announcedNetPort: number,
-        fabrics: Fabric[],
-        {
-            sessionIdleInterval = SESSION_ACTIVE_INTERVAL_MS,
-            sessionActiveInterval = SESSION_IDLE_INTERVAL_MS,
-            sessionActiveThreshold = SESSION_ACTIVE_THRESHOLD_MS,
-        }: OperationalInstanceData = {},
+    async #setRecordsGenerator(
+        instance: MdnsInstanceBroadcaster,
+        deviceQname: string,
+        announcementType: AnnouncementType,
+        ptrs: Record<string, string>,
+        txt: Record<string, string>,
     ) {
-        const currentOperationalFabrics = this.#activeOperationalAnnouncements.get(announcedNetPort);
-        if (currentOperationalFabrics !== undefined) {
-            const fabricIndexesSet = new Set(fabrics.map(f => f.fabricIndex));
+        const intfToHosts = await this.#hostGenerator.generate(instance);
+
+        await this.#mdnsServer.setRecordsGenerator(instance.id, announcementType, intf => {
+            const records = Array<DnsRecord<any>>();
+
+            // Compute hosts
+            const hosts = intfToHosts[intf];
+            if (Object.keys(hosts).length === 0) {
+                return records;
+            }
+
+            // Add PTR records
+            for (const name in ptrs) {
+                records.push(PtrRecord(name, ptrs[name]));
+            }
+
+            // Add TXT record
+            records.push(
+                TxtRecord(
+                    deviceQname,
+                    Object.entries(txt).map(([k, v]) => `${k}=${v}`),
+                ),
+            );
+
+            for (const host of hosts) {
+                // Add SRV records
+                for (const port of host.ports) {
+                    records.push(SrvRecord(deviceQname, { priority: 0, weight: 0, port, target: host.qname }));
+                }
+
+                // Add A/AAAA records
+                host.ips.forEach(ip => {
+                    if (isIPv6(ip)) {
+                        records.push(AAAARecord(host.qname, ip));
+                    } else if (isIPv4(ip)) {
+                        records.push(ARecord(host.qname, ip));
+                    } else {
+                        logger.warn(`Unknown IP address type: ${ip}`);
+                    }
+                });
+            }
+
+            return records;
+        });
+    }
+
+    /** Set the Broadcaster Data to announce a device for operative discovery (aka "already paired") */
+    async enterOperationalMode(instance: MdnsInstanceBroadcaster, oldFabrics: Fabric[]) {
+        const { defaultSessionParameters } = instance;
+
+        if (oldFabrics !== undefined) {
+            const fabricIndexesSet = new Set(instance.fabrics.map(f => f.fabricIndex));
 
             // Expire Fabric announcements if any entry got removed
-            if (!currentOperationalFabrics.every(fabricIndex => fabricIndexesSet.has(fabricIndex))) {
-                await this.expireFabricAnnouncement(announcedNetPort);
+            if (!instance.fabrics.every(({ fabricIndex }) => fabricIndexesSet.has(fabricIndex))) {
+                await this.expireFabricAnnouncement(instance);
             }
         }
 
-        this.#activeOperationalAnnouncements.set(
-            announcedNetPort,
-            fabrics.map(f => f.fabricIndex),
-        );
+        this.#activeOperationalInstances.add(instance);
 
-        await this.#mdnsServer.setRecordsGenerator(announcedNetPort, AnnouncementType.Operative, netInterface => {
+        await this.#mdnsServer.setRecordsGenerator(instance.id, AnnouncementType.Operative, netInterface => {
             const ipMac = this.#network.getIpMac(netInterface);
             if (ipMac === undefined) return [];
             const { mac, ips } = ipMac;
             const hostname = mac.replace(/:/g, "").toUpperCase() + "0000.local";
 
             const records: DnsRecord<any>[] = [PtrRecord(SERVICE_DISCOVERY_QNAME, MATTER_SERVICE_QNAME)];
-            fabrics.forEach(fabric => {
+            instance.fabrics.forEach(fabric => {
                 const { operationalId, nodeId } = fabric;
                 const operationalIdString = operationalId.toHex().toUpperCase();
                 const fabricQname = getFabricQname(operationalIdString);
@@ -268,9 +266,9 @@ export class MdnsBroadcaster {
                     PtrRecord(fabricQname, deviceMatterQname),
                     SrvRecord(deviceMatterQname, { priority: 0, weight: 0, port: announcedNetPort, target: hostname }),
                     TxtRecord(deviceMatterQname, [
-                        `SII=${sessionIdleInterval}` /* Session Idle Interval */,
-                        `SAI=${sessionActiveInterval}` /* Session Active Interval */,
-                        `SAT=${sessionActiveThreshold}` /* Session Active Threshold */,
+                        `SII=${defaultSessionParameters.idleIntervalMs}` /* Session Idle Interval */,
+                        `SAI=${defaultSessionParameters.activeIntervalMs}` /* Session Active Interval */,
+                        `SAT=${defaultSessionParameters.activeThresholdMs}` /* Session Active Threshold */,
                         `T=${TCP_SUPPORTED}` /* TCP not supported */,
                         `ICD=${ICD_SUPPORTED}` /* ICD not supported */,
                     ]),
@@ -283,34 +281,25 @@ export class MdnsBroadcaster {
     }
 
     /** Set the Broadcaster data to announce a Commissioner (aka Commissioner discovery) */
-    async setCommissionerInfo(
-        announcedNetPort: number,
-        {
-            deviceName,
-            deviceType,
-            vendorId,
-            productId,
-            sessionIdleInterval = SESSION_ACTIVE_INTERVAL_MS,
-            sessionActiveInterval = SESSION_IDLE_INTERVAL_MS,
-            sessionActiveThreshold = SESSION_ACTIVE_THRESHOLD_MS,
-        }: CommissionerInstanceData,
-    ) {
+    async enterCommissionerDiscoveryMode(instance: MdnsInstanceBroadcaster) {
+        const { product, defaultSessionParameters } = instance;
+
         logger.debug(
             "Announcement: Commissioner",
             Diagnostic.dict({
-                port: announcedNetPort,
-                deviceType,
+                instance: instance.id,
+                deviceType: product.deviceType,
             }),
         );
 
         const instanceId = Crypto.getRandomData(8).toHex().toUpperCase();
-        const deviceTypeQname = `_T${deviceType}._sub.${MATTER_COMMISSIONER_SERVICE_QNAME}`;
-        const vendorQname = `_V${vendorId}._sub.${MATTER_COMMISSIONER_SERVICE_QNAME}`;
+        const deviceTypeQname = `_T${product.deviceType}._sub.${MATTER_COMMISSIONER_SERVICE_QNAME}`;
+        const vendorQname = `_V${product.vendorId}._sub.${MATTER_COMMISSIONER_SERVICE_QNAME}`;
         const deviceQname = `${instanceId}.${MATTER_COMMISSIONER_SERVICE_QNAME}`;
 
-        this.#activeCommissioningAnnouncements.add(announcedNetPort);
+        this.#activeCommissioningInstances.add(instance);
 
-        await this.#mdnsServer.setRecordsGenerator(announcedNetPort, AnnouncementType.Commissionable, netInterface => {
+        await this.#mdnsServer.setRecordsGenerator(instance.id, AnnouncementType.Commissionable, netInterface => {
             const ipMac = this.#network.getIpMac(netInterface);
             if (ipMac === undefined) return [];
             const { mac, ips } = ipMac;
@@ -321,17 +310,17 @@ export class MdnsBroadcaster {
                 PtrRecord(vendorQname, deviceQname),
                 SrvRecord(deviceQname, { priority: 0, weight: 0, port: announcedNetPort, target: hostname }),
                 TxtRecord(deviceQname, [
-                    `VP=${vendorId}+${productId}` /* Vendor / Product */,
-                    `DT=${deviceType}` /* Device Type */,
-                    `DN=${deviceName}` /* Device Name */,
-                    `SII=${sessionIdleInterval}` /* Session Idle Interval */,
-                    `SAI=${sessionActiveInterval}` /* Session Active Interval */,
-                    `SAT=${sessionActiveThreshold}` /* Session Active Threshold */,
+                    `VP=${product.vendorId}+${product.productId}` /* Vendor / Product */,
+                    `DT=${product.deviceType}` /* Device Type */,
+                    `DN=${product.name}` /* Device Name */,
+                    `SII=${defaultSessionParameters.idleIntervalMs}` /* Session Idle Interval */,
+                    `SAI=${defaultSessionParameters.idleIntervalMs}` /* Session Active Interval */,
+                    `SAT=${defaultSessionParameters.activeThresholdMs}` /* Session Active Threshold */,
                     `T=${TCP_SUPPORTED}` /* TCP not supported */,
                     `ICD=${ICD_SUPPORTED}` /* ICD not supported */,
                 ]),
             ];
-            if (deviceType !== undefined) {
+            if (product.deviceType !== -1) {
                 records.push(PtrRecord(SERVICE_DISCOVERY_QNAME, deviceTypeQname));
                 records.push(PtrRecord(deviceTypeQname, deviceQname));
             }
@@ -341,33 +330,30 @@ export class MdnsBroadcaster {
         });
     }
 
-    async announce(announcementPort: number) {
-        this.#mdnsServer.announce(announcementPort).catch(error => logger.error(error));
+    async announce(instance: MdnsInstanceBroadcaster) {
+        this.#mdnsServer.announce(instance.id).catch(error => logger.error(error));
     }
 
-    async expireFabricAnnouncement(announcementPort: number) {
-        if (this.#activeOperationalAnnouncements.has(announcementPort)) {
-            await this.#mdnsServer.expireAnnouncements(announcementPort, AnnouncementType.Operative);
-            this.#activeOperationalAnnouncements.delete(announcementPort);
+    async expireFabricAnnouncement(instance: MdnsInstanceBroadcaster) {
+        if (this.#activeOperationalInstances.has(instance)) {
+            await this.#mdnsServer.expireAnnouncements(instance.id, AnnouncementType.Operative);
+            this.#activeOperationalInstances.delete(instance);
         }
     }
 
-    async expireCommissioningAnnouncement(announcementPort: number) {
-        if (this.#activeCommissioningAnnouncements.has(announcementPort)) {
-            await this.#mdnsServer.expireAnnouncements(announcementPort, AnnouncementType.Commissionable);
-            this.#activeCommissioningAnnouncements.delete(announcementPort);
+    async expireCommissioningAnnouncement(instance: MdnsInstanceBroadcaster) {
+        if (this.#activeCommissioningInstances.has(instance)) {
+            await this.#mdnsServer.expireAnnouncements(instance.id, AnnouncementType.Commissionable);
+            this.#activeCommissioningInstances.delete(instance);
         }
     }
 
-    async expireAllAnnouncements(announcementPort: number) {
-        if (
-            !this.#activeCommissioningAnnouncements.has(announcementPort) &&
-            !this.#activeOperationalAnnouncements.has(announcementPort)
-        )
+    async expireAllAnnouncements(instance: MdnsInstanceBroadcaster) {
+        if (!this.#activeCommissioningInstances.has(instance) && !this.#activeOperationalInstances.has(instance))
             return;
-        await this.#mdnsServer.expireAnnouncements(announcementPort);
-        this.#activeCommissioningAnnouncements.delete(announcementPort);
-        this.#activeOperationalAnnouncements.delete(announcementPort);
+        await this.#mdnsServer.expireAnnouncements(instance.id);
+        this.#activeCommissioningInstances.delete(instance);
+        this.#activeOperationalInstances.delete(instance);
     }
 
     async close() {
@@ -376,8 +362,8 @@ export class MdnsBroadcaster {
         }
 
         await this.#mdnsServer.expireAnnouncements();
-        this.#activeCommissioningAnnouncements.clear();
-        this.#activeOperationalAnnouncements.clear();
+        this.#activeCommissioningInstances.clear();
+        this.#activeOperationalInstances.clear();
         await this.#mdnsServer.close();
     }
 }

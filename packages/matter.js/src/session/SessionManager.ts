@@ -17,7 +17,7 @@ import { AsyncObservable, Observable } from "../util/Observable.js";
 import { BasicSet } from "../util/Set.js";
 import { InsecureSession } from "./InsecureSession.js";
 import { SecureSession } from "./SecureSession.js";
-import { SessionParameterOptions, SessionParameters } from "./Session.js";
+import { DEFAULT_SESSION_PARAMETERS, SessionParameterOptions, SessionParameters } from "./Session.js";
 
 const logger = Logger.get("SessionManager");
 
@@ -54,12 +54,15 @@ export class SessionManager<ContextT> {
     readonly #subscriptionsChanged = new Observable<[session: SecureSession<ContextT>]>();
     readonly #sessionOpened = new Observable<[session: SecureSession<ContextT>]>();
     readonly #sessionClosed = new AsyncObservable<[session: SecureSession<ContextT>], void>();
+    readonly #defaultSessionParameters: SessionParameters;
 
     constructor(
         private readonly context: ContextT,
         sessionStorage: StorageContext,
+        defaultSessionParameters?: SessionParameterOptions,
     ) {
         this.#sessionStorage = sessionStorage;
+        this.#defaultSessionParameters = { ...DEFAULT_SESSION_PARAMETERS, ...defaultSessionParameters };
     }
 
     get subscriptionsChanged() {
@@ -74,7 +77,7 @@ export class SessionManager<ContextT> {
         return this.#sessionClosed;
     }
 
-    createUnsecureSession(options: {
+    createInsecureSession(options: {
         initiatorNodeId?: NodeId;
         sessionParameters?: SessionParameterOptions;
         isInitiator?: boolean;
@@ -94,7 +97,7 @@ export class SessionManager<ContextT> {
                     this.#insecureSessions.delete(session.nodeId);
                 },
                 initiatorNodeId,
-                sessionParameters,
+                sessionParameters: { ...this.#defaultSessionParameters, ...sessionParameters },
                 isInitiator: isInitiator ?? false,
             });
 
@@ -143,7 +146,7 @@ export class SessionManager<ContextT> {
                 this.#sessions.delete(session);
                 await this.#sessionClosed.emit(session);
             },
-            sessionParameters,
+            sessionParameters: { ...this.#defaultSessionParameters, ...sessionParameters },
             subscriptionChangedCallback: () => {
                 this.#subscriptionsChanged.emit(session);
             },

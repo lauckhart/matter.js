@@ -15,13 +15,18 @@ import { UdpChannel } from "./UdpChannel.js";
 export class UdpInterface implements NetInterface {
     static async create(
         network: Network,
-        type: "udp" | "udp4" | "udp6",
+        family?: "ipv4" | "ipv6",
         port?: number,
         host?: string,
         netInterface?: string,
     ) {
         return new UdpInterface(
-            await network.createUdpChannel({ listeningPort: port, type, netInterface, listeningAddress: host }),
+            await network.createUdpChannel({
+                listeningPort: port,
+                family,
+                multicastInterface: netInterface,
+                listeningAddress: host,
+            }),
         );
     }
 

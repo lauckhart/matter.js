@@ -43,14 +43,15 @@ function createDgramSocket(host: string | undefined, port: number | undefined, o
 export class UdpChannelNode implements UdpChannel {
     static async create({
         listeningPort,
-        type,
+        family,
         listeningAddress,
-        netInterface,
+        multicastInterface,
         membershipAddresses,
+        membershipInterfaces,
         reuseAddress,
     }: UdpChannelOptions) {
-        const socketOptions: dgram.SocketOptions = { type: type === "udp" ? "udp6" : type };
-        if (type === "udp6") {
+        const socketOptions: dgram.SocketOptions = { type: family === "ipv4" ? "udp4" : "udp6" };
+        if (family === "ipv6") {
             socketOptions.ipv6Only = true;
         }
         if (reuseAddress) {
@@ -59,32 +60,33 @@ export class UdpChannelNode implements UdpChannel {
         const socket = await createDgramSocket(listeningAddress, listeningPort, socketOptions);
         socket.setBroadcast(true);
         let netInterfaceZone: string | undefined;
-        if (netInterface !== undefined) {
-            netInterfaceZone = NetworkNode.getNetInterfaceZoneIpv6(netInterface);
-            let multicastInterface: string | undefined;
-            if (type === "udp4") {
-                multicastInterface = NetworkNode.getMulticastInterfaceIpv4(netInterface);
-                if (multicastInterface === undefined) {
-                    throw new NetworkError(`No IPv4 addresses on interface: ${netInterface}`);
+        if (multicastInterface !== undefined) {
+            netInterfaceZone = NetworkNode.getNetInterfaceZoneIpv6(multicastInterface);
+            let multicastInterfaceAddress: string | undefined;
+            if (family === "ipv4") {
+                multicastInterfaceAddress = NetworkNode.getMulticastInterfaceIpv4(multicastInterface);
+                if (multicastInterfaceAddress === undefined) {
+                    throw new NetworkError(`No IPv4 addresses on interface: ${multicastInterface}`);
                 }
             } else {
                 if (netInterfaceZone === undefined) {
-                    throw new NetworkError(`No IPv6 addresses on interface: ${netInterface}`);
+                    throw new NetworkError(`No IPv6 addresses on interface: ${multicastInterface}`);
                 }
-                multicastInterface = `::%${netInterfaceZone}`;
+                multicastInterfaceAddress = `::%${netInterfaceZone}`;
             }
             logger.debug(
                 "Initialize multicast",
                 Diagnostic.dict({
-                    address: `${multicastInterface}:${listeningPort}`,
-                    interface: netInterface,
-                    type: type,
+                    address: `${multicastInterfaceAddress}:${listeningPort}`,
+                    interface: multicastInterface,
+                    family,
                 }),
             );
-            socket.setMulticastInterface(multicastInterface);
+            socket.setMulticastInterface(multicastInterfaceAddress);
         }
         if (membershipAddresses !== undefined) {
-            const multicastInterfaces = NetworkNode.getMembershipMulticastInterfaces(netInterface, type === "udp4");
+            const multicastInterfaces =
+                membershipInterfaces ?? NetworkNode.getMembershipMulticastInterfaces(undefined, family === "ipv4");
             for (const address of membershipAddresses) {
                 for (const multicastInterface of multicastInterfaces) {
                     try {
