@@ -6,6 +6,7 @@
 
 import { DataModelPath } from "../../../endpoint/DataModelPath.js";
 import { Conformance, FeatureSet, FieldValue, Metatype, ValueModel } from "../../../model/index.js";
+import { camelize } from "../../../util/String.js";
 import { AccessControl } from "../../AccessControl.js";
 import { ConformanceError, SchemaImplementationError } from "../../errors.js";
 import { Schema } from "../../supervision/Schema.js";
@@ -295,17 +296,17 @@ export function astToFunction(
      */
     function createName(param: string): DynamicNode {
         if (featuresAvailable.has(param)) {
-            // Name references a feature.  We know whether features are
-            // supported by a cluster at compile time so this results in a
-            // static node that is conformant iff the feature is supported
+            // Name references a feature.  We know whether features are supported by a cluster at compile time so this
+            // results in a static node that is conformant iff the feature is supported
             if (featuresSupported.has(param)) {
                 return ConformantNode;
             } else {
                 return NonconformantNode;
             }
         } else {
-            // Name references a sibling property.  This results in a value
-            // node but must be evaluated at runtime against a specific struct
+            // Name references a sibling property.  This results in a value node but must be evaluated at runtime
+            // against a specific struct
+            param = camelize(param, true);
             return {
                 code: Code.Evaluate,
 

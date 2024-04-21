@@ -73,7 +73,7 @@ export function MergedModel(variants: TraverseMap, priorities = MergedModel.Defa
             for (const key of priority.get("*", "constraint")) {
                 const definition = (variants.map[key] as ValueModel | undefined)?.constraint;
                 const constraint = new Constraint(definition);
-                if (!constraint?.empty && !constraint?.desc) {
+                if (!constraint?.isEmpty && !constraint?.desc) {
                     properties.constraint = definition;
                     break;
                 }

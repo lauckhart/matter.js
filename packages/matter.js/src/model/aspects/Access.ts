@@ -29,7 +29,7 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
         return !!this.rw && this.rw !== Access.Rw.Read;
     }
 
-    override get empty() {
+    override get isEmpty() {
         return (
             (!this.rw || this.rw === Access.Rw.Read) && !this.fabric && !this.readPriv && !this.writePriv && !this.timed
         );
@@ -240,6 +240,8 @@ export class Access extends Aspect<Access.Definition> implements Access.Ast {
             }
         });
     }
+
+    declare extend: (other: Access) => Access;
 }
 
 export namespace Access {

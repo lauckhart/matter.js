@@ -73,7 +73,7 @@ export class RequirementModel extends Model implements RequirementElement {
         const result = super.valueOf() as any;
         for (const k of ["conformance", "access", "quality", "constraint"]) {
             const v = (this as any)[k] as Aspect<any>;
-            if (v && !v.empty) {
+            if (v && !v.isEmpty) {
                 result[k] = v.valueOf();
             }
         }

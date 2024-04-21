@@ -92,6 +92,8 @@ export class Quality extends Aspect<Quality.Definition> implements Quality.Ast {
 
         return flags.join(" ");
     }
+
+    declare extend: (other: Quality) => Quality;
 }
 
 export namespace Quality {

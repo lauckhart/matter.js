@@ -17,21 +17,21 @@ export abstract class Aspect<D> {
     definition: D;
     errors?: DefinitionError[];
 
-    get valid() {
+    get isValid() {
         return !this.errors;
     }
 
-    constructor(definition: D) {
-        this.definition = definition;
-    }
-
-    get empty() {
+    get isEmpty() {
         for (const [k, v] of Object.entries(this)) {
             if (k !== "definition" && k !== "errors" && v !== undefined) {
                 return false;
             }
         }
         return true;
+    }
+
+    constructor(definition: D) {
+        this.definition = definition;
     }
 
     /**
@@ -62,7 +62,7 @@ export abstract class Aspect<D> {
         });
     }
 
-    extend<This extends Aspect<any>>(this: This, other: Exclude<D, "string">) {
+    extend(other: Exclude<D, "string">) {
         const descriptors = [
             ...Object.entries(Object.getOwnPropertyDescriptors(this)),
             ...Object.entries(Object.getOwnPropertyDescriptors(other)),
@@ -77,6 +77,6 @@ export abstract class Aspect<D> {
         }
 
         const constructor = this.constructor as new (definition: any) => Aspect<D>;
-        return new constructor(definition) as This;
+        return new constructor(definition);
     }
 }

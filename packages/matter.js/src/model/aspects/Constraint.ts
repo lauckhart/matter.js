@@ -4,10 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { InternalError } from "../../common/MatterError.js";
 import { camelize } from "../../util/String.js";
 import { isObject } from "../../util/Type.js";
 import { FieldValue } from "../definitions/index.js";
 import { Aspect } from "./Aspect.js";
+import { Tokenizer } from "./Tokenizer.js";
 
 /**
  * An operational view of constraints as defined by the Matter specification.
@@ -17,129 +19,173 @@ import { Aspect } from "./Aspect.js";
  * Formally a constraint is not considered a quality by the specification. It is handled similarly to qualities, though,
  * so we keep it in the same section.
  */
-export class Constraint extends Aspect<Constraint.Definition> implements Constraint.Ast {
-    desc?: boolean;
-    value?: FieldValue;
-    min?: FieldValue;
-    max?: FieldValue;
-    in?: FieldValue;
-    entry?: Constraint;
-    parts?: Constraint[];
+export class Constraint extends Aspect<Constraint.Definition> {
+    ast: Constraint.Ast;
 
     /**
      * Initialize from a Constraint.Definition or the constraint DSL defined by the Matter Specification.
      */
     constructor(definition: Constraint.Definition) {
         super(definition);
-
-        let ast;
-        switch (typeof definition) {
-            case "string":
-                ast = Constraint.parse(this, definition);
-                break;
-
-            case "number":
-                ast = { value: definition };
-                break;
-
-            default:
-                ast = definition;
-                if (ast?.definition) {
-                    this.definition = ast.definition;
-                }
-                break;
-        }
-
-        if (!ast) {
-            return;
-        }
-
-        if (ast.desc !== undefined) {
-            this.desc = ast.desc;
-        }
-        if (ast.value !== undefined) {
-            this.value = ast.value;
-        }
-        if (ast.min !== undefined) {
-            this.min = ast.min;
-        }
-        if (ast.max !== undefined) {
-            this.max = ast.max;
-        }
-        if (ast.in !== undefined) {
-            this.in = ast.in;
-        }
-        if (ast.entry !== undefined) {
-            this.entry = new Constraint(ast.entry);
-        }
-        if (ast.parts !== undefined) {
-            this.parts = ast.parts.map(p => new Constraint(p));
-        }
+        this.ast = definitionToAst(this, definition);
     }
 
     /**
-     * Test a value against a constraint.  Does not recurse into arrays.
+     * Test a value against the constraint.
      */
     test(value: FieldValue, properties?: Record<string, any>): boolean {
-        // Helper that looks up "reference" field values in properties.  This is for constraints such as "min FieldName"
-        function valueOf(value: unknown, raw = false) {
-            if (!raw && (typeof value === "string" || Array.isArray(value))) {
-                return value.length;
+        return this.#test(this.ast, value, properties);
+    }
+
+    #test(ast: Constraint.Ast, value: FieldValue, properties?: Record<string, any>): boolean {
+        if (value === undefined) {
+            return false;
+        }
+
+        switch (ast?.type) {
+            case "in":
+                let set = valueOf(ast.value, true);
+                if (!Array.isArray(set)) {
+                    set = [set];
+                }
+                return set.indexOf(value) !== -1;
+
+            case "const":
+                const v = valueOf(ast.value);
+                return v === value;
+
+            case "min": {
+                const min = valueOf(ast.value);
+                return min === undefined || min === null || (min as any) <= (value as any);
             }
+
+            case "max": {
+                const max = valueOf(ast.value);
+                return max === undefined || max === null || (max as any) >= (value as any);
+            }
+
+            case "to": {
+                const min = valueOf(ast.min);
+                const max = valueOf(ast.max);
+                return (
+                    (min === undefined || min === null || (min as any) <= (value as any)) &&
+                    (max === undefined || max === null || (max as any) >= (value as any))
+                );
+            }
+
+            case "any":
+                return !ast.parts.every(part => this.#test(part, value, properties) === false);
+
+            case "all":
+                return ast.parts.every(part => this.#test(part, value, properties) === true);
+
+            case "desc":
+                return true;
+
+            case "array":
+                if (!Array.isArray(value)) {
+                    return false;
+                }
+                if (!this.#test(ast.length, valueOf(value), properties)) {
+                    return false;
+                }
+                for (const entry of value) {
+                    if (!this.#test(ast.entry, valueOf(entry), properties)) {
+                        return false;
+                    }
+                }
+                return true;
+
+            default:
+                throw new InternalError(`Unsupported constraint AST node type ${(ast as any)?.type}`);
+        }
+
+        /**
+         * Evaluate an expression.
+         */
+        function valueOf(value: Constraint.Expression, raw = false): FieldValue {
+            if (!raw) {
+                if (typeof value === "string" || Array.isArray(value)) {
+                    return value.length;
+                }
+                if (ArrayBuffer.isView(value)) {
+                    return value.byteLength;
+                }
+            }
+
             if (isObject(value)) {
-                const { type, name } = value;
-                if (type === FieldValue.reference && typeof name === "string") {
-                    value = valueOf(properties?.[camelize(name)], raw);
+                switch (value.type) {
+                    case "reference":
+                        value = valueOf(properties?.[camelize(value.name)], raw);
+                        break;
+
+                    case "-":
+                        return binaryOp(value, (lhs, rhs) => lhs - rhs);
+
+                    case "+":
+                        return binaryOp(value, (lhs, rhs) => lhs + rhs);
+
+                    case "*":
+                        return binaryOp(value, (lhs, rhs) => lhs * rhs);
+
+                    case "/":
+                        return binaryOp(value, (lhs, rhs) => lhs / rhs);
+
+                    default:
+                        value = FieldValue.unwrap(value as FieldValue) as FieldValue;
+                        break;
                 }
             }
 
             return value;
         }
 
-        if (value === undefined) {
-            return false;
+        /**
+         * Apply a binary operator.
+         */
+        function binaryOp(expr: Constraint.BinaryOperation, operator: (lhs: any, rhs: any) => FieldValue) {
+            return operator(valueOf(expr.lhs) as any, valueOf(expr.rhs) as any);
         }
-
-        if (this.in) {
-            let set = valueOf(this.in, true);
-            if (!Array.isArray(set)) {
-                set = [set];
-            }
-            return (set as unknown[]).indexOf(value) !== -1;
-        }
-
-        const v = valueOf(this.value);
-        if (v === value) {
-            return true;
-        }
-
-        if (v !== undefined || value === null) {
-            return false;
-        }
-
-        if (this.min !== undefined && this.min !== null) {
-            const min = valueOf(this.min);
-            if (min !== undefined && min !== null && (min as typeof value) > value) {
-                return false;
-            }
-        }
-
-        if (this.max !== undefined && this.max !== null) {
-            const max = valueOf(this.max);
-            if (max !== undefined && max !== null && (max as typeof value) < value) {
-                return false;
-            }
-        }
-
-        if (this.parts?.every(part => part.test(value, properties) === false)) {
-            return false;
-        }
-
-        return true;
     }
 
     override toString() {
-        return Constraint.serialize(this);
+        return serialize(this.ast);
+    }
+
+    override get isEmpty() {
+        return this.ast === undefined || this.ast.type === "empty" || this.ast.type === "desc";
+    }
+
+    override extend(other: Constraint): Constraint {
+        if (other.isEmpty) {
+            return this;
+        }
+        if (this.isEmpty) {
+            return other;
+        }
+
+        const parts = Array<Constraint.Ast>();
+
+        function add(constraint: Constraint) {
+            if (constraint.isEmpty) {
+                return;
+            }
+
+            if (constraint.ast.type === "any") {
+                parts.push(...constraint.ast.parts);
+            }
+
+            parts.push(constraint.ast);
+        }
+
+        add(this);
+        add(other);
+
+        if (parts.length === 1) {
+            return new Constraint(parts[0]);
+        }
+
+        return new Constraint({ type: "or", parts });
     }
 }
 
@@ -147,291 +193,344 @@ export namespace Constraint {
     export type NumberOrIdentifier = number | string;
 
     /**
-     * Parsed list structure.
+     * An operation with an operator and two operands.
      */
-    export type Ast = {
-        /**
-         * Indicates constraint is defined in prose and cannot be enforced automatically.
-         */
-        desc?: boolean;
-
-        /**
-         * Constant value.
-         */
-        value?: FieldValue;
-
-        /**
-         * Lower bound on value or sequence length.
-         */
-        min?: FieldValue;
-
-        /**
-         * Upper bound on value or sequence length.
-         */
-        max?: FieldValue;
-
-        /**
-         * Require set membership for the value.
-         */
-        in?: FieldValue;
-
-        /**
-         * Constraint on list child element.
-         */
-        entry?: Ast;
-
-        /**
-         * List of sub-constraints in a sequence.
-         */
-        parts?: Ast[];
+    export type BinaryOperation = {
+        type: "-" | "+" | "/" | "*";
+        lhs: Expression;
+        rhs: Expression;
     };
 
     /**
-     * These are all ways to describe a constraint.
+     * A constraint expression.  Currently very limited as the only expressions are constants and (a - b).
      */
-    export type Definition = (Ast & { definition?: Definition }) | string | number | undefined;
+    export type Expression = FieldValue | BinaryOperation;
 
-    function parseValue(numOrName: string): FieldValue {
-        let value;
-        if (numOrName.startsWith("0x") || numOrName.startsWith("0b")) {
-            value = Number.parseInt(numOrName);
-        } else {
-            value = Number.parseFloat(numOrName);
-        }
-        if (Number.isNaN(value)) {
-            return FieldValue.Reference(camelize(numOrName));
-        }
-        if (numOrName.endsWith("%")) {
-            return FieldValue.Percent(value);
-        }
-        if (numOrName.endsWith("°C")) {
-            return FieldValue.Celsius(value);
-        }
-        return value;
-    }
+    /**
+     * Parsed list structure.
+     */
+    export type Ast =
+        | { type: "empty" | "desc" }
+        | { type: "const" | "min" | "max" | "in"; value: Expression; entry?: Ast }
+        | { type: "to"; min: Expression; max: Expression; entry?: Ast }
+        | { type: "any" | "all"; parts: Ast[] }
+        | { type: "array"; length: Ast; entry: Ast };
 
-    function parseAtom(constraint: Constraint, words: string[]): Ast | undefined {
-        switch (words.length) {
-            case 0:
-                return undefined;
-
-            case 1:
-                switch (words[0].toLowerCase()) {
-                    case "desc":
-                        return { desc: true };
-
-                    case "all":
-                    case "any":
-                        return {};
-                }
-                const value = parseValue(words[0]);
-                if (value === undefined || value === null) {
-                    return;
-                }
-                return { value };
-
-            case 2:
-                switch (words[0].toLowerCase()) {
-                    case "min":
-                        const min = parseValue(words[1]);
-                        if (min === undefined || min === null) {
-                            return;
-                        }
-                        return { min: min };
-
-                    case "max":
-                        const max = parseValue(words[1]);
-                        if (max === undefined || max === null) {
-                            return;
-                        }
-                        return { max: max };
-
-                    case "in":
-                        const ref = parseValue(words[1]);
-                        return { in: ref };
-
-                    default:
-                        constraint.error(
-                            "INVALID_CONSTRAINT",
-                            `Two word constraint "${words.join(" ")}" does not start with "min" or "max"`,
-                        );
-                }
-                return;
-
-            case 3:
-                if (words[1].toLowerCase() === "to") {
-                    function parseBound(name: string, pos: number) {
-                        if (words[pos].toLowerCase() === name) {
-                            return undefined;
-                        }
-                        return parseValue(words[pos]);
-                    }
-
-                    const ast: Ast = {};
-
-                    const min = parseBound("min", 0);
-                    if (min !== undefined && min !== null) {
-                        ast.min = min;
-                    }
-
-                    const max = parseBound("max", 2);
-                    if (max !== undefined && max !== null) {
-                        ast.max = max;
-                    }
-
-                    if ((ast.min !== undefined && ast.min !== null) || (ast.max !== undefined && ast.max !== null)) {
-                        return ast;
-                    }
-                }
-                return;
-        }
-
-        constraint.error("INVALID_CONSTRAINT", `Unrecognized value constraint "${words.join(" ")}"`);
+    /**
+     * Shorthand definition for simple constraints.
+     */
+    export interface SimpleDefinition {
+        type?: undefined;
+        min?: Expression;
+        max?: Expression;
+        entry?: Definition;
     }
 
     /**
-     * Parse constraint DSL.  Extremely lenient.
+     * These are all ways to describe an input constraint.
      */
-    export function parse(constraint: Constraint, definition: string): Ast {
-        let pos = 2;
-        let current: string | undefined = definition[0];
-        let peeked: string | undefined = definition[1];
+    export type Definition =
+        | Ast
+        | { type?: undefined; ast: Ast; definition?: Definition }
+        | SimpleDefinition
+        | string
+        | number
+        | undefined;
+}
 
-        function next() {
-            current = peeked;
-            if (pos === definition.length) {
-                peeked = undefined;
-            } else {
-                peeked = definition[pos];
-                pos++;
+function definitionToAst(constraint: Constraint, definition: Constraint.Definition): Constraint.Ast {
+    switch (typeof definition) {
+        case "undefined":
+            return { type: "empty" };
+
+        case "string":
+            return parse(constraint, definition);
+
+        case "number":
+            return { type: "const", value: definition };
+
+        default:
+            if (definition.type === undefined) {
+                const { ast } = definition as { ast: Constraint.Ast };
+                if (ast) {
+                    return ast;
+                }
+
+                const { min, max, entry: entryDef } = definition as Constraint.SimpleDefinition;
+                const entry = entryDef === undefined ? undefined : definitionToAst(constraint, definition);
+                if (min !== undefined) {
+                    if (max !== undefined) {
+                        return { type: "to", min, max, entry };
+                    }
+                    return { type: "min", value: min, entry };
+                }
+
+                if (max !== undefined) {
+                    return { type: "max", value: "max", entry };
+                }
+
+                return { type: "empty" };
             }
+
+            return definition;
+    }
+}
+
+function serializeExpression(expression: Constraint.Expression): string {
+    if (isObject(expression)) {
+        switch (expression.type) {
+            case "-":
+            case "+":
+            case "*":
+            case "/":
+                return `${serializeExpression(expression)} - ${serializeExpression(expression)}`;
         }
-
-        function scan(depth: number): Ast {
-            const parts = Array<Ast>();
-            let words = Array<string>();
-            let word = "";
-
-            function parseWords() {
-                if (word) {
-                    words.push(word);
-                    word = "";
-                }
-
-                const atom = parseAtom(constraint, words);
-                words = Array<string>();
-                return atom;
-            }
-
-            function emit() {
-                const atom = parseWords();
-                if (atom !== undefined) {
-                    parts.push(atom);
-                }
-            }
-
-            while (current !== undefined) {
-                switch (current) {
-                    case " ":
-                    case "\t":
-                    case "\r":
-                    case "\n":
-                    case "\v":
-                    case "\f":
-                        if (word) {
-                            words.push(word);
-                            word = "";
-                        }
-                        break;
-
-                    case "[":
-                        next();
-                        let ast = parseWords();
-                        const entry = scan(depth + 1);
-                        if (entry) {
-                            if (!ast) {
-                                ast = {};
-                            }
-                            ast.entry = entry;
-                        }
-                        if (ast) {
-                            parts.push(ast);
-                        }
-                        break;
-
-                    case "]":
-                        if (!depth) {
-                            constraint.error("INVALID_CONSTRAINT", 'Unexpected "]"');
-                            break;
-                        }
-                        emit();
-                        if (parts.length > 1) {
-                            return { parts: parts };
-                        }
-                        return parts[0];
-
-                    case ",":
-                        emit();
-                        break;
-
-                    default:
-                        word += current;
-                        break;
-                }
-
-                next();
-            }
-
-            if (depth) {
-                constraint.error("INVALID_CONSTRAINT", "Unterminated sub-constraint");
-            }
-
-            emit();
-
-            if (parts.length < 2) {
-                return parts[0];
-            }
-
-            return { parts: parts };
-        }
-
-        return scan(0);
     }
 
-    function serializeAtom(ast: Ast) {
-        if (ast.desc) {
+    return FieldValue.serialize(expression);
+}
+
+function serializeEntry(ast: Constraint.Ast | undefined): string {
+    if (ast === undefined) {
+        return "";
+    }
+    return `[${serialize(ast)}]`;
+}
+
+function serialize(ast: Constraint.Ast): string {
+    switch (ast.type) {
+        case "empty":
+            return "";
+
+        case "desc":
             return "desc";
-        }
 
-        if (ast.value !== undefined && ast.value !== null) {
-            return `${FieldValue.serialize(ast.value)}`;
-        }
+        case "const":
+            return serializeExpression(ast.value);
 
-        if (ast.min !== undefined && ast.min !== null) {
-            if (ast.max === undefined || ast.max === null) {
-                return `min ${FieldValue.serialize(ast.min)}`;
-            }
-            return `${FieldValue.serialize(ast.min)} to ${FieldValue.serialize(ast.max)}`;
-        }
+        case "min":
+            return `min ${serializeExpression(ast.value)}${serializeEntry(ast.entry)}`;
 
-        if (ast.max !== undefined && ast.max !== null) {
-            return `max ${FieldValue.serialize(ast.max)}`;
-        }
+        case "max":
+            return `max ${serializeExpression(ast.value)}${serializeEntry(ast.entry)}`;
 
-        if (ast.in !== undefined) {
-            return `in ${FieldValue.serialize(ast.in)}`;
-        }
+        case "to":
+            return `${serializeExpression(ast.min)} to ${serializeExpression(ast.max)}${serializeEntry(ast.entry)}`;
 
-        return "all";
+        case "in":
+            return `in ${serializeExpression(ast.value)}`;
+
+        case "any":
+            return ast.parts.map(ast => serialize(ast)).join(", ");
+
+        case "array":
+            return `${serialize(ast.length)}[${serialize(ast.entry)}]`;
+
+        default:
+            throw new InternalError(`Unrecognized constraint AST node type ${(ast as any).type}`);
+    }
+}
+
+class ConstraintTokenizer extends Tokenizer {}
+
+function parse(constraint: Constraint, text: string): Constraint.Ast {
+    const tokens = Tokenizer(constraint, text);
+
+    const parts = Array<Constraint.Ast>();
+
+    while (!tokens.done) {
+        const part = parsePart();
+        if (part) {
+            parts.push(part);
+        }
     }
 
-    export function serialize(ast: Ast): string {
-        if (ast.parts) {
-            return ast.parts.map(serialize).join(", ");
+    if (parts.length === 0) {
+        return { type: "empty" };
+    }
+
+    if (parts.length === 1) {
+        return parts[0];
+    }
+
+    return { type: "or", parts };
+
+    function startsExpression() {
+        if (tokens.token?.type === "value") {
+            return true;
         }
-        if (ast.entry) {
-            return `${serializeAtom(ast)}[${serialize(ast.entry)}]`;
+
+        if (tokens.token?.type === "word") {
+            switch (tokens.token.value) {
+                case "min":
+                case "max":
+                case "to":
+                case "desc":
+                case "any":
+                case "all":
+                    return false;
+            }
         }
-        return serializeAtom(ast);
+
+        return true;
+    }
+
+    function parseValueOrWord(): Constraint.Expression | undefined {
+        if (!startsExpression()) {
+            return;
+        }
+
+        let result: Constraint.Expression | undefined;
+        switch (tokens.token?.type) {
+            case "word":
+                result = { type: "reference", name: tokens.token.value };
+                break;
+
+            case "value":
+                result = tokens.token.value;
+                break;
+        }
+
+        if (result === undefined) {
+            // Error
+            return;
+        }
+
+        tokens.next();
+
+        return result;
+    }
+
+    function parseExpression(): Constraint.Expression | undefined {
+        const start = parseValueOrWord();
+        if (start === undefined) {
+            return;
+        }
+
+        switch (tokens.token?.type) {
+            case "-":
+            case "+":
+            case "*":
+            case "/":
+                const { type } = tokens.token;
+                tokens.next();
+
+                const stop = parseValueOrWord();
+                if (stop === undefined) {
+                    break;
+                }
+
+                return {
+                    type,
+                    lhs: start,
+                    rhs: stop,
+                };
+        }
+    }
+
+    function parseConstOrRangePart(): Constraint.Ast | undefined {
+        const start = parseExpression();
+        if (start === undefined) {
+            return;
+        }
+
+        if (tokens.token?.type !== "word" || tokens.token?.value !== "to") {
+            // Single value
+            return { type: "const", value: start };
+        }
+
+        // Range
+        tokens.next();
+        const stop = parseExpression();
+        if (stop === undefined) {
+            return;
+        }
+
+        return { type: "to", min: start, max: stop };
+    }
+
+    function parseUnaryPart(): Constraint.Ast | undefined {
+        const type = tokens.token?.type as "min" | "max" | "in";
+        tokens.next();
+
+        const value = parseExpression();
+        if (value === undefined) {
+            return;
+        }
+
+        return { type, value: value };
+    }
+
+    function parseEntry(): Constraint.Ast | undefined {
+        if (tokens.token?.type !== "[") {
+            return;
+        }
+
+        tokens.next();
+
+        const part = parsePart("]");
+
+        if ((tokens.token?.type as Tokenizer.Token["type"]) === "]") {
+            tokens.next();
+        } else {
+            constraint.error("UNTERMINATED_CLAUSE", `Unterminated array entry (expected "]")`);
+        }
+
+        return part;
+    }
+
+    function parsePart(terminator?: string): Constraint.Ast | undefined {
+        let part: Constraint.Ast | undefined;
+
+        if (startsExpression()) {
+            part = parseConstOrRangePart();
+        } else if (tokens.token?.type === "word") {
+            switch (tokens.token.value) {
+                case "desc":
+                    tokens.next();
+                    part = { type: "desc" };
+                    break;
+
+                case "any":
+                case "all":
+                    break;
+
+                case "min":
+                case "max":
+                case "in":
+                    part = parseUnaryPart();
+                    break;
+            }
+        }
+
+        if (part) {
+            const entry = parseEntry();
+            if (entry) {
+                part = { type: "array", length: part, entry };
+            }
+
+            parts.push(part);
+        }
+
+        let addedError = false;
+        while (true) {
+            if (terminator && tokens.token?.type === terminator) {
+                break;
+            }
+
+            if (tokens.token?.type === ",") {
+                tokens.next();
+                break;
+            }
+
+            if (!addedError) {
+                constraint.error("UNEXPECTED_TOKEN", `Unexpected ${tokens.description}`);
+                addedError = true;
+            }
+
+            tokens.next();
+        }
+
+        return part;
     }
 }

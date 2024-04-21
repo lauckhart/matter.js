@@ -19,7 +19,7 @@ export function createConstraintValidator(
     constraint: Constraint,
     schema: ValueModel,
 ): ValueSupervisor.Validate | undefined {
-    if (constraint.empty) {
+    if (constraint.isEmpty) {
         return;
     }
 

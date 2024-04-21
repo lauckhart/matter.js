@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { camelize } from "../../../util/String.js";
 import { Access, Conformance, Constraint, Quality } from "../../aspects/index.js";
 import { DefinitionError, FieldValue, Metatype } from "../../definitions/index.js";
 import { ClusterModel, ValueModel } from "../../models/index.js";
@@ -29,8 +30,8 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
                 const cluster = this.model.owner(ClusterModel);
                 return !!cluster?.features.find(f => f.name === name);
             } else {
-                // Field lookup
-                return !!this.model.parent?.member(name);
+                // Field lookup or enum value lookup
+                return !!this.model.parent?.member(camelize(name, true));
             }
         });
 
@@ -59,8 +60,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
                 return;
             }
 
-            // Spec does not always provide type information for deprecated
-            // fields
+            // Spec does not always provide type information for deprecated fields
             if (this.model.deprecated) {
                 return;
             }
@@ -83,8 +83,8 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
         }
         const metatype = metabase.metatype;
         if (metatype === undefined) {
-            // This shouldn't happen because the presence of the metatype is
-            // what makes it a metabase.  But eslint doesn't know that
+            // This shouldn't happen because the presence of the metatype is what makes it a metabase.  But eslint
+            // doesn't know that
             this.error("METATYPE_MISSING", `Metabase ${metabase.name} has no metatype`);
             return;
         }
@@ -100,10 +100,9 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
 
         // Convert value to proper type if possible
         if (metatype === Metatype.string && defaultValue === "empty") {
-            // Metatype doesn't handle this case because otherwise you'd never
-            // be able to have a string called "empty".  In this case though
-            // the data likely comes from the spec so we're going to take a
-            // flyer and say you can never have "empty" as a default value
+            // Metatype doesn't handle this case because otherwise you'd never be able to have a string called "empty".
+            // In this case though the data likely comes from the spec so we're going to take a flyer and say you can
+            // never have "empty" as a default value
             defaultValue = "";
         }
         const cast = Metatype.cast(metatype, defaultValue);
@@ -137,8 +136,7 @@ export class ValueValidator<T extends ValueModel> extends ModelValidator<T> {
     }
 
     private validateEntries() {
-        // Note - these checks only apply for first-order derived types, so use
-        // direct metatype
+        // Note - these checks only apply for first-order derived types, so use direct metatype
         const metatype = this.model.directMetatype;
         switch (metatype) {
             case Metatype.object:

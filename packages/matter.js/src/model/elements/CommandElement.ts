@@ -15,7 +15,7 @@ export interface CommandElement extends ValueElement {
     id: Mei;
     tag: `${CommandElement.Tag}`;
 
-    // Direction is required but we handling missing direction in validation
+    // Direction is required but we handle missing direction in validation
     direction?: `${CommandElement.Direction}`;
 
     response?: string;

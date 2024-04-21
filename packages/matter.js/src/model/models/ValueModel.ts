@@ -202,10 +202,10 @@ export abstract class ValueModel extends Model implements ValueElement {
 
         new ModelTraversal().visitInheritance(this, model => {
             if (model instanceof ValueModel) {
-                if (!model.conformance.empty && model.conformance.type !== Conformance.Special.Desc) {
+                if (!model.conformance.isEmpty && model.conformance.type !== Conformance.Special.Desc) {
                     aspects.push(model.conformance);
                 }
-                if (!model.constraint.empty && !model.constraint.desc) {
+                if (!model.constraint.isEmpty) {
                     aspects.push(model.constraint);
                 }
                 if (model.quality.nullable === false) {
@@ -257,16 +257,16 @@ export abstract class ValueModel extends Model implements ValueElement {
         if (this.type && this.type !== shadow.type) {
             return true;
         }
-        if (!this.conformance.empty && !this.conformance.equals(shadow.conformance)) {
+        if (!this.conformance.isEmpty && !this.conformance.equals(shadow.conformance)) {
             return true;
         }
-        if (!this.quality.empty && !this.quality.equals(shadow.quality)) {
+        if (!this.quality.isEmpty && !this.quality.equals(shadow.quality)) {
             return true;
         }
-        if (!this.constraint.empty && !this.constraint.equals(shadow.constraint)) {
+        if (!this.constraint.isEmpty && !this.constraint.equals(shadow.constraint)) {
             return true;
         }
-        if (!this.access.empty && !this.access.equals(shadow.access)) {
+        if (!this.access.isEmpty && !this.access.equals(shadow.access)) {
             return true;
         }
     }
@@ -282,7 +282,7 @@ export abstract class ValueModel extends Model implements ValueElement {
         const result = super.valueOf() as any;
         for (const k of ["conformance", "access", "quality", "constraint"]) {
             const v = (this as any)[k] as Aspect<any>;
-            if (v && !v.empty) {
+            if (v && !v.isEmpty) {
                 result[k] = v.valueOf();
             }
         }
