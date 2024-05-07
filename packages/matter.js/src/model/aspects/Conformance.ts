@@ -5,8 +5,8 @@
  */
 
 import { Lexer } from "../../parser/Lexer.js";
+import { Parser } from "../../parser/Parser.js";
 import { BasicToken } from "../../parser/Token.js";
-import { Tokens } from "../../parser/Tokens.js";
 import { FieldValue } from "../definitions/index.js";
 import { Aspect } from "./Aspect.js";
 
@@ -398,7 +398,7 @@ const flags = new Set(Object.values(Conformance.Flag));
 // The DSL is *almost* complex enough to warrant a proper parser library.  Not quite though...
 function ParsedAst(conformance: Conformance, definition: string) {
     definition = definition.replace(" or ", " | ");
-    const tokens = Tokens(Lexer.Basic.lex(definition, (code, message) => conformance.error(code, message)));
+    const tokens = Parser(Lexer.basic.lex(definition, (code, message) => conformance.error(code, message)));
     return parseGroup();
 
     function parseGroup(end?: BasicToken.Operator): Conformance.Ast {

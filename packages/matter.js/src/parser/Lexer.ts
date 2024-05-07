@@ -5,6 +5,7 @@
  */
 
 import { FieldValue } from "../model/definitions/index.js";
+import { ParseErrorHandler } from "./ParseErrorHandler.js";
 import { BasicToken, Token } from "./Token.js";
 
 function isNameChar(c: string) {
@@ -12,35 +13,26 @@ function isNameChar(c: string) {
 }
 
 /**
- * DSL lexer.
- *
- * Tokenizes simple text dialects.  Currently sufficient for Matter conformance and constraint tokenization.
+ * A function that converts text into a {@link Token} iterator.
  */
-export class Lexer<T extends BasicToken> {
-    #keywords: Set<string>;
+export type Lexer<T extends Token = Token> = (text: string, error: ParseErrorHandler) => Iterator<T>;
 
-    constructor(keywords: Iterable<string> = []) {
-        if (keywords instanceof Set) {
-            this.#keywords = keywords;
-        } else {
-            this.#keywords = new Set(keywords);
-        }
-    }
+/**
+ * Create a basic {@link Lexer}.
+ *
+ * This supports simple text dialects.  Currently sufficient for Matter conformance and constraint tokenization.
+ */
+export function Lexer<T extends BasicToken = BasicToken>(keywords: Iterable<string>) {
+    const keywordIndex = keywords instanceof Set ? keywords : new Set(...keywords);
 
-    lex(text: string, error: (code: string, message: string) => void) {
-        return lex(text, error, this.#keywords) as Iterator<T>;
-    }
+    return ((text, error) => lex(text, error, keywordIndex)) as Lexer<T>;
 }
 
 export namespace Lexer {
-    export const Basic = new Lexer();
+    export const basic = Lexer([]);
 }
 
-function* lex(
-    text: string,
-    error: (code: string, message: string) => void,
-    keywords: Set<string>,
-): Generator<Token, undefined> {
+function* lex(text: string, error: ParseErrorHandler, keywords: Set<string>): Generator<Token, undefined> {
     const i = text[Symbol.iterator]();
 
     let current = i.next();
