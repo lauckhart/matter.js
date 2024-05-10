@@ -9,7 +9,7 @@ import { Message } from "../../codec/MessageCodec.js";
 import { CommandId } from "../../datatype/CommandId.js";
 import { EndpointInterface } from "../../endpoint/EndpointInterface.js";
 import { Logger } from "../../log/Logger.js";
-import { Globals } from "../../model/index.js";
+import { FabricIndex } from "../../model/standard/elements/FabricIndex.js";
 import { StatusCode } from "../../protocol/interaction/StatusCode.js";
 import { SecureSession } from "../../session/SecureSession.js";
 import { Session } from "../../session/Session.js";
@@ -59,7 +59,7 @@ export class CommandServer<RequestT, ResponseT> {
             if (fabric) {
                 request = this.requestSchema.injectField(
                     request,
-                    <number>Globals.FabricIndex.id,
+                    <number>FabricIndex.id,
                     session.associatedFabric.fabricIndex,
                     existingFieldIndex => existingFieldIndex === undefined,
                 );
