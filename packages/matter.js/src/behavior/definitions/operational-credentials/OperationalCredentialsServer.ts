@@ -27,17 +27,6 @@ import { CommissioningBehavior } from "../../system/commissioning/CommissioningB
 import { ProductDescriptionServer } from "../../system/product-description/ProductDescriptionServer.js";
 import { DeviceCertification } from "./DeviceCertification.js";
 import { OperationalCredentialsBehavior } from "./OperationalCredentialsBehavior.js";
-import {
-    AddNocRequest,
-    AddTrustedRootCertificateRequest,
-    AttestationRequest,
-    CertificateChainRequest,
-    CsrRequest,
-    NocResponse,
-    RemoveFabricRequest,
-    UpdateFabricLabelRequest,
-    UpdateNocRequest,
-} from "./OperationalCredentialsInterface.js";
 import { TlvAttestation, TlvCertSigningRequest } from "./OperationalCredentialsTypes.js";
 
 const logger = Logger.get("OperationalCredentials");
@@ -90,7 +79,7 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
         this.reactTo((this.endpoint as Node).lifecycle.online, this.#nodeOnline);
     }
 
-    override async attestationRequest({ attestationNonce }: AttestationRequest) {
+    override async attestationRequest({ attestationNonce }: OperationalCredentials.AttestationRequest) {
         if (attestationNonce.length !== 32) {
             throw new StatusResponseError("Invalid attestation nonce length", StatusCode.InvalidCommand);
         }
@@ -108,7 +97,7 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
         };
     }
 
-    override async csrRequest({ csrNonce, isForUpdateNoc }: CsrRequest) {
+    override async csrRequest({ csrNonce, isForUpdateNoc }: OperationalCredentials.CsrRequest) {
         if (csrNonce.length !== 32) {
             throw new StatusResponseError("Invalid csr nonce length", StatusCode.InvalidCommand);
         }
@@ -138,7 +127,7 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
         return { nocsrElements, attestationSignature: certification.sign(this.session, nocsrElements) };
     }
 
-    override async certificateChainRequest({ certificateType }: CertificateChainRequest) {
+    override async certificateChainRequest({ certificateType }: OperationalCredentials.CertificateChainRequest) {
         const certification = await this.getCertification();
 
         switch (certificateType) {
@@ -154,7 +143,7 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
         }
     }
 
-    #mapNocErrors(error: unknown): NocResponse {
+    #mapNocErrors(error: unknown): OperationalCredentials.NocResponse {
         if (error instanceof MatterFabricConflictError) {
             return {
                 statusCode: OperationalCredentials.NodeOperationalCertStatus.FabricConflict,
@@ -183,7 +172,13 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
         throw error;
     }
 
-    override async addNoc({ nocValue, icacValue, ipkValue, caseAdminSubject, adminVendorId }: AddNocRequest) {
+    override async addNoc({
+        nocValue,
+        icacValue,
+        ipkValue,
+        caseAdminSubject,
+        adminVendorId,
+    }: OperationalCredentials.AddNocRequest) {
         const failsafeContext = this.session.context.failsafeContext;
 
         if (failsafeContext.fabricIndex !== undefined) {
@@ -278,7 +273,7 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
         };
     }
 
-    override async updateNoc({ nocValue, icacValue }: UpdateNocRequest) {
+    override async updateNoc({ nocValue, icacValue }: OperationalCredentials.UpdateNocRequest) {
         assertSecureSession(this.session);
 
         const device = this.session.context;
@@ -334,7 +329,7 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
         }
     }
 
-    override async updateFabricLabel({ label }: UpdateFabricLabelRequest) {
+    override async updateFabricLabel({ label }: OperationalCredentials.UpdateFabricLabelRequest) {
         const fabric = this.session.associatedFabric;
 
         const currentFabricIndex = fabric.fabricIndex;
@@ -354,7 +349,7 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
         return { statusCode: OperationalCredentials.NodeOperationalCertStatus.Ok, fabricIndex: fabric.fabricIndex };
     }
 
-    override async removeFabric({ fabricIndex }: RemoveFabricRequest) {
+    override async removeFabric({ fabricIndex }: OperationalCredentials.RemoveFabricRequest) {
         const device = this.session.context;
 
         const fabric = device.getFabricByIndex(fabricIndex);
@@ -375,7 +370,7 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
         };
     }
 
-    override addTrustedRootCertificate({ rootCaCertificate }: AddTrustedRootCertificateRequest) {
+    override addTrustedRootCertificate({ rootCaCertificate }: OperationalCredentials.AddTrustedRootCertificateRequest) {
         const failsafeContext = this.session.context.failsafeContext;
 
         if (failsafeContext.hasRootCert) {
