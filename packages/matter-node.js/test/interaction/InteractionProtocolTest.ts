@@ -55,6 +55,7 @@ import {
     WriteRequest,
     WriteResponse,
 } from "@project-chip/matter.js/interaction";
+import { Specification } from "@project-chip/matter.js/model";
 import { MessageExchange } from "@project-chip/matter.js/protocol";
 import { SecureSession } from "@project-chip/matter.js/session";
 import { StorageBackendMemory, StorageContext, StorageManager, SyncStorage } from "@project-chip/matter.js/storage";
@@ -896,7 +897,7 @@ describe("InteractionProtocol", () => {
                         caseSessionsPerFabric: 100,
                         subscriptionsPerFabric: 100,
                     },
-                    specificationVersion: 0x01030000,
+                    specificationVersion: Specification.SPECIFICATION_VERSION,
                     maxPathsPerInvoke: 100,
                 },
                 {},
@@ -1155,7 +1156,7 @@ describe("InteractionProtocol", () => {
                         caseSessionsPerFabric: 100,
                         subscriptionsPerFabric: 100,
                     },
-                    specificationVersion: 0x01030000,
+                    specificationVersion: Specification.SPECIFICATION_VERSION,
                     maxPathsPerInvoke: 100,
                 },
                 {},
@@ -1198,7 +1199,7 @@ describe("InteractionProtocol", () => {
                         caseSessionsPerFabric: 100,
                         subscriptionsPerFabric: 100,
                     },
-                    specificationVersion: 0x01030000,
+                    specificationVersion: Specification.SPECIFICATION_VERSION,
                     maxPathsPerInvoke: 100,
                 },
                 {},
