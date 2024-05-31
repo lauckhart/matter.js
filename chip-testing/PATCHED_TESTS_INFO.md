@@ -21,6 +21,7 @@ No test
 | DGGEN.S.C03.Rsp=0         | We do not support the "TimeSnapshotResponse" command, so disablke tests for that                                       |
 | DGGEN.S.E00..2=0          | We do not enable events 0..2 for now, so disable tests for that                                                        |
 | DGGEN.S.F00=0             | We do not support the "DM Test" feature, so disablke tests for that                                                    |
-| PS.S.E01=0 | We do not suppooirt the optional Battery Fault Change event, so disable tests for that                                 |
-| CNET.S.A0002..3=0 | We use an Ethernet Network commissioning cluster and so we do not have these two attributes, so disable tests for that |
-| DESC.S.F00=0 | We do not provide a Taglist on Descriptor cluster, so disable tests for that                                           |
+| PS.S.E01=0                | We do not support the optional Battery Fault Change event, so disable tests for that                                   |
+| CNET.S.A0002..3=0         | We use an Ethernet Network commissioning cluster and so we do not have these two attributes, so disable tests for that |
+| DESC.S.F00=0              | We do not provide a Taglist on Descriptor cluster, so disable tests for that                                           |
+| PCC.S.A0005..c=0          | We provide a Constant pressure pump, so these attributes must not exist, so disable tests for that                     |

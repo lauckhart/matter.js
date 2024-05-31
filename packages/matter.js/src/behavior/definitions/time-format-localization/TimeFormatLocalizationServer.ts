@@ -8,6 +8,9 @@
 
 import { TimeFormatLocalization } from "../../../cluster/definitions/TimeFormatLocalizationCluster.js";
 import { TimeFormatLocalizationBehavior } from "./TimeFormatLocalizationBehavior.js";
+import { Logger } from "../../../log/Logger.js";
+
+const logger = Logger.get("TimeFormatLocalizationServer");
 
 /**
  * This is the default server implementation of {@link TimeFormatLocalizationBehavior}.
@@ -72,7 +75,7 @@ export class TimeFormatLocalizationServer extends TimeFormatLocalizationBehavior
                 return TimeFormatLocalization.CalendarType.Persian;
 
             default:
-                console.warn(`Unmapped calendar type "${type}"; falling back to Gregorian`);
+                logger.warn(`Unmapped calendar type "${type}"; falling back to Gregorian`);
                 return TimeFormatLocalization.CalendarType.Gregorian;
         }
     }
