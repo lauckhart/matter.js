@@ -6,7 +6,7 @@ on:
     - cron: 0 2 * * * # Every day at 02:00
   workflow_dispatch: # Manually on demand
   push:
-    branches: [ "*" ]
+    branches: [  "*" ]
   pull_request:
     branches: [ "*" ]
   merge_group:
