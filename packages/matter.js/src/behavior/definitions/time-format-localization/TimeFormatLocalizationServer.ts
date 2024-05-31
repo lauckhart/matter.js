@@ -28,6 +28,7 @@ export class TimeFormatLocalizationServer extends TimeFormatLocalizationBehavior
         }
     }
 
+    /** Override this getter with own implementation to detect the hour format of the system. */
     get detectedHourFormat() {
         if (Intl.DateTimeFormat(undefined, { hour: "numeric" }).resolvedOptions().hour12) {
             return TimeFormatLocalization.HourFormat["12Hr"];
@@ -35,6 +36,7 @@ export class TimeFormatLocalizationServer extends TimeFormatLocalizationBehavior
         return TimeFormatLocalization.HourFormat["24Hr"];
     }
 
+    /** Override this getter with own implementation to detect the calendar type of the system. */
     get detectedCalendarType() {
         const type = Intl.DateTimeFormat().resolvedOptions().calendar;
         switch (type) {
