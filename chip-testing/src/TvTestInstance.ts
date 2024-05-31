@@ -126,6 +126,7 @@ export class TvTestInstance implements TestInstance {
                         finish: BasicInformation.ProductFinish.Satin,
                         primaryColor: BasicInformation.Color.Purple,
                     },
+                    reachable: true,
                 },
                 administratorCommissioning: {
                     windowStatus: AdministratorCommissioning.CommissioningWindowStatus.WindowNotOpen,
