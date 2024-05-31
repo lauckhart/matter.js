@@ -17,6 +17,7 @@ No test
 | WNCV.S.M.Calibration=1    | We need to turn off calibration because the test expect a different behavior then we do in default implementation      |
 | CC.S.F00=1                | We support "Hue/Saturation" feature and want to run tests for that too                                                 |
 | DGGEN.S.A0003..7=0        | We do not add attributes 3..7 to our test, so disable tests for that                                                   |
+| DGGEN.S.C00.Rsp=0         | We do not support the "TestTrigger" command, so disable tests for that                                                 |
 | DGGEN.S.C03.Rsp=0         | We do not support the "TimeSnapshotResponse" command, so disablke tests for that                                       |
 | DGGEN.S.E00..2=0          | We do not enable events 0..2 for now, so disable tests for that                                                        |
 | DGGEN.S.F00=0             | We do not support the "DM Test" feature, so disablke tests for that                                                    |
