@@ -6,7 +6,7 @@ on:
     - cron: 0 2 * * * # Every day at 02:00
   workflow_dispatch: # Manually on demand
   push:
-    branches: [  "*" ]
+    branches: [ "*" ]
   pull_request:
     branches: [ "*" ]
   merge_group:
@@ -34,7 +34,7 @@ jobs:
   # Find out what is needed to be done by this test workflow
   chip-tests-needed:
     needs: [head-commit-message]
-    if: github.repository == 'project-chip/matter.js'
+    if: github.repository == 'Apollon77/lauckhart-matter.js'
     runs-on: ubuntu-latest
     outputs:
       chip-changes: ${{ steps.changes.outputs.src }}
@@ -110,7 +110,7 @@ jobs:
   # If we need to do anything make sure that chip binaries are build and environment can be set up
   prepare-chip-build:
     needs: [chip-tests-needed]
-    if: ${{ github.repository == 'project-chip/matter.js' && (needs.chip-tests-needed.outputs.chip-tool-rebuild == 'true' || needs.chip-tests-needed.outputs.chip-tests-required == 'true' || needs.chip-tests-needed.outputs.chip-changes == 'true' || needs.chip-tests-needed.outputs.chip-long-tests-required == 'true') }}
+    if: ${{ github.repository == 'Apollon77/lauckhart-matter.js' && (needs.chip-tests-needed.outputs.chip-tool-rebuild == 'true' || needs.chip-tests-needed.outputs.chip-tests-required == 'true' || needs.chip-tests-needed.outputs.chip-changes == 'true' || needs.chip-tests-needed.outputs.chip-long-tests-required == 'true') }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out matter.js
@@ -125,7 +125,7 @@ jobs:
   # Execute the core cluster tests
   chip-tests-core:
     needs: [prepare-chip-build]
-    if: ${{ github.repository == 'project-chip/matter.js' && (needs.chip-tests-needed.outputs.chip-tool-rebuild == 'true' || needs.chip-tests-needed.outputs.chip-tests-required == 'true' || needs.chip-tests-needed.outputs.chip-changes == 'true' || needs.chip-tests-needed.outputs.chip-long-tests-required == 'true') }}
+    if: ${{ github.repository == 'Apollon77/lauckhart-matter.js' && (needs.chip-tests-needed.outputs.chip-tool-rebuild == 'true' || needs.chip-tests-needed.outputs.chip-tests-required == 'true' || needs.chip-tests-needed.outputs.chip-changes == 'true' || needs.chip-tests-needed.outputs.chip-long-tests-required == 'true') }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out matter.js
@@ -157,7 +157,7 @@ jobs:
   # Execute the fast application cluster tests
   chip-tests-app-fast:
     needs: [prepare-chip-build]
-    if: ${{ github.repository == 'project-chip/matter.js' && (needs.chip-tests-needed.outputs.chip-tool-rebuild == 'true' || needs.chip-tests-needed.outputs.chip-tests-required == 'true' || needs.chip-tests-needed.outputs.chip-changes == 'true' || needs.chip-tests-needed.outputs.chip-long-tests-required == 'true') }}
+    if: ${{ github.repository == 'Apollon77/lauckhart-matter.js' && (needs.chip-tests-needed.outputs.chip-tool-rebuild == 'true' || needs.chip-tests-needed.outputs.chip-tests-required == 'true' || needs.chip-tests-needed.outputs.chip-changes == 'true' || needs.chip-tests-needed.outputs.chip-long-tests-required == 'true') }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out matter.js
@@ -189,7 +189,7 @@ jobs:
   # Execute the slower (because simulated) application cluster tests
   chip-tests-app-slow:
     needs: [prepare-chip-build]
-    if: ${{ github.repository == 'project-chip/matter.js' && (needs.chip-tests-needed.outputs.chip-tool-rebuild == 'true' || needs.chip-tests-needed.outputs.chip-slowapp-tests-required == 'true' || needs.chip-tests-needed.outputs.chip-changes == 'true' || needs.chip-tests-needed.outputs.chip-long-tests-required == 'true') }}
+    if: ${{ github.repository == 'Apollon77/lauckhart-matter.js' && (needs.chip-tests-needed.outputs.chip-tool-rebuild == 'true' || needs.chip-tests-needed.outputs.chip-slowapp-tests-required == 'true' || needs.chip-tests-needed.outputs.chip-changes == 'true' || needs.chip-tests-needed.outputs.chip-long-tests-required == 'true') }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out matter.js
@@ -220,7 +220,7 @@ jobs:
 
   chip-tests-legacy:
     needs: [prepare-chip-build]
-    if: ${{ github.repository == 'project-chip/matter.js' && (needs.chip-tests-needed.outputs.chip-tool-rebuild == 'true' || needs.chip-tests-needed.outputs.chip-tests-required == 'true' || needs.chip-tests-needed.outputs.chip-changes == 'true' || needs.chip-tests-needed.outputs.chip-long-tests-required == 'true') }}
+    if: ${{ github.repository == 'Apollon77/lauckhart-matter.js' && (needs.chip-tests-needed.outputs.chip-tool-rebuild == 'true' || needs.chip-tests-needed.outputs.chip-tests-required == 'true' || needs.chip-tests-needed.outputs.chip-changes == 'true' || needs.chip-tests-needed.outputs.chip-long-tests-required == 'true') }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out matter.js
@@ -250,7 +250,7 @@ jobs:
 
   chip-tests-long:
     needs: [prepare-chip-build]
-    if: ${{ github.repository == 'project-chip/matter.js' && needs.chip-tests-needed.outputs.chip-long-tests-required == 'true' }}
+    if: ${{ github.repository == 'Apollon77/lauckhart-matter.js' && needs.chip-tests-needed.outputs.chip-long-tests-required == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out matter.js
@@ -280,7 +280,7 @@ jobs:
 
   chip-tests-long-legacy:
     needs: [prepare-chip-build]
-    if: ${{ github.repository == 'project-chip/matter.js' && needs.chip-tests-needed.outputs.chip-long-tests-required == 'true' }}
+    if: ${{ github.repository == 'Apollon77/lauckhart-matter.js' && needs.chip-tests-needed.outputs.chip-long-tests-required == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out matter.js
