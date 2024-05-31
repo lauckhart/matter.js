@@ -77,7 +77,7 @@ export class TimeFormatLocalizationServer extends TimeFormatLocalizationBehavior
                 return TimeFormatLocalization.CalendarType.Persian;
 
             default:
-                logger.warn(`Unmapped calendar type "${type}"; falling back to Gregorian`);
+                logger.warn(`Unmapped calendar type "${type}"; Falling back to Gregorian`);
                 return TimeFormatLocalization.CalendarType.Gregorian;
         }
     }
