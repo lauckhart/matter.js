@@ -32,6 +32,9 @@ export async function main(argv = process.argv) {
         .command("types", "build type definitions", () => targets.push(Target.types))
         .command("esm", "build JS (ES6 modules)", () => targets.push(Target.esm))
         .command("cjs", "build JS (CommonJS modules)", () => targets.push(Target.cjs))
+        .command("content", "build markdown and HTML", () => targets.push(Target.markdown, Target.html))
+        .command("markdown", "build markdown from sources", () => targets.push(Target.markdown))
+        .command("html", "build HTML from markdown files", () => targets.push(Target.html))
         .command("graph", "display the workspace graph", () => (mode = Mode.DisplayGraph))
         .wrap(Math.min(process.stdout.columns, 80))
         .strict().argv;

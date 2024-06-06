@@ -8,9 +8,11 @@
     "packages/matter-node-ble.js",
     "packages/matter-node-shell.js",
     "packages/matter-node.js-examples",
+    "packages/matter.js-ui",
     "models",
     "codegen",
-    "chip-testing"
+    "chip-testing",
+    "website"
   ],
   "scripts": {
     "prepare": "npm run build-clean",

@@ -14,6 +14,8 @@ export enum Target {
     types = "types",
     esm = "esm",
     cjs = "cjs",
+    markdown = "markdown",
+    html = "html",
 }
 
 export interface Options {
