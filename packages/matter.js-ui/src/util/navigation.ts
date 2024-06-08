@@ -4,4 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export namespace nav {}
+import "@virtualstate/navigation";
+
+declare const navigation: Navigation;

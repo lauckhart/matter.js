@@ -32,8 +32,12 @@
     "dependencies": {
         "@project-chip/matter.js": "0.10.0-alpha.0-20240601-cba311a5",
         "@project-chip/matter.js-tools": "0.10.0-alpha.0-20240601-cba311a5",
+        "@virtualstate/navigation": "^1.0.1-alpha.203",
         "highlight.js": "^11.9.0",
         "marked": "^12.0.2",
         "marked-highlight": "^2.1.1"
+    },
+    "devDependencies": {
+        "@types/dom-navigation": "^1.0.3"
     }
 }

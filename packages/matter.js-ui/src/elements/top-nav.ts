@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import "@virtualstate/navigation/polyfill";
 import { define } from "../util/elements.js";
 import { render } from "../util/render.js";
 
@@ -17,9 +18,18 @@ class TopNav extends HTMLElement {
     connectedCallback() {
         if (this.firstElementChild === undefined) {
             render({ url: "top-nav.md" })
-                .then(html => (this.innerHTML = html))
+                .then(html => {
+                    this.innerHTML = html;
+                    this.#initializeNavigation();
+                })
                 .catch(console.error);
+        } else {
+            this.#initializeNavigation();
         }
+    }
+
+    #initializeNavigation() {
+        navigation;
     }
 }
 
