@@ -29,8 +29,11 @@ class TopNav extends HTMLElement {
     }
 
     #initializeNavigation() {
-        navigation;
+        navigation.addEventListener("navigate");
+        this.#updateCurrent();
     }
+
+    #updateCurrent() {}
 }
 
 define(TopNav);
