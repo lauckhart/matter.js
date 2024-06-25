@@ -14,7 +14,7 @@ import { DescriptorServer } from "../../behavior/definitions/descriptor/Descript
 import { BehaviorBacking } from "../../behavior/internal/BehaviorBacking.js";
 import { Val } from "../../behavior/state/Val.js";
 import { Transaction } from "../../behavior/state/transaction/Transaction.js";
-import { Lifecycle, UninitializedDependencyError } from "../../common/Lifecycle.js";
+import { CrashedDependencyError, Lifecycle, UninitializedDependencyError } from "../../common/Lifecycle.js";
 import { ImplementationError, InternalError, ReadOnlyError } from "../../common/MatterError.js";
 import { Diagnostic } from "../../log/Diagnostic.js";
 import { Logger } from "../../log/Logger.js";
@@ -25,6 +25,7 @@ import { BasicSet } from "../../util/Set.js";
 import { camelize, describeList } from "../../util/String.js";
 import type { Agent } from "../Agent.js";
 import type { Endpoint } from "../Endpoint.js";
+import { EndpointVariableService } from "../EndpointVariableService.js";
 import { EndpointInitializer } from "./EndpointInitializer.js";
 import { EndpointLifecycle } from "./EndpointLifecycle.js";
 import type { SupportedBehaviors } from "./SupportedBehaviors.js";
@@ -126,26 +127,59 @@ export class Behaviors {
     /**
      * Activate any behaviors designated for immediate activation.  Returns a promise iff any behaviors have ongoing
      * initialization.
+     *
+     * Throws an error if any behavior crashes, but we allow all behaviors to settle before throwing.  The goal is to
+     * surface multiple configuration errors and prevent inconsistent state caused by partial initialization.
      */
     initialize(agent: Agent): MaybePromise {
+        // Activate behaviors
+        //
+        // TODO - add a timeout on behavior initialization
         for (const type of Object.values(this.supported)) {
             if (type.early) {
                 this.activate(type, agent);
             }
         }
 
-        // If all behaviors are initialized then we complete synchronously
+        // Returns an error if any behaviors crashed
+        const behaviorError = () => {
+            if (
+                Object.values(this.#backings).findIndex(
+                    behavior => behavior.construction.status === Lifecycle.Status.Crashed,
+                ) === -1
+            ) {
+                return;
+            }
+
+            return new CrashedDependencyError(
+                `Endpoint ${this.#endpoint}`,
+                "initialization failed because of behavior errors",
+            );
+        };
+
+        // If all started behaviors are now settled then we complete synchronously
         const initializing = this.#initializing;
         if (!initializing?.size) {
+            const error = behaviorError();
+            if (error) {
+                throw error;
+            }
             return;
         }
 
-        // Return a promise that fulfills once all behaviors complete initialization
-        return new Promise<void>(fulfilled => {
+        // Async initialization - return a promise that fulfills once all behaviors settle
+        return new Promise<void>((resolve, reject) => {
             const initializationListener = () => {
                 if (initializing.size === 0) {
                     initializing.deleted.off(initializationListener);
-                    fulfilled();
+
+                    const error = behaviorError();
+                    if (error !== undefined) {
+                        reject(error);
+                        return;
+                    }
+
+                    resolve();
                 }
             };
 
@@ -202,17 +236,6 @@ export class Behaviors {
         }
 
         return behavior;
-    }
-
-    /**
-     * True if any behaviors failed to initialized
-     */
-    get hasCrashed() {
-        return (
-            Object.values(this.#backings).findIndex(
-                behavior => behavior.construction.status === Lifecycle.Status.Crashed,
-            ) !== -1
-        );
     }
 
     /**
@@ -383,8 +406,10 @@ export class Behaviors {
      * a new endpoint.
      */
     defaultsFor(type: Behavior.Type) {
-        const options = this.#options[type.id];
         let defaults: Val.Struct | undefined;
+
+        // Set defaults from options
+        const options = this.#options[type.id];
         if (options) {
             for (const key in type.defaults) {
                 if (key in options) {
@@ -395,6 +420,13 @@ export class Behaviors {
                 }
             }
         }
+        // Set defaults from environmental configuration
+        const varService = this.#endpoint.env.get(EndpointVariableService);
+        const vars = varService.forBehaviorInstance(this.#endpoint, type);
+        if (vars !== undefined) {
+            defaults = { ...defaults, ...(type.supervisor.cast(vars) as Val.Struct) };
+        }
+
         return defaults;
     }
 

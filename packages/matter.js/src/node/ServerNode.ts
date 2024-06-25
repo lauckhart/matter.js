@@ -89,8 +89,13 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
     >(this: This, definition?: T | Node.Configuration<T>, options?: Node.Options<T>) {
         const node = new this(definition, options);
 
-        if (!node.lifecycle.isTreeReady) {
-            await node.lifecycle.treeReady;
+        // Wait for the node's tree to complete initialization.  If the node crashes construction will reject so
+        // wait on that too so we rethrow
+        while (!node.lifecycle.isTreeReady) {
+            if (node.construction.error) {
+                throw node.construction.error;
+            }
+            await Promise.any([node.construction, node.lifecycle.treeReady]);
         }
 
         const activity = node.env.get(NodeActivity);

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CrashedDependencyError, Lifecycle } from "../../common/Lifecycle.js";
+import { Lifecycle } from "../../common/Lifecycle.js";
 import { ImplementationError } from "../../common/MatterError.js";
 import { type Agent } from "../../endpoint/Agent.js";
 import type { Endpoint } from "../../endpoint/Endpoint.js";
@@ -68,16 +68,16 @@ export abstract class BehaviorBacking {
             return this.invokeInitializer(behavior, this.#options);
         };
 
-        const backingConstructionCrashed = (e: Error) => {
-            // This is the only error we should see here...
-            if (!(e instanceof CrashedDependencyError)) {
-                // ...but if not, log
-                logger.error("Unhandled error initializing behavior", e);
-            }
+        const backingConstructionCrashed = (e: unknown) => {
+            logger.error(`Error initializing ${this}:`, e);
         };
 
-        this.construction.start(constructBacking);
-        this.construction.onError(backingConstructionCrashed);
+        try {
+            this.construction.start(constructBacking);
+            this.construction.onError(backingConstructionCrashed);
+        } catch (e) {
+            backingConstructionCrashed(e);
+        }
     }
 
     /**

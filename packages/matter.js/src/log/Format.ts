@@ -424,6 +424,9 @@ function renderValue(value: unknown, formatter: Formatter, squash: boolean): str
         return formatter.text(formatTime(value));
     }
     if (typeof value === "object") {
+        if (value instanceof String) {
+            return value.toString();
+        }
         return formatter.text(serialize(value) ?? "undefined");
     }
 
