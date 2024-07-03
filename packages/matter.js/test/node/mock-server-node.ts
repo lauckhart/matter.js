@@ -100,7 +100,7 @@ export class MockServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootE
         }
 
         if (options?.online === false) {
-            await node.construction.initialization;
+            await node.construction;
             return node;
         }
 

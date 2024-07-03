@@ -16,9 +16,7 @@ import { EndpointServer } from "../endpoint/EndpointServer.js";
 import { RootEndpoint as BaseRootEndpoint } from "../endpoint/definitions/system/RootEndpoint.js";
 import { EndpointInitializer } from "../endpoint/properties/EndpointInitializer.js";
 import { EndpointLifecycle } from "../endpoint/properties/EndpointLifecycle.js";
-import { Diagnostic } from "../log/Diagnostic.js";
 import { DiagnosticSource } from "../log/DiagnosticSource.js";
-import { Logger } from "../log/Logger.js";
 import { asyncNew } from "../util/AsyncConstruction.js";
 import { Mutex } from "../util/Mutex.js";
 import { Identity } from "../util/Type.js";
@@ -26,8 +24,6 @@ import { Node } from "./Node.js";
 import { IdentityService } from "./server/IdentityService.js";
 import { ServerEndpointInitializer } from "./server/ServerEndpointInitializer.js";
 import { ServerStore } from "./server/storage/ServerStore.js";
-
-const logger = Logger.get("ServerNode");
 
 /**
  * A server-side Matter {@link Node}.
@@ -212,7 +208,7 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
 
     protected override endpointCrashed(endpoint: Endpoint) {
         // Endpoint crashes may be disabled by event handlers except for the node
-        if (super.endpointCrashed(endpoint) === false && endpoint !== this) {
+        if (super.endpointCrashed(endpoint) === false && endpoint !== this && endpoint.essential !== false) {
             return false;
         }
 
@@ -236,9 +232,8 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
     }
 
     #reportCrashTermination() {
-        logger.info("Aborting", Diagnostic.strong(this.toString()), ": Endpoints have errors");
         this.construction.onSuccess(() =>
-            this.construction.crashed(new Error(`Aborted ${this}: Endpoints have errors`), false),
+            this.construction.crashed(new Error(`Aborted ${this} due to endpoint errors`)),
         );
     }
 }

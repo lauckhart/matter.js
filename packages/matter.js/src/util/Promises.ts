@@ -89,7 +89,7 @@ export async function withTimeout<T>(
     if (typeof cancel === "function") {
         cancelFn = cancel;
     } else if (typeof cancel?.abort === "function") {
-        cancelFn = () => (cancel as AbortController).abort();
+        cancelFn = () => cancel.abort();
     } else {
         cancelFn = () => {
             throw new PromiseTimeoutError();
@@ -100,7 +100,7 @@ export async function withTimeout<T>(
 
     // Sub-promise 1, the timer
     const timeout = new Promise<void>((resolve, reject) => {
-        const timer = Time.getTimer("promise-timeout", timeoutMs, () => reject(cancel));
+        const timer = Time.getTimer("promise-timeout", timeoutMs, () => reject(cancelFn));
 
         cancelTimer = () => {
             timer.stop();

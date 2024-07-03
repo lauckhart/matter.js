@@ -48,6 +48,13 @@ export class DescriptorServer extends DescriptorBehavior {
                     revision: partType.deviceRevision,
                 },
             ];
+
+            this.addDeviceTypes(
+                ...this.endpoint.additionalTypes.map(type => {
+                    const { deviceType, deviceRevision: revision } = type;
+                    return { deviceType, revision };
+                }),
+            );
         }
     }
 

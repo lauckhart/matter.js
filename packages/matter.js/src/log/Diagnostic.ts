@@ -5,7 +5,6 @@
  */
 
 import type { Lifecycle } from "../common/Lifecycle.js";
-import { isObject } from "../util/Type.js";
 
 /**
  * Logged values may implement this interface to customize presentation.
@@ -141,50 +140,7 @@ export namespace Diagnostic {
      * Create a Diagnostic for an error.
      */
     export function error(error: any) {
-        const { message, stack } = messageAndStackFor(error);
-
-        let cause, errors;
-        if (isObject(error)) {
-            ({ cause, errors } = error);
-        }
-
-        if (stack === undefined && cause === undefined && errors === undefined) {
-            return message;
-        }
-
-        const list: Array<string | Diagnostic> = [message];
-        if (stack !== undefined) {
-            list.push(Diagnostic(Presentation.List, stack));
-        }
-
-        // We render chained causes at the same level as the parent.  They are displayed atomically and there can be
-        // only one so this is not ambiguous.  If we did not do this we would end up with a lot of indent levels
-        for (; isObject(cause); cause = cause.cause) {
-            const { message, stack } = messageAndStackFor(cause);
-            list.push(message);
-            if (stack !== undefined) {
-                list.push(stack as Diagnostic);
-            }
-        }
-
-        // AggregateError support.  We render sub-errors as subordinate to the parent.  Otherwise the parent error would
-        // be ambiguous.  This means they get an extra indent level but since they do not tend to be nested as deeply as
-        // causes this is a good tradeoff
-        if (Array.isArray(errors)) {
-            list.push(
-                errors.map(e => {
-                    let diagnostic = Diagnostic.error(e);
-                    if (Array.isArray(diagnostic)) {
-                        diagnostic[0] = Diagnostic(Presentation.Error, ["Sub-error:", diagnostic[0]]);
-                    } else if (Array.isArray(diagnostic)) {
-                        diagnostic = Diagnostic(Presentation.Error, ["Sub-error:", diagnostic]);
-                    }
-                    return diagnostic;
-                }) as Diagnostic,
-            );
-        }
-
-        return Diagnostic(Presentation.List, list);
+        return formatError(error);
     }
 
     /**
@@ -291,7 +247,60 @@ export namespace Diagnostic {
     }
 }
 
-function messageAndStackFor(error: any) {
+function formatError(error: any, options: { messagePrefix?: string; parentStack?: string[] } = {}) {
+    const { messagePrefix, parentStack } = options;
+
+    const messageAndStack = messageAndStackFor(error, parentStack);
+    const { stack, stackLines } = messageAndStack;
+
+    let { message } = messageAndStack;
+    if (messagePrefix) {
+        message = `${messagePrefix} ${message}`;
+    }
+
+    message = Diagnostic.upgrade(message, Diagnostic(Diagnostic.Presentation.Error, message));
+
+    let cause, errors;
+    if (typeof error === "object" && error !== null) {
+        ({ cause, errors } = error);
+    }
+
+    if (stack === undefined && cause === undefined && errors === undefined) {
+        return message;
+    }
+
+    const list: Array<string | Diagnostic> = [message];
+    if (stack !== undefined) {
+        list.push(Diagnostic(Diagnostic.Presentation.List, stack));
+    }
+
+    // We render chained causes at the same level as the parent.  They are displayed atomically and there can be
+    // only one so this is not ambiguous.  If we did not do this we would end up with a lot of indent levels
+    for (; typeof cause === "object" && cause !== null; cause = cause.cause) {
+        let formatted = formatError(cause, { messagePrefix: "Caused by:", parentStack: stackLines });
+        if ((formatted as Diagnostic)[Diagnostic.presentation] === Diagnostic.Presentation.List) {
+            formatted = (formatted as Diagnostic)[Diagnostic.value] ?? formatted;
+        }
+
+        if (Array.isArray(formatted)) {
+            list.push(...formatted);
+        } else {
+            list.push(formatted);
+        }
+    }
+
+    // AggregateError support.  We render sub-errors as subordinate to the parent.  Otherwise the parent error would
+    // be ambiguous.  This means they get an extra indent level but since they will not tend to be nested as deeply as
+    // causes (I think) this is a decent tradeoff
+    if (Array.isArray(errors)) {
+        let cause = 0;
+        list.push(...errors.map(e => formatError(e, { messagePrefix: `Cause #${cause++}:`, parentStack: stackLines })));
+    }
+
+    return Diagnostic(Diagnostic.Presentation.List, list);
+}
+
+function messageAndStackFor(error: any, parentStack?: string[]) {
     let message: string | undefined;
     let rawStack: string | undefined;
     if (error !== undefined && error !== null) {
@@ -332,14 +341,56 @@ function messageAndStackFor(error: any) {
         rawStack = rawStack.slice(pos + message.length).trim();
     }
 
+    // Extract raw lines
+    let stackLines = rawStack
+        .split("\n")
+        .map(line => line.trim())
+        .filter(line => line !== "");
+
+    // Node helpfully gives us this if there's no message.  It's not even the name of the error class, just "Error"
+    if (stackLines[0] === "Error") {
+        stackLines.shift();
+    }
+
+    // If there's a parent stack, identify the portion of the stack in common so we don't have to repeat it.  The stacks
+    // may be truncated by the VM so this is not 100% guaranteed correct with recursive functions, but accidental
+    // mismatches are unlikely
+    let truncatedToParent = false;
+    if (parentStack) {
+        let truncateTo = 0;
+
+        // For each line in the stack, find the line in the parent.  Skip the last two lines because truncating them
+        // won't save space
+        stackSearch: for (; truncateTo < stackLines.length - 1; truncateTo++) {
+            let parentPos = parentStack.indexOf(stackLines[truncateTo]);
+            if (parentPos === -1) {
+                continue;
+            }
+
+            // Found the line.  If all subsequent lines match then we truncate.  If either stack terminates before the
+            // other, assume the stacks are truncated and consider a match
+            parentPos++;
+            for (
+                let pos = truncateTo + 1;
+                pos < stackLines.length && parentPos < parentStack.length;
+                pos++, parentPos++
+            ) {
+                if (stackLines[pos] !== parentStack[parentPos]) {
+                    continue stackSearch;
+                }
+            }
+
+            // Found a match.  Truncate but leave the top-most shared frame to make it clear where the commonality
+            // with the parent starts
+            stackLines = stackLines.slice(0, truncateTo + 1);
+            truncatedToParent = true;
+            break;
+        }
+    }
+
     // Spiff up stack lines a bit
     const stack = Array<unknown>();
-    for (let line of rawStack.split("\n")) {
-        line = line.trim();
-        if (line === "") {
-            continue;
-        }
-
+    for (const line of stackLines) {
         const match1 = line.match(/^at\s+(?:(.+)\s+\(([^)]+)\)|(<anonymous>))$/);
         if (match1) {
             const value = [Diagnostic.weak("at "), match1[1] ?? match1[3]];
@@ -359,10 +410,10 @@ function messageAndStackFor(error: any) {
         stack.push(line);
     }
 
-    // Node helpfully gives us this if there's no message.  It's not even the name of the error class, just "Error"
-    if (stack[0] === "Error") {
-        stack.shift();
+    // Add truncation note
+    if (truncatedToParent) {
+        stack.push(Diagnostic.weak("(see parent frames)"));
     }
 
-    return { message, stack };
+    return { message, stack, stackLines };
 }

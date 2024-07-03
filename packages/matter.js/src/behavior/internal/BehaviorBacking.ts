@@ -8,6 +8,7 @@ import { Lifecycle } from "../../common/Lifecycle.js";
 import { ImplementationError } from "../../common/MatterError.js";
 import { type Agent } from "../../endpoint/Agent.js";
 import type { Endpoint } from "../../endpoint/Endpoint.js";
+import { BehaviorInitializationError } from "../../endpoint/errors.js";
 import { Logger } from "../../log/Logger.js";
 import { AsyncConstruction } from "../../util/AsyncConstruction.js";
 import { EventEmitter, Observable } from "../../util/Observable.js";
@@ -42,7 +43,17 @@ export abstract class BehaviorBacking {
         this.#type = type;
         this.#options = options;
 
-        this.#construction = AsyncConstruction(this);
+        this.#construction = AsyncConstruction(this, undefined, {
+            onerror(error) {
+                // The endpoint reports errors during initialization.  For errors occurring later we report the error
+                // ourselves
+                if (endpoint.behaviors.isInitialized) {
+                    logger.error(error);
+                }
+
+                return false;
+            },
+        });
     }
 
     toString() {
@@ -59,6 +70,10 @@ export abstract class BehaviorBacking {
      * Called by Behaviors class once the backing is installed.
      */
     initialize(agent: Agent) {
+        const crashConstruction = (cause: unknown) => {
+            throw new BehaviorInitializationError(`Error initializing ${this}`, cause);
+        };
+
         const constructBacking = () => {
             try {
                 // We use this behavior for initialization.  Do not use agent.get() to access the behavior because it
@@ -66,37 +81,16 @@ export abstract class BehaviorBacking {
                 const behavior = this.#lifecycleInstance(agent);
 
                 // Perform actual initialization
-                return this.invokeInitializer(behavior, this.#options);
-            } catch (e) {}
-        };
-
-        const backingConstructionCrashed = (e: unknown) => {
-            let detail;
-            if (this.#endpoint.behaviors.isInitialized) {
-                // The endpoint is initialized so report the full stack trace
-                detail = e;
-            } else {
-                // The endpoint is still initializing so we only log the message.  We include full details in the
-                // AggregateError thrown by Behaviors
-                if (e instanceof Error) {
-                    if (e.cause instanceof Error) {
-                        detail = `Error initializing ${this}: ${e.cause.message}`;
-                    } else {
-                        detail = e.message;
-                    }
-                } else {
-                    detail = `Error initializing ${this}: ${e}`;
+                const promise = this.invokeInitializer(behavior, this.#options);
+                if (promise) {
+                    Promise.resolve(promise).catch(crashConstruction);
                 }
+            } catch (e) {
+                crashConstruction(e);
             }
-            logger.error(detail);
         };
 
-        try {
-            this.construction.start(constructBacking);
-            this.construction.onError(backingConstructionCrashed);
-        } catch (e) {
-            backingConstructionCrashed(e);
-        }
+        this.construction.start(constructBacking);
     }
 
     /**

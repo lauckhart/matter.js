@@ -423,7 +423,8 @@ function renderValue(value: unknown, formatter: Formatter, squash: boolean): str
         if (list.length > 1) {
             return renderList(list, formatter);
         }
-        return list[0]
+        const first = valueFor(list[0]) as unknown[];
+        return first
             .map(e => {
                 if (typeof e === "string" && !squash) {
                     e = e.trim();

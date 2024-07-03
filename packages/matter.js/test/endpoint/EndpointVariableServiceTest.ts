@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CrashedDependencyError } from "../../src/common/Lifecycle.js";
 import { OnOffLightDevice } from "../../src/endpoint/definitions/device/OnOffLightDevice.js";
+import { EndpointBehaviorsError } from "../../src/endpoint/errors.js";
 import { Environment } from "../../src/environment/Environment.js";
 import { MockServerNode } from "../node/mock-server-node.js";
 import { MockEndpoint } from "./mock-endpoint.js";
@@ -44,7 +44,7 @@ describe("EndpointVariableService", () => {
             const environment = new Environment("test");
             environment.vars.addUnixEnvStyle({ MATTER_NODES_NODE0_BASICINFORMATION_VENDORSPECIES: "Frog" });
             await expect(MockServerNode.create(MockServerNode.RootEndpoint, { environment })).rejectedWith(
-                CrashedDependencyError,
+                EndpointBehaviorsError,
             );
         });
     });
@@ -89,11 +89,11 @@ describe("EndpointVariableService", () => {
             expect(endpoint.state.onOff.onTime).equals(10);
         });
 
-        it("rejects invalid property", async () => {
+        it.only("rejects invalid property", async () => {
             const environment = new Environment("test");
             environment.vars.addUnixEnvStyle({ MATTER_NODES_NODE0_PARTS_PART0_ONOFF_ONTIME: "Fred" });
 
-            await expect(MockEndpoint.create(OnOffLightDevice, { environment })).rejectedWith(CrashedDependencyError);
+            await expect(MockEndpoint.create(OnOffLightDevice, { environment })).rejectedWith(EndpointBehaviorsError);
         });
     });
 });

@@ -115,7 +115,9 @@ export class UninitializedDependencyError extends DependencyLifecycleError {}
 /**
  * Thrown for actions that cannot be performed because dependency crashed.
  */
-export class CrashedDependencyError extends DependencyLifecycleError {}
+export class CrashedDependencyError extends DependencyLifecycleError {
+    subject?: object;
+}
 
 /**
  * Thrown for actions that cannot be performed because a dependency has been destroyed.

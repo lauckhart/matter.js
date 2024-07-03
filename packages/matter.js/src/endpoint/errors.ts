@@ -4,27 +4,31 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BehaviorBacking } from "../behavior/internal/BehaviorBacking.js";
 import { MatterAggregateError, MatterError } from "../common/MatterError.js";
-import { Endpoint } from "./Endpoint.js";
+import { type Endpoint } from "./Endpoint.js";
 
 /**
  * Thrown when an error occurs during initialization of a behavior.
  */
 export class BehaviorInitializationError extends MatterError {
-    constructor(backing: BehaviorBacking, cause: Error) {
-        super(`Error initializing ${backing}`);
+    constructor(message: string, cause?: unknown) {
+        super(message);
         this.cause = cause;
     }
-
-    override cause: Error;
 }
 
 /**
  * Thrown when an error occurs initializing the behaviors of an endpoint.
  */
-export class BehaviorsInitializationError extends MatterAggregateError {
-    constructor(causes: Error[], endpoint: Endpoint) {
-        super(causes, `Error initializing ${endpoint}: Behaviors have errors`);
+export class EndpointBehaviorsError extends MatterAggregateError {
+    constructor(causes: Error[]) {
+        super(causes, `Behaviors have errors`);
+    }
+}
+
+export class EndpointInitializationError extends MatterError {
+    constructor(endpoint: Endpoint, cause: unknown) {
+        super(`Error initializing ${endpoint}`);
+        this.cause = cause;
     }
 }

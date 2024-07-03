@@ -14,10 +14,21 @@ import { MaybePromise } from "./Promises.js";
  * Create an instance of a class implementing the {@link AsyncConstructable} pattern.
  */
 export async function asyncNew<const A extends any[], const C extends new (...args: A) => AsyncConstructable<any>>(
-    constructable: C,
+    constructor: C,
     ...args: A
 ): Promise<InstanceType<C>> {
-    return await new constructable(...args).construction.initialization;
+    const subject = new constructor(...args);
+
+    try {
+        await subject.construction;
+    } catch (e) {
+        if (subject.construction.error && e instanceof CrashedDependencyError && e.subject === subject) {
+            throw subject.construction.error;
+        }
+        throw e;
+    }
+
+    return subject as InstanceType<C>;
 }
 
 /**
@@ -73,19 +84,6 @@ export interface AsyncConstruction<T> extends Promise<T> {
     readonly change: Observable<[status: Lifecycle.Status, subject: T]>;
 
     /**
-     * A promise that resolves or rejects with {@link error}.  Awaiting this promise is identical to awaiting the
-     * AsyncConstruction itself except:
-     *
-     *   - On error this promise rejects with the original error rather than CrashedDependencyError
-     *
-     *   - Accessing this property disables error logging in the default handler
-     *
-     * This allows the primary code path to handle initialization errors while dependent code paths only receive errors
-     * indicating the dependency is unavailable.
-     */
-    readonly initialization: Promise<T>;
-
-    /**
      * If you omit the initializer parameter to {@link AsyncConstruction} execution is deferred until you invoke this
      * method.
      */
@@ -125,7 +123,7 @@ export interface AsyncConstruction<T> extends Promise<T> {
     /**
      * Force "crashed" state with the specified error.
      */
-    crashed(cause: any, reportError?: boolean): void;
+    crashed(cause: any): void;
 
     /**
      * Invoke a method after construction completes successfully.
@@ -156,11 +154,6 @@ export function AsyncConstruction<T extends AsyncConstructable>(
     initializer?: () => MaybePromise,
     options?: AsyncConstruction.Options,
 ): AsyncConstruction<T> {
-    // The promise we use to implement AsyncConstructable.initialization
-    let initializationPromise: undefined | Promise<T>;
-    let initializationResolve: undefined | ((subject: T) => void);
-    let initializationReject: undefined | ((error: any) => void);
-
     // The promise we use to implement AsyncConstructable.then()
     let awaiterPromise: undefined | Promise<T>;
     let awaiterResolve: undefined | ((subject: T) => void);
@@ -172,16 +165,8 @@ export function AsyncConstruction<T extends AsyncConstructable>(
     let canceled = false;
     let status = Lifecycle.Status.Initializing;
     let change: Observable<[status: Lifecycle.Status, subject: T]> | undefined;
-    let errorHandled = false;
 
-    const onerror =
-        options?.onerror ??
-        ((error: Error) => {
-            if (errorHandled) {
-                return;
-            }
-            unhandledError(error);
-        });
+    const onerror = options?.onerror ?? unhandledError;
 
     const self: AsyncConstruction<any> = {
         [Symbol.toStringTag]: "AsyncConstruction",
@@ -223,9 +208,8 @@ export function AsyncConstruction<T extends AsyncConstructable>(
             try {
                 initializerPromise = initializer();
             } catch (e) {
-                errorHandled = true;
                 rejected(e);
-                throw e;
+                return;
             }
 
             if (MaybePromise.is(initializerPromise)) {
@@ -300,24 +284,6 @@ export function AsyncConstruction<T extends AsyncConstructable>(
             onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null,
         ): Promise<T | TResult> {
             return this.then(undefined, onrejected);
-        },
-
-        get initialization() {
-            if (initializationPromise === undefined) {
-                if (!ready) {
-                    errorHandled = true;
-                    initializationPromise = new Promise<T>((resolve, reject) => {
-                        initializationResolve = () => resolve(subject);
-                        initializationReject = reject;
-                    });
-                } else if (error) {
-                    initializationPromise = Promise.reject(error);
-                } else {
-                    initializationPromise = Promise.resolve(subject);
-                }
-            }
-
-            return initializationPromise;
         },
 
         onSuccess(actor: () => MaybePromise<void>) {
@@ -405,12 +371,10 @@ export function AsyncConstruction<T extends AsyncConstructable>(
             return Promise.prototype.finally.call(this, onfinally);
         },
 
-        crashed(cause: any, report = true) {
+        crashed(cause: any) {
             error = cause;
             setStatus(Lifecycle.Status.Crashed);
-            if (report) {
-                onerror(error);
-            }
+            onerror(error);
         },
 
         setStatus(newStatus: Lifecycle.Status) {
@@ -464,7 +428,9 @@ export function AsyncConstruction<T extends AsyncConstructable>(
         } else {
             what = subject.toString();
         }
-        return new CrashedDependencyError(what, "unavailable due to initialization error");
+        const error = new CrashedDependencyError(what, "unavailable due to initialization error");
+        error.subject = subject;
+        return error;
     }
 
     function setStatus(newStatus: Lifecycle.Status) {
@@ -485,12 +451,6 @@ export function AsyncConstruction<T extends AsyncConstructable>(
             setStatus(Lifecycle.Status.Active);
         }
 
-        if (initializationResolve) {
-            const resolve = initializationResolve;
-            initializationResolve = initializationReject = undefined;
-            resolve(subject);
-        }
-
         if (awaiterResolve) {
             const resolve = awaiterResolve;
             awaiterResolve = awaiterReject = undefined;
@@ -499,15 +459,12 @@ export function AsyncConstruction<T extends AsyncConstructable>(
     }
 
     function rejected(cause: any) {
+        let result = undefined;
         ready = true;
         if (status !== Lifecycle.Status.Destroying && status !== Lifecycle.Status.Destroyed) {
-            self.crashed(cause);
-        }
-
-        if (initializationReject) {
-            const reject = initializationReject;
-            initializationResolve = initializationReject = undefined;
-            reject(cause);
+            error = cause;
+            setStatus(Lifecycle.Status.Crashed);
+            result = onerror(error);
         }
 
         if (awaiterReject) {
@@ -515,6 +472,8 @@ export function AsyncConstruction<T extends AsyncConstructable>(
             awaiterResolve = awaiterReject = undefined;
             reject(cause);
         }
+
+        return result;
     }
 
     function unhandledError(...args: any[]) {
@@ -541,11 +500,6 @@ export namespace AsyncConstruction {
          * Cancellation callback if the subject supports cancellation.
          */
         cancel?: () => void;
-
-        /**
-         * If the subject contributes to a composite object, crashes propagate to parent indicated here.
-         */
-        parent?: AsyncConstruction<any>;
 
         /**
          * By default unhandled initialization errors are logged.  You can override by supplying an error handler here

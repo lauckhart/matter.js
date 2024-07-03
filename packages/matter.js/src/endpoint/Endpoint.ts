@@ -23,6 +23,7 @@ import { Immutable } from "../util/Type.js";
 import { Agent } from "./Agent.js";
 import { DataModelPath } from "./DataModelPath.js";
 import { RootEndpoint } from "./definitions/system/RootEndpoint.js";
+import { EndpointInitializationError } from "./errors.js";
 import { Behaviors } from "./properties/Behaviors.js";
 import { EndpointInitializer } from "./properties/EndpointInitializer.js";
 import { EndpointLifecycle } from "./properties/EndpointLifecycle.js";
@@ -46,6 +47,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     #id?: string;
     #number?: EndpointNumber;
     #owner?: Endpoint;
+    #additionalTypes: EndpointType[];
     #agentType?: Agent.Type<T>;
     #behaviors?: Behaviors;
     #lifecycle: EndpointLifecycle;
@@ -54,6 +56,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     #stateView = {} as Immutable<SupportedBehaviors.StateOf<T["behaviors"]>>;
     #events = {} as SupportedBehaviors.EventsOf<T["behaviors"]>;
     #activity?: NodeActivity;
+    #isEssential = true;
 
     /**
      * A string that uniquely identifies an endpoint.
@@ -105,6 +108,20 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      */
     get owner(): Endpoint | undefined {
         return this.#owner;
+    }
+
+    /**
+     * Designates endpoint as essential.
+     *
+     * By default endpoints are considered "essential".  An essential endpoint must initialize successfully or the node
+     * will terminate with errors.
+     */
+    get essential() {
+        return this.#isEssential;
+    }
+
+    set essential(essential: boolean) {
+        this.#isEssential = essential;
     }
 
     /**
@@ -262,8 +279,8 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     /**
      * Create new endpoint.
      *
-     * The endpoint will not initialize fully until added to a {@link Node}.  You can use {@link Endpoint.add} to construct
-     * and initialize a {@link Endpoint} in one step.
+     * The endpoint will not initialize fully until added to a {@link Node}.  You can use {@link Endpoint.add} to
+     * construct and initialize an {@link Endpoint} in one step.
      *
      * @param config
      */
@@ -272,8 +289,8 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     /**
      * Create new endpoint.
      *
-     * The endpoint will not initialize fully until added to a {@link Node}.  You can use {@link Endpoint.add} to construct
-     * and initialize a {@link Endpoint} in one step.
+     * The endpoint will not initialize fully until added to a {@link Node}.  You can use {@link Endpoint.add} to
+     * construct and initialize an {@link Endpoint} in one step.
      *
      * @param config
      */
@@ -281,16 +298,21 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
 
     constructor(definition: T | Endpoint.Configuration<T>, options?: Endpoint.Options<T>) {
         // Create construction early so endpoints and behaviors can hook events
-        this.#construction = AsyncConstruction(this);
+        this.#construction = AsyncConstruction(this, undefined);
 
         const config = Endpoint.configurationFor(definition, options);
 
         this.#type = config.type;
         this.#lifecycle = this.createLifecycle();
+        this.#isEssential = config.isEssential ?? true;
 
         this.#lifecycle.ready.on(() => this.#logReady());
 
-        this.#behaviors = new Behaviors(this, this.#type.behaviors, config as Record<string, object | undefined>);
+        if (config.additionalTypes !== undefined) {
+            this.#additionalTypes = [...config.additionalTypes];
+        } else {
+            this.#additionalTypes = [];
+        }
 
         if (config.id !== undefined) {
             this.id = config.id;
@@ -299,6 +321,8 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
         if (config.number !== undefined) {
             this.number = config.number;
         }
+
+        this.#behaviors = new Behaviors(this, config as Record<string, object | undefined>);
 
         if (config.owner) {
             this.owner = config.owner instanceof Agent ? config.owner.endpoint : config.owner;
@@ -309,6 +333,8 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
                 this.parts.add(part);
             }
         }
+
+        this.#isEssential = config.isEssential ?? true;
 
         this.#construction.start(() => {
             if (this.lifecycle.isInstalled) {
@@ -434,10 +460,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     async add<T extends EndpointType>(endpoint: Endpoint<T> | Endpoint.Configuration<T> | T): Promise<Endpoint<T>>;
 
     /**
-     * Add a child endpoint.
-     *
-     * If this endpoint is initialized, awaits child initialization.  If child initialization fails the child is
-     * removed.
+     * Add a child endpoint.  If child initialization fails the child is removed.
      *
      * @param type the {@link EndpointType} of the child endpoint
      * @param options settings for the new endpoint
@@ -463,10 +486,14 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
 
         if (this.lifecycle.isReady) {
             try {
-                await endpoint.construction.initialization;
+                await endpoint.construction;
             } catch (e) {
-                this.parts.delete(endpoint);
-                throw e;
+                if (endpoint.essential) {
+                    this.parts.delete(endpoint);
+                    throw new EndpointInitializationError(this, e);
+                } else {
+                    logger.error(`Error initializating non-essential endpoint ${e}:`, e);
+                }
             }
         }
 
@@ -478,6 +505,13 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      */
     get type() {
         return this.#type;
+    }
+
+    /**
+     * Additional endpoint types supported by this endpoint.
+     */
+    get additionalTypes() {
+        return this.#additionalTypes;
     }
 
     /**
@@ -715,10 +749,54 @@ export namespace Endpoint {
     };
 
     export interface EndpointOptions {
+        /**
+         * The owner of the endpoint.
+         *
+         * If provided, takes ownership of the endpoint at construction.
+         */
         owner?: Endpoint | Agent;
+
+        /**
+         * The endpoint's string identifier.  Must be unique within the parent.
+         *
+         * If you omit the identifier the node assigns a generated one for you.
+         */
         id?: string;
+
+        /**
+         * The endpoint number.  Must be unique within the node.
+         *
+         * If you omit the endpoint number the node assigns a sequential one for you.
+         */
         number?: number;
+
+        /**
+         * Child endpoints.
+         *
+         * This is the inverse of setting {@link owner} above.  The endpoint instantiates and takes ownership of child
+         * endpoints at construction time.
+         */
         parts?: Iterable<Endpoint.Definition>;
+
+        /**
+         * Additional endpoint types.
+         *
+         * This extends the set of device types reported to the matter fabric and adds additional clusters.
+         *
+         * Per the Matter specification, you may include utility or application device types.  However the the only
+         * application device types you may include are those with clusters that are a subset of the primary device
+         * type's cluster.
+         *
+         * Clusters added in this way do not contribute to TypeScript typing for the endpoint.
+         */
+        additionalTypes?: Iterable<EndpointType>;
+
+        /**
+         * Designates whether an endpoint is essential.
+         *
+         * Endpoints are essential by default but you may disable by setting this to false.
+         */
+        isEssential?: boolean;
     }
 
     export type Options<
