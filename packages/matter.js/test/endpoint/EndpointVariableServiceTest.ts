@@ -89,7 +89,7 @@ describe("EndpointVariableService", () => {
             expect(endpoint.state.onOff.onTime).equals(10);
         });
 
-        it.only("rejects invalid property", async () => {
+        it("rejects invalid property", async () => {
             const environment = new Environment("test");
             environment.vars.addUnixEnvStyle({ MATTER_NODES_NODE0_PARTS_PART0_ONOFF_ONTIME: "Fred" });
 

@@ -10,7 +10,7 @@ import { type Agent } from "../../endpoint/Agent.js";
 import type { Endpoint } from "../../endpoint/Endpoint.js";
 import { BehaviorInitializationError } from "../../endpoint/errors.js";
 import { Logger } from "../../log/Logger.js";
-import { AsyncConstruction } from "../../util/AsyncConstruction.js";
+import { AsyncConstructable, AsyncConstruction } from "../../util/AsyncConstruction.js";
 import { EventEmitter, Observable } from "../../util/Observable.js";
 import { MaybePromise } from "../../util/Promises.js";
 import type { Behavior } from "../Behavior.js";
@@ -47,7 +47,7 @@ export abstract class BehaviorBacking {
             onerror(error) {
                 // The endpoint reports errors during initialization.  For errors occurring later we report the error
                 // ourselves
-                if (endpoint.behaviors.isInitialized) {
+                if (endpoint.lifecycle.isReady) {
                     logger.error(error);
                 }
 
@@ -67,30 +67,26 @@ export abstract class BehaviorBacking {
     /**
      * Initialize state by applying values from options and invoking the behavior's initialize() function.
      *
-     * Called by Behaviors class once the backing is installed.
+     * Initiated via {@link AsyncConstruction#start} by Behaviors class once the backing is installed.
      */
-    initialize(agent: Agent) {
-        const crashConstruction = (cause: unknown) => {
+    [AsyncConstructable.construct](agent: Agent) {
+        const crash = (cause: unknown) => {
             throw new BehaviorInitializationError(`Error initializing ${this}`, cause);
         };
 
-        const constructBacking = () => {
-            try {
-                // We use this behavior for initialization.  Do not use agent.get() to access the behavior because it
-                // will throw if the behavior isn't initialized
-                const behavior = this.#lifecycleInstance(agent);
+        try {
+            // We use this behavior for initialization.  Do not use agent.get() to access the behavior because it
+            // will throw if the behavior isn't initialized
+            const behavior = this.#lifecycleInstance(agent);
 
-                // Perform actual initialization
-                const promise = this.invokeInitializer(behavior, this.#options);
-                if (promise) {
-                    Promise.resolve(promise).catch(crashConstruction);
-                }
-            } catch (e) {
-                crashConstruction(e);
+            // Perform actual initialization
+            const promise = this.invokeInitializer(behavior, this.#options);
+            if (promise) {
+                return Promise.resolve(promise).catch(crash);
             }
-        };
-
-        this.construction.start(constructBacking);
+        } catch (e) {
+            crash(e);
+        }
     }
 
     /**

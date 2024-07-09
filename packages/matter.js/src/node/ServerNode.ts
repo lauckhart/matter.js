@@ -105,15 +105,7 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
      */
     start() {
         this.#mutex.run(async () => {
-            if (this.#crashed) {
-                this.#crashed = false;
-                this.#reportCrashTermination();
-                return;
-            }
-
-            if (!this.lifecycle.isTreeReady) {
-                await this.lifecycle.treeReady;
-            }
+            await this.construction;
 
             await new ServerNetworkRuntime(this).run();
         });
@@ -206,19 +198,6 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
         return super.initialize(agent);
     }
 
-    protected override endpointCrashed(endpoint: Endpoint) {
-        // Endpoint crashes may be disabled by event handlers except for the node
-        if (super.endpointCrashed(endpoint) === false && endpoint !== this && endpoint.essential !== false) {
-            return false;
-        }
-
-        if (this.lifecycle.isOnline) {
-            this.#reportCrashTermination();
-        } else {
-            this.#crashed = true;
-        }
-    }
-
     /**
      * By default on factory reset we erase all stored data.
      *
@@ -229,12 +208,6 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
      */
     protected async resetStorage() {
         await this.env.get(ServerStore).erase();
-    }
-
-    #reportCrashTermination() {
-        this.construction.onSuccess(() =>
-            this.construction.crashed(new Error(`Aborted ${this} due to endpoint errors`)),
-        );
     }
 }
 

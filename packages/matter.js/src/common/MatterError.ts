@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { asError } from "../util/Error.js";
+
 /** Error base class for all errors thrown by this library. */
 export class MatterError extends Error {}
 
@@ -47,6 +49,11 @@ export class ReadOnlyError extends ImplementationError {
  * Thrown for errors that have multiple underlying causes.
  */
 export class MatterAggregateError extends AggregateError {
+    constructor(causes: Iterable<unknown>, message?: string) {
+        causes = [...causes].map(asError);
+        super(causes, message);
+    }
+
     static [Symbol.hasInstance](instance: unknown) {
         if (instance instanceof MatterError) {
             return true;

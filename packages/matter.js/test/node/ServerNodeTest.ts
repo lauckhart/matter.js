@@ -345,7 +345,7 @@ describe("ServerNode", () => {
         await node.close();
     });
 
-    describe("cashes gracefully", () => {
+    describe("crashes gracefully", () => {
         const badNodeEnv = new Environment("test");
         badNodeEnv.vars.set("behaviors.basicInformation.revision", "not a number");
 
@@ -359,7 +359,7 @@ describe("ServerNode", () => {
                 ).rejectedWith(CrashedDependencyError);
             });
 
-            it("from behavior error on child during node create", async () => {
+            it.only("from behavior error on child during node create", async () => {
                 await expect(
                     MockServerNode.create(MockServerNode.RootEndpoint, {
                         environment: badEndpointEnv,

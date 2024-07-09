@@ -29,7 +29,6 @@ export async function testNode(runner: TestRunner, format: "cjs" | "esm") {
             } else {
                 message = `${e}`;
             }
-            console.log((e as any).constructor.name);
             runner.reporter.failRun(`Unhandled rejection (ignored by Mocha): ${message}`, stack);
         }
     });

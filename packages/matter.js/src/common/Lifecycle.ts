@@ -5,7 +5,7 @@
  */
 
 import { MaybePromise } from "../util/Promises.js";
-import { ImplementationError } from "./MatterError.js";
+import { ImplementationError, MatterAggregateError } from "./MatterError.js";
 
 export namespace Lifecycle {
     /**
@@ -128,3 +128,8 @@ export class DestroyedDependencyError extends DependencyLifecycleError {}
  * Thrown for actions that cannot be performed because a dependency is not supported.
  */
 export class UnsupportedDependencyError extends DependencyLifecycleError {}
+
+/**
+ * Thrown if multiple dependencies crash.
+ */
+export class CrashedDependenciesError extends MatterAggregateError {}

@@ -17,10 +17,10 @@ import { Transaction } from "../../behavior/state/transaction/Transaction.js";
 import { ClusterType } from "../../cluster/ClusterType.js";
 import { Lifecycle, UninitializedDependencyError } from "../../common/Lifecycle.js";
 import { ImplementationError, InternalError, ReadOnlyError } from "../../common/MatterError.js";
-import { DeviceClasses } from "../../device/DeviceTypes.js";
 import { Diagnostic } from "../../log/Diagnostic.js";
 import { Logger } from "../../log/Logger.js";
 import { FeatureSet } from "../../model/index.js";
+import { AsyncConstruction } from "../../util/AsyncConstruction.js";
 import { EventEmitter } from "../../util/Observable.js";
 import { MaybePromise } from "../../util/Promises.js";
 import { camelize, describeList } from "../../util/String.js";
@@ -28,7 +28,6 @@ import type { Agent } from "../Agent.js";
 import type { Endpoint } from "../Endpoint.js";
 import { EndpointVariableService } from "../EndpointVariableService.js";
 import { BehaviorInitializationError, EndpointBehaviorsError } from "../errors.js";
-import { EndpointType } from "../type/EndpointType.js";
 import { EndpointInitializer } from "./EndpointInitializer.js";
 import { EndpointLifecycle } from "./EndpointLifecycle.js";
 import type { SupportedBehaviors } from "./SupportedBehaviors.js";
@@ -43,7 +42,6 @@ export class Behaviors {
     #supported: SupportedBehaviors;
     #backings: Record<string, BehaviorBacking> = {};
     #options: Record<string, object | undefined>;
-    #isInitialized = false;
 
     /**
      * The {@link SupportedBehaviors} of the {@link Endpoint}.
@@ -102,27 +100,14 @@ export class Behaviors {
         });
     }
 
-    get isInitialized() {
-        return this.#isInitialized;
-    }
-
     constructor(endpoint: Endpoint, options: Record<string, object | undefined>) {
-        const { type, additionalTypes } = endpoint;
+        const { type } = endpoint;
         if (typeof type?.behaviors !== "object") {
             throw new ImplementationError('EndpointType "behaviors" must be an array of Behavior.Type instances');
         }
 
-        if (
-            additionalTypes !== undefined &&
-            (!Array.isArray(additionalTypes) || additionalTypes.findIndex(t => typeof t?.behaviors !== "object") !== -1)
-        ) {
-            throw new ImplementationError('Endpoint "additionaTypes" must be an array of EndpointTypes');
-        }
-
-        const supported = supportedBehaviorsOf(type, additionalTypes);
-
         this.#endpoint = endpoint;
-        this.#supported = supported;
+        this.#supported = type.behaviors;
         this.#options = options;
 
         // DescriptorBehavior is unequivocally mandatory
@@ -159,31 +144,17 @@ export class Behaviors {
             }
         }
 
-        /**
-         * Determine if behaviors are still initializing.  If so, wait for them, then check again (dependencies may be
-         * added between cycles).  Once all behaviors are settled, throw an exception if initialization was not entirely
-         * successful.
-         */
-        const checkInitializationProgress = (): MaybePromise => {
-            // Return a promise if
-            const uninitialized = Object.values(this.#backings).filter(
-                backing => backing.construction.status === Lifecycle.Status.Initializing,
-            );
-            if (uninitialized.length) {
-                return Promise.allSettled(uninitialized.map(backing => backing.construction)).then(
-                    checkInitializationProgress,
-                );
-            }
+        return AsyncConstruction.all(
+            {
+                [Symbol.iterator]: () => {
+                    return Object.values(this.#backings)[Symbol.iterator]();
+                },
+            },
 
-            const crashed = Object.values(this.#backings).filter(
-                backing => backing.construction.status === Lifecycle.Status.Crashed,
-            );
-            if (crashed.length) {
-                throw new EndpointBehaviorsError(crashed.map(backing => backing.construction.error as Error));
-            }
-        };
-
-        return checkInitializationProgress();
+            causes => {
+                throw new EndpointBehaviorsError(causes);
+            },
+        );
     }
 
     /**
@@ -523,7 +494,7 @@ export class Behaviors {
         const backing = this.#endpoint.env.get(EndpointInitializer).createBacking(this.#endpoint, myType);
         this.#backings[type.id] = backing;
 
-        backing.initialize(agent);
+        backing.construction.start(agent);
 
         return backing;
     }
@@ -574,77 +545,4 @@ export class Behaviors {
 
 function clusterOf(behavior?: Behavior.Type): ClusterType | undefined {
     return (behavior as ClusterBehavior.Type)?.cluster;
-}
-
-function supportedBehaviorsOf(base: EndpointType, additional: EndpointType[]): SupportedBehaviors {
-    const supported = { ...base.behaviors };
-
-    if (additional.length === 0) {
-        return supported;
-    }
-
-    for (const type of additional) {
-        let mayAddClusters;
-
-        switch (type.deviceClass) {
-            case DeviceClasses.App:
-                mayAddClusters = false;
-                break;
-
-            case DeviceClasses.Utility:
-                mayAddClusters = true;
-                break;
-
-            default:
-                throw new ImplementationError(
-                    `Unsupported device class "${type}" for additional endpoint type "${type.name}"`,
-                );
-        }
-
-        for (const id in type.behaviors) {
-            const behaviorType = type.behaviors[id];
-
-            if (supported[id] === undefined) {
-                // The wording of core 1.3 § 9.2.5 is
-                if (
-                    clusterOf(behaviorType) === undefined ||
-                    mayAddClusters ||
-                    base.requirements.server?.mandatory?.[id] ||
-                    base.requirements.server?.optional?.[id]
-                ) {
-                    supported[id] = behaviorType;
-                    continue;
-                }
-
-                // The specification (1.3 § 9.2.5) is not entirely clear on allowed subset clusters.  The intent seems
-                // to be that a subset device type cannot add clusters unless they are mandatory or optional in
-                // the superset
-                throw new ImplementationError(
-                    `Application endpoint ${type.name} clusters are not a subset of endpoint type ${base.name}`,
-                );
-            }
-
-            const supersetCluster = clusterOf(supported[id]);
-            const subsetCluster = clusterOf(behaviorType);
-
-            if (supersetCluster === undefined || subsetCluster === undefined) {
-                continue;
-            }
-
-            const supersetFeatures = Object.keys(supersetCluster.supportedFeatures);
-            const subsetFeatures = Object.keys(subsetCluster.supportedFeatures);
-            if (
-                supersetFeatures.length !== subsetFeatures.length ||
-                !supersetFeatures.every(f => subsetFeatures.indexOf(f) !== -1)
-            ) {
-                throw new ImplementationError(
-                    `Application endpoint type ${type.name} cluster ${subsetCluster.name} features do not match`,
-                );
-            }
-
-            // TODO - consider adding validation of individual element requirements; currently we only check features
-        }
-    }
-
-    return supported;
 }

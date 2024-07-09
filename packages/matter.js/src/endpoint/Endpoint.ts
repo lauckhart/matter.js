@@ -47,7 +47,6 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     #id?: string;
     #number?: EndpointNumber;
     #owner?: Endpoint;
-    #additionalTypes: EndpointType[];
     #agentType?: Agent.Type<T>;
     #behaviors?: Behaviors;
     #lifecycle: EndpointLifecycle;
@@ -113,14 +112,14 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     /**
      * Designates endpoint as essential.
      *
-     * By default endpoints are considered "essential".  An essential endpoint must initialize successfully or the node
-     * will terminate with errors.
+     * By default endpoints are considered "essential".  An essential endpoint must initialize successfully or an error
+     * is thrown.  Non-essential endpoints may be installed even if they have errors.
      */
-    get essential() {
+    get isEssential() {
         return this.#isEssential;
     }
 
-    set essential(essential: boolean) {
+    set isEssential(essential: boolean) {
         this.#isEssential = essential;
     }
 
@@ -173,7 +172,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      */
     stateOf<T extends Behavior.Type>(type: T) {
         if (!this.behaviors.has(type)) {
-            throw new ImplementationError(`Behavior ${type.id} is not supported by this endpoint`);
+            throw new ImplementationError(`Behavior ${type.id} is not supported by ${this}`);
         }
         return (this.#stateView as Record<string, unknown>)[type.id] as Immutable<Behavior.StateOf<T>>;
     }
@@ -308,12 +307,6 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
 
         this.#lifecycle.ready.on(() => this.#logReady());
 
-        if (config.additionalTypes !== undefined) {
-            this.#additionalTypes = [...config.additionalTypes];
-        } else {
-            this.#additionalTypes = [];
-        }
-
         if (config.id !== undefined) {
             this.id = config.id;
         }
@@ -444,23 +437,27 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
         try {
             owner.parts.add(this);
         } catch (e) {
+            owner.parts.delete(this);
             this.#owner = undefined;
             throw e;
         }
     }
 
     /**
-     * Add a child endpoint.
+     * Add a child endpoint.  If this endpoint is initialized, awaits child initialization.
      *
-     * If this endpoint is initialized, awaits child initialization.  If child initialization fails the child is
-     * removed.
+     * If child initialization fails:
+     *
+     *   - If the child is essential (@see {@link Endpoint.isEssential}), removes the child and rethrows
+     *
+     *   - If the child is non-essential then logs the error but leaves the child installed.
      *
      * @param endpoint the {@link Endpoint} or {@link Endpoint.Configuration}
      */
     async add<T extends EndpointType>(endpoint: Endpoint<T> | Endpoint.Configuration<T> | T): Promise<Endpoint<T>>;
 
     /**
-     * Add a child endpoint.  If child initialization fails the child is removed.
+     * Add a child endpoint with separate type and options arguments.
      *
      * @param type the {@link EndpointType} of the child endpoint
      * @param options settings for the new endpoint
@@ -488,7 +485,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
             try {
                 await endpoint.construction;
             } catch (e) {
-                if (endpoint.essential) {
+                if (endpoint.isEssential) {
                     this.parts.delete(endpoint);
                     throw new EndpointInitializationError(this, e);
                 } else {
@@ -505,13 +502,6 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      */
     get type() {
         return this.#type;
-    }
-
-    /**
-     * Additional endpoint types supported by this endpoint.
-     */
-    get additionalTypes() {
-        return this.#additionalTypes;
     }
 
     /**
@@ -693,15 +683,17 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
             this.#activity = this.env.get(NodeActivity);
         }
 
-        const result = OfflineContext.act("initialize", this.#activity, initializeEndpoint, { trace });
+        let result = OfflineContext.act("initialize", this.#activity, initializeEndpoint, { trace });
 
-        return MaybePromise.then(result, () => {
+        result = MaybePromise.then(result, () => {
             this.lifecycle.change(EndpointLifecycle.Change.Ready);
             if (trace && this.env.has(ActionTracer)) {
                 trace.path = this.path;
                 this.env.get(ActionTracer).record(trace);
             }
         });
+
+        return result;
     }
 
     #logReady() {
@@ -777,19 +769,6 @@ export namespace Endpoint {
          * endpoints at construction time.
          */
         parts?: Iterable<Endpoint.Definition>;
-
-        /**
-         * Additional endpoint types.
-         *
-         * This extends the set of device types reported to the matter fabric and adds additional clusters.
-         *
-         * Per the Matter specification, you may include utility or application device types.  However the the only
-         * application device types you may include are those with clusters that are a subset of the primary device
-         * type's cluster.
-         *
-         * Clusters added in this way do not contribute to TypeScript typing for the endpoint.
-         */
-        additionalTypes?: Iterable<EndpointType>;
 
         /**
          * Designates whether an endpoint is essential.

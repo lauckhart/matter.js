@@ -10,7 +10,7 @@ import { Endpoint } from "../../../endpoint/Endpoint.js";
 import { PartStore } from "../../../endpoint/storage/PartStore.js";
 import { Logger } from "../../../log/Logger.js";
 import type { StorageContext } from "../../../storage/StorageContext.js";
-import { AsyncConstruction, asyncNew } from "../../../util/AsyncConstruction.js";
+import { AsyncConstructable, AsyncConstruction, asyncNew } from "../../../util/AsyncConstruction.js";
 import { IdentityConflictError } from "../IdentityService.js";
 import { ServerPartStore } from "./ServerPartStore.js";
 
@@ -57,6 +57,7 @@ export class PartStoreFactory extends PartStoreService {
     #numbersPersisted?: Promise<void>;
     #numbersToPersist?: Array<Endpoint>;
     #nextNumber?: number;
+    #defaultNextNumber: number;
     #root?: ServerPartStore;
 
     get construction() {
@@ -67,24 +68,23 @@ export class PartStoreFactory extends PartStoreService {
         super();
 
         this.#storage = storage;
+        this.#defaultNextNumber = nextNumber ?? 1;
 
-        if (typeof nextNumber !== "number") {
-            nextNumber = 1;
+        this.#construction = AsyncConstruction(this);
+    }
+
+    async [AsyncConstructable.construct]() {
+        // Load next number with excessive validation for the off-chance it somehow gets corrupted
+        this.#nextNumber = (await this.#storage.get(NEXT_NUMBER_KEY, this.#defaultNextNumber)) % 0xffff;
+
+        if (!this.#nextNumber) {
+            this.#nextNumber = 1;
+        } else {
+            this.#persistedNextNumber = this.#nextNumber;
         }
 
-        this.#construction = AsyncConstruction(this, async () => {
-            // Load next number with excessive validation for the off-chance it somehow gets corrupted
-            this.#nextNumber = (await storage.get(NEXT_NUMBER_KEY, nextNumber)) % 0xffff;
-
-            if (!this.#nextNumber) {
-                this.#nextNumber = 1;
-            } else {
-                this.#persistedNextNumber = this.#nextNumber;
-            }
-
-            // Preload stores so we can access synchronously going forward
-            this.#root = await asyncNew(ServerPartStore, this.#storage);
-        });
+        // Preload stores so we can access synchronously going forward
+        this.#root = await asyncNew(ServerPartStore, this.#storage);
     }
 
     async erase() {

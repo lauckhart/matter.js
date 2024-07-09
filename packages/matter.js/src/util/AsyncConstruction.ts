@@ -4,9 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CrashedDependencyError, Lifecycle } from "../common/Lifecycle.js";
+import { CrashedDependenciesError, CrashedDependencyError, Lifecycle } from "../common/Lifecycle.js";
 import { ImplementationError } from "../common/MatterError.js";
 import { Logger } from "../log/Logger.js";
+import { asError } from "./Error.js";
 import { Observable } from "./Observable.js";
 import { MaybePromise } from "./Promises.js";
 
@@ -32,7 +33,7 @@ export async function asyncNew<const A extends any[], const C extends new (...ar
 }
 
 /**
- * AsyncConstructable implements a pattern for asynchronous object initialization.
+ * AsyncConstructable as a pattern for asynchronous object initialization.
  *
  * Async construction happens in the initializer parameter of {@link AsyncConstruction}.  You invoke in your constructor
  * and place in a property called "construction".
@@ -57,6 +58,23 @@ export async function asyncNew<const A extends any[], const C extends new (...ar
  */
 export interface AsyncConstructable<T = any> {
     readonly construction: AsyncConstruction<T>;
+}
+
+export module AsyncConstructable {
+    /**
+     * An {@link AsyncConstructable} that supports deferred construction.
+     *
+     * This supports use cases where initialization initiates separately from construction and/or reinitialization is
+     * possible.
+     */
+    export interface Deferred<T = any, A extends [] = []> extends AsyncConstructable<T> {
+        /**
+         * Initiate deferred construction.
+         */
+        [construct](...args: A): MaybePromise<void>;
+    }
+
+    export const construct = Symbol("construct");
 }
 
 /**
@@ -87,7 +105,10 @@ export interface AsyncConstruction<T> extends Promise<T> {
      * If you omit the initializer parameter to {@link AsyncConstruction} execution is deferred until you invoke this
      * method.
      */
-    start(initializer?: () => MaybePromise): void;
+    start<T, A extends [], This extends AsyncConstruction<AsyncConstructable.Deferred<T, A>>>(
+        this: This,
+        initializer?: (...args: A) => MaybePromise,
+    ): void;
 
     /**
      * Invoke destruction logic then move to destroyed status.
@@ -135,6 +156,8 @@ export interface AsyncConstruction<T> extends Promise<T> {
     /**
      * Invoke a method after construction completes unsuccessfully.
      *
+     * If you register an onError handler then the default error handler will not log the error.
+     *
      * Errors thrown by this callback are logged but otherwise ignored.
      */
     onError(actor: (error: Error) => MaybePromise<void>): void;
@@ -149,24 +172,60 @@ export interface AsyncConstruction<T> extends Promise<T> {
     toString(): string;
 }
 
+/**
+ * Create an {@link AsyncConstructable} and begin async construction.
+ */
 export function AsyncConstruction<T extends AsyncConstructable>(
     subject: T,
     initializer?: () => MaybePromise,
     options?: AsyncConstruction.Options,
+): AsyncConstruction<T>;
+
+/**
+ * Create an {@link AsyncConstructable} with deferred construction.
+ */
+export function AsyncConstruction<T extends AsyncConstructable.Deferred<[]>>(
+    subject: T,
+    options?: AsyncConstruction.Options,
+): AsyncConstruction<T>;
+
+export function AsyncConstruction<T extends AsyncConstructable>(
+    subject: T,
+    initializerOrOptions?: AsyncConstruction.Options | (() => MaybePromise),
+    options?: AsyncConstruction.Options,
 ): AsyncConstruction<T> {
+    let initializer: undefined | (() => MaybePromise);
+
+    if (typeof initializerOrOptions === "function") {
+        initializer = initializerOrOptions;
+    } else {
+        assertDeferred(subject);
+        options = initializerOrOptions;
+        initializerOrOptions = undefined;
+    }
+
     // The promise we use to implement AsyncConstructable.then()
     let awaiterPromise: undefined | Promise<T>;
     let awaiterResolve: undefined | ((subject: T) => void);
     let awaiterReject: undefined | ((error: any) => void);
 
-    let error: any;
+    let error: undefined | Error;
     let started = false;
     let ready = false;
     let canceled = false;
+    let errorsHandled = false;
     let status = Lifecycle.Status.Initializing;
     let change: Observable<[status: Lifecycle.Status, subject: T]> | undefined;
 
-    const onerror = options?.onerror ?? unhandledError;
+    const onerror =
+        options?.onerror ??
+        (e => {
+            if (errorsHandled) {
+                return;
+            }
+
+            unhandledError(e);
+        });
 
     const self: AsyncConstruction<any> = {
         [Symbol.toStringTag]: "AsyncConstruction",
@@ -190,23 +249,21 @@ export function AsyncConstruction<T extends AsyncConstructable>(
             return change;
         },
 
-        start(init?: () => MaybePromise) {
+        start<T, A extends [], This extends AsyncConstruction<AsyncConstructable.Deferred<T, A>>>(
+            this: This,
+            ...args: A
+        ) {
             if (started) {
                 throw new ImplementationError(`Initialization of ${subject} is already ongoing`);
             }
 
-            if (init) {
-                initializer = init;
-            }
-            if (!initializer) {
-                throw new ImplementationError(`No initializer available for ${subject}`);
-            }
+            assertDeferred(subject);
 
             started = true;
 
             let initializerPromise;
             try {
-                initializerPromise = initializer();
+                initializerPromise = subject[AsyncConstructable.construct](...args);
             } catch (e) {
                 rejected(e);
                 return;
@@ -314,11 +371,13 @@ export function AsyncConstruction<T extends AsyncConstructable>(
         },
 
         onError(actor: (error: Error) => MaybePromise<void>) {
-            const onError = (error: any) => {
+            errorsHandled = true;
+
+            const onError = () => {
                 const errorHandler = createErrorHandler("onError");
 
                 try {
-                    const result = actor(error);
+                    const result = actor(asError(error));
                     if (MaybePromise.is(result)) {
                         return Promise.resolve(result).catch(errorHandler);
                     }
@@ -372,7 +431,7 @@ export function AsyncConstruction<T extends AsyncConstructable>(
         },
 
         crashed(cause: any) {
-            error = cause;
+            error = asError(cause);
             setStatus(Lifecycle.Status.Crashed);
             onerror(error);
         },
@@ -464,7 +523,7 @@ export function AsyncConstruction<T extends AsyncConstructable>(
         if (status !== Lifecycle.Status.Destroying && status !== Lifecycle.Status.Destroyed) {
             error = cause;
             setStatus(Lifecycle.Status.Crashed);
-            result = onerror(error);
+            result = onerror(asError(error));
         }
 
         if (awaiterReject) {
@@ -507,4 +566,46 @@ export namespace AsyncConstruction {
          */
         onerror?: (error: Error) => void;
     }
+
+    /**
+     * Ensure a pool of {@link AsyncConstructable}s are initialized.  Returns a promise if any constructables are still
+     * initializing.
+     *
+     * @param subjects the constructables to monitor; may mutate whilst construction is ongoing
+     * @param onerror error handler; if returns error it is thrown; if omitted throws CrashedDependenciesError
+     */
+    export function all<T extends AsyncConstructable>(
+        subjects: Iterable<T>,
+        onerror?: (errored: Iterable<T>) => void | Error,
+    ): MaybePromise {
+        if (onerror === undefined) {
+            onerror = errors => new CrashedDependenciesError(errors);
+        }
+
+        const subjectArray = [...subjects];
+
+        const uninitialized = subjectArray.filter(
+            subject => subject.construction.status === Lifecycle.Status.Initializing,
+        );
+        if (uninitialized.length) {
+            return Promise.allSettled(uninitialized.map(backing => backing.construction)).then(() =>
+                // Recurse to ensure subjects added subsequent to initial "all" settle
+                all(subjects),
+            );
+        }
+
+        const crashed = Object.values(subjectArray).filter(
+            backing => backing.construction.status === Lifecycle.Status.Crashed,
+        );
+        if (crashed.length) {
+            const error = onerror(crashed);
+            if (error) {
+                throw error;
+            }
+        }
+    }
+}
+
+function assertDeferred<T>(subject: AsyncConstructable<T>): asserts subject is AsyncConstructable.Deferred<T, any> {
+    throw new ImplementationError(`No initializer defined for ${subject}`);
 }

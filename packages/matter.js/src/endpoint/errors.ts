@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterAggregateError, MatterError } from "../common/MatterError.js";
+import { CrashedDependenciesError } from "../common/Lifecycle.js";
+import { MatterError } from "../common/MatterError.js";
 import { type Endpoint } from "./Endpoint.js";
 
 /**
@@ -20,8 +21,8 @@ export class BehaviorInitializationError extends MatterError {
 /**
  * Thrown when an error occurs initializing the behaviors of an endpoint.
  */
-export class EndpointBehaviorsError extends MatterAggregateError {
-    constructor(causes: Error[]) {
+export class EndpointBehaviorsError extends CrashedDependenciesError {
+    constructor(causes: Iterable<unknown>) {
         super(causes, `Behaviors have errors`);
     }
 }
