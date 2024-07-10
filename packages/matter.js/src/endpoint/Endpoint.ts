@@ -17,13 +17,12 @@ import { Diagnostic } from "../log/Diagnostic.js";
 import { Logger } from "../log/Logger.js";
 import type { Node } from "../node/Node.js";
 import { IdentityService } from "../node/server/IdentityService.js";
-import { AsyncConstruction } from "../util/AsyncConstruction.js";
+import { AsyncConstructable, AsyncConstruction } from "../util/AsyncConstruction.js";
 import { MaybePromise } from "../util/Promises.js";
 import { Immutable } from "../util/Type.js";
 import { Agent } from "./Agent.js";
 import { DataModelPath } from "./DataModelPath.js";
 import { RootEndpoint } from "./definitions/system/RootEndpoint.js";
-import { EndpointInitializationError } from "./errors.js";
 import { Behaviors } from "./properties/Behaviors.js";
 import { EndpointInitializer } from "./properties/EndpointInitializer.js";
 import { EndpointLifecycle } from "./properties/EndpointLifecycle.js";
@@ -48,14 +47,13 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     #number?: EndpointNumber;
     #owner?: Endpoint;
     #agentType?: Agent.Type<T>;
-    #behaviors?: Behaviors;
+    #behaviors: Behaviors;
     #lifecycle: EndpointLifecycle;
     #parts?: Parts;
     #construction: AsyncConstruction<Endpoint<T>>;
     #stateView = {} as Immutable<SupportedBehaviors.StateOf<T["behaviors"]>>;
     #events = {} as SupportedBehaviors.EventsOf<T["behaviors"]>;
     #activity?: NodeActivity;
-    #isEssential = true;
 
     /**
      * A string that uniquely identifies an endpoint.
@@ -110,20 +108,6 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     }
 
     /**
-     * Designates endpoint as essential.
-     *
-     * By default endpoints are considered "essential".  An essential endpoint must initialize successfully or an error
-     * is thrown.  Non-essential endpoints may be installed even if they have errors.
-     */
-    get isEssential() {
-        return this.#isEssential;
-    }
-
-    set isEssential(essential: boolean) {
-        this.#isEssential = essential;
-    }
-
-    /**
      * Search for the owner of a specific type.
      *
      * Returns undefined if this owner is not found on the way up to the root endpoint.
@@ -151,12 +135,6 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      * Access the pool of behaviors supported by this endpoint.
      */
     get behaviors() {
-        if (this.#behaviors === undefined) {
-            throw new UninitializedDependencyError(
-                this.toString(),
-                "behaviors are not yet initialized; await endpoint.construction to avoid this error",
-            );
-        }
         return this.#behaviors;
     }
 
@@ -297,13 +275,20 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
 
     constructor(definition: T | Endpoint.Configuration<T>, options?: Endpoint.Options<T>) {
         // Create construction early so endpoints and behaviors can hook events
-        this.#construction = AsyncConstruction(this, undefined);
+        this.#construction = AsyncConstruction(this, {
+            onerror: error => {
+                if (this.#lifecycle.isEssential) {
+                    logger.error(`Error initializing ${this}:`, error);
+                } else {
+                    logger.warn(`Error initializing non-essential endpoint ${this}:`, error);
+                }
+            },
+        });
 
         const config = Endpoint.configurationFor(definition, options);
 
         this.#type = config.type;
-        this.#lifecycle = this.createLifecycle();
-        this.#isEssential = config.isEssential ?? true;
+        this.#lifecycle = this.createLifecycle(config.isEssential);
 
         this.#lifecycle.ready.on(() => this.#logReady());
 
@@ -326,33 +311,6 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
                 this.parts.add(part);
             }
         }
-
-        this.#isEssential = config.isEssential ?? true;
-
-        this.#construction.start(() => {
-            if (this.lifecycle.isInstalled) {
-                // Immediate initialization
-                return this.#initialize();
-            }
-
-            // Deferred initialization -- wait for installation
-            return new Promise<void>((fulfilled, rejected) => {
-                const initializeOnInstall = () => {
-                    try {
-                        const result = this.#initialize();
-                        if (MaybePromise.is(result)) {
-                            result.then(fulfilled, rejected);
-                            return;
-                        }
-                    } catch (e) {
-                        rejected(e);
-                    }
-                    fulfilled();
-                };
-
-                this.lifecycle.installed.once(initializeOnInstall);
-            });
-        });
     }
 
     set id(id: string) {
@@ -481,15 +439,18 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
 
         this.parts.add(endpoint);
 
-        if (this.lifecycle.isReady) {
+        // Our tree is already initialized; initialize the endpoint now so it is fully operational on return and we can
+        // remove if endpoint is essential and crashes
+        if (this.#lifecycle.isTreeReady) {
             try {
+                endpoint.construction.start();
                 await endpoint.construction;
             } catch (e) {
-                if (endpoint.isEssential) {
+                if (endpoint.lifecycle.isEssential) {
                     this.parts.delete(endpoint);
-                    throw new EndpointInitializationError(this, e);
+                    throw new UninitializedDependencyError(`Part ${endpoint}`, `initialization error`);
                 } else {
-                    logger.error(`Error initializating non-essential endpoint ${e}:`, e);
+                    logger.warn("Non-essential initialization error:", endpoint.construction.error);
                 }
             }
         }
@@ -528,8 +489,8 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
         return this.#lifecycle;
     }
 
-    protected createLifecycle() {
-        return new EndpointLifecycle(this);
+    protected createLifecycle(isEssential?: boolean) {
+        return new EndpointLifecycle(this, isEssential);
     }
 
     /**
@@ -579,9 +540,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
         this.lifecycle.resetting();
 
         // Reset child parts
-        for (const endpoint of this.parts) {
-            await endpoint.reset();
-        }
+        await this.parts.reset();
 
         // Reset behaviors
         await this.behaviors.reset();
@@ -669,10 +628,22 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      */
     protected initialize(agent: Agent.Instance<T>) {
         this.env.get(EndpointInitializer).initializeDescendent(this);
-        return this.behaviors.initialize(agent);
+
+        const promise = this.behaviors.initialize(agent);
+
+        if (promise) {
+            return promise.then(this.parts.initialize.bind(this.parts));
+        }
+
+        return this.parts.initialize();
     }
 
-    #initialize() {
+    /**
+     * Complete initialization.  Invoked via {@link AsyncConstruction#start} by the owner.
+     */
+    [AsyncConstructable.construct]() {
+        this.lifecycle.change(EndpointLifecycle.Change.Installed);
+
         const trace: ActionTracer.Action | undefined = this.env.has(ActionTracer)
             ? { type: ActionTracer.ActionType.Initialize }
             : undefined;

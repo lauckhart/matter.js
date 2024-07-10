@@ -4,9 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CrashedDependenciesError } from "../common/Lifecycle.js";
-import { MatterError } from "../common/MatterError.js";
-import { type Endpoint } from "./Endpoint.js";
+import type { BehaviorBacking } from "../behavior/internal/BehaviorBacking.js";
+import { MatterAggregateError, MatterError } from "../common/MatterError.js";
+import { describeList } from "../util/String.js";
+import type { Endpoint } from "./Endpoint.js";
 
 /**
  * Thrown when an error occurs during initialization of a behavior.
@@ -21,15 +22,26 @@ export class BehaviorInitializationError extends MatterError {
 /**
  * Thrown when an error occurs initializing the behaviors of an endpoint.
  */
-export class EndpointBehaviorsError extends CrashedDependenciesError {
-    constructor(causes: Iterable<unknown>) {
+export class EndpointBehaviorsError extends MatterAggregateError {
+    constructor(causes: Iterable<BehaviorBacking>) {
         super(causes, `Behaviors have errors`);
     }
 }
 
-export class EndpointInitializationError extends MatterError {
-    constructor(endpoint: Endpoint, cause: unknown) {
-        super(`Error initializing ${endpoint}`);
-        this.cause = cause;
+/**
+ * Thrown when an error occurs initializing essential parts of an endpoint during initialization.
+ */
+export class EndpointPartsError extends MatterError {
+    constructor(causes: Iterable<Endpoint>) {
+        let suffix;
+
+        const causesArray = [...causes];
+        if (causesArray.length) {
+            suffix = `${causesArray.length === 1 ? "" : "s"} ${describeList("and", ...causesArray.map(cause => cause.toString()))}`;
+        } else {
+            suffix = "";
+        }
+
+        super(`Error initializing essential part${suffix}`);
     }
 }

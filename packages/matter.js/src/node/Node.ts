@@ -48,9 +48,7 @@ export class Node<T extends RootEndpoint = RootEndpoint> extends Endpoint<T> {
             this.number = 0;
         }
 
-        // We don't really get "installed" as we are the root endpoint.  This informs the endpoint it is ready for full
-        // initialization
-        this.lifecycle.change(EndpointLifecycle.Change.Installed);
+        this.construction.start();
 
         this.lifecycle.online.on(() => {
             this.statusUpdate("is online");

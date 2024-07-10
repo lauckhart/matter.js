@@ -135,6 +135,11 @@ export class Behaviors {
      * surface multiple configuration errors and prevent inconsistent state caused by partial initialization.
      */
     initialize(agent: Agent): MaybePromise {
+        // Sanity check
+        if (!this.#endpoint.lifecycle.isInstalled) {
+            throw new ImplementationError(`Cannot initialize behaviors because endpoint is not installed`);
+        }
+
         // Activate behaviors
         //
         // TODO - add a timeout on behavior initialization
@@ -493,7 +498,6 @@ export class Behaviors {
 
         const backing = this.#endpoint.env.get(EndpointInitializer).createBacking(this.#endpoint, myType);
         this.#backings[type.id] = backing;
-
         backing.construction.start(agent);
 
         return backing;

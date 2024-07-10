@@ -19,6 +19,7 @@ const logger = Logger.get("PartLifecycle");
  */
 export class EndpointLifecycle {
     #endpoint: Endpoint;
+    #isEssential: boolean;
     #isInstalled = false;
     #isReady = false;
     #isTreeReady = false;
@@ -98,6 +99,16 @@ export class EndpointLifecycle {
     }
 
     /**
+     * Designates endpoint as essential.
+     *
+     * By default endpoints are considered "essential".  An essential endpoint must initialize successfully or an error
+     * is thrown.  Non-essential endpoints may be installed even if they have errors.
+     */
+    get isEssential() {
+        return this.#isEssential;
+    }
+
+    /**
      * Does the endpoint have an ID?
      */
     get hasId() {
@@ -111,8 +122,9 @@ export class EndpointLifecycle {
         return this.#hasNumber;
     }
 
-    constructor(endpoint: Endpoint) {
+    constructor(endpoint: Endpoint, isEssential?: boolean) {
         this.#endpoint = endpoint;
+        this.#isEssential = isEssential ?? true;
 
         // Bubble crash events
         endpoint.construction.change.on(status => {

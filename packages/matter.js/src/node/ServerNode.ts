@@ -169,8 +169,8 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
             // Reset storage
             await this.resetStorage();
 
-            // Reset puts parts back into inactive state; set to "installed" to trigger re-initialization
-            this.lifecycle.change(EndpointLifecycle.Change.Installed);
+            // Reset reverts node to inactive state; now reinitialize
+            this.construction.start();
 
             // Go back online if we were online at time of reset
             if (isOnline) {

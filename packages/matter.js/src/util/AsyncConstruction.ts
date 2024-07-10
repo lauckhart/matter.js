@@ -56,7 +56,7 @@ export async function asyncNew<const A extends any[], const C extends new (...ar
  *
  * To determine if initialization is complete synchronously you can check {@link AsyncConstruction.ready}.
  */
-export interface AsyncConstructable<T = any> {
+export interface AsyncConstructable<T = object> {
     readonly construction: AsyncConstruction<T>;
 }
 
@@ -67,7 +67,7 @@ export module AsyncConstructable {
      * This supports use cases where initialization initiates separately from construction and/or reinitialization is
      * possible.
      */
-    export interface Deferred<T = any, A extends [] = []> extends AsyncConstructable<T> {
+    export interface Deferred<T, A extends unknown[]> extends AsyncConstructable<T> {
         /**
          * Initiate deferred construction.
          */
@@ -105,10 +105,10 @@ export interface AsyncConstruction<T> extends Promise<T> {
      * If you omit the initializer parameter to {@link AsyncConstruction} execution is deferred until you invoke this
      * method.
      */
-    start<T, A extends [], This extends AsyncConstruction<AsyncConstructable.Deferred<T, A>>>(
+    start<const T, const A extends unknown[], const This extends AsyncConstruction<AsyncConstructable.Deferred<T, A>>>(
         this: This,
-        initializer?: (...args: A) => MaybePromise,
-    ): void;
+        ...args: A
+    ): MaybePromise;
 
     /**
      * Invoke destruction logic then move to destroyed status.
@@ -175,7 +175,7 @@ export interface AsyncConstruction<T> extends Promise<T> {
 /**
  * Create an {@link AsyncConstructable} and begin async construction.
  */
-export function AsyncConstruction<T extends AsyncConstructable>(
+export function AsyncConstruction<const T extends AsyncConstructable>(
     subject: T,
     initializer?: () => MaybePromise,
     options?: AsyncConstruction.Options,
@@ -184,12 +184,12 @@ export function AsyncConstruction<T extends AsyncConstructable>(
 /**
  * Create an {@link AsyncConstructable} with deferred construction.
  */
-export function AsyncConstruction<T extends AsyncConstructable.Deferred<[]>>(
+export function AsyncConstruction<const T extends AsyncConstructable.Deferred<object, []>>(
     subject: T,
     options?: AsyncConstruction.Options,
 ): AsyncConstruction<T>;
 
-export function AsyncConstruction<T extends AsyncConstructable>(
+export function AsyncConstruction<const T extends AsyncConstructable>(
     subject: T,
     initializerOrOptions?: AsyncConstruction.Options | (() => MaybePromise),
     options?: AsyncConstruction.Options,
@@ -249,7 +249,7 @@ export function AsyncConstruction<T extends AsyncConstructable>(
             return change;
         },
 
-        start<T, A extends [], This extends AsyncConstruction<AsyncConstructable.Deferred<T, A>>>(
+        start<const T, const A extends [], const This extends AsyncConstruction<AsyncConstructable.Deferred<T, A>>>(
             this: This,
             ...args: A
         ) {
@@ -547,7 +547,7 @@ export function AsyncConstruction<T extends AsyncConstructable>(
     }
 
     if (initializer) {
-        self.start(initializer);
+        initializer();
     }
 
     return self;

@@ -4,11 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterError } from "../../common/MatterError.js";
+import { Lifecycle } from "../../common/Lifecycle.js";
+import { ImplementationError, MatterError } from "../../common/MatterError.js";
 import { IdentityConflictError, IdentityService } from "../../node/server/IdentityService.js";
+import { AsyncConstruction } from "../../util/AsyncConstruction.js";
 import { BasicSet, MutableSet, ObservableSet } from "../../util/Set.js";
 import { Agent } from "../Agent.js";
 import { Endpoint } from "../Endpoint.js";
+import { EndpointPartsError } from "../errors.js";
 import { EndpointType } from "../type/EndpointType.js";
 import { EndpointLifecycle } from "./EndpointLifecycle.js";
 
@@ -36,16 +39,6 @@ export class Parts implements MutableSet<Endpoint, Endpoint | Agent>, Observable
 
         // Update state in response to mutation of state.parts
         this.#children.added.on(child => this.#adoptPart(child));
-
-        // Inform children they're installed once my endpoint is fully initialized
-        const initializeParts = () => {
-            for (const endpoint of this.#children) {
-                if (!endpoint.lifecycle.isInstalled) {
-                    endpoint.lifecycle.change(EndpointLifecycle.Change.Installed);
-                }
-            }
-        };
-        this.#endpoint.lifecycle.ready.on(initializeParts);
     }
 
     add(child: Endpoint.Definition | Agent) {
@@ -145,6 +138,46 @@ export class Parts implements MutableSet<Endpoint, Endpoint | Agent>, Observable
         }
     }
 
+    /**
+     * Initialize all uninitialized Parts.
+     *
+     * Invoked automatically by the owner after behaviors initialize.
+     */
+    initialize() {
+        // Sanity check
+        if (!this.#endpoint.owner) {
+            throw new ImplementationError(`Cannot initialize ${this.#endpoint} parts because endpoint`);
+        }
+        if (!this.#endpoint.owner.lifecycle.isReady) {
+            throw new ImplementationError(`Cannot initialize ${this.#endpoint} parts because its owner is not ready`);
+        }
+
+        for (const endpoint of this) {
+            if (endpoint.construction.status === Lifecycle.Status.Inactive) {
+                endpoint.construction.start();
+            }
+        }
+
+        return AsyncConstruction.all(this, errored => {
+            const essential = [...errored].filter(endpoint => endpoint.lifecycle.isEssential);
+            if (essential.length) {
+                return new EndpointPartsError(essential);
+            }
+        });
+    }
+
+    /**
+     * Soft-reset all parts.  Invoked automatically by the owner on reset.
+     */
+    async reset() {
+        for (const endpoint of this) {
+            await endpoint.reset();
+        }
+    }
+
+    /**
+     * Destroy all parts.  Invoked automatically by the owner on destroy.
+     */
     async close() {
         for (const endpoint of this) {
             await endpoint.close();
