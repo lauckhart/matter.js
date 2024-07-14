@@ -45,3 +45,8 @@ export class EndpointPartsError extends MatterError {
         super(`Error initializing essential part${suffix}`);
     }
 }
+
+/**
+ * Thrown when a requested child {@link Endpoint} does not exist.
+ */
+export class PartNotFoundError extends MatterError {}

@@ -63,6 +63,9 @@ export class SessionsBehavior extends Behavior {
     }
 
     #sessionClosed(session: SecureSession<any>) {
+        if (session.isPase) {
+            return;
+        }
         delete this.state.sessions[session.id];
         this.events.closed.emit(this.#convertToExposedSession(session));
     }

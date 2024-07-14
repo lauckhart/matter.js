@@ -74,9 +74,7 @@ export const OperationalCredentialsClusterHandler: (
     };
 
     const assureCertification = async () => {
-        if (!cert().construction.ready) {
-            return cert().construction;
-        }
+        await cert().construction;
     };
 
     return {

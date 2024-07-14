@@ -5,8 +5,6 @@
  */
 
 import { Behavior } from "../behavior/Behavior.js";
-import { ActionContext } from "../behavior/context/ActionContext.js";
-import { ActionTracer } from "../behavior/context/ActionTracer.js";
 import { NodeActivity } from "../behavior/context/NodeActivity.js";
 import { OfflineContext } from "../behavior/context/server/OfflineContext.js";
 import { Lifecycle, UninitializedDependencyError } from "../common/Lifecycle.js";
@@ -274,22 +272,14 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     constructor(type: T, options?: Endpoint.Options<T>);
 
     constructor(definition: T | Endpoint.Configuration<T>, options?: Endpoint.Options<T>) {
-        // Create construction early so endpoints and behaviors can hook events
-        this.#construction = AsyncConstruction(this, {
-            onerror: error => {
-                if (this.#lifecycle.isEssential) {
-                    logger.error(`Error initializing ${this}:`, error);
-                } else {
-                    logger.warn(`Error initializing non-essential endpoint ${this}:`, error);
-                }
-            },
-        });
-
         const config = Endpoint.configurationFor(definition, options);
 
         this.#type = config.type;
-        this.#lifecycle = this.createLifecycle(config.isEssential);
 
+        // Create construction early so other components can hook events
+        this.#construction = AsyncConstruction(this);
+
+        this.#lifecycle = this.createLifecycle(config.isEssential);
         this.#lifecycle.ready.on(() => this.#logReady());
 
         if (config.id !== undefined) {
@@ -437,21 +427,33 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
             endpoint = new Endpoint(definition as any, options);
         }
 
+        if (this.#lifecycle.isPartsReady) {
+            // Disable the default logging of construction errors because we throw the cause below
+            endpoint.construction.onError(() => {});
+        }
+
         this.parts.add(endpoint);
 
-        // Our tree is already initialized; initialize the endpoint now so it is fully operational on return and we can
-        // remove if endpoint is essential and crashes
-        if (this.#lifecycle.isTreeReady) {
+        // If tree is already initialized, the endpoint will be initializing and we handle crashes here
+        if (endpoint.construction.status === Lifecycle.Status.Initializing) {
             try {
-                endpoint.construction.start();
-                await endpoint.construction;
+                await endpoint.construction.primary;
             } catch (e) {
+                // Revert endpoint to uninitialized state
+                await endpoint.reset();
+
+                // If endpoint is essential do not allow it to be added
                 if (endpoint.lifecycle.isEssential) {
                     this.parts.delete(endpoint);
-                    throw new UninitializedDependencyError(`Part ${endpoint}`, `initialization error`);
-                } else {
-                    logger.warn("Non-essential initialization error:", endpoint.construction.error);
+                    endpoint.#owner = undefined;
                 }
+
+                // For non-essential endpoints just log the error
+                if (!endpoint.lifecycle.isEssential) {
+                    logger.error(`Initialization error in non-essential endpoint ${endpoint}:`, e);
+                }
+
+                throw e;
             }
         }
 
@@ -536,23 +538,24 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      * Perform "soft" reset of the endpoint, reverting all in-memory structures to uninitialized.
      */
     async reset() {
-        // Revert lifecycle to uninitialized
-        this.lifecycle.resetting();
+        try {
+            // Revert lifecycle to uninitialized
+            this.lifecycle.resetting();
 
-        // Reset child parts
-        await this.parts.reset();
+            // Reset child parts
+            await this.parts.reset();
 
-        // Reset behaviors
-        await this.behaviors.reset();
+            // Reset behaviors
+            await this.behaviors.reset();
 
-        // Notify
-        await this.lifecycle.reset.emit();
+            // Notify
+            await this.lifecycle.reset.emit();
 
-        // Set construction to inactive so we can restart
-        this.construction.setStatus(Lifecycle.Status.Inactive);
-
-        // The endpoint will defer construction until it is notified of installation by a node
-        this.construction.start();
+            // Set construction to inactive so we can restart
+            this.construction.setStatus(Lifecycle.Status.Inactive);
+        } catch (e) {
+            logger.error(`Unhandled error during reset of ${this}`, e);
+        }
     }
 
     /**
@@ -606,9 +609,9 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      */
     get path(): DataModelPath {
         let ident;
-        if (this.lifecycle.hasId) {
+        if (this.lifecycle?.hasId) {
             ident = this.id;
-        } else if (this.lifecycle.hasNumber) {
+        } else if (this.lifecycle?.hasNumber) {
             ident = this.number;
         } else {
             ident = "?";
@@ -618,7 +621,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
             return this.#owner.path.at(ident, this.#type.name);
         }
 
-        return DataModelPath(ident, this.type.name);
+        return DataModelPath(ident, this.type?.name);
     }
 
     /**
@@ -626,45 +629,47 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      *
      * Derivatives may override to perform async construction prior to full initialization.
      */
-    protected initialize(agent: Agent.Instance<T>) {
+    protected initialize() {
+        // Configure the endpoint for the appropriate node type
         this.env.get(EndpointInitializer).initializeDescendent(this);
 
-        const promise = this.behaviors.initialize(agent);
+        // Initialize behaviors.  Success brings endpoint to "ready" state
+        let promise = this.behaviors.initialize();
 
+        // Initialize parts.  Success brings endpoint to "tree ready" state
         if (promise) {
-            return promise.then(this.parts.initialize.bind(this.parts));
+            promise = promise.then(this.parts.initialize.bind(this.parts));
+        } else {
+            promise = this.parts.initialize();
         }
 
-        return this.parts.initialize();
+        return promise;
+    }
+
+    /**
+     * Ensure requirements for construction are met.
+     */
+    protected assertConstructable() {
+        if (this.#owner === undefined) {
+            throw new ImplementationError(`Endpoint construction initiated without owner`);
+        }
+        if (!this.#owner.#lifecycle.isInstalled) {
+            throw new ImplementationError(`Endpoint construction initiated with uninstalled owner`);
+        }
     }
 
     /**
      * Complete initialization.  Invoked via {@link AsyncConstruction#start} by the owner.
      */
     [AsyncConstructable.construct]() {
+        // Sanity checks
+        this.assertConstructable();
+
+        // We now consider the endpoint "installed"
         this.lifecycle.change(EndpointLifecycle.Change.Installed);
 
-        const trace: ActionTracer.Action | undefined = this.env.has(ActionTracer)
-            ? { type: ActionTracer.ActionType.Initialize }
-            : undefined;
-
-        const initializeEndpoint = (context: ActionContext) => this.initialize(context.agentFor(this));
-
-        if (!this.#activity) {
-            this.#activity = this.env.get(NodeActivity);
-        }
-
-        let result = OfflineContext.act("initialize", this.#activity, initializeEndpoint, { trace });
-
-        result = MaybePromise.then(result, () => {
-            this.lifecycle.change(EndpointLifecycle.Change.Ready);
-            if (trace && this.env.has(ActionTracer)) {
-                trace.path = this.path;
-                this.env.get(ActionTracer).record(trace);
-            }
-        });
-
-        return result;
+        // Initialize
+        return this.initialize();
     }
 
     #logReady() {

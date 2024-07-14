@@ -66,7 +66,7 @@ export class CommissioningBehavior extends Behavior {
 
         this.reactTo((this.endpoint as Node).lifecycle.online, this.#nodeOnline);
 
-        this.reactTo((this.endpoint as Node).lifecycle.treeReady, this.#initializeNode);
+        this.reactTo((this.endpoint as Node).lifecycle.partsReady, this.#initializeNode);
     }
 
     override [Symbol.asyncDispose]() {

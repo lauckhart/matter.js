@@ -4,18 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NodeActivity } from "../behavior/context/NodeActivity.js";
 import { CommissioningBehavior } from "../behavior/system/commissioning/CommissioningBehavior.js";
 import { NetworkServer } from "../behavior/system/network/NetworkServer.js";
 import { ServerNetworkRuntime } from "../behavior/system/network/ServerNetworkRuntime.js";
 import { ProductDescriptionServer } from "../behavior/system/product-description/ProductDescriptionServer.js";
 import { SessionsBehavior } from "../behavior/system/sessions/SessionsBehavior.js";
-import { Agent } from "../endpoint/Agent.js";
 import { Endpoint } from "../endpoint/Endpoint.js";
 import { EndpointServer } from "../endpoint/EndpointServer.js";
 import { RootEndpoint as BaseRootEndpoint } from "../endpoint/definitions/system/RootEndpoint.js";
 import { EndpointInitializer } from "../endpoint/properties/EndpointInitializer.js";
-import { EndpointLifecycle } from "../endpoint/properties/EndpointLifecycle.js";
 import { DiagnosticSource } from "../log/DiagnosticSource.js";
 import { asyncNew } from "../util/AsyncConstruction.js";
 import { Mutex } from "../util/Mutex.js";
@@ -32,7 +29,6 @@ import { ServerStore } from "./server/storage/ServerStore.js";
  */
 export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint> extends Node<T> {
     #mutex: Mutex;
-    #crashed = false;
 
     /**
      * Construct a new ServerNode.
@@ -84,18 +80,7 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
         This extends typeof ServerNode<any>,
         T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint,
     >(this: This, definition?: T | Node.Configuration<T>, options?: Node.Options<T>) {
-        const node = await asyncNew(this, definition, options);
-
-        if (!node.lifecycle.isTreeReady) {
-            await node.lifecycle.treeReady;
-        }
-
-        const activity = node.env.get(NodeActivity);
-        if (activity.isActive) {
-            await activity.inactive;
-        }
-
-        return node as ServerNode<T>;
+        return await asyncNew(this, definition, options);
     }
 
     /**
@@ -185,7 +170,7 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
         await this.act(agent => agent.get(NetworkServer).advertiseNow());
     }
 
-    protected override async initialize(agent: Agent.Instance<T>) {
+    protected override async initialize() {
         // Load the environment with node-specific services
         const serverStore = await ServerStore.create(this.env, this.id);
 
@@ -195,7 +180,7 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
 
         this.env.set(IdentityService, new IdentityService(this));
 
-        return super.initialize(agent);
+        return super.initialize();
     }
 
     /**
@@ -209,6 +194,11 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
     protected async resetStorage() {
         await this.env.get(ServerStore).erase();
     }
+
+    /**
+     * ServerNode has no preconditions for construction.
+     */
+    protected override assertConstructable() {}
 }
 
 export namespace ServerNode {

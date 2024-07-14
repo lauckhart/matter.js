@@ -103,7 +103,7 @@ export class TransactionalInteractionServer extends InteractionServer {
         this.#updateStructure();
         this.#changeListener = type => {
             switch (type) {
-                case EndpointLifecycle.Change.TreeReady:
+                case EndpointLifecycle.Change.PartsReady:
                 case EndpointLifecycle.Change.ClientsChanged:
                 case EndpointLifecycle.Change.ServersChanged:
                 case EndpointLifecycle.Change.Destroyed:
@@ -295,7 +295,7 @@ export class TransactionalInteractionServer extends InteractionServer {
     }
 
     #updateStructure() {
-        if (this.#endpoint.lifecycle.isTreeReady) {
+        if (this.#endpoint.lifecycle.isPartsReady) {
             this.#endpointStructure.initializeFromEndpoint(EndpointServer.forEndpoint(this.#endpoint));
         }
     }

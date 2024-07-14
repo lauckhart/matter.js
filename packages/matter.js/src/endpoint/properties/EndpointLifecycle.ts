@@ -22,12 +22,12 @@ export class EndpointLifecycle {
     #isEssential: boolean;
     #isInstalled = false;
     #isReady = false;
-    #isTreeReady = false;
+    #isPartsReady = false;
     #hasId = false;
     #hasNumber = false;
     #installed = Observable<[]>(error => this.emitError("installed", error));
     #ready = Observable<[]>(error => this.emitError("ready", error));
-    #treeReady = Observable<[]>(error => this.emitError("treeReady", error));
+    #partsReady = Observable<[]>(error => this.emitError("partsReady", error));
     #destroyed = Observable<[]>(error => this.emitError("destroyed", error));
     #changed = Observable<[type: EndpointLifecycle.Change, endpoint: Endpoint]>(error =>
         this.emitError("changed", error),
@@ -52,8 +52,8 @@ export class EndpointLifecycle {
     /**
      * Emitted when an endpoint is fully initialized including children.
      */
-    get treeReady() {
-        return this.#treeReady;
+    get partsReady() {
+        return this.#partsReady;
     }
 
     /**
@@ -94,8 +94,8 @@ export class EndpointLifecycle {
     /**
      * Is the {@link Endpoint} fully initialized, including children?
      */
-    get isTreeReady() {
-        return this.#isTreeReady;
+    get isPartsReady() {
+        return this.#isPartsReady;
     }
 
     /**
@@ -139,10 +139,6 @@ export class EndpointLifecycle {
      */
     bubble(type: EndpointLifecycle.Change, endpoint: Endpoint) {
         this.#changed.emit(type, endpoint);
-
-        if (type === EndpointLifecycle.Change.TreeReady) {
-            this.#checkTreeReadiness();
-        }
     }
 
     /**
@@ -164,7 +160,14 @@ export class EndpointLifecycle {
                     throw new ImplementationError("Endpoint reports as ready but has no number assigned");
                 }
                 this.#isReady = true;
-                this.#checkTreeReadiness();
+                break;
+
+            case EndpointLifecycle.Change.PartsReady:
+                // Sanity checks
+                if (!this.#isReady) {
+                    throw new ImplementationError("Endpoint reports as parts-ready but is not itself ready");
+                }
+                this.#isPartsReady = true;
                 break;
 
             case EndpointLifecycle.Change.IdAssigned:
@@ -212,20 +215,7 @@ export class EndpointLifecycle {
      * Revert to uninstalled state.
      */
     resetting() {
-        this.#isInstalled = this.#isReady = this.#isTreeReady = false;
-    }
-
-    #checkTreeReadiness() {
-        if (this.#isTreeReady) {
-            return;
-        }
-
-        if (!this.#endpoint.parts.areReady) {
-            return;
-        }
-
-        this.#isTreeReady = true;
-        this.change(EndpointLifecycle.Change.TreeReady);
+        this.#isInstalled = this.#isReady = this.#isPartsReady = false;
     }
 }
 
@@ -233,7 +223,7 @@ export namespace EndpointLifecycle {
     export enum Change {
         Installed = "installed",
         Ready = "ready",
-        TreeReady = "treeReady",
+        PartsReady = "partsReady",
         Crashed = "crashed",
         Destroyed = "destroyed",
         ServersChanged = "serversChanged",

@@ -426,7 +426,7 @@ export namespace EventEmitter {
  */
 export class ObservableProxy extends BasicObservable {
     #target: Observable;
-    #emitter = (...args: unknown[]) => super.emit(...args);
+    #emitter = super.emit.bind(this);
 
     constructor(target: Observable) {
         super();
@@ -439,6 +439,7 @@ export class ObservableProxy extends BasicObservable {
 
         this.#target = target;
         this.#target.on(this.#emitter);
+        this.emit = this.#target.emit.bind(this.#target);
     }
 
     override [Symbol.dispose]() {
@@ -454,7 +455,5 @@ export class ObservableProxy extends BasicObservable {
         return this.#target.isObserved;
     }
 
-    override emit(...payload: any[]): void | undefined {
-        return this.#target.emit(...payload);
-    }
+    override emit: (...payload: any) => any | undefined;
 }

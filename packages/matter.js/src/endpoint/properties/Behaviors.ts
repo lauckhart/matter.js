@@ -8,6 +8,7 @@ import { Behavior } from "../../behavior/Behavior.js";
 import type { ClusterBehavior } from "../../behavior/cluster/ClusterBehavior.js";
 import { ValidatedElements } from "../../behavior/cluster/ValidatedElements.js";
 import { ActionContext } from "../../behavior/context/ActionContext.js";
+import { ActionTracer } from "../../behavior/context/ActionTracer.js";
 import { NodeActivity } from "../../behavior/context/NodeActivity.js";
 import { OfflineContext } from "../../behavior/context/server/OfflineContext.js";
 import { DescriptorServer } from "../../behavior/definitions/descriptor/DescriptorServer.js";
@@ -134,32 +135,64 @@ export class Behaviors {
      * Throws an error if any behavior crashes, but we allow all behaviors to settle before throwing.  The goal is to
      * surface multiple configuration errors and prevent inconsistent state caused by partial initialization.
      */
-    initialize(agent: Agent): MaybePromise {
+    initialize(): MaybePromise {
         // Sanity check
         if (!this.#endpoint.lifecycle.isInstalled) {
             throw new ImplementationError(`Cannot initialize behaviors because endpoint is not installed`);
         }
 
-        // Activate behaviors
-        //
-        // TODO - add a timeout on behavior initialization
-        for (const type of Object.values(this.supported)) {
-            if (type.early) {
-                this.activate(type, agent);
+        // Initialization action.  We initialize all behaviors in the same transaction
+        const initializeBehaviors = (context: ActionContext) => {
+            const agent = context.agentFor(this.#endpoint);
+
+            // Activate behaviors
+            //
+            // TODO - add a timeout on behavior initialization
+            for (const type of Object.values(this.supported)) {
+                if (type.early) {
+                    this.activate(type, agent);
+                }
             }
+
+            // Wait for all behaviors to initialize
+            return AsyncConstruction.all(
+                {
+                    [Symbol.iterator]: () => {
+                        return Object.values(this.#backings)[Symbol.iterator]();
+                    },
+                },
+
+                causes => {
+                    throw new EndpointBehaviorsError(causes);
+                },
+            );
+        };
+
+        // Initialize instrumentation
+        const activity = this.#endpoint.env.get(NodeActivity);
+        const trace: ActionTracer.Action | undefined = this.#endpoint.env.has(ActionTracer)
+            ? { type: ActionTracer.ActionType.Initialize }
+            : undefined;
+
+        // Perform initialization
+        let promise = OfflineContext.act("initialize", activity, initializeBehaviors, { trace });
+
+        // Once behaviors are ready the endpoint we consider the endpoint "ready"
+        const onReady = () => {
+            this.#endpoint.lifecycle.change(EndpointLifecycle.Change.Ready);
+
+            if (trace) {
+                trace.path = this.#endpoint.path;
+                this.#endpoint.env.get(ActionTracer).record(trace);
+            }
+        };
+        if (promise) {
+            promise = promise.then(onReady);
+        } else {
+            onReady();
         }
 
-        return AsyncConstruction.all(
-            {
-                [Symbol.iterator]: () => {
-                    return Object.values(this.#backings)[Symbol.iterator]();
-                },
-            },
-
-            causes => {
-                throw new EndpointBehaviorsError(causes);
-            },
-        );
+        return promise;
     }
 
     /**
@@ -187,6 +220,9 @@ export class Behaviors {
             return;
         }
 
+        if (this.#supported === this.#endpoint.type.behaviors) {
+            this.#supported = { ...this.#supported };
+        }
         this.#supported[type.id] = type;
 
         this.#augmentEndpoint(type);
@@ -252,7 +288,7 @@ export class Behaviors {
         };
 
         // If the backing initializes asynchronously, return a promise that returns the behavior when initialized
-        if (!backing.construction.ready) {
+        if (backing.construction.status === Lifecycle.Status.Initializing) {
             return backing.construction
                 .then(() => getBehavior())
                 .catch(() => {
@@ -449,13 +485,14 @@ export class Behaviors {
 
         if (MaybePromise.is(result)) {
             result.then(undefined, error => {
-                // The backing should handle its own errors so assume this is a commit error and crash the backing.  If
-                // there's no backing then there shouldn't be a promise so this is effectively an internal error
+                // The backing should handle its own errors so if present assume this is a commit error and crash the
+                // backing.  If there's no backing then there shouldn't be a promise so this is effectively an internal
+                // error
                 const backing = this.#backings[type.id];
                 if (backing) {
-                    backing.construction.crashed(error);
+                    logger.error(`Error initializing ${backing}`, error);
                 } else {
-                    logger.error("Unexpected rejection of late activation", error);
+                    logger.error(`Unexpected rejection initializing ${type.name}`, error);
                 }
             });
         }

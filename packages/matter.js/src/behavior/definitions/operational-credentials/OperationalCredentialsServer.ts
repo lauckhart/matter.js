@@ -448,9 +448,8 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
                 this.agent.get(ProductDescriptionServer).state,
             ));
 
-        if (!certification.construction.ready) {
-            await certification.construction;
-        }
+        await certification.construction;
+        
         return certification;
     }
 

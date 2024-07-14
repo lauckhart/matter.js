@@ -10,7 +10,7 @@ import { Endpoint } from "../../../endpoint/Endpoint.js";
 import { PartStore } from "../../../endpoint/storage/PartStore.js";
 import { Logger } from "../../../log/Logger.js";
 import type { StorageContext } from "../../../storage/StorageContext.js";
-import { AsyncConstructable, AsyncConstruction, asyncNew } from "../../../util/AsyncConstruction.js";
+import { AsyncConstruction, asyncNew } from "../../../util/AsyncConstruction.js";
 import { IdentityConflictError } from "../IdentityService.js";
 import { ServerPartStore } from "./ServerPartStore.js";
 
@@ -70,21 +70,19 @@ export class PartStoreFactory extends PartStoreService {
         this.#storage = storage;
         this.#defaultNextNumber = nextNumber ?? 1;
 
-        this.#construction = AsyncConstruction(this);
-    }
+        this.#construction = AsyncConstruction(this, async () => {
+            // Load next number with excessive validation for the off-chance it somehow gets corrupted
+            this.#nextNumber = (await this.#storage.get(NEXT_NUMBER_KEY, this.#defaultNextNumber)) % 0xffff;
 
-    async [AsyncConstructable.construct]() {
-        // Load next number with excessive validation for the off-chance it somehow gets corrupted
-        this.#nextNumber = (await this.#storage.get(NEXT_NUMBER_KEY, this.#defaultNextNumber)) % 0xffff;
+            if (!this.#nextNumber) {
+                this.#nextNumber = 1;
+            } else {
+                this.#persistedNextNumber = this.#nextNumber;
+            }
 
-        if (!this.#nextNumber) {
-            this.#nextNumber = 1;
-        } else {
-            this.#persistedNextNumber = this.#nextNumber;
-        }
-
-        // Preload stores so we can access synchronously going forward
-        this.#root = await asyncNew(ServerPartStore, this.#storage);
+            // Preload stores so we can access synchronously going forward
+            this.#root = await asyncNew(ServerPartStore, this.#storage);
+        });
     }
 
     async erase() {
@@ -95,7 +93,11 @@ export class PartStoreFactory extends PartStoreService {
         await this.#storage.clearAll();
 
         this.#construction.setStatus(Lifecycle.Status.Inactive);
-        this.#construction.start();
+
+        this.#allocatedNumbers = new Set();
+        this.#persistedNextNumber = this.#nextNumber = (this.#defaultNextNumber ?? 1) % 0xffff;
+        this.#root = new ServerPartStore(this.#storage, false);
+
         await this.construction;
     }
 

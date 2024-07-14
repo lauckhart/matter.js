@@ -8,7 +8,6 @@ import { NodeActivity } from "../behavior/context/NodeActivity.js";
 import { ImplementationError } from "../common/MatterError.js";
 import { Endpoint } from "../endpoint/Endpoint.js";
 import { RootEndpoint } from "../endpoint/definitions/system/RootEndpoint.js";
-import { EndpointLifecycle } from "../endpoint/properties/EndpointLifecycle.js";
 import { EndpointType } from "../endpoint/type/EndpointType.js";
 import { Environment } from "../environment/Environment.js";
 import { RuntimeService } from "../environment/RuntimeService.js";
@@ -56,12 +55,6 @@ export class Node<T extends RootEndpoint = RootEndpoint> extends Endpoint<T> {
 
         this.lifecycle.offline.on(() => {
             this.statusUpdate("is offline");
-        });
-
-        this.lifecycle.changed.on((type, endpoint) => {
-            if (type === EndpointLifecycle.Change.Crashed) {
-                this.endpointCrashed(endpoint);
-            }
         });
     }
 
@@ -125,10 +118,6 @@ export class Node<T extends RootEndpoint = RootEndpoint> extends Endpoint<T> {
 
     protected statusUpdate(message: string) {
         logger.notice(Diagnostic.strong(this.toString()), message);
-    }
-
-    protected endpointCrashed(endpoint: Endpoint) {
-        return this.lifecycle.endpointError.emit(endpoint, endpoint.construction.error ?? new Error("Unknown error"));
     }
 }
 

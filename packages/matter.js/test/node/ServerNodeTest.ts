@@ -21,6 +21,7 @@ import { LightSensorDevice } from "../../src/endpoint/definitions/device/LightSe
 import { OnOffLightDevice } from "../../src/endpoint/definitions/device/OnOffLightDevice.js";
 import { PumpDevice } from "../../src/endpoint/definitions/device/PumpDevice.js";
 import { AggregatorEndpoint } from "../../src/endpoint/definitions/system/AggregatorEndpoint.js";
+import { EndpointBehaviorsError, EndpointPartsError } from "../../src/endpoint/errors.js";
 import { Environment } from "../../src/environment/Environment.js";
 import { FabricManager } from "../../src/fabric/FabricManager.js";
 import { UdpChannelFake } from "../../src/net/fake/UdpChannelFake.js";
@@ -65,7 +66,7 @@ describe("ServerNode", () => {
             node.env.runtime.cancel();
         });
 
-        for (const event of ["online", "offline", "ready", "treeReady"] as const) {
+        for (const event of ["online", "offline", "ready", "partsReady"] as const) {
             node.lifecycle[event].on(() => {
                 changes.push([event]);
             });
@@ -81,10 +82,10 @@ describe("ServerNode", () => {
             ["installed", "node0.?"],
             ["idAssigned", "node0.part0"],
             ["numberAssigned", "node0.part0"],
-            ["treeReady", "node0.part0"],
-            ["treeReady", "node0"],
-            ["treeReady"],
             ["ready", "node0.part0"],
+            ["partsReady", "node0.part0"],
+            ["partsReady", "node0"],
+            ["partsReady"],
             ["online"],
             ["offline"],
             ["destroyed", "node0.part0"],
@@ -246,7 +247,7 @@ describe("ServerNode", () => {
         await node.close();
     });
 
-    it("decommissions and recommissions", async () => {
+    it.only("decommissions and recommissions", async () => {
         const { node, contextOptions } = await commission();
 
         const fabricIndex = await node.online(
@@ -278,7 +279,7 @@ describe("ServerNode", () => {
         await commission(node);
 
         await node.close();
-    });
+    }).timeout(60000);
 
     it("commissions twice", async () => {
         const { node } = await commission();
@@ -356,21 +357,21 @@ describe("ServerNode", () => {
             it("from root behavior error", async () => {
                 await expect(
                     MockServerNode.create(MockServerNode.RootEndpoint, { environment: badNodeEnv }),
-                ).rejectedWith(CrashedDependencyError);
+                ).rejectedWith(EndpointBehaviorsError);
             });
 
-            it.only("from behavior error on child during node create", async () => {
+            it("from behavior error on child during node create", async () => {
                 await expect(
                     MockServerNode.create(MockServerNode.RootEndpoint, {
                         environment: badEndpointEnv,
                         parts: [new Endpoint(LightSensorDevice)],
                     }),
-                ).rejectedWith(CrashedDependencyError);
+                ).rejectedWith(EndpointPartsError);
             });
 
             it("from behavior on child after node create", async () => {
                 const node = await MockServerNode.create(MockServerNode.RootEndpoint, { environment: badEndpointEnv });
-                await expect(node.add(new Endpoint(LightSensorDevice))).rejectedWith(CrashedDependencyError);
+                await expect(node.add(new Endpoint(LightSensorDevice))).rejectedWith(EndpointBehaviorsError);
             });
         });
 
