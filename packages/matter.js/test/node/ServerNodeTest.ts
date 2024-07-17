@@ -11,7 +11,7 @@ import { CertificationDeclarationManager } from "../../src/certificate/Certifica
 import { GeneralCommissioning } from "../../src/cluster/definitions/GeneralCommissioningCluster.js";
 import { PumpConfigurationAndControl } from "../../src/cluster/definitions/PumpConfigurationAndControlCluster.js";
 import { DnsCodec, DnsMessage, DnsRecordType } from "../../src/codec/DnsCodec.js";
-import { CrashedDependencyError } from "../../src/common/Lifecycle.js";
+import { CrashedDependenciesError, CrashedDependencyError } from "../../src/common/Lifecycle.js";
 import { Crypto } from "../../src/crypto/Crypto.js";
 import { Key, PrivateKey } from "../../src/crypto/Key.js";
 import { NodeId } from "../../src/datatype/NodeId.js";
@@ -247,7 +247,7 @@ describe("ServerNode", () => {
         await node.close();
     });
 
-    it.only("decommissions and recommissions", async () => {
+    it("decommissions and recommissions", async () => {
         const { node, contextOptions } = await commission();
 
         const fabricIndex = await node.online(
@@ -279,7 +279,7 @@ describe("ServerNode", () => {
         await commission(node);
 
         await node.close();
-    }).timeout(60000);
+    });
 
     it("commissions twice", async () => {
         const { node } = await commission();
@@ -348,7 +348,7 @@ describe("ServerNode", () => {
 
     describe("crashes gracefully", () => {
         const badNodeEnv = new Environment("test");
-        badNodeEnv.vars.set("behaviors.basicInformation.revision", "not a number");
+        badNodeEnv.vars.set("behaviors.basicInformation.version", "not a number");
 
         const badEndpointEnv = new Environment("test");
         badEndpointEnv.vars.set("behaviors.illuminancemeasurement.diet", "duck food");
@@ -381,7 +381,7 @@ describe("ServerNode", () => {
                     MockServerNode.createOnline({
                         config: { type: MockServerNode.RootEndpoint, environment: badNodeEnv },
                     }),
-                ).rejectedWith(CrashedDependencyError);
+                ).rejectedWith(CrashedDependenciesError, "Behaviors have errors");
             });
 
             it("from behavior error on child during startup", async () => {

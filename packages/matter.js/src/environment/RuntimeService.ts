@@ -220,6 +220,7 @@ export class RuntimeService implements Multiplex {
 
         if (worker.construction) {
             worker.construction.onSuccess(cancel);
+            return;
         }
 
         return cancel();

@@ -51,7 +51,11 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
 
     constructor(definition?: T | Node.Configuration<T>, options?: Node.Options<T>) {
         super(Node.nodeConfigFor(ServerNode.RootEndpoint as T, definition, options));
-        this.#mutex = new Mutex(this, this.construction);
+
+        // Note that we don't hold the mutex with construction.  Otherwise it will log construction errors.  We instead
+        // want those handled by whichever method depends on construction completion
+        this.#mutex = new Mutex(this);
+
         DiagnosticSource.add(this);
     }
 
@@ -91,7 +95,6 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
     start() {
         this.#mutex.run(async () => {
             await this.construction;
-
             await new ServerNetworkRuntime(this).run();
         });
     }
@@ -114,6 +117,8 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
     }
 
     override async close() {
+        await this.construction;
+
         this.cancel();
 
         this.#mutex.terminate(async () => {
@@ -135,6 +140,8 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
      * Perform a factory reset of the node.
      */
     async factoryReset() {
+        await this.construction;
+
         // Go offline before performing reset
         const isOnline = this.lifecycle.isOnline;
         if (isOnline) {
@@ -151,7 +158,7 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
             // Reset in-memory state
             await this.reset();
 
-            // Reset storage
+            // Reset persistent state
             await this.resetStorage();
 
             // Reset reverts node to inactive state; now reinitialize

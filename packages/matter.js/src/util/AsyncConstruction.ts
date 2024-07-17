@@ -104,6 +104,14 @@ export interface AsyncConstruction<T> extends Promise<T> {
     readonly isErrorHandled: boolean;
 
     /**
+     * A promise that behaves identically to {@link AsyncConstruction} but always throws the primary cause rather than
+     * {@link CrashedDependencyError}.
+     *
+     * Handling errors on this promise will prevent other handlers from seeing the primary cause.
+     */
+    primary: Promise<T>;
+
+    /**
      * If you omit the initializer parameter to {@link AsyncConstruction} execution is deferred until you invoke this
      * method to initiate construction via the {@link AsyncConstructable.Deferred} interface.
      *
@@ -168,14 +176,6 @@ export interface AsyncConstruction<T> extends Promise<T> {
      * Errors thrown by this callback are logged but otherwise ignored.
      */
     onCompletion(actor: () => void): void;
-
-    /**
-     * A promise that behaves identically to {@link AsyncConstruction} but always throws the primary cause rather than
-     * {@link CrashedDependencyError}.
-     *
-     * Handling errors on this promise will prevent other handlers from seeing the primary cause.
-     */
-    primary: Promise<T>;
 
     toString(): string;
 }
