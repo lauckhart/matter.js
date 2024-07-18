@@ -10,7 +10,7 @@ import { type Agent } from "../../endpoint/Agent.js";
 import type { Endpoint } from "../../endpoint/Endpoint.js";
 import { BehaviorInitializationError } from "../../endpoint/errors.js";
 import { Logger } from "../../log/Logger.js";
-import { AsyncConstructable, AsyncConstruction } from "../../util/AsyncConstruction.js";
+import { Construction } from "../../util/Construction.js";
 import { EventEmitter, Observable } from "../../util/Observable.js";
 import { MaybePromise } from "../../util/Promises.js";
 import type { Behavior } from "../Behavior.js";
@@ -32,7 +32,7 @@ export abstract class BehaviorBacking {
     #options?: Behavior.Options;
     #datasource?: Datasource;
     #reactors?: Reactors;
-    #construction: AsyncConstruction<BehaviorBacking>;
+    #construction: Construction<BehaviorBacking>;
 
     get construction() {
         return this.#construction;
@@ -43,16 +43,13 @@ export abstract class BehaviorBacking {
         this.#type = type;
         this.#options = options;
 
-        this.#construction = AsyncConstruction(this, undefined, {
-            onerror(error) {
-                // The endpoint reports errors during initialization.  For errors occurring later we report the error
-                // ourselves
-                if (endpoint.lifecycle.isReady) {
-                    logger.error(error);
-                }
-
-                return false;
-            },
+        this.#construction = Construction(this);
+        this.#construction.onError(error => {
+            // The endpoint reports errors during initialization.  For errors occurring later we report the error
+            // ourselves
+            if (endpoint.lifecycle.isReady) {
+                logger.error(`Error initializing ${this}:`, error);
+            }
         });
     }
 
@@ -67,9 +64,9 @@ export abstract class BehaviorBacking {
     /**
      * Initialize state by applying values from options and invoking the behavior's initialize() function.
      *
-     * Initiated via {@link AsyncConstruction#start} by Behaviors class once the backing is installed.
+     * Initiated via {@link Construction#start} by Behaviors class once the backing is installed.
      */
-    [AsyncConstructable.construct](agent: Agent) {
+    [Construction.construct](agent: Agent) {
         const crash = (cause: unknown) => {
             throw new BehaviorInitializationError(`Error initializing ${this}`, cause);
         };

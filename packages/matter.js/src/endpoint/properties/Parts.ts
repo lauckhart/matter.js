@@ -8,7 +8,7 @@ import { Lifecycle } from "../../common/Lifecycle.js";
 import { ImplementationError } from "../../common/MatterError.js";
 import { Logger } from "../../log/Logger.js";
 import { IdentityConflictError, IdentityService } from "../../node/server/IdentityService.js";
-import { AsyncConstruction } from "../../util/AsyncConstruction.js";
+import { Construction } from "../../util/Construction.js";
 import { BasicSet, MutableSet, ObservableSet } from "../../util/Set.js";
 import { Agent } from "../Agent.js";
 import { Endpoint } from "../Endpoint.js";
@@ -214,7 +214,7 @@ export class Parts implements MutableSet<Endpoint, Endpoint | Agent>, Observable
                 return new EndpointPartsError(essential);
             }
         };
-        let promise = AsyncConstruction.all(this, onPartsCrashed);
+        let promise = Construction.all(this, onPartsCrashed);
 
         // Once parts are initialized we consider the endpoint "tree ready"
         if (promise) {

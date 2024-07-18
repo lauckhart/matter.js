@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import type { AsyncConstructable } from "./AsyncConstruction.js";
+import type { Constructable } from "./Construction.js";
 
 /**
  * Ensure that a cause is an error object.
@@ -12,9 +12,9 @@ import type { AsyncConstructable } from "./AsyncConstruction.js";
  * We consider anything with a "message" property to be a reasonable error object.
  */
 export function asError(cause: unknown): Error {
-    // If the cause is an AsyncConstructable, use its construction error
-    if ((cause as AsyncConstructable)?.construction?.error) {
-        cause = (cause as AsyncConstructable)?.construction.error;
+    // If the cause is an Constructable, use its construction error
+    if ((cause as Constructable)?.construction?.error) {
+        cause = (cause as Constructable)?.construction.error;
     }
 
     // If the cause is indeterminate we fall back to the helpful "Unknown error"

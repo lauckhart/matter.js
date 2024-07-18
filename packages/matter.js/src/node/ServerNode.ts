@@ -9,13 +9,13 @@ import { NetworkServer } from "../behavior/system/network/NetworkServer.js";
 import { ServerNetworkRuntime } from "../behavior/system/network/ServerNetworkRuntime.js";
 import { ProductDescriptionServer } from "../behavior/system/product-description/ProductDescriptionServer.js";
 import { SessionsBehavior } from "../behavior/system/sessions/SessionsBehavior.js";
+import { MatterFlowError } from "../common/MatterError.js";
 import { Endpoint } from "../endpoint/Endpoint.js";
 import { EndpointServer } from "../endpoint/EndpointServer.js";
 import { RootEndpoint as BaseRootEndpoint } from "../endpoint/definitions/system/RootEndpoint.js";
 import { EndpointInitializer } from "../endpoint/properties/EndpointInitializer.js";
 import { DiagnosticSource } from "../log/DiagnosticSource.js";
-import { asyncNew } from "../util/AsyncConstruction.js";
-import { Mutex } from "../util/Mutex.js";
+import { asyncNew } from "../util/Construction.js";
 import { Identity } from "../util/Type.js";
 import { Node } from "./Node.js";
 import { IdentityService } from "./server/IdentityService.js";
@@ -28,7 +28,8 @@ import { ServerStore } from "./server/storage/ServerStore.js";
  * The Matter specification often refers to server-side nodes as "devices".
  */
 export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint> extends Node<T> {
-    #mutex: Mutex;
+    #runtime?: ServerNetworkRuntime;
+    #resetting = false;
 
     /**
      * Construct a new ServerNode.
@@ -51,10 +52,6 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
 
     constructor(definition?: T | Node.Configuration<T>, options?: Node.Options<T>) {
         super(Node.nodeConfigFor(ServerNode.RootEndpoint as T, definition, options));
-
-        // Note that we don't hold the mutex with construction.  Otherwise it will log construction errors.  We instead
-        // want those handled by whichever method depends on construction completion
-        this.#mutex = new Mutex(this);
 
         DiagnosticSource.add(this);
     }
@@ -92,11 +89,19 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
      *
      * If you add the server as a worker to {@link Environment.runtime} this happens automatically.
      */
-    start() {
-        this.#mutex.run(async () => {
-            await this.construction;
-            await new ServerNetworkRuntime(this).run();
-        });
+    async start() {
+        await this.construction.ready;
+
+        if (this.#runtime) {
+            throw new MatterFlowError("Server is already started");
+        }
+        if (this.#resetting) {
+            throw new MatterFlowError("Server cannot start because it is performing factory reset");
+        }
+
+        this.#runtime = new ServerNetworkRuntime(this);
+
+        await this.#runtime.construction.ready;
     }
 
     /**
@@ -105,23 +110,13 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
      * This happens automatically on close.
      */
     cancel() {
-        if (this.behaviors.isActive(NetworkServer)) {
-            const runtime = this.behaviors.internalsOf(NetworkServer).runtime;
-
-            if (runtime) {
-                // Note that we call close() immediately -- not once the mutex is free -- because the mutex is probably
-                // held by the network's run() promise
-                this.#mutex.run(runtime.close());
-            }
-        }
+        return this.#runtime?.close();
     }
 
-    override async close() {
-        await this.construction;
+    override close() {
+        const close = async () => {
+            await this.cancel();
 
-        this.cancel();
-
-        this.#mutex.terminate(async () => {
             await super.close();
 
             if (this.env.has(ServerStore)) {
@@ -129,11 +124,11 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
                 await store.close();
                 this.env.delete(ServerStore, store);
             }
-        });
 
-        await this.#mutex;
+            DiagnosticSource.delete(this);
+        };
 
-        DiagnosticSource.delete(this);
+        return this.construction.close(close);
     }
 
     /**

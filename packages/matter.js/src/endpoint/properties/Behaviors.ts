@@ -21,7 +21,7 @@ import { ImplementationError, InternalError, ReadOnlyError } from "../../common/
 import { Diagnostic } from "../../log/Diagnostic.js";
 import { Logger } from "../../log/Logger.js";
 import { FeatureSet } from "../../model/index.js";
-import { AsyncConstruction } from "../../util/AsyncConstruction.js";
+import { Construction } from "../../util/Construction.js";
 import { EventEmitter } from "../../util/Observable.js";
 import { MaybePromise } from "../../util/Promises.js";
 import { camelize, describeList } from "../../util/String.js";
@@ -155,7 +155,7 @@ export class Behaviors {
             }
 
             // Wait for all behaviors to initialize
-            return AsyncConstruction.all(
+            return Construction.all(
                 {
                     [Symbol.iterator]: () => {
                         return Object.values(this.#backings)[Symbol.iterator]();

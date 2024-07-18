@@ -15,7 +15,7 @@ import { Diagnostic } from "../log/Diagnostic.js";
 import { Logger } from "../log/Logger.js";
 import type { Node } from "../node/Node.js";
 import { IdentityService } from "../node/server/IdentityService.js";
-import { AsyncConstructable, AsyncConstruction } from "../util/AsyncConstruction.js";
+import { Construction } from "../util/Construction.js";
 import { MaybePromise } from "../util/Promises.js";
 import { Immutable } from "../util/Type.js";
 import { Agent } from "./Agent.js";
@@ -48,7 +48,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     #behaviors: Behaviors;
     #lifecycle: EndpointLifecycle;
     #parts?: Parts;
-    #construction: AsyncConstruction<Endpoint<T>>;
+    #construction: Construction<Endpoint<T>>;
     #stateView = {} as Immutable<SupportedBehaviors.StateOf<T["behaviors"]>>;
     #events = {} as SupportedBehaviors.EventsOf<T["behaviors"]>;
     #activity?: NodeActivity;
@@ -277,7 +277,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
         this.#type = config.type;
 
         // Create construction early so other components can hook events
-        this.#construction = AsyncConstruction(this);
+        this.#construction = Construction(this);
 
         this.#lifecycle = this.createLifecycle(config.isEssential);
         this.#lifecycle.ready.on(() => this.#logReady());
@@ -437,7 +437,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
         // If tree is already initialized, the endpoint will be initializing and we handle crashes here
         if (endpoint.construction.status === Lifecycle.Status.Initializing) {
             try {
-                await endpoint.construction.primary;
+                await endpoint.construction.ready;
             } catch (e) {
                 // Revert endpoint to uninitialized state
                 await endpoint.reset();
@@ -659,9 +659,9 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     }
 
     /**
-     * Complete initialization.  Invoked via {@link AsyncConstruction#start} by the owner.
+     * Complete initialization.  Invoked via {@link Construction#start} by the owner.
      */
-    [AsyncConstructable.construct]() {
+    [Construction.construct]() {
         // Sanity checks
         this.assertConstructable();
 

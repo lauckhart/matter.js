@@ -51,8 +51,8 @@ import { ResumptionRecord, SessionManager } from "./session/SessionManager.js";
 import { PaseServer } from "./session/pase/PaseServer.js";
 import { StorageContext } from "./storage/StorageContext.js";
 import { Time, Timer } from "./time/Time.js";
-import { AsyncConstruction, asyncNew } from "./util/AsyncConstruction.js";
 import { ByteArray } from "./util/ByteArray.js";
+import { Construction, asyncNew } from "./util/Construction.js";
 import { Mutex } from "./util/Mutex.js";
 
 const logger = Logger.get("MatterDevice");
@@ -78,7 +78,7 @@ export class MatterDevice {
     // this mutex prevents automated announcements from piling up and allows us to ensure announcements are complete
     // on close
     #announcementMutex = new Mutex(this);
-    #construction: AsyncConstruction<MatterDevice>;
+    #construction: Construction<MatterDevice>;
 
     get construction() {
         return this.#construction;

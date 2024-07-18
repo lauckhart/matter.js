@@ -8,7 +8,7 @@ import { Cancellable, Destructable, Lifecycle, Startable } from "../common/Lifec
 import { Diagnostic } from "../log/Diagnostic.js";
 import { DiagnosticSource } from "../log/DiagnosticSource.js";
 import { Logger } from "../log/Logger.js";
-import { AsyncConstruction } from "../util/AsyncConstruction.js";
+import { Construction } from "../util/Construction.js";
 import { Multiplex } from "../util/Multiplex.js";
 import { Observable } from "../util/Observable.js";
 import type { Environment } from "./Environment.js";
@@ -38,8 +38,8 @@ export class RuntimeService implements Multiplex {
      *
      * The runtime considers itself "active" if there are one or more workers installed.
      *
-     * A worker must either be {@link PromiseLike} or {@link AsyncConstructable} for the runtime to detect completion.
-     * On completion the worker is removed and destroyed if the worker is {@link Destructable}.
+     * A worker must either be {@link PromiseLike} or {@link Constructable} for the runtime to detect completion. On
+     * completion the worker is removed and destroyed if the worker is {@link Destructable}.
      */
     add(worker: RuntimeService.Worker | void) {
         if (!worker) {
@@ -289,14 +289,14 @@ export namespace RuntimeService {
         helper?: boolean;
 
         /**
-         * If the worker supports {@link AsyncConstruction}, the runtime will monitor the worker's lifecycle:
+         * If the worker supports {@link Construction}, the runtime will monitor the worker's lifecycle:
          *
          *   - If the worker crashed (e.g. experiences an error during initialization) the runtime will cancel all
          *     workers and exit
          *
          *   - If the worker is destroyed the runtime deletes it from the set of known workers
          */
-        construction?: AsyncConstruction<any>;
+        construction?: Construction<any>;
 
         /**
          * If the worker supports {@link Symbol.asyncDispose} the runtime will invoke when the worker is no longer

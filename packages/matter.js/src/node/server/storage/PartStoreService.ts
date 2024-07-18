@@ -10,7 +10,7 @@ import { Endpoint } from "../../../endpoint/Endpoint.js";
 import { PartStore } from "../../../endpoint/storage/PartStore.js";
 import { Logger } from "../../../log/Logger.js";
 import type { StorageContext } from "../../../storage/StorageContext.js";
-import { AsyncConstructable, AsyncConstruction, asyncNew } from "../../../util/AsyncConstruction.js";
+import { Construction, asyncNew } from "../../../util/Construction.js";
 import { IdentityConflictError } from "../IdentityService.js";
 import { ServerPartStore } from "./ServerPartStore.js";
 
@@ -52,7 +52,7 @@ export abstract class PartStoreService {
 export class PartStoreFactory extends PartStoreService {
     #storage: StorageContext;
     #allocatedNumbers = new Set<number>();
-    #construction: AsyncConstruction<PartStoreFactory>;
+    #construction: Construction<PartStoreFactory>;
     #persistedNextNumber?: number;
     #numbersPersisted?: Promise<void>;
     #numbersToPersist?: Array<Endpoint>;
@@ -70,11 +70,11 @@ export class PartStoreFactory extends PartStoreService {
         this.#storage = storage;
         this.#defaultNextNumber = nextNumber ?? 1;
 
-        this.#construction = AsyncConstruction(this);
+        this.#construction = Construction(this);
         this.#construction.start();
     }
 
-    async [AsyncConstructable.construct]() {
+    async [Construction.construct]() {
         // Load next number with excessive validation for the off-chance it somehow gets corrupted
         this.#nextNumber = (await this.#storage.get(NEXT_NUMBER_KEY, this.#defaultNextNumber)) % 0xffff;
 

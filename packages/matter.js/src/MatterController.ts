@@ -56,8 +56,8 @@ import { TlvEnum } from "./tlv/TlvNumber.js";
 import { TlvField, TlvObject } from "./tlv/TlvObject.js";
 import { TypeFromSchema } from "./tlv/TlvSchema.js";
 import { TlvString } from "./tlv/TlvString.js";
-import { AsyncConstruction } from "./util/AsyncConstruction.js";
 import { ByteArray } from "./util/ByteArray.js";
+import { Construction } from "./util/Construction.js";
 import { isIPv6 } from "./util/Ip.js";
 import { anyPromise, createPromise } from "./util/Promises.js";
 
@@ -168,7 +168,7 @@ export class MatterController {
     private netInterfaceBle: NetInterface | undefined;
     private bleScanner: Scanner | undefined;
     private readonly commissionedNodes = new Map<NodeId, CommissionedNodeDetails>();
-    #construction: AsyncConstruction<MatterController>;
+    #construction: Construction<MatterController>;
 
     get construction() {
         return this.#construction;
