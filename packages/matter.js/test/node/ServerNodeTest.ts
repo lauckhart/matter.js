@@ -53,44 +53,99 @@ describe("ServerNode", () => {
         commissionForFabricNumber = undefined;
     });
 
-    it("starts and stops and emits correct lifecycle changes", async () => {
-        const node = new MockServerNode();
+    describe("emits correct lifecycle changes", () => {
+        function instrument(node: ServerNode) {
+            const changes = new Array<[string, string?]>();
 
-        const changes = new Array<[string, string?]>();
-
-        node.lifecycle.changed.on((type, endpoint) => {
-            changes.push([type, endpoint.toString()]);
-        });
-
-        node.lifecycle.online.on(() => {
-            node.env.runtime.cancel();
-        });
-
-        for (const event of ["online", "offline", "ready", "partsReady"] as const) {
-            node.lifecycle[event].on(() => {
-                changes.push([event]);
+            node.lifecycle.changed.on((type, endpoint) => {
+                changes.push([type, endpoint.toString()]);
             });
+
+            for (const event of ["online", "offline", "ready", "partsReady"] as const) {
+                node.lifecycle[event].on(() => {
+                    changes.push([event]);
+                });
+            }
+
+            return changes;
         }
 
-        await node.add(OnOffLightDevice);
+        it("with part at startup", async () => {
+            const node = new MockServerNode({ parts: [OnOffLightDevice] });
 
-        await MockTime.resolve(node.run());
+            const changes = instrument(node);
 
-        expect(changes).deep.equals([
-            ["ready", "node0"],
-            ["ready"],
-            ["installed", "node0.?"],
-            ["idAssigned", "node0.part0"],
-            ["numberAssigned", "node0.part0"],
-            ["ready", "node0.part0"],
-            ["partsReady", "node0.part0"],
-            ["partsReady", "node0"],
-            ["partsReady"],
-            ["online"],
-            ["offline"],
-            ["destroyed", "node0.part0"],
-            ["destroyed", "node0"],
-        ]);
+            await node.start();
+            await node.close();
+
+            expect(changes).deep.equals([
+                ["ready", "node0"],
+                ["ready"],
+                ["installed", "node0.?"],
+                ["idAssigned", "node0.part0"],
+                ["numberAssigned", "node0.part0"],
+                ["ready", "node0.part0"],
+                ["partsReady", "node0.part0"],
+                ["partsReady", "node0"],
+                ["partsReady"],
+                ["online"],
+                ["offline"],
+                ["destroyed", "node0.part0"],
+                ["destroyed", "node0"],
+            ]);
+        });
+
+        it("with part added before online", async () => {
+            const node = new MockServerNode({});
+
+            const changes = instrument(node);
+
+            await node.add(OnOffLightDevice);
+            await node.start();
+            await node.close();
+
+            expect(changes).deep.equals([
+                ["ready", "node0"],
+                ["ready"],
+                ["partsReady", "node0"],
+                ["partsReady"],
+                ["installed", "node0.?"],
+                ["idAssigned", "node0.part0"],
+                ["numberAssigned", "node0.part0"],
+                ["ready", "node0.part0"],
+                ["partsReady", "node0.part0"],
+                ["online"],
+                ["offline"],
+                ["destroyed", "node0.part0"],
+                ["destroyed", "node0"],
+            ]);
+        });
+
+        it("with part added after online", async () => {
+            const node = new MockServerNode({});
+
+            const changes = instrument(node);
+
+            await node.start();
+            await node.add(OnOffLightDevice);
+            await node.close();
+
+            expect(changes).deep.equals([
+                ["ready", "node0"],
+                ["ready"],
+                ["partsReady", "node0"],
+                ["partsReady"],
+                ["online"],
+                ["installed", "node0.?"],
+                ["idAssigned", "node0.part0"],
+                ["numberAssigned", "node0.part0"],
+                ["ready", "node0.part0"],
+                ["partsReady", "node0.part0"],
+                ["offline"],
+                ["destroyed", "node0.part0"],
+                ["destroyed", "node0"],
+            ]);
+        });
     });
 
     it("announces and expires correctly", async () => {
@@ -364,20 +419,21 @@ describe("ServerNode", () => {
                 await expect(
                     MockServerNode.createOnline({
                         config: { type: MockServerNode.RootEndpoint, environment: badNodeEnv },
+                        device: undefined,
                     }),
-                ).rejectedWith(CrashedDependenciesError, "Behaviors have errors");
+                ).rejectedWith(EndpointBehaviorsError, "Behaviors have errors");
             });
 
             it("from behavior error on child during startup", async () => {
                 await expect(
                     MockServerNode.createOnline({
-                        config: { type: MockServerNode.RootEndpoint, environment: badEndpointEnv },
+                        config: { type: MockServerNode.RootEndpoint, environment: badEndpointEnv, id: "foo" },
                         device: LightSensorDevice,
                     }),
-                ).rejectedWith(EndpointPartsError, "Error initializing part node0.part0");
+                ).rejectedWith(EndpointBehaviorsError, "Behaviors have errors");
             });
 
-            it.only("from behavior error on child added after startup", async () => {
+            it("from behavior error on child added after startup", async () => {
                 const node = await MockServerNode.createOnline({
                     config: { type: MockServerNode.RootEndpoint, environment: badEndpointEnv },
                     device: undefined,

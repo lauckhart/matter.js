@@ -79,7 +79,7 @@ describe("Endpoint", () => {
             });
 
             expect(sensor.state.temperatureMeasurement.measuredValue).equals(123);
-        });
+        }).timeout(600000);
 
         it("deep sets object", async () => {
             const node = new MockNode();

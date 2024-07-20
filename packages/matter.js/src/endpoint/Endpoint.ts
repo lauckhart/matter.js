@@ -420,6 +420,8 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
             throw new ImplementationError(`You may not use add() here because ${this} is not installed in a Node`);
         }
 
+        await this.construction;
+
         let endpoint;
         if (definition instanceof Endpoint) {
             endpoint = definition;
@@ -434,27 +436,22 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
 
         this.parts.add(endpoint);
 
-        // If tree is already initialized, the endpoint will be initializing and we handle crashes here
-        if (endpoint.construction.status === Lifecycle.Status.Initializing) {
-            try {
-                await endpoint.construction.ready;
-            } catch (e) {
-                // Revert endpoint to uninitialized state
+        try {
+            await endpoint.construction.ready;
+        } catch (e) {
+            // If endpoint is essential do not allow it to be added
+            if (endpoint.lifecycle.isEssential) {
                 await endpoint.reset();
-
-                // If endpoint is essential do not allow it to be added
-                if (endpoint.lifecycle.isEssential) {
-                    this.parts.delete(endpoint);
-                    endpoint.#owner = undefined;
-                }
-
-                // For non-essential endpoints just log the error
-                if (!endpoint.lifecycle.isEssential) {
-                    logger.error(`Initialization error in non-essential endpoint ${endpoint}:`, e);
-                }
-
-                throw e;
+                this.parts.delete(endpoint);
+                endpoint.#owner = undefined;
             }
+
+            // For non-essential endpoints just log the error
+            if (!endpoint.lifecycle.isEssential) {
+                logger.error(`Initialization error in non-essential endpoint ${endpoint}:`, e);
+            }
+
+            throw e;
         }
 
         return endpoint;

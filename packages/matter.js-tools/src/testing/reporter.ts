@@ -39,6 +39,7 @@ export abstract class ProgressReporter implements Reporter {
     private run = "";
     private suite = Array<string>();
     private failures = Array<Failure>();
+    private lastTitle?: string;
 
     constructor(private progress: Progress) {}
 
@@ -55,9 +56,13 @@ export abstract class ProgressReporter implements Reporter {
         this.suite = name;
     }
 
-    beginTest(name: string, stats?: Stats): void {
-        const title = [this.suite, name].join(" ➡ ");
-        this.progress.update(this.summarize(stats), title);
+    beginTest(_name: string, stats?: Stats): void {
+        // Only update once per suite to keep the line count down in GH action logs
+        const title = this.suite[0];
+        if (this.lastTitle !== title) {
+            this.lastTitle = title;
+            this.progress.update(this.summarize(stats), title);
+        }
     }
 
     failTest(name: string, detail: FailureDetail) {
