@@ -189,7 +189,7 @@ export class MatterDevice {
             }
         });
 
-        this.#construction = AsyncConstruction(this, async () => {
+        this.#construction = Construction(this, async () => {
             await this.#fabricManager.initFromStorage();
 
             // Attach added events delayed because initialization from storage would else trigger it

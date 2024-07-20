@@ -34,7 +34,7 @@ export async function asyncNew<const A extends any[], const C extends new (...ar
 }
 
 /**
- * A pattern for (possibly) asynchronous object initialization and cleanup of a target object, called the "subject".
+ * A pattern for asynchronous object initialization and cleanup of a target object, called the "subject".
  *
  * Construction happens in the initializer parameter of {@link Construction} or via {@link Construction.construct} on
  * the subject.  You invoke in your constructor and place in a property called "construction".
@@ -163,6 +163,14 @@ export interface Construction<T> extends Promise<T> {
      * This method fails if initialization is ongoing; await completion first.
      */
     setStatus(status: Lifecycle.Status): void;
+
+    /**
+     * Move subject to "crashed" state, optionally setting the cause.
+     *
+     * This happens automatically if there is an error during construction.  It is also useful for post-construction
+     * errors to convey crashed state to components such as the environmental runtime service.
+     */
+    crash(cause?: any): void;
 
     /**
      * Invoke a method after construction completes successfully.
@@ -423,7 +431,7 @@ export function Construction<const T extends Constructable>(
             }
 
             if (status === Lifecycle.Status.Initializing) {
-                return this.finally(beginDestruction);
+                return this.then(beginDestruction, beginDestruction);
             }
 
             return beginDestruction();
@@ -472,6 +480,11 @@ export function Construction<const T extends Constructable>(
             }
 
             setStatus(newStatus);
+        },
+
+        crash(newError?: Error) {
+            error = newError;
+            setStatus(Lifecycle.Status.Crashed);
         },
 
         get ready() {
@@ -616,13 +629,18 @@ export function Construction<const T extends Constructable>(
         if (awaiterReject) {
             const reject = awaiterReject;
             awaiterResolve = awaiterReject = undefined;
-            reject(cause);
+            reject(crashedError());
         }
 
         if (closedReject) {
+            primaryCauseHandled = true;
             const reject = closedReject;
             closedResolve = closedReject = undefined;
             reject(cause);
+        }
+
+        if (!primaryCauseHandled) {
+            unhandledError(cause);
         }
     }
 
@@ -641,7 +659,7 @@ export function Construction<const T extends Constructable>(
 export namespace Construction {
     /**
      * Ensure a pool of {@link Constructable}s are initialized.  Returns a promise if any constructables are still
-     * initializing.
+     * initializing or there is an error.
      *
      * @param subjects the constructables to monitor; may mutate whilst construction is ongoing
      * @param onError error handler; if returns error it is thrown; if omitted throws CrashedDependenciesError
@@ -670,9 +688,14 @@ export namespace Construction {
             backing => backing.construction.status === Lifecycle.Status.Crashed,
         );
         if (crashed.length) {
-            const error = onError(crashed);
+            let error;
+            try {
+                error = onError(crashed);
+            } catch (e) {
+                error = e;
+            }
             if (error) {
-                throw error;
+                return Promise.reject(error);
             }
         }
     }

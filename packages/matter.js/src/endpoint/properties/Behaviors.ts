@@ -162,9 +162,7 @@ export class Behaviors {
                     },
                 },
 
-                causes => {
-                    throw new EndpointBehaviorsError(causes);
-                },
+                causes => new EndpointBehaviorsError(causes),
             );
         };
 
@@ -331,7 +329,7 @@ export class Behaviors {
     }
 
     /**
-     * Destroy all behaviors that are initialized (have backings present).
+     * Destroy all behaviors that are initialized (have backings present).  The object may be reused after close.
      */
     async close() {
         const dispose = async (context: ActionContext) => {
@@ -460,22 +458,6 @@ export class Behaviors {
             }
         }
         return backing.getInternal() as InstanceType<T["Internal"]>;
-    }
-
-    /**
-     * Destroy in-memory state, resetting behaviors to uninitialized state.
-     */
-    async reset() {
-        for (const backing of Object.values(this.#backings)) {
-            try {
-                await this.#endpoint.act(async agent => {
-                    await backing.close(agent);
-                });
-            } catch (e) {
-                logger.error(`Error during reset of ${backing}:`, e);
-            }
-            delete this.#backings[backing.type.id];
-        }
     }
 
     #activateLate(type: Behavior.Type) {

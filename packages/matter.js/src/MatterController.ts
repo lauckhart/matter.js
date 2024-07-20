@@ -202,7 +202,7 @@ export class MatterController {
         }
         this.addTransportInterface(netInterfaceIpv6);
 
-        this.#construction = AsyncConstruction(this, async () => {
+        this.#construction = Construction(this, async () => {
             // If controller has a stored operational server address, use it, irrelevant what was passed in the constructor
             if (await this.nodesStore.has("commissionedNodes")) {
                 const commissionedNodes =

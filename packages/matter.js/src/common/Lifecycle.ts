@@ -48,10 +48,10 @@ export namespace Lifecycle {
                 throw new CrashedDependencyError(description, "initialization failed");
 
             case Status.Destroying:
-                throw new DestroyedDependencyError(description, "is undergoing destruction");
+                throw new DestroyedDependencyError(description, "is closing");
 
             case Status.Destroyed:
-                throw new DestroyedDependencyError(description, "was destroyed");
+                throw new DestroyedDependencyError(description, "is closed");
         }
 
         throw new DependencyLifecycleError(description, `status "${status}" is unknown`);

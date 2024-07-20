@@ -48,8 +48,9 @@ export abstract class NetworkRuntime {
         try {
             await this.stop();
         } finally {
-            await this.#owner.act(agent => (agent.get(NetworkBehavior).internal.runtime = undefined));
+            this.#owner.behaviors.internalsOf(NetworkBehavior).runtime = undefined;
         }
+        await this.#owner.act(agent => this.owner.lifecycle.offline.emit(agent.context));
     }
 
     async close() {

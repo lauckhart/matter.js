@@ -146,7 +146,6 @@ export class CommissioningBehavior extends Behavior {
     #handleSessionClosed() {
         const sessions = this.agent.get(SessionsBehavior);
         if (Object.keys(sessions.state.sessions).length === 0) {
-            // Do we need to remove this listener? I think now
             this.#triggerFactoryReset();
         }
     }

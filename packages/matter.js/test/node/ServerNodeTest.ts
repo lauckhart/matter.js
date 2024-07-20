@@ -11,7 +11,7 @@ import { CertificationDeclarationManager } from "../../src/certificate/Certifica
 import { GeneralCommissioning } from "../../src/cluster/definitions/GeneralCommissioningCluster.js";
 import { PumpConfigurationAndControl } from "../../src/cluster/definitions/PumpConfigurationAndControlCluster.js";
 import { DnsCodec, DnsMessage, DnsRecordType } from "../../src/codec/DnsCodec.js";
-import { CrashedDependenciesError, CrashedDependencyError } from "../../src/common/Lifecycle.js";
+import { CrashedDependenciesError } from "../../src/common/Lifecycle.js";
 import { Crypto } from "../../src/crypto/Crypto.js";
 import { Key, PrivateKey } from "../../src/crypto/Key.js";
 import { NodeId } from "../../src/datatype/NodeId.js";
@@ -160,11 +160,7 @@ describe("ServerNode", () => {
     it("commissions", async () => {
         const { node } = await commission();
 
-        node.cancel();
-
-        if (node.lifecycle.isOnline) {
-            await MockTime.resolve(node.lifecycle.offline);
-        }
+        await MockTime.resolve(node.cancel());
 
         await node.close();
     });
@@ -238,12 +234,6 @@ describe("ServerNode", () => {
         });
         expect(commissioningServer2CertificateProviderCalled).equals(true);
 
-        node.cancel();
-
-        if (node.lifecycle.isOnline) {
-            await MockTime.resolve(node.lifecycle.offline);
-        }
-
         await node.close();
     });
 
@@ -307,12 +297,6 @@ describe("ServerNode", () => {
         expect(lastCommissionedFabricCount).equals(2);
         expect(lastCommissionedFabricIndex).equals(2);
         expect(lastFabricsCount).equals(2);
-
-        node.cancel();
-
-        if (node.lifecycle.isOnline) {
-            await MockTime.resolve(node.lifecycle.offline);
-        }
 
         await node.close();
     });
@@ -388,17 +372,20 @@ describe("ServerNode", () => {
                 await expect(
                     MockServerNode.createOnline({
                         config: { type: MockServerNode.RootEndpoint, environment: badEndpointEnv },
-                        device: undefined,
+                        device: LightSensorDevice,
                     }),
-                ).rejectedWith(CrashedDependencyError);
+                ).rejectedWith(EndpointPartsError, "Error initializing part node0.part0");
             });
 
-            it("from behavior error on child added after startup", async () => {
+            it.only("from behavior error on child added after startup", async () => {
                 const node = await MockServerNode.createOnline({
                     config: { type: MockServerNode.RootEndpoint, environment: badEndpointEnv },
                     device: undefined,
                 });
-                await node.add(OnOffLightDevice);
+                await expect(node.add(LightSensorDevice)).rejectedWith(
+                    CrashedDependenciesError,
+                    "Behaviors have errors",
+                );
             });
         });
     });

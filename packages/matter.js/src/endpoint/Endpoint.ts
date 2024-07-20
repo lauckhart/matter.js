@@ -546,7 +546,7 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
             await this.parts.reset();
 
             // Reset behaviors
-            await this.behaviors.reset();
+            await this.behaviors.close();
 
             // Notify
             await this.lifecycle.reset.emit();
@@ -583,17 +583,19 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
     }
 
     async close() {
-        await this.construction.close(async () => {
-            await this.#parts?.close();
-            await this.#behaviors?.close();
+        await this.#construction.close();
+    }
 
-            for (const events of Object.values(this.#events)) {
-                events[Symbol.dispose]();
-            }
+    async [Construction.destruct]() {
+        await this.#parts?.close();
+        await this.#behaviors?.close();
 
-            this.lifecycle.change(EndpointLifecycle.Change.Destroyed);
-            this.#owner = undefined;
-        });
+        for (const events of Object.values(this.#events)) {
+            events[Symbol.dispose]();
+        }
+
+        this.lifecycle.change(EndpointLifecycle.Change.Destroyed);
+        this.#owner = undefined;
     }
 
     async [Symbol.asyncDispose]() {

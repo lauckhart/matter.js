@@ -42,7 +42,7 @@ export class EndpointPartsError extends MatterError {
             suffix = "";
         }
 
-        super(`Error initializing essential part${suffix}`);
+        super(`Error initializing part${suffix}`);
     }
 }
 

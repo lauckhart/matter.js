@@ -171,7 +171,11 @@ export class BasicObservable<T extends any[] = any[], R = void> implements Obser
         // Iterate over a clone of observers so we do not trigger new observers added during observation
         const iterator = [...this.#observers][Symbol.iterator]();
 
-        const emitNext = (): R | undefined => {
+        const emitNext = (previousEmitResult?: R): R | undefined => {
+            if (previousEmitResult !== undefined) {
+                return previousEmitResult;
+            }
+
             for (let iteration = iterator.next(); !iteration.done; iteration = iterator.next()) {
                 let result;
 
