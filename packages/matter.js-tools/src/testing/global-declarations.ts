@@ -6,6 +6,7 @@
 
 import type Chai from "chai";
 import "chai-as-promised";
+import type { Chip } from "./chip.ts";
 import type { MockLogger } from "./mocks/logging.js";
 import type { MockTime } from "./mocks/time.js";
 
@@ -18,6 +19,9 @@ declare global {
 
     // Expose API for controlling logging
     let MockLogger: MockLogger;
+
+    // Expose Chip testing API
+    let Chip: Chip;
 
     /**
      * If present, the following hooks are engaged by matter.js packages to

@@ -17,11 +17,9 @@ import { TheMockTime, timeSetup } from "./mocks/time.js";
 Chai.config.truncateThreshold = 200;
 Chai.use(ChaiAsPromised);
 
-Object.assign(globalThis as any, {
-    expect: Chai.expect,
-});
-
 Object.assign(globalThis, {
+    expect: Chai.expect,
+
     MatterHooks: {
         loggerSetup: loggerSetup,
         timeSetup: timeSetup,
@@ -30,6 +28,7 @@ Object.assign(globalThis, {
 
     MockTime: TheMockTime,
     MockLogger: TheMockLogger,
+    Chip: Chip,
 });
 
 if (typeof window === "object" && globalThis === window) {
