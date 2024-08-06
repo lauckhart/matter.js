@@ -35,6 +35,20 @@ export namespace UnitLocalization {
     }
 
     /**
+     * These are optional features supported by UnitLocalizationCluster.
+     *
+     * @see {@link MatterSpecification.v13.Core} § 11.5.4
+     */
+    export enum Feature {
+        /**
+         * TemperatureUnit (TEMP)
+         *
+         * The Node can be configured to use different units of temperature when conveying values to a user.
+         */
+        TemperatureUnit = "TemperatureUnit"
+    }
+
+    /**
      * A UnitLocalizationCluster supports these elements if it supports feature TemperatureUnit.
      */
     export const TemperatureUnitComponent = MutableCluster.Component({
@@ -53,20 +67,6 @@ export namespace UnitLocalization {
             )
         }
     });
-
-    /**
-     * These are optional features supported by UnitLocalizationCluster.
-     *
-     * @see {@link MatterSpecification.v13.Core} § 11.5.4
-     */
-    export enum Feature {
-        /**
-         * TemperatureUnit (TEMP)
-         *
-         * The Node can be configured to use different units of temperature when conveying values to a user.
-         */
-        TemperatureUnit = "TemperatureUnit"
-    }
 
     /**
      * These elements and properties are present in all UnitLocalization clusters.

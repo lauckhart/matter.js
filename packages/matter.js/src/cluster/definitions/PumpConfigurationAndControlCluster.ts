@@ -20,12 +20,68 @@ import {
 } from "../Cluster.js";
 import { TlvInt16, TlvUInt16, TlvBitmap, TlvEnum, TlvUInt24, TlvUInt32 } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial } from "../../schema/BitmapSchema.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { Identity } from "../../util/Type.js";
 import { ClusterRegistry } from "../ClusterRegistry.js";
 
 export namespace PumpConfigurationAndControl {
+    /**
+     * These are optional features supported by PumpConfigurationAndControlCluster.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 4.2.4
+     */
+    export enum Feature {
+        /**
+         * ConstantPressure (PRSCONST)
+         *
+         * Supports operating in constant pressure mode
+         */
+        ConstantPressure = "ConstantPressure",
+
+        /**
+         * CompensatedPressure (PRSCOMP)
+         *
+         * Supports operating in compensated pressure mode
+         */
+        CompensatedPressure = "CompensatedPressure",
+
+        /**
+         * ConstantFlow (FLW)
+         *
+         * Supports operating in constant flow mode
+         */
+        ConstantFlow = "ConstantFlow",
+
+        /**
+         * ConstantSpeed (SPD)
+         *
+         * Supports operating in constant speed mode
+         */
+        ConstantSpeed = "ConstantSpeed",
+
+        /**
+         * ConstantTemperature (TEMP)
+         *
+         * Supports operating in constant temperature mode
+         */
+        ConstantTemperature = "ConstantTemperature",
+
+        /**
+         * Automatic (AUTO)
+         *
+         * Supports operating in automatic mode
+         */
+        Automatic = "Automatic",
+
+        /**
+         * LocalOperation (LOCAL)
+         *
+         * Supports operating using local settings
+         */
+        LocalOperation = "LocalOperation"
+    }
+
     /**
      * @see {@link MatterSpecification.v13.Cluster} § 4.2.6.1
      */
@@ -459,62 +515,6 @@ export namespace PumpConfigurationAndControl {
     });
 
     /**
-     * These are optional features supported by PumpConfigurationAndControlCluster.
-     *
-     * @see {@link MatterSpecification.v13.Cluster} § 4.2.4
-     */
-    export enum Feature {
-        /**
-         * ConstantPressure (PRSCONST)
-         *
-         * Supports operating in constant pressure mode
-         */
-        ConstantPressure = "ConstantPressure",
-
-        /**
-         * CompensatedPressure (PRSCOMP)
-         *
-         * Supports operating in compensated pressure mode
-         */
-        CompensatedPressure = "CompensatedPressure",
-
-        /**
-         * ConstantFlow (FLW)
-         *
-         * Supports operating in constant flow mode
-         */
-        ConstantFlow = "ConstantFlow",
-
-        /**
-         * ConstantSpeed (SPD)
-         *
-         * Supports operating in constant speed mode
-         */
-        ConstantSpeed = "ConstantSpeed",
-
-        /**
-         * ConstantTemperature (TEMP)
-         *
-         * Supports operating in constant temperature mode
-         */
-        ConstantTemperature = "ConstantTemperature",
-
-        /**
-         * Automatic (AUTO)
-         *
-         * Supports operating in automatic mode
-         */
-        Automatic = "Automatic",
-
-        /**
-         * LocalOperation (LOCAL)
-         *
-         * Supports operating using local settings
-         */
-        LocalOperation = "LocalOperation"
-    }
-
-    /**
      * These elements and properties are present in all PumpConfigurationAndControl clusters.
      */
     export const Base = MutableCluster.Component({
@@ -611,7 +611,11 @@ export namespace PumpConfigurationAndControl {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 4.2.7.14
              */
-            pumpStatus: OptionalAttribute(0x10, TlvBitmap(TlvUInt16, PumpStatus)),
+            pumpStatus: OptionalAttribute(
+                0x10,
+                TlvBitmap(TlvUInt16, PumpStatus),
+                { default: BitsFromPartial(PumpStatus, { deviceFault: true }) }
+            ),
 
             /**
              * This attribute specifies current effective operation mode of the pump as defined in OperationModeEnum.

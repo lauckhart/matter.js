@@ -214,6 +214,27 @@ export namespace SmokeCoAlarm {
     export interface InterconnectCoAlarmEvent extends TypeFromSchema<typeof TlvInterconnectCoAlarmEvent> {}
 
     /**
+     * These are optional features supported by SmokeCoAlarmCluster.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 2.11.4
+     */
+    export enum Feature {
+        /**
+         * SmokeAlarm (SMOKE)
+         *
+         * Supports Smoke alarm
+         */
+        SmokeAlarm = "SmokeAlarm",
+
+        /**
+         * CoAlarm (CO)
+         *
+         * Supports CO alarm
+         */
+        CoAlarm = "CoAlarm"
+    }
+
+    /**
      * @see {@link MatterSpecification.v13.Cluster} § 2.11.5.3
      */
     export enum ExpressedState {
@@ -460,27 +481,6 @@ export namespace SmokeCoAlarm {
             interconnectCoAlarm: OptionalEvent(0x9, EventPriority.Critical, TlvInterconnectCoAlarmEvent)
         }
     });
-
-    /**
-     * These are optional features supported by SmokeCoAlarmCluster.
-     *
-     * @see {@link MatterSpecification.v13.Cluster} § 2.11.4
-     */
-    export enum Feature {
-        /**
-         * SmokeAlarm (SMOKE)
-         *
-         * Supports Smoke alarm
-         */
-        SmokeAlarm = "SmokeAlarm",
-
-        /**
-         * CoAlarm (CO)
-         *
-         * Supports CO alarm
-         */
-        CoAlarm = "CoAlarm"
-    }
 
     /**
      * These elements and properties are present in all SmokeCoAlarm clusters.

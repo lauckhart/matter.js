@@ -33,6 +33,20 @@ export namespace AudioOutput {
     export interface RenameOutputRequest extends TypeFromSchema<typeof TlvRenameOutputRequest> {}
 
     /**
+     * These are optional features supported by AudioOutputCluster.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 6.5.4
+     */
+    export enum Feature {
+        /**
+         * NameUpdates (NU)
+         *
+         * Supports updates to output names
+         */
+        NameUpdates = "NameUpdates"
+    }
+
+    /**
      * The type of output, expressed as an enum, with the following values:
      *
      * @see {@link MatterSpecification.v13.Cluster} § 6.5.5.1
@@ -124,20 +138,6 @@ export namespace AudioOutput {
             renameOutput: Command(0x1, TlvRenameOutputRequest, 0x1, TlvNoResponse, { invokeAcl: AccessLevel.Manage })
         }
     });
-
-    /**
-     * These are optional features supported by AudioOutputCluster.
-     *
-     * @see {@link MatterSpecification.v13.Cluster} § 6.5.4
-     */
-    export enum Feature {
-        /**
-         * NameUpdates (NU)
-         *
-         * Supports updates to output names
-         */
-        NameUpdates = "NameUpdates"
-    }
 
     /**
      * These elements and properties are present in all AudioOutput clusters.

@@ -9,7 +9,7 @@
 import { MutableCluster } from "../mutation/MutableCluster.js";
 import { Attribute, OptionalAttribute, WritableAttribute, AccessLevel, OptionalWritableAttribute } from "../Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt24 } from "../../tlv/TlvNumber.js";
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial } from "../../schema/BitmapSchema.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvString } from "../../tlv/TlvString.js";
 import { Identity } from "../../util/Type.js";
@@ -92,7 +92,11 @@ export namespace BallastConfiguration {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 3.3.6.3
              */
-            ballastStatus: OptionalAttribute(0x2, TlvBitmap(TlvUInt8, BallastStatus)),
+            ballastStatus: OptionalAttribute(
+                0x2,
+                TlvBitmap(TlvUInt8, BallastStatus),
+                { default: BitsFromPartial(BallastStatus, { ballastNonOperational: true }) }
+            ),
 
             /**
              * This attribute shall specify the light output of the ballast according to the dimming light curve (see
@@ -230,7 +234,7 @@ export namespace BallastConfiguration {
             lampAlarmMode: OptionalWritableAttribute(
                 0x34,
                 TlvBitmap(TlvUInt8, LampAlarmMode),
-                { writeAcl: AccessLevel.Manage }
+                { default: BitsFromPartial(LampAlarmMode, { lampBurnHours: true }), writeAcl: AccessLevel.Manage }
             ),
 
             /**

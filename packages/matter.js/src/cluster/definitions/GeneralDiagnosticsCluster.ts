@@ -108,6 +108,26 @@ export namespace GeneralDiagnostics {
     export interface PayloadTestResponse extends TypeFromSchema<typeof TlvPayloadTestResponse> {}
 
     /**
+     * These are optional features supported by GeneralDiagnosticsCluster.
+     *
+     * @see {@link MatterSpecification.v13.Core} § 11.12.4
+     */
+    export enum Feature {
+        /**
+         * DataModelTest (DMTEST)
+         *
+         * This feature indicates support for extended Data Model testing commands, which are required in some
+         * situations.
+         *
+         * This feature shall be supported if the MaxPathsPerInvoke attribute of the Basic Information Cluster has a
+         * value > 1.
+         *
+         * @see {@link MatterSpecification.v13.Core} § 11.12.4.1
+         */
+        DataModelTest = "DataModelTest"
+    }
+
+    /**
      * @see {@link MatterSpecification.v13.Core} § 11.12.5.4
      */
     export enum InterfaceType {
@@ -630,26 +650,6 @@ export namespace GeneralDiagnostics {
             )
         }
     });
-
-    /**
-     * These are optional features supported by GeneralDiagnosticsCluster.
-     *
-     * @see {@link MatterSpecification.v13.Core} § 11.12.4
-     */
-    export enum Feature {
-        /**
-         * DataModelTest (DMTEST)
-         *
-         * This feature indicates support for extended Data Model testing commands, which are required in some
-         * situations.
-         *
-         * This feature shall be supported if the MaxPathsPerInvoke attribute of the Basic Information Cluster has a
-         * value > 1.
-         *
-         * @see {@link MatterSpecification.v13.Core} § 11.12.4.1
-         */
-        DataModelTest = "DataModelTest"
-    }
 
     /**
      * These elements and properties are present in all GeneralDiagnostics clusters.

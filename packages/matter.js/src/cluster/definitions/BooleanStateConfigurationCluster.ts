@@ -20,7 +20,7 @@ import {
     OptionalEvent
 } from "../Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvUInt16 } from "../../tlv/TlvNumber.js";
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial } from "../../schema/BitmapSchema.js";
 import { TlvField, TlvObject, TlvOptionalField } from "../../tlv/TlvObject.js";
 import { TypeFromSchema } from "../../tlv/TlvSchema.js";
 import { Identity } from "../../util/Type.js";
@@ -116,6 +116,59 @@ export namespace BooleanStateConfiguration {
     export interface SuppressAlarmRequest extends TypeFromSchema<typeof TlvSuppressAlarmRequest> {}
 
     /**
+     * These are optional features supported by BooleanStateConfigurationCluster.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 1.8.4
+     */
+    export enum Feature {
+        /**
+         * Visual (VIS)
+         *
+         * Supports visual alarms
+         */
+        Visual = "Visual",
+
+        /**
+         * Audible (AUD)
+         *
+         * Supports audible alarms
+         */
+        Audible = "Audible",
+
+        /**
+         * AlarmSuppress (SPRS)
+         *
+         * This feature shall indicate that the device is able to suppress the supported alarm modes, when the user
+         * acknowledges the alarm. This is intended to stop visual and/or audible alarms, when the user has become
+         * aware that the sensor is triggered, but it is no longer desired to have the alarm modes active on the
+         * device, e.g.:
+         *
+         *   • The triggering cause have been resolved by the user, but the sensor has not yet stopped detecting the
+         *     triggering cause.
+         *
+         *   • The user is not able to address the triggering cause, but is aware of the alarm and suppress/acknowledge
+         *     it be addressed at a later point.
+         *
+         * Acknowledge of alarms will for the remainder of this cluster be referred to as suppress.
+         *
+         * A suppressed alarm is still considered active and will remain so unless it is actively disabled or the
+         * triggering condition is not longer present. The action of suppressing an alarm mode is only applicable to
+         * and is intended to stop the physical alarming, e.g. emitting a sound or blinking a light; it does not impact
+         * alarm reporting in AlarmsActive.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.8.4.1
+         */
+        AlarmSuppress = "AlarmSuppress",
+
+        /**
+         * SensitivityLevel (SENSLVL)
+         *
+         * Supports ability to set sensor sensitivity
+         */
+        SensitivityLevel = "SensitivityLevel"
+    }
+
+    /**
      * @see {@link MatterSpecification.v13.Cluster} § 1.8.5.2
      */
     export const SensorFault = {
@@ -203,7 +256,11 @@ export namespace BooleanStateConfiguration {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 1.8.6.4
              */
-            alarmsActive: Attribute(0x3, TlvBitmap(TlvUInt8, AlarmMode)),
+            alarmsActive: Attribute(
+                0x3,
+                TlvBitmap(TlvUInt8, AlarmMode),
+                { default: BitsFromPartial(AlarmMode, { visual: true }) }
+            ),
 
             /**
              * Indicates the alarm modes that will be emitted if the sensor is triggered. If an alarm mode is not
@@ -228,7 +285,11 @@ export namespace BooleanStateConfiguration {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 1.8.6.7
              */
-            alarmsSupported: FixedAttribute(0x6, TlvBitmap(TlvUInt8, AlarmMode))
+            alarmsSupported: FixedAttribute(
+                0x6,
+                TlvBitmap(TlvUInt8, AlarmMode),
+                { default: BitsFromPartial(AlarmMode, { visual: true }) }
+            )
         },
 
         commands: {
@@ -273,7 +334,11 @@ export namespace BooleanStateConfiguration {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 1.8.6.5
              */
-            alarmsSuppressed: Attribute(0x4, TlvBitmap(TlvUInt8, AlarmMode))
+            alarmsSuppressed: Attribute(
+                0x4,
+                TlvBitmap(TlvUInt8, AlarmMode),
+                { default: BitsFromPartial(AlarmMode, { visual: true }) }
+            )
         },
 
         commands: {
@@ -283,59 +348,6 @@ export namespace BooleanStateConfiguration {
             suppressAlarm: Command(0x0, TlvSuppressAlarmRequest, 0x0, TlvNoResponse)
         }
     });
-
-    /**
-     * These are optional features supported by BooleanStateConfigurationCluster.
-     *
-     * @see {@link MatterSpecification.v13.Cluster} § 1.8.4
-     */
-    export enum Feature {
-        /**
-         * Visual (VIS)
-         *
-         * Supports visual alarms
-         */
-        Visual = "Visual",
-
-        /**
-         * Audible (AUD)
-         *
-         * Supports audible alarms
-         */
-        Audible = "Audible",
-
-        /**
-         * AlarmSuppress (SPRS)
-         *
-         * This feature shall indicate that the device is able to suppress the supported alarm modes, when the user
-         * acknowledges the alarm. This is intended to stop visual and/or audible alarms, when the user has become
-         * aware that the sensor is triggered, but it is no longer desired to have the alarm modes active on the
-         * device, e.g.:
-         *
-         *   • The triggering cause have been resolved by the user, but the sensor has not yet stopped detecting the
-         *     triggering cause.
-         *
-         *   • The user is not able to address the triggering cause, but is aware of the alarm and suppress/acknowledge
-         *     it be addressed at a later point.
-         *
-         * Acknowledge of alarms will for the remainder of this cluster be referred to as suppress.
-         *
-         * A suppressed alarm is still considered active and will remain so unless it is actively disabled or the
-         * triggering condition is not longer present. The action of suppressing an alarm mode is only applicable to
-         * and is intended to stop the physical alarming, e.g. emitting a sound or blinking a light; it does not impact
-         * alarm reporting in AlarmsActive.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 1.8.4.1
-         */
-        AlarmSuppress = "AlarmSuppress",
-
-        /**
-         * SensitivityLevel (SENSLVL)
-         *
-         * Supports ability to set sensor sensitivity
-         */
-        SensitivityLevel = "SensitivityLevel"
-    }
 
     /**
      * These elements and properties are present in all BooleanStateConfiguration clusters.
@@ -399,7 +411,11 @@ export namespace BooleanStateConfiguration {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 1.8.6.8
              */
-            sensorFault: OptionalAttribute(0x7, TlvBitmap(TlvUInt16, SensorFault))
+            sensorFault: OptionalAttribute(
+                0x7,
+                TlvBitmap(TlvUInt16, SensorFault),
+                { default: BitsFromPartial(SensorFault, { generalFault: true }) }
+            )
         },
 
         events: {

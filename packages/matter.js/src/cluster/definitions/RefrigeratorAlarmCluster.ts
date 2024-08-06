@@ -13,16 +13,6 @@ import { ClusterRegistry } from "../ClusterRegistry.js";
 
 export namespace RefrigeratorAlarm {
     /**
-     * @see {@link MatterSpecification.v13.Cluster} § 8.8.5.1
-     */
-    export const Alarm = {
-        /**
-         * The cabinet’s door has been open for a vendor defined amount of time.
-         */
-        doorOpen: BitFlag(0)
-    };
-
-    /**
      * These are optional features supported by RefrigeratorAlarmCluster.
      *
      * @see {@link MatterSpecification.v13.Cluster} § 8.8.4
@@ -35,6 +25,16 @@ export namespace RefrigeratorAlarm {
          */
         Reset = "Reset"
     }
+
+    /**
+     * @see {@link MatterSpecification.v13.Cluster} § 8.8.5.1
+     */
+    export const Alarm = {
+        /**
+         * The cabinet’s door has been open for a vendor defined amount of time.
+         */
+        doorOpen: BitFlag(0)
+    };
 
     /**
      * These elements and properties are present in all RefrigeratorAlarm clusters.

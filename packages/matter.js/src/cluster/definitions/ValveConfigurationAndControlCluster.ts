@@ -20,7 +20,7 @@ import {
 } from "../Cluster.js";
 import { TlvEpochUs, TlvPercent, TlvUInt8, TlvUInt32, TlvEnum, TlvUInt16, TlvBitmap } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial } from "../../schema/BitmapSchema.js";
 import { TlvOptionalField, TlvObject, TlvField } from "../../tlv/TlvObject.js";
 import { TypeFromSchema } from "../../tlv/TlvSchema.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
@@ -28,6 +28,35 @@ import { Identity } from "../../util/Type.js";
 import { ClusterRegistry } from "../ClusterRegistry.js";
 
 export namespace ValveConfigurationAndControl {
+    /**
+     * These are optional features supported by ValveConfigurationAndControlCluster.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 4.6.4
+     */
+    export enum Feature {
+        /**
+         * TimeSync (TS)
+         *
+         * This feature shall indicate that the valve uses Time Synchronization and UTC time to indicate duration and
+         * auto close time.
+         *
+         * This feature shall NOT be supported unless the device supports the Time Synchronization cluster.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 4.6.4.1
+         */
+        TimeSync = "TimeSync",
+
+        /**
+         * Level (LVL)
+         *
+         * This feature shall indicate that the valve is capable of being adjusted to a specific position, as a
+         * percentage, of its full range of motion.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 4.6.4.2
+         */
+        Level = "Level"
+    }
+
     /**
      * @see {@link MatterSpecification.v13.Cluster} § 4.6.5.2
      */
@@ -268,35 +297,6 @@ export namespace ValveConfigurationAndControl {
     });
 
     /**
-     * These are optional features supported by ValveConfigurationAndControlCluster.
-     *
-     * @see {@link MatterSpecification.v13.Cluster} § 4.6.4
-     */
-    export enum Feature {
-        /**
-         * TimeSync (TS)
-         *
-         * This feature shall indicate that the valve uses Time Synchronization and UTC time to indicate duration and
-         * auto close time.
-         *
-         * This feature shall NOT be supported unless the device supports the Time Synchronization cluster.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 4.6.4.1
-         */
-        TimeSync = "TimeSync",
-
-        /**
-         * Level (LVL)
-         *
-         * This feature shall indicate that the valve is capable of being adjusted to a specific position, as a
-         * percentage, of its full range of motion.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 4.6.4.2
-         */
-        Level = "Level"
-    }
-
-    /**
      * These elements and properties are present in all ValveConfigurationAndControl clusters.
      */
     export const Base = MutableCluster.Component({
@@ -408,7 +408,11 @@ export namespace ValveConfigurationAndControl {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 4.6.7.10
              */
-            valveFault: OptionalAttribute(0x9, TlvBitmap(TlvUInt16, ValveFault))
+            valveFault: OptionalAttribute(
+                0x9,
+                TlvBitmap(TlvUInt16, ValveFault),
+                { default: BitsFromPartial(ValveFault, { generalFault: true }) }
+            )
         },
 
         commands: {

@@ -29,8 +29,8 @@ import {
     TlvEpochS,
     TlvUInt32
 } from "../../tlv/TlvNumber.js";
-import { BitsFromPartial, BitFlag, BitField } from "../../schema/BitmapSchema.js";
 import { TlvField, TlvObject } from "../../tlv/TlvObject.js";
+import { BitFlag, BitsFromPartial, BitField } from "../../schema/BitmapSchema.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TypeFromSchema } from "../../tlv/TlvSchema.js";
@@ -286,6 +286,66 @@ export namespace Thermostat {
      * @see {@link MatterSpecification.v13.Cluster} § 4.3.10.6
      */
     export interface GetWeeklyScheduleResponse extends TypeFromSchema<typeof TlvGetWeeklyScheduleResponse> {}
+
+    /**
+     * These are optional features supported by ThermostatCluster.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 4.3.4
+     */
+    export enum Feature {
+        /**
+         * Heating (HEAT)
+         *
+         * Thermostat is capable of managing a heating device
+         */
+        Heating = "Heating",
+
+        /**
+         * Cooling (COOL)
+         *
+         * Thermostat is capable of managing a cooling device
+         */
+        Cooling = "Cooling",
+
+        /**
+         * Occupancy (OCC)
+         *
+         * Supports Occupied and Unoccupied setpoints
+         */
+        Occupancy = "Occupancy",
+
+        /**
+         * ScheduleConfiguration (SCH)
+         *
+         * Supports remote configuration of a weekly schedule of setpoint transitions
+         */
+        ScheduleConfiguration = "ScheduleConfiguration",
+
+        /**
+         * Setback (SB)
+         *
+         * Supports configurable setback (or span)
+         */
+        Setback = "Setback",
+
+        /**
+         * AutoMode (AUTO)
+         *
+         * Supports a System Mode of Auto
+         */
+        AutoMode = "AutoMode",
+
+        /**
+         * LocalTemperatureNotExposed (LTNE)
+         *
+         * This feature indicates that the Calculated Local Temperature used internally is unavailable to report
+         * externally, for example due to the temperature control being done by a separate subsystem which does not
+         * offer a view into the currently measured temperature, but allows setpoints to be provided.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 4.3.4.1
+         */
+        LocalTemperatureNotExposed = "LocalTemperatureNotExposed"
+    }
 
     /**
      * @see {@link MatterSpecification.v13.Cluster} § 4.3.8.9
@@ -775,11 +835,7 @@ export namespace Thermostat {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 4.3.9.5
              */
-            occupancy: Attribute(
-                0x2,
-                TlvBitmap(TlvUInt8, OccupancySensing.Occupancy),
-                { default: BitsFromPartial(OccupancySensing.Occupancy, { occupied: true }) }
-            )
+            occupancy: Attribute(0x2, TlvBitmap(TlvUInt8, OccupancySensing.Occupancy))
         }
     });
 
@@ -1260,66 +1316,6 @@ export namespace Thermostat {
     });
 
     /**
-     * These are optional features supported by ThermostatCluster.
-     *
-     * @see {@link MatterSpecification.v13.Cluster} § 4.3.4
-     */
-    export enum Feature {
-        /**
-         * Heating (HEAT)
-         *
-         * Thermostat is capable of managing a heating device
-         */
-        Heating = "Heating",
-
-        /**
-         * Cooling (COOL)
-         *
-         * Thermostat is capable of managing a cooling device
-         */
-        Cooling = "Cooling",
-
-        /**
-         * Occupancy (OCC)
-         *
-         * Supports Occupied and Unoccupied setpoints
-         */
-        Occupancy = "Occupancy",
-
-        /**
-         * ScheduleConfiguration (SCH)
-         *
-         * Supports remote configuration of a weekly schedule of setpoint transitions
-         */
-        ScheduleConfiguration = "ScheduleConfiguration",
-
-        /**
-         * Setback (SB)
-         *
-         * Supports configurable setback (or span)
-         */
-        Setback = "Setback",
-
-        /**
-         * AutoMode (AUTO)
-         *
-         * Supports a System Mode of Auto
-         */
-        AutoMode = "AutoMode",
-
-        /**
-         * LocalTemperatureNotExposed (LTNE)
-         *
-         * This feature indicates that the Calculated Local Temperature used internally is unavailable to report
-         * externally, for example due to the temperature control being done by a separate subsystem which does not
-         * offer a view into the currently measured temperature, but allows setpoints to be provided.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 4.3.4.1
-         */
-        LocalTemperatureNotExposed = "LocalTemperatureNotExposed"
-    }
-
-    /**
      * These elements and properties are present in all Thermostat clusters.
      */
     export const Base = MutableCluster.Component({
@@ -1422,7 +1418,11 @@ export namespace Thermostat {
             remoteSensing: OptionalWritableAttribute(
                 0x1a,
                 TlvBitmap(TlvUInt8, RemoteSensing),
-                { persistent: true, writeAcl: AccessLevel.Manage }
+                {
+                    persistent: true,
+                    default: BitsFromPartial(RemoteSensing, { localTemperature: true }),
+                    writeAcl: AccessLevel.Manage
+                }
             ),
 
             /**
@@ -1504,7 +1504,10 @@ export namespace Thermostat {
             thermostatProgrammingOperationMode: OptionalWritableAttribute(
                 0x25,
                 TlvBitmap(TlvUInt8, ProgrammingOperationMode),
-                { writeAcl: AccessLevel.Manage }
+                {
+                    default: BitsFromPartial(ProgrammingOperationMode, { scheduleActive: true }),
+                    writeAcl: AccessLevel.Manage
+                }
             ),
 
             /**
@@ -1637,7 +1640,7 @@ export namespace Thermostat {
             acErrorCode: OptionalWritableAttribute(
                 0x44,
                 TlvBitmap(TlvUInt32, AcErrorCode),
-                { writeAcl: AccessLevel.Manage }
+                { default: BitsFromPartial(AcErrorCode, { compressorFail: true }), writeAcl: AccessLevel.Manage }
             ),
 
             /**

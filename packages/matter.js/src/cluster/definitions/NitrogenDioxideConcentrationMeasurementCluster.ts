@@ -16,7 +16,7 @@ export namespace NitrogenDioxideConcentrationMeasurement {
         ...ConcentrationMeasurement.Base,
         id: 0x413,
         name: "NitrogenDioxideConcentrationMeasurement"
-    }
+    } as const
 
     /**
      * @see {@link Cluster}

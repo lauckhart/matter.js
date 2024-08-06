@@ -13,7 +13,7 @@ import { Identity } from "../../util/Type.js";
 import { ClusterRegistry } from "../ClusterRegistry.js";
 
 export namespace PulseWidthModulation {
-    export const Base = { ...LevelControl.Base, id: 0x1c, name: "PulseWidthModulation" }
+    export const Base = { ...LevelControl.Base, id: 0x1c, name: "PulseWidthModulation" } as const
 
     /**
      * @see {@link Cluster}

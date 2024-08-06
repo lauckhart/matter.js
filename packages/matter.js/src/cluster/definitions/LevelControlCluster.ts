@@ -20,7 +20,7 @@ import { TlvUInt16, TlvUInt8, TlvBitmap, TlvEnum } from "../../tlv/TlvNumber.js"
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvField, TlvObject } from "../../tlv/TlvObject.js";
 import { TypeFromSchema } from "../../tlv/TlvSchema.js";
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial } from "../../schema/BitmapSchema.js";
 import { ClusterType } from "../ClusterType.js";
 import { Identity } from "../../util/Type.js";
 import { ClusterRegistry } from "../ClusterRegistry.js";
@@ -39,6 +39,47 @@ export namespace LevelControl {
      * @see {@link MatterSpecification.v13.Cluster} § 1.6.7.5
      */
     export interface MoveToClosestFrequencyRequest extends TypeFromSchema<typeof TlvMoveToClosestFrequencyRequest> {}
+
+    /**
+     * These are optional features supported by LevelControlCluster.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 1.6.4
+     */
+    export enum Feature {
+        /**
+         * OnOff (OO)
+         *
+         * Dependency with the On/Off cluster
+         */
+        OnOff = "OnOff",
+
+        /**
+         * Lighting (LT)
+         *
+         * This feature supports an interface for controlling the level of a light source. For the CurrentLevel
+         * attribute:
+         *
+         * A value of 0x00 shall NOT be used.
+         *
+         * A value of 0x01 shall indicate the minimum level that can be attained on a device. A value of 0xFE shall
+         * indicate the maximum level that can be attained on a device. A value of null shall represent an undefined
+         * value.
+         *
+         * All other values are application specific gradations from the minimum to the maximum level.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.6.4.2
+         */
+        Lighting = "Lighting",
+
+        /**
+         * Frequency (FQ)
+         *
+         * NOTE The Frequency feature is provisional.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.6.4.3
+         */
+        Frequency = "Frequency"
+    }
 
     /**
      * @see {@link MatterSpecification.v13.Cluster} § 1.6.5.1
@@ -297,47 +338,6 @@ export namespace LevelControl {
     });
 
     /**
-     * These are optional features supported by LevelControlCluster.
-     *
-     * @see {@link MatterSpecification.v13.Cluster} § 1.6.4
-     */
-    export enum Feature {
-        /**
-         * OnOff (OO)
-         *
-         * Dependency with the On/Off cluster
-         */
-        OnOff = "OnOff",
-
-        /**
-         * Lighting (LT)
-         *
-         * This feature supports an interface for controlling the level of a light source. For the CurrentLevel
-         * attribute:
-         *
-         * A value of 0x00 shall NOT be used.
-         *
-         * A value of 0x01 shall indicate the minimum level that can be attained on a device. A value of 0xFE shall
-         * indicate the maximum level that can be attained on a device. A value of null shall represent an undefined
-         * value.
-         *
-         * All other values are application specific gradations from the minimum to the maximum level.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 1.6.4.2
-         */
-        Lighting = "Lighting",
-
-        /**
-         * Frequency (FQ)
-         *
-         * NOTE The Frequency feature is provisional.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 1.6.4.3
-         */
-        Frequency = "Frequency"
-    }
-
-    /**
      * These elements and properties are present in all LevelControl clusters.
      */
     export const Base = MutableCluster.Component({
@@ -418,7 +418,11 @@ export namespace LevelControl {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 1.6.6.9
              */
-            options: WritableAttribute(0xf, TlvBitmap(TlvUInt8, Options)),
+            options: WritableAttribute(
+                0xf,
+                TlvBitmap(TlvUInt8, Options),
+                { default: BitsFromPartial(Options, { executeIfOff: true }) }
+            ),
 
             /**
              * Indicates the time taken to move to or from the target level when On or Off commands are received by an

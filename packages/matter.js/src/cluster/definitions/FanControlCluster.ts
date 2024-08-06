@@ -10,7 +10,7 @@ import { MutableCluster } from "../mutation/MutableCluster.js";
 import { FixedAttribute, WritableAttribute, Attribute, Command, TlvNoResponse } from "../Cluster.js";
 import { TlvUInt8, TlvBitmap, TlvEnum, TlvPercent } from "../../tlv/TlvNumber.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial } from "../../schema/BitmapSchema.js";
 import { TlvField, TlvOptionalField, TlvObject } from "../../tlv/TlvObject.js";
 import { TlvBoolean } from "../../tlv/TlvBoolean.js";
 import { TypeFromSchema } from "../../tlv/TlvSchema.js";
@@ -117,6 +117,65 @@ export namespace FanControl {
      * @see {@link MatterSpecification.v13.Cluster} § 4.4.7.1
      */
     export interface StepRequest extends TypeFromSchema<typeof TlvStepRequest> {}
+
+    /**
+     * These are optional features supported by FanControlCluster.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 4.4.4
+     */
+    export enum Feature {
+        /**
+         * MultiSpeed (SPD)
+         *
+         * Legacy Fan Control cluster revision 0-1 defined 3 speeds (low, medium and high) plus automatic speed control
+         * but left it up to the implementer to decide what was supported. Therefore, it is assumed that legacy client
+         * implementations are capable of determining, from the server, the number of speeds supported between 1, 2, or
+         * 3, and whether automatic speed control is supported.
+         *
+         * The MultiSpeed feature includes new attributes that support a running fan speed value from 0 to SpeedMax,
+         * which has a maximum of 100.
+         *
+         * See Speed Rules for more details.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 4.4.4.1
+         */
+        MultiSpeed = "MultiSpeed",
+
+        /**
+         * Auto (AUT)
+         *
+         * Automatic mode supported for fan speed
+         */
+        Auto = "Auto",
+
+        /**
+         * Rocking (RCK)
+         *
+         * Rocking movement supported
+         */
+        Rocking = "Rocking",
+
+        /**
+         * Wind (WND)
+         *
+         * Wind emulation supported
+         */
+        Wind = "Wind",
+
+        /**
+         * Step (STEP)
+         *
+         * Step command supported
+         */
+        Step = "Step",
+
+        /**
+         * AirflowDirection (DIR)
+         *
+         * Airflow Direction attribute is supported
+         */
+        AirflowDirection = "AirflowDirection"
+    }
 
     /**
      * @see {@link MatterSpecification.v13.Cluster} § 4.4.5.5
@@ -249,7 +308,11 @@ export namespace FanControl {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 4.4.6.8
              */
-            rockSupport: FixedAttribute(0x7, TlvBitmap(TlvUInt8, Rock)),
+            rockSupport: FixedAttribute(
+                0x7,
+                TlvBitmap(TlvUInt8, Rock),
+                { default: BitsFromPartial(Rock, { rockLeftRight: true }) }
+            ),
 
             /**
              * This attribute is a bitmap that indicates the current active fan rocking motion settings. Each bit shall
@@ -265,7 +328,11 @@ export namespace FanControl {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 4.4.6.9
              */
-            rockSetting: WritableAttribute(0x8, TlvBitmap(TlvUInt8, Rock))
+            rockSetting: WritableAttribute(
+                0x8,
+                TlvBitmap(TlvUInt8, Rock),
+                { default: BitsFromPartial(Rock, { rockLeftRight: true }) }
+            )
         }
     });
 
@@ -280,7 +347,11 @@ export namespace FanControl {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 4.4.6.10
              */
-            windSupport: FixedAttribute(0x9, TlvBitmap(TlvUInt8, Wind)),
+            windSupport: FixedAttribute(
+                0x9,
+                TlvBitmap(TlvUInt8, Wind),
+                { default: BitsFromPartial(Wind, { sleepWind: true }) }
+            ),
 
             /**
              * This attribute is a bitmap that indicates the current active fan wind feature settings. Each bit shall
@@ -296,7 +367,11 @@ export namespace FanControl {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 4.4.6.11
              */
-            windSetting: WritableAttribute(0xa, TlvBitmap(TlvUInt8, Wind))
+            windSetting: WritableAttribute(
+                0xa,
+                TlvBitmap(TlvUInt8, Wind),
+                { default: BitsFromPartial(Wind, { sleepWind: true }) }
+            )
         }
     });
 
@@ -338,65 +413,6 @@ export namespace FanControl {
             step: Command(0x0, TlvStepRequest, 0x0, TlvNoResponse)
         }
     });
-
-    /**
-     * These are optional features supported by FanControlCluster.
-     *
-     * @see {@link MatterSpecification.v13.Cluster} § 4.4.4
-     */
-    export enum Feature {
-        /**
-         * MultiSpeed (SPD)
-         *
-         * Legacy Fan Control cluster revision 0-1 defined 3 speeds (low, medium and high) plus automatic speed control
-         * but left it up to the implementer to decide what was supported. Therefore, it is assumed that legacy client
-         * implementations are capable of determining, from the server, the number of speeds supported between 1, 2, or
-         * 3, and whether automatic speed control is supported.
-         *
-         * The MultiSpeed feature includes new attributes that support a running fan speed value from 0 to SpeedMax,
-         * which has a maximum of 100.
-         *
-         * See Speed Rules for more details.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 4.4.4.1
-         */
-        MultiSpeed = "MultiSpeed",
-
-        /**
-         * Auto (AUT)
-         *
-         * Automatic mode supported for fan speed
-         */
-        Auto = "Auto",
-
-        /**
-         * Rocking (RCK)
-         *
-         * Rocking movement supported
-         */
-        Rocking = "Rocking",
-
-        /**
-         * Wind (WND)
-         *
-         * Wind emulation supported
-         */
-        Wind = "Wind",
-
-        /**
-         * Step (STEP)
-         *
-         * Step command supported
-         */
-        Step = "Step",
-
-        /**
-         * AirflowDirection (DIR)
-         *
-         * Airflow Direction attribute is supported
-         */
-        AirflowDirection = "AirflowDirection"
-    }
 
     /**
      * These elements and properties are present in all FanControl clusters.

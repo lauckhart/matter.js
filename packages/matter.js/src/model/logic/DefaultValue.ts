@@ -144,7 +144,7 @@ function buildValue(model: ValueModel, ifValid: boolean) {
 function buildObject(model: ValueModel, ifValid: boolean) {
     let result: { [key: string]: any } | undefined;
 
-    for (const child of model.activeMembers) {
+    for (const child of model.conformantMembers) {
         const name = camelize(child.name);
         if (result && result[name] !== undefined) {
             continue;
@@ -173,7 +173,7 @@ function buildBitmap(model: ValueModel) {
     let result;
     let fieldsDefined = 0;
 
-    for (const m of model.activeMembers) {
+    for (const m of model.conformantMembers) {
         const defaultValue = FieldValue.numericValue(m.default);
         if (defaultValue === undefined) {
             continue;

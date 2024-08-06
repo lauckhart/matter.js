@@ -34,6 +34,20 @@ export namespace MediaInput {
     export interface RenameInputRequest extends TypeFromSchema<typeof TlvRenameInputRequest> {}
 
     /**
+     * These are optional features supported by MediaInputCluster.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 6.9.4
+     */
+    export enum Feature {
+        /**
+         * NameUpdates (NU)
+         *
+         * Supports updates to the input names
+         */
+        NameUpdates = "NameUpdates"
+    }
+
+    /**
      * @see {@link MatterSpecification.v13.Cluster} § 6.9.5.1
      */
     export enum InputType {
@@ -135,20 +149,6 @@ export namespace MediaInput {
             renameInput: Command(0x3, TlvRenameInputRequest, 0x3, TlvNoResponse, { invokeAcl: AccessLevel.Manage })
         }
     });
-
-    /**
-     * These are optional features supported by MediaInputCluster.
-     *
-     * @see {@link MatterSpecification.v13.Cluster} § 6.9.4
-     */
-    export enum Feature {
-        /**
-         * NameUpdates (NU)
-         *
-         * Supports updates to the input names
-         */
-        NameUpdates = "NameUpdates"
-    }
 
     /**
      * These elements and properties are present in all MediaInput clusters.

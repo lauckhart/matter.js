@@ -22,7 +22,7 @@ import { TlvUInt16, TlvPercent100ths, TlvPercent, TlvEnum, TlvUInt8, TlvBitmap }
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvField, TlvObject } from "../../tlv/TlvObject.js";
 import { TypeFromSchema } from "../../tlv/TlvSchema.js";
-import { BitFlag, BitFieldEnum } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitFieldEnum, BitsFromPartial } from "../../schema/BitmapSchema.js";
 import { TlvNoArguments } from "../../tlv/TlvNoArguments.js";
 import { Identity } from "../../util/Type.js";
 import { ClusterRegistry } from "../ClusterRegistry.js";
@@ -97,6 +97,60 @@ export namespace WindowCovering {
      * @see {@link MatterSpecification.v13.Cluster} § 5.3.7.6
      */
     export interface GoToTiltValueRequest extends TypeFromSchema<typeof TlvGoToTiltValueRequest> {}
+
+    /**
+     * These are optional features supported by WindowCoveringCluster.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 5.3.4
+     */
+    export enum Feature {
+        /**
+         * Lift (LF)
+         *
+         * The Lift feature applies to window coverings that lift up and down (e.g. for a roller shade, Up and Down is
+         * lift Open and Close) or slide left to right (e.g. for a sliding curtain, Left and Right is lift Open and
+         * Close).
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 5.3.4.1
+         */
+        Lift = "Lift",
+
+        /**
+         * Tilt (TL)
+         *
+         * The Tilt feature applies to window coverings with vertical or horizontal strips.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 5.3.4.2
+         */
+        Tilt = "Tilt",
+
+        /**
+         * PositionAwareLift (PA_LF)
+         *
+         * Position aware lift control is supported.
+         */
+        PositionAwareLift = "PositionAwareLift",
+
+        /**
+         * AbsolutePosition (ABS)
+         *
+         * The percentage attributes shall indicate the position as a percentage between the InstalledOpenLimits and
+         * InstalledClosedLimits attributes of the window covering starting at the open (0.00%).
+         *
+         * As a general rule, absolute positioning (in centimeters or tenth of a degrees) SHOULD NOT be supported for
+         * new implementations.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 5.3.4.4
+         */
+        AbsolutePosition = "AbsolutePosition",
+
+        /**
+         * PositionAwareTilt (PA_TL)
+         *
+         * Position aware tilt control is supported.
+         */
+        PositionAwareTilt = "PositionAwareTilt"
+    }
 
     /**
      * @see {@link MatterSpecification.v13.Cluster} § 5.3.5.5
@@ -886,60 +940,6 @@ export namespace WindowCovering {
     });
 
     /**
-     * These are optional features supported by WindowCoveringCluster.
-     *
-     * @see {@link MatterSpecification.v13.Cluster} § 5.3.4
-     */
-    export enum Feature {
-        /**
-         * Lift (LF)
-         *
-         * The Lift feature applies to window coverings that lift up and down (e.g. for a roller shade, Up and Down is
-         * lift Open and Close) or slide left to right (e.g. for a sliding curtain, Left and Right is lift Open and
-         * Close).
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 5.3.4.1
-         */
-        Lift = "Lift",
-
-        /**
-         * Tilt (TL)
-         *
-         * The Tilt feature applies to window coverings with vertical or horizontal strips.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 5.3.4.2
-         */
-        Tilt = "Tilt",
-
-        /**
-         * PositionAwareLift (PA_LF)
-         *
-         * Position aware lift control is supported.
-         */
-        PositionAwareLift = "PositionAwareLift",
-
-        /**
-         * AbsolutePosition (ABS)
-         *
-         * The percentage attributes shall indicate the position as a percentage between the InstalledOpenLimits and
-         * InstalledClosedLimits attributes of the window covering starting at the open (0.00%).
-         *
-         * As a general rule, absolute positioning (in centimeters or tenth of a degrees) SHOULD NOT be supported for
-         * new implementations.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 5.3.4.4
-         */
-        AbsolutePosition = "AbsolutePosition",
-
-        /**
-         * PositionAwareTilt (PA_TL)
-         *
-         * Position aware tilt control is supported.
-         */
-        PositionAwareTilt = "PositionAwareTilt"
-    }
-
-    /**
      * These elements and properties are present in all WindowCovering clusters.
      */
     export const Base = MutableCluster.Component({
@@ -1019,7 +1019,11 @@ export namespace WindowCovering {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 5.3.6.16
              */
-            operationalStatus: Attribute(0xa, TlvBitmap(TlvUInt8, OperationalStatus)),
+            operationalStatus: Attribute(
+                0xa,
+                TlvBitmap(TlvUInt8, OperationalStatus),
+                { default: BitsFromPartial(OperationalStatus, { global: MovementStatus.Stopped }) }
+            ),
 
             /**
              * This attribute SHOULD provide more detail about the product type than can be determined from the main
@@ -1046,7 +1050,11 @@ export namespace WindowCovering {
             mode: WritableAttribute(
                 0x17,
                 TlvBitmap(TlvUInt8, Mode),
-                { persistent: true, writeAcl: AccessLevel.Manage }
+                {
+                    persistent: true,
+                    default: BitsFromPartial(Mode, { motorDirectionReversed: true }),
+                    writeAcl: AccessLevel.Manage
+                }
             ),
 
             /**
@@ -1056,7 +1064,11 @@ export namespace WindowCovering {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 5.3.6.23
              */
-            safetyStatus: OptionalAttribute(0x1a, TlvBitmap(TlvUInt16, SafetyStatus))
+            safetyStatus: OptionalAttribute(
+                0x1a,
+                TlvBitmap(TlvUInt16, SafetyStatus),
+                { default: BitsFromPartial(SafetyStatus, { remoteLockout: true }) }
+            )
         },
 
         commands: {

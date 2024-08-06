@@ -12,7 +12,7 @@ import { Identity } from "../../util/Type.js";
 import { ClusterRegistry } from "../ClusterRegistry.js";
 
 export namespace ActivatedCarbonFilterMonitoring {
-    export const Base = { ...ResourceMonitoring.Base, id: 0x72, name: "ActivatedCarbonFilterMonitoring" }
+    export const Base = { ...ResourceMonitoring.Base, id: 0x72, name: "ActivatedCarbonFilterMonitoring" } as const
 
     /**
      * @see {@link Cluster}

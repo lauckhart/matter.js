@@ -20,7 +20,7 @@ import {
 } from "../Cluster.js";
 import { TlvUInt8, TlvEnum, TlvUInt16, TlvBitmap, TlvInt16 } from "../../tlv/TlvNumber.js";
 import { TlvField, TlvObject } from "../../tlv/TlvObject.js";
-import { BitFlag, BitField } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitField, BitsFromPartial } from "../../schema/BitmapSchema.js";
 import { TypeFromSchema } from "../../tlv/TlvSchema.js";
 import { TlvNullable } from "../../tlv/TlvNullable.js";
 import { TlvString } from "../../tlv/TlvString.js";
@@ -855,6 +855,48 @@ export namespace ColorControl {
     export interface StopMoveStepRequest extends TypeFromSchema<typeof TlvStopMoveStepRequest> {}
 
     /**
+     * These are optional features supported by ColorControlCluster.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 3.2.5
+     */
+    export enum Feature {
+        /**
+         * HueSaturation (HS)
+         *
+         * Supports color specification via hue/saturation.
+         */
+        HueSaturation = "HueSaturation",
+
+        /**
+         * EnhancedHue (EHUE)
+         *
+         * Enhanced hue is supported.
+         */
+        EnhancedHue = "EnhancedHue",
+
+        /**
+         * ColorLoop (CL)
+         *
+         * Color loop is supported.
+         */
+        ColorLoop = "ColorLoop",
+
+        /**
+         * Xy (XY)
+         *
+         * Supports color specification via XY.
+         */
+        Xy = "Xy",
+
+        /**
+         * ColorTemperature (CT)
+         *
+         * Supports specification of color temperature.
+         */
+        ColorTemperature = "ColorTemperature"
+    }
+
+    /**
      * The value of the ColorControl driftCompensation attribute
      *
      * @see {@link MatterSpecification.v13.Cluster} § 3.2.7.7
@@ -1280,48 +1322,6 @@ export namespace ColorControl {
     });
 
     /**
-     * These are optional features supported by ColorControlCluster.
-     *
-     * @see {@link MatterSpecification.v13.Cluster} § 3.2.5
-     */
-    export enum Feature {
-        /**
-         * HueSaturation (HS)
-         *
-         * Supports color specification via hue/saturation.
-         */
-        HueSaturation = "HueSaturation",
-
-        /**
-         * EnhancedHue (EHUE)
-         *
-         * Enhanced hue is supported.
-         */
-        EnhancedHue = "EnhancedHue",
-
-        /**
-         * ColorLoop (CL)
-         *
-         * Color loop is supported.
-         */
-        ColorLoop = "ColorLoop",
-
-        /**
-         * Xy (XY)
-         *
-         * Supports color specification via XY.
-         */
-        Xy = "Xy",
-
-        /**
-         * ColorTemperature (CT)
-         *
-         * Supports specification of color temperature.
-         */
-        ColorTemperature = "ColorTemperature"
-    }
-
-    /**
      * These elements and properties are present in all ColorControl clusters.
      */
     export const Base = MutableCluster.Component({
@@ -1433,7 +1433,11 @@ export namespace ColorControl {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 3.2.7.11
              */
-            options: WritableAttribute(0xf, TlvBitmap(TlvUInt8, Options)),
+            options: WritableAttribute(
+                0xf,
+                TlvBitmap(TlvUInt8, Options),
+                { default: BitsFromPartial(Options, { executeIfOff: true }) }
+            ),
 
             /**
              * The NumberOfPrimaries attribute contains the number of color primaries implemented on this device. A
@@ -1712,7 +1716,11 @@ export namespace ColorControl {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 3.2.7.19
              */
-            colorCapabilities: Attribute(0x400a, TlvBitmap(TlvUInt16, ColorCapabilities))
+            colorCapabilities: Attribute(
+                0x400a,
+                TlvBitmap(TlvUInt16, ColorCapabilities),
+                { default: BitsFromPartial(ColorCapabilities, { hueSaturation: true }) }
+            )
         },
 
         /**

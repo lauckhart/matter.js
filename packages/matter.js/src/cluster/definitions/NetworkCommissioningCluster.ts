@@ -773,6 +773,34 @@ export namespace NetworkCommissioning {
     export interface AddOrUpdateThreadNetworkRequest extends TypeFromSchema<typeof TlvAddOrUpdateThreadNetworkRequest> {}
 
     /**
+     * These are optional features supported by NetworkCommissioningCluster.
+     *
+     * @see {@link MatterSpecification.v13.Core} § 11.9.4
+     */
+    export enum Feature {
+        /**
+         * WiFiNetworkInterface (WI)
+         *
+         * Wi-Fi related features
+         */
+        WiFiNetworkInterface = "WiFiNetworkInterface",
+
+        /**
+         * ThreadNetworkInterface (TH)
+         *
+         * Thread related features
+         */
+        ThreadNetworkInterface = "ThreadNetworkInterface",
+
+        /**
+         * EthernetNetworkInterface (ET)
+         *
+         * Ethernet related features
+         */
+        EthernetNetworkInterface = "EthernetNetworkInterface"
+    }
+
+    /**
      * NetworkInfoStruct struct describes an existing network configuration, as provided in the Networks attribute.
      *
      * @see {@link MatterSpecification.v13.Core} § 11.9.5.5
@@ -1120,34 +1148,6 @@ export namespace NetworkCommissioning {
             )
         }
     });
-
-    /**
-     * These are optional features supported by NetworkCommissioningCluster.
-     *
-     * @see {@link MatterSpecification.v13.Core} § 11.9.4
-     */
-    export enum Feature {
-        /**
-         * WiFiNetworkInterface (WI)
-         *
-         * Wi-Fi related features
-         */
-        WiFiNetworkInterface = "WiFiNetworkInterface",
-
-        /**
-         * ThreadNetworkInterface (TH)
-         *
-         * Thread related features
-         */
-        ThreadNetworkInterface = "ThreadNetworkInterface",
-
-        /**
-         * EthernetNetworkInterface (ET)
-         *
-         * Ethernet related features
-         */
-        EthernetNetworkInterface = "EthernetNetworkInterface"
-    }
 
     /**
      * These elements and properties are present in all NetworkCommissioning clusters.

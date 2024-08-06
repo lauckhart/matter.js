@@ -94,7 +94,11 @@ export class ClusterModel extends Model implements ClusterElement {
     }
 
     get activeMembers() {
-        return new ModelTraversal().findActiveMembers(this, this);
+        return new ModelTraversal().findActiveMembers(this, false, this);
+    }
+
+    get conformantMembers() {
+        return new ModelTraversal().findActiveMembers(this, true, this);
     }
 
     get revision() {
@@ -111,7 +115,7 @@ export class ClusterModel extends Model implements ClusterElement {
     }
 
     get featureMap() {
-        return this.get(AttributeModel, FeatureMap.id) ?? new AttributeModel(FeatureMap);
+        return (this.member(FeatureMap.id) as AttributeModel) ?? new AttributeModel(FeatureMap);
     }
 
     get featureNames(): FeatureSet {

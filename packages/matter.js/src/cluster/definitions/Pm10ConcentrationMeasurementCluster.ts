@@ -12,7 +12,7 @@ import { Identity } from "../../util/Type.js";
 import { ClusterRegistry } from "../ClusterRegistry.js";
 
 export namespace Pm10ConcentrationMeasurement {
-    export const Base = { ...ConcentrationMeasurement.Base, id: 0x42d, name: "Pm10ConcentrationMeasurement" }
+    export const Base = { ...ConcentrationMeasurement.Base, id: 0x42d, name: "Pm10ConcentrationMeasurement" } as const
 
     /**
      * @see {@link Cluster}

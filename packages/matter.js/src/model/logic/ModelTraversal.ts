@@ -502,7 +502,7 @@ export class ModelTraversal {
      * Note 2 - members may not be differentiated with conformance rules that rely on field values in this way. That
      * will probably never be necessary and would require an entirely different (more complicated) structure.
      */
-    findActiveMembers(scope: Model & { members: PropertyModel[] }, cluster?: ClusterModel) {
+    findActiveMembers(scope: Model & { members: PropertyModel[] }, conformantOnly: boolean, cluster?: ClusterModel) {
         const features = cluster?.featureNames ?? new FeatureSet();
         const supportedFeatures = cluster?.supportedFeatures ?? new FeatureSet();
 
@@ -512,9 +512,13 @@ export class ModelTraversal {
                 continue;
             }
 
+            if (conformantOnly && !member.conformance.isApplicable(features, supportedFeatures)) {
+                continue;
+            }
+
             const other = selectedMembers[member.name];
             if (other !== undefined) {
-                if (!member.conformance.isApplicable(features, supportedFeatures)) {
+                if (!conformantOnly && !member.conformance.isApplicable(features, supportedFeatures)) {
                     continue;
                 }
 

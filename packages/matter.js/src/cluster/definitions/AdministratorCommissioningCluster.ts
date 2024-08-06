@@ -54,6 +54,20 @@ export namespace AdministratorCommissioning {
     export interface OpenBasicCommissioningWindowRequest extends TypeFromSchema<typeof TlvOpenBasicCommissioningWindowRequest> {}
 
     /**
+     * These are optional features supported by AdministratorCommissioningCluster.
+     *
+     * @see {@link MatterSpecification.v13.Core} § 11.19.4
+     */
+    export enum Feature {
+        /**
+         * Basic (BC)
+         *
+         * Node supports Basic Commissioning Method.
+         */
+        Basic = "Basic"
+    }
+
+    /**
      * @see {@link MatterSpecification.v13.Core} § 11.19.5.1
      */
     export enum CommissioningWindowStatus {
@@ -206,20 +220,6 @@ export namespace AdministratorCommissioning {
             )
         }
     });
-
-    /**
-     * These are optional features supported by AdministratorCommissioningCluster.
-     *
-     * @see {@link MatterSpecification.v13.Core} § 11.19.4
-     */
-    export enum Feature {
-        /**
-         * Basic (BC)
-         *
-         * Node supports Basic Commissioning Method.
-         */
-        Basic = "Basic"
-    }
 
     /**
      * These elements and properties are present in all AdministratorCommissioning clusters.

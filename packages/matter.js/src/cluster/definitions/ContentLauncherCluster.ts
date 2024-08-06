@@ -10,7 +10,7 @@ import { MutableCluster } from "../mutation/MutableCluster.js";
 import { Attribute, Command } from "../Cluster.js";
 import { TlvArray } from "../../tlv/TlvArray.js";
 import { TlvString } from "../../tlv/TlvString.js";
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial } from "../../schema/BitmapSchema.js";
 import { TlvUInt32, TlvBitmap, TlvDouble, TlvEnum, TlvUInt64, TlvUInt8 } from "../../tlv/TlvNumber.js";
 import { TlvField, TlvOptionalField, TlvObject } from "../../tlv/TlvObject.js";
 import { TypeFromSchema } from "../../tlv/TlvSchema.js";
@@ -655,6 +655,49 @@ export namespace ContentLauncher {
     export interface LaunchContentRequest extends TypeFromSchema<typeof TlvLaunchContentRequest> {}
 
     /**
+     * These are optional features supported by ContentLauncherCluster.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 6.7.4
+     */
+    export enum Feature {
+        /**
+         * ContentSearch (CS)
+         *
+         * Device supports content search (non-app specific)
+         */
+        ContentSearch = "ContentSearch",
+
+        /**
+         * UrlPlayback (UP)
+         *
+         * Device supports basic URL-based file playback
+         */
+        UrlPlayback = "UrlPlayback",
+
+        /**
+         * AdvancedSeek (AS)
+         *
+         * Enables clients to implement more advanced media seeking behavior in their user interface, such as for
+         * example a "seek bar".
+         */
+        AdvancedSeek = "AdvancedSeek",
+
+        /**
+         * TextTracks (TT)
+         *
+         * Device or app supports Text Tracks.
+         */
+        TextTracks = "TextTracks",
+
+        /**
+         * AudioTracks (AT)
+         *
+         * Device or app supports Audio Tracks.
+         */
+        AudioTracks = "AudioTracks"
+    }
+
+    /**
      * A ContentLauncherCluster supports these elements if it supports feature UrlPlayback.
      */
     export const UrlPlaybackComponent = MutableCluster.Component({
@@ -672,7 +715,11 @@ export namespace ContentLauncher {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 6.7.6.2
              */
-            supportedStreamingProtocols: Attribute(0x1, TlvBitmap(TlvUInt32, SupportedProtocols), { persistent: true })
+            supportedStreamingProtocols: Attribute(
+                0x1,
+                TlvBitmap(TlvUInt32, SupportedProtocols),
+                { persistent: true, default: BitsFromPartial(SupportedProtocols, { dash: true }) }
+            )
         },
 
         commands: {
@@ -719,49 +766,6 @@ export namespace ContentLauncher {
      * A ContentLauncherCluster supports these elements if it supports features ContentSearch or UrlPlayback.
      */
     export const ContentSearchOrUrlPlaybackComponent = MutableCluster.Component({});
-
-    /**
-     * These are optional features supported by ContentLauncherCluster.
-     *
-     * @see {@link MatterSpecification.v13.Cluster} § 6.7.4
-     */
-    export enum Feature {
-        /**
-         * ContentSearch (CS)
-         *
-         * Device supports content search (non-app specific)
-         */
-        ContentSearch = "ContentSearch",
-
-        /**
-         * UrlPlayback (UP)
-         *
-         * Device supports basic URL-based file playback
-         */
-        UrlPlayback = "UrlPlayback",
-
-        /**
-         * AdvancedSeek (AS)
-         *
-         * Enables clients to implement more advanced media seeking behavior in their user interface, such as for
-         * example a "seek bar".
-         */
-        AdvancedSeek = "AdvancedSeek",
-
-        /**
-         * TextTracks (TT)
-         *
-         * Device or app supports Text Tracks.
-         */
-        TextTracks = "TextTracks",
-
-        /**
-         * AudioTracks (AT)
-         *
-         * Device or app supports Audio Tracks.
-         */
-        AudioTracks = "AudioTracks"
-    }
 
     /**
      * These elements and properties are present in all ContentLauncher clusters.

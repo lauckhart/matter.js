@@ -25,7 +25,7 @@ import { TlvFabricIndex } from "../../datatype/FabricIndex.js";
 import { TypeFromSchema } from "../../tlv/TlvSchema.js";
 import { TlvUInt32, TlvUInt16, TlvBitmap, TlvEnum } from "../../tlv/TlvNumber.js";
 import { TlvByteString, TlvString } from "../../tlv/TlvString.js";
-import { BitFlag } from "../../schema/BitmapSchema.js";
+import { BitFlag, BitsFromPartial } from "../../schema/BitmapSchema.js";
 import { Identity } from "../../util/Type.js";
 import { ClusterRegistry } from "../ClusterRegistry.js";
 
@@ -323,6 +323,43 @@ export namespace IcdManagement {
     export interface StayActiveResponse extends TypeFromSchema<typeof TlvStayActiveResponse> {}
 
     /**
+     * These are optional features supported by IcdManagementCluster.
+     *
+     * @see {@link MatterSpecification.v13.Core} § 9.17.4
+     */
+    export enum Feature {
+        /**
+         * CheckInProtocolSupport (CIP)
+         *
+         * When this feature is supported, the device shall support all the associated commands and attributes to
+         * properly support the Check-In Protocol.
+         *
+         * @see {@link MatterSpecification.v13.Core} § 9.17.4.1
+         */
+        CheckInProtocolSupport = "CheckInProtocolSupport",
+
+        /**
+         * UserActiveModeTrigger (UAT)
+         *
+         * This feature is supported if and only if the device has a user active mode trigger.
+         *
+         * @see {@link MatterSpecification.v13.Core} § 9.17.4.2
+         */
+        UserActiveModeTrigger = "UserActiveModeTrigger",
+
+        /**
+         * LongIdleTimeSupport (LITS)
+         *
+         * This feature is supported if and only the device is a Long Idle Time ICD.
+         *
+         * NOTE In this version of the specification, the support for the feature is provisional.
+         *
+         * @see {@link MatterSpecification.v13.Core} § 9.17.4.3
+         */
+        LongIdleTimeSupport = "LongIdleTimeSupport"
+    }
+
+    /**
      * A IcdManagementCluster supports these elements if it supports feature CheckInProtocolSupport.
      */
     export const CheckInProtocolSupportComponent = MutableCluster.Component({
@@ -423,7 +460,11 @@ export namespace IcdManagement {
              *
              * @see {@link MatterSpecification.v13.Core} § 9.17.6.7
              */
-            userActiveModeTriggerHint: FixedAttribute(0x6, TlvBitmap(TlvUInt32, UserActiveModeTrigger))
+            userActiveModeTriggerHint: FixedAttribute(
+                0x6,
+                TlvBitmap(TlvUInt32, UserActiveModeTrigger),
+                { default: BitsFromPartial(UserActiveModeTrigger, { powerCycle: true }) }
+            )
         }
     });
 
@@ -459,43 +500,6 @@ export namespace IcdManagement {
             stayActiveRequest: Command(0x3, TlvStayActiveRequest, 0x4, TlvStayActiveResponse)
         }
     });
-
-    /**
-     * These are optional features supported by IcdManagementCluster.
-     *
-     * @see {@link MatterSpecification.v13.Core} § 9.17.4
-     */
-    export enum Feature {
-        /**
-         * CheckInProtocolSupport (CIP)
-         *
-         * When this feature is supported, the device shall support all the associated commands and attributes to
-         * properly support the Check-In Protocol.
-         *
-         * @see {@link MatterSpecification.v13.Core} § 9.17.4.1
-         */
-        CheckInProtocolSupport = "CheckInProtocolSupport",
-
-        /**
-         * UserActiveModeTrigger (UAT)
-         *
-         * This feature is supported if and only if the device has a user active mode trigger.
-         *
-         * @see {@link MatterSpecification.v13.Core} § 9.17.4.2
-         */
-        UserActiveModeTrigger = "UserActiveModeTrigger",
-
-        /**
-         * LongIdleTimeSupport (LITS)
-         *
-         * This feature is supported if and only the device is a Long Idle Time ICD.
-         *
-         * NOTE In this version of the specification, the support for the feature is provisional.
-         *
-         * @see {@link MatterSpecification.v13.Core} § 9.17.4.3
-         */
-        LongIdleTimeSupport = "LongIdleTimeSupport"
-    }
 
     /**
      * These elements and properties are present in all IcdManagement clusters.

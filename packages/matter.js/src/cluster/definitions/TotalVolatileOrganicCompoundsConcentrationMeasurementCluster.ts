@@ -16,7 +16,7 @@ export namespace TotalVolatileOrganicCompoundsConcentrationMeasurement {
         ...ConcentrationMeasurement.Base,
         id: 0x42e,
         name: "TotalVolatileOrganicCompoundsConcentrationMeasurement"
-    }
+    } as const
 
     /**
      * @see {@link Cluster}

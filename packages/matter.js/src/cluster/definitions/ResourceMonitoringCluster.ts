@@ -95,6 +95,34 @@ export namespace ResourceMonitoring {
     export interface ReplacementProduct extends TypeFromSchema<typeof TlvReplacementProduct> {}
 
     /**
+     * These are optional features supported by ResourceMonitoringCluster.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 2.8.4
+     */
+    export enum Feature {
+        /**
+         * Condition (CON)
+         *
+         * Supports monitoring the condition of the resource in percentage
+         */
+        Condition = "Condition",
+
+        /**
+         * Warning (WRN)
+         *
+         * Supports warning indication
+         */
+        Warning = "Warning",
+
+        /**
+         * ReplacementProductList (REP)
+         *
+         * Supports specifying the list of replacement products
+         */
+        ReplacementProductList = "ReplacementProductList"
+    }
+
+    /**
      * @see {@link MatterSpecification.v13.Cluster} § 2.8.5.2
      */
     export enum ChangeIndication {

@@ -47,6 +47,33 @@ export namespace LaundryWasherControls {
     }
 
     /**
+     * These are optional features supported by LaundryWasherControlsCluster.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 8.6.4
+     */
+    export enum Feature {
+        /**
+         * Spin (SPIN)
+         *
+         * This feature indicates multiple spin speeds are supported in at least one supported mode. Note that some
+         * modes may not support multiple spin speeds even if this feature is supported.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 8.6.4.1
+         */
+        Spin = "Spin",
+
+        /**
+         * Rinse (RINSE)
+         *
+         * This feature indicates multiple rinse cycles are supported in at least one supported mode. Note that some
+         * modes may not support selection of the number of rinse cycles even if this feature is supported.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 8.6.4.2
+         */
+        Rinse = "Rinse"
+    }
+
+    /**
      * A LaundryWasherControlsCluster supports these elements if it supports feature Spin.
      */
     export const SpinComponent = MutableCluster.Component({
@@ -103,33 +130,6 @@ export namespace LaundryWasherControls {
             supportedRinses: Attribute(0x3, TlvArray(TlvEnum<NumberOfRinses>(), { maxLength: 4 }), { default: [] })
         }
     });
-
-    /**
-     * These are optional features supported by LaundryWasherControlsCluster.
-     *
-     * @see {@link MatterSpecification.v13.Cluster} § 8.6.4
-     */
-    export enum Feature {
-        /**
-         * Spin (SPIN)
-         *
-         * This feature indicates multiple spin speeds are supported in at least one supported mode. Note that some
-         * modes may not support multiple spin speeds even if this feature is supported.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 8.6.4.1
-         */
-        Spin = "Spin",
-
-        /**
-         * Rinse (RINSE)
-         *
-         * This feature indicates multiple rinse cycles are supported in at least one supported mode. Note that some
-         * modes may not support selection of the number of rinse cycles even if this feature is supported.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 8.6.4.2
-         */
-        Rinse = "Rinse"
-    }
 
     /**
      * These elements and properties are present in all LaundryWasherControls clusters.

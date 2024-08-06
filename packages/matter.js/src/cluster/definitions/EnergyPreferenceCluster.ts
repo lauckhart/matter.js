@@ -77,6 +77,34 @@ export namespace EnergyPreference {
     }
 
     /**
+     * These are optional features supported by EnergyPreferenceCluster.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 9.5.4
+     */
+    export enum Feature {
+        /**
+         * EnergyBalance (BALA)
+         *
+         * This feature allows a user to select from a list of energy balances with associated descriptions of which
+         * strategies a device will use to target the specified balance.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 9.5.4.1
+         */
+        EnergyBalance = "EnergyBalance",
+
+        /**
+         * LowPowerModeSensitivity (LPMS)
+         *
+         * This feature allows the user to select a condition or set of conditions which will cause the device to
+         * switch to a mode using less power. For example, a device might provide a scale of durations that must elapse
+         * without user interaction before it goes to sleep.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 9.5.4.2
+         */
+        LowPowerModeSensitivity = "LowPowerModeSensitivity"
+    }
+
+    /**
      * A EnergyPreferenceCluster supports these elements if it supports feature EnergyBalance.
      */
     export const EnergyBalanceComponent = MutableCluster.Component({
@@ -174,34 +202,6 @@ export namespace EnergyPreference {
             currentLowPowerModeSensitivity: WritableAttribute(0x4, TlvUInt8, { persistent: true })
         }
     });
-
-    /**
-     * These are optional features supported by EnergyPreferenceCluster.
-     *
-     * @see {@link MatterSpecification.v13.Cluster} § 9.5.4
-     */
-    export enum Feature {
-        /**
-         * EnergyBalance (BALA)
-         *
-         * This feature allows a user to select from a list of energy balances with associated descriptions of which
-         * strategies a device will use to target the specified balance.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 9.5.4.1
-         */
-        EnergyBalance = "EnergyBalance",
-
-        /**
-         * LowPowerModeSensitivity (LPMS)
-         *
-         * This feature allows the user to select a condition or set of conditions which will cause the device to
-         * switch to a mode using less power. For example, a device might provide a scale of durations that must elapse
-         * without user interaction before it goes to sleep.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 9.5.4.2
-         */
-        LowPowerModeSensitivity = "LowPowerModeSensitivity"
-    }
 
     /**
      * These elements and properties are present in all EnergyPreference clusters.
