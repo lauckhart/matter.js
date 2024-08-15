@@ -29,6 +29,10 @@ export abstract class Node<T extends RootEndpoint = RootEndpoint> extends Endpoi
     #environment: Environment;
     #runtime?: NetworkRuntime;
 
+    override get construction(): Construction<Node<T>> {
+        return super.construction as Construction<Node<T>>;
+    }
+
     constructor(config: Node.Configuration<T>) {
         const parentEnvironment = config.environment ?? Environment.default;
 

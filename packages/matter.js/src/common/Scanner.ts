@@ -10,8 +10,8 @@ import { Fabric } from "../fabric/Fabric.js";
 import { ServerAddress, ServerAddressIp } from "./ServerAddress.js";
 
 /**
- * All information exposed by a commissionable device via announcements.
- * The properties are named identical as in the Matter specification.
+ * All information exposed by a commissionable device via announcements. The properties are named identical as in the
+ * Matter specification.
  */
 export type DiscoveryData = {
     /** VendorId + ProductId */
