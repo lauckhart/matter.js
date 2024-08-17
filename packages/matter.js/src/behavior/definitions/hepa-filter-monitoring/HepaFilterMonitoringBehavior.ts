@@ -21,7 +21,7 @@ export const HepaFilterMonitoringBehavior = ClusterBehavior
     .withInterface<ResourceMonitoringInterface>()
     .for(HepaFilterMonitoring.Cluster);
 
-type HepaFilterMonitoringBehaviorType = InstanceType<typeof HepaFilterMonitoringBehavior>;
-export interface HepaFilterMonitoringBehavior extends HepaFilterMonitoringBehaviorType {}
-type StateType = InstanceType<typeof HepaFilterMonitoringBehavior.State>;
-export namespace HepaFilterMonitoringBehavior { export interface State extends StateType {} }
+export interface HepaFilterMonitoringBehavior extends InstanceType<typeof HepaFilterMonitoringBehavior> {}
+export namespace HepaFilterMonitoringBehavior {
+    export interface State extends InstanceType<typeof HepaFilterMonitoringBehavior.State> {}
+}

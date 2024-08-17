@@ -17,7 +17,5 @@ export const IdentifyBehavior = ClusterBehavior
     .withInterface<IdentifyInterface>()
     .for(Identify.Cluster);
 
-type IdentifyBehaviorType = InstanceType<typeof IdentifyBehavior>;
-export interface IdentifyBehavior extends IdentifyBehaviorType {}
-type StateType = InstanceType<typeof IdentifyBehavior.State>;
-export namespace IdentifyBehavior { export interface State extends StateType {} }
+export interface IdentifyBehavior extends InstanceType<typeof IdentifyBehavior> {}
+export namespace IdentifyBehavior { export interface State extends InstanceType<typeof IdentifyBehavior.State> {} }

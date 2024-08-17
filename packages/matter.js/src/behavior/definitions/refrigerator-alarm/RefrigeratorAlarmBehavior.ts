@@ -21,7 +21,7 @@ export const RefrigeratorAlarmBehavior = ClusterBehavior
     .withInterface<RefrigeratorAlarmInterface>()
     .for(RefrigeratorAlarm.Cluster);
 
-type RefrigeratorAlarmBehaviorType = InstanceType<typeof RefrigeratorAlarmBehavior>;
-export interface RefrigeratorAlarmBehavior extends RefrigeratorAlarmBehaviorType {}
-type StateType = InstanceType<typeof RefrigeratorAlarmBehavior.State>;
-export namespace RefrigeratorAlarmBehavior { export interface State extends StateType {} }
+export interface RefrigeratorAlarmBehavior extends InstanceType<typeof RefrigeratorAlarmBehavior> {}
+export namespace RefrigeratorAlarmBehavior {
+    export interface State extends InstanceType<typeof RefrigeratorAlarmBehavior.State> {}
+}

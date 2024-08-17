@@ -14,7 +14,5 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const WakeOnLanBehavior = ClusterBehavior.for(WakeOnLan.Cluster);
 
-type WakeOnLanBehaviorType = InstanceType<typeof WakeOnLanBehavior>;
-export interface WakeOnLanBehavior extends WakeOnLanBehaviorType {}
-type StateType = InstanceType<typeof WakeOnLanBehavior.State>;
-export namespace WakeOnLanBehavior { export interface State extends StateType {} }
+export interface WakeOnLanBehavior extends InstanceType<typeof WakeOnLanBehavior> {}
+export namespace WakeOnLanBehavior { export interface State extends InstanceType<typeof WakeOnLanBehavior.State> {} }

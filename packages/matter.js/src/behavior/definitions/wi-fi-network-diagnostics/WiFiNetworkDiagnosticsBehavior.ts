@@ -21,7 +21,7 @@ export const WiFiNetworkDiagnosticsBehavior = ClusterBehavior
     .withInterface<WiFiNetworkDiagnosticsInterface>()
     .for(WiFiNetworkDiagnostics.Cluster);
 
-type WiFiNetworkDiagnosticsBehaviorType = InstanceType<typeof WiFiNetworkDiagnosticsBehavior>;
-export interface WiFiNetworkDiagnosticsBehavior extends WiFiNetworkDiagnosticsBehaviorType {}
-type StateType = InstanceType<typeof WiFiNetworkDiagnosticsBehavior.State>;
-export namespace WiFiNetworkDiagnosticsBehavior { export interface State extends StateType {} }
+export interface WiFiNetworkDiagnosticsBehavior extends InstanceType<typeof WiFiNetworkDiagnosticsBehavior> {}
+export namespace WiFiNetworkDiagnosticsBehavior {
+    export interface State extends InstanceType<typeof WiFiNetworkDiagnosticsBehavior.State> {}
+}

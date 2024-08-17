@@ -21,7 +21,7 @@ export const TimeSynchronizationBehavior = ClusterBehavior
     .withInterface<TimeSynchronizationInterface>()
     .for(TimeSynchronization.Cluster);
 
-type TimeSynchronizationBehaviorType = InstanceType<typeof TimeSynchronizationBehavior>;
-export interface TimeSynchronizationBehavior extends TimeSynchronizationBehaviorType {}
-type StateType = InstanceType<typeof TimeSynchronizationBehavior.State>;
-export namespace TimeSynchronizationBehavior { export interface State extends StateType {} }
+export interface TimeSynchronizationBehavior extends InstanceType<typeof TimeSynchronizationBehavior> {}
+export namespace TimeSynchronizationBehavior {
+    export interface State extends InstanceType<typeof TimeSynchronizationBehavior.State> {}
+}

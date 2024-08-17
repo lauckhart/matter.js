@@ -21,7 +21,5 @@ export const SmokeCoAlarmBehavior = ClusterBehavior
     .withInterface<SmokeCoAlarmInterface>()
     .for(ClusterType(SmokeCoAlarm.Base));
 
-type SmokeCoAlarmBehaviorType = InstanceType<typeof SmokeCoAlarmBehavior>;
-export interface SmokeCoAlarmBehavior extends SmokeCoAlarmBehaviorType {}
-type StateType = InstanceType<typeof SmokeCoAlarmBehavior.State>;
-export namespace SmokeCoAlarmBehavior { export interface State extends StateType {} }
+export interface SmokeCoAlarmBehavior extends InstanceType<typeof SmokeCoAlarmBehavior> {}
+export namespace SmokeCoAlarmBehavior { export interface State extends InstanceType<typeof SmokeCoAlarmBehavior.State> {} }

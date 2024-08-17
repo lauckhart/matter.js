@@ -20,7 +20,5 @@ export const EnergyEvseBehavior = ClusterBehavior
     .withInterface<EnergyEvseInterface>()
     .for(EnergyEvse.Cluster);
 
-type EnergyEvseBehaviorType = InstanceType<typeof EnergyEvseBehavior>;
-export interface EnergyEvseBehavior extends EnergyEvseBehaviorType {}
-type StateType = InstanceType<typeof EnergyEvseBehavior.State>;
-export namespace EnergyEvseBehavior { export interface State extends StateType {} }
+export interface EnergyEvseBehavior extends InstanceType<typeof EnergyEvseBehavior> {}
+export namespace EnergyEvseBehavior { export interface State extends InstanceType<typeof EnergyEvseBehavior.State> {} }

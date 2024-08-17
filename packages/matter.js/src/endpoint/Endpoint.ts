@@ -256,8 +256,6 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      *
      * The endpoint will not initialize fully until added to a {@link Node}.  You can use {@link Endpoint.add} to
      * construct and initialize an {@link Endpoint} in one step.
-     *
-     * @param config
      */
     constructor(config: Endpoint.Configuration<T> | T);
 
@@ -266,8 +264,6 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
      *
      * The endpoint will not initialize fully until added to a {@link Node}.  You can use {@link Endpoint.add} to
      * construct and initialize an {@link Endpoint} in one step.
-     *
-     * @param config
      */
     constructor(type: T, options?: Endpoint.Options<T>);
 

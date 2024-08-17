@@ -4,6 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/**
+ * @import
+ *
+ * @module @project-chip/matter.js/behavior/cluster
+ */
+
 export * from "./ClusterBehavior.js";
 export * from "./ClusterBehaviorUtil.js";
 export * from "./ClusterEvents.js";

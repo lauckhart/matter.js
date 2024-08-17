@@ -19,7 +19,7 @@ import { ClusterType } from "../../../cluster/ClusterType.js";
  */
 export const Pm25ConcentrationMeasurementBehavior = ClusterBehavior.for(ClusterType(Pm25ConcentrationMeasurement.Base));
 
-type Pm25ConcentrationMeasurementBehaviorType = InstanceType<typeof Pm25ConcentrationMeasurementBehavior>;
-export interface Pm25ConcentrationMeasurementBehavior extends Pm25ConcentrationMeasurementBehaviorType {}
-type StateType = InstanceType<typeof Pm25ConcentrationMeasurementBehavior.State>;
-export namespace Pm25ConcentrationMeasurementBehavior { export interface State extends StateType {} }
+export interface Pm25ConcentrationMeasurementBehavior extends InstanceType<typeof Pm25ConcentrationMeasurementBehavior> {}
+export namespace Pm25ConcentrationMeasurementBehavior {
+    export interface State extends InstanceType<typeof Pm25ConcentrationMeasurementBehavior.State> {}
+}

@@ -20,7 +20,7 @@ import { ClusterType } from "../../../cluster/ClusterType.js";
 export const OzoneConcentrationMeasurementBehavior = ClusterBehavior
     .for(ClusterType(OzoneConcentrationMeasurement.Base));
 
-type OzoneConcentrationMeasurementBehaviorType = InstanceType<typeof OzoneConcentrationMeasurementBehavior>;
-export interface OzoneConcentrationMeasurementBehavior extends OzoneConcentrationMeasurementBehaviorType {}
-type StateType = InstanceType<typeof OzoneConcentrationMeasurementBehavior.State>;
-export namespace OzoneConcentrationMeasurementBehavior { export interface State extends StateType {} }
+export interface OzoneConcentrationMeasurementBehavior extends InstanceType<typeof OzoneConcentrationMeasurementBehavior> {}
+export namespace OzoneConcentrationMeasurementBehavior {
+    export interface State extends InstanceType<typeof OzoneConcentrationMeasurementBehavior.State> {}
+}

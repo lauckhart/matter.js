@@ -18,7 +18,7 @@ export const GeneralCommissioningBehavior = ClusterBehavior
     .withInterface<GeneralCommissioningInterface>()
     .for(GeneralCommissioning.Cluster);
 
-type GeneralCommissioningBehaviorType = InstanceType<typeof GeneralCommissioningBehavior>;
-export interface GeneralCommissioningBehavior extends GeneralCommissioningBehaviorType {}
-type StateType = InstanceType<typeof GeneralCommissioningBehavior.State>;
-export namespace GeneralCommissioningBehavior { export interface State extends StateType {} }
+export interface GeneralCommissioningBehavior extends InstanceType<typeof GeneralCommissioningBehavior> {}
+export namespace GeneralCommissioningBehavior {
+    export interface State extends InstanceType<typeof GeneralCommissioningBehavior.State> {}
+}

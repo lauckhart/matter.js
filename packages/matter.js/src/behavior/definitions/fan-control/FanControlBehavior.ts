@@ -20,7 +20,5 @@ export const FanControlBehavior = ClusterBehavior
     .withInterface<FanControlInterface>()
     .for(FanControl.Cluster);
 
-type FanControlBehaviorType = InstanceType<typeof FanControlBehavior>;
-export interface FanControlBehavior extends FanControlBehaviorType {}
-type StateType = InstanceType<typeof FanControlBehavior.State>;
-export namespace FanControlBehavior { export interface State extends StateType {} }
+export interface FanControlBehavior extends InstanceType<typeof FanControlBehavior> {}
+export namespace FanControlBehavior { export interface State extends InstanceType<typeof FanControlBehavior.State> {} }

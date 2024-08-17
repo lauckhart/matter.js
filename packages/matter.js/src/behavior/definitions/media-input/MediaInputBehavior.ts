@@ -20,7 +20,5 @@ export const MediaInputBehavior = ClusterBehavior
     .withInterface<MediaInputInterface>()
     .for(MediaInput.Cluster);
 
-type MediaInputBehaviorType = InstanceType<typeof MediaInputBehavior>;
-export interface MediaInputBehavior extends MediaInputBehaviorType {}
-type StateType = InstanceType<typeof MediaInputBehavior.State>;
-export namespace MediaInputBehavior { export interface State extends StateType {} }
+export interface MediaInputBehavior extends InstanceType<typeof MediaInputBehavior> {}
+export namespace MediaInputBehavior { export interface State extends InstanceType<typeof MediaInputBehavior.State> {} }

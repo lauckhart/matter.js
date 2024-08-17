@@ -17,7 +17,7 @@ export const TargetNavigatorBehavior = ClusterBehavior
     .withInterface<TargetNavigatorInterface>()
     .for(TargetNavigator.Cluster);
 
-type TargetNavigatorBehaviorType = InstanceType<typeof TargetNavigatorBehavior>;
-export interface TargetNavigatorBehavior extends TargetNavigatorBehaviorType {}
-type StateType = InstanceType<typeof TargetNavigatorBehavior.State>;
-export namespace TargetNavigatorBehavior { export interface State extends StateType {} }
+export interface TargetNavigatorBehavior extends InstanceType<typeof TargetNavigatorBehavior> {}
+export namespace TargetNavigatorBehavior {
+    export interface State extends InstanceType<typeof TargetNavigatorBehavior.State> {}
+}

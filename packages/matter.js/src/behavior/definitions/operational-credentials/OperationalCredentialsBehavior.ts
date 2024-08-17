@@ -18,7 +18,7 @@ export const OperationalCredentialsBehavior = ClusterBehavior
     .withInterface<OperationalCredentialsInterface>()
     .for(OperationalCredentials.Cluster);
 
-type OperationalCredentialsBehaviorType = InstanceType<typeof OperationalCredentialsBehavior>;
-export interface OperationalCredentialsBehavior extends OperationalCredentialsBehaviorType {}
-type StateType = InstanceType<typeof OperationalCredentialsBehavior.State>;
-export namespace OperationalCredentialsBehavior { export interface State extends StateType {} }
+export interface OperationalCredentialsBehavior extends InstanceType<typeof OperationalCredentialsBehavior> {}
+export namespace OperationalCredentialsBehavior {
+    export interface State extends InstanceType<typeof OperationalCredentialsBehavior.State> {}
+}

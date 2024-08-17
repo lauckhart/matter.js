@@ -22,9 +22,7 @@ import { ClusterType } from "../../../cluster/ClusterType.js";
 export const TotalVolatileOrganicCompoundsConcentrationMeasurementBehavior = ClusterBehavior
     .for(ClusterType(TotalVolatileOrganicCompoundsConcentrationMeasurement.Base));
 
-type TotalVolatileOrganicCompoundsConcentrationMeasurementBehaviorType = InstanceType<typeof TotalVolatileOrganicCompoundsConcentrationMeasurementBehavior>;
-export interface TotalVolatileOrganicCompoundsConcentrationMeasurementBehavior extends TotalVolatileOrganicCompoundsConcentrationMeasurementBehaviorType {}
-type StateType = InstanceType<typeof TotalVolatileOrganicCompoundsConcentrationMeasurementBehavior.State>;
+export interface TotalVolatileOrganicCompoundsConcentrationMeasurementBehavior extends InstanceType<typeof TotalVolatileOrganicCompoundsConcentrationMeasurementBehavior> {}
 export namespace TotalVolatileOrganicCompoundsConcentrationMeasurementBehavior {
-    export interface State extends StateType {}
+    export interface State extends InstanceType<typeof TotalVolatileOrganicCompoundsConcentrationMeasurementBehavior.State> {}
 }

@@ -17,20 +17,22 @@ import type { AnyElement } from "./AnyElement.js";
  */
 export interface BaseElement {
     /**
-     * The ID of the element per Matter specification, either global or
-     * context-specific.  A "machine appropriate" semantic differentiator.
+     * The ID of the element per Matter specification, either global or context-specific.  A "machine appropriate"
+     * semantic differentiator.
      */
     id?: number;
 
     /**
-     * The key used for storing this element.  A "human appropriate" semantic
-     * differentiator.
+     * The key used for storing this element.  A "human appropriate" semantic differentiator.
      */
     name: string;
 
     /**
-     * If an element derives from another element, the name of the parent
-     * element goes here.
+     * If an element extends another element, the name of the parent element goes here.
+     *
+     * For datatypes and fields, every type that is not global must specify a global datatype as a base type.  Datatype
+     * elements may use the shortcut "list[EntryType]" to designate an element as type "list" with a single child that
+     * is the entry type.
      */
     type?: string;
 

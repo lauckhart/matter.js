@@ -19,7 +19,7 @@ import { ClusterType } from "../../../cluster/ClusterType.js";
  */
 export const ElectricalPowerMeasurementBehavior = ClusterBehavior.for(ClusterType(ElectricalPowerMeasurement.Base));
 
-type ElectricalPowerMeasurementBehaviorType = InstanceType<typeof ElectricalPowerMeasurementBehavior>;
-export interface ElectricalPowerMeasurementBehavior extends ElectricalPowerMeasurementBehaviorType {}
-type StateType = InstanceType<typeof ElectricalPowerMeasurementBehavior.State>;
-export namespace ElectricalPowerMeasurementBehavior { export interface State extends StateType {} }
+export interface ElectricalPowerMeasurementBehavior extends InstanceType<typeof ElectricalPowerMeasurementBehavior> {}
+export namespace ElectricalPowerMeasurementBehavior {
+    export interface State extends InstanceType<typeof ElectricalPowerMeasurementBehavior.State> {}
+}

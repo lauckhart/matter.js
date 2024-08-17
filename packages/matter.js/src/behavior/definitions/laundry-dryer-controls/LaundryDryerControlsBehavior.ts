@@ -15,7 +15,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const LaundryDryerControlsBehavior = ClusterBehavior.for(LaundryDryerControls.Cluster);
 
-type LaundryDryerControlsBehaviorType = InstanceType<typeof LaundryDryerControlsBehavior>;
-export interface LaundryDryerControlsBehavior extends LaundryDryerControlsBehaviorType {}
-type StateType = InstanceType<typeof LaundryDryerControlsBehavior.State>;
-export namespace LaundryDryerControlsBehavior { export interface State extends StateType {} }
+export interface LaundryDryerControlsBehavior extends InstanceType<typeof LaundryDryerControlsBehavior> {}
+export namespace LaundryDryerControlsBehavior {
+    export interface State extends InstanceType<typeof LaundryDryerControlsBehavior.State> {}
+}

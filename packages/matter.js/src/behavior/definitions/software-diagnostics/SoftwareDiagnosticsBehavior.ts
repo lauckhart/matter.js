@@ -21,7 +21,7 @@ export const SoftwareDiagnosticsBehavior = ClusterBehavior
     .withInterface<SoftwareDiagnosticsInterface>()
     .for(SoftwareDiagnostics.Cluster);
 
-type SoftwareDiagnosticsBehaviorType = InstanceType<typeof SoftwareDiagnosticsBehavior>;
-export interface SoftwareDiagnosticsBehavior extends SoftwareDiagnosticsBehaviorType {}
-type StateType = InstanceType<typeof SoftwareDiagnosticsBehavior.State>;
-export namespace SoftwareDiagnosticsBehavior { export interface State extends StateType {} }
+export interface SoftwareDiagnosticsBehavior extends InstanceType<typeof SoftwareDiagnosticsBehavior> {}
+export namespace SoftwareDiagnosticsBehavior {
+    export interface State extends InstanceType<typeof SoftwareDiagnosticsBehavior.State> {}
+}

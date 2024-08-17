@@ -18,7 +18,7 @@ export const OtaSoftwareUpdateRequestorBehavior = ClusterBehavior
     .withInterface<OtaSoftwareUpdateRequestorInterface>()
     .for(OtaSoftwareUpdateRequestor.Cluster);
 
-type OtaSoftwareUpdateRequestorBehaviorType = InstanceType<typeof OtaSoftwareUpdateRequestorBehavior>;
-export interface OtaSoftwareUpdateRequestorBehavior extends OtaSoftwareUpdateRequestorBehaviorType {}
-type StateType = InstanceType<typeof OtaSoftwareUpdateRequestorBehavior.State>;
-export namespace OtaSoftwareUpdateRequestorBehavior { export interface State extends StateType {} }
+export interface OtaSoftwareUpdateRequestorBehavior extends InstanceType<typeof OtaSoftwareUpdateRequestorBehavior> {}
+export namespace OtaSoftwareUpdateRequestorBehavior {
+    export interface State extends InstanceType<typeof OtaSoftwareUpdateRequestorBehavior.State> {}
+}

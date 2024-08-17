@@ -69,6 +69,12 @@
         "@types/yargs": "^17.0.32",
         "dockerode": "^4.0.2",
         "trace-unhandled": "^2.0.1",
+        "type-fest": "^4.24.0",
+        "typedoc": "^0.26.5",
+        "typedoc-material-theme": "^1.1.0",
+        "typedoc-plugin-markdown": "^4.2.4",
+        "typedoc-plugin-missing-exports": "^3.0.0",
+        "types-package-json": "^2.0.39",
         "wtfnode": "^0.9.3"
     },
     "publishConfig": {

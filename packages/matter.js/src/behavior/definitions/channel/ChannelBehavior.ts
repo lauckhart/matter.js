@@ -20,7 +20,5 @@ export const ChannelBehavior = ClusterBehavior
     .withInterface<ChannelInterface>()
     .for(Channel.Cluster);
 
-type ChannelBehaviorType = InstanceType<typeof ChannelBehavior>;
-export interface ChannelBehavior extends ChannelBehaviorType {}
-type StateType = InstanceType<typeof ChannelBehavior.State>;
-export namespace ChannelBehavior { export interface State extends StateType {} }
+export interface ChannelBehavior extends InstanceType<typeof ChannelBehavior> {}
+export namespace ChannelBehavior { export interface State extends InstanceType<typeof ChannelBehavior.State> {} }

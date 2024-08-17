@@ -22,7 +22,7 @@ export const MicrowaveOvenControlBehavior = ClusterBehavior
     .withInterface<MicrowaveOvenControlInterface>()
     .for(ClusterType(MicrowaveOvenControl.Base));
 
-type MicrowaveOvenControlBehaviorType = InstanceType<typeof MicrowaveOvenControlBehavior>;
-export interface MicrowaveOvenControlBehavior extends MicrowaveOvenControlBehaviorType {}
-type StateType = InstanceType<typeof MicrowaveOvenControlBehavior.State>;
-export namespace MicrowaveOvenControlBehavior { export interface State extends StateType {} }
+export interface MicrowaveOvenControlBehavior extends InstanceType<typeof MicrowaveOvenControlBehavior> {}
+export namespace MicrowaveOvenControlBehavior {
+    export interface State extends InstanceType<typeof MicrowaveOvenControlBehavior.State> {}
+}

@@ -18,7 +18,7 @@ export const RvcOperationalStateBehavior = ClusterBehavior
     .withInterface<RvcOperationalStateInterface>()
     .for(RvcOperationalState.Cluster);
 
-type RvcOperationalStateBehaviorType = InstanceType<typeof RvcOperationalStateBehavior>;
-export interface RvcOperationalStateBehavior extends RvcOperationalStateBehaviorType {}
-type StateType = InstanceType<typeof RvcOperationalStateBehavior.State>;
-export namespace RvcOperationalStateBehavior { export interface State extends StateType {} }
+export interface RvcOperationalStateBehavior extends InstanceType<typeof RvcOperationalStateBehavior> {}
+export namespace RvcOperationalStateBehavior {
+    export interface State extends InstanceType<typeof RvcOperationalStateBehavior.State> {}
+}

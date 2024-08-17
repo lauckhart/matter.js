@@ -18,7 +18,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const PressureMeasurementBehavior = ClusterBehavior.for(PressureMeasurement.Cluster);
 
-type PressureMeasurementBehaviorType = InstanceType<typeof PressureMeasurementBehavior>;
-export interface PressureMeasurementBehavior extends PressureMeasurementBehaviorType {}
-type StateType = InstanceType<typeof PressureMeasurementBehavior.State>;
-export namespace PressureMeasurementBehavior { export interface State extends StateType {} }
+export interface PressureMeasurementBehavior extends InstanceType<typeof PressureMeasurementBehavior> {}
+export namespace PressureMeasurementBehavior {
+    export interface State extends InstanceType<typeof PressureMeasurementBehavior.State> {}
+}

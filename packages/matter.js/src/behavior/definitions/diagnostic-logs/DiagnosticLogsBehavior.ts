@@ -17,7 +17,7 @@ export const DiagnosticLogsBehavior = ClusterBehavior
     .withInterface<DiagnosticLogsInterface>()
     .for(DiagnosticLogs.Cluster);
 
-type DiagnosticLogsBehaviorType = InstanceType<typeof DiagnosticLogsBehavior>;
-export interface DiagnosticLogsBehavior extends DiagnosticLogsBehaviorType {}
-type StateType = InstanceType<typeof DiagnosticLogsBehavior.State>;
-export namespace DiagnosticLogsBehavior { export interface State extends StateType {} }
+export interface DiagnosticLogsBehavior extends InstanceType<typeof DiagnosticLogsBehavior> {}
+export namespace DiagnosticLogsBehavior {
+    export interface State extends InstanceType<typeof DiagnosticLogsBehavior.State> {}
+}

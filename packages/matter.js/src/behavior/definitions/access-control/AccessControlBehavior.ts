@@ -14,7 +14,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const AccessControlBehavior = ClusterBehavior.for(AccessControl.Cluster);
 
-type AccessControlBehaviorType = InstanceType<typeof AccessControlBehavior>;
-export interface AccessControlBehavior extends AccessControlBehaviorType {}
-type StateType = InstanceType<typeof AccessControlBehavior.State>;
-export namespace AccessControlBehavior { export interface State extends StateType {} }
+export interface AccessControlBehavior extends InstanceType<typeof AccessControlBehavior> {}
+export namespace AccessControlBehavior {
+    export interface State extends InstanceType<typeof AccessControlBehavior.State> {}
+}

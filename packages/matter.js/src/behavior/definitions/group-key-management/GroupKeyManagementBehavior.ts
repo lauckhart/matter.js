@@ -18,7 +18,7 @@ export const GroupKeyManagementBehavior = ClusterBehavior
     .withInterface<GroupKeyManagementInterface>()
     .for(GroupKeyManagement.Cluster);
 
-type GroupKeyManagementBehaviorType = InstanceType<typeof GroupKeyManagementBehavior>;
-export interface GroupKeyManagementBehavior extends GroupKeyManagementBehaviorType {}
-type StateType = InstanceType<typeof GroupKeyManagementBehavior.State>;
-export namespace GroupKeyManagementBehavior { export interface State extends StateType {} }
+export interface GroupKeyManagementBehavior extends InstanceType<typeof GroupKeyManagementBehavior> {}
+export namespace GroupKeyManagementBehavior {
+    export interface State extends InstanceType<typeof GroupKeyManagementBehavior.State> {}
+}

@@ -21,7 +21,7 @@ export const WindowCoveringBehavior = ClusterBehavior
     .withInterface<WindowCoveringInterface>()
     .for(ClusterType(WindowCovering.Base));
 
-type WindowCoveringBehaviorType = InstanceType<typeof WindowCoveringBehavior>;
-export interface WindowCoveringBehavior extends WindowCoveringBehaviorType {}
-type StateType = InstanceType<typeof WindowCoveringBehavior.State>;
-export namespace WindowCoveringBehavior { export interface State extends StateType {} }
+export interface WindowCoveringBehavior extends InstanceType<typeof WindowCoveringBehavior> {}
+export namespace WindowCoveringBehavior {
+    export interface State extends InstanceType<typeof WindowCoveringBehavior.State> {}
+}

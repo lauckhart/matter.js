@@ -21,7 +21,7 @@ export const BooleanStateConfigurationBehavior = ClusterBehavior
     .withInterface<BooleanStateConfigurationInterface>()
     .for(BooleanStateConfiguration.Cluster);
 
-type BooleanStateConfigurationBehaviorType = InstanceType<typeof BooleanStateConfigurationBehavior>;
-export interface BooleanStateConfigurationBehavior extends BooleanStateConfigurationBehaviorType {}
-type StateType = InstanceType<typeof BooleanStateConfigurationBehavior.State>;
-export namespace BooleanStateConfigurationBehavior { export interface State extends StateType {} }
+export interface BooleanStateConfigurationBehavior extends InstanceType<typeof BooleanStateConfigurationBehavior> {}
+export namespace BooleanStateConfigurationBehavior {
+    export interface State extends InstanceType<typeof BooleanStateConfigurationBehavior.State> {}
+}

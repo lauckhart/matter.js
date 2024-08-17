@@ -21,7 +21,7 @@ export const ThreadNetworkDiagnosticsBehavior = ClusterBehavior
     .withInterface<ThreadNetworkDiagnosticsInterface>()
     .for(ThreadNetworkDiagnostics.Cluster);
 
-type ThreadNetworkDiagnosticsBehaviorType = InstanceType<typeof ThreadNetworkDiagnosticsBehavior>;
-export interface ThreadNetworkDiagnosticsBehavior extends ThreadNetworkDiagnosticsBehaviorType {}
-type StateType = InstanceType<typeof ThreadNetworkDiagnosticsBehavior.State>;
-export namespace ThreadNetworkDiagnosticsBehavior { export interface State extends StateType {} }
+export interface ThreadNetworkDiagnosticsBehavior extends InstanceType<typeof ThreadNetworkDiagnosticsBehavior> {}
+export namespace ThreadNetworkDiagnosticsBehavior {
+    export interface State extends InstanceType<typeof ThreadNetworkDiagnosticsBehavior.State> {}
+}

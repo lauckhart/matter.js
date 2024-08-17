@@ -17,7 +17,5 @@ export const ActionsBehavior = ClusterBehavior
     .withInterface<ActionsInterface>()
     .for(Actions.Cluster);
 
-type ActionsBehaviorType = InstanceType<typeof ActionsBehavior>;
-export interface ActionsBehavior extends ActionsBehaviorType {}
-type StateType = InstanceType<typeof ActionsBehavior.State>;
-export namespace ActionsBehavior { export interface State extends StateType {} }
+export interface ActionsBehavior extends InstanceType<typeof ActionsBehavior> {}
+export namespace ActionsBehavior { export interface State extends InstanceType<typeof ActionsBehavior.State> {} }

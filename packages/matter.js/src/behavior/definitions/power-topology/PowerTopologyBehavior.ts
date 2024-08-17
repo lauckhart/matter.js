@@ -18,7 +18,7 @@ import { ClusterType } from "../../../cluster/ClusterType.js";
  */
 export const PowerTopologyBehavior = ClusterBehavior.for(ClusterType(PowerTopology.Base));
 
-type PowerTopologyBehaviorType = InstanceType<typeof PowerTopologyBehavior>;
-export interface PowerTopologyBehavior extends PowerTopologyBehaviorType {}
-type StateType = InstanceType<typeof PowerTopologyBehavior.State>;
-export namespace PowerTopologyBehavior { export interface State extends StateType {} }
+export interface PowerTopologyBehavior extends InstanceType<typeof PowerTopologyBehavior> {}
+export namespace PowerTopologyBehavior {
+    export interface State extends InstanceType<typeof PowerTopologyBehavior.State> {}
+}

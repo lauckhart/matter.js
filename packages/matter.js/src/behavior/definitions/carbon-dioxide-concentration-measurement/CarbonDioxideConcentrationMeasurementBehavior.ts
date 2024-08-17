@@ -22,7 +22,7 @@ import { ClusterType } from "../../../cluster/ClusterType.js";
 export const CarbonDioxideConcentrationMeasurementBehavior = ClusterBehavior
     .for(ClusterType(CarbonDioxideConcentrationMeasurement.Base));
 
-type CarbonDioxideConcentrationMeasurementBehaviorType = InstanceType<typeof CarbonDioxideConcentrationMeasurementBehavior>;
-export interface CarbonDioxideConcentrationMeasurementBehavior extends CarbonDioxideConcentrationMeasurementBehaviorType {}
-type StateType = InstanceType<typeof CarbonDioxideConcentrationMeasurementBehavior.State>;
-export namespace CarbonDioxideConcentrationMeasurementBehavior { export interface State extends StateType {} }
+export interface CarbonDioxideConcentrationMeasurementBehavior extends InstanceType<typeof CarbonDioxideConcentrationMeasurementBehavior> {}
+export namespace CarbonDioxideConcentrationMeasurementBehavior {
+    export interface State extends InstanceType<typeof CarbonDioxideConcentrationMeasurementBehavior.State> {}
+}

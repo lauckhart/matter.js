@@ -11,5 +11,6 @@ export * from "./DeviceTypes.js";
 export * from "./DimmableDevices.js";
 export * from "./Endpoint.js";
 export * from "./EndpointStructureLogger.js";
+export type * from "./LegacyInteractionServer.js";
 export * from "./OnOffDevices.js";
 export * from "./PairedNode.js";

@@ -6,6 +6,7 @@
 
 // Export Protocol types
 // Export Interaction Classes
+export type * from "./AccessControlManager.js";
 export * from "./AttributeDataDecoder.js";
 export * from "./AttributeDataEncoder.js";
 export * from "./EventDataDecoder.js";
@@ -17,3 +18,4 @@ export * from "./InteractionProtocol.js";
 export * from "./InteractionServer.js";
 export * from "./StatusCode.js";
 export * from "./SubscriptionHandler.js";
+export * from "./SubscriptionOptions.js";

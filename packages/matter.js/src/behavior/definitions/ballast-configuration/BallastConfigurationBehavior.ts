@@ -15,7 +15,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const BallastConfigurationBehavior = ClusterBehavior.for(BallastConfiguration.Cluster);
 
-type BallastConfigurationBehaviorType = InstanceType<typeof BallastConfigurationBehavior>;
-export interface BallastConfigurationBehavior extends BallastConfigurationBehaviorType {}
-type StateType = InstanceType<typeof BallastConfigurationBehavior.State>;
-export namespace BallastConfigurationBehavior { export interface State extends StateType {} }
+export interface BallastConfigurationBehavior extends InstanceType<typeof BallastConfigurationBehavior> {}
+export namespace BallastConfigurationBehavior {
+    export interface State extends InstanceType<typeof BallastConfigurationBehavior.State> {}
+}

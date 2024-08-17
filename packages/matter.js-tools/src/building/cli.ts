@@ -6,7 +6,9 @@
 
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+import { Package } from "../util/package.js";
 import { Builder, Target } from "./builder.js";
+import { mergeDocs } from "./docs.js";
 import { Graph } from "./graph.js";
 import { Project } from "./project.js";
 
@@ -14,7 +16,9 @@ enum Mode {
     BuildProject,
     BuildProjectWithDependencies,
     BuildWorkspace,
+    BuildDocs,
     DisplayGraph,
+    NoBuild,
 }
 
 export async function main(argv = process.argv) {
@@ -27,11 +31,13 @@ export async function main(argv = process.argv) {
         .option("clean", { alias: "c", default: false, type: "boolean", describe: "clean before build" })
         .option("workspaces", { alias: "w", default: false, type: "boolean", describe: "build all workspace packages" })
         .option("dependencies", { alias: "d", default: false, type: "boolean", describe: "build dependencies" })
+        .option("merge-docs", { default: false, type: "boolean", describe: "build workspace docs" })
         .command("*", "build types and both JS files", () => {})
         .command("clean", "remove build and dist directories", () => targets.push(Target.clean))
         .command("types", "build type definitions", () => targets.push(Target.types))
         .command("esm", "build JS (ES6 modules)", () => targets.push(Target.esm))
         .command("cjs", "build JS (CommonJS modules)", () => targets.push(Target.cjs))
+        .command("docs", "build package documentation", () => targets.push(Target.docs))
         .command("graph", "display the workspace graph", () => (mode = Mode.DisplayGraph))
         .wrap(Math.min(process.stdout.columns, 80))
         .strict().argv;
@@ -39,6 +45,8 @@ export async function main(argv = process.argv) {
     if (mode === Mode.BuildProject) {
         if (args.workspaces) {
             mode = Mode.BuildWorkspace;
+        } else if (args.mergeDocs && !targets.length) {
+            mode = Mode.NoBuild;
         } else if (args.dependencies) {
             mode = Mode.BuildProjectWithDependencies;
         }
@@ -69,5 +77,9 @@ export async function main(argv = process.argv) {
         case Mode.DisplayGraph:
             (await Graph.load()).display();
             break;
+    }
+
+    if (args.mergeDocs) {
+        await mergeDocs(Package.workspace);
     }
 }

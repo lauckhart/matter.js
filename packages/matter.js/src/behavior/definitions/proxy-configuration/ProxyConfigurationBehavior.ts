@@ -15,7 +15,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const ProxyConfigurationBehavior = ClusterBehavior.for(ProxyConfiguration.Cluster);
 
-type ProxyConfigurationBehaviorType = InstanceType<typeof ProxyConfigurationBehavior>;
-export interface ProxyConfigurationBehavior extends ProxyConfigurationBehaviorType {}
-type StateType = InstanceType<typeof ProxyConfigurationBehavior.State>;
-export namespace ProxyConfigurationBehavior { export interface State extends StateType {} }
+export interface ProxyConfigurationBehavior extends InstanceType<typeof ProxyConfigurationBehavior> {}
+export namespace ProxyConfigurationBehavior {
+    export interface State extends InstanceType<typeof ProxyConfigurationBehavior.State> {}
+}

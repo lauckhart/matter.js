@@ -21,7 +21,7 @@ export const GeneralDiagnosticsBehavior = ClusterBehavior
     .withInterface<GeneralDiagnosticsInterface>()
     .for(GeneralDiagnostics.Cluster);
 
-type GeneralDiagnosticsBehaviorType = InstanceType<typeof GeneralDiagnosticsBehavior>;
-export interface GeneralDiagnosticsBehavior extends GeneralDiagnosticsBehaviorType {}
-type StateType = InstanceType<typeof GeneralDiagnosticsBehavior.State>;
-export namespace GeneralDiagnosticsBehavior { export interface State extends StateType {} }
+export interface GeneralDiagnosticsBehavior extends InstanceType<typeof GeneralDiagnosticsBehavior> {}
+export namespace GeneralDiagnosticsBehavior {
+    export interface State extends InstanceType<typeof GeneralDiagnosticsBehavior.State> {}
+}

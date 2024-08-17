@@ -4,6 +4,12 @@
         // Participate in workspace
         "composite": true,
 
+        // Skip analysis of declaration files
+        "skipLibCheck": true,
+
+        // Disable features that would make esbuild transpilation unreliable
+        "isolatedModules": true,
+
         // Add compatibility with CommonJS modules
         "esModuleInterop": true,
 

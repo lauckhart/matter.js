@@ -22,7 +22,7 @@ export const NetworkCommissioningBehavior = ClusterBehavior
     .withInterface<NetworkCommissioningInterface>()
     .for(ClusterType(NetworkCommissioning.Base));
 
-type NetworkCommissioningBehaviorType = InstanceType<typeof NetworkCommissioningBehavior>;
-export interface NetworkCommissioningBehavior extends NetworkCommissioningBehaviorType {}
-type StateType = InstanceType<typeof NetworkCommissioningBehavior.State>;
-export namespace NetworkCommissioningBehavior { export interface State extends StateType {} }
+export interface NetworkCommissioningBehavior extends InstanceType<typeof NetworkCommissioningBehavior> {}
+export namespace NetworkCommissioningBehavior {
+    export interface State extends InstanceType<typeof NetworkCommissioningBehavior.State> {}
+}

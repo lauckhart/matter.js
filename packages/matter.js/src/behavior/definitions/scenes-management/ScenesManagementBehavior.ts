@@ -18,7 +18,7 @@ export const ScenesManagementBehavior = ClusterBehavior
     .withInterface<ScenesManagementInterface>()
     .for(ScenesManagement.Cluster);
 
-type ScenesManagementBehaviorType = InstanceType<typeof ScenesManagementBehavior>;
-export interface ScenesManagementBehavior extends ScenesManagementBehaviorType {}
-type StateType = InstanceType<typeof ScenesManagementBehavior.State>;
-export namespace ScenesManagementBehavior { export interface State extends StateType {} }
+export interface ScenesManagementBehavior extends InstanceType<typeof ScenesManagementBehavior> {}
+export namespace ScenesManagementBehavior {
+    export interface State extends InstanceType<typeof ScenesManagementBehavior.State> {}
+}

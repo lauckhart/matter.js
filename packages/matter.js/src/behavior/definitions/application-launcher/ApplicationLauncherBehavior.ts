@@ -21,7 +21,7 @@ export const ApplicationLauncherBehavior = ClusterBehavior
     .withInterface<ApplicationLauncherInterface>()
     .for(ApplicationLauncher.Cluster);
 
-type ApplicationLauncherBehaviorType = InstanceType<typeof ApplicationLauncherBehavior>;
-export interface ApplicationLauncherBehavior extends ApplicationLauncherBehaviorType {}
-type StateType = InstanceType<typeof ApplicationLauncherBehavior.State>;
-export namespace ApplicationLauncherBehavior { export interface State extends StateType {} }
+export interface ApplicationLauncherBehavior extends InstanceType<typeof ApplicationLauncherBehavior> {}
+export namespace ApplicationLauncherBehavior {
+    export interface State extends InstanceType<typeof ApplicationLauncherBehavior.State> {}
+}

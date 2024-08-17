@@ -17,7 +17,5 @@ export const LowPowerBehavior = ClusterBehavior
     .withInterface<LowPowerInterface>()
     .for(LowPower.Cluster);
 
-type LowPowerBehaviorType = InstanceType<typeof LowPowerBehavior>;
-export interface LowPowerBehavior extends LowPowerBehaviorType {}
-type StateType = InstanceType<typeof LowPowerBehavior.State>;
-export namespace LowPowerBehavior { export interface State extends StateType {} }
+export interface LowPowerBehavior extends InstanceType<typeof LowPowerBehavior> {}
+export namespace LowPowerBehavior { export interface State extends InstanceType<typeof LowPowerBehavior.State> {} }

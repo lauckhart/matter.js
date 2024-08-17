@@ -17,7 +17,5 @@ export const AccountLoginBehavior = ClusterBehavior
     .withInterface<AccountLoginInterface>()
     .for(AccountLogin.Cluster);
 
-type AccountLoginBehaviorType = InstanceType<typeof AccountLoginBehavior>;
-export interface AccountLoginBehavior extends AccountLoginBehaviorType {}
-type StateType = InstanceType<typeof AccountLoginBehavior.State>;
-export namespace AccountLoginBehavior { export interface State extends StateType {} }
+export interface AccountLoginBehavior extends InstanceType<typeof AccountLoginBehavior> {}
+export namespace AccountLoginBehavior { export interface State extends InstanceType<typeof AccountLoginBehavior.State> {} }

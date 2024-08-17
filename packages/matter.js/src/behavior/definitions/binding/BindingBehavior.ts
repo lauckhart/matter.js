@@ -14,7 +14,5 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const BindingBehavior = ClusterBehavior.for(Binding.Cluster);
 
-type BindingBehaviorType = InstanceType<typeof BindingBehavior>;
-export interface BindingBehavior extends BindingBehaviorType {}
-type StateType = InstanceType<typeof BindingBehavior.State>;
-export namespace BindingBehavior { export interface State extends StateType {} }
+export interface BindingBehavior extends InstanceType<typeof BindingBehavior> {}
+export namespace BindingBehavior { export interface State extends InstanceType<typeof BindingBehavior.State> {} }

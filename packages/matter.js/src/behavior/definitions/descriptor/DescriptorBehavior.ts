@@ -17,7 +17,5 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const DescriptorBehavior = ClusterBehavior.for(Descriptor.Cluster);
 
-type DescriptorBehaviorType = InstanceType<typeof DescriptorBehavior>;
-export interface DescriptorBehavior extends DescriptorBehaviorType {}
-type StateType = InstanceType<typeof DescriptorBehavior.State>;
-export namespace DescriptorBehavior { export interface State extends StateType {} }
+export interface DescriptorBehavior extends InstanceType<typeof DescriptorBehavior> {}
+export namespace DescriptorBehavior { export interface State extends InstanceType<typeof DescriptorBehavior.State> {} }

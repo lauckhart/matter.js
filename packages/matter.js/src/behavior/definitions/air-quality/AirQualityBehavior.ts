@@ -14,7 +14,5 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const AirQualityBehavior = ClusterBehavior.for(AirQuality.Cluster);
 
-type AirQualityBehaviorType = InstanceType<typeof AirQualityBehavior>;
-export interface AirQualityBehavior extends AirQualityBehaviorType {}
-type StateType = InstanceType<typeof AirQualityBehavior.State>;
-export namespace AirQualityBehavior { export interface State extends StateType {} }
+export interface AirQualityBehavior extends InstanceType<typeof AirQualityBehavior> {}
+export namespace AirQualityBehavior { export interface State extends InstanceType<typeof AirQualityBehavior.State> {} }

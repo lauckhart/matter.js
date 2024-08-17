@@ -17,7 +17,5 @@ export const KeypadInputBehavior = ClusterBehavior
     .withInterface<KeypadInputInterface>()
     .for(KeypadInput.Cluster);
 
-type KeypadInputBehaviorType = InstanceType<typeof KeypadInputBehavior>;
-export interface KeypadInputBehavior extends KeypadInputBehaviorType {}
-type StateType = InstanceType<typeof KeypadInputBehavior.State>;
-export namespace KeypadInputBehavior { export interface State extends StateType {} }
+export interface KeypadInputBehavior extends InstanceType<typeof KeypadInputBehavior> {}
+export namespace KeypadInputBehavior { export interface State extends InstanceType<typeof KeypadInputBehavior.State> {} }

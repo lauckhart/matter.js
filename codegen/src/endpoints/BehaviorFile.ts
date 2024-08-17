@@ -73,15 +73,15 @@ export class BehaviorFile extends TsFile {
             extraDocs,
         );
 
-        // Behavior is a generated class so we need to define a matching
-        // interface for it to act like a real class in TypeScript
-        this.atom(`type ${this.cluster.name}BehaviorType = InstanceType<typeof ${this.cluster.name}Behavior>`);
+        // Behavior is a generated class so we need to define a matching interface for it to act like a real class in
+        // TypeScript
         this.undefine(`${this.cluster.name}Behavior`);
-        this.atom(`export interface ${this.cluster.name}Behavior extends ${this.cluster.name}BehaviorType {}`);
+        this.atom(
+            `export interface ${this.cluster.name}Behavior extends InstanceType<typeof ${this.cluster.name}Behavior> {}`,
+        );
 
         // We also need to generate an interface for State
-        this.atom(`type StateType = InstanceType<typeof ${this.cluster.name}Behavior.State>`);
         const ns = this.expressions(`export namespace ${this.cluster.name}Behavior {`, "}");
-        ns.atom("export interface State extends StateType {}");
+        ns.atom(`export interface State extends InstanceType<typeof ${this.cluster.name}Behavior.State> {}`);
     }
 }

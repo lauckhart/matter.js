@@ -5,6 +5,7 @@
  */
 
 export * from "./AttributeModel.js";
+export * from "./Children.js";
 export * from "./ClusterModel.js";
 export * from "./CommandModel.js";
 export * from "./DatatypeModel.js";

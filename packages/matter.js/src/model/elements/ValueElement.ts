@@ -13,13 +13,6 @@ import { BaseElement } from "./BaseElement.js";
  * A base element for all elements that represent data values.
  */
 export type ValueElement = BaseElement & {
-    /**
-     * Derived datatypes as defined by the Matter Specification must specify the name of the base type.  This is every
-     * type that is not global.
-     *
-     * Elements may use the shortcut "list[EntryType]" to designate an element as type "list" with a single child that
-     * is the entry type.
-     */
     type?: string;
 
     /**
@@ -52,10 +45,6 @@ export type ValueElement = BaseElement & {
      */
     default?: FieldValue;
 
-    /**
-     * Nested structures that may have data elements include enums, structs and
-     * lists.
-     */
     children?: AnyValueElement[];
 };
 

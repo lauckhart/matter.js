@@ -14,7 +14,5 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const RvcCleanModeBehavior = ClusterBehavior.for(RvcCleanMode.Cluster);
 
-type RvcCleanModeBehaviorType = InstanceType<typeof RvcCleanModeBehavior>;
-export interface RvcCleanModeBehavior extends RvcCleanModeBehaviorType {}
-type StateType = InstanceType<typeof RvcCleanModeBehavior.State>;
-export namespace RvcCleanModeBehavior { export interface State extends StateType {} }
+export interface RvcCleanModeBehavior extends InstanceType<typeof RvcCleanModeBehavior> {}
+export namespace RvcCleanModeBehavior { export interface State extends InstanceType<typeof RvcCleanModeBehavior.State> {} }

@@ -15,7 +15,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const PowerSourceConfigurationBehavior = ClusterBehavior.for(PowerSourceConfiguration.Cluster);
 
-type PowerSourceConfigurationBehaviorType = InstanceType<typeof PowerSourceConfigurationBehavior>;
-export interface PowerSourceConfigurationBehavior extends PowerSourceConfigurationBehaviorType {}
-type StateType = InstanceType<typeof PowerSourceConfigurationBehavior.State>;
-export namespace PowerSourceConfigurationBehavior { export interface State extends StateType {} }
+export interface PowerSourceConfigurationBehavior extends InstanceType<typeof PowerSourceConfigurationBehavior> {}
+export namespace PowerSourceConfigurationBehavior {
+    export interface State extends InstanceType<typeof PowerSourceConfigurationBehavior.State> {}
+}

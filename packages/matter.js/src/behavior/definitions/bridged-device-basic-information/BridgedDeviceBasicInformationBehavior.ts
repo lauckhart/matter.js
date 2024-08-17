@@ -15,7 +15,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const BridgedDeviceBasicInformationBehavior = ClusterBehavior.for(BridgedDeviceBasicInformation.Cluster);
 
-type BridgedDeviceBasicInformationBehaviorType = InstanceType<typeof BridgedDeviceBasicInformationBehavior>;
-export interface BridgedDeviceBasicInformationBehavior extends BridgedDeviceBasicInformationBehaviorType {}
-type StateType = InstanceType<typeof BridgedDeviceBasicInformationBehavior.State>;
-export namespace BridgedDeviceBasicInformationBehavior { export interface State extends StateType {} }
+export interface BridgedDeviceBasicInformationBehavior extends InstanceType<typeof BridgedDeviceBasicInformationBehavior> {}
+export namespace BridgedDeviceBasicInformationBehavior {
+    export interface State extends InstanceType<typeof BridgedDeviceBasicInformationBehavior.State> {}
+}

@@ -17,7 +17,7 @@ export const ProxyDiscoveryBehavior = ClusterBehavior
     .withInterface<ProxyDiscoveryInterface>()
     .for(ProxyDiscovery.Cluster);
 
-type ProxyDiscoveryBehaviorType = InstanceType<typeof ProxyDiscoveryBehavior>;
-export interface ProxyDiscoveryBehavior extends ProxyDiscoveryBehaviorType {}
-type StateType = InstanceType<typeof ProxyDiscoveryBehavior.State>;
-export namespace ProxyDiscoveryBehavior { export interface State extends StateType {} }
+export interface ProxyDiscoveryBehavior extends InstanceType<typeof ProxyDiscoveryBehavior> {}
+export namespace ProxyDiscoveryBehavior {
+    export interface State extends InstanceType<typeof ProxyDiscoveryBehavior.State> {}
+}

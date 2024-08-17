@@ -20,7 +20,5 @@ export const LevelControlBehavior = ClusterBehavior
     .withInterface<LevelControlInterface>()
     .for(LevelControl.Cluster);
 
-type LevelControlBehaviorType = InstanceType<typeof LevelControlBehavior>;
-export interface LevelControlBehavior extends LevelControlBehaviorType {}
-type StateType = InstanceType<typeof LevelControlBehavior.State>;
-export namespace LevelControlBehavior { export interface State extends StateType {} }
+export interface LevelControlBehavior extends InstanceType<typeof LevelControlBehavior> {}
+export namespace LevelControlBehavior { export interface State extends InstanceType<typeof LevelControlBehavior.State> {} }

@@ -20,7 +20,7 @@ export const ContentControlBehavior = ClusterBehavior
     .withInterface<ContentControlInterface>()
     .for(ContentControl.Cluster);
 
-type ContentControlBehaviorType = InstanceType<typeof ContentControlBehavior>;
-export interface ContentControlBehavior extends ContentControlBehaviorType {}
-type StateType = InstanceType<typeof ContentControlBehavior.State>;
-export namespace ContentControlBehavior { export interface State extends StateType {} }
+export interface ContentControlBehavior extends InstanceType<typeof ContentControlBehavior> {}
+export namespace ContentControlBehavior {
+    export interface State extends InstanceType<typeof ContentControlBehavior.State> {}
+}

@@ -15,7 +15,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const OccupancySensingBehavior = ClusterBehavior.for(OccupancySensing.Cluster);
 
-type OccupancySensingBehaviorType = InstanceType<typeof OccupancySensingBehavior>;
-export interface OccupancySensingBehavior extends OccupancySensingBehaviorType {}
-type StateType = InstanceType<typeof OccupancySensingBehavior.State>;
-export namespace OccupancySensingBehavior { export interface State extends StateType {} }
+export interface OccupancySensingBehavior extends InstanceType<typeof OccupancySensingBehavior> {}
+export namespace OccupancySensingBehavior {
+    export interface State extends InstanceType<typeof OccupancySensingBehavior.State> {}
+}

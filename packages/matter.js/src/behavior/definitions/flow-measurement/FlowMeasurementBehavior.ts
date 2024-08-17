@@ -14,7 +14,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const FlowMeasurementBehavior = ClusterBehavior.for(FlowMeasurement.Cluster);
 
-type FlowMeasurementBehaviorType = InstanceType<typeof FlowMeasurementBehavior>;
-export interface FlowMeasurementBehavior extends FlowMeasurementBehaviorType {}
-type StateType = InstanceType<typeof FlowMeasurementBehavior.State>;
-export namespace FlowMeasurementBehavior { export interface State extends StateType {} }
+export interface FlowMeasurementBehavior extends InstanceType<typeof FlowMeasurementBehavior> {}
+export namespace FlowMeasurementBehavior {
+    export interface State extends InstanceType<typeof FlowMeasurementBehavior.State> {}
+}

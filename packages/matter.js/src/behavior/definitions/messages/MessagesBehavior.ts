@@ -17,7 +17,5 @@ export const MessagesBehavior = ClusterBehavior
     .withInterface<MessagesInterface>()
     .for(Messages.Cluster);
 
-type MessagesBehaviorType = InstanceType<typeof MessagesBehavior>;
-export interface MessagesBehavior extends MessagesBehaviorType {}
-type StateType = InstanceType<typeof MessagesBehavior.State>;
-export namespace MessagesBehavior { export interface State extends StateType {} }
+export interface MessagesBehavior extends InstanceType<typeof MessagesBehavior> {}
+export namespace MessagesBehavior { export interface State extends InstanceType<typeof MessagesBehavior.State> {} }

@@ -17,7 +17,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const DishwasherAlarmBehavior = ClusterBehavior.for(DishwasherAlarm.Cluster);
 
-type DishwasherAlarmBehaviorType = InstanceType<typeof DishwasherAlarmBehavior>;
-export interface DishwasherAlarmBehavior extends DishwasherAlarmBehaviorType {}
-type StateType = InstanceType<typeof DishwasherAlarmBehavior.State>;
-export namespace DishwasherAlarmBehavior { export interface State extends StateType {} }
+export interface DishwasherAlarmBehavior extends InstanceType<typeof DishwasherAlarmBehavior> {}
+export namespace DishwasherAlarmBehavior {
+    export interface State extends InstanceType<typeof DishwasherAlarmBehavior.State> {}
+}

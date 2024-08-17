@@ -18,7 +18,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
 export const ThermostatUserInterfaceConfigurationBehavior = ClusterBehavior
     .for(ThermostatUserInterfaceConfiguration.Cluster);
 
-type ThermostatUserInterfaceConfigurationBehaviorType = InstanceType<typeof ThermostatUserInterfaceConfigurationBehavior>;
-export interface ThermostatUserInterfaceConfigurationBehavior extends ThermostatUserInterfaceConfigurationBehaviorType {}
-type StateType = InstanceType<typeof ThermostatUserInterfaceConfigurationBehavior.State>;
-export namespace ThermostatUserInterfaceConfigurationBehavior { export interface State extends StateType {} }
+export interface ThermostatUserInterfaceConfigurationBehavior extends InstanceType<typeof ThermostatUserInterfaceConfigurationBehavior> {}
+export namespace ThermostatUserInterfaceConfigurationBehavior {
+    export interface State extends InstanceType<typeof ThermostatUserInterfaceConfigurationBehavior.State> {}
+}

@@ -17,7 +17,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const EnergyEvseModeBehavior = ClusterBehavior.for(EnergyEvseMode.Cluster);
 
-type EnergyEvseModeBehaviorType = InstanceType<typeof EnergyEvseModeBehavior>;
-export interface EnergyEvseModeBehavior extends EnergyEvseModeBehaviorType {}
-type StateType = InstanceType<typeof EnergyEvseModeBehavior.State>;
-export namespace EnergyEvseModeBehavior { export interface State extends StateType {} }
+export interface EnergyEvseModeBehavior extends InstanceType<typeof EnergyEvseModeBehavior> {}
+export namespace EnergyEvseModeBehavior {
+    export interface State extends InstanceType<typeof EnergyEvseModeBehavior.State> {}
+}

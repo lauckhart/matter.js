@@ -347,12 +347,12 @@ export namespace Behavior {
     export type StateOf<B extends Type> = InstanceType<B["State"]>;
 
     /**
-     * Input variant of StateOf.
+     * Input variant of {@link StateOf}.
      */
     export type InputStateOf<B extends Type> = Partial<ClusterType.RelaxTypes<StateOf<B>>>;
 
     /**
-     * Patch variant of StateOf.
+     * Patch variant of {@link StateOf}.
      */
     export type PatchStateOf<B extends Type> = ClusterType.PatchType<StateOf<B>>;
 

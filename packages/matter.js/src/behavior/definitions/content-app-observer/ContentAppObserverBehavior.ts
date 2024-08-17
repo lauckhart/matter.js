@@ -18,7 +18,7 @@ export const ContentAppObserverBehavior = ClusterBehavior
     .withInterface<ContentAppObserverInterface>()
     .for(ContentAppObserver.Cluster);
 
-type ContentAppObserverBehaviorType = InstanceType<typeof ContentAppObserverBehavior>;
-export interface ContentAppObserverBehavior extends ContentAppObserverBehaviorType {}
-type StateType = InstanceType<typeof ContentAppObserverBehavior.State>;
-export namespace ContentAppObserverBehavior { export interface State extends StateType {} }
+export interface ContentAppObserverBehavior extends InstanceType<typeof ContentAppObserverBehavior> {}
+export namespace ContentAppObserverBehavior {
+    export interface State extends InstanceType<typeof ContentAppObserverBehavior.State> {}
+}

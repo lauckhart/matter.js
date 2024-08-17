@@ -21,7 +21,7 @@ export const EthernetNetworkDiagnosticsBehavior = ClusterBehavior
     .withInterface<EthernetNetworkDiagnosticsInterface>()
     .for(EthernetNetworkDiagnostics.Cluster);
 
-type EthernetNetworkDiagnosticsBehaviorType = InstanceType<typeof EthernetNetworkDiagnosticsBehavior>;
-export interface EthernetNetworkDiagnosticsBehavior extends EthernetNetworkDiagnosticsBehaviorType {}
-type StateType = InstanceType<typeof EthernetNetworkDiagnosticsBehavior.State>;
-export namespace EthernetNetworkDiagnosticsBehavior { export interface State extends StateType {} }
+export interface EthernetNetworkDiagnosticsBehavior extends InstanceType<typeof EthernetNetworkDiagnosticsBehavior> {}
+export namespace EthernetNetworkDiagnosticsBehavior {
+    export interface State extends InstanceType<typeof EthernetNetworkDiagnosticsBehavior.State> {}
+}

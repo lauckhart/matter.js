@@ -18,7 +18,7 @@ export const OperationalStateBehavior = ClusterBehavior
     .withInterface<OperationalStateInterface>()
     .for(OperationalState.Cluster);
 
-type OperationalStateBehaviorType = InstanceType<typeof OperationalStateBehavior>;
-export interface OperationalStateBehavior extends OperationalStateBehaviorType {}
-type StateType = InstanceType<typeof OperationalStateBehavior.State>;
-export namespace OperationalStateBehavior { export interface State extends StateType {} }
+export interface OperationalStateBehavior extends InstanceType<typeof OperationalStateBehavior> {}
+export namespace OperationalStateBehavior {
+    export interface State extends InstanceType<typeof OperationalStateBehavior.State> {}
+}

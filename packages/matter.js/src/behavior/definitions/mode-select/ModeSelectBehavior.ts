@@ -20,7 +20,5 @@ export const ModeSelectBehavior = ClusterBehavior
     .withInterface<ModeSelectInterface>()
     .for(ModeSelect.Cluster);
 
-type ModeSelectBehaviorType = InstanceType<typeof ModeSelectBehavior>;
-export interface ModeSelectBehavior extends ModeSelectBehaviorType {}
-type StateType = InstanceType<typeof ModeSelectBehavior.State>;
-export namespace ModeSelectBehavior { export interface State extends StateType {} }
+export interface ModeSelectBehavior extends InstanceType<typeof ModeSelectBehavior> {}
+export namespace ModeSelectBehavior { export interface State extends InstanceType<typeof ModeSelectBehavior.State> {} }

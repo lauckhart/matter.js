@@ -20,7 +20,5 @@ export const DoorLockBehavior = ClusterBehavior
     .withInterface<DoorLockInterface>()
     .for(DoorLock.Cluster);
 
-type DoorLockBehaviorType = InstanceType<typeof DoorLockBehavior>;
-export interface DoorLockBehavior extends DoorLockBehaviorType {}
-type StateType = InstanceType<typeof DoorLockBehavior.State>;
-export namespace DoorLockBehavior { export interface State extends StateType {} }
+export interface DoorLockBehavior extends InstanceType<typeof DoorLockBehavior> {}
+export namespace DoorLockBehavior { export interface State extends InstanceType<typeof DoorLockBehavior.State> {} }

@@ -18,7 +18,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const TimeFormatLocalizationBehavior = ClusterBehavior.for(TimeFormatLocalization.Cluster);
 
-type TimeFormatLocalizationBehaviorType = InstanceType<typeof TimeFormatLocalizationBehavior>;
-export interface TimeFormatLocalizationBehavior extends TimeFormatLocalizationBehaviorType {}
-type StateType = InstanceType<typeof TimeFormatLocalizationBehavior.State>;
-export namespace TimeFormatLocalizationBehavior { export interface State extends StateType {} }
+export interface TimeFormatLocalizationBehavior extends InstanceType<typeof TimeFormatLocalizationBehavior> {}
+export namespace TimeFormatLocalizationBehavior {
+    export interface State extends InstanceType<typeof TimeFormatLocalizationBehavior.State> {}
+}

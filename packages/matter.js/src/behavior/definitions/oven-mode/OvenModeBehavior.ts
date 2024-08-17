@@ -17,7 +17,5 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const OvenModeBehavior = ClusterBehavior.for(OvenMode.Cluster);
 
-type OvenModeBehaviorType = InstanceType<typeof OvenModeBehavior>;
-export interface OvenModeBehavior extends OvenModeBehaviorType {}
-type StateType = InstanceType<typeof OvenModeBehavior.State>;
-export namespace OvenModeBehavior { export interface State extends StateType {} }
+export interface OvenModeBehavior extends InstanceType<typeof OvenModeBehavior> {}
+export namespace OvenModeBehavior { export interface State extends InstanceType<typeof OvenModeBehavior.State> {} }

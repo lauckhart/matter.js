@@ -21,7 +21,7 @@ export const ActivatedCarbonFilterMonitoringBehavior = ClusterBehavior
     .withInterface<ResourceMonitoringInterface>()
     .for(ActivatedCarbonFilterMonitoring.Cluster);
 
-type ActivatedCarbonFilterMonitoringBehaviorType = InstanceType<typeof ActivatedCarbonFilterMonitoringBehavior>;
-export interface ActivatedCarbonFilterMonitoringBehavior extends ActivatedCarbonFilterMonitoringBehaviorType {}
-type StateType = InstanceType<typeof ActivatedCarbonFilterMonitoringBehavior.State>;
-export namespace ActivatedCarbonFilterMonitoringBehavior { export interface State extends StateType {} }
+export interface ActivatedCarbonFilterMonitoringBehavior extends InstanceType<typeof ActivatedCarbonFilterMonitoringBehavior> {}
+export namespace ActivatedCarbonFilterMonitoringBehavior {
+    export interface State extends InstanceType<typeof ActivatedCarbonFilterMonitoringBehavior.State> {}
+}

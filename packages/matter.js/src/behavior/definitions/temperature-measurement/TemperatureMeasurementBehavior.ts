@@ -15,7 +15,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const TemperatureMeasurementBehavior = ClusterBehavior.for(TemperatureMeasurement.Cluster);
 
-type TemperatureMeasurementBehaviorType = InstanceType<typeof TemperatureMeasurementBehavior>;
-export interface TemperatureMeasurementBehavior extends TemperatureMeasurementBehaviorType {}
-type StateType = InstanceType<typeof TemperatureMeasurementBehavior.State>;
-export namespace TemperatureMeasurementBehavior { export interface State extends StateType {} }
+export interface TemperatureMeasurementBehavior extends InstanceType<typeof TemperatureMeasurementBehavior> {}
+export namespace TemperatureMeasurementBehavior {
+    export interface State extends InstanceType<typeof TemperatureMeasurementBehavior.State> {}
+}

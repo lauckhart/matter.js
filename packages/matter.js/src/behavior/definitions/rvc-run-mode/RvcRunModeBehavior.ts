@@ -14,7 +14,5 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const RvcRunModeBehavior = ClusterBehavior.for(RvcRunMode.Cluster);
 
-type RvcRunModeBehaviorType = InstanceType<typeof RvcRunModeBehavior>;
-export interface RvcRunModeBehavior extends RvcRunModeBehaviorType {}
-type StateType = InstanceType<typeof RvcRunModeBehavior.State>;
-export namespace RvcRunModeBehavior { export interface State extends StateType {} }
+export interface RvcRunModeBehavior extends InstanceType<typeof RvcRunModeBehavior> {}
+export namespace RvcRunModeBehavior { export interface State extends InstanceType<typeof RvcRunModeBehavior.State> {} }

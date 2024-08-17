@@ -14,7 +14,5 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const FixedLabelBehavior = ClusterBehavior.for(FixedLabel.Cluster);
 
-type FixedLabelBehaviorType = InstanceType<typeof FixedLabelBehavior>;
-export interface FixedLabelBehavior extends FixedLabelBehaviorType {}
-type StateType = InstanceType<typeof FixedLabelBehavior.State>;
-export namespace FixedLabelBehavior { export interface State extends StateType {} }
+export interface FixedLabelBehavior extends InstanceType<typeof FixedLabelBehavior> {}
+export namespace FixedLabelBehavior { export interface State extends InstanceType<typeof FixedLabelBehavior.State> {} }

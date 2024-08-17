@@ -18,7 +18,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const UnitLocalizationBehavior = ClusterBehavior.for(UnitLocalization.Cluster);
 
-type UnitLocalizationBehaviorType = InstanceType<typeof UnitLocalizationBehavior>;
-export interface UnitLocalizationBehavior extends UnitLocalizationBehaviorType {}
-type StateType = InstanceType<typeof UnitLocalizationBehavior.State>;
-export namespace UnitLocalizationBehavior { export interface State extends StateType {} }
+export interface UnitLocalizationBehavior extends InstanceType<typeof UnitLocalizationBehavior> {}
+export namespace UnitLocalizationBehavior {
+    export interface State extends InstanceType<typeof UnitLocalizationBehavior.State> {}
+}

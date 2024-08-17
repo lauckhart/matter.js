@@ -14,7 +14,5 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const BooleanStateBehavior = ClusterBehavior.for(BooleanState.Cluster);
 
-type BooleanStateBehaviorType = InstanceType<typeof BooleanStateBehavior>;
-export interface BooleanStateBehavior extends BooleanStateBehaviorType {}
-type StateType = InstanceType<typeof BooleanStateBehavior.State>;
-export namespace BooleanStateBehavior { export interface State extends StateType {} }
+export interface BooleanStateBehavior extends InstanceType<typeof BooleanStateBehavior> {}
+export namespace BooleanStateBehavior { export interface State extends InstanceType<typeof BooleanStateBehavior.State> {} }

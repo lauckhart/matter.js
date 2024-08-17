@@ -15,7 +15,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const BasicInformationBehavior = ClusterBehavior.for(BasicInformation.Cluster);
 
-type BasicInformationBehaviorType = InstanceType<typeof BasicInformationBehavior>;
-export interface BasicInformationBehavior extends BasicInformationBehaviorType {}
-type StateType = InstanceType<typeof BasicInformationBehavior.State>;
-export namespace BasicInformationBehavior { export interface State extends StateType {} }
+export interface BasicInformationBehavior extends InstanceType<typeof BasicInformationBehavior> {}
+export namespace BasicInformationBehavior {
+    export interface State extends InstanceType<typeof BasicInformationBehavior.State> {}
+}

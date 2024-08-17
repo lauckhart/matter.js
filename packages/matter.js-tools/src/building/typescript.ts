@@ -33,16 +33,8 @@ export class Typescript {
         this.options = {
             ...baseOptions,
 
-            incremental: true,
-            isolatedModules: true,
             tsBuildInfoFile: pkg.resolve("build/tsbuildinfo"),
             rootDir: this.pkg.path,
-
-            // So this guy is interesting.  It reduces redundant work and
-            // drastically speeds things up so seems worthwhile.  May want to
-            // enable in some nightly process but I think we're safe enough
-            // as is
-            skipLibCheck: true,
 
             ...options,
         };

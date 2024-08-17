@@ -18,7 +18,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
 export const RefrigeratorAndTemperatureControlledCabinetModeBehavior = ClusterBehavior
     .for(RefrigeratorAndTemperatureControlledCabinetMode.Cluster);
 
-type RefrigeratorAndTemperatureControlledCabinetModeBehaviorType = InstanceType<typeof RefrigeratorAndTemperatureControlledCabinetModeBehavior>;
-export interface RefrigeratorAndTemperatureControlledCabinetModeBehavior extends RefrigeratorAndTemperatureControlledCabinetModeBehaviorType {}
-type StateType = InstanceType<typeof RefrigeratorAndTemperatureControlledCabinetModeBehavior.State>;
-export namespace RefrigeratorAndTemperatureControlledCabinetModeBehavior { export interface State extends StateType {} }
+export interface RefrigeratorAndTemperatureControlledCabinetModeBehavior extends InstanceType<typeof RefrigeratorAndTemperatureControlledCabinetModeBehavior> {}
+export namespace RefrigeratorAndTemperatureControlledCabinetModeBehavior {
+    export interface State extends InstanceType<typeof RefrigeratorAndTemperatureControlledCabinetModeBehavior.State> {}
+}

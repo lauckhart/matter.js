@@ -13,7 +13,7 @@ const SPINNER = "◐◓◑◒"; //"⡜⠔⠢⢣"; //["⚫︎", "⚪︎"]; "⡈�
 const SPINNER_INTERVAL = 100;
 
 function packageIdentity(pkg: Package) {
-    return `${colors.bold(pkg.json.name)}@${pkg.json.version}`;
+    return `${colors.bold(pkg.name)}@${pkg.version}`;
 }
 
 /**
@@ -151,6 +151,10 @@ export class Progress {
         writeStatus("");
     }
 
+    /**
+     * The spinner updates on a timer but this doesn't work in long synchronous code.  This allows it to update so we
+     * don't look frozen.
+     */
     refresh() {
         if (this.#updateSpinner()) {
             this.#writeOngoing();

@@ -21,7 +21,7 @@ export const PulseWidthModulationBehavior = ClusterBehavior
     .withInterface<LevelControlInterface>()
     .for(PulseWidthModulation.Cluster);
 
-type PulseWidthModulationBehaviorType = InstanceType<typeof PulseWidthModulationBehavior>;
-export interface PulseWidthModulationBehavior extends PulseWidthModulationBehaviorType {}
-type StateType = InstanceType<typeof PulseWidthModulationBehavior.State>;
-export namespace PulseWidthModulationBehavior { export interface State extends StateType {} }
+export interface PulseWidthModulationBehavior extends InstanceType<typeof PulseWidthModulationBehavior> {}
+export namespace PulseWidthModulationBehavior {
+    export interface State extends InstanceType<typeof PulseWidthModulationBehavior.State> {}
+}

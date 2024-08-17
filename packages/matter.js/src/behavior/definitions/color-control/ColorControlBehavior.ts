@@ -20,7 +20,5 @@ export const ColorControlBehavior = ClusterBehavior
     .withInterface<ColorControlInterface>()
     .for(ColorControl.Cluster);
 
-type ColorControlBehaviorType = InstanceType<typeof ColorControlBehavior>;
-export interface ColorControlBehavior extends ColorControlBehaviorType {}
-type StateType = InstanceType<typeof ColorControlBehavior.State>;
-export namespace ColorControlBehavior { export interface State extends StateType {} }
+export interface ColorControlBehavior extends InstanceType<typeof ColorControlBehavior> {}
+export namespace ColorControlBehavior { export interface State extends InstanceType<typeof ColorControlBehavior.State> {} }

@@ -19,7 +19,7 @@ import { ClusterType } from "../../../cluster/ClusterType.js";
  */
 export const EnergyPreferenceBehavior = ClusterBehavior.for(ClusterType(EnergyPreference.Base));
 
-type EnergyPreferenceBehaviorType = InstanceType<typeof EnergyPreferenceBehavior>;
-export interface EnergyPreferenceBehavior extends EnergyPreferenceBehaviorType {}
-type StateType = InstanceType<typeof EnergyPreferenceBehavior.State>;
-export namespace EnergyPreferenceBehavior { export interface State extends StateType {} }
+export interface EnergyPreferenceBehavior extends InstanceType<typeof EnergyPreferenceBehavior> {}
+export namespace EnergyPreferenceBehavior {
+    export interface State extends InstanceType<typeof EnergyPreferenceBehavior.State> {}
+}

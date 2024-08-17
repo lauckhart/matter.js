@@ -6,6 +6,7 @@
 
 import colors from "ansi-colors";
 import { Progress } from "../util/progress.js";
+import { buildDocs } from "./docs.js";
 import { BuildError } from "./error.js";
 import { Project } from "./project.js";
 
@@ -14,6 +15,7 @@ export enum Target {
     types = "types",
     esm = "esm",
     cjs = "cjs",
+    docs = "docs",
 }
 
 export interface Options {
@@ -59,7 +61,7 @@ export class Builder {
         if (targets.has(Target.types)) {
             const refresh = progress.refresh.bind(progress);
             try {
-                if (project.pkg.library) {
+                if (project.pkg.isLibrary) {
                     await progress.run(`Generate ${colors.bold("type declarations")}`, () =>
                         project.buildDeclarations(refresh),
                     );
@@ -85,6 +87,10 @@ export class Builder {
 
         if (targets.has(Target.cjs)) {
             await this.#transpile(project, progress, Target.cjs);
+        }
+
+        if (targets.has(Target.docs) && project.pkg.isLibrary) {
+            await progress.run("Document", () => buildDocs(project.pkg, progress));
         }
 
         // Only update timestamp when there are no explicit targets so we know it's a full build

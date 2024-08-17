@@ -20,7 +20,7 @@ export const IcdManagementBehavior = ClusterBehavior
     .withInterface<IcdManagementInterface>()
     .for(IcdManagement.Cluster);
 
-type IcdManagementBehaviorType = InstanceType<typeof IcdManagementBehavior>;
-export interface IcdManagementBehavior extends IcdManagementBehaviorType {}
-type StateType = InstanceType<typeof IcdManagementBehavior.State>;
-export namespace IcdManagementBehavior { export interface State extends StateType {} }
+export interface IcdManagementBehavior extends InstanceType<typeof IcdManagementBehavior> {}
+export namespace IcdManagementBehavior {
+    export interface State extends InstanceType<typeof IcdManagementBehavior.State> {}
+}

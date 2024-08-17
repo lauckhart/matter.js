@@ -15,7 +15,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const IlluminanceMeasurementBehavior = ClusterBehavior.for(IlluminanceMeasurement.Cluster);
 
-type IlluminanceMeasurementBehaviorType = InstanceType<typeof IlluminanceMeasurementBehavior>;
-export interface IlluminanceMeasurementBehavior extends IlluminanceMeasurementBehaviorType {}
-type StateType = InstanceType<typeof IlluminanceMeasurementBehavior.State>;
-export namespace IlluminanceMeasurementBehavior { export interface State extends StateType {} }
+export interface IlluminanceMeasurementBehavior extends InstanceType<typeof IlluminanceMeasurementBehavior> {}
+export namespace IlluminanceMeasurementBehavior {
+    export interface State extends InstanceType<typeof IlluminanceMeasurementBehavior.State> {}
+}

@@ -21,7 +21,7 @@ export const ValveConfigurationAndControlBehavior = ClusterBehavior
     .withInterface<ValveConfigurationAndControlInterface>()
     .for(ValveConfigurationAndControl.Cluster);
 
-type ValveConfigurationAndControlBehaviorType = InstanceType<typeof ValveConfigurationAndControlBehavior>;
-export interface ValveConfigurationAndControlBehavior extends ValveConfigurationAndControlBehaviorType {}
-type StateType = InstanceType<typeof ValveConfigurationAndControlBehavior.State>;
-export namespace ValveConfigurationAndControlBehavior { export interface State extends StateType {} }
+export interface ValveConfigurationAndControlBehavior extends InstanceType<typeof ValveConfigurationAndControlBehavior> {}
+export namespace ValveConfigurationAndControlBehavior {
+    export interface State extends InstanceType<typeof ValveConfigurationAndControlBehavior.State> {}
+}

@@ -21,7 +21,7 @@ export const AdministratorCommissioningBehavior = ClusterBehavior
     .withInterface<AdministratorCommissioningInterface>()
     .for(AdministratorCommissioning.Cluster);
 
-type AdministratorCommissioningBehaviorType = InstanceType<typeof AdministratorCommissioningBehavior>;
-export interface AdministratorCommissioningBehavior extends AdministratorCommissioningBehaviorType {}
-type StateType = InstanceType<typeof AdministratorCommissioningBehavior.State>;
-export namespace AdministratorCommissioningBehavior { export interface State extends StateType {} }
+export interface AdministratorCommissioningBehavior extends InstanceType<typeof AdministratorCommissioningBehavior> {}
+export namespace AdministratorCommissioningBehavior {
+    export interface State extends InstanceType<typeof AdministratorCommissioningBehavior.State> {}
+}

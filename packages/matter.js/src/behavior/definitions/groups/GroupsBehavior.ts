@@ -17,7 +17,5 @@ export const GroupsBehavior = ClusterBehavior
     .withInterface<GroupsInterface>()
     .for(Groups.Cluster);
 
-type GroupsBehaviorType = InstanceType<typeof GroupsBehavior>;
-export interface GroupsBehavior extends GroupsBehaviorType {}
-type StateType = InstanceType<typeof GroupsBehavior.State>;
-export namespace GroupsBehavior { export interface State extends StateType {} }
+export interface GroupsBehavior extends InstanceType<typeof GroupsBehavior> {}
+export namespace GroupsBehavior { export interface State extends InstanceType<typeof GroupsBehavior.State> {} }

@@ -22,7 +22,7 @@ import { ClusterType } from "../../../cluster/ClusterType.js";
 export const FormaldehydeConcentrationMeasurementBehavior = ClusterBehavior
     .for(ClusterType(FormaldehydeConcentrationMeasurement.Base));
 
-type FormaldehydeConcentrationMeasurementBehaviorType = InstanceType<typeof FormaldehydeConcentrationMeasurementBehavior>;
-export interface FormaldehydeConcentrationMeasurementBehavior extends FormaldehydeConcentrationMeasurementBehaviorType {}
-type StateType = InstanceType<typeof FormaldehydeConcentrationMeasurementBehavior.State>;
-export namespace FormaldehydeConcentrationMeasurementBehavior { export interface State extends StateType {} }
+export interface FormaldehydeConcentrationMeasurementBehavior extends InstanceType<typeof FormaldehydeConcentrationMeasurementBehavior> {}
+export namespace FormaldehydeConcentrationMeasurementBehavior {
+    export interface State extends InstanceType<typeof FormaldehydeConcentrationMeasurementBehavior.State> {}
+}

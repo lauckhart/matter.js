@@ -302,24 +302,12 @@ export namespace ClusterBehavior {
             // Add methods defined manually in ExtensionInterface
             ExtensionInterfaceOf<B> & {
                 // Cluster-specific members
-                /**
-                 * The implemented cluster.
-                 */
                 cluster: C;
 
-                /**
-                 * State values for the behavior.
-                 */
                 state: ClusterState<C, B>;
 
-                /**
-                 * Observables for cluster events and attribute changes.
-                 */
                 events: ClusterEvents<C, B>;
 
-                /**
-                 * Supported features as a flag object.
-                 */
                 features: TypeFromBitSchema<C["features"]>;
 
                 [Symbol.asyncDispose](): MaybePromise<void>;

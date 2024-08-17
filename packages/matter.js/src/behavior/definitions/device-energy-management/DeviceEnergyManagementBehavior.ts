@@ -22,7 +22,7 @@ export const DeviceEnergyManagementBehavior = ClusterBehavior
     .withInterface<DeviceEnergyManagementInterface>()
     .for(ClusterType(DeviceEnergyManagement.Base));
 
-type DeviceEnergyManagementBehaviorType = InstanceType<typeof DeviceEnergyManagementBehavior>;
-export interface DeviceEnergyManagementBehavior extends DeviceEnergyManagementBehaviorType {}
-type StateType = InstanceType<typeof DeviceEnergyManagementBehavior.State>;
-export namespace DeviceEnergyManagementBehavior { export interface State extends StateType {} }
+export interface DeviceEnergyManagementBehavior extends InstanceType<typeof DeviceEnergyManagementBehavior> {}
+export namespace DeviceEnergyManagementBehavior {
+    export interface State extends InstanceType<typeof DeviceEnergyManagementBehavior.State> {}
+}

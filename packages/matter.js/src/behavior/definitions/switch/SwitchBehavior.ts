@@ -17,7 +17,5 @@ import { ClusterType } from "../../../cluster/ClusterType.js";
  */
 export const SwitchBehavior = ClusterBehavior.for(ClusterType(Switch.Base));
 
-type SwitchBehaviorType = InstanceType<typeof SwitchBehavior>;
-export interface SwitchBehavior extends SwitchBehaviorType {}
-type StateType = InstanceType<typeof SwitchBehavior.State>;
-export namespace SwitchBehavior { export interface State extends StateType {} }
+export interface SwitchBehavior extends InstanceType<typeof SwitchBehavior> {}
+export namespace SwitchBehavior { export interface State extends InstanceType<typeof SwitchBehavior.State> {} }

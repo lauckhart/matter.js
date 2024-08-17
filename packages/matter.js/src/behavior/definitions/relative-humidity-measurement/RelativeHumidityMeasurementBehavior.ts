@@ -15,7 +15,7 @@ import { ClusterBehavior } from "../../cluster/ClusterBehavior.js";
  */
 export const RelativeHumidityMeasurementBehavior = ClusterBehavior.for(RelativeHumidityMeasurement.Cluster);
 
-type RelativeHumidityMeasurementBehaviorType = InstanceType<typeof RelativeHumidityMeasurementBehavior>;
-export interface RelativeHumidityMeasurementBehavior extends RelativeHumidityMeasurementBehaviorType {}
-type StateType = InstanceType<typeof RelativeHumidityMeasurementBehavior.State>;
-export namespace RelativeHumidityMeasurementBehavior { export interface State extends StateType {} }
+export interface RelativeHumidityMeasurementBehavior extends InstanceType<typeof RelativeHumidityMeasurementBehavior> {}
+export namespace RelativeHumidityMeasurementBehavior {
+    export interface State extends InstanceType<typeof RelativeHumidityMeasurementBehavior.State> {}
+}

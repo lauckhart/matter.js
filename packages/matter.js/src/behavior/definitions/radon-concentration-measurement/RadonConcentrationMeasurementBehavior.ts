@@ -20,7 +20,7 @@ import { ClusterType } from "../../../cluster/ClusterType.js";
 export const RadonConcentrationMeasurementBehavior = ClusterBehavior
     .for(ClusterType(RadonConcentrationMeasurement.Base));
 
-type RadonConcentrationMeasurementBehaviorType = InstanceType<typeof RadonConcentrationMeasurementBehavior>;
-export interface RadonConcentrationMeasurementBehavior extends RadonConcentrationMeasurementBehaviorType {}
-type StateType = InstanceType<typeof RadonConcentrationMeasurementBehavior.State>;
-export namespace RadonConcentrationMeasurementBehavior { export interface State extends StateType {} }
+export interface RadonConcentrationMeasurementBehavior extends InstanceType<typeof RadonConcentrationMeasurementBehavior> {}
+export namespace RadonConcentrationMeasurementBehavior {
+    export interface State extends InstanceType<typeof RadonConcentrationMeasurementBehavior.State> {}
+}

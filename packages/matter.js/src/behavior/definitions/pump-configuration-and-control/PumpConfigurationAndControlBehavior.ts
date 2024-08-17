@@ -19,7 +19,7 @@ import { ClusterType } from "../../../cluster/ClusterType.js";
  */
 export const PumpConfigurationAndControlBehavior = ClusterBehavior.for(ClusterType(PumpConfigurationAndControl.Base));
 
-type PumpConfigurationAndControlBehaviorType = InstanceType<typeof PumpConfigurationAndControlBehavior>;
-export interface PumpConfigurationAndControlBehavior extends PumpConfigurationAndControlBehaviorType {}
-type StateType = InstanceType<typeof PumpConfigurationAndControlBehavior.State>;
-export namespace PumpConfigurationAndControlBehavior { export interface State extends StateType {} }
+export interface PumpConfigurationAndControlBehavior extends InstanceType<typeof PumpConfigurationAndControlBehavior> {}
+export namespace PumpConfigurationAndControlBehavior {
+    export interface State extends InstanceType<typeof PumpConfigurationAndControlBehavior.State> {}
+}

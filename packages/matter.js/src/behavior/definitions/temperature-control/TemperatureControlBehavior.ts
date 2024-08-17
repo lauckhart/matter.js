@@ -22,7 +22,7 @@ export const TemperatureControlBehavior = ClusterBehavior
     .withInterface<TemperatureControlInterface>()
     .for(ClusterType(TemperatureControl.Base));
 
-type TemperatureControlBehaviorType = InstanceType<typeof TemperatureControlBehavior>;
-export interface TemperatureControlBehavior extends TemperatureControlBehaviorType {}
-type StateType = InstanceType<typeof TemperatureControlBehavior.State>;
-export namespace TemperatureControlBehavior { export interface State extends StateType {} }
+export interface TemperatureControlBehavior extends InstanceType<typeof TemperatureControlBehavior> {}
+export namespace TemperatureControlBehavior {
+    export interface State extends InstanceType<typeof TemperatureControlBehavior.State> {}
+}

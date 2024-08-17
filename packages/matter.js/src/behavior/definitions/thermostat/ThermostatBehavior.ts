@@ -21,7 +21,5 @@ export const ThermostatBehavior = ClusterBehavior
     .withInterface<ThermostatInterface>()
     .for(ClusterType(Thermostat.Base));
 
-type ThermostatBehaviorType = InstanceType<typeof ThermostatBehavior>;
-export interface ThermostatBehavior extends ThermostatBehaviorType {}
-type StateType = InstanceType<typeof ThermostatBehavior.State>;
-export namespace ThermostatBehavior { export interface State extends StateType {} }
+export interface ThermostatBehavior extends InstanceType<typeof ThermostatBehavior> {}
+export namespace ThermostatBehavior { export interface State extends InstanceType<typeof ThermostatBehavior.State> {} }

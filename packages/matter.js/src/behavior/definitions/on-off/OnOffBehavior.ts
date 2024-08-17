@@ -20,7 +20,5 @@ export const OnOffBehavior = ClusterBehavior
     .withInterface<OnOffInterface>()
     .for(OnOff.Cluster);
 
-type OnOffBehaviorType = InstanceType<typeof OnOffBehavior>;
-export interface OnOffBehavior extends OnOffBehaviorType {}
-type StateType = InstanceType<typeof OnOffBehavior.State>;
-export namespace OnOffBehavior { export interface State extends StateType {} }
+export interface OnOffBehavior extends InstanceType<typeof OnOffBehavior> {}
+export namespace OnOffBehavior { export interface State extends InstanceType<typeof OnOffBehavior.State> {} }

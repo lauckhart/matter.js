@@ -20,7 +20,7 @@ export const MediaPlaybackBehavior = ClusterBehavior
     .withInterface<MediaPlaybackInterface>()
     .for(MediaPlayback.Cluster);
 
-type MediaPlaybackBehaviorType = InstanceType<typeof MediaPlaybackBehavior>;
-export interface MediaPlaybackBehavior extends MediaPlaybackBehaviorType {}
-type StateType = InstanceType<typeof MediaPlaybackBehavior.State>;
-export namespace MediaPlaybackBehavior { export interface State extends StateType {} }
+export interface MediaPlaybackBehavior extends InstanceType<typeof MediaPlaybackBehavior> {}
+export namespace MediaPlaybackBehavior {
+    export interface State extends InstanceType<typeof MediaPlaybackBehavior.State> {}
+}

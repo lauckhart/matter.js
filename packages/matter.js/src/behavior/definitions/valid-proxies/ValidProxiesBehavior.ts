@@ -17,7 +17,5 @@ export const ValidProxiesBehavior = ClusterBehavior
     .withInterface<ValidProxiesInterface>()
     .for(ValidProxies.Cluster);
 
-type ValidProxiesBehaviorType = InstanceType<typeof ValidProxiesBehavior>;
-export interface ValidProxiesBehavior extends ValidProxiesBehaviorType {}
-type StateType = InstanceType<typeof ValidProxiesBehavior.State>;
-export namespace ValidProxiesBehavior { export interface State extends StateType {} }
+export interface ValidProxiesBehavior extends InstanceType<typeof ValidProxiesBehavior> {}
+export namespace ValidProxiesBehavior { export interface State extends InstanceType<typeof ValidProxiesBehavior.State> {} }

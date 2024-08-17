@@ -20,7 +20,5 @@ export const AudioOutputBehavior = ClusterBehavior
     .withInterface<AudioOutputInterface>()
     .for(AudioOutput.Cluster);
 
-type AudioOutputBehaviorType = InstanceType<typeof AudioOutputBehavior>;
-export interface AudioOutputBehavior extends AudioOutputBehaviorType {}
-type StateType = InstanceType<typeof AudioOutputBehavior.State>;
-export namespace AudioOutputBehavior { export interface State extends StateType {} }
+export interface AudioOutputBehavior extends InstanceType<typeof AudioOutputBehavior> {}
+export namespace AudioOutputBehavior { export interface State extends InstanceType<typeof AudioOutputBehavior.State> {} }

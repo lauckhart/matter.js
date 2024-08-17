@@ -20,7 +20,7 @@ export const ContentLauncherBehavior = ClusterBehavior
     .withInterface<ContentLauncherInterface>()
     .for(ContentLauncher.Cluster);
 
-type ContentLauncherBehaviorType = InstanceType<typeof ContentLauncherBehavior>;
-export interface ContentLauncherBehavior extends ContentLauncherBehaviorType {}
-type StateType = InstanceType<typeof ContentLauncherBehavior.State>;
-export namespace ContentLauncherBehavior { export interface State extends StateType {} }
+export interface ContentLauncherBehavior extends InstanceType<typeof ContentLauncherBehavior> {}
+export namespace ContentLauncherBehavior {
+    export interface State extends InstanceType<typeof ContentLauncherBehavior.State> {}
+}
