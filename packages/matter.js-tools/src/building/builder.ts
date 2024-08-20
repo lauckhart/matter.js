@@ -7,6 +7,7 @@
 import colors from "ansi-colors";
 import { Progress } from "../util/progress.js";
 import { buildDocs } from "./docs.js";
+import { emitApiDoc } from "./docs/emit-api-doc.js";
 import { BuildError } from "./error.js";
 import { Project } from "./project.js";
 
@@ -62,11 +63,14 @@ export class Builder {
             const refresh = progress.refresh.bind(progress);
             try {
                 if (project.pkg.isLibrary) {
-                    await progress.run(`Generate ${colors.bold("type declarations")}`, () =>
+                    const program = await progress.run(`Generate ${colors.bold("type declarations")}`, () =>
                         project.buildDeclarations(refresh),
                     );
                     await progress.run(`Install ${colors.bold("type declarations")}`, () =>
                         project.installDeclarations(),
+                    );
+                    await progress.run(`Extract ${colors.bold("api docs")}`, () =>
+                        emitApiDoc(project.pkg, program, progress),
                     );
                 } else {
                     await progress.run(`Validating ${colors.bold("types")}`, () => project.validateTypes(refresh));

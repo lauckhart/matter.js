@@ -69,7 +69,7 @@ export class Typescript {
     }
 
     static emitDeclarations(pkg: Package, refreshCallback?: () => void) {
-        new Typescript(
+        return new Typescript(
             pkg,
             {
                 outDir: pkg.resolve("build/types"),
@@ -118,7 +118,10 @@ export class Typescript {
         if (!this.options.noEmit) {
             diagnostics.push(...program.emit().diagnostics);
         }
+
         this.passTscErrors(diagnostics);
+
+        return program.getProgram();
     }
 
     private getCompilerOptions(filename: string) {
@@ -147,10 +150,9 @@ export class Typescript {
 
         let formatted = ts.formatDiagnosticsWithColorAndContext(diagnostics, this.#host);
 
-        // Strangely there are not newlines between errors in this output like
-        // there is when you run tsc from the command line.  Use the "light
-        // blue" ANSI escape code as an injection point for an additional
-        // newline
+        // Strangely there are not newlines between errors in this output like there is when you run tsc from the
+        // command line.  Use the "light blue" ANSI escape code as an injection point for an additional newline
+        //
         // eslint-disable-next-line no-control-regex
         formatted = formatted.replace(/\u001b\[96m/gms, "\n\u001b[96m");
 
@@ -158,9 +160,8 @@ export class Typescript {
     }
 
     /**
-     * As we largely configure based on convention, we mostly ignore
-     * tsconfig.json files in project directories.  The limited number of
-     * project-specific options we allow load here.
+     * As we largely configure based on convention, we mostly ignore tsconfig.json files in project directories.  The
+     * limited number of project-specific options we allow load here.
      */
     private loadPackageOptions(path: string) {
         const filename = this.pkg.resolve(path);

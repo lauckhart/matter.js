@@ -38,7 +38,7 @@ const writeStatus = (() => {
             // Require a newline for status updates any time the cursor does not end at the beginning of a line
             needNewline =
                 // Update ends in newline
-                payload[payload.length - 1] === "\n" &&
+                payload[payload.length - 1] !== "\n" &&
                 // Update ends in carriage return
                 payload[payload.length - 1] !== "\r";
 
@@ -143,6 +143,10 @@ export class Progress {
         writeStatus(`  ${colors.dim("‣")} ${label}`);
     }
 
+    warn(text: string) {
+        stdout.write(`    ${colors.yellow("Warning:")} ${text}\n`);
+    }
+
     shutdown() {
         if (this.#refreshInterval) {
             clearInterval(this.#refreshInterval);
@@ -178,10 +182,11 @@ export class Progress {
         return true;
     }
 
-    async run(what: string, fn: () => Promise<void>) {
+    async run<T>(what: string, fn: () => Promise<T>) {
         this.update(what);
-        await fn();
+        const result = await fn();
         this.success(what);
+        return result;
     }
 
     get #duration() {

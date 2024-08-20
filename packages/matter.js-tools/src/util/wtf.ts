@@ -4,6 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/**
+ * A small wrapper API for wtfnode.
+ */
 export const wtf = {
     async initialize() {
         // This will only work under actual Node.js

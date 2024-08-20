@@ -66,7 +66,7 @@ export class Project {
     }
 
     async buildDeclarations(refreshCallback?: () => void) {
-        Typescript.emitDeclarations(this.pkg, refreshCallback);
+        return Typescript.emitDeclarations(this.pkg, refreshCallback);
     }
 
     async validateTypes(refreshCallback?: () => void) {
