@@ -12,7 +12,7 @@ export namespace Api {
 
     export type Docs = SymbolDisplayPart[];
 
-    export type Kind = "root" | "module" | "class" | "type" | "function" | "namespace" | "variable";
+    export type Kind = "root" | "module" | "class" | "type" | "function" | "namespace" | "variable" | "export";
 
     export interface Item<T extends Kind = Kind> {
         kind: T;
@@ -31,7 +31,9 @@ export namespace Api {
         version: string;
     }
 
-    export interface Module extends Parent<"module"> {}
+    export interface Module extends Parent<"module"> {
+        path: string;
+    }
 
     export interface Class extends Parent<"class"> {}
 
@@ -45,5 +47,10 @@ export namespace Api {
 
     export interface Variable extends Item<"variable"> {
         type: string;
+    }
+
+    export interface Reexport extends Item<"export"> {
+        fromModule: string;
+        fromName?: string;
     }
 }

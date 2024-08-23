@@ -11,12 +11,12 @@ import { SemanticTagElement } from "./SemanticTagElement.js";
 /**
  * Details a specific semantic tag.
  */
-export type SemanticNamespaceElement = BaseElement & {
+export interface SemanticNamespaceElement extends BaseElement {
     id: number;
     tag: `${SemanticNamespaceElement.Tag}`;
     children?: SemanticTagElement[];
     mfgCode?: number;
-};
+}
 
 export function SemanticNamespaceElement(definition: SemanticNamespaceElement.Properties) {
     return BaseElement(SemanticNamespaceElement.Tag, definition) as SemanticNamespaceElement;

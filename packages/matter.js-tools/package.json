@@ -58,6 +58,7 @@
         "v8-profiler-next": "^1.10.0"
     },
     "devDependencies": {
+        "@microsoft/api-extractor": "^7.47.7",
         "@microsoft/api-extractor-model": "^7.29.5",
         "@microsoft/tsdoc": "^0.15.0",
         "@types/chai": "^4.3.16",

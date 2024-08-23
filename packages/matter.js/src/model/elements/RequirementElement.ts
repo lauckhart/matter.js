@@ -11,7 +11,7 @@ import { BaseElement } from "./BaseElement.js";
 /**
  * Describes a cluster or cluster element requirement for a device.
  */
-export type RequirementElement = BaseElement & {
+export interface RequirementElement extends BaseElement {
     tag: `${RequirementElement.Tag}`;
 
     /**
@@ -26,7 +26,7 @@ export type RequirementElement = BaseElement & {
     default?: any;
 
     children?: (RequirementElement | FieldElement)[];
-};
+}
 
 export function RequirementElement(definition: RequirementElement.Properties) {
     return {

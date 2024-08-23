@@ -12,7 +12,7 @@ import { BaseElement } from "./BaseElement.js";
 /**
  * A base element for all elements that represent data values.
  */
-export type ValueElement = BaseElement & {
+export interface ValueElement extends BaseElement {
     type?: string;
 
     /**
@@ -46,7 +46,7 @@ export type ValueElement = BaseElement & {
     default?: FieldValue;
 
     children?: AnyValueElement[];
-};
+}
 
 export function ValueElement(tag: ElementTag, definition: ValueElement) {
     definition = { ...definition };

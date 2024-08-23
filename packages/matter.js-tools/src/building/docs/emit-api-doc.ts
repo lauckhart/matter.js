@@ -9,7 +9,8 @@ import { Program } from "typescript";
 import { Package } from "../../util/package.js";
 import { Progress } from "../../util/progress.js";
 import { ApiContext } from "./api-context.js";
-import { loadEntrypoints } from "./load-entrypoints.js";
+import { ApiFile } from "./api-file.js";
+import { Api } from "./api.js";
 
 /**
  * Convert program into ApiModel.
@@ -25,7 +26,17 @@ export async function emitApiDoc(pkg: Package, program: Program, progress: Progr
 
     const cx = ApiContext(pkg, program, progress);
 
-    loadEntrypoints(cx);
+    const api: Api.Root = {
+        kind: "root",
+        name: pkg.name,
+        version: pkg.version,
+        items: [],
+    };
 
-    writeFileSync(pkg.resolve("build/package.api.json"), JSON.stringify(cx.api));
+    for (const name in cx.fileToModule) {
+        const file = ApiFile.for(name, cx);
+        api.items.push(file.api);
+    }
+
+    writeFileSync(pkg.resolve("build/package.api.json"), JSON.stringify(api));
 }

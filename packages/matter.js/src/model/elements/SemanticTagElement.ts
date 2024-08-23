@@ -10,11 +10,11 @@ import { BaseElement } from "./BaseElement.js";
 /**
  * Details a specific semantic tag.
  */
-export type SemanticTagElement = BaseElement & {
+export interface SemanticTagElement extends BaseElement {
     id: number;
     tag: `${SemanticTagElement.Tag}`;
     children?: never[];
-};
+}
 
 export function SemanticTagElement(definition: SemanticTagElement.Properties) {
     return BaseElement(SemanticTagElement.Tag, definition) as SemanticTagElement;

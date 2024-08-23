@@ -55,7 +55,7 @@ export function isNullish(a: any) {
 export type MakeMandatory<T> = Exclude<T, undefined>;
 
 /** Create a branded type */
-declare const __brand: unique symbol;
+export declare const __brand: unique symbol;
 // Don't think it should be necessary to export Brand<B> but it will cause
 // the following error under some circumstances:
 //

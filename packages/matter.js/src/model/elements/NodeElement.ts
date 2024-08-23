@@ -11,11 +11,11 @@ import { EndpointElement } from "./EndpointElement.js";
 /**
  * Runtime representation of a node.
  */
-export type NodeElement = BaseElement & {
+export interface NodeElement extends BaseElement {
     id: number;
     tag: `${NodeElement.Tag}`;
     children?: EndpointElement[];
-};
+}
 
 export function NodeElement(definition: NodeElement.Properties) {
     return BaseElement(NodeElement.Tag, definition) as NodeElement;

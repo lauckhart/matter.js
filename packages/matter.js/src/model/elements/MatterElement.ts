@@ -18,11 +18,11 @@ import { SemanticNamespaceElement } from "./SemanticNamespaceElement.js";
 /**
  * The root model element.
  */
-export type MatterElement = BaseElement & {
+export interface MatterElement extends BaseElement {
     tag: `${ElementTag.Matter}`;
     revision?: Specification.Revision;
     children: MatterElement.Child[];
-};
+}
 
 export function MatterElement(definition: MatterElement.Properties) {
     return BaseElement(MatterElement.Tag, definition) as MatterElement;
