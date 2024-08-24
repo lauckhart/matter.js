@@ -12,18 +12,29 @@ export namespace Api {
 
     export type Docs = SymbolDisplayPart[];
 
-    export type Kind = "root" | "module" | "class" | "type" | "function" | "namespace" | "variable" | "export";
+    export type Kind =
+        | "root"
+        | "module"
+        | "class"
+        | "factory"
+        | "type"
+        | "function"
+        | "namespace"
+        | "variable"
+        | "export";
 
-    export interface Item<T extends Kind = Kind> {
+    export type Item = Root | Module | Class | Factory | Type | Api.Function | Namespace | Variable | Reexport;
+
+    export interface Base<T extends Kind = Kind> {
         kind: T;
-        name: string;
+        name?: string;
         items?: Item[];
 
         // TODO - this would perhaps save some space converted to markdown
         docs?: Docs;
     }
 
-    export interface Parent<T extends Kind = Kind> extends Item<T> {
+    export interface Parent<T extends Kind = Kind> extends Base<T> {
         items: Item[];
     }
 
@@ -37,19 +48,21 @@ export namespace Api {
 
     export interface Class extends Parent<"class"> {}
 
+    export interface Factory extends Parent<"factory"> {}
+
     export interface Type extends Parent<"type"> {}
 
-    export interface Function extends Item<"function"> {
-        items?: Variable[];
+    export interface Function extends Base<"function"> {
+        items?: (Api.Function | Variable)[];
     }
 
     export interface Namespace extends Parent<"namespace"> {}
 
-    export interface Variable extends Item<"variable"> {
+    export interface Variable extends Base<"variable"> {
         type: string;
     }
 
-    export interface Reexport extends Item<"export"> {
+    export interface Reexport extends Base<"export"> {
         fromModule: string;
         fromName?: string;
     }

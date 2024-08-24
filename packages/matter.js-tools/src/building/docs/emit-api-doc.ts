@@ -11,6 +11,7 @@ import { Progress } from "../../util/progress.js";
 import { ApiContext } from "./api-context.js";
 import { ApiFile } from "./api-file.js";
 import { Api } from "./api.js";
+import { extractNodeApi } from "./extract-node-api.js";
 
 /**
  * Convert program into ApiModel.
@@ -24,7 +25,7 @@ export async function emitApiDoc(pkg: Package, program: Program, progress: Progr
         return;
     }
 
-    const cx = ApiContext(pkg, program, progress);
+    const cx = ApiContext(pkg, program, progress, (file, moduleName, cx) => new ApiFile(file, moduleName, cx));
 
     const api: Api.Root = {
         kind: "root",
@@ -33,9 +34,11 @@ export async function emitApiDoc(pkg: Package, program: Program, progress: Progr
         items: [],
     };
 
-    for (const name in cx.fileToModule) {
-        const file = ApiFile.for(name, cx);
-        api.items.push(file.api);
+    for (const exp of cx.exports) {
+        const module = extractNodeApi(exp.node, exp);
+        if (module) {
+            api.items.push(module);
+        }
     }
 
     writeFileSync(pkg.resolve("build/package.api.json"), JSON.stringify(api));
