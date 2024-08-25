@@ -33,16 +33,8 @@ export class Typescript {
         this.options = {
             ...baseOptions,
 
-            incremental: true,
-            isolatedModules: true,
             tsBuildInfoFile: pkg.resolve("build/tsbuildinfo"),
             rootDir: this.pkg.path,
-
-            // So this guy is interesting.  It reduces redundant work and
-            // drastically speeds things up so seems worthwhile.  May want to
-            // enable in some nightly process but I think we're safe enough
-            // as is
-            skipLibCheck: true,
 
             ...options,
         };
@@ -77,7 +69,7 @@ export class Typescript {
     }
 
     static emitDeclarations(pkg: Package, refreshCallback?: () => void) {
-        new Typescript(
+        return new Typescript(
             pkg,
             {
                 outDir: pkg.resolve("build/types"),
@@ -126,7 +118,10 @@ export class Typescript {
         if (!this.options.noEmit) {
             diagnostics.push(...program.emit().diagnostics);
         }
+
         this.passTscErrors(diagnostics);
+
+        return program.getProgram();
     }
 
     private getCompilerOptions(filename: string) {
@@ -155,10 +150,9 @@ export class Typescript {
 
         let formatted = ts.formatDiagnosticsWithColorAndContext(diagnostics, this.#host);
 
-        // Strangely there are not newlines between errors in this output like
-        // there is when you run tsc from the command line.  Use the "light
-        // blue" ANSI escape code as an injection point for an additional
-        // newline
+        // Strangely there are not newlines between errors in this output like there is when you run tsc from the
+        // command line.  Use the "light blue" ANSI escape code as an injection point for an additional newline
+        //
         // eslint-disable-next-line no-control-regex
         formatted = formatted.replace(/\u001b\[96m/gms, "\n\u001b[96m");
 
@@ -166,9 +160,8 @@ export class Typescript {
     }
 
     /**
-     * As we largely configure based on convention, we mostly ignore
-     * tsconfig.json files in project directories.  The limited number of
-     * project-specific options we allow load here.
+     * As we largely configure based on convention, we mostly ignore tsconfig.json files in project directories.  The
+     * limited number of project-specific options we allow load here.
      */
     private loadPackageOptions(path: string) {
         const filename = this.pkg.resolve(path);
