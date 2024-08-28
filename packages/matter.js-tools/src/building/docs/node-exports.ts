@@ -17,53 +17,72 @@ import type { ApiFile } from "./api-file.js";
 
 export interface NodeExports {
     file: ApiFile;
-    references: NamedReferences;
-    declarations: NamedNodes;
+    names: Set<string>;
+    has(key: string): boolean;
+    get(key: string): NodeExport[];
+    entries: Array<{ name: string; exports: NodeExport[] }>;
 }
 
-export interface NamedNodes {
-    [name: string]: Node[];
-}
-
-export interface FileReference {
-    source: ApiFile;
-    moduleName: string;
-    name: string;
-}
-
-export interface NamedReferences {
-    [name: string]: FileReference;
-}
+export type NodeExport = Node | string;
 
 export function NodeExports(node: Node, file: ApiFile): NodeExports {
-    /**
-     * Load declarations exported directly from this file.
-     */
-    const references = {} as NamedReferences;
-    const declarations = {} as NamedNodes;
+    const items = {} as Record<string, NodeExport[]>;
 
-    node.forEachChild(node => {
-        if (node.kind === SyntaxKind.ExportDeclaration) {
-            loadExportReferences(node as ExportDeclaration, references);
-        } else if (isNodeExported(node)) {
-            if (isVariableStatement(node)) {
-                for (const decl of node.declarationList.declarations) {
+    node.forEachChild(child => {
+        if (child.kind === SyntaxKind.ExportDeclaration) {
+            if (node.kind !== SyntaxKind.SourceFile) {
+                file.abort(
+                    `Export statement encountered in ${SyntaxKind[node.kind]}} node (only allowed in SourceFile)`,
+                );
+            }
+            loadExportReferences(child as ExportDeclaration);
+        } else if (isNodeExported(child)) {
+            if (isVariableStatement(child)) {
+                for (const decl of child.declarationList.declarations) {
                     const name = file.nameOf(decl);
-                    (declarations[name] ??= []).push(decl);
+                    addItem(name, decl);
                 }
             } else {
-                const name = file.nameOf(node);
-                (declarations[name] ??= []).push(node);
+                const name = file.nameOf(child);
+                addItem(name, child);
             }
         }
     });
 
-    return { file, references, declarations };
+    const names = new Set(Object.keys(items));
+
+    return {
+        file,
+
+        names,
+
+        has(name: string) {
+            return name in items;
+        },
+
+        get(name: string) {
+            if (name === undefined) {
+                file.abort(`Unsupported export ${name}`);
+            }
+
+            return items[name];
+        },
+
+        get entries() {
+            return Object.entries(items).map(([name, exports]) => ({ name, exports }));
+        },
+    };
+
+    function addItem(name: string, ...newItems: NodeExport[]) {
+        for (const item of newItems) {
+            (items[name] ??= []).push(item);
+        }
+    }
 
     /**
      * Load named references from an export statement.
      */
-    function loadExportReferences(node: ExportDeclaration, into: NamedReferences) {
+    function loadExportReferences(node: ExportDeclaration) {
         const moduleSpecifier = node.moduleSpecifier;
         if (moduleSpecifier === undefined) {
             // Should have been caught as bad grammar
@@ -81,26 +100,37 @@ export function NodeExports(node: Node, file: ApiFile): NodeExports {
 
         const module = file.cx.fileFor(sourceSymbol.valueDeclaration);
 
-        const moduleName = file.textOf(moduleSpecifier);
-
         const clause = node.exportClause;
+
+        let addExport: (name: string, sourceName?: string) => void;
+
+        const moduleName = file.resolve(file.textOf(moduleSpecifier));
+
+        // If this is a reexport, just add a reference.  Otherwise for documentation purposes we own the item
+        if (module.isExternal || module.isExported) {
+            addExport = (name, sourceName) => {
+                addItem(name, `${moduleName}#${sourceName ?? name}`);
+            };
+        } else {
+            addExport = (name, sourceName) => {
+                addItem(name, ...module.exports.get(sourceName ?? name));
+            };
+        }
+
         if (!clause) {
-            for (const name of module.exportNames) {
-                if (name in into) {
-                    file.abort(`Unsupported merged exports ${name}`);
-                }
-                into[name] = { source: module, moduleName, name };
+            for (const name of module.exports.names) {
+                addExport(name);
             }
         } else if (clause.kind === SyntaxKind.NamespaceExport) {
             file.abort(`Namespace export unsupported`);
         } else {
-            const available = module.exportNames;
             for (const element of clause.elements) {
+                const sourceName = element.propertyName ? file.textOf(element.propertyName) : undefined;
                 const name = file.textOf(element.name);
-                if (!available.has(name)) {
+                if (!module.exports.has(sourceName || name)) {
                     file.abort(`Cannot locate export ${name} from ${module.path}`);
                 }
-                into[name] = { source: module, moduleName, name };
+                addExport(name, sourceName);
             }
         }
     }
@@ -108,7 +138,6 @@ export function NodeExports(node: Node, file: ApiFile): NodeExports {
 
 function isNodeExported(node: Node) {
     return (
-        !!(getCombinedModifierFlags(node as Declaration) & ModifierFlags.Export) &&
-        node.parent?.kind === SyntaxKind.SourceFile
+        !!(getCombinedModifierFlags(node as Declaration) & ModifierFlags.Export) && node.kind !== SyntaxKind.SourceFile
     );
 }

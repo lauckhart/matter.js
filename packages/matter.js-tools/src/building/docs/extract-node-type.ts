@@ -6,9 +6,6 @@
 
 import { Node } from "typescript";
 import { ApiFile } from "./api-file.js";
-import { FileReference } from "./node-exports.js";
-
-export type NodeType = string | FileReference;
 
 export function extractNodeType(node: Node, file: ApiFile) {
     node;

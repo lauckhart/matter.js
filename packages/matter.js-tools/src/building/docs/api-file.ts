@@ -4,14 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NamedDeclaration, Node, SourceFile, SyntaxKind } from "typescript";
+import { dirname, resolve } from "path";
+import { isStringLiteralLike, NamedDeclaration, Node, SourceFile, SyntaxKind } from "typescript";
+import { Package } from "../../util/package.js";
 import { ApiContext } from "./api-context.js";
 import { ApiFileError } from "./api-file-error.js";
 import { Api } from "./api.js";
+import { NamedDefinition } from "./named-definition.js";
 import { NodeExports } from "./node-exports.js";
 
 /**
- * Utility for interacting the the API of a source file.
+ * Utility for interacting with the API of a source file.
  *
  * Allows for incremental extraction of only exports relevant to documentation.
  */
@@ -20,8 +23,6 @@ export class ApiFile {
     #node: SourceFile;
 
     #exports: NodeExports;
-    #exportNames: Set<string>;
-    #exportItems = {} as Record<string, Api.Item>;
     #moduleName?: string;
 
     constructor(file: SourceFile, cx: ApiContext, moduleName?: string) {
@@ -29,10 +30,6 @@ export class ApiFile {
         this.#node = file;
         this.#moduleName = moduleName;
         this.#exports = NodeExports(file, this);
-        this.#exportNames = new Set([
-            ...Object.keys(this.#exports.references),
-            ...Object.keys(this.#exports.declarations),
-        ]);
     }
 
     get cx() {
@@ -51,18 +48,8 @@ export class ApiFile {
         return this.#exports;
     }
 
-    get exportNames() {
-        return this.#exportNames;
-    }
-
     get node() {
         return this.#node;
-    }
-
-    exportForName(name: string) {
-        if (name in this.#exportItems) {
-            return this.#exportItems[name];
-        }
     }
 
     get isExternal() {
@@ -72,6 +59,31 @@ export class ApiFile {
 
     get isExported() {
         return this.#moduleName !== undefined;
+    }
+
+    get api() {
+        if (this.#moduleName === undefined) {
+            this.abort("Cannot create API because module is not exported");
+        }
+
+        const api: Api.Module = {
+            name: this.#moduleName,
+            path: Package.workspace.relative(this.path),
+            exports: this.#exports.entries.map(({ name, exports }): Api.NamedDefinition => {
+                const definition = NamedDefinition(name, exports, this);
+                if (definition === undefined) {
+                    this.warn(`No definition for export ${name}`);
+                    return {
+                        name,
+                        ts: "unknown",
+                    };
+                } else {
+                    return definition;
+                }
+            }),
+        };
+
+        return api;
     }
 
     nameOf(node: Node) {
@@ -87,7 +99,19 @@ export class ApiFile {
     }
 
     textOf(what: Node) {
+        if (isStringLiteralLike(what)) {
+            return what.text;
+        }
+
         return what.getText(this.#node);
+    }
+
+    resolve(path: string) {
+        return resolve(dirname(this.#node.fileName), path);
+    }
+
+    warn(message: string) {
+        this.#cx.warn(message, this.#node);
     }
 
     abort(why: string): never {

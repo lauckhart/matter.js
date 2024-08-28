@@ -12,58 +12,97 @@ export namespace Api {
 
     export type Docs = SymbolDisplayPart[];
 
-    export type Kind =
-        | "root"
-        | "module"
-        | "class"
-        | "factory"
-        | "type"
-        | "function"
-        | "namespace"
-        | "variable"
-        | "export";
+    export interface Named {
+        name: string;
+    }
 
-    export type Item = Root | Module | Class | Factory | Type | Api.Function | Namespace | Variable | Reexport;
-
-    export interface Base<T extends Kind = Kind> {
-        kind: T;
-        name?: string;
-        items?: Item[];
-
+    export interface Documented {
         // TODO - this would perhaps save some space converted to markdown
         docs?: Docs;
     }
 
-    export interface Parent<T extends Kind = Kind> extends Base<T> {
-        items: Item[];
-    }
-
-    export interface Root extends Parent<"root"> {
+    export interface Root extends Named, Documented {
         version: string;
+        modules: Module[];
     }
 
-    export interface Module extends Parent<"module"> {
+    export interface Module extends Named, Documented {
         path: string;
+        exports: Definition[];
     }
 
-    export interface Class extends Parent<"class"> {}
+    export interface Definition extends Documented {
+        /**
+         * If this is true the definition is a type.  Otherwise it is a runtime value.
+         */
+        type?: boolean;
 
-    export interface Factory extends Parent<"factory"> {}
+        /**
+         * Reference to another export in module#name form.
+         */
+        ref?: string;
 
-    export interface Type extends Parent<"type"> {}
+        /**
+         * Extends and implements clauses for classes and interfaces in module#name form.
+         */
+        base?: Definition | Definition[];
 
-    export interface Function extends Base<"function"> {
-        items?: (Api.Function | Variable)[];
+        /**
+         * Visible properties, variables and type definitions namespaced under this value.
+         */
+        props?: Properties;
+
+        /**
+         * Instance properties for classes.
+         */
+        iprops?: Properties;
+
+        /**
+         * Call signatures.
+         */
+        calls?: FunctionSignature | FunctionSignature[];
+
+        /**
+         * Serialized typescript for the type.
+         */
+        ts?: string;
     }
 
-    export interface Namespace extends Parent<"namespace"> {}
+    export interface NamedDefinition extends Named, Definition {}
 
-    export interface Variable extends Base<"variable"> {
-        type: string;
+    export type Properties = NamedDefinition | NamedDefinition[];
+
+    export interface FunctionSignature extends Documented {
+        /**
+         * If true may be invoked as a constructor.
+         */
+        new?: boolean;
+
+        /**
+         * If true may be invoked normally.  Only set if new is set.
+         */
+        call?: boolean;
+
+        /**
+         * Function arguments.
+         */
+        params?: NamedDefinition[];
+
+        /**
+         * Type parameters.
+         */
+        tparams?: NamedDefinition[];
+
+        /**
+         * Function return value.
+         */
+        returns?: Definition;
     }
 
-    export interface Reexport extends Base<"export"> {
-        fromModule: string;
-        fromName?: string;
+    export function assignName(name: string, definition: Definition): NamedDefinition {
+        return {
+            name,
+            ...definition,
+        };
     }
 }
