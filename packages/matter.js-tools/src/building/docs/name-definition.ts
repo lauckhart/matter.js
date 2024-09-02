@@ -19,10 +19,8 @@ import { ApiFile } from "./api-file.js";
 import { Api } from "./api.js";
 import { NodeExports } from "./node-exports.js";
 
-export function NamedDefinition(name: string, values: (string | Node)[], file: ApiFile): Api.NamedDefinition {
-    const result = {
-        name,
-    } as Api.NamedDefinition;
+export function NameDefinition(name: string, values: (string | Node)[], file: ApiFile) {
+    const result: Api.NameDefinition = {};
 
     // Remove the actual function in the case of function overloads
     if (values.filter(n => typeof n !== "string" && n.kind === SyntaxKind.FunctionDeclaration).length > 1) {
@@ -114,23 +112,22 @@ export function NamedDefinition(name: string, values: (string | Node)[], file: A
         const exports = NodeExports(decl.body, file);
 
         for (const name of exports.names) {
-            define("props", NamedDefinition(name, exports.get(name), file));
+            define("props", NameDefinition(name, exports.get(name), file));
         }
     }
 
     function defineFunction(decl: FunctionDeclaration) {
-        const { parameters, typeParameters } = decl;
-        for (const param of parameters) {
-            // TODO
-        }
+        // const { parameters, typeParameters } = decl;
+        // for (const param of parameters) {
+        //     // TODO
+        // }
 
-        if (typeParameters) {
-            for (const param of typeParameters) {
-                // TODO
-            }
-        }
+        // if (typeParameters) {
+        //     for (const param of typeParameters) {
+        //         // TODO
+        //     }
+        // }
 
-        decl.parameters;
         decl; // TODO
     }
 

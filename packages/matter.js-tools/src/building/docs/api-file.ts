@@ -10,7 +10,7 @@ import { Package } from "../../util/package.js";
 import { ApiContext } from "./api-context.js";
 import { ApiFileError } from "./api-file-error.js";
 import { Api } from "./api.js";
-import { NamedDefinition } from "./named-definition.js";
+import { NameDefinition } from "./name-definition.js";
 import { NodeExports } from "./node-exports.js";
 
 /**
@@ -66,21 +66,15 @@ export class ApiFile {
             this.abort("Cannot create API because module is not exported");
         }
 
+        const names = {} as Record<string, Api.NameDefinition>;
+        for (const { name, exports } of this.#exports.entries) {
+            names[name] = NameDefinition(name, exports, this);
+        }
+
         const api: Api.Module = {
             name: this.#moduleName,
             path: Package.workspace.relative(this.path),
-            exports: this.#exports.entries.map(({ name, exports }): Api.NamedDefinition => {
-                const definition = NamedDefinition(name, exports, this);
-                if (definition === undefined) {
-                    this.warn(`No definition for export ${name}`);
-                    return {
-                        name,
-                        ts: "unknown",
-                    };
-                } else {
-                    return definition;
-                }
-            }),
+            names,
         };
 
         return api;

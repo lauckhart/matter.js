@@ -29,11 +29,15 @@ export async function emitApiDoc(pkg: Package, program: Program, progress: Progr
     const api: Api.Root = {
         name: pkg.name,
         version: pkg.version,
-        modules: [],
+        modules: {},
     };
 
-    for (const exp of cx.exports) {
-        api.modules.push(exp.api);
+    for (const file of cx.exports) {
+        if (file.moduleName === undefined) {
+            file.abort("File exported without module name");
+            throw "never"; // Can't get here
+        }
+        api.modules[file.moduleName] = file.api;
     }
 
     writeFileSync(pkg.resolve("build/package.api.json"), JSON.stringify(api));

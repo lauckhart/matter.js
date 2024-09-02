@@ -12,97 +12,116 @@ export namespace Api {
 
     export type Docs = SymbolDisplayPart[];
 
-    export interface Named {
-        name: string;
-    }
-
     export interface Documented {
         // TODO - this would perhaps save some space converted to markdown
         docs?: Docs;
     }
 
-    export interface Root extends Named, Documented {
+    /**
+     * Root of the API object model.
+     */
+    export interface Root extends Documented {
+        name: string;
         version: string;
-        modules: Module[];
+        modules: Record<string, Module>;
     }
 
-    export interface Module extends Named, Documented {
+    /**
+     * A file available via "import" or "require".
+     */
+    export interface Module {
+        /**
+         * The name of the module.
+         */
+        name: string;
+
+        /**
+         * Path to module relative to the workspace root.
+         */
         path: string;
-        exports: Definition[];
+
+        /**
+         * Names exported by the module.
+         */
+        names?: Record<string, string | NameDefinition>;
     }
 
-    export interface Definition extends Documented {
+    /**
+     * The definition of a name within a module or a parent name.
+     */
+    export interface NameDefinition {
         /**
-         * If this is true the definition is a type.  Otherwise it is a runtime value.
+         * References to external names exported for this name.
          */
-        type?: boolean;
+        ref?: Reference | Reference[];
 
         /**
-         * Reference to another export in module#name form.
+         * If a value is defined, the type of the value.
          */
-        ref?: string;
+        value?: Type;
 
+        /**
+         * If a type is defined, the type definition.
+         */
+        type?: TypeDefinition;
+
+        /**
+         * Exported sub-names.
+         */
+        props?: Record<string, string | NameDefinition>;
+    }
+
+    export type Type = Reference | TypeDefinition;
+
+    /**
+     * The definition of a type.
+     */
+    export interface TypeDefinition {
         /**
          * Extends and implements clauses for classes and interfaces in module#name form.
          */
-        base?: Definition | Definition[];
+        base?: Type | Type[];
 
         /**
-         * Visible properties, variables and type definitions namespaced under this value.
+         * Sub-properties of the object.
          */
-        props?: Properties;
+        props?: Record<string, Type>;
 
         /**
-         * Instance properties for classes.
+         * Function signatures if callable.
          */
-        iprops?: Properties;
-
-        /**
-         * Call signatures.
-         */
-        calls?: FunctionSignature | FunctionSignature[];
-
-        /**
-         * Serialized typescript for the type.
-         */
-        ts?: string;
+        calls?: FunctionSignature;
     }
 
-    export interface NamedDefinition extends Named, Definition {}
-
-    export type Properties = NamedDefinition | NamedDefinition[];
+    /**
+     * Reference to an api in the form <module>#<export>.
+     */
+    export type Reference = `${string}#${string}`;
 
     export interface FunctionSignature extends Documented {
         /**
-         * If true may be invoked as a constructor.
+         * True if callable with "new".
          */
         new?: boolean;
 
         /**
-         * If true may be invoked normally.  Only set if new is set.
+         * True if callable without "new".  Only present if "new" is true.
          */
         call?: boolean;
 
         /**
          * Function arguments.
          */
-        params?: NamedDefinition[];
+        params?: Record<string, Type>;
 
         /**
          * Type parameters.
          */
-        tparams?: NamedDefinition[];
+        tparams?: Record<string, Type>;
 
         /**
          * Function return value.
          */
-        returns?: Definition;
-    }
-
-    export function assignName(name: string, definition: Definition): NamedDefinition {
-        return {
-            name,
-            ...definition,
-        };
+        returns?: Type;
     }
 }
