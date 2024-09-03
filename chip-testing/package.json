@@ -20,6 +20,7 @@
         "build-clean": "matter-build --clean"
     },
     "dependencies": {
+        "@project-chip/matter.js-general": "0.10.1-alpha.0-20240903-7cffa11d",
         "@project-chip/matter-node.js": "0.10.1-alpha.0-20240903-7cffa11d",
         "@project-chip/matter.js": "0.10.1-alpha.0-20240903-7cffa11d",
         "@project-chip/matter.js-tools": "0.10.1-alpha.0-20240903-7cffa11d"

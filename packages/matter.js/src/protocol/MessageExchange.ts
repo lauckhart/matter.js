@@ -4,23 +4,27 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {
+    AsyncObservable,
+    CRYPTO_AEAD_MIC_LENGTH_BYTES,
+    Diagnostic,
+    InternalError,
+    Logger,
+    MatterError,
+    MatterFlowError,
+    Queue,
+    Time,
+    Timer,
+    createPromise,
+} from "@project-chip/matter.js-general";
 import { Message, MessageCodec, SessionType } from "../codec/MessageCodec.js";
-import { InternalError, MatterError, MatterFlowError } from "../common/MatterError.js";
-import { CRYPTO_AEAD_MIC_LENGTH_BYTES } from "../crypto/CryptoConstants.js";
 import { NodeId } from "../datatype/NodeId.js";
-import { Diagnostic } from "../log/Diagnostic.js";
-import { Logger } from "../log/Logger.js";
 import {
     SESSION_ACTIVE_INTERVAL_MS,
     SESSION_ACTIVE_THRESHOLD_MS,
     SESSION_IDLE_INTERVAL_MS,
     Session,
 } from "../session/Session.js";
-import { Time, Timer } from "../time/Time.js";
-import { ByteArray } from "../util/ByteArray.js";
-import { AsyncObservable } from "../util/Observable.js";
-import { createPromise } from "../util/Promises.js";
-import { Queue } from "../util/Queue.js";
 import { ChannelNotConnectedError, MessageChannel } from "./ExchangeManager.js";
 import { StatusCode, StatusResponseError } from "./interaction/StatusCode.js";
 import { MessageType, SECURE_CHANNEL_PROTOCOL_ID } from "./securechannel/SecureChannelMessages.js";
@@ -213,7 +217,7 @@ export class MessageExchange<ContextT> {
         } = message;
         if (!requiresAck || !this.#useMRP) return;
 
-        await this.send(MessageType.StandaloneAck, new ByteArray(0), { includeAcknowledgeMessageId: messageId });
+        await this.send(MessageType.StandaloneAck, new Uint8Array(0), { includeAcknowledgeMessageId: messageId });
     }
 
     async onMessageReceived(message: Message, isDuplicate = false) {
@@ -297,7 +301,7 @@ export class MessageExchange<ContextT> {
         await this.#messagesQueue.write(message);
     }
 
-    async send(messageType: number, payload: ByteArray, options?: ExchangeSendOptions) {
+    async send(messageType: number, payload: Uint8Array, options?: ExchangeSendOptions) {
         if (options?.requiresAck && !this.#useMRP) {
             options.requiresAck = false;
         }

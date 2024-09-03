@@ -4,19 +4,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterFlowError } from "../common/MatterError.js";
-import { Crypto } from "../crypto/Crypto.js";
+import {
+    AsyncObservable,
+    BasicSet,
+    Bytes,
+    Crypto,
+    Logger,
+    MatterFlowError,
+    Observable,
+    StorageContext,
+} from "@project-chip/matter.js-general";
 import { CaseAuthenticatedTag } from "../datatype/CaseAuthenticatedTag.js";
 import { FabricId } from "../datatype/FabricId.js";
 import { FabricIndex } from "../datatype/FabricIndex.js";
 import { NodeId } from "../datatype/NodeId.js";
 import { Fabric } from "../fabric/Fabric.js";
-import { Logger } from "../log/Logger.js";
 import { MessageCounter } from "../protocol/MessageCounter.js";
-import { StorageContext } from "../storage/StorageContext.js";
-import { ByteArray } from "../util/ByteArray.js";
-import { AsyncObservable, Observable } from "../util/Observable.js";
-import { BasicSet } from "../util/Set.js";
 import { InsecureSession } from "./InsecureSession.js";
 import { SecureSession } from "./SecureSession.js";
 import {
@@ -36,8 +39,8 @@ const logger = Logger.get("SessionManager");
 export const UNICAST_UNSECURE_SESSION_ID = 0x0000;
 
 export interface ResumptionRecord {
-    sharedSecret: ByteArray;
-    resumptionId: ByteArray;
+    sharedSecret: Uint8Array;
+    resumptionId: Uint8Array;
     fabric: Fabric;
     peerNodeId: NodeId;
     sessionParameters: SessionParameters;
@@ -129,8 +132,8 @@ export class SessionManager<ContextT> {
         fabric: Fabric | undefined;
         peerNodeId: NodeId;
         peerSessionId: number;
-        sharedSecret: ByteArray;
-        salt: ByteArray;
+        sharedSecret: Uint8Array;
+        salt: Uint8Array;
         isInitiator: boolean;
         isResumption: boolean;
         peerSessionParameters?: SessionParameterOptions;
@@ -264,8 +267,8 @@ export class SessionManager<ContextT> {
         throw new Error(`Not implemented ${groupId} ${groupSessionId}`);
     }
 
-    findResumptionRecordById(resumptionId: ByteArray) {
-        return [...this.#resumptionRecords.values()].find(record => record.resumptionId.equals(resumptionId));
+    findResumptionRecordById(resumptionId: Uint8Array) {
+        return [...this.#resumptionRecords.values()].find(record => Bytes.areEqual(record.resumptionId, resumptionId));
     }
 
     findResumptionRecordByNodeId(nodeId: NodeId) {

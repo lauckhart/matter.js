@@ -4,12 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ImplementationError, Logger, MatterFlowError, UnexpectedDataError } from "@project-chip/matter.js-general";
 import { MatterController } from "../../MatterController.js";
 import { MatterDevice } from "../../MatterDevice.js";
 import { Status } from "../../cluster/globals/index.js";
 import { Message, SessionType } from "../../codec/MessageCodec.js";
-import { ImplementationError, MatterFlowError, UnexpectedDataError } from "../../common/MatterError.js";
-import { Logger } from "../../log/Logger.js";
 import { ExchangeProvider } from "../../protocol/ExchangeManager.js";
 import {
     ExchangeSendOptions,
@@ -19,7 +18,6 @@ import {
 } from "../../protocol/MessageExchange.js";
 import { TlvAny } from "../../tlv/TlvAny.js";
 import { TlvSchema, TypeFromSchema } from "../../tlv/TlvSchema.js";
-import { ByteArray } from "../../util/ByteArray.js";
 import {
     DataReportPayload,
     canAttributePayloadBeChunked,
@@ -73,7 +71,7 @@ const logger = Logger.get("InteractionMessenger");
 class InteractionMessenger<ContextT> {
     constructor(protected exchange: MessageExchange<ContextT>) {}
 
-    send(messageType: number, payload: ByteArray, options?: ExchangeSendOptions) {
+    send(messageType: number, payload: Uint8Array, options?: ExchangeSendOptions) {
         return this.exchange.send(messageType, payload, options);
     }
 
@@ -411,7 +409,7 @@ export class InteractionClientMessenger extends IncomingInteractionClientMesseng
     }
 
     /** Implements a send method with an automatic reconnection mechanism */
-    override async send(messageType: number, payload: ByteArray, options?: ExchangeSendOptions) {
+    override async send(messageType: number, payload: Uint8Array, options?: ExchangeSendOptions) {
         if (this.exchange.channel.closed) {
             throw new ImplementationError("The exchange channel is closed. Please connect the device first.");
         }

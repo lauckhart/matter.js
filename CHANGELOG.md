@@ -9,6 +9,15 @@ The main work (all changes without a GitHub username in brackets in the below li
 	## __WORK IN PROGRESS__
 -->
 
+## __WORK IN PROGRESS__
+
+-   IMPORTANT: As of 0.10.0 the @project-chip/matter.js module has grown quite large.  This release includes major refactoring that moves functional areas into independent NPM packages.  We have added exports to maintain backwards compatibility but these are not exhaustive.  In some cases you may need to update imports to reference new code locations.
+
+-   Matter-Core functionality:
+    -   BREAKING: The "ByteArray" type is removed, replaced with native-JS Uint8Array and a small collection of utility functions in the "Bytes" namespace
+    -   General functionality that is not Matter specific previously resided in @project-chip/matter.js.  It now lives in @project-chip/matter.js-general
+    -   The Matter object model previously exported as @project-chip/matter.js/model now resides in @project-chip/matter.js-model
+
 ## 0.10.0 (2024-08-31)
 
 -   IMPORTANT: This release upgrades Matter support from Matter 1.1 to the latest release, Matter 1.3.0.1. This includes BREAKING CHANGES in a number of areas due to specification changes and some improvements in how we define datatypes. For the most part these changes are transparent because they involve low-level APIs, implicit type names, or Matter features that were never adopted elsewhere. However, some small code changes may be necessary depending on how you use Matter.js.
