@@ -6,13 +6,13 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import {
     SemanticNamespaceElement as SemanticNamespace,
     SemanticTagElement as SemanticTag
 } from "../../elements/index.js";
 
-export const PositionNs = SemanticNamespace({
+export const PositionNS = SemanticNamespace({
     name: "Position", id: 0x8, mfgCode: undefined,
 
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
@@ -44,4 +44,4 @@ export const PositionNs = SemanticNamespace({
     ]
 });
 
-Matter.children.push(PositionNs);
+MatterDefinition.children.push(PositionNS);

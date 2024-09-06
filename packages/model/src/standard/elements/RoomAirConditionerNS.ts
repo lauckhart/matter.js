@@ -6,13 +6,13 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import {
     SemanticNamespaceElement as SemanticNamespace,
     SemanticTagElement as SemanticTag
 } from "../../elements/index.js";
 
-export const RoomAirConditionerNs = SemanticNamespace({
+export const RoomAirConditionerNS = SemanticNamespace({
     name: "RoomAirConditioner", id: 0x42, mfgCode: undefined,
     details: "The tags contained in this namespace are restricted for use in the room air conditioner domain and " +
         "shall NOT be used in any other domain or context.",
@@ -20,4 +20,4 @@ export const RoomAirConditionerNs = SemanticNamespace({
     children: [SemanticTag({ name: "Evaporator", id: 0x0 }), SemanticTag({ name: "Condenser", id: 0x1 })]
 });
 
-Matter.children.push(RoomAirConditionerNs);
+MatterDefinition.children.push(RoomAirConditionerNS);

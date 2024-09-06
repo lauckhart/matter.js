@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ElementTag, Specification } from "../definitions/index.js";
+import { ElementTag, Specification } from "../common/index.js";
 import type { AnyElement } from "./AnyElement.js";
 
 /**

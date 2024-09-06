@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const OnOffSensorDt = DeviceType({
+export const OnOffSensorDT = DeviceType({
     name: "OnOffSensor", id: 0x850, category: "Sensor", classification: "simple",
     details: "An On/Off Sensor is a measurement and sensing device that, when bound to a lighting device such as " +
         "a Dimmable Light, is capable of being used to switch the device on or off.",
@@ -51,4 +51,4 @@ export const OnOffSensorDt = DeviceType({
     ]
 });
 
-Matter.children.push(OnOffSensorDt);
+MatterDefinition.children.push(OnOffSensorDT);

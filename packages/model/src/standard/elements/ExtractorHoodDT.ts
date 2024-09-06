@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const ExtractorHoodDt = DeviceType({
+export const ExtractorHoodDT = DeviceType({
     name: "ExtractorHood", id: 0x7a, category: "Appliances", classification: "simple",
 
     details: "An Extractor Hood is a device that is generally installed above a cooking surface in residential " +
@@ -63,4 +63,4 @@ export const ExtractorHoodDt = DeviceType({
     ]
 });
 
-Matter.children.push(ExtractorHoodDt);
+MatterDefinition.children.push(ExtractorHoodDT);

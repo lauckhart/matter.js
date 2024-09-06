@@ -6,14 +6,14 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import {
     DeviceTypeElement as DeviceType,
     RequirementElement as Requirement,
     FieldElement as Field
 } from "../../elements/index.js";
 
-export const BasicVideoPlayerDt = DeviceType({
+export const BasicVideoPlayerDT = DeviceType({
     name: "BasicVideoPlayer", id: 0x28, category: "Media", classification: "simple",
 
     details: "This defines conformance to the Basic Video Player device type." +
@@ -98,4 +98,4 @@ export const BasicVideoPlayerDt = DeviceType({
     ]
 });
 
-Matter.children.push(BasicVideoPlayerDt);
+MatterDefinition.children.push(BasicVideoPlayerDT);

@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const ThermostatDt = DeviceType({
+export const ThermostatDT = DeviceType({
     name: "Thermostat", id: 0x301, category: "HVAC", classification: "simple",
     details: "A Thermostat device is capable of having either built-in or separate sensors for temperature, " +
         "humidity or occupancy. It allows the desired temperature to be set either remotely or locally. The " +
@@ -74,4 +74,4 @@ export const ThermostatDt = DeviceType({
     ]
 });
 
-Matter.children.push(ThermostatDt);
+MatterDefinition.children.push(ThermostatDT);

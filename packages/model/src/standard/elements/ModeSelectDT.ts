@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const ModeSelectDt = DeviceType({
+export const ModeSelectDT = DeviceType({
     name: "ModeSelect", id: 0x27, category: "Generic", classification: "simple",
     details: "This defines conformance to the Mode Select device type.",
     xref: { document: "device", section: "11.1" },
@@ -29,4 +29,4 @@ export const ModeSelectDt = DeviceType({
     ]
 });
 
-Matter.children.push(ModeSelectDt);
+MatterDefinition.children.push(ModeSelectDT);

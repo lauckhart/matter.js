@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const ContactSensorDt = DeviceType({
+export const ContactSensorDT = DeviceType({
     name: "ContactSensor", id: 0x15, category: "Sensor", classification: "simple",
     details: "This defines conformance to the Contact Sensor device type.",
     xref: { document: "device", section: "7.1" },
@@ -37,4 +37,4 @@ export const ContactSensorDt = DeviceType({
     ]
 });
 
-Matter.children.push(ContactSensorDt);
+MatterDefinition.children.push(ContactSensorDT);

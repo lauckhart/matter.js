@@ -8,7 +8,7 @@ import {
     AnyElement,
     ClusterElement,
     DatatypeElement,
-    MatterModel,
+    Matter,
     Metatype,
     ValueElement,
 } from "@project-chip/matter.js-model";
@@ -50,7 +50,7 @@ export async function loadChip(version: string): Promise<ClusterElement[]> {
 // duplicate type names in Matter that it works.  This routine installs datatypes into proper cluster scope
 function installDatatypes(elements: AnyElement[]) {
     const globals = {} as { [name: string]: AnyElement };
-    Object.values(MatterModel.seedGlobals).forEach(g => (globals[g.name] = g));
+    Object.values(Matter.seedGlobals).forEach(g => (globals[g.name] = g));
 
     const datatypes = {} as { [name: string]: DatatypeElement };
     elements.forEach(e => {

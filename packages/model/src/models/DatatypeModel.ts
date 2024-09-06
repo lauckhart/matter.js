@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Metatype } from "../common/index.js";
 import { DatatypeElement } from "../elements/DatatypeElement.js";
-import { Metatype } from "../index.js";
 import { Model } from "./Model.js";
 import { ValueModel } from "./ValueModel.js";
 

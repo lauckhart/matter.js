@@ -6,12 +6,23 @@
 
 import { InternalError } from "@project-chip/matter.js-general";
 import { Access, Aspect, Constraint } from "../aspects/index.js";
-import { SchemaImplementationError } from "../definitions/errors.js";
-import { ElementTag, FeatureSet, FieldValue, Metatype } from "../definitions/index.js";
+import { SchemaImplementationError } from "../common/errors.js";
+import { ElementTag, FeatureSet, FieldValue, Metatype } from "../common/index.js";
 import { AnyElement } from "../elements/index.js";
 import { Children } from "../models/Children.js";
 import { PropertyModel, type ClusterModel, type CommandModel, type Model, type ValueModel } from "../models/index.js";
-import * as Elements from "../standard/elements/index.js";
+import {
+    enum16,
+    enum8,
+    map16,
+    map32,
+    map64,
+    map8,
+    uint16,
+    uint32,
+    uint64,
+    uint8,
+} from "../standard/elements/definitions.js";
 
 const OPERATION_DEPTH_LIMIT = 20;
 
@@ -93,22 +104,22 @@ export class ModelTraversal {
                 // If parented by enum or bitmap, infer type as uint of same size
                 if ((ancestor as { effectiveMetatype?: string }).effectiveMetatype) {
                     switch (ancestor.name) {
-                        case Elements.enum8.name:
-                        case Elements.map8.name:
-                            result = Elements.uint8.name;
+                        case enum8.name:
+                        case map8.name:
+                            result = uint8.name;
                             return false;
 
-                        case Elements.enum16.name:
-                        case Elements.map16.name:
-                            result = Elements.uint16.name;
+                        case enum16.name:
+                        case map16.name:
+                            result = uint16.name;
                             return false;
 
-                        case Elements.map32.name:
-                            result = Elements.uint32.name;
+                        case map32.name:
+                            result = uint32.name;
                             return false;
 
-                        case Elements.map64.name:
-                            result = Elements.uint64.name;
+                        case map64.name:
+                            result = uint64.name;
                             return false;
                     }
                 }

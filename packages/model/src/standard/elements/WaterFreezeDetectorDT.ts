@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const WaterFreezeDetectorDt = DeviceType({
+export const WaterFreezeDetectorDT = DeviceType({
     name: "WaterFreezeDetector", id: 0x41, category: "Sensor", classification: "simple",
     details: "This defines conformance to the Water Freeze Detector device type.",
     xref: { document: "device", section: "7.11" },
@@ -38,4 +38,4 @@ export const WaterFreezeDetectorDt = DeviceType({
     ]
 });
 
-Matter.children.push(WaterFreezeDetectorDt);
+MatterDefinition.children.push(WaterFreezeDetectorDT);

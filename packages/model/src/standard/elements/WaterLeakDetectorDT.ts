@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const WaterLeakDetectorDt = DeviceType({
+export const WaterLeakDetectorDT = DeviceType({
     name: "WaterLeakDetector", id: 0x43, category: "Sensor", classification: "simple",
     details: "This defines conformance to the Water Leak Detector device type.",
     xref: { document: "device", section: "7.12" },
@@ -38,4 +38,4 @@ export const WaterLeakDetectorDt = DeviceType({
     ]
 });
 
-Matter.children.push(WaterLeakDetectorDt);
+MatterDefinition.children.push(WaterLeakDetectorDT);

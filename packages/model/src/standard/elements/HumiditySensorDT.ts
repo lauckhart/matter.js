@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const HumiditySensorDt = DeviceType({
+export const HumiditySensorDT = DeviceType({
     name: "HumiditySensor", id: 0x307, category: "Sensor", classification: "simple",
     details: "A humidity sensor (in most cases a Relative humidity sensor) reports humidity measurements.",
     xref: { document: "device", section: "7.7" },
@@ -30,4 +30,4 @@ export const HumiditySensorDt = DeviceType({
     ]
 });
 
-Matter.children.push(HumiditySensorDt);
+MatterDefinition.children.push(HumiditySensorDT);

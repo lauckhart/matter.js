@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const GenericSwitchDt = DeviceType({
+export const GenericSwitchDT = DeviceType({
     name: "GenericSwitch", id: 0xf, category: "Switches and Controls", classification: "simple",
     details: "This defines conformance for the Generic Switch device type.",
     xref: { document: "device", section: "6.6" },
@@ -33,4 +33,4 @@ export const GenericSwitchDt = DeviceType({
     ]
 });
 
-Matter.children.push(GenericSwitchDt);
+MatterDefinition.children.push(GenericSwitchDT);

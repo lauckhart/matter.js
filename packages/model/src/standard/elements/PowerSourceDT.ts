@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const PowerSourceDt = DeviceType({
+export const PowerSourceDT = DeviceType({
     name: "PowerSource", id: 0x11, category: "Utility", classification: "utility",
     xref: { document: "device", section: "2.2" },
 
@@ -28,4 +28,4 @@ export const PowerSourceDt = DeviceType({
     ]
 });
 
-Matter.children.push(PowerSourceDt);
+MatterDefinition.children.push(PowerSourceDT);

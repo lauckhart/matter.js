@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const CooktopDt = DeviceType({
+export const CooktopDT = DeviceType({
     name: "Cooktop", id: 0x78, category: "Appliances", classification: "simple",
     details: "A cooktop is a cooking surface that heats food either by transferring currents from an " +
         "electromagnetic field located below the glass surface directly to the magnetic induction cookware " +
@@ -33,4 +33,4 @@ export const CooktopDt = DeviceType({
     ]
 });
 
-Matter.children.push(CooktopDt);
+MatterDefinition.children.push(CooktopDT);

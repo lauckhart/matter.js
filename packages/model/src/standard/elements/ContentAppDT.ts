@@ -6,14 +6,14 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import {
     DeviceTypeElement as DeviceType,
     RequirementElement as Requirement,
     FieldElement as Field
 } from "../../elements/index.js";
 
-export const ContentAppDt = DeviceType({
+export const ContentAppDT = DeviceType({
     name: "ContentApp", id: 0x24, category: "Media", classification: "simple",
     details: "This defines conformance to the Content App device type." +
         "\n" +
@@ -81,4 +81,4 @@ export const ContentAppDt = DeviceType({
     ]
 });
 
-Matter.children.push(ContentAppDt);
+MatterDefinition.children.push(ContentAppDT);

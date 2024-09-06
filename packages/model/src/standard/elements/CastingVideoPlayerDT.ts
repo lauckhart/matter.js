@@ -6,14 +6,14 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import {
     DeviceTypeElement as DeviceType,
     RequirementElement as Requirement,
     FieldElement as Field
 } from "../../elements/index.js";
 
-export const CastingVideoPlayerDt = DeviceType({
+export const CastingVideoPlayerDT = DeviceType({
     name: "CastingVideoPlayer", id: 0x23, category: "Media", classification: "simple",
 
     details: "This defines conformance to the Casting Video Player device type." +
@@ -117,4 +117,4 @@ export const CastingVideoPlayerDt = DeviceType({
     ]
 });
 
-Matter.children.push(CastingVideoPlayerDt);
+MatterDefinition.children.push(CastingVideoPlayerDT);

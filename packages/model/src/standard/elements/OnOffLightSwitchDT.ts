@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const OnOffLightSwitchDt = DeviceType({
+export const OnOffLightSwitchDT = DeviceType({
     name: "OnOffLightSwitch", id: 0x103, category: "Switches and Controls", classification: "simple",
     details: "An On/Off Light Switch is a controller device that, when bound to a lighting device such as an " +
         "On/Off Light, is capable of being used to switch the device on or off.",
@@ -43,4 +43,4 @@ export const OnOffLightSwitchDt = DeviceType({
     ]
 });
 
-Matter.children.push(OnOffLightSwitchDt);
+MatterDefinition.children.push(OnOffLightSwitchDT);

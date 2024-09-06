@@ -5,7 +5,7 @@
  */
 
 import { camelize, InternalError } from "@project-chip/matter.js-general";
-import { DefinitionError, ElementTag, Metatype, Specification } from "../definitions/index.js";
+import { DefinitionError, ElementTag, Metatype, Specification } from "../common/index.js";
 import { AnyElement, BaseElement } from "../elements/index.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
 import { Children } from "./Children.js";

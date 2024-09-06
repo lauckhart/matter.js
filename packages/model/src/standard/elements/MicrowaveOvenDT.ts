@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const MicrowaveOvenDt = DeviceType({
+export const MicrowaveOvenDT = DeviceType({
     name: "MicrowaveOven", id: 0x79, category: "Appliances", classification: "simple",
     details: "This defines conformance to the Microwave Oven device type." +
         "\n" +
@@ -52,4 +52,4 @@ export const MicrowaveOvenDt = DeviceType({
     ]
 });
 
-Matter.children.push(MicrowaveOvenDt);
+MatterDefinition.children.push(MicrowaveOvenDT);

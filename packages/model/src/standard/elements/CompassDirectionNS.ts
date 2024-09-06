@@ -6,13 +6,13 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import {
     SemanticNamespaceElement as SemanticNamespace,
     SemanticTagElement as SemanticTag
 } from "../../elements/index.js";
 
-export const CompassDirectionNs = SemanticNamespace({
+export const CompassDirectionNS = SemanticNamespace({
     name: "CompassDirection", id: 0x2, mfgCode: undefined,
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a movement into a certain compass direction. Note the difference with Chapter 4, " +
@@ -31,4 +31,4 @@ export const CompassDirectionNs = SemanticNamespace({
     ]
 });
 
-Matter.children.push(CompassDirectionNs);
+MatterDefinition.children.push(CompassDirectionNS);

@@ -5,7 +5,7 @@
  */
 
 import { Access, Aspect, Conformance, Constraint, Quality } from "../aspects/index.js";
-import { ElementTag, FieldValue, Metatype } from "../definitions/index.js";
+import { ElementTag, FieldValue, Metatype } from "../common/index.js";
 import { AnyElement, FieldElement, ValueElement } from "../elements/index.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
 import { Aspects } from "./Aspects.js";

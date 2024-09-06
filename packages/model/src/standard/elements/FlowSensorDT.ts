@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const FlowSensorDt = DeviceType({
+export const FlowSensorDT = DeviceType({
     name: "FlowSensor", id: 0x306, category: "Sensor", classification: "simple",
     details: "A Flow Sensor device measures and reports the flow rate of a fluid.",
     xref: { document: "device", section: "7.6" },
@@ -30,4 +30,4 @@ export const FlowSensorDt = DeviceType({
     ]
 });
 
-Matter.children.push(FlowSensorDt);
+MatterDefinition.children.push(FlowSensorDT);

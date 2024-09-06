@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const SpeakerDt = DeviceType({
+export const SpeakerDT = DeviceType({
     name: "Speaker", id: 0x22, category: "Media", classification: "simple",
 
     details: "This defines conformance to the Speaker device type. This feature controls the speaker volume of " +
@@ -47,4 +47,4 @@ export const SpeakerDt = DeviceType({
     ]
 });
 
-Matter.children.push(SpeakerDt);
+MatterDefinition.children.push(SpeakerDT);

@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const BridgedNodeDt = DeviceType({
+export const BridgedNodeDT = DeviceType({
     name: "BridgedNode", id: 0x13, category: "Utility", classification: "utility",
     details: "This defines conformance for a Bridged Node root endpoint. This endpoint is akin to a \"read me " +
         "first\" endpoint that describes itself and any other endpoints that make up the Bridged Node. A " +
@@ -41,4 +41,4 @@ export const BridgedNodeDt = DeviceType({
     ]
 });
 
-Matter.children.push(BridgedNodeDt);
+MatterDefinition.children.push(BridgedNodeDT);

@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const LaundryWasherDt = DeviceType({
+export const LaundryWasherDT = DeviceType({
     name: "LaundryWasher", id: 0x73, category: "Appliances", classification: "simple",
     details: "A Laundry Washer represents a device that is capable of laundering consumer items. Any laundry " +
         "washer product may utilize this device type." +
@@ -56,4 +56,4 @@ export const LaundryWasherDt = DeviceType({
     ]
 });
 
-Matter.children.push(LaundryWasherDt);
+MatterDefinition.children.push(LaundryWasherDT);

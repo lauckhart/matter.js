@@ -17,6 +17,11 @@ import { Model } from "./Model.js";
 export interface Children<M extends Model = Model, E extends AnyElement = AnyElement> extends Array<M> {
     /**
      * Add a child.
+     */
+    add(child: M | E): Model;
+
+    /**
+     * Add children.
      *
      * Operates like a standard array push but we adjust the type to allow insertion of elements as well as models.
      */

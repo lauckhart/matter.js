@@ -6,13 +6,13 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import {
     SemanticNamespaceElement as SemanticNamespace,
     SemanticTagElement as SemanticTag
 } from "../../elements/index.js";
 
-export const NumberNs = SemanticNamespace({
+export const NumberNS = SemanticNamespace({
     name: "Number", id: 0x7, mfgCode: undefined,
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a certain numeric feature of a device (e.g. a numeric input button).",
@@ -33,4 +33,4 @@ export const NumberNs = SemanticNamespace({
     ]
 });
 
-Matter.children.push(NumberNs);
+MatterDefinition.children.push(NumberNS);

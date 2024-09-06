@@ -6,14 +6,14 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import {
     DeviceTypeElement as DeviceType,
     RequirementElement as Requirement,
     FieldElement as Field
 } from "../../elements/index.js";
 
-export const RootNodeDt = DeviceType({
+export const RootNodeDT = DeviceType({
     name: "RootNode", id: 0x16, category: "Utility", classification: "node",
 
     details: "This defines conformance for a root node endpoint (see System Model specification). This endpoint " +
@@ -136,4 +136,4 @@ export const RootNodeDt = DeviceType({
     ]
 });
 
-Matter.children.push(RootNodeDt);
+MatterDefinition.children.push(RootNodeDT);

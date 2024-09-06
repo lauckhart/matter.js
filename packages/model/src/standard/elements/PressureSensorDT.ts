@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const PressureSensorDt = DeviceType({
+export const PressureSensorDT = DeviceType({
     name: "PressureSensor", id: 0x305, category: "Sensor", classification: "simple",
     details: "A Pressure Sensor device measures and reports the pressure of a fluid.",
     xref: { document: "device", section: "7.5" },
@@ -30,4 +30,4 @@ export const PressureSensorDt = DeviceType({
     ]
 });
 
-Matter.children.push(PressureSensorDt);
+MatterDefinition.children.push(PressureSensorDT);

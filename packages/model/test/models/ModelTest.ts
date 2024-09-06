@@ -10,10 +10,12 @@ import {
     ClusterModel,
     DatatypeModel,
     FieldModel,
+    Matter,
     MatterModel,
     Metatype,
+    uint16,
+    uint32,
 } from "../../src/index.js";
-import * as Elements from "../../src/standard/elements/index.js";
 
 describe("Model", () => {
     describe("parent", () => {
@@ -182,7 +184,7 @@ describe("Model", () => {
         });
 
         it("is inferred from implied base", () => {
-            expect(Fixtures.feature.base?.name).equal(Elements.uint32.name);
+            expect(Fixtures.feature.base?.name).equal(uint32.name);
         });
 
         it("finds attribute struct", () => {
@@ -250,7 +252,7 @@ describe("Model", () => {
         });
 
         it("infers type", () => {
-            expect(Fixtures.enumValue2.effectiveType).equal(Elements.uint16.name);
+            expect(Fixtures.enumValue2.effectiveType).equal(uint16.name);
         });
     });
 
@@ -348,7 +350,7 @@ namespace Fixtures {
     export const matter = new MatterModel({
         name: "Fake Matter",
         children: [
-            ...MatterModel.seedGlobals,
+            ...Matter.seedGlobals,
             cluster1,
             {
                 tag: "cluster",

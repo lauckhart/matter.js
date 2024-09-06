@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const OvenDt = DeviceType({
+export const OvenDT = DeviceType({
     name: "Oven", id: 0x7b, category: "Appliances", classification: "simple",
     details: "An oven represents a device that contains one or more cabinets, and optionally a single cooktop, " +
         "that are all capable of heating food. Examples of consumer products implementing this device type " +
@@ -28,4 +28,4 @@ export const OvenDt = DeviceType({
     ]
 });
 
-Matter.children.push(OvenDt);
+MatterDefinition.children.push(OvenDT);

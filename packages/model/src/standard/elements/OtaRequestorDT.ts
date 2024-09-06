@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const OtaRequestorDt = DeviceType({
+export const OtaRequestorDT = DeviceType({
     name: "OtaRequestor", id: 0x12, category: "Utility", classification: "utility",
     details: "An OTA Requestor is a device that is capable of receiving an OTA software update.",
     xref: { document: "device", section: "2.3" },
@@ -33,4 +33,4 @@ export const OtaRequestorDt = DeviceType({
     ]
 });
 
-Matter.children.push(OtaRequestorDt);
+MatterDefinition.children.push(OtaRequestorDT);

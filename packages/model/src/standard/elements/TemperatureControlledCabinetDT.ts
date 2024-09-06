@@ -6,14 +6,14 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import {
     DeviceTypeElement as DeviceType,
     RequirementElement as Requirement,
     FieldElement as Field
 } from "../../elements/index.js";
 
-export const TemperatureControlledCabinetDt = DeviceType({
+export const TemperatureControlledCabinetDT = DeviceType({
     name: "TemperatureControlledCabinet", id: 0x71, category: "Appliances", classification: "simple",
     details: "A Temperature Controlled Cabinet only exists composed as part of another device type. It represents " +
         "a single cabinet that is capable of having its temperature controlled. Such a cabinet may be " +
@@ -81,4 +81,4 @@ export const TemperatureControlledCabinetDt = DeviceType({
     ]
 });
 
-Matter.children.push(TemperatureControlledCabinetDt);
+MatterDefinition.children.push(TemperatureControlledCabinetDT);

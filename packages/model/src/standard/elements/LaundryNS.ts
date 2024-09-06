@@ -6,13 +6,13 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import {
     SemanticNamespaceElement as SemanticNamespace,
     SemanticTagElement as SemanticTag
 } from "../../elements/index.js";
 
-export const LaundryNs = SemanticNamespace({
+export const LaundryNS = SemanticNamespace({
     name: "Laundry", id: 0xe, mfgCode: undefined,
     details: "The tags contained in this namespace are restricted for use in the laundry domain and shall NOT be " +
         "used in any other domain or context.",
@@ -26,4 +26,4 @@ export const LaundryNs = SemanticNamespace({
     ]
 });
 
-Matter.children.push(LaundryNs);
+MatterDefinition.children.push(LaundryNS);

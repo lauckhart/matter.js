@@ -6,10 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Matter } from "../Matter.js";
+import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const DimmableLightDt = DeviceType({
+export const DimmableLightDT = DeviceType({
     name: "DimmableLight", id: 0x101, type: "OnOffLight", category: "Lighting",
     classification: "simple",
     details: "A Dimmable Light is a lighting device that is capable of being switched on or off and the intensity " +
@@ -63,4 +63,4 @@ export const DimmableLightDt = DeviceType({
     ]
 })
 
-Matter.children.push(DimmableLightDt);
+MatterDefinition.children.push(DimmableLightDT);

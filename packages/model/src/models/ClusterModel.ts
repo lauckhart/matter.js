@@ -7,9 +7,9 @@
 import { camelize, describeList } from "@project-chip/matter.js-general";
 import { Access } from "../aspects/Access.js";
 import { Quality } from "../aspects/Quality.js";
-import { SchemaImplementationError } from "../definitions/errors.js";
-import { ElementTag, FeatureSet, Metatype } from "../definitions/index.js";
-import { Mei } from "../definitions/Mei.js";
+import { SchemaImplementationError } from "../common/errors.js";
+import { ElementTag, FeatureSet, Metatype } from "../common/index.js";
+import { Mei } from "../common/Mei.js";
 import { ClusterElement } from "../elements/index.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
 import { ClusterRevision } from "../standard/elements/ClusterRevision.js";

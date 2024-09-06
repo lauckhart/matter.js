@@ -5,7 +5,7 @@
  */
 
 import { Access, Conformance, Constraint, Quality } from "../aspects/index.js";
-import { ElementTag, FieldValue } from "../definitions/index.js";
+import { ElementTag, FieldValue } from "../common/index.js";
 import { type AnyValueElement } from "./AnyValueElement.js";
 import { BaseElement } from "./BaseElement.js";
 
