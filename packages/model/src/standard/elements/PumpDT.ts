@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const PumpDT = DeviceType({
+export const PumpDt = DeviceType({
     name: "Pump", id: 0x303, category: "Smart Plugs/Outlets and other Actuators",
     classification: "simple",
     details: "A Pump device is a pump that may have variable speed. It may have optional built-in sensors and a " +
@@ -76,4 +76,4 @@ export const PumpDT = DeviceType({
     ]
 })
 
-MatterDefinition.children.push(PumpDT);
+MatterDefinition.children.push(PumpDt);

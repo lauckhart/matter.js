@@ -4,29 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { EndpointElement, NodeElement } from "../elements/index.js";
-import { Children } from "./Children.js";
+import { NodeElement } from "../elements/index.js";
 import { EndpointModel } from "./EndpointModel.js";
 import { Model } from "./Model.js";
 
-export class NodeModel extends Model implements NodeElement {
+export class NodeModel extends Model<NodeElement, EndpointModel> implements NodeElement {
     override tag: NodeElement.Tag = NodeElement.Tag;
     declare id: number;
 
     get endpoints() {
         return this.children;
-    }
-
-    override get children(): Children<EndpointModel, EndpointElement> {
-        return super.children as any;
-    }
-
-    override set children(children: (EndpointModel | EndpointElement)[]) {
-        super.children = children;
-    }
-
-    constructor(definition: NodeElement.Properties) {
-        super(definition);
     }
 
     static {

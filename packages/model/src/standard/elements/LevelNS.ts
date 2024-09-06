@@ -12,7 +12,7 @@ import {
     SemanticTagElement as SemanticTag
 } from "../../elements/index.js";
 
-export const LevelNS = SemanticNamespace({
+export const LevelNs = SemanticNamespace({
     name: "Level", id: 0x5, mfgCode: undefined,
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a certain level for a feature of a device (e.g. a button to set the speed of a " +
@@ -25,4 +25,4 @@ export const LevelNS = SemanticNamespace({
     ]
 });
 
-MatterDefinition.children.push(LevelNS);
+MatterDefinition.children.push(LevelNs);

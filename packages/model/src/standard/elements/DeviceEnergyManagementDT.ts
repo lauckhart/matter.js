@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const DeviceEnergyManagementDT = DeviceType({
+export const DeviceEnergyManagementDt = DeviceType({
     name: "DeviceEnergyManagement", id: 0x50d, category: "Utility", classification: "utility",
     details: "A Device Energy Management device provides reporting and optionally adjustment of the electrical " +
         "power planned on being consumed or produced by the device.",
@@ -31,4 +31,4 @@ export const DeviceEnergyManagementDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(DeviceEnergyManagementDT);
+MatterDefinition.children.push(DeviceEnergyManagementDt);

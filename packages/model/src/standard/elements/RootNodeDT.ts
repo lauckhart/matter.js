@@ -13,7 +13,7 @@ import {
     FieldElement as Field
 } from "../../elements/index.js";
 
-export const RootNodeDT = DeviceType({
+export const RootNodeDt = DeviceType({
     name: "RootNode", id: 0x16, category: "Utility", classification: "node",
 
     details: "This defines conformance for a root node endpoint (see System Model specification). This endpoint " +
@@ -136,4 +136,4 @@ export const RootNodeDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(RootNodeDT);
+MatterDefinition.children.push(RootNodeDt);

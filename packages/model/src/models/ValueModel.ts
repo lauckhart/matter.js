@@ -6,7 +6,7 @@
 
 import { Access, Aspect, Conformance, Constraint, Quality } from "../aspects/index.js";
 import { ElementTag, FieldValue, Metatype } from "../common/index.js";
-import { AnyElement, FieldElement, ValueElement } from "../elements/index.js";
+import { AnyElement, BaseElement, FieldElement, ValueElement } from "../elements/index.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
 import { Aspects } from "./Aspects.js";
 import { Children } from "./Children.js";
@@ -28,13 +28,13 @@ const QUALITY: unique symbol = Symbol("quality");
 /**
  * Each {@link ValueElement} type has a corresponding implementation that derives from this class.
  */
-export abstract class ValueModel extends Model implements ValueElement {
+export abstract class ValueModel<T extends ValueElement = any> extends Model<T, FieldModel> implements ValueElement {
     declare byteSize?: ValueElement.ByteSize;
     declare default?: FieldValue;
     declare metatype?: Metatype;
     override isType? = true;
 
-    override get children(): Children<FieldModel, FieldElement> {
+    override get children(): Children<FieldModel> {
         return super.children as any;
     }
 
@@ -312,7 +312,7 @@ export abstract class ValueModel extends Model implements ValueElement {
         super.freeze();
     }
 
-    constructor(definition: ValueElement.Properties) {
+    constructor(definition: BaseElement.Properties<T>) {
         super(definition);
 
         const match = this.type?.match(/^list\[(.*)\]$/);

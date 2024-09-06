@@ -8,27 +8,30 @@ import { Specification } from "../common/index.js";
 import { MatterElement } from "../elements/index.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
 import { AttributeModel } from "./AttributeModel.js";
-import { Children } from "./Children.js";
 import { ClusterModel } from "./ClusterModel.js";
 import { DatatypeModel } from "./DatatypeModel.js";
 import { DeviceTypeModel } from "./DeviceTypeModel.js";
 import { FabricModel } from "./FabricModel.js";
 import { FieldModel } from "./FieldModel.js";
+import { Globals } from "./Globals.js";
 import { Model } from "./Model.js";
 import { SemanticNamespaceModel } from "./SemanticNamespaceModel.js";
 
 /**
  * The root of a Matter model.  This is the parent for global models.
  */
-export class MatterModel extends Model implements MatterElement {
+export class MatterModel extends Model<MatterElement, MatterModel.Child> implements MatterElement {
     override tag: MatterElement.Tag = MatterElement.Tag;
     override isTypeScope = true;
     declare revision?: Specification.Revision;
 
     /**
-     * The default instance of the canonical MatterModel.
+     * The default instance of the canonical MatterModel (also exported directly simply as "Matter").
      */
-    static standard: MatterModel = new MatterModel();
+    static standard: MatterModel = new MatterModel({
+        name: "Matter",
+        children: Object.values(Globals),
+    });
 
     /**
      * Clusters.
@@ -72,14 +75,6 @@ export class MatterModel extends Model implements MatterElement {
         return this.all(FabricModel);
     }
 
-    override get children(): Children<MatterModel.Child, MatterElement.Child> {
-        return super.children as any;
-    }
-
-    override set children(children: (MatterModel.Child | MatterElement.Child)[]) {
-        super.children = children;
-    }
-
     /**
      * Create a new MatterModel.
      *
@@ -98,7 +93,7 @@ export class MatterModel extends Model implements MatterElement {
      *
      * The returned elements are clones as we use this to initialize empty models for testing or diagnostic purposes.
      */
-    get seedGlobals() {
+    get seedGlobals(): MatterModel.Child[] {
         return this.children.filter(child => child.isSeed).map(child => child.clone());
     }
 

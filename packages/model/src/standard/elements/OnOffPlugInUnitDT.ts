@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const OnOffPlugInUnitDT = DeviceType({
+export const OnOffPlugInUnitDt = DeviceType({
     name: "OnOffPlugInUnit", id: 0x10a, category: "Smart Plugs/Outlets and other Actuators",
     classification: "simple",
     details: "An On/Off Plug-in Unit is a device that provides power to another device that is plugged into it, " +
@@ -61,4 +61,4 @@ export const OnOffPlugInUnitDT = DeviceType({
     ]
 })
 
-MatterDefinition.children.push(OnOffPlugInUnitDT);
+MatterDefinition.children.push(OnOffPlugInUnitDt);

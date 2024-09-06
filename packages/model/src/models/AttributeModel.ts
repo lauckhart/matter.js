@@ -12,7 +12,7 @@ import { PropertyModel } from "./PropertyModel.js";
 // Full set of global IDs per core spec 1.3
 export const GLOBAL_IDS = new Set([0xfffd, 0xfffc, 0xfffb, 0xfffa, 0xfff9, 0xfff8]);
 
-export class AttributeModel extends PropertyModel implements AttributeElement {
+export class AttributeModel extends PropertyModel<AttributeElement> implements AttributeElement {
     override tag: AttributeElement.Tag = AttributeElement.Tag;
     declare id: Mei;
 

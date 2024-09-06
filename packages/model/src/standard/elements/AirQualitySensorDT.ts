@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const AirQualitySensorDT = DeviceType({
+export const AirQualitySensorDt = DeviceType({
     name: "AirQualitySensor", id: 0x2c, category: "Sensor", classification: "simple",
     details: "This defines conformance for the Air Quality Sensor device type." +
         "\n" +
@@ -88,4 +88,4 @@ export const AirQualitySensorDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(AirQualitySensorDT);
+MatterDefinition.children.push(AirQualitySensorDt);

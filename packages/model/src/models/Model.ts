@@ -12,17 +12,20 @@ import { Children } from "./Children.js";
 
 /**
  * A "model" is a class that implements runtime functionality associated with the corresponding element type.
+ *
+ * @template T the element type this model implements
+ * @template C the type of children this model accepts
  */
-export abstract class Model {
+export abstract class Model<T extends BaseElement = any, C extends Model = any> {
     abstract readonly tag: ElementTag;
-    declare type?: string;
-    declare isSeed?: boolean;
-    declare description?: string;
-    declare details?: string;
-    declare xref?: Model.CrossReference;
-    declare errors?: DefinitionError[];
-    declare asOf?: Specification.Revision;
-    declare until?: Specification.Revision;
+    type?: string;
+    isSeed?: boolean;
+    description?: string;
+    details?: string;
+    xref?: Model.CrossReference;
+    errors?: DefinitionError[];
+    asOf?: Specification.Revision;
+    until?: Specification.Revision;
     declare id?: number;
     declare name: string;
 
@@ -39,7 +42,16 @@ export abstract class Model {
      */
     isType?: boolean;
 
-    #children?: Children;
+    /**
+     * Normally {@link base} performs lookup based on {@link type}.  If instead a model is installed it is used as the
+     * base.
+     *
+     * The operational base also enables resolution from the operational base's tree.  This enables resolution on
+     * operational models that are not installed in a parent hierarchy.
+     */
+    operationalBase?: Model;
+
+    #children?: Children<C>;
     #parent?: Model;
 
     /**
@@ -153,7 +165,7 @@ export abstract class Model {
     /**
      * Children of models are always models.
      */
-    get children(): Children {
+    get children(): Children<Model<T, C>> {
         if (!this.#children) {
             // Construct new Children instance via setter
             this.children = [];
@@ -162,9 +174,9 @@ export abstract class Model {
     }
 
     /**
-     * Children can be added as models or elements.
+     * Set the children of the model.
      */
-    set children(children: (Model | AnyElement)[]) {
+    set children(children: Iterable<Children.DefinitionOf<Model<T>>>) {
         this.#children = Children(
             children,
 
@@ -209,7 +221,7 @@ export abstract class Model {
     }
 
     /**
-     * Get a Model for my base type, if any.
+     * Get a model for my base type as defined by {@link type}, if any.
      */
     get base() {
         return new ModelTraversal().findBase(this);
@@ -271,6 +283,7 @@ export abstract class Model {
         const t = definition["tag"];
         const constructor = Model.types[t];
         if (!constructor) {
+            debugger;
             throw new InternalError(`Unknown element tag "${t}"`);
         }
         return new constructor(definition);
@@ -282,14 +295,14 @@ export abstract class Model {
      * @param constructor model class or a predicate object
      * @param key filters to models matching a specific type
      */
-    all<T extends Model>(constructor: Model.Type<T>, key?: number | string) {
+    all<T extends C>(constructor: Model.Type<T>, key?: number | string): T[] {
         return this.children.all(constructor, key);
     }
 
     /**
-     * Retrieve a specific model by ID or name.
+     * Retrieve a specific child by ID or name.
      */
-    get<T extends Model>(type: Model.Type<T>, key: number | string): T | undefined {
+    get<T extends C>(type: Model.Type<T>, key: number | string): T | undefined {
         return this.children.get(type, key);
     }
 
@@ -382,7 +395,27 @@ export abstract class Model {
         return new Type(this);
     }
 
-    constructor(definition: BaseElement) {
+    /**
+     * Create an operational extension of the model.  This creates a new model that inherits from this model for
+     * operational purposes.
+     */
+    extend<This extends Model>(this: This, properties: Partial<BaseElement.Properties<T>>): This {
+        const constructor = this.constructor as new (properties: unknown) => This;
+
+        const extension = new constructor({
+            id: this.id,
+            name: this.name,
+
+            ...properties,
+
+            tag: this.tag,
+            operationalBase: this,
+        });
+
+        return extension;
+    }
+
+    constructor(definition: Model<T, C> | BaseElement.Properties<T>) {
         const isClone = definition instanceof Model;
 
         this.#id = definition.id;
@@ -406,8 +439,8 @@ export abstract class Model {
         }
 
         if (isClone) {
-            for (const child of definition.children as Children) {
-                this.children.push(child.clone());
+            for (const child of definition.children) {
+                this.children.push(child.clone() as Model.ChildOf<typeof this>);
             }
         }
     }
@@ -506,4 +539,16 @@ export namespace Model {
             return (this.instances[key] = new CrossReference(xref));
         }
     }
+}
+
+export namespace Model {
+    /**
+     * Obtain the element type of a model type.
+     */
+    export type ElementOf<T> = T extends Model<infer E extends AnyElement> ? E : never;
+
+    /**
+     * Obtain the child type of a model type.
+     */
+    export type ChildOf<T> = T extends Model<BaseElement, infer C extends Model> ? C : never;
 }

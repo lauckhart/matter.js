@@ -12,7 +12,7 @@ import {
     SemanticTagElement as SemanticTag
 } from "../../elements/index.js";
 
-export const LocationNS = SemanticNamespace({
+export const LocationNs = SemanticNamespace({
     name: "Location", id: 0x6, mfgCode: undefined,
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a location of a device (e.g. an outdoor temperature sensor).",
@@ -38,4 +38,4 @@ export const LocationNS = SemanticNamespace({
     ]
 });
 
-MatterDefinition.children.push(LocationNS);
+MatterDefinition.children.push(LocationNs);

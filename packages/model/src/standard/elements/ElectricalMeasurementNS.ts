@@ -12,7 +12,7 @@ import {
     SemanticTagElement as SemanticTag
 } from "../../elements/index.js";
 
-export const ElectricalMeasurementNS = SemanticNamespace({
+export const ElectricalMeasurementNs = SemanticNamespace({
     name: "ElectricalMeasurement", id: 0xa, mfgCode: undefined,
     details: "The tags contained in this namespace are restricted for use in the electrical measurement domain " +
         "and shall NOT be used in any other domain or context.",
@@ -39,4 +39,4 @@ export const ElectricalMeasurementNS = SemanticNamespace({
     ]
 });
 
-MatterDefinition.children.push(ElectricalMeasurementNS);
+MatterDefinition.children.push(ElectricalMeasurementNs);

@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const RoomAirConditionerDT = DeviceType({
+export const RoomAirConditionerDt = DeviceType({
     name: "RoomAirConditioner", id: 0x72, category: "Appliances", classification: "simple",
     details: "This defines conformance to the Room Air Conditioner device type." +
         "\n" +
@@ -63,4 +63,4 @@ export const RoomAirConditionerDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(RoomAirConditionerDT);
+MatterDefinition.children.push(RoomAirConditionerDt);

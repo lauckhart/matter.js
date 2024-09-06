@@ -13,7 +13,7 @@ import {
     FieldElement as Field
 } from "../../elements/index.js";
 
-export const TemperatureControlledCabinetDT = DeviceType({
+export const TemperatureControlledCabinetDt = DeviceType({
     name: "TemperatureControlledCabinet", id: 0x71, category: "Appliances", classification: "simple",
     details: "A Temperature Controlled Cabinet only exists composed as part of another device type. It represents " +
         "a single cabinet that is capable of having its temperature controlled. Such a cabinet may be " +
@@ -81,4 +81,4 @@ export const TemperatureControlledCabinetDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(TemperatureControlledCabinetDT);
+MatterDefinition.children.push(TemperatureControlledCabinetDt);

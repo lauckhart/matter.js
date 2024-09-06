@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const CookSurfaceDT = DeviceType({
+export const CookSurfaceDt = DeviceType({
     name: "CookSurface", id: 0x77, category: "Appliances", classification: "simple",
     details: "A Cook Surface device type represents a heating object on a cooktop or other similar device. It " +
         "shall only be used when composed as part of another device type.",
@@ -36,4 +36,4 @@ export const CookSurfaceDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(CookSurfaceDT);
+MatterDefinition.children.push(CookSurfaceDt);

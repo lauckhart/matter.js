@@ -6,8 +6,7 @@
 
 import { Access, Conformance, Constraint, Quality } from "../../aspects/index.js";
 import { DefinitionError, FieldValue, Metatype } from "../../common/index.js";
-import { ClusterModel, ValueModel } from "../../models/index.js";
-import * as Globals from "../../standard/elements/models.js";
+import { ClusterModel, Globals, ValueModel } from "../../models/index.js";
 import { ModelValidator } from "./ModelValidator.js";
 import { ValidationExceptions } from "./ValidationExceptions.js";
 

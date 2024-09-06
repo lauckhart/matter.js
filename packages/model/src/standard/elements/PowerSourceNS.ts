@@ -12,7 +12,7 @@ import {
     SemanticTagElement as SemanticTag
 } from "../../elements/index.js";
 
-export const PowerSourceNS = SemanticNamespace({
+export const PowerSourceNs = SemanticNamespace({
     name: "PowerSource", id: 0xf, mfgCode: undefined,
     details: "The tags contained in this namespace are restricted for use in the power source domain and shall " +
         "NOT be used in any other domain or context.",
@@ -54,4 +54,4 @@ export const PowerSourceNS = SemanticNamespace({
     ]
 });
 
-MatterDefinition.children.push(PowerSourceNS);
+MatterDefinition.children.push(PowerSourceNs);

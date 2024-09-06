@@ -9,7 +9,7 @@ import { DatatypeElement } from "../elements/DatatypeElement.js";
 import { Model } from "./Model.js";
 import { ValueModel } from "./ValueModel.js";
 
-export class DatatypeModel extends ValueModel implements DatatypeElement {
+export class DatatypeModel extends ValueModel<DatatypeElement> implements DatatypeElement {
     override tag: DatatypeElement.Tag = DatatypeElement.Tag;
     declare id: undefined;
 

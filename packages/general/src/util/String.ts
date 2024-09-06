@@ -13,6 +13,7 @@ export function capitalize<T extends string>(text: T) {
  * "fooBar" or "FOOBar" into "fooBar" or "FooBar".
  */
 export function camelize(name: string, upperFirst = false) {
+    if (name === undefined) debugger;
     const pieces = new Array<string>();
     let pieceStart = 0,
         sawUpper = false,

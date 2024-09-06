@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const RefrigeratorDT = DeviceType({
+export const RefrigeratorDt = DeviceType({
     name: "Refrigerator", id: 0x70, category: "Appliances", classification: "simple",
     details: "A refrigerator represents a device that contains one or more cabinets that are capable of chilling " +
         "or freezing food. Examples of consumer products that may make use of this device type include " +
@@ -43,4 +43,4 @@ export const RefrigeratorDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(RefrigeratorDT);
+MatterDefinition.children.push(RefrigeratorDt);

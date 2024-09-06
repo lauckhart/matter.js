@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const AirPurifierDT = DeviceType({
+export const AirPurifierDt = DeviceType({
     name: "AirPurifier", id: 0x2d, category: "HVAC", classification: "simple",
     details: "An Air Purifier is a standalone device that is designed to clean the air in a room." +
         "\n" +
@@ -48,4 +48,4 @@ export const AirPurifierDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(AirPurifierDT);
+MatterDefinition.children.push(AirPurifierDt);

@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const TemperatureSensorDT = DeviceType({
+export const TemperatureSensorDt = DeviceType({
     name: "TemperatureSensor", id: 0x302, category: "Sensor", classification: "simple",
     details: "A Temperature Sensor device reports measurements of temperature.",
     xref: { document: "device", section: "7.4" },
@@ -30,4 +30,4 @@ export const TemperatureSensorDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(TemperatureSensorDT);
+MatterDefinition.children.push(TemperatureSensorDt);

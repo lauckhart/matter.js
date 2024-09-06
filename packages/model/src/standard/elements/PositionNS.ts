@@ -12,7 +12,7 @@ import {
     SemanticTagElement as SemanticTag
 } from "../../elements/index.js";
 
-export const PositionNS = SemanticNamespace({
+export const PositionNs = SemanticNamespace({
     name: "Position", id: 0x8, mfgCode: undefined,
 
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
@@ -44,4 +44,4 @@ export const PositionNS = SemanticNamespace({
     ]
 });
 
-MatterDefinition.children.push(PositionNS);
+MatterDefinition.children.push(PositionNs);

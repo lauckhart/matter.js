@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const WaterValveDT = DeviceType({
+export const WaterValveDt = DeviceType({
     name: "WaterValve", id: 0x42, category: "Smart Plugs/Outlets and other Actuators",
     classification: "simple",
     details: "This defines conformance to the Water Valve device type.",
@@ -42,4 +42,4 @@ export const WaterValveDT = DeviceType({
     ]
 })
 
-MatterDefinition.children.push(WaterValveDT);
+MatterDefinition.children.push(WaterValveDt);

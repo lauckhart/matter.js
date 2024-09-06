@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const SmokeCoAlarmDT = DeviceType({
+export const SmokeCoAlarmDt = DeviceType({
     name: "SmokeCoAlarm", id: 0x76, category: "Sensor", classification: "simple",
 
     details: "A Smoke CO Alarm device is capable of sensing smoke, carbon monoxide or both. It is capable of " +
@@ -59,4 +59,4 @@ export const SmokeCoAlarmDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(SmokeCoAlarmDT);
+MatterDefinition.children.push(SmokeCoAlarmDt);

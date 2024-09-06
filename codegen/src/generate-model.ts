@@ -56,7 +56,7 @@ function elementDiscriminatedName(element: Model) {
     if (element.tag === ElementTag.SemanticNamespace) {
         return `${name}NS`;
     }
-    return camelize(element.name, name[0] < "a" || name[0] > "z");
+    return name;
 }
 
 function elementIdentifierName(element: Model) {

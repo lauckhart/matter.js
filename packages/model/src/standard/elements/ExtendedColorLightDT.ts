@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const ExtendedColorLightDT = DeviceType({
+export const ExtendedColorLightDt = DeviceType({
     name: "ExtendedColorLight", id: 0x10d, type: "ColorTemperatureLight", category: "Lighting",
     classification: "simple",
     details: "An Extended Color Light is a lighting device that is capable of being switched on or off, the " +
@@ -78,4 +78,4 @@ export const ExtendedColorLightDT = DeviceType({
     ]
 })
 
-MatterDefinition.children.push(ExtendedColorLightDT);
+MatterDefinition.children.push(ExtendedColorLightDt);

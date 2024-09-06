@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const ColorTemperatureLightDT = DeviceType({
+export const ColorTemperatureLightDt = DeviceType({
     name: "ColorTemperatureLight", id: 0x10c, type: "DimmableLight", category: "Lighting",
     classification: "simple",
     details: "A Color Temperature Light is a lighting device that is capable of being switched on or off, the " +
@@ -71,4 +71,4 @@ export const ColorTemperatureLightDT = DeviceType({
     ]
 })
 
-MatterDefinition.children.push(ColorTemperatureLightDT);
+MatterDefinition.children.push(ColorTemperatureLightDt);

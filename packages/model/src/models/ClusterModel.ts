@@ -16,7 +16,6 @@ import { ClusterRevision } from "../standard/elements/ClusterRevision.js";
 import { FeatureMap } from "../standard/elements/FeatureMap.js";
 import { Aspects } from "./Aspects.js";
 import { AttributeModel } from "./AttributeModel.js";
-import { Children } from "./Children.js";
 import { CommandModel } from "./CommandModel.js";
 import { DatatypeModel } from "./DatatypeModel.js";
 import { EventModel } from "./EventModel.js";
@@ -26,7 +25,7 @@ import { PropertyModel } from "./PropertyModel.js";
 
 const QUALITY = Symbol("quality");
 
-export class ClusterModel extends Model implements ClusterElement {
+export class ClusterModel extends Model<ClusterElement, ClusterModel.Child> implements ClusterElement {
     override tag: ClusterElement.Tag = ClusterElement.Tag;
     declare id: Mei;
     declare classification?: ClusterElement.Classification;
@@ -176,14 +175,6 @@ export class ClusterModel extends Model implements ClusterElement {
                 `Cannot set unknown feature${featureSet.size > 1 ? "s" : ""} ${describeList("and", ...featureSet)}`,
             );
         }
-    }
-
-    override get children(): Children<ClusterModel.Child, ClusterElement.Child> {
-        return super.children as any;
-    }
-
-    override set children(children: (ClusterModel.Child | ClusterElement.Child)[]) {
-        super.children = children;
     }
 
     get effectiveMetatype() {

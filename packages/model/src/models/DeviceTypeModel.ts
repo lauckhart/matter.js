@@ -5,13 +5,15 @@
  */
 
 import { Mei } from "../common/Mei.js";
-import { DeviceTypeElement, FieldElement, RequirementElement } from "../elements/index.js";
-import { Children } from "./Children.js";
+import { DeviceTypeElement } from "../elements/index.js";
 import { FieldModel } from "./FieldModel.js";
 import { Model } from "./Model.js";
 import { RequirementModel } from "./RequirementModel.js";
 
-export class DeviceTypeModel extends Model implements DeviceTypeElement {
+export class DeviceTypeModel
+    extends Model<DeviceTypeElement, RequirementModel | FieldModel>
+    implements DeviceTypeElement
+{
     override tag: DeviceTypeElement.Tag = DeviceTypeElement.Tag;
     declare id: Mei;
     declare classification: DeviceTypeElement.Classification;
@@ -24,18 +26,6 @@ export class DeviceTypeModel extends Model implements DeviceTypeElement {
         return (
             this?.get(RequirementModel, "Descriptor")?.get(RequirementModel, "DeviceTypeList")?.default[0].revision ?? 1
         );
-    }
-
-    override get children(): Children<RequirementModel | FieldModel, RequirementElement | FieldElement> {
-        return super.children as any;
-    }
-
-    override set children(children: (RequirementModel | FieldModel | RequirementElement | FieldElement)[]) {
-        super.children = children;
-    }
-
-    constructor(definition: DeviceTypeElement.Properties) {
-        super(definition);
     }
 
     static {

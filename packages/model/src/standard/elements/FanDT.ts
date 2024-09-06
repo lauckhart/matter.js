@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const FanDT = DeviceType({
+export const FanDt = DeviceType({
     name: "Fan", id: 0x2b, category: "HVAC", classification: "simple",
     details: "A Fan device is typically standalone or mounted on a ceiling or wall and is used to circulate air " +
         "in a room.",
@@ -42,4 +42,4 @@ export const FanDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(FanDT);
+MatterDefinition.children.push(FanDt);

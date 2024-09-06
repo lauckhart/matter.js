@@ -13,7 +13,7 @@ import {
     FieldElement as Field
 } from "../../elements/index.js";
 
-export const ContentAppDT = DeviceType({
+export const ContentAppDt = DeviceType({
     name: "ContentApp", id: 0x24, category: "Media", classification: "simple",
     details: "This defines conformance to the Content App device type." +
         "\n" +
@@ -81,4 +81,4 @@ export const ContentAppDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(ContentAppDT);
+MatterDefinition.children.push(ContentAppDt);

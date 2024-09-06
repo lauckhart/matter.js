@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const ControlBridgeDT = DeviceType({
+export const ControlBridgeDt = DeviceType({
     name: "ControlBridge", id: 0x840, category: "Switches and Controls", classification: "simple",
     details: "A Control Bridge is a controller device that, when bound to a lighting device such as an Extended " +
         "Color Light, is capable of being used to switch the device on or off, adjust the intensity of the " +
@@ -61,4 +61,4 @@ export const ControlBridgeDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(ControlBridgeDT);
+MatterDefinition.children.push(ControlBridgeDt);

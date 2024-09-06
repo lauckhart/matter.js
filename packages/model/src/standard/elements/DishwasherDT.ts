@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const DishwasherDT = DeviceType({
+export const DishwasherDt = DeviceType({
     name: "Dishwasher", id: 0x75, category: "Appliances", classification: "simple",
     details: "A dishwasher is a device that is generally installed in residential homes and is capable of washing " +
         "dishes, cutlery, and other items associate with food preparation and consumption. The device can be " +
@@ -55,4 +55,4 @@ export const DishwasherDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(DishwasherDT);
+MatterDefinition.children.push(DishwasherDt);

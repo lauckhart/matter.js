@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const LightSensorDT = DeviceType({
+export const LightSensorDt = DeviceType({
     name: "LightSensor", id: 0x106, category: "Sensor", classification: "simple",
     details: "A Light Sensor device is a measurement and sensing device that is capable of measuring and " +
         "reporting the intensity of light (illuminance) to which the sensor is being subjected.",
@@ -31,4 +31,4 @@ export const LightSensorDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(LightSensorDT);
+MatterDefinition.children.push(LightSensorDt);

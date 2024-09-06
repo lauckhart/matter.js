@@ -12,7 +12,7 @@ import {
     SemanticTagElement as SemanticTag
 } from "../../elements/index.js";
 
-export const RoomAirConditionerNS = SemanticNamespace({
+export const RoomAirConditionerNs = SemanticNamespace({
     name: "RoomAirConditioner", id: 0x42, mfgCode: undefined,
     details: "The tags contained in this namespace are restricted for use in the room air conditioner domain and " +
         "shall NOT be used in any other domain or context.",
@@ -20,4 +20,4 @@ export const RoomAirConditionerNS = SemanticNamespace({
     children: [SemanticTag({ name: "Evaporator", id: 0x0 }), SemanticTag({ name: "Condenser", id: 0x1 })]
 });
 
-MatterDefinition.children.push(RoomAirConditionerNS);
+MatterDefinition.children.push(RoomAirConditionerNs);

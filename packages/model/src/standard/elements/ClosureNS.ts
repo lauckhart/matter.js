@@ -12,7 +12,7 @@ import {
     SemanticTagElement as SemanticTag
 } from "../../elements/index.js";
 
-export const ClosureNS = SemanticNamespace({
+export const ClosureNs = SemanticNamespace({
     name: "Closure", id: 0x1, mfgCode: undefined,
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a feature of a Closure, e.g. the button to activate opening a garage door.",
@@ -24,4 +24,4 @@ export const ClosureNS = SemanticNamespace({
     ]
 });
 
-MatterDefinition.children.push(ClosureNS);
+MatterDefinition.children.push(ClosureNs);

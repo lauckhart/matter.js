@@ -9,7 +9,7 @@
 import { MatterDefinition } from "../MatterDefinition.js";
 import { DeviceTypeElement as DeviceType, RequirementElement as Requirement } from "../../elements/index.js";
 
-export const LaundryDryerDT = DeviceType({
+export const LaundryDryerDt = DeviceType({
     name: "LaundryDryer", id: 0x7c, category: "Appliances", classification: "simple",
     details: "A Laundry Dryer represents a device that is capable of drying laundry items.",
     xref: { document: "device", section: "13.6" },
@@ -53,4 +53,4 @@ export const LaundryDryerDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(LaundryDryerDT);
+MatterDefinition.children.push(LaundryDryerDt);

@@ -12,7 +12,7 @@ import {
     SemanticTagElement as SemanticTag
 } from "../../elements/index.js";
 
-export const DirectionNS = SemanticNamespace({
+export const DirectionNs = SemanticNamespace({
     name: "Direction", id: 0x4, mfgCode: undefined,
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a movement in a certain direction relative to the device. Note the difference with " +
@@ -29,4 +29,4 @@ export const DirectionNS = SemanticNamespace({
     ]
 });
 
-MatterDefinition.children.push(DirectionNS);
+MatterDefinition.children.push(DirectionNs);

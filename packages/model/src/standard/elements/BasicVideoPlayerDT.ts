@@ -13,7 +13,7 @@ import {
     FieldElement as Field
 } from "../../elements/index.js";
 
-export const BasicVideoPlayerDT = DeviceType({
+export const BasicVideoPlayerDt = DeviceType({
     name: "BasicVideoPlayer", id: 0x28, category: "Media", classification: "simple",
 
     details: "This defines conformance to the Basic Video Player device type." +
@@ -98,4 +98,4 @@ export const BasicVideoPlayerDT = DeviceType({
     ]
 });
 
-MatterDefinition.children.push(BasicVideoPlayerDT);
+MatterDefinition.children.push(BasicVideoPlayerDt);

@@ -10,7 +10,7 @@ import { ModelTraversal } from "../logic/ModelTraversal.js";
 import { Model } from "./Model.js";
 import { ValueModel } from "./ValueModel.js";
 
-export class CommandModel extends ValueModel implements CommandElement {
+export class CommandModel extends ValueModel<CommandElement> implements CommandElement {
     override tag: CommandElement.Tag = CommandElement.Tag;
     declare id: Mei;
     declare direction?: CommandElement.Direction;
@@ -51,10 +51,6 @@ export class CommandModel extends ValueModel implements CommandElement {
         }
 
         return this.direction;
-    }
-
-    constructor(definition: CommandElement.Properties) {
-        super(definition);
     }
 
     static {
