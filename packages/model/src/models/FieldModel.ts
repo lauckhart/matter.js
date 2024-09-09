@@ -11,7 +11,7 @@ import { Model } from "./Model.js";
 import { PropertyModel } from "./PropertyModel.js";
 import { ValueModel } from "./ValueModel.js";
 
-export class FieldModel<T extends FieldElement = any> extends PropertyModel<T> implements FieldElement {
+export class FieldModel<T extends FieldElement = FieldElement> extends PropertyModel<T> implements FieldElement {
     override tag: FieldElement.Tag = FieldElement.Tag;
     declare id?: Mei;
 

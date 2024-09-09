@@ -817,38 +817,38 @@ export class ModelTraversal {
             return model.parent;
         }
 
+        // MatterModel is the scope root so there is no fallback
+        if (model.tag === ElementTag.Matter) {
+            return undefined;
+        }
+
+        // Identify a fallback scope
         return this.findScope(model);
     }
 
     /**
-     * Find a node that defines type scope in the parent hierarchy.
+     * Find an owner that defines type scope for a model.
      */
     findScope(model?: Model): Model | undefined {
         if (model === undefined) {
             return;
         }
 
-        if (model.isTypeScope) {
-            // This is the scope
-            return model;
-        }
-
+        // First, examine parents
         if (model.parent) {
-            // Scope will come from an owner
+            if (model.parent.isTypeScope) {
+                return model.parent;
+            }
+
             return this.operationWithDismissal(model, () => this.findScope(model.parent));
         }
 
+        // Next, search operational base hierarchy
         if (model.operationalBase) {
-            // Scope will come from the operational base
-            return this.operationWithDismissal(model, () => this.findScope(model.operationalBase?.parent));
+            return this.operationWithDismissal(model, () => this.findScope(model.operationalBase));
         }
 
-        if (model.tag === ElementTag.Matter) {
-            // MatterModel is the scope root so no fallback is necessary
-            return undefined;
-        }
-
-        // Fall back to the canonical MatterModel
+        // Finally, fall back to the canonical MatterModel
         return ModelTraversal.fallbackScope;
     }
 

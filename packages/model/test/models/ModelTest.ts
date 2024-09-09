@@ -196,6 +196,31 @@ describe("Model", () => {
         });
     });
 
+    describe("detached models", () => {
+        it("resolves types from standard scope", () => {
+            const detached = new DatatypeModel({ name: "Foo", type: "uint8" });
+            expect(detached.parent === undefined);
+            expect(detached.base).equals(Matter.get(DatatypeModel, "uint8"));
+            expect(detached.effectiveMetatype).equals("integer");
+        });
+
+        it("resolves types from operational base scope", () => {
+            const foo = new DatatypeModel({ name: "foo", metatype: "float" });
+            const fooAlias = new DatatypeModel({ name: "fooAlias", type: "foo" });
+            new MatterModel({
+                name: "OtherMatter",
+                children: [foo, fooAlias],
+            });
+
+            expect(fooAlias.base).equals(foo);
+
+            const detached = fooAlias.extend();
+            expect(detached.parent === undefined);
+            expect(detached.operationalBase).equals(fooAlias);
+            expect(detached.effectiveMetatype).equals("float");
+        });
+    });
+
     describe("qualified type names", () => {
         it("resolves reference to attribute in another cluster", () => {
             expect(Fixtures.cluster2Attr3.base).equals(Fixtures.cluster1StructAttr);

@@ -513,7 +513,6 @@ export function Children<T extends Model = Model>(
         const { tag } = value as AnyElement;
 
         if (typeof tag !== "string") {
-            debugger;
             throw new ImplementationError(`Child must have a string tag (tag is typeof ${typeof tag})`);
         }
         if (tag[0] < "a" || tag[0] > "z" || !(camelize(tag, true) in ElementTag)) {

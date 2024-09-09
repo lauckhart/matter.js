@@ -283,7 +283,6 @@ export abstract class Model<T extends BaseElement = any, C extends Model = any> 
         const t = definition["tag"];
         const constructor = Model.types[t];
         if (!constructor) {
-            debugger;
             throw new InternalError(`Unknown element tag "${t}"`);
         }
         return new constructor(definition);
@@ -339,7 +338,7 @@ export abstract class Model<T extends BaseElement = any, C extends Model = any> 
     /**
      * Convert to non-class structure.
      */
-    valueOf(): AnyElement {
+    valueOf() {
         const result = {} as { [name: string]: any };
 
         // Return all iterable properties minus metadata
@@ -356,7 +355,7 @@ export abstract class Model<T extends BaseElement = any, C extends Model = any> 
             }
         }
 
-        return result as AnyElement;
+        return result as T;
     }
 
     /**
@@ -399,7 +398,7 @@ export abstract class Model<T extends BaseElement = any, C extends Model = any> 
      * Create an operational extension of the model.  This creates a new model that inherits from this model for
      * operational purposes.
      */
-    extend<This extends Model>(this: This, properties: Partial<BaseElement.Properties<T>>): This {
+    extend<This extends Model>(this: This, properties?: Partial<BaseElement.Properties<T>>): This {
         const constructor = this.constructor as new (properties: unknown) => This;
 
         const extension = new constructor({
@@ -550,5 +549,5 @@ export namespace Model {
     /**
      * Obtain the child type of a model type.
      */
-    export type ChildOf<T> = T extends Model<BaseElement, infer C extends Model> ? C : never;
+    export type ChildOf<T> = T extends Model<any, infer C extends Model> ? C : never;
 }
