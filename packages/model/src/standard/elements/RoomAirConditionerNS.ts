@@ -13,7 +13,7 @@ import {
 } from "../../elements/index.js";
 
 export const RoomAirConditionerNs = SemanticNamespace({
-    name: "RoomAirConditioner", id: 0x42, mfgCode: undefined,
+    name: "RoomAirConditioner", id: 0x42,
     details: "The tags contained in this namespace are restricted for use in the room air conditioner domain and " +
         "shall NOT be used in any other domain or context.",
     xref: { document: "namespace", section: "14" },

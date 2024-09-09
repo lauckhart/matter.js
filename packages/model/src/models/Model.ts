@@ -348,10 +348,13 @@ export abstract class Model<T extends BaseElement = any, C extends Model = any> 
                 case "errors":
                 case "isTypeScope":
                 case "isType":
+                case "operationalBase":
                     continue;
 
                 default:
-                    result[key] = this[key];
+                    if (this[key] !== undefined && (this[key] !== null || key === "default")) {
+                        result[key] = this[key];
+                    }
             }
         }
 

@@ -13,7 +13,7 @@ import {
 } from "../../elements/index.js";
 
 export const PositionNs = SemanticNamespace({
-    name: "Position", id: 0x8, mfgCode: undefined,
+    name: "Position", id: 0x8,
 
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a position relative to the device (e.g. the temperature sensor in the top drawer " +

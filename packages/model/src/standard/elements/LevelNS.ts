@@ -13,7 +13,7 @@ import {
 } from "../../elements/index.js";
 
 export const LevelNs = SemanticNamespace({
-    name: "Level", id: 0x5, mfgCode: undefined,
+    name: "Level", id: 0x5,
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a certain level for a feature of a device (e.g. a button to set the speed of a " +
         "fan).",

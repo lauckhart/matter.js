@@ -111,7 +111,7 @@ function installDatatypes(elements: AnyElement[]) {
             const type = (c as ValueElement).type;
 
             if (type) {
-                installChildren(type, c);
+                installChildren(type, c as AnyElement);
 
                 if (type && !globals[type] && !alreadyInstalled.has(type)) {
                     alreadyInstalled.add(type);
@@ -127,7 +127,7 @@ function installDatatypes(elements: AnyElement[]) {
                 }
             }
 
-            install(into, c, alreadyInstalled);
+            install(into, c as AnyElement, alreadyInstalled);
         });
     }
 
