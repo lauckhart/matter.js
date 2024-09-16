@@ -15,6 +15,16 @@ export interface TestInstance {
     stop: () => Promise<void>;
 }
 
+export namespace log {
+    export function directive(...args: unknown[]) {
+        console.log(...args);
+    }
+
+    export function error(...args: unknown[]) {
+        console.log(args);
+    }
+}
+
 export async function startTestApp(
     appName: string,
     testInstanceClass: ClassExtends<TestInstance>,

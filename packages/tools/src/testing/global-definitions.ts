@@ -9,6 +9,7 @@
 
 import Chai from "chai";
 import ChaiAsPromised from "chai-as-promised";
+import { Chip } from "./chip.js";
 import { browserSetup, generalSetup } from "./mocha.js";
 import { cryptoSetup } from "./mocks/crypto.js";
 import { TheMockLogger, loggerSetup } from "./mocks/logging.js";
@@ -17,19 +18,18 @@ import { TheMockTime, timeSetup } from "./mocks/time.js";
 Chai.config.truncateThreshold = 200;
 Chai.use(ChaiAsPromised);
 
-Object.assign(globalThis as any, {
-    expect: Chai.expect,
-});
-
 Object.assign(globalThis, {
+    expect: Chai.expect,
+
     MatterHooks: {
-        loggerSetup: loggerSetup,
-        timeSetup: timeSetup,
-        cryptoSetup: cryptoSetup,
+        loggerSetup,
+        timeSetup,
+        cryptoSetup,
     },
 
     MockTime: TheMockTime,
     MockLogger: TheMockLogger,
+    Chip,
 });
 
 if (typeof window === "object" && globalThis === window) {

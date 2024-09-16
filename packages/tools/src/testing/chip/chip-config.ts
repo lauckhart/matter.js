@@ -12,7 +12,7 @@ export const DOCKER_BUILD_PATH = "chip";
 /**
  * We use this as both the image and container name.
  */
-export const DOCKER_NAME = "matterjs-chip-test";
+export const DOCKER_NAME = "matterjs-chip";
 
 /**
  * Tests we run by default.
