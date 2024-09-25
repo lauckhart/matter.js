@@ -1,7 +1,6 @@
 {
-    "extends": "../../tools/tsconfig.base.json",
+    "extends": "../../tools/tsc/tsconfig.test.json",
     "compilerOptions": {
-        "outDir": "../build/test",
         "types": [
             "mocha",
             "node",
@@ -16,10 +15,10 @@
             "path": "../../model/src"
         },
         {
-            "path": "../../tools/src"
+            "path": "../src"
         },
         {
-            "path": "../src"
+            "path": "../../tools/src"
         }
     ]
 }

@@ -1,7 +1,6 @@
 {
-    "extends": "../../../packages/tools/tsconfig.base.json",
+    "extends": "../../../packages/tools/tsc/tsconfig.lib.json",
     "compilerOptions": {
-        "outDir": "../dist/esm",
         "types": [
             "node"
         ]
@@ -11,10 +10,10 @@
             "path": "../../../packages/general/src"
         },
         {
-            "path": "../../../packages/matter.js/src"
+            "path": "../../../packages/nodejs/src"
         },
         {
-            "path": "../../../packages/nodejs/src"
+            "path": "../../../packages/matter.js/src"
         }
     ]
 }

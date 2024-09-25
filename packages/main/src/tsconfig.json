@@ -1,7 +1,6 @@
 {
-    "extends": "../../tools/tsconfig.base.json",
+    "extends": "../../tools/tsc/tsconfig.lib-with-proxies.json",
     "compilerOptions": {
-        "outDir": "../dist/esm",
         "types": [
             "@matter.js/tools",
             "globals"
@@ -9,13 +8,16 @@
     },
     "references": [
         {
-            "path": "../../../codegen/src"
-        },
-        {
             "path": "../../general/src"
         },
         {
             "path": "../../model/src"
+        },
+        {
+            "path": "../../types/src"
+        },
+        {
+            "path": "../../protocol/src"
         },
         {
             "path": "../../node/src"
@@ -24,13 +26,10 @@
             "path": "../../nodejs/src"
         },
         {
-            "path": "../../protocol/src"
-        },
-        {
             "path": "../../react-native/src"
         },
         {
-            "path": "../../types/src"
+            "path": "../../../codegen/src"
         }
     ]
 }

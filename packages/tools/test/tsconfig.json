@@ -1,10 +1,10 @@
 {
-    "extends": "../tsconfig.base.json",
+    "extends": "../tsc/tsconfig.test.json",
     "compilerOptions": {
-        "outDir": "../build/test",
         "types": [
             "node",
-            "mocha"
+            "mocha",
+            "@matter.js/tools"
         ]
     },
     "references": [

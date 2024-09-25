@@ -1,7 +1,6 @@
 {
-    "extends": "../../../packages/tools/tsconfig.base.json",
+    "extends": "../../../packages/tools/tsc/tsconfig.test.json",
     "compilerOptions": {
-        "outDir": "../build/test",
         "types": [
             "mocha",
             "node",
@@ -10,28 +9,28 @@
     },
     "references": [
         {
-            "path": "../../../codegen/src"
-        },
-        {
             "path": "../../general/src"
-        },
-        {
-            "path": "../src"
         },
         {
             "path": "../../model/src"
         },
         {
-            "path": "../../node/src"
+            "path": "../../types/src"
         },
         {
             "path": "../../protocol/src"
         },
         {
-            "path": "../../tools/src"
+            "path": "../../node/src"
         },
         {
-            "path": "../../types/src"
+            "path": "../../../codegen/src"
+        },
+        {
+            "path": "../src"
+        },
+        {
+            "path": "../../tools/src"
         }
     ]
 }

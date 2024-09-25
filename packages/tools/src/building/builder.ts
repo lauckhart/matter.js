@@ -8,6 +8,7 @@ import colors from "ansi-colors";
 import { Progress } from "../util/progress.js";
 import { BuildError } from "./error.js";
 import { Project } from "./project.js";
+import { TypescriptContext } from "./typescript.js";
 
 export enum Target {
     clean = "clean",
@@ -28,6 +29,7 @@ export interface Options {
  */
 export class Builder {
     unconditional: boolean;
+    tsContext?: TypescriptContext;
 
     constructor(private options: Options = {}) {
         this.unconditional =
@@ -40,7 +42,6 @@ export class Builder {
         try {
             await this.#doBuild(project, progress);
         } catch (e: any) {
-            progress.failure(`Unexpected build error`);
             progress.shutdown();
             process.stderr.write(`${e.stack ?? e.message}\n\n`);
             process.exit(1);
@@ -65,18 +66,30 @@ export class Builder {
         await config.before?.({ project, progress });
 
         if (targets.has(Target.types)) {
-            const refresh = progress.refresh.bind(progress);
+            let context = this.tsContext;
+            if (context === undefined) {
+                context = this.tsContext = new TypescriptContext(
+                    project.pkg.workspace,
+                    progress.refresh.bind(progress),
+                );
+            }
+
             try {
                 if (project.pkg.isLibrary) {
                     await progress.run(`Generate ${progress.emphasize("type declarations")}`, () =>
-                        project.buildDeclarations(refresh),
+                        project.buildDeclarations(context, "src"),
                     );
                     await progress.run(`Install ${progress.emphasize("type declarations")}`, () =>
                         project.installDeclarations(),
                     );
                 } else {
-                    await progress.run(`Validating ${progress.emphasize("types")}`, () =>
-                        project.validateTypes(refresh),
+                    await progress.run(`Validate ${progress.emphasize("types")}`, () =>
+                        project.validateTypes(context, "src"),
+                    );
+                }
+                if (project.pkg.hasTests) {
+                    await progress.run(`Validate ${progress.emphasize("test types")}`, () =>
+                        project.validateTypes(context, "test"),
                     );
                 }
             } catch (e) {

@@ -12,7 +12,7 @@ import { dirname } from "path";
 import { ignoreError } from "../util/errors.js";
 import { CODEGEN_PATH, CONFIG_PATH, Package } from "../util/package.js";
 import { Progress } from "../util/progress.js";
-import { Typescript } from "./typescript.js";
+import { Typescript, TypescriptContext } from "./typescript.js";
 
 export class Project {
     pkg: Package;
@@ -70,12 +70,12 @@ export class Project {
         }
     }
 
-    async buildDeclarations(refreshCallback?: () => void) {
-        Typescript.emitDeclarations(this.pkg, refreshCallback);
+    async buildDeclarations(context: TypescriptContext, path: string) {
+        Typescript.emitDeclarations(this.pkg, context, path);
     }
 
-    async validateTypes(refreshCallback?: () => void) {
-        Typescript.validateTypes(this.pkg, refreshCallback);
+    async validateTypes(context: TypescriptContext, path: string) {
+        Typescript.validateTypes(this.pkg, context, path);
     }
 
     async installDeclarationFormat(format: Format) {
@@ -139,6 +139,10 @@ export class Project {
             // Write to new location
             await writeFile(dest, map.subarray(0, map.length - 3));
         }
+    }
+
+    get hasDeclarations() {
+        return this.pkg.hasDirectory("build/types");
     }
 
     async installDeclarations() {

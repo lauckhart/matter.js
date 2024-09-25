@@ -1,0 +1,14 @@
+// This configuration a standard baseline for all libraries
+{
+    "extends": "./tsconfig.base.json",
+    "include": [
+        "${configDir}", "${configDir}/../build/src"
+    ],
+    "compilerOptions": {
+        "rootDir": "${configDir}/..",
+        "emitDeclarationOnly": true,
+        "sourceMap": true,
+        "declarationMap": true,
+        "outDir": "${configDir}/../build/types",
+    }
+}

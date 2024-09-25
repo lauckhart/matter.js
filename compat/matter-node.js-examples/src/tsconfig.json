@@ -1,13 +1,9 @@
 {
-    "extends": "../../../packages/tools/tsconfig.base.json",
+    "extends": "../../../packages/tools/tsc/tsconfig.app.json",
     "compilerOptions": {
-        "outDir": "../dist/esm",
         "types": [
             "node"
-        ],
-        "declaration": false,
-        "composite": false,
-        "declarationMap": false
+        ]
     },
     "references": [
         {

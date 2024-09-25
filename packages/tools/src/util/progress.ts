@@ -188,7 +188,12 @@ export class Progress {
 
     async run(what: string, fn: () => void | Promise<void>) {
         this.update(what);
-        await fn();
+        try {
+            await fn();
+        } catch (e) {
+            this.failure(what);
+            throw e;
+        }
         this.success(what);
     }
 

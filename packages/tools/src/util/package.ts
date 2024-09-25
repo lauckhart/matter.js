@@ -5,7 +5,7 @@
  */
 
 import { readFileSync, statSync } from "fs";
-import { readdir, stat, writeFile } from "fs/promises";
+import { readdir, readFile, stat, writeFile } from "fs/promises";
 import { glob } from "glob";
 import { dirname, join, relative, resolve } from "path";
 import { ignoreError, ignoreErrorSync } from "./errors.js";
@@ -230,12 +230,33 @@ export class Package {
         return !!this.#maybeStat(path)?.isDirectory();
     }
 
+    async readFile(path: string) {
+        return readFile(this.resolve(path), "utf-8");
+    }
+
     async writeFile(path: string, contents: unknown) {
-        await writeFile(path, `${contents}`);
+        await writeFile(this.resolve(path), `${contents}`);
     }
 
     async save() {
         await this.writeFile(join(this.path, "package.json"), JSON.stringify(this.json, undefined, 4));
+    }
+
+    async readJson(path: string) {
+        const text = await this.readFile(path);
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            if (!(e instanceof Error)) {
+                e = new Error(`${e}`);
+            }
+            (e as Error).message = `Error parsing "${this.resolve(path)}": ${(e as Error).message}`;
+        }
+        return JSON.parse(await this.readFile(path));
+    }
+
+    async writeJson(path: string, value: {}) {
+        await this.writeFile(path, JSON.stringify(value, undefined, 4));
     }
 
     #maybeStat(path: string) {
