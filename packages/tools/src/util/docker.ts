@@ -19,7 +19,7 @@ export class Docker {
         const { args, createOptions } = configureRun(options);
 
         let resolve: undefined | ((text?: string) => void);
-        let reject: undefined | ((text?: string) => void);
+        let reject: undefined | ((error: Error) => void);
         let signal: undefined | Promise<string | undefined>;
 
         function newSignal() {
@@ -42,8 +42,16 @@ export class Docker {
         };
 
         this.#intf.run(imageName, args, output, createOptions).then(
-            () => {
-                resolve!(undefined);
+            result => {
+                const statusCode = result?.[0]?.StatusCode;
+                if (typeof statusCode !== "number") {
+                    throw new Error(`Process exit status "${statusCode}" is non-numeric`);
+                }
+                if (statusCode === 0) {
+                    resolve!(undefined);
+                } else {
+                    reject!(new Error(`Process exited with error status "${statusCode}"`));
+                }
             },
             error => reject!(error),
         );

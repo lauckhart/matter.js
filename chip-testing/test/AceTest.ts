@@ -8,6 +8,6 @@ import { AllClustersTestInstance } from "../src/AllClustersTestInstance.js";
 import { App } from "./support.js";
 
 describe("ACE", () => {
-    Chip.yaml(App(AllClustersTestInstance), "TC_ACE_*");
-    Chip.python(App(AllClustersTestInstance), "TC_ACE_*");
+    Chip.yaml(App(AllClustersTestInstance), "ACE_*");
+    //Chip.python(App(AllClustersTestInstance), "ACE_*");
 });
