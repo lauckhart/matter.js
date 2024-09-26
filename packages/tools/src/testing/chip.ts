@@ -35,6 +35,7 @@ const State = {
     options: undefined as Chip.Options | undefined,
     docker: undefined as Docker | undefined,
     yamlTests: Array<string>(),
+    pythonTests: Array<string>(),
 };
 
 /**
@@ -86,6 +87,13 @@ export const Chip = {
     },
 
     /**
+     * Initialize.  This must run before defining tests to enable test definition via globs.
+     */
+    async initialize() {
+        await configure();
+    },
+
+    /**
      * Define YAML tests.  This is a declarative CHIP test defined in a YAML file.
      */
     yaml(testee: Chip.Testee, includeGlob: string, excludeGlob?: string) {
@@ -107,7 +115,7 @@ export const Chip = {
     /**
      * Define a "python" test.  This is a CHIP test implemented as a python script.
      */
-    python(testee: Chip.Testee, tester: Chip.TestSelection) {
+    python(testee: Chip.Testee, tester: Chip.TestSelection, excludeGlob?: string) {
         if (typeof tester === "string") {
             tester = {
                 name: tester,
@@ -127,7 +135,18 @@ export const Chip = {
             };
         }
 
-        implementTest(testee, tester);
+        let files = filterWithGlob(State.pythonTests, tester.name, false);
+        if (excludeGlob !== undefined) {
+            files = filterWithGlob(files, excludeGlob, true);
+        }
+
+        if (files.length === 0) {
+            throw new Error(`Python test glob ${tester.name} matched no tests`);
+        }
+
+        for (const name of files) {
+            implementTest(testee, { ...tester, name });
+        }
     },
 };
 
@@ -355,6 +374,7 @@ async function configure() {
     await Config.docker();
     await configurePics();
     await configureYaml();
+    await configurePython();
 
     State.configured = true;
 }
@@ -376,6 +396,14 @@ async function configureYaml() {
     const yamlTests = await docker.resolveGlobFromImage(Constants.dockerName, `${Constants.yamlTests}/Test_*.yaml`);
 
     State.yamlTests.push(...yamlTests);
+}
+
+async function configurePython() {
+    const docker = await Config.docker();
+
+    const tcTests = await docker.resolveGlobFromImage(Constants.dockerName, `${Constants.pythonTests}/*.py`);
+
+    State.pythonTests.push(...tcTests.filter(name => name.startsWith("TC_") || name.startsWith("Test")));
 }
 
 function filterWithGlob(list: string[], glob: string, invert = false) {

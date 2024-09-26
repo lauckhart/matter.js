@@ -74,13 +74,16 @@ export class Docker {
         const output = Array<string>();
 
         for await (const chunk of this.run(imageName, {
-            entrypoint: "ls",
-            args: [glob],
+            entrypoint: ["/bin/bash", "-c"],
+            args: `ls ${glob}`,
         })) {
             output.push(chunk);
         }
 
-        return output.join("").split(/\r?\n/);
+        return output
+            .join("")
+            .split(/\r?\n/)
+            .filter(line => line !== "");
     }
 
     async buildImage(name: string, path: string) {
