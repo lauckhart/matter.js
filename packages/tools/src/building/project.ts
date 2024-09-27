@@ -78,33 +78,43 @@ export class Project {
         Typescript.validateTypes(this.pkg, context, path);
     }
 
-    async installDeclarationFormat(format: Format) {
-        const srcMaps = Array<[string, string]>();
+    async installDeclarationFormats(formats: Iterable<string>) {
+        const srcMaps = Array<string>();
+        let needSrcMaps = true;
 
-        await cp(this.pkg.resolve("build/types/src"), this.pkg.resolve(`dist/${format}`), {
-            recursive: true,
-            force: true,
+        const src = this.pkg.resolve("build/types/src");
 
-            filter: (source, dest) => {
-                // We process source maps below
-                if (source.endsWith(".d.ts.map")) {
-                    srcMaps.push([source, dest]);
-                    return false;
-                }
-                return true;
-            },
-        });
-
-        if (this.pkg.hasCodegen) {
-            await cp(this.pkg.resolve("build/types/build/src"), this.pkg.resolve(`dist/${format}`), {
+        for (const format of formats) {
+            await cp(src, this.pkg.resolve(`dist/${format}`), {
                 recursive: true,
                 force: true,
 
                 filter: source => {
-                    // Ignore source maps
-                    return !source.endsWith(".d.ts.map");
+                    // We process source maps below
+                    if (source.endsWith(".d.ts.map")) {
+                        if (needSrcMaps) {
+                            srcMaps.push(source);
+                        }
+                        return false;
+                    }
+                    return true;
                 },
             });
+
+            // Only need to collect source maps on a single pass
+            needSrcMaps = false;
+
+            if (this.pkg.hasCodegen) {
+                await cp(this.pkg.resolve("build/types/build/src"), this.pkg.resolve(`dist/${format}`), {
+                    recursive: true,
+                    force: true,
+
+                    filter: source => {
+                        // Ignore source maps
+                        return !source.endsWith(".d.ts.map");
+                    },
+                });
+            }
         }
 
         // If you specify --sourceRoot, tsc just sticks whatever the string is directly into the file.  Not very useful
@@ -118,7 +128,7 @@ export class Project {
         //
         // So...  Rewrite the paths in all source maps under src/.  Do this directly on buffer for marginal performance
         // win.
-        for (const [source, dest] of srcMaps) {
+        for (const source of srcMaps) {
             // Load map as binary
             const map = await readFile(source);
 
@@ -137,7 +147,10 @@ export class Project {
             map.copyWithin(pos, pos + 3);
 
             // Write to new location
-            await writeFile(dest, map.subarray(0, map.length - 3));
+            for (const format of formats) {
+                // TODO!!!
+                await writeFile(dest, map.subarray(0, map.length - 3));
+            }
         }
     }
 
@@ -147,12 +160,14 @@ export class Project {
 
     async installDeclarations() {
         await mkdir(this.pkg.resolve("dist"), { recursive: true });
+        const formats = new Set();
         if (this.pkg.supportsEsm) {
-            await this.installDeclarationFormat("esm");
+            formats.add("esm");
         }
         if (this.pkg.supportsCjs) {
-            await this.installDeclarationFormat("cjs");
+            formats.add("cjs");
         }
+        await this.installDeclarationFormats(formats);
     }
 
     async recordBuildTime() {

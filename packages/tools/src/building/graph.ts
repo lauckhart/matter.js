@@ -12,6 +12,14 @@ import { Builder } from "./builder.js";
 import { InternalBuildError } from "./error.js";
 import { Project } from "./project.js";
 
+const BUILD_INFO_FILE = "build/info.json";
+
+export interface BuildInformation {
+    timestamp?: string;
+    apiSha?: string;
+    dependencyApiShas?: Record<string, string>;
+}
+
 /**
  * Graph of dependencies for workspace packages.
  *
@@ -94,7 +102,7 @@ export class Graph {
 
             if (node.dirty || builder.unconditional) {
                 await builder.build(new Project(node.pkg));
-                node.buildTime = Date.now();
+                node.info.timestamp = new Date().toISOString();
             } else if (showSkipped) {
                 new Progress().skip("Up to date", node.pkg);
             }
@@ -108,7 +116,7 @@ export class Graph {
             const progress = node.pkg.start("Node");
             progress.info("path", node.pkg.path);
             progress.info("modified", formatTime(node.modifyTime));
-            progress.info("built", formatTime(node.buildTime));
+            progress.info("built", formatTime(node.info.timestamp ?? 0));
             progress.info("dirty", node.dirty ? colors.dim.red("yes") : colors.dim.green("no"));
             progress.info("dependencies", node.dependencies.map(formatDep).join(", "));
             progress.shutdown();
@@ -120,7 +128,9 @@ export class Graph {
 
         await Promise.all(
             graph.nodes.map(async node => {
-                node.buildTime = await node.pkg.lastModified("build/timestamp");
+                if (node.pkg.hasFile(BUILD_INFO_FILE)) {
+                    node.info = await node.pkg.readJson(BUILD_INFO_FILE);
+                }
 
                 node.modifyTime = await node.pkg.lastModified("package.json", "src", "test");
 
@@ -158,14 +168,38 @@ export class Graph {
             nodeMap[pkg.json.name] = {
                 pkg,
                 dependencies: [],
-                buildTime: 0,
+                info: {},
                 modifyTime: 0,
+
+                get buildTime() {
+                    return this.info.timestamp ? new Date(this.info.timestamp).getTime() : 0;
+                },
 
                 get dirty() {
                     return (
                         this.modifyTime > this.buildTime ||
                         !!this.dependencies.find(d => d.dirty || d.buildTime > this.buildTime)
                     );
+                },
+
+                // This version of dirty should only be used after building all dependencies.  If this project is
+                // unmodified and the SHA of the type definitions of the target project is also unmodified then we do
+                // not need to build
+                get prebuildDirty() {
+                    if (this.modifyTime > this.buildTime) {
+                        return true;
+                    }
+                    const depShas = this.info.dependencyApiShas;
+                    if (typeof depShas !== "object") {
+                        return this.dirty;
+                    }
+                    for (const dep of this.dependencies) {
+                        const depSha = depShas[dep.pkg.name];
+                        if (depSha === undefined || depSha !== dep.info.apiSha) {
+                            return true;
+                        }
+                    }
+                    return false;
                 },
             };
         }
@@ -190,14 +224,19 @@ export namespace Graph {
         pkg: Package;
         dependencies: Node[];
         buildTime: number;
+        info: BuildInformation;
         modifyTime: number;
         dirty: boolean;
+        prebuildDirty: boolean;
     }
 }
 
-function formatTime(time: number) {
+function formatTime(time: number | string) {
     if (!time) {
         return colors.dim.red("never");
+    }
+    if (typeof time === "string") {
+        time = new Date(time).getTime();
     }
     return new Date(time - new Date().getTimezoneOffset()).toISOString().split(".")[0].replace("T", " ");
 }

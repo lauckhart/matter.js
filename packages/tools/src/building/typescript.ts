@@ -37,7 +37,7 @@ export class Typescript {
 
     #run() {
         const status = this.context.builder.build(this.pkg.resolve(join(this.path, "tsconfig.json"))) ?? 0;
-        this.context.passTscErrors(status, path);
+        this.context.passTscErrors(status, this.path);
     }
 }
 

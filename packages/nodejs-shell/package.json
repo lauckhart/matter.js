@@ -36,6 +36,7 @@
         "#types": "@matter.js/types"
     },
     "dependencies": {
+        "@matter.js/nodejs-ble": "*",
         "@matter.js/nodejs": "*",
         "@matter.js/general": "*",
         "@project-chip/matter.js": "*",
