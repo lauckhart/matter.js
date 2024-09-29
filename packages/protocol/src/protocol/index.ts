@@ -13,5 +13,4 @@ export * from "./ExchangeManager.js";
 export * from "./MessageCounter.js";
 export * from "./MessageExchange.js";
 export * from "./MessageReceptionState.js";
-export * from "./NodeConnector.js";
 export * from "./ProtocolHandler.js";

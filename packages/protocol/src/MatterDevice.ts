@@ -259,7 +259,7 @@ export class MatterDevice {
     }
 
     initiateExchange(fabric: Fabric, nodeId: NodeId, protocolId: number) {
-        return this.#exchangeManager.initiateExchange(fabric, nodeId, protocolId);
+        return this.#exchangeManager.initiateExchange(fabric.addressOf(nodeId), protocolId);
     }
 
     getFabrics() {

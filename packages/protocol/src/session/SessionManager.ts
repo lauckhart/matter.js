@@ -34,6 +34,7 @@ import {
     FALLBACK_INTERACTIONMODEL_REVISION,
     FALLBACK_MAX_PATHS_PER_INVOKE,
     FALLBACK_SPECIFICATION_VERSION,
+    Session,
     SESSION_ACTIVE_INTERVAL_MS,
     SESSION_ACTIVE_THRESHOLD_MS,
     SESSION_IDLE_INTERVAL_MS,
@@ -114,7 +115,7 @@ export class SessionManager {
     readonly #globalUnencryptedMessageCounter = new MessageCounter();
     readonly #subscriptionsChanged = Observable<[session: SecureSession, subscription: Subscription]>();
     readonly #sessionParameters;
-    readonly #resubmissionStarted = new Observable<[nodeId?: NodeId]>();
+    readonly #resubmissionStarted = new Observable<[session: Session]>();
     readonly #construction: Construction<SessionManager>;
     readonly #observers = new ObserverGroup();
     readonly #subscriptionUpdateMutex = new Mutex(this);

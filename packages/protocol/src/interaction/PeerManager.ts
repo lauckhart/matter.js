@@ -5,11 +5,12 @@
  */
 
 import { NodeAddress, NodeAddressMap } from "#common/NodeAddress.js";
-import { DiscoveryData } from "#common/Scanner.js";
-import { Fabric } from "#fabric/Fabric.js";
+import { DiscoveryData, ScannerSet } from "#common/Scanner.js";
 import {
     anyPromise,
+    BasicSet,
     ChannelType,
+    Construction,
     createPromise,
     Environment,
     Environmental,
@@ -25,82 +26,141 @@ import {
 } from "#general";
 import { InteractionClient } from "#interaction/InteractionClient.js";
 import { MdnsScanner } from "#mdns/MdnsScanner.js";
-import { CaseClient } from "#session/index.js";
+import { CaseClient, Session } from "#session/index.js";
 import { SessionManager } from "#session/SessionManager.js";
-import { NodeId, SECURE_CHANNEL_PROTOCOL_ID } from "@matter.js/types";
-import { ChannelManager, NoChannelError } from "./ChannelManager.js";
-import { ControllerDiscovery, DiscoveryError, PairRetransmissionLimitReachedError } from "./ControllerDiscovery.js";
-import { ExchangeManager, ExchangeProvider, MessageChannel } from "./ExchangeManager.js";
-import { RetransmissionLimitReachedError } from "./MessageExchange.js";
-import { DiscoveryOptions, NodeDiscoveryType, NodeFinder } from "./NodeFinder.js";
+import { SECURE_CHANNEL_PROTOCOL_ID } from "@matter.js/types";
+import { ChannelManager, NoChannelError } from "../protocol/ChannelManager.js";
+import {
+    ControllerDiscovery,
+    DiscoveryError,
+    PairRetransmissionLimitReachedError,
+} from "../protocol/ControllerDiscovery.js";
+import { ExchangeManager, ExchangeProvider, MessageChannel } from "../protocol/ExchangeManager.js";
+import { RetransmissionLimitReachedError } from "../protocol/MessageExchange.js";
+import { OperationalPeer, PeerStore } from "./PeerStore.js";
 
 const logger = Logger.get("NodeFinder");
 
 const RECONNECTION_POLLING_INTERVAL_MS = 600_000; // 10 minutes
+const RETRANSMISSION_DISCOVERY_TIMEOUT_MS = 5_000;
 
 /**
- * Interfaces {@link NodeConnector} with other components.
+ * Types of discovery that may be performed when connecting operationally.
  */
-export interface NodeConnectorContext {
-    sessions: SessionManager;
-    channels: ChannelManager;
-    exchanges: ExchangeManager;
-    finder: NodeFinder;
-    netInterfaces: NetInterfaceSet;
+export enum PeerDiscoveryType {
+    /** No discovery is done, in calls means that only known addresses are tried. */
+    None = 0,
+
+    /** Retransmission discovery means that we ignore known addresses and start a query for 5s. */
+    RetransmissionDiscovery = 1,
+
+    /** Timed discovery means that the device is discovered for a defined timeframe, including known addresses. */
+    TimedDiscovery = 2,
+
+    /** Full discovery means that the device is discovered until it is found, excluding known addresses. */
+    FullDiscovery = 3,
+}
+
+/**
+ * Configuration for discovering when establishing a peer connection.
+ */
+export interface DiscoveryOptions {
+    discoveryType?: PeerDiscoveryType;
+    timeoutSeconds?: number;
+    discoveryData?: DiscoveryData;
 }
 
 interface RunningDiscovery {
-    type: NodeDiscoveryType;
+    type: PeerDiscoveryType;
     promises?: (() => Promise<MessageChannel>)[];
     timer?: Timer;
 }
 
 /**
- * Establishes connections to other Matter nodes.
+ * Interfaces {@link PeerManager} with other components.
  */
-export class NodeConnector {
+export interface PeerConnectorContext {
+    sessions: SessionManager;
+    channels: ChannelManager;
+    exchanges: ExchangeManager;
+    scanners: ScannerSet;
+    netInterfaces: NetInterfaceSet;
+    store: PeerStore;
+}
+
+/**
+ * Establishes connections to Matter nodes on a shared fabric.
+ */
+export class PeerManager {
     readonly #sessions: SessionManager;
     readonly #channels: ChannelManager;
     readonly #exchanges: ExchangeManager;
-    readonly #finder: NodeFinder;
+    readonly #scanners: ScannerSet;
     readonly #netInterfaces: NetInterfaceSet;
-    readonly #runningNodeDiscoveries = new NodeAddressMap<RunningDiscovery>();
     readonly #caseClient: CaseClient;
+    readonly #peers = new BasicSet<OperationalPeer>();
+    readonly #peersByAddress = new NodeAddressMap<OperationalPeer>();
+    readonly #runningPeerDiscoveries = new NodeAddressMap<RunningDiscovery>();
+    readonly #construction: Construction<PeerManager>;
+    readonly #store: PeerStore;
 
-    constructor(context: NodeConnectorContext) {
-        const { sessions, channels, exchanges, finder, netInterfaces } = context;
+    constructor(context: PeerConnectorContext) {
+        const { sessions, channels, exchanges, scanners, netInterfaces, store } = context;
 
         this.#sessions = sessions;
         this.#channels = channels;
         this.#exchanges = exchanges;
-        this.#finder = finder;
+        this.#scanners = scanners;
         this.#netInterfaces = netInterfaces;
+        this.#store = store;
         this.#caseClient = new CaseClient(this.#sessions);
+
+        this.#peers.added.on(peer => {
+            peer.address = NodeAddress(peer.address);
+            this.#peersByAddress.set(peer.address, peer);
+        });
+
+        this.#peers.deleted.on(peer => {
+            this.#peersByAddress.delete(peer.address);
+        });
+
+        this.#sessions.resubmissionStarted.on(this.#handleResubmissionStarted.bind(this));
+
+        this.#construction = Construction(this, async () => {
+            for (const peer of await this.#store.loadPeers()) {
+                this.#peers.add(peer);
+            }
+        });
+    }
+
+    get construction() {
+        return this.#construction;
     }
 
     [Environmental.create](env: Environment) {
-        const instance = new NodeConnector({
+        const instance = new PeerManager({
             sessions: env.get(SessionManager),
             channels: env.get(ChannelManager),
             exchanges: env.get(ExchangeManager),
-            finder: env.get(NodeFinder),
+            scanners: env.get(ScannerSet),
             netInterfaces: env.get(NetInterfaceSet),
+            store: env.get(PeerStore),
         });
-        env.set(NodeConnector, instance);
+        env.set(PeerManager, instance);
         return instance;
     }
 
+    get peers() {
+        return this.#peers;
+    }
+
     /**
-     * Connect to a node for operational (non-commissioning) purposes.
+     * Connect to a node on a fabric.
      */
-    async connectToPeer(
-        fabric: Fabric,
-        nodeId: NodeId,
-        discoveryOptions: DiscoveryOptions,
-    ): Promise<InteractionClient> {
+    async connect(address: NodeAddress, discoveryOptions: DiscoveryOptions): Promise<InteractionClient> {
         const { discoveryData } = discoveryOptions;
 
-        const address = fabric.addressOf(nodeId);
+        address = NodeAddress(address);
 
         let channel: MessageChannel;
         try {
@@ -121,7 +181,7 @@ export class NodeConnector {
                 await this.#channels.removeAllNodeChannels(address);
 
                 // Try to use first result for one last try before we need to reconnect
-                const operationalAddress = this.#finder.knownOperationalAddressFor(address);
+                const operationalAddress = this.#knownOperationalAddressFor(address);
                 if (operationalAddress === undefined) {
                     logger.info(
                         `Re-discovering device failed (no address found), remove all sessions for ${NodeAddress(address)}`,
@@ -144,20 +204,68 @@ export class NodeConnector {
     }
 
     /**
+     * Retrieve a peer by address.
+     */
+    get(peer: NodeAddress | OperationalPeer) {
+        if ("address" in peer) {
+            return this.#peersByAddress.get(peer.address);
+        }
+        return this.#peersByAddress.get(peer);
+    }
+
+    /**
+     * Terminate any active peer connection.
+     */
+    async disconnect(peer: NodeAddress | OperationalPeer) {
+        const address = this.get(peer)?.address;
+        if (address === undefined) {
+            return;
+        }
+
+        await this.#sessions.removeAllSessionsForNode(address, true);
+        await this.#channels.removeAllNodeChannels(address);
+    }
+
+    /**
+     * Forget a known peer.
+     */
+    async delete(peer: NodeAddress | OperationalPeer) {
+        const actual = this.get(peer);
+        if (actual === undefined) {
+            return;
+        }
+
+        logger.info(`Removing peer ${actual.address}`);
+        await this.disconnect(actual);
+        await this.#sessions.removeResumptionRecord(actual.address);
+        this.#peers.delete(actual);
+    }
+
+    async close() {
+        const mdnsScanner = this.#scanners.scannerFor(ChannelType.UDP) as MdnsScanner | undefined;
+        for (const [address, { timer }] of this.#runningPeerDiscoveries.entries()) {
+            timer?.stop();
+
+            // This ends discovery without triggering promises
+            mdnsScanner?.cancelOperationalDeviceDiscovery(this.#sessions.fabricFor(address), address.nodeId, false);
+        }
+    }
+
+    /**
      * Resume a device connection and establish a CASE session that was previously paired with the controller. This
      * method will try to connect to the device using the previously used server address (if set). If that fails, the
      * device is discovered again using its operational instance details.
      * It returns the operational MessageChannel on success.
      */
     async #resume(address: NodeAddress, discoveryOptions?: DiscoveryOptions) {
-        const operationalAddress = this.#finder.knownOperationalAddressFor(address);
+        const operationalAddress = this.#knownOperationalAddressFor(address);
 
         try {
             return await this.#connectOrDiscoverNode(address, operationalAddress, discoveryOptions);
         } catch (error) {
             if (
                 (error instanceof DiscoveryError || error instanceof NoResponseTimeoutError) &&
-                this.#finder.isKnown(address)
+                this.#peersByAddress.has(address)
             ) {
                 logger.info(`Resume failed, remove all sessions for ${NodeAddress(address)}`);
                 // We remove all sessions, this also informs the PairedNode class
@@ -174,34 +282,34 @@ export class NodeConnector {
     ) {
         address = NodeAddress(address);
         const {
-            discoveryType: requestedDiscoveryType = NodeDiscoveryType.FullDiscovery,
+            discoveryType: requestedDiscoveryType = PeerDiscoveryType.FullDiscovery,
             timeoutSeconds,
-            discoveryData = this.#knownNodes.get(address)?.discoveryData,
+            discoveryData = this.#peersByAddress.get(address)?.discoveryData,
         } = discoveryOptions;
-        if (timeoutSeconds !== undefined && requestedDiscoveryType !== NodeDiscoveryType.TimedDiscovery) {
+        if (timeoutSeconds !== undefined && requestedDiscoveryType !== PeerDiscoveryType.TimedDiscovery) {
             throw new ImplementationError("Cannot set timeout without timed discovery.");
         }
-        if (requestedDiscoveryType === NodeDiscoveryType.RetransmissionDiscovery) {
+        if (requestedDiscoveryType === PeerDiscoveryType.RetransmissionDiscovery) {
             throw new ImplementationError("Cannot set retransmission discovery type.");
         }
 
-        const mdnsScanner = this.scanners.scannerFor(ChannelType.UDP) as MdnsScanner | undefined;
+        const mdnsScanner = this.#scanners.scannerFor(ChannelType.UDP) as MdnsScanner | undefined;
         if (!mdnsScanner) {
             throw new ImplementationError("Cannot discover device without mDNS scanner.");
         }
 
-        const existingDiscoveryDetails = this.#runningNodeDiscoveries.get(address) ?? {
-            type: NodeDiscoveryType.None,
+        const existingDiscoveryDetails = this.#runningPeerDiscoveries.get(address) ?? {
+            type: PeerDiscoveryType.None,
         };
 
         // If we currently run another "lower" retransmission type we cancel it
         if (
-            existingDiscoveryDetails.type !== NodeDiscoveryType.None &&
+            existingDiscoveryDetails.type !== PeerDiscoveryType.None &&
             existingDiscoveryDetails.type < requestedDiscoveryType
         ) {
             mdnsScanner.cancelOperationalDeviceDiscovery(this.#sessions.fabricFor(address), address.nodeId);
-            this.#runningNodeDiscoveries.delete(address);
-            existingDiscoveryDetails.type = NodeDiscoveryType.None;
+            this.#runningPeerDiscoveries.delete(address);
+            existingDiscoveryDetails.type = PeerDiscoveryType.None;
         }
 
         const { type: runningDiscoveryType, promises } = existingDiscoveryDetails;
@@ -210,13 +318,13 @@ export class NodeConnector {
         // In worst case parallel cases we do this step twice, but that's ok
         if (
             operationalAddress !== undefined &&
-            (runningDiscoveryType === NodeDiscoveryType.None || requestedDiscoveryType === NodeDiscoveryType.None)
+            (runningDiscoveryType === PeerDiscoveryType.None || requestedDiscoveryType === PeerDiscoveryType.None)
         ) {
-            const directReconnection = await this.reconnectKnownAddress(address, operationalAddress, discoveryData);
+            const directReconnection = await this.#reconnectKnownAddress(address, operationalAddress, discoveryData);
             if (directReconnection !== undefined) {
                 return directReconnection;
             }
-            if (requestedDiscoveryType === NodeDiscoveryType.None) {
+            if (requestedDiscoveryType === PeerDiscoveryType.None) {
                 throw new DiscoveryError(`Node ${address} is not reachable right now.`);
             }
         }
@@ -236,7 +344,7 @@ export class NodeConnector {
 
         if (operationalAddress !== undefined) {
             // Additionally to general discovery we also try to poll the formerly known operational address
-            if (requestedDiscoveryType === NodeDiscoveryType.FullDiscovery) {
+            if (requestedDiscoveryType === PeerDiscoveryType.FullDiscovery) {
                 const { promise, resolver, rejecter } = createPromise<MessageChannel>();
 
                 reconnectionPollingTimer = Time.getPeriodicTimer(
@@ -245,14 +353,18 @@ export class NodeConnector {
                     async () => {
                         try {
                             logger.debug(`Polling for device at ${serverAddressToString(operationalAddress)} ...`);
-                            const result = await this.reconnectKnownAddress(address, operationalAddress, discoveryData);
+                            const result = await this.#reconnectKnownAddress(
+                                address,
+                                operationalAddress,
+                                discoveryData,
+                            );
                             if (result !== undefined && reconnectionPollingTimer?.isRunning) {
                                 reconnectionPollingTimer?.stop();
                                 mdnsScanner.cancelOperationalDeviceDiscovery(
                                     this.#sessions.fabricFor(address),
                                     address.nodeId,
                                 );
-                                this.#runningNodeDiscoveries.delete(address);
+                                this.#runningPeerDiscoveries.delete(address);
                                 resolver(result);
                             }
                         } catch (error) {
@@ -262,7 +374,7 @@ export class NodeConnector {
                                     this.#sessions.fabricFor(address),
                                     address.nodeId,
                                 );
-                                this.#runningNodeDiscoveries.delete(address);
+                                this.#runningPeerDiscoveries.delete(address);
                                 rejecter(error);
                             }
                         }
@@ -281,9 +393,9 @@ export class NodeConnector {
                 timeoutSeconds,
                 timeoutSeconds === undefined,
             );
-            const { timer } = this.#runningNodeDiscoveries.get(address) ?? {};
+            const { timer } = this.#runningPeerDiscoveries.get(address) ?? {};
             timer?.stop();
-            this.#runningNodeDiscoveries.delete(address);
+            this.#runningPeerDiscoveries.delete(address);
 
             const { result } = await ControllerDiscovery.iterateServerAddresses(
                 [scanResult],
@@ -295,11 +407,11 @@ export class NodeConnector {
                     );
                     return device !== undefined ? [device] : [];
                 },
-                async (operationalAddress, device) => {
-                    const result = await this.#pair(address, operationalAddress, device);
-                    await this.#setOperationalDeviceData(address, operationalAddress, {
+                async (operationalAddress, peer) => {
+                    const result = await this.#pair(address, operationalAddress, peer);
+                    await this.#addOrUpdatePeer(address, operationalAddress, {
                         ...discoveryData,
-                        ...device,
+                        ...peer,
                     });
                     return result;
                 },
@@ -308,13 +420,13 @@ export class NodeConnector {
             return result;
         });
 
-        this.#runningNodeDiscoveries.set(peerNodeId, {
+        this.#runningPeerDiscoveries.set(address, {
             type: requestedDiscoveryType,
             promises: discoveryPromises,
             timer: reconnectionPollingTimer,
         });
 
-        return await anyPromise(discoveryPromises).finally(() => this.#runningNodeDiscoveries.delete(peerNodeId));
+        return await anyPromise(discoveryPromises).finally(() => this.#runningPeerDiscoveries.delete(address));
     }
 
     async #reconnectKnownAddress(
@@ -328,10 +440,14 @@ export class NodeConnector {
         const { ip, port } = operationalAddress;
         try {
             logger.debug(
-                `Resume device connection to configured server at ${ip}:${port}${expectedProcessingTimeMs !== undefined ? ` with expected processing time of ${expectedProcessingTimeMs}ms` : ""} ...`,
+                `Resuming connection to ${NodeAddress(address)} at ${ip}:${port}${
+                    expectedProcessingTimeMs !== undefined
+                        ? ` with expected processing time of ${expectedProcessingTimeMs}ms`
+                        : ""
+                }`,
             );
             const channel = await this.#pair(address, operationalAddress, discoveryData, expectedProcessingTimeMs);
-            await this.#setOperationalDeviceData(address, operationalAddress);
+            await this.#addOrUpdatePeer(address, operationalAddress);
             return channel;
         } catch (error) {
             if (error instanceof NoResponseTimeoutError) {
@@ -411,5 +527,80 @@ export class NodeConnector {
         const channel = new MessageChannel(operationalChannel, operationalSecureSession);
         await this.#channels.setChannel(address, channel);
         return channel;
+    }
+
+    /**
+     * Obtain an operational address for a logical address from cache.
+     */
+    #knownOperationalAddressFor(address: NodeAddress) {
+        const mdnsScanner = this.#scanners.scannerFor(ChannelType.UDP) as MdnsScanner | undefined;
+        const discoveredAddresses = mdnsScanner?.getDiscoveredOperationalDevice(
+            this.#sessions.fabricFor(address),
+            address.nodeId,
+        );
+        const lastKnownAddress = this.#getLastOperationalAddress(address);
+
+        if (
+            lastKnownAddress !== undefined &&
+            discoveredAddresses !== undefined &&
+            discoveredAddresses.addresses.some(
+                ({ ip, port }) => ip === lastKnownAddress.ip && port === lastKnownAddress.port,
+            )
+        ) {
+            // We found the same address, so assume somehow cached response because we just tried to connect,
+            // and it failed, so clear list
+            discoveredAddresses.addresses.length = 0;
+        }
+
+        // Try to use first result for one last try before we need to reconnect
+        return discoveredAddresses?.addresses[0];
+    }
+
+    async #addOrUpdatePeer(
+        address: NodeAddress,
+        operationalServerAddress: ServerAddressIp,
+        discoveryData?: DiscoveryData,
+    ) {
+        let peer = this.#peersByAddress.get(address);
+        if (peer === undefined) {
+            peer = { address };
+            this.#peers.add(peer);
+        }
+        peer.operationalAddress = operationalServerAddress;
+        if (discoveryData !== undefined) {
+            peer.discoveryData = {
+                ...peer.discoveryData,
+                ...discoveryData,
+            };
+        }
+        await this.#store.updatePeer(peer);
+    }
+
+    #getLastOperationalAddress(address: NodeAddress) {
+        return this.#peersByAddress.get(address)?.operationalAddress;
+    }
+
+    #handleResubmissionStarted(session: Session) {
+        const { associatedFabric: fabric, peerNodeId: nodeId } = session;
+        if (fabric === undefined || nodeId === undefined) {
+            return;
+        }
+        const address = fabric.addressOf(nodeId);
+        if (this.#runningPeerDiscoveries.has(address)) {
+            // We already discover for this node, so we do not need to start a new discovery
+            return;
+        }
+        this.#runningPeerDiscoveries.set(address, { type: PeerDiscoveryType.RetransmissionDiscovery });
+        this.#scanners
+            .scannerFor(ChannelType.UDP)
+            ?.findOperationalDevice(fabric, nodeId, RETRANSMISSION_DISCOVERY_TIMEOUT_MS, true)
+            .catch(error => {
+                logger.error(`Failed to discover ${address} after resubmission started.`, error);
+            })
+            .finally(() => {
+                if (this.#runningPeerDiscoveries.get(address)?.type === PeerDiscoveryType.RetransmissionDiscovery) {
+                    this.#runningPeerDiscoveries.delete(address);
+                }
+            });
     }
 }

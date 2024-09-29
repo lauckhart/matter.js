@@ -7,5 +7,6 @@
 export * from "./FailsafeContext.js";
 export * from "./FailsafeTimer.js";
 export * from "./InstanceBroadcaster.js";
+export * from "./NodeAddress.js";
 export * from "./OperationalCredentialsTypes.js";
 export * from "./Scanner.js";

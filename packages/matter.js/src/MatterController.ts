@@ -50,10 +50,10 @@ import {
     InteractionClient,
     MdnsScanner,
     MessageChannel,
-    NodeConnector,
-    NodeDiscoveryType,
     PairRetransmissionLimitReachedError,
     PaseClient,
+    PeerDiscoveryType,
+    PeerManager,
     ResumptionRecord,
     RetransmissionLimitReachedError,
     RootCertificateManager,
@@ -77,6 +77,7 @@ import {
     TypeFromSchema,
     VendorId,
 } from "#types";
+import { OperationalPeer, PeerStore } from "../../protocol/src/interaction/PeerStore.js";
 import { NodeCommissioningOptions } from "./CommissioningController.js";
 
 const TlvCommissioningSuccessFailureResponse = TlvObject({
@@ -98,12 +99,16 @@ const DEFAULT_FABRIC_INDEX = FabricIndex(1);
 const DEFAULT_FABRIC_ID = FabricId(1);
 const DEFAULT_ADMIN_VENDOR_ID = VendorId(0xfff1);
 
-const RETRANSMISSION_DISCOVERY_TIMEOUT_MS = 5_000;
-
 const CONTROLLER_CONNECTIONS_PER_FABRIC_AND_NODE = 3;
 const CONTROLLER_MAX_PATHS_PER_INVOKE = 10;
 
 const logger = Logger.get("MatterController");
+
+// Operational peer extended with basic information as required for conversion to CommissionedNodeDetails
+type CommissionedPeer = OperationalPeer & { basicInformationData?: Record<string, SupportedStorageTypes> };
+
+// Backward-compatible persistence record for nodes
+type StoredOperationalPeer = [NodeId, CommissionedNodeDetails];
 
 export class MatterController {
     public static async create(options: {
@@ -231,15 +236,13 @@ export class MatterController {
     private readonly netInterfaces = new NetInterfaceSet();
     private readonly channelManager = new ChannelManager(CONTROLLER_CONNECTIONS_PER_FABRIC_AND_NODE);
     private readonly exchangeManager: ExchangeManager;
-    private readonly nodeDiscoverer: NodeConnector;
+    private readonly peers: PeerManager;
     private readonly paseClient;
-    private readonly caseClient;
-    private readonly commissionedNodes = new Map<NodeId, CommissionedNodeDetails>();
     #construction: Construction<MatterController>;
 
     readonly sessionStorage: StorageContext;
     readonly fabricStorage?: StorageContext;
-    readonly nodesStorage: StorageContext;
+    readonly nodesStore: CommissionedNodeStore;
     private readonly scanners: ScannerSet;
     private readonly certificateManager: RootCertificateManager;
     private readonly fabric: Fabric;
@@ -274,7 +277,6 @@ export class MatterController {
         } = options;
         this.sessionStorage = sessionStorage;
         this.fabricStorage = fabricStorage;
-        this.nodesStorage = nodesStorage;
         this.scanners = scanners;
         this.netInterfaces = netInterfaces;
         this.certificateManager = certificateManager;
@@ -296,7 +298,6 @@ export class MatterController {
         this.sessionManager.sessions.deleted.on(async session => {
             this.sessionClosedCallback?.(session.peerNodeId);
         });
-        this.sessionManager.resubmissionStarted.on(this.#handleResubmissionStarted.bind(this));
 
         this.exchangeManager = new ExchangeManager({
             sessionManager: this.sessionManager,
@@ -305,24 +306,20 @@ export class MatterController {
         });
         this.exchangeManager.addProtocolHandler(new StatusReportOnlySecureChannelProtocol());
 
-        this.nodeDiscoverer = new NodeConnector({
+        // Adapts the historical storage format for MatterController to OperationalPeer objects
+        this.nodesStore = new CommissionedNodeStore(nodesStorage, fabric);
+
+        this.nodesStore.peers = this.peers = new PeerManager({
             sessions: this.sessionManager,
             channels: this.channelManager,
             exchanges: this.exchangeManager,
             scanners: this.scanners,
+            netInterfaces: this.netInterfaces,
+            store: this.nodesStore,
         });
 
         this.#construction = Construction(this, async () => {
-            // If controller has a stored operational server address, use it, irrelevant what was passed in the constructor
-            if (await this.nodesStorage.has("commissionedNodes")) {
-                const commissionedNodes =
-                    await this.nodesStorage.get<[NodeId, CommissionedNodeDetails][]>("commissionedNodes");
-                this.commissionedNodes.clear();
-                for (const [nodeId, details] of commissionedNodes) {
-                    this.commissionedNodes.set(nodeId, details);
-                }
-            }
-
+            await this.peers.construction.ready;
             await this.sessionManager.construction.ready;
         });
     }
@@ -459,19 +456,11 @@ export class MatterController {
     }
 
     async disconnect(nodeId: NodeId) {
-        const address = this.fabric.addressOf(nodeId);
-        await this.sessionManager.removeAllSessionsForNode(address, true);
-        await this.channelManager.removeAllNodeChannels(address);
+        return this.peers.disconnect(this.fabric.addressOf(nodeId));
     }
 
     async removeNode(nodeId: NodeId) {
-        const address = this.fabric.addressOf(nodeId);
-        logger.info(`Removing commissioned node ${address} from controller.`);
-        await this.sessionManager.removeAllSessionsForNode(address);
-        await this.sessionManager.removeResumptionRecord(address);
-        await this.channelManager.removeAllNodeChannels(this.fabric, nodeId);
-        this.commissionedNodes.delete(nodeId);
-        await this.storeCommissionedNodes();
+        return this.peers.delete(this.fabric.addressOf(nodeId));
     }
 
     /**
@@ -585,7 +574,10 @@ export class MatterController {
         const peerNodeId = commissioningOptions.nodeId ?? NodeId.randomOperationalNodeId();
         const commissioningManager = new ControllerCommissioner(
             // Use the created secure session to do the commissioning
-            new InteractionClient(new ExchangeProvider(this.exchangeManager, paseSecureMessageChannel), peerNodeId),
+            new InteractionClient(
+                new ExchangeProvider(this.exchangeManager, paseSecureMessageChannel),
+                this.fabric.addressOf(peerNodeId),
+            ),
             this.certificateManager,
             this.fabric,
             commissioningOptions,
@@ -611,7 +603,7 @@ export class MatterController {
                 }
                 // Look for the device broadcast over MDNS and do CASE pairing
                 return await this.connect(peerNodeId, {
-                    discoveryType: NodeDiscoveryType.TimedDiscovery,
+                    discoveryType: PeerDiscoveryType.TimedDiscovery,
                     timeoutSeconds: 120,
                     discoveryData,
                 }); // Wait maximum 120s to find the operational device for commissioning process
@@ -621,10 +613,8 @@ export class MatterController {
         try {
             await commissioningManager.executeCommissioning();
         } catch (error) {
-            if (this.commissionedNodes.has(peerNodeId)) {
-                // We might have added data for an operational address that we need to cleanup
-                this.commissionedNodes.delete(peerNodeId);
-            }
+            // We might have added data for an operational address that we need to cleanup
+            await this.peers.delete(this.fabric.addressOf(peerNodeId));
             throw error;
         }
 
@@ -639,7 +629,7 @@ export class MatterController {
     async completeCommissioning(peerNodeId: NodeId, discoveryData?: DiscoveryData) {
         // Look for the device broadcast over MDNS and do CASE pairing
         const interactionClient = await this.connect(peerNodeId, {
-            discoveryType: NodeDiscoveryType.TimedDiscovery,
+            discoveryType: PeerDiscoveryType.TimedDiscovery,
             timeoutSeconds: 120,
             discoveryData,
         }); // Wait maximum 120s to find the operational device for commissioning process
@@ -652,75 +642,45 @@ export class MatterController {
             useExtendedFailSafeMessageResponseTimeout: true,
         });
         if (errorCode !== GeneralCommissioning.CommissioningError.Ok) {
-            if (this.commissionedNodes.has(peerNodeId)) {
-                // We might have added data for an operational address that we need to cleanup
-                this.commissionedNodes.delete(peerNodeId);
-            }
+            // We might have added data for an operational address that we need to cleanup
+            await this.peers.delete(this.fabric.addressOf(peerNodeId));
             throw new CommissioningError(`Commission error on commissioningComplete: ${errorCode}, ${debugText}`);
         }
         await this.fabricStorage?.set("fabric", this.fabric.toStorageObject());
     }
 
-    #handleResubmissionStarted(peerNodeId?: NodeId) {
-        if (peerNodeId === undefined) {
-            return;
-        }
-        if (this.#runningNodeDiscoveries.has(peerNodeId)) {
-            // We already discover for this node, so we do not need to start a new discovery
-            return;
-        }
-        this.#runningNodeDiscoveries.set(peerNodeId, { type: NodeDiscoveryType.RetransmissionDiscovery });
-        this.scanners
-            .scannerFor(ChannelType.UDP)
-            ?.findOperationalDevice(this.fabric, peerNodeId, RETRANSMISSION_DISCOVERY_TIMEOUT_MS, true)
-            .catch(error => {
-                logger.error(`Failed to discover device ${peerNodeId} after resubmission started.`, error);
-            })
-            .finally(() => {
-                if (this.#runningNodeDiscoveries.get(peerNodeId)?.type === NodeDiscoveryType.RetransmissionDiscovery) {
-                    this.#runningNodeDiscoveries.delete(peerNodeId);
-                }
-            });
-    }
-
     isCommissioned() {
-        return this.commissionedNodes.size > 0;
+        return this.peers.peers.size > 0;
     }
 
     getCommissionedNodes() {
-        return Array.from(this.commissionedNodes.keys());
+        return this.peers.peers.map(peer => peer.address.nodeId);
     }
 
     getCommissionedNodesDetails() {
-        return Array.from(this.commissionedNodes.entries()).map(
-            ([nodeId, { operationalServerAddress, discoveryData, basicInformationData }]) => ({
-                nodeId,
-                operationalAddress: operationalServerAddress
-                    ? serverAddressToString(operationalServerAddress)
-                    : undefined,
+        return this.peers.peers.map(peer => {
+            const { address, operationalAddress, discoveryData, basicInformationData } = peer as CommissionedPeer;
+            return {
+                nodeId: address.nodeId,
+                operationalAddress: operationalAddress ? serverAddressToString(operationalAddress) : undefined,
                 advertisedName: discoveryData?.DN,
                 discoveryData,
                 basicInformationData,
-            }),
-        );
+            };
+        });
     }
 
     async enhanceCommissionedNodeDetails(
         nodeId: NodeId,
         data: { basicInformationData: Record<string, SupportedStorageTypes> },
     ) {
-        const nodeDetails = this.commissionedNodes.get(nodeId);
+        const nodeDetails = this.peers.get(this.fabric.addressOf(nodeId)) as CommissionedPeer;
         if (nodeDetails === undefined) {
             throw new Error(`Node ${nodeId} is not commissioned.`);
         }
         const { basicInformationData } = data;
         nodeDetails.basicInformationData = basicInformationData;
-        this.commissionedNodes.set(nodeId, nodeDetails);
-        await this.storeCommissionedNodes();
-    }
-
-    private async storeCommissionedNodes() {
-        await this.nodesStorage.set("commissionedNodes", Array.from(this.commissionedNodes.entries()));
+        await this.nodesStore.save();
     }
 
     /**
@@ -728,7 +688,7 @@ export class MatterController {
      * Returns a InteractionClient on success.
      */
     async connect(peerNodeId: NodeId, discoveryOptions: DiscoveryOptions) {
-        return this.nodeDiscoverer.connectToPeer(this.fabric, peerNodeId, discoveryOptions);
+        return this.peers.connect(this.fabric.addressOf(peerNodeId), discoveryOptions);
     }
 
     async getNextAvailableSessionId() {
@@ -752,11 +712,7 @@ export class MatterController {
     }
 
     async close() {
-        const mdnsScanner = this.scanners.scannerFor(ChannelType.UDP) as MdnsScanner | undefined;
-        for (const [nodeId, { timer }] of this.#runningNodeDiscoveries.entries()) {
-            timer?.stop();
-            mdnsScanner?.cancelOperationalDeviceDiscovery(this.fabric, nodeId, false); // This ends discovery without triggering promises
-        }
+        await this.peers.close();
         await this.exchangeManager.close();
         await this.sessionManager.close();
         await this.channelManager.close();
@@ -765,5 +721,59 @@ export class MatterController {
 
     getActiveSessionInformation() {
         return this.sessionManager.getActiveSessionInformation();
+    }
+}
+
+class CommissionedNodeStore extends PeerStore {
+    declare peers: PeerManager;
+
+    constructor(
+        private nodesStorage: StorageContext,
+        private fabric: Fabric,
+    ) {
+        super();
+    }
+
+    async loadPeers() {
+        if (!(await this.nodesStorage.has("commissionedNodes"))) {
+            return [];
+        }
+
+        const commissionedNodes = await this.nodesStorage.get<StoredOperationalPeer[]>("commissionedNodes");
+        return commissionedNodes.map(
+            ([nodeId, { operationalServerAddress, discoveryData, basicInformationData }]) =>
+                ({
+                    address: this.fabric.addressOf(nodeId),
+                    operationalAddress: operationalServerAddress,
+                    discoveryData,
+                    basicInformationData,
+                }) satisfies CommissionedPeer,
+        );
+    }
+
+    async updatePeer() {
+        return this.save();
+    }
+
+    async deletePeer() {
+        return this.save();
+    }
+
+    async save() {
+        await this.nodesStorage.set(
+            "commissionedNodes",
+            [...this.peers.peers].map(peer => {
+                const {
+                    address,
+                    operationalAddress: operationalServerAddress,
+                    basicInformationData,
+                    discoveryData,
+                } = peer as CommissionedPeer;
+                return [
+                    address.nodeId,
+                    { operationalServerAddress, basicInformationData, discoveryData },
+                ] satisfies StoredOperationalPeer;
+            }),
+        );
     }
 }

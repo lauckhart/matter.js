@@ -402,7 +402,7 @@ export class ExchangeManager {
         return {
             channel,
             localSessionParameters: this.#sessionManager.sessionParameters,
-            resubmissionStarted: nodeId => this.#sessionManager.resubmissionStarted.emit(nodeId),
+            resubmissionStarted: () => this.#sessionManager.resubmissionStarted.emit(channel.session),
         };
     }
 
