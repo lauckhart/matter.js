@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Fabric } from "#fabric/Fabric.js";
+import { NodeAddress } from "#common/NodeAddress.js";
 import { Crypto, Diagnostic, InternalError, Logger, MatterFlowError } from "#general";
 import { AttributeModel, ClusterModel, CommandModel, GLOBAL_IDS, MatterModel, Specification } from "#model";
 import { SessionManager } from "#session/SessionManager.js";
@@ -219,7 +219,7 @@ export interface InteractionContext {
     readonly structure: InteractionEndpointStructure;
     readonly subscriptionOptions?: Partial<ServerSubscriptionConfig>;
     readonly maxPathsPerInvoke?: number;
-    initiateExchange(fabric: Fabric, nodeId: NodeId, protocolId: number): MessageExchange;
+    initiateExchange(address: NodeAddress, protocolId: number): MessageExchange;
 }
 
 /**
@@ -1043,8 +1043,7 @@ export class InteractionServer implements ProtocolHandler, InteractionRecipient 
                     this.#endpointStructure.getEndpoint(path.endpointId)!,
                 ),
 
-            initiateExchange: (fabric, nodeId, protocolId) =>
-                this.#context.initiateExchange(fabric, nodeId, protocolId),
+            initiateExchange: (address: NodeAddress, protocolId) => this.#context.initiateExchange(address, protocolId),
         };
 
         const subscription = new ServerSubscription({

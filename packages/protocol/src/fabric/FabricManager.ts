@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { NodeAddress } from "#common/NodeAddress.js";
 import {
     Bytes,
     Construction,
@@ -88,6 +89,17 @@ export class FabricManager {
 
     get events() {
         return this.#events;
+    }
+
+    for(address: FabricIndex | NodeAddress) {
+        if (typeof address === "object") {
+            address = address.fabricIndex;
+        }
+        const fabric = this.#fabrics.get(address);
+        if (fabric === undefined) {
+            throw new FabricNotFoundError(`Cannot access fabric for unknown index ${address}`);
+        }
+        return fabric;
     }
 
     getNextFabricIndex() {

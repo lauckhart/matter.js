@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { NodeAddress } from "#common/NodeAddress.js";
 import {
     BasicSet,
     Bytes,
@@ -16,7 +17,7 @@ import {
     MatterFlowError,
 } from "#general";
 import { Subscription } from "#interaction/Subscription.js";
-import { CaseAuthenticatedTag, NodeId, StatusCode, StatusResponseError } from "#types";
+import { CaseAuthenticatedTag, FabricIndex, NodeId, StatusCode, StatusResponseError } from "#types";
 import { DecodedMessage, DecodedPacket, Message, MessageCodec, Packet } from "../codec/MessageCodec.js";
 import { Fabric } from "../fabric/Fabric.js";
 import { MessageCounter } from "../protocol/MessageCounter.js";
@@ -310,6 +311,26 @@ export class SecureSession extends Session {
                 await this.closer;
             }
         }
+    }
+
+    /**
+     * The peer node's address.
+     */
+    get address() {
+        return NodeAddress({
+            fabricIndex: this.#fabric?.fabricIndex ?? FabricIndex.NO_FABRIC,
+            nodeId: this.nodeId,
+        });
+    }
+
+    /**
+     * Indicates whether a peer matches a specific address.
+     */
+    peerIs(address: NodeAddress) {
+        return (
+            (this.#fabric?.fabricIndex ?? FabricIndex.NO_FABRIC) === address.fabricIndex &&
+            this.#peerNodeId === address.nodeId
+        );
     }
 
     private generateNonce(securityFlags: number, messageId: number, nodeId: NodeId) {

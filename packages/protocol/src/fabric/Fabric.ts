@@ -5,6 +5,7 @@
  */
 
 import { GroupKeyManagement } from "#clusters/group-key-management";
+import { NodeAddress } from "#common/NodeAddress.js";
 import {
     BinaryKeyPair,
     Bytes,
@@ -346,6 +347,10 @@ export class Fabric {
             rootVendorId: this.rootVendorId,
             label: this.label,
         };
+    }
+
+    addressOf(nodeId: NodeId) {
+        return NodeAddress({ fabricIndex: this.fabricIndex, nodeId });
     }
 }
 

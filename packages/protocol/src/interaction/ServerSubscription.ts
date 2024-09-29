@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { NodeAddress } from "#common/NodeAddress.js";
 import {
     InternalError,
     Logger,
@@ -138,7 +139,7 @@ export interface ServerSubscriptionContext {
         event: AnyEventServer<any, any>,
         eventFilters: TypeFromSchema<typeof TlvEventFilter>[] | undefined,
     ): Promise<EventStorageData<unknown>[]>;
-    initiateExchange(fabric: Fabric, nodeId: NodeId, protocolId: number): MessageExchange;
+    initiateExchange(address: NodeAddress, protocolId: number): MessageExchange;
 }
 
 /**
@@ -839,7 +840,10 @@ export class ServerSubscription extends Subscription {
         logger.debug(
             `Sending subscription update message for ID ${this.id} with ${attributes.length} attributes and ${events.length} events`,
         );
-        const exchange = this.#context.initiateExchange(this.fabric, this.peerNodeId, INTERACTION_PROTOCOL_ID);
+        const exchange = this.#context.initiateExchange(
+            this.fabric.addressOf(this.peerNodeId),
+            INTERACTION_PROTOCOL_ID,
+        );
         if (exchange === undefined) return;
         logger.debug(
             `Sending subscription changes for ID ${this.id}: ${attributes
