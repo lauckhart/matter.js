@@ -13,7 +13,6 @@ import {
     NetInterfaceSet,
     Network,
     NoProviderError,
-    ServerAddress,
     StorageContext,
     SupportedStorageTypes,
     SyncStorage,
@@ -24,13 +23,13 @@ import {
     Ble,
     CommissionableDevice,
     CommissionableDeviceIdentifiers,
-    ControllerCommissioningOptions,
     ControllerDiscovery,
     DiscoveryData,
     InteractionClient,
     MdnsBroadcaster,
     MdnsScanner,
     MdnsService,
+    NodeDiscoveryType,
     ScannerSet,
     SupportedAttributeClient,
 } from "#protocol";
@@ -45,8 +44,9 @@ import {
     TypeFromPartialBitSchema,
     VendorId,
 } from "#types";
+import { PeerCommissioningOptions } from "../../protocol/src/interaction/PeerCommissioner.js";
 import { CommissioningControllerNodeOptions, PairedNode } from "./device/PairedNode.js";
-import { MatterController, NodeDiscoveryType } from "./MatterController.js";
+import { MatterController } from "./MatterController.js";
 import { MatterNode } from "./MatterNode.js";
 
 const logger = new Logger("CommissioningController");
@@ -119,48 +119,7 @@ export type CommissioningControllerOptions = CommissioningControllerNodeOptions 
 };
 
 /** Options needed to commission a new node */
-export type NodeCommissioningOptions = CommissioningControllerNodeOptions & {
-    /** Commission related options. */
-    commissioning?: ControllerCommissioningOptions;
-
-    /** Discovery related options. */
-    discovery: (
-        | {
-              /**
-               * Device identifiers (Short or Long Discriminator, Product/Vendor-Ids, Device-type or a pre-discovered
-               * instance Id, or "nothing" to discover all commissionable matter devices) to use for discovery.
-               * If the property commissionableDevice is provided this property is ignored.
-               */
-              identifierData: CommissionableDeviceIdentifiers;
-          }
-        | {
-              /**
-               * Commissionable device object returned by a discovery run.
-               * If this property is provided then identifierData and knownAddress are ignored.
-               */
-              commissionableDevice: CommissionableDevice;
-          }
-    ) & {
-        /**
-         * Discovery capabilities to use for discovery. These are included in the QR code normally and defined if BLE
-         * is supported for initial commissioning.
-         */
-        discoveryCapabilities?: TypeFromPartialBitSchema<typeof DiscoveryCapabilitiesBitmap>;
-
-        /**
-         * Known address of the device to use for discovery. if this is set this will be tried first before discovering
-         * the device.
-         */
-        knownAddress?: ServerAddress;
-
-        /** Timeout in seconds for the discovery process. Default: 30 seconds */
-        timeoutSeconds?: number;
-    };
-
-    /** Passcode to use for commissioning. */
-    passcode: number;
-};
-
+export type NodeCommissioningOptions = CommissioningControllerNodeOptions & Omit<PeerCommissioningOptions, "fabric">;
 /** Controller class to commission and connect multiple nodes into one fabric. */
 export class CommissioningController extends MatterNode {
     private started = false;
@@ -274,7 +233,8 @@ export class CommissioningController extends MatterNode {
     }
 
     /**
-     * Commissions/Pairs a new device into the controller fabric. The method returns the NodeId of the commissioned node.
+     * Commissions/Pairs a new device into the controller fabric. The method returns the NodeId of the commissioned
+     * node.
      */
     async commissionNode(nodeOptions: NodeCommissioningOptions, connectNodeAfterCommissioning = true) {
         this.assertIsAddedToMatterServer();

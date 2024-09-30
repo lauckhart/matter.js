@@ -41,6 +41,9 @@ export type ControllerCommissioningOptions = {
     /** Country Code where the device is used. */
     regulatoryCountryCode: string;
 
+    /** Vendor ID used during commissionioning. */
+    adminVendorId?: VendorId;
+
     /** Wifi network credentials to commission the device to. */
     wifiNetwork?: {
         wifiSsid: string;
@@ -52,6 +55,8 @@ export type ControllerCommissioningOptions = {
         networkName: string;
         operationalDataset: string;
     };
+
+    /** The node ID assigned to the newly commissioned node. */
     nodeId?: NodeId;
 };
 
@@ -152,12 +157,6 @@ export class ControllerCommissioner {
 
         /** Commissioning options for the commissioning process. */
         private readonly commissioningOptions: ControllerCommissioningOptions,
-
-        /** NodeId to assign to the device to commission. */
-        private readonly nodeId: NodeId,
-
-        /** Administrator/Controller VendorId */
-        private readonly adminVendorId: VendorId,
 
         /**
          * Callback to operative discover and connect to the device and establish a CASE session with the device.
@@ -707,7 +706,7 @@ export class ControllerCommissioner {
         const peerOperationalCert = this.certificateManager.generateNoc(
             operationalPublicKey,
             this.fabric.fabricId,
-            this.nodeId,
+            this.interactionClient.address.nodeId,
         );
         this.ensureOperationalCredentialsSuccess(
             "addNoc",
@@ -716,7 +715,7 @@ export class ControllerCommissioner {
                     nocValue: peerOperationalCert,
                     icacValue: new Uint8Array(0),
                     ipkValue: this.fabric.identityProtectionKey,
-                    adminVendorId: this.adminVendorId,
+                    adminVendorId: this.fabric.rootVendorId,
                     caseAdminSubject: this.fabric.rootNodeId,
                 },
                 { useExtendedFailSafeMessageResponseTimeout: true },

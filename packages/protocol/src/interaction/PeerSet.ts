@@ -14,11 +14,13 @@ import {
     createPromise,
     Environment,
     Environmental,
+    ImmutableSet,
     ImplementationError,
     isIPv6,
     Logger,
     NetInterfaceSet,
     NoResponseTimeoutError,
+    ObservableSet,
     ServerAddressIp,
     serverAddressToString,
     Time,
@@ -47,7 +49,7 @@ const RETRANSMISSION_DISCOVERY_TIMEOUT_MS = 5_000;
 /**
  * Types of discovery that may be performed when connecting operationally.
  */
-export enum PeerDiscoveryType {
+export enum NodeDiscoveryType {
     /** No discovery is done, in calls means that only known addresses are tried. */
     None = 0,
 
@@ -65,21 +67,21 @@ export enum PeerDiscoveryType {
  * Configuration for discovering when establishing a peer connection.
  */
 export interface DiscoveryOptions {
-    discoveryType?: PeerDiscoveryType;
+    discoveryType?: NodeDiscoveryType;
     timeoutSeconds?: number;
     discoveryData?: DiscoveryData;
 }
 
 interface RunningDiscovery {
-    type: PeerDiscoveryType;
+    type: NodeDiscoveryType;
     promises?: (() => Promise<MessageChannel>)[];
     timer?: Timer;
 }
 
 /**
- * Interfaces {@link PeerManager} with other components.
+ * Interfaces {@link PeerSet} with other components.
  */
-export interface PeerConnectorContext {
+export interface PeerSetContext {
     sessions: SessionManager;
     channels: ChannelManager;
     exchanges: ExchangeManager;
@@ -89,9 +91,9 @@ export interface PeerConnectorContext {
 }
 
 /**
- * Establishes connections to Matter nodes on a shared fabric.
+ * Manages operational connections to peers on shared fabric.
  */
-export class PeerManager {
+export class PeerSet implements ImmutableSet<OperationalPeer>, ObservableSet<OperationalPeer> {
     readonly #sessions: SessionManager;
     readonly #channels: ChannelManager;
     readonly #exchanges: ExchangeManager;
@@ -101,10 +103,10 @@ export class PeerManager {
     readonly #peers = new BasicSet<OperationalPeer>();
     readonly #peersByAddress = new NodeAddressMap<OperationalPeer>();
     readonly #runningPeerDiscoveries = new NodeAddressMap<RunningDiscovery>();
-    readonly #construction: Construction<PeerManager>;
+    readonly #construction: Construction<PeerSet>;
     readonly #store: PeerStore;
 
-    constructor(context: PeerConnectorContext) {
+    constructor(context: PeerSetContext) {
         const { sessions, channels, exchanges, scanners, netInterfaces, store } = context;
 
         this.#sessions = sessions;
@@ -133,12 +135,47 @@ export class PeerManager {
         });
     }
 
+    get added() {
+        return this.#peers.added;
+    }
+
+    get deleted() {
+        return this.#peers.deleted;
+    }
+
+    has(item: NodeAddress | OperationalPeer) {
+        if ("address" in item) {
+            return this.#peers.has(item);
+        }
+        return this.#peersByAddress.has(item);
+    }
+
+    get size() {
+        return this.#peers.size;
+    }
+
+    find(predicate: (item: OperationalPeer) => boolean | undefined) {
+        return this.#peers.find(predicate);
+    }
+
+    filter(predicate: (item: OperationalPeer) => boolean | undefined) {
+        return this.#peers.filter(predicate);
+    }
+
+    map<T>(mapper: (item: OperationalPeer) => T) {
+        return this.#peers.map(mapper);
+    }
+
+    [Symbol.iterator]() {
+        return this.#peers[Symbol.iterator]();
+    }
+
     get construction() {
         return this.#construction;
     }
 
     [Environmental.create](env: Environment) {
-        const instance = new PeerManager({
+        const instance = new PeerSet({
             sessions: env.get(SessionManager),
             channels: env.get(ChannelManager),
             exchanges: env.get(ExchangeManager),
@@ -146,7 +183,7 @@ export class PeerManager {
             netInterfaces: env.get(NetInterfaceSet),
             store: env.get(PeerStore),
         });
-        env.set(PeerManager, instance);
+        env.set(PeerSet, instance);
         return instance;
     }
 
@@ -282,14 +319,14 @@ export class PeerManager {
     ) {
         address = NodeAddress(address);
         const {
-            discoveryType: requestedDiscoveryType = PeerDiscoveryType.FullDiscovery,
+            discoveryType: requestedDiscoveryType = NodeDiscoveryType.FullDiscovery,
             timeoutSeconds,
             discoveryData = this.#peersByAddress.get(address)?.discoveryData,
         } = discoveryOptions;
-        if (timeoutSeconds !== undefined && requestedDiscoveryType !== PeerDiscoveryType.TimedDiscovery) {
+        if (timeoutSeconds !== undefined && requestedDiscoveryType !== NodeDiscoveryType.TimedDiscovery) {
             throw new ImplementationError("Cannot set timeout without timed discovery.");
         }
-        if (requestedDiscoveryType === PeerDiscoveryType.RetransmissionDiscovery) {
+        if (requestedDiscoveryType === NodeDiscoveryType.RetransmissionDiscovery) {
             throw new ImplementationError("Cannot set retransmission discovery type.");
         }
 
@@ -299,17 +336,17 @@ export class PeerManager {
         }
 
         const existingDiscoveryDetails = this.#runningPeerDiscoveries.get(address) ?? {
-            type: PeerDiscoveryType.None,
+            type: NodeDiscoveryType.None,
         };
 
         // If we currently run another "lower" retransmission type we cancel it
         if (
-            existingDiscoveryDetails.type !== PeerDiscoveryType.None &&
+            existingDiscoveryDetails.type !== NodeDiscoveryType.None &&
             existingDiscoveryDetails.type < requestedDiscoveryType
         ) {
             mdnsScanner.cancelOperationalDeviceDiscovery(this.#sessions.fabricFor(address), address.nodeId);
             this.#runningPeerDiscoveries.delete(address);
-            existingDiscoveryDetails.type = PeerDiscoveryType.None;
+            existingDiscoveryDetails.type = NodeDiscoveryType.None;
         }
 
         const { type: runningDiscoveryType, promises } = existingDiscoveryDetails;
@@ -318,13 +355,13 @@ export class PeerManager {
         // In worst case parallel cases we do this step twice, but that's ok
         if (
             operationalAddress !== undefined &&
-            (runningDiscoveryType === PeerDiscoveryType.None || requestedDiscoveryType === PeerDiscoveryType.None)
+            (runningDiscoveryType === NodeDiscoveryType.None || requestedDiscoveryType === NodeDiscoveryType.None)
         ) {
             const directReconnection = await this.#reconnectKnownAddress(address, operationalAddress, discoveryData);
             if (directReconnection !== undefined) {
                 return directReconnection;
             }
-            if (requestedDiscoveryType === PeerDiscoveryType.None) {
+            if (requestedDiscoveryType === NodeDiscoveryType.None) {
                 throw new DiscoveryError(`Node ${address} is not reachable right now.`);
             }
         }
@@ -344,7 +381,7 @@ export class PeerManager {
 
         if (operationalAddress !== undefined) {
             // Additionally to general discovery we also try to poll the formerly known operational address
-            if (requestedDiscoveryType === PeerDiscoveryType.FullDiscovery) {
+            if (requestedDiscoveryType === NodeDiscoveryType.FullDiscovery) {
                 const { promise, resolver, rejecter } = createPromise<MessageChannel>();
 
                 reconnectionPollingTimer = Time.getPeriodicTimer(
@@ -590,7 +627,7 @@ export class PeerManager {
             // We already discover for this node, so we do not need to start a new discovery
             return;
         }
-        this.#runningPeerDiscoveries.set(address, { type: PeerDiscoveryType.RetransmissionDiscovery });
+        this.#runningPeerDiscoveries.set(address, { type: NodeDiscoveryType.RetransmissionDiscovery });
         this.#scanners
             .scannerFor(ChannelType.UDP)
             ?.findOperationalDevice(fabric, nodeId, RETRANSMISSION_DISCOVERY_TIMEOUT_MS, true)
@@ -598,7 +635,7 @@ export class PeerManager {
                 logger.error(`Failed to discover ${address} after resubmission started.`, error);
             })
             .finally(() => {
-                if (this.#runningPeerDiscoveries.get(address)?.type === PeerDiscoveryType.RetransmissionDiscovery) {
+                if (this.#runningPeerDiscoveries.get(address)?.type === NodeDiscoveryType.RetransmissionDiscovery) {
                     this.#runningPeerDiscoveries.delete(address);
                 }
             });

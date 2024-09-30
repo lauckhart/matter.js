@@ -13,49 +13,33 @@
 import { GeneralCommissioning } from "#clusters";
 import {
     CRYPTO_SYMMETRIC_KEY_LENGTH,
-    Channel,
     ChannelType,
     Construction,
     Crypto,
     ImplementationError,
     Logger,
     NetInterfaceSet,
-    NoResponseTimeoutError,
-    ServerAddress,
     ServerAddressIp,
     StorageBackendMemory,
     StorageContext,
     StorageManager,
     SupportedStorageTypes,
-    isIPv6,
     serverAddressToString,
 } from "#general";
 import {
     ChannelManager,
     ClusterClient,
-    CommissionableDevice,
     CommissioningError,
-    CommissioningSuccessfullyFinished,
-    ControllerCommissioner,
-    ControllerCommissioningOptions,
-    ControllerDiscovery,
     DiscoveryData,
     DiscoveryOptions,
     ExchangeManager,
-    ExchangeProvider,
     Fabric,
     FabricBuilder,
     FabricJsonObject,
     FabricManager,
-    InteractionClient,
-    MdnsScanner,
-    MessageChannel,
-    PairRetransmissionLimitReachedError,
-    PaseClient,
-    PeerDiscoveryType,
-    PeerManager,
+    NodeDiscoveryType,
+    PeerSet,
     ResumptionRecord,
-    RetransmissionLimitReachedError,
     RootCertificateManager,
     ScannerSet,
     SessionManager,
@@ -68,7 +52,6 @@ import {
     FabricId,
     FabricIndex,
     NodeId,
-    SECURE_CHANNEL_PROTOCOL_ID,
     TlvEnum,
     TlvField,
     TlvObject,
@@ -77,6 +60,7 @@ import {
     TypeFromSchema,
     VendorId,
 } from "#types";
+import { PeerCommissioner } from "../../protocol/src/interaction/PeerCommissioner.js";
 import { OperationalPeer, PeerStore } from "../../protocol/src/interaction/PeerStore.js";
 import { NodeCommissioningOptions } from "./CommissioningController.js";
 
@@ -95,9 +79,9 @@ export type CommissionedNodeDetails = {
     basicInformationData?: Record<string, SupportedStorageTypes>;
 };
 
+const DEFAULT_ADMIN_VENDOR_ID = VendorId(0xfff1);
 const DEFAULT_FABRIC_INDEX = FabricIndex(1);
 const DEFAULT_FABRIC_ID = FabricId(1);
-const DEFAULT_ADMIN_VENDOR_ID = VendorId(0xfff1);
 
 const CONTROLLER_CONNECTIONS_PER_FABRIC_AND_NODE = 3;
 const CONTROLLER_MAX_PATHS_PER_INVOKE = 10;
@@ -132,7 +116,7 @@ export class MatterController {
             scanners,
             netInterfaces,
             sessionClosedCallback,
-            adminVendorId = VendorId(DEFAULT_ADMIN_VENDOR_ID),
+            adminVendorId,
             adminFabricId = FabricId(DEFAULT_FABRIC_ID),
             adminFabricIndex = FabricIndex(DEFAULT_FABRIC_INDEX),
             caseAuthenticatedTags,
@@ -162,7 +146,7 @@ export class MatterController {
                 .setRootCert(certificateManager.rootCert)
                 .setRootNodeId(rootNodeId)
                 .setIdentityProtectionKey(ipkValue)
-                .setRootVendorId(adminVendorId);
+                .setRootVendorId(adminVendorId ?? adminVendorId ?? DEFAULT_ADMIN_VENDOR_ID);
             fabricBuilder.setOperationalCert(
                 certificateManager.generateNoc(
                     fabricBuilder.publicKey,
@@ -236,8 +220,8 @@ export class MatterController {
     private readonly netInterfaces = new NetInterfaceSet();
     private readonly channelManager = new ChannelManager(CONTROLLER_CONNECTIONS_PER_FABRIC_AND_NODE);
     private readonly exchangeManager: ExchangeManager;
-    private readonly peers: PeerManager;
-    private readonly paseClient;
+    private readonly peers: PeerSet;
+    private readonly commissioner: PeerCommissioner;
     #construction: Construction<MatterController>;
 
     readonly sessionStorage: StorageContext;
@@ -294,7 +278,6 @@ export class MatterController {
                 maxPathsPerInvoke: CONTROLLER_MAX_PATHS_PER_INVOKE,
             },
         });
-        this.paseClient = new PaseClient(this.sessionManager);
         this.sessionManager.sessions.deleted.on(async session => {
             this.sessionClosedCallback?.(session.peerNodeId);
         });
@@ -309,13 +292,21 @@ export class MatterController {
         // Adapts the historical storage format for MatterController to OperationalPeer objects
         this.nodesStore = new CommissionedNodeStore(nodesStorage, fabric);
 
-        this.nodesStore.peers = this.peers = new PeerManager({
+        this.nodesStore.peers = this.peers = new PeerSet({
             sessions: this.sessionManager,
             channels: this.channelManager,
             exchanges: this.exchangeManager,
             scanners: this.scanners,
             netInterfaces: this.netInterfaces,
             store: this.nodesStore,
+        });
+
+        this.commissioner = new PeerCommissioner({
+            peers: this.peers,
+            scanners: this.scanners,
+            netInterfaces: this.netInterfaces,
+            exchanges: this.exchangeManager,
+            sessions: this.sessionManager,
         });
 
         this.#construction = Construction(this, async () => {
@@ -365,94 +356,8 @@ export class MatterController {
         options: NodeCommissioningOptions,
         completeCommissioningCallback?: (peerNodeId: NodeId, discoveryData?: DiscoveryData) => Promise<boolean>,
     ): Promise<NodeId> {
-        const {
-            commissioning: commissioningOptions = {
-                regulatoryLocation: GeneralCommissioning.RegulatoryLocationType.Outdoor, // Set to the most restrictive if relevant
-                regulatoryCountryCode: "XX",
-            },
-            discovery: { timeoutSeconds = 30 },
-            passcode,
-        } = options;
-        const commissionableDevice =
-            "commissionableDevice" in options.discovery ? options.discovery.commissionableDevice : undefined;
-        let {
-            discovery: { discoveryCapabilities = {}, knownAddress },
-        } = options;
-        let identifierData = "identifierData" in options.discovery ? options.discovery.identifierData : {};
-
-        if (
-            this.scanners.hasScannerFor(ChannelType.UDP) &&
-            this.netInterfaces.hasInterfaceFor(ChannelType.UDP, "::") !== undefined
-        ) {
-            discoveryCapabilities.onIpNetwork = true; // We always discover on network as defined by specs
-        }
-        if (commissionableDevice !== undefined) {
-            let { addresses } = commissionableDevice;
-            if (discoveryCapabilities.ble === true) {
-                discoveryCapabilities = { onIpNetwork: true, ble: addresses.some(address => address.type === "ble") };
-            } else if (discoveryCapabilities.onIpNetwork === true) {
-                // do not use BLE if not specified, even if existing
-                addresses = addresses.filter(address => address.type !== "ble");
-            }
-            addresses.sort(a => (a.type === "udp" ? -1 : 1)); // Sort addresses to use UDP first
-            knownAddress = addresses[0];
-            if ("instanceId" in commissionableDevice && commissionableDevice.instanceId !== undefined) {
-                // it is an UDP discovery
-                identifierData = { instanceId: commissionableDevice.instanceId as string };
-            } else {
-                identifierData = { longDiscriminator: commissionableDevice.D };
-            }
-        }
-
-        const scannersToUse = this.collectScanners(discoveryCapabilities);
-
-        logger.info(
-            `Commissioning device with identifier ${Logger.toJSON(identifierData)} and ${
-                scannersToUse.length
-            } scanners and knownAddress ${Logger.toJSON(knownAddress)}`,
-        );
-
-        // If we have a known address we try this first before we discover the device
-        let paseSecureChannel: MessageChannel | undefined;
-        let discoveryData: DiscoveryData | undefined;
-
-        // If we have a last known address, try this first
-        if (knownAddress !== undefined) {
-            try {
-                paseSecureChannel = await this.initializePaseSecureChannel(knownAddress, passcode);
-            } catch (error) {
-                NoResponseTimeoutError.accept(error);
-            }
-        }
-        if (paseSecureChannel === undefined) {
-            const discoveredDevices = await ControllerDiscovery.discoverDeviceAddressesByIdentifier(
-                scannersToUse,
-                identifierData,
-                timeoutSeconds,
-            );
-
-            const { result } = await ControllerDiscovery.iterateServerAddresses(
-                discoveredDevices,
-                NoResponseTimeoutError,
-                async () =>
-                    scannersToUse.flatMap(scanner => scanner.getDiscoveredCommissionableDevices(identifierData)),
-                async (address, device) => {
-                    const channel = await this.initializePaseSecureChannel(address, passcode, device);
-                    discoveryData = device;
-                    return channel;
-                },
-            );
-
-            // Pairing was successful, so store the address and assign the established secure channel
-            paseSecureChannel = result;
-        }
-
-        return await this.commissionDevice(
-            paseSecureChannel,
-            commissioningOptions,
-            discoveryData,
-            completeCommissioningCallback,
-        );
+        const address = await this.commissioner.commission({ ...options, fabric: this.fabric });
+        return address.nodeId;
     }
 
     async disconnect(nodeId: NodeId) {
@@ -464,172 +369,12 @@ export class MatterController {
     }
 
     /**
-     * Method to start commission process with a PASE pairing.
-     * If this not successful and throws an RetransmissionLimitReachedError the address is invalid or the passcode
-     * is wrong.
-     */
-    private async initializePaseSecureChannel(
-        address: ServerAddress,
-        passcode: number,
-        device?: CommissionableDevice,
-    ): Promise<MessageChannel> {
-        let paseChannel: Channel<Uint8Array>;
-        if (device !== undefined) {
-            logger.info(`Commissioning device`, MdnsScanner.discoveryDataDiagnostics(device));
-        }
-        if (address.type === "udp") {
-            const { ip } = address;
-
-            const isIpv6Address = isIPv6(ip);
-            const paseInterface = this.netInterfaces.interfaceFor(ChannelType.UDP, isIpv6Address ? "::" : "0.0.0.0");
-            if (paseInterface === undefined) {
-                // mainly IPv6 address when IPv4 is disabled
-                throw new PairRetransmissionLimitReachedError(
-                    `IPv${isIpv6Address ? "6" : "4"} interface not initialized. Cannot use ${ip} for commissioning.`,
-                );
-            }
-            paseChannel = await paseInterface.openChannel(address);
-        } else {
-            const ble = this.netInterfaces.interfaceFor(ChannelType.BLE);
-            if (!ble) {
-                throw new PairRetransmissionLimitReachedError(
-                    `BLE interface not initialized. Cannot use ${address.peripheralAddress} for commissioning.`,
-                );
-            }
-            // TODO Have a Timeout mechanism here for connections
-            paseChannel = await ble.openChannel(address);
-        }
-
-        // Do PASE paring
-        const unsecureSession = this.sessionManager.createInsecureSession({
-            // Use the session parameters from MDNS announcements when available and rest is assumed to be fallbacks
-            sessionParameters: {
-                idleIntervalMs: device?.SII,
-                activeIntervalMs: device?.SAI,
-                activeThresholdMs: device?.SAT,
-            },
-            isInitiator: true,
-        });
-        const paseUnsecureMessageChannel = new MessageChannel(paseChannel, unsecureSession);
-        const paseExchange = this.exchangeManager.initiateExchangeWithChannel(
-            paseUnsecureMessageChannel,
-            SECURE_CHANNEL_PROTOCOL_ID,
-        );
-
-        let paseSecureSession;
-        try {
-            paseSecureSession = await this.paseClient.pair(
-                this.sessionManager.sessionParameters,
-                paseExchange,
-                passcode,
-            );
-        } catch (e) {
-            // Close the exchange and rethrow
-            await paseExchange.close();
-            throw e;
-        }
-
-        await unsecureSession.destroy();
-        return new MessageChannel(paseChannel, paseSecureSession);
-    }
-
-    /**
-     * Method to commission a device with a PASE secure channel. It returns the NodeId of the commissioned device on
-     * success.
-     */
-    private async commissionDevice(
-        paseSecureMessageChannel: MessageChannel,
-        commissioningOptions: ControllerCommissioningOptions,
-        discoveryData?: DiscoveryData,
-        completeCommissioningCallback?: (peerNodeId: NodeId, discoveryData?: DiscoveryData) => Promise<boolean>,
-    ): Promise<NodeId> {
-        // TODO: Create the fabric only when needed before commissioning (to do when refactoring MatterController away)
-        // TODO also move certificateManager and other parts into that class to get rid of them here
-        // TODO Depending on the Error type during commissioning we can do a retry ...
-        /*
-            Whenever the Fail-Safe timer is armed, Commissioners and Administrators SHALL NOT consider any cluster
-            operation to have timed-out before waiting at least 30 seconds for a valid response from the cluster server.
-            Some commands and attributes with complex side-effects MAY require longer and have specific timing requirements
-            stated in their respective cluster specification.
-
-            In concurrent connection commissioning flow, the failure of any of the steps 2 through 10 SHALL result in the
-            Commissioner and Commissionee returning to step 2 (device discovery and commissioning channel establishment) and
-            repeating each step. The failure of any of the steps 11 through 15 in concurrent connection commissioning flow
-            SHALL result in the Commissioner and Commissionee returning to step 11 (configuration of operational network
-            information). In the case of failure of any of the steps 11 through 15 in concurrent connection commissioning
-            flow, the Commissioner and Commissionee SHALL reuse the existing PASE-derived encryption keys over the
-            commissioning channel and all steps up to and including step 10 are considered to have been successfully
-            completed.
-            In non-concurrent connection commissioning flow, the failure of any of the steps 2 through 15 SHALL result in
-            the Commissioner and Commissionee returning to step 2 (device discovery and commissioning channel establishment)
-            and repeating each step.
-
-            Commissioners that need to restart from step 2 MAY immediately expire the fail-safe by invoking the ArmFailSafe
-            command with an ExpiryLengthSeconds field set to 0. Otherwise, Commissioners will need to wait until the current
-            fail-safe timer has expired for the Commissionee to begin accepting PASE again.
-            In both concurrent connection commissioning flow and non-concurrent connection commissioning flow, the
-            Commissionee SHALL exit Commissioning Mode after 20 failed attempts.
-         */
-
-        const peerNodeId = commissioningOptions.nodeId ?? NodeId.randomOperationalNodeId();
-        const commissioningManager = new ControllerCommissioner(
-            // Use the created secure session to do the commissioning
-            new InteractionClient(
-                new ExchangeProvider(this.exchangeManager, paseSecureMessageChannel),
-                this.fabric.addressOf(peerNodeId),
-            ),
-            this.certificateManager,
-            this.fabric,
-            commissioningOptions,
-            peerNodeId,
-            this.adminVendorId,
-            async () => {
-                // TODO Right now we always close after step 12 because we do not check for commissioning flow requirements
-                /*
-                    In concurrent connection commissioning flow the commissioning channel SHALL terminate after
-                    successful step 15 (CommissioningComplete command invocation). In non-concurrent connection
-                    commissioning flow the commissioning channel SHALL terminate after successful step 12 (trigger
-                    joining of operational network at Commissionee). The PASE-derived encryption keys SHALL be deleted
-                    when commissioning channel terminates. The PASE session SHALL be terminated by both Commissioner and
-                    Commissionee once the CommissioningComplete command is received by the Commissionee.
-                 */
-                await paseSecureMessageChannel.close(); // We reconnect using Case, so close PASE connection
-
-                if (completeCommissioningCallback !== undefined) {
-                    if (!(await completeCommissioningCallback(peerNodeId, discoveryData))) {
-                        throw new RetransmissionLimitReachedError("Device could not be discovered");
-                    }
-                    throw new CommissioningSuccessfullyFinished();
-                }
-                // Look for the device broadcast over MDNS and do CASE pairing
-                return await this.connect(peerNodeId, {
-                    discoveryType: PeerDiscoveryType.TimedDiscovery,
-                    timeoutSeconds: 120,
-                    discoveryData,
-                }); // Wait maximum 120s to find the operational device for commissioning process
-            },
-        );
-
-        try {
-            await commissioningManager.executeCommissioning();
-        } catch (error) {
-            // We might have added data for an operational address that we need to cleanup
-            await this.peers.delete(this.fabric.addressOf(peerNodeId));
-            throw error;
-        }
-
-        await this.fabricStorage?.set("fabric", this.fabric.toStorageObject());
-
-        return peerNodeId;
-    }
-
-    /**
      * Method to complete the commissioning process to a node which was initialized with a PASE secure channel.
      */
     async completeCommissioning(peerNodeId: NodeId, discoveryData?: DiscoveryData) {
         // Look for the device broadcast over MDNS and do CASE pairing
         const interactionClient = await this.connect(peerNodeId, {
-            discoveryType: PeerDiscoveryType.TimedDiscovery,
+            discoveryType: NodeDiscoveryType.TimedDiscovery,
             timeoutSeconds: 120,
             discoveryData,
         }); // Wait maximum 120s to find the operational device for commissioning process
@@ -650,15 +395,15 @@ export class MatterController {
     }
 
     isCommissioned() {
-        return this.peers.peers.size > 0;
+        return this.peers.size > 0;
     }
 
     getCommissionedNodes() {
-        return this.peers.peers.map(peer => peer.address.nodeId);
+        return this.peers.map(peer => peer.address.nodeId);
     }
 
     getCommissionedNodesDetails() {
-        return this.peers.peers.map(peer => {
+        return this.peers.map(peer => {
             const { address, operationalAddress, discoveryData, basicInformationData } = peer as CommissionedPeer;
             return {
                 nodeId: address.nodeId,
@@ -725,7 +470,7 @@ export class MatterController {
 }
 
 class CommissionedNodeStore extends PeerStore {
-    declare peers: PeerManager;
+    declare peers: PeerSet;
 
     constructor(
         private nodesStorage: StorageContext,
@@ -762,7 +507,7 @@ class CommissionedNodeStore extends PeerStore {
     async save() {
         await this.nodesStorage.set(
             "commissionedNodes",
-            [...this.peers.peers].map(peer => {
+            this.peers.map(peer => {
                 const {
                     address,
                     operationalAddress: operationalServerAddress,
