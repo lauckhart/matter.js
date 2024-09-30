@@ -278,7 +278,7 @@ describe("ClusterServerBacking", () => {
         await node.close();
     });
 
-    it.only("properly handles subscribe and notify of attributes and events", async () => {
+    it("properly handles subscribe and notify of attributes and events", async () => {
         const node = await MockServerNode.createOnline();
 
         const fabric1 = await createFabric(node, 1);

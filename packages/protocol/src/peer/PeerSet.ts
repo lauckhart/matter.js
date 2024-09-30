@@ -38,7 +38,7 @@ import { ControllerDiscovery, DiscoveryError, PairRetransmissionLimitReachedErro
 import { OperationalPeer } from "./OperationalPeer.js";
 import { PeerStore } from "./PeerStore.js";
 
-const logger = Logger.get("NodeFinder");
+const logger = Logger.get("PeerSet");
 
 const RECONNECTION_POLLING_INTERVAL_MS = 600_000; // 10 minutes
 const RETRANSMISSION_DISCOVERY_TIMEOUT_MS = 5_000;
@@ -276,7 +276,7 @@ export class PeerSet implements ImmutableSet<OperationalPeer>, ObservableSet<Ope
             return;
         }
 
-        logger.info(`Removing peer ${actual.address}`);
+        logger.info(`Removing ${actual.address}`);
         this.#peers.delete(actual);
         await this.#store.deletePeer(actual.address);
         await this.disconnect(actual);
@@ -367,14 +367,14 @@ export class PeerSet implements ImmutableSet<OperationalPeer>, ObservableSet<Ope
                 return directReconnection;
             }
             if (requestedDiscoveryType === NodeDiscoveryType.None) {
-                throw new DiscoveryError(`Node ${address} is not reachable right now.`);
+                throw new DiscoveryError(`${address} is not reachable right now.`);
             }
         }
 
         if (promises !== undefined) {
             if (runningDiscoveryType > requestedDiscoveryType) {
                 // We already run a "longer" discovery, so we know it is unreachable for now
-                throw new DiscoveryError(`Node ${address} is not reachable right now and discovery already running.`);
+                throw new DiscoveryError(`${address} is not reachable right now and discovery already running.`);
             } else {
                 // If we are already discovering this node, so we reuse promises
                 return await anyPromise(promises);
