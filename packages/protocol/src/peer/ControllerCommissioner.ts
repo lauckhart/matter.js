@@ -6,7 +6,6 @@
 
 import { RootCertificateManager } from "#certificate/RootCertificateManager.js";
 import { GeneralCommissioning } from "#clusters/general-commissioning";
-import { NodeAddress } from "#common/NodeAddress.js";
 import { CommissionableDevice, CommissionableDeviceIdentifiers, DiscoveryData, ScannerSet } from "#common/Scanner.js";
 import { Fabric } from "#fabric/Fabric.js";
 import {
@@ -21,14 +20,14 @@ import {
     ServerAddress,
 } from "#general";
 import { MdnsScanner } from "#mdns/MdnsScanner.js";
-import { ControllerCommissioner, ControllerCommissioningOptions } from "#protocol/ControllerCommissioner.js";
-import { ControllerDiscovery, PairRetransmissionLimitReachedError } from "#protocol/ControllerDiscovery.js";
+import { ControllerCommissioningFlow, PeerCommissioningFlowOptions } from "#peer/ControllerCommissioningFlow.js";
+import { ControllerDiscovery, PairRetransmissionLimitReachedError } from "#peer/ControllerDiscovery.js";
 import { ExchangeManager, ExchangeProvider, MessageChannel } from "#protocol/ExchangeManager.js";
-import { RetransmissionLimitReachedError } from "#protocol/MessageExchange.js";
 import { PaseClient } from "#session/index.js";
 import { SessionManager } from "#session/SessionManager.js";
 import { DiscoveryCapabilitiesBitmap, NodeId, SECURE_CHANNEL_PROTOCOL_ID, TypeFromPartialBitSchema } from "#types";
-import { InteractionClient } from "./InteractionClient.js";
+import { InteractionClient } from "../interaction/InteractionClient.js";
+import { PeerAddress } from "./PeerAddress.js";
 import { NodeDiscoveryType, PeerSet } from "./PeerSet.js";
 
 const logger = Logger.get("PeerCommissioner");
@@ -36,12 +35,12 @@ const logger = Logger.get("PeerCommissioner");
 /**
  * Options needed to commission a new node
  */
-export type PeerCommissioningOptions = {
+export interface PeerCommissioningOptions extends Partial<PeerCommissioningFlowOptions> {
     /** The fabric into which to commission. */
     fabric: Fabric;
 
-    /** Commission related options. */
-    commissioning?: Partial<ControllerCommissioningOptions>;
+    /** The node ID to assign (the commissioner assigns a random node ID if omitted) */
+    nodeId?: NodeId;
 
     /** Discovery related options. */
     discovery: (
@@ -79,12 +78,20 @@ export type PeerCommissioningOptions = {
 
     /** Passcode to use for commissioning. */
     passcode: number;
-};
+
+    /**
+     * Commissioning completion callback
+     *
+     * This optional callback allows the caller to complete commissioning once PASE commissioning completes.  If it does
+     * not throw, the commissioner considers commissioning complete.
+     */
+    performCaseCommissioning?: (peerAddress: PeerAddress, discoveryData?: DiscoveryData) => Promise<void>;
+}
 
 /**
- * Interfaces {@link PeerCommissioner} with other components.
+ * Interfaces {@link ControllerCommissioner} with other components.
  */
-export interface PeerCommissionerContext {
+export interface ControllerCommissionerContext {
     peers: PeerSet;
     scanners: ScannerSet;
     netInterfaces: NetInterfaceSet;
@@ -96,17 +103,17 @@ export interface PeerCommissionerContext {
 /**
  * Commissions other nodes onto a fabric.
  */
-export class PeerCommissioner {
-    #context: PeerCommissionerContext;
+export class ControllerCommissioner {
+    #context: ControllerCommissionerContext;
     #paseClient: PaseClient;
 
-    constructor(context: PeerCommissionerContext) {
+    constructor(context: ControllerCommissionerContext) {
         this.#context = context;
         this.#paseClient = new PaseClient(context.sessions);
     }
 
     [Environmental.create](env: Environment) {
-        const instance = new PeerCommissioner({
+        const instance = new ControllerCommissioner({
             peers: env.get(PeerSet),
             scanners: env.get(ScannerSet),
             netInterfaces: env.get(NetInterfaceSet),
@@ -114,13 +121,12 @@ export class PeerCommissioner {
             exchanges: env.get(ExchangeManager),
             certificates: env.get(RootCertificateManager),
         });
-        env.set(PeerCommissioner, instance);
+        env.set(ControllerCommissioner, instance);
         return instance;
     }
 
-    async commission(options: PeerCommissioningOptions): Promise<NodeAddress> {
+    async commission(options: PeerCommissioningOptions): Promise<PeerAddress> {
         const {
-            commissioning,
             discovery: { timeoutSeconds = 30 },
             passcode,
         } = options;
@@ -128,7 +134,7 @@ export class PeerCommissioner {
         const commissioningOptions = {
             regulatoryLocation: GeneralCommissioning.RegulatoryLocationType.Outdoor, // Set to the most restrictive if relevant
             regulatoryCountryCode: "XX",
-            ...commissioning,
+            ...options,
         };
 
         const commissionableDevice =
@@ -205,12 +211,7 @@ export class PeerCommissioner {
             paseSecureChannel = result;
         }
 
-        return await this.#commissionDiscoveredNode(
-            options.fabric,
-            paseSecureChannel,
-            commissioningOptions,
-            discoveryData,
-        );
+        return await this.#commissionDiscoveredNode(paseSecureChannel, commissioningOptions, discoveryData);
     }
 
     /**
@@ -291,12 +292,12 @@ export class PeerCommissioner {
      * success.
      */
     async #commissionDiscoveredNode(
-        fabric: Fabric,
         paseSecureMessageChannel: MessageChannel,
-        commissioningOptions: ControllerCommissioningOptions,
+        commissioningOptions: PeerCommissioningOptions & PeerCommissioningFlowOptions,
         discoveryData?: DiscoveryData,
-        completeCommissioningCallback?: (peerNodeId: NodeId, discoveryData?: DiscoveryData) => Promise<boolean>,
-    ): Promise<NodeAddress> {
+    ): Promise<PeerAddress> {
+        const { fabric, performCaseCommissioning } = commissioningOptions;
+
         // TODO: Create the fabric only when needed before commissioning (to do when refactoring MatterController away)
         // TODO also move certificateManager and other parts into that class to get rid of them here
         // TODO Depending on the Error type during commissioning we can do a retry ...
@@ -326,13 +327,13 @@ export class PeerCommissioner {
          */
 
         const address = fabric.addressOf(commissioningOptions.nodeId ?? NodeId.randomOperationalNodeId());
-        const commissioningManager = new ControllerCommissioner(
+        const commissioningManager = new ControllerCommissioningFlow(
             // Use the created secure session to do the commissioning
             new InteractionClient(new ExchangeProvider(this.#context.exchanges, paseSecureMessageChannel), address),
             this.#context.certificates,
             fabric,
             commissioningOptions,
-            async () => {
+            async address => {
                 // TODO Right now we always close after step 12 because we do not check for commissioning flow requirements
                 /*
                     In concurrent connection commissioning flow the commissioning channel SHALL terminate after
@@ -344,11 +345,9 @@ export class PeerCommissioner {
                  */
                 await paseSecureMessageChannel.close(); // We reconnect using Case, so close PASE connection
 
-                if (completeCommissioningCallback !== undefined) {
-                    if (!(await completeCommissioningCallback(address.nodeId, discoveryData))) {
-                        throw new RetransmissionLimitReachedError("Device could not be discovered");
-                    }
-                    throw new CommissioningSuccessfullyFinished();
+                if (performCaseCommissioning !== undefined) {
+                    await performCaseCommissioning(address, discoveryData);
+                    return;
                 }
 
                 // Look for the device broadcast over MDNS and do CASE pairing

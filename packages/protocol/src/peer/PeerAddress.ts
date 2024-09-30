@@ -7,16 +7,16 @@
 import { FabricIndex, NodeId } from "@matter.js/types";
 
 /**
- * This is the "logical" address of a Matter node consisting of a fabric and node ID.
+ * This is the "logical" address of a peer node consisting of a fabric and node ID.
  */
-export interface NodeAddress {
+export interface PeerAddress {
     fabricIndex: FabricIndex;
     nodeId: NodeId;
 }
 
 const interned = Symbol("interned-logical-address");
 
-const internedAddresses = new Map<FabricIndex, Map<NodeId, NodeAddress>>();
+const internedAddresses = new Map<FabricIndex, Map<NodeId, PeerAddress>>();
 
 /**
  * Obtain a canonical instance of a logical address.
@@ -24,7 +24,7 @@ const internedAddresses = new Map<FabricIndex, Map<NodeId, NodeAddress>>();
  * This allows for identification based on object comparison.  Interned addresses render to a string in the format
  * "@<fabric index>:<node id>"
  */
-export function NodeAddress(address: NodeAddress): NodeAddress {
+export function PeerAddress(address: PeerAddress): PeerAddress {
     if (interned in address) {
         return address;
     }
@@ -48,9 +48,9 @@ export function NodeAddress(address: NodeAddress): NodeAddress {
 
             toString() {
                 const nodeStr = this.nodeId > 0xffff ? `0x${this.nodeId.toString(16)}` : this.nodeId;
-                return `@${this.fabricIndex}:${nodeStr}`;
+                return `peer@${this.fabricIndex}:${nodeStr}`;
             },
-        } as NodeAddress),
+        } as PeerAddress),
     );
 
     return internedAddress;
@@ -59,20 +59,20 @@ export function NodeAddress(address: NodeAddress): NodeAddress {
 /**
  * A collection of items keyed by logical address.
  */
-export class NodeAddressMap<T> extends Map<NodeAddress, T> {
-    override delete(key: NodeAddress) {
-        return super.delete(NodeAddress(key));
+export class PeerAddressMap<T> extends Map<PeerAddress, T> {
+    override delete(key: PeerAddress) {
+        return super.delete(PeerAddress(key));
     }
 
-    override has(key: NodeAddress) {
-        return super.has(NodeAddress(key));
+    override has(key: PeerAddress) {
+        return super.has(PeerAddress(key));
     }
 
-    override set(key: NodeAddress, value: T) {
-        return super.set(NodeAddress(key), value);
+    override set(key: PeerAddress, value: T) {
+        return super.set(PeerAddress(key), value);
     }
 
-    override get(key: NodeAddress) {
-        return super.get(NodeAddress(key));
+    override get(key: PeerAddress) {
+        return super.get(PeerAddress(key));
     }
 }

@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NodeAddress } from "#common/NodeAddress.js";
 import {
     InternalError,
     Logger,
@@ -16,12 +15,12 @@ import {
     isObject,
 } from "#general";
 import { Specification } from "#model";
+import { PeerAddress } from "#peer/PeerAddress.js";
 import type { MessageExchange } from "#protocol/MessageExchange.js";
 import { SecureSession } from "#session/SecureSession.js";
 import {
     EventNumber,
     INTERACTION_PROTOCOL_ID,
-    NodeId,
     StatusCode,
     StatusResponseError,
     TlvAttributePath,
@@ -34,7 +33,6 @@ import {
 } from "#types";
 import { AnyAttributeServer, FabricScopedAttributeServer } from "../cluster/server/AttributeServer.js";
 import { AnyEventServer, FabricSensitiveEventServer } from "../cluster/server/EventServer.js";
-import { type Fabric } from "../fabric/Fabric.js";
 import { NoChannelError } from "../protocol/ChannelManager.js";
 import { AttributeReportPayload, EventReportPayload } from "./AttributeDataEncoder.js";
 import { EventStorageData } from "./EventHandler.js";
@@ -139,7 +137,7 @@ export interface ServerSubscriptionContext {
         event: AnyEventServer<any, any>,
         eventFilters: TypeFromSchema<typeof TlvEventFilter>[] | undefined,
     ): Promise<EventStorageData<unknown>[]>;
-    initiateExchange(address: NodeAddress, protocolId: number): MessageExchange;
+    initiateExchange(address: PeerAddress, protocolId: number): MessageExchange;
 }
 
 /**
@@ -173,8 +171,7 @@ export class ServerSubscription extends Subscription {
     readonly #sendIntervalMs: number;
     private readonly minIntervalFloorMs: number;
     private readonly maxIntervalCeilingMs: number;
-    private readonly fabric: Fabric;
-    private readonly peerNodeId: NodeId;
+    private readonly peerAddress: PeerAddress;
 
     private sendingUpdateInProgress = false;
     private sendNextUpdateImmediately = false;
@@ -195,8 +192,7 @@ export class ServerSubscription extends Subscription {
         this.#context = context;
         this.#structure = context.structure;
 
-        this.fabric = this.session.associatedFabric;
-        this.peerNodeId = this.session.peerNodeId;
+        this.peerAddress = this.session.peerAddress;
         this.minIntervalFloorMs = minIntervalFloor * 1000;
         this.maxIntervalCeilingMs = maxIntervalCeiling * 1000;
 
@@ -840,10 +836,7 @@ export class ServerSubscription extends Subscription {
         logger.debug(
             `Sending subscription update message for ID ${this.id} with ${attributes.length} attributes and ${events.length} events`,
         );
-        const exchange = this.#context.initiateExchange(
-            this.fabric.addressOf(this.peerNodeId),
-            INTERACTION_PROTOCOL_ID,
-        );
+        const exchange = this.#context.initiateExchange(this.peerAddress, INTERACTION_PROTOCOL_ID);
         if (exchange === undefined) return;
         logger.debug(
             `Sending subscription changes for ID ${this.id}: ${attributes

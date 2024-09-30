@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NodeAddress, NodeAddressMap } from "#common/NodeAddress.js";
 import { Channel, Environment, Environmental, Logger, MatterError } from "#general";
+import { PeerAddress, PeerAddressMap } from "#peer/PeerAddress.js";
 import { SecureSession } from "../session/SecureSession.js";
 import { Session } from "../session/Session.js";
 import { MessageChannel } from "./ExchangeManager.js";
@@ -15,7 +15,7 @@ const logger = Logger.get("ChannelManager");
 export class NoChannelError extends MatterError {}
 
 export class ChannelManager {
-    readonly #channels = new NodeAddressMap<MessageChannel[]>();
+    readonly #channels = new PeerAddressMap<MessageChannel[]>();
     readonly #paseChannels = new Map<Session, MessageChannel>();
     #caseSessionsPerFabricAndNode: number;
 
@@ -44,7 +44,7 @@ export class ChannelManager {
         return oldest;
     }
 
-    async setChannel(address: NodeAddress, channel: MessageChannel) {
+    async setChannel(address: PeerAddress, channel: MessageChannel) {
         channel.closeCallback = async () => this.removeChannel(address, channel.session);
         const currentChannels = this.#channels.get(address) ?? [];
         currentChannels.push(channel);
@@ -57,23 +57,23 @@ export class ChannelManager {
             if (channel.session.id !== oldSession.id) {
                 await oldSession.destroy(false, false);
             }
-            logger.info(`Close oldest channel for fabric ${NodeAddress(address)} (from session ${oldSession.id})`);
+            logger.info(`Close oldest channel for fabric ${PeerAddress(address)} (from session ${oldSession.id})`);
             await oldestChannel.close();
         }
     }
 
-    hasChannel(address: NodeAddress) {
+    hasChannel(address: PeerAddress) {
         return !!this.#channels.get(address)?.length;
     }
 
-    getChannel(address: NodeAddress, session?: Session) {
+    getChannel(address: PeerAddress, session?: Session) {
         let results = this.#channels.get(address) ?? [];
         if (session !== undefined) {
             results = results.filter(channel => channel.session.id === session.id);
         }
         if (results.length === 0)
             throw new NoChannelError(
-                `Can't find a channel to ${NodeAddress(address)}${session !== undefined ? ` session ${session.id}` : ""}`,
+                `Can't find a channel to ${PeerAddress(address)}${session !== undefined ? ` session ${session.id}` : ""}`,
             );
         return results[results.length - 1]; // Return the latest added channel (or the one belonging to the session requested)
     }
@@ -94,14 +94,14 @@ export class ChannelManager {
         return this.#paseChannels.get(session);
     }
 
-    async removeAllNodeChannels(address: NodeAddress) {
+    async removeAllNodeChannels(address: PeerAddress) {
         const channelsToRemove = this.#channels.get(address) ?? [];
         for (const channel of channelsToRemove) {
             await channel.close();
         }
     }
 
-    async removeChannel(address: NodeAddress, session: Session) {
+    async removeChannel(address: PeerAddress, session: Session) {
         const fabricChannels = this.#channels.get(address) ?? [];
         const channelEntryIndex = fabricChannels.findIndex(
             ({ session: entrySession }) => entrySession.id === session.id,

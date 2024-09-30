@@ -27,13 +27,14 @@ import { ClusterClientObj } from "../cluster/client/ClusterClientTypes.js";
 import { TlvCertSigningRequest } from "../common/OperationalCredentialsTypes.js";
 import { Fabric } from "../fabric/Fabric.js";
 import { InteractionClient } from "../interaction/InteractionClient.js";
+import { PeerAddress } from "./PeerAddress.js";
 
 const logger = Logger.get("ControllerCommissioner");
 
 /**
  * User specific options for the Commissioning process
  */
-export type ControllerCommissioningOptions = {
+export type PeerCommissioningFlowOptions = {
     /**
      * The regulatory location (indoor or outdoor) where the device is used.
      */
@@ -77,6 +78,7 @@ enum CommissioningStepResultCode {
     Success,
     Failure,
     Skipped,
+    Stop,
 }
 
 /**
@@ -140,11 +142,12 @@ export type SKIP_PASE_COMMISSIONING = typeof SKIP_CASE_COMMISSIONING;
 /**
  * Class to abstract the Device commission flow in a step wise way as defined in Specs. The specs are not 100%
  */
-export abstract class ControllerCommissioner {
+export class ControllerCommissioningFlow {
     #interactionClient: InteractionClient;
     readonly #certificateManager: RootCertificateManager;
     readonly #fabric: Fabric;
-    readonly #commissioningOptions: ControllerCommissioningOptions;
+    readonly #transitionToCase: (peerAddress: PeerAddress) => Promise<InteractionClient | undefined>;
+    readonly #commissioningOptions: PeerCommissioningFlowOptions;
     readonly #commissioningSteps = new Array<CommissioningStep>();
     readonly #commissioningStepResults = new Map<string, CommissioningStepResult>();
     readonly #clusterClients = new Map<ClusterId, ClusterClientObj>();
@@ -166,137 +169,18 @@ export abstract class ControllerCommissioner {
         fabric: Fabric,
 
         /** Commissioning options for the commissioning process. */
-        commissioningOptions: ControllerCommissioningOptions,
+        commissioningOptions: PeerCommissioningFlowOptions,
+
+        /** Callback that establishes CASE connection or handles final commissioning */
+        transitionToCase: (peerAddress: PeerAddress) => Promise<InteractionClient | undefined>,
     ) {
         this.#interactionClient = interactionClient;
         this.#certificateManager = certificateManager;
         this.#fabric = fabric;
+        this.#transitionToCase = transitionToCase;
         this.#commissioningOptions = commissioningOptions;
         logger.debug(`Commissioning options: ${Logger.toJSON(commissioningOptions)}`);
-        this.initializeCommissioningSteps();
-    }
-
-    /**
-     * Helper method to create ClusterClients. If not feature specific and for the Root Endpoint they are also reused.
-     */
-    private getClusterClient<const T extends ClusterType>(
-        cluster: T,
-        endpointId = EndpointNumber(0),
-        isFeatureSpecific = false,
-    ): ClusterClientObj<T> {
-        if (!isFeatureSpecific && endpointId === 0) {
-            const clusterClient = this.#clusterClients.get(cluster.id);
-            if (clusterClient !== undefined) {
-                logger.debug(
-                    `Returning existing cluster client for cluster ${cluster.name} (endpoint ${endpointId}, isFeatureSpecific ${isFeatureSpecific})`,
-                );
-                return clusterClient as ClusterClientObj<T>;
-            }
-        }
-        logger.debug(
-            `Creating new cluster client for cluster ${cluster.name} (endpoint ${endpointId}, isFeatureSpecific ${isFeatureSpecific})`,
-        );
-        const client = ClusterClient(cluster, endpointId, this.#interactionClient);
-        this.#clusterClients.set(cluster.id, client);
-        return client;
-    }
-
-    /**
-     * Initialize commissioning steps and add them in the default order
-     */
-    private initializeCommissioningSteps() {
-        this.#commissioningSteps.push({
-            stepNumber: 0,
-            subStepNumber: 1,
-            name: "GetInitialData",
-            stepLogic: () => this.getInitialData(),
-        });
-
-        this.#commissioningSteps.push({
-            stepNumber: 3,
-            subStepNumber: 1,
-            name: "GeneralCommissioning.ArmFailsafe",
-            stepLogic: () => this.armFailsafe(),
-        });
-
-        this.#commissioningSteps.push({
-            stepNumber: 5,
-            subStepNumber: 1,
-            name: "GeneralCommissioning.ConfigureRegulatoryInformation",
-            stepLogic: () => this.configureRegulatoryInformation(),
-        });
-
-        this.#commissioningSteps.push({
-            stepNumber: 5,
-            subStepNumber: 2,
-            name: "TimeSynchronization.SynchronizeTime",
-            stepLogic: () => this.synchronizeTime(),
-        });
-
-        this.#commissioningSteps.push({
-            stepNumber: 6,
-            subStepNumber: 1,
-            name: "OperationalCredentials.DeviceAttestation",
-            stepLogic: () => this.deviceAttestation(),
-        });
-
-        this.#commissioningSteps.push({
-            stepNumber: 7,
-            subStepNumber: 1,
-            name: "OperationalCredentials.Certificates",
-            stepLogic: () => this.certificates(),
-        });
-
-        this.#commissioningSteps.push({
-            stepNumber: 10,
-            subStepNumber: 1,
-            name: "AccessControl",
-            stepLogic: () => this.configureAccessControlLists(),
-        });
-
-        // Care about Network commissioning only when we are on BLE, because else we are already on IP network
-        if (this.#interactionClient.channelType === ChannelType.BLE) {
-            this.#commissioningSteps.push({
-                stepNumber: 11,
-                subStepNumber: 1,
-                name: "NetworkCommissioning.Validate",
-                stepLogic: () => this.validateNetwork(),
-            });
-            if (this.#commissioningOptions.wifiNetwork !== undefined) {
-                this.#commissioningSteps.push({
-                    stepNumber: 11,
-                    subStepNumber: 2,
-                    name: "NetworkCommissioning.Wifi",
-                    stepLogic: () => this.configureNetworkWifi(),
-                });
-            }
-            if (this.#commissioningOptions.threadNetwork !== undefined) {
-                this.#commissioningSteps.push({
-                    stepNumber: 11,
-                    subStepNumber: 3,
-                    name: "NetworkCommissioning.Thread",
-                    stepLogic: () => this.configureNetworkThread(),
-                });
-            }
-        } else {
-            logger.info(
-                `Skipping NetworkCommissioning steps because the device is already on IP network (${this.#interactionClient.channelType})`,
-            );
-        }
-
-        this.#commissioningSteps.push({
-            stepNumber: 12,
-            subStepNumber: 1,
-            name: "Reconnect",
-            stepLogic: () => this.reconnectWithDevice(),
-        });
-
-        this.#commissioningSteps.push({
-            stepNumber: 15,
-            subStepNumber: 1,
-            name: "GeneralCommissioning.Complete",
-            stepLogic: () => this.completeCommissioning(),
-        });
+        this.#initializeCommissioningSteps();
     }
 
     /**
@@ -306,13 +190,13 @@ export abstract class ControllerCommissioner {
      * action is allowed to take 30s at minimum based on specs).
      */
     async executeCommissioning() {
-        this.sortSteps();
+        this.#sortSteps();
 
         for (const step of this.#commissioningSteps) {
             logger.info(`Executing commissioning step ${step.stepNumber}.${step.subStepNumber}: ${step.name}`);
             try {
                 const result = await step.stepLogic();
-                this.setCommissioningStepResult(step, result);
+                this.#setCommissioningStepResult(step, result);
 
                 if (this.#lastFailSafeTime !== undefined) {
                     const timeSinceLastArmFailsafe = Time.nowMs() - this.#lastFailSafeTime;
@@ -335,8 +219,12 @@ export abstract class ControllerCommissioner {
                                 timeSinceLastArmFailsafe / 1000,
                             )}s elapsed since last arm failsafe, re-arming failsafe`,
                         );
-                        await this.armFailsafe();
+                        await this.#armFailsafe();
                     }
+                }
+
+                if (result.code === CommissioningStepResultCode.Stop) {
+                    break;
                 }
             } catch (error) {
                 if (error instanceof RecoverableCommissioningError) {
@@ -361,7 +249,7 @@ export abstract class ControllerCommissioner {
                     // the ArmFailSafe command with an ExpiryLengthSeconds field set to 0. Otherwise, Commissioners
                     // will need to wait until the current fail-safe timer has expired for the Commissionee to begin
                     // accepting PASE again.
-                    await this.resetFailsafeTimer();
+                    await this.#resetFailsafeTimer();
 
                     StatusResponseError.accept(error);
 
@@ -376,14 +264,137 @@ export abstract class ControllerCommissioner {
         }
     }
 
-    private sortSteps() {
+    /**
+     * Helper method to create ClusterClients. If not feature specific and for the Root Endpoint they are also reused.
+     */
+    #getClusterClient<const T extends ClusterType>(
+        cluster: T,
+        endpointId = EndpointNumber(0),
+        isFeatureSpecific = false,
+    ): ClusterClientObj<T> {
+        if (!isFeatureSpecific && endpointId === 0) {
+            const clusterClient = this.#clusterClients.get(cluster.id);
+            if (clusterClient !== undefined) {
+                logger.debug(
+                    `Returning existing cluster client for cluster ${cluster.name} (endpoint ${endpointId}, isFeatureSpecific ${isFeatureSpecific})`,
+                );
+                return clusterClient as ClusterClientObj<T>;
+            }
+        }
+        logger.debug(
+            `Creating new cluster client for cluster ${cluster.name} (endpoint ${endpointId}, isFeatureSpecific ${isFeatureSpecific})`,
+        );
+        const client = ClusterClient(cluster, endpointId, this.#interactionClient);
+        this.#clusterClients.set(cluster.id, client);
+        return client;
+    }
+
+    /**
+     * Initialize commissioning steps and add them in the default order
+     */
+    #initializeCommissioningSteps() {
+        this.#commissioningSteps.push({
+            stepNumber: 0,
+            subStepNumber: 1,
+            name: "GetInitialData",
+            stepLogic: () => this.#getInitialData(),
+        });
+
+        this.#commissioningSteps.push({
+            stepNumber: 3,
+            subStepNumber: 1,
+            name: "GeneralCommissioning.ArmFailsafe",
+            stepLogic: () => this.#armFailsafe(),
+        });
+
+        this.#commissioningSteps.push({
+            stepNumber: 5,
+            subStepNumber: 1,
+            name: "GeneralCommissioning.ConfigureRegulatoryInformation",
+            stepLogic: () => this.#configureRegulatoryInformation(),
+        });
+
+        this.#commissioningSteps.push({
+            stepNumber: 5,
+            subStepNumber: 2,
+            name: "TimeSynchronization.SynchronizeTime",
+            stepLogic: () => this.#synchronizeTime(),
+        });
+
+        this.#commissioningSteps.push({
+            stepNumber: 6,
+            subStepNumber: 1,
+            name: "OperationalCredentials.DeviceAttestation",
+            stepLogic: () => this.#deviceAttestation(),
+        });
+
+        this.#commissioningSteps.push({
+            stepNumber: 7,
+            subStepNumber: 1,
+            name: "OperationalCredentials.Certificates",
+            stepLogic: () => this.#certificates(),
+        });
+
+        this.#commissioningSteps.push({
+            stepNumber: 10,
+            subStepNumber: 1,
+            name: "AccessControl",
+            stepLogic: () => this.#configureAccessControlLists(),
+        });
+
+        // Care about Network commissioning only when we are on BLE, because else we are already on IP network
+        if (this.#interactionClient.channelType === ChannelType.BLE) {
+            this.#commissioningSteps.push({
+                stepNumber: 11,
+                subStepNumber: 1,
+                name: "NetworkCommissioning.Validate",
+                stepLogic: () => this.#validateNetwork(),
+            });
+            if (this.#commissioningOptions.wifiNetwork !== undefined) {
+                this.#commissioningSteps.push({
+                    stepNumber: 11,
+                    subStepNumber: 2,
+                    name: "NetworkCommissioning.Wifi",
+                    stepLogic: () => this.#configureNetworkWifi(),
+                });
+            }
+            if (this.#commissioningOptions.threadNetwork !== undefined) {
+                this.#commissioningSteps.push({
+                    stepNumber: 11,
+                    subStepNumber: 3,
+                    name: "NetworkCommissioning.Thread",
+                    stepLogic: () => this.#configureNetworkThread(),
+                });
+            }
+        } else {
+            logger.info(
+                `Skipping NetworkCommissioning steps because the device is already on IP network (${this.#interactionClient.channelType})`,
+            );
+        }
+
+        this.#commissioningSteps.push({
+            stepNumber: 12,
+            subStepNumber: 1,
+            name: "Reconnect",
+            stepLogic: () => this.#reconnectWithDevice(),
+        });
+
+        this.#commissioningSteps.push({
+            stepNumber: 15,
+            subStepNumber: 1,
+            name: "GeneralCommissioning.Complete",
+            stepLogic: () => this.#completeCommissioning(),
+        });
+    }
+
+    #sortSteps() {
         this.#commissioningSteps.sort((a, b) => {
             if (a.stepNumber !== b.stepNumber) return a.stepNumber - b.stepNumber;
             return a.subStepNumber - b.subStepNumber;
         });
     }
 
-    private setCommissioningStepResult(step: CommissioningStep, result: CommissioningStepResult) {
+    #setCommissioningStepResult(step: CommissioningStep, result: CommissioningStepResult) {
         this.#commissioningStepResults.set(`${step.stepNumber}-${step.subStepNumber}`, result);
     }
 
@@ -392,7 +403,7 @@ export abstract class ControllerCommissioner {
     }
 
     /** Helper method to check for errorCode/debugTest responses and throw error on failure */
-    private ensureOperationalCredentialsSuccess(
+    #ensureOperationalCredentialsSuccess(
         context: string,
         { statusCode, debugText, fabricIndex }: TypeFromSchema<typeof OperationalCredentials.TlvNocResponse>,
     ) {
@@ -411,10 +422,7 @@ export abstract class ControllerCommissioner {
     }
 
     /** Helper method to check for errorCode/debugTest responses and throw error on failure */
-    private ensureGeneralCommissioningSuccess(
-        context: string,
-        { errorCode, debugText }: CommissioningSuccessFailureResponse,
-    ) {
+    #ensureGeneralCommissioningSuccess(context: string, { errorCode, debugText }: CommissioningSuccessFailureResponse) {
         logger.debug(`Commissioning step ${context} returned ${errorCode}, ${debugText}`);
 
         if (errorCode === GeneralCommissioning.CommissioningError.Ok) return;
@@ -424,8 +432,8 @@ export abstract class ControllerCommissioner {
     /**
      * Initial Step to receive some common data used by other steps
      */
-    private async getInitialData() {
-        const descriptorClient = this.getClusterClient(Descriptor.Cluster);
+    async #getInitialData() {
+        const descriptorClient = this.#getClusterClient(Descriptor.Cluster);
         this.#collectedCommissioningData.rootPartsList = await descriptorClient.getPartsListAttribute();
         this.#collectedCommissioningData.rootServerList = await descriptorClient.getServerListAttribute();
 
@@ -462,12 +470,12 @@ export abstract class ControllerCommissioner {
         this.#collectedCommissioningData.networkFeatures = networkFeatures;
         this.#collectedCommissioningData.networkStatus = networkStatus;
 
-        const basicInfoClient = this.getClusterClient(BasicInformation.Cluster);
+        const basicInfoClient = this.#getClusterClient(BasicInformation.Cluster);
         this.#collectedCommissioningData.vendorId = await basicInfoClient.getVendorIdAttribute();
         this.#collectedCommissioningData.productId = await basicInfoClient.getProductIdAttribute();
         this.#collectedCommissioningData.productName = await basicInfoClient.getProductNameAttribute();
 
-        const generalCommissioningClient = this.getClusterClient(GeneralCommissioning.Cluster);
+        const generalCommissioningClient = this.#getClusterClient(GeneralCommissioning.Cluster);
         this.#collectedCommissioningData.supportsConcurrentConnection =
             await generalCommissioningClient.getSupportsConcurrentConnectionAttribute();
 
@@ -496,8 +504,8 @@ export abstract class ControllerCommissioner {
      * reading BasicCommissioningInfo attribute (see Section 11.9.5.2, “BasicCommissioningInfo Attribute”) prior to
      * invoking the ArmFailSafe command.
      */
-    private async armFailsafe() {
-        const client = this.getClusterClient(GeneralCommissioning.Cluster);
+    async #armFailsafe() {
+        const client = this.#getClusterClient(GeneralCommissioning.Cluster);
         if (this.#collectedCommissioningData.basicCommissioningInfo === undefined) {
             const basicCommissioningInfo = await client.getBasicCommissioningInfoAttribute();
             this.#collectedCommissioningData.basicCommissioningInfo = basicCommissioningInfo;
@@ -506,7 +514,7 @@ export abstract class ControllerCommissioner {
             this.#commissioningExpiryTime =
                 this.#commissioningStartedTime + basicCommissioningInfo.maxCumulativeFailsafeSeconds * 1000;
         }
-        this.ensureGeneralCommissioningSuccess(
+        this.#ensureGeneralCommissioningSuccess(
             "armFailSafe",
             await client.armFailSafe({
                 breadcrumb: this.#lastBreadcrumb,
@@ -521,9 +529,9 @@ export abstract class ControllerCommissioner {
         };
     }
 
-    private async resetFailsafeTimer() {
+    async #resetFailsafeTimer() {
         try {
-            const client = this.getClusterClient(GeneralCommissioning.Cluster);
+            const client = this.#getClusterClient(GeneralCommissioning.Cluster);
             await client.armFailSafe({
                 breadcrumb: this.#lastBreadcrumb,
                 expiryLengthSeconds: 0,
@@ -541,7 +549,7 @@ export abstract class ControllerCommissioner {
      * The regulatory information is configured using SetRegulatoryConfig (see Section 11.9.6.4,
      * “SetRegulatoryConfig Command”).
      */
-    private async configureRegulatoryInformation() {
+    async #configureRegulatoryInformation() {
         if (this.#collectedCommissioningData.networkFeatures === undefined) {
             throw new CommissioningError("No network features collected. This should never happen.");
         }
@@ -552,7 +560,7 @@ export abstract class ControllerCommissioner {
         );
 
         if (hasRadioNetwork) {
-            const client = this.getClusterClient(GeneralCommissioning.Cluster);
+            const client = this.#getClusterClient(GeneralCommissioning.Cluster);
             let locationCapability = await client.getLocationCapabilityAttribute();
             if (locationCapability === GeneralCommissioning.RegulatoryLocationType.IndoorOutdoor) {
                 locationCapability = this.#commissioningOptions.regulatoryLocation;
@@ -580,7 +588,7 @@ export abstract class ControllerCommissioner {
                     `Device does not support a configurable country code. Use "XX" instead of "${countryCode}"`,
                 );
                 countryCode = "XX";
-                this.ensureGeneralCommissioningSuccess(
+                this.#ensureGeneralCommissioningSuccess(
                     "setRegulatoryConfig",
                     await client.setRegulatoryConfig(
                         {
@@ -592,7 +600,7 @@ export abstract class ControllerCommissioner {
                     ),
                 );
             } else {
-                this.ensureGeneralCommissioningSuccess("setRegulatoryConfig", regulatoryResult);
+                this.#ensureGeneralCommissioningSuccess("setRegulatoryConfig", regulatoryResult);
             }
             return {
                 code: CommissioningStepResultCode.Success,
@@ -613,7 +621,7 @@ export abstract class ControllerCommissioner {
      * (see Section 11.16.8.6, “TimeZone Attribute”) and DstOffset attribute (see Section 11.16.8.7,
      * “DSTOffset Attribute”), respectively.
      */
-    private async synchronizeTime() {
+    async #synchronizeTime() {
         if (
             this.#collectedCommissioningData.rootServerList !== undefined &&
             this.#collectedCommissioningData.rootServerList.find(
@@ -634,8 +642,8 @@ export abstract class ControllerCommissioner {
      * Commissioner SHALL establish the authenticity of the Commissionee as a certified Matter device (see Section
      * 6.2.3, “Device Attestation Procedure”).
      */
-    private async deviceAttestation() {
-        const operationalCredentialsClusterClient = this.getClusterClient(OperationalCredentials.Cluster);
+    async #deviceAttestation() {
+        const operationalCredentialsClusterClient = this.#getClusterClient(OperationalCredentials.Cluster);
         const { certificate: deviceAttestation } = await operationalCredentialsClusterClient.certificateChainRequest(
             {
                 certificateType: OperationalCredentials.CertificateChainType.DacCertificate,
@@ -687,8 +695,8 @@ export abstract class ControllerCommissioner {
      * 9: Commissioner SHALL install operational credentials (see Figure 38, “Node Operational Credentials flow”) on
      * the Commissionee using the AddTrustedRootCertificate and AddNOC commands.
      */
-    private async certificates() {
-        const operationalCredentialsClusterClient = this.getClusterClient(OperationalCredentials.Cluster);
+    async #certificates() {
+        const operationalCredentialsClusterClient = this.#getClusterClient(OperationalCredentials.Cluster);
         const { nocsrElements, attestationSignature: csrSignature } =
             await operationalCredentialsClusterClient.csrRequest(
                 { csrNonce: Crypto.getRandomData(32) },
@@ -713,7 +721,7 @@ export abstract class ControllerCommissioner {
             this.#fabric.fabricId,
             this.#interactionClient.address.nodeId,
         );
-        this.ensureOperationalCredentialsSuccess(
+        this.#ensureOperationalCredentialsSuccess(
             "addNoc",
             await operationalCredentialsClusterClient.addNoc(
                 {
@@ -740,7 +748,7 @@ export abstract class ControllerCommissioner {
      * privilege over CASE authentication type for the Node ID provided with the command is not sufficient to express
      * its desired access control policies.
      */
-    private async configureAccessControlLists() {
+    async #configureAccessControlLists() {
         // Standard entry is sufficient in our case
 
         return {
@@ -761,7 +769,7 @@ export abstract class ControllerCommissioner {
      * 12: The Commissioner SHALL trigger the Commissionee to connect to the operational network using ConnectNetwork
      * command (see Section 11.8.7.9, “ConnectNetwork Command”) unless the Commissionee is already on the desired operational network.
      */
-    private async validateNetwork() {
+    async #validateNetwork() {
         if (
             this.#collectedCommissioningData.networkFeatures === undefined ||
             this.#collectedCommissioningData.networkStatus === undefined
@@ -796,7 +804,7 @@ export abstract class ControllerCommissioner {
         };
     }
 
-    private async configureNetworkWifi() {
+    async #configureNetworkWifi() {
         if (this.#commissioningOptions.wifiNetwork === undefined) {
             logger.debug("WiFi network is not configured");
             return {
@@ -837,7 +845,7 @@ export abstract class ControllerCommissioner {
         }
 
         logger.debug("Configuring WiFi network ...");
-        const networkCommissioningClusterClient = this.getClusterClient(
+        const networkCommissioningClusterClient = this.#getClusterClient(
             NetworkCommissioning.Cluster.with("WiFiNetworkInterface"),
             EndpointNumber(0),
             true,
@@ -925,7 +933,7 @@ export abstract class ControllerCommissioner {
         };
     }
 
-    private async configureNetworkThread() {
+    async #configureNetworkThread() {
         if (this.#collectedCommissioningData.successfullyConnectedToNetwork) {
             logger.debug("Node is already connected to a network. Skipping Thread configuration.");
             return {
@@ -972,7 +980,7 @@ export abstract class ControllerCommissioner {
         }
 
         logger.debug("Configuring Thread network ...");
-        const networkCommissioningClusterClient = this.getClusterClient(
+        const networkCommissioningClusterClient = this.#getClusterClient(
             NetworkCommissioning.Cluster.with("ThreadNetworkInterface"),
             EndpointNumber(0),
             true,
@@ -1078,9 +1086,18 @@ export abstract class ControllerCommissioner {
      * (CASE)”) session with the Commissionee over the operational network.
      *
      */
-    private async reconnectWithDevice() {
+    async #reconnectWithDevice() {
         logger.debug("Reconnecting with device ...");
-        this.#interactionClient = await this.connectToPeer();
+        const transitionResult = await this.#transitionToCase(this.#interactionClient.address);
+
+        if (transitionResult === undefined) {
+            logger.debug("CASE commissioning handled externally, terminating commissioning flow");
+            return {
+                code: CommissioningStepResultCode.Stop,
+                breadcrumb: this.#lastBreadcrumb,
+            };
+        }
+
         logger.debug("Successfully reconnected with device ...");
 
         this.#clusterClients.clear();
@@ -1090,8 +1107,6 @@ export abstract class ControllerCommissioner {
         };
     }
 
-    protected abstract connectToPeer(): Promise<InteractionClient>;
-
     /**
      * Step 15
      * The Administrator having established a CASE session with the Commissionee over the operational network in the
@@ -1099,9 +1114,9 @@ export abstract class ControllerCommissioner {
      * “CommissioningComplete Command”). A success response after invocation of the CommissioningComplete command ends
      * the commissioning process.
      */
-    private async completeCommissioning() {
-        const generalCommissioningClusterClient = this.getClusterClient(GeneralCommissioning.Cluster);
-        this.ensureGeneralCommissioningSuccess(
+    async #completeCommissioning() {
+        const generalCommissioningClusterClient = this.#getClusterClient(GeneralCommissioning.Cluster);
+        this.#ensureGeneralCommissioningSuccess(
             "commissioningComplete",
             await generalCommissioningClusterClient.commissioningComplete(undefined, {
                 useExtendedFailSafeMessageResponseTimeout: true,

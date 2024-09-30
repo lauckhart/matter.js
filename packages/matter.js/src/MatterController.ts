@@ -11,6 +11,7 @@
  */
 
 import { GeneralCommissioning } from "#clusters";
+import { NodeCommissioningOptions } from "#CommissioningController.js";
 import {
     CRYPTO_SYMMETRIC_KEY_LENGTH,
     ChannelType,
@@ -30,6 +31,7 @@ import {
     ChannelManager,
     ClusterClient,
     CommissioningError,
+    ControllerCommissioner,
     DiscoveryData,
     DiscoveryOptions,
     ExchangeManager,
@@ -38,8 +40,12 @@ import {
     FabricJsonObject,
     FabricManager,
     NodeDiscoveryType,
+    OperationalPeer,
+    PeerCommissioningOptions,
     PeerSet,
+    PeerStore,
     ResumptionRecord,
+    RetransmissionLimitReachedError,
     RootCertificateManager,
     ScannerSet,
     SessionManager,
@@ -60,9 +66,6 @@ import {
     TypeFromSchema,
     VendorId,
 } from "#types";
-import { PeerCommissioner } from "../../protocol/src/interaction/PeerCommissioner.js";
-import { OperationalPeer, PeerStore } from "../../protocol/src/interaction/PeerStore.js";
-import { NodeCommissioningOptions } from "./CommissioningController.js";
 
 const TlvCommissioningSuccessFailureResponse = TlvObject({
     /** Contain the result of the operation. */
@@ -218,7 +221,7 @@ export class MatterController {
     private readonly channelManager = new ChannelManager(CONTROLLER_CONNECTIONS_PER_FABRIC_AND_NODE);
     private readonly exchangeManager: ExchangeManager;
     private readonly peers: PeerSet;
-    private readonly commissioner: PeerCommissioner;
+    private readonly commissioner: ControllerCommissioner;
     #construction: Construction<MatterController>;
 
     readonly sessionStorage: StorageContext;
@@ -294,7 +297,7 @@ export class MatterController {
             store: this.nodesStore,
         });
 
-        this.commissioner = new PeerCommissioner({
+        this.commissioner = new ControllerCommissioner({
             peers: this.peers,
             scanners: this.scanners,
             netInterfaces: this.netInterfaces,
@@ -350,16 +353,23 @@ export class MatterController {
         options: NodeCommissioningOptions,
         completeCommissioningCallback?: (peerNodeId: NodeId, discoveryData?: DiscoveryData) => Promise<boolean>,
     ): Promise<NodeId> {
-        let address;
+        const commissioningOptions: PeerCommissioningOptions = {
+            ...options.commissioning,
+            fabric: this.fabric,
+            discovery: options.discovery,
+            passcode: options.passcode,
+        };
+
         if (completeCommissioningCallback) {
-            address = await this.commissioner.commission({
-                ...options,
-                fabric: this.fabric,
-                commissioning: { ...options.commissioning, paseOnly: true },
-            });
-        } else {
-            address = await this.commissioner.commission({ ...options, fabric: this.fabric });
+            commissioningOptions.performCaseCommissioning = async (peerAddress, discoveryData) => {
+                const result = await completeCommissioningCallback(peerAddress.nodeId, discoveryData);
+                if (!result) {
+                    throw new RetransmissionLimitReachedError("Device could not be discovered");
+                }
+            };
         }
+
+        const address = await this.commissioner.commission(commissioningOptions);
 
         await this.fabricStorage?.set("fabric", this.fabric.toStorageObject());
 

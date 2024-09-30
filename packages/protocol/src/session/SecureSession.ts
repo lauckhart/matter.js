@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NodeAddress } from "#common/NodeAddress.js";
 import {
     BasicSet,
     Bytes,
@@ -17,6 +16,7 @@ import {
     MatterFlowError,
 } from "#general";
 import { Subscription } from "#interaction/Subscription.js";
+import { PeerAddress } from "#peer/PeerAddress.js";
 import { CaseAuthenticatedTag, FabricIndex, NodeId, StatusCode, StatusResponseError } from "#types";
 import { DecodedMessage, DecodedPacket, Message, MessageCodec, Packet } from "../codec/MessageCodec.js";
 import { Fabric } from "../fabric/Fabric.js";
@@ -316,8 +316,8 @@ export class SecureSession extends Session {
     /**
      * The peer node's address.
      */
-    get address() {
-        return NodeAddress({
+    get peerAddress() {
+        return PeerAddress({
             fabricIndex: this.#fabric?.fabricIndex ?? FabricIndex.NO_FABRIC,
             nodeId: this.nodeId,
         });
@@ -326,7 +326,7 @@ export class SecureSession extends Session {
     /**
      * Indicates whether a peer matches a specific address.
      */
-    peerIs(address: NodeAddress) {
+    peerIs(address: PeerAddress) {
         return (
             (this.#fabric?.fabricIndex ?? FabricIndex.NO_FABRIC) === address.fabricIndex &&
             this.#peerNodeId === address.nodeId

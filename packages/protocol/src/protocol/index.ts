@@ -5,8 +5,6 @@
  */
 
 export * from "./ChannelManager.js";
-export * from "./ControllerCommissioner.js";
-export * from "./ControllerDiscovery.js";
 export * from "./DeviceAdvertiser.js";
 export * from "./DeviceCommissioner.js";
 export * from "./ExchangeManager.js";

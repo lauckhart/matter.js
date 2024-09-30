@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NodeAddress } from "#common/NodeAddress.js";
 import {
     Channel,
     Crypto,
@@ -20,6 +19,7 @@ import {
     TransportInterfaceSet,
     UdpInterface,
 } from "#general";
+import { PeerAddress } from "#peer/PeerAddress.js";
 import { INTERACTION_PROTOCOL_ID, NodeId, SECURE_CHANNEL_PROTOCOL_ID, SecureMessageType } from "#types";
 import { Message, MessageCodec, SessionType } from "../codec/MessageCodec.js";
 import { SecureChannelMessenger } from "../securechannel/SecureChannelMessenger.js";
@@ -162,7 +162,7 @@ export class ExchangeManager {
         this.#protocols.set(protocol.getId(), protocol);
     }
 
-    initiateExchange(address: NodeAddress, protocolId: number) {
+    initiateExchange(address: PeerAddress, protocolId: number) {
         return this.initiateExchangeWithChannel(this.#channelManager.getChannel(address), protocolId);
     }
 

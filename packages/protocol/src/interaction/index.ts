@@ -13,6 +13,5 @@ export * from "./InteractionClient.js";
 export * from "./InteractionEndpointStructure.js";
 export * from "./InteractionMessenger.js";
 export * from "./InteractionServer.js";
-export * from "./PeerSet.js";
 export * from "./ServerSubscription.js";
 export * from "./Subscription.js";

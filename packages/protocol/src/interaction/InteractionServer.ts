@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NodeAddress } from "#common/NodeAddress.js";
 import { Crypto, Diagnostic, InternalError, Logger, MatterFlowError } from "#general";
 import { AttributeModel, ClusterModel, CommandModel, GLOBAL_IDS, MatterModel, Specification } from "#model";
+import { PeerAddress } from "#peer/PeerAddress.js";
 import { SessionManager } from "#session/SessionManager.js";
 import {
     ArraySchema,
@@ -219,7 +219,7 @@ export interface InteractionContext {
     readonly structure: InteractionEndpointStructure;
     readonly subscriptionOptions?: Partial<ServerSubscriptionConfig>;
     readonly maxPathsPerInvoke?: number;
-    initiateExchange(address: NodeAddress, protocolId: number): MessageExchange;
+    initiateExchange(address: PeerAddress, protocolId: number): MessageExchange;
 }
 
 /**
@@ -1043,7 +1043,7 @@ export class InteractionServer implements ProtocolHandler, InteractionRecipient 
                     this.#endpointStructure.getEndpoint(path.endpointId)!,
                 ),
 
-            initiateExchange: (address: NodeAddress, protocolId) => this.#context.initiateExchange(address, protocolId),
+            initiateExchange: (address: PeerAddress, protocolId) => this.#context.initiateExchange(address, protocolId),
         };
 
         const subscription = new ServerSubscription({

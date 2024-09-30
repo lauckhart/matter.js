@@ -30,6 +30,7 @@ import {
     MdnsScanner,
     MdnsService,
     NodeDiscoveryType,
+    PeerCommissioningOptions,
     ScannerSet,
     SupportedAttributeClient,
 } from "#protocol";
@@ -44,7 +45,6 @@ import {
     TypeFromPartialBitSchema,
     VendorId,
 } from "#types";
-import { PeerCommissioningOptions } from "../../protocol/src/interaction/PeerCommissioner.js";
 import { CommissioningControllerNodeOptions, PairedNode } from "./device/PairedNode.js";
 import { MatterController } from "./MatterController.js";
 import { MatterNode } from "./MatterNode.js";
@@ -119,7 +119,12 @@ export type CommissioningControllerOptions = CommissioningControllerNodeOptions 
 };
 
 /** Options needed to commission a new node */
-export type NodeCommissioningOptions = CommissioningControllerNodeOptions & Omit<PeerCommissioningOptions, "fabric">;
+export type NodeCommissioningOptions = CommissioningControllerNodeOptions & {
+    commissioning: Omit<PeerCommissioningOptions, "fabric" | "discovery" | "passcode">;
+    discovery: PeerCommissioningOptions["discovery"];
+    passcode: number;
+};
+
 /** Controller class to commission and connect multiple nodes into one fabric. */
 export class CommissioningController extends MatterNode {
     private started = false;

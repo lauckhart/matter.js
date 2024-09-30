@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NodeAddress, NodeAddressMap } from "#common/NodeAddress.js";
 import { FabricManager } from "#fabric/FabricManager.js";
 import {
     BasicSet,
@@ -24,6 +23,7 @@ import {
 } from "#general";
 import { Subscription } from "#interaction/Subscription.js";
 import { Specification } from "#model";
+import { PeerAddress, PeerAddressMap } from "#peer/PeerAddress.js";
 import { CaseAuthenticatedTag, DEFAULT_MAX_PATHS_PER_INVOKE, FabricId, FabricIndex, NodeId } from "#types";
 import { Fabric } from "../fabric/Fabric.js";
 import { MessageCounter } from "../protocol/MessageCounter.js";
@@ -111,7 +111,7 @@ export class SessionManager {
     readonly #insecureSessions = new Map<NodeId, InsecureSession>();
     readonly #sessions = new BasicSet<SecureSession>();
     #nextSessionId = Crypto.getRandomUInt16();
-    #resumptionRecords = new NodeAddressMap<ResumptionRecord>();
+    #resumptionRecords = new PeerAddressMap<ResumptionRecord>();
     readonly #globalUnencryptedMessageCounter = new MessageCounter();
     readonly #subscriptionsChanged = Observable<[session: SecureSession, subscription: Subscription]>();
     readonly #sessionParameters;
@@ -188,7 +188,7 @@ export class SessionManager {
     /**
      * Convenience function for accessing a fabric by address.
      */
-    fabricFor(address: FabricIndex | NodeAddress) {
+    fabricFor(address: FabricIndex | PeerAddress) {
         return this.#context.fabrics.for(address);
     }
 
@@ -285,7 +285,7 @@ export class SessionManager {
         return session;
     }
 
-    async removeResumptionRecord(address: NodeAddress) {
+    async removeResumptionRecord(address: PeerAddress) {
         await this.#construction;
 
         this.#resumptionRecords.delete(address);
@@ -341,7 +341,7 @@ export class SessionManager {
         ) as SecureSession;
     }
 
-    getSessionForNode(address: NodeAddress) {
+    getSessionForNode(address: PeerAddress) {
         this.#construction.assert();
 
         //TODO: It can have multiple sessions for one node ...
@@ -352,7 +352,7 @@ export class SessionManager {
         });
     }
 
-    async removeAllSessionsForNode(address: NodeAddress, sendClose = false) {
+    async removeAllSessionsForNode(address: PeerAddress, sendClose = false) {
         await this.#construction;
 
         for (const session of this.#sessions) {
@@ -389,7 +389,7 @@ export class SessionManager {
         return [...this.#resumptionRecords.values()].find(record => Bytes.areEqual(record.resumptionId, resumptionId));
     }
 
-    findResumptionRecordByAddress(address: NodeAddress) {
+    findResumptionRecordByAddress(address: PeerAddress) {
         this.#construction.assert();
         return this.#resumptionRecords.get(address);
     }

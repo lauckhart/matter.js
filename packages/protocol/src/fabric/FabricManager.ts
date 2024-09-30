@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NodeAddress } from "#common/NodeAddress.js";
 import {
     Bytes,
     Construction,
@@ -20,6 +19,7 @@ import {
     StorageContext,
     StorageManager,
 } from "#general";
+import { PeerAddress } from "#peer/PeerAddress.js";
 import { FabricIndex } from "#types";
 import { Fabric, FabricJsonObject } from "./Fabric.js";
 
@@ -91,7 +91,7 @@ export class FabricManager {
         return this.#events;
     }
 
-    for(address: FabricIndex | NodeAddress) {
+    for(address: FabricIndex | PeerAddress) {
         if (typeof address === "object") {
             address = address.fabricIndex;
         }
