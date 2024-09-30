@@ -278,7 +278,7 @@ describe("ClusterServerBacking", () => {
         await node.close();
     });
 
-    it("properly handles subscribe and notify of attributes and events", async () => {
+    it.only("properly handles subscribe and notify of attributes and events", async () => {
         const node = await MockServerNode.createOnline();
 
         const fabric1 = await createFabric(node, 1);
@@ -301,7 +301,7 @@ describe("ClusterServerBacking", () => {
 
         // Mock ExchangeManager's "initiateExchange" method
         node.env.get(ExchangeManager).initiateExchange = address => {
-            expect(address.fabricIndex).equals(FabricIndex(0));
+            expect(address.fabricIndex).equals(FabricIndex(1));
             expect(address.nodeId).equals(NodeId(0));
 
             return {

@@ -319,7 +319,7 @@ export class SecureSession extends Session {
     get peerAddress() {
         return PeerAddress({
             fabricIndex: this.#fabric?.fabricIndex ?? FabricIndex.NO_FABRIC,
-            nodeId: this.nodeId,
+            nodeId: this.#peerNodeId,
         });
     }
 

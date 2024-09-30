@@ -277,9 +277,10 @@ export class PeerSet implements ImmutableSet<OperationalPeer>, ObservableSet<Ope
         }
 
         logger.info(`Removing peer ${actual.address}`);
+        this.#peers.delete(actual);
+        await this.#store.deletePeer(actual.address);
         await this.disconnect(actual);
         await this.#sessions.removeResumptionRecord(actual.address);
-        this.#peers.delete(actual);
     }
 
     async close() {

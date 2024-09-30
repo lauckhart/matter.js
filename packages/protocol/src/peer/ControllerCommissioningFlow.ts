@@ -34,7 +34,7 @@ const logger = Logger.get("ControllerCommissioner");
 /**
  * User specific options for the Commissioning process
  */
-export type PeerCommissioningFlowOptions = {
+export type ControllingCommissioningFlowOptions = {
     /**
      * The regulatory location (indoor or outdoor) where the device is used.
      */
@@ -147,7 +147,7 @@ export class ControllerCommissioningFlow {
     readonly #certificateManager: RootCertificateManager;
     readonly #fabric: Fabric;
     readonly #transitionToCase: (peerAddress: PeerAddress) => Promise<InteractionClient | undefined>;
-    readonly #commissioningOptions: PeerCommissioningFlowOptions;
+    readonly #commissioningOptions: ControllingCommissioningFlowOptions;
     readonly #commissioningSteps = new Array<CommissioningStep>();
     readonly #commissioningStepResults = new Map<string, CommissioningStepResult>();
     readonly #clusterClients = new Map<ClusterId, ClusterClientObj>();
@@ -169,7 +169,7 @@ export class ControllerCommissioningFlow {
         fabric: Fabric,
 
         /** Commissioning options for the commissioning process. */
-        commissioningOptions: PeerCommissioningFlowOptions,
+        commissioningOptions: ControllingCommissioningFlowOptions,
 
         /** Callback that establishes CASE connection or handles final commissioning */
         transitionToCase: (peerAddress: PeerAddress) => Promise<InteractionClient | undefined>,
@@ -1098,9 +1098,11 @@ export class ControllerCommissioningFlow {
             };
         }
 
+        this.#interactionClient = transitionResult;
+        this.#clusterClients.clear();
+
         logger.debug("Successfully reconnected with device ...");
 
-        this.#clusterClients.clear();
         return {
             code: CommissioningStepResultCode.Success,
             breadcrumb: this.#lastBreadcrumb,
