@@ -136,7 +136,6 @@ export class MatterController {
                 netInterfaces,
                 certificateManager,
                 fabric,
-                adminVendorId: fabric.rootVendorId,
                 sessionClosedCallback,
             });
         } else {
@@ -165,7 +164,6 @@ export class MatterController {
                 netInterfaces,
                 certificateManager,
                 fabric,
-                adminVendorId,
                 sessionClosedCallback,
             });
         }
@@ -209,7 +207,6 @@ export class MatterController {
             netInterfaces,
             certificateManager,
             fabric,
-            adminVendorId: fabric.rootVendorId,
             sessionClosedCallback,
         });
         await controller.construction;
@@ -230,7 +227,6 @@ export class MatterController {
     private readonly scanners: ScannerSet;
     private readonly certificateManager: RootCertificateManager;
     private readonly fabric: Fabric;
-    private readonly adminVendorId: VendorId;
     private readonly sessionClosedCallback?: (peerNodeId: NodeId) => void;
 
     get construction() {
@@ -245,7 +241,6 @@ export class MatterController {
         netInterfaces: NetInterfaceSet;
         certificateManager: RootCertificateManager;
         fabric: Fabric;
-        adminVendorId: VendorId;
         sessionClosedCallback?: (peerNodeId: NodeId) => void;
     }) {
         const {
@@ -257,7 +252,6 @@ export class MatterController {
             certificateManager,
             fabric,
             sessionClosedCallback,
-            adminVendorId,
         } = options;
         this.sessionStorage = sessionStorage;
         this.fabricStorage = fabricStorage;
@@ -266,7 +260,6 @@ export class MatterController {
         this.certificateManager = certificateManager;
         this.fabric = fabric;
         this.sessionClosedCallback = sessionClosedCallback;
-        this.adminVendorId = adminVendorId;
 
         const fabricManager = new FabricManager();
         fabricManager.addFabric(fabric);
@@ -307,6 +300,7 @@ export class MatterController {
             netInterfaces: this.netInterfaces,
             exchanges: this.exchangeManager,
             sessions: this.sessionManager,
+            certificates: this.certificateManager,
         });
 
         this.#construction = Construction(this, async () => {
@@ -356,7 +350,19 @@ export class MatterController {
         options: NodeCommissioningOptions,
         completeCommissioningCallback?: (peerNodeId: NodeId, discoveryData?: DiscoveryData) => Promise<boolean>,
     ): Promise<NodeId> {
-        const address = await this.commissioner.commission({ ...options, fabric: this.fabric });
+        let address;
+        if (completeCommissioningCallback) {
+            address = await this.commissioner.commission({
+                ...options,
+                fabric: this.fabric,
+                commissioning: { ...options.commissioning, paseOnly: true },
+            });
+        } else {
+            address = await this.commissioner.commission({ ...options, fabric: this.fabric });
+        }
+
+        await this.fabricStorage?.set("fabric", this.fabric.toStorageObject());
+
         return address.nodeId;
     }
 

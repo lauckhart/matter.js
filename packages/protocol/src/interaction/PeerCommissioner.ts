@@ -21,11 +21,7 @@ import {
     ServerAddress,
 } from "#general";
 import { MdnsScanner } from "#mdns/MdnsScanner.js";
-import {
-    CommissioningSuccessfullyFinished,
-    ControllerCommissioner,
-    ControllerCommissioningOptions,
-} from "#protocol/ControllerCommissioner.js";
+import { ControllerCommissioner, ControllerCommissioningOptions } from "#protocol/ControllerCommissioner.js";
 import { ControllerDiscovery, PairRetransmissionLimitReachedError } from "#protocol/ControllerDiscovery.js";
 import { ExchangeManager, ExchangeProvider, MessageChannel } from "#protocol/ExchangeManager.js";
 import { RetransmissionLimitReachedError } from "#protocol/MessageExchange.js";
@@ -45,7 +41,7 @@ export type PeerCommissioningOptions = {
     fabric: Fabric;
 
     /** Commission related options. */
-    commissioning?: ControllerCommissioningOptions;
+    commissioning?: Partial<ControllerCommissioningOptions>;
 
     /** Discovery related options. */
     discovery: (
@@ -124,13 +120,17 @@ export class PeerCommissioner {
 
     async commission(options: PeerCommissioningOptions): Promise<NodeAddress> {
         const {
-            commissioning: commissioningOptions = {
-                regulatoryLocation: GeneralCommissioning.RegulatoryLocationType.Outdoor, // Set to the most restrictive if relevant
-                regulatoryCountryCode: "XX",
-            },
+            commissioning,
             discovery: { timeoutSeconds = 30 },
             passcode,
         } = options;
+
+        const commissioningOptions = {
+            regulatoryLocation: GeneralCommissioning.RegulatoryLocationType.Outdoor, // Set to the most restrictive if relevant
+            regulatoryCountryCode: "XX",
+            ...commissioning,
+        };
+
         const commissionableDevice =
             "commissionableDevice" in options.discovery ? options.discovery.commissionableDevice : undefined;
         let {
@@ -205,12 +205,11 @@ export class PeerCommissioner {
             paseSecureChannel = result;
         }
 
-        return await this.#commissionDevice(
+        return await this.#commissionDiscoveredNode(
             options.fabric,
             paseSecureChannel,
             commissioningOptions,
             discoveryData,
-            completeCommissioningCallback,
         );
     }
 
@@ -291,7 +290,7 @@ export class PeerCommissioner {
      * Method to commission a device with a PASE secure channel. It returns the NodeId of the commissioned device on
      * success.
      */
-    async #commissionDevice(
+    async #commissionDiscoveredNode(
         fabric: Fabric,
         paseSecureMessageChannel: MessageChannel,
         commissioningOptions: ControllerCommissioningOptions,
@@ -351,6 +350,7 @@ export class PeerCommissioner {
                     }
                     throw new CommissioningSuccessfullyFinished();
                 }
+
                 // Look for the device broadcast over MDNS and do CASE pairing
                 return await this.#context.peers.connect(address, {
                     discoveryType: NodeDiscoveryType.TimedDiscovery,
@@ -367,8 +367,6 @@ export class PeerCommissioner {
             await this.#context.peers.delete(address);
             throw error;
         }
-
-        await this.fabricStorage?.set("fabric", this.fabric.toStorageObject());
 
         return address;
     }

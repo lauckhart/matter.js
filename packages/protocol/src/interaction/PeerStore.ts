@@ -11,10 +11,23 @@ import type { PeerSet } from "./PeerSet.js";
 
 /**
  * Operational information for a single peer.
+ *
+ * For our purposes a "peer" is another node commissioned to a fabric to which we have access.
  */
 export interface OperationalPeer {
+    /**
+     * The logical address of the peer.
+     */
     address: NodeAddress;
+
+    /**
+     * A physical address the peer may be accessed at, if known.
+     */
     operationalAddress?: ServerAddressIp;
+
+    /**
+     * Additional information collected while locating the peer.
+     */
     discoveryData?: DiscoveryData;
 }
 
