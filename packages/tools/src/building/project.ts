@@ -8,7 +8,7 @@ import { build as esbuild, Format } from "esbuild";
 import { cp, mkdir, readFile, rm, symlink, writeFile } from "fs/promises";
 import { glob } from "glob";
 import { platform } from "os";
-import { dirname } from "path";
+import { dirname, join, relative } from "path";
 import { ignoreError } from "../util/errors.js";
 import { CODEGEN_PATH, CONFIG_PATH, Package } from "../util/package.js";
 import { Progress } from "../util/progress.js";
@@ -89,11 +89,11 @@ export class Project {
                 recursive: true,
                 force: true,
 
-                filter: source => {
+                filter: filename => {
                     // We process source maps below
-                    if (source.endsWith(".d.ts.map")) {
+                    if (filename.endsWith(".d.ts.map")) {
                         if (needSrcMaps) {
-                            srcMaps.push(source);
+                            srcMaps.push(filename);
                         }
                         return false;
                     }
@@ -128,15 +128,15 @@ export class Project {
         //
         // So...  Rewrite the paths in all source maps under src/.  Do this directly on buffer for marginal performance
         // win.
-        for (const source of srcMaps) {
+        for (const filename of srcMaps) {
             // Load map as binary
-            const map = await readFile(source);
+            let map = await readFile(filename);
 
             // Find key text
             let pos = map.indexOf('"sources":["../');
             if (pos === -1) {
                 throw new Error(
-                    `Could not find sources position in declaration map ${source}, format may have changed`,
+                    `Could not find sources position in declaration map ${filename}, format may have changed`,
                 );
             }
 
@@ -144,12 +144,12 @@ export class Project {
             pos += 12;
 
             // Shift everything left by three
-            map.copyWithin(pos, pos + 3);
+            map = map.copyWithin(pos, pos + 3).subarray(0, map.length - 3);
 
             // Write to new location
+            const pathRelativeToDest = relative(src, filename);
             for (const format of formats) {
-                // TODO!!!
-                await writeFile(dest, map.subarray(0, map.length - 3));
+                await writeFile(join(join(this.pkg.resolve(`dist/${format}`), pathRelativeToDest)), map);
             }
         }
     }
@@ -160,7 +160,7 @@ export class Project {
 
     async installDeclarations() {
         await mkdir(this.pkg.resolve("dist"), { recursive: true });
-        const formats = new Set();
+        const formats = new Set<string>();
         if (this.pkg.supportsEsm) {
             formats.add("esm");
         }
