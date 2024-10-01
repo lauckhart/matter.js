@@ -5,9 +5,11 @@
  */
 
 import colors from "ansi-colors";
+import { createHash } from "crypto";
 import { Progress } from "../util/progress.js";
 import { BuildError } from "./error.js";
-import { Project } from "./project.js";
+import { Graph } from "./graph.js";
+import { BuildInformation, Project } from "./project.js";
 import { TypescriptContext } from "./typescript.js";
 
 export enum Target {
@@ -20,6 +22,7 @@ export enum Target {
 export interface Options {
     targets?: Target[];
     clean?: boolean;
+    graph?: Graph;
 }
 
 /**
@@ -30,6 +33,7 @@ export interface Options {
 export class Builder {
     unconditional: boolean;
     tsContext?: TypescriptContext;
+    graph?: Graph;
 
     constructor(private options: Options = {}) {
         this.unconditional =
@@ -61,11 +65,29 @@ export class Builder {
             return;
         }
 
+        const info: BuildInformation = {};
+
         const config = await project.loadConfig();
 
         await config.before?.({ project, progress });
 
+        // If available we use graph to access dependency API shas
+        const graph = this.graph ?? (await Graph.forProject(project.pkg.path));
+        let node: Graph.Node | undefined;
+        if (graph) {
+            node = graph.get(project.pkg.name);
+            for (const dep of node.dependencies) {
+                if (dep.info.apiSha !== undefined) {
+                    if (info.dependencyApiShas === undefined) {
+                        info.dependencyApiShas = {};
+                    }
+                    info.dependencyApiShas[dep.pkg.name] = dep.info.apiSha;
+                }
+            }
+        }
+
         if (targets.has(Target.types)) {
+            // Obtain or initialize typescript solution builder
             let context = this.tsContext;
             if (context === undefined) {
                 context = this.tsContext = new TypescriptContext(
@@ -76,12 +98,25 @@ export class Builder {
 
             try {
                 if (project.pkg.isLibrary) {
+                    const apiSha = createHash("sha1");
+
+                    // Our API SHA changes if that of any dependency changes
+                    if (node) {
+                        for (const dep of node.dependencies) {
+                            if (dep.info.apiSha !== undefined) {
+                                apiSha.update(dep.info.apiSha);
+                            }
+                        }
+                    }
+
                     await progress.run(`Generate ${progress.emphasize("type declarations")}`, () =>
                         project.buildDeclarations(context, "src"),
                     );
                     await progress.run(`Install ${progress.emphasize("type declarations")}`, () =>
-                        project.installDeclarations(),
+                        project.installDeclarations(apiSha),
                     );
+
+                    info.apiSha = apiSha.digest("hex");
                 } else {
                     await progress.run(`Validate ${progress.emphasize("types")}`, () =>
                         project.validateTypes(context, "src"),
@@ -112,9 +147,12 @@ export class Builder {
 
         await config.after?.({ project, progress });
 
-        // Only update timestamp when there are no explicit targets so we know it's a full build
+        // Only update build information when there are no explicit targets so we know it's a full build
         if (!this.options.targets?.length) {
-            await project.recordBuildTime();
+            await project.recordBuildInfo(info);
+            if (node) {
+                node.info = info;
+            }
         }
     }
 

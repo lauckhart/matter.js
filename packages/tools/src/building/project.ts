@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Hash } from "crypto";
 import { build as esbuild, Format } from "esbuild";
-import { cp, mkdir, readFile, rm, symlink, writeFile } from "fs/promises";
+import { cp, mkdir, readFile, rm, stat, symlink, writeFile } from "fs/promises";
 import { glob } from "glob";
 import { platform } from "os";
 import { dirname, join, relative } from "path";
@@ -13,6 +14,25 @@ import { ignoreError } from "../util/errors.js";
 import { CODEGEN_PATH, CONFIG_PATH, Package } from "../util/package.js";
 import { Progress } from "../util/progress.js";
 import { Typescript, TypescriptContext } from "./typescript.js";
+
+export const BUILD_INFO_LOCATION = "build/info.json";
+
+export interface BuildInformation {
+    /**
+     * Time of last build.  Compared to source files to determine whether build is dirty.
+     */
+    timestamp?: string;
+
+    /**
+     * API signature.  Used by dependents to determine whether they need to rebuild after we do.
+     */
+    apiSha?: string;
+
+    /**
+     * API signature of each dependency.  Compared to apiSha of each dependency during dirty detection.
+     */
+    dependencyApiShas?: Record<string, string>;
+}
 
 export class Project {
     pkg: Package;
@@ -78,9 +98,16 @@ export class Project {
         Typescript.validateTypes(this.pkg, context, path);
     }
 
-    async installDeclarationFormats(formats: Iterable<string>) {
+    /**
+     * Installs declaration files into specified directory.  Also computes SHA-1 hash for all files that we use to
+     * detect "public API changes".
+     *
+     * Note we use cp to traverse filesystem, detect changes, locate source maps and compute API SHA.  A little
+     * convoluted but works.
+     */
+    async installDeclarationFormats(formats: Iterable<string>, apiSha?: Hash) {
         const srcMaps = Array<string>();
-        let needSrcMaps = true;
+        let firstPass = true;
 
         const src = this.pkg.resolve("build/types/src");
 
@@ -89,20 +116,40 @@ export class Project {
                 recursive: true,
                 force: true,
 
-                filter: filename => {
+                filter: async (source, destination) => {
+                    const sourceStat = await stat(source);
+                    if (!sourceStat.isFile()) {
+                        return true;
+                    }
+
+                    // Ignore files that are unchanged
+                    const destinationMtime = (await ignoreError("ENOENT", () => stat(destination)))?.mtimeMs;
+                    if (destinationMtime !== undefined) {
+                        const sourceMtime = sourceStat.mtimeMs;
+                        if (destinationMtime >= sourceMtime) {
+                            return false;
+                        }
+                    }
+
                     // We process source maps below
-                    if (filename.endsWith(".d.ts.map")) {
-                        if (needSrcMaps) {
-                            srcMaps.push(filename);
+                    if (source.endsWith(".d.ts.map")) {
+                        if (firstPass) {
+                            srcMaps.push(source);
                         }
                         return false;
                     }
+
+                    // Update hash if provided
+                    if (apiSha) {
+                        apiSha.update(await readFile(source));
+                    }
+
                     return true;
                 },
             });
 
-            // Only need to collect source maps on a single pass
-            needSrcMaps = false;
+            // Only need to collect source maps and update hash on first pass
+            firstPass = false;
 
             if (this.pkg.hasCodegen) {
                 await cp(this.pkg.resolve("build/types/build/src"), this.pkg.resolve(`dist/${format}`), {
@@ -146,7 +193,7 @@ export class Project {
             // Shift everything left by three
             map = map.copyWithin(pos, pos + 3).subarray(0, map.length - 3);
 
-            // Write to new location
+            // Write to new locations
             const pathRelativeToDest = relative(src, filename);
             for (const format of formats) {
                 await writeFile(join(join(this.pkg.resolve(`dist/${format}`), pathRelativeToDest)), map);
@@ -158,7 +205,7 @@ export class Project {
         return this.pkg.hasDirectory("build/types");
     }
 
-    async installDeclarations() {
+    async installDeclarations(apiSha?: Hash) {
         await mkdir(this.pkg.resolve("dist"), { recursive: true });
         const formats = new Set<string>();
         if (this.pkg.supportsEsm) {
@@ -167,12 +214,13 @@ export class Project {
         if (this.pkg.supportsCjs) {
             formats.add("cjs");
         }
-        await this.installDeclarationFormats(formats);
+        await this.installDeclarationFormats(formats, apiSha);
     }
 
-    async recordBuildTime() {
+    async recordBuildInfo(info: BuildInformation) {
         await mkdir(this.pkg.resolve("build"), { recursive: true });
-        await writeFile(this.pkg.resolve("build/timestamp"), "");
+        info.timestamp = new Date().toISOString();
+        await writeFile(this.pkg.resolve(BUILD_INFO_LOCATION), JSON.stringify(info));
     }
 
     async loadConfig() {

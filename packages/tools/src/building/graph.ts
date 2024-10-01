@@ -10,15 +10,7 @@ import { JsonNotFoundError, Package } from "../util/package.js";
 import { Progress } from "../util/progress.js";
 import { Builder } from "./builder.js";
 import { InternalBuildError } from "./error.js";
-import { Project } from "./project.js";
-
-const BUILD_INFO_FILE = "build/info.json";
-
-export interface BuildInformation {
-    timestamp?: string;
-    apiSha?: string;
-    dependencyApiShas?: Record<string, string>;
-}
+import { BUILD_INFO_LOCATION, BuildInformation, Project } from "./project.js";
 
 /**
  * Graph of dependencies for workspace packages.
@@ -89,7 +81,7 @@ export class Graph {
 
             nodes: for (node of toBuild) {
                 for (const dep of node.dependencies) {
-                    if (dep.dirty) {
+                    if (dep.isDirty) {
                         continue nodes;
                     }
                 }
@@ -100,7 +92,7 @@ export class Graph {
                 throw new Error("Internal logic error: No unbuilt project has fully built dependencies");
             }
 
-            if (node.dirty || builder.unconditional) {
+            if (node.isDirty || builder.unconditional) {
                 await builder.build(new Project(node.pkg));
                 node.info.timestamp = new Date().toISOString();
             } else if (showSkipped) {
@@ -117,7 +109,7 @@ export class Graph {
             progress.info("path", node.pkg.path);
             progress.info("modified", formatTime(node.modifyTime));
             progress.info("built", formatTime(node.info.timestamp ?? 0));
-            progress.info("dirty", node.dirty ? colors.dim.red("yes") : colors.dim.green("no"));
+            progress.info("dirty", node.isDirty ? colors.dim.red("yes") : colors.dim.green("no"));
             progress.info("dependencies", node.dependencies.map(formatDep).join(", "));
             progress.shutdown();
         }
@@ -128,8 +120,8 @@ export class Graph {
 
         await Promise.all(
             graph.nodes.map(async node => {
-                if (node.pkg.hasFile(BUILD_INFO_FILE)) {
-                    node.info = await node.pkg.readJson(BUILD_INFO_FILE);
+                if (node.pkg.hasFile(BUILD_INFO_LOCATION)) {
+                    node.info = await node.pkg.readJson(BUILD_INFO_LOCATION);
                 }
 
                 node.modifyTime = await node.pkg.lastModified("package.json", "src", "test");
@@ -175,10 +167,16 @@ export class Graph {
                     return this.info.timestamp ? new Date(this.info.timestamp).getTime() : 0;
                 },
 
-                get dirty() {
+                get isDirty() {
                     return (
                         this.modifyTime > this.buildTime ||
-                        !!this.dependencies.find(d => d.dirty || d.buildTime > this.buildTime)
+                        !!this.dependencies.find(
+                            dep =>
+                                dep.isDirty ||
+                                (dep.buildTime > this.buildTime &&
+                                    (dep.info.apiSha === undefined ||
+                                        dep.info.apiSha !== this.info.dependencyApiShas?.[dep.pkg.name])),
+                        )
                     );
                 },
 
@@ -191,7 +189,7 @@ export class Graph {
                     }
                     const depShas = this.info.dependencyApiShas;
                     if (typeof depShas !== "object") {
-                        return this.dirty;
+                        return this.isDirty;
                     }
                     for (const dep of this.dependencies) {
                         const depSha = depShas[dep.pkg.name];
@@ -226,7 +224,7 @@ export namespace Graph {
         buildTime: number;
         info: BuildInformation;
         modifyTime: number;
-        dirty: boolean;
+        isDirty: boolean;
         prebuildDirty: boolean;
     }
 }
