@@ -148,20 +148,21 @@ export class Project {
                 },
             });
 
-            // Only need to collect source maps and update hash on first pass
-            firstPass = false;
-
             if (this.pkg.hasCodegen) {
                 await cp(this.pkg.resolve("build/types/build/src"), this.pkg.resolve(`dist/${format}`), {
                     recursive: true,
                     force: true,
 
                     filter: source => {
-                        // Ignore source maps
+                        // Ignore type definition source maps; we'd have to rewrite and they aren't too useful since
+                        // build-time codegen is currently just for proxies
                         return !source.endsWith(".d.ts.map");
                     },
                 });
             }
+
+            // Only need to collect source maps and update hash on first pass
+            firstPass = false;
         }
 
         // If you specify --sourceRoot, tsc just sticks whatever the string is directly into the file.  Not very useful
@@ -220,7 +221,7 @@ export class Project {
     async recordBuildInfo(info: BuildInformation) {
         await mkdir(this.pkg.resolve("build"), { recursive: true });
         info.timestamp = new Date().toISOString();
-        await writeFile(this.pkg.resolve(BUILD_INFO_LOCATION), JSON.stringify(info));
+        await writeFile(this.pkg.resolve(BUILD_INFO_LOCATION), JSON.stringify(info, undefined, 4));
     }
 
     async loadConfig() {
