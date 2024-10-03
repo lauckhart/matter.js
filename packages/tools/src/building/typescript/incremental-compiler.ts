@@ -67,9 +67,6 @@ export function createIncrementalCompilerContext(
             if (pkg.hasSrc) {
                 sources.push(...(await pkg.glob("src/**/*.ts")));
             }
-            if (pkg.hasCodegen) {
-                sources.push(...(await pkg.glob("build/src/**/*.ts")));
-            }
         } else if (path === "test") {
             if (pkg.hasTests) {
                 sources.push(...(await pkg.glob("test/**/*.ts")));

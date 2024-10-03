@@ -16,7 +16,7 @@ import { toolsPath } from "./tools-path.cjs";
 export class JsonNotFoundError extends Error {}
 
 export const CONFIG_PATH = `src/build.config.ts`;
-export const CODEGEN_PATH = `build/src`;
+export const CODEGEN_PATH = `codegen`;
 
 const packageForPath = {} as Record<string, Package | undefined | null>;
 

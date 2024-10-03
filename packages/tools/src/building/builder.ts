@@ -41,6 +41,24 @@ export class Builder {
             options.clean || (options.targets !== undefined && options.targets?.indexOf(Target.clean) !== -1);
     }
 
+    public async configure(project: Project) {
+        if (!project.pkg.hasConfig) {
+            return;
+        }
+
+        const progress = project.pkg.start("Configuring");
+
+        try {
+            await project.configure(progress);
+        } catch (e: any) {
+            progress.shutdown();
+            process.stderr.write(`${e.stack ?? e.message}\n\n`);
+            process.exit(1);
+        }
+
+        progress.shutdown();
+    }
+
     public async build(project: Project) {
         const progress = project.pkg.start("Building");
 
@@ -68,9 +86,9 @@ export class Builder {
 
         const info: BuildInformation = {};
 
-        const config = await project.loadConfig();
+        const config = await project.configure(progress);
 
-        await config.before?.({ project, progress });
+        await config?.before?.({ project, progress });
 
         // If available we use graph to access dependency API shas
         const graph = this.graph ?? (await Graph.forProject(project.pkg.path));
@@ -147,7 +165,7 @@ export class Builder {
             await this.#transpile(project, progress, Target.cjs);
         }
 
-        await config.after?.({ project, progress });
+        await config?.after?.({ project, progress });
 
         // Only update build information when there are no explicit targets so we know it's a full build
         if (!this.options.targets?.length) {

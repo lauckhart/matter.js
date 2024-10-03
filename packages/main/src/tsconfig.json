@@ -1,5 +1,5 @@
 {
-    "extends": "../../tools/tsc/tsconfig.lib-with-proxies.json",
+    "extends": "../../tools/tsc/tsconfig.lib.json",
     "compilerOptions": {
         "types": [
             "@matter.js/tools",
@@ -27,9 +27,6 @@
         },
         {
             "path": "../../react-native/src"
-        },
-        {
-            "path": "../../../codegen/src"
         }
     ]
 }

@@ -24,9 +24,6 @@
             "path": "../../node/src"
         },
         {
-            "path": "../../../codegen/src"
-        },
-        {
             "path": "../src"
         },
         {

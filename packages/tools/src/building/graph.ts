@@ -76,6 +76,11 @@ export class Graph {
     async build(builder: Builder, showSkipped = true) {
         const toBuild = new Set(this.nodes);
 
+        // We configure each build before building so that any generated files are in place before we initiate the build
+        for (const node of this.nodes) {
+            await builder.configure(node.project);
+        }
+
         while (toBuild.size) {
             let node;
 
@@ -93,7 +98,7 @@ export class Graph {
             }
 
             if (node.isDirty || builder.unconditional) {
-                await builder.build(new Project(node.pkg));
+                await builder.build(node.project);
                 node.info.timestamp = new Date().toISOString();
             } else if (showSkipped) {
                 new Progress().skip("Up to date", node.pkg);
@@ -159,6 +164,7 @@ export class Graph {
             allDeps[pkg.json.name] = pkg.dependencies;
             nodeMap[pkg.json.name] = {
                 pkg,
+                project: new Project(pkg),
                 dependencies: [],
                 info: {},
                 modifyTime: 0,
@@ -220,6 +226,7 @@ export class Graph {
 export namespace Graph {
     export interface Node {
         pkg: Package;
+        project: Project;
         dependencies: Node[];
         buildTime: number;
         info: BuildInformation;

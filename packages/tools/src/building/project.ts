@@ -11,7 +11,7 @@ import { glob } from "glob";
 import { platform } from "os";
 import { dirname, join, relative } from "path";
 import { ignoreError } from "../util/errors.js";
-import { CODEGEN_PATH, CONFIG_PATH, Package } from "../util/package.js";
+import { CONFIG_PATH, Package } from "../util/package.js";
 import { Progress } from "../util/progress.js";
 
 export const BUILD_INFO_LOCATION = "build/info.json";
@@ -35,6 +35,8 @@ export interface BuildInformation {
 
 export class Project {
     pkg: Package;
+    #config?: Project.Config;
+    #configured?: boolean;
 
     constructor(source: Package | string = ".") {
         if (typeof source === "string") {
@@ -50,9 +52,6 @@ export class Project {
 
     async buildSource(format: Format) {
         await this.#build(format, "src", `dist/${format}`);
-        if (this.pkg.hasCodegen) {
-            await this.#build(format, CODEGEN_PATH, `dist/${format}`);
-        }
         await this.#configureFormat("dist", format, true);
     }
 
@@ -139,19 +138,6 @@ export class Project {
                 },
             });
 
-            if (this.pkg.hasCodegen) {
-                await cp(this.pkg.resolve("build/types/build/src"), this.pkg.resolve(`dist/${format}`), {
-                    recursive: true,
-                    force: true,
-
-                    filter: source => {
-                        // Ignore type definition source maps; we'd have to rewrite and they aren't too useful since
-                        // build-time codegen is currently just for proxies
-                        return !source.endsWith(".d.ts.map");
-                    },
-                });
-            }
-
             // Only need to collect source maps and update hash on first pass
             firstPass = false;
         }
@@ -161,9 +147,6 @@ export class Project {
         //
         // We distribute types for src one level higher than we generate them (dist/esm vs build/types/src) so the paths
         // end up incorrect.
-        //
-        // The source maps for codegen files are off by two levels but we don't bother installing those since we don't
-        // distribute the source anyway.
         //
         // So...  Rewrite the paths in all source maps under src/.  Do this directly on buffer for marginal performance
         // win.
@@ -215,7 +198,11 @@ export class Project {
         await writeFile(this.pkg.resolve(BUILD_INFO_LOCATION), JSON.stringify(info, undefined, 4));
     }
 
-    async loadConfig() {
+    async configure(progress: Progress) {
+        if (this.#configured) {
+            return this.#config;
+        }
+
         if (!this.pkg.hasConfig) {
             return {};
         }
@@ -229,7 +216,17 @@ export class Project {
             sourcemap: true,
         });
 
-        return (await import(`file://${outfile}`)) as Project.Config;
+        this.#config = (await import(`file://${outfile}`)) as Project.Config | undefined;
+        this.#configured = true;
+
+        if (this.#config?.startup) {
+            await this.#config?.startup({
+                project: this,
+                progress,
+            });
+        }
+
+        return this.#config;
     }
 
     async #build(format: Format, indir: string, outdir: string) {
@@ -304,6 +301,7 @@ export namespace Project {
     }
 
     export interface Config {
+        startup?: (context: Context) => Promise<void>;
         before?: (context: Context) => Promise<void>;
         after?: (context: Context) => Promise<void>;
     }

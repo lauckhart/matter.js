@@ -1,5 +1,5 @@
 {
-    "extends": "../../../packages/tools/tsc/tsconfig.lib-with-proxies.json",
+    "extends": "../../../packages/tools/tsc/tsconfig.lib.json",
     "compilerOptions": {
         "types": [
             "@matter.js/tools",
@@ -21,9 +21,6 @@
         },
         {
             "path": "../../node/src"
-        },
-        {
-            "path": "../../../codegen/src"
         }
     ]
 }
