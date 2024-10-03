@@ -13,7 +13,6 @@ import { dirname, join, relative } from "path";
 import { ignoreError } from "../util/errors.js";
 import { CODEGEN_PATH, CONFIG_PATH, Package } from "../util/package.js";
 import { Progress } from "../util/progress.js";
-import { Typescript, TypescriptContext } from "./typescript.js";
 
 export const BUILD_INFO_LOCATION = "build/info.json";
 
@@ -88,14 +87,6 @@ export class Project {
         for (const dir of ["build", "dist"]) {
             await rm(this.pkg.resolve(dir), { recursive: true, force: true });
         }
-    }
-
-    async buildDeclarations(context: TypescriptContext, path: string) {
-        Typescript.emitDeclarations(this.pkg, context, path);
-    }
-
-    async validateTypes(context: TypescriptContext, path: string) {
-        Typescript.validateTypes(this.pkg, context, path);
     }
 
     /**
@@ -277,7 +268,7 @@ export class Project {
         // Build import map
         let { imports } = this.pkg.json;
         if (isDist && typeof imports === "object") {
-            imports = { ...imports } as Record<string, unknown>;
+            imports = { ...imports };
             for (const key in imports) {
                 const value = imports[key];
                 if (typeof value === "string") {

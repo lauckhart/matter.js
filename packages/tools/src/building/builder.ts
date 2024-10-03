@@ -10,7 +10,8 @@ import { Progress } from "../util/progress.js";
 import { BuildError } from "./error.js";
 import { Graph } from "./graph.js";
 import { BuildInformation, Project } from "./project.js";
-import { TypescriptContext } from "./typescript.js";
+import { createTypescriptContext } from "./typescript.js";
+import { TypescriptContext } from "./typescript/context.js";
 
 export enum Target {
     clean = "clean",
@@ -87,16 +88,17 @@ export class Builder {
         }
 
         if (targets.has(Target.types)) {
-            // Obtain or initialize typescript solution builder
-            let context = this.tsContext;
-            if (context === undefined) {
-                context = this.tsContext = new TypescriptContext(
-                    project.pkg.workspace,
-                    progress.refresh.bind(progress),
-                );
-            }
-
             try {
+                // Obtain or initialize typescript solution builder
+                let context = this.tsContext;
+                if (context === undefined) {
+                    context = this.tsContext = await createTypescriptContext(
+                        project.pkg.workspace,
+                        graph,
+                        progress.refresh.bind(progress),
+                    );
+                }
+
                 if (project.pkg.isLibrary) {
                     const apiSha = createHash("sha1");
 
@@ -110,7 +112,7 @@ export class Builder {
                     }
 
                     await progress.run(`Generate ${progress.emphasize("type declarations")}`, () =>
-                        project.buildDeclarations(context, "src"),
+                        context.build(project.pkg, "src"),
                     );
                     await progress.run(`Install ${progress.emphasize("type declarations")}`, () =>
                         project.installDeclarations(apiSha),
@@ -119,12 +121,12 @@ export class Builder {
                     info.apiSha = apiSha.digest("hex");
                 } else {
                     await progress.run(`Validate ${progress.emphasize("types")}`, () =>
-                        project.validateTypes(context, "src"),
+                        context.build(project.pkg, "src", false),
                     );
                 }
                 if (project.pkg.hasTests) {
                     await progress.run(`Validate ${progress.emphasize("test types")}`, () =>
-                        project.validateTypes(context, "test"),
+                        context.build(project.pkg, "test"),
                     );
                 }
             } catch (e) {
