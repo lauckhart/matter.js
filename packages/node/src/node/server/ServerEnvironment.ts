@@ -5,6 +5,7 @@
  */
 
 import { EndpointInitializer } from "#endpoint/index.js";
+import { CommissioningDiscoveryService } from "#node/client/CommissioningDiscovery.js";
 import { ServerNode } from "#node/ServerNode.js";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
 import { FabricManager, SessionManager } from "#protocol";
@@ -31,6 +32,7 @@ export namespace ServerEnvironment {
     export async function close(node: ServerNode) {
         const { env } = node;
 
+        await env.close(CommissioningDiscoveryService);
         env.close(FabricManager);
         await env.close(SessionManager);
         await env.close(ServerNodeStore);

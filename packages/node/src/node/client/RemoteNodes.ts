@@ -5,26 +5,18 @@
  */
 
 import { EndpointContainer } from "#endpoint/properties/EndpointContainer.js";
-import {
-    CommissionableDeviceIdentifiers,
-    Fabric,
-    FabricAuthorityConfigurationProvider,
-    OperationalPeer,
-    PeerAddress,
-    PeerStore,
-} from "#protocol";
-import { ClientNode } from "./ClientNode.js";
-import { ServerNode } from "./ServerNode.js";
-import { ServerNodeStore } from "./storage/ServerNodeStore.js";
+import { FabricAuthorityConfigurationProvider, OperationalPeer, PeerAddress, PeerStore } from "#protocol";
+import { ClientNode } from "../ClientNode.js";
+import { ServerNode } from "../ServerNode.js";
+import { ServerNodeStore } from "../storage/ServerNodeStore.js";
+import { CommissioningDiscoveryService } from "./CommissioningDiscovery.js";
 
 /**
  * Manages the set of known remote nodes.
  *
  * Remote nodes are either peers (commissioned into a fabric we share) or commissionable.
  */
-export class Nodes extends EndpointContainer<ClientNode> {
-    #controllerFabric?: Fabric;
-
+export class RemoteNodes extends EndpointContainer<ClientNode> {
     constructor(owner: ServerNode) {
         super(owner);
 
@@ -39,6 +31,10 @@ export class Nodes extends EndpointContainer<ClientNode> {
                 }),
             );
         }
+    }
+
+    get discovery() {
+        return this.endpoint.env.get(CommissioningDiscoveryService);
     }
 
     override get(id: string | PeerAddress) {
@@ -56,26 +52,8 @@ export class Nodes extends EndpointContainer<ClientNode> {
         return super.get(id);
     }
 
-    set controllerFabric(fabric: Fabric) {
-        this.#controllerFabric = fabric;
-    }
-
     override get endpoint() {
         return super.endpoint as ServerNode;
-    }
-
-    /**
-     * Find a specific commissionable node.
-     */
-    async find(): Promise<ClientNode> {
-        // TODO
-    }
-
-    /**
-     * Employ discovery to find a set of commissionable nodes.
-     */
-    async discovery(): Promise<ClientNode[]> {
-        // TODO
     }
 
     #configureController() {
@@ -137,19 +115,5 @@ export class Nodes extends EndpointContainer<ClientNode> {
                 }
             })(),
         );
-    }
-}
-
-export namespace Nodes {
-    export type DiscoveryFilter = CommissionableDeviceIdentifiers;
-
-    export interface DiscoveryOptions {
-        filter?: DiscoveryFilter;
-        timeoutSeconds?: number;
-    }
-
-    export interface OngoingDiscovery {
-        complete: Promise<ClientNode[]>;
-        cancel(): void;
     }
 }

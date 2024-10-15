@@ -14,7 +14,10 @@ import { ServerNode } from "./ServerNode.js";
 import { ServerNodeStore } from "./storage/ServerNodeStore.js";
 
 /**
- * A client-side Matter {@link Node}.
+ * A remote Matter {@link Node}.
+ *
+ * Client nodes may be peers (commissioned into a shared fabric) or commissionable, in which they are not usable until
+ * you invoke {@link commissioned}.
  */
 export class ClientNode extends Node<ClientNode.RootEndpoint> {
     constructor(options: ClientNode.Options) {
@@ -49,7 +52,11 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
         super.owner = node;
     }
 
-    createRuntime(): NetworkRuntime {
+    async commission(options: CommissioningClient.CommissioningOptions) {
+        await this.act("commission", agent => agent.commissioning.commission(options));
+    }
+
+    protected createRuntime(): NetworkRuntime {
         throw new NotImplementedError();
     }
 
