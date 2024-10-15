@@ -5,7 +5,6 @@
  */
 
 import { Endpoint } from "#endpoint/Endpoint.js";
-import type { EndpointServer } from "#endpoint/EndpointServer.js";
 import {
     Diagnostic,
     EventEmitter,
@@ -40,16 +39,16 @@ import { SessionsBehavior } from "../sessions/SessionsBehavior.js";
 const logger = Logger.get("Commissioning");
 
 /**
- * Server functionality related to commissioning used by {@link EndpointServer}.
+ * Server behavior related to commissioning.
  *
- * Better name would be CommissioningServer but we already have one of those.
+ * Updates node state based on commissioning status.
  */
-export class CommissioningBehavior extends Behavior {
+export class CommissioningServer extends Behavior {
     static override readonly id = "commissioning";
 
-    declare state: CommissioningBehavior.State;
-    declare events: CommissioningBehavior.Events;
-    declare internal: CommissioningBehavior.Internal;
+    declare state: CommissioningServer.State;
+    declare events: CommissioningServer.Events;
+    declare internal: CommissioningServer.Internal;
 
     static override early = true;
 
@@ -162,7 +161,7 @@ export class CommissioningBehavior extends Behavior {
         }
 
         // Callback that listens to the failsafe for destruction and triggers commissioning status update
-        const listener = this.callback(function (this: CommissioningBehavior, status: Lifecycle.Status) {
+        const listener = this.callback(function (this: CommissioningServer, status: Lifecycle.Status) {
             if (status === Lifecycle.Status.Destroyed) {
                 if (failsafe.fabricIndex !== undefined) {
                     this.handleFabricChange(
@@ -175,7 +174,7 @@ export class CommissioningBehavior extends Behavior {
         });
 
         // Callback that removes above listener
-        this.internal.unregisterFailsafeListener = this.callback(function (this: CommissioningBehavior) {
+        this.internal.unregisterFailsafeListener = this.callback(function (this: CommissioningServer) {
             failsafe.construction.change.off(listener);
             this.internal.unregisterFailsafeListener = undefined;
         });
@@ -216,7 +215,7 @@ export class CommissioningBehavior extends Behavior {
      */
     static pairingCodesFor(node: Endpoint) {
         const bi = node.stateOf(BasicInformationBehavior);
-        const comm = node.stateOf(CommissioningBehavior);
+        const comm = node.stateOf(CommissioningServer);
         const net = node.stateOf(NetworkServer);
 
         const qrPairingCode = QrPairingCodeCodec.encode([
@@ -272,7 +271,7 @@ export class CommissioningBehavior extends Behavior {
     }
 }
 
-export namespace CommissioningBehavior {
+export namespace CommissioningServer {
     export interface PairingCodes {
         manualPairingCode: string;
         qrPairingCode: string;
@@ -294,7 +293,7 @@ export namespace CommissioningBehavior {
         [Val.properties](endpoint: Endpoint) {
             return {
                 get pairingCodes() {
-                    return CommissioningBehavior.pairingCodesFor(endpoint);
+                    return CommissioningServer.pairingCodesFor(endpoint);
                 },
             };
         }

@@ -30,7 +30,7 @@ import {
     SecureChannelProtocol,
     SessionManager,
 } from "#protocol";
-import { CommissioningBehavior } from "../commissioning/CommissioningBehavior.js";
+import { CommissioningServer } from "../commissioning/CommissioningServer.js";
 import { ProductDescriptionServer } from "../product-description/ProductDescriptionServer.js";
 import { SessionsBehavior } from "../sessions/SessionsBehavior.js";
 import { NetworkRuntime } from "./NetworkRuntime.js";
@@ -272,7 +272,7 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         await this.owner.act("load-sessions", agent => agent.load(SessionsBehavior));
 
         // Monitor CommissioningBehavior to end "uncommissioned" mode when we are commissioned
-        this.#observers.on(this.owner.eventsOf(CommissioningBehavior).commissioned, this.endUncommissionedMode);
+        this.#observers.on(this.owner.eventsOf(CommissioningServer).commissioned, this.endUncommissionedMode);
 
         // Ensure the environment will convey the commissioning configuration to the DeviceCommissioner
         if (!env.has(CommissioningConfigProvider)) {

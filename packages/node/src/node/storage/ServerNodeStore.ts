@@ -11,12 +11,10 @@ import {
     Environment,
     ImplementationError,
     Logger,
-    StorageContext,
     StorageManager,
     StorageService,
 } from "#general";
-import { PeerAddress } from "#protocol";
-import { ClientNodeStore } from "./ClientNodeStore.js";
+import { ClientStoreFactory, ClientStoreService } from "./ClientStoreService.js";
 import { NodeStore } from "./NodeStore.js";
 
 const logger = Logger.get("ServerNodeStore");
@@ -30,7 +28,7 @@ export class ServerNodeStore extends NodeStore implements Destructable {
     #nodeId: string;
     #location: string;
     #storageManager?: StorageManager;
-    #peerStorage?: StorageContext;
+    #peerStores?: ClientStoreFactory;
 
     constructor(environment: Environment, nodeId: string) {
         super({
@@ -55,26 +53,16 @@ export class ServerNodeStore extends NodeStore implements Destructable {
         return await asyncNew(this, environment, nodeId);
     }
 
-    allPeerStores() {
-        return ClientNodeStore.load(this.#peers);
-    }
-
-    addPeerStore(address: PeerAddress) {
-        return ClientNodeStore.create(address, this.#peers);
-    }
-
     async close() {
         await this.construction.close(async () => {
+            await this.#peerStores?.close();
             await this.#storageManager?.close();
             this.#logChange("Closed");
         });
     }
 
-    get #peers() {
-        if (!this.#peerStorage) {
-            this.#peerStorage = this.factory.createContext("peer");
-        }
-        return this.#peerStorage;
+    get peerStores(): ClientStoreService {
+        return this.construction.assert("client stores", this.#peerStores);
     }
 
     #logChange(what: "Opened" | "Closed") {
@@ -84,6 +72,8 @@ export class ServerNodeStore extends NodeStore implements Destructable {
     override async initializeStorage() {
         this.#storageManager = await this.#env.get(StorageService).open(this.#nodeId);
         this.#env.set(StorageManager, this.#storageManager);
+
+        this.#peerStores = await asyncNew(ClientStoreFactory, this.#storageManager.createContext("peers"));
 
         await super.initializeStorage();
 
