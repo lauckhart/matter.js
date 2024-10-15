@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CommissioningBehavior } from "#behavior/system/commissioning/CommissioningBehavior.js";
+import { CommissioningServer } from "#behavior/system/commissioning/CommissioningServer.js";
 import { NetworkServer } from "#behavior/system/network/NetworkServer.js";
 import { ServerNetworkRuntime } from "#behavior/system/network/ServerNetworkRuntime.js";
 import { ProductDescriptionServer } from "#behavior/system/product-description/ProductDescriptionServer.js";
@@ -16,7 +16,7 @@ import { Construction, DiagnosticSource, Identity, MatterError, asyncNew, errorO
 import { EventHandler, FabricManager, SessionManager } from "#protocol";
 import { RootEndpoint as BaseRootEndpoint } from "../endpoints/root.js";
 import { Node } from "./Node.js";
-import { Nodes } from "./Nodes.js";
+import { Nodes } from "./RemoteNodes.js";
 import { ServerEnvironment } from "./server/ServerEnvironment.js";
 import { ServerNodeStore } from "./storage/ServerNodeStore.js";
 
@@ -188,7 +188,7 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
 
 export namespace ServerNode {
     export const RootEndpoint = BaseRootEndpoint.with(
-        CommissioningBehavior,
+        CommissioningServer,
         NetworkServer,
         ProductDescriptionServer,
         SessionsBehavior,

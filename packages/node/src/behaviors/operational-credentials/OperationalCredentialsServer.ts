@@ -6,7 +6,7 @@
 
 import { Val } from "#behavior/state/Val.js";
 import { ValueSupervisor } from "#behavior/supervision/ValueSupervisor.js";
-import { CommissioningBehavior } from "#behavior/system/commissioning/CommissioningBehavior.js";
+import { CommissioningServer } from "#behavior/system/commissioning/CommissioningServer.js";
 import { ProductDescriptionServer } from "#behavior/system/product-description/ProductDescriptionServer.js";
 import { AccessControlServer } from "#behaviors/access-control";
 import { AccessControl } from "#clusters/access-control";
@@ -471,17 +471,17 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
 
     async #handleAddedFabric({ fabricIndex }: Fabric) {
         await this.#updateFabrics();
-        this.agent.get(CommissioningBehavior).handleFabricChange(fabricIndex, FabricAction.Added);
+        this.agent.get(CommissioningServer).handleFabricChange(fabricIndex, FabricAction.Added);
     }
 
     async #handleUpdatedFabric({ fabricIndex }: Fabric) {
         await this.#updateFabrics();
-        this.agent.get(CommissioningBehavior).handleFabricChange(fabricIndex, FabricAction.Updated);
+        this.agent.get(CommissioningServer).handleFabricChange(fabricIndex, FabricAction.Updated);
     }
 
     async #handleRemovedFabric({ fabricIndex }: Fabric) {
         await this.#updateFabrics();
-        this.agent.get(CommissioningBehavior).handleFabricChange(fabricIndex, FabricAction.Removed);
+        this.agent.get(CommissioningServer).handleFabricChange(fabricIndex, FabricAction.Removed);
     }
 
     async #handleFailsafeClosed() {
