@@ -7,14 +7,17 @@
 import { CommissioningClient } from "#behavior/system/commissioning/CommissioningClient.js";
 import { NetworkRuntime } from "#behavior/system/network/NetworkRuntime.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
-import { Identity, ImplementationError, NotImplementedError } from "#general";
+import { Identity, NotImplementedError } from "#general";
 import { ClientEndpointInitializer } from "./client/ClientEndpointInitializer.js";
+import { ClientRegistryService } from "./client/ClientRegistryService.js";
 import { Node } from "./Node.js";
-import { ServerNode } from "./ServerNode.js";
-import { ServerNodeStore } from "./storage/ServerNodeStore.js";
+import type { ServerNode } from "./ServerNode.js";
 
 /**
- * A client-side Matter {@link Node}.
+ * A remote Matter {@link Node}.
+ *
+ * Client nodes may be peers (commissioned into a shared fabric) or commissionable, in which they are not usable until
+ * you invoke {@link commissioned}.
  */
 export class ClientNode extends Node<ClientNode.RootEndpoint> {
     constructor(options: ClientNode.Options) {
@@ -23,11 +26,10 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
             number: 0,
             type: ClientNode.RootEndpoint,
         };
-        if (opts.id === undefined) {
-            opts.id = opts.owner.env.get(ServerNodeStore).peerStores.allocateId();
-        }
 
         super(opts);
+
+        this.env.get(ClientRegistryService).add(this);
     }
 
     override async initialize() {
@@ -36,20 +38,19 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
         await super.initialize();
     }
 
-    protected async initializeAsCommissionable() {}
+    override async close() {
+        this.env.get(ClientRegistryService).delete(this);
+    }
 
     override get owner(): ServerNode {
         return super.owner as ServerNode;
     }
 
-    protected override set owner(node: ServerNode) {
-        if (!(node instanceof ServerNode)) {
-            throw new ImplementationError("Client node owner must be a server node");
-        }
-        super.owner = node;
+    async commission(options: CommissioningClient.CommissioningOptions) {
+        await this.act("commission", agent => agent.commissioning.commission(options));
     }
 
-    createRuntime(): NetworkRuntime {
+    protected createRuntime(): NetworkRuntime {
         throw new NotImplementedError();
     }
 
@@ -59,9 +60,7 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
 }
 
 export namespace ClientNode {
-    export interface Options extends Node.Options<RootEndpoint> {
-        owner: ServerNode;
-    }
+    export interface Options extends Node.Options<RootEndpoint> {}
 
     export const RootEndpoint = Node.CommonRootEndpoint.with(CommissioningClient);
 

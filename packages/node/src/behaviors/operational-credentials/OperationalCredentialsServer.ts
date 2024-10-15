@@ -360,9 +360,7 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
 
         const currentFabricIndex = fabric.fabricIndex;
         const fabrics = this.env.get(FabricManager);
-        const conflictingLabelFabric = fabrics
-            .getFabrics()
-            .find(f => f.label === label && f.fabricIndex !== currentFabricIndex);
+        const conflictingLabelFabric = fabrics.find(f => f.label === label && f.fabricIndex !== currentFabricIndex);
         if (conflictingLabelFabric !== undefined) {
             return {
                 statusCode: OperationalCredentials.NodeOperationalCertStatus.LabelConflict,
@@ -426,14 +424,14 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
             throw error;
         }
 
-        const fabrics = this.env.get(FabricManager).getFabrics();
+        const fabrics = this.env.get(FabricManager);
         const trustedRootCertificates = fabrics.map(fabric => fabric.rootCert);
         trustedRootCertificates.push(rootCaCertificate);
         this.state.trustedRootCertificates = trustedRootCertificates;
     }
 
     async #updateFabrics() {
-        const fabrics = this.env.get(FabricManager).getFabrics();
+        const fabrics = this.env.get(FabricManager);
         this.state.fabrics = fabrics.map(fabric => ({
             fabricId: fabric.fabricId,
             label: fabric.label,

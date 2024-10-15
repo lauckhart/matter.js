@@ -57,8 +57,8 @@ export class NetworkServer extends NetworkBehavior {
      * Advertise and continue advertising at regular intervals until timeout per Matter specification.  If already
      * advertising, the advertisement timeout resets.
      *
-     * If the node is uncommissioned it announces as commissionable on all available transports. Commissioned devices
-     * only advertise for operational discovery via DNS-SD.
+     * If the node is uncommissioned and commissioning is enabled, announces as commissionable on all available
+     * transports. Commissioned devices only advertise for operational discovery via DNS-SD.
      *
      * Advertisement begins at startup.
      */

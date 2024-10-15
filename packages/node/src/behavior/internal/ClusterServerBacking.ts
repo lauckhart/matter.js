@@ -155,7 +155,7 @@ export class ClusterServerBacking extends ServerBehaviorBacking {
             },
 
             get fabrics() {
-                return env.get(FabricManager).getFabrics();
+                return env.get(FabricManager).fabrics;
             },
 
             // We handle change management ourselves

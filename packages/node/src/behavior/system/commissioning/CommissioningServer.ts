@@ -6,6 +6,7 @@
 
 import { Endpoint } from "#endpoint/Endpoint.js";
 import {
+    AsyncObservable,
     Diagnostic,
     EventEmitter,
     ImplementationError,
@@ -97,7 +98,7 @@ export class CommissioningServer extends Behavior {
             }
         }
 
-        const fabrics = this.env.get(FabricManager).getFabrics();
+        const fabrics = this.env.get(FabricManager);
         const commissioned = !!fabrics.length;
         if (fabricAction === FabricAction.Removed) {
             delete this.state.fabrics[fabricIndex];
@@ -184,7 +185,8 @@ export class CommissioningServer extends Behavior {
     }
 
     /**
-     * The server invokes this method when the node is active but not yet commissioned.
+     * The server invokes this method when the node is active but not yet commissioned unless you set
+     * {@link CommissioningServer.State#enabled} to false.
      *
      * An uncommissioned node is not yet associated with fabrics.  It cannot be used until commissioned by a controller.
      *
@@ -253,9 +255,11 @@ export class CommissioningServer extends Behavior {
     });
 
     #nodeOnline() {
-        const fabrics = this.env.get(FabricManager).getFabrics();
+        const fabrics = this.env.get(FabricManager).fabrics;
         if (!fabrics.length) {
-            this.initiateCommissioning();
+            if (this.state.enabled) {
+                this.initiateCommissioning();
+            }
         } else {
             const exposedFabrics: Record<FabricIndex, ExposedFabricInformation> = {};
             fabrics.forEach(
@@ -281,7 +285,8 @@ export namespace CommissioningServer {
         unregisterFailsafeListener?: () => void = undefined;
     }
 
-    export class State implements CommissioningOptions {
+    export class State {
+        enabled?: boolean;
         commissioned = false;
         fabrics: Record<FabricIndex, ExposedFabricInformation> = {};
         passcode = -1;
@@ -300,8 +305,9 @@ export namespace CommissioningServer {
     }
 
     export class Events extends EventEmitter {
-        commissioned = Observable<[session: ActionContext]>();
-        decommissioned = Observable<[session: ActionContext]>();
+        commissioned = Observable<[context: ActionContext]>();
+        decommissioned = Observable<[context: ActionContext]>();
         fabricsChanged = Observable<[fabricIndex: FabricIndex, action: FabricAction]>();
+        enabled$Changed = AsyncObservable<[context: ActionContext]>();
     }
 }

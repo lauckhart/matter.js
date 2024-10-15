@@ -4,33 +4,42 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ControllerBehavior } from "#behavior/system/controller/ControllerBehavior.js";
 import { EndpointContainer } from "#endpoint/properties/EndpointContainer.js";
-import {
-    CommissionableDeviceIdentifiers,
-    Fabric,
-    FabricAuthorityConfigurationProvider,
-    OperationalPeer,
-    PeerAddress,
-    PeerAddressStore,
-    PeerDataStore,
-} from "#protocol";
-import { InternalError } from "@matter/general";
-import { ClientNode } from "./ClientNode.js";
-import { ServerNode } from "./ServerNode.js";
-import { ServerNodeStore } from "./storage/ServerNodeStore.js";
+import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
+import { OperationalPeer, PeerAddress, PeerAddressStore, PeerDataStore } from "#protocol";
+import { InternalError, MaybePromise } from "@matter/general";
+import { CommissioningDiscovery } from "../../behavior/system/controller/CommissioningDiscovery.js";
+import { ClientNode } from "../ClientNode.js";
+import type { ServerNode } from "../ServerNode.js";
+import { ClientRegistryService } from "./ClientRegistryService.js";
 
 /**
  * Manages the set of known remote nodes.
  *
  * Remote nodes are either peers (commissioned into a fabric we share) or commissionable.
  */
-export class Nodes extends EndpointContainer<ClientNode> {
-    #controllerFabric?: Fabric;
+export class RemoteNodes extends EndpointContainer<ClientNode> {
+    #peersInitialized = true;
 
     constructor(owner: ServerNode) {
         super(owner);
 
-        this.#configureController();
+        owner.env.set(
+            ClientRegistryService,
+            new (class extends ClientRegistryService {
+                add(node: ClientNode) {
+                    if (node.id === undefined) {
+                        node.id = owner.env.get(ServerNodeStore).peerStores.allocateId();
+                    }
+                    this.add(node);
+                }
+
+                delete(node: ClientNode) {
+                    this.delete(node);
+                }
+            })(),
+        );
 
         const peerStores = this.endpoint.env.get(ServerNodeStore).peerStores;
         for (const id of peerStores.knownIds) {
@@ -41,6 +50,20 @@ export class Nodes extends EndpointContainer<ClientNode> {
                 }),
             );
         }
+    }
+
+    /**
+     * Find a specific commissionable node.
+     */
+    locate(options?: CommissioningDiscovery.Options) {
+        return this.#withController("locate node", controller => controller.locate(options));
+    }
+
+    /**
+     * Employ discovery to find a set of commissionable nodes.
+     */
+    discover(options?: CommissioningDiscovery.Options) {
+        return this.#withController("discover node", controller => controller.discover(options));
     }
 
     override get(id: string | PeerAddress) {
@@ -58,43 +81,32 @@ export class Nodes extends EndpointContainer<ClientNode> {
         return super.get(id);
     }
 
-    set controllerFabric(fabric: Fabric) {
-        this.#controllerFabric = fabric;
-    }
-
     override get endpoint() {
         return super.endpoint as ServerNode;
     }
 
-    /**
-     * Find a specific commissionable node.
-     */
-    async find(): Promise<ClientNode> {
-        // TODO
+    #withController<T>(purpose: string, actor: (controller: ControllerBehavior) => T) {
+        return this.#initializePeers().then(() =>
+            this.endpoint.act(purpose, agent => {
+                const controller = agent.load(ControllerBehavior);
+                if (MaybePromise.is(controller)) {
+                    return controller.then(controller => actor(controller));
+                }
+                return actor(controller);
+            }),
+        );
     }
 
-    /**
-     * Employ discovery to find a set of commissionable nodes.
-     */
-    async discovery(): Promise<ClientNode[]> {
-        // TODO
-    }
-
-    #configureController() {
-        const { endpoint: owner } = this;
-
-        if (!owner.env.has(FabricAuthorityConfigurationProvider)) {
-            owner.env.set(
-                FabricAuthorityConfigurationProvider,
-                new (class extends FabricAuthorityConfigurationProvider {
-                    get vendorId() {
-                        return owner.state.basicInformation.vendorId;
-                    }
-                })(),
-            );
+    async #initializePeers() {
+        if (this.#peersInitialized) {
+            return;
         }
 
+        const { endpoint: owner } = this;
+
         const nodes = this;
+
+        await owner.act("initialize controller", agent => agent.load(ControllerBehavior));
 
         owner.env.set(
             PeerAddressStore,
@@ -134,7 +146,7 @@ export class Nodes extends EndpointContainer<ClientNode> {
                 async deletePeer(address: PeerAddress) {
                     const node = nodes.get(address);
                     if (node) {
-                        nodes.delete(node);
+                        await node.close();
                     }
                 }
 
@@ -143,19 +155,7 @@ export class Nodes extends EndpointContainer<ClientNode> {
                 }
             })(),
         );
-    }
-}
 
-export namespace Nodes {
-    export type DiscoveryFilter = CommissionableDeviceIdentifiers;
-
-    export interface DiscoveryOptions {
-        filter?: DiscoveryFilter;
-        timeoutSeconds?: number;
-    }
-
-    export interface OngoingDiscovery {
-        complete: Promise<ClientNode[]>;
-        cancel(): void;
+        this.#peersInitialized = true;
     }
 }

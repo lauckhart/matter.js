@@ -552,7 +552,7 @@ async function commission(existingNode?: MockServerNode, number = 0) {
     const { node } = await almostCommission(existingNode, number);
 
     // Do not reuse session from initial commissioning because we must now move from CASE to PASE
-    const fabric = node.env.get(FabricManager).getFabrics()[number];
+    const fabric = node.env.get(FabricManager).fabrics[number];
     const contextOptions = {
         exchange: await node.createExchange({
             fabric,
