@@ -354,7 +354,7 @@ export class MatterController {
             };
         }
 
-        const address = await this.commissioner.commission(commissioningOptions);
+        const address = await this.commissioner.commissionWithDiscovery(commissioningOptions);
 
         await this.#store.fabricStorage.set("fabric", this.fabric.config);
 

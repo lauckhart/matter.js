@@ -9,17 +9,15 @@ import { ImplementationError, ServerAddress } from "#general";
 import { ClientNode } from "#node/ClientNode.js";
 import { Node } from "#node/Node.js";
 import {
-    CommissionableDevice,
-    CommissionableDeviceIdentifiers,
+    CommissioningMode,
     ControllerCommissioner,
-    DiscoveryData,
     Fabric,
     FabricAuthority,
     FabricManager,
     PeerAddress,
     PeerCommissioningOptions,
 } from "#protocol";
-import { NodeId } from "#types";
+import { DeviceTypeId, NodeId, VendorId } from "#types";
 
 /**
  * Client functionality related to commissioning.
@@ -72,7 +70,7 @@ export class CommissioningClient extends Behavior {
 
         const commissioner = this.endpoint.env.get(ControllerCommissioner);
 
-        const address = await commissioner.commission(commissionerOptions);
+        const address = await commissioner.commissionWithDiscovery(commissionerOptions);
         this.state.peerAddress = address;
 
         return node;
@@ -86,17 +84,124 @@ export class CommissioningClient extends Behavior {
 
 export namespace CommissioningClient {
     export class State {
+        /**
+         * Fabric index and node ID for paired peers.  If this is undefined the node is uncommissioned.
+         */
         peerAddress?: PeerAddress;
+
+        /**
+         * Known network addresses for the device.  If this is undefined the node has not been located on any network
+         * interface.
+         */
         operationalAddresses?: ServerAddress[];
-        discoveryAddress?: CommissionableDevice;
-        discoveryPayload?: DiscoveryData;
-        discoveryFilters?: CommissionableDeviceIdentifiers[];
+
+        /**
+         * IP network name.
+         */
+        hostname?: string;
+
+        /**
+         * BLE MAC address.
+         */
+        bleAddress?: string;
+
+        /**
+         * The device's long discriminator.
+         */
+        discriminator?: number;
+
+        /**
+         * The last know commissioning mode of the device.
+         */
+        commissioningMode?: CommissioningMode;
+
+        /**
+         * Vendor.
+         */
+        vendorId?: VendorId;
+
+        /**
+         * Product.
+         */
+        productId?: number;
+
+        /**
+         * Advertised device type.
+         */
+        deviceType?: DeviceTypeId;
+
+        /**
+         * The advertised device name specified by the user.
+         */
+        deviceName?: string;
+
+        /**
+         * An optional manufacturer-specific unique rotating ID for uniquely identifying the device.
+         */
+        rotatingIdentifier?: string;
+
+        /**
+         * A bitmap indicating how to transition the device to commissioning mode from its current state.
+         */
+        pairingHint?: number;
+
+        /**
+         * Textual pairing instructions associated with pairing hint.
+         */
+        pairingInstructions?: string;
+
+        /**
+         * The retransmission interval for idle nodes in milliseconds.
+         */
+        sessionIdleInterval?: number;
+
+        /**
+         * The retransmission interval for active nodes in milliseconds.
+         */
+        sessionActiveInterval?: number;
+
+        /**
+         * The length of the node's active window following network activity.
+         */
+        sessionActiveThreshold?: number;
+
+        /**
+         * TCP support bitmap.
+         */
+        tcpSupport?: number;
+
+        /**
+         * Indicates whether node is ICD with a slow (15 s+) polling interval.
+         */
+        longIdleTimeOperatingMode?: boolean;
     }
 
+    /**
+     * Options that control commissioning.
+     */
     export interface CommissioningOptions {
+        /**
+         * The device's passcode.
+         */
         passcode: number;
+
+        /**
+         * The ID to assign the node during commissioning.  By default the node receives the next available ID.
+         */
         nodeId?: NodeId;
-        fabricAuthority?: FabricAuthority;
+
+        /**
+         * The fabric the joins upon commissioning.  Defaults to the default fabric of the assigned
+         * {@link FabricAuthority}.
+         */
         fabric?: Fabric;
+
+        /**
+         * The authority controlling the commissioning fabric.  Defaults to the {@link FabricAuthority} of the local
+         * environment.
+         */
+        fabricAuthority?: FabricAuthority;
+
+        discoveryCapabilities?: 
     }
 }

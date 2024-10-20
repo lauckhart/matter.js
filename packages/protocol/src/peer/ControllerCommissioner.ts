@@ -34,15 +34,38 @@ import { NodeDiscoveryType, PeerSet } from "./PeerSet.js";
 const logger = Logger.get("PeerCommissioner");
 
 /**
- * Options needed to commission a new node
+ * General commissioning options.
  */
-export interface PeerCommissioningOptions extends Partial<ControllerCommissioningFlowOptions> {
+export interface CommissioningOptions extends Partial<ControllerCommissioningFlowOptions> {
     /** The fabric into which to commission. */
     fabric: Fabric;
 
     /** The node ID to assign (the commissioner assigns a random node ID if omitted) */
     nodeId?: NodeId;
 
+    /** Passcode to use for commissioning. */
+    passcode: number;
+
+    /**
+     * Commissioning completion callback
+     *
+     * This optional callback allows the caller to complete commissioning once PASE commissioning completes.  If it does
+     * not throw, the commissioner considers commissioning complete.
+     */
+    performCaseCommissioning?: (peerAddress: PeerAddress, discoveryData?: DiscoveryData) => Promise<void>;
+}
+
+/**
+ * Configuration for commissioning a previously discovered node.
+ */
+export interface LocatedNodeCommissioningOptions extends CommissioningOptions {
+    addresses: ServerAddress[];
+}
+
+/**
+ * Configuration for performing discovery + commissioning in one step.
+ */
+export interface DiscoveryAndCommissioningOptions extends CommissioningOptions {
     /** Discovery related options. */
     discovery: (
         | {
@@ -76,17 +99,6 @@ export interface PeerCommissioningOptions extends Partial<ControllerCommissionin
         /** Timeout in seconds for the discovery process. Default: 30 seconds */
         timeoutSeconds?: number;
     };
-
-    /** Passcode to use for commissioning. */
-    passcode: number;
-
-    /**
-     * Commissioning completion callback
-     *
-     * This optional callback allows the caller to complete commissioning once PASE commissioning completes.  If it does
-     * not throw, the commissioner considers commissioning complete.
-     */
-    performCaseCommissioning?: (peerAddress: PeerAddress, discoveryData?: DiscoveryData) => Promise<void>;
 }
 
 /**
@@ -127,19 +139,18 @@ export class ControllerCommissioner {
     }
 
     /**
-     * Commission a node.
+     * Commmission a previously discovered node.
      */
-    async commission(options: PeerCommissioningOptions): Promise<PeerAddress> {
+    async commission(options: LocatedNodeCommissioningOptions): Promise<PeerAddress> {}
+
+    /**
+     * Commission a node with discovery.
+     */
+    async commissionWithDiscovery(options: DiscoveryAndCommissioningOptions): Promise<PeerAddress> {
         const {
             discovery: { timeoutSeconds = 30 },
             passcode,
         } = options;
-
-        const commissioningOptions = {
-            regulatoryLocation: GeneralCommissioning.RegulatoryLocationType.Outdoor, // Set to the most restrictive if relevant
-            regulatoryCountryCode: "XX",
-            ...options,
-        };
 
         const commissionableDevice =
             "commissionableDevice" in options.discovery ? options.discovery.commissionableDevice : undefined;
@@ -215,7 +226,7 @@ export class ControllerCommissioner {
             paseSecureChannel = result;
         }
 
-        return await this.#commissionDiscoveredNode(paseSecureChannel, commissioningOptions, discoveryData);
+        return await this.#commissionDiscoveredNode(paseSecureChannel, options, discoveryData);
     }
 
     /**
@@ -297,9 +308,15 @@ export class ControllerCommissioner {
      */
     async #commissionDiscoveredNode(
         paseSecureMessageChannel: MessageChannel,
-        commissioningOptions: PeerCommissioningOptions & ControllerCommissioningFlowOptions,
+        options: CommissioningOptions,
         discoveryData?: DiscoveryData,
     ): Promise<PeerAddress> {
+        const commissioningOptions = {
+            regulatoryLocation: GeneralCommissioning.RegulatoryLocationType.Outdoor, // Set to the most restrictive if relevant
+            regulatoryCountryCode: "XX",
+            ...options,
+        };
+
         const { fabric, performCaseCommissioning } = commissioningOptions;
 
         // TODO: Create the fabric only when needed before commissioning (to do when refactoring MatterController away)
