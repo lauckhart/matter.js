@@ -18,6 +18,7 @@ import {
     NetInterfaceSet,
     NoResponseTimeoutError,
     ServerAddress,
+    serverAddressToString,
 } from "#general";
 import { MdnsScanner } from "#mdns/MdnsScanner.js";
 import { ControllerCommissioningFlow, ControllerCommissioningFlowOptions } from "#peer/ControllerCommissioningFlow.js";
@@ -60,6 +61,7 @@ export interface CommissioningOptions extends Partial<ControllerCommissioningFlo
  */
 export interface LocatedNodeCommissioningOptions extends CommissioningOptions {
     addresses: ServerAddress[];
+    discoveryData?: DiscoveryData;
 }
 
 /**
@@ -141,7 +143,31 @@ export class ControllerCommissioner {
     /**
      * Commmission a previously discovered node.
      */
-    async commission(options: LocatedNodeCommissioningOptions): Promise<PeerAddress> {}
+    async commission(options: LocatedNodeCommissioningOptions): Promise<PeerAddress> {
+        const { passcode, addresses, discoveryData } = options;
+
+        // Prioritize UDP
+        addresses.sort(a => (a.type === "udp" ? -1 : 1));
+
+        // Attempt a connection on each known address
+        let channel: MessageChannel | undefined;
+        for (const address of addresses) {
+            try {
+                channel = await this.#initializePaseSecureChannel(address, passcode);
+            } catch (e) {
+                NoResponseTimeoutError.accept(e);
+                console.warn(
+                    `Commissionable device is unresponsive at discovered address ${serverAddressToString(address)}`,
+                );
+            }
+        }
+
+        if (channel === undefined) {
+            throw new NoResponseTimeoutError("Could not connect to device");
+        }
+
+        return await this.#commissionConnectedNode(channel, options, discoveryData);
+    }
 
     /**
      * Commission a node with discovery.
@@ -226,7 +252,7 @@ export class ControllerCommissioner {
             paseSecureChannel = result;
         }
 
-        return await this.#commissionDiscoveredNode(paseSecureChannel, options, discoveryData);
+        return await this.#commissionConnectedNode(paseSecureChannel, options, discoveryData);
     }
 
     /**
@@ -306,7 +332,7 @@ export class ControllerCommissioner {
      * Method to commission a device with a PASE secure channel. It returns the NodeId of the commissioned device on
      * success.
      */
-    async #commissionDiscoveredNode(
+    async #commissionConnectedNode(
         paseSecureMessageChannel: MessageChannel,
         options: CommissioningOptions,
         discoveryData?: DiscoveryData,

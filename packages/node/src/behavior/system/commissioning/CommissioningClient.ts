@@ -11,13 +11,15 @@ import { Node } from "#node/Node.js";
 import {
     CommissioningMode,
     ControllerCommissioner,
+    DiscoveryAndCommissioningOptions,
+    DiscoveryData,
     Fabric,
     FabricAuthority,
     FabricManager,
     PeerAddress,
-    PeerCommissioningOptions,
+    SessionParameters,
 } from "#protocol";
-import { DeviceTypeId, NodeId, VendorId } from "#types";
+import { DeviceTypeId, DiscoveryCapabilitiesBitmap, NodeId, TypeFromPartialBitSchema, VendorId } from "#types";
 
 /**
  * Client functionality related to commissioning.
@@ -62,7 +64,7 @@ export class CommissioningClient extends Behavior {
 
         const knownAddress = this.state.operationalAddresses?.find(addr => addr.type === "udp");
 
-        const commissionerOptions: PeerCommissioningOptions = {
+        const commissionerOptions: DiscoveryAndCommissioningOptions = {
             fabric,
             discovery: { commissionableDevice, knownAddress },
             passcode: options.passcode,
@@ -74,6 +76,108 @@ export class CommissioningClient extends Behavior {
         this.state.peerAddress = address;
 
         return node;
+    }
+
+    get discoveryData(): DiscoveryData {
+        const result: DiscoveryData = {};
+
+        const {
+            vendorId,
+            productId,
+            deviceType,
+            deviceName,
+            rotatingIdentifier,
+            pairingHint,
+            pairingInstructions,
+            sessionParameters,
+            tcpSupport,
+            longIdleTimeOperatingMode,
+        } = this.state;
+
+        if (vendorId !== undefined) {
+            if (productId !== undefined) {
+                result.VP = `${vendorId}+${productId}`;
+            } else {
+                result.VP = vendorId.toString();
+            }
+        }
+
+        if (deviceType !== undefined) {
+            result.DT = deviceType;
+        }
+
+        if (deviceName !== undefined) {
+            result.DN = deviceName;
+        }
+
+        if (rotatingIdentifier !== undefined) {
+            result.RI = rotatingIdentifier;
+        }
+
+        if (pairingHint !== undefined) {
+            result.PH = pairingHint;
+        }
+
+        if (pairingInstructions !== undefined) {
+            result.PI = pairingInstructions;
+        }
+
+        if (sessionParameters !== undefined) {
+            const { idleIntervalMs, activeIntervalMs, activeThresholdMs } = sessionParameters;
+
+            if (idleIntervalMs !== undefined) {
+                result.SII = idleIntervalMs;
+            }
+
+            if (activeIntervalMs !== undefined) {
+                result.SAI = activeIntervalMs;
+            }
+
+            if (activeThresholdMs !== undefined) {
+                result.SAT = activeThresholdMs;
+            }
+        }
+
+        if (tcpSupport !== undefined) {
+            result.T = tcpSupport;
+        }
+
+        if (longIdleTimeOperatingMode !== undefined) {
+            result.ICD = 1;
+        }
+
+        return result;
+    }
+
+    set discoveryData(data: DiscoveryData) {
+        const { VP, DT, DN, RI, PH, PI, SII, SAI, SAT, T, ICD } = data;
+
+        if (VP !== undefined) {
+            const [vendor, product] = VP.split("+").map(Number.parseInt);
+
+            this.state.vendorId = Number.isNaN(vendor) ? undefined : VendorId(vendor);
+            this.state.productId = Number.isNaN(product) ? undefined : VendorId(vendor);
+        }
+
+        let sessionParameters: Partial<SessionParameters> | undefined;
+        if (SII !== undefined) {
+            (sessionParameters ??= {}).idleIntervalMs = SII;
+        }
+        if (SAI !== undefined) {
+            (sessionParameters ??= {}).activeIntervalMs = SAI;
+        }
+        if (SAT !== undefined) {
+            (sessionParameters ??= {}).activeThresholdMs = SAT;
+        }
+        this.state.sessionParameters = sessionParameters;
+
+        this.state.deviceType = DT === undefined ? undefined : DeviceTypeId(DT);
+        this.state.deviceName = DN;
+        this.state.rotatingIdentifier = RI;
+        this.state.pairingHint = PH;
+        this.state.pairingInstructions = PI;
+        this.state.tcpSupport = T;
+        this.state.longIdleTimeOperatingMode = ICD === undefined ? undefined : ICD === 1;
     }
 
     #initializeNode() {
@@ -151,19 +255,9 @@ export namespace CommissioningClient {
         pairingInstructions?: string;
 
         /**
-         * The retransmission interval for idle nodes in milliseconds.
+         * The peer's session parameters.
          */
-        sessionIdleInterval?: number;
-
-        /**
-         * The retransmission interval for active nodes in milliseconds.
-         */
-        sessionActiveInterval?: number;
-
-        /**
-         * The length of the node's active window following network activity.
-         */
-        sessionActiveThreshold?: number;
+        sessionParameters?: Partial<SessionParameters>;
 
         /**
          * TCP support bitmap.
@@ -202,6 +296,10 @@ export namespace CommissioningClient {
          */
         fabricAuthority?: FabricAuthority;
 
-        discoveryCapabilities?: 
+        /**
+         * Discovery capabilities to use for discovery. These are included in the QR code normally and defined if BLE
+         * is supported for initial commissioning.
+         */
+        discoveryCapabilities?: TypeFromPartialBitSchema<typeof DiscoveryCapabilitiesBitmap>;
     }
 }
