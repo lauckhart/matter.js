@@ -4,15 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ControllerBehavior } from "#behavior/system/controller/ControllerBehavior.js";
+import { CommissioningDiscovery, Discovery, InstanceDiscovery, TimedDiscovery } from "#behavior/index.js";
 import { EndpointContainer } from "#endpoint/properties/EndpointContainer.js";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
-import { OperationalPeer, PeerAddress, PeerAddressStore, PeerDataStore } from "#protocol";
-import { InternalError, MaybePromise } from "@matter/general";
-import { CommissioningDiscovery } from "../../behavior/system/controller/CommissioningDiscovery.js";
+import { PeerAddress, PeerAddressStore } from "#protocol";
 import { ClientNode } from "../ClientNode.js";
 import type { ServerNode } from "../ServerNode.js";
-import { ClientRegistryService } from "./ClientRegistryService.js";
+import { ClientNodeFactory } from "./ClientNodeFactory.js";
+import { NodePeerStore } from "./NodePeerStore.js";
 
 /**
  * Manages the set of known remote nodes.
@@ -20,50 +19,62 @@ import { ClientRegistryService } from "./ClientRegistryService.js";
  * Remote nodes are either peers (commissioned into a fabric we share) or commissionable.
  */
 export class RemoteNodes extends EndpointContainer<ClientNode> {
-    #peersInitialized = true;
-
     constructor(owner: ServerNode) {
         super(owner);
 
-        owner.env.set(
-            ClientRegistryService,
-            new (class extends ClientRegistryService {
-                add(node: ClientNode) {
-                    if (node.id === undefined) {
-                        node.id = owner.env.get(ServerNodeStore).peerStores.allocateId();
-                    }
-                    this.add(node);
-                }
+        const self = this;
 
-                delete(node: ClientNode) {
-                    this.delete(node);
-                }
-            })(),
-        );
+        if (!owner.env.has(ClientNodeFactory)) {
+            owner.env.set(
+                ClientNodeFactory,
+                new (class extends ClientNodeFactory {
+                    create(options: ClientNode.Options) {
+                        const node = new ClientNode(options);
+                        self.add(node);
+                        return node;
+                    }
+
+                    get nodes() {
+                        return self;
+                    }
+                })(),
+            );
+        }
+
+        const factory = owner.env.get(ClientNodeFactory);
 
         const peerStores = this.endpoint.env.get(ServerNodeStore).peerStores;
         for (const id of peerStores.knownIds) {
             this.add(
-                new ClientNode({
+                factory.create({
                     id,
                     owner,
                 }),
             );
         }
+
+        owner.env.set(PeerAddressStore, new NodePeerStore(owner));
     }
 
     /**
      * Find a specific commissionable node.
      */
-    locate(options?: CommissioningDiscovery.Options) {
-        return this.#withController("locate node", controller => controller.locate(options));
+    locate(options?: Discovery.Options) {
+        return new InstanceDiscovery(this.endpoint, options);
     }
 
     /**
      * Employ discovery to find a set of commissionable nodes.
      */
-    discover(options?: CommissioningDiscovery.Options) {
-        return this.#withController("discover node", controller => controller.discover(options));
+    discover(options?: Discovery.Options) {
+        return new TimedDiscovery(this.endpoint, options);
+    }
+
+    /**
+     * Find a specific commissionable node and commission.
+     */
+    commission(options: CommissioningDiscovery.Options) {
+        return new CommissioningDiscovery(this.endpoint, options);
     }
 
     override get(id: string | PeerAddress) {
@@ -85,77 +96,10 @@ export class RemoteNodes extends EndpointContainer<ClientNode> {
         return super.endpoint as ServerNode;
     }
 
-    #withController<T>(purpose: string, actor: (controller: ControllerBehavior) => T) {
-        return this.#initializePeers().then(() =>
-            this.endpoint.act(purpose, agent => {
-                const controller = agent.load(ControllerBehavior);
-                if (MaybePromise.is(controller)) {
-                    return controller.then(controller => actor(controller));
-                }
-                return actor(controller);
-            }),
-        );
-    }
-
-    async #initializePeers() {
-        if (this.#peersInitialized) {
-            return;
+    override add(node: ClientNode) {
+        if (!node.lifecycle.hasId) {
+            node.id = this.endpoint.env.get(ServerNodeStore).peerStores.allocateId();
         }
-
-        const { endpoint: owner } = this;
-
-        const nodes = this;
-
-        await owner.act("initialize controller", agent => agent.load(ControllerBehavior));
-
-        owner.env.set(
-            PeerAddressStore,
-            new (class extends PeerAddressStore {
-                async loadPeers(): Promise<OperationalPeer[]> {
-                    return [...nodes]
-                        .map(node => {
-                            const commissioning = node.state.commissioning;
-                            if (!commissioning.peerAddress) {
-                                return;
-                            }
-                            return {
-                                address: commissioning.peerAddress,
-                                operationalAddress: commissioning.operationalAddresses?.find(
-                                    addr => addr.type === "udp",
-                                ),
-                                discoveryData: commissioning.discoveryPayload,
-                            };
-                        })
-                        .filter(addr => addr !== undefined);
-                }
-
-                async updatePeer(peer: OperationalPeer) {
-                    const node = nodes.get(peer.address);
-                    if (!node) {
-                        return;
-                    }
-
-                    await node.set({
-                        commissioning: {
-                            operationalAddresses: peer.operationalAddress ? [peer.operationalAddress] : undefined,
-                            discoveryPayload: peer.discoveryData,
-                        },
-                    });
-                }
-
-                async deletePeer(address: PeerAddress) {
-                    const node = nodes.get(address);
-                    if (node) {
-                        await node.close();
-                    }
-                }
-
-                async createNodeStore(): Promise<PeerDataStore> {
-                    throw new InternalError("Node store creation not supported");
-                }
-            })(),
-        );
-
-        this.#peersInitialized = true;
+        super.add(node);
     }
 }

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CommissioningDiscoveryService } from "#behavior/system/controller/CommissioningDiscovery.js";
+import { CommissioningDiscoveryService } from "#behavior/system/controller/discovery/Discovery.js";
 import { EndpointInitializer } from "#endpoint/index.js";
 import { ServerNode } from "#node/ServerNode.js";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";

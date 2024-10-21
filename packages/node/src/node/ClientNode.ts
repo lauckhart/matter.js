@@ -9,7 +9,6 @@ import { NetworkRuntime } from "#behavior/system/network/NetworkRuntime.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
 import { Identity, NotImplementedError } from "#general";
 import { ClientEndpointInitializer } from "./client/ClientEndpointInitializer.js";
-import { ClientRegistryService } from "./client/ClientRegistryService.js";
 import { Node } from "./Node.js";
 import type { ServerNode } from "./ServerNode.js";
 
@@ -28,18 +27,12 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
         };
 
         super(opts);
-
-        this.env.get(ClientRegistryService).add(this);
     }
 
     override async initialize() {
         this.env.set(EndpointInitializer, new ClientEndpointInitializer(this));
 
         await super.initialize();
-    }
-
-    override async close() {
-        this.env.get(ClientRegistryService).delete(this);
     }
 
     override get owner(): ServerNode {

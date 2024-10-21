@@ -5,21 +5,25 @@
  */
 
 import { Behavior } from "#behavior/Behavior.js";
-import { ImplementationError, ServerAddress } from "#general";
+import { ImplementationError, NotImplementedError, ServerAddress } from "#general";
+import { DatatypeModel, FieldElement } from "#model";
 import { ClientNode } from "#node/ClientNode.js";
 import { Node } from "#node/Node.js";
 import {
+    CommissionableDevice,
     CommissioningMode,
     ControllerCommissioner,
-    DiscoveryAndCommissioningOptions,
     DiscoveryData,
     Fabric,
     FabricAuthority,
     FabricManager,
+    LocatedNodeCommissioningOptions,
+    OperationalDevice,
     PeerAddress,
     SessionParameters,
 } from "#protocol";
 import { DeviceTypeId, DiscoveryCapabilitiesBitmap, NodeId, TypeFromPartialBitSchema, VendorId } from "#types";
+import { RemoteDescriptor } from "./RemoteDescriptor.js";
 
 /**
  * Client functionality related to commissioning.
@@ -30,7 +34,8 @@ export class CommissioningClient extends Behavior {
     declare state: CommissioningClient.State;
 
     static override readonly id = "commissioning";
-    override initialize() {
+    override initialize({ descriptor }: { descriptor?: CommissioningClient.NodeDescriptor }) {
+        this.descriptor = descriptor;
         this.reactTo((this.endpoint as Node).lifecycle.partsReady, this.#initializeNode);
     }
 
@@ -42,7 +47,7 @@ export class CommissioningClient extends Behavior {
         }
 
         const fabricAuthority = options.fabricAuthority || this.env.get(FabricAuthority);
-        let fabric = options.fabric;
+        let { fabric } = options;
         if (fabric === undefined) {
             if (this.context.fabric === undefined) {
                 fabric = await fabricAuthority.defaultFabric();
@@ -50,6 +55,7 @@ export class CommissioningClient extends Behavior {
                 fabric = node.env.get(FabricManager).for(this.context.fabric);
             }
         }
+        const { nodeId, passcode } = options;
 
         if (!fabricAuthority.hasControlOf(fabric)) {
             throw new ImplementationError(
@@ -57,133 +63,110 @@ export class CommissioningClient extends Behavior {
             );
         }
 
-        const commissionableDevice = this.state.discoveryAddress;
-        if (commissionableDevice === undefined) {
+        const addresses = this.state.addresses;
+        if (!addresses?.length) {
             throw new ImplementationError(`Cannot commission ${node} because the node has not been located`);
         }
 
-        const knownAddress = this.state.operationalAddresses?.find(addr => addr.type === "udp");
-
-        const commissionerOptions: DiscoveryAndCommissioningOptions = {
-            fabric,
-            discovery: { commissionableDevice, knownAddress },
-            passcode: options.passcode,
-        };
-
         const commissioner = this.endpoint.env.get(ControllerCommissioner);
 
-        const address = await commissioner.commissionWithDiscovery(commissionerOptions);
+        const commissioningOptions: LocatedNodeCommissioningOptions = {
+            addresses,
+            fabric,
+            nodeId,
+            passcode,
+            discoveryData: this.descriptor,
+        };
+
+        if (this.performCaseCommissioning !== CommissioningClient.prototype.performCaseCommissioning) {
+            commissioningOptions.performCaseCommissioning = this.performCaseCommissioning.bind(this);
+        }
+
+        const address = await commissioner.commission(commissioningOptions);
         this.state.peerAddress = address;
 
         return node;
     }
 
-    get discoveryData(): DiscoveryData {
-        const result: DiscoveryData = {};
-
-        const {
-            vendorId,
-            productId,
-            deviceType,
-            deviceName,
-            rotatingIdentifier,
-            pairingHint,
-            pairingInstructions,
-            sessionParameters,
-            tcpSupport,
-            longIdleTimeOperatingMode,
-        } = this.state;
-
-        if (vendorId !== undefined) {
-            if (productId !== undefined) {
-                result.VP = `${vendorId}+${productId}`;
-            } else {
-                result.VP = vendorId.toString();
-            }
-        }
-
-        if (deviceType !== undefined) {
-            result.DT = deviceType;
-        }
-
-        if (deviceName !== undefined) {
-            result.DN = deviceName;
-        }
-
-        if (rotatingIdentifier !== undefined) {
-            result.RI = rotatingIdentifier;
-        }
-
-        if (pairingHint !== undefined) {
-            result.PH = pairingHint;
-        }
-
-        if (pairingInstructions !== undefined) {
-            result.PI = pairingInstructions;
-        }
-
-        if (sessionParameters !== undefined) {
-            const { idleIntervalMs, activeIntervalMs, activeThresholdMs } = sessionParameters;
-
-            if (idleIntervalMs !== undefined) {
-                result.SII = idleIntervalMs;
-            }
-
-            if (activeIntervalMs !== undefined) {
-                result.SAI = activeIntervalMs;
-            }
-
-            if (activeThresholdMs !== undefined) {
-                result.SAT = activeThresholdMs;
-            }
-        }
-
-        if (tcpSupport !== undefined) {
-            result.T = tcpSupport;
-        }
-
-        if (longIdleTimeOperatingMode !== undefined) {
-            result.ICD = 1;
-        }
-
-        return result;
+    /**
+     * Override to implement CASE commissioning yourself.
+     */
+    protected async performCaseCommissioning(_address: PeerAddress, _discoveryData?: DiscoveryData) {
+        throw new NotImplementedError();
     }
 
-    set discoveryData(data: DiscoveryData) {
-        const { VP, DT, DN, RI, PH, PI, SII, SAI, SAT, T, ICD } = data;
+    get descriptor() {
+        return RemoteDescriptor.fromState(this.state);
+    }
 
-        if (VP !== undefined) {
-            const [vendor, product] = VP.split("+").map(Number.parseInt);
-
-            this.state.vendorId = Number.isNaN(vendor) ? undefined : VendorId(vendor);
-            this.state.productId = Number.isNaN(product) ? undefined : VendorId(vendor);
-        }
-
-        let sessionParameters: Partial<SessionParameters> | undefined;
-        if (SII !== undefined) {
-            (sessionParameters ??= {}).idleIntervalMs = SII;
-        }
-        if (SAI !== undefined) {
-            (sessionParameters ??= {}).activeIntervalMs = SAI;
-        }
-        if (SAT !== undefined) {
-            (sessionParameters ??= {}).activeThresholdMs = SAT;
-        }
-        this.state.sessionParameters = sessionParameters;
-
-        this.state.deviceType = DT === undefined ? undefined : DeviceTypeId(DT);
-        this.state.deviceName = DN;
-        this.state.rotatingIdentifier = RI;
-        this.state.pairingHint = PH;
-        this.state.pairingInstructions = PI;
-        this.state.tcpSupport = T;
-        this.state.longIdleTimeOperatingMode = ICD === undefined ? undefined : ICD === 1;
+    set descriptor(descriptor: CommissioningClient.NodeDescriptor | undefined) {
+        RemoteDescriptor.toState(descriptor, this.state);
     }
 
     #initializeNode() {
         const endpoint = this.endpoint as ClientNode;
         endpoint.lifecycle.initialized.emit(this.state.peerAddress !== undefined);
     }
+
+    /**
+     * Define logical schema to enable runtime validation and make fields persistent.
+     */
+    static override readonly schema = new DatatypeModel({
+        name: "CommissioningState",
+        type: "struct",
+
+        children: [
+            FieldElement({
+                name: "peerAddress",
+                type: "struct",
+                quality: "N",
+                children: [
+                    FieldElement({ name: "fabricIndex", type: "fabric-id" }),
+                    FieldElement({ name: "nodeId", type: "node-id" }),
+                ],
+            }),
+            FieldElement({
+                name: "addresses",
+                type: "array",
+                quality: "N",
+                children: [
+                    FieldElement({
+                        name: "entry",
+                        type: "struct",
+                        children: [
+                            FieldElement({ name: "type", type: "string" }),
+                            FieldElement({ name: "ip", type: "string" }),
+                            FieldElement({ name: "port", type: "uint16" }),
+                            FieldElement({ name: "peripheralAddress", type: "string" }),
+                        ],
+                    }),
+                ],
+            }),
+            FieldElement({ name: "hostname", type: "string", quality: "N" }),
+            FieldElement({ name: "bleAddress", type: "string", quality: "N" }),
+            FieldElement({ name: "discriminator", type: "uint16", quality: "N" }),
+            FieldElement({ name: "commissioningMode", type: "uint8", quality: "N" }),
+            FieldElement({ name: "vendorId", type: "vendor-id", quality: "N" }),
+            FieldElement({ name: "productId", type: "uint16", quality: "N" }),
+            FieldElement({ name: "deviceType", type: "uint16", quality: "N" }),
+            FieldElement({ name: "deviceName", type: "string", quality: "N" }),
+            FieldElement({ name: "rotatingIdentifier", type: "string", quality: "N" }),
+            FieldElement({ name: "pairingHint", type: "string", quality: "N" }),
+            FieldElement({ name: "pairingInstructions", type: "string", quality: "N" }),
+            FieldElement({
+                name: "sessionParameters",
+                type: "struct",
+                quality: "N",
+                children: [
+                    FieldElement({ name: "idleIntervalMs", type: "uint32", constraint: "max 3600000" }),
+                    FieldElement({ name: "activeIntervalMs", type: "uint32", constraint: "max 3600000" }),
+                    FieldElement({ name: "activeThresholdMs", type: "uint16" }),
+                ],
+            }),
+            FieldElement({ name: "tcpSupport", type: "uint8", quality: "N" }),
+            FieldElement({ name: "longIdleOperatingMode", type: "boolean", quality: "N" }),
+        ],
+    });
 }
 
 export namespace CommissioningClient {
@@ -197,7 +180,7 @@ export namespace CommissioningClient {
          * Known network addresses for the device.  If this is undefined the node has not been located on any network
          * interface.
          */
-        operationalAddresses?: ServerAddress[];
+        addresses?: ServerAddress[];
 
         /**
          * IP network name.
@@ -255,7 +238,7 @@ export namespace CommissioningClient {
         pairingInstructions?: string;
 
         /**
-         * The peer's session parameters.
+         * The remote node's session parameters.
          */
         sessionParameters?: Partial<SessionParameters>;
 
@@ -302,4 +285,9 @@ export namespace CommissioningClient {
          */
         discoveryCapabilities?: TypeFromPartialBitSchema<typeof DiscoveryCapabilitiesBitmap>;
     }
+
+    /**
+     * Device descriptor used by lower-level components.
+     */
+    export type NodeDescriptor = Partial<OperationalDevice | CommissionableDevice>;
 }

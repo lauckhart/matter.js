@@ -6,16 +6,16 @@
 
 import { Domain } from "#domain.js";
 import { IncompleteError } from "#errors.js";
-import { Diagnostic, Environment, LogFormat } from "#general";
+import { Diagnostic, Environment, LogFormat, StorageService } from "#general";
 import { undefinedValue } from "#location.js";
 import { isCommand } from "#parser.js";
 import colors from "ansi-colors";
 import { readFile } from "fs/promises";
 import { homedir } from "os";
 import { dirname, join } from "path";
-import { env, exit, stderr, stdout } from "process";
+import { exit, stderr, stdout } from "process";
 import { AsyncCompleter, CompleterResult } from "readline";
-import { Recoverable, REPLEval, REPLServer, start } from "repl";
+import { Recoverable, REPLEval, ReplOptions, REPLServer, start } from "repl";
 import "./commands/index.js";
 import "./providers/index.js";
 
@@ -134,9 +134,19 @@ export async function repl() {
         prompt: createPrompt(),
         eval: doEval,
         ignoreUndefined: true,
-    });
+        historySize: domain.env.vars.integer("history.size", 10000),
+    } as ReplOptions);
 
-    const historyPath = env.MATTER_REPL_HISTORY || join(homedir(), ".matter-cli-history");
+    let historyPath = domain.env.vars.string("history.path");
+    if (historyPath === undefined) {
+        const storagePath = domain.env.get(StorageService).location;
+        if (storagePath === undefined) {
+            historyPath = join(homedir(), ".matter-cli-history");
+        } else {
+            historyPath = join(storagePath, "cli-history");
+        }
+    }
+
     server.setupHistory(historyPath, error => {
         if (error) {
             console.error(error);

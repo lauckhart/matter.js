@@ -4,12 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/**
- * @license
- * Copyright 2022-2024 Matter.js Authors
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { Endpoint } from "#node";
 import { Directory, Stat } from "#stat.js";
 
