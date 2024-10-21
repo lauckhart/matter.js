@@ -604,7 +604,9 @@ export class MdnsScanner implements Scanner {
         identifier: CommissionableDeviceIdentifiers,
         callback: (device: CommissionableDevice) => void,
         timeoutSeconds = 900,
+        cancelSignal?: Promise<void>,
     ): Promise<CommissionableDevice[]> {
+        const canceled = cancelSignal ? cancelSignal.then(() => true) : undefined;
         const discoveredDevices = new Set<string>();
 
         const discoveryEndTime = Time.nowMs() + timeoutSeconds * 1000;
@@ -625,7 +627,15 @@ export class MdnsScanner implements Scanner {
                 break;
             }
             const { promise } = await this.#registerWaiterPromise(queryId, remainingTime, false);
-            await promise;
+
+            if (cancelSignal) {
+                const result = await Promise.race([promise, canceled]);
+                if (result) {
+                    break;
+                }
+            } else {
+                await promise;
+            }
         }
         return this.#getCommissionableDeviceRecords(identifier);
     }

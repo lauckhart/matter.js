@@ -7,7 +7,7 @@
 import { CommissioningClient } from "#behavior/system/commissioning/CommissioningClient.js";
 import { NetworkRuntime } from "#behavior/system/network/NetworkRuntime.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
-import { Identity, NotImplementedError } from "#general";
+import { Identity, Lifecycle, NotImplementedError } from "#general";
 import { ClientEndpointInitializer } from "./client/ClientEndpointInitializer.js";
 import { Node } from "./Node.js";
 import type { ServerNode } from "./ServerNode.js";
@@ -27,16 +27,28 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
         };
 
         super(opts);
+
+        if (this.owner) {
+            this.construction.start();
+        }
     }
 
     override async initialize() {
-        this.env.set(EndpointInitializer, new ClientEndpointInitializer(this));
+        this.env.set(EndpointInitializer, await ClientEndpointInitializer.create(this));
 
         await super.initialize();
     }
 
-    override get owner(): ServerNode {
-        return super.owner as ServerNode;
+    override get owner(): ServerNode | undefined {
+        return super.owner as ServerNode | undefined;
+    }
+
+    override set owner(owner: ServerNode) {
+        super.owner = owner;
+
+        if (this.construction.status === Lifecycle.Status.Inactive) {
+            this.construction.start();
+        }
     }
 
     async commission(options: CommissioningClient.CommissioningOptions) {

@@ -21,6 +21,16 @@ export class ClientEndpointInitializer extends EndpointInitializer {
         this.#store = node.env.get(ServerNodeStore).peerStores.storeForNode(node);
     }
 
+    get ready() {
+        return this.#store.construction.ready;
+    }
+
+    static async create(node: ClientNode) {
+        const instance = new ClientEndpointInitializer(node);
+        await instance.ready;
+        return instance;
+    }
+
     override createBacking(endpoint: Endpoint, behavior: Behavior.Type): BehaviorBacking {
         const store = this.#store.endpointStores.storeForEndpoint(endpoint);
         return new ClientBehaviorBacking(endpoint, behavior, store);

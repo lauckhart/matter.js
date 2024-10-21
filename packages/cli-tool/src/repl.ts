@@ -117,6 +117,8 @@ function createNodeRepl(domain: Domain) {
     let repl: REPLServer | undefined = undefined;
 
     const evaluate: REPLEval = function (this, evalCmd, _context, _file, cb: (err: Error | null, result: any) => void) {
+        repl?.pause();
+
         // See comment below r.e. "realEmit".  We can't just strip first character because the line protector will
         // appear multiple times if there are multiple lines
         evalCmd = evalCmd.replace(new RegExp(LINE_PROTECTOR_CHAR, "g"), "");
@@ -185,6 +187,7 @@ function createNodeRepl(domain: Domain) {
         }
 
         function finish(err: Error | null, result: any) {
+            repl?.resume();
             cb(err, result);
         }
     };
@@ -256,9 +259,14 @@ function addCompletionSupport(repl: REPLServer, domain: Domain) {
 }
 
 function instrumentReplToMaintainPrompt(repl: REPLServer) {
+    if (!stdout.isTTY) {
+        return;
+    }
+
     let evaluating = false;
     let promptHidden = false;
     let readlineWriting = false;
+    let onNewline = false;
 
     instrumentStdStream(stdout);
     instrumentStdStream(stderr);
@@ -287,6 +295,10 @@ function instrumentReplToMaintainPrompt(repl: REPLServer) {
                 cb(err, result);
                 evaluating = false;
             });
+
+            if (!onNewline) {
+                stdout.write("\n");
+            }
         },
         writable: true,
         configurable: true,
@@ -295,12 +307,17 @@ function instrumentReplToMaintainPrompt(repl: REPLServer) {
     function instrumentStdStream(stream: NodeJS.WriteStream) {
         const actualWrite = stream.write.bind(stream);
         stream.write = (payload: Uint8Array | string, ...params: any[]) => {
+            // Doesn't catch cursor movement from ANSI codes but worse case we end up with a blank line
+            onNewline = payload[payload.length - 1] === "\n" || payload[payload.length - 1] === "\r";
+
             if (!evaluating && !promptHidden && !readlineWriting) {
                 promptHidden = true;
                 stdout.cursorTo(0);
                 stdout.clearLine(0);
-                setTimeout(restorePrompt, 0);
+                queueMicrotask(restorePrompt);
+                onNewline = true;
             }
+
             return actualWrite(payload, ...params);
         };
     }
@@ -309,6 +326,11 @@ function instrumentReplToMaintainPrompt(repl: REPLServer) {
         if (!promptHidden) {
             return;
         }
+
+        if (!onNewline) {
+            stdout.write("\n");
+        }
+
         repl?.displayPrompt(true);
         promptHidden = false;
     }

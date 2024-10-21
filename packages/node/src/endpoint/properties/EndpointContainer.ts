@@ -15,10 +15,10 @@ export class EndpointContainer<T extends Endpoint = Endpoint>
     implements ImmutableSet<T>, MutableSet<T, T>, ObservableSet<T>
 {
     #children = new BasicSet<T>();
-    #endpoint: Endpoint;
+    #owner: Endpoint;
 
     constructor(endpoint: Endpoint) {
-        this.#endpoint = endpoint;
+        this.#owner = endpoint;
     }
 
     get(id: string) {
@@ -35,7 +35,7 @@ export class EndpointContainer<T extends Endpoint = Endpoint>
         }
 
         this.#children.add(endpoint);
-        endpoint.owner = this.#endpoint;
+        endpoint.owner = this.#owner;
 
         endpoint.lifecycle.destroyed.once(() => {
             this.delete(endpoint);
@@ -116,7 +116,7 @@ export class EndpointContainer<T extends Endpoint = Endpoint>
         }
     }
 
-    protected get endpoint() {
-        return this.#endpoint;
+    protected get owner() {
+        return this.#owner;
     }
 }

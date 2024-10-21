@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MatterAggregateError, MatterError, MaybePromise } from "#general";
+import { CancelablePromise, MatterAggregateError, MatterError, MaybePromise } from "#general";
 import { ClientNodeFactory } from "#node/client/ClientNodeFactory.js";
 import { ClientNode } from "#node/ClientNode.js";
 import { ServerNode } from "#node/ServerNode.js";
@@ -28,29 +28,29 @@ export class DiscoveryAggregateError extends MatterAggregateError {}
  *
  * This is a cancelable promise; use cancel() to terminate discovery.
  */
-export abstract class Discovery<T = unknown> extends Promise<T> {
+export abstract class Discovery<T = unknown> extends CancelablePromise<T> {
     #isCanceled = false;
+    #cancel?: () => void;
     #owner: ServerNode;
     #options: Discovery.Options;
-    #resolve: (result: T) => void;
-    #reject: (cause: any) => void;
+    #resolve!: (value: T) => void;
+    #reject!: (cause?: any) => void;
 
     constructor(owner: ServerNode, options: Discovery.Options | undefined) {
-        let resolve: (result: T) => void;
-        let reject: (cause: any) => void;
-        super((doResolve, doReject) => {
-            resolve = doResolve;
-            reject = doReject;
+        let resolve: (value: T) => void, reject: (cause?: any) => void;
+        super((resolver, rejecter) => {
+            resolve = resolver;
+            reject = rejecter;
         });
+        this.#resolve = resolve!;
+        this.#reject = reject!;
 
         owner.env.get(ActiveDiscoveries).add(this);
 
         this.#owner = owner;
         this.#options = options ?? {};
-        this.#resolve = resolve!;
-        this.#reject = reject!;
 
-        this.#initializeController();
+        queueMicrotask(this.#initializeController.bind(this));
     }
 
     protected abstract onDiscovered(node: ClientNode): void;
@@ -68,9 +68,7 @@ export abstract class Discovery<T = unknown> extends Promise<T> {
         }
 
         this.#isCanceled = true;
-        for (const scanner of this.#owner.env.get(ScannerSet)) {
-            scanner.cancelCommissionableDeviceDiscovery(this.#options);
-        }
+        this.#cancel?.();
     }
 
     override toString() {
@@ -110,6 +108,7 @@ export abstract class Discovery<T = unknown> extends Promise<T> {
     #initializeController() {
         let controllerInitialized;
         try {
+            this.#owner.behaviors.require(ControllerBehavior);
             controllerInitialized = this.#owner.act(agent => agent.load(ControllerBehavior));
         } catch (e) {
             this.#reject(e);
@@ -138,7 +137,7 @@ export abstract class Discovery<T = unknown> extends Promise<T> {
             return;
         }
 
-        this.#owner.start().then(() => this.#performDiscovery.bind(this), this.#reject);
+        this.#owner.start().then(this.#performDiscovery.bind(this), this.#reject);
     }
 
     /**
@@ -154,6 +153,7 @@ export abstract class Discovery<T = unknown> extends Promise<T> {
 
         const factory = this.#owner.env.get(ClientNodeFactory);
         const scans = new Array<Promise<unknown>>();
+        const cancelSignal = new Promise<void>(resolve => (this.#cancel = resolve));
         for (const scanner of scanners) {
             scans.push(
                 scanner.findCommissionableDevicesContinuously(
@@ -167,6 +167,7 @@ export abstract class Discovery<T = unknown> extends Promise<T> {
                         );
                     },
                     this.#options.timeoutSeconds,
+                    cancelSignal,
                 ),
             );
         }
@@ -182,7 +183,7 @@ export abstract class Discovery<T = unknown> extends Promise<T> {
                 }
 
                 if (errors.length) {
-                    throw new DiscoveryAggregateError(errors, `${this} failed due to scanner error`);
+                    throw new DiscoveryAggregateError(errors, `${this} failed`);
                 }
 
                 this.#invokeCompleter();

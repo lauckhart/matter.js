@@ -169,6 +169,10 @@ function formatName(location: DisplayLocation) {
         return { name: `${colors.green(name)}*`, length: length + 1 };
     }
 
+    if (location.tag === "constructor") {
+        return { name: `${colors.green.bold(name)}*`, length: length + 1 };
+    }
+
     return { name, length };
 }
 
@@ -242,7 +246,7 @@ function DisplayLocation(location: Location, all: boolean, displayName?: string)
         if (all && typeof definition === "object" && definition !== null) {
             for (
                 let obj = definition;
-                obj !== undefined && obj !== Object.prototype;
+                obj !== undefined && obj !== null && obj !== Object.prototype;
                 obj = Object.getPrototypeOf(obj)
             ) {
                 for (const key of Object.getOwnPropertyNames(obj)) {

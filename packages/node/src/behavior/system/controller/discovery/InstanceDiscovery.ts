@@ -6,6 +6,7 @@
 
 import { MaybePromise } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
+import { ServerNode } from "#node/ServerNode.js";
 import { Discovery, DiscoveryError } from "./Discovery.js";
 
 /**
@@ -15,6 +16,10 @@ import { Discovery, DiscoveryError } from "./Discovery.js";
  */
 export class InstanceDiscovery extends Discovery<ClientNode> {
     #result?: ClientNode;
+
+    constructor(owner: ServerNode, options?: Discovery.Options) {
+        super(owner, options);
+    }
 
     protected onDiscovered(node: ClientNode) {
         this.#result = node;

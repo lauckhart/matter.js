@@ -63,6 +63,8 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
         this.env.set(ServerNode, this);
 
         DiagnosticSource.add(this);
+
+        this.construction.start();
     }
 
     /**

@@ -11,7 +11,7 @@ import { Discovery } from "./Discovery.js";
  * Ongoing node discoveries registered with the environment.
  */
 export class ActiveDiscoveries extends Set<Discovery<any>> {
-    [Environmental.create](env: Environment) {
+    static [Environmental.create](env: Environment) {
         const instance = new ActiveDiscoveries();
         env.set(ActiveDiscoveries, instance);
         return instance;

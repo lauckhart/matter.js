@@ -43,7 +43,7 @@ export class RemoteNodes extends EndpointContainer<ClientNode> {
 
         const factory = owner.env.get(ClientNodeFactory);
 
-        const peerStores = this.endpoint.env.get(ServerNodeStore).peerStores;
+        const peerStores = this.owner.env.get(ServerNodeStore).peerStores;
         for (const id of peerStores.knownIds) {
             this.add(
                 factory.create({
@@ -60,21 +60,21 @@ export class RemoteNodes extends EndpointContainer<ClientNode> {
      * Find a specific commissionable node.
      */
     locate(options?: Discovery.Options) {
-        return new InstanceDiscovery(this.endpoint, options);
+        return new InstanceDiscovery(this.owner, options);
     }
 
     /**
      * Employ discovery to find a set of commissionable nodes.
      */
     discover(options?: Discovery.Options) {
-        return new TimedDiscovery(this.endpoint, options);
+        return new TimedDiscovery(this.owner, options);
     }
 
     /**
      * Find a specific commissionable node and commission.
      */
     commission(options: CommissioningDiscovery.Options) {
-        return new CommissioningDiscovery(this.endpoint, options);
+        return new CommissioningDiscovery(this.owner, options);
     }
 
     override get(id: string | PeerAddress) {
@@ -92,13 +92,14 @@ export class RemoteNodes extends EndpointContainer<ClientNode> {
         return super.get(id);
     }
 
-    override get endpoint() {
-        return super.endpoint as ServerNode;
+    override get owner() {
+        return super.owner as ServerNode;
     }
 
     override add(node: ClientNode) {
+        node.owner = this.owner;
         if (!node.lifecycle.hasId) {
-            node.id = this.endpoint.env.get(ServerNodeStore).peerStores.allocateId();
+            node.id = this.owner.env.get(ServerNodeStore).peerStores.allocateId();
         }
         super.add(node);
     }

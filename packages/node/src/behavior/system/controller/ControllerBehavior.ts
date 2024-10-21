@@ -34,7 +34,7 @@ export class ControllerBehavior extends Behavior {
             this.state.ip = true;
         }
         if (this.state.ip !== false) {
-            this.env.get(ScannerSet).add(this.env.get(MdnsService).scanner);
+            this.env.get(ScannerSet).add((await this.env.load(MdnsService)).scanner);
         }
 
         if (this.state.ble === undefined) {
