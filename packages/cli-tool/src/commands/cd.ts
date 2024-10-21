@@ -14,7 +14,7 @@ Command({
 
     invoke: async function cd([path]) {
         if (path === undefined) {
-            path = "/";
+            path = this.env.vars.get("home", "/");
         } else {
             path = `${path}`;
         }

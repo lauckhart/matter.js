@@ -240,8 +240,14 @@ function DisplayLocation(location: Location, all: boolean, displayName?: string)
     function listPaths(paths: string[], definition: unknown) {
         const result = new Set(paths);
         if (all && typeof definition === "object" && definition !== null) {
-            for (const key of Object.getOwnPropertyNames(definition)) {
-                result.add(key);
+            for (
+                let obj = definition;
+                obj !== undefined && obj !== Object.prototype;
+                obj = Object.getPrototypeOf(obj)
+            ) {
+                for (const key of Object.getOwnPropertyNames(obj)) {
+                    result.add(key);
+                }
             }
         }
 

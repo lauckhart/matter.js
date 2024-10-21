@@ -10,6 +10,7 @@ import { bin, globals as defaultGlobals } from "#globals.js";
 import { Location, undefinedValue } from "#location.js";
 import { parseInput } from "#parser.js";
 import { Directory } from "#stat.js";
+import { ServerNode } from "@matter/node";
 import colors from "ansi-colors";
 import { inspect } from "util";
 import { createContext, runInContext, RunningCodeOptions } from "vm";
@@ -44,7 +45,7 @@ export interface Domain extends DomainContext {
 /**
  * Maintains state and executes commands.
  */
-export function Domain(context: DomainContext): Domain {
+export async function Domain(context: DomainContext): Promise<Domain> {
     const hiddenGlobals = Object.keys(globalThis);
 
     const globals: Record<string, unknown> = Object.defineProperties(
@@ -70,6 +71,10 @@ export function Domain(context: DomainContext): Domain {
     });
 
     globals.global = globals.globalThis = globals;
+
+    const defaultNode = new ServerNode();
+    await defaultNode.construction;
+    globals[defaultNode.id] = defaultNode;
 
     const domain: Domain = {
         isDomain: true,
@@ -208,13 +213,21 @@ export function Domain(context: DomainContext): Domain {
         },
     };
 
+    if (!domain.env.vars.has("home")) {
+        domain.env.vars.set("home", `/${defaultNode.id}`);
+    }
+
     const vmContext = createContext(
         new Proxy(
             {},
             {
                 get(_target, key, _receiver) {
                     if (key in (domain.location.definition as {})) {
-                        return (domain.location.definition as any)[key];
+                        let result = (domain.location.definition as any)[key];
+                        if (typeof result === "function") {
+                            result = result.bind(domain.location.definition);
+                        }
+                        return result;
                     }
 
                     return globals[key as any];
@@ -273,6 +286,17 @@ export function Domain(context: DomainContext): Domain {
             },
         ),
     );
+
+    const cwd = domain.env.vars.string("cwd");
+    if (cwd !== undefined) {
+        try {
+            domain.location = await domain.location.at(cwd);
+        } catch (e) {
+            if (!(e instanceof NotFoundError) && !(e instanceof NotADirectoryError)) {
+                throw e;
+            }
+        }
+    }
 
     return domain;
 

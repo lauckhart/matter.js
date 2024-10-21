@@ -53,6 +53,7 @@ export class ClientStoreFactory extends ClientStoreService {
         super();
         this.#storage = storage;
         this.#construction = Construction(this);
+        this.#construction.start();
     }
 
     async [Construction.construct]() {

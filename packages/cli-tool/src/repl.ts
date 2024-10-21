@@ -16,6 +16,7 @@ import { dirname, join } from "path";
 import { exit, stderr, stdout } from "process";
 import { AsyncCompleter, CompleterResult } from "readline";
 import { Recoverable, REPLEval, ReplOptions, REPLServer, start } from "repl";
+import { Context } from "vm";
 import "./commands/index.js";
 import "./providers/index.js";
 
@@ -24,9 +25,20 @@ import "./providers/index.js";
 const LINE_PROTECTOR_CHAR = "\u0001";
 
 export async function repl() {
+    const domain = await createDomain();
+    stdout.write(`Welcome to ${domain.description}.  Type ${colors.bold('"help"')} for help.\n`);
+
+    const repl = createNodeRepl(domain);
+    configureHistory(repl, domain);
+    addCompletionSupport(repl, domain);
+    instrumentReplToMaintainPrompt(repl);
+    instrumentReplToAddLineProtector(repl);
+}
+
+async function createDomain() {
     const description = `${colors.bold("matter.js")} ${await readPackageVersion()}`;
 
-    const domain = Domain({
+    const domain = await Domain({
         description,
 
         out(...text) {
@@ -58,9 +70,53 @@ export async function repl() {
         exit(0);
     };
 
-    let server: REPLServer | undefined = undefined;
+    return domain;
+}
 
-    const doEval: REPLEval = function (this, evalCmd, _context, _file, cb: (err: Error | null, result: any) => void) {
+async function readPackageVersion() {
+    let path = new URL(import.meta.url).pathname;
+    while (dirname(path) !== path) {
+        path = dirname(path);
+        try {
+            const pkg = await readFile(join(path, "package.json"));
+            const parsed = JSON.parse(pkg.toString());
+            if (typeof parsed.version === "string") {
+                return parsed.version;
+            }
+        } catch (e) {
+            if ((e as any).code === "ENOENT") {
+                continue;
+            }
+            throw e;
+        }
+    }
+
+    return "?";
+}
+
+function configureHistory(repl: REPLServer, domain: Domain) {
+    let historyPath = domain.env.vars.string("history.path");
+    if (historyPath === undefined) {
+        const storagePath = domain.env.get(StorageService).location;
+        if (storagePath === undefined) {
+            historyPath = join(homedir(), ".matter-cli-history");
+        } else {
+            historyPath = join(storagePath, "cli-history");
+        }
+    }
+
+    repl.setupHistory(historyPath, error => {
+        if (error) {
+            console.error(error);
+            exit(1);
+        }
+    });
+}
+
+function createNodeRepl(domain: Domain) {
+    let repl: REPLServer | undefined = undefined;
+
+    const evaluate: REPLEval = function (this, evalCmd, _context, _file, cb: (err: Error | null, result: any) => void) {
         // See comment below r.e. "realEmit".  We can't just strip first character because the line protector will
         // appear multiple times if there are multiple lines
         evalCmd = evalCmd.replace(new RegExp(LINE_PROTECTOR_CHAR, "g"), "");
@@ -72,19 +128,19 @@ export async function repl() {
         result.then(handleSuccess, handleError);
 
         function handleSuccess(result: unknown) {
-            server?.setPrompt(createPrompt());
+            repl?.setPrompt(createPrompt());
             if (result === undefinedValue) {
                 domain.out(domain.inspect(result));
-                cb(null, undefined);
+                finish(null, undefined);
             }
-            cb(null, result);
+            finish(null, result);
         }
 
         function handleError(error: Error) {
-            server?.setPrompt(createPrompt());
+            repl?.setPrompt(createPrompt());
 
             if (error.constructor.name === "IncompleteError") {
-                cb(new Recoverable((error as IncompleteError).cause as Error), undefined);
+                finish(new Recoverable((error as IncompleteError).cause as Error), undefined);
                 return;
             }
 
@@ -125,59 +181,41 @@ export async function repl() {
             stderr.write(`${formatted}\n`);
 
             // Do not report the error to node
-            cb(null, undefined);
+            finish(null, undefined);
+        }
+
+        function finish(err: Error | null, result: any) {
+            cb(err, result);
         }
     };
 
-    stdout.write(`Welcome to ${description}.  Type ${colors.bold('"help"')} for help.\n`);
-    server = start({
+    repl = start({
         prompt: createPrompt(),
-        eval: doEval,
+        eval: evaluate,
         ignoreUndefined: true,
         historySize: domain.env.vars.integer("history.size", 10000),
     } as ReplOptions);
 
-    let historyPath = domain.env.vars.string("history.path");
-    if (historyPath === undefined) {
-        const storagePath = domain.env.get(StorageService).location;
-        if (storagePath === undefined) {
-            historyPath = join(homedir(), ".matter-cli-history");
-        } else {
-            historyPath = join(storagePath, "cli-history");
-        }
+    return repl;
+
+    function createPrompt() {
+        return `${colors.dim("matter")} ${colors.yellow(domain.location.path)} ❯ `;
     }
+}
 
-    server.setupHistory(historyPath, error => {
-        if (error) {
-            console.error(error);
-            exit(1);
-        }
-    });
-
-    const realEmit = server.emit as (...args: unknown[]) => boolean;
-    server.emit = (event, ...args: any[]) => {
-        if (event === "line") {
-            args[0] = `${LINE_PROTECTOR_CHAR}${args[0]}`;
-        }
-        return realEmit.call(server, event, ...args);
-    };
-
+function addCompletionSupport(repl: REPLServer, domain: Domain) {
     const complete: AsyncCompleter = (line, callback) => {
         findCompletions(line).then(result => {
             if (result) {
                 callback(null, result);
             } else {
-                nodeCompleter.call(server, line, callback);
+                nodeCompleter.call(repl, line, callback);
             }
         }, callback);
     };
 
-    const nodeCompleter = server.completer;
-    Object.defineProperty(server, "completer", { value: complete });
-
-    function createPrompt() {
-        return `${colors.dim("matter")} ${colors.yellow(domain.location.path)} ❯ `;
-    }
+    const nodeCompleter = repl.completer;
+    Object.defineProperty(repl, "completer", { value: complete, configurable: true, writable: true });
 
     async function findCompletions(line: string): Promise<undefined | CompleterResult> {
         if (line.endsWith("/") ? !isCommand(line.slice(0, line.length - 1)) : !isCommand(line)) {
@@ -217,23 +255,71 @@ export async function repl() {
     }
 }
 
-async function readPackageVersion() {
-    let path = new URL(import.meta.url).pathname;
-    while (dirname(path) !== path) {
-        path = dirname(path);
-        try {
-            const pkg = await readFile(join(path, "package.json"));
-            const parsed = JSON.parse(pkg.toString());
-            if (typeof parsed.version === "string") {
-                return parsed.version;
+function instrumentReplToMaintainPrompt(repl: REPLServer) {
+    let evaluating = false;
+    let promptHidden = false;
+    let readlineWriting = false;
+
+    instrumentStdStream(stdout);
+    instrumentStdStream(stderr);
+
+    const serverWithTty = repl as unknown as { _ttyWrite: (...args: unknown[]) => unknown };
+    const ttyWrite = serverWithTty._ttyWrite.bind(repl);
+    serverWithTty._ttyWrite = (...args: unknown[]) => {
+        readlineWriting = true;
+        restorePrompt();
+        const result = ttyWrite(...args);
+        readlineWriting = false;
+        return result;
+    };
+
+    const realEval = repl.eval;
+    Object.defineProperty(repl, "eval", {
+        value: function (
+            this: REPLServer,
+            evalCmd: string,
+            context: Context,
+            file: string,
+            cb: (err: Error | null, result: any) => void,
+        ) {
+            evaluating = true;
+            realEval.call(this, evalCmd, context, file, (err: Error | null, result: any) => {
+                cb(err, result);
+                evaluating = false;
+            });
+        },
+        writable: true,
+        configurable: true,
+    });
+
+    function instrumentStdStream(stream: NodeJS.WriteStream) {
+        const actualWrite = stream.write.bind(stream);
+        stream.write = (payload: Uint8Array | string, ...params: any[]) => {
+            if (!evaluating && !promptHidden && !readlineWriting) {
+                promptHidden = true;
+                stdout.cursorTo(0);
+                stdout.clearLine(0);
+                setTimeout(restorePrompt, 0);
             }
-        } catch (e) {
-            if ((e as any).code === "ENOENT") {
-                continue;
-            }
-            throw e;
-        }
+            return actualWrite(payload, ...params);
+        };
     }
 
-    return "?";
+    function restorePrompt() {
+        if (!promptHidden) {
+            return;
+        }
+        repl?.displayPrompt(true);
+        promptHidden = false;
+    }
+}
+
+function instrumentReplToAddLineProtector(repl: REPLServer) {
+    const realEmit = repl.emit as (...args: unknown[]) => boolean;
+    repl.emit = (event, ...args: any[]) => {
+        if (event === "line") {
+            args[0] = `${LINE_PROTECTOR_CHAR}${args[0]}`;
+        }
+        return realEmit.call(repl, event, ...args);
+    };
 }
