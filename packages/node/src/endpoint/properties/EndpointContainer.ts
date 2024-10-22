@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BasicSet, ImmutableSet, MutableSet, ObservableSet } from "#general";
+import { BasicSet, decamelize, Diagnostic, ImmutableSet, MutableSet, ObservableSet } from "#general";
 import { IdentityConflictError } from "#node/server/IdentityService.js";
 import { Endpoint } from "../Endpoint.js";
 
@@ -103,10 +103,6 @@ export class EndpointContainer<T extends Endpoint = Endpoint>
     }
 
     /**
-     * Ensure the endpoint's identity is unique amongst siblings.
-     */
-
-    /**
      * Confirm availability of an ID amongst the endpoint's children.
      */
     assertIdAvailable(id: string, endpoint: Endpoint) {
@@ -118,5 +114,9 @@ export class EndpointContainer<T extends Endpoint = Endpoint>
 
     protected get owner() {
         return this.#owner;
+    }
+
+    get [Diagnostic.value]() {
+        return Diagnostic.list([decamelize(this.constructor.name), ...this]);
     }
 }

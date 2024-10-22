@@ -168,12 +168,20 @@ export async function Domain(context: DomainContext): Promise<Domain> {
             if (value === undefinedValue) {
                 return colors.dim("(undefined)");
             }
+
+            if (
+                typeof value === "object" &&
+                value !== null &&
+                (Diagnostic.value in value || Diagnostic.presentation in value || value instanceof Error)
+            ) {
+                return LogFormat[colors.enabled ? "ansi" : "plain"](value);
+            }
+
             return inspect(value, false, 1, this.colorize);
         },
 
         displayError(cause: unknown, prefix?: string) {
-            const diagnostic = Diagnostic.error(cause);
-            const formatted = LogFormat[colors.enabled ? "ansi" : "plain"](diagnostic);
+            const formatted = this.inspect(cause);
 
             if (prefix) {
                 prefix = colors.dim(`${prefix}: `);

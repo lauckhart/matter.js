@@ -7,7 +7,6 @@
 import { Domain } from "#domain.js";
 import { IncompleteError } from "#errors.js";
 import { Environment, InternalError, Observable, RuntimeService, StorageService, Time } from "#general";
-import { undefinedValue } from "#location.js";
 import { isCommand } from "#parser.js";
 import colors from "ansi-colors";
 import { readFile } from "fs/promises";
@@ -221,12 +220,12 @@ function evaluate(
     };
 
     const handleSuccess = (result: unknown) => {
-        this.setPrompt(createPrompt(this.mdomain));
-        if (result === undefinedValue) {
-            this.mdomain.out(this.mdomain.inspect(result));
+        try {
+            this.setPrompt(createPrompt(this.mdomain));
+            this.mdomain.out(`${this.mdomain.inspect(result)}\n`);
+        } finally {
             finish(null, undefined);
         }
-        finish(null, result);
     };
 
     const handleError = (error: Error) => {

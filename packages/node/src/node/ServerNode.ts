@@ -5,6 +5,7 @@
  */
 
 import { CommissioningServer } from "#behavior/system/commissioning/CommissioningServer.js";
+import { ControllerBehavior } from "#behavior/system/controller/ControllerBehavior.js";
 import { NetworkServer } from "#behavior/system/network/NetworkServer.js";
 import { ServerNetworkRuntime } from "#behavior/system/network/ServerNetworkRuntime.js";
 import { ProductDescriptionServer } from "#behavior/system/product-description/ProductDescriptionServer.js";
@@ -196,6 +197,7 @@ export namespace ServerNode {
         NetworkServer,
         ProductDescriptionServer,
         SessionsBehavior,
+        ControllerBehavior,
     );
 
     export interface RootEndpoint extends Identity<typeof RootEndpoint> {}

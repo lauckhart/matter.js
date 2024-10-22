@@ -24,9 +24,9 @@ import { ActiveDiscoveries } from "./discovery/ActiveDiscoveries.js";
  * For our purposes, a "controller" is a node that supports commissioning of remote devices.
  */
 export class ControllerBehavior extends Behavior {
-    declare state: ControllerBehavior.State;
+    static override readonly id = "controller";
 
-    static override id = "controller";
+    declare state: ControllerBehavior.State;
 
     override async initialize() {
         // Configure discovery transports
