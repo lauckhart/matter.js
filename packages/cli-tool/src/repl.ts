@@ -6,15 +6,7 @@
 
 import { Domain } from "#domain.js";
 import { IncompleteError } from "#errors.js";
-import {
-    Diagnostic,
-    Environment,
-    InternalError,
-    LogFormat,
-    Observable,
-    RuntimeService,
-    StorageService,
-} from "#general";
+import { Environment, InternalError, Observable, RuntimeService, StorageService, Time } from "#general";
 import { undefinedValue } from "#location.js";
 import { isCommand } from "#parser.js";
 import colors from "ansi-colors";
@@ -28,6 +20,10 @@ import { Context } from "vm";
 import "./commands/index.js";
 import "./providers/index.js";
 
+// Maybe worth sharing spinner implementation with tools.  Maybe not
+const SPINNER = "◐◓◑◒";
+const SPINNER_INTERVAL = 100;
+
 // Node.js repl implementation does good stuff for us so want to keep it but we don't want the "." commands and it has
 // no way to disable those.  So use this prefix as a hack to prevent it from noticing lines that start with "."
 const LINE_PROTECTOR_CHAR = "\u0001";
@@ -37,13 +33,18 @@ export async function repl() {
     stdout.write(`Welcome to ${domain.description}.  Type ${colors.bold('"help"')} for help.\n`);
 
     const repl = createNodeRepl(domain);
+    configureInterruptHandling(repl);
+    installEvaluationInputBuffer(repl);
     configureHistory(repl);
     addCompletionSupport(repl);
     instrumentReplToMaintainPrompt(repl);
     instrumentReplToAddLineProtector(repl);
-    configureInterruptHandling(repl);
+    configureSpinner(repl);
 }
 
+/**
+ * Create our "domain" object that manages overall CLI state.
+ */
 async function createDomain() {
     const description = `${colors.bold("matter.js")} ${await readPackageVersion()}`;
 
@@ -103,39 +104,20 @@ async function readPackageVersion() {
     return "?";
 }
 
-function configureHistory(repl: AugmentedRepl) {
-    let historyPath = repl.dom.env.vars.string("history.path");
-    if (historyPath === undefined) {
-        const storagePath = repl.dom.env.get(StorageService).location;
-        if (storagePath === undefined) {
-            historyPath = join(homedir(), ".matter-cli-history");
-        } else {
-            historyPath = join(storagePath, "cli-history");
-        }
-    }
-
-    repl.setupHistory(historyPath, error => {
-        if (error) {
-            console.error(error);
-            exit(1);
-        }
-    });
-}
-
 interface KeypressEvent {
     str: string;
     key: Key;
 }
 
 interface AugmentedRepl extends REPLServer {
-    // Node has an internal "domain" variable so call ours "dom"
-    dom: Domain;
+    // Node has an internal "domain" variable so name ours differently
+    mdomain: Domain;
 
     // Emits when we start/stop evaluating
     evaluationModeChange: Observable<[state: boolean]>;
 
     // Emits when we receive input from the terminal
-    keypressReceived: Observable<[event: KeypressEvent], boolean>;
+    keypressReceived: Observable<[event: KeypressEvent], false | void>;
 
     // Emits before we pass input from the terminal to readline
     keypressDelivering: Observable<[event: KeypressEvent]>;
@@ -143,10 +125,25 @@ interface AugmentedRepl extends REPLServer {
     // Emits after we pass input from the terminal to readline
     keypressDelivered: Observable<[event: KeypressEvent]>;
 
+    // Emits when there is output to the console
+    outputDisplayed: Observable<[]>;
+
     // Injects data as if it was received from the terminal
     deliverKeypress(event: KeypressEvent): void;
+
+    // Indicates whether we believe cursor is on a new line
+    onNewline: boolean;
+
+    // Indicates whether we are building a multiline command
+    inMultilineCommand: boolean;
+
+    // Indicates output is prompt related so prompt management should ignore
+    updatingPrompt: boolean;
 }
 
+/**
+ * Create an (augmented) node repl.
+ */
 function createNodeRepl(domain: Domain) {
     const repl = start({
         prompt: createPrompt(domain),
@@ -155,10 +152,14 @@ function createNodeRepl(domain: Domain) {
         historySize: domain.env.vars.integer("history.size", 10000),
     } as ReplOptions) as AugmentedRepl;
 
-    repl.dom = domain;
+    repl.mdomain = domain;
     repl.evaluationModeChange = Observable();
     repl.keypressReceived = Observable();
+    repl.keypressDelivering = Observable();
     repl.keypressDelivered = Observable();
+    repl.outputDisplayed = Observable();
+    repl.onNewline = true;
+    repl.inMultilineCommand = repl.updatingPrompt = false;
 
     const onkeypress = repl.input.listeners("keypress").find(listener => listener.name === "onkeypress");
     if (!onkeypress) {
@@ -185,6 +186,9 @@ function createNodeRepl(domain: Domain) {
     return repl;
 }
 
+/**
+ * The standard "eval" callback for the node repl.
+ */
 function evaluate(
     this: AugmentedRepl,
     evalCmd: string,
@@ -192,7 +196,8 @@ function evaluate(
     _file: string,
     cb: (err: Error | null, result: any) => void,
 ) {
-    this.pause();
+    this.inMultilineCommand = false;
+    this.evaluationModeChange.emit(true);
 
     // See comment below r.e. "realEmit".  We can't just strip first character because the line protector will
     // appear multiple times if there are multiple lines
@@ -201,26 +206,27 @@ function evaluate(
     if (evalCmd.endsWith("\n")) {
         evalCmd = evalCmd.slice(0, evalCmd.length - 1);
     }
-    const result: Promise<unknown> = this.dom.execute(evalCmd);
+    const result: Promise<unknown> = this.mdomain.execute(evalCmd);
 
     const finish = (err: Error | null, result: any) => {
-        this.resume();
         cb(err, result);
+        this.evaluationModeChange.emit(false);
     };
 
     const handleSuccess = (result: unknown) => {
-        this.setPrompt(createPrompt(this.dom));
+        this.setPrompt(createPrompt(this.mdomain));
         if (result === undefinedValue) {
-            this.dom.out(this.dom.inspect(result));
+            this.mdomain.out(this.mdomain.inspect(result));
             finish(null, undefined);
         }
         finish(null, result);
     };
 
     const handleError = (error: Error) => {
-        this.setPrompt(createPrompt(this.dom));
+        this.setPrompt(createPrompt(this.mdomain));
 
         if (error.constructor.name === "IncompleteError") {
+            this.inMultilineCommand = true;
             finish(new Recoverable((error as IncompleteError).cause as Error), undefined);
             return;
         }
@@ -257,9 +263,7 @@ function evaluate(
         }
 
         // Display the error ourselves so is pretty and captures all details
-        const diagnostic = Diagnostic.error(error);
-        const formatted = LogFormat[colors.enabled ? "ansi" : "plain"](diagnostic);
-        stderr.write(`${formatted}\n`);
+        this.mdomain.displayError(error);
 
         // Do not report the error to node
         finish(null, undefined);
@@ -272,6 +276,98 @@ function createPrompt(domain: Domain) {
     return `${colors.dim("matter")} ${colors.yellow(domain.location.path)} ❯ `;
 }
 
+/**
+ * Bypass Node's interrupt handling and install our own.
+ */
+function configureInterruptHandling(repl: AugmentedRepl) {
+    repl.keypressReceived.on(event => {
+        // Ignore anything other than ctrl-c
+        if (!event.key.ctrl || event.key.name !== "c") {
+            return;
+        }
+
+        // This is the same mechanism used by real SIGINTs so behavior is uniform
+        repl.mdomain.env.get(RuntimeService).interrupt();
+
+        // Do not pass ctrl-c to readline/REPLServer; this disables its interrupt handling
+        return false;
+    });
+
+    // Interrupt handling is largely handled within the domain but in this case we need to take care of it
+    repl.mdomain.interrupted.on(() => {
+        if (!repl.inMultilineCommand) {
+            return;
+        }
+
+        repl.inMultilineCommand = false;
+        repl.clearBufferedCommand();
+
+        repl.updatingPrompt = true;
+        stdout.write("\n");
+        repl.displayPrompt();
+        repl.updatingPrompt = false;
+
+        return false;
+    });
+}
+
+/**
+ * If we just use readline's "pause" then it eats control-c so we can't interrupt.
+ *
+ * So instead just buffer events ourselves during evaluation.  This installs after the ctrl-c handler
+ */
+function installEvaluationInputBuffer(repl: AugmentedRepl) {
+    let buffering = false;
+    const buffer = Array<KeypressEvent>();
+
+    repl.evaluationModeChange.on(mode => {
+        if (mode) {
+            buffering = true;
+        } else {
+            for (let event = buffer.shift(); event; event = buffer.shift()) {
+                repl.deliverKeypress(event);
+            }
+            buffering = false;
+        }
+    });
+
+    repl.keypressReceived.on(event => {
+        if (!buffering) {
+            return;
+        }
+
+        buffer.push(event);
+        return false;
+    });
+}
+
+/**
+ * Configure history support.
+ */
+function configureHistory(repl: AugmentedRepl) {
+    let historyPath = repl.mdomain.env.vars.string("history.path");
+    if (historyPath === undefined) {
+        const storagePath = repl.mdomain.env.get(StorageService).location;
+        if (storagePath === undefined) {
+            historyPath = join(homedir(), ".matter-cli-history");
+        } else {
+            historyPath = join(storagePath, "cli-history");
+        }
+    }
+
+    repl.setupHistory(historyPath, error => {
+        if (error) {
+            console.error(error);
+            exit(1);
+        }
+    });
+}
+
+/**
+ * Add completion for commands, paths and expressions.
+ *
+ * TODO - this completion is not yet all that complete
+ */
 function addCompletionSupport(repl: AugmentedRepl) {
     const nodeCompleter = repl.completer;
 
@@ -314,7 +410,7 @@ function addCompletionSupport(repl: AugmentedRepl) {
         const completions = Array<string>();
 
         for (const path of pathsToSearch) {
-            const location = await repl.dom.location.maybeAt(path);
+            const location = await repl.mdomain.location.maybeAt(path);
             if (location?.kind !== "directory") {
                 continue;
             }
@@ -326,6 +422,9 @@ function addCompletionSupport(repl: AugmentedRepl) {
     }
 }
 
+/**
+ * Hook output streams so we can ensure output doesn't overwrite the prompt.
+ */
 function instrumentReplToMaintainPrompt(repl: AugmentedRepl) {
     if (!stdout.isTTY) {
         return;
@@ -333,56 +432,38 @@ function instrumentReplToMaintainPrompt(repl: AugmentedRepl) {
 
     let evaluating = false;
     let promptHidden = false;
-    let readlineWriting = false;
-    let onNewline = false;
 
     instrumentStdStream(stdout);
     instrumentStdStream(stderr);
 
-    repl.keypressDelivered.on(() => {
-        readlineWriting = true;
+    repl.keypressDelivering.on(() => {
+        repl.updatingPrompt = true;
         restorePrompt();
     });
+
     repl.keypressDelivered.on(() => {
-        readlineWriting = false;
+        repl.updatingPrompt = false;
     });
 
-    const realEval = repl.eval;
-    Object.defineProperty(repl, "eval", {
-        value: function (
-            this: REPLServer,
-            evalCmd: string,
-            context: Context,
-            file: string,
-            cb: (err: Error | null, result: any) => void,
-        ) {
-            evaluating = true;
-            realEval.call(this, evalCmd, context, file, (err: Error | null, result: any) => {
-                cb(err, result);
-                evaluating = false;
-            });
-
-            if (!onNewline) {
-                stdout.write("\n");
-            }
-        },
-        writable: true,
-        configurable: true,
+    repl.evaluationModeChange.on(mode => {
+        evaluating = mode;
     });
 
     function instrumentStdStream(stream: NodeJS.WriteStream) {
         const actualWrite = stream.write.bind(stream);
         stream.write = (payload: Uint8Array | string, ...params: any[]) => {
             // Doesn't catch cursor movement from ANSI codes but worse case we end up with a blank line
-            onNewline = payload[payload.length - 1] === "\n" || payload[payload.length - 1] === "\r";
+            repl.onNewline = payload[payload.length - 1] === "\n" || payload[payload.length - 1] === "\r";
 
-            if (!evaluating && !promptHidden && !readlineWriting) {
+            if (!evaluating && !promptHidden && !repl.updatingPrompt) {
                 promptHidden = true;
                 stdout.cursorTo(0);
                 stdout.clearLine(0);
                 queueMicrotask(restorePrompt);
-                onNewline = true;
+                repl.onNewline = true;
             }
+
+            repl.outputDisplayed.emit();
 
             return actualWrite(payload, ...params);
         };
@@ -393,7 +474,7 @@ function instrumentReplToMaintainPrompt(repl: AugmentedRepl) {
             return;
         }
 
-        if (!onNewline) {
+        if (!repl.onNewline) {
             stdout.write("\n");
         }
 
@@ -402,6 +483,9 @@ function instrumentReplToMaintainPrompt(repl: AugmentedRepl) {
     }
 }
 
+/**
+ * Inject our janky little line prefix that prevents node from processing "dot" commands.
+ */
 function instrumentReplToAddLineProtector(repl: REPLServer) {
     const realEmit = repl.emit as (...args: unknown[]) => boolean;
     repl.emit = (event, ...args: any[]) => {
@@ -412,16 +496,38 @@ function instrumentReplToAddLineProtector(repl: REPLServer) {
     };
 }
 
-function configureInterruptHandling(repl: AugmentedRepl) {
-    // These handlers handle ctrl-C from readline.  It's not actually a SIGINT, readline just detects the keypress
-    const fakeSigintHandlers = repl.listeners("SIGINT");
+/**
+ * Just wouldn't be complete without it.
+ */
+function configureSpinner(repl: AugmentedRepl) {
+    let spinnerVisible = false;
+    let spinnerPhase = 0;
+    const spinner = Time.getPeriodicTimer("cli-spinner", SPINNER_INTERVAL, spin);
 
-    // We do not want node's default behavior
-    const onSigInt = fakeSigintHandlers.find(handler => handler.name === "onSigInt");
-    if (onSigInt) {
-        repl.off("SIGINT", onSigInt as any);
+    function spin() {
+        if (!repl.onNewline) {
+            repl.mdomain.out("\n");
+        }
+        if (spinnerVisible) {
+            stdout.cursorTo(0);
+            stdout.clearLine(0);
+        }
+        stdout.write(colors.yellow("  " + SPINNER[spinnerPhase % SPINNER.length]));
+        stdout.cursorTo(0);
+        repl.onNewline = true;
+        spinnerPhase++;
+        spinnerVisible = true;
     }
 
-    // Make fake interrupts do the same thing as real interrupts
-    repl.on("SIGINT", () => repl.dom.env.get(RuntimeService).interrupt());
+    repl.evaluationModeChange.on(mode => {
+        if (mode) {
+            spinner.start();
+        } else {
+            spinner.stop();
+        }
+    });
+
+    repl.outputDisplayed.on(() => {
+        spinnerVisible = false;
+    });
 }

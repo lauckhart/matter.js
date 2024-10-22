@@ -322,4 +322,8 @@ export abstract class CancelablePromise<T> implements Promise<T> {
     get [Symbol.toStringTag]() {
         return this.#promise[Symbol.toStringTag];
     }
+
+    static is<T>(value: MaybePromise<T>): value is CancelablePromise<T> {
+        return MaybePromise.is(value) && typeof (value as CancelablePromise<T>).cancel === "function";
+    }
 }
