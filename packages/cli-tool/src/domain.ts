@@ -377,28 +377,33 @@ export async function Domain(context: DomainContext): Promise<Domain> {
                 return result;
             }
 
-            if (CancelablePromise.is(result)) {
-                cancelEval = result.cancel.bind(result);
+            try {
+                if (CancelablePromise.is(result)) {
+                    cancelEval = result.cancel.bind(result);
+                }
+
+                let isDiscarded = false;
+                const discarded = new Promise<void>(resolve => {
+                    discardEval = () => {
+                        isDiscarded = true;
+                        resolve();
+                    };
+                });
+
+                const returnValue = await Promise.race([discarded, result]);
+
+                if (isDiscarded) {
+                    result.then(
+                        () => domain.displayHint("Ignored command has finished"),
+                        cause => domain.displayError(cause, "Ignored command crashed"),
+                    );
+                }
+
+                return returnValue;
+            } finally {
+                cancelEval = discardEval = undefined;
+                softInterrupted = false;
             }
-
-            let isDiscarded = false;
-            const discarded = new Promise<void>(resolve => {
-                discardEval = () => {
-                    isDiscarded = true;
-                    resolve();
-                };
-            });
-
-            const returnValue = await Promise.race([discarded, result]);
-
-            if (isDiscarded) {
-                result.then(
-                    () => domain.displayHint("Ignored command has finished"),
-                    cause => domain.displayError(cause, "Ignored command crashed"),
-                );
-            }
-
-            return returnValue;
         }
     }
 

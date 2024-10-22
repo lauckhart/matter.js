@@ -306,7 +306,7 @@ function configureInterruptHandling(repl: AugmentedRepl) {
 
     // Interrupt handling is largely handled within the domain but when taking user input we need to handle it
     repl.mdomain.interrupted.on(() => {
-        if (evaluating) {
+        if (evaluating || (!repl.inMultilineCommand && repl.line === "")) {
             return;
         }
 
@@ -444,6 +444,7 @@ function instrumentReplToMaintainPrompt(repl: AugmentedRepl) {
 
     let evaluating = false;
     let promptHidden = false;
+    let emitting = false;
 
     instrumentStdStream(stdout);
     instrumentStdStream(stderr);
@@ -467,7 +468,7 @@ function instrumentReplToMaintainPrompt(repl: AugmentedRepl) {
             // Doesn't catch cursor movement from ANSI codes but worse case we end up with a blank line
             repl.onNewline = payload[payload.length - 1] === "\n" || payload[payload.length - 1] === "\r";
 
-            if (!evaluating && !promptHidden && !repl.updatingPrompt) {
+            if (!evaluating && !promptHidden && !repl.updatingPrompt && !emitting) {
                 promptHidden = true;
                 stdout.cursorTo(0);
                 stdout.clearLine(0);
@@ -475,7 +476,14 @@ function instrumentReplToMaintainPrompt(repl: AugmentedRepl) {
                 repl.onNewline = true;
             }
 
-            repl.outputDisplayed.emit();
+            if (!emitting) {
+                emitting = true;
+                try {
+                    repl.outputDisplayed.emit();
+                } finally {
+                    emitting = false;
+                }
+            }
 
             return actualWrite(payload, ...params);
         };
@@ -536,10 +544,17 @@ function configureSpinner(repl: AugmentedRepl) {
             spinner.start();
         } else {
             spinner.stop();
+            spinnerVisible = false;
         }
     });
 
     repl.outputDisplayed.on(() => {
-        spinnerVisible = false;
+        if (!spinnerVisible) {
+            return;
+        }
+
+        const onNewline = repl.onNewline;
+        stdout.clearLine(1);
+        repl.onNewline = onNewline;
     });
 }
