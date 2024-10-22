@@ -20,14 +20,12 @@ import { Context } from "vm";
 import "./commands/index.js";
 import "./providers/index.js";
 
-// Maybe worth sharing spinner implementation with tools.  Maybe not
-const SPINNER = "◐◓◑◒";
-const SPINNER_INTERVAL = 100;
-
-// Node.js repl implementation does good stuff for us so want to keep it but we don't want the "." commands and it has
-// no way to disable those.  So use this prefix as a hack to prevent it from noticing lines that start with "."
-const LINE_PROTECTOR_CHAR = "\u0001";
-
+/**
+ * Present the user with a REPL for executing repeated commands.
+ *
+ * Logic related to command execution is in {@link Domain}.  This is just a terminal-based UI based on Node's
+ * REPLServer.
+ */
 export async function repl() {
     const domain = await createDomain();
     stdout.write(`Welcome to ${domain.description}.  Type ${colors.bold('"help"')} for help.\n`);
@@ -41,6 +39,14 @@ export async function repl() {
     instrumentReplToAddLineProtector(repl);
     configureSpinner(repl);
 }
+
+// Maybe worth sharing spinner implementation with tools.  Maybe not
+const SPINNER = "◐◓◑◒";
+const SPINNER_INTERVAL = 100;
+
+// Node.js repl implementation does good stuff for us so want to keep it but we don't want the "." commands and it has
+// no way to disable those.  So use this prefix as a hack to prevent it from noticing lines that start with "."
+const LINE_PROTECTOR_CHAR = "\u0001";
 
 /**
  * Create our "domain" object that manages overall CLI state.
@@ -293,14 +299,20 @@ function configureInterruptHandling(repl: AugmentedRepl) {
         return false;
     });
 
-    // Interrupt handling is largely handled within the domain but in this case we need to take care of it
+    let evaluating = false;
+    repl.evaluationModeChange.on(mode => {
+        evaluating = mode;
+    });
+
+    // Interrupt handling is largely handled within the domain but when taking user input we need to handle it
     repl.mdomain.interrupted.on(() => {
-        if (!repl.inMultilineCommand) {
+        if (evaluating) {
             return;
         }
 
         repl.inMultilineCommand = false;
         repl.clearBufferedCommand();
+        (repl as any).line = "";
 
         repl.updatingPrompt = true;
         stdout.write("\n");
