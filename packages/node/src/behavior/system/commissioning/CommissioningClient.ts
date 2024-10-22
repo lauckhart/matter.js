@@ -7,10 +7,9 @@
 import { Behavior } from "#behavior/Behavior.js";
 import { ImplementationError, NotImplementedError, ServerAddress } from "#general";
 import { DatatypeModel, FieldElement } from "#model";
-import { ClientNode } from "#node/ClientNode.js";
+import type { ClientNode } from "#node/ClientNode.js";
 import { Node } from "#node/Node.js";
 import {
-    CommissionableDevice,
     CommissioningMode,
     ControllerCommissioner,
     DiscoveryData,
@@ -18,7 +17,6 @@ import {
     FabricAuthority,
     FabricManager,
     LocatedNodeCommissioningOptions,
-    OperationalDevice,
     PeerAddress,
     SessionParameters,
 } from "#protocol";
@@ -34,7 +32,7 @@ export class CommissioningClient extends Behavior {
     declare state: CommissioningClient.State;
 
     static override readonly id = "commissioning";
-    override initialize({ descriptor }: { descriptor?: CommissioningClient.NodeDescriptor }) {
+    override initialize({ descriptor }: { descriptor?: RemoteDescriptor }) {
         this.descriptor = descriptor;
         this.reactTo((this.endpoint as Node).lifecycle.partsReady, this.#initializeNode);
     }
@@ -96,11 +94,11 @@ export class CommissioningClient extends Behavior {
     }
 
     get descriptor() {
-        return RemoteDescriptor.fromState(this.state);
+        return RemoteDescriptor.fromLongForm(this.state);
     }
 
-    set descriptor(descriptor: CommissioningClient.NodeDescriptor | undefined) {
-        RemoteDescriptor.toState(descriptor, this.state);
+    set descriptor(descriptor: RemoteDescriptor | undefined) {
+        RemoteDescriptor.toLongForm(descriptor, this.state);
     }
 
     #initializeNode() {
@@ -109,7 +107,7 @@ export class CommissioningClient extends Behavior {
     }
 
     /**
-     * Define logical schema to enable runtime validation and make fields persistent.
+     * Define logical schema.  This enables runtime validation, make fields persistent and makes subfields editable.
      */
     static override readonly schema = new DatatypeModel({
         name: "CommissioningState",
@@ -142,8 +140,7 @@ export class CommissioningClient extends Behavior {
                     }),
                 ],
             }),
-            FieldElement({ name: "hostname", type: "string", quality: "N" }),
-            FieldElement({ name: "bleAddress", type: "string", quality: "N" }),
+            FieldElement({ name: "deviceIdentifier", type: "string", quality: "N" }),
             FieldElement({ name: "discriminator", type: "uint16", quality: "N" }),
             FieldElement({ name: "commissioningMode", type: "uint8", quality: "N" }),
             FieldElement({ name: "vendorId", type: "vendor-id", quality: "N" }),
@@ -183,14 +180,9 @@ export namespace CommissioningClient {
         addresses?: ServerAddress[];
 
         /**
-         * IP network name.
+         * The canonical global ID of the device.
          */
-        hostname?: string;
-
-        /**
-         * BLE MAC address.
-         */
-        bleAddress?: string;
+        deviceIdentifier?: string;
 
         /**
          * The device's long discriminator.
@@ -285,9 +277,4 @@ export namespace CommissioningClient {
          */
         discoveryCapabilities?: TypeFromPartialBitSchema<typeof DiscoveryCapabilitiesBitmap>;
     }
-
-    /**
-     * Device descriptor used by lower-level components.
-     */
-    export type NodeDescriptor = Partial<OperationalDevice | CommissionableDevice>;
 }

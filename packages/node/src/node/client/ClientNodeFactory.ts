@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { RemoteDescriptor } from "#behavior/system/commissioning/RemoteDescriptor.js";
 import { ImmutableSet } from "#general";
 import type { ClientNode } from "#node/ClientNode.js";
 
@@ -14,6 +15,7 @@ import type { ClientNode } from "#node/ClientNode.js";
  * install new nodes in the ServerNode's "nodes" property.
  */
 export abstract class ClientNodeFactory {
+    abstract find(descriptor: RemoteDescriptor): ClientNode | undefined;
     abstract create(options: ClientNode.Options): ClientNode;
     abstract nodes: ImmutableSet<ClientNode>;
 }

@@ -110,6 +110,7 @@ function listPaths(endpoint: Endpoint) {
             if (paths.has(basename)) {
                 basename = `${NODE_PREFIX}${basename}`;
             }
+            paths.add(basename);
         }
     }
 

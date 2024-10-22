@@ -152,19 +152,33 @@ export abstract class Discovery<T = unknown> extends CancelablePromise<T> {
         const scanners = this.#owner.env.get(ScannerSet);
 
         const factory = this.#owner.env.get(ClientNodeFactory);
-        const scans = new Array<Promise<unknown>>();
+        const promises = new Array<PromiseLike<unknown>>();
         const cancelSignal = new Promise<void>(resolve => (this.#cancel = resolve));
         for (const scanner of scanners) {
-            scans.push(
+            promises.push(
                 scanner.findCommissionableDevicesContinuously(
                     this.#options,
                     descriptor => {
-                        this.onDiscovered(
-                            factory.create({
+                        // Identify a known node that matches the descriptor
+                        let node = factory.find(descriptor);
+
+                        if (node) {
+                            // Found a known node; update its commissioning metadata
+                            const updatePromise = node.act(agent => {
+                                agent.commissioning.descriptor = descriptor;
+                            });
+                            if (MaybePromise.is(updatePromise)) {
+                                promises.push(updatePromise);
+                            }
+                        } else {
+                            // This node is new to us
+                            node = factory.create({
                                 environment: this.#owner.env,
                                 commissioning: { descriptor },
-                            }),
-                        );
+                            });
+                        }
+
+                        this.onDiscovered(node);
                     },
                     this.#options.timeoutSeconds,
                     cancelSignal,
@@ -172,7 +186,7 @@ export abstract class Discovery<T = unknown> extends CancelablePromise<T> {
             );
         }
 
-        Promise.allSettled(scans)
+        Promise.allSettled(promises)
             .then(results => {
                 const errors = Array<any>();
 

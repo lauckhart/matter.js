@@ -5,6 +5,7 @@
  */
 
 import { CommissioningDiscovery, Discovery, InstanceDiscovery, TimedDiscovery } from "#behavior/index.js";
+import { RemoteDescriptor } from "#behavior/system/commissioning/RemoteDescriptor.js";
 import { EndpointContainer } from "#endpoint/properties/EndpointContainer.js";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
 import { PeerAddress, PeerAddressStore } from "#protocol";
@@ -22,23 +23,8 @@ export class RemoteNodes extends EndpointContainer<ClientNode> {
     constructor(owner: ServerNode) {
         super(owner);
 
-        const self = this;
-
         if (!owner.env.has(ClientNodeFactory)) {
-            owner.env.set(
-                ClientNodeFactory,
-                new (class extends ClientNodeFactory {
-                    create(options: ClientNode.Options) {
-                        const node = new ClientNode(options);
-                        self.add(node);
-                        return node;
-                    }
-
-                    get nodes() {
-                        return self;
-                    }
-                })(),
-            );
+            owner.env.set(ClientNodeFactory, new Factory(this));
         }
 
         const factory = owner.env.get(ClientNodeFactory);
@@ -102,5 +88,32 @@ export class RemoteNodes extends EndpointContainer<ClientNode> {
             node.id = this.owner.env.get(ServerNodeStore).peerStores.allocateId();
         }
         super.add(node);
+    }
+}
+
+class Factory extends ClientNodeFactory {
+    #owner: RemoteNodes;
+
+    constructor(owner: RemoteNodes) {
+        super();
+        this.#owner = owner;
+    }
+
+    create(options: ClientNode.Options) {
+        const node = new ClientNode(options);
+        this.#owner.add(node);
+        return node;
+    }
+
+    find(descriptor: RemoteDescriptor) {
+        for (const node of this.#owner) {
+            if (RemoteDescriptor.is(node.state.commissioning, descriptor)) {
+                return node;
+            }
+        }
+    }
+
+    get nodes() {
+        return this.#owner;
     }
 }

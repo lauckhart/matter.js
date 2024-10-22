@@ -5,7 +5,7 @@
  */
 
 import { DeepReadonly } from "#general";
-import { CommissionableDevice, OperationalDevice, SessionParameters } from "#protocol";
+import { CommissionableDevice, OperationalDevice, PeerAddress, SessionParameters } from "#protocol";
 import { DeviceTypeId, VendorId } from "#types";
 import type { CommissioningClient } from "./CommissioningClient.js";
 
@@ -15,11 +15,37 @@ import type { CommissioningClient } from "./CommissioningClient.js";
 export type RemoteDescriptor = Partial<OperationalDevice | CommissionableDevice>;
 
 export namespace RemoteDescriptor {
-    export function fromState(state: DeepReadonly<CommissioningClient.State>): RemoteDescriptor {
+    /**
+     * The "long form" descriptor used by higher-level components.
+     */
+    export type Long = CommissioningClient.State;
+
+    /**
+     * The subset of device identifiers that matches canonically for identity purposes.
+     */
+    export interface Identifier {
+        readonly peerAddress?: Readonly<PeerAddress>;
+        readonly deviceIdentifier?: string;
+    }
+
+    export function is(subject: Identifier, object: Identifier) {
+        if (object.peerAddress !== undefined && subject.peerAddress !== undefined) {
+            return PeerAddress.is(subject.peerAddress, object.peerAddress);
+        }
+
+        if (object.deviceIdentifier !== undefined) {
+            return subject.deviceIdentifier === object.deviceIdentifier;
+        }
+
+        return false;
+    }
+
+    export function fromLongForm(long: DeepReadonly<Long>): RemoteDescriptor {
         const result: RemoteDescriptor = {};
 
         const {
             addresses,
+            deviceIdentifier,
             discriminator,
             commissioningMode,
             vendorId,
@@ -32,7 +58,11 @@ export namespace RemoteDescriptor {
             sessionParameters,
             tcpSupport,
             longIdleTimeOperatingMode,
-        } = state;
+        } = long;
+
+        if (deviceIdentifier !== undefined) {
+            result.deviceIdentifier = deviceIdentifier;
+        }
 
         if (vendorId !== undefined) {
             if (productId !== undefined) {
@@ -86,7 +116,7 @@ export namespace RemoteDescriptor {
             result.ICD = 1;
         }
 
-        const isOperational = state.peerAddress !== undefined;
+        const isOperational = long.peerAddress !== undefined;
         if (isOperational) {
             if (addresses !== undefined) {
                 result.addresses = addresses?.filter(address => address.type === "udp");
@@ -108,25 +138,26 @@ export namespace RemoteDescriptor {
         return result;
     }
 
-    export function toState(
-        descriptor: CommissioningClient.NodeDescriptor | undefined,
-        state: CommissioningClient.State,
-    ) {
+    export function toLongForm(descriptor: RemoteDescriptor | undefined, long: Long) {
         if (!descriptor) {
             descriptor = {};
         }
 
-        const { addresses, VP, DT, DN, RI, PH, PI, SII, SAI, SAT, T, ICD } = descriptor;
+        const { addresses, deviceIdentifier, VP, DT, DN, RI, PH, PI, SII, SAI, SAT, T, ICD } = descriptor;
 
         if (addresses?.length) {
-            state.addresses = addresses;
+            long.addresses = addresses;
+        }
+
+        if (deviceIdentifier !== undefined) {
+            long.deviceIdentifier = deviceIdentifier;
         }
 
         if (VP !== undefined) {
             const [vendor, product] = VP.split("+").map(Number.parseInt);
 
-            state.vendorId = Number.isNaN(vendor) ? undefined : VendorId(vendor);
-            state.productId = Number.isNaN(product) ? undefined : VendorId(vendor);
+            long.vendorId = Number.isNaN(vendor) ? undefined : VendorId(vendor);
+            long.productId = Number.isNaN(product) ? undefined : VendorId(vendor);
         }
 
         let sessionParameters: Partial<SessionParameters> | undefined;
@@ -139,22 +170,22 @@ export namespace RemoteDescriptor {
         if (SAT !== undefined) {
             (sessionParameters ??= {}).activeThresholdMs = SAT;
         }
-        state.sessionParameters = sessionParameters;
+        long.sessionParameters = sessionParameters;
 
-        state.deviceType = DT === undefined ? undefined : DeviceTypeId(DT);
-        state.deviceName = DN;
-        state.rotatingIdentifier = RI;
-        state.pairingHint = PH;
-        state.pairingInstructions = PI;
-        state.tcpSupport = T;
-        state.longIdleTimeOperatingMode = ICD === undefined ? undefined : ICD === 1;
+        long.deviceType = DT === undefined ? undefined : DeviceTypeId(DT);
+        long.deviceName = DN;
+        long.rotatingIdentifier = RI;
+        long.pairingHint = PH;
+        long.pairingInstructions = PI;
+        long.tcpSupport = T;
+        long.longIdleTimeOperatingMode = ICD === undefined ? undefined : ICD === 1;
 
         if ("D" in descriptor) {
-            state.discriminator = descriptor.D;
+            long.discriminator = descriptor.D;
         }
 
         if ("CM" in descriptor) {
-            state.commissioningMode = descriptor.CM;
+            long.commissioningMode = descriptor.CM;
         }
     }
 }
