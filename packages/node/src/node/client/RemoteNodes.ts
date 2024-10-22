@@ -87,6 +87,7 @@ export class RemoteNodes extends EndpointContainer<ClientNode> {
         if (!node.lifecycle.hasId) {
             node.id = this.owner.env.get(ServerNodeStore).peerStores.allocateId();
         }
+
         super.add(node);
     }
 }
@@ -100,7 +101,10 @@ class Factory extends ClientNodeFactory {
     }
 
     create(options: ClientNode.Options) {
-        const node = new ClientNode(options);
+        const node = new ClientNode({
+            ...options,
+            owner: this.#owner.owner,
+        });
         this.#owner.add(node);
         return node;
     }

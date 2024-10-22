@@ -156,6 +156,7 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
         if (!this.#nodes) {
             this.#nodes = new RemoteNodes(this);
         }
+
         return this.#nodes;
     }
 
@@ -166,7 +167,7 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
     protected override async initialize() {
         await ServerEnvironment.initialize(this);
 
-        return super.initialize();
+        await super.initialize();
     }
 
     /**

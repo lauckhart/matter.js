@@ -6,8 +6,9 @@
 
 import { CommissioningClient } from "#behavior/system/commissioning/CommissioningClient.js";
 import { NetworkRuntime } from "#behavior/system/network/NetworkRuntime.js";
+import { Agent } from "#endpoint/Agent.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
-import { Identity, Lifecycle, NotImplementedError } from "#general";
+import { Identity, Lifecycle, MaybePromise, NotImplementedError } from "#general";
 import { ClientEndpointInitializer } from "./client/ClientEndpointInitializer.js";
 import { Node } from "./Node.js";
 import type { ServerNode } from "./ServerNode.js";
@@ -27,10 +28,6 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
         };
 
         super(opts);
-
-        if (this.owner) {
-            this.construction.start();
-        }
     }
 
     override async initialize() {
@@ -45,10 +42,6 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
 
     override set owner(owner: ServerNode) {
         super.owner = owner;
-
-        if (this.construction.status === Lifecycle.Status.Inactive) {
-            this.construction.start();
-        }
     }
 
     async commission(options: CommissioningClient.CommissioningOptions) {
@@ -61,6 +54,23 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
 
     protected override get container() {
         return this.owner?.nodes;
+    }
+
+    override act<R>(
+        purpose: string,
+        actor: (agent: Agent.Instance<ClientNode.RootEndpoint>) => MaybePromise<R>,
+    ): MaybePromise<R>;
+
+    override act<R>(actor: (agent: Agent.Instance<ClientNode.RootEndpoint>) => MaybePromise<R>): MaybePromise<R>;
+
+    override act<R>(
+        actorOrPurpose: string | ((agent: Agent.Instance<ClientNode.RootEndpoint>) => MaybePromise<R>),
+        actor?: (agent: Agent.Instance<ClientNode.RootEndpoint>) => MaybePromise<R>,
+    ): MaybePromise<R> {
+        if (this.construction.status === Lifecycle.Status.Inactive) {
+            this.construction.start();
+        }
+        return (super.act as any)(actorOrPurpose, actor);
     }
 }
 
