@@ -27,6 +27,19 @@ export interface TextWriter {
     (...text: string[]): void;
 }
 
+const GLOBALS: Record<string, string> = {
+    general: "@matter/general",
+    tools: "@matter/tools",
+    protocol: "@matter/protocol",
+    node: "@matter/node",
+    types: "@matter/types",
+    model: "@matter/model",
+    clusters: "@matter/types/clusters",
+    behaviors: "@matter/node/behaviors",
+    endpoints: "@matter/node/endpoints",
+    devices: "@matter/node/devices",
+};
+
 /**
  * Interfaces {@link Domain} with other components.
  *
@@ -52,6 +65,8 @@ export interface Domain extends DomainContext {
     displayHint(message: string): void;
     interrupt(): void;
     interrupted: Observable<[], false | void>;
+    globals: Record<string, unknown>;
+    globalsLoaded: Promise<void>;
 }
 
 /**
@@ -227,7 +242,12 @@ export async function Domain(context: DomainContext): Promise<Domain> {
         },
 
         interrupted: Observable(),
+
+        globals,
+        globalsLoaded: undefined as unknown as Promise<void>,
     };
+
+    domain.globalsLoaded = loadGlobals(domain);
 
     if (!domain.env.vars.has("home")) {
         domain.env.vars.set("home", `/${defaultNode.id}`);
@@ -377,6 +397,11 @@ export async function Domain(context: DomainContext): Promise<Domain> {
                 return result;
             }
 
+            // Do not await Construction or Observable
+            if ("emit" in result || "change" in result) {
+                return result;
+            }
+
             try {
                 if (CancelablePromise.is(result)) {
                     cancelEval = result.cancel.bind(result);
@@ -415,4 +440,22 @@ export async function Domain(context: DomainContext): Promise<Domain> {
             ...options,
         });
     }
+}
+
+/**
+ * We load the global packages dynamically, attempting to get interpreter to start faster.
+ */
+export async function loadGlobals(domain: Domain) {
+    const loads = Array<Promise<void>>();
+
+    for (const name in GLOBALS) {
+        loads.push(
+            import(GLOBALS[name]).then(
+                module => (domain.globals[name] = module),
+                error => domain.displayError(`Error loading ${GLOBALS[name]}: ${error.message}`),
+            ),
+        );
+    }
+
+    await Promise.allSettled(loads);
 }

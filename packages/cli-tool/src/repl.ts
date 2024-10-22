@@ -28,6 +28,7 @@ import "./providers/index.js";
  */
 export async function repl() {
     const domain = await createDomain();
+    await domain.globalsLoaded;
     stdout.write(`Welcome to ${domain.description}.  Type ${colors.bold('"help"')} for help.\n`);
 
     const repl = createNodeRepl(domain);

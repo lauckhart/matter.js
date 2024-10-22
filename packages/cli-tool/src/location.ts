@@ -57,6 +57,9 @@ export function Location(basename: string, definition: unknown, stat: Stat, pare
                 tag = "bytes";
             } else if (definition.constructor.name !== "Object") {
                 tag = definition.constructor.name;
+                if (tag === "BasicObservable") {
+                    tag = "event";
+                }
             } else {
                 tag = "object";
             }
@@ -184,11 +187,16 @@ export function Location(basename: string, definition: unknown, stat: Stat, pare
                 return sublocation.at(segments.slice(1).join("/"), subsearchedAs);
             };
 
-            if (MaybePromise.is(definition)) {
-                return definition.then(accept);
+            if (!MaybePromise.is(definition)) {
+                return accept(definition);
             }
 
-            return accept(definition);
+            // Do not await Construction or Observable
+            if ("emit" in definition || "change" in definition) {
+                return accept(definition);
+            }
+
+            return definition.then(accept);
         },
     };
 }

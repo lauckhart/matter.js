@@ -4,4 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+export * from "./ClientEndpointInitializer.js";
+export * from "./NodePeerStore.js";
+export * from "./RemoteNodes.js";
 export * from "./storage/index.js";
