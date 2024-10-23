@@ -59,8 +59,23 @@ export class RemoteNodes extends EndpointContainer<ClientNode> {
     /**
      * Find a specific commissionable node and commission.
      */
-    commission(options: CommissioningDiscovery.Options) {
-        return new CommissioningDiscovery(this.owner, options);
+    commission(passcode: number, discriminator?: number): Promise<ClientNode>;
+
+    /**
+     * Find a specific commissionable node and commission.
+     */
+    commission(options: CommissioningDiscovery.Options): Promise<ClientNode>;
+
+    commission(optionsOrPasscode: CommissioningDiscovery.Options | number, discriminator?: number) {
+        if (typeof optionsOrPasscode !== "object") {
+            optionsOrPasscode = { passcode: optionsOrPasscode };
+        }
+
+        if (discriminator !== undefined) {
+            (optionsOrPasscode as { longDiscriminator: number }).longDiscriminator = discriminator;
+        }
+
+        return new CommissioningDiscovery(this.owner, optionsOrPasscode);
     }
 
     override get(id: string | PeerAddress) {
@@ -105,7 +120,7 @@ class Factory extends ClientNodeFactory {
             ...options,
             owner: this.#owner.owner,
         });
-        this.#owner.add(node);
+        node.construction.start();
         return node;
     }
 

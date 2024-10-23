@@ -33,6 +33,6 @@ export class ClientEndpointInitializer extends EndpointInitializer {
 
     override createBacking(endpoint: Endpoint, behavior: Behavior.Type): BehaviorBacking {
         const store = this.#store.endpointStores.storeForEndpoint(endpoint);
-        return new ClientBehaviorBacking(endpoint, behavior, store);
+        return new ClientBehaviorBacking(endpoint, behavior, store, endpoint.behaviors.optionsFor(behavior));
     }
 }

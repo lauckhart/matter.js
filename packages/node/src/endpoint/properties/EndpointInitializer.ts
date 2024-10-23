@@ -22,7 +22,6 @@ export abstract class EndpointInitializer {
      *
      * @param endpoint the {@link Endpoint} the behavior belongs to
      * @param type the {@link Behavior} type
-     * @param defaults default values for behavior state
      * @returns a new {@link BehaviorBacking}
      */
     abstract createBacking(endpoint: Endpoint, behavior: Behavior.Type): BehaviorBacking;

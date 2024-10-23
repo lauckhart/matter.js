@@ -87,12 +87,16 @@ export class ClientStoreFactory extends ClientStoreService {
     storeForNode(node: ClientNode): NodeStore {
         this.#construction.assert();
 
-        const store = this.#stores[node.id];
+        let store = this.#stores[node.id];
         if (store) {
             return store;
         }
 
-        return (this.#stores[node.id] = new NodeStore(this.#storage));
+        store = new NodeStore(this.#storage);
+        store.construction.start();
+        this.#stores[node.id] = store;
+
+        return store;
     }
 
     get knownIds() {

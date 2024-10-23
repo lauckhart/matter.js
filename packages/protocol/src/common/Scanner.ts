@@ -103,7 +103,6 @@ export type CommissionableDeviceIdentifiers =
       }
     | {
           /** Pass empty object to discover any commissionable device. */
-          [K in any]: never; // aka "empty object" for just discovering any commisionable device
       };
 
 export interface Scanner {

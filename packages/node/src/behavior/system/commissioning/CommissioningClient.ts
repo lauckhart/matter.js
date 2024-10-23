@@ -32,12 +32,32 @@ export class CommissioningClient extends Behavior {
     declare state: CommissioningClient.State;
 
     static override readonly id = "commissioning";
-    override initialize({ descriptor }: { descriptor?: RemoteDescriptor }) {
-        this.descriptor = descriptor;
+    override initialize(options: { descriptor?: RemoteDescriptor }) {
+        const descriptor = options?.descriptor;
+        if (descriptor) {
+            this.descriptor = descriptor;
+        }
+
         this.reactTo((this.endpoint as Node).lifecycle.partsReady, this.#initializeNode);
     }
 
-    async commission(options: CommissioningClient.CommissioningOptions) {
+    commission(passcode: number): Promise<ClientNode>;
+
+    commission(options: CommissioningClient.CommissioningOptions): Promise<ClientNode>;
+
+    async commission(options: number | CommissioningClient.CommissioningOptions) {
+        if (typeof options !== "object") {
+            options = { passcode: options };
+        }
+
+        let { passcode } = options;
+        if (typeof passcode !== "number" || Number.isNaN(passcode)) {
+            passcode = Number.parseInt(passcode as unknown as string);
+            if (Number.isNaN(passcode)) {
+                throw new ImplementationError(`You musts provide the numeric passcode to commission a node`);
+            }
+        }
+
         const node = this.endpoint as ClientNode;
 
         if (this.state.peerAddress !== undefined) {
@@ -53,7 +73,6 @@ export class CommissioningClient extends Behavior {
                 fabric = node.env.get(FabricManager).for(this.context.fabric);
             }
         }
-        const { nodeId, passcode } = options;
 
         if (!fabricAuthority.hasControlOf(fabric)) {
             throw new ImplementationError(
@@ -71,7 +90,7 @@ export class CommissioningClient extends Behavior {
         const commissioningOptions: LocatedNodeCommissioningOptions = {
             addresses,
             fabric,
-            nodeId,
+            nodeId: options.nodeId,
             passcode,
             discoveryData: this.descriptor,
         };
@@ -125,7 +144,7 @@ export class CommissioningClient extends Behavior {
             }),
             FieldElement({
                 name: "addresses",
-                type: "array",
+                type: "list",
                 quality: "N",
                 children: [
                     FieldElement({
@@ -148,7 +167,7 @@ export class CommissioningClient extends Behavior {
             FieldElement({ name: "deviceType", type: "uint16", quality: "N" }),
             FieldElement({ name: "deviceName", type: "string", quality: "N" }),
             FieldElement({ name: "rotatingIdentifier", type: "string", quality: "N" }),
-            FieldElement({ name: "pairingHint", type: "string", quality: "N" }),
+            FieldElement({ name: "pairingHint", type: "uint32", quality: "N" }),
             FieldElement({ name: "pairingInstructions", type: "string", quality: "N" }),
             FieldElement({
                 name: "sessionParameters",
@@ -161,7 +180,7 @@ export class CommissioningClient extends Behavior {
                 ],
             }),
             FieldElement({ name: "tcpSupport", type: "uint8", quality: "N" }),
-            FieldElement({ name: "longIdleOperatingMode", type: "boolean", quality: "N" }),
+            FieldElement({ name: "longIdleOperatingMode", type: "bool", quality: "N" }),
         ],
     });
 }

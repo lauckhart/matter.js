@@ -70,6 +70,11 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
         if (this.construction.status === Lifecycle.Status.Inactive) {
             this.construction.start();
         }
+
+        if (this.construction.status === Lifecycle.Status.Initializing) {
+            return this.construction.then(() => (super.act as any)(actorOrPurpose, actor));
+        }
+
         return (super.act as any)(actorOrPurpose, actor);
     }
 }
