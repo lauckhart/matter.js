@@ -222,7 +222,9 @@ function evaluate(
     const handleSuccess = (result: unknown) => {
         try {
             this.setPrompt(createPrompt(this.mdomain));
-            this.mdomain.out(`${this.mdomain.inspect(result)}\n`);
+            if (result !== undefined) {
+                this.mdomain.out(`${this.mdomain.inspect(result)}\n`);
+            }
         } finally {
             finish(null, undefined);
         }

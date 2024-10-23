@@ -153,12 +153,10 @@ export class ControllerCommissioner {
         let channel: MessageChannel | undefined;
         for (const address of addresses) {
             try {
-                channel = await this.#initializePaseSecureChannel(address, passcode);
+                channel = await this.#initializePaseSecureChannel(address, passcode, discoveryData);
             } catch (e) {
                 NoResponseTimeoutError.accept(e);
-                console.warn(
-                    `Commissionable device is unresponsive at discovered address ${serverAddressToString(address)}`,
-                );
+                console.warn(`Could not connect to ${serverAddressToString(address)}: ${e.message}`);
             }
         }
 
@@ -263,7 +261,7 @@ export class ControllerCommissioner {
     async #initializePaseSecureChannel(
         address: ServerAddress,
         passcode: number,
-        device?: CommissionableDevice,
+        device?: DiscoveryData,
     ): Promise<MessageChannel> {
         let paseChannel: Channel<Uint8Array>;
         if (device !== undefined) {

@@ -14,14 +14,19 @@ import {
     MdnsService,
     ScannerSet,
 } from "#protocol";
+import type { CommissioningClient } from "../commissioning/CommissioningClient.js";
 import { CommissioningServer } from "../commissioning/CommissioningServer.js";
 import { NetworkServer } from "../network/NetworkServer.js";
 import { ActiveDiscoveries } from "./discovery/ActiveDiscoveries.js";
+import type { Discovery } from "./discovery/Discovery.js";
 
 /**
  * Node controller functionality.
  *
  * For our purposes, a "controller" is a node that supports commissioning of remote devices.
+ *
+ * This class initializes components required for controller usage and tracks active discoveries.  Discovery logic
+ * resides in {@link Discovery} and commissioning logic in {@link CommissioningClient}.
  */
 export class ControllerBehavior extends Behavior {
     static override readonly id = "controller";

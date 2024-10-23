@@ -73,7 +73,7 @@ export class ClientStoreFactory extends ClientStoreService {
                 }
             }
 
-            const store = new NodeStore(this.#storage);
+            const store = new NodeStore(this.#storage.createContext(id));
             this.#stores[id] = store;
             store.construction.start();
         }
