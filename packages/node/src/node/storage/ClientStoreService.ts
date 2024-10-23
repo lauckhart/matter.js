@@ -9,6 +9,8 @@ import type { ClientNode } from "#node/ClientNode.js";
 import type { Node } from "#node/Node.js";
 import { NodeStore } from "./NodeStore.js";
 
+const CLIENT_ID_PREFIX = "peer";
+
 /**
  * Manages all {@link ClientNodeStore}s for a {@link Node}.
  *
@@ -60,14 +62,20 @@ export class ClientStoreFactory extends ClientStoreService {
         const contexts = await this.#storage.contexts();
 
         for (const id of contexts) {
-            const num = Number.parseInt(id);
+            if (!id.startsWith(CLIENT_ID_PREFIX)) {
+                continue;
+            }
+
+            const num = Number.parseInt(id.slice(CLIENT_ID_PREFIX.length));
             if (!Number.isNaN(num)) {
                 if (this.#nextAutomaticId <= num) {
                     this.#nextAutomaticId = num + 1;
                 }
             }
 
-            this.#stores[id] = new NodeStore(this.#storage);
+            const store = new NodeStore(this.#storage);
+            this.#stores[id] = store;
+            store.construction.start();
         }
 
         const results = await Promise.allSettled(Object.values(this.#stores).map(store => store.construction.ready));
@@ -81,7 +89,7 @@ export class ClientStoreFactory extends ClientStoreService {
     allocateId() {
         this.#construction.assert();
 
-        return `peer${this.#nextAutomaticId++}`;
+        return `${CLIENT_ID_PREFIX}${this.#nextAutomaticId++}`;
     }
 
     storeForNode(node: ClientNode): NodeStore {
@@ -92,7 +100,7 @@ export class ClientStoreFactory extends ClientStoreService {
             return store;
         }
 
-        store = new NodeStore(this.#storage);
+        store = new NodeStore(this.#storage.createContext(node.id));
         store.construction.start();
         this.#stores[node.id] = store;
 

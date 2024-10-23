@@ -18,7 +18,7 @@ export class ClientEndpointInitializer extends EndpointInitializer {
 
     constructor(node: ClientNode) {
         super();
-        this.#store = node.env.get(ServerNodeStore).peerStores.storeForNode(node);
+        this.#store = node.env.get(ServerNodeStore).clientStores.storeForNode(node);
     }
 
     get ready() {

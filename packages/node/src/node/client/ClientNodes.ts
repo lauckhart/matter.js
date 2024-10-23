@@ -19,7 +19,7 @@ import { NodePeerStore } from "./NodePeerStore.js";
  *
  * Remote nodes are either peers (commissioned into a fabric we share) or commissionable.
  */
-export class RemoteNodes extends EndpointContainer<ClientNode> {
+export class ClientNodes extends EndpointContainer<ClientNode> {
     constructor(owner: ServerNode) {
         super(owner);
 
@@ -27,19 +27,24 @@ export class RemoteNodes extends EndpointContainer<ClientNode> {
             owner.env.set(ClientNodeFactory, new Factory(this));
         }
 
-        const factory = owner.env.get(ClientNodeFactory);
+        this.owner.env.set(PeerAddressStore, new NodePeerStore(owner));
+    }
 
-        const peerStores = this.owner.env.get(ServerNodeStore).peerStores;
-        for (const id of peerStores.knownIds) {
+    /**
+     * Load nodes.  Invoked automatically by owner.
+     */
+    initialize() {
+        const factory = this.owner.env.get(ClientNodeFactory);
+
+        const clientStores = this.owner.env.get(ServerNodeStore).clientStores;
+        for (const id of clientStores.knownIds) {
             this.add(
                 factory.create({
                     id,
-                    owner,
+                    owner: this.owner,
                 }),
             );
         }
-
-        owner.env.set(PeerAddressStore, new NodePeerStore(owner));
     }
 
     /**
@@ -99,23 +104,23 @@ export class RemoteNodes extends EndpointContainer<ClientNode> {
 
     override add(node: ClientNode) {
         node.owner = this.owner;
-        if (!node.lifecycle.hasId) {
-            node.id = this.owner.env.get(ServerNodeStore).peerStores.allocateId();
-        }
 
         super.add(node);
     }
 }
 
 class Factory extends ClientNodeFactory {
-    #owner: RemoteNodes;
+    #owner: ClientNodes;
 
-    constructor(owner: RemoteNodes) {
+    constructor(owner: ClientNodes) {
         super();
         this.#owner = owner;
     }
 
     create(options: ClientNode.Options) {
+        if (options.id === undefined) {
+            options.id = this.#owner.owner.env.get(ServerNodeStore).clientStores.allocateId();
+        }
         const node = new ClientNode({
             ...options,
             owner: this.#owner.owner,

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Endpoint, RemoteNodes, ServerNode } from "#node";
+import { ClientNodes, Endpoint, ServerNode } from "#node";
 import { Directory, Stat } from "#stat.js";
 
 const STATIC = new Set(["act", "start", "factoryReset", "run", "set", "visit", "nodes", "parts", "behaviors"]);
@@ -24,7 +24,7 @@ Stat.provide(endpoint => {
                 return (endpoint as unknown as Record<string, unknown>)[path];
             }
 
-            const nodes = (endpoint as ServerNode).nodes as RemoteNodes | undefined;
+            const nodes = (endpoint as ServerNode).nodes as ClientNodes | undefined;
 
             if (path.startsWith(BEHAVIOR_PREFIX)) {
                 const id = path.slice(BEHAVIOR_PREFIX.length);

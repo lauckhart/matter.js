@@ -28,7 +28,7 @@ export class ServerNodeStore extends NodeStore implements Destructable {
     #nodeId: string;
     #location: string;
     #storageManager?: StorageManager;
-    #peerStores?: ClientStoreFactory;
+    #clientStores?: ClientStoreFactory;
 
     constructor(environment: Environment, nodeId: string) {
         super({
@@ -55,14 +55,14 @@ export class ServerNodeStore extends NodeStore implements Destructable {
 
     async close() {
         await this.construction.close(async () => {
-            await this.#peerStores?.close();
+            await this.#clientStores?.close();
             await this.#storageManager?.close();
             this.#logChange("Closed");
         });
     }
 
-    get peerStores(): ClientStoreService {
-        return this.construction.assert("client stores", this.#peerStores);
+    get clientStores(): ClientStoreService {
+        return this.construction.assert("client stores", this.#clientStores);
     }
 
     #logChange(what: "Opened" | "Closed") {
@@ -73,7 +73,7 @@ export class ServerNodeStore extends NodeStore implements Destructable {
         this.#storageManager = await this.#env.get(StorageService).open(this.#nodeId);
         this.#env.set(StorageManager, this.#storageManager);
 
-        this.#peerStores = await asyncNew(ClientStoreFactory, this.#storageManager.createContext("peers"));
+        this.#clientStores = await asyncNew(ClientStoreFactory, this.#storageManager.createContext("nodes"));
 
         await super.initializeStorage();
 

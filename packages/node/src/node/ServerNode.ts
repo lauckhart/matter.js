@@ -17,7 +17,7 @@ import { Construction, DiagnosticSource, Identity, MatterError, asyncNew, errorO
 import { EventHandler, FabricManager, SessionManager } from "#protocol";
 import { RootEndpoint as BaseRootEndpoint } from "../endpoints/root.js";
 import { Node } from "./Node.js";
-import { RemoteNodes } from "./client/RemoteNodes.js";
+import { ClientNodes } from "./client/ClientNodes.js";
 import { ServerEnvironment } from "./server/ServerEnvironment.js";
 import { ServerNodeStore } from "./storage/ServerNodeStore.js";
 
@@ -37,7 +37,7 @@ class FactoryResetError extends MatterError {
  * The Matter specification often refers to server-side nodes as "devices".
  */
 export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint> extends Node<T> {
-    #nodes?: RemoteNodes;
+    #nodes?: ClientNodes;
 
     /**
      * Construct a new ServerNode.
@@ -154,7 +154,8 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
      */
     get nodes() {
         if (!this.#nodes) {
-            this.#nodes = new RemoteNodes(this);
+            this.#nodes = new ClientNodes(this);
+            this.#nodes.initialize();
         }
 
         return this.#nodes;

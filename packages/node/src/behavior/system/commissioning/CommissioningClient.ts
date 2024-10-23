@@ -21,6 +21,7 @@ import {
     SessionParameters,
 } from "#protocol";
 import { DeviceTypeId, DiscoveryCapabilitiesBitmap, NodeId, TypeFromPartialBitSchema, VendorId } from "#types";
+import { ControllerBehavior } from "../controller/ControllerBehavior.js";
 import { RemoteDescriptor } from "./RemoteDescriptor.js";
 
 /**
@@ -30,6 +31,8 @@ import { RemoteDescriptor } from "./RemoteDescriptor.js";
  */
 export class CommissioningClient extends Behavior {
     declare state: CommissioningClient.State;
+
+    static override readonly early = true;
 
     static override readonly id = "commissioning";
     override initialize(options: { descriptor?: RemoteDescriptor }) {
@@ -50,6 +53,7 @@ export class CommissioningClient extends Behavior {
             options = { passcode: options };
         }
 
+        // Validate passcode
         let { passcode } = options;
         if (typeof passcode !== "number" || Number.isNaN(passcode)) {
             passcode = Number.parseInt(passcode as unknown as string);
@@ -58,12 +62,16 @@ export class CommissioningClient extends Behavior {
             }
         }
 
+        // Commissioning can only happen once
         const node = this.endpoint as ClientNode;
-
         if (this.state.peerAddress !== undefined) {
             throw new ImplementationError(`${node} is already commissioned`);
         }
 
+        // Ensure controller is initialized
+        await this.endpoint.owner?.act(agent => agent.load(ControllerBehavior));
+
+        // Obtain the fabric we will commission into
         const fabricAuthority = options.fabricAuthority || this.env.get(FabricAuthority);
         let { fabric } = options;
         if (fabric === undefined) {
@@ -76,7 +84,7 @@ export class CommissioningClient extends Behavior {
 
         if (!fabricAuthority.hasControlOf(fabric)) {
             throw new ImplementationError(
-                `Cannot commission ${node} because we do control fabric ${fabric.fabricIndex}`,
+                `Cannot commission ${node} fabric ${fabric.fabricIndex} because we do not control this fabric`,
             );
         }
 
