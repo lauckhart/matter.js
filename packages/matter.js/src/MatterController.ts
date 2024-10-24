@@ -38,6 +38,7 @@ import {
     DEFAULT_ADMIN_VENDOR_ID,
     DEFAULT_FABRIC_ID,
     DeviceAdvertiser,
+    DiscoveryAndCommissioningOptions,
     DiscoveryData,
     DiscoveryOptions,
     ExchangeManager,
@@ -49,7 +50,6 @@ import {
     OperationalPeer,
     PeerAddress,
     PeerAddressStore,
-    PeerCommissioningOptions,
     PeerSet,
     ResumptionRecord,
     RetransmissionLimitReachedError,
@@ -338,7 +338,7 @@ export class MatterController {
         options: NodeCommissioningOptions,
         completeCommissioningCallback?: (peerNodeId: NodeId, discoveryData?: DiscoveryData) => Promise<boolean>,
     ): Promise<NodeId> {
-        const commissioningOptions: PeerCommissioningOptions = {
+        const commissioningOptions: DiscoveryAndCommissioningOptions = {
             ...options.commissioning,
             fabric: this.fabric,
             discovery: options.discovery,
@@ -354,7 +354,7 @@ export class MatterController {
             };
         }
 
-        const address = await this.commissioner.commission(commissioningOptions);
+        const address = await this.commissioner.commissionWithDiscovery(commissioningOptions);
 
         await this.#store.fabricStorage.set("fabric", this.fabric.config);
 
