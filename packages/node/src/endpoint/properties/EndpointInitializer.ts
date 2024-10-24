@@ -15,7 +15,7 @@ export abstract class EndpointInitializer {
     /**
      * Initialize a {@link Endpoint}.
      */
-    initializeDescendent(_endpoint: Endpoint) {}
+    initializeDescendant(_endpoint: Endpoint) {}
 
     /**
      * Create backing for a behavior of a descendent.

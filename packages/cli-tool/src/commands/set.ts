@@ -24,11 +24,11 @@ Command({
                 if (equalPos === -1) {
                     this.err("Invalid argument: parameter must be of the form key=value");
                 }
-                this.env.vars.persist(assignment.slice(0, equalPos), assignment.slice(equalPos + 1));
+                await this.env.vars.persist(assignment.slice(0, equalPos), assignment.slice(equalPos + 1));
                 break;
 
             case 2:
-                this.env.vars.persist(`${args[0]}`, args[1] as VariableService.Value);
+                await this.env.vars.persist(`${args[0]}`, args[1] as VariableService.Value);
                 break;
         }
     },

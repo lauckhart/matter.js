@@ -160,7 +160,7 @@ export class EndpointStoreFactory extends EndpointStoreService {
     storeForEndpoint(endpoint: Endpoint): EndpointStore {
         this.#construction.assert();
 
-        if (endpoint.number === 0) {
+        if (endpoint.maybeNumber === 0) {
             return this.#construction.assert("root node store", this.#root);
         }
 

@@ -328,7 +328,7 @@ export class ServerNetworkRuntime extends NetworkRuntime {
 
     protected async configureCommissioning() {
         if (this.owner.state.commissioning.enabled) {
-            // Ensure a DeviceCommissioner is active commissionable device
+            // Ensure a DeviceCommissioner is active
             this.owner.env.get(DeviceCommissioner);
         } else if (this.owner.env.has(DeviceCommissioner)) {
             // Ensure no DeviceCommissioner is active
