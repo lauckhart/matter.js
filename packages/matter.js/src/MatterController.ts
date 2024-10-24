@@ -346,7 +346,7 @@ export class MatterController {
         };
 
         if (completeCommissioningCallback) {
-            commissioningOptions.performCaseCommissioning = async (peerAddress, discoveryData) => {
+            commissioningOptions.finalizeCommissioning = async (peerAddress, discoveryData) => {
                 const result = await completeCommissioningCallback(peerAddress.nodeId, discoveryData);
                 if (!result) {
                     throw new RetransmissionLimitReachedError("Device could not be discovered");
