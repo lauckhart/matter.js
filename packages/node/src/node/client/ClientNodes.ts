@@ -7,6 +7,7 @@
 import { CommissioningDiscovery, ContinuousDiscovery, Discovery, InstanceDiscovery } from "#behavior/index.js";
 import { RemoteDescriptor } from "#behavior/system/commissioning/RemoteDescriptor.js";
 import { EndpointContainer } from "#endpoint/properties/EndpointContainer.js";
+import { CancelablePromise, Time } from "#general";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
 import { PeerAddress, PeerAddressStore } from "#protocol";
 import { ClientNode } from "../ClientNode.js";
@@ -14,12 +15,17 @@ import type { ServerNode } from "../ServerNode.js";
 import { ClientNodeFactory } from "./ClientNodeFactory.js";
 import { NodePeerStore } from "./NodePeerStore.js";
 
+const DEFAULT_COMMISSIONING_TTL = 900 * 1000;
+const EXPIRATION_INTERVAL = 60 * 1000;
+
 /**
  * Manages the set of known remote nodes.
  *
  * Remote nodes are either peers (commissioned into a fabric we share) or commissionable.
  */
 export class ClientNodes extends EndpointContainer<ClientNode> {
+    #expirationInterval: CancelablePromise | undefined;
+
     constructor(owner: ServerNode) {
         super(owner);
 
@@ -28,6 +34,9 @@ export class ClientNodes extends EndpointContainer<ClientNode> {
         }
 
         this.owner.env.set(PeerAddressStore, new NodePeerStore(owner));
+
+        this.added.on(this.#manageExpiration.bind(this));
+        this.deleted.on(this.#manageExpiration.bind(this));
     }
 
     /**
@@ -106,6 +115,64 @@ export class ClientNodes extends EndpointContainer<ClientNode> {
         node.owner = this.owner;
 
         super.add(node);
+    }
+
+    override async close() {
+        this.#cancelExpiration();
+        await super.close();
+    }
+
+    #cancelExpiration() {
+        if (this.#expirationInterval) {
+            this.#expirationInterval.cancel();
+            this.#expirationInterval = undefined;
+        }
+    }
+
+    #manageExpiration() {
+        if (this.#expirationInterval) {
+            if (!this.size) {
+                this.#cancelExpiration();
+            }
+            return;
+        }
+
+        if (!this.size) {
+            return;
+        }
+
+        this.#expirationInterval = Time.wait("client node expiration", EXPIRATION_INTERVAL).then(async () => {
+            this.#expirationInterval = undefined;
+            try {
+                await this.#cullExpiredNodesAndAddresses();
+            } finally {
+                this.#manageExpiration();
+            }
+        });
+    }
+
+    async #cullExpiredNodesAndAddresses() {
+        const now = Time.nowMs();
+
+        for (const node of this) {
+            const { peerAddress, addresses, discoveredAt, ttl } = node.state.commissioning;
+
+            // Remove expired addresses
+            // TODO
+
+            // Only cull "expired" nodes that are uncommissioned
+            if (peerAddress === undefined) {
+                if (!addresses?.length || now >= discoveredAt + (ttl ?? DEFAULT_COMMISSIONING_TTL)) {
+                    await node.delete();
+                    continue;
+                }
+            }
+
+            // Update addresses if we removed any
+            if (addresses?.length !== node.state.commissioning.addresses?.length) {
+                await node.set({ commissioning: { addresses } });
+            }
+        }
     }
 }
 
