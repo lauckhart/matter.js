@@ -8,8 +8,8 @@ import { existsSync, readFileSync, statSync } from "fs";
 import { readdir, readFile, stat, writeFile } from "fs/promises";
 import { glob } from "glob";
 import { dirname, join, relative, resolve } from "path";
-import { maybeStatSync } from "../testing/files.js";
 import { ignoreError, ignoreErrorSync } from "./errors.js";
+import { maybeStatSync } from "./files.js";
 import { Progress } from "./progress.js";
 import { toolsPath } from "./tools-path.cjs";
 

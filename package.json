@@ -3,6 +3,7 @@
   "private": true,
   "workspaces": [
     "packages/tools",
+    "packages/testing",
     "packages/general",
     "packages/model",
     "packages/types",

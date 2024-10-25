@@ -4,18 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Package, Progress } from "#tools";
 import colors from "ansi-colors";
 import debug from "debug";
 import { glob } from "glob";
 import { relative } from "path";
-import { Package } from "../util/package.js";
-import { Progress } from "../util/progress.js";
 import { Chip } from "./chip.js";
 import { FailureDetail } from "./failure-detail.js";
-import { listSupportFiles } from "./files.js";
 import { testNode } from "./node.js";
 import { TestOptions } from "./options.js";
 import { ProgressReporter, Reporter } from "./reporter.js";
+import { listSupportFiles } from "./util/files.js";
 import { testWeb } from "./web.js";
 
 export class TestRunner {
