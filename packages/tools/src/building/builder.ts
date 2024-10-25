@@ -149,7 +149,7 @@ export class Builder {
             } catch (e) {
                 if (e instanceof BuildError) {
                     progress.failure("Terminating due to type errors");
-                    process.stderr.write(e.diagnostics);
+                    process.stderr.write(`${e.diagnostics}\n`);
                     process.exit(1);
                 }
                 throw e;

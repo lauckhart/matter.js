@@ -203,26 +203,31 @@ export class Package {
         throw new Error(`Cannot resolve export ${name} in package ${this.name}`);
     }
 
-    resolveImport(name: string, type: "cjs" | "esm" = "esm") {
-        const segments = name.split("/");
-        let subdir = segments.shift() as string;
-        if (subdir.startsWith("@") && segments.length) {
-            subdir = `${subdir}/${segments.shift()}`;
-        }
-
+    findPackage(name: string) {
         let resolveIn = this.path;
         while (true) {
-            if (isDirectory(resolve(resolveIn, "node_modules", subdir))) {
+            if (isDirectory(resolve(resolveIn, "node_modules", name))) {
                 break;
             }
             const nextResolveIn = dirname(resolveIn);
             if (nextResolveIn === resolveIn) {
-                throw new Error(`Cannot find module ${subdir} from ${this.path}`);
+                throw new Error(`Cannot find module ${name} from ${this.path}`);
             }
             resolveIn = nextResolveIn;
         }
 
-        const pkg = Package.forPath(resolve(resolveIn, "node_modules", subdir));
+        return Package.forPath(resolve(resolveIn, "node_modules", name));
+    }
+
+    resolveImport(name: string, type: "cjs" | "esm" = "esm") {
+        const segments = name.split("/");
+        let packageName = segments.shift() as string;
+        if (packageName.startsWith("@") && segments.length) {
+            packageName = `${packageName}/${segments.shift()}`;
+        }
+
+        const pkg = this.findPackage(packageName);
+
         return pkg.resolveExport(segments.length ? segments.join("/") : ".", type);
     }
 
