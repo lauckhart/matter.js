@@ -159,7 +159,10 @@ export class Project {
             formats.push("cjs");
         }
         for (const format of formats) {
-            await cp(this.pkg.resolve(source), this.pkg.resolve(join("dist", format, dest)));
+            await cp(this.pkg.resolve(source), this.pkg.resolve(join("dist", format, dest)), {
+                recursive: true,
+                force: true,
+            });
         }
     }
 

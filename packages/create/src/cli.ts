@@ -3,75 +3,103 @@
  * Copyright 2022-2024 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
-
-import colors from "ansi-colors";
-import { exit, stderr, stdout } from "process";
-import yargs from "yargs";
-import { hideBin } from "yargs/helpers";
+import { argv, exit, stdout } from "process";
+import { blue, bold } from "./colors.js";
+import { error, notice } from "./messages.js";
 import { reify } from "./reify.js";
 import { Template, TemplateNotFoundError } from "./template.js";
 
-colors.enabled = stdout.isTTY;
+const PATH_ARG = "--path=";
 
-interface InitArgs {
-    template?: string;
+const args = argv.slice(2);
+
+let path = ".";
+const pathPos = args.findIndex(arg => arg.startsWith(PATH_ARG));
+if (pathPos !== -1) {
+    path = args[pathPos].slice(PATH_ARG.length);
+    args.splice(pathPos, 1);
 }
 
-await yargs(hideBin(process.argv))
-    .command(["templates"], "list available templates", () => {}, listTemplates)
+stdout.write("\n");
 
-    .command<InitArgs>(
-        ["$0 [template]"],
-        "initialize a new project",
-        yargs => {
-            yargs.positional("template", {
-                describe: "the template to use as a basis for the new project",
-                type: "string",
-                default: "default",
-            });
-        },
-        init,
-    )
-
-    .usage("Generates a matter.js project from one of the example templates.")
-    .strict()
-    .parse();
-
-async function error(e: Error) {
-    stderr.write(`\n${colors.red(e.message)}\n`);
+const option = args[0] ?? "default";
+if (option === "templates") {
+    await listTemplates();
+    exit(0);
 }
+
+if (option === "help" || option === "--help") {
+    usage();
+    exit(0);
+}
+
+if (option.startsWith("-")) {
+    error(`Invalid argument ${bold(option)}`);
+    usage();
+    exit(0);
+}
+
+if (args.length > 1) {
+    error(`Unexpected argument ${args[1]}`);
+    usage();
+    exit(1);
+}
+
+await init(option);
 
 function welcome() {
-    stdout.write(`\n🎉 Welcome to ${colors.bold("matter.js")}!\n`);
+    stdout.write(`🎉 Welcome to ${bold("matter.js")}!\n\n`);
 }
 
-async function init({ template: templateName }: InitArgs) {
+function usage() {
+    welcome();
+    stdout.write(
+        [
+            ``,
+            `Initialize a new matter.js project from a project template.`,
+            ``,
+            `Usage:`,
+            `  ${bold("npm init @matter")}            initialize with default template`,
+            `  ${bold("npm init @matter <name>")}     initialize with template ${bold("name")}`,
+            `  ${bold("npm init @matter templates")}  list available templates`,
+            `  ${bold("npm init @matter help")}       show this help`,
+            ``,
+            `Options:`,
+            `  ${bold("--path=<path>")}               initialize in directory ${bold("path")}`,
+            ``,
+            ``,
+        ].join("\n"),
+    );
+}
+
+async function init(templateName: string) {
     let template;
     try {
-        template = Template(templateName ?? "default");
+        template = Template(templateName);
     } catch (e) {
         if (e instanceof TemplateNotFoundError) {
-            await error(e);
+            error(`Invalid template ${bold(templateName)}`);
             await listTemplates();
             exit(1);
         }
 
         throw e;
     }
+
     welcome();
-    stdout.write(`\n${colors.green(`Initializing project based on ${colors.bold(template.name)} template...\n\n`)}`);
-    reify(template);
+    notice(`Initializing project from ${bold(template.name)} template...`);
+    await reify(path, template);
 }
 
 async function listTemplates() {
     const templates = await Template.all();
 
     welcome();
-    stdout.write("\nYou can create a new project using one of the following templates:\n\n");
+    stdout.write("You can create a new project using one of the following templates:\n\n");
     for (const template of templates) {
-        const name = template.name === "default" ? colors.bold(template.name) : template.name;
-        stdout.write(`    * ${colors.blueBright(name)}\n`);
+        const name = template.name === "default" ? bold(template.name) : template.name;
+        stdout.write(`    * ${blue(name)}\n`);
     }
 
-    stdout.write("\n");
+    stdout.write("\n\n");
 }

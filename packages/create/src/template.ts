@@ -4,7 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Package } from "@matter/tools";
+import { statSync } from "fs";
+import { readdir } from "fs/promises";
+import { resolve } from "path";
+
+const TEMPLATE_PATH = resolve(import.meta.dirname, "../templates");
 
 export class TemplateNotFoundError extends Error {}
 
@@ -14,24 +18,29 @@ export interface Template {
 }
 
 export function Template(name: string): Template {
-    const examples = Package.tools.findPackage("@matter/examples");
+    const path = resolve(TEMPLATE_PATH, name);
 
-    const path = `src/examples/${name}`;
-    if (!examples.hasDirectory(path)) {
+    let valid = false;
+    try {
+        valid = statSync(path).isDirectory();
+    } catch (e) {
+        if ((e as any)?.code !== "ENOENT" && (e as any)?.code !== "ENOTDIR") {
+            throw e;
+        }
+    }
+    if (!valid) {
         throw new TemplateNotFoundError(`"${name}" is not a valid template name`);
     }
 
     return {
         name,
-        path: examples.resolve(path),
+        path,
     };
 }
 
 export namespace Template {
     export async function all() {
-        const examples = Package.tools.findPackage("@matter/examples");
-        const paths = await examples.glob("src/examples/*");
-        const names = paths.map(path => path.replace(/.*[\\/]/, "")).sort();
+        const names = await readdir(TEMPLATE_PATH);
         return names.map(Template);
     }
 }
