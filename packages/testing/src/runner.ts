@@ -7,7 +7,6 @@
 import { Package, Progress } from "#tools";
 import colors from "ansi-colors";
 import debug from "debug";
-import { glob } from "glob";
 import { relative } from "path";
 import { Chip } from "./chip.js";
 import { FailureDetail } from "./failure-detail.js";
@@ -60,7 +59,7 @@ export class TestRunner {
         await this.run(this.progress, () => testWeb(this, manual));
     }
 
-    loadFiles(format: "esm" | "cjs") {
+    async loadFiles(format: "esm" | "cjs") {
         const tests = [];
         for (let spec of this.spec) {
             spec = spec.replace(/\.ts$/, ".js");
@@ -68,12 +67,8 @@ export class TestRunner {
             if (!spec.startsWith(".") && !spec.startsWith("build/") && !spec.startsWith("dist/")) {
                 spec = `build/${format}/${spec}`;
             }
-            spec = this.pkg.resolve(spec);
 
-            // Glob only understands forward-slash as separator because reasons
-            spec = spec.replace(/\\/g, "/");
-
-            tests.push(...glob.sync(spec));
+            tests.push(...(await this.pkg.glob(spec)));
         }
 
         if (!tests.length) {

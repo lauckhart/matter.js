@@ -17,7 +17,7 @@ import { ConsoleProxyReporter, Reporter } from "./reporter.js";
 import type { TestRunner } from "./runner.js";
 
 export async function testWeb(runner: TestRunner, manual: boolean) {
-    const files = runner.loadFiles("esm");
+    const files = await runner.loadFiles("esm");
     const bundlePath = await bundle(files, runner.pkg);
 
     const server = await new Promise<http.Server>((resolve, reject) => {

@@ -6,10 +6,9 @@
 
 import { existsSync, readFileSync, statSync } from "fs";
 import { readdir, readFile, stat, writeFile } from "fs/promises";
-import { glob } from "glob";
 import { dirname, join, relative, resolve } from "path";
 import { ignoreError, ignoreErrorSync } from "./errors.js";
-import { maybeStatSync } from "./files.js";
+import { globSync, maybeStatSync } from "./files.js";
 import { Progress } from "./progress.js";
 import { toolsPath } from "./tools-path.cjs";
 
@@ -97,11 +96,16 @@ export class Package {
         return relative(this.path, path);
     }
 
-    async glob(pattern: string) {
+    async glob(pattern: string | string[]) {
         // Glob only understands forward-slash as separator because reasons
-        pattern = this.resolve(pattern).replace(/\\/g, "/");
+        if (typeof pattern === "string") {
+            pattern = this.resolve(pattern).replace(/\\/g, "/");
+        } else {
+            pattern = pattern.map(s => this.resolve(s).replace(/\\/g, "/"));
+        }
 
-        return await glob(pattern);
+        // Current glob implementation isn't actually async as this is faster and we only walk small directory trees
+        return globSync(pattern);
     }
 
     start(what: string) {
@@ -264,8 +268,8 @@ export class Package {
                 e = new Error(`${e}`);
             }
             (e as Error).message = `Error parsing "${this.resolve(path)}": ${(e as Error).message}`;
+            throw e;
         }
-        return JSON.parse(await this.readFile(path));
     }
 
     async writeJson(path: string, value: {}) {

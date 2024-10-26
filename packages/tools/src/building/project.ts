@@ -7,7 +7,6 @@
 import { Hash } from "crypto";
 import { build as esbuild, Format } from "esbuild";
 import { cp, mkdir, readFile, rm, symlink, writeFile } from "fs/promises";
-import { glob } from "glob";
 import { platform } from "os";
 import { dirname, join } from "path";
 import { ignoreError } from "../util/errors.js";
@@ -219,12 +218,12 @@ export class Project {
     }
 
     async #targetsOf(indir: string, outdir: string, ...extensions: string[]) {
-        indir = this.pkg.resolve(indir).replace(/\\/g, "/");
+        const inputPrefixLength = this.pkg.resolve(indir).length + 1;
         outdir = this.pkg.resolve(outdir).replace(/\\/g, "/");
 
-        return (await glob(extensions.map(ext => `${indir}/**/*.${ext}`))).map(file => ({
+        return (await this.pkg.glob(extensions.map(ext => `${indir}/**/*.${ext}`))).map(file => ({
             in: file,
-            out: `${outdir}/${file.slice(indir.length + 1)}`,
+            out: `${outdir}/${file.slice(inputPrefixLength)}`,
         }));
     }
 }

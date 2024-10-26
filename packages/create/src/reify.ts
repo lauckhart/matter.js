@@ -6,4 +6,7 @@
 
 import { Template } from "./template.js";
 
-export function reify(template: Template) {}
+export function reify(template: Template) {
+    // TODO
+    template;
+}

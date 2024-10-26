@@ -9,3 +9,4 @@ export * from "./building/graph.js";
 export * from "./building/project.js";
 export * from "./util/package.js";
 export * from "./util/progress.js";
+export * from "./util/commander.js";

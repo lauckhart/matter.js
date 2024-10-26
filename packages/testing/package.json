@@ -50,7 +50,6 @@
         "chai-as-promised": "^7.1.2",
         "dockerode": "^4.0.2",
         "express": "^4.19.2",
-        "glob": "^10.4.5",
         "mocha": "^10.7.3",
         "playwright": "^1.48.1",
         "trace-unhandled": "^2.0.1",
@@ -66,9 +65,7 @@
         "@types/chai": "^4.3.16",
         "@types/chai-as-promised": "^7.1.8",
         "@types/debug": "^4.1.12",
-        "@types/glob": "^8.1.0",
         "@types/mocha": "^10.0.7",
-        "@types/npmcli__map-workspaces": "^3.0.4",
         "@types/wtfnode": "^0.7.3",
         "@types/yargs": "^17.0.33"
     },

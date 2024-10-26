@@ -39,7 +39,7 @@ export async function testNode(runner: TestRunner, format: "cjs" | "esm") {
 
     TestOptions.apply(mocha, runner.options);
 
-    const files = runner.loadFiles(format);
+    const files = await runner.loadFiles(format);
     files.forEach(path => {
         path = relative(process.cwd(), path);
         if (path[0] !== ".") {
