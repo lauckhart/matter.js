@@ -5,7 +5,19 @@
  */
 
 import { stderr, stdout } from "process";
-import { bold, green, red } from "./colors.js";
+import { bold, dim, green, red, visibleWidthOf } from "./formatting.js";
+
+const WELCOME_TO = "🎉 Welcome to";
+
+const GRAPHIC = `
+███╗   ███╗ █████╗ ████████╗████████╗███████╗██████╗ ${dim("        ██╗███████╗")}
+████╗ ████║██╔══██╗╚══██╔══╝╚══██╔══╝██╔════╝██╔══██╗${dim("        ██║██╔════╝")}
+██╔████╔██║███████║   ██║      ██║   █████╗  ██████╔╝${dim("        ██║███████╗")}
+██║╚██╔╝██║██╔══██║   ██║      ██║   ██╔══╝  ██╔══██╗${dim("   ██   ██║╚════██║")}
+██║ ╚═╝ ██║██║  ██║   ██║      ██║   ███████╗██║  ██║${dim("██╗╚█████╔╝███████║")}
+╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚══════╝╚═╝  ╚═╝${dim("╚═╝ ╚════╝ ╚══════╝")}`.trim();
+
+const GRAPHIC_WIDTH = 72;
 
 function join(parts: unknown[]) {
     return parts.map(part => (part instanceof Error ? part.message : `${part}`)).join(" ");
@@ -17,4 +29,29 @@ export function error(...parts: unknown[]) {
 
 export function notice(...parts: unknown[]) {
     stdout.write(`${green(join(parts))}\n\n`);
+}
+
+export function welcome() {
+    stdout.write(`${WELCOME_TO} ${bold("matter.js")}!\n\n`);
+}
+
+export function bigWelcome() {
+    if (!stdout.isTTY || stdout.columns < GRAPHIC_WIDTH) {
+        welcome();
+        return;
+    }
+
+    const parts = Array<string>();
+
+    const welcomePad = "".padStart(Math.floor((stdout.columns - visibleWidthOf(WELCOME_TO)) / 2));
+    parts.push(`${welcomePad}${WELCOME_TO}`);
+
+    parts.push("");
+
+    const graphicPad = "".padStart(Math.floor((stdout.columns - GRAPHIC_WIDTH) / 2));
+    parts.push(...GRAPHIC.split("\n").map(line => `${graphicPad}${line}`));
+
+    parts.push("", "");
+
+    stdout.write(parts.join("\n"));
 }

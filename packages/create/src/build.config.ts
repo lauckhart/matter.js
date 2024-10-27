@@ -4,35 +4,49 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Project, maybeStatSync } from "@matter/tools";
-import { cp, stat } from "fs/promises";
+import { Project } from "@matter/tools";
+import { cp, mkdir, readFile, writeFile } from "fs/promises";
+import { basename, dirname } from "path";
+import { Config, Template } from "./config.js";
 
 /**
  * Install "templates" to dist so we can install without external dependencies.
  */
 export async function before({ project }: Project.Context) {
-    await cp(
-        project.pkg.findPackage("@matter/examples").resolve("src/examples"),
-        project.pkg.resolve("dist/templates"),
-        {
-            recursive: true,
-            force: true,
+    const toolsPkg = project.pkg.findPackage("@matter/tools");
+    const examplesPkg = project.pkg.findPackage("@matter/examples");
+    const createPkg = project.pkg.findPackage("@matter/create");
 
-            async filter(source, dest) {
-                const stats = await stat(source);
+    await mkdir(createPkg.resolve("dist/templates"), { recursive: true });
 
-                if (stats.isDirectory()) {
-                    return true;
-                }
+    const readmes = await examplesPkg.glob("src/*/README.md");
+    const templates = Array<Template>();
+    for (const readme of readmes) {
+        const name = basename(dirname(readme));
+        const match = (await readFile(readme, "utf-8")).match(/^# (.*)/);
+        if (!match) {
+            continue;
+        }
 
-                if (!source.endsWith(".ts")) {
-                    return false;
-                }
+        templates.push({
+            name,
+            description: match[1],
+        });
 
-                const destMtime = maybeStatSync(dest)?.mtimeMs;
+        const sources = await examplesPkg.glob(`src/${name}/*.ts`);
+        for (const file of sources) {
+            await cp(file, createPkg.resolve("dist/templates/", name, basename(file)));
+        }
+    }
 
-                return !destMtime || destMtime < stats.mtimeMs;
-            },
-        },
-    );
+    const matterJsVersion = `~${toolsPkg.json.version}`;
+    const typescriptVersion = toolsPkg.json.dependencies.typescript;
+
+    const config: Config = {
+        matterJsVersion,
+        typescriptVersion,
+        templates,
+    };
+
+    await writeFile(createPkg.resolve("dist/templates/index.json"), JSON.stringify(config, undefined, 4));
 }

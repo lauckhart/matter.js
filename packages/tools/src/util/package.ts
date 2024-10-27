@@ -88,8 +88,8 @@ export class Package {
         return this.hasDirectory(CODEGEN_PATH);
     }
 
-    resolve(path: string) {
-        return resolve(this.path, path);
+    resolve(...paths: string[]) {
+        return resolve(this.path, ...paths);
     }
 
     relative(path: string) {
