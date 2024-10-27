@@ -8,9 +8,7 @@ const node = await ServerNode.create();
 const light = await node.add(OnOffLightDevice);
 
 // Add an event handler to log the light's current status
-light.events.onOff.onOff$Changed.on((value) =>
-  console.log(`Light is now ${value}`)
-);
+light.events.onOff.onOff$Changed.on(value => console.log(`Light is now ${value}`));
 
 // Run our server
 await node.start();
