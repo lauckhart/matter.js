@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { NetworkServer } from "#behavior/system/network/NetworkServer.js";
 import { NetworkCommissioningServer } from "#behaviors/network-commissioning";
 import { OnOffServer } from "#behaviors/on-off";
 import { AccessControl } from "#clusters/access-control";
@@ -20,6 +19,7 @@ import {
     Fabric,
     FabricBuilder,
     FabricManager,
+    InteractionServer,
     InteractionServerMessenger,
     Message,
     MessageExchange,
@@ -106,7 +106,7 @@ class WifiCommissioningServer extends NetworkCommissioningServer.with("WiFiNetwo
 async function connect(node: MockServerNode, fabric: Fabric) {
     const exchange = await node.createExchange({ fabric });
 
-    const interactionServer = node.behaviors.internalsOf(NetworkServer).runtime.interactionServer;
+    const interactionServer = node.env.get(InteractionServer);
 
     return { exchange, interactionServer };
 }

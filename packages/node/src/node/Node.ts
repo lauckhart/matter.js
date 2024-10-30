@@ -221,6 +221,17 @@ export namespace Node {
         } as Endpoint.Configuration<T>;
     }
 
+    export function forEndpoint(endpoint: Endpoint): Node {
+        const node = endpoint.ownerOfType(RootEndpoint);
+        if (node === undefined) {
+            throw new ImplementationError(`Cannot complete operation because ${endpoint} is not installed in a node`);
+        }
+        if (!(node instanceof Node)) {
+            throw new ImplementationError(`Root endpoint for ${endpoint} is not a node`);
+        }
+        return node;
+    }
+
     /**
      * Common root endpoint definition for all nodes.
      */

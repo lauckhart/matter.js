@@ -175,7 +175,7 @@ export class CommissioningClient extends Behavior {
                 ],
             }),
             FieldElement({ name: "discoveredAt", type: "systime-ms", quality: "N", conformance: "M" }),
-            FieldElement({ name: "ttl", type: "number", quality: "N" }),
+            FieldElement({ name: "ttl", type: "uint32", quality: "N" }),
             FieldElement({ name: "deviceIdentifier", type: "string", quality: "N" }),
             FieldElement({ name: "discriminator", type: "uint16", quality: "N" }),
             FieldElement({ name: "commissioningMode", type: "uint8", quality: "N" }),

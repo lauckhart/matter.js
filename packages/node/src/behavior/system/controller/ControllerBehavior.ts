@@ -6,13 +6,16 @@
 
 import { Behavior } from "#behavior/Behavior.js";
 import { BasicInformationBehavior } from "#behaviors/basic-information";
+import { Node } from "#node/Node.js";
 import {
     Ble,
     FabricAuthority,
     FabricAuthorityConfigurationProvider,
     FabricManager,
+    InteractionServer,
     MdnsService,
     ScannerSet,
+    SubscriptionClient,
 } from "#protocol";
 import type { CommissioningClient } from "../commissioning/CommissioningClient.js";
 import { CommissioningServer } from "../commissioning/CommissioningServer.js";
@@ -72,10 +75,17 @@ export class ControllerBehavior extends Behavior {
                 commissioning.state.enabled = false;
             }
         }
+
+        const node = Node.forEndpoint(this.endpoint);
+        this.reactTo(node.lifecycle.online, this.#nodeOnline);
+        if (node.lifecycle.isOnline) {
+            this.#nodeOnline();
+        }
     }
 
     override async [Symbol.asyncDispose]() {
         const discoveries = this.env.get(ActiveDiscoveries);
+
         while (discoveries.size) {
             for (const discovery of discoveries) {
                 discovery.cancel();
@@ -83,6 +93,14 @@ export class ControllerBehavior extends Behavior {
 
             await Promise.allSettled([...discoveries]);
         }
+
+        this.env.delete(FabricAuthority);
+        this.env.delete(ScannerSet);
+    }
+
+    #nodeOnline() {
+        // This is necessary to receive data reports for subscriptions
+        this.env.get(InteractionServer).clientHandler = this.env.get(SubscriptionClient);
     }
 }
 

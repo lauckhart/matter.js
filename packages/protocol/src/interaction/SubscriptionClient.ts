@@ -22,7 +22,7 @@ export class SubscriptionClient implements ProtocolHandler {
 
     constructor() {}
 
-    [Environmental.create](env: Environment) {
+    static [Environmental.create](env: Environment) {
         const client = new SubscriptionClient();
         env.set(SubscriptionClient, client);
         return client;
