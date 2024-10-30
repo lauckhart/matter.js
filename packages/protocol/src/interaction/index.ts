@@ -15,3 +15,4 @@ export * from "./InteractionMessenger.js";
 export * from "./InteractionServer.js";
 export * from "./ServerSubscription.js";
 export * from "./Subscription.js";
+export * from "./SubscriptionClient.js";

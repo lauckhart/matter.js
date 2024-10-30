@@ -58,9 +58,7 @@ export class PaseServer implements ProtocolHandler {
         private readonly pbkdfParameters?: PbkdfParameters,
     ) {}
 
-    getId(): number {
-        return SECURE_CHANNEL_PROTOCOL_ID;
-    }
+    readonly id = SECURE_CHANNEL_PROTOCOL_ID;
 
     async onNewExchange(exchange: MessageExchange) {
         const messenger = new PaseServerMessenger(exchange);

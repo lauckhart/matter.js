@@ -229,6 +229,7 @@ export class InteractionServer implements ProtocolHandler, InteractionRecipient 
     #context: InteractionContext;
     #nextSubscriptionId = Crypto.getRandomUInt32();
     #isClosing = false;
+    #clientHandler?: ProtocolHandler;
     readonly #subscriptionConfig: ServerSubscriptionConfig;
     readonly #maxPathsPerInvoke;
 
@@ -243,9 +244,7 @@ export class InteractionServer implements ProtocolHandler, InteractionRecipient 
         });
     }
 
-    getId() {
-        return INTERACTION_PROTOCOL_ID;
-    }
+    readonly id = INTERACTION_PROTOCOL_ID;
 
     protected get isClosing() {
         return this.#isClosing;
@@ -255,11 +254,26 @@ export class InteractionServer implements ProtocolHandler, InteractionRecipient 
         return this.#maxPathsPerInvoke;
     }
 
-    async onNewExchange(exchange: MessageExchange) {
-        // Note - changes here must be copied to TransactionalInteractionServer as it does not call super() to avoid
-        // the stack frame
+    async onNewExchange(exchange: MessageExchange, message: Message) {
+        // NOTE - changes here must be copied to TransactionalInteractionServer as it does not call super() to avoid the
+        // stack frame
         if (this.#isClosing) return; // We are closing, ignore anything newly incoming
+
+        // An incoming data report as the first message is not a valid server operation.  We instead delegate to a
+        // client implementation if available
+        if (message.payloadHeader.messageType === MessageType.SubscribeRequest && this.#clientHandler) {
+            return this.#clientHandler.onNewExchange(exchange, message);
+        }
+
         await new InteractionServerMessenger(exchange).handleRequest(this);
+    }
+
+    get clientHandler(): ProtocolHandler | undefined {
+        return this.#clientHandler;
+    }
+
+    set clientHandler(clientHandler: ProtocolHandler) {
+        this.#clientHandler = clientHandler;
     }
 
     async handleReadRequest(

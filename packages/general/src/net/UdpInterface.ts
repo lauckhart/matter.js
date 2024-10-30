@@ -29,7 +29,7 @@ export class UdpInterface implements NetInterface {
             throw new NetworkError(`Unsupported address type ${address.type}`);
         }
         const { ip, port } = address;
-        return Promise.resolve(new UdpConnection(this.server, ip, port));
+        return new UdpConnection(this.server, ip, port);
     }
 
     onData(listener: (channel: Channel<Uint8Array>, messageBytes: Uint8Array) => void): TransportInterface.Listener {

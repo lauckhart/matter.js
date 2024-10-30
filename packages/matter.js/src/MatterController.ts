@@ -57,7 +57,6 @@ import {
     ScannerSet,
     SecureChannelProtocol,
     SessionManager,
-    SubscriptionClient,
     UnknownNodeError,
 } from "#protocol";
 import {
@@ -72,6 +71,7 @@ import {
     VendorId,
 } from "#types";
 import { ControllerStoreInterface } from "@matter/node";
+import { SubscriptionClient } from "../../protocol/src/interaction/SubscriptionClient.js";
 
 export type CommissionedNodeDetails = {
     operationalServerAddress?: ServerAddressIp;
@@ -256,13 +256,15 @@ export class MatterController {
             this.sessionClosedCallback?.(session.peerNodeId);
         });
 
+        const subscriptionClient = new SubscriptionClient();
+
         this.exchangeManager = new ExchangeManager({
             sessionManager: this.sessionManager,
             channelManager: this.channelManager,
             transportInterfaces: this.netInterfaces,
         });
         this.exchangeManager.addProtocolHandler(new SecureChannelProtocol(this.sessionManager, fabricManager));
-        this.exchangeManager.addProtocolHandler(new SubscriptionClient());
+        this.exchangeManager.addProtocolHandler(subscriptionClient);
 
         // Adapts the historical storage format for MatterController to OperationalPeer objects
         this.nodesStore = new CommissionedNodeStore(controllerStore, fabric);
@@ -271,6 +273,7 @@ export class MatterController {
             sessions: this.sessionManager,
             channels: this.channelManager,
             exchanges: this.exchangeManager,
+            subscriptionClient,
             scanners: this.scanners,
             netInterfaces: this.netInterfaces,
             store: this.nodesStore,

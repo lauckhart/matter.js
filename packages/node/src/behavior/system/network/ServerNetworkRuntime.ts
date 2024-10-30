@@ -29,6 +29,7 @@ import {
     MdnsService,
     SecureChannelProtocol,
     SessionManager,
+    SubscriptionClient,
 } from "#protocol";
 import { CommissioningOptions } from "@matter/types";
 import { CommissioningServer } from "../commissioning/CommissioningServer.js";
@@ -267,13 +268,29 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         };
 
         // Install our interaction server
-        this.#interactionServer = await TransactionalInteractionServer.create(this.owner, env.get(SessionManager));
-        env.get(ExchangeManager).addProtocolHandler(this.#interactionServer);
+        const interactionServer = (this.#interactionServer = await TransactionalInteractionServer.create(
+            this.owner,
+            env.get(SessionManager),
+        ));
+        env.get(ExchangeManager).addProtocolHandler(interactionServer);
 
         await this.owner.act("load-sessions", agent => agent.load(SessionsBehavior));
 
         // Monitor CommissioningServer to end "uncommissioned" mode when we are commissioned
         this.#observers.on(this.owner.eventsOf(CommissioningServer).commissioned, this.endUncommissionedMode);
+
+        // Install subscription client if present or listen for creation if not
+        if (env.has(SubscriptionClient)) {
+            interactionServer.clientHandler = env.get(SubscriptionClient);
+        } else {
+            const clientListener = (key: abstract new (...args: any[]) => unknown, value: {}) => {
+                if (key === SubscriptionClient) {
+                    interactionServer.clientHandler = value as SubscriptionClient;
+                    env.added.off(clientListener);
+                }
+            };
+            this.#observers.on(env.added, clientListener);
+        }
 
         // Ensure the environment will convey the commissioning configuration to the DeviceCommissioner
         if (!env.has(CommissioningConfigProvider)) {

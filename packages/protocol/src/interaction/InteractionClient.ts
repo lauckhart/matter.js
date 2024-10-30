@@ -6,7 +6,6 @@
 
 import {
     ImplementationError,
-    InternalError,
     Logger,
     MatterFlowError,
     MaybePromise,
@@ -29,7 +28,6 @@ import {
     Event,
     EventId,
     EventNumber,
-    INTERACTION_PROTOCOL_ID,
     NodeId,
     RequestType,
     ResponseType,
@@ -46,16 +44,10 @@ import {
     resolveEventName,
 } from "#types";
 import { ExchangeProvider, ReconnectableExchangeProvider } from "../protocol/ExchangeProvider.js";
-import { MessageExchange } from "../protocol/MessageExchange.js";
-import { ProtocolHandler } from "../protocol/ProtocolHandler.js";
 import { DecodedAttributeReportValue, normalizeAndDecodeReadAttributeReport } from "./AttributeDataDecoder.js";
 import { DecodedEventData, DecodedEventReportValue, normalizeAndDecodeReadEventReport } from "./EventDataDecoder.js";
-import {
-    DataReport,
-    IncomingInteractionClientMessenger,
-    InteractionClientMessenger,
-    ReadRequest,
-} from "./InteractionMessenger.js";
+import { DataReport, InteractionClientMessenger, ReadRequest } from "./InteractionMessenger.js";
+import { SubscriptionClient } from "./SubscriptionClient.js";
 
 const logger = Logger.get("InteractionClient");
 
@@ -73,89 +65,29 @@ export interface AttributeStatus {
     status: StatusCode;
 }
 
-export class SubscriptionClient implements ProtocolHandler {
-    private readonly subscriptionListeners = new Map<number, (dataReport: DataReport) => MaybePromise<void>>();
-    private readonly subscriptionUpdateTimers = new Map<number, Timer>();
-
-    constructor() {}
-
-    getId() {
-        return INTERACTION_PROTOCOL_ID;
-    }
-
-    registerSubscriptionListener(subscriptionId: number, listener: (dataReport: DataReport) => MaybePromise<void>) {
-        this.subscriptionListeners.set(subscriptionId, listener);
-    }
-
-    removeSubscriptionListener(subscriptionId: number) {
-        this.subscriptionListeners.delete(subscriptionId);
-    }
-
-    registerSubscriptionUpdateTimer(subscriptionId: number, timer: Timer) {
-        this.subscriptionUpdateTimers.set(subscriptionId, timer);
-    }
-
-    removeSubscriptionUpdateTimer(subscriptionId: number) {
-        this.subscriptionUpdateTimers.get(subscriptionId)?.stop();
-        this.subscriptionUpdateTimers.delete(subscriptionId);
-    }
-
-    async onNewExchange(exchange: MessageExchange) {
-        const messenger = new IncomingInteractionClientMessenger(exchange);
-
-        let dataReport: DataReport;
-        try {
-            // TODO Adjust this to getting packages as callback when received to handle error cases and checks outside
-            dataReport = await messenger.readDataReports([...this.subscriptionListeners.keys()]);
-        } finally {
-            messenger.close().catch(error => logger.info("Error closing client messenger", error));
-        }
-        const subscriptionId = dataReport.subscriptionId as number; // this is checked in the messenger already because we hand over allowed list
-
-        const listener = this.subscriptionListeners.get(subscriptionId);
-        const timer = this.subscriptionUpdateTimers.get(subscriptionId);
-
-        if (timer !== undefined) {
-            timer.stop().start(); // Restart timer because we received data
-        }
-
-        await listener?.(dataReport);
-    }
-
-    async close() {
-        this.subscriptionListeners.clear();
-        this.subscriptionUpdateTimers.forEach(timer => timer.stop());
-        this.subscriptionUpdateTimers.clear();
-    }
-}
-
 export class InteractionClient {
+    readonly #exchangeProvider: ExchangeProvider;
+    readonly #subscriptionClient: SubscriptionClient;
     readonly #nodeStore?: PeerDataStore;
     readonly #ownSubscriptionIds = new Set<number>();
-    readonly #subscriptionClient: SubscriptionClient;
     readonly #queue?: PromiseQueue;
 
     constructor(
-        private readonly exchangeProvider: ExchangeProvider,
+        exchangeProvider: ExchangeProvider,
+        subscriptionClient: SubscriptionClient,
         readonly address: PeerAddress,
         queue?: PromiseQueue,
         nodeStore?: PeerDataStore,
     ) {
+        this.#exchangeProvider = exchangeProvider;
+        this.#subscriptionClient = subscriptionClient;
         this.#nodeStore = nodeStore;
         this.#queue = queue;
-
-        const client = this.exchangeProvider.getProtocolHandler(INTERACTION_PROTOCOL_ID);
-        if (client === undefined || !(client instanceof SubscriptionClient)) {
-            throw new InternalError(
-                `Subscription protocol handler ${INTERACTION_PROTOCOL_ID} missing or unexpected type.`,
-            );
-        }
-        this.#subscriptionClient = client;
     }
 
     get channelUpdated() {
-        if (this.exchangeProvider instanceof ReconnectableExchangeProvider) {
-            return this.exchangeProvider.channelUpdated;
+        if (this.#exchangeProvider instanceof ReconnectableExchangeProvider) {
+            return this.#exchangeProvider.channelUpdated;
         }
         throw new ImplementationError("ExchangeProvider does not support channelUpdated");
     }
@@ -1147,7 +1079,7 @@ export class InteractionClient {
         invoke: (messenger: InteractionClientMessenger) => Promise<T>,
         executeQueued = false,
     ): Promise<T> {
-        const messenger = await InteractionClientMessenger.create(this.exchangeProvider);
+        const messenger = await InteractionClientMessenger.create(this.#exchangeProvider);
         let result: T;
         try {
             if (executeQueued) {
@@ -1196,11 +1128,11 @@ export class InteractionClient {
     }
 
     get session() {
-        return this.exchangeProvider.session;
+        return this.#exchangeProvider.session;
     }
 
     get channelType() {
-        return this.exchangeProvider.channelType;
+        return this.#exchangeProvider.channelType;
     }
 
     /** Enrich cached data to get complete responses when data version filters were used. */

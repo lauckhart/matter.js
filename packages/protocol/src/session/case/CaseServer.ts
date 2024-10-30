@@ -58,9 +58,7 @@ export class CaseServer implements ProtocolHandler {
         }
     }
 
-    getId(): number {
-        return SECURE_CHANNEL_PROTOCOL_ID;
-    }
+    readonly id = SECURE_CHANNEL_PROTOCOL_ID;
 
     private async handleSigma1(messenger: CaseServerMessenger) {
         logger.info(`Received pairing request from ${messenger.getChannelName()}`);
