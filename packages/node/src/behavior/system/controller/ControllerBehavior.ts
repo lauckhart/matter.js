@@ -6,6 +6,7 @@
 
 import { Behavior } from "#behavior/Behavior.js";
 import { BasicInformationBehavior } from "#behaviors/basic-information";
+import { NetInterface, NetInterfaceSet, TransportInterfaceSet } from "#general";
 import { Node } from "#node/Node.js";
 import {
     Ble,
@@ -99,8 +100,38 @@ export class ControllerBehavior extends Behavior {
     }
 
     #nodeOnline() {
+        // Configure network connections
+        const netInterfaces = this.env.get(NetInterfaceSet);
+        const netTransports = this.env.get(TransportInterfaceSet);
+        for (const transport of netTransports) {
+            if ("openChannel" in transport) {
+                netInterfaces.add(transport as NetInterface);
+            }
+        }
+        if (this.state.ble) {
+            netInterfaces.add(Ble.get().getBleCentralInterface());
+        }
+
         // This is necessary to receive data reports for subscriptions
         this.env.get(InteractionServer).clientHandler = this.env.get(SubscriptionClient);
+
+        // Clean up as the node goes offline
+        const node = Node.forEndpoint(this.endpoint);
+        this.reactTo(node.lifecycle.goingOffline, this.#nodeGoingOffline);
+    }
+
+    async #nodeGoingOffline() {
+        const netInterfaces = this.env.get(NetInterfaceSet);
+        const netTransports = this.env.get(TransportInterfaceSet);
+
+        // Remove "transports" from the net interface set so they are not closed twice
+        for (const intf of netInterfaces) {
+            if (netTransports.has(intf)) {
+                netInterfaces.delete(intf);
+            }
+        }
+
+        await this.env.close(NetInterfaceSet);
     }
 }
 

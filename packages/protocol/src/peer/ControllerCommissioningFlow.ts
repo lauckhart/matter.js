@@ -29,7 +29,7 @@ import { Fabric } from "../fabric/Fabric.js";
 import { InteractionClient } from "../interaction/InteractionClient.js";
 import { PeerAddress } from "./PeerAddress.js";
 
-const logger = Logger.get("ControllerCommissioner");
+const logger = Logger.get("ControllerCommissioningFlow");
 
 /**
  * User specific options for the Commissioning process
@@ -1081,7 +1081,7 @@ export class ControllerCommissioningFlow {
      *
      */
     async #reconnectWithDevice() {
-        logger.debug("Reconnecting with device ...");
+        logger.debug("Reconnecting with device");
         const transitionResult = await this.#transitionToCase(this.#interactionClient.address);
 
         if (transitionResult === undefined) {
@@ -1095,7 +1095,7 @@ export class ControllerCommissioningFlow {
         this.#interactionClient = transitionResult;
         this.#clusterClients.clear();
 
-        logger.debug("Successfully reconnected with device ...");
+        logger.debug("Successfully reconnected with device");
 
         return {
             code: CommissioningStepResultCode.Success,

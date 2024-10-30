@@ -156,7 +156,7 @@ export class ControllerCommissioner {
                 channel = await this.#initializePaseSecureChannel(address, passcode, discoveryData);
             } catch (e) {
                 NoResponseTimeoutError.accept(e);
-                console.warn(`Could not connect to ${serverAddressToString(address)}: ${e.message}`);
+                logger.warn(`Could not connect to ${serverAddressToString(address)}: ${e.message}`);
             }
         }
 

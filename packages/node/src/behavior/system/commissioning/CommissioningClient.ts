@@ -9,6 +9,7 @@ import { ImplementationError, NotImplementedError, ServerAddress, Time } from "#
 import { DatatypeModel, FieldElement } from "#model";
 import type { ClientNode } from "#node/ClientNode.js";
 import { Node } from "#node/Node.js";
+import { IdentityService } from "#node/server/IdentityService.js";
 import {
     CommissioningMode,
     ControllerCommissioner,
@@ -111,8 +112,17 @@ export class CommissioningClient extends Behavior {
             commissioningOptions.finalizeCommissioning = this.finalizeCommissioning.bind(this);
         }
 
-        const address = await commissioner.commission(commissioningOptions);
-        this.state.peerAddress = address;
+        const identityService = this.endpoint.env.get(IdentityService);
+        const address = identityService.assignNodeAddress(node, fabric.fabricIndex, options.nodeId);
+
+        try {
+            await commissioner.commission(commissioningOptions);
+            this.state.peerAddress = address;
+        } finally {
+            if (this.state.peerAddress !== address) {
+                identityService.releaseNodeAddress(address);
+            }
+        }
 
         return node;
     }

@@ -5,28 +5,61 @@
  */
 
 import { RemoteDescriptor } from "#behavior/system/commissioning/RemoteDescriptor.js";
-import { InternalError } from "#general";
+import { ClientNode } from "#node/ClientNode.js";
+import { IdentityService } from "#node/server/IdentityService.js";
 import { ServerNode } from "#node/ServerNode.js";
-import { OperationalPeer, PeerAddress, PeerAddressStore, PeerDataStore } from "#protocol";
+import { OperationalPeer, PeerAddress, PeerAddressMap, PeerAddressStore } from "#protocol";
+import { FabricIndex, NodeId } from "#types";
 
 /**
  * This is an adapter for lower-level components in the protocol package.
  */
-export class NodePeerStore extends PeerAddressStore {
+export class NodePeerAddressStore extends PeerAddressStore {
     #owner: ServerNode;
+
+    /**
+     * This is the map of all addresses allocated to nodes.  A node may appear in this map even if not yet commissioned
+     * if commissioning is underway.
+     */
+    #assignedAddresses = new PeerAddressMap<ClientNode>();
 
     constructor(owner: ServerNode) {
         super();
         this.#owner = owner;
+
+        // Install address management functions into IdentityService.  This indirection is just to avoid circular
+        // dependencies
+        const identityService = owner.env.get(IdentityService);
+        identityService.assignNodeAddress = this.assignNewAddress.bind(this);
+        identityService.releaseNodeAddress = this.deletePeer.bind(this);
     }
 
-    async loadPeers(): Promise<OperationalPeer[]> {
+    assignNewAddress(node: ClientNode, fabricIndex: FabricIndex, nodeId?: NodeId) {
+        while (nodeId === undefined) {
+            nodeId = NodeId.randomOperationalNodeId();
+            if (this.#assignedAddresses.has({ fabricIndex, nodeId })) {
+                nodeId = undefined;
+            }
+        }
+
+        const address = PeerAddress({ fabricIndex, nodeId });
+
+        this.#assignedAddresses.set(address, node);
+
+        return address;
+    }
+
+    loadPeers(): OperationalPeer[] {
+        this.#assignedAddresses = new PeerAddressMap();
         return [...this.#owner.nodes]
             .map(node => {
                 const commissioning = node.state.commissioning;
                 if (!commissioning.peerAddress) {
                     return;
                 }
+
+                this.#assignedAddresses.set(commissioning.peerAddress, node);
+
                 return {
                     address: commissioning.peerAddress,
                     operationalAddress: commissioning.addresses?.find(addr => addr.type === "udp"),
@@ -52,15 +85,9 @@ export class NodePeerStore extends PeerAddressStore {
         });
     }
 
-    async deletePeer(address: PeerAddress) {
-        // TODO - should we be doing this separately?
-        const node = this.#owner.nodes.get(address);
-        if (node) {
-            await node.close();
-        }
+    deletePeer(address: PeerAddress) {
+        this.#assignedAddresses.delete(address);
     }
 
-    async createNodeStore(): Promise<PeerDataStore> {
-        throw new InternalError("Node store creation not supported");
-    }
+    createNodeStore(): undefined {}
 }

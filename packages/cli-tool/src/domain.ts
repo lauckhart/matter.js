@@ -331,14 +331,12 @@ export async function Domain(context: DomainContext): Promise<Domain> {
         ),
     );
 
-    const cwd = domain.env.vars.string("cwd");
-    if (cwd !== undefined) {
-        try {
-            domain.location = await domain.location.at(cwd);
-        } catch (e) {
-            if (!(e instanceof NotFoundError) && !(e instanceof NotADirectoryError)) {
-                throw e;
-            }
+    const cwd = domain.env.vars.string("cwd") ?? `/${defaultNode.id}`;
+    try {
+        domain.location = await domain.location.at(cwd);
+    } catch (e) {
+        if (!(e instanceof NotFoundError) && !(e instanceof NotADirectoryError)) {
+            throw e;
         }
     }
 
