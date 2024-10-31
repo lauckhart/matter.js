@@ -19,9 +19,14 @@ import {
     Identity,
     ImplementationError,
     Logger,
+    MaybePromise,
     RuntimeService,
 } from "#general";
 import { RootEndpoint } from "../endpoints/root.js";
+import { ReadRequestAction } from "./action/ReadRequestAction.js";
+import { ReportDataAction } from "./action/ReportDataAction.js";
+import { WriteRequestAction } from "./action/WriteRequestAction.js";
+import { WriteResponseAction } from "./action/WriteResponseAction.js";
 import { NodeLifecycle } from "./NodeLifecycle.js";
 
 const logger = Logger.get("Node");
@@ -70,12 +75,15 @@ export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEn
         });
     }
 
-    override get env() {
-        return this.#environment;
+    abstract read(request: ReadRequestAction): MaybePromise<ReportDataAction>;
+    abstract write(request: WriteRequestAction): MaybePromise<WriteResponseAction>;
+
+    override get lifecycle(): NodeLifecycle {
+        return super.lifecycle as NodeLifecycle;
     }
 
-    protected override createLifecycle(): NodeLifecycle {
-        return new NodeLifecycle(this);
+    override get env() {
+        return this.#environment;
     }
 
     /**
@@ -168,8 +176,8 @@ export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEn
         });
     }
 
-    override get lifecycle(): NodeLifecycle {
-        return super.lifecycle as NodeLifecycle;
+    protected override createLifecycle(): NodeLifecycle {
+        return new NodeLifecycle(this);
     }
 
     protected statusUpdate(message: string) {

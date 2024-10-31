@@ -147,6 +147,10 @@ export class ExchangeManager {
         return instance;
     }
 
+    get channels() {
+        return this.#channelManager;
+    }
+
     hasProtocolHandler(protocolId: number) {
         return this.#protocols.has(protocolId);
     }

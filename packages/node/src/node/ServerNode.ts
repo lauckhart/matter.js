@@ -12,11 +12,23 @@ import { ProductDescriptionServer } from "#behavior/system/product-description/P
 import { SessionsBehavior } from "#behavior/system/sessions/SessionsBehavior.js";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { EndpointServer } from "#endpoint/EndpointServer.js";
-import type { Environment } from "#general";
-import { Construction, DiagnosticSource, Identity, MatterError, asyncNew, errorOf } from "#general";
+import type { Environment, MaybePromise } from "#general";
+import {
+    Construction,
+    DiagnosticSource,
+    Identity,
+    MatterError,
+    NotImplementedError,
+    asyncNew,
+    errorOf,
+} from "#general";
 import { EventHandler, FabricManager, SessionManager } from "#protocol";
 import { RootEndpoint as BaseRootEndpoint } from "../endpoints/root.js";
 import { Node } from "./Node.js";
+import { ReadRequestAction } from "./action/ReadRequestAction.js";
+import { ReportDataAction } from "./action/ReportDataAction.js";
+import { WriteRequestAction } from "./action/WriteRequestAction.js";
+import { WriteResponseAction } from "./action/WriteResponseAction.js";
 import { ClientNodes } from "./client/ClientNodes.js";
 import { ServerEnvironment } from "./server/ServerEnvironment.js";
 import { ServerNodeStore } from "./storage/ServerNodeStore.js";
@@ -66,6 +78,16 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
         DiagnosticSource.add(this);
 
         this.construction.start();
+    }
+
+    read(_request: ReadRequestAction): MaybePromise<ReportDataAction> {
+        // TODO - route read interactions here
+        throw new NotImplementedError("Global read is not implemented for server nodes");
+    }
+
+    write(_request: WriteRequestAction): MaybePromise<WriteResponseAction> {
+        // TODO - route write interactions here
+        throw new NotImplementedError("Global write is not implemented for server nodes");
     }
 
     /**

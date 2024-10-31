@@ -22,7 +22,6 @@ import {
     NetInterfaceSet,
     NoResponseTimeoutError,
     ObservableSet,
-    PromiseQueue,
     ServerAddressIp,
     serverAddressToString,
     Time,
@@ -40,6 +39,7 @@ import { ChannelNotConnectedError, ExchangeManager, MessageChannel } from "../pr
 import { ReconnectableExchangeProvider } from "../protocol/ExchangeProvider.js";
 import { RetransmissionLimitReachedError } from "../protocol/MessageExchange.js";
 import { ControllerDiscovery, DiscoveryError, PairRetransmissionLimitReachedError } from "./ControllerDiscovery.js";
+import { InteractionQueue } from "./InteractionQueue.js";
 import { OperationalPeer } from "./OperationalPeer.js";
 import { PeerAddressStore, PeerDataStore } from "./PeerAddressStore.js";
 
@@ -47,9 +47,6 @@ const logger = Logger.get("PeerSet");
 
 const RECONNECTION_POLLING_INTERVAL_MS = 600_000; // 10 minutes
 const RETRANSMISSION_DISCOVERY_TIMEOUT_MS = 5_000;
-
-const CONCURRENT_QUEUED_INTERACTIONS = 4;
-const INTERACTION_QUEUE_DELAY_MS = 100;
 
 /**
  * Types of discovery that may be performed when connecting operationally.
@@ -119,7 +116,7 @@ export class PeerSet implements ImmutableSet<OperationalPeer>, ObservableSet<Ope
     }>();
     readonly #construction: Construction<PeerSet>;
     readonly #store: PeerAddressStore;
-    readonly #interactionQueue = new PromiseQueue(CONCURRENT_QUEUED_INTERACTIONS, INTERACTION_QUEUE_DELAY_MS);
+    readonly #interactionQueue = new InteractionQueue();
     readonly #nodeCachedData = new PeerAddressMap<PeerDataStore>(); // Temporarily until we store it in new API
     readonly #clients = new PeerAddressMap<InteractionClient>();
 
