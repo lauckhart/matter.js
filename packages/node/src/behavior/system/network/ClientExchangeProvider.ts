@@ -4,18 +4,36 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ChannelType } from "#general";
-import { ExchangeManager, ExchangeProvider, MessageExchange, PeerAddress, Session } from "#protocol";
+import {
+    ChannelType,
+    Immutable,
+    ImplementationError,
+    InternalError,
+    Logger,
+    NetInterfaceSet,
+    NotImplementedError,
+} from "#general";
+import { ClientNode } from "#node/ClientNode.js";
+import { ExchangeManager, ExchangeProvider, MessageExchange, Session } from "#protocol";
 import { INTERACTION_PROTOCOL_ID } from "#types";
+import { CommissioningClient } from "../commissioning/CommissioningClient.js";
+
+const logger = Logger.get("ClientExchangeProvider");
 
 export class ClientExchangeProvider extends ExchangeProvider {
-    #address: PeerAddress;
+    #owner: ClientNode;
     #exchanges: ExchangeManager;
+    #commissioning: Immutable<CommissioningClient.State>;
+    #connected?: Promise<boolean>;
 
-    constructor(address: PeerAddress, exchanges: ExchangeManager) {
+    constructor(owner: ClientNode) {
+        const exchanges = owner.env.get(ExchangeManager);
+
         super(exchanges);
-        this.#address = address;
+
+        this.#owner = owner;
         this.#exchanges = exchanges;
+        this.#commissioning = owner.state.commissioning;
     }
 
     override async initiateExchange(): Promise<MessageExchange> {
@@ -26,8 +44,41 @@ export class ClientExchangeProvider extends ExchangeProvider {
     }
 
     override reconnectChannel(): Promise<boolean> {
-        // TODO
-        return Promise.resolve(false);
+        if (this.#connected) {
+            return this.#connected;
+        }
+
+        const rediscover = this.#commissioning.addresses === undefined || this.#commissioning.offlineAt !== undefined;
+        if (rediscover) {
+            // TODO
+            throw new NotImplementedError("Rediscovery not implemented");
+        }
+
+        this.#connected = this.#connect();
+
+        return this.#connected;
+    }
+
+    async #connect(): Promise<boolean> {
+        const addresses = this.#commissioning.addresses;
+        if (addresses === undefined) {
+            throw new InternalError(`Connection attempt to ${this.#owner} without operational address`);
+        }
+
+        const netInterfaces = this.#owner.env.get(NetInterfaceSet);
+        for (const address of addresses) {
+            if (address.type !== ChannelType.UDP) {
+                continue;
+            }
+
+            const intf = netInterfaces.interfaceFor(ChannelType.UDP, address.ip);
+            if (intf === undefined) {
+                logger.warn(`No network interface for ${this.#owner} address ${address.ip}`);
+                continue;
+            }
+
+            const channel = intf.openChannel(address);
+        }
     }
 
     override get session(): Session {
@@ -36,5 +87,13 @@ export class ClientExchangeProvider extends ExchangeProvider {
 
     override get channelType(): ChannelType {
         return this.#exchanges.channels.getChannel(this.#address).channel.type;
+    }
+
+    get #address() {
+        const address = this.#commissioning.peerAddress;
+        if (address === undefined) {
+            throw new ImplementationError(`${this.#owner} is uncommissioned`);
+        }
+        return address;
     }
 }

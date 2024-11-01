@@ -185,6 +185,8 @@ export class CommissioningClient extends Behavior {
                 ],
             }),
             FieldElement({ name: "discoveredAt", type: "systime-ms", quality: "N", conformance: "M" }),
+            FieldElement({ name: "onlineAt", type: "systime-ms", quality: "N" }),
+            FieldElement({ name: "offlineAt", type: "systime-ms", quality: "N" }),
             FieldElement({ name: "ttl", type: "uint32", quality: "N" }),
             FieldElement({ name: "deviceIdentifier", type: "string", quality: "N" }),
             FieldElement({ name: "discriminator", type: "uint16", quality: "N" }),
@@ -222,8 +224,6 @@ export namespace CommissioningClient {
         /**
          * Known network addresses for the device.  If this is undefined the node has not been located on any network
          * interface.
-         *
-         * TODO - track discovery time and TTL on individual addresses
          */
         addresses?: ServerAddress[];
 
@@ -231,6 +231,16 @@ export namespace CommissioningClient {
          * Time at which the device was discovered.
          */
         discoveredAt: number = Time.nowMs();
+
+        /**
+         * Time at which we discovered the device's current operational addresses.
+         */
+        onlineAt?: number;
+
+        /**
+         * Time at which we concluded the device's current operational address is unreachable.
+         */
+        offlineAt?: number;
 
         /**
          * The TTL of the discovery record if applicable.
