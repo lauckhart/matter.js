@@ -127,6 +127,15 @@ export class UnexpectedDataError extends MatterError {}
 export class ImplementationError extends MatterError {}
 
 /**
+ * Used to indicate an asynchronous operation was canceled.
+ */
+export class CanceledError extends MatterError {
+    constructor(message = "Operation canceled", options?: ErrorOptions) {
+        super(message, options);
+    }
+}
+
+/**
  * Thrown for write attempts against immutable data.
  */
 export class ReadOnlyError extends ImplementationError {

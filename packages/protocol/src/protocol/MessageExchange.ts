@@ -199,8 +199,8 @@ export class MessageExchange {
         this.#idleIntervalMs = idleIntervalMs ?? SESSION_IDLE_INTERVAL_MS;
         this.#activeThresholdMs = activeThresholdMs ?? SESSION_ACTIVE_THRESHOLD_MS;
         this.#maxTransmissions = MRP_MAX_TRANSMISSIONS;
-
         // When the session is supporting MRP and the channel is not reliable, use MRP handling
+
         this.#useMRP = session.supportsMRP && !channel.isReliable;
 
         logger.debug(
@@ -256,7 +256,6 @@ export class MessageExchange {
             payloadHeader: { requiresAck },
         } = message;
         if (!requiresAck || !this.#useMRP) return;
-
         await this.send(SecureMessageType.StandaloneAck, new Uint8Array(0), { includeAcknowledgeMessageId: messageId });
     }
 
@@ -337,8 +336,8 @@ export class MessageExchange {
             }
             this.#receivedMessageToAck = message;
             this.#receivedMessageAckTimer.start();
+            await this.#messagesQueue.write(message);
         }
-        await this.#messagesQueue.write(message);
     }
 
     async send(messageType: number, payload: Uint8Array, options?: ExchangeSendOptions) {

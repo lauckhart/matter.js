@@ -10,6 +10,7 @@ import { ExchangeProvider, InteractionClient, InteractionClientMessenger, PeerSe
 import { InteractionQueue } from "../../../../../protocol/src/peer/InteractionQueue.js";
 import { CommissioningClient } from "../commissioning/CommissioningClient.js";
 import { RemoteDescriptor } from "../commissioning/RemoteDescriptor.js";
+import { ClientExchangeProvider } from "./ClientExchangeProvider.js";
 import { NetworkRuntime } from "./NetworkRuntime.js";
 
 export class UncommissionedError extends MatterError {}
@@ -29,19 +30,24 @@ export class ClientNetworkRuntime extends NetworkRuntime {
     constructor(owner: ClientNode) {
         super(owner);
         this.#queue = owner.env.get(InteractionQueue);
-    }
-
-    async interact<T>(actor: (messenger: InteractionClientMessenger) => T) {
-        const messenger = await InteractionClientMessenger.create(this.#exchangeProvider);
-        return actor(messenger);
+        this.#exchangeProvider = new ClientExchangeProvider(owner);
     }
 
     /**
-     * Obtain an active {@link InteractionClient} for the node.
+     * Interact with the remote node.
+     *
+     * During interaction an actor function has exclusive access to a messenger for communicating with the ndoe.
+     *
+     * TODO - wire cancelation into MessageExchange, return CancelablePromise here
      */
-    client() {
-        // TODO - need reconnect logic here
-        return this.construction.assert(`${this.owner} connected`, this.#connected);
+    async interact<T>(interactor: (messenger: InteractionClientMessenger) => Promise<T>): Promise<T> {
+        const messenger = await InteractionClientMessenger.create(this.#exchangeProvider);
+
+        try {
+            return interactor(messenger);
+        } finally {
+            await messenger.close();
+        }
     }
 
     protected async start() {
