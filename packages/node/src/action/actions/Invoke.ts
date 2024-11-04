@@ -6,8 +6,7 @@
 
 import { FALLBACK_INTERACTIONMODEL_REVISION } from "#protocol";
 import { ClusterType, CommandData, InvokeRequest, TlvSchema, TypeFromSchema } from "#types";
-import { ImplementationError } from "@matter/general";
-import { Action } from "./Action.js";
+import { Action, MalformedActionError } from "./Action.js";
 
 export interface Invoke extends InvokeRequest {
     kind: "invoke";
@@ -52,13 +51,13 @@ export namespace Invoke {
         return result;
     }
 
-    export type CommandIdentifier<C extends ClusterType = ClusterType> =
+    export type CommandSpecifier<C extends ClusterType = ClusterType> =
         | ClusterType.Command
         | (string & keyof C["commands"]);
 
     export type CommandRequest<
         C extends Action.ClusterSpecifier = Action.ClusterSpecifier,
-        CMD extends CommandIdentifier<Action.ClusterFor<C>> = CommandIdentifier<Action.ClusterFor<C>>,
+        CMD extends CommandSpecifier<Action.ClusterFor<C>> = CommandSpecifier<Action.ClusterFor<C>>,
     > = {
         endpoint?: Action.EndpointSpecifier;
         cluster: C;
@@ -72,7 +71,7 @@ export namespace Invoke {
               ? { fields?: TypeFromSchema<S> }
               : { fields: TypeFromSchema<S> };
 
-    export type CommandFor<C extends ClusterType, CMD extends CommandIdentifier<C>> = CMD extends string
+    export type CommandFor<C extends ClusterType, CMD extends CommandSpecifier<C>> = CMD extends string
         ? C["commands"][CMD]
         : CMD extends ClusterType.Command
           ? CMD
@@ -82,11 +81,11 @@ export namespace Invoke {
         if (typeof request.command === "string") {
             const cluster = Action.clusterOf(request);
             if (cluster === undefined) {
-                throw new ImplementationError(`Command named ${request.command} cannot be designated without cluster`);
+                throw new MalformedActionError(`Cannot designate command "${request.command}" without cluster`);
             }
             const command = cluster.commands[request.command];
             if (command === undefined) {
-                throw new ImplementationError(`Cluster ${cluster.name} does not support command ${request.command}`);
+                throw new MalformedActionError(`Cluster ${cluster.name} does not define command ${request.command}`);
             }
             return command as CommandFor<Action.ClusterOf<R>, R["command"]>;
         }

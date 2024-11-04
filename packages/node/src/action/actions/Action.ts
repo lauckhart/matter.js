@@ -4,12 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { MatterError } from "#general";
 import { ClusterType, EndpointNumber } from "#types";
 import type { Invoke } from "./Invoke.js";
 import type { Read } from "./Read.js";
 import type { Subscribe } from "./Subscribe.js";
 import type { Timed } from "./Timed.js";
 import type { Write } from "./Write.js";
+
+export class MalformedActionError extends MatterError {}
 
 /**
  * An action is a message transmitted as part of a Matter interaction.
@@ -25,7 +28,9 @@ export namespace Action {
 
     export type ClusterSpecifier = ClusterType | { cluster: ClusterType };
 
-    export type EndpointSpecifier = EndpointNumber | { number: EndpointNumber };
+    export type EndpointSpecifier =
+        | EndpointNumber
+        | { number: EndpointNumber; versions?: Record<string, number>; minEvent?: number };
 
     export interface ElementRequest {
         endpoint?: EndpointSpecifier;

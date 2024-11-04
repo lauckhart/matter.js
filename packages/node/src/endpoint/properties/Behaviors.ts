@@ -474,6 +474,16 @@ export class Behaviors {
         return backing.getInternal() as InstanceType<T["Internal"]>;
     }
 
+    /**
+     * Obtain the data version for a behavior.
+     */
+    versionOf(type: Behavior.Type) {
+        const backing = this.#backings[type.id];
+        if (backing !== undefined) {
+            return backing.datasource.version;
+        }
+    }
+
     #activateLate(type: Behavior.Type) {
         const result = OfflineContext.act("behavior-late-activation", this.#endpoint.env.get(NodeActivity), context =>
             this.activate(type, context.agentFor(this.#endpoint)),
