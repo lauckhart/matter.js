@@ -6,7 +6,7 @@
 
 import { Construction, ImplementationError } from "#general";
 import type { Node } from "#node/Node.js";
-import { NodeActivity } from "../../context/NodeActivity.js";
+import { NodeActivity } from "../../../action/context/NodeActivity.js";
 import { NetworkBehavior } from "./NetworkBehavior.js";
 
 /**

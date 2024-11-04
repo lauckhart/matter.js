@@ -6,11 +6,11 @@
 
 import { CommissioningClient } from "#behavior/system/commissioning/CommissioningClient.js";
 import { ClientNetworkRuntime } from "#behavior/system/network/ClientNetworkRuntime.js";
+import { NetworkClient } from "#behavior/system/network/NetworkClient.js";
 import { NetworkRuntime } from "#behavior/system/network/NetworkRuntime.js";
 import { Agent } from "#endpoint/Agent.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
 import { Identity, Lifecycle, MaybePromise, NotImplementedError } from "#general";
-import { ReadRequestAction } from "./action/ReadRequestAction.js";
 import { ReportDataAction } from "./action/ReportDataAction.js";
 import { WriteRequestAction } from "./action/WriteRequestAction.js";
 import { WriteResponseAction } from "./action/WriteResponseAction.js";
@@ -99,7 +99,7 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
 export namespace ClientNode {
     export interface Options extends Node.Options<RootEndpoint> {}
 
-    export const RootEndpoint = Node.CommonRootEndpoint.with(CommissioningClient);
+    export const RootEndpoint = Node.CommonRootEndpoint.with(CommissioningClient, NetworkClient);
 
     export interface RootEndpoint extends Identity<typeof RootEndpoint> {}
 }

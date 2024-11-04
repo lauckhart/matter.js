@@ -11,7 +11,7 @@ import { CommandPayload } from "../payloads/CommandPayload.js";
  *
  * @see {@link MatterSpecification.v11.Core} § 8.8.2
  */
-export type InvokeRequestAction = {
+export type InvokeAction = {
     commands: CommandPayload.Request[];
     suppressResponse?: boolean;
     timedRequest?: boolean;

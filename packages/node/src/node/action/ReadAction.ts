@@ -8,7 +8,7 @@ import { DataVersion, EventNumber, NodeId } from "#types";
 import { AttributePath } from "../paths/AttributePath.js";
 import { EventPath } from "../paths/EventPath.js";
 
-export namespace ReadRequestAction {
+export namespace ReadAction {
     /**
      * Filters known data from attribute reads.
      *
@@ -34,10 +34,10 @@ export namespace ReadRequestAction {
  *
  * @see {@link MatterSpecification.v11.Core} § 8.4.2
  */
-export type ReadRequestAction = {
+export type ReadAction = {
     attributes?: AttributePath.Read[];
-    versions?: ReadRequestAction.AttributeVersionFilter[];
+    versions?: ReadAction.AttributeVersionFilter[];
     events?: EventPath.Read[];
-    sequences?: ReadRequestAction.EventSequenceFilter[];
+    sequences?: ReadAction.EventSequenceFilter[];
     fabric?: boolean;
 };

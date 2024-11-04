@@ -10,7 +10,7 @@ import type { EndpointType } from "#endpoint/type/EndpointType.js";
 import type { AccessLevel } from "#model";
 import type { Message, SecureSession } from "#protocol";
 import { MessageExchange } from "#protocol";
-import type { ValueSupervisor } from "../supervision/ValueSupervisor.js";
+import type { ValueSupervisor } from "../../behavior/supervision/ValueSupervisor.js";
 import { NodeActivity } from "./NodeActivity.js";
 import type { OfflineContext } from "./server/OfflineContext.js";
 import type { OnlineContext } from "./server/OnlineContext.js";
@@ -47,7 +47,7 @@ export interface ActionContext extends ValueSupervisor.Session {
     exchange?: MessageExchange;
 
     /**
-     * The wire message that initiated invocation.
+     * The wire message that initiated the interaction.
      */
     message?: Message;
 

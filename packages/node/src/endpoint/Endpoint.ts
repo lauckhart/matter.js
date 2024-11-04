@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { NodeActivity } from "#action/context/NodeActivity.js";
+import { OfflineContext } from "#action/context/server/OfflineContext.js";
 import { Behavior } from "#behavior/Behavior.js";
-import { NodeActivity } from "#behavior/context/NodeActivity.js";
-import { OfflineContext } from "#behavior/context/server/OfflineContext.js";
 import {
     Construction,
     Diagnostic,

@@ -25,7 +25,6 @@ import {
 import { EventHandler, FabricManager, SessionManager } from "#protocol";
 import { RootEndpoint as BaseRootEndpoint } from "../endpoints/root.js";
 import { Node } from "./Node.js";
-import { ReadRequestAction } from "./action/ReadRequestAction.js";
 import { ReportDataAction } from "./action/ReportDataAction.js";
 import { WriteRequestAction } from "./action/WriteRequestAction.js";
 import { WriteResponseAction } from "./action/WriteResponseAction.js";

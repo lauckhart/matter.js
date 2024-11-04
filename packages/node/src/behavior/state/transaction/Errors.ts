@@ -5,9 +5,9 @@
  */
 
 import { MatterError } from "#general";
+import type { ActionContext } from "../../../action/context/ActionContext.js";
+import type { OfflineContext } from "../../../action/context/server/OfflineContext.js";
 import type { Behavior } from "../../Behavior.js";
-import type { ActionContext } from "../../context/ActionContext.js";
-import type { OfflineContext } from "../../context/server/OfflineContext.js";
 import type { Transaction } from "./Transaction.js";
 
 /**

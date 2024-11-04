@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ActionContext } from "#action/context/ActionContext.js";
 import { Behavior } from "#behavior/Behavior.js";
-import { ActionContext } from "#behavior/context/ActionContext.js";
 import { GeneratedClass, MaybePromise } from "#general";
 import { DescriptorBehavior } from "../behaviors/descriptor/DescriptorBehavior.js";
 import type { Endpoint } from "./Endpoint.js";

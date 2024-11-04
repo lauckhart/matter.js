@@ -21,12 +21,12 @@ import {
     SecureSession,
 } from "#protocol";
 import { Attribute, Command, Event, TlvNoResponse } from "#types";
+import { Contextual } from "../../action/context/Contextual.js";
 import { AccessControl } from "../AccessControl.js";
 import { Behavior } from "../Behavior.js";
 import type { ClusterBehavior } from "../cluster/ClusterBehavior.js";
 import { ClusterEvents } from "../cluster/ClusterEvents.js";
 import { ValidatedElements } from "../cluster/ValidatedElements.js";
-import { Contextual } from "../context/Contextual.js";
 import { Val } from "../state/Val.js";
 import { StructManager } from "../state/managed/values/StructManager.js";
 import { Status } from "../state/transaction/Status.js";

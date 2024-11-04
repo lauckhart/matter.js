@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ActionContext } from "#action/context/ActionContext.js";
 import { AccessControl } from "#behavior/AccessControl.js";
-import { ActionContext } from "#behavior/context/ActionContext.js";
 import { AccessControl as AccessControlTypes } from "#clusters/access-control";
 import { deepCopy, InternalError, isDeepEqual, Logger } from "#general";
 import { AccessLevel } from "#model";

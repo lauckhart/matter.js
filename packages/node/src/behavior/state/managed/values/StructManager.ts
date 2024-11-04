@@ -38,6 +38,11 @@ export function StructManager(owner: RootSupervisor, schema: Schema): ValueSuper
         instanceDescriptors[name] = descriptor;
         propertyAccessControls[name] = access;
 
+        // Support ID as an alternate key
+        if (member.id !== undefined) {
+            instanceDescriptors[member.id] = descriptor;
+        }
+
         if (member.name === "FabricIndex") {
             hasFabricIndex = true;
         }
@@ -154,6 +159,7 @@ interface Wrapper extends Val.Struct, Internal.Collection {
 
 function configureProperty(manager: RootSupervisor, schema: ValueModel) {
     const name = camelize(schema.name);
+    const id = schema.id;
 
     const { access, manage, validate } = manager.get(schema);
 
@@ -166,7 +172,15 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
         set(this: Wrapper, value: Val) {
             access.authorizeWrite(this[SESSION], this[Internal.reference].location);
 
-            const oldValue = this[Internal.reference].value[name];
+            // We allow attribute/field name or id as key.  If name is present id is ignored
+            let storedKey =
+                name in this[Internal.reference].value
+                    ? name
+                    : id !== undefined && id in this[Internal.reference]
+                      ? id
+                      : name;
+
+            const oldValue = this[Internal.reference].value[storedKey];
 
             const self = this;
 
@@ -175,12 +189,13 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
 
                 // Identify the target.  Usually just "struct" except when struct supports Val.Dynamic
                 let target;
-                if ((struct as Val.Dynamic)[Val.properties]) {
+                if (Val.properties in struct) {
                     const properties = (struct as Val.Dynamic)[Val.properties](
                         this[Internal.reference].rootOwner,
                         this[SESSION],
                     );
                     if (name in properties) {
+                        storedKey = name;
                         target = properties;
                     } else {
                         target = struct;
@@ -195,7 +210,7 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
                 }
 
                 // Modify the value
-                if (fabricScopedList && Array.isArray(value) && Array.isArray(target[name])) {
+                if (fabricScopedList && Array.isArray(value) && Array.isArray(target[storedKey])) {
                     // In the case of fabric-scoped write to established list we use the managed proxy to perform update
                     // as it will sort through values and only modify those with correct fabricIndex
                     const proxy = self[name] as Val.List;
@@ -205,7 +220,7 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
                     proxy.length = value.length;
                 } else {
                     // Direct assignment
-                    target[name] = value;
+                    target[storedKey] = value;
                 }
 
                 if (!this[SESSION].acceptInvalid && validate) {
@@ -225,7 +240,7 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
                     } catch (e) {
                         // Undo our change on error.  Rollback will take care of this when transactional but this
                         // handles the cases of 1.) no transaction, and 2.) error is caught within transaction
-                        target[name] = oldValue;
+                        target[storedKey] = oldValue;
 
                         throw e;
                     }
@@ -249,7 +264,7 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
                     }
                 }
 
-                return struct[name];
+                return struct[name] ?? (id === undefined ? undefined : struct[id]);
             }
         };
     } else {
@@ -293,7 +308,7 @@ function configureProperty(manager: RootSupervisor, schema: ValueModel) {
                     value = struct[name];
                 }
             } else {
-                value = struct[name];
+                value = struct[name] ?? (id === undefined ? undefined : struct[id]);
             }
 
             if (value === undefined) {

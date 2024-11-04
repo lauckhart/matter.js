@@ -7,11 +7,11 @@
 import { Endpoint } from "#endpoint/Endpoint.js";
 import type { Observable, Observer } from "#general";
 import { ImplementationError, InternalError, Logger, MaybePromise } from "#general";
+import { ActionContext } from "../../action/context/ActionContext.js";
+import { Contextual } from "../../action/context/Contextual.js";
+import { NodeActivity } from "../../action/context/NodeActivity.js";
+import { OfflineContext } from "../../action/context/server/OfflineContext.js";
 import { Reactor } from "../Reactor.js";
-import { ActionContext } from "../context/ActionContext.js";
-import { Contextual } from "../context/Contextual.js";
-import { NodeActivity } from "../context/NodeActivity.js";
-import { OfflineContext } from "../context/server/OfflineContext.js";
 import { Resource } from "../state/transaction/Resource.js";
 import type { BehaviorBacking } from "./BehaviorBacking.js";
 

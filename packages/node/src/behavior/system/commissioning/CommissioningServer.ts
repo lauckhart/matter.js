@@ -29,10 +29,10 @@ import {
     QrCode,
     QrPairingCodeCodec,
 } from "#types";
+import { ActionContext } from "../../../action/context/ActionContext.js";
 import { BasicInformationBehavior } from "../../../behaviors/basic-information/BasicInformationBehavior.js";
 import { OperationalCredentialsBehavior } from "../../../behaviors/operational-credentials/OperationalCredentialsBehavior.js";
 import { Behavior } from "../../Behavior.js";
-import { ActionContext } from "../../context/ActionContext.js";
 import { Val } from "../../state/Val.js";
 import { NetworkServer } from "../network/NetworkServer.js";
 import { SessionsBehavior } from "../sessions/SessionsBehavior.js";

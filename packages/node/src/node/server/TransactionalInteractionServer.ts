@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { ActionContext } from "#action/context/ActionContext.js";
+import { ActionTracer } from "#action/context/ActionTracer.js";
+import { NodeActivity } from "#action/context/NodeActivity.js";
+import { OfflineContext } from "#action/context/server/OfflineContext.js";
+import { OnlineContext } from "#action/context/server/OnlineContext.js";
 import { AccessControl } from "#behavior/AccessControl.js";
-import { ActionContext } from "#behavior/context/ActionContext.js";
-import { ActionTracer } from "#behavior/context/ActionTracer.js";
-import { NodeActivity } from "#behavior/context/NodeActivity.js";
-import { OfflineContext } from "#behavior/context/server/OfflineContext.js";
-import { OnlineContext } from "#behavior/context/server/OnlineContext.js";
 import { AccessControlCluster } from "#clusters/access-control";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { EndpointServer } from "#endpoint/EndpointServer.js";

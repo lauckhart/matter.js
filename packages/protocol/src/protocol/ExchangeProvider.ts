@@ -13,6 +13,8 @@ import { ProtocolHandler } from "../protocol/ProtocolHandler.js";
 import { Session } from "../session/Session.js";
 
 export abstract class ExchangeProvider {
+    abstract readonly supportsReconnect: boolean;
+
     protected constructor(protected readonly exchangeManager: ExchangeManager) {}
 
     hasProtocolHandler(protocolId: number) {
@@ -35,6 +37,8 @@ export abstract class ExchangeProvider {
 
 export class DedicatedChannelExchangeProvider extends ExchangeProvider {
     #channel: MessageChannel;
+
+    readonly supportsReconnect = false;
 
     constructor(exchangeManager: ExchangeManager, channel: MessageChannel) {
         super(exchangeManager);
@@ -59,6 +63,7 @@ export class DedicatedChannelExchangeProvider extends ExchangeProvider {
 }
 
 export class ReconnectableExchangeProvider extends ExchangeProvider {
+    override readonly supportsReconnect = true;
     readonly #address: PeerAddress;
     readonly #reconnectChannelFunc: () => Promise<void>;
     readonly #channelUpdated = Observable<[void]>();

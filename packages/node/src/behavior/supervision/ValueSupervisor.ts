@@ -6,8 +6,8 @@
 
 import { AsyncObservable } from "#general";
 import { DataModelPath } from "#model";
+import { ActionTracer } from "../../action/context/ActionTracer.js";
 import type { AccessControl } from "../AccessControl.js";
-import { ActionTracer } from "../context/ActionTracer.js";
 import type { Val } from "../state/Val.js";
 import type { Transaction } from "../state/transaction/Transaction.js";
 import type { ValidationLocation } from "../state/validation/location.js";

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { OfflineContext } from "#behavior/context/server/OfflineContext.js";
+import { OfflineContext } from "#action/context/server/OfflineContext.js";
 import { IndexBehavior } from "#behavior/system/index/IndexBehavior.js";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { ImplementationError, InternalError } from "#general";

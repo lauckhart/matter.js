@@ -6,8 +6,8 @@
 
 import type { AsyncObservable, Observable } from "#general";
 import type { ClusterType, TypeFromSchema } from "#types";
+import type { ActionContext } from "../../action/context/ActionContext.js";
 import type { Behavior } from "../Behavior.js";
-import type { ActionContext } from "../context/ActionContext.js";
 import type { ClusterOf } from "./ClusterBehaviorUtil.js";
 
 /**

@@ -8,7 +8,7 @@ import { StatusCode } from "#types";
 
 export namespace BasePayload {
     /**
-     * Generates payload type for responses that return data.
+     * Generates payload type for message that convey data.
      */
     export type Data<P, D = {}> = P &
         D & {

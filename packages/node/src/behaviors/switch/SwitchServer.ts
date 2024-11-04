@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ActionContext } from "#behavior/context/ActionContext.js";
+import { ActionContext } from "#action/context/ActionContext.js";
 import { Switch } from "#clusters/switch";
 import { Observable, Time, Timer } from "#general";
 import { FieldElement } from "#model";

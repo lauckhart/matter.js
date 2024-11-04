@@ -6,7 +6,7 @@
 
 import { DataModelPath } from "#model";
 import { StatusCode } from "#types";
-import { Val } from "../state/Val.js";
+import { Val } from "../../behavior/state/Val.js";
 
 /**
  * This is an instrumentation interface that allows for recording of attribute I/O, commands, events and state
