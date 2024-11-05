@@ -6,11 +6,11 @@
 
 import { ActionContext } from "#action/context/ActionContext.js";
 import { MaybePromise } from "#general";
-import { Action } from "./actions/Action.js";
+import { ActionRequest } from "./request/ActionRequest.js";
 
 /**
  * Objects implementing this interface can participate in Matter interactions.
  */
 export interface Interactable {
-    interact(request: Action, context?: ActionContext): MaybePromise<void>;
+    interact<T extends ActionRequest>(request: T, context?: ActionContext): MaybePromise<ActionResponse<T>>;
 }

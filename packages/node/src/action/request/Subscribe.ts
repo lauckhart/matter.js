@@ -5,7 +5,7 @@
  */
 
 import { UINT16_MAX } from "#general";
-import { Action, MalformedActionError } from "./Action.js";
+import { MalformedActionError } from "./ActionRequest.js";
 import { Read } from "./Read.js";
 
 /**
@@ -48,7 +48,7 @@ export function Subscribe<const C extends Action.ClusterSpecifier>(definition: S
 
 export namespace Subscribe {
     export interface Definition<C extends Action.ClusterSpecifier> extends Read.Definition<C> {
-        keepSubscriptions: boolean;
+        keepSubscriptions?: boolean;
         minIntervalFloorSeconds?: number;
         maxIntervalCeilingSeconds?: number;
     }

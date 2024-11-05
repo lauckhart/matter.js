@@ -6,7 +6,6 @@
 
 import { TimedRequest } from "#types";
 import { FALLBACK_INTERACTIONMODEL_REVISION } from "@matter/protocol";
-import { Action } from "./Action.js";
 
 export interface Timed extends TimedRequest {
     kind: "timed";

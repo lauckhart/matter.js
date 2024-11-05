@@ -52,7 +52,7 @@ import { SubscriptionClient } from "./SubscriptionClient.js";
 const logger = Logger.get("InteractionClient");
 
 const REQUEST_ALL = [{}];
-const DEFAULT_TIMED_REQUEST_TIMEOUT_MS = 10_000; // 10 seconds
+export const DEFAULT_TIMED_REQUEST_TIMEOUT_MS = 10_000; // 10 seconds
 const DEFAULT_MINIMUM_RESPONSE_TIMEOUT_WITH_FAILSAFE_MS = 30_000; // 30 seconds
 
 export interface AttributeStatus {

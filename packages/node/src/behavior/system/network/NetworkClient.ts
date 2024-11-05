@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Subscribe } from "#action/index.js";
 import { RootEndpoint } from "#endpoints/root";
 import { ImplementationError } from "#general";
 import { DatatypeModel, FieldElement } from "#model";
-import { SubscribeRequestAction } from "#node/action/SubscribeAction.js";
 import { Node } from "#node/Node.js";
 import { InteractionClient } from "#protocol";
 import { ClientNetworkRuntime } from "./ClientNetworkRuntime.js";
@@ -38,13 +38,12 @@ export class NetworkClient extends NetworkBehavior {
             return;
         }
 
-        const subscription = {
-            keepSubscriptions: false,
+        const message = Subscribe({
+            isFabricFiltered: true,
             minIntervalFloorSeconds: DEFAULT_MIN_INTERVAL_FLOOR_SECONDS,
             maxIntervalCeilingSeconds: 0,
             ...startupSubscription,
-            ...this.#(startupSubscription),
-        };
+        });
     }
 
     /**
@@ -63,10 +62,6 @@ export class NetworkClient extends NetworkBehavior {
             }),
         ],
     });
-
-    #defineSubscription(subscription: Partial<SubscribeRequestAction>) {
-
-    }
 }
 
 export namespace NetworkClient {
@@ -86,6 +81,6 @@ export namespace NetworkClient {
          *
          * Set to null to disable.
          */
-        startupSubscription?: Partial<SubscribeRequestAction> | null;
+        startupSubscription?: Subscribe | null;
     }
 }

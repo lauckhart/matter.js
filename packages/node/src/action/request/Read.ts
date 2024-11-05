@@ -15,13 +15,14 @@ import {
     ReadRequest,
 } from "#types";
 import { camelize } from "@matter/general";
-import { Action, MalformedActionError } from "./Action.js";
+import { ActionRequest, MalformedActionError } from "./ActionRequest.js";
+import { Specifier } from "./Specifier.js";
 
 export interface Read extends ReadRequest {
     kind: "read";
 }
 
-export function Read<const C extends Action.ClusterSpecifier>(definition: Read.Definition<C>): Read {
+export function Read<const C extends Specifier.Cluster>(definition: Read.Definition<C>): Read {
     const { selectors } = definition;
     let { attributes: attributeRequests, versionFilters, events: eventRequests, eventFilters } = definition;
 
@@ -39,6 +40,10 @@ export function Read<const C extends Action.ClusterSpecifier>(definition: Read.D
         } else {
             reifySelector(selectors);
         }
+    }
+
+    if (!attributeRequests?.length && !eventRequests?.length) {
+        throw new MalformedActionError(`Read action designates no attributes or events`);
     }
 
     if (attributeRequests) {
@@ -78,7 +83,7 @@ export function Read<const C extends Action.ClusterSpecifier>(definition: Read.D
      * Update "real" ReadRequest fields from our convenience attribute "selector".
      */
     function reifyAttributeSelector(selector: Read.AttributeSelector) {
-        const cluster = Action.clusterOf(selector);
+        const cluster = ActionRequest.clusterOf(selector);
         const { endpoint } = selector;
 
         // Install data version filter if the endpoint reports it has complete version information
@@ -108,7 +113,7 @@ export function Read<const C extends Action.ClusterSpecifier>(definition: Read.D
         }
         const prototype: AttributePath = {};
         if (endpoint !== undefined) {
-            prototype.endpointId = Action.endpointIdOf(selector);
+            prototype.endpointId = ActionRequest.endpointIdOf(selector);
         }
         if (cluster !== undefined) {
             prototype.clusterId = cluster.id;
@@ -126,7 +131,7 @@ export function Read<const C extends Action.ClusterSpecifier>(definition: Read.D
             attributes = [attributes];
         }
         for (const specifier of attributes) {
-            attributeRequests.push({ ...prototype, attributeId: Read.attributeFor(cluster, specifier).id });
+            attributeRequests.push({ ...prototype, attributeId: Specifier.attributeFor(cluster, specifier).id });
         }
     }
 
@@ -134,7 +139,7 @@ export function Read<const C extends Action.ClusterSpecifier>(definition: Read.D
      * Update "real" ReadRequest fields from our convenience event "selector"
      */
     function reifyEventSelector(selector: Read.EventSelector) {
-        const cluster = Action.clusterOf(selector);
+        const cluster = ActionRequest.clusterOf(selector);
         const { endpoint } = selector;
 
         // Install event minimum if the endpoint reports ingested events
@@ -150,7 +155,7 @@ export function Read<const C extends Action.ClusterSpecifier>(definition: Read.D
         }
         const prototype: EventPath = {};
         if (endpoint !== undefined) {
-            prototype.endpointId = Action.endpointIdOf(selector);
+            prototype.endpointId = ActionRequest.endpointIdOf(selector);
         }
         if (cluster !== undefined) {
             prototype.clusterId = cluster.id;
@@ -168,15 +173,13 @@ export function Read<const C extends Action.ClusterSpecifier>(definition: Read.D
             events = [events];
         }
         for (const specifier of events) {
-            eventRequests.push({ ...prototype, eventId: Read.eventFor(cluster, specifier).id });
+            eventRequests.push({ ...prototype, eventId: Specifier.eventFor(cluster, specifier).id });
         }
     }
 }
 
-const GlobalAttrMap = GlobalAttributes({}) as Record<string, ClusterType.Attribute>;
-
 export namespace Read {
-    export interface Definition<C extends Action.ClusterSpecifier> extends Action.Definition {
+    export interface Definition<C extends Specifier.Cluster> extends ActionRequest.Definition {
         selectors?: Selector<C> | Selector<C>[];
         attributes?: AttributePath[];
         versionFilters?: DataVersionFilter[];
@@ -188,14 +191,14 @@ export namespace Read {
     /**
      * Selects attributes or events to read.
      */
-    export type Selector<C extends Action.ClusterSpecifier = Action.ClusterSpecifier> =
+    export type Selector<C extends Specifier.Cluster = Specifier.Cluster> =
         | ({ kind: "attribute" } & AttributeSelector<C>)
         | ({ kind: "event" } & EventSelector<C>);
 
     /**
      * Selects attributes to read.  Limits fields to legal permutations per the Matter specification.
      */
-    export type AttributeSelector<C extends Action.ClusterSpecifier = Action.ClusterSpecifier> =
+    export type AttributeSelector<C extends Specifier.Cluster = Specifier.Cluster> =
         | AttributeSelector.Concrete<C>
         | AttributeSelector.FullWildcard
         | AttributeSelector.Global
@@ -206,7 +209,7 @@ export namespace Read {
     /**
      * Selects events to read.  Limits fields to legal permutations per the Matter specification.
      */
-    export type EventSelector<C extends Action.ClusterSpecifier = Action.ClusterSpecifier> =
+    export type EventSelector<C extends Specifier.Cluster = Specifier.Cluster> =
         | EventSelector.Concrete<C>
         | EventSelector.FullWildcard
         | EventSelector.WildcardEndpoint<C>
@@ -227,50 +230,6 @@ export namespace Read {
         };
     }
 
-    export type AttributeSpecifier<C extends ClusterType = ClusterType> =
-        | ClusterType.Attribute
-        | (string & keyof C["attributes"]);
-
-    export type EventSpecifier<C extends ClusterType = ClusterType> = ClusterType.Event | (string & keyof C["events"]);
-
-    export function attributeFor(cluster: ClusterType | undefined, specifier: AttributeSpecifier) {
-        if (typeof specifier === "object") {
-            return specifier;
-        }
-
-        if (cluster === undefined) {
-            const attr = GlobalAttrMap[specifier];
-            if (attr === undefined) {
-                throw new MalformedActionError(`Cannot designate event "${specifier}" without a cluster`);
-            }
-            return attr;
-        }
-
-        const attr = cluster.attributes?.[specifier];
-        if (attr === undefined) {
-            throw new MalformedActionError(`Cluster ${cluster.name} does not define attribute ${specifier}`);
-        }
-
-        return attr;
-    }
-
-    export function eventFor(cluster: ClusterType | undefined, specifier: EventSpecifier) {
-        if (typeof specifier === "object") {
-            return specifier;
-        }
-
-        if (cluster === undefined) {
-            throw new MalformedActionError(`Cannot designate event "${specifier}" without a cluster`);
-        }
-
-        const event = cluster.events?.[specifier];
-        if (event === undefined) {
-            throw new MalformedActionError(`Cluster ${cluster.name} does not define event ${specifier}`);
-        }
-
-        return event;
-    }
-
     export interface WildcardFlags {
         skipRoot?: boolean;
         skipCustom?: boolean;
@@ -285,10 +244,10 @@ export namespace Read {
     export type GlobalAttributeSpecifier = ClusterType.Attribute | keyof GlobalAttributes<any>;
 
     export namespace AttributeSelector {
-        export interface Concrete<C extends Action.ClusterSpecifier> {
-            endpoint: Action.EndpointSpecifier;
-            cluster: Action.ClusterSpecifier;
-            attributes: AttributeSpecifier<Action.ClusterFor<C>> | AttributeSpecifier<Action.ClusterFor<C>>[];
+        export interface Concrete<C extends Specifier.Cluster> {
+            endpoint: Specifier.Endpoint;
+            cluster: Specifier.Cluster;
+            attributes: Specifier.Attribute<Specifier.ClusterFor<C>> | Specifier.Attribute<Specifier.ClusterFor<C>>[];
         }
 
         export interface Wildcard {
@@ -302,35 +261,35 @@ export namespace Read {
         }
 
         export interface Global extends Wildcard {
-            endpoint?: Action.EndpointSpecifier;
+            endpoint?: Specifier.Endpoint;
             cluster?: undefined;
             attributes: GlobalAttributeSpecifier | GlobalAttributeSpecifier[];
         }
 
-        export interface WildcardEndpoint<C extends Action.ClusterSpecifier> extends Wildcard {
+        export interface WildcardEndpoint<C extends Specifier.Cluster> extends Wildcard {
             endpoint?: undefined;
-            cluster: Action.ClusterSpecifier;
-            attributes: AttributeSpecifier<Action.ClusterFor<C>> | AttributeSpecifier<Action.ClusterFor<C>>[];
+            cluster: Specifier.Cluster;
+            attributes: Specifier.Attribute<Specifier.ClusterFor<C>> | Specifier.Attribute<Specifier.ClusterFor<C>>[];
         }
 
         export interface WildcardAttribute extends Wildcard {
-            endpoint: Action.EndpointSpecifier;
-            cluster: Action.ClusterSpecifier;
+            endpoint: Specifier.Endpoint;
+            cluster: Specifier.Cluster;
             attributes?: undefined;
         }
 
         export interface Endpoint extends Wildcard {
-            endpoint: Action.EndpointSpecifier;
+            endpoint: Specifier.Endpoint;
             cluster?: undefined;
             attributes?: undefined;
         }
     }
 
     export namespace EventSelector {
-        export interface Concrete<C extends Action.ClusterSpecifier> {
-            endpoint: Action.EndpointSpecifier;
-            cluster: Action.ClusterSpecifier;
-            events: EventSpecifier<Action.ClusterFor<C>> | EventSpecifier<Action.ClusterFor<C>>[];
+        export interface Concrete<C extends Specifier.Cluster> {
+            endpoint: Specifier.Endpoint;
+            cluster: Specifier.Cluster;
+            events: Specifier.Event<Specifier.ClusterFor<C>> | Specifier.Event<Specifier.ClusterFor<C>>[];
         }
 
         export interface Wildcard {
@@ -343,20 +302,20 @@ export namespace Read {
             events?: undefined;
         }
 
-        export interface WildcardEndpoint<C extends Action.ClusterSpecifier> extends Wildcard {
+        export interface WildcardEndpoint<C extends Specifier.Cluster> extends Wildcard {
             endpoint?: undefined;
-            cluster: Action.ClusterSpecifier;
-            events: EventSpecifier<Action.ClusterFor<C>> | EventSpecifier<Action.ClusterFor<C>>[];
+            cluster: Specifier.Cluster;
+            events: Specifier.Event<Specifier.ClusterFor<C>> | Specifier.Event<Specifier.ClusterFor<C>>[];
         }
 
         export interface WildcardAttribute extends Wildcard {
-            endpoint: Action.EndpointSpecifier;
-            cluster: Action.ClusterSpecifier;
+            endpoint: Specifier.Endpoint;
+            cluster: Specifier.Cluster;
             events?: undefined;
         }
 
         export interface Endpoint extends Wildcard {
-            endpoint: Action.EndpointSpecifier;
+            endpoint: Specifier.Endpoint;
             cluster?: undefined;
             events?: undefined;
         }

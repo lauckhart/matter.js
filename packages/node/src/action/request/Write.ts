@@ -6,9 +6,9 @@
 
 import { WriteRequest } from "#types";
 
-export interface Write {
+export interface Write extends WriteRequest {
     kind: "write";
-    payload: WriteRequest;
+    timeout?: number;
 }
 
 // TODO - write DSL

@@ -5,6 +5,7 @@
  */
 
 import { NodeActivity } from "#action/context/NodeActivity.js";
+import { ActionRequest, Interactable } from "#action/index.js";
 import { IndexBehavior } from "#behavior/system/index/IndexBehavior.js";
 import { NetworkRuntime } from "#behavior/system/network/NetworkRuntime.js";
 import { PartsBehavior } from "#behavior/system/parts/PartsBehavior.js";
@@ -23,9 +24,6 @@ import {
     RuntimeService,
 } from "#general";
 import { RootEndpoint } from "../endpoints/root.js";
-import { ReportDataAction } from "./action/ReportDataAction.js";
-import { WriteRequestAction } from "./action/WriteRequestAction.js";
-import { WriteResponseAction } from "./action/WriteResponseAction.js";
 import { NodeLifecycle } from "./NodeLifecycle.js";
 
 const logger = Logger.get("Node");
@@ -35,7 +33,10 @@ const logger = Logger.get("Node");
  *
  * In Matter, a "node" is an individually addressable top-level network resource.
  */
-export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEndpoint> extends Endpoint<T> {
+export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEndpoint>
+    extends Endpoint<T>
+    implements Interactable
+{
     #environment: Environment;
     #runtime?: NetworkRuntime;
 
@@ -74,8 +75,7 @@ export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEn
         });
     }
 
-    abstract read(request: ReadRequestAction): MaybePromise<ReportDataAction>;
-    abstract write(request: WriteRequestAction): MaybePromise<WriteResponseAction>;
+    abstract interact(action: ActionRequest): MaybePromise<void>;
 
     override get lifecycle(): NodeLifecycle {
         return super.lifecycle as NodeLifecycle;

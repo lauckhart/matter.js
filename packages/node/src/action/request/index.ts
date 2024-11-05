@@ -4,9 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from "./Action.js";
+export * from "./ActionRequest.js";
 export * from "./Invoke.js";
 export * from "./Read.js";
+export * from "./Specifier.js";
 export * from "./Subscribe.js";
 export * from "./Timed.js";
 export * from "./Write.js";
