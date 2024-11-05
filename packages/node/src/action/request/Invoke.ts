@@ -6,11 +6,10 @@
 
 import { FALLBACK_INTERACTIONMODEL_REVISION } from "#protocol";
 import { ClusterType, CommandData, InvokeRequest, TlvSchema, TypeFromSchema } from "#types";
-import { ActionRequest, MalformedActionError } from "./ActionRequest.js";
+import { MalformedActionError } from "./MalformedRequestError.js";
 import { Specifier } from "./Specifier.js";
 
 export interface Invoke extends InvokeRequest {
-    kind: "invoke";
     timeout?: number;
 }
 
@@ -30,7 +29,6 @@ export function Invoke(definition: Invoke.Definition): Invoke {
     timedRequest ??= false;
 
     return {
-        kind: "invoke",
         invokeRequests: commands,
         interactionModelRevision,
         suppressResponse,
@@ -39,10 +37,11 @@ export function Invoke(definition: Invoke.Definition): Invoke {
 }
 
 export namespace Invoke {
-    export interface Definition extends ActionRequest.Definition {
+    export interface Definition {
         commands: CommandData[];
         suppressResponse?: boolean;
         timed?: boolean;
+        interactionModelRevision?: number;
     }
 
     export function Command<const C extends ClusterType>(request: Invoke.CommandRequest<C>): CommandData {
@@ -53,7 +52,7 @@ export namespace Invoke {
             },
         };
 
-        const endpointId = ActionRequest.endpointIdOf(request);
+        const endpointId = Specifier.endpointIdOf(request);
         if (endpointId !== undefined) {
             result.commandPath.endpointId = endpointId;
         }
@@ -72,7 +71,7 @@ export namespace Invoke {
 
     export function commandOf<const R extends CommandRequest>(request: R): ClusterType.Command {
         if (typeof request.command === "string") {
-            const cluster = ActionRequest.clusterOf(request);
+            const cluster = Specifier.clusterFor(request.cluster);
             if (cluster === undefined) {
                 throw new MalformedActionError(`Cannot designate command "${request.command}" without cluster`);
             }
@@ -80,9 +79,9 @@ export namespace Invoke {
             if (command === undefined) {
                 throw new MalformedActionError(`Cluster ${cluster.name} does not define command ${request.command}`);
             }
-            return command as Specifier.CommandFor<ActionRequest.ClusterOf<R>, R["command"]>;
+            return command as Specifier.CommandFor<Specifier.ClusterOf<R>, R["command"]>;
         }
-        return request.command as Specifier.CommandFor<ActionRequest.ClusterOf<R>, R["command"]>;
+        return request.command as Specifier.CommandFor<Specifier.ClusterOf<R>, R["command"]>;
     }
 
     export type Fields<S extends TlvSchema<any>> =

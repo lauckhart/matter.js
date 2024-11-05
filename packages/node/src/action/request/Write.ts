@@ -7,7 +7,6 @@
 import { WriteRequest } from "#types";
 
 export interface Write extends WriteRequest {
-    kind: "write";
     timeout?: number;
 }
 

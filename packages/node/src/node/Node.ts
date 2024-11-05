@@ -5,7 +5,7 @@
  */
 
 import { NodeActivity } from "#action/context/NodeActivity.js";
-import { ActionRequest, Interactable } from "#action/index.js";
+import { Interactable } from "#action/index.js";
 import { IndexBehavior } from "#behavior/system/index/IndexBehavior.js";
 import { NetworkRuntime } from "#behavior/system/network/NetworkRuntime.js";
 import { PartsBehavior } from "#behavior/system/parts/PartsBehavior.js";

@@ -15,19 +15,16 @@ import {
     ReadRequest,
 } from "#types";
 import { camelize } from "@matter/general";
-import { ActionRequest, MalformedActionError } from "./ActionRequest.js";
+import { MalformedActionError } from "./MalformedRequestError.js";
 import { Specifier } from "./Specifier.js";
 
-export interface Read extends ReadRequest {
-    kind: "read";
-}
+export interface Read extends ReadRequest {}
 
 export function Read<const C extends Specifier.Cluster>(definition: Read.Definition<C>): Read {
     const { selectors } = definition;
     let { attributes: attributeRequests, versionFilters, events: eventRequests, eventFilters } = definition;
 
     const result: Read = {
-        kind: "read",
         isFabricFiltered: definition.fabricFilter ?? true,
         interactionModelRevision: definition.interactionModelRevision ?? FALLBACK_INTERACTIONMODEL_REVISION,
     };
@@ -83,7 +80,7 @@ export function Read<const C extends Specifier.Cluster>(definition: Read.Definit
      * Update "real" ReadRequest fields from our convenience attribute "selector".
      */
     function reifyAttributeSelector(selector: Read.AttributeSelector) {
-        const cluster = ActionRequest.clusterOf(selector);
+        const cluster = Specifier.clusterOf(selector);
         const { endpoint } = selector;
 
         // Install data version filter if the endpoint reports it has complete version information
@@ -113,7 +110,7 @@ export function Read<const C extends Specifier.Cluster>(definition: Read.Definit
         }
         const prototype: AttributePath = {};
         if (endpoint !== undefined) {
-            prototype.endpointId = ActionRequest.endpointIdOf(selector);
+            prototype.endpointId = Specifier.endpointIdOf(selector);
         }
         if (cluster !== undefined) {
             prototype.clusterId = cluster.id;
@@ -139,7 +136,7 @@ export function Read<const C extends Specifier.Cluster>(definition: Read.Definit
      * Update "real" ReadRequest fields from our convenience event "selector"
      */
     function reifyEventSelector(selector: Read.EventSelector) {
-        const cluster = ActionRequest.clusterOf(selector);
+        const cluster = Specifier.clusterOf(selector);
         const { endpoint } = selector;
 
         // Install event minimum if the endpoint reports ingested events
@@ -155,7 +152,7 @@ export function Read<const C extends Specifier.Cluster>(definition: Read.Definit
         }
         const prototype: EventPath = {};
         if (endpoint !== undefined) {
-            prototype.endpointId = ActionRequest.endpointIdOf(selector);
+            prototype.endpointId = Specifier.endpointIdOf(selector);
         }
         if (cluster !== undefined) {
             prototype.clusterId = cluster.id;
@@ -179,13 +176,14 @@ export function Read<const C extends Specifier.Cluster>(definition: Read.Definit
 }
 
 export namespace Read {
-    export interface Definition<C extends Specifier.Cluster> extends ActionRequest.Definition {
+    export interface Definition<C extends Specifier.Cluster> {
         selectors?: Selector<C> | Selector<C>[];
         attributes?: AttributePath[];
         versionFilters?: DataVersionFilter[];
         events?: EventPath[];
         eventFilters?: EventFilter[];
         fabricFilter?: boolean;
+        interactionModelRevision?: number;
     }
 
     /**

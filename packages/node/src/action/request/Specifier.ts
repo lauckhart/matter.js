@@ -5,7 +5,7 @@
  */
 
 import { ClusterType, EndpointNumber, GlobalAttributeNames, GlobalAttributes } from "#types";
-import { MalformedActionError } from "./ActionRequest.js";
+import { MalformedActionError } from "./MalformedRequestError.js";
 
 const GlobalAttrMap = GlobalAttributes({}) as Record<string, ClusterType.Attribute>;
 
@@ -115,5 +115,32 @@ export namespace Specifier {
         }
 
         return event;
+    }
+
+    /**
+     * Extract the cluster type from a cluster request type.
+     */
+    export type ClusterOf<T extends { cluster?: Cluster }> = T extends { cluster: Specifier.Cluster }
+        ? Specifier.ClusterFor<T["cluster"]>
+        : undefined;
+
+    /**
+     * Extract the cluster type from an element request.
+     */
+    export function clusterOf<const T extends { cluster?: Cluster }>(request: T): ClusterOf<T> {
+        if (request.cluster) {
+            return Specifier.clusterFor(request.cluster) as ClusterOf<T>;
+        }
+        return undefined as ClusterOf<T>;
+    }
+
+    /**
+     * Determine endpoint number for an object with an endpoint specifier.
+     */
+    export function endpointIdOf<const T extends { endpoint?: Endpoint }>(request: T): EndpointNumber | undefined {
+        if (typeof request.endpoint === "number") {
+            return request.endpoint;
+        }
+        return request.endpoint?.number;
     }
 }

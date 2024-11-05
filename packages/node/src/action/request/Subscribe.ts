@@ -5,8 +5,9 @@
  */
 
 import { UINT16_MAX } from "#general";
-import { MalformedActionError } from "./ActionRequest.js";
+import { MalformedActionError } from "./MalformedRequestError.js";
 import { Read } from "./Read.js";
+import { Specifier } from "./Specifier.js";
 
 /**
  * Defines a subscription.
@@ -14,17 +15,14 @@ import { Read } from "./Read.js";
  * The subscription interval fields are optional as matter.js will set them to appropriate defaults based on physical
  * attributes of the target device.  If you are unsure of appropriate values do not set them.
  */
-export interface Subscribe extends Omit<Read, "kind"> {
-    kind: "subscribe";
-
+export interface Subscribe extends Read {
     keepSubscriptions: boolean;
     minIntervalFloorSeconds?: number;
     maxIntervalCeilingSeconds?: number;
 }
 
-export function Subscribe<const C extends Action.ClusterSpecifier>(definition: Subscribe.Definition<C>): Subscribe {
+export function Subscribe<const C extends Specifier.Cluster>(definition: Subscribe.Definition<C>): Subscribe {
     const subscribe = Read(definition) as unknown as Subscribe;
-    subscribe.kind = "subscribe";
 
     const { keepSubscriptions, minIntervalFloorSeconds, maxIntervalCeilingSeconds } = definition;
     subscribe.keepSubscriptions = keepSubscriptions ?? true;
@@ -47,7 +45,7 @@ export function Subscribe<const C extends Action.ClusterSpecifier>(definition: S
 }
 
 export namespace Subscribe {
-    export interface Definition<C extends Action.ClusterSpecifier> extends Read.Definition<C> {
+    export interface Definition<C extends Specifier.Cluster> extends Read.Definition<C> {
         keepSubscriptions?: boolean;
         minIntervalFloorSeconds?: number;
         maxIntervalCeilingSeconds?: number;
