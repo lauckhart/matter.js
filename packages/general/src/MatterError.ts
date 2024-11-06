@@ -127,10 +127,19 @@ export class UnexpectedDataError extends MatterError {}
 export class ImplementationError extends MatterError {}
 
 /**
- * Used to indicate an asynchronous operation was canceled.
+ * Indicate an asynchronous operation was canceled.
  */
 export class CanceledError extends MatterError {
     constructor(message = "Operation canceled", options?: ErrorOptions) {
+        super(message, options);
+    }
+}
+
+/**
+ * Indicates an asynchronous operation was canceled due to timeout.
+ */
+export class TimeoutError extends CanceledError {
+    constructor(message = "Operation timed out", options?: ErrorOptions) {
         super(message, options);
     }
 }

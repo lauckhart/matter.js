@@ -6,19 +6,28 @@
 
 import { MessageExchange } from "#protocol/MessageExchange.js";
 import { ProtocolHandler } from "#protocol/ProtocolHandler.js";
-import { Environment, Environmental, Logger, MaybePromise, Timer } from "@matter/general";
+import { Environment, Environmental, Logger, MaybePromise, Time, Timer } from "@matter/general";
 import { INTERACTION_PROTOCOL_ID } from "@matter/types";
 import { DataReport, IncomingInteractionClientMessenger } from "./InteractionMessenger.js";
 
 const logger = Logger.get("SubscriptionClient");
 
+export interface RegisteredSubscription {
+    id: number;
+    maximumPeerResponseTime: number;
+    maxIntervalS: number;
+    onData: (dataReport: DataReport) => MaybePromise<void>;
+    onTimeout?: () => void;
+}
+
 /**
- * A simple protocol handler that handles exchanges starting with data reports.  These must map to a subscription or the
- * exchange is invalid.
+ * A simple protocol handler that handles exchanges starting with data reports.
+ *
+ * Incoming data reports must match to a subscription registered with {@link add} or the exchange is invalid.
  */
 export class SubscriptionClient implements ProtocolHandler {
-    private readonly subscriptionListeners = new Map<number, (dataReport: DataReport) => MaybePromise<void>>();
-    private readonly subscriptionUpdateTimers = new Map<number, Timer>();
+    readonly #listeners = new Map<number, (dataReport: DataReport) => MaybePromise<void>>();
+    readonly #timeouts = new Map<number, Timer>();
 
     constructor() {}
 
@@ -30,21 +39,42 @@ export class SubscriptionClient implements ProtocolHandler {
 
     readonly id = INTERACTION_PROTOCOL_ID;
 
-    registerSubscriptionListener(subscriptionId: number, listener: (dataReport: DataReport) => MaybePromise<void>) {
-        this.subscriptionListeners.set(subscriptionId, listener);
+    /**
+     * Register a subscription.
+     */
+    add(subscription: RegisteredSubscription) {
+        const { id, onData, onTimeout } = subscription;
+
+        this.#listeners.set(id, onData);
+        if (onTimeout) {
+            let timer = this.#timeouts.get(id);
+            if (timer !== undefined) {
+                timer.stop();
+                this.#timeouts.delete(id);
+            }
+
+            const maxIntervalMs = subscription.maxIntervalS * 1000 + subscription.maximumPeerResponseTime;
+
+            timer = Time.getTimer("Subscription timeout", maxIntervalMs, () => {
+                logger.info(`Subscription ${id} timed out after ${maxIntervalMs}ms`);
+                this.delete(id);
+                onTimeout();
+            }).start();
+
+            this.#timeouts.set(id, timer);
+        }
     }
 
-    removeSubscriptionListener(subscriptionId: number) {
-        this.subscriptionListeners.delete(subscriptionId);
-    }
-
-    registerSubscriptionUpdateTimer(subscriptionId: number, timer: Timer) {
-        this.subscriptionUpdateTimers.set(subscriptionId, timer);
-    }
-
-    removeSubscriptionUpdateTimer(subscriptionId: number) {
-        this.subscriptionUpdateTimers.get(subscriptionId)?.stop();
-        this.subscriptionUpdateTimers.delete(subscriptionId);
+    /**
+     * Unregister a subscription.
+     */
+    delete(id: number) {
+        this.#listeners.delete(id);
+        const timer = this.#timeouts.get(id);
+        if (timer !== undefined) {
+            timer.stop();
+            this.#timeouts.delete(id);
+        }
     }
 
     async onNewExchange(exchange: MessageExchange) {
@@ -53,14 +83,14 @@ export class SubscriptionClient implements ProtocolHandler {
         let dataReport: DataReport;
         try {
             // TODO Adjust this to getting packages as callback when received to handle error cases and checks outside
-            dataReport = await messenger.readDataReports([...this.subscriptionListeners.keys()]);
+            dataReport = await messenger.readDataReports([...this.#listeners.keys()]);
         } finally {
             messenger.close().catch(error => logger.info("Error closing client messenger", error));
         }
         const subscriptionId = dataReport.subscriptionId as number; // this is checked in the messenger already because we hand over allowed list
 
-        const listener = this.subscriptionListeners.get(subscriptionId);
-        const timer = this.subscriptionUpdateTimers.get(subscriptionId);
+        const listener = this.#listeners.get(subscriptionId);
+        const timer = this.#timeouts.get(subscriptionId);
 
         if (timer !== undefined) {
             timer.stop().start(); // Restart timer because we received data
@@ -70,8 +100,8 @@ export class SubscriptionClient implements ProtocolHandler {
     }
 
     async close() {
-        this.subscriptionListeners.clear();
-        this.subscriptionUpdateTimers.forEach(timer => timer.stop());
-        this.subscriptionUpdateTimers.clear();
+        this.#listeners.clear();
+        this.#timeouts.forEach(timer => timer.stop());
+        this.#timeouts.clear();
     }
 }

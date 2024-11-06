@@ -4,16 +4,25 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {
+    ActionContext,
+    Invoke,
+    InvokeResult,
+    Read,
+    ReadResult,
+    Subscribe,
+    SubscribeResult,
+    Write,
+    WriteResult,
+} from "#action/index.js";
+import { NetworkBehavior } from "#behavior/index.js";
 import { CommissioningClient } from "#behavior/system/commissioning/CommissioningClient.js";
-import { ClientNetworkRuntime } from "#behavior/system/network/ClientNetworkRuntime.js";
+import { ClientNetworkRuntime, OfflineError } from "#behavior/system/network/ClientNetworkRuntime.js";
 import { NetworkClient } from "#behavior/system/network/NetworkClient.js";
 import { NetworkRuntime } from "#behavior/system/network/NetworkRuntime.js";
 import { Agent } from "#endpoint/Agent.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
 import { Identity, Lifecycle, MaybePromise, NotImplementedError } from "#general";
-import { ReportDataAction } from "./action/ReportDataAction.js";
-import { WriteRequestAction } from "./action/WriteRequestAction.js";
-import { WriteResponseAction } from "./action/WriteResponseAction.js";
 import { ClientEndpointInitializer } from "./client/ClientEndpointInitializer.js";
 import { Node } from "./Node.js";
 import type { ServerNode } from "./ServerNode.js";
@@ -35,16 +44,6 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
         super(opts);
     }
 
-    read(_request: ReadRequestAction): MaybePromise<ReportDataAction> {
-        // TODO - route read interactions here
-        throw new NotImplementedError("Global read is not implemented for client nodes");
-    }
-
-    write(_request: WriteRequestAction): MaybePromise<WriteResponseAction> {
-        // TODO - route write interactions here
-        throw new NotImplementedError("Global write is not implemented for client nodes");
-    }
-
     override async initialize() {
         this.env.set(EndpointInitializer, await ClientEndpointInitializer.create(this));
 
@@ -64,10 +63,30 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
     }
 
     protected createRuntime(): NetworkRuntime {
-        throw new ClientNetworkRuntime(this);
+        return new ClientNetworkRuntime(this);
     }
 
     async prepareRuntimeShutdown() {}
+
+    read(_request: Read, _context?: ActionContext): ReadResult {
+        // TODO
+        throw new NotImplementedError();
+    }
+
+    write(_request: Write, _context?: ActionContext): WriteResult {
+        // TODO
+        throw new NotImplementedError();
+    }
+
+    invoke(_request: Invoke, _context?: ActionContext): InvokeResult {
+        // TODO
+        throw new NotImplementedError();
+    }
+
+    subscribe(_request: Subscribe, _context?: ActionContext): SubscribeResult {
+        // TODO
+        throw new NotImplementedError();
+    }
 
     protected override get container() {
         return this.owner?.nodes;
@@ -93,6 +112,14 @@ export class ClientNode extends Node<ClientNode.RootEndpoint> {
         }
 
         return (super.act as any)(actorOrPurpose, actor);
+    }
+
+    get #client() {
+        const runtime = this.behaviors.internalsOf(NetworkBehavior).runtime;
+        if (runtime === undefined || !this.lifecycle.isOnline) {
+            throw new OfflineError(`Cannot interact with remote node: ${this} is offline`);
+        }
+        return runtime.client;
     }
 }
 

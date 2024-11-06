@@ -5,12 +5,13 @@
  */
 
 import { CommandData } from "#types";
+import { StreamingResult } from "./StreamingResult.js";
 
-export interface InvokeResult extends Iterable<InvokeResult.Chunk> {
-    interactionModelRevision: number;
-    cancel(): Promise<void>;
-}
+export interface InvokeResult extends StreamingResult<InvokeResult.Chunk> {}
 
 export namespace InvokeResult {
-    export type Chunk = CommandData[];
+    export interface Chunk extends StreamingResult.Chunk {
+        kind: string;
+        responses: CommandData[];
+    }
 }

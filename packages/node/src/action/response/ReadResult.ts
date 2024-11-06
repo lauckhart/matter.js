@@ -5,21 +5,19 @@
  */
 
 import { AttributeReport, EventReport } from "#types";
+import { StreamingResult } from "./StreamingResult.js";
 
-export interface ReadResult<Chunk = ReadResult.Chunk> extends AsyncIterator<Chunk> {
-    interactionModelRevision: number;
-    cancel(): Promise<void>;
-}
+export interface ReadResult<Chunk = ReadResult.Chunk> extends StreamingResult<ReadResult.Chunk> {}
 
 export namespace ReadResult {
     export type Chunk = AttributeChunk | EventChunk;
 
-    export interface AttributeChunk {
+    export interface AttributeChunk extends StreamingResult.Chunk {
         kind: "attributes";
         attributes: AttributeReport[];
     }
 
-    export interface EventChunk {
+    export interface EventChunk extends StreamingResult.Chunk {
         kind: "events";
         events: EventReport[];
     }

@@ -15,7 +15,7 @@ import { Session } from "../session/Session.js";
 export abstract class ExchangeProvider {
     abstract readonly supportsReconnect: boolean;
 
-    protected constructor(protected readonly exchangeManager: ExchangeManager) {}
+    constructor(protected readonly exchangeManager: ExchangeManager) {}
 
     hasProtocolHandler(protocolId: number) {
         return this.exchangeManager.hasProtocolHandler(protocolId);

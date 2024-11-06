@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError, MatterError } from "../MatterError.js";
+import { CanceledError, InternalError, MatterError } from "../MatterError.js";
 import { Time } from "../time/Time.js";
 
 /**
@@ -288,19 +288,75 @@ MaybePromise.toString = () => "MaybePromise";
  * Behaviors like a normal promise but does not actually extend {@link Promise} because that makes extension a PITA.
  */
 export class CancelablePromise<T = void> implements Promise<T> {
+    #reject!: (cause: any) => void;
     #promise: Promise<T>;
+    #isResolved = false;
 
+    /**
+     * Create a new cancelable promise.
+     *
+     * If the promise is rejected due to cancelation, the {@link executor} callbacks have no effect.
+     *
+     * If you supply {@link onCancel} it overwrites the {@link CancelablePromise#onCancel} method.
+     *
+     * @param executor the normal executor supplied to a {@link Promise} constructor
+     * @param onCancel rejection handler supplied with a reason and a callback for optionally rejecting the promise
+     */
     constructor(
         executor: (resolve: (value: T | PromiseLike<T>) => void, reject: (reason?: any) => void) => void,
-        onCancel?: () => void,
+        onCancel?: (reason: Error, reject: (reason: any) => void) => void,
     ) {
-        this.#promise = new Promise(executor);
         if (onCancel !== undefined) {
-            this.cancel = onCancel;
+            this.onCancel = onCancel;
         }
+
+        this.#promise = new Promise((resolve, reject) => {
+            this.#reject = reject;
+
+            executor(
+                (value: T | PromiseLike<T>) => {
+                    if (this.#isResolved) {
+                        return;
+                    }
+
+                    this.#isResolved = true;
+                    resolve(value);
+                },
+
+                (reason?: any) => {
+                    if (this.#isResolved) {
+                        return;
+                    }
+
+                    this.#isResolved = true;
+                    resolve(reason);
+                },
+            );
+        });
     }
 
-    cancel() {}
+    /**
+     * Cancel the operation.
+     */
+    cancel(reason: Error = new CanceledError()) {
+        if (this.#isResolved) {
+            return;
+        }
+
+        this.onCancel(reason, this.#reject);
+    }
+
+    /**
+     * Implement cancelation.  This is only invoked if the promise has not resolved.
+     *
+     * The default implementation rejects the promise with the specified {@link reason}.
+     *
+     * This is overwritten if there is an "onCancel" argument to the constructor.
+     */
+    protected onCancel(reason: Error, reject: (reason: any) => void) {
+        this.#isResolved = true;
+        reject(reason);
+    }
 
     then<TResult1 = T, TResult2 = never>(
         onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,

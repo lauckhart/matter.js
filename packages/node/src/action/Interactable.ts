@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { MaybePromise } from "#general";
 import { ActionContext } from "./context/ActionContext.js";
 import { Invoke } from "./request/Invoke.js";
 import { Read } from "./request/Read.js";
@@ -22,20 +21,20 @@ export interface Interactable {
     /**
      * Perform a Matter read interaction.
      */
-    read(request: Read, context?: ActionContext): MaybePromise<ReadResult>;
+    read(request: Read, context?: ActionContext): ReadResult;
 
     /**
      * Perform a Matter write interaction.
      */
-    write(request: Write, context?: ActionContext): MaybePromise<WriteResult>;
+    write(request: Write, context?: ActionContext): WriteResult;
 
     /**
      * Perform a Matter invoke interaction.
      */
-    invoke(request: Invoke, context?: ActionContext): MaybePromise<InvokeResult>;
+    invoke(request: Invoke, context?: ActionContext): InvokeResult;
 
     /**
      * Perform a Matter subscribe interaction.
      */
-    subscribe(request: Subscribe, context?: ActionContext): MaybePromise<SubscribeResult>;
+    subscribe(request: Subscribe, context?: ActionContext): SubscribeResult;
 }

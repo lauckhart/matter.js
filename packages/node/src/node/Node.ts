@@ -5,7 +5,18 @@
  */
 
 import { NodeActivity } from "#action/context/NodeActivity.js";
-import { Interactable } from "#action/index.js";
+import {
+    ActionContext,
+    Interactable,
+    Invoke,
+    InvokeResult,
+    Read,
+    ReadResult,
+    Subscribe,
+    SubscribeResult,
+    Write,
+    WriteResult,
+} from "#action/index.js";
 import { IndexBehavior } from "#behavior/system/index/IndexBehavior.js";
 import { NetworkRuntime } from "#behavior/system/network/NetworkRuntime.js";
 import { PartsBehavior } from "#behavior/system/parts/PartsBehavior.js";
@@ -20,7 +31,6 @@ import {
     Identity,
     ImplementationError,
     Logger,
-    MaybePromise,
     RuntimeService,
 } from "#general";
 import { RootEndpoint } from "../endpoints/root.js";
@@ -74,8 +84,6 @@ export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEn
             this.statusUpdate("going offline");
         });
     }
-
-    abstract interact(action: ActionRequest): MaybePromise<void>;
 
     override get lifecycle(): NodeLifecycle {
         return super.lifecycle as NodeLifecycle;
@@ -150,6 +158,11 @@ export abstract class Node<T extends Node.CommonRootEndpoint = Node.CommonRootEn
 
         await super.close();
     }
+
+    abstract read(request: Read, context?: ActionContext): ReadResult;
+    abstract write(request: Write, context?: ActionContext): WriteResult;
+    abstract invoke(request: Invoke, context?: ActionContext): InvokeResult;
+    abstract subscribe(request: Subscribe, context?: ActionContext): SubscribeResult;
 
     /**
      * Create the network runtime.

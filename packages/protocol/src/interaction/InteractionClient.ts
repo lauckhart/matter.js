@@ -5,19 +5,20 @@
  */
 
 import {
+    Environment,
+    Environmental,
     ImplementationError,
     Logger,
     MatterFlowError,
-    MaybePromise,
     PromiseQueue,
-    Time,
     Timer,
     UnexpectedDataError,
     isDeepEqual,
 } from "#general";
 import { Specification } from "#model";
-import { PeerAddress } from "#peer/PeerAddress.js";
+import { PeerAddress, PeerAddressMap } from "#peer/PeerAddress.js";
 import { PeerDataStore } from "#peer/PeerAddressStore.js";
+import { DiscoveryOptions, PeerSet } from "#peer/PeerSet.js";
 import {
     Attribute,
     AttributeId,
@@ -45,9 +46,10 @@ import {
 } from "#types";
 import { ExchangeProvider, ReconnectableExchangeProvider } from "../protocol/ExchangeProvider.js";
 import { DecodedAttributeReportValue, normalizeAndDecodeReadAttributeReport } from "./AttributeDataDecoder.js";
+import { DecodedDataReport } from "./DecodedDataReport.js";
 import { DecodedEventData, DecodedEventReportValue, normalizeAndDecodeReadEventReport } from "./EventDataDecoder.js";
 import { DataReport, InteractionClientMessenger, ReadRequest } from "./InteractionMessenger.js";
-import { SubscriptionClient } from "./SubscriptionClient.js";
+import { RegisteredSubscription, SubscriptionClient } from "./SubscriptionClient.js";
 
 const logger = Logger.get("InteractionClient");
 
@@ -63,6 +65,68 @@ export interface AttributeStatus {
         attributeId?: AttributeId;
     };
     status: StatusCode;
+}
+
+export class InteractionClientProvider {
+    readonly #peers: PeerSet;
+    readonly #clients = new PeerAddressMap<InteractionClient>();
+
+    constructor(peers: PeerSet) {
+        this.#peers = peers;
+        this.#peers.deleted.on(peer => this.#onPeerLoss(peer.address));
+        this.#peers.disconnected.on(address => this.#onPeerLoss(address));
+    }
+
+    static [Environmental.create](env: Environment) {
+        const instance = new InteractionClientProvider(env.get(PeerSet));
+        env.set(InteractionClientProvider, instance);
+        return instance;
+    }
+
+    get peers() {
+        return this.#peers;
+    }
+
+    async connect(
+        address: PeerAddress,
+        discoveryOptions: DiscoveryOptions,
+        allowUnknownPeer = false,
+    ): Promise<InteractionClient> {
+        await this.#peers.ensureConnection(address, discoveryOptions, allowUnknownPeer);
+
+        return this.getInteractionClient(address, discoveryOptions);
+    }
+
+    async getInteractionClient(address: PeerAddress, discoveryOptions: DiscoveryOptions) {
+        let client = this.#clients.get(address);
+        if (client !== undefined) {
+            return client;
+        }
+
+        const nodeStore = this.#peers.get(address)?.dataStore;
+        await nodeStore?.construction; // Lazy initialize the data if not already done
+
+        const exchangeProvider = await this.#peers.exchangeProviderFor(address, discoveryOptions);
+
+        client = new InteractionClient(
+            exchangeProvider,
+            this.#peers.subscriptionClient,
+            address,
+            this.#peers.interactionQueue,
+            nodeStore,
+        );
+        this.#clients.set(address, client);
+
+        return client;
+    }
+
+    #onPeerLoss(address: PeerAddress) {
+        const client = this.#clients.get(address);
+        if (client !== undefined) {
+            client.close();
+            this.#clients.delete(address);
+        }
+    }
 }
 
 export class InteractionClient {
@@ -92,15 +156,9 @@ export class InteractionClient {
         throw new ImplementationError("ExchangeProvider does not support channelUpdated");
     }
 
-    registerSubscriptionListener(subscriptionId: number, listener: (dataReport: DataReport) => MaybePromise<void>) {
-        this.#ownSubscriptionIds.add(subscriptionId);
-        this.#subscriptionClient.registerSubscriptionListener(subscriptionId, listener);
-    }
-
     removeSubscription(subscriptionId: number) {
         this.#ownSubscriptionIds.delete(subscriptionId);
-        this.#subscriptionClient.removeSubscriptionListener(subscriptionId);
-        this.#subscriptionClient.removeSubscriptionUpdateTimer(subscriptionId);
+        this.#subscriptionClient.delete(subscriptionId);
     }
 
     async getAllAttributes(
@@ -574,16 +632,22 @@ export class InteractionClient {
             listener?.(value, version);
         };
 
-        this.registerSubscriptionListener(subscriptionId, subscriptionListener);
-        if (updateTimeoutHandler !== undefined) {
-            this.registerSubscriptionUpdateTimer(
+        await this.#registerSubscription(
+            {
+                id: subscriptionId,
                 maximumPeerResponseTime,
-                subscriptionId,
-                maxInterval,
-                updateTimeoutHandler,
-            );
-        }
-        await subscriptionListener(report);
+                maxIntervalS: maxInterval,
+                onData: subscriptionListener,
+                onTimeout: updateTimeoutHandler,
+            },
+            report,
+        );
+    }
+
+    async #registerSubscription(subscription: RegisteredSubscription, initialReport: DataReport) {
+        this.#subscriptionClient.add(subscription);
+        this.#ownSubscriptionIds.add(subscription.id);
+        await subscription.onData(initialReport);
     }
 
     async subscribeEvent<T, E extends Event<T, any>>(options: {
@@ -665,16 +729,17 @@ export class InteractionClient {
 
             events.forEach(event => listener?.(event));
         };
-        this.registerSubscriptionListener(subscriptionId, subscriptionListener);
-        if (updateTimeoutHandler !== undefined) {
-            this.registerSubscriptionUpdateTimer(
+
+        await this.#registerSubscription(
+            {
+                id: subscriptionId,
                 maximumPeerResponseTime,
-                subscriptionId,
-                maxInterval,
-                updateTimeoutHandler,
-            );
-        }
-        subscriptionListener(report);
+                maxIntervalS: maxInterval,
+                onData: subscriptionListener,
+                onTimeout: updateTimeoutHandler,
+            },
+            report,
+        );
     }
 
     async subscribeAllAttributesAndEvents(options: {
@@ -872,39 +937,33 @@ export class InteractionClient {
                 await this.#nodeStore?.updateLastEventNumber(maxEventNumber);
             }
         };
-        this.registerSubscriptionListener(subscriptionId, async dataReport => {
-            await subscriptionListener({
-                ...dataReport,
-                attributeReports:
-                    dataReport.attributeReports !== undefined
-                        ? normalizeAndDecodeReadAttributeReport(dataReport.attributeReports)
-                        : undefined,
-                eventReports:
-                    dataReport.eventReports !== undefined
-                        ? normalizeAndDecodeReadEventReport(dataReport.eventReports)
-                        : undefined,
-            });
-        });
 
-        if (updateTimeoutHandler !== undefined) {
-            this.registerSubscriptionUpdateTimer(
+        await this.#registerSubscription(
+            {
+                id: subscriptionId,
                 maximumPeerResponseTime,
-                subscriptionId,
-                maxInterval,
-                updateTimeoutHandler,
-            );
-        }
+                maxIntervalS: maxInterval,
 
-        const seedReport = {
-            attributeReports:
-                report.attributeReports !== undefined
-                    ? normalizeAndDecodeReadAttributeReport(report.attributeReports)
-                    : undefined,
-            eventReports:
-                report.eventReports !== undefined ? normalizeAndDecodeReadEventReport(report.eventReports) : undefined,
-            subscriptionId,
-        };
-        await subscriptionListener(seedReport);
+                onData: async dataReport => {
+                    await subscriptionListener({
+                        ...dataReport,
+                        attributeReports:
+                            dataReport.attributeReports !== undefined
+                                ? normalizeAndDecodeReadAttributeReport(dataReport.attributeReports)
+                                : undefined,
+                        eventReports:
+                            dataReport.eventReports !== undefined
+                                ? normalizeAndDecodeReadEventReport(dataReport.eventReports)
+                                : undefined,
+                    });
+                },
+
+                onTimeout: updateTimeoutHandler,
+            },
+            report,
+        );
+
+        const seedReport = DecodedDataReport(report);
 
         if (dataVersionFilters !== undefined && dataVersionFilters.length > 0 && enrichCachedAttributeData) {
             this.#enrichCachedAttributeData(seedReport.attributeReports ?? [], dataVersionFilters);
@@ -1094,27 +1153,6 @@ export class InteractionClient {
             messenger.close().catch(error => logger.info(`Error closing messenger: ${error}`));
         }
         return result;
-    }
-
-    private registerSubscriptionUpdateTimer(
-        maximumPeerResponseTime: number,
-        subscriptionId: number,
-        maxIntervalS: number,
-        updateTimeoutHandler: Timer.Callback,
-    ) {
-        if (!this.#ownSubscriptionIds.has(subscriptionId)) {
-            throw new MatterFlowError(
-                `Cannot register update timer for subscription ${subscriptionId} because it is not owned by this client.`,
-            );
-        }
-        const maxIntervalMs = maxIntervalS * 1000 + maximumPeerResponseTime;
-
-        const timer = Time.getTimer("Subscription timeout", maxIntervalMs, () => {
-            logger.info(`Subscription ${subscriptionId} timed out after ${maxIntervalMs}ms ...`);
-            this.removeSubscription(subscriptionId);
-            updateTimeoutHandler();
-        }).start();
-        this.#subscriptionClient.registerSubscriptionUpdateTimer(subscriptionId, timer);
     }
 
     removeAllSubscriptions() {

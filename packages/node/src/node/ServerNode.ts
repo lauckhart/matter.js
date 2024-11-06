@@ -4,6 +4,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import type {
+    ActionContext,
+    Invoke,
+    InvokeResult,
+    Read,
+    ReadResult,
+    Subscribe,
+    SubscribeResult,
+    Write,
+    WriteResult,
+} from "#action/index.js";
 import { CommissioningServer } from "#behavior/system/commissioning/CommissioningServer.js";
 import { ControllerBehavior } from "#behavior/system/controller/ControllerBehavior.js";
 import { NetworkServer } from "#behavior/system/network/NetworkServer.js";
@@ -12,7 +23,7 @@ import { ProductDescriptionServer } from "#behavior/system/product-description/P
 import { SessionsBehavior } from "#behavior/system/sessions/SessionsBehavior.js";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import { EndpointServer } from "#endpoint/EndpointServer.js";
-import type { Environment, MaybePromise } from "#general";
+import type { Environment } from "#general";
 import {
     Construction,
     DiagnosticSource,
@@ -25,9 +36,6 @@ import {
 import { EventHandler, FabricManager, SessionManager } from "#protocol";
 import { RootEndpoint as BaseRootEndpoint } from "../endpoints/root.js";
 import { Node } from "./Node.js";
-import { ReportDataAction } from "./action/ReportDataAction.js";
-import { WriteRequestAction } from "./action/WriteRequestAction.js";
-import { WriteResponseAction } from "./action/WriteResponseAction.js";
 import { ClientNodes } from "./client/ClientNodes.js";
 import { ServerEnvironment } from "./server/ServerEnvironment.js";
 import { ServerNodeStore } from "./storage/ServerNodeStore.js";
@@ -79,16 +87,6 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
         this.construction.start();
     }
 
-    read(_request: ReadRequestAction): MaybePromise<ReportDataAction> {
-        // TODO - route read interactions here
-        throw new NotImplementedError("Global read is not implemented for server nodes");
-    }
-
-    write(_request: WriteRequestAction): MaybePromise<WriteResponseAction> {
-        // TODO - route write interactions here
-        throw new NotImplementedError("Global write is not implemented for server nodes");
-    }
-
     /**
      * Create a new ServerNode.
      *
@@ -115,6 +113,26 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
         T extends ServerNode.RootEndpoint = ServerNode.RootEndpoint,
     >(this: This, definition?: T | Node.Configuration<T>, options?: Node.Options<T>) {
         return await asyncNew(this, definition, options);
+    }
+
+    read(_request: Read, _context?: ActionContext): ReadResult {
+        // TODO
+        throw new NotImplementedError();
+    }
+
+    write(_request: Write, _context?: ActionContext): WriteResult {
+        // TODO
+        throw new NotImplementedError();
+    }
+
+    invoke(_request: Invoke, _context?: ActionContext): InvokeResult {
+        // TODO
+        throw new NotImplementedError();
+    }
+
+    subscribe(_request: Subscribe, _context?: ActionContext): SubscribeResult {
+        // TODO
+        throw new NotImplementedError();
     }
 
     protected createRuntime(): ServerNetworkRuntime {

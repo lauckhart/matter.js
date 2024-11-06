@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { CancelablePromise } from "#general";
 import { WriteResponse } from "#types";
 
-export interface WriteResult extends WriteResponse {}
+export type WriteResult = CancelablePromise<WriteResponse>;

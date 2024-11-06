@@ -385,6 +385,7 @@ export class SessionManager {
             const secureSession = session;
             if (secureSession.peerIs(address)) {
                 await secureSession.destroy(sendClose, false);
+                this.#sessions.delete(session);
             }
         }
     }
