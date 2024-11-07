@@ -4,10 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CommandData } from "#types";
-import { StreamingResult } from "./StreamingResult.js";
+import type { Invoke } from "#action/request/Invoke.js";
+import type { CommandData } from "#types";
+import { CancelablePromise } from "@matter/general";
+import type { StreamingResult } from "./StreamingResult.js";
 
-export interface InvokeResult extends StreamingResult<InvokeResult.Chunk> {}
+export type InvokeResult<T extends Invoke> = T extends { suppressResponse: true }
+    ? CancelablePromise<void>
+    : StreamingResult<InvokeResult.Chunk>;
 
 export namespace InvokeResult {
     export interface Chunk extends StreamingResult.Chunk {

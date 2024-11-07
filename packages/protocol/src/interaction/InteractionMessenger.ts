@@ -4,18 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Logger, MatterFlowError, NoResponseTimeoutError, UnexpectedDataError } from "#general";
+import { InternalError, Logger, MatterFlowError, NoResponseTimeoutError, UnexpectedDataError } from "#general";
 import { Specification } from "#model";
 import {
     Status,
     StatusCode,
     StatusResponseError,
     TlvAny,
-    TlvAttributeReport,
     TlvDataReport,
     TlvDataReportForSend,
     TlvDataVersionFilter,
-    TlvEventReport,
     TlvInvokeRequest,
     TlvInvokeResponse,
     TlvReadRequest,
@@ -88,21 +86,22 @@ class InteractionMessenger {
         );
     }
 
-    async waitForSuccess(expectedProcessingTimeMs?: number) {
+    waitForSuccess(expectedProcessingTimeMs?: number) {
         // If the status is not Success, this would throw an Error.
-        await this.nextMessage(MessageType.StatusResponse, expectedProcessingTimeMs);
+        return this.nextMessage(MessageType.StatusResponse, expectedProcessingTimeMs);
     }
 
-    async nextMessage(expectedMessageType?: number, expectedProcessingTimeMs?: number) {
-        const message = await this.exchange.nextMessage(expectedProcessingTimeMs);
-        const messageType = message.payloadHeader.messageType;
-        this.throwIfErrorStatusMessage(message);
-        if (expectedMessageType !== undefined && messageType !== expectedMessageType) {
-            throw new UnexpectedDataError(
-                `Received unexpected message type: ${messageType}, expected: ${expectedMessageType}`,
-            );
-        }
-        return message;
+    nextMessage(expectedMessageType?: number, expectedProcessingTimeMs?: number) {
+        return this.exchange.nextMessage(expectedProcessingTimeMs).then(message => {
+            const messageType = message.payloadHeader.messageType;
+            this.throwIfErrorStatusMessage(message);
+            if (expectedMessageType !== undefined && messageType !== expectedMessageType) {
+                throw new UnexpectedDataError(
+                    `Received unexpected message type: ${messageType}, expected: ${expectedMessageType}`,
+                );
+            }
+            return message;
+        });
     }
 
     async close() {
@@ -381,15 +380,10 @@ export class IncomingInteractionClientMessenger extends InteractionMessenger {
         return message;
     }
 
-    // TODO: Adjust to use callbacks or events to push put received data to allow parallel processing
-    async readDataReports(expectedSubscriptionIds?: number[]): Promise<DataReport> {
-        let subscriptionId: number | undefined;
-        const attributeValues: TypeFromSchema<typeof TlvAttributeReport>[] = [];
-        const eventValues: TypeFromSchema<typeof TlvEventReport>[] = [];
+    async readAggregateDataReport(expectedSubscriptionIds?: number[]): Promise<DataReport> {
+        let result: DataReport | undefined;
 
-        while (true) {
-            const dataReportMessage = await this.waitFor(MessageType.ReportData);
-            const report = TlvDataReport.decode(dataReportMessage.payload);
+        for await (const report of this.readDataReports()) {
             if (expectedSubscriptionIds !== undefined) {
                 if (report.subscriptionId === undefined || !expectedSubscriptionIds.includes(report.subscriptionId)) {
                     await this.sendStatus(StatusCode.InvalidSubscription);
@@ -401,12 +395,7 @@ export class IncomingInteractionClientMessenger extends InteractionMessenger {
                 }
             }
 
-            if (subscriptionId === undefined && report.subscriptionId !== undefined) {
-                subscriptionId = report.subscriptionId;
-            } else if (
-                (subscriptionId !== undefined || report.subscriptionId !== undefined) &&
-                report.subscriptionId !== subscriptionId
-            ) {
+            if (result?.subscriptionId !== undefined && report.subscriptionId !== result.subscriptionId) {
                 throw new UnexpectedDataError(`Invalid subscription ID ${report.subscriptionId} received`);
             }
 
@@ -414,27 +403,53 @@ export class IncomingInteractionClientMessenger extends InteractionMessenger {
                 `Received DataReport chunk with ${report.attributeReports?.length ?? 0} attributes and ${report.eventReports?.length ?? 0} events, suppressResponse: ${report.suppressResponse}, moreChunkedMessages: ${report.moreChunkedMessages}${report.subscriptionId !== undefined ? `, subscriptionId: ${report.subscriptionId}` : ""}`,
             );
 
-            if (Array.isArray(report.attributeReports) && report.attributeReports.length > 0) {
-                attributeValues.push(...report.attributeReports);
+            if (!result) {
+                result = report;
+            } else {
+                if (Array.isArray(report.attributeReports)) {
+                    if (!result.attributeReports) {
+                        result.attributeReports = report.attributeReports;
+                    } else {
+                        result.attributeReports.push(...report.attributeReports);
+                    }
+                }
+                if (Array.isArray(report.eventReports)) {
+                    if (!result.eventReports) {
+                        result.eventReports = report.eventReports;
+                    } else {
+                        result.eventReports.push(...report.eventReports);
+                    }
+                }
             }
-            if (Array.isArray(report.eventReports) && report.eventReports.length > 0) {
-                eventValues.push(...report.eventReports);
-            }
+        }
+
+        if (result === undefined) {
+            // readDataReports should have thrown
+            throw new InternalError("No data report loaded during read");
+        }
+
+        return result;
+    }
+
+    async *readDataReports() {
+        while (true) {
+            const dataReportMessage = await this.waitFor(MessageType.ReportData);
+            const report = TlvDataReport.decode(dataReportMessage.payload);
+
+            yield report;
 
             if (report.moreChunkedMessages) {
                 await this.sendStatus(StatusCode.Success);
             } else if (!report.suppressResponse) {
-                // We received the last message and need to send a final Success, but we do not need to wait for it and
-                // also don't care if it fails
+                // We received the last message and need to send a final success, but we do not need to wait for it and
+                // don't care if it fails
                 this.sendStatus(StatusCode.Success).catch(error =>
-                    logger.info("Error while sending final Success after receiving all DataReport chunks", error),
+                    logger.info("Error sending success after final datareport chunk", error),
                 );
             }
 
             if (!report.moreChunkedMessages) {
-                report.attributeReports = attributeValues;
-                report.eventReports = eventValues;
-                return report;
+                break;
             }
         }
     }
@@ -485,7 +500,7 @@ export class InteractionClientMessenger extends IncomingInteractionClientMesseng
     async sendReadRequest(readRequest: ReadRequest) {
         await this.send(MessageType.ReadRequest, TlvReadRequest.encode(readRequest));
 
-        return this.readDataReports();
+        return this.readAggregateDataReport();
     }
 
     #encodeSubscribeRequest(subscribeRequest: SubscribeRequest) {
@@ -530,7 +545,7 @@ export class InteractionClientMessenger extends IncomingInteractionClientMesseng
         const request = this.#encodeSubscribeRequest(subscribeRequest);
         await this.send(MessageType.SubscribeRequest, request);
 
-        const report = await this.readDataReports();
+        const report = await this.readAggregateDataReport();
         const { subscriptionId } = report;
 
         if (subscriptionId === undefined) {
@@ -552,38 +567,38 @@ export class InteractionClientMessenger extends IncomingInteractionClientMesseng
         };
     }
 
-    async sendInvokeCommand(invokeRequest: InvokeRequest, expectedProcessingTimeMs?: number) {
+    sendInvokeCommand(invokeRequest: InvokeRequest, expectedProcessingTimeMs?: number) {
         if (invokeRequest.suppressResponse) {
-            await this.requestWithSuppressedResponse(
+            return this.requestWithSuppressedResponse(
                 MessageType.InvokeRequest,
                 TlvInvokeRequest,
-                invokeRequest,
-                expectedProcessingTimeMs,
-            );
-        } else {
-            return await this.request(
-                MessageType.InvokeRequest,
-                TlvInvokeRequest,
-                MessageType.InvokeResponse,
-                TlvInvokeResponse,
                 invokeRequest,
                 expectedProcessingTimeMs,
             );
         }
+
+        return this.request(
+            MessageType.InvokeRequest,
+            TlvInvokeRequest,
+            MessageType.InvokeResponse,
+            TlvInvokeResponse,
+            invokeRequest,
+            expectedProcessingTimeMs,
+        );
     }
 
-    async sendWriteCommand(writeRequest: WriteRequest) {
+    sendWriteCommand(writeRequest: WriteRequest) {
         if (writeRequest.suppressResponse) {
-            await this.requestWithSuppressedResponse(MessageType.WriteRequest, TlvWriteRequest, writeRequest);
-        } else {
-            return await this.request(
-                MessageType.WriteRequest,
-                TlvWriteRequest,
-                MessageType.WriteResponse,
-                TlvWriteResponse,
-                writeRequest,
-            );
+            return this.requestWithSuppressedResponse(MessageType.WriteRequest, TlvWriteRequest, writeRequest);
         }
+
+        return this.request(
+            MessageType.WriteRequest,
+            TlvWriteRequest,
+            MessageType.WriteResponse,
+            TlvWriteResponse,
+            writeRequest,
+        );
     }
 
     sendTimedRequest(timeoutSeconds: number) {

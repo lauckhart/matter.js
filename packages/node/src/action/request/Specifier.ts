@@ -5,7 +5,7 @@
  */
 
 import { ClusterType, EndpointNumber, GlobalAttributeNames, GlobalAttributes } from "#types";
-import { MalformedActionError } from "./MalformedRequestError.js";
+import { MalformedRequestError } from "./MalformedRequestError.js";
 
 const GlobalAttrMap = GlobalAttributes({}) as Record<string, ClusterType.Attribute>;
 
@@ -75,14 +75,14 @@ export namespace Specifier {
         if (cluster === undefined) {
             const attr = GlobalAttrMap[specifier];
             if (attr === undefined) {
-                throw new MalformedActionError(`Cannot designate event "${specifier}" without a cluster`);
+                throw new MalformedRequestError(`Cannot designate event "${specifier}" without a cluster`);
             }
             return attr;
         }
 
         const attr = cluster.attributes?.[specifier];
         if (attr === undefined) {
-            throw new MalformedActionError(`Cluster ${cluster.name} does not define attribute ${specifier}`);
+            throw new MalformedRequestError(`Cluster ${cluster.name} does not define attribute ${specifier}`);
         }
 
         return attr;
@@ -106,12 +106,12 @@ export namespace Specifier {
         }
 
         if (cluster === undefined) {
-            throw new MalformedActionError(`Cannot designate event "${specifier}" without a cluster`);
+            throw new MalformedRequestError(`Cannot designate event "${specifier}" without a cluster`);
         }
 
         const event = cluster.events?.[specifier];
         if (event === undefined) {
-            throw new MalformedActionError(`Cluster ${cluster.name} does not define event ${specifier}`);
+            throw new MalformedRequestError(`Cluster ${cluster.name} does not define event ${specifier}`);
         }
 
         return event;

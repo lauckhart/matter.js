@@ -4,21 +4,43 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AttributeReport, EventReport } from "#types";
+import { AttributeReportData, EventData, StatusCode } from "#types";
 import { StreamingResult } from "./StreamingResult.js";
 
 export interface ReadResult<Chunk = ReadResult.Chunk> extends StreamingResult<ReadResult.Chunk> {}
 
 export namespace ReadResult {
-    export type Chunk = AttributeChunk | EventChunk;
-
-    export interface AttributeChunk extends StreamingResult.Chunk {
-        kind: "attributes";
-        attributes: AttributeReport[];
+    export interface Chunk extends StreamingResult.Chunk {
+        reports: Report[];
     }
 
-    export interface EventChunk extends StreamingResult.Chunk {
-        kind: "events";
-        events: EventReport[];
+    export type Status =
+        | {
+              code: StatusCode;
+          }
+        | {
+              clusterCode: number;
+          };
+
+    export type Report = AttributeValue | EventValue | AttributeStatus | EventStatus;
+
+    export interface AttributeValue extends AttributeReportData {
+        kind: "attribute";
+        status?: undefined;
+    }
+
+    export interface EventValue extends EventData {
+        kind: "event";
+        status?: undefined;
+    }
+
+    export interface AttributeStatus {
+        kind: "attribute";
+        status: Status;
+    }
+
+    export interface EventStatus {
+        kind: "event";
+        status: Status;
     }
 }

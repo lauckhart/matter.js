@@ -5,7 +5,7 @@
  */
 
 import { UINT16_MAX } from "#general";
-import { MalformedActionError } from "./MalformedRequestError.js";
+import { MalformedRequestError } from "./MalformedRequestError.js";
 import { Read } from "./Read.js";
 import { Specifier } from "./Specifier.js";
 
@@ -29,14 +29,14 @@ export function Subscribe<const C extends Specifier.Cluster>(definition: Subscri
 
     if (minIntervalFloorSeconds !== undefined) {
         if (minIntervalFloorSeconds < 0 || minIntervalFloorSeconds > UINT16_MAX) {
-            throw new MalformedActionError(`Minimum interval floor ${minIntervalFloorSeconds} is out of range`);
+            throw new MalformedRequestError(`Minimum interval floor ${minIntervalFloorSeconds} is out of range`);
         }
         subscribe.minIntervalFloorSeconds = minIntervalFloorSeconds;
     }
 
     if (maxIntervalCeilingSeconds !== undefined) {
         if (maxIntervalCeilingSeconds < 0 || maxIntervalCeilingSeconds > UINT16_MAX) {
-            throw new MalformedActionError(`Maximum interval ceiling ${maxIntervalCeilingSeconds} is out of range`);
+            throw new MalformedRequestError(`Maximum interval ceiling ${maxIntervalCeilingSeconds} is out of range`);
         }
         subscribe.maxIntervalCeilingSeconds = maxIntervalCeilingSeconds;
     }

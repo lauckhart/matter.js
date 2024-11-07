@@ -15,7 +15,7 @@ import {
     ReadRequest,
 } from "#types";
 import { camelize } from "@matter/general";
-import { MalformedActionError } from "./MalformedRequestError.js";
+import { MalformedRequestError } from "./MalformedRequestError.js";
 import { Specifier } from "./Specifier.js";
 
 export interface Read extends ReadRequest {}
@@ -40,7 +40,7 @@ export function Read<const C extends Specifier.Cluster>(definition: Read.Definit
     }
 
     if (!attributeRequests?.length && !eventRequests?.length) {
-        throw new MalformedActionError(`Read action designates no attributes or events`);
+        throw new MalformedRequestError(`Read action designates no attributes or events`);
     }
 
     if (attributeRequests) {
@@ -72,7 +72,7 @@ export function Read<const C extends Specifier.Cluster>(definition: Read.Definit
                 break;
 
             default:
-                throw new MalformedActionError(`Invalid selector kind "${(selector as Read.Selector).kind}"`);
+                throw new MalformedRequestError(`Invalid selector kind "${(selector as Read.Selector).kind}"`);
         }
     }
 

@@ -7,6 +7,7 @@
 import {
     AsyncObservable,
     CRYPTO_AEAD_MIC_LENGTH_BYTES,
+    CancelablePromise,
     DataReadQueue,
     Diagnostic,
     InternalError,
@@ -340,7 +341,13 @@ export class MessageExchange {
         }
     }
 
-    async send(messageType: number, payload: Uint8Array, options?: ExchangeSendOptions) {
+    send(messageType: number, payload: Uint8Array, options?: ExchangeSendOptions): CancelablePromise<void> {
+        return new CancelablePromise((resolve, reject) => {
+            this.#send(messageType, payload, options);
+        });
+    }
+
+    async #send(messageType: number, payload: Uint8Array, options?: ExchangeSendOptions) {
         if (options?.requiresAck && !this.#useMRP) {
             options.requiresAck = false;
         }

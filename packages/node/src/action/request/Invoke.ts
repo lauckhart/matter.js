@@ -6,7 +6,7 @@
 
 import { FALLBACK_INTERACTIONMODEL_REVISION } from "#protocol";
 import { ClusterType, CommandData, InvokeRequest, TlvSchema, TypeFromSchema } from "#types";
-import { MalformedActionError } from "./MalformedRequestError.js";
+import { MalformedRequestError } from "./MalformedRequestError.js";
 import { Specifier } from "./Specifier.js";
 
 export interface Invoke extends InvokeRequest {
@@ -21,7 +21,7 @@ export function Invoke(definition: Invoke.Definition): Invoke {
     const { commands } = definition;
 
     if (!commands?.length) {
-        throw new MalformedActionError(`Invocation requires at least one command`);
+        throw new MalformedRequestError(`Invocation requires at least one command`);
     }
 
     interactionModelRevision ??= FALLBACK_INTERACTIONMODEL_REVISION;
@@ -73,11 +73,11 @@ export namespace Invoke {
         if (typeof request.command === "string") {
             const cluster = Specifier.clusterFor(request.cluster);
             if (cluster === undefined) {
-                throw new MalformedActionError(`Cannot designate command "${request.command}" without cluster`);
+                throw new MalformedRequestError(`Cannot designate command "${request.command}" without cluster`);
             }
             const command = cluster.commands[request.command];
             if (command === undefined) {
-                throw new MalformedActionError(`Cluster ${cluster.name} does not define command ${request.command}`);
+                throw new MalformedRequestError(`Cluster ${cluster.name} does not define command ${request.command}`);
             }
             return command as Specifier.CommandFor<Specifier.ClusterOf<R>, R["command"]>;
         }

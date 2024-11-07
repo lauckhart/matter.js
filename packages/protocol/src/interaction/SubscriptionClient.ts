@@ -83,7 +83,7 @@ export class SubscriptionClient implements ProtocolHandler {
         let dataReport: DataReport;
         try {
             // TODO Adjust this to getting packages as callback when received to handle error cases and checks outside
-            dataReport = await messenger.readDataReports([...this.#listeners.keys()]);
+            dataReport = await messenger.readAggregateDataReport([...this.#listeners.keys()]);
         } finally {
             messenger.close().catch(error => logger.info("Error closing client messenger", error));
         }

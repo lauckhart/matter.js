@@ -24,17 +24,17 @@ export interface Interactable {
     read(request: Read, context?: ActionContext): ReadResult;
 
     /**
+     * Perform a Matter subscribe interaction.
+     */
+    subscribe(request: Subscribe, context?: ActionContext): SubscribeResult;
+
+    /**
      * Perform a Matter write interaction.
      */
-    write(request: Write, context?: ActionContext): WriteResult;
+    write<T extends Write>(request: T, context?: ActionContext): WriteResult<T>;
 
     /**
      * Perform a Matter invoke interaction.
      */
-    invoke(request: Invoke, context?: ActionContext): InvokeResult;
-
-    /**
-     * Perform a Matter subscribe interaction.
-     */
-    subscribe(request: Subscribe, context?: ActionContext): SubscribeResult;
+    invoke<T extends Invoke>(request: T, context?: ActionContext): InvokeResult<T>;
 }

@@ -4,15 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { CancelableAsyncIterator } from "#general";
+
 /**
  * matter.js uses this for any interaction returning multiple chunks.
  */
-export interface StreamingResult<T extends StreamingResult.Chunk> extends AsyncIterator<T> {
-    /**
-     * Terminate the stream.  Only necessary if the stream is not fully consumed.
-     */
-    close(): Promise<void>;
-}
+export interface StreamingResult<T extends StreamingResult.Chunk> extends CancelableAsyncIterator<T> {}
 
 export namespace StreamingResult {
     export interface Chunk {

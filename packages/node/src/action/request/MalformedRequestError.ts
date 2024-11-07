@@ -6,4 +6,4 @@
 
 import { MatterError } from "#general";
 
-export class MalformedActionError extends MatterError {}
+export class MalformedRequestError extends MatterError {}
