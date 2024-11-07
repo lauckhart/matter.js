@@ -257,14 +257,14 @@ export class CancelableAsyncIterator<T, TReturn = T, TNext = void>
 /**
  * Create a function that returns a {@link CancelablePromise} and delegates cancelation internally to other async logic.
  *
- * The output function invokes the supplied {@link executor} with an additional "cancelable" function argument.  This
- * function wraps supported types (currently {@link CancelablePromise}, {@link CancelableAsyncIterator} and
- * {@link Promise}) with cancelation logic.
+ * The output function invokes the supplied {@link executor} with an additional "cancelable" argument.  This function
+ * wraps supported types (currently {@link CancelablePromise}, {@link CancelableAsyncIterator} and {@link Promise}) with
+ * cancelation logic.
  *
  * Any such wrapped object behaves normally but will throw with the cancelation reason on cancel.
  */
-export function CancelDelegator<ThisT, ArgsT extends unknown[], ReturnT>(
-    executor: CancelDelegator.Executor<ThisT, ArgsT, ReturnT>,
+export function Cancelable<ThisT, ArgsT extends unknown[], ReturnT>(
+    executor: Cancelable.Executor<ThisT, ArgsT, ReturnT>,
 ) {
     // The proxy that invokes the executor with a "canceable" argument used for delegation
     return function cancelable(this: ThisT, ...args: ArgsT): CancelablePromise<ReturnT> {
@@ -359,12 +359,12 @@ export function CancelDelegator<ThisT, ArgsT extends unknown[], ReturnT>(
     };
 }
 
-export namespace CancelDelegator {
-    export interface Canceler {
+export namespace Cancelable {
+    export interface Delegator {
         <T>(value: T): T;
     }
 
     export interface Executor<ThisT, ArgsT extends unknown[], ReturnT> {
-        (this: ThisT, cancelable: Canceler, ...args: ArgsT): MaybePromise<ReturnT>;
+        (this: ThisT, cancelable: Delegator, ...args: ArgsT): MaybePromise<ReturnT>;
     }
 }

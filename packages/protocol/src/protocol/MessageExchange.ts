@@ -7,7 +7,7 @@
 import {
     AsyncObservable,
     CRYPTO_AEAD_MIC_LENGTH_BYTES,
-    CancelablePromise,
+    Cancelable,
     DataReadQueue,
     Diagnostic,
     InternalError,
@@ -341,13 +341,14 @@ export class MessageExchange {
         }
     }
 
-    send(messageType: number, payload: Uint8Array, options?: ExchangeSendOptions): CancelablePromise<void> {
-        return new CancelablePromise((resolve, reject) => {
-            this.#send(messageType, payload, options);
-        });
-    }
+    send = CancelDelegator(this.#send);
 
-    async #send(messageType: number, payload: Uint8Array, options?: ExchangeSendOptions) {
+    async #send(
+        cancelable: Cancelable.Delegator,
+        messageType: number,
+        payload: Uint8Array,
+        options?: ExchangeSendOptions,
+    ) {
         if (options?.requiresAck && !this.#useMRP) {
             options.requiresAck = false;
         }
@@ -388,7 +389,7 @@ export class MessageExchange {
             packetHeader: {
                 sessionId: this.#peerSessionId,
                 sessionType: SessionType.Unicast, // TODO: support multicast/groups
-                messageId: await this.session.getIncrementedMessageCounter(),
+                messageId: await cancelable(this.session.getIncrementedMessageCounter()),
                 destNodeId: this.#peerNodeId,
                 sourceNodeId: this.#nodeId,
                 hasPrivacyEnhancements: false,
@@ -422,13 +423,13 @@ export class MessageExchange {
             this.#sentMessageAckFailure = rejecter;
         }
 
-        await this.channel.send(message);
+        await cancelable(this.channel.send(message));
 
         if (ackPromise !== undefined) {
             this.#retransmissionCounter = 0;
             this.#retransmissionTimer?.start();
             // Await Response to be received (or Message retransmit limit reached which rejects the promise)
-            const responseMessage = await ackPromise;
+            const responseMessage = await cancelable(ackPromise);
             this.#sentMessageAckSuccess = undefined;
             this.#sentMessageAckFailure = undefined;
             // If we only expect an Ack without data but got data, throw an error
