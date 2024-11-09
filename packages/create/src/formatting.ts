@@ -51,6 +51,25 @@ export function fittedTextOf(text: string, width = stdout.columns) {
         return text;
     }
 
+    const lines = text.split("\n");
+    const paragraphs = Array<string>();
+    for (let line of lines) {
+        const paddedLineMatch = line.match(/^(\s*)(.*)/);
+        let padding;
+        if (paddedLineMatch) {
+            padding = paddedLineMatch[1];
+            line = paddedLineMatch[2];
+        } else {
+            padding = "";
+        }
+
+        paragraphs.push(padding + wrap(line, width));
+    }
+
+    return paragraphs.join("\n");
+}
+
+function wrap(text: string, width = stdout.columns) {
     const words = text.trim().split(/\s+/);
     let lineWidth = 0;
     let line = "";

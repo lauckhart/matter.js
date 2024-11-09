@@ -58,13 +58,16 @@ if (args.length > 1) {
 await init(option);
 
 async function init(templateName: string) {
+    if (templateName === "contributor") {
+        bigWelcome();
+        const project = NewContributorProject(path);
+        await project.setup();
+        return;
+    }
+
     let project;
     try {
-        if (templateName === "contributor") {
-            project = NewContributorProject(path);
-        } else {
-            project = await NewConsumerProject(templateName, path);
-        }
+        project = await NewConsumerProject(templateName, path);
     } catch (e) {
         if (e instanceof TemplateNotFoundError) {
             error(`Invalid template ${bold(templateName)}`);

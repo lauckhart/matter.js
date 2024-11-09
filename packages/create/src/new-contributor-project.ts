@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { execSync } from "child_process";
+import { spawnSync, SpawnSyncOptions } from "child_process";
 import { readdir, readFile } from "fs/promises";
+import { homedir } from "os";
 import { join, resolve } from "path";
 import { createInterface } from "readline/promises";
 import { Config } from "./config.js";
@@ -24,8 +25,7 @@ export interface NewContributorProject {
     dest: string;
     origin: string;
 
-    create(): Promise<void>;
-    build(showInstall: boolean): void;
+    setup(): Promise<void>;
 }
 
 export function NewContributorProject(dest: string): NewContributorProject {
@@ -35,10 +35,7 @@ export function NewContributorProject(dest: string): NewContributorProject {
         dest,
         origin: DEFAULT_GIT_REPO,
 
-        create: create,
-        build() {
-            build.call(this, true);
-        },
+        setup,
     };
 }
 
@@ -49,10 +46,19 @@ interface UI {
 
 function UI(): UI {
     const readline = createInterface(process.stdin, process.stdout);
-    readline.write;
+
+    readline.on("close", () => {
+        process.stdout.write("\n\n");
+        process.exit(-1);
+    });
+
     return {
         async ask(text: string, defaultAnswer: string) {
-            const answer = await readline.question(fittedTextOf(text) + "\n" + dim(`(${defaultAnswer}) `));
+            const lines = text.split("\n");
+            lines[0] = bold(lines[0]);
+            text = lines.join("\n");
+
+            const answer = await readline.question("\n" + fittedTextOf(text) + "\n\n" + dim(`(${defaultAnswer}) `));
             process.stdout.write("\n");
             return answer === "" ? defaultAnswer : answer;
         },
@@ -63,34 +69,81 @@ function UI(): UI {
     };
 }
 
-async function create(this: NewContributorProject) {
+async function setup(this: NewContributorProject) {
     getStarted();
 
     const ui = UI();
     try {
         await chooseDest(this, ui);
         await chooseOrigin(this, ui);
-        await createClone(this, ui);
+        await cloneGitRepo(this, ui);
     } finally {
         ui.close();
     }
 
     await createContributorVsCodeProject(this);
+    build.apply(this, true);
     finishUp(this);
+}
+
+function git(args: string[], options: SpawnSyncOptions) {
+    spawnSync("git", args, { ...options, shell: true });
+}
+
+function getStarted() {
+    notice("Hello and 😍 contributor!");
+
+    try {
+        git(["--version"], { stdio: "ignore" });
+    } catch (e) {
+        throw new ProjectError(
+            `Unfortunately we can't seem to run git.  If you don't have it installed please install and try again.\n\nOtherwise, no worries!  ${MANUAL_INSTRUCTIONS}.`,
+        );
+    }
+
+    info(
+        `We're going to ask a few questions and configure your project as we go.  Hit ${bold("enter")} to accept the default value.`,
+    );
+}
+
+async function chooseDest(project: NewContributorProject, ui: UI) {
+    let badDir = false;
+    while (true) {
+        if (badDir || project.dest === ".") {
+            project.dest = await ui.ask("Where do you want to install?", DEFAULT_DEV_PATH);
+
+            // Kind of half-assed but allow for "~/" expansion as home directory.  Even on windows because why not...
+            if (project.dest.match(/^~[\\/]/)) {
+                project.dest = join(homedir(), project.dest.substring(2));
+            }
+        }
+
+        try {
+            await createAndValidateDest(project);
+            break;
+        } catch (e) {
+            if (!(e instanceof ProjectError)) {
+                throw e;
+            }
+
+            badDir = true;
+            error(e);
+        }
+    }
 }
 
 async function chooseOrigin(project: NewContributorProject, ui: UI) {
     project.origin = await ui.ask(
-        `What do you want to use as your ${bold("git origin")}?  Ideally this is your own fork of the matter.js GitHub repo so you can push branches for PRs.  To create a fork now go to ${blue(FORK_LINK)}`,
+        `What git repository do you want to use as your git origin?\n\nIdeally this is your own fork of the matter.js GitHub repo.  Then you can push new branches to your fork using ${bold("git push --set-upstream origin new-branch-name")}.\n\nTo create a fork now go to ${blue(FORK_LINK)}`,
         project.origin,
     );
 }
 
-async function createClone(project: NewContributorProject, ui: UI) {
+async function cloneGitRepo(project: NewContributorProject, ui: UI) {
     // Create local clone
     while (true) {
         const mainUrl = await ui.ask(
-            `What git repository do you want to use for your ${bold("main")} branch?  If you use our repository you can pull new changes without syncing your fork.`,
+            `What git repository do you want to use for your main branch?\n\nIf you use our repository you can pull new changes without syncing your fork.`,
             DEFAULT_GIT_REPO,
         );
 
@@ -98,8 +151,18 @@ async function createClone(project: NewContributorProject, ui: UI) {
 
         try {
             process.stdout.write("\n");
-            execSync(
-                `git clone "${mainUrl}" -o main -c "remote.origin.url=${project.origin}" -c "remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*"`,
+            git(
+                [
+                    "clone",
+                    mainUrl,
+                    project.dest,
+                    "-o",
+                    "main",
+                    "-c",
+                    `remote.origin.url=${project.origin}`,
+                    "-c",
+                    "remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*",
+                ],
                 {
                     stdio: "inherit",
                 },
@@ -116,41 +179,6 @@ async function createClone(project: NewContributorProject, ui: UI) {
         }
 
         break;
-    }
-}
-
-function getStarted() {
-    notice("Awesome, we 😍 contributions!");
-
-    try {
-        execSync("git --version", { stdio: "ignore" });
-    } catch (e) {
-        throw new ProjectError(
-            `Unfortunately we can't seem to run git.  If you don't have it installed please install and try again.\n\nOtherwise, no worries!  ${MANUAL_INSTRUCTIONS}.`,
-        );
-    }
-
-    info("We're going to ask a couple quick questions and configure your project as we go.");
-}
-
-async function chooseDest(project: NewContributorProject, ui: UI) {
-    let badDir = false;
-    while (true) {
-        if (badDir || project.dest === ".") {
-            project.dest = await ui.ask("Where do you want to install?", DEFAULT_DEV_PATH);
-        }
-
-        try {
-            await createAndValidateDest(project);
-            break;
-        } catch (e) {
-            if (!(e instanceof ProjectError)) {
-                throw e;
-            }
-
-            badDir = true;
-            error(e);
-        }
     }
 }
 
