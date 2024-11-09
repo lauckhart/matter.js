@@ -6,7 +6,9 @@
 import { argv, exit, stderr, stdout } from "process";
 import { bold } from "./formatting.js";
 import { bigWelcome, error, notice } from "./messages.js";
-import { NewProject, ProjectError, TemplateNotFoundError } from "./new-project.js";
+import { NewConsumerProject } from "./new-consumer-project.js";
+import { NewContributorProject } from "./new-contributor-project.js";
+import { ProjectError, TemplateNotFoundError } from "./new-project.js";
 import { DEFAULT_TEMPLATE, usage } from "./usage.js";
 
 const PATH_ARG = "--prefix=";
@@ -24,6 +26,12 @@ const noBuildPos = args.findIndex(arg => arg === "--no-build");
 const doBuild = noBuildPos === -1;
 if (!doBuild) {
     args.splice(noBuildPos, 1);
+}
+
+const verbosePos = args.findIndex(arg => arg === "--verbose");
+const verbose = verbosePos !== -1;
+if (verbose) {
+    args.splice(verbosePos, 1);
 }
 
 stdout.write("\n");
@@ -52,7 +60,11 @@ await init(option);
 async function init(templateName: string) {
     let project;
     try {
-        project = await NewProject(templateName, path);
+        if (templateName === "contributor") {
+            project = NewContributorProject(path);
+        } else {
+            project = await NewConsumerProject(templateName, path);
+        }
     } catch (e) {
         if (e instanceof TemplateNotFoundError) {
             error(`Invalid template ${bold(templateName)}`);
@@ -80,7 +92,7 @@ async function init(templateName: string) {
         notice(`Initializing project...`);
 
         try {
-            project.build();
+            project.build(verbose);
         } catch (e) {
             stderr.write("\n");
             error("Error building project:", e);

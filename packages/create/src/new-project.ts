@@ -5,186 +5,89 @@
  */
 
 import { execSync } from "child_process";
-import { cp, mkdir, readdir, writeFile } from "fs/promises";
-import { basename, resolve } from "path";
-import { Config, Template, TEMPLATE_DIR } from "./config.js";
+import { mkdir, readdir, writeFile } from "fs/promises";
+import { resolve } from "path";
+import { warning } from "./messages.js";
+import { NewConsumerProject } from "./new-consumer-project.js";
+import { NewContributorProject } from "./new-contributor-project.js";
 
-const PACKAGE_JSON = {
-    dependencies: {} as Record<string, string>,
-    devDependencies: {
-        typescript: "*",
-        "@types/node": "*",
-    },
-    name: "matter-app",
-    version: "0.1.0",
-    type: "module",
-    scripts: {
-        prepare: "tsc",
-        build: "tsc",
-        app: "node --enable-source-maps dist/index.js",
-        test: 'echo "Error: no test specified" && exit 1',
-        clean: "node -e 'fs.rmSync(\"dist\", { recursive: true, force: true })'",
-    },
+const VS_CODE_LAUNCH_CONFIG = {
+    type: "node",
+    request: "launch",
+    skipFiles: ["<node_internals>/**"],
+
+    // Never gotten it to work without this as of VS Code 1.94.2
+    console: "integratedTerminal",
+
+    internalConsoleOptions: "neverOpen",
+
+    // Doesn't seem to work as of VS Code 1.94.2 so we just set the runtimeArgs ourselves
+    //sourceMaps: true,
+
+    runtimeArgs: ["--enable-source-maps"],
+    preLaunchTask: "tsc: build - tsconfig.json",
+    outFiles: ["${workspaceFolder}/dist/**/*.js"],
 };
 
-const TSCONFIG = {
-    compilerOptions: {
-        strict: true,
-        target: "es2022",
-        module: "node16",
-        moduleResolution: "node16",
-        noImplicitAny: true,
-        noImplicitOverride: true,
-        outDir: "./dist",
-        skipLibCheck: true,
-    },
-    include: ["./src/**/*.ts"],
+export type LaunchOptions = {
+    name: string;
+    program: string;
+    cwd?: string;
+    args?: string[];
+    env?: Record<string, string>;
+    presentation?: { clear: true };
 };
+
+export type LaunchConfig = LaunchOptions & typeof VS_CODE_LAUNCH_CONFIG;
 
 const VS_CODE_LAUNCH = {
     version: "0.2.0",
-    configurations: [
-        {
-            type: "node",
-            request: "launch",
-            name: "Launch Program",
-            skipFiles: ["<node_internals>/**"],
-            program: "",
-
-            // Never gotten it to work without this
-            console: "integratedTerminal",
-
-            // Doesn't seem to work
-            //sourceMaps: true,
-
-            env: {
-                NODE_OPTIONS: "--enable-source-maps",
-            },
-            preLaunchTask: "tsc: build - tsconfig.json",
-            outFiles: ["${workspaceFolder}/dist/**/*.js"],
-        },
-    ],
+    configurations: Array<LaunchConfig>(),
 };
-
-const GITIGNORE = "node_modules/\ndist/\n";
 
 export class TemplateNotFoundError extends Error {}
 
-export interface NewProject {
-    template: Template;
-    source: string;
-    dest: string;
-
-    create(): Promise<void>;
-    build(): void;
-}
-
-export async function NewProject(name: string, dest: string): Promise<NewProject> {
-    const template = (await Config()).templates.find(template => template.name === name);
-
-    if (template === undefined) {
-        throw new TemplateNotFoundError(`"${name}" is not a valid template name`);
-    }
-
-    return {
-        template,
-        source: resolve(TEMPLATE_DIR, template.name),
-        dest,
-        create,
-        build,
-    };
-}
+export type NewProject = NewConsumerProject | NewContributorProject;
 
 export class ProjectError extends Error {}
 
-export async function create(this: NewProject) {
+export async function createAndValidateDest(project: NewProject) {
     try {
-        await mkdir(this.dest, { recursive: true });
+        await mkdir(project.dest, { recursive: true });
     } catch (e) {
-        throw new ProjectError(`Could not create "${this.dest}": ${e}`);
+        throw new ProjectError(`Could not create "${project.dest}": ${e}`);
     }
 
-    const existingFiles = await readdir(this.dest);
+    const existingFiles = await readdir(project.dest);
     if (existingFiles.length) {
         throw new ProjectError(
-            `Files exist in "${this.dest}". Please run in an empty directory or specify new directory with "--prefix=" option`,
+            `Files exist in "${project.dest}". Please run in an empty directory or specify new directory with "--prefix=" option`,
         );
     }
-
-    await createPackageJson(this);
-    await createTsconfig(this);
-    await createGitignore(this);
-    await createVsCodeProject(this);
-    await installSources(this);
 }
 
-function entrypointFor(project: NewProject) {
-    return "dist/" + project.template.entrypoint.replace(/\.ts$/, ".js");
-}
-
-async function createPackageJson(project: NewProject) {
-    const pkg = PACKAGE_JSON;
-
-    const config = await Config();
-
-    pkg.scripts.app = `node --enable-source-maps ${entrypointFor(project)}`;
-
-    pkg.dependencies = project.template.dependencies;
-    pkg.devDependencies["typescript"] = config.typescriptVersion;
-    pkg.devDependencies["@types/node"] = config.nodeTypesVersion;
-
-    (pkg as any).description = project.template.description;
-
-    let author, authorEmail;
+export async function createVsCodeProject(project: NewProject, launchLoader: () => AsyncIterable<LaunchOptions>) {
     try {
-        for (const line of execSync("git config --list", { encoding: "utf-8" }).split("\n")) {
-            if (line.startsWith("user.name=")) {
-                author = line.replace(/^[^=]=/, "");
-            } else if (line.startsWith("user.email=")) {
-                authorEmail = line.replace(/^[^=]=/, "");
+        const root = resolve(project.dest, ".vscode");
+        await mkdir(root);
+        for await (const launch of launchLoader()) {
+            const config = {
+                ...VS_CODE_LAUNCH_CONFIG,
+                ...launch,
+                program: `\${workspaceFolder}/${launch.program}`,
+            };
+
+            if (config.cwd) {
+                config.cwd = `\${workspaceFolder}/${launch.cwd}`;
             }
         }
+        await writeFile(resolve(root, "launch.json"), JSON.stringify(VS_CODE_LAUNCH, undefined, 4));
     } catch (e) {
-        // Non-fatal error if git isn't available; we just don't set the author
+        warning(`Sorry, we couldn't configure VS Code for you: ${e}`);
     }
-
-    if (authorEmail) {
-        if (author) {
-            author = `${author} <${authorEmail}>`;
-        } else {
-            author = `<${authorEmail}>`;
-        }
-    }
-
-    if (author) {
-        (pkg as any).author = author;
-    }
-
-    await writeFile(resolve(project.dest, "package.json"), JSON.stringify(pkg, undefined, 4));
 }
 
-async function createTsconfig(project: NewProject) {
-    await writeFile(resolve(project.dest, "tsconfig.json"), JSON.stringify(TSCONFIG, undefined, 4));
-}
-
-async function createGitignore(project: NewProject) {
-    await writeFile(resolve(project.dest, ".gitignore"), GITIGNORE);
-}
-
-async function createVsCodeProject(project: NewProject) {
-    const root = resolve(project.dest, ".vscode");
-    await mkdir(root);
-    VS_CODE_LAUNCH.configurations[0].program = `\${workspaceFolder}/${entrypointFor(project)}`;
-    await writeFile(resolve(root, "launch.json"), JSON.stringify(VS_CODE_LAUNCH, undefined, 4));
-}
-
-async function installSources(project: NewProject) {
-    await cp(project.source, resolve(project.dest, "src"), {
-        recursive: true,
-        filter: source => basename(source).indexOf(".") === -1 || source.endsWith(".ts"),
-    });
-}
-
-function build(this: NewProject) {
-    execSync(`npm install --silent`, { stdio: "inherit", cwd: this.dest });
+export function build(this: NewProject, showInstall: boolean) {
+    const args = showInstall ? "" : " --silent";
+    execSync(`npm install${args}`, { stdio: "inherit", cwd: this.dest });
 }

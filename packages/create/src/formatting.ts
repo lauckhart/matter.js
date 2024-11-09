@@ -18,6 +18,7 @@ export const dim = formatter(2, 22);
 export const red = formatter(31, 39);
 export const green = formatter(32, 39);
 export const blue = formatter(34, 39);
+export const yellow = formatter(33, 39);
 
 export function visibleWidthOf(str: string) {
     let i = 0,
@@ -45,7 +46,7 @@ export function visibleWidthOf(str: string) {
     return length;
 }
 
-export function fittedTextOf(text: string, width: number) {
+export function fittedTextOf(text: string, width = stdout.columns) {
     if (width <= 20) {
         return text;
     }

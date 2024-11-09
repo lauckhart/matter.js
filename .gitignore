@@ -8,3 +8,4 @@ dist/
 !.mergify.yml
 !.pullapprove.yml
 *.tsbuildinfo
+.vscode/

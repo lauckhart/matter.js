@@ -14,6 +14,10 @@ The main work (all changes without a GitHub username in brackets in the below li
 -   @matter/nodejs
     - Feature: New export @matter/nodejs/config allows for fine-grained configuration of Node.js bootstrap logic
 
+-   @matter/create
+    - Feature: Add command line option "--verbose" to enable informational NPM messages during initialization
+    - Feature: Add template "contributor" to bootstrap dev environment for working on matter.js itself
+
 ## 0.11.4 (2024-11-07)
 
 -   Matter cluster definitions and implementations
