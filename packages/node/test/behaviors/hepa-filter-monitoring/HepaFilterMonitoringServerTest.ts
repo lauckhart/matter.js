@@ -11,7 +11,7 @@ import { AirPurifierDevice } from "#devices/air-purifier";
 import { MockServerNode } from "../../node/mock-server-node.js";
 
 describe("HepaFilterMonitoringServer", () => {
-    it.only("instantiates", async () => {
+    it("instantiates", async () => {
         const node = await MockServerNode.create();
         const DeviceType = AirPurifierDevice.with(HepaFilterMonitoringServer);
         await node.add(DeviceType, {
