@@ -8,6 +8,7 @@
 import type MochaType from "mocha";
 import { FailureDetail } from "./failure-detail.js";
 import { LoggerHooks } from "./mocks/logging.js";
+import { resetNetworkSimulator } from "./mocks/network-simulator.js";
 import { TestOptions } from "./options.js";
 import { ConsoleProxyReporter, Reporter } from "./reporter.js";
 import { wtf } from "./util/wtf.js";
@@ -59,11 +60,16 @@ export function generalSetup(mocha: MochaType) {
 
     // Reset mocks before each suite.  Suites could conceivably have callbacks that occur across tests.  If individual
     // tests need a reset the suite needs to handle itself.
-    const actualBeforeAll = mocha.suite.beforeAll;
-    mocha.suite.beforeAll = function (this: Mocha.Context, ...args: any) {
+    mocha.suite.beforeAll(() => {
         MockTime.reset();
-        return actualBeforeAll.apply(this, args);
-    };
+        resetNetworkSimulator();
+    });
+    // const actualBeforeAll = mocha.suite.beforeAll;
+    // mocha.suite.beforeAll = function (this: Mocha.Context, ...args: any) {
+    //     MockTime.reset();
+    //     resetNetworkSimulator();
+    //     return actualBeforeAll.apply(this, args);
+    // };
 
     mocha.suite.beforeEach(() => {
         for (const hook of LoggerHooks.beforeEach) {

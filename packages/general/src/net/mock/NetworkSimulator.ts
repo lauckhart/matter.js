@@ -55,6 +55,14 @@ export class NetworkSimulator {
             }),
         );
     }
+
+    reset() {
+        this.listenersMap.clear();
+    }
+}
+
+if (typeof MatterHooks !== "undefined") {
+    MatterHooks?.networkSimulatorSetup?.(NetworkSimulator.get());
 }
 
 export namespace NetworkSimulator {

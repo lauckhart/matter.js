@@ -20,9 +20,8 @@ declare global {
     let MockLogger: MockLogger;
 
     /**
-     * If present, the following hooks are engaged by matter.js packages to
-     * enable mocking.  We use globals rather than imports so we can hook the
-     * modules regardless of whether they're loaded as CommonJS or ESM.
+     * If present, the following hooks are engaged by matter.js packages to enable mocking.  We use globals rather than
+     * imports so we can hook the modules regardless of whether they're loaded as CommonJS or ESM.
      */
     let MatterHooks:
         | undefined
@@ -41,6 +40,11 @@ declare global {
                * Configure crypto.
                */
               cryptoSetup?: (Crypto: any) => void;
+
+              /**
+               * Configure the network simulator.
+               */
+              networkSimulatorSetup?: (NetworkSimulator: any) => void;
 
               /**
                * Receive intercepted log messages.  The logging mocks

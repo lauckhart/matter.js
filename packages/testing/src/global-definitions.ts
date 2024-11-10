@@ -12,6 +12,7 @@ import ChaiAsPromised from "chai-as-promised";
 import { browserSetup, generalSetup } from "./mocha.js";
 import { cryptoSetup } from "./mocks/crypto.js";
 import { TheMockLogger, loggerSetup } from "./mocks/logging.js";
+import { networkSimulatorSetup } from "./mocks/network-simulator.js";
 import { timeSetup } from "./mocks/time.js";
 
 Chai.config.truncateThreshold = 200;
@@ -24,6 +25,7 @@ Object.assign(globalThis, {
         loggerSetup,
         timeSetup,
         cryptoSetup,
+        networkSimulatorSetup,
     },
 
     MockLogger: TheMockLogger,

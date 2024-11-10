@@ -5,10 +5,13 @@
  */
 
 import { execSync } from "child_process";
-import { cp, writeFile } from "fs/promises";
+import { cp, mkdir, writeFile } from "fs/promises";
 import { basename, resolve } from "path";
+import { stderr } from "process";
 import { Config, Template, TEMPLATE_DIR } from "./config.js";
-import { build, createAndValidateDest, createVsCodeProject, TemplateNotFoundError } from "./new-project.js";
+import { bold } from "./formatting.js";
+import { notice } from "./messages.js";
+import { createAndValidateDest, install, ProjectError, TemplateNotFoundError } from "./new-project.js";
 
 const PACKAGE_JSON = {
     dependencies: {} as Record<string, string>,
@@ -42,19 +45,57 @@ const TSCONFIG = {
     include: ["./src/**/*.ts"],
 };
 
+const VS_CODE_LAUNCH = {
+    version: "0.2.0",
+    configurations: [
+        {
+            type: "node",
+            request: "launch",
+            name: "Launch Program",
+            skipFiles: ["<node_internals>/**"],
+            program: "",
+
+            // Never gotten it to work without this
+            console: "integratedTerminal",
+
+            // Doesn't seem to work
+            //sourceMaps: true,
+
+            env: {
+                NODE_OPTIONS: "--enable-source-maps",
+            },
+            preLaunchTask: "tsc: build - tsconfig.json",
+            outFiles: ["${workspaceFolder}/dist/**/*.js"],
+        },
+    ],
+};
+
 const GITIGNORE = "node_modules/\ndist/\n";
 
-export interface NewConsumerProject {
+export interface ConsumerProject {
     kind: "consumer";
     template: Template;
     source: string;
     dest: string;
+    performInstall: boolean;
+    verbose: boolean;
 
-    create(): Promise<void>;
-    build(showInstall: boolean): void;
+    setup(): Promise<void>;
 }
 
-export async function NewConsumerProject(name: string, dest: string): Promise<NewConsumerProject> {
+export interface ConsumerProjectOptions {
+    name: string;
+    dest: string;
+    performInstall: boolean;
+    verbose: boolean;
+}
+
+export async function ConsumerProject({
+    name,
+    dest,
+    performInstall,
+    verbose,
+}: ConsumerProjectOptions): Promise<ConsumerProject> {
     const template = (await Config()).templates.find(template => template.name === name);
 
     if (template === undefined) {
@@ -66,21 +107,25 @@ export async function NewConsumerProject(name: string, dest: string): Promise<Ne
         template,
         source: resolve(TEMPLATE_DIR, template.name),
         dest,
-        create: create,
-        build,
+        performInstall,
+        verbose,
+        setup,
     };
 }
 
-export async function create(this: NewConsumerProject) {
+export async function setup(this: ConsumerProject) {
+    notice(`Creating project from ${bold(this.template.name)} template...`);
+
     await createAndValidateDest(this);
     await createPackageJson(this);
     await createTsconfig(this);
     await createGitignore(this);
     await installSources(this);
-    await createConsumerVsCodeProject(this);
+    await createVsCodeProject(this);
+    await performInstall(this);
 }
 
-async function createPackageJson(project: NewConsumerProject) {
+async function createPackageJson(project: ConsumerProject) {
     const pkg = PACKAGE_JSON;
 
     const config = await Config();
@@ -121,29 +166,49 @@ async function createPackageJson(project: NewConsumerProject) {
     await writeFile(resolve(project.dest, "package.json"), JSON.stringify(pkg, undefined, 4));
 }
 
-async function createTsconfig(project: NewConsumerProject) {
+async function createTsconfig(project: ConsumerProject) {
     await writeFile(resolve(project.dest, "tsconfig.json"), JSON.stringify(TSCONFIG, undefined, 4));
 }
 
-async function createGitignore(project: NewConsumerProject) {
+async function createGitignore(project: ConsumerProject) {
     await writeFile(resolve(project.dest, ".gitignore"), GITIGNORE);
 }
 
-async function installSources(project: NewConsumerProject) {
+async function installSources(project: ConsumerProject) {
     await cp(project.source, resolve(project.dest, "src"), {
         recursive: true,
         filter: source => basename(source).indexOf(".") === -1 || source.endsWith(".ts"),
     });
 }
 
-async function createConsumerVsCodeProject(project: NewConsumerProject) {
-    async function* launchGenerator() {
-        yield { name: "Run Program", program: entrypointFor(project) };
-    }
-
-    await createVsCodeProject(project, launchGenerator);
+async function createVsCodeProject(project: ConsumerProject) {
+    const root = resolve(project.dest, ".vscode");
+    await mkdir(root);
+    VS_CODE_LAUNCH.configurations[0].program = `\${workspaceFolder}/${entrypointFor(project)}`;
+    await writeFile(resolve(root, "launch.json"), JSON.stringify(VS_CODE_LAUNCH, undefined, 4));
 }
 
-function entrypointFor(project: NewConsumerProject) {
+async function performInstall(project: ConsumerProject) {
+    if (!project.performInstall) {
+        return;
+    }
+
+    notice(`Initializing project...`);
+
+    try {
+        await install(project, project.verbose);
+    } catch (e) {
+        stderr.write("\n");
+        throw new ProjectError(
+            `Build failed: ${e}\n\nWe couldn't build your new project, but you may be able to using ${bold("npm install")}.`,
+        );
+    }
+
+    const where = project.dest !== "." && project.dest !== process.cwd() ? ` in ${bold(project.dest)}` : "";
+
+    notice(`${bold("Success!")} Run your new app using ${bold("npm run app")}${where}.`);
+}
+
+function entrypointFor(project: ConsumerProject) {
     return "dist/" + project.template.entrypoint.replace(/\.ts$/, ".js");
 }

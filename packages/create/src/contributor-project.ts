@@ -4,35 +4,41 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { spawnSync, SpawnSyncOptions } from "child_process";
-import { readdir, readFile } from "fs/promises";
+import { spawn, SpawnSyncOptions } from "child_process";
 import { homedir } from "os";
 import { join, resolve } from "path";
 import { createInterface } from "readline/promises";
-import { Config } from "./config.js";
+import { promisify } from "util";
 import { blue, bold, dim, fittedTextOf } from "./formatting.js";
 import { error, info, notice } from "./messages.js";
-import { build, createAndValidateDest, createVsCodeProject, LaunchOptions, ProjectError } from "./new-project.js";
+import { createAndValidateDest, install, ProjectError } from "./new-project.js";
 
 const DEFAULT_DEV_PATH = "./matter.js";
 const DEFAULT_GIT_REPO = "git@github.com:project-chip/matter.js.git";
 const FORK_LINK = "https://github.com/project-chip/matter.js/fork";
 const MANUAL_INSTRUCTIONS = `You can fork at ${blue(FORK_LINK)}, clone yourself and run ${bold("npm install")}`;
 
-export interface NewContributorProject {
+export interface ContributorProject {
     kind: "contributor";
     template: { name: string };
     dest: string;
+    performInstall: boolean;
     origin: string;
 
     setup(): Promise<void>;
 }
 
-export function NewContributorProject(dest: string): NewContributorProject {
+export interface ContributorProjectOptions {
+    dest: string;
+    performInstall: boolean;
+}
+
+export function ContributorProject({ dest, performInstall }: ContributorProjectOptions): ContributorProject {
     return {
         kind: "contributor",
         template: { name: "contributor" },
         dest,
+        performInstall,
         origin: DEFAULT_GIT_REPO,
 
         setup,
@@ -69,8 +75,8 @@ function UI(): UI {
     };
 }
 
-async function setup(this: NewContributorProject) {
-    getStarted();
+async function setup(this: ContributorProject) {
+    await getStarted();
 
     const ui = UI();
     try {
@@ -81,24 +87,27 @@ async function setup(this: NewContributorProject) {
         ui.close();
     }
 
-    await createContributorVsCodeProject(this);
-    build.apply(this, true);
+    await invokeInstall(this);
     finishUp(this);
 }
 
-function git(args: string[], options: SpawnSyncOptions) {
-    spawnSync("git", args, { ...options, shell: true });
+async function git(args: string[], options: SpawnSyncOptions) {
+    await promisify(spawn)("snit", args, options);
 }
 
-function getStarted() {
+async function getStarted() {
     notice("Hello and 😍 contributor!");
 
     try {
-        git(["--version"], { stdio: "ignore" });
+        await git(["--version"], { stdio: "ignore" });
     } catch (e) {
-        throw new ProjectError(
-            `Unfortunately we can't seem to run git.  If you don't have it installed please install and try again.\n\nOtherwise, no worries!  ${MANUAL_INSTRUCTIONS}.`,
-        );
+        if (e instanceof Error && "code" in e && e.code === "ENOENT") {
+            throw new ProjectError(`We can't find the ${bold("git")} command.  Please install and try again.`);
+        } else {
+            throw new ProjectError(
+                `Unfortunately we can't seem to run git.  If this is something you can fix please try again.\n\nOtherwise, no worries!  ${MANUAL_INSTRUCTIONS}.`,
+            );
+        }
     }
 
     info(
@@ -106,7 +115,7 @@ function getStarted() {
     );
 }
 
-async function chooseDest(project: NewContributorProject, ui: UI) {
+async function chooseDest(project: ContributorProject, ui: UI) {
     let badDir = false;
     while (true) {
         if (badDir || project.dest === ".") {
@@ -132,14 +141,14 @@ async function chooseDest(project: NewContributorProject, ui: UI) {
     }
 }
 
-async function chooseOrigin(project: NewContributorProject, ui: UI) {
+async function chooseOrigin(project: ContributorProject, ui: UI) {
     project.origin = await ui.ask(
         `What git repository do you want to use as your git origin?\n\nIdeally this is your own fork of the matter.js GitHub repo.  Then you can push new branches to your fork using ${bold("git push --set-upstream origin new-branch-name")}.\n\nTo create a fork now go to ${blue(FORK_LINK)}`,
         project.origin,
     );
 }
 
-async function cloneGitRepo(project: NewContributorProject, ui: UI) {
+async function cloneGitRepo(project: ContributorProject, ui: UI) {
     // Create local clone
     while (true) {
         const mainUrl = await ui.ask(
@@ -151,7 +160,7 @@ async function cloneGitRepo(project: NewContributorProject, ui: UI) {
 
         try {
             process.stdout.write("\n");
-            git(
+            await git(
                 [
                     "clone",
                     mainUrl,
@@ -182,74 +191,18 @@ async function cloneGitRepo(project: NewContributorProject, ui: UI) {
     }
 }
 
-const DEFAULT_LAUNCH_OPTIONS: Partial<LaunchOptions> = {
-    env: {
-        MATTER_LOG_STACK_LIMIT: "50",
-        MATTER_TRACE_ENABLE: "true",
-    },
-    presentation: { clear: true },
-};
-
-function TestLaunch(options: Partial<LaunchOptions> & { name: string }): LaunchOptions {
-    return {
-        ...DEFAULT_LAUNCH_OPTIONS,
-        ...options,
-        program: "node_modules/.bin/matter-test",
-    };
-}
-
-function RunLaunch(options: Partial<LaunchOptions> & { name: string; args: string[] }): LaunchOptions {
-    const result: LaunchOptions = {
-        ...DEFAULT_LAUNCH_OPTIONS,
-        ...options,
-        program: "node_modules/.bin/matter-run",
-    };
-
-    delete (result as any).file;
-
-    return result;
-}
-
-async function createContributorVsCodeProject(project: NewContributorProject) {
-    async function* launchGenerator() {
-        // Generate launches that are not project specific
-        yield TestLaunch({ name: "All tests" });
-        yield TestLaunch({ name: "Current test", args: ["--spec", "${input:testFile}", "--all-logs", "esm"] });
-        yield RunLaunch({ name: "Current file", args: ["${file}"] });
-
-        // Generate launches for each project that has tests
-        for (const source of ["packages", "compat"]) {
-            const sourceDir = resolve(project.dest, source);
-            for (const dir of await readdir(sourceDir)) {
-                const packageJson = resolve(sourceDir, dir, "package.json");
-                const pkg = JSON.parse(await readFile(packageJson, "utf-8"));
-                const name = pkg.name;
-                if (pkg?.scripts?.test !== undefined && pkg.name !== undefined) {
-                    yield TestLaunch({
-                        name: `Test ${name}`,
-                        cwd: join(source, dir),
-                    });
-                }
-            }
-        }
-
-        // Generate launches for each example
-        for (const source of (await Config()).templates) {
-            yield RunLaunch({
-                name: `Run ${source.name} example`,
-                args: [join(`packages/examples/src/${source.name}/${source.entrypoint}`)],
-            });
-        }
+async function invokeInstall(project: ContributorProject) {
+    if (!project.performInstall) {
+        return;
     }
-
-    await createVsCodeProject(project, launchGenerator);
+    await install(project, true);
 }
 
-function finishUp(project: NewContributorProject) {
+function finishUp(project: ContributorProject) {
     notice("You're all set!");
 
     info(
-        `If you're a ${bold("VS Code")} user, we've created a project with launch configurations for matter.js tests and examples.  To open, run:`,
+        `If you're a ${bold("VS Code")} user, we provide launch configurations and recommend extensions.  To open, run:`,
     );
 
     info(`    ${bold(`code ${resolve(project.dest)}`)}`);
