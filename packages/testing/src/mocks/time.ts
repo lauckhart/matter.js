@@ -92,7 +92,7 @@ export const MockTime = {
         nowMs = time;
 
         // Ensure time reverts to correct implementation across suites
-        reinstallTime?.();
+        this.enable();
     },
 
     now(): Date {

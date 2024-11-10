@@ -58,23 +58,29 @@ export function generalSetup(mocha: MochaType) {
     filterLogs("beforeEach");
     filterLogs("afterEach");
 
-    // Reset mocks before each suite.  Suites could conceivably have callbacks that occur across tests.  If individual
-    // tests need a reset the suite needs to handle itself.
-    mocha.suite.beforeAll(() => {
-        MockTime.reset();
-        resetNetworkSimulator();
-    });
-    // const actualBeforeAll = mocha.suite.beforeAll;
-    // mocha.suite.beforeAll = function (this: Mocha.Context, ...args: any) {
-    //     MockTime.reset();
-    //     resetNetworkSimulator();
-    //     return actualBeforeAll.apply(this, args);
-    // };
+    let lastSuite: undefined | Mocha.Suite;
 
-    mocha.suite.beforeEach(() => {
+    mocha.suite.beforeEach(function before() {
         for (const hook of LoggerHooks.beforeEach) {
             hook(mocha);
         }
+
+        let suite = this.currentTest?.parent;
+        if (!suite) {
+            return;
+        }
+
+        while (suite.parent?.parent) {
+            suite = suite.parent;
+        }
+
+        if (suite === lastSuite) {
+            return;
+        }
+
+        lastSuite = suite;
+
+        beforeEachFile();
     });
 
     mocha.suite.afterEach(() => {
@@ -84,6 +90,13 @@ export function generalSetup(mocha: MochaType) {
     });
 
     FailureDetail.diff = Base.generateDiff.bind(Base);
+}
+
+// Reset mocks before each suite.  Suites could conceivably have callbacks that occur across tests.  If individual tests
+// need a reset the suite needs to handle itself.
+function beforeEachFile() {
+    MockTime.reset();
+    resetNetworkSimulator();
 }
 
 export function adaptReporter(Mocha: typeof MochaType, title: string, reporter: Reporter) {
