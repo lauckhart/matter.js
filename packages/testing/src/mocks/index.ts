@@ -6,6 +6,6 @@
 
 import "./environment.js";
 import "./logging.js";
+export * from "./boot.js";
 export * from "./crypto.js";
-export * from "./network-simulator.js";
 export * from "./time.js";

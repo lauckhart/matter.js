@@ -81,7 +81,7 @@ export async function main(argv = process.argv) {
         const graph = await Graph.load(pkg);
         await graph.build(builder, false);
         for (const node of graph.nodes) {
-            if (!node.pkg.hasTests) {
+            if (!node.pkg.hasTests || node.pkg.json.matter?.test === false) {
                 continue;
             }
 

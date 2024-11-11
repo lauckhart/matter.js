@@ -6,6 +6,7 @@
 
 import type Chai from "chai";
 import "chai-as-promised";
+import { Boot } from "./mocks/boot.js";
 import type { MockLogger } from "./mocks/logging.js";
 import type { MockTime } from "./mocks/time.js";
 
@@ -27,6 +28,11 @@ declare global {
         | undefined
         | {
               /**
+               * Set boot manager.
+               */
+              bootSetup(boot: Boot): void;
+
+              /**
                * Configure time.
                */
               timeSetup?: (Time: any) => void;
@@ -42,12 +48,7 @@ declare global {
               cryptoSetup?: (Crypto: any) => void;
 
               /**
-               * Configure the network simulator.
-               */
-              networkSimulatorSetup?: (NetworkSimulator: any) => void;
-
-              /**
-               * Receive intercepted log messages.  The logging mocks
+               * Receive intercepted log messages.
                */
               loggerSink?: (level: number, message: string) => void;
           };

@@ -5,14 +5,12 @@
  */
 
 import { Logger } from "../../log/Logger.js";
-import { singleton } from "../../util/Singleton.js";
 import { TransportInterface } from "../TransportInterface.js";
+import { MockNetwork } from "./MockNetwork.js";
 
 const logger = Logger.get("SimulatedNetwork");
 
 export class NetworkSimulator {
-    static get = singleton(() => new NetworkSimulator());
-
     private readonly listenersMap = new Map<string, Array<NetworkSimulator.Listener>>();
 
     onUdpData(
@@ -48,7 +46,7 @@ export class NetworkSimulator {
         [`${remoteAddress}:${remotePort}`, `*:${remotePort}`].forEach(ipPort =>
             this.listenersMap.get(ipPort)?.forEach(listener => {
                 try {
-                    listener(NetworkSimulator.INTERFACE_NAME, localAddress, localPort, data);
+                    listener("fake0", localAddress, localPort, data);
                 } catch (error) {
                     logger.error(error);
                 }
@@ -56,16 +54,15 @@ export class NetworkSimulator {
         );
     }
 
-    reset() {
-        this.listenersMap.clear();
+    addHost(lastIdentifierByte: number) {
+        const byte = lastIdentifierByte.toString(16).padStart(2, "0");
+        return new MockNetwork(this, `00:11:22:33:44:${byte}`, [
+            `1111:2222:3333:4444:5555:6666:7777:88${byte}`,
+            `10.10.10.${lastIdentifierByte}`,
+        ]);
     }
-}
-
-if (typeof MatterHooks !== "undefined") {
-    MatterHooks?.networkSimulatorSetup?.(NetworkSimulator.get());
 }
 
 export namespace NetworkSimulator {
     export type Listener = (netInterface: string, peerAddress: string, peerPort: number, data: Uint8Array) => void;
-    export const INTERFACE_NAME = "fakeInterface";
 }

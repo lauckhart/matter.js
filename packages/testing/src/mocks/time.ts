@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Boot } from "./boot.js";
+
 type TimerCallback = () => any;
 
 type MockTimeLike = typeof MockTime;
@@ -293,3 +295,7 @@ export function timeSetup(Time: { get(): unknown }) {
 }
 
 Object.assign(globalThis, { MockTime });
+
+Boot.init(() => {
+    MockTime.reset();
+});
