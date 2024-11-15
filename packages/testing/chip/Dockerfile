@@ -75,15 +75,27 @@ RUN find out -name \*.whl | xargs pip install --break-system-packages --upgrade
 # STAGE 4 - extract CHIP subset required for runtime
 FROM matter.js-chip-base as matter.js-chip
 
+RUN rm -rf bin.usr-is-merged boot home media mnt opt sbin.usr-is-merged srv 
+
 # Installed python packages
 COPY --from=matter.js-chip-bins /usr/lib/python3/dist-packages /usr/lib/python3/dist-packages
 COPY --from=matter.js-chip-bins /usr/local/lib /usr/local/lib
+
+# Other packages CHIP has scattered randomly and adds to path in relative_importer.py
+WORKDIR /usr/local/lib/python3.12/dist-packages
+COPY --from=matter.js-chip-bins /connectedhomeip/scripts/tests/chiptest chiptest
+COPY --from=matter.js-chip-bins /connectedhomeip/scripts/py_matter_idl/matter_idl matter_idl
+COPY --from=matter.js-chip-bins /connectedhomeip/scripts/py_matter_yamltests/matter_yamltests matter_yamltests
+COPY --from=matter.js-chip-bins /connectedhomeip/examples/chip-tool/py_matter_chip_tool_adapter/matter_chip_tool_adapter matter_chip_tool_adapter
+COPY --from=matter.js-chip-bins /connectedhomeip/examples/placeholder/py_matter_placeholder_adapter/matter_placeholder_adapter matter_placeholder_adapter
+COPY --from=matter.js-chip-bins /connectedhomeip/src/controller/python/py_matter_yamltest_repl_adapter/matter_yamltest_repl_adapter matter_yamltest_repl_adapter
+WORKDIR /
 
 # chip-tool binary
 COPY --from=matter.js-chip-bins /connectedhomeip/out/chip-tool /bin/chip-tool
 
 # YAML test runner
-COPY --from=matter.js-chip-bins /connectedhomeip/scripts/tests/chipyaml /chipyaml
+COPY --from=matter.js-chip-bins /connectedhomeip/scripts/tests/chipyaml /scripts
 
 # Tests
 COPY --from=matter.js-chip-bins /connectedhomeip/src/python_testing /tests/python

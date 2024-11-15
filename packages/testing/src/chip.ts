@@ -15,14 +15,14 @@ import { Docker } from "./util/docker.js";
  */
 namespace Constants {
     export const chip = "/connectedhomeip";
-    export const chipTool = `${chip}/scripts/tests/chipyaml/chiptool.py`;
-    export const yamlTests = `${chip}/src/app/tests/suites/certification`;
-    export const pythonTests = `${chip}/src/python_testing`;
+    export const chipTool = `/chipyaml/chiptool.py`;
+    export const yamlTests = `/tests/yaml`;
+    export const pythonTests = `/tests/python`;
     export const python = ["/usr/bin/env", "-S", "python3", "-B"];
-    export const pythonRunner = `${chip}/scripts/tests/run_python_test.py`;
+    export const pythonRunner = `${chip}/scripts/tests/run_python_test.py`; // TODO - is this necessary?  Need to add if so
 
     export const pics = "/matter.js/packages/tools/build/pics.properties";
-    export const chipPics = "/connectedhomeip/src/app/tests/suites/certification/ci-pics-values";
+    export const chipPics = "/tests/yaml/ci-pics-values";
     export const buildTimeout = 600_000;
     export const defaultTimeout = 60_000;
     export const dockerBuildPath = "chip";
