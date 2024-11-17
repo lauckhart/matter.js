@@ -5,9 +5,21 @@
  */
 
 import { readdir } from "fs/promises";
-import { Writable } from "stream";
 
 import Dockerode from "dockerode";
+import { ReadStream } from "fs";
+
+export class NonZeroExitError extends Error {
+    constructor(readonly code: number) {
+        super(`Non-zero exit code ${code}`);
+    }
+}
+
+export interface Container extends AsyncIterator<Uint8Array & { source: "stdin" | "stdout" }> {
+    write(content: Uint8Array | string): Promise<void>;
+    close(): Promise<void>;
+    consume(): Promise<Uint8Array>;
+}
 
 /**
  * A high-level docker control API specialized for our purposes.
@@ -15,31 +27,12 @@ import Dockerode from "dockerode";
 export class Docker {
     #intf = new Dockerode();
 
-    async *run(imageName: string, options?: Docker.RunOptions) {
+    async run(imageName: string, options?: Docker.RunOptions): Promise<Container> {
         const { args, createOptions } = configureRun(options);
 
-        let resolve: undefined | ((text?: string) => void);
-        let reject: undefined | ((error: Error) => void);
-        let signal: undefined | Promise<string | undefined>;
-
-        function newSignal() {
-            signal = new Promise((newResolve, newReject) => {
-                resolve = text => {
-                    newResolve(text);
-                    newSignal();
-                };
-                reject = newReject;
-            });
-        }
-
-        newSignal();
-
-        const output = new Writable();
-        output._write = (chunk, _encoding, done) => {
-            resolve!(chunk.toString("utf-8"));
-            newSignal();
-            done();
-        };
+        const ct = await this.#intf.createContainer(createOptions);
+        await ct.start();
+        const stream = await ct.attach({ stdin: true, stdout: true, stderr: true });
 
         this.#intf.run(imageName, args, output, createOptions).then(
             result => {
@@ -94,6 +87,18 @@ export class Docker {
             .filter(line => line !== "");
     }
 
+    async pull(nameAndTag: string) {
+        const progress = await this.#intf.pull(nameAndTag);
+        await new Promise<void>((resolve, reject) => {
+            this.#intf.modem.followProgress(progress, error => {
+                if (error) {
+                    reject(error);
+                }
+                resolve();
+            });
+        });
+    }
+
     async buildImage(name: string, path: string) {
         const files = await readdir(path);
 
@@ -127,12 +132,16 @@ export class Docker {
 
 namespace Docker {
     export interface RunOptions {
+        containerName?: string;
+        replace?: boolean;
+        autoRemove?: boolean;
         entrypoint?: string | string[];
         args?: string | string[];
         env?: Record<string, string>;
         privileged?: boolean;
         binds?: Record<string, string>;
         network?: "host";
+        input?: ReadStream;
     }
 }
 
@@ -150,7 +159,7 @@ function configureRun(options?: Docker.RunOptions) {
 
     const createOptions = {
         HostConfig: {
-            AutoRemove: true,
+            AutoRemove: options?.autoRemove !== false,
         },
     } as Dockerode.ContainerCreateOptions;
 

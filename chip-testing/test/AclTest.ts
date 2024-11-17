@@ -8,5 +8,6 @@ import { AllClustersTestInstance } from "../src/AllClustersTestInstance.js";
 import { App } from "./support.js";
 
 describe("ACL", () => {
-    Chip.python(App(AllClustersTestInstance), "TC_ACL_2_2");
+    //Chip.python(App(AllClustersTestInstance), "TC_ACL_2_2");
+    Chip.yaml(App(AllClustersTestInstance), "Test_TC_ACL_*");
 });

@@ -9,5 +9,5 @@ import { App } from "./support.js";
 
 describe("ACE", () => {
     Chip.yaml(App(AllClustersTestInstance), "ACE_*");
-    //Chip.python(App(AllClustersTestInstance), "ACE_*");
+    Chip.python(App(AllClustersTestInstance), "ACE_*");
 });

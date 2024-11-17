@@ -1,6 +1,11 @@
-# Builds an image capable of running CHIP tests.
+# @license
+# Copyright 2022-2024 Matter.js Authors
+# SPDX-License-Identifier: Apache-2.0
+
+# Builds an image capable of running chip-tool and CHIP tests.
 #
 # Intermediate stages don't focus on optimization but the final image is minimal (relatively speaking).
+
 
 # STAGE 1 - common base image
 FROM ubuntu:24.04 as matter.js-chip-base
@@ -9,15 +14,16 @@ SHELL [ "/bin/bash", "-c" ]
 
 # Quality of life
 RUN echo 'PS1="\[\033[01;32m\]matter.js-chip\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m# "' >> /root/.bashrc
-RUN rm -rf bin.usr-is-merged boot home media mnt opt sbin.usr-is-merged srv 
 
 # Set timezone to UTC
 ENV TZ=Etc/UTC
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install a few packages required by final image.  Most are also required during build
-RUN apt-get -qq update
-RUN apt-get -qq -y install python3 python-is-python3 libavahi-client3 libglib2.0-0 iproute2
+RUN --mount=type=cache,target=/var/cache/apt \
+    --mount=type=cache,target=/var/lib/apt \
+    apt-get -qq update && \
+    apt-get -qq -y install python3 python-is-python3 libavahi-client3 libglib2.0-0 iproute2 less
 
 
 # STAGE 2 - CHIP source code and build tooling
@@ -33,9 +39,11 @@ RUN case "${TARGETPLATFORM}" in \
     esac
 
 # Install system packages required for build
-RUN apt-get -qq update
-RUN apt-get -qq -y install git gcc g++ pkg-config libssl-dev libdbus-1-dev libglib2.0-dev libavahi-client-dev \
-    ninja-build python3-venv python3-dev unzip libgirepository1.0-dev libcairo2-dev libreadline-dev python3-pip
+RUN --mount=type=cache,target=/var/cache/apt \
+    --mount=type=cache,target=/var/lib/apt \
+    apt-get -qq update && \
+    apt-get -qq -y install git gcc g++ pkg-config libssl-dev libdbus-1-dev libglib2.0-dev libavahi-client-dev \
+        ninja-build python3-venv python3-dev unzip libgirepository1.0-dev libcairo2-dev libreadline-dev python3-pip
 
 # Pull CHIP source code
 RUN git clone --depth=1 https://github.com/project-chip/connectedhomeip.git
@@ -47,6 +55,11 @@ RUN ./scripts/checkout_submodules.py --shallow --platform linux
 FROM matter.js-chip-build as matter.js-chip-bins
 
 WORKDIR /connectedhomeip
+
+# Reduce build size, saves about 1/3 of final image
+RUN sed -i "s/is_debug = true/is_debug = false/" build/config/BUILDCONFIG.gn && \
+    sed -i "s/-O2/-Os/" build/config/compiler/BUILD.gn && \
+    sed -i "s/strip_symbols = false/strip_symbols = true/" build/config/compiler/compiler.gni
 
 # Build chip-tool
 RUN case ${TARGETPLATFORM} in \
@@ -75,6 +88,10 @@ RUN find out -name \*.whl | xargs pip install --break-system-packages --upgrade
 # STAGE 4 - extract CHIP subset required for runtime
 FROM matter.js-chip-base as matter.js-chip
 
+LABEL org.opencontainers.image.title="matter.js CHIP tooling build"
+LABEL org.opencontainers.image.url=https://github.com/matter-js/chip
+LABEL org.opencontainers.image.source=https://github.com/project-chip/matter.js/tree/main/packages/testing/chip
+
 RUN rm -rf bin.usr-is-merged boot home media mnt opt sbin.usr-is-merged srv 
 
 # Installed python packages
@@ -95,8 +112,12 @@ WORKDIR /
 COPY --from=matter.js-chip-bins /connectedhomeip/out/chip-tool /bin/chip-tool
 
 # YAML test runner
-COPY --from=matter.js-chip-bins /connectedhomeip/scripts/tests/chipyaml /scripts
+COPY --from=matter.js-chip-bins /connectedhomeip/scripts/tests /scripts/tests
+
+# Data model, test runner uses to decode element names
+COPY --from=matter.js-chip-bins /connectedhomeip/src/app/zap-templates/zcl/data-model/chip \
+    connectedhomeip/src/app/zap-templates/zcl/data-model/chip
 
 # Tests
-COPY --from=matter.js-chip-bins /connectedhomeip/src/python_testing /tests/python
-COPY --from=matter.js-chip-bins /connectedhomeip/src/app/tests/suites/certification /tests/yaml
+COPY --from=matter.js-chip-bins /connectedhomeip/src/python_testing /src/python_testing
+COPY --from=matter.js-chip-bins /connectedhomeip/src/app/tests/suites /src/app/tests/suites

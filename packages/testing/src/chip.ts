@@ -14,19 +14,18 @@ import { Docker } from "./util/docker.js";
  * Path configuration.
  */
 namespace Constants {
-    export const chip = "/connectedhomeip";
-    export const chipTool = `/chipyaml/chiptool.py`;
+    export const chipTool = "/bin/chip-tool";
+    export const yamlRunner = `/chipyaml/chiptool.py`;
     export const yamlTests = `/tests/yaml`;
     export const pythonTests = `/tests/python`;
     export const python = ["/usr/bin/env", "-S", "python3", "-B"];
-    export const pythonRunner = `${chip}/scripts/tests/run_python_test.py`; // TODO - is this necessary?  Need to add if so
+    export const pythonRunner = `/tests/python/run_python_test.py`; // TODO - replace?  Need to add if not
 
     export const pics = "/matter.js/packages/tools/build/pics.properties";
     export const chipPics = "/tests/yaml/ci-pics-values";
     export const buildTimeout = 600_000;
     export const defaultTimeout = 60_000;
-    export const dockerBuildPath = "chip";
-    export const dockerName = "matterjs-chip";
+    export const imageName = "ghcr.io/matter-js/chip";
 }
 
 /**
@@ -67,9 +66,7 @@ const Config = {
 
         const { progress } = Config.runner;
 
-        await progress.run(`Build ${progress.emphasize("CHIP image")}`, () =>
-            docker.buildImage(Constants.dockerName, Package.tools.resolve(Constants.dockerBuildPath)),
-        );
+        await progress.run(`Pull ${progress.emphasize(Constants.imageName)}`, () => docker.pull(Constants.imageName));
 
         State.docker = docker;
 
@@ -112,13 +109,15 @@ export const Chip = {
             implementTest(testee, {
                 name: parse(file).base,
 
-                command: [Constants.pythonRunner, file],
+                command: [Constants.yamlRunner, file, "tests", file],
 
-                // TODO - complete argument set
                 args: {
                     "--pics-file": Constants.pics,
-                    "--discriminator": "1234",
-                    "--passcode": "20202021",
+
+                    // TODO - commission
+                    // Node ID 0x12344321
+                    // discriminator 1234
+                    // passcode  20202021
                 },
             });
         }
@@ -200,7 +199,7 @@ async function invokeTester(tester: Chip.Tester) {
     }
 
     // TODO - define docker network to match CHIP's testing infrastructure
-    const output = docker.run(Constants.dockerName, {
+    const output = docker.run(Constants.imageName, {
         args,
         env: tester.environment,
         binds: {
@@ -386,7 +385,7 @@ async function initialize() {
 
 async function configurePics() {
     const docker = await Config.docker();
-    const ciPics = await docker.readFileFromImage(Constants.dockerName, Constants.chipPics);
+    const ciPics = await docker.readFileFromImage(Constants.imageName, Constants.chipPics);
     const pics = new PicsFile(ciPics, true);
 
     const overrides = new PicsFile(Package.tools.resolve("src/testing/chip/pics.properties"));
@@ -398,7 +397,7 @@ async function configurePics() {
 async function configureYaml() {
     const docker = await Config.docker();
 
-    const tests = await docker.resolveGlobFromImage(Constants.dockerName, `${Constants.yamlTests}/Test_*.yaml`);
+    const tests = await docker.resolveGlobFromImage(Constants.imageName, `${Constants.yamlTests}/Test_*.yaml`);
 
     State.yamlTests.push(...tests);
 }
@@ -406,7 +405,7 @@ async function configureYaml() {
 async function configurePython() {
     const docker = await Config.docker();
 
-    const tests = (await docker.resolveGlobFromImage(Constants.dockerName, `${Constants.pythonTests}/*.py`)).filter(
+    const tests = (await docker.resolveGlobFromImage(Constants.imageName, `${Constants.pythonTests}/*.py`)).filter(
         name => name.match(/(?:TC_|Test)[^/]\.py$/),
     );
 
