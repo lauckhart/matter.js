@@ -5,7 +5,7 @@
  */
 
 import { Package } from "#tools";
-import { parse } from "path";
+import { basename, extname, parse } from "path";
 import { PicsFile } from "./chip/pics-file.js";
 import { type TestRunner } from "./runner.js";
 import { Container, Docker, Terminal } from "./util/docker.js";
@@ -15,11 +15,11 @@ import { Container, Docker, Terminal } from "./util/docker.js";
  */
 namespace Constants {
     export const yamlRunner = `/scripts/tests/chipyaml/chiptool.py`;
-    export const yamlTests = `/tests/yaml`;
-    export const pythonTests = `/tests/python`;
+    export const yamlTestDir = `/src/app/tests/suites/certification`;
+    export const pythonTestDir = `/src/python_testing`;
 
     export const pics = "/matter.js/packages/tools/build/pics.properties";
-    export const chipPics = "/tests/yaml/ci-pics-values";
+    export const chipPics = "/src/app/tests/suites/certification/ci-pics-values";
     export const initTimeout = 60_000;
     export const defaultTimeout = 60_000;
     export const imageName = "ghcr.io/matter-js/chip";
@@ -149,15 +149,15 @@ export const Chip = {
             throw new Error(`YAML test glob ${includeGlob} matched no tests`);
         }
 
-        for (const file of tests) {
+        for (const name of tests) {
             implementTest(testee, {
-                name: parse(file).base,
+                name: parse(name).base,
 
                 async invoke(container: Container) {
                     const terminal = await container.exec(Terminal.Line, [
                         "python3",
                         Constants.yamlRunner,
-                        file,
+                        `${Constants.yamlTestDir}/${name}.yaml`,
                         "--PICS",
                         Constants.pics,
                     ]);
@@ -187,7 +187,12 @@ export const Chip = {
             implementTest(testee, {
                 name,
                 async invoke(container) {
-                    const terminal = await container.exec(Terminal.Line, ["python3", file, "--PICS", Constants.pics]);
+                    const terminal = await container.exec(Terminal.Line, [
+                        "python3",
+                        `${Constants.pythonTestDir}/${name}.py`,
+                        "--PICS",
+                        Constants.pics,
+                    ]);
                     for await (const line of terminal) {
                         // TODO - pretty this up
                         MockLogger.injectExternalMessage("CHIP", line);
@@ -292,7 +297,7 @@ async function configureContainer() {
 
     return await progress.run(`Pull and start ${progress.emphasize(Constants.imageName)}`, async () => {
         await docker.pull(Constants.imageName);
-        return await docker.start({
+        return await docker.open({
             image: Constants.imageName,
             name: Constants.containerName,
             autoRemove: true,
@@ -307,28 +312,33 @@ async function configurePics() {
     const ciPics = await Config.container.readFile(Constants.chipPics);
     const pics = new PicsFile(ciPics, true);
 
-    const overrides = new PicsFile(Package.tools.resolve("src/testing/chip/pics.properties"));
+    const overrides = new PicsFile(Package.workspace.resolve("packages/testing/src/chip/pics.properties"));
     pics.patch(overrides);
 
-    pics.save(Package.tools.resolve("build/pics.properties"));
+    pics.save(Package.workspace.resolve("packages/testing/build/pics.properties"));
 }
 
 async function configureYaml() {
-    const tests = await Config.container.resolveGlob(`${Constants.yamlTests}/Test_*.yaml`);
+    const tests = (await Config.container.resolveGlob(`${Constants.yamlTestDir}/Test_*.yaml`)).map(testNameOf);
 
     State.yamlTests.push(...tests);
 }
 
 async function configurePython() {
-    const tests = (await Config.container.resolveGlob(`${Constants.pythonTests}/*.py`)).filter(name =>
-        name.match(/(?:TC_|Test)[^/]\.py$/),
-    );
+    const tests = (await Config.container.resolveGlob(`${Constants.pythonTestDir}/*.py`))
+        .map(testNameOf)
+        .filter(name => name.startsWith("TC_") || name.startsWith("Test"));
 
     State.pythonTests.push(...tests);
 }
 
 function filterWithGlob(list: string[], glob: string, invert = false) {
     const globPattern = glob.replace(/\*/g, "[^\\/]+");
-    const pattern = new RegExp(`^.*/(?:Test_TC_|TC|Test)${globPattern}\\.(?:py|yaml)$`);
+    const pattern = new RegExp(`^${globPattern}$`);
     return list.filter(s => !!s.match(pattern) === !invert);
+}
+
+function testNameOf(path: string) {
+    const name = basename(path);
+    return name.slice(0, name.length - extname(name).length);
 }

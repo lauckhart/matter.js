@@ -14,9 +14,27 @@ import { finished } from "stream/promises";
 import { promisify } from "util";
 import { asyncLinesOf, textOf } from "./text.js";
 
+export class ContainerError extends Error {
+    constructor(
+        message: string,
+        readonly code: number,
+        readonly textCode: string,
+    ) {
+        super(message);
+    }
+}
+
 export class NonZeroExitError extends Error {
-    constructor(readonly code: number) {
-        super(`Process exited with error code ${code}`);
+    constructor(
+        readonly code: number,
+        message?: string,
+    ) {
+        if (message) {
+            message = `: ${message}`;
+        } else {
+            message = "";
+        }
+        super(`Process exited with error code ${code}${message}`);
     }
 }
 
@@ -31,102 +49,53 @@ export class Docker {
     }
 
     async open(options: Docker.ContainerOptions & { name: string }) {
-        const container = await this.get(options.name);
-        if (container === undefined) {
-            return this.create(options);
-        }
-    }
-
-    async get(name: string) {
-        return this.#intf.getContainer(name);
-    }
-
-    async create(options: Docker.ContainerOptions): Promise<Container> {
-        const ct = await this.#intf.createContainer(configureContainer(options));
-
-        return {
-            docker: this,
-
-            async start() {
+        const info = await this.containerStatus(options.name);
+        if (info) {
+            const ct = await adaptContainer(this, this.#intf.getContainer(info.id));
+            if (info.state !== "running") {
                 await ct.start();
-            },
+            }
+            return ct;
+        }
 
-            async kill() {
-                await ct.kill();
-            },
-
-            async attach<T extends Terminal.Factory<unknown>>(terminal: T, stdin = false) {
-                const exited = new Promise<void>((resolve, reject) => {
-                    ct.wait().then(code => {
-                        if (code) {
-                            reject(new NonZeroExitError(code));
-                        } else {
-                            resolve();
-                        }
-                    }, reject);
-                });
-
-                return terminal(
-                    this.docker,
-                    await ct.attach({ stream: true, stdin, stdout: true, stderr: true }),
-                    exited,
-                ) as ReturnType<T>;
-            },
-
-            async exec<T extends Terminal.Factory<unknown>>(terminal: T, command: string | string[], stdin = false) {
-                if (!Array.isArray(command)) {
-                    command = [command];
-                }
-
-                const exec = await ct.exec({
-                    Cmd: command,
-                    AttachStdin: stdin,
-                    AttachStdout: true,
-                    AttachStderr: true,
-                });
-
-                const stream = await exec.start({ hijack: true, stdin });
-
-                const exited = new Promise<void>((resolve, reject) => {
-                    finished(stream).then(() => {
-                        exec.inspect().then(info => {
-                            if (info.ExitCode) {
-                                reject(new NonZeroExitError(info.ExitCode));
-                            } else {
-                                resolve();
-                            }
-                        }, reject);
-                    }, reject);
-                });
-
-                return terminal(this.docker, stream, exited) as ReturnType<T>;
-            },
-
-            async readFile(path: string) {
-                const terminal = await this.exec(Terminal.Line, ["cat", path]);
-                return await terminal.consume();
-            },
-
-            async resolveGlob(glob: string) {
-                const terminal = await this.exec(Terminal.Line, ["bash", "-c", `ls ${glob}`]);
-                const output = await terminal.consume();
-                return output.split("\n").filter(line => line !== "");
-            },
-        } satisfies Container;
-    }
-
-    async start(options: Docker.ContainerOptions): Promise<Container> {
         const ct = await this.create(options);
         await ct.start();
         return ct;
     }
 
+    async containerStatus(name: string) {
+        const containers = await adaptErrors(
+            this.#intf.listContainers({
+                filters: { name: [name] },
+            }),
+        );
+        const info = containers[0];
+        if (info) {
+            return {
+                name,
+                id: info.Id,
+                state: info.State,
+            };
+        }
+    }
+
+    async create(options: Docker.ContainerOptions): Promise<Container> {
+        const ct = await adaptErrors(this.#intf.createContainer(configureContainer(options)));
+        return adaptContainer(this, ct);
+    }
+
+    async start(options: Docker.ContainerOptions): Promise<Container> {
+        const ct = await this.create(options);
+        await adaptErrors(ct.start());
+        return ct;
+    }
+
     async pull(nameAndTag: string) {
-        const progress = await this.#intf.pull(nameAndTag);
+        const progress = await adaptErrors(this.#intf.pull(nameAndTag));
         await new Promise<void>((resolve, reject) => {
             this.#intf.modem.followProgress(progress, error => {
                 if (error) {
-                    reject(error);
+                    reject(translateError(error));
                 }
                 resolve();
             });
@@ -136,20 +105,22 @@ export class Docker {
     async buildImage(name: string, path: string) {
         const files = await readdir(path);
 
-        const stream = await this.#intf.buildImage(
-            {
-                context: path,
-                src: files,
-            },
-            {
-                t: name,
-            },
+        const stream = await adaptErrors(
+            this.#intf.buildImage(
+                {
+                    context: path,
+                    src: files,
+                },
+                {
+                    t: name,
+                },
+            ),
         );
 
         await new Promise<void>((resolve, reject) => {
             this.#intf.modem.followProgress(stream, (error, result) => {
                 if (error) {
-                    reject(error);
+                    reject(translateError(error));
                 }
 
                 const finalMessage = result[result.length - 1];
@@ -227,7 +198,7 @@ function configureContainer(options: Docker.ContainerOptions) {
         createOptions.Cmd = Array.isArray(command) ? command : [command];
     }
 
-    if (attachStdin) {
+    if (attachStdin !== false) {
         createOptions.AttachStdin = true;
     }
 
@@ -251,10 +222,16 @@ export namespace Terminal {
 
     export function Raw(docker: Docker, stream: NodeJS.ReadWriteStream, exited: Promise<void>): Terminal<Chunk> {
         const buffer = Array<Chunk>();
+        let closed = false;
         let readError: undefined | Error;
         let signalReadReady: () => void;
         let readReady: Promise<void>;
         resetBuffer();
+
+        stream.on("close", () => {
+            closed = true;
+            signalReadReady();
+        });
 
         const stdout = createOutputStream("stdout");
         const stderr = createOutputStream("stderr");
@@ -277,23 +254,42 @@ export namespace Terminal {
             async consume(): Promise<Uint8Array> {
                 const chunks = Array<Uint8Array>();
                 let length = 0;
-                for await (const chunk of this) {
-                    chunks.push(chunk);
-                    length += chunk.length;
+                try {
+                    for await (const chunk of this) {
+                        chunks.push(chunk);
+                        length += chunk.length;
+                    }
+                } catch (e) {
+                    // With non-zero exit errors the message is probably in the data we were collecting, so include that
+                    // in the error message
+                    if (e instanceof NonZeroExitError) {
+                        let message = textOf(join());
+                        if (message.length > 256) {
+                            message = message.slice(0, 256) + "…";
+                        }
+                        e = new NonZeroExitError(e.code, message);
+                    }
+
+                    throw e;
                 }
-                const output = new Uint8Array(length);
-                let pos = 0;
-                for (const chunk of chunks) {
-                    output.set(chunk, pos);
-                    pos += chunk.length;
+
+                return join();
+
+                function join() {
+                    const output = new Uint8Array(length);
+                    let pos = 0;
+                    for (const chunk of chunks) {
+                        output.set(chunk, pos);
+                        pos += chunk.length;
+                    }
+                    return output;
                 }
-                return output;
             },
 
             [Symbol.asyncIterator]: function (): AsyncIterator<Chunk, any, any> {
                 return {
                     async next() {
-                        while (!stderr.closed && !stdout.closed) {
+                        while (!closed || buffer.length) {
                             await readReady;
 
                             let result;
@@ -303,14 +299,14 @@ export namespace Terminal {
                                     value: buffer.shift()!,
                                 };
 
-                                if (!buffer.length && !stderr.closed && !stdout.closed) {
+                                if (!buffer.length && !closed) {
                                     resetBuffer();
                                 }
 
                                 return result;
                             }
 
-                            if (!stdout.closed && !stderr.closed) {
+                            if (!closed) {
                                 resetBuffer();
                             }
                         }
@@ -348,10 +344,6 @@ export namespace Terminal {
                 signalReadReady();
             };
 
-            result._final = () => {
-                signalReadReady();
-            };
-
             return result;
         }
     }
@@ -377,4 +369,103 @@ export namespace Terminal {
             },
         };
     }
+}
+
+async function adaptContainer(docker: Docker, ct: Dockerode.Container): Promise<Container> {
+    return {
+        docker,
+
+        async start() {
+            await adaptErrors(ct.start());
+        },
+
+        async kill() {
+            await adaptErrors(ct.kill());
+        },
+
+        async attach<T extends Terminal.Factory<unknown>>(terminal: T, stdin = false) {
+            const exited = new Promise<void>((resolve, reject) => {
+                ct.wait().then(
+                    code => {
+                        if (code) {
+                            reject(new NonZeroExitError(code));
+                        } else {
+                            resolve();
+                        }
+                    },
+                    e => reject(translateError(e)),
+                );
+            });
+
+            return terminal(
+                this.docker,
+                await adaptErrors(ct.attach({ stream: true, stdin, stdout: true, stderr: true })),
+                exited,
+            ) as ReturnType<T>;
+        },
+
+        async exec<T extends Terminal.Factory<unknown>>(terminal: T, command: string | string[], stdin = false) {
+            if (!Array.isArray(command)) {
+                command = [command];
+            }
+
+            const exec = await adaptErrors(
+                ct.exec({
+                    Cmd: command,
+                    AttachStdin: stdin,
+                    AttachStdout: true,
+                    AttachStderr: true,
+                }),
+            );
+
+            const stream = await adaptErrors(exec.start({ hijack: true, stdin }));
+
+            const exited = new Promise<void>((resolve, reject) => {
+                finished(stream).then(() => {
+                    exec.inspect().then(info => {
+                        if (info.ExitCode) {
+                            reject(new NonZeroExitError(info.ExitCode));
+                        } else {
+                            resolve();
+                        }
+                    }, reject);
+                }, reject);
+            });
+
+            return terminal(this.docker, stream, exited) as ReturnType<T>;
+        },
+
+        async readFile(path: string) {
+            const terminal = await this.exec(Terminal.Line, ["cat", path]);
+            return await terminal.consume();
+        },
+
+        async resolveGlob(glob: string) {
+            const terminal = await this.exec(Terminal.Line, ["bash", "-c", `ls ${glob}`]);
+            const output = await terminal.consume();
+            return output.split("\n").filter(line => line !== "");
+        },
+    } satisfies Container;
+}
+
+function adaptErrors<T>(source: Promise<T>): Promise<T> {
+    return source.catch(e => {
+        throw translateError(e);
+    });
+}
+
+function translateError(error: unknown): Error {
+    if (!(error instanceof Error)) {
+        return new Error(`${error}`);
+    }
+    const parsed = error.message.match(/^\(HTTP code (\d+)\) ([^-]+) - (.*)$/);
+    if (parsed === null) {
+        return error;
+    }
+    const [, status, textCode, message] = parsed;
+    let text = message.trim();
+    if (text === "") {
+        text = textCode;
+    }
+    return new ContainerError(`${text} (${status})`, Number.parseInt(status), textCode.replace(" ", "-"));
 }

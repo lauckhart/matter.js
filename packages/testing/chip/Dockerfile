@@ -6,9 +6,10 @@
 #
 # Intermediate stages don't focus on optimization but the final image is minimal (relatively speaking).
 
+# TODO - either finish cross compilation or create manifest for amd64 & arm64
 
 # STAGE 1 - common base image
-FROM ubuntu:24.04 as matter.js-chip-base
+FROM ubuntu:24.04 as base
 
 SHELL [ "/bin/bash", "-c" ]
 
@@ -25,9 +26,9 @@ RUN --mount=type=cache,target=/var/cache/apt \
     apt-get -qq update && \
     apt-get -qq -y install python3 python-is-python3 libavahi-client3 libglib2.0-0 iproute2 less
 
-
+    
 # STAGE 2 - CHIP source code and build tooling
-FROM matter.js-chip-base as matter.js-chip-build
+FROM --platform=$BUILDPLATFORM base as build
 
 ARG TARGETPLATFORM
 
@@ -38,12 +39,17 @@ RUN case "${TARGETPLATFORM}" in \
     *) echo "Unsupported platform ${TARGETPLATFORM}";; \
     esac
 
+# Configure for cross compilation
+#RUN dpkg --add-architecture arm64
+#COPY ubuntu-arm64.sources /etc/apt/sources.list.d
+
 # Install system packages required for build
 RUN --mount=type=cache,target=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt \
     apt-get -qq update && \
     apt-get -qq -y install git gcc g++ pkg-config libssl-dev libdbus-1-dev libglib2.0-dev libavahi-client-dev \
-        ninja-build python3-venv python3-dev unzip libgirepository1.0-dev libcairo2-dev libreadline-dev python3-pip
+        ninja-build python3-venv python3-dev unzip libgirepository1.0-dev libcairo2-dev libreadline-dev python3-pip \
+        gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
 
 # Pull CHIP source code
 RUN git clone --depth=1 https://github.com/project-chip/connectedhomeip.git
@@ -52,7 +58,7 @@ RUN ./scripts/checkout_submodules.py --shallow --platform linux
 
 
 # STAGE 3 - built chip-tool and installed python packages
-FROM matter.js-chip-build as matter.js-chip-bins
+FROM --platform=$BUILDPLATFORM build as bins
 
 WORKDIR /connectedhomeip
 
@@ -77,6 +83,10 @@ RUN cp out/*/chip-tool out
 # Build python wheels
 RUN scripts/build_python.sh
 
+
+# STAGE 4 - install into final destination
+FROM bins as install
+
 # Install external python dependencies
 RUN pip install --break-system-packages -r src/python_testing/requirements.txt
 RUN pip install --break-system-packages -r scripts/tests/requirements.txt
@@ -85,8 +95,8 @@ RUN pip install --break-system-packages -r scripts/tests/requirements.txt
 RUN find out -name \*.whl | xargs pip install --break-system-packages --upgrade
 
 
-# STAGE 4 - extract CHIP subset required for runtime
-FROM matter.js-chip-base as matter.js-chip
+# STAGE 5 - extract CHIP subset required for runtime
+FROM base as final
 
 LABEL org.opencontainers.image.title="matter.js CHIP tooling build"
 LABEL org.opencontainers.image.url=https://github.com/matter-js/chip
@@ -94,30 +104,30 @@ LABEL org.opencontainers.image.source=https://github.com/project-chip/matter.js/
 
 RUN rm -rf bin.usr-is-merged boot home media mnt opt sbin.usr-is-merged srv 
 
-# Installed python packages
-COPY --from=matter.js-chip-bins /usr/lib/python3/dist-packages /usr/lib/python3/dist-packages
-COPY --from=matter.js-chip-bins /usr/local/lib /usr/local/lib
+# chip-tool binary
+COPY --from=install /connectedhomeip/out/chip-tool /bin/chip-tool
 
-# Other packages CHIP has scattered randomly and adds to path in relative_importer.py
+# Installed python packages
+COPY --from=install /usr/lib/python3/dist-packages /usr/lib/python3/dist-packages
+COPY --from=install /usr/local/lib /usr/local/lib
+
+# Other python packages CHIP has scattered randomly and adds to path in relative_importer.py
 WORKDIR /usr/local/lib/python3.12/dist-packages
-COPY --from=matter.js-chip-bins /connectedhomeip/scripts/tests/chiptest chiptest
-COPY --from=matter.js-chip-bins /connectedhomeip/scripts/py_matter_idl/matter_idl matter_idl
-COPY --from=matter.js-chip-bins /connectedhomeip/scripts/py_matter_yamltests/matter_yamltests matter_yamltests
-COPY --from=matter.js-chip-bins /connectedhomeip/examples/chip-tool/py_matter_chip_tool_adapter/matter_chip_tool_adapter matter_chip_tool_adapter
-COPY --from=matter.js-chip-bins /connectedhomeip/examples/placeholder/py_matter_placeholder_adapter/matter_placeholder_adapter matter_placeholder_adapter
-COPY --from=matter.js-chip-bins /connectedhomeip/src/controller/python/py_matter_yamltest_repl_adapter/matter_yamltest_repl_adapter matter_yamltest_repl_adapter
+COPY --from=build /connectedhomeip/scripts/tests/chiptest chiptest
+COPY --from=build /connectedhomeip/scripts/py_matter_idl/matter_idl matter_idl
+COPY --from=build /connectedhomeip/scripts/py_matter_yamltests/matter_yamltests matter_yamltests
+COPY --from=build /connectedhomeip/examples/chip-tool/py_matter_chip_tool_adapter/matter_chip_tool_adapter matter_chip_tool_adapter
+COPY --from=build /connectedhomeip/examples/placeholder/py_matter_placeholder_adapter/matter_placeholder_adapter matter_placeholder_adapter
+COPY --from=build /connectedhomeip/src/controller/python/py_matter_yamltest_repl_adapter/matter_yamltest_repl_adapter matter_yamltest_repl_adapter
 WORKDIR /
 
-# chip-tool binary
-COPY --from=matter.js-chip-bins /connectedhomeip/out/chip-tool /bin/chip-tool
-
 # YAML test runner
-COPY --from=matter.js-chip-bins /connectedhomeip/scripts/tests /scripts/tests
+COPY --from=build /connectedhomeip/scripts/tests /scripts/tests
 
 # Data model, test runner uses to decode element names
-COPY --from=matter.js-chip-bins /connectedhomeip/src/app/zap-templates/zcl/data-model/chip \
+COPY --from=build /connectedhomeip/src/app/zap-templates/zcl/data-model/chip \
     /src/app/zap-templates/zcl/data-model/chip
 
 # Tests
-COPY --from=matter.js-chip-bins /connectedhomeip/src/python_testing /src/python_testing
-COPY --from=matter.js-chip-bins /connectedhomeip/src/app/tests/suites /src/app/tests/suites
+COPY --from=build /connectedhomeip/src/python_testing /src/python_testing
+COPY --from=build /connectedhomeip/src/app/tests/suites /src/app/tests/suites

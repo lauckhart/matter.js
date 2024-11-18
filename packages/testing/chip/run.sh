@@ -1,7 +1,7 @@
 #!/bin/bash
 
 THISDIR=$(dirname -- "${BASH_SOURCE[0]}")
-GIT_ROOT=$(realpath "${DIRNAME}/../../..")
+GIT_ROOT=$(realpath "${THISDIR}/../../..")
 
 docker run \
     -it \
