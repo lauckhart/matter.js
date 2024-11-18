@@ -6,19 +6,18 @@
 
 import { readdir } from "fs/promises";
 
+import DockerModem from "docker-modem";
 import Dockerode from "dockerode";
 import { ReadStream } from "fs";
+import { Writable } from "stream";
+import { finished } from "stream/promises";
+import { promisify } from "util";
+import { asyncLinesOf, textOf } from "./text.js";
 
 export class NonZeroExitError extends Error {
     constructor(readonly code: number) {
-        super(`Non-zero exit code ${code}`);
+        super(`Process exited with error code ${code}`);
     }
-}
-
-export interface Container extends AsyncIterator<Uint8Array & { source: "stdin" | "stdout" }> {
-    write(content: Uint8Array | string): Promise<void>;
-    close(): Promise<void>;
-    consume(): Promise<Uint8Array>;
 }
 
 /**
@@ -27,64 +26,99 @@ export interface Container extends AsyncIterator<Uint8Array & { source: "stdin" 
 export class Docker {
     #intf = new Dockerode();
 
-    async run(imageName: string, options?: Docker.RunOptions): Promise<Container> {
-        const { args, createOptions } = configureRun(options);
+    get modem() {
+        return this.#intf.modem as DockerModem;
+    }
 
-        const ct = await this.#intf.createContainer(createOptions);
-        await ct.start();
-        const stream = await ct.attach({ stdin: true, stdout: true, stderr: true });
+    async open(options: Docker.ContainerOptions & { name: string }) {
+        const container = await this.get(options.name);
+        if (container === undefined) {
+            return this.create(options);
+        }
+    }
 
-        this.#intf.run(imageName, args, output, createOptions).then(
-            result => {
-                const statusCode = result?.[0]?.StatusCode;
-                if (typeof statusCode !== "number") {
-                    throw new Error(`Process exit status "${statusCode}" is non-numeric`);
-                }
-                if (statusCode === 0) {
-                    resolve!(undefined);
-                } else {
-                    reject!(new Error(`Process exited with error status "${statusCode}"`));
-                }
+    async get(name: string) {
+        return this.#intf.getContainer(name);
+    }
+
+    async create(options: Docker.ContainerOptions): Promise<Container> {
+        const ct = await this.#intf.createContainer(configureContainer(options));
+
+        return {
+            docker: this,
+
+            async start() {
+                await ct.start();
             },
-            error => reject!(error),
-        );
 
-        while (true) {
-            const value = await signal;
-            if (value === undefined) {
-                break;
-            }
-            yield value;
-        }
+            async kill() {
+                await ct.kill();
+            },
+
+            async attach<T extends Terminal.Factory<unknown>>(terminal: T, stdin = false) {
+                const exited = new Promise<void>((resolve, reject) => {
+                    ct.wait().then(code => {
+                        if (code) {
+                            reject(new NonZeroExitError(code));
+                        } else {
+                            resolve();
+                        }
+                    }, reject);
+                });
+
+                return terminal(
+                    this.docker,
+                    await ct.attach({ stream: true, stdin, stdout: true, stderr: true }),
+                    exited,
+                ) as ReturnType<T>;
+            },
+
+            async exec<T extends Terminal.Factory<unknown>>(terminal: T, command: string | string[], stdin = false) {
+                if (!Array.isArray(command)) {
+                    command = [command];
+                }
+
+                const exec = await ct.exec({
+                    Cmd: command,
+                    AttachStdin: stdin,
+                    AttachStdout: true,
+                    AttachStderr: true,
+                });
+
+                const stream = await exec.start({ hijack: true, stdin });
+
+                const exited = new Promise<void>((resolve, reject) => {
+                    finished(stream).then(() => {
+                        exec.inspect().then(info => {
+                            if (info.ExitCode) {
+                                reject(new NonZeroExitError(info.ExitCode));
+                            } else {
+                                resolve();
+                            }
+                        }, reject);
+                    }, reject);
+                });
+
+                return terminal(this.docker, stream, exited) as ReturnType<T>;
+            },
+
+            async readFile(path: string) {
+                const terminal = await this.exec(Terminal.Line, ["cat", path]);
+                return await terminal.consume();
+            },
+
+            async resolveGlob(glob: string) {
+                const terminal = await this.exec(Terminal.Line, ["bash", "-c", `ls ${glob}`]);
+                const output = await terminal.consume();
+                return output.split("\n").filter(line => line !== "");
+            },
+        } satisfies Container;
     }
 
-    async readFileFromImage(imageName: string, pathInImage: string) {
-        const output = Array<string>();
-
-        for await (const chunk of this.run(imageName, {
-            entrypoint: "/usr/bin/cat",
-            args: [pathInImage],
-        })) {
-            output.push(chunk);
-        }
-
-        return output.join("").replace(/\r\n/g, "\n");
-    }
-
-    async resolveGlobFromImage(imageName: string, glob: string) {
-        const output = Array<string>();
-
-        for await (const chunk of this.run(imageName, {
-            entrypoint: ["/bin/bash", "-c"],
-            args: `ls ${glob}`,
-        })) {
-            output.push(chunk);
-        }
-
-        return output
-            .join("")
-            .split(/\r?\n/)
-            .filter(line => line !== "");
+    async start(options: Docker.ContainerOptions): Promise<Container> {
+        const ct = await this.create(options);
+        await ct.start();
+        return ct;
     }
 
     async pull(nameAndTag: string) {
@@ -130,40 +164,48 @@ export class Docker {
     }
 }
 
+export interface Container {
+    docker: Docker;
+    start(): Promise<void>;
+    kill(): Promise<void>;
+    attach<T extends Terminal.Factory<unknown>>(terminal: T): Promise<ReturnType<T>>;
+    exec<T extends Terminal.Factory<unknown>>(terminal: T, command: string | string[]): Promise<ReturnType<T>>;
+    readFile(path: string): Promise<string>;
+    resolveGlob(glob: string): Promise<string[]>;
+}
+
 namespace Docker {
-    export interface RunOptions {
-        containerName?: string;
+    export interface ContainerOptions {
+        image: string;
+        name?: string;
         replace?: boolean;
         autoRemove?: boolean;
         entrypoint?: string | string[];
-        args?: string | string[];
+        command?: string | string[];
         env?: Record<string, string>;
         privileged?: boolean;
         binds?: Record<string, string>;
         network?: "host";
         input?: ReadStream;
+        attachStdin?: boolean;
     }
 }
 
-function configureRun(options?: Docker.RunOptions) {
-    if (options === undefined) {
-        options = {};
-    }
-
-    let { args } = options;
-    if (args === undefined) {
-        args = [];
-    } else if (typeof args === "string") {
-        args = [args];
-    }
-
+function configureContainer(options: Docker.ContainerOptions) {
     const createOptions = {
+        Image: options.image,
         HostConfig: {
             AutoRemove: options?.autoRemove !== false,
         },
+        AttachStdout: true,
+        AttachStderr: true,
     } as Dockerode.ContainerCreateOptions;
 
-    const { entrypoint, env, binds, network } = options ?? {};
+    const { name, entrypoint, env, binds, network, command, attachStdin } = options ?? {};
+
+    if (name !== undefined) {
+        createOptions.name = name;
+    }
 
     if (entrypoint !== undefined) {
         createOptions.Entrypoint = entrypoint;
@@ -181,5 +223,158 @@ function configureRun(options?: Docker.RunOptions) {
         createOptions.HostConfig!.NetworkMode = network;
     }
 
-    return { args, createOptions };
+    if (command) {
+        createOptions.Cmd = Array.isArray(command) ? command : [command];
+    }
+
+    if (attachStdin) {
+        createOptions.AttachStdin = true;
+    }
+
+    return createOptions;
+}
+
+export interface Terminal<OutputT> extends AsyncIterable<OutputT> {
+    write(content: unknown): Promise<void>;
+    close(): Promise<void>;
+    consume(): Promise<OutputT>;
+}
+
+export namespace Terminal {
+    export interface Factory<OutputT> {
+        (docker: Docker, stream: NodeJS.ReadWriteStream, exited: Promise<void>): Terminal<OutputT>;
+    }
+
+    export interface Chunk extends Uint8Array {
+        source?: "stdout" | "stderr";
+    }
+
+    export function Raw(docker: Docker, stream: NodeJS.ReadWriteStream, exited: Promise<void>): Terminal<Chunk> {
+        const buffer = Array<Chunk>();
+        let readError: undefined | Error;
+        let signalReadReady: () => void;
+        let readReady: Promise<void>;
+        resetBuffer();
+
+        const stdout = createOutputStream("stdout");
+        const stderr = createOutputStream("stderr");
+
+        docker.modem.demuxStream(stream, stdout, stderr);
+        const write = promisify(stream.write).bind(stream) as (content: Uint8Array | string) => Promise<void>;
+
+        // Exited promise should never be unhandled; it's only relevant if the streams close without error
+        exited.catch(() => {});
+
+        return {
+            write(content: Uint8Array | string): Promise<void> {
+                return write(content);
+            },
+
+            async close() {
+                await promisify(stream.end).bind(stream)();
+            },
+
+            async consume(): Promise<Uint8Array> {
+                const chunks = Array<Uint8Array>();
+                let length = 0;
+                for await (const chunk of this) {
+                    chunks.push(chunk);
+                    length += chunk.length;
+                }
+                const output = new Uint8Array(length);
+                let pos = 0;
+                for (const chunk of chunks) {
+                    output.set(chunk, pos);
+                    pos += chunk.length;
+                }
+                return output;
+            },
+
+            [Symbol.asyncIterator]: function (): AsyncIterator<Chunk, any, any> {
+                return {
+                    async next() {
+                        while (!stderr.closed && !stdout.closed) {
+                            await readReady;
+
+                            let result;
+                            if (buffer.length) {
+                                result = {
+                                    done: false,
+                                    value: buffer.shift()!,
+                                };
+
+                                if (!buffer.length && !stderr.closed && !stdout.closed) {
+                                    resetBuffer();
+                                }
+
+                                return result;
+                            }
+
+                            if (!stdout.closed && !stderr.closed) {
+                                resetBuffer();
+                            }
+                        }
+
+                        if (readError) {
+                            throw readError;
+                        }
+
+                        await exited;
+
+                        return {
+                            done: true,
+                            value: undefined,
+                        };
+                    },
+                };
+            },
+        };
+
+        function resetBuffer() {
+            readReady = new Promise(resolve => {
+                signalReadReady = resolve;
+            });
+        }
+
+        function createOutputStream(source: "stdout" | "stderr") {
+            const result = new Writable();
+
+            result._write = chunk => {
+                if (!(chunk instanceof Uint8Array)) {
+                    throw new Error("Input chunk is not a byte array");
+                }
+                (chunk as Chunk).source = source;
+                buffer.push(chunk as Chunk);
+                signalReadReady();
+            };
+
+            result._final = () => {
+                signalReadReady();
+            };
+
+            return result;
+        }
+    }
+
+    export function Line(docker: Docker, stream: NodeJS.ReadWriteStream, exited: Promise<void>): Terminal<string> {
+        const raw = Raw(docker, stream, exited);
+
+        return {
+            write(content: string | Uint8Array) {
+                return raw.write(content);
+            },
+
+            close() {
+                return raw.close();
+            },
+
+            consume() {
+                return raw.consume().then(textOf);
+            },
+
+            [Symbol.asyncIterator]() {
+                return asyncLinesOf(raw);
+            },
+        };
+    }
 }

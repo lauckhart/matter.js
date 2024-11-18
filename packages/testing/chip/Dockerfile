@@ -116,7 +116,7 @@ COPY --from=matter.js-chip-bins /connectedhomeip/scripts/tests /scripts/tests
 
 # Data model, test runner uses to decode element names
 COPY --from=matter.js-chip-bins /connectedhomeip/src/app/zap-templates/zcl/data-model/chip \
-    connectedhomeip/src/app/zap-templates/zcl/data-model/chip
+    /src/app/zap-templates/zcl/data-model/chip
 
 # Tests
 COPY --from=matter.js-chip-bins /connectedhomeip/src/python_testing /src/python_testing

@@ -5,6 +5,8 @@
  */
 
 import { InternalError, Storage } from "@matter/main";
+import { AllClustersTestInstance } from "../src/AllClustersTestInstance.js";
+import { BridgeTestInstance } from "../src/BridgeTestInstance.js";
 import { TestInstance } from "../src/GenericTestApp.js";
 import { StorageBackendSyncJsonFile } from "../src/storage/StorageBackendSyncJsonFile.js";
 
@@ -48,3 +50,6 @@ export function App(implementation: AppImplementation): TestInstance {
         },
     };
 }
+
+export const AllClustersApp = App(AllClustersTestInstance);
+export const BridgeApp = App(BridgeTestInstance);

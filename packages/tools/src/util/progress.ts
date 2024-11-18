@@ -186,15 +186,17 @@ export class Progress {
         return true;
     }
 
-    async run(what: string, fn: () => void | Promise<void>) {
+    async run<T>(what: string, fn: () => T | Promise<T>) {
         this.update(what);
+        let result: T;
         try {
-            await fn();
+            result = await fn();
         } catch (e) {
             this.failure(what);
             throw e;
         }
         this.success(what);
+        return result;
     }
 
     get #duration() {
