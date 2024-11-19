@@ -13,7 +13,7 @@ const State = {
     configured: false,
     maybeOptions: undefined as Chip.Options | undefined,
     maybeContainer: undefined as Container | undefined,
-    activeTestee: undefined as Chip.Testee | undefined,
+    activeTestee: undefined as Chip.Subject | undefined,
 
     get runner() {
         const runner = this.maybeOptions?.runner;
@@ -79,7 +79,7 @@ export const Internal = {
     /**
      * Activate a test app.
      */
-    async activateTestee(testee: Chip.Testee, tester: Chip.Tester) {
+    async activateTestee(testee: Chip.Subject, tester: Chip.Test) {
         if (State.activeTestee === testee) {
             return;
         }
@@ -115,9 +115,9 @@ export const Internal = {
     /**
      * Define a new test.
      *
-     * Installs a test into the current Mocha suite.
+     * Installs a test into the current Mocha suite that activates {@link testee} then runs {@link tester}.
      */
-    implement(testee: Chip.Testee, tester: Chip.Tester) {
+    implement(testee: Chip.Subject, tester: Chip.Test) {
         if (!containerInitializerInstalled) {
             containerInitializerInstalled = true;
             before(async function () {

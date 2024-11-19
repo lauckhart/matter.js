@@ -9,11 +9,12 @@ import { Container } from "../docker/container.js";
 import { Terminal } from "../docker/terminal.js";
 import type { Chip } from "./chip.js";
 import { ContainerPaths } from "./config.js";
+import { Internal } from "./internal.js";
 import { filterWithGlob, testNameOf } from "./support.js";
 
 const definitions = Array<string>();
 
-export function PythonTests(testee: Chip.Testee, includeGlob: string, excludeGlob?: string) {
+export function PythonTests(testee: Chip.Subject, includeGlob: string, excludeGlob?: string) {
     let tests = filterWithGlob(definitions, includeGlob);
     if (excludeGlob !== undefined) {
         tests = filterWithGlob(tests, excludeGlob, true);
@@ -25,7 +26,7 @@ export function PythonTests(testee: Chip.Testee, includeGlob: string, excludeGlo
 
     for (const file of tests) {
         const name = parse(file).name;
-        implementTest(testee, {
+        Internal.implement(testee, {
             name,
 
             /**
@@ -83,19 +84,4 @@ export namespace PythonTests {
         const files = await container.resolveGlob(`${ContainerPaths.yamlTestDir}/Test_*.yaml`);
         definitions.push(...files.map(testNameOf));
     }
-}
-function implementTest(
-    testee: Chip.Testee,
-    arg1: {
-        name: string;
-        /**
-         * Python commissioning logic is cleverly hidden in:
-         *
-         *     connectedhomeip/src/python_testing/chip/testing/matter_testing.py
-         */
-        commission(container: Container): Promise<void>;
-        invoke(container: any): Promise<void>;
-    },
-) {
-    throw new Error("Function not implemented.");
 }

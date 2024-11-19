@@ -14,7 +14,7 @@ import { filterWithGlob, testNameOf } from "./support.js";
 
 const definitions = Array<string>();
 
-export function YamlTests(testee: Chip.Testee, includeGlob: string, excludeGlob?: string) {
+export function YamlTests(testee: Chip.Subject, includeGlob: string, excludeGlob?: string) {
     let tests = filterWithGlob(definitions, includeGlob);
     if (excludeGlob !== undefined) {
         tests = filterWithGlob(tests, excludeGlob, true);

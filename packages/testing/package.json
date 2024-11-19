@@ -1,7 +1,7 @@
 {
     "name": "@matter/testing",
     "version": "0.0.0-git",
-    "description": "Matter.js tooling",
+    "description": "Test harness for running JavaScript and Matter certification tests",
     "type": "module",
     "scripts": {
         "clean": "matter-build clean",
