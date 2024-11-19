@@ -4,11 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError, Storage } from "@matter/main";
+import { InternalError, Storage, StorageBackendMemory } from "@matter/main";
 import { AllClustersTestInstance } from "../src/AllClustersTestInstance.js";
 import { BridgeTestInstance } from "../src/BridgeTestInstance.js";
 import { TestInstance } from "../src/GenericTestApp.js";
-import { StorageBackendSyncJsonFile } from "../src/storage/StorageBackendSyncJsonFile.js";
 
 export type AppImplementation = new (
     storage: Storage,
@@ -24,7 +23,7 @@ export function App(implementation: AppImplementation): TestInstance {
 
     return {
         async setup() {
-            const storage = new StorageBackendSyncJsonFile("/tmp/chip_kvs");
+            const storage = new StorageBackendMemory();
 
             app = new implementation(storage, {
                 appName: "TestApp",

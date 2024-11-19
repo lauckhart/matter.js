@@ -6,7 +6,8 @@
 #
 # Intermediate stages don't focus on optimization but the final image is minimal (relatively speaking).
 
-# TODO - either finish cross compilation or create manifest for amd64 & arm64
+# TODO - either finish cross compilation, create manifest for amd64 & arm64, or punt -- leave as x86 for CI and let mac
+# users emulate
 
 # STAGE 1 - common base image
 FROM ubuntu:24.04 as base
@@ -48,8 +49,10 @@ RUN --mount=type=cache,target=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt \
     apt-get -qq update && \
     apt-get -qq -y install git gcc g++ pkg-config libssl-dev libdbus-1-dev libglib2.0-dev libavahi-client-dev \
-        ninja-build python3-venv python3-dev unzip libgirepository1.0-dev libcairo2-dev libreadline-dev python3-pip \
-        gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
+        ninja-build python3-venv python3-dev unzip libgirepository1.0-dev libcairo2-dev libreadline-dev python3-pip
+
+# Install x86->arm cross compilers, will require installing dependent libs though, unsure how feasible that is 
+#RUN apt-get -qq -y install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
 
 # Pull CHIP source code
 RUN git clone --depth=1 https://github.com/project-chip/connectedhomeip.git
@@ -81,7 +84,7 @@ RUN case ${TARGETPLATFORM} in \
 RUN cp out/*/chip-tool out
 
 # Build python wheels
-RUN scripts/build_python.sh
+RUN scripts/build_python.sh --chip_mdns platform
 
 
 # STAGE 4 - install into final destination
@@ -99,7 +102,7 @@ RUN find out -name \*.whl | xargs pip install --break-system-packages --upgrade
 FROM base as final
 
 LABEL org.opencontainers.image.title="matter.js CHIP tooling build"
-LABEL org.opencontainers.image.url=https://github.com/matter-js/chip
+LABEL org.opencontainers.image.url=https://github.com/matter-js/matter.js-chip
 LABEL org.opencontainers.image.source=https://github.com/project-chip/matter.js/tree/main/packages/testing/chip
 
 RUN rm -rf bin.usr-is-merged boot home media mnt opt sbin.usr-is-merged srv 
