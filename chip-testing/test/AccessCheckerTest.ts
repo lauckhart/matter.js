@@ -8,5 +8,5 @@ import { AllClustersTestInstance } from "../src/AllClustersTestInstance.js";
 import { App } from "./support.js";
 
 describe("AccessChecker", () => {
-    Chip.python(App(AllClustersTestInstance), "TC_AccessChecker");
+    Chip(App(AllClustersTestInstance), "TC_AccessChecker");
 });

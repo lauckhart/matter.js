@@ -9,6 +9,7 @@ docker run \
     --network host \
     -v "${GIT_ROOT}:/matter.js" \
     -v /var/run/dbus:/run/dbus \
-    --security-opt "apparmor:unconfined" \
+    --security-opt apparmor:unconfined \
+    --platform linux/amd64 \
     ghcr.io/matter-js/chip \
     "$@"

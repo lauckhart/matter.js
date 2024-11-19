@@ -6,6 +6,7 @@
 
 import { Package } from "#tools";
 import { resolve } from "path";
+import { env } from "process";
 
 /**
  * Significant locations within the test container.
@@ -26,12 +27,16 @@ export namespace ContainerPaths {
  * Other misc configuration.
  */
 export namespace Constants {
+    // We only publish for x86.  This is appropriate for GH CI and runs fine under emulation on MacOS
+    export const platform = env.MATTER_CHIP_PLATFORM || "linux/amd64";
+
+    export const imageName = env.MATTER_CHIP_IMAGE || "ghcr.io/matter-js/chip:latest";
+    export const containerName = env.MATTER_CHIP_CONTAINER || "matter.js-chip-test";
+
     export const initTimeout = 60_000;
     export const defaultTimeout = 60_000;
-    export const imageName = "ghcr.io/matter-js/chip";
-    export const containerName = "matter.js-chip-test";
 
     export const matterJsRoot = Package.workspace.path;
-    export const inputPicsFile = resolve(matterJsRoot, "packages/testing/chip/pics.properties");
+    export const inputPicsFile = resolve(matterJsRoot, "packages/testing/src/chip/matter-js-pics.properties");
     export const outputPicsFile = resolve(matterJsRoot, "packages/testing/build/pics.properties");
 }

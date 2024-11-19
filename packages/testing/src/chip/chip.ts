@@ -7,8 +7,6 @@
 import { Container } from "../docker/container.js";
 import { type TestRunner } from "../runner.js";
 import { Internal } from "./internal.js";
-import { PythonTests } from "./python-tests.js";
-import { YamlTests } from "./yaml-tests.js";
 
 /**
  * CHIP test harness.
@@ -22,41 +20,37 @@ import { YamlTests } from "./yaml-tests.js";
  *
  * We execute test logic within a Docker container available at {@link https://github.com/matter-js/matter.js-chip}.
  */
-export const Chip = {
-    /**
-     * Configure CHIP testing.  Invoke prior to use of other methods.
-     */
-    set options(options: Chip.Options) {
+export function Chip(subject: Chip.Subject, includeGlob: string, excludeGlob?: string) {
+    const tests = Internal.select(includeGlob, excludeGlob);
+
+    for (const test of tests) {
+        Internal.implement(subject, test);
+    }
+}
+
+/**
+ * Configure CHIP testing.  Invoke prior to use of other methods.
+ */
+Chip.options = undefined as undefined | Chip.Options;
+
+Object.defineProperty(Chip, "options", {
+    set(options: Chip.Options) {
         Internal.options = options;
     },
+});
 
-    /**
-     * Initialize.  This must run before defining tests to enable test definition via globs.
-     */
-    async initialize() {
-        await Internal.initialize();
-    },
+/**
+ * Initialize.  This must run before defining tests to enable test definition via globs.
+ */
+Chip.initialize = async () => {
+    await Internal.initialize();
+};
 
-    /**
-     * Shut down.  Deactivates any active testee and removes the test container.
-     */
-    async close() {
-        await Internal.close();
-    },
-
-    /**
-     * Define YAML tests.  This is a declarative CHIP test defined in a YAML file.
-     */
-    yaml(testee: Chip.Subject, includeGlob: string, excludeGlob?: string) {
-        return YamlTests(testee, includeGlob, excludeGlob);
-    },
-
-    /**
-     * Define a "python" test.  This is a CHIP test implemented as a python script.
-     */
-    python(testee: Chip.Subject, includeGlob: string, excludeGlob?: string) {
-        return PythonTests(testee, includeGlob, excludeGlob);
-    },
+/**
+ * Shut down.  Deactivates any active testee and removes the test container.
+ */
+Chip.close = async () => {
+    await Internal.close();
 };
 
 export namespace Chip {

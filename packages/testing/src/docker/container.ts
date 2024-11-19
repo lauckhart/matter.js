@@ -54,6 +54,8 @@ export function Container(
 export namespace Container {
     export interface Configuration {
         image: string;
+        tag?: string;
+        platform?: string;
         name?: string;
         replace?: boolean;
         autoRemove?: boolean;
@@ -89,7 +91,7 @@ function configureContainer(options: Container.Configuration) {
         AttachStderr: true,
     } as Dockerode.ContainerCreateOptions & { HostConfig: Dockerode.HostConfig };
 
-    const { name, entrypoint, env, binds, command, openStdin, network, cwd } = options ?? {};
+    const { name, entrypoint, env, binds, command, openStdin, network, cwd, platform } = options ?? {};
 
     if (network === "host") {
         createOptions.HostConfig.NetworkMode = "host";
@@ -131,6 +133,10 @@ function configureContainer(options: Container.Configuration) {
         createOptions.OpenStdin = true;
         createOptions.AttachStdin = true;
         createOptions.StdinOnce = true;
+    }
+
+    if (platform) {
+        createOptions.platform = platform;
     }
 
     return createOptions;

@@ -80,8 +80,16 @@ export class Docker {
         return ct;
     }
 
-    async pull(nameAndTag: string) {
-        const progress = await DockerError.adapt(this.#intf.pull(nameAndTag));
+    async pull(nameAndTag: string, platform?: string) {
+        const imageConfig = {
+            fromImage: nameAndTag,
+        } as { fromImage: string; platform?: string };
+
+        if (platform !== undefined) {
+            imageConfig.platform = platform;
+        }
+
+        const progress = await DockerError.adapt(this.#intf.createImage(imageConfig));
         await new Promise<void>((resolve, reject) => {
             this.#intf.modem.followProgress(progress, error => {
                 if (error) {

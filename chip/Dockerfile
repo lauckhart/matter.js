@@ -6,8 +6,7 @@
 #
 # Intermediate stages don't focus on optimization but the final image is minimal (relatively speaking).
 
-# TODO - either finish cross compilation, create manifest for amd64 & arm64, or punt -- leave as x86 for CI and let mac
-# users emulate
+# TODO - either finish cross compilation, create CI & manifest for amd64 & arm64, or punt.  Current choice: punt
 
 # STAGE 1 - common base image
 FROM ubuntu:24.04 as base
@@ -25,9 +24,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN --mount=type=cache,target=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt \
     apt-get -qq update && \
-    apt-get -qq -y install python3 python-is-python3 libavahi-client3 libglib2.0-0 iproute2 less
+    apt-get -qq -y install python3 python-is-python3 libavahi-client3 libglib2.0-0 iproute2 less vim
 
-    
+
 # STAGE 2 - CHIP source code and build tooling
 FROM --platform=$BUILDPLATFORM base as build
 
@@ -51,8 +50,9 @@ RUN --mount=type=cache,target=/var/cache/apt \
     apt-get -qq -y install git gcc g++ pkg-config libssl-dev libdbus-1-dev libglib2.0-dev libavahi-client-dev \
         ninja-build python3-venv python3-dev unzip libgirepository1.0-dev libcairo2-dev libreadline-dev python3-pip
 
-# Install x86->arm cross compilers, will require installing dependent libs though, unsure how feasible that is 
-#RUN apt-get -qq -y install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
+# Install x86->arm cross compilers.  Not useful becauserequire installation of lib dependencies which we've not
+# implemented
+# RUN apt-get -qq -y install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
 
 # Pull CHIP source code
 RUN git clone --depth=1 https://github.com/project-chip/connectedhomeip.git
@@ -134,3 +134,8 @@ COPY --from=build /connectedhomeip/src/app/zap-templates/zcl/data-model/chip \
 # Tests
 COPY --from=build /connectedhomeip/src/python_testing /src/python_testing
 COPY --from=build /connectedhomeip/src/app/tests/suites /src/app/tests/suites
+
+# Development certs
+COPY --from=build /connectedhomeip/credentials/development/paa-root-certs /credentials/development/paa-root-certs
+
+WORKDIR /tmp
