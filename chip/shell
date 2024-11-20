@@ -7,6 +7,7 @@ docker run \
     -it \
     --rm \
     --network host \
+    --workdir / \
     -v /var/run/dbus:/run/dbus \
     --security-opt apparmor:unconfined \
     --platform linux/amd64 \
