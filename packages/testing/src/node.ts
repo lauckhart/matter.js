@@ -16,6 +16,17 @@ import type { TestRunner } from "./runner.js";
 import { FailureDetail } from "./failure-detail.js";
 import "./global-definitions.js";
 
+const beforeRunHooks = Array<() => void | Promise<void>>();
+const afterRunHooks = Array<() => void | Promise<void>>();
+
+export function beforeRun(hook: () => void | Promise<void>) {
+    beforeRunHooks.push(hook);
+}
+
+export function afterRun(hook: () => void | Promise<void>) {
+    afterRunHooks.push(hook);
+}
+
 export async function testNode(runner: TestRunner, format: "cjs" | "esm") {
     // Grr Mocha (as of 10.2.0) classifies certain unhandled rejections as "mocha".  For others, it uninstalls its
     // unhandled rejection handler and re-emits the "unhandledRejection" event.  But since it already handled the event,
@@ -32,6 +43,13 @@ export async function testNode(runner: TestRunner, format: "cjs" | "esm") {
     }
 
     process.on("unhandledRejection", unhandledRejection);
+
+    if (runner.options.profile) {
+        const profiler = new Profiler();
+        beforeRun(() => profiler.start());
+        afterRun(() => profiler.stop(runner.pkg.resolve("build/profiles")));
+    }
+
     try {
         const mocha = new Mocha({
             inlineDiffs: true,
@@ -53,17 +71,16 @@ export async function testNode(runner: TestRunner, format: "cjs" | "esm") {
 
         await mocha.loadFilesAsync();
 
-        const profiler = new Profiler();
-        if (runner.options.profile) {
-            await profiler.start();
+        for (const hook of beforeRunHooks) {
+            await hook();
         }
 
         await new Promise<Mocha.Runner>(resolve => {
             const runner = mocha.run(() => resolve(runner));
         });
 
-        if (runner.options.profile) {
-            await profiler.stop(runner.pkg.resolve("build/profiles"));
+        for (const hook of afterRunHooks) {
+            await hook();
         }
     } finally {
         process.off("unhandledRejection", unhandledRejection);

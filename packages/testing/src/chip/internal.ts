@@ -1,6 +1,7 @@
 import { basename, extname } from "path";
 import { Container } from "../docker/container.js";
 import { Docker } from "../docker/docker.js";
+import { afterRun, beforeRun } from "../node.js";
 import type { Chip } from "./chip.js";
 import { Constants, ContainerPaths } from "./config.js";
 import { PicsFile } from "./pics-file.js";
@@ -11,7 +12,7 @@ import { YamlTests } from "./yaml-tests.js";
  * Internal state.
  */
 const State = {
-    configured: false,
+    initialized: false,
     maybeOptions: undefined as Chip.Options | undefined,
     maybeContainer: undefined as Container | undefined,
     activeTestee: undefined as Chip.Subject | undefined,
@@ -28,7 +29,7 @@ const State = {
     },
 };
 
-let containerInitializerInstalled = false;
+let containerLifecycleInstalled = false;
 
 export const Internal = {
     get container() {
@@ -49,7 +50,7 @@ export const Internal = {
      * Setup.
      */
     async initialize() {
-        if (State.configured) {
+        if (State.initialized) {
             return;
         }
 
@@ -64,6 +65,11 @@ export const Internal = {
      * Teardown.
      */
     async close() {
+        if (!State.initialized) {
+            return;
+        }
+        State.initialized = false;
+
         await deactivateTestee();
 
         const { maybeContainer: container } = State;
@@ -104,12 +110,10 @@ export const Internal = {
      * Installs a test into the current Mocha suite that activates {@link testee} then runs {@link tester}.
      */
     implement(testee: Chip.Subject, tester: Chip.Test) {
-        if (!containerInitializerInstalled) {
-            containerInitializerInstalled = true;
-            before(async function () {
-                this.timeout(Constants.initTimeout);
-                await Internal.initialize();
-            });
+        if (!containerLifecycleInstalled) {
+            containerLifecycleInstalled = true;
+            beforeRun(Internal.initialize);
+            afterRun(Internal.close);
         }
 
         it(tester.description ?? tester.name, async () => {
@@ -136,7 +140,7 @@ async function initialize() {
     // Try to order the tests logically
     State.tests.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
 
-    State.configured = true;
+    State.initialized = true;
 }
 
 async function configureContainer() {
