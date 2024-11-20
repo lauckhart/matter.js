@@ -27,6 +27,7 @@ export interface Container {
         stdin?: boolean,
     ): Promise<ReturnType<T>>;
     readFile(path: string): Promise<string>;
+    writeFile(path: string, contents: {}): Promise<void>;
     resolveGlob(glob: string): Promise<string[]>;
 }
 
@@ -224,6 +225,13 @@ function adaptContainer(docker: Docker, ct: Dockerode.Container): Container {
         async readFile(path: string) {
             const terminal = await this.exec(["cat", path], Terminal.Line);
             return await terminal.consume();
+        },
+
+        async writeFile(path: string, contents: unknown) {
+            const terminal = await this.exec(["bash", "-c", `cat - > ${JSON.stringify(path)}`], Terminal.Raw);
+
+            await terminal.write(contents);
+            await terminal.close();
         },
 
         async resolveGlob(glob: string) {

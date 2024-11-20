@@ -56,8 +56,26 @@ export namespace Terminal {
         exited.catch(() => {});
 
         return {
-            write(content: Uint8Array | string): Promise<void> {
-                return write(content);
+            async write(content: {}) {
+                if (content === undefined || content === null) {
+                    return;
+                }
+
+                if (Symbol.asyncIterator in content) {
+                    for await (const chunk of content as AsyncIterable<unknown>) {
+                        await this.write(chunk);
+                    }
+                } else if (typeof content === "string" || content instanceof Uint8Array) {
+                    await write(content);
+                } else if (ArrayBuffer.isView(content)) {
+                    await write(new Uint8Array(content.buffer, content.byteOffset, content.byteLength));
+                } else if (Symbol.iterator in content) {
+                    for (const chunk of content as Iterable<unknown>) {
+                        await this.write(chunk);
+                    }
+                } else {
+                    await write(content.toString());
+                }
             },
 
             async close() {

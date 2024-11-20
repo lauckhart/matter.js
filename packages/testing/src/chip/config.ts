@@ -20,7 +20,7 @@ export namespace ContainerPaths {
     export const pythonTestDir = `/src/python_testing`;
     export const pythonCommissioner = `${pythonTestDir}/hello_test.py`;
     export const chipPics = "/src/app/tests/suites/certification/ci-pics-values";
-    export const matterJsPics = "/matter.js/packages/testing/build/pics.properties";
+    export const matterJsPics = "/matter-js-pics.properties";
 }
 
 /**

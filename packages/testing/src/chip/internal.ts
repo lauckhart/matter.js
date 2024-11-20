@@ -163,9 +163,6 @@ async function configureContainer() {
         openStdin: true,
 
         binds: {
-            // Make local config (e.g. our PICS file) available in container
-            [Constants.matterJsRoot]: "/matter.js",
-
             // Better to run avahi in a separate container but use host version for now
             "/var/run/dbus": "/run/dbus",
         },
@@ -179,7 +176,7 @@ async function configurePics() {
     const overrides = new PicsFile(Constants.inputPicsFile);
     pics.patch(overrides);
 
-    pics.save(Constants.outputPicsFile);
+    await Internal.container.writeFile(ContainerPaths.matterJsPics, pics.toString());
 }
 
 function filterWithGlob(list: Chip.Test[], glob: string, invert = false) {

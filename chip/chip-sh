@@ -7,7 +7,6 @@ docker run \
     -it \
     --rm \
     --network host \
-    -v "${GIT_ROOT}:/matter.js" \
     -v /var/run/dbus:/run/dbus \
     --security-opt apparmor:unconfined \
     --platform linux/amd64 \
