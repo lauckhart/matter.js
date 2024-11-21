@@ -13,32 +13,11 @@ import { Parser } from "xml2js";
  */
 export class AccessoryServer {
     #server: Server;
-    #activeRequests = new Set<IncomingMessage>();
     #isClosed = false;
-    #closed: Promise<void>;
-    #resolveClosed!: () => void;
 
     private constructor(onReady: () => void) {
-        this.#closed = new Promise(resolve => (this.#resolveClosed = resolve));
         this.#server = createServer(this.#handleRequest.bind(this));
         this.#server.listen(0, "127.0.0.1", onReady);
-    }
-
-    async close() {
-        if (!this.#isClosed) {
-            this.#server.close();
-            this.#isClosed = true;
-            await new Promise<void>(resolve =>
-                this.#server.close(error => {
-                    if (error !== undefined) {
-                        console.warn("Error closing AccessoryServer", error);
-                    }
-                    resolve();
-                }),
-            );
-        }
-
-        await this.#closed;
     }
 
     static create() {
@@ -56,25 +35,28 @@ export class AccessoryServer {
         return port;
     }
 
-    #handleRequest(request: IncomingMessage, response: ServerResponse) {
-        this.#activeRequests.add(request);
+    async close() {
+        if (!this.#isClosed) {
+            this.#isClosed = true;
+            await new Promise<void>(resolve =>
+                this.#server.close(error => {
+                    if (error) {
+                        console.warn("Error closing accessory server", error);
+                    }
+                    resolve();
+                }),
+            );
+        }
+    }
 
+    #handleRequest(request: IncomingMessage, response: ServerResponse) {
         request.on("error", error => {
             console.warn("Accessory server request error", error);
-        });
-
-        request.on("close", () => {
-            this.#activeRequests.delete(request);
-            if (this.#isClosed && !this.#activeRequests.size) {
-                this.#resolveClosed;
-            }
         });
 
         response.on("error", error => {
             console.warn("Accessory server response error", error);
         });
-
-        this.#activeRequests.add(request);
 
         const parser = new Parser();
         request.on("data", chunk => {

@@ -124,6 +124,9 @@ COPY --from=build /connectedhomeip/examples/placeholder/py_matter_placeholder_ad
 COPY --from=build /connectedhomeip/src/controller/python/py_matter_yamltest_repl_adapter/matter_yamltest_repl_adapter matter_yamltest_repl_adapter
 WORKDIR /
 
+# YAML test logic
+COPY --from=build /connectedhomeip/scripts/tests/chipyaml /scripts/tests/chipyaml
+
 # Link installed YAML test runner scripts to original location as they are more convenient
 RUN mkdir -p /scripts/tests
 RUN ln -s /usr/local/lib/python3.12/dist-packages/chiptest /scripts/tests/chiptest
