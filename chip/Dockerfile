@@ -124,8 +124,11 @@ COPY --from=build /connectedhomeip/examples/placeholder/py_matter_placeholder_ad
 COPY --from=build /connectedhomeip/src/controller/python/py_matter_yamltest_repl_adapter/matter_yamltest_repl_adapter matter_yamltest_repl_adapter
 WORKDIR /
 
-# YAML test runner
-COPY --from=build /connectedhomeip/scripts/tests /scripts/tests
+# Link installed YAML test runner scripts to original location as they are more convenient
+RUN mkdir -p /scripts/tests
+RUN ln -s /usr/local/lib/python3.12/dist-packages/chiptest /scripts/tests/chiptest
+RUN mkdir -p /scripts/py_matter_yamltests
+RUN ln -s /usr/local/lib/python3.12/dist-packages/matter_yamltests /scripts/py_matter_yamltests/matter_yamltests
 
 # Data model, test runner uses to decode element names
 COPY --from=build /connectedhomeip/src/app/zap-templates/zcl/data-model/chip \

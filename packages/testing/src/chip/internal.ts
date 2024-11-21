@@ -135,20 +135,8 @@ async function initialize() {
     State.maybeContainer = await configureContainer();
 
     await configurePics();
-
-    // Load each type of test
-    State.tests.push(...(await YamlTests(Internal.container)));
-    State.tests.push(...(await PythonTests(Internal.container)));
-
-    // Loaded tests are paths; convert to a normal form that just consists of the actual purpose of the test
-    for (const test of State.tests) {
-        test.name = testNameOf(test.name);
-    }
-
-    // Try to order the tests logically
-    State.tests.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
-
-    State.initialized = true;
+    await configureTests();
+    await configureNetwork();
 }
 
 async function configureContainer() {
@@ -191,6 +179,22 @@ async function configurePics() {
     await Internal.container.writeFile(ContainerPaths.matterJsPics, pics.toString());
 }
 
+async function configureTests() {
+    // Load each type of test
+    State.tests.push(...(await YamlTests(Internal.container)));
+    State.tests.push(...(await PythonTests(Internal.container)));
+
+    // Loaded tests are paths; convert to a normal form that just consists of the actual purpose of the test
+    for (const test of State.tests) {
+        test.name = testNameOf(test.name);
+    }
+
+    // Try to order the tests logically
+    State.tests.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+
+    State.initialized = true;
+}
+
 function filterWithGlob(list: Chip.Test[], glob: string, invert = false) {
     const globPattern = glob.replace(/\*/g, "[^\\/]+");
     const pattern = new RegExp(`^${globPattern}$`);
@@ -204,6 +208,22 @@ function testNameOf(path: string) {
         name = name.slice(5);
     }
     return name;
+}
+
+async function configureNetwork() {
+    // CHIP has 10.10.10.5 hard-coded as IP on linux.  With host networking we would have to add that to the host.  That
+    // is undesirable as its platform- and network-specific.
+    //
+    // We could instead NAT with the bridge network but that will require working through IPv6 networking.  That's a
+    // larger task.
+    //
+    // Instead we just rewrite the address back to the default 127.0.0.1 used by every other platform.
+    await Internal.container.exec([
+        "sed",
+        "-i",
+        "s/10.10.10.5/127.0.0.1/g",
+        "/scripts/py_matter_yamltests/matter_yamltests/pseudo_clusters/clusters/accessory_server_bridge.py",
+    ]);
 }
 
 async function activateSubject(subject: Chip.Subject, tester: Chip.Test) {
