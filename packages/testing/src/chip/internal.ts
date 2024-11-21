@@ -2,6 +2,7 @@ import { basename, extname } from "path";
 import { Container } from "../docker/container.js";
 import { Docker } from "../docker/docker.js";
 import { afterRun, beforeRun } from "../mocha.js";
+import { AccessoryServer } from "./accessory-server.js";
 import type { Chip } from "./chip.js";
 import { Constants, ContainerPaths } from "./config.js";
 import { PicsFile } from "./pics-file.js";
@@ -16,6 +17,7 @@ const State = {
     maybeOptions: undefined as Chip.Options | undefined,
     maybeContainer: undefined as Container | undefined,
     activeSubject: undefined as Chip.Subject | undefined,
+    accessoryServer: undefined as AccessoryServer | undefined,
     tests: Array<Chip.Test>(),
 
     get runner() {
@@ -72,7 +74,7 @@ export const Internal = {
 
         await deactivateSubject();
 
-        const { maybeContainer: container } = State;
+        const { maybeContainer: container, accessoryServer } = State;
         if (container) {
             const docker = container.docker;
 
@@ -87,6 +89,18 @@ export const Internal = {
             } catch (e) {
                 console.error("Error closing docker connection", e);
             }
+
+            State.maybeContainer = undefined;
+        }
+
+        if (accessoryServer) {
+            try {
+                await accessoryServer.close();
+            } catch (e) {
+                console.error("Error closing accessory server", e);
+            }
+
+            State.accessoryServer = undefined;
         }
     },
 
@@ -211,6 +225,8 @@ function testNameOf(path: string) {
 }
 
 async function configureNetwork() {
+    State.accessoryServer = await AccessoryServer.create();
+
     // CHIP has 10.10.10.5 hard-coded as IP on linux.  With host networking we would have to add that to the host.  That
     // is undesirable as its platform- and network-specific.
     //
@@ -218,11 +234,15 @@ async function configureNetwork() {
     // larger task.
     //
     // Instead we just rewrite the address back to the default 127.0.0.1 used by every other platform.
+    await Internal.container.exec(["sed", "-i", "s/10.10.10.5/127.0.0.1/g", ContainerPaths.accessoryClient]);
+
+    // While we're at it we rewrite the port so we can rely on dynamic allocation.  This ensures multiple suites may run
+    // in parallel and something unexpectedly running on 9000 doesn't interfere with us.
     await Internal.container.exec([
         "sed",
         "-i",
-        "s/10.10.10.5/127.0.0.1/g",
-        "/scripts/py_matter_yamltests/matter_yamltests/pseudo_clusters/clusters/accessory_server_bridge.py",
+        `s/_PORT = 9000/_PORT = ${State.accessoryServer.port}/g`,
+        ContainerPaths.accessoryClient,
     ]);
 }
 
