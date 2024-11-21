@@ -81,6 +81,7 @@ export class Progress {
     #refreshInterval?: ReturnType<typeof setInterval>;
     #spinnerPosition = 0;
     #spinnerWindow?: number;
+    #subtasks = Array<string>();
 
     constructor() {}
 
@@ -129,7 +130,11 @@ export class Progress {
             return;
         }
 
-        writeStatus(`  ${colors.yellow(this.#spinner)} ${this.#ongoingText}`, true);
+        const subtask = this.#subtasks.length
+            ? colors.dim(` (${colors.dim(this.#subtasks[this.#subtasks.length - 1])})`)
+            : "";
+
+        writeStatus(`  ${colors.yellow(this.#spinner)} ${this.#ongoingText}${subtask}`, true);
     }
 
     success(text: string) {
@@ -166,6 +171,16 @@ export class Progress {
     refresh() {
         if (this.#updateSpinner()) {
             this.#writeOngoing();
+        }
+    }
+
+    async subtask(text: string, fn: () => Promise<void>) {
+        this.#subtasks.push(text);
+
+        try {
+            await fn();
+        } finally {
+            this.#subtasks.pop();
         }
     }
 

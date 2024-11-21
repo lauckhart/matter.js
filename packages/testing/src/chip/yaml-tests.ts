@@ -24,7 +24,7 @@ export async function YamlTests(container: Container): Promise<Chip.Test[]> {
 
             try {
                 for await (const line of terminal) {
-                    MockLogger.injectExternalMessage("PAIR-YAML", line);
+                    MockLogger.injectExternalMessage("PAIR", line);
                 }
             } catch (e) {
                 throw new Error("Error pairing test app", { cause: e });
@@ -36,7 +36,7 @@ export async function YamlTests(container: Container): Promise<Chip.Test[]> {
                 [
                     "python3",
                     ContainerPaths.yamlRunner,
-                    `${ContainerPaths.yamlTestDir}/${name}.yaml`,
+                    `${ContainerPaths.yamlTestDir}/${filename}.yaml`,
                     "--PICS",
                     ContainerPaths.matterJsPics,
                 ],

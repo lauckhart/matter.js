@@ -9,7 +9,7 @@ import { Endpoint } from "@matter/main";
 import { SwitchServer } from "@matter/main/behaviors/switch";
 import { Switch } from "@matter/main/clusters/switch";
 import { BitFlag, BitmapSchema } from "@matter/main/types";
-import { SimulateLongPressCommand, SimulateMultiPressCommand } from "../NamedPipeCommands.js";
+import { PipeCommand } from "@matter/testing";
 
 const NEUTRAL_SWITCH_POSITION = 0;
 
@@ -71,7 +71,7 @@ export class SwitchSimulator {
      *   - "LongPressDelayMillis": Time in milliseconds before the LongPress
      *   - "LongPressDurationMillis": Total duration in milliseconds from start of the press to LongRelease
      */
-    static async simulateLongPress(endpoint: Endpoint, command: SimulateLongPressCommand) {
+    static async simulateLongPress(endpoint: Endpoint, command: PipeCommand.SimulateLongPress) {
         const simulator = new SwitchSimulator(endpoint);
 
         // Configure cluster according to tests
@@ -101,7 +101,7 @@ export class SwitchSimulator {
      *   - "FeatureMap":  The feature map to simulate
      *   - "MultiPressMax": max number of presses (from attribute).
      */
-    static async simulateMultiPress(endpoint: Endpoint, command: SimulateMultiPressCommand) {
+    static async simulateMultiPress(endpoint: Endpoint, command: PipeCommand.SimulateMultiPress) {
         const simulator = new SwitchSimulator(endpoint);
 
         const features = BitmapSchema({

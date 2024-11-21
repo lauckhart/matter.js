@@ -43,18 +43,17 @@ export async function PythonTests(container: Container): Promise<Chip.Test[]> {
                         "--commissioning-method",
                         "on-network",
 
-                        "--passcode",
-                        "20202021",
-
-                        "--discriminator",
-                        "1234",
+                        // Our PID is meaningless within the container but Python tests (and thus CommandPipe) are
+                        // hard-coded to use it in the command FIFO filename
+                        "--app-pid",
+                        process.pid.toString(),
                     ],
                     Terminal.Line,
                 );
 
                 try {
                     for await (const line of terminal) {
-                        MockLogger.injectExternalMessage("PAIR-PY", spiffy(line));
+                        MockLogger.injectExternalMessage("PAIR", spiffy(line));
                     }
                 } catch (e) {
                     throw new Error("Error pairing test app", { cause: e });
@@ -66,8 +65,17 @@ export async function PythonTests(container: Container): Promise<Chip.Test[]> {
                     ["python3", filename, "--PICS", ContainerPaths.matterJsPics],
                     Terminal.Line,
                 );
+
+                let passed = false;
                 for await (const line of terminal) {
+                    if (line.indexOf("Final result: PASS") !== -1) {
+                        passed = true;
+                    }
                     MockLogger.injectExternalMessage("CHIP", spiffy(line));
+                }
+
+                if (!passed) {
+                    throw new Error("Test exited without error but did not indicate successful test");
                 }
             },
         });
@@ -84,6 +92,8 @@ function spiffy(line: string) {
     let level = "";
     let facility = "";
     let message = line;
+
+    line = line.trim();
 
     const logFormat1 = line.match(/^\[MatterTest\] (\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d) ([A-Z]+) (.*)$/);
     if (logFormat1) {

@@ -1,7 +1,7 @@
 import { basename, extname } from "path";
 import { Container } from "../docker/container.js";
 import { Docker } from "../docker/docker.js";
-import { afterRun, beforeRun } from "../node.js";
+import { afterRun, beforeRun } from "../mocha.js";
 import type { Chip } from "./chip.js";
 import { Constants, ContainerPaths } from "./config.js";
 import { PicsFile } from "./pics-file.js";
@@ -15,7 +15,7 @@ const State = {
     initialized: false,
     maybeOptions: undefined as Chip.Options | undefined,
     maybeContainer: undefined as Container | undefined,
-    activeTestee: undefined as Chip.Subject | undefined,
+    activeSubject: undefined as Chip.Subject | undefined,
     tests: Array<Chip.Test>(),
 
     get runner() {
@@ -70,14 +70,22 @@ export const Internal = {
         }
         State.initialized = false;
 
-        await deactivateTestee();
+        await deactivateSubject();
 
         const { maybeContainer: container } = State;
         if (container) {
+            const docker = container.docker;
+
             try {
                 await container.kill();
             } catch (e) {
-                console.warn("Error terminating test container", e);
+                console.error("Error terminating test container", e);
+            }
+
+            try {
+                await docker.close();
+            } catch (e) {
+                console.error("Error closing docker connection", e);
             }
         }
     },
@@ -107,9 +115,9 @@ export const Internal = {
     /**
      * Define a new test.
      *
-     * Installs a test into the current Mocha suite that activates {@link testee} then runs {@link tester}.
+     * Installs a test into the current Mocha suite that activates {@link subject} then runs {@link tester}.
      */
-    implement(testee: Chip.Subject, tester: Chip.Test) {
+    implement(subject: Chip.Subject, tester: Chip.Test) {
         if (!containerLifecycleInstalled) {
             containerLifecycleInstalled = true;
             beforeRun(Internal.initialize);
@@ -117,7 +125,7 @@ export const Internal = {
         }
 
         it(tester.description ?? tester.name, async () => {
-            await activateTestee(testee, tester);
+            await activateSubject(subject, tester);
             await tester.invoke(Internal.container);
         }).timeout(tester.timeout ?? Constants.defaultTimeout);
     },
@@ -198,35 +206,39 @@ function testNameOf(path: string) {
     return name;
 }
 
-async function activateTestee(testee: Chip.Subject, tester: Chip.Test) {
-    if (State.activeTestee === testee) {
+async function activateSubject(subject: Chip.Subject, tester: Chip.Test) {
+    if (State.activeSubject === subject) {
         return;
     }
 
-    await deactivateTestee();
+    const { progress } = State.runner;
 
-    await testee.setup();
-    await testee.start();
+    await progress.subtask("deactivating previous subject", deactivateSubject);
 
-    await Internal.container.exec(["rm", "-rf", "/tmp/*"]);
-    await tester.commission(Internal.container);
+    await progress.subtask("commissioning subject", async () => {
+        await subject.setup();
+        await subject.start();
 
-    State.activeTestee = testee;
+        await Internal.container.exec(["rm", "-rf", "/tmp/*"]);
+        await tester.commission(Internal.container);
+    });
+
+    State.activeSubject = subject;
 }
 
 /**
  * Close the current test app, if any.
  */
-async function deactivateTestee() {
-    if (State.activeTestee === undefined) {
+async function deactivateSubject() {
+    if (State.activeSubject === undefined) {
         return;
     }
 
     try {
-        await State.activeTestee.stop();
+        await State.activeSubject.stop();
     } catch (e) {
         console.warn("Error stopping test subject", e);
     }
 
-    State.activeTestee = undefined;
+    State.activeSubject = undefined;
 }

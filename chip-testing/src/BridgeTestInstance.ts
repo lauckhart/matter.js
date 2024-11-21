@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Storage } from "@matter/general";
 import { Endpoint, Environment, ServerNode, StorageService } from "@matter/main";
 import { AdministratorCommissioningServer } from "@matter/main/behaviors/administrator-commissioning";
 import { BridgedDeviceBasicInformationServer } from "@matter/main/behaviors/bridged-device-basic-information";
@@ -15,22 +14,8 @@ import { AggregatorEndpoint } from "@matter/main/endpoints/aggregator";
 import { DeviceTypeId, VendorId } from "@matter/main/types";
 import { log, TestInstance } from "./GenericTestApp.js";
 
-export class BridgeTestInstance implements TestInstance {
+export class BridgeTestInstance extends TestInstance {
     serverNode: ServerNode | undefined;
-    //storageManager: StorageManager;
-    protected appName: string;
-
-    constructor(
-        public storage: Storage,
-        protected options: {
-            appName: string;
-            discriminator?: number;
-            passcode?: number;
-        },
-    ) {
-        //this.storageManager = new StorageManager(storage);
-        this.appName = options.appName;
-    }
 
     /** Set up the test instance MatterServer. */
     async setup() {
@@ -75,17 +60,16 @@ export class BridgeTestInstance implements TestInstance {
     }
 
     /** Stop the test instance MatterServer and the device. */
-    async stop() {
+    override async stop() {
+        await super.stop();
         if (!this.serverNode) throw new Error("serverNode not initialized on close");
         await this.serverNode.close();
-        //this.serverNode.cancel();
-        //await this.serverNode.lifecycle.act;
         this.serverNode = undefined;
         log.directive(`======> ${this.appName}: Instance stopped`);
     }
 
     async setupServer(): Promise<ServerNode> {
-        Environment.default.get(StorageService).factory = (_namespace: string) => this.storage;
+        Environment.default.get(StorageService).factory = (_namespace: string) => this.config.storage;
 
         const networkId = new Uint8Array(32);
 
@@ -103,8 +87,8 @@ export class BridgeTestInstance implements TestInstance {
                     //advertiseOnStartup: false,
                 },
                 commissioning: {
-                    passcode: this.options.passcode ?? 20202021,
-                    discriminator: this.options.discriminator ?? 3840,
+                    passcode: this.config.passcode ?? 20202021,
+                    discriminator: this.config.discriminator ?? 3840,
                 },
                 productDescription: {
                     name: this.appName,

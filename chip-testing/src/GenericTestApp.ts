@@ -5,8 +5,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClassExtends, Environment } from "@matter/main";
+import { decamelize, Environment, Storage } from "@matter/main";
 import { ValidationError } from "@matter/main/types";
+import { CommandPipe } from "@matter/testing";
+import { NamedPipeCommandHandler } from "./NamedPipeCommandHandler.js";
 import { StorageBackendAsyncJsonFile } from "./storage/StorageBackendAsyncJsonFile.js";
 import { StorageBackendSyncJsonFile } from "./storage/StorageBackendSyncJsonFile.js";
 
@@ -35,10 +37,43 @@ export function getIntParameter(name: string) {
     return intValue;
 }
 
-export interface TestInstance {
-    setup: () => Promise<void>;
-    start: () => Promise<void>;
-    stop: () => Promise<void>;
+export abstract class TestInstance {
+    #commandPipe?: CommandPipe;
+
+    get baseAppName() {
+        return this.constructor.name.replace(/TestInstance(?:Legacy)?/, "");
+    }
+
+    get appName() {
+        if (this.constructor.name.endsWith("Legacy")) {
+            return `${this.baseAppName}-Legacy`;
+        }
+        return this.baseAppName;
+    }
+
+    get commandPipeName() {
+        return decamelize(this.baseAppName, "_");
+    }
+
+    constructor(protected config: TestInstanceConfig) {}
+
+    get commandPipe() {
+        if (this.#commandPipe === undefined) {
+            if (this.config.commandPipeFactory === undefined) {
+                throw new Error(`Cannot instantiate ${this.appName} without command pipe facotry`);
+            }
+            this.#commandPipe = this.config.commandPipeFactory(this);
+        }
+
+        return this.#commandPipe;
+    }
+
+    abstract setup(): Promise<void>;
+    abstract start(): Promise<void>;
+
+    async stop(): Promise<void> {
+        await this.#commandPipe?.deactivate();
+    }
 }
 
 export namespace log {
@@ -51,9 +86,19 @@ export namespace log {
     }
 }
 
+export interface TestInstanceConfig {
+    storage: Storage;
+    commandPipeFactory: (app: TestInstance) => CommandPipe;
+    discriminator?: number;
+    passcode?: number;
+}
+
+export interface TestInstanceConstructor {
+    new (config: TestInstanceConfig): TestInstance;
+}
+
 export async function startTestApp(
-    appName: string,
-    testInstanceClass: ClassExtends<TestInstance>,
+    testInstanceClass: TestInstanceConstructor,
     storageType: typeof StorageBackendSyncJsonFile | typeof StorageBackendAsyncJsonFile = StorageBackendSyncJsonFile,
 ) {
     const storageName = `/tmp/chip_${getParameter("KVS") ?? "kvs"}`;
@@ -63,8 +108,9 @@ export async function startTestApp(
         await storage.clear();
     }
 
-    const testInstance = new testInstanceClass(storage, {
-        appName,
+    const testInstance = new testInstanceClass({
+        storage,
+        commandPipeFactory: (app: TestInstance) => new NamedPipeCommandHandler(app.commandPipeName),
         discriminator: getIntParameter("discriminator"),
         passcode: getIntParameter("passcode"),
     });

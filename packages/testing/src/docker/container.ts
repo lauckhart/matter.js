@@ -7,6 +7,7 @@
 import Dockerode from "dockerode";
 import { ReadStream } from "fs";
 import { finished } from "stream/promises";
+import { base64Of } from "../util/text.js";
 import type { Docker } from "./docker.js";
 import { DockerError, NonZeroExitError } from "./errors.js";
 import { Terminal } from "./terminal.js";
@@ -19,16 +20,54 @@ export interface Container {
     start(): Promise<void>;
     kill(): Promise<void>;
     remove(): Promise<void>;
-    attach<T extends Terminal.Factory<unknown>>(terminal: T): Promise<ReturnType<T>>;
+    attach<T extends Terminal.Factory>(terminal: T): Promise<ReturnType<T>>;
+
+    /**
+     * Execute a command with no input or output.
+     */
     exec(command: string | string[]): Promise<void>;
-    exec<T extends Terminal.Factory<unknown>>(
-        command: string | string[],
-        terminal: T,
-        stdin?: boolean,
-    ): Promise<ReturnType<T>>;
+
+    /**
+     * Execute a command with input and/or output.
+     */
+    exec<T extends Terminal.Factory>(command: string | string[], terminal: T, stdin?: boolean): Promise<ReturnType<T>>;
+
+    /**
+     * Retrieve contents of a file as a string.
+     */
     readFile(path: string): Promise<string>;
+
+    /**
+     * Retrieve the contents of a file using a terminal.
+     */
+    readFile<T extends Terminal.Factory>(path: string, terminal: T): Promise<ReturnType<T>>;
+
+    /**
+     * Set contents of a file.
+     */
     writeFile(path: string, contents: {}): Promise<void>;
+
+    /**
+     * Delete a file.
+     */
+    deleteFile(path: string, options?: FileDeleteOptions): Promise<void>;
+
+    /**
+     * List files matching a bash glob.
+     */
     resolveGlob(glob: string): Promise<string[]>;
+
+    /**
+     * Create a named pipe.
+     *
+     * Communicate with the pipe via {@link readFile} and {@link writeFile}.
+     */
+    createPipe(name: string): Promise<void>;
+}
+
+export interface FileDeleteOptions {
+    force?: boolean;
+    recursive?: boolean;
 }
 
 /**
@@ -159,7 +198,7 @@ function adaptContainer(docker: Docker, ct: Dockerode.Container): Container {
             await DockerError.adapt(ct.remove());
         },
 
-        async attach<T extends Terminal.Factory<unknown>>(terminal: T, stdin = false) {
+        async attach<T extends Terminal.Factory>(terminal: T, stdin = false) {
             const exited = new Promise<void>((resolve, reject) => {
                 ct.wait().then(
                     code => {
@@ -180,7 +219,7 @@ function adaptContainer(docker: Docker, ct: Dockerode.Container): Container {
             ) as ReturnType<T>;
         },
 
-        async exec<T extends Terminal.Factory<unknown>>(command: string | string[], terminal?: T, stdin = false) {
+        async exec<T extends Terminal.Factory>(command: string | string[], terminal?: T, stdin = false) {
             if (!Array.isArray(command)) {
                 command = [command];
             }
@@ -222,16 +261,31 @@ function adaptContainer(docker: Docker, ct: Dockerode.Container): Container {
             return terminal(this.docker, stream, exited) as ReturnType<T>;
         },
 
-        async readFile(path: string) {
-            const terminal = await this.exec(["cat", path], Terminal.Line);
-            return await terminal.consume();
+        async readFile<T extends Terminal.Factory>(path: string, terminal?: T): Promise<string | T> {
+            const term = await this.exec(["cat", path], terminal ?? Terminal.Line);
+            if (terminal === undefined) {
+                return (await term.consume()) as string;
+            }
+            return term as T;
         },
 
         async writeFile(path: string, contents: unknown) {
-            const terminal = await this.exec(["bash", "-c", `cat - > ${JSON.stringify(path)}`], Terminal.Raw);
+            const terminal = await this.exec(["bash", "-c", `cat - > ${shesc(path)}`], Terminal.Raw);
 
             await terminal.write(contents);
             await terminal.close();
+        },
+
+        async deleteFile(path: string, options: FileDeleteOptions) {
+            const command = ["rm"];
+            if (options?.recursive) {
+                command.push("-r");
+            }
+            if (options?.force) {
+                command.push("-f");
+            }
+            command.push(path);
+            await this.exec(command);
         },
 
         async resolveGlob(glob: string) {
@@ -239,5 +293,16 @@ function adaptContainer(docker: Docker, ct: Dockerode.Container): Container {
             const output = await terminal.consume();
             return output.split("\n").filter(line => line !== "");
         },
+
+        async createPipe(name: string) {
+            await this.exec(["mkfifo", name]);
+        },
     } satisfies Container;
+}
+
+/**
+ * Safe shell escape of arbitrary data via base64 encoding.
+ */
+function shesc(value: string | Uint8Array) {
+    return `"$(echo ${base64Of(value)} | base64 -d)"`;
 }

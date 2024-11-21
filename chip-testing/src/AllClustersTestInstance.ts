@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Bytes, Storage } from "@matter/general";
+import { Bytes } from "@matter/general";
 import { Endpoint, Environment, NumberTag, ServerNode, StorageService } from "@matter/main";
 import {
     AdministratorCommissioningServer,
@@ -70,34 +70,58 @@ import { TestIdentifyServer } from "./cluster/TestIdentifyServer.js";
 import { TestLevelControlServer } from "./cluster/TestLevelControlServer.js";
 import { TestWindowCoveringServer } from "./cluster/TestWindowCoveringServer.js";
 import { log, TestInstance } from "./GenericTestApp.js";
-import { NamedPipeCommandHandler } from "./NamedPipeCommandHandler.js";
+import { SwitchSimulator } from "./simulators/SwitchSimulator.js";
 
-export class AllClustersTestInstance implements TestInstance {
+export class AllClustersTestInstance extends TestInstance {
     serverNode?: ServerNode;
-    protected appName: string;
-    #namedPipeHandler?: NamedPipeCommandHandler;
-
-    constructor(
-        public storage: Storage,
-        protected options: {
-            appName: string;
-            discriminator?: number;
-            passcode?: number;
-        },
-    ) {
-        this.appName = options.appName;
-    }
 
     async #setupNamedPipe() {
         if (this.serverNode === undefined) {
             throw new Error("ServerNode not initialized, cannot setup NamedPipeCommandHandler.");
         }
         try {
-            this.#namedPipeHandler = new NamedPipeCommandHandler(
-                `/tmp/chip_all_clusters_fifo_${process.pid}`,
-                this.serverNode,
-            );
-            await this.#namedPipeHandler.listen();
+            await this.commandPipe.activate(async command => {
+                console.log("Named pipe data:", JSON.stringify(command));
+
+                const name = command.Name;
+
+                const endpointId = command.EndpointId;
+                let endpoint: Endpoint | undefined;
+                if (endpointId !== undefined) {
+                    // Find the endpoint instance if an EndpointId is set
+                    this.serverNode?.visit(visitedEndpoint => {
+                        if (visitedEndpoint.number === endpointId) {
+                            if (endpoint !== undefined) {
+                                throw new Error("Duplicate endpoint number? Should never happen");
+                            }
+                            endpoint = visitedEndpoint;
+                        }
+                    });
+                }
+
+                switch (name) {
+                    case "SimulateLongPress":
+                        if (endpoint === undefined) {
+                            throw new Error(`Endpoint ${endpointId} not existing`);
+                        }
+                        await SwitchSimulator.simulateLongPress(endpoint, command);
+                        break;
+                    case "SimulateMultiPress":
+                        if (endpoint === undefined) {
+                            throw new Error(`Endpoint ${endpointId} not existing`);
+                        }
+                        await SwitchSimulator.simulateMultiPress(endpoint, command);
+                        break;
+                    case "SimulateLatchPosition":
+                        if (endpoint === undefined) {
+                            throw new Error(`Endpoint ${endpointId} not existing`);
+                        }
+                        await endpoint.setStateOf(SwitchServer, { currentPosition: command.PositionId });
+                        break;
+                    default:
+                        console.log(`Unknown named pipe command: ${name}`);
+                }
+            });
         } catch (error) {
             log.error("Error creating named pipe:", error);
         }
@@ -145,22 +169,16 @@ export class AllClustersTestInstance implements TestInstance {
     }
 
     /** Stop the test instance MatterServer and the device. */
-    async stop() {
+    override async stop() {
+        await super.stop();
         if (!this.serverNode) throw new Error("serverNode not initialized on close");
         await this.serverNode.close();
-        //this.serverNode.cancel();
-        //await this.serverNode.lifecycle.act;
         this.serverNode = undefined;
-        try {
-            await this.#namedPipeHandler?.close();
-        } catch (error) {
-            log.error("Error closing named pipe:", error);
-        }
         log.directive(`======> ${this.appName}: Instance stopped`);
     }
 
     async setupServer(): Promise<ServerNode> {
-        Environment.default.get(StorageService).factory = (_namespace: string) => this.storage;
+        Environment.default.get(StorageService).factory = (_namespace: string) => this.config.storage;
 
         const networkId = new Uint8Array(32);
 
@@ -192,8 +210,8 @@ export class AllClustersTestInstance implements TestInstance {
                     //advertiseOnStartup: false,
                 },
                 commissioning: {
-                    passcode: this.options.passcode ?? 20202021,
-                    discriminator: this.options.discriminator ?? 3840,
+                    passcode: this.config.passcode ?? 20202021,
+                    discriminator: this.config.discriminator ?? 3840,
                 },
                 productDescription: {
                     name: this.appName,

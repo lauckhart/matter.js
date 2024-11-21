@@ -25,7 +25,7 @@ export interface Terminal<OutputT> extends AsyncIterable<OutputT> {
 }
 
 export namespace Terminal {
-    export interface Factory<OutputT> {
+    export interface Factory<OutputT = unknown> {
         (docker: Docker, stream: NodeJS.ReadWriteStream, exited: Promise<void>): Terminal<OutputT>;
     }
 
@@ -61,7 +61,7 @@ export namespace Terminal {
                     return;
                 }
 
-                if (Symbol.asyncIterator in content) {
+                if (typeof content === "object" && Symbol.asyncIterator in content) {
                     for await (const chunk of content as AsyncIterable<unknown>) {
                         await this.write(chunk);
                     }
@@ -69,7 +69,7 @@ export namespace Terminal {
                     await write(content);
                 } else if (ArrayBuffer.isView(content)) {
                     await write(new Uint8Array(content.buffer, content.byteOffset, content.byteLength));
-                } else if (Symbol.iterator in content) {
+                } else if (typeof content === "object" && Symbol.iterator in content) {
                     for (const chunk of content as Iterable<unknown>) {
                         await this.write(chunk);
                     }
@@ -79,6 +79,10 @@ export namespace Terminal {
             },
 
             async close() {
+                if (closed) {
+                    return;
+                }
+
                 await promisify(stream.end).bind(stream)();
             },
 

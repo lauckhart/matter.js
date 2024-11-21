@@ -8,24 +8,13 @@ import { mkdir, writeFile } from "fs/promises";
 import type { Session } from "inspector/promises";
 import Mocha from "mocha";
 import { relative } from "path";
-import { adaptReporter, generalSetup } from "./mocha.js";
+import { adaptReporter, afterRun, beforeRun, generalSetup, runMocha } from "./mocha.js";
 import { TestOptions } from "./options.js";
 import type { TestRunner } from "./runner.js";
 
 // Load globals so settings get applied
 import { FailureDetail } from "./failure-detail.js";
 import "./global-definitions.js";
-
-const beforeRunHooks = Array<() => void | Promise<void>>();
-const afterRunHooks = Array<() => void | Promise<void>>();
-
-export function beforeRun(hook: () => void | Promise<void>) {
-    beforeRunHooks.push(hook);
-}
-
-export function afterRun(hook: () => void | Promise<void>) {
-    afterRunHooks.push(hook);
-}
 
 export async function testNode(runner: TestRunner, format: "cjs" | "esm") {
     // Grr Mocha (as of 10.2.0) classifies certain unhandled rejections as "mocha".  For others, it uninstalls its
@@ -71,17 +60,7 @@ export async function testNode(runner: TestRunner, format: "cjs" | "esm") {
 
         await mocha.loadFilesAsync();
 
-        for (const hook of beforeRunHooks) {
-            await hook();
-        }
-
-        await new Promise<Mocha.Runner>(resolve => {
-            const runner = mocha.run(() => resolve(runner));
-        });
-
-        for (const hook of afterRunHooks) {
-            await hook();
-        }
+        await runMocha(mocha);
     } finally {
         process.off("unhandledRejection", unhandledRejection);
 

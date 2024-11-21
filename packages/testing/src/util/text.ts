@@ -18,6 +18,10 @@ export function textOf(input: {}) {
     return input.toString();
 }
 
+export function base64Of(input: string | Uint8Array) {
+    return Buffer.from(input).toString("base64");
+}
+
 export async function* asyncLinesOf(input: AsyncIterable<unknown>) {
     let partial: undefined | string;
 

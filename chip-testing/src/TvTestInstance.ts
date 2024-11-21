@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Bytes, Storage } from "@matter/general";
+import { Bytes } from "@matter/general";
 import { Endpoint, Environment, ServerNode, StorageService } from "@matter/main";
 import { AdministratorCommissioningServer } from "@matter/main/behaviors/administrator-commissioning";
 import { ApplicationBasicServer } from "@matter/main/behaviors/application-basic";
@@ -15,22 +15,8 @@ import { DeviceTypeId, EndpointNumber, VendorId } from "@matter/main/types";
 import { log, TestInstance } from "./GenericTestApp.js";
 import { TestLowPowerServer } from "./cluster/TestLowPowerServer.js";
 
-export class TvTestInstance implements TestInstance {
+export class TvTestInstance extends TestInstance {
     serverNode: ServerNode | undefined;
-    //storageManager: StorageManager;
-    protected appName: string;
-
-    constructor(
-        public storage: Storage,
-        protected options: {
-            appName: string;
-            discriminator?: number;
-            passcode?: number;
-        },
-    ) {
-        //this.storageManager = new StorageManager(storage);
-        this.appName = options.appName;
-    }
 
     /** Set up the test instance MatterServer. */
     async setup() {
@@ -75,7 +61,8 @@ export class TvTestInstance implements TestInstance {
     }
 
     /** Stop the test instance MatterServer and the device. */
-    async stop() {
+    override async stop() {
+        await super.stop();
         if (!this.serverNode) throw new Error("serverNode not initialized on close");
         await this.serverNode.close();
         //this.serverNode.cancel();
@@ -85,7 +72,7 @@ export class TvTestInstance implements TestInstance {
     }
 
     async setupServer(): Promise<ServerNode> {
-        Environment.default.get(StorageService).factory = (_namespace: string) => this.storage;
+        Environment.default.get(StorageService).factory = (_namespace: string) => this.config.storage;
 
         const serverNode = await ServerNode.create(
             ServerNode.RootEndpoint.with(
@@ -99,8 +86,8 @@ export class TvTestInstance implements TestInstance {
                     //advertiseOnStartup: false,
                 },
                 commissioning: {
-                    passcode: this.options.passcode ?? 20202021,
-                    discriminator: this.options.discriminator ?? 3840,
+                    passcode: this.config.passcode ?? 20202021,
+                    discriminator: this.config.discriminator ?? 3840,
                 },
                 productDescription: {
                     name: this.appName,

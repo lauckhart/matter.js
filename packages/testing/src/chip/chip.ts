@@ -29,13 +29,28 @@ export function Chip(subject: Chip.Subject, includeGlob: string, excludeGlob?: s
 }
 
 /**
- * Configure CHIP testing.  Invoke prior to use of other methods.
+ * Configure CHIP testing.  Set prior to use of other methods.
  */
 Chip.options = undefined as undefined | Chip.Options;
 
 Object.defineProperty(Chip, "options", {
     set(options: Chip.Options) {
         Internal.options = options;
+    },
+});
+
+/**
+ * The test container.  Must be initialized before access.
+ */
+Chip.container = {} as Container;
+
+Object.defineProperty(Chip, "container", {
+    get() {
+        if (Internal.container === undefined) {
+            throw new Error("CHIP container accessed before initialization");
+        }
+
+        return Internal.container;
     },
 });
 
