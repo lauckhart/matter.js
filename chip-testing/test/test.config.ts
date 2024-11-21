@@ -18,6 +18,6 @@ MockTime.disable();
 declare global {
     const chip: ChipType;
 }
-Object.assign(globalThis, { Chip: ChipType });
+Object.assign(globalThis, { chip: ChipType });
 
 await chip.initialize();

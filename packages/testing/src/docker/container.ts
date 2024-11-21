@@ -142,16 +142,10 @@ function configureContainer(options: Container.Configuration) {
 
     const { name, entrypoint, env, binds, command, openStdin, network, cwd, platform } = options ?? {};
 
-    if (network === "host") {
-        createOptions.HostConfig.NetworkMode = "host";
-    } else if (network !== undefined) {
-        createOptions.NetworkingConfig = {
-            EndpointsConfig: {
-                eth0: {
-                    NetworkID: network,
-                },
-            },
-        };
+    if (typeof network === "string") {
+        createOptions.HostConfig.NetworkMode = network;
+    } else if (typeof network === "object") {
+        createOptions.NetworkingConfig = network;
     }
 
     if (cwd !== undefined) {

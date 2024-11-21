@@ -43,6 +43,12 @@ export async function PythonTests(container: Container): Promise<Chip.Test[]> {
                         "--commissioning-method",
                         "on-network",
 
+                        "--passcode",
+                        "20202021",
+
+                        "--discriminator",
+                        "1234",
+
                         // Our PID is meaningless within the container but Python tests (and thus CommandPipe) are
                         // hard-coded to use it in the command FIFO filename
                         "--app-pid",
