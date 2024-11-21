@@ -5,9 +5,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { decamelize, Environment, Storage } from "@matter/main";
+import { Environment, Storage } from "@matter/main";
 import { ValidationError } from "@matter/main/types";
 import { CommandPipe } from "@matter/testing";
+import { BackchannelCommand } from "../../packages/testing/src/chip/backchannel-command.js";
 import { NamedPipeCommandHandler } from "./NamedPipeCommandHandler.js";
 import { StorageBackendAsyncJsonFile } from "./storage/StorageBackendAsyncJsonFile.js";
 import { StorageBackendSyncJsonFile } from "./storage/StorageBackendSyncJsonFile.js";
@@ -51,21 +52,15 @@ export abstract class TestInstance {
         return this.baseAppName;
     }
 
-    get commandPipeName() {
-        return decamelize(this.baseAppName, "_");
-    }
-
     constructor(protected config: TestInstanceConfig) {}
 
-    get commandPipe() {
+    async activateCommandPipe(name: string) {
         if (this.#commandPipe === undefined) {
             if (this.config.commandPipeFactory === undefined) {
-                throw new Error(`Cannot instantiate ${this.appName} without command pipe facotry`);
+                throw new Error(`Cannot instantiate ${this.appName} without command pipe factory`);
             }
-            this.#commandPipe = this.config.commandPipeFactory(this);
+            this.#commandPipe = await this.config.commandPipeFactory(this, name);
         }
-
-        return this.#commandPipe;
     }
 
     abstract setup(): Promise<void>;
@@ -73,6 +68,10 @@ export abstract class TestInstance {
 
     async stop(): Promise<void> {
         await this.#commandPipe?.deactivate();
+    }
+
+    async backchannel(command: BackchannelCommand) {
+        throw new Error(`Unhandled backchannel ${command.name}`);
     }
 }
 
@@ -88,7 +87,7 @@ export namespace log {
 
 export interface TestInstanceConfig {
     storage: Storage;
-    commandPipeFactory: (app: TestInstance) => CommandPipe;
+    commandPipeFactory: (app: TestInstance, name: string) => Promise<CommandPipe>;
     discriminator?: number;
     passcode?: number;
 }
@@ -110,7 +109,20 @@ export async function startTestApp(
 
     const testInstance = new testInstanceClass({
         storage,
-        commandPipeFactory: (app: TestInstance) => new NamedPipeCommandHandler(app.commandPipeName),
+        commandPipeFactory: async (app: TestInstance, name: string) => {
+            const pipe = new NamedPipeCommandHandler(
+                {
+                    backchannel(command: BackchannelCommand): void | Promise<void> {
+                        return app.backchannel(command);
+                    },
+                },
+                name,
+            );
+
+            await pipe.activate();
+
+            return pipe;
+        },
         discriminator: getIntParameter("discriminator"),
         passcode: getIntParameter("passcode"),
     });

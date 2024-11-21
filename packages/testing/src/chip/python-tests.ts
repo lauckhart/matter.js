@@ -77,7 +77,7 @@ export async function PythonTests(container: Container): Promise<Chip.Test[]> {
                     if (line.indexOf("Final result: PASS") !== -1) {
                         passed = true;
                     }
-                    MockLogger.injectExternalMessage("CHIP", spiffy(line));
+                    MockLogger.injectExternalMessage("CHIP P", spiffy(line));
                 }
 
                 if (!passed) {

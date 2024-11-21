@@ -6,8 +6,8 @@
 
 import { Container } from "../docker/container.js";
 import { Terminal } from "../docker/terminal.js";
+import { BackchannelCommand } from "./backchannel-command.js";
 import { CommandPipe } from "./command-pipe.js";
-import { PipeCommand } from "./pipe-command.js";
 
 /**
  * A command pipe that reads commands from a Docker container.
@@ -17,14 +17,12 @@ export class ContainerCommandPipe extends CommandPipe {
     #deactivate?: () => void;
     #stopped?: Promise<void>;
 
-    constructor(container: Container, appName: string) {
-        super(appName);
+    constructor(container: Container, subject: BackchannelCommand.Subject, appName: string) {
+        super(subject, appName);
         this.#container = container;
     }
 
-    override async activate(listener: (command: PipeCommand) => void | Promise<void>) {
-        await super.activate(listener);
-
+    override async activate() {
         await this.#container.createPipe(this.filename);
 
         this.#stopped = this.#processCommands();

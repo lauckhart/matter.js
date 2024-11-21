@@ -45,7 +45,7 @@ export async function YamlTests(container: Container): Promise<Chip.Test[]> {
                 { cwd: "/" },
             );
             for await (const line of terminal) {
-                MockLogger.injectExternalMessage("CHIP", line);
+                MockLogger.injectExternalMessage("CHIP Y", line);
             }
         },
     }));

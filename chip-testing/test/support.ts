@@ -6,39 +6,44 @@
 
 import { Environment, InternalError, RuntimeService, StorageBackendMemory } from "@matter/main";
 import { Chip, ContainerCommandPipe } from "@matter/testing";
+import { BackchannelCommand } from "../../packages/testing/src/chip/backchannel-command.js";
 import { AllClustersTestInstance } from "../src/AllClustersTestInstance.js";
 import { BridgeTestInstance } from "../src/BridgeTestInstance.js";
 import { TestInstance, TestInstanceConstructor } from "../src/GenericTestApp.js";
 
 export function App(implementation: TestInstanceConstructor): Chip.Subject {
-    let app: undefined | TestInstance;
+    let subject: undefined | TestInstance;
 
     return {
         async setup() {
             const storage = new StorageBackendMemory();
 
-            app = new implementation({
+            subject = new implementation({
                 storage,
-                commandPipeFactory: app => new ContainerCommandPipe(Chip.container, app.appName),
+                commandPipeFactory: async (app, name) => {
+                    const commandPipe = new ContainerCommandPipe(Chip.container, app, name);
+                    await commandPipe.activate();
+                    return commandPipe;
+                },
                 discriminator: 1234,
                 passcode: 20202021,
             });
 
-            await app.setup();
+            await subject.setup();
         },
 
         async start() {
-            if (app === undefined) {
+            if (subject === undefined) {
                 throw new InternalError("App start before setup");
             }
-            await app.start();
+            await subject.start();
         },
 
         async stop() {
-            if (app === undefined) {
+            if (subject === undefined) {
                 throw new InternalError("App stop before setup");
             }
-            await app.stop();
+            await subject.stop();
 
             // Terminate and/or wait for any long-running services such as MdnsService
             const runtime = Environment.default.maybeGet(RuntimeService);
@@ -46,6 +51,14 @@ export function App(implementation: TestInstanceConstructor): Chip.Subject {
                 await runtime.close();
                 Environment.default.delete(RuntimeService, runtime);
             }
+        },
+
+        backchannel(command: BackchannelCommand) {
+            if (subject === undefined) {
+                throw new Error(`Backchannel ${command.name} invoked without active subject`);
+            }
+
+            return subject.backchannel(command);
         },
     };
 }

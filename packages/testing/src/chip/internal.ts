@@ -3,6 +3,7 @@ import { Container } from "../docker/container.js";
 import { Docker } from "../docker/docker.js";
 import { afterRun, beforeRun } from "../mocha.js";
 import { AccessoryServer } from "./accessory-server.js";
+import { BackchannelCommand } from "./backchannel-command.js";
 import type { Chip } from "./chip.js";
 import { Constants, ContainerPaths } from "./config.js";
 import { PicsFile } from "./pics-file.js";
@@ -143,6 +144,17 @@ export const Internal = {
             await tester.invoke(Internal.container);
         }).timeout(tester.timeout ?? Constants.defaultTimeout);
     },
+
+    /**
+     * Pass a backchannel command to the active subject.
+     */
+    backchannel(command: BackchannelCommand) {
+        if (State.activeSubject === undefined) {
+            throw new Error(`Backchannel ${command.name} without active test subject`);
+        }
+
+        return State.activeSubject.backchannel(command);
+    },
 };
 
 async function initialize() {
@@ -225,7 +237,7 @@ function testNameOf(path: string) {
 }
 
 async function configureNetwork() {
-    State.accessoryServer = await AccessoryServer.create();
+    State.accessoryServer = await AccessoryServer.create(Internal);
 
     // CHIP has 10.10.10.5 hard-coded as IP on linux.  With host networking we would have to add that to the host.  That
     // is undesirable as its platform- and network-specific.

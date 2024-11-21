@@ -63,6 +63,7 @@ import {
 } from "@matter/main/clusters";
 import { OnOffLightDevice } from "@matter/main/devices";
 import { DeviceTypeId, EndpointNumber, VendorId } from "@matter/main/types";
+import { BackchannelCommand } from "../../packages/testing/src/chip/backchannel-command.js";
 import { TestActivatedCarbonFilterMonitoringServer } from "./cluster/TestActivatedCarbonFilterMonitoringServer.js";
 import { TestGeneralDiagnosticsServer } from "./cluster/TestGeneralDiagnosticsServer.js";
 import { TestHepaFilterMonitoringServer } from "./cluster/TestHEPAFilterMonitoringServer.js";
@@ -80,48 +81,7 @@ export class AllClustersTestInstance extends TestInstance {
             throw new Error("ServerNode not initialized, cannot setup NamedPipeCommandHandler.");
         }
         try {
-            await this.commandPipe.activate(async command => {
-                console.log("Named pipe data:", JSON.stringify(command));
-
-                const name = command.Name;
-
-                const endpointId = command.EndpointId;
-                let endpoint: Endpoint | undefined;
-                if (endpointId !== undefined) {
-                    // Find the endpoint instance if an EndpointId is set
-                    this.serverNode?.visit(visitedEndpoint => {
-                        if (visitedEndpoint.number === endpointId) {
-                            if (endpoint !== undefined) {
-                                throw new Error("Duplicate endpoint number? Should never happen");
-                            }
-                            endpoint = visitedEndpoint;
-                        }
-                    });
-                }
-
-                switch (name) {
-                    case "SimulateLongPress":
-                        if (endpoint === undefined) {
-                            throw new Error(`Endpoint ${endpointId} not existing`);
-                        }
-                        await SwitchSimulator.simulateLongPress(endpoint, command);
-                        break;
-                    case "SimulateMultiPress":
-                        if (endpoint === undefined) {
-                            throw new Error(`Endpoint ${endpointId} not existing`);
-                        }
-                        await SwitchSimulator.simulateMultiPress(endpoint, command);
-                        break;
-                    case "SimulateLatchPosition":
-                        if (endpoint === undefined) {
-                            throw new Error(`Endpoint ${endpointId} not existing`);
-                        }
-                        await endpoint.setStateOf(SwitchServer, { currentPosition: command.PositionId });
-                        break;
-                    default:
-                        console.log(`Unknown named pipe command: ${name}`);
-                }
-            });
+            await this.activateCommandPipe("all_clusters");
         } catch (error) {
             log.error("Error creating named pipe:", error);
         }
@@ -175,6 +135,48 @@ export class AllClustersTestInstance extends TestInstance {
         await this.serverNode.close();
         this.serverNode = undefined;
         log.directive(`======> ${this.appName}: Instance stopped`);
+    }
+
+    /** Process a backchannel command */
+    override async backchannel(command: BackchannelCommand) {
+        const name = command.name;
+
+        const endpointId = "endpointId" in command ? command.endpointId : undefined;
+        let endpoint: Endpoint | undefined;
+        if (endpointId !== undefined) {
+            // Find the endpoint instance if an EndpointId is set
+            this.serverNode?.visit(visitedEndpoint => {
+                if (visitedEndpoint.number === endpointId) {
+                    if (endpoint !== undefined) {
+                        throw new Error("Duplicate endpoint number? Should never happen");
+                    }
+                    endpoint = visitedEndpoint;
+                }
+            });
+        }
+
+        switch (name) {
+            case "simulateLongPress":
+                if (endpoint === undefined) {
+                    throw new Error(`Endpoint ${endpointId} not existing`);
+                }
+                await SwitchSimulator.simulateLongPress(endpoint, command);
+                break;
+            case "simulateMultiPress":
+                if (endpoint === undefined) {
+                    throw new Error(`Endpoint ${endpointId} not existing`);
+                }
+                await SwitchSimulator.simulateMultiPress(endpoint, command);
+                break;
+            case "simulateLatchPosition":
+                if (endpoint === undefined) {
+                    throw new Error(`Endpoint ${endpointId} not existing`);
+                }
+                await endpoint.setStateOf(SwitchServer, { currentPosition: command.positionId });
+                break;
+            default:
+                await super.backchannel(command);
+        }
     }
 
     async setupServer(): Promise<ServerNode> {

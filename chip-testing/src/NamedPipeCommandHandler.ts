@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CommandPipe, PipeCommand } from "@matter/testing";
+import { CommandPipe } from "@matter/testing";
 import { execSync } from "child_process";
 import { constants } from "node:fs";
 import { FileHandle, open, unlink } from "node:fs/promises";
@@ -46,9 +46,7 @@ export class NamedPipeCommandHandler extends CommandPipe {
         });
     }
 
-    override async activate(listener: (command: PipeCommand) => void | Promise<void>) {
-        await super.activate(listener);
-
+    override async activate() {
         execSync(`mkfifo ${this.filename}`);
         console.log(`Named pipe created: ${this.filename}`);
 
@@ -56,7 +54,6 @@ export class NamedPipeCommandHandler extends CommandPipe {
     }
 
     override async deactivate() {
-        await super.deactivate();
         this.#stopping = true;
         try {
             // Note - this leaks the socket which will prevent process exit.  Not fixing because we only use when

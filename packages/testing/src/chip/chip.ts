@@ -6,6 +6,7 @@
 
 import { Container } from "../docker/container.js";
 import { type TestRunner } from "../runner.js";
+import { BackchannelCommand } from "./backchannel-command.js";
 import { Internal } from "./internal.js";
 
 /**
@@ -76,6 +77,7 @@ export namespace Chip {
         setup(): Promise<void>;
         start(): Promise<void>;
         stop(): Promise<void>;
+        backchannel(command: BackchannelCommand): Promise<void>;
     }
 
     /**

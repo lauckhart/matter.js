@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { PipeCommand } from "./pipe-command.js";
+import { BackchannelCommand } from "./backchannel-command.js";
 
 const utf8 = new TextDecoder();
 
@@ -15,9 +15,10 @@ const utf8 = new TextDecoder();
  */
 export abstract class CommandPipe {
     #filename: string;
-    #listener?: (command: PipeCommand) => void | Promise<void>;
+    #subject: BackchannelCommand.Subject;
 
-    constructor(appName: string) {
+    constructor(subject: BackchannelCommand.Subject, appName: string) {
+        this.#subject = subject;
         this.#filename = `/tmp/${appName}_fifo_${process.pid}`;
     }
 
@@ -25,20 +26,10 @@ export abstract class CommandPipe {
         return this.#filename;
     }
 
-    async activate(listener: (command: PipeCommand) => void | Promise<void>): Promise<void> {
-        this.#listener = listener;
-    }
-
-    async deactivate(): Promise<void> {
-        this.#listener = undefined;
-    }
+    abstract activate(): Promise<void>;
+    abstract deactivate(): Promise<void>;
 
     protected onData(dataBuf: Uint8Array) {
-        if (!this.#listener) {
-            console.warn("Ignoring pipe command without active listener");
-            return;
-        }
-
         let data: Record<string, unknown>;
         try {
             data = JSON.parse(utf8.decode(dataBuf));
@@ -57,8 +48,17 @@ export abstract class CommandPipe {
             return;
         }
 
+        data.Name = data.Name.slice(0, 1).toLowerCase() + data.Name.slice(1);
+
+        data = Object.fromEntries(
+            Object.entries(data).map(([k, v]) => {
+                k = k.slice(0, 1).toLowerCase() + k.slice(1);
+                return [k, v];
+            }),
+        );
+
         try {
-            const result = this.#listener(data as PipeCommand);
+            const result = this.#subject.backchannel(data as BackchannelCommand);
             if (result) {
                 result.catch(listenerError);
             }
