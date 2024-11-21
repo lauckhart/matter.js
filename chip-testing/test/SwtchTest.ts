@@ -7,5 +7,5 @@
 import { AllClustersApp } from "./support.js";
 
 describe("SWTCH", () => {
-    Chip(AllClustersApp, "TC_SWTCH");
+    chip(AllClustersApp, "TC_SWTCH");
 });

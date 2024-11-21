@@ -7,5 +7,5 @@
 import { AllClustersApp } from "./support.js";
 
 describe("ACE", () => {
-    Chip(AllClustersApp, "ACE_*");
+    chip(AllClustersApp, "ACE_*");
 });

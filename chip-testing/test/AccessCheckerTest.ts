@@ -7,5 +7,5 @@
 import { AllClustersApp } from "./support.js";
 
 describe("AccessChecker", () => {
-    Chip(AllClustersApp, "TC_AccessChecker");
+    chip(AllClustersApp, "TC_AccessChecker");
 });

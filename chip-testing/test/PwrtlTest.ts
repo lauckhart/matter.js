@@ -7,5 +7,5 @@
 import { AllClustersApp } from "./support.js";
 
 describe("DA", () => {
-    Chip(AllClustersApp, "TC_PWRTL_2_1");
+    chip(AllClustersApp, "TC_PWRTL_2_1");
 });

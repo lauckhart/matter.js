@@ -7,5 +7,5 @@
 import { AllClustersApp } from "./support.js";
 
 describe("DeviceBasicComposition", () => {
-    Chip(AllClustersApp, "TC_DeviceBasicComposition");
+    chip(AllClustersApp, "TC_DeviceBasicComposition");
 });

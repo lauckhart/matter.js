@@ -7,5 +7,5 @@
 import { AllClustersApp } from "./support.js";
 
 describe("TestEventTrigger", () => {
-    Chip(AllClustersApp, "TC_TestEventTrigger");
+    chip(AllClustersApp, "TC_TestEventTrigger");
 });

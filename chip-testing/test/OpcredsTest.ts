@@ -7,6 +7,6 @@
 import { AllClustersApp } from "./support.js";
 
 describe("OPCREDS", () => {
-    Chip(AllClustersApp, "TC_OPCREDS_3_1");
-    Chip(AllClustersApp, "TC_OPCREDS_3_2");
+    chip(AllClustersApp, "TC_OPCREDS_3_1");
+    chip(AllClustersApp, "TC_OPCREDS_3_2");
 });

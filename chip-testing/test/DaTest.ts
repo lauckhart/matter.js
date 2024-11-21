@@ -7,7 +7,7 @@
 import { AllClustersApp } from "./support.js";
 
 describe("DA", () => {
-    Chip(AllClustersApp, "TC_DA_1_2");
-    Chip(AllClustersApp, "TC_DA_1_5");
-    Chip(AllClustersApp, "TC_DA_1_7");
+    chip(AllClustersApp, "TC_DA_1_2");
+    chip(AllClustersApp, "TC_DA_1_5");
+    chip(AllClustersApp, "TC_DA_1_7");
 });

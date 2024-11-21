@@ -7,6 +7,5 @@
 import { AllClustersApp } from "./support.js";
 
 describe("ACL", () => {
-    Chip(AllClustersApp, "TC_ACL_2_1");
-    //Chip(AllClustersApp, "TC_ACL_*", "TC_ACL_2_11");
+    chip(AllClustersApp, "TC_ACL_*", "TC_ACL_2_11");
 });

@@ -7,6 +7,6 @@
 import { AllClustersApp } from "./support.js";
 
 describe("IDM", () => {
-    Chip(AllClustersApp, "TC_DA_1_2");
-    Chip(AllClustersApp, "TC_DA_4_2");
+    chip(AllClustersApp, "TC_DA_1_2");
+    chip(AllClustersApp, "TC_DA_4_2");
 });

@@ -7,5 +7,5 @@
 import { AllClustersApp } from "./support.js";
 
 describe("CADMIN", () => {
-    Chip(AllClustersApp, "TC_CADMIN_1_9");
+    chip(AllClustersApp, "TC_CADMIN_1_9");
 });

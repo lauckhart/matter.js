@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { parse } from "path";
+import { basename, parse } from "path";
 import { Container } from "../docker/container.js";
 import { Terminal } from "../docker/terminal.js";
 import type { Chip } from "./chip.js";
@@ -36,11 +36,13 @@ export async function YamlTests(container: Container): Promise<Chip.Test[]> {
                 [
                     "python3",
                     ContainerPaths.yamlRunner,
-                    `${ContainerPaths.yamlTestDir}/${filename}.yaml`,
+                    "tests",
+                    basename(filename),
                     "--PICS",
                     ContainerPaths.matterJsPics,
                 ],
                 Terminal.Line,
+                { cwd: "/" },
             );
             for await (const line of terminal) {
                 MockLogger.injectExternalMessage("CHIP", line);

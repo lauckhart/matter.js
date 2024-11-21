@@ -7,5 +7,5 @@
 import { AllClustersApp } from "./support.js";
 
 describe("CGEN", () => {
-    Chip(AllClustersApp, "TC_CGEN_2_4");
+    chip(AllClustersApp, "TC_CGEN_2_4");
 });

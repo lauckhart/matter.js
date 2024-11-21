@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import Dockerode from "dockerode";
+import Dockerode, { ExecCreateOptions } from "dockerode";
 import { ReadStream } from "fs";
 import { finished } from "stream/promises";
 import { base64Of } from "../util/text.js";
@@ -25,12 +25,16 @@ export interface Container {
     /**
      * Execute a command with no input or output.
      */
-    exec(command: string | string[]): Promise<void>;
+    exec(command: string | string[], options?: Container.ExecOptions): Promise<void>;
 
     /**
      * Execute a command with input and/or output.
      */
-    exec<T extends Terminal.Factory>(command: string | string[], terminal: T, stdin?: boolean): Promise<ReturnType<T>>;
+    exec<T extends Terminal.Factory>(
+        command: string | string[],
+        terminal: T,
+        options?: Container.ExecOptions,
+    ): Promise<ReturnType<T>>;
 
     /**
      * Retrieve contents of a file as a string.
@@ -107,6 +111,11 @@ export namespace Container {
         network?: string;
         input?: ReadStream;
         openStdin?: boolean;
+        cwd?: string;
+    }
+
+    export interface ExecOptions {
+        stdin?: boolean;
         cwd?: string;
     }
 }
@@ -219,19 +228,35 @@ function adaptContainer(docker: Docker, ct: Dockerode.Container): Container {
             ) as ReturnType<T>;
         },
 
-        async exec<T extends Terminal.Factory>(command: string | string[], terminal?: T, stdin = false) {
+        async exec<T extends Terminal.Factory>(
+            command: string | string[],
+            terminalOrOptions?: T | Container.ExecOptions,
+            options?: Container.ExecOptions,
+        ) {
+            let terminal;
+            if (typeof terminalOrOptions === "object") {
+                options = terminalOrOptions;
+            } else {
+                terminal = terminalOrOptions;
+            }
+
+            const { stdin, cwd } = options ?? {};
             if (!Array.isArray(command)) {
                 command = [command];
             }
 
-            const exec = await DockerError.adapt(
-                ct.exec({
-                    Cmd: command,
-                    AttachStdin: stdin,
-                    AttachStdout: true,
-                    AttachStderr: true,
-                }),
-            );
+            const config: ExecCreateOptions = {
+                Cmd: command,
+                AttachStdin: stdin,
+                AttachStdout: true,
+                AttachStderr: true,
+            };
+
+            if (cwd !== undefined) {
+                config.WorkingDir = cwd;
+            }
+
+            const exec = await DockerError.adapt(ct.exec(config));
 
             const stream = await DockerError.adapt(exec.start({ hijack: true, stdin }));
 
@@ -264,13 +289,13 @@ function adaptContainer(docker: Docker, ct: Dockerode.Container): Container {
         async readFile<T extends Terminal.Factory>(path: string, terminal?: T): Promise<string | T> {
             const term = await this.exec(["cat", path], terminal ?? Terminal.Line);
             if (terminal === undefined) {
-                return (await term.consume()) as string;
+                return (await term.consume()) as string | T;
             }
             return term as T;
         },
 
         async writeFile(path: string, contents: unknown) {
-            const terminal = await this.exec(["bash", "-c", `cat - > ${shesc(path)}`], Terminal.Raw);
+            const terminal = await this.exec(["bash", "-c", `cat - > ${shesc(path)}`], Terminal.Raw, { stdin: true });
 
             await terminal.write(contents);
             await terminal.close();
