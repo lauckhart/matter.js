@@ -4,6 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/**
+ * A command received through one of CHIP's backchannels from the test implementation to the DUT.
+ */
 export type BackchannelCommand =
     | BackchannelCommand.SimulateLongPress
     | BackchannelCommand.SimulateMultiPress

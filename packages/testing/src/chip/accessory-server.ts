@@ -79,10 +79,10 @@ export class AccessoryServer {
                 }
                 if (result !== undefined) {
                     this.#invoke(result).then(
-                        status => {
+                        () => {
                             response.writeHead(200);
                             response.end(
-                                `<?xml version="1.0"?>\n<methodResponse><params><param><value><boolean>${status}</boolean></value></param></params></methodResponse>`,
+                                `<?xml version="1.0"?>\n<methodResponse><params><param><value><boolean>1</boolean></value></param></params></methodResponse>`,
                             );
                         },
                         error => {
@@ -106,7 +106,8 @@ export class AccessoryServer {
         switch (methodName) {
             case "reboot":
             case "factoryReset":
-                return true;
+                await this.#subject.backchannel({ name: methodName });
+                return;
 
             case "waitForMessage":
             case "createOtaImage":
