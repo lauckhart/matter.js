@@ -5,25 +5,31 @@
  */
 
 import { Environment, InternalError, RuntimeService, StorageBackendMemory } from "@matter/main";
-import { Chip, ContainerCommandPipe } from "@matter/testing";
-import { BackchannelCommand } from "../../packages/testing/src/chip/backchannel-command.js";
+import { BackchannelCommand, Chip, Subject } from "@matter/testing";
 import { AllClustersTestInstance } from "../src/AllClustersTestInstance.js";
 import { BridgeTestInstance } from "../src/BridgeTestInstance.js";
 import { TestInstance, TestInstanceConstructor } from "../src/GenericTestApp.js";
 
-export function App(implementation: TestInstanceConstructor): Chip.Subject {
+Chip.onClose(async () => {
+    // Terminate and/or wait for any long-running services such as MdnsService
+    const runtime = Environment.default.maybeGet(RuntimeService);
+    if (runtime) {
+        await runtime.close();
+        Environment.default.delete(RuntimeService, runtime);
+    }
+});
+
+export function App(implementation: TestInstanceConstructor): () => Subject {
     let subject: undefined | TestInstance;
 
-    return {
-        async setup() {
+    return () => ({
+        async initialize() {
             const storage = new StorageBackendMemory();
 
             subject = new implementation({
                 storage,
-                commandPipeFactory: async (app, name) => {
-                    const commandPipe = new ContainerCommandPipe(Chip.container, app, name);
-                    await commandPipe.activate();
-                    return commandPipe;
+                commandPipeFactory: async (_subject, name) => {
+                    await Chip.openPipe(name);
                 },
                 discriminator: 1234,
                 passcode: 20202021,
@@ -40,17 +46,11 @@ export function App(implementation: TestInstanceConstructor): Chip.Subject {
         },
 
         async stop() {
-            if (subject === undefined) {
-                throw new InternalError("App stop before setup");
-            }
-            await subject.stop();
+            await subject?.stop();
+        },
 
-            // Terminate and/or wait for any long-running services such as MdnsService
-            const runtime = Environment.default.maybeGet(RuntimeService);
-            if (runtime) {
-                await runtime.close();
-                Environment.default.delete(RuntimeService, runtime);
-            }
+        async close() {
+            await subject?.close();
         },
 
         backchannel(command: BackchannelCommand) {
@@ -60,7 +60,7 @@ export function App(implementation: TestInstanceConstructor): Chip.Subject {
 
             return subject.backchannel(command);
         },
-    };
+    });
 }
 
 export const AllClustersApp = App(AllClustersTestInstance);

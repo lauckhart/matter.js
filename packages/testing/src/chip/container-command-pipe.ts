@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { BackchannelCommand } from "../device/backchannel.js";
 import { Container } from "../docker/container.js";
 import { Terminal } from "../docker/terminal.js";
-import { BackchannelCommand } from "./backchannel-command.js";
 import { CommandPipe } from "./command-pipe.js";
 
 /**
@@ -22,13 +22,13 @@ export class ContainerCommandPipe extends CommandPipe {
         this.#container = container;
     }
 
-    override async activate() {
+    override async initialize() {
         await this.#container.createPipe(this.filename);
 
         this.#stopped = this.#processCommands();
     }
 
-    override async deactivate() {
+    override async close() {
         this.#deactivate?.();
         this.#deactivate = undefined;
 

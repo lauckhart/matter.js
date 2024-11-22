@@ -7,7 +7,7 @@
 import { createServer, IncomingMessage, Server, ServerResponse } from "http";
 import { AddressInfo } from "net";
 import { Parser } from "xml2js";
-import { BackchannelCommand } from "./backchannel-command.js";
+import { BackchannelCommand } from "../device/backchannel.js";
 
 export class AccessoryMethodError extends Error {
     constructor(
@@ -76,6 +76,7 @@ export class AccessoryServer {
                 if (error !== undefined) {
                     response.writeHead(400);
                     response.end();
+                    return;
                 }
                 if (result !== undefined) {
                     this.#invoke(result).then(

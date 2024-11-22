@@ -7,8 +7,7 @@
 
 import { Environment, Storage } from "@matter/main";
 import { ValidationError } from "@matter/main/types";
-import { CommandPipe } from "@matter/testing";
-import { BackchannelCommand } from "../../packages/testing/src/chip/backchannel-command.js";
+import { BackchannelCommand, CommandPipe } from "@matter/testing";
 import { NamedPipeCommandHandler } from "./NamedPipeCommandHandler.js";
 import { StorageBackendAsyncJsonFile } from "./storage/StorageBackendAsyncJsonFile.js";
 import { StorageBackendSyncJsonFile } from "./storage/StorageBackendSyncJsonFile.js";
@@ -59,7 +58,10 @@ export abstract class TestInstance {
             if (this.config.commandPipeFactory === undefined) {
                 throw new Error(`Cannot instantiate ${this.appName} without command pipe factory`);
             }
-            this.#commandPipe = await this.config.commandPipeFactory(this, name);
+            const pipe = await this.config.commandPipeFactory(this, name);
+            if (pipe) {
+                this.#commandPipe = pipe;
+            }
         }
     }
 
@@ -67,8 +69,10 @@ export abstract class TestInstance {
     abstract start(): Promise<void>;
 
     async stop(): Promise<void> {
-        await this.#commandPipe?.deactivate();
+        await this.#commandPipe?.close();
     }
+
+    abstract close(): Promise<void>;
 
     async backchannel(command: BackchannelCommand) {
         throw new Error(`Unhandled backchannel ${command.name}`);
@@ -87,7 +91,7 @@ export namespace log {
 
 export interface TestInstanceConfig {
     storage: Storage;
-    commandPipeFactory: (app: TestInstance, name: string) => Promise<CommandPipe>;
+    commandPipeFactory: (app: TestInstance, name: string) => Promise<void | CommandPipe>;
     discriminator?: number;
     passcode?: number;
 }
@@ -119,7 +123,7 @@ export async function startTestApp(
                 name,
             );
 
-            await pipe.activate();
+            await pipe.initialize();
 
             return pipe;
         },

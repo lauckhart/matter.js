@@ -4,9 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Container } from "../docker/container.js";
-import { type TestRunner } from "../runner.js";
-import { BackchannelCommand } from "./backchannel-command.js";
+import { Subject } from "../device/subject.js";
+import { Test } from "../device/test.js";
+import type { Container } from "../docker/container.js";
+import type { TestRunner } from "../runner.js";
 import { Internal } from "./internal.js";
 
 /**
@@ -14,14 +15,14 @@ import { Internal } from "./internal.js";
  *
  * "CHIP tests" are official tests implemented in the connectedhomeip repository.
  *
- * This harness uses Mocha to run a {@link Chip.Test} against a {@link Chip.Subject}.
+ * This harness uses Mocha to run a {@link Test} against a {@link Subject}.
  *
  * We provide utility functions for tests against in-process matter.js subjects.  But the subject interface is generic
  * and requires only setup and teardown logic, so could easily support out-of-process subjects.
  *
  * We execute test logic within a Docker container available at {@link https://github.com/matter-js/matter.js-chip}.
  */
-export function Chip(subject: Chip.Subject, includeGlob: string, excludeGlob?: string) {
+export function Chip(subject: Subject.Factory, includeGlob: string, excludeGlob?: string) {
     const tests = Internal.select(includeGlob, excludeGlob);
 
     for (const test of tests) {
@@ -69,17 +70,21 @@ Chip.close = async () => {
     await Internal.close();
 };
 
-export namespace Chip {
-    /**
-     * The test subject.
-     */
-    export interface Subject {
-        setup(): Promise<void>;
-        start(): Promise<void>;
-        stop(): Promise<void>;
-        backchannel(command: BackchannelCommand): Promise<void>;
-    }
+/**
+ * Open a command pipe.
+ */
+Chip.openPipe = async (name: string) => {
+    return Internal.openPipe(name);
+};
 
+/**
+ * Add teardown logic.
+ */
+Chip.onClose = (fn: () => Promise<void>) => {
+    return Internal.onClose(fn);
+};
+
+export namespace Chip {
     /**
      * The test implementation.
      */
@@ -90,17 +95,6 @@ export namespace Chip {
      */
     export interface Options {
         runner: TestRunner;
-    }
-
-    /**
-     * Details of how to run a specific test.
-     */
-    export interface Test {
-        name: string;
-        description?: string;
-        timeout?: number;
-        commission(container: Container): Promise<void>;
-        invoke(container: Container): Promise<void>;
     }
 }
 

@@ -101,6 +101,8 @@ RUN find out -name \*.whl | xargs pip install --break-system-packages --upgrade
 # STAGE 5 - extract CHIP subset required for runtime
 FROM base as final
 
+ENV CHIP_ROOT=/
+
 LABEL org.opencontainers.image.title="matter.js CHIP tooling build"
 LABEL org.opencontainers.image.url=https://github.com/matter-js/matter.js-chip
 LABEL org.opencontainers.image.source=https://github.com/project-chip/matter.js/tree/main/packages/testing/chip
@@ -122,20 +124,20 @@ COPY --from=build /connectedhomeip/scripts/py_matter_yamltests/matter_yamltests 
 COPY --from=build /connectedhomeip/examples/chip-tool/py_matter_chip_tool_adapter/matter_chip_tool_adapter matter_chip_tool_adapter
 COPY --from=build /connectedhomeip/examples/placeholder/py_matter_placeholder_adapter/matter_placeholder_adapter matter_placeholder_adapter
 COPY --from=build /connectedhomeip/src/controller/python/py_matter_yamltest_repl_adapter/matter_yamltest_repl_adapter matter_yamltest_repl_adapter
-WORKDIR /
+
+# Link various bits to original connectedhomeip locations for discovery and/or convenience
+RUN ln -s "$(realpath chip/testing/data_model)" /data_model
+RUN mkdir -p /scripts/tests
+RUN ln -s "$(realpath chiptest)" /scripts/tests/chiptest
+RUN mkdir -p /scripts/py_matter_yamltests
+RUN ln -s "$(realpath matter_yamltests)" /scripts/py_matter_yamltests/matter_yamltests
 
 # YAML test logic
+WORKDIR /
 COPY --from=build /connectedhomeip/scripts/tests/chipyaml /scripts/tests/chipyaml
 
-# Link installed YAML test runner scripts to original location as they are more convenient
-RUN mkdir -p /scripts/tests
-RUN ln -s /usr/local/lib/python3.12/dist-packages/chiptest /scripts/tests/chiptest
-RUN mkdir -p /scripts/py_matter_yamltests
-RUN ln -s /usr/local/lib/python3.12/dist-packages/matter_yamltests /scripts/py_matter_yamltests/matter_yamltests
-
-# Data model, test runner uses to decode element names
-COPY --from=build /connectedhomeip/src/app/zap-templates/zcl/data-model/chip \
-    /src/app/zap-templates/zcl/data-model/chip
+# COPY --from=build /connectedhomeip/src/app/zap-templates/zcl/data-model/chip \
+#     /src/app/zap-templates/zcl/data-model/chip
 
 # Tests
 COPY --from=build /connectedhomeip/src/python_testing /src/python_testing

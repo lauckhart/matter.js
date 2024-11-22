@@ -77,7 +77,7 @@ export interface FileDeleteOptions {
 /**
  * Create a new container.
  */
-export function Container(docker: Docker, ptions: Container.Configuration): Promise<Container>;
+export function Container(docker: Docker, options: Container.Configuration): Promise<Container>;
 
 /**
  * Wrap a {@link Dockerode.Container}.
@@ -117,6 +117,7 @@ export namespace Container {
     export interface ExecOptions {
         stdin?: boolean;
         cwd?: string;
+        env?: Record<string, string>;
     }
 }
 
@@ -234,7 +235,7 @@ function adaptContainer(docker: Docker, ct: Dockerode.Container): Container {
                 terminal = terminalOrOptions;
             }
 
-            const { stdin, cwd } = options ?? {};
+            const { stdin, cwd, env } = options ?? {};
             if (!Array.isArray(command)) {
                 command = [command];
             }
@@ -248,6 +249,10 @@ function adaptContainer(docker: Docker, ct: Dockerode.Container): Container {
 
             if (cwd !== undefined) {
                 config.WorkingDir = cwd;
+            }
+
+            if (env !== undefined) {
+                config.Env = Object.entries(env).map(([k, v]) => `${k}=${v}`);
             }
 
             const exec = await DockerError.adapt(ct.exec(config));

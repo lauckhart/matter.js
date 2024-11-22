@@ -5,7 +5,7 @@
  */
 
 /**
- * A command received through one of CHIP's backchannels from the test implementation to the DUT.
+ * A command received through an OOB channel from the test implementation to the subject.
  */
 export type BackchannelCommand =
     | BackchannelCommand.SimulateLongPress

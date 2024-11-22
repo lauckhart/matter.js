@@ -63,7 +63,7 @@ import {
 } from "@matter/main/clusters";
 import { OnOffLightDevice } from "@matter/main/devices";
 import { DeviceTypeId, EndpointNumber, VendorId } from "@matter/main/types";
-import { BackchannelCommand } from "../../packages/testing/src/chip/backchannel-command.js";
+import { BackchannelCommand } from "@matter/testing";
 import { TestActivatedCarbonFilterMonitoringServer } from "./cluster/TestActivatedCarbonFilterMonitoringServer.js";
 import { TestGeneralDiagnosticsServer } from "./cluster/TestGeneralDiagnosticsServer.js";
 import { TestHepaFilterMonitoringServer } from "./cluster/TestHEPAFilterMonitoringServer.js";
@@ -131,6 +131,11 @@ export class AllClustersTestInstance extends TestInstance {
     /** Stop the test instance MatterServer and the device. */
     override async stop() {
         await super.stop();
+        if (!this.serverNode) throw new Error("serverNode not initialized on stop");
+        await this.serverNode.cancel();
+    }
+
+    override async close() {
         if (!this.serverNode) throw new Error("serverNode not initialized on close");
         await this.serverNode.close();
         this.serverNode = undefined;

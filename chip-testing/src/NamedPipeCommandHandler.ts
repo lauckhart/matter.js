@@ -46,14 +46,14 @@ export class NamedPipeCommandHandler extends CommandPipe {
         });
     }
 
-    override async activate() {
+    override async initialize() {
         execSync(`mkfifo ${this.filename}`);
         console.log(`Named pipe created: ${this.filename}`);
 
         await this.#openSocket();
     }
 
-    override async deactivate() {
+    override async close() {
         this.#stopping = true;
         try {
             // Note - this leaks the socket which will prevent process exit.  Not fixing because we only use when

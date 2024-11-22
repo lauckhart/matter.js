@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BackchannelCommand } from "./backchannel-command.js";
+import { BackchannelCommand } from "../device/backchannel.js";
 
 const utf8 = new TextDecoder();
 
@@ -19,15 +19,15 @@ export abstract class CommandPipe {
 
     constructor(subject: BackchannelCommand.Subject, appName: string) {
         this.#subject = subject;
-        this.#filename = `/tmp/${appName}_fifo_${process.pid}`;
+        this.#filename = `/tmp/${appName}_fifo_1`;
     }
 
     get filename() {
         return this.#filename;
     }
 
-    abstract activate(): Promise<void>;
-    abstract deactivate(): Promise<void>;
+    abstract initialize(): Promise<void>;
+    abstract close(): Promise<void>;
 
     protected onData(dataBuf: Uint8Array) {
         let data: Record<string, unknown>;

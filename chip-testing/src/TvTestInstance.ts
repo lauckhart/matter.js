@@ -63,6 +63,11 @@ export class TvTestInstance extends TestInstance {
     /** Stop the test instance MatterServer and the device. */
     override async stop() {
         await super.stop();
+        if (!this.serverNode) throw new Error("serverNode not initialized on stop");
+        await this.serverNode.cancel();
+    }
+
+    override async close() {
         if (!this.serverNode) throw new Error("serverNode not initialized on close");
         await this.serverNode.close();
         //this.serverNode.cancel();

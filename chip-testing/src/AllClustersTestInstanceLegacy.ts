@@ -75,8 +75,7 @@ export class AllClustersTestInstanceLegacy extends TestInstance {
     }
 
     /** Stop the test instance MatterServer and the device. */
-    override async stop() {
-        await super.stop();
+    override async close() {
         if (!this.matterServer) throw new Error("serverNode not initialized on close");
         await this.matterServer.close();
         this.matterServer = undefined;

@@ -1,11 +1,14 @@
 import { basename, extname } from "path";
+import { BackchannelCommand } from "../device/backchannel.js";
+import { Subject } from "../device/subject.js";
+import { Test } from "../device/test.js";
 import { Container } from "../docker/container.js";
 import { Docker } from "../docker/docker.js";
 import { afterRun, beforeRun } from "../mocha.js";
 import { AccessoryServer } from "./accessory-server.js";
-import { BackchannelCommand } from "./backchannel-command.js";
 import type { Chip } from "./chip.js";
 import { Constants, ContainerPaths } from "./config.js";
+import { ContainerCommandPipe } from "./container-command-pipe.js";
 import { PicsFile } from "./pics-file.js";
 import { PythonTests } from "./python-tests.js";
 import { YamlTests } from "./yaml-tests.js";
@@ -17,9 +20,11 @@ const State = {
     initialized: false,
     maybeOptions: undefined as Chip.Options | undefined,
     maybeContainer: undefined as Container | undefined,
-    activeSubject: undefined as Chip.Subject | undefined,
-    accessoryServer: undefined as AccessoryServer | undefined,
-    tests: Array<Chip.Test>(),
+    initializedSubjects: new WeakSet<Subject>(),
+    activeSubject: undefined as Subject | undefined,
+    tests: Array<Test>(),
+    activePipes: new Set<string>(),
+    closers: Array<() => Promise<void>>(),
 
     get runner() {
         const runner = this.maybeOptions?.runner;
@@ -68,41 +73,23 @@ export const Internal = {
      * Teardown.
      */
     async close() {
-        if (!State.initialized) {
-            return;
-        }
-        State.initialized = false;
-
         await deactivateSubject();
 
-        const { maybeContainer: container, accessoryServer } = State;
-        if (container) {
-            const docker = container.docker;
-
+        let closer;
+        while ((closer = State.closers.pop())) {
             try {
-                await container.kill();
+                await closer();
             } catch (e) {
-                console.error("Error terminating test container", e);
+                console.error("Teardown error:", e);
             }
-
-            try {
-                await docker.close();
-            } catch (e) {
-                console.error("Error closing docker connection", e);
-            }
-
-            State.maybeContainer = undefined;
         }
+    },
 
-        if (accessoryServer) {
-            try {
-                await accessoryServer.close();
-            } catch (e) {
-                console.error("Error closing accessory server", e);
-            }
-
-            State.accessoryServer = undefined;
-        }
+    /**
+     * Add cleanup logic.
+     */
+    onClose(fn: () => Promise<void>) {
+        State.closers.push(fn);
     },
 
     /**
@@ -132,7 +119,7 @@ export const Internal = {
      *
      * Installs a test into the current Mocha suite that activates {@link subject} then runs {@link tester}.
      */
-    implement(subject: Chip.Subject, tester: Chip.Test) {
+    implement(subject: Subject.Factory, tester: Test) {
         if (!containerLifecycleInstalled) {
             containerLifecycleInstalled = true;
             beforeRun(Internal.initialize);
@@ -155,11 +142,25 @@ export const Internal = {
 
         return State.activeSubject.backchannel(command);
     },
+
+    /**
+     * Open a back-channel command pipe.
+     */
+    async openPipe(name: string) {
+        if (State.activePipes.has(name)) {
+            return;
+        }
+
+        const pipe = new ContainerCommandPipe(this.container, this, name);
+
+        Internal.onClose(async () => {
+            await pipe.close();
+        });
+    },
 };
 
 async function initialize() {
-    State.maybeContainer = await configureContainer();
-
+    await configureContainer();
     await configurePics();
     await configureTests();
     await configureNetwork();
@@ -175,7 +176,7 @@ async function configureContainer() {
 
     await docker.pull(Constants.imageName, Constants.platform);
 
-    return await docker.open({
+    const container = (State.maybeContainer = await docker.open({
         image: Constants.imageName,
         name: Constants.containerName,
         autoRemove: true,
@@ -192,6 +193,24 @@ async function configureContainer() {
             // Better to run avahi in a separate container but use host version for now
             "/var/run/dbus": "/run/dbus",
         },
+    }));
+
+    Internal.onClose(async () => {
+        const docker = container.docker;
+
+        try {
+            await container.kill();
+        } catch (e) {
+            console.error("Error terminating test container:", e);
+        }
+
+        try {
+            await docker.close();
+        } catch (e) {
+            console.error("Error closing docker connection:", e);
+        }
+
+        State.maybeContainer = undefined;
     });
 }
 
@@ -221,7 +240,7 @@ async function configureTests() {
     State.initialized = true;
 }
 
-function filterWithGlob(list: Chip.Test[], glob: string, invert = false) {
+function filterWithGlob(list: Test[], glob: string, invert = false) {
     const globPattern = glob.replace(/\*/g, "[^\\/]+");
     const pattern = new RegExp(`^${globPattern}$`);
     return list.filter(s => !!s.name.match(pattern) === !invert);
@@ -237,7 +256,15 @@ function testNameOf(path: string) {
 }
 
 async function configureNetwork() {
-    State.accessoryServer = await AccessoryServer.create(Internal);
+    const accessoryServer = await AccessoryServer.create(Internal);
+
+    Internal.onClose(async () => {
+        try {
+            await accessoryServer.close();
+        } catch (e) {
+            console.error("Error closing accessory server:", e);
+        }
+    });
 
     // CHIP has 10.10.10.5 hard-coded as IP on linux.  With host networking we would have to add that to the host.  That
     // is undesirable as its platform- and network-specific.
@@ -253,26 +280,36 @@ async function configureNetwork() {
     await Internal.container.exec([
         "sed",
         "-i",
-        `s/_PORT = 9000/_PORT = ${State.accessoryServer.port}/g`,
+        `s/_PORT = 9000/_PORT = ${accessoryServer.port}/g`,
         ContainerPaths.accessoryClient,
     ]);
 }
 
-async function activateSubject(subject: Chip.Subject, tester: Chip.Test) {
+async function activateSubject(factory: Subject.Factory, test: Test) {
+    const subject = test.loadSubject(factory);
+
     if (State.activeSubject === subject) {
         return;
     }
 
     const { progress } = State.runner;
 
-    await progress.subtask("deactivating previous subject", deactivateSubject);
+    if (State.activeSubject) {
+        await progress.subtask("deactivating previous subject", deactivateSubject);
+    }
 
-    await progress.subtask("commissioning subject", async () => {
-        await subject.setup();
-        await subject.start();
+    await progress.subtask("activating subject", async () => {
+        if (!State.initializedSubjects.has(subject)) {
+            await subject.initialize();
+            Internal.onClose(subject.close.bind(subject));
 
-        await Internal.container.exec(["rm", "-rf", "/tmp/*"]);
-        await tester.commission(Internal.container);
+            await subject.start();
+            await test.initializeSubject(Internal.container, subject);
+
+            State.initializedSubjects.add(subject);
+        } else {
+            await subject.start();
+        }
     });
 
     State.activeSubject = subject;

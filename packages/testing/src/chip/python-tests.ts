@@ -8,13 +8,14 @@ import colors from "ansi-colors";
 import { basename } from "path";
 import { Container } from "../docker/container.js";
 import { Terminal } from "../docker/terminal.js";
-import type { Chip } from "./chip.js";
+import { Subject } from "../device/subject.js";
+import { Test } from "../device/test.js";
 import { ContainerPaths } from "./config.js";
 
-export async function PythonTests(container: Container): Promise<Chip.Test[]> {
+export async function PythonTests(container: Container): Promise<Test[]> {
     const files = await container.resolveGlob(`${ContainerPaths.pythonTestDir}/*.py`);
 
-    const tests = Array<Chip.Test>();
+    const tests = Array<Test>();
 
     for (const filename of files) {
         const name = basename(filename);
@@ -22,72 +23,91 @@ export async function PythonTests(container: Container): Promise<Chip.Test[]> {
             continue;
         }
 
-        tests.push({
-            name,
-
-            /**
-             * Python commissioning logic is cleverly hidden in:
-             *
-             *     connectedhomeip/src/python_testing/chip/testing/matter_testing.py
-             */
-            async commission(container: Container) {
-                const terminal = await container.exec(
-                    [
-                        "python3",
-                        ContainerPaths.pythonCommissioner,
-
-                        // Python commissioning is only available in test implementations so our "commissioner" is just
-                        // a random test.  Disable the actual test from running
-                        "--commission-only",
-
-                        "--commissioning-method",
-                        "on-network",
-
-                        "--passcode",
-                        "20202021",
-
-                        "--discriminator",
-                        "1234",
-
-                        // Our PID is meaningless within the container but Python tests (and thus CommandPipe) are
-                        // hard-coded to use it in the command FIFO filename
-                        "--app-pid",
-                        process.pid.toString(),
-                    ],
-                    Terminal.Line,
-                );
-
-                try {
-                    for await (const line of terminal) {
-                        MockLogger.injectExternalMessage("PAIR", spiffy(line));
-                    }
-                } catch (e) {
-                    throw new Error("Error pairing test app", { cause: e });
-                }
-            },
-
-            async invoke(container: Container) {
-                const terminal = await container.exec(
-                    ["python3", filename, "--PICS", ContainerPaths.matterJsPics],
-                    Terminal.Line,
-                );
-
-                let passed = false;
-                for await (const line of terminal) {
-                    if (line.indexOf("Final result: PASS") !== -1) {
-                        passed = true;
-                    }
-                    MockLogger.injectExternalMessage("CHIP P", spiffy(line));
-                }
-
-                if (!passed) {
-                    throw new Error("Test exited without error but did not indicate successful test");
-                }
-            },
-        });
+        tests.push(new PythonTest(name, filename));
     }
 
     return tests;
+}
+
+const subjects = new Map<Subject.Factory, Subject>();
+
+class PythonTest implements Test {
+    #filename: string;
+
+    constructor(
+        public name: string,
+        filename: string,
+    ) {
+        this.#filename = filename;
+    }
+
+    loadSubject(factory: Subject.Factory) {
+        let subject = subjects.get(factory);
+        if (subject === undefined) {
+            subject = factory();
+            subjects.set(factory, subject);
+        }
+        return subject;
+    }
+
+    /**
+     * Python commissioning logic is cleverly hidden in:
+     *
+     *     connectedhomeip/src/python_testing/chip/testing/matter_testing.py
+     */
+    async initializeSubject(container: Container) {
+        const terminal = await container.exec(
+            [
+                "python3",
+                ContainerPaths.pythonCommissioner,
+
+                // Python commissioning is only available in test implementations so our "commissioner" is just
+                // a random test.  Disable the actual test from running
+                "--commission-only",
+
+                "--commissioning-method",
+                "on-network",
+
+                "--passcode",
+                "20202021",
+
+                "--discriminator",
+                "1234",
+
+                // Python uses this in the name of the command pipe
+                "--app-pid",
+                "1",
+            ],
+            Terminal.Line,
+        );
+
+        try {
+            for await (const line of terminal) {
+                MockLogger.injectExternalMessage("PAIR", spiffy(line));
+            }
+        } catch (e) {
+            throw new Error("Error pairing test app", { cause: e });
+        }
+    }
+
+    async invoke(container: Container) {
+        const terminal = await container.exec(
+            ["python3", this.#filename, "--PICS", ContainerPaths.matterJsPics],
+            Terminal.Line,
+        );
+
+        let passed = false;
+        for await (const line of terminal) {
+            if (line.indexOf("Final result: PASS") !== -1) {
+                passed = true;
+            }
+            MockLogger.injectExternalMessage("CHIP P", spiffy(line));
+        }
+
+        if (!passed) {
+            throw new Error("Python test exited without error but did not indicate successful test");
+        }
+    }
 }
 
 /**
