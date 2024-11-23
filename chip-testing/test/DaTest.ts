@@ -4,11 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllClustersTestInstance } from "../src/AllClustersTestInstance.js";
-import { App } from "./support.js";
+import { AllClustersApp } from "./support.js";
 
 describe("DA", () => {
-    Chip.python(App(AllClustersTestInstance), "TC_DA_1_2");
-    Chip.python(App(AllClustersTestInstance), "TC_DA_1_5");
-    Chip.python(App(AllClustersTestInstance), "TC_DA_1_7");
+    chip(AllClustersApp, "TC_DA_1_2");
+    chip(AllClustersApp, "TC_DA_1_5");
+    chip(AllClustersApp, "TC_DA_1_7");
 });

@@ -16,8 +16,8 @@ MockTime.disable();
 
 // Expose Chip testing API as a global
 declare global {
-    const Chip: ChipType;
+    const chip: ChipType;
 }
-Object.assign(globalThis, { Chip: ChipType });
+Object.assign(globalThis, { chip: ChipType });
 
-await Chip.initialize();
+await chip.initialize();

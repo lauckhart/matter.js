@@ -4,9 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllClustersTestInstance } from "../src/AllClustersTestInstance.js";
-import { App } from "./support.js";
+import { AllClustersApp } from "./support.js";
 
 describe("ACL", () => {
-    Chip.python(App(AllClustersTestInstance), "TC_ACL_2_2");
+    chip(AllClustersApp, "TC_ACL_2_1");
+    //chip(AllClustersApp, "TC_ACL_2_3");
+    //chip(AllClustersApp, "TC_ACL_*", "TC_ACL_2_11");
 });

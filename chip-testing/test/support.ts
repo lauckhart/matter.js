@@ -4,47 +4,62 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { InternalError, Storage } from "@matter/main";
-import { TestInstance } from "../src/GenericTestApp.js";
-import { StorageBackendSyncJsonFile } from "../src/storage/StorageBackendSyncJsonFile.js";
+import { Environment, InternalError, RuntimeService, StorageBackendMemory } from "@matter/main";
+import { BackchannelCommand, Chip, Subject } from "@matter/testing";
+import { AllClustersTestInstance } from "../src/AllClustersTestInstance.js";
+import { BridgeTestInstance } from "../src/BridgeTestInstance.js";
+import { TestInstance, TestInstanceConstructor } from "../src/GenericTestApp.js";
 
-export type AppImplementation = new (
-    storage: Storage,
-    options: {
-        appName: string;
-        discriminator?: number;
-        passcode?: number;
-    },
-) => TestInstance;
+Chip.onClose(async () => {
+    // Terminate and/or wait for any long-running services such as MdnsService
+    const runtime = Environment.default.maybeGet(RuntimeService);
+    if (runtime) {
+        await runtime.close();
+        Environment.default.delete(RuntimeService, runtime);
+    }
+});
 
-export function App(implementation: AppImplementation): TestInstance {
-    let app: undefined | TestInstance;
+export function App(implementation: TestInstanceConstructor): () => Subject {
+    let subject: undefined | TestInstance;
 
-    return {
-        async setup() {
-            const storage = new StorageBackendSyncJsonFile("/tmp/chip_kvs");
-
-            app = new implementation(storage, {
-                appName: "TestApp",
+    return () => ({
+        async initialize() {
+            subject = new implementation({
+                storage: new StorageBackendMemory(),
+                async commandPipeFactory(_subject, name) {
+                    await Chip.openPipe(name);
+                },
                 discriminator: 1234,
                 passcode: 20202021,
             });
 
-            await app.setup();
+            await subject.setup();
         },
 
         async start() {
-            if (app === undefined) {
+            if (subject === undefined) {
                 throw new InternalError("App start before setup");
             }
-            await app.start();
+            await subject.start();
         },
 
         async stop() {
-            if (app === undefined) {
-                throw new InternalError("App stop before setup");
-            }
-            await app.stop();
+            await subject?.stop();
         },
-    };
+
+        async close() {
+            await subject?.close();
+            subject = undefined;
+        },
+
+        async backchannel(command: BackchannelCommand) {
+            if (subject === undefined) {
+                throw new Error(`Backchannel ${command.name} invoked without active subject`);
+            }
+            return subject.backchannel(command);
+        },
+    });
 }
+
+export const AllClustersApp = App(AllClustersTestInstance);
+export const BridgeApp = App(BridgeTestInstance);

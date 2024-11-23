@@ -5,8 +5,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ClassExtends, Environment } from "@matter/main";
+import { Environment, Storage } from "@matter/main";
 import { ValidationError } from "@matter/main/types";
+import { BackchannelCommand, CommandPipe } from "@matter/testing";
+import { NamedPipeCommandHandler } from "./NamedPipeCommandHandler.js";
 import { StorageBackendAsyncJsonFile } from "./storage/StorageBackendAsyncJsonFile.js";
 import { StorageBackendSyncJsonFile } from "./storage/StorageBackendSyncJsonFile.js";
 
@@ -35,10 +37,46 @@ export function getIntParameter(name: string) {
     return intValue;
 }
 
-export interface TestInstance {
-    setup: () => Promise<void>;
-    start: () => Promise<void>;
-    stop: () => Promise<void>;
+export abstract class TestInstance {
+    #commandPipe?: CommandPipe;
+
+    get baseAppName() {
+        return this.constructor.name.replace(/TestInstance(?:Legacy)?/, "");
+    }
+
+    get appName() {
+        if (this.constructor.name.endsWith("Legacy")) {
+            return `${this.baseAppName}-Legacy`;
+        }
+        return this.baseAppName;
+    }
+
+    constructor(protected config: TestInstanceConfig) {}
+
+    async activateCommandPipe(name: string) {
+        if (this.#commandPipe === undefined) {
+            if (this.config.commandPipeFactory === undefined) {
+                throw new Error(`Cannot instantiate ${this.appName} without command pipe factory`);
+            }
+            const pipe = await this.config.commandPipeFactory(this, name);
+            if (pipe) {
+                this.#commandPipe = pipe;
+            }
+        }
+    }
+
+    abstract setup(): Promise<void>;
+    abstract start(): Promise<void>;
+
+    async stop(): Promise<void> {
+        await this.#commandPipe?.close();
+    }
+
+    abstract close(): Promise<void>;
+
+    async backchannel(command: BackchannelCommand) {
+        throw new Error(`Unhandled backchannel ${command.name}`);
+    }
 }
 
 export namespace log {
@@ -51,9 +89,26 @@ export namespace log {
     }
 }
 
+export interface TestInstanceConfig {
+    storage: Storage;
+    discriminator?: number;
+    passcode?: number;
+
+    /**
+     * Initializes a {@link CommandPipe} for the application.
+     *
+     * This function may optionally return the pipe object.  When running tests locally using GenericTestApp this is
+     * necessary to close the pipe.  When running containerized this is unnecessary as the test harness manages pipes.
+     */
+    commandPipeFactory: (app: TestInstance, name: string) => Promise<void | CommandPipe>;
+}
+
+export interface TestInstanceConstructor {
+    new (config: TestInstanceConfig): TestInstance;
+}
+
 export async function startTestApp(
-    appName: string,
-    testInstanceClass: ClassExtends<TestInstance>,
+    testInstanceClass: TestInstanceConstructor,
     storageType: typeof StorageBackendSyncJsonFile | typeof StorageBackendAsyncJsonFile = StorageBackendSyncJsonFile,
 ) {
     const storageName = `/tmp/chip_${getParameter("KVS") ?? "kvs"}`;
@@ -63,8 +118,22 @@ export async function startTestApp(
         await storage.clear();
     }
 
-    const testInstance = new testInstanceClass(storage, {
-        appName,
+    const testInstance = new testInstanceClass({
+        storage,
+        commandPipeFactory: async (app: TestInstance, name: string) => {
+            const pipe = new NamedPipeCommandHandler(
+                {
+                    backchannel(command: BackchannelCommand): void | Promise<void> {
+                        return app.backchannel(command);
+                    },
+                },
+                name,
+            );
+
+            await pipe.initialize();
+
+            return pipe;
+        },
         discriminator: getIntParameter("discriminator"),
         passcode: getIntParameter("passcode"),
     });

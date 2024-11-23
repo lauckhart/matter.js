@@ -67,6 +67,10 @@ The main work (all changes without a GitHub username in brackets in the below li
 -   @matter/protocol
     - Fix: Corrects the DataVersion Filter shortening logic to ensure maximum message size is not exceeded 
 
+-   @matter/testing
+    - Feature: New test harness supports simplified management of Matter certification tests
+    - Feature: Build system for lightweight (relatively speaking) Docker image with chip-tool and CHIP certification tests available at https://github.com/matter-js/matter.js-chip
+
 -   @matter/tools
     - Multi-project test runs now use a single process to improve performance
 

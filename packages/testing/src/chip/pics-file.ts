@@ -49,6 +49,10 @@ export class PicsFile {
         return this.#values;
     }
 
+    toString() {
+        return this.#lines.join("\n") + "\n";
+    }
+
     patch(other: PicsFile) {
         this.#lines = this.lines.map(line => {
             const { key } = readValue(line);
@@ -66,6 +70,6 @@ export class PicsFile {
     }
 
     save(path: string) {
-        writeFileSync(path, this.lines.join("\n"));
+        writeFileSync(path, this.toString());
     }
 }

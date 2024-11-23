@@ -1,0 +1,15 @@
+#!/bin/bash
+
+THISDIR=$(dirname -- "${BASH_SOURCE[0]}")
+GIT_ROOT=$(realpath "${THISDIR}/../../..")
+
+docker run \
+    -it \
+    --rm \
+    --network host \
+    --workdir / \
+    -v /var/run/dbus:/run/dbus \
+    --security-opt apparmor:unconfined \
+    --platform linux/amd64 \
+    ghcr.io/matter-js/chip \
+    "$@"

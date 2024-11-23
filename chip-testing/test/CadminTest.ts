@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllClustersTestInstance } from "../src/AllClustersTestInstance.js";
-import { App } from "./support.js";
+import { AllClustersApp } from "./support.js";
 
 describe("CADMIN", () => {
-    Chip.python(App(AllClustersTestInstance), "TC_CADMIN_1_9");
+    chip(AllClustersApp, "TC_CADMIN_1_9");
 });
