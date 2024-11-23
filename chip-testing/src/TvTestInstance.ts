@@ -5,80 +5,20 @@
  */
 
 import { Bytes } from "@matter/general";
-import { Endpoint, Environment, ServerNode, StorageService } from "@matter/main";
+import { Endpoint, ServerNode } from "@matter/main";
 import { AdministratorCommissioningServer } from "@matter/main/behaviors/administrator-commissioning";
 import { ApplicationBasicServer } from "@matter/main/behaviors/application-basic";
 import { WakeOnLanServer } from "@matter/main/behaviors/wake-on-lan";
 import { AdministratorCommissioning, ApplicationBasic, BasicInformation } from "@matter/main/clusters";
 import { DimmableLightDevice } from "@matter/main/devices/dimmable-light";
 import { DeviceTypeId, EndpointNumber, VendorId } from "@matter/main/types";
-import { log, TestInstance } from "./GenericTestApp.js";
+import { NodeTestInstance } from "./NodeTestInstance.js";
 import { TestLowPowerServer } from "./cluster/TestLowPowerServer.js";
 
-export class TvTestInstance extends TestInstance {
+export class TvTestInstance extends NodeTestInstance {
     serverNode: ServerNode | undefined;
 
-    /** Set up the test instance MatterServer. */
-    async setup() {
-        try {
-            //await this.storageManager.initialize(); // hacky but works
-
-            this.serverNode = await this.setupServer();
-        } catch (error) {
-            // Catch and log error, else the test framework hides issues here
-            log.error(error);
-            log.error((error as Error).stack);
-            throw error;
-        }
-        log.directive(`======> ${this.appName}: Setup done`);
-    }
-
-    /** Start the test instance MatterServer with the included device. */
-    async start() {
-        if (!this.serverNode) throw new Error("serverNode not initialized on start");
-
-        /*
-        const env = Environment.default;
-        env.vars.set("mdns.networkInterface", "en0");
-         */
-
-        try {
-            await this.serverNode.start();
-            const { qrPairingCode } = this.serverNode.state.commissioning.pairingCodes;
-            // Magic logging chip testing waits for
-            log.directive(`SetupQRCode: [${qrPairingCode}]`);
-            log.directive();
-            // Magic logging chip testing waits for
-            log.directive("mDNS service published:");
-            log.directive();
-
-            log.directive(`======> ${this.appName}: Instance started`);
-        } catch (error) {
-            // Catch and log error, else the test framework hides issues here
-            log.error(error);
-        }
-        log.directive("=====>>> STARTED");
-    }
-
-    /** Stop the test instance MatterServer and the device. */
-    override async stop() {
-        await super.stop();
-        if (!this.serverNode) throw new Error("serverNode not initialized on stop");
-        await this.serverNode.cancel();
-    }
-
-    override async close() {
-        if (!this.serverNode) throw new Error("serverNode not initialized on close");
-        await this.serverNode.close();
-        //this.serverNode.cancel();
-        //await this.serverNode.lifecycle.act;
-        this.serverNode = undefined;
-        log.directive(`======> ${this.appName}: Instance stopped`);
-    }
-
     async setupServer(): Promise<ServerNode> {
-        Environment.default.get(StorageService).factory = (_namespace: string) => this.config.storage;
-
         const serverNode = await ServerNode.create(
             ServerNode.RootEndpoint.with(
                 // We upgrade the AdminCommissioningCluster to also allow Basic Commissioning, so we can use for more testcases
@@ -86,6 +26,7 @@ export class TvTestInstance extends TestInstance {
             ),
             {
                 id: "binford-6100",
+                environment: this.env,
                 network: {
                     port: 5540,
                     //advertiseOnStartup: false,

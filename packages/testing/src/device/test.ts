@@ -16,5 +16,5 @@ export interface Test {
     timeout?: number;
     loadSubject(subject: Subject.Factory): Subject;
     initializeSubject(container: Container, subject: Subject): Promise<void>;
-    invoke(container: Container): Promise<void>;
+    invoke(container: Container, step: (title: string) => void): Promise<void>;
 }

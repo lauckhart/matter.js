@@ -128,7 +128,8 @@ export const Internal = {
 
         it(tester.description ?? tester.name, async () => {
             await activateSubject(subject, tester);
-            await tester.invoke(Internal.container);
+            // TODO - show step title in progress
+            await tester.invoke(Internal.container, (_title: string) => {});
         }).timeout(tester.timeout ?? Constants.defaultTimeout);
     },
 

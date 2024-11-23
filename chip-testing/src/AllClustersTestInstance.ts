@@ -5,7 +5,7 @@
  */
 
 import { Bytes } from "@matter/general";
-import { Endpoint, Environment, NumberTag, ServerNode, StorageService } from "@matter/main";
+import { Endpoint, NumberTag, ServerNode } from "@matter/main";
 import {
     AdministratorCommissioningServer,
     AirQualityServer,
@@ -70,76 +70,14 @@ import { TestHepaFilterMonitoringServer } from "./cluster/TestHEPAFilterMonitori
 import { TestIdentifyServer } from "./cluster/TestIdentifyServer.js";
 import { TestLevelControlServer } from "./cluster/TestLevelControlServer.js";
 import { TestWindowCoveringServer } from "./cluster/TestWindowCoveringServer.js";
-import { log, TestInstance } from "./GenericTestApp.js";
+import { NodeTestInstance } from "./NodeTestInstance.js";
 import { SwitchSimulator } from "./simulators/SwitchSimulator.js";
 
-export class AllClustersTestInstance extends TestInstance {
-    serverNode?: ServerNode;
-
-    async #setupNamedPipe() {
-        if (this.serverNode === undefined) {
-            throw new Error("ServerNode not initialized, cannot setup NamedPipeCommandHandler.");
-        }
-        try {
-            await this.activateCommandPipe("all_clusters");
-        } catch (error) {
-            log.error("Error creating named pipe:", error);
-        }
-    }
-
+export class AllClustersTestInstance extends NodeTestInstance {
     /** Set up the test instance MatterServer. */
-    async setup() {
-        try {
-            this.serverNode = await this.setupServer();
-            await this.#setupNamedPipe();
-        } catch (error) {
-            // Catch and log error, else the test framework hides issues here
-            log.error(error);
-            log.error((error as Error).stack);
-            throw error;
-        }
-        log.directive(`======> ${this.appName}: Setup done`);
-    }
-
-    /** Start the test instance MatterServer with the included device. */
-    async start() {
-        if (!this.serverNode) throw new Error("serverNode not initialized on start");
-
-        /*
-        const env = Environment.default;
-        env.vars.set("mdns.networkInterface", "en0");
-        */
-
-        try {
-            await this.serverNode.start();
-            const { qrPairingCode } = this.serverNode.state.commissioning.pairingCodes;
-            // Magic logging chip testing waits for
-            log.directive(`SetupQRCode: [${qrPairingCode}]`);
-            log.directive();
-            // Magic logging chip testing waits for
-            log.directive("mDNS service published:");
-            log.directive();
-
-            log.directive(`======> ${this.appName}: Instance started`);
-        } catch (error) {
-            // Catch and log error, else the test framework hides issues here
-            log.error(error);
-        }
-        log.directive("=====>>> STARTED");
-    }
-
-    /** Stop the test instance MatterServer and the device. */
-    override async stop() {
-        await super.stop();
-        if (!this.serverNode) throw new Error("serverNode not initialized on stop");
-        await this.serverNode.cancel();
-    }
-
-    override async close() {
-        if (!this.serverNode) throw new Error("serverNode not initialized on close");
-        await this.serverNode.close();
-        this.serverNode = undefined;
-        log.directive(`======> ${this.appName}: Instance stopped`);
+    override async setup() {
+        await this.activateCommandPipe("all_clusters");
+        await super.setup();
     }
 
     /** Process a backchannel command */
@@ -150,7 +88,7 @@ export class AllClustersTestInstance extends TestInstance {
         let endpoint: Endpoint | undefined;
         if (endpointId !== undefined) {
             // Find the endpoint instance if an EndpointId is set
-            this.serverNode?.visit(visitedEndpoint => {
+            this.node?.visit(visitedEndpoint => {
                 if (visitedEndpoint.number === endpointId) {
                     if (endpoint !== undefined) {
                         throw new Error("Duplicate endpoint number? Should never happen");
@@ -185,8 +123,6 @@ export class AllClustersTestInstance extends TestInstance {
     }
 
     async setupServer(): Promise<ServerNode> {
-        Environment.default.get(StorageService).factory = (_namespace: string) => this.config.storage;
-
         const networkId = new Uint8Array(32);
 
         let deviceTestEnableKey = Bytes.fromHex("00112233445566778899aabbccddeeff");
@@ -212,6 +148,7 @@ export class AllClustersTestInstance extends TestInstance {
             ),
             {
                 id: "binford-6100",
+                environment: this.env,
                 network: {
                     port: 5540,
                     //advertiseOnStartup: false,

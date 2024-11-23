@@ -6,10 +6,10 @@
 
 import colors from "ansi-colors";
 import { basename } from "path";
-import { Container } from "../docker/container.js";
-import { Terminal } from "../docker/terminal.js";
 import { Subject } from "../device/subject.js";
 import { Test } from "../device/test.js";
+import { Container } from "../docker/container.js";
+import { Terminal } from "../docker/terminal.js";
 import { ContainerPaths } from "./config.js";
 
 export async function PythonTests(container: Container): Promise<Test[]> {
@@ -31,8 +31,20 @@ export async function PythonTests(container: Container): Promise<Test[]> {
 
 const subjects = new Map<Subject.Factory, Subject>();
 
+let nextStoragePathId = 0;
+const storagePaths = new Map<Subject, string>();
+
+function storagePathFor(subject: Subject) {
+    let store = storagePaths.get(subject);
+    if (store === undefined) {
+        storagePaths.set(subject, (store = `/tmp/py-storage-${nextStoragePathId++}.json`));
+    }
+    return store;
+}
+
 class PythonTest implements Test {
     #filename: string;
+    #storagePath = "";
 
     constructor(
         public name: string,
@@ -55,7 +67,7 @@ class PythonTest implements Test {
      *
      *     connectedhomeip/src/python_testing/chip/testing/matter_testing.py
      */
-    async initializeSubject(container: Container) {
+    async initializeSubject(container: Container, subject: Subject) {
         const terminal = await container.exec(
             [
                 "python3",
@@ -77,6 +89,9 @@ class PythonTest implements Test {
                 // Python uses this in the name of the command pipe
                 "--app-pid",
                 "1",
+
+                "--storage-path",
+                (this.#storagePath = storagePathFor(subject)),
             ],
             Terminal.Line,
         );
@@ -92,7 +107,7 @@ class PythonTest implements Test {
 
     async invoke(container: Container) {
         const terminal = await container.exec(
-            ["python3", this.#filename, "--PICS", ContainerPaths.matterJsPics],
+            ["python3", this.#filename, "--PICS", ContainerPaths.matterJsPics, "--storage-path", this.#storagePath],
             Terminal.Line,
         );
 
@@ -101,7 +116,7 @@ class PythonTest implements Test {
             if (line.indexOf("Final result: PASS") !== -1) {
                 passed = true;
             }
-            MockLogger.injectExternalMessage("CHIP P", spiffy(line));
+            MockLogger.injectExternalMessage("CHIP", spiffy(line));
         }
 
         if (!passed) {

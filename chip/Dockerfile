@@ -101,8 +101,6 @@ RUN find out -name \*.whl | xargs pip install --break-system-packages --upgrade
 # STAGE 5 - extract CHIP subset required for runtime
 FROM base as final
 
-ENV CHIP_ROOT=/
-
 LABEL org.opencontainers.image.title="matter.js CHIP tooling build"
 LABEL org.opencontainers.image.url=https://github.com/matter-js/matter.js-chip
 LABEL org.opencontainers.image.source=https://github.com/project-chip/matter.js/tree/main/packages/testing/chip
@@ -136,8 +134,14 @@ RUN ln -s "$(realpath matter_yamltests)" /scripts/py_matter_yamltests/matter_yam
 WORKDIR /
 COPY --from=build /connectedhomeip/scripts/tests/chipyaml /scripts/tests/chipyaml
 
-# COPY --from=build /connectedhomeip/src/app/zap-templates/zcl/data-model/chip \
-#     /src/app/zap-templates/zcl/data-model/chip
+# Ensure python logic can find the data model (spec_parsing.yaml looks for "scraper_version" but the wheels don't
+# include it)
+ENV PW_PROJECT_ROOT=/
+RUN touch /data_model/master/scraper_version
+
+# YAML tests of course use a different data model
+COPY --from=build /connectedhomeip/src/app/zap-templates/zcl/data-model/chip \
+    /src/app/zap-templates/zcl/data-model/chip
 
 # Tests
 COPY --from=build /connectedhomeip/src/python_testing /src/python_testing
@@ -145,5 +149,3 @@ COPY --from=build /connectedhomeip/src/app/tests/suites /src/app/tests/suites
 
 # Development certs
 COPY --from=build /connectedhomeip/credentials/development/paa-root-certs /credentials/development/paa-root-certs
-
-WORKDIR /tmp

@@ -91,9 +91,16 @@ export namespace log {
 
 export interface TestInstanceConfig {
     storage: Storage;
-    commandPipeFactory: (app: TestInstance, name: string) => Promise<void | CommandPipe>;
     discriminator?: number;
     passcode?: number;
+
+    /**
+     * Initializes a {@link CommandPipe} for the application.
+     *
+     * This function may optionally return the pipe object.  When running tests locally using GenericTestApp this is
+     * necessary to close the pipe.  When running containerized this is unnecessary as the test harness manages pipes.
+     */
+    commandPipeFactory: (app: TestInstance, name: string) => Promise<void | CommandPipe>;
 }
 
 export interface TestInstanceConstructor {

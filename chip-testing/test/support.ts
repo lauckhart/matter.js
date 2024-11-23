@@ -22,10 +22,10 @@ Chip.onClose(async () => {
 export function App(implementation: TestInstanceConstructor): () => Subject {
     let subject: undefined | TestInstance;
 
+    const storage = new StorageBackendMemory();
+
     return () => ({
         async initialize() {
-            const storage = new StorageBackendMemory();
-
             subject = new implementation({
                 storage,
                 commandPipeFactory: async (_subject, name) => {
@@ -51,13 +51,13 @@ export function App(implementation: TestInstanceConstructor): () => Subject {
 
         async close() {
             await subject?.close();
+            subject = undefined;
         },
 
-        backchannel(command: BackchannelCommand) {
+        async backchannel(command: BackchannelCommand) {
             if (subject === undefined) {
                 throw new Error(`Backchannel ${command.name} invoked without active subject`);
             }
-
             return subject.backchannel(command);
         },
     });

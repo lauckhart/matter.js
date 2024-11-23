@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import colors from "ansi-colors";
 import { basename, parse } from "path";
 import { Subject } from "../device/subject.js";
 import { Test } from "../device/test.js";
@@ -26,7 +27,7 @@ const storageDirectories = new Map<Subject, string>();
 function storageDirectoryFor(subject: Subject) {
     let store = storageDirectories.get(subject);
     if (store === undefined) {
-        storageDirectories.set(subject, (store = `/tmp/chip-storage-${nextStorageDirectoryId++}`));
+        storageDirectories.set(subject, (store = `/tmp/yaml-storage-${nextStorageDirectoryId++}`));
     }
     return store;
 }
@@ -73,24 +74,16 @@ class YamlTest implements Test {
             Terminal.Line,
         );
 
-        let passed = false;
         try {
             for await (const line of terminal) {
-                if (deansify(line).match(/Test finished.+ 0 errors .+/)) {
-                    passed = true;
-                }
                 MockLogger.injectExternalMessage("PAIR", line);
             }
         } catch (e) {
             throw new Error("Error pairing test app", { cause: e });
         }
-
-        if (!passed) {
-            throw new Error("Yaml test exited without error but did not indicate successful test");
-        }
     }
 
-    async invoke(container: Container) {
+    async invoke(container: Container, step: (title: string) => void) {
         const terminal = await container.exec(
             [
                 "python3",
@@ -105,8 +98,34 @@ class YamlTest implements Test {
             Terminal.Line,
             { cwd: "/" },
         );
-        for await (const line of terminal) {
-            MockLogger.injectExternalMessage("CHIP Y", line);
+
+        let passed = false;
+
+        for await (let line of terminal) {
+            line = line.replaceAll("\r\n", "\n").replaceAll("\t", "  ");
+
+            const text = deansify(line);
+            const stepMatch = text.match(/^\s*\*{5} Test Step \d+ : (.*)$/);
+            if (stepMatch) {
+                const [, stepName] = stepMatch;
+                step(stepName);
+                line = line.replace(/( Test Step \d+ )/, colors.greenBright.bold("$1"));
+            } else if (line.match(/Test finished.+ 0 errors .+/)) {
+                passed = true;
+            }
+            let first = true;
+            for (let part of line.split("\r")) {
+                if (first) {
+                    first = false;
+                } else {
+                    part = `    ${part}`;
+                }
+                MockLogger.injectExternalMessage("CHIP", part);
+            }
+        }
+
+        if (!passed) {
+            throw new Error("Yaml test exited without error but did not indicate successful test");
         }
     }
 }
