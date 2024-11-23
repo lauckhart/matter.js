@@ -6,7 +6,6 @@
 
 import colors from "ansi-colors";
 import { basename } from "path";
-import { Subject } from "../device/subject.js";
 import { Test } from "../device/test.js";
 import { Container } from "../docker/container.js";
 import { Terminal } from "../docker/terminal.js";
@@ -29,22 +28,9 @@ export async function PythonTests(container: Container): Promise<Test[]> {
     return tests;
 }
 
-const subjects = new Map<Subject.Factory, Subject>();
-
-let nextStorageDirId = 0;
-const storageDirs = new Map<Subject, string>();
-
-function storageDirFor(subject: Subject) {
-    let store = storageDirs.get(subject);
-    if (store === undefined) {
-        storageDirs.set(subject, (store = `/tmp/py-storage-${nextStorageDirId++}.json`));
-    }
-    return store;
-}
-
 class PythonTest implements Test {
     #filename: string;
-    #storageDir = "";
+    domain = "python";
 
     constructor(
         public name: string,
@@ -53,23 +39,12 @@ class PythonTest implements Test {
         this.#filename = filename;
     }
 
-    loadSubject(factory: Subject.Factory) {
-        let subject = subjects.get(factory);
-        if (subject === undefined) {
-            subject = factory();
-            subjects.set(factory, subject);
-        }
-        return subject;
-    }
-
     /**
      * Python commissioning logic is cleverly hidden in:
      *
      *     connectedhomeip/src/python_testing/chip/testing/matter_testing.py
      */
-    async initializeSubject(container: Container, subject: Subject) {
-        this.#storageDir = storageDirFor(subject);
-
+    async initializeSubject(container: Container) {
         const terminal = await container.exec(
             [
                 "python3",
@@ -88,16 +63,13 @@ class PythonTest implements Test {
                 "--discriminator",
                 "1234",
 
-                // Python uses this in the name of the command pipe
+                // Our PID is meaningless within the container but Python uses in the name of the command pipe
                 "--app-pid",
                 "1",
             ],
             Terminal.Line,
             {
-                cwd: this.#storageDir,
-                env: {
-                    TMPDIR: this.#storageDir,
-                },
+                cwd: "/tmp",
             },
         );
 
@@ -112,13 +84,10 @@ class PythonTest implements Test {
 
     async invoke(container: Container) {
         const terminal = await container.exec(
-            ["python3", this.#filename, "--PICS", ContainerPaths.matterJsPics, "--storage-path"],
+            ["python3", this.#filename, "--PICS", ContainerPaths.matterJsPics],
             Terminal.Line,
             {
-                cwd: this.#storageDir,
-                env: {
-                    TMPDIR: this.#storageDir,
-                },
+                cwd: "/tmp",
             },
         );
 

@@ -25,6 +25,6 @@ export namespace Subject {
      * initializes differently for different test implementations.
      */
     export interface Factory {
-        (): Subject;
+        (domain: string): Subject;
     }
 }

@@ -25,7 +25,7 @@ export class TvTestInstance extends NodeTestInstance {
                 AdministratorCommissioningServer.with("Basic"),
             ),
             {
-                id: "binford-6100",
+                id: this.qualify("bingeford-6100"),
                 environment: this.env,
                 network: {
                     port: 5540,

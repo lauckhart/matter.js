@@ -6,7 +6,6 @@
 
 import colors from "ansi-colors";
 import { basename, parse } from "path";
-import { Subject } from "../device/subject.js";
 import { Test } from "../device/test.js";
 import { Container } from "../docker/container.js";
 import { Terminal } from "../docker/terminal.js";
@@ -19,55 +18,20 @@ export async function YamlTests(container: Container): Promise<Test[]> {
     return files.map(filename => new YamlTest(filename));
 }
 
-const subjects = new Map<Subject.Factory, Subject>();
-
-let nextStorageDirId = 0;
-const storageDirs = new Map<Subject, string>();
-
-function storageDirFor(subject: Subject) {
-    let store = storageDirs.get(subject);
-    if (store === undefined) {
-        storageDirs.set(subject, (store = `/tmp/yaml-storage-${nextStorageDirId++}`));
-    }
-    return store;
-}
-
 class YamlTest implements Test {
     name: string;
+    domain = "yaml";
     #filename: string;
-    #storageDirectory = "";
 
     constructor(filename: string) {
         this.name = parse(filename).base;
         this.#filename = filename;
     }
 
-    loadSubject(factory: Subject.Factory) {
-        let subject = subjects.get(factory);
-        if (subject === undefined) {
-            subject = factory();
-            subjects.set(factory, subject);
-        }
-        return subject;
-    }
-
-    /**
-     * Python commissioning logic is cleverly hidden in:
-     *
-     *     connectedhomeip/src/python_testing/chip/testing/matter_testing.py
-     */
-    async initializeSubject(container: Container, subject: Subject) {
-        this.#storageDirectory = storageDirFor(subject);
-        await container.exec(["mkdir", "-p", this.#storageDirectory]);
-
+    async initializeSubject(container: Container) {
         const terminal = await container.exec(
             ["chip-tool", "pairing", "onnetwork-long", "0x12344321", "20202021", "1234"],
             Terminal.Line,
-            {
-                env: {
-                    TMPDIR: this.#storageDirectory,
-                },
-            },
         );
 
         try {
@@ -88,15 +52,8 @@ class YamlTest implements Test {
                 basename(this.#filename),
                 "--PICS",
                 ContainerPaths.matterJsPics,
-                "--configuration_directory",
-                "/src/app/tests/suites/",
             ],
             Terminal.Line,
-            {
-                env: {
-                    TMPDIR: this.#storageDirectory,
-                },
-            },
         );
 
         let passed = false;

@@ -8,7 +8,7 @@ import { Subject } from "../device/subject.js";
 import { Test } from "../device/test.js";
 import type { Container } from "../docker/container.js";
 import type { TestRunner } from "../runner.js";
-import { Internal } from "./internal.js";
+import { State } from "./state.js";
 
 /**
  * CHIP test harness.
@@ -23,10 +23,10 @@ import { Internal } from "./internal.js";
  * We execute test logic within a Docker container available at {@link https://github.com/matter-js/matter.js-chip}.
  */
 export function Chip(subject: Subject.Factory, includeGlob: string, excludeGlob?: string) {
-    const tests = Internal.select(includeGlob, excludeGlob);
+    const tests = State.select(includeGlob, excludeGlob);
 
     for (const test of tests) {
-        Internal.implement(subject, test);
+        State.implement(subject, test);
     }
 }
 
@@ -37,7 +37,7 @@ Chip.options = undefined as undefined | Chip.Options;
 
 Object.defineProperty(Chip, "options", {
     set(options: Chip.Options) {
-        Internal.options = options;
+        State.options = options;
     },
 });
 
@@ -48,11 +48,11 @@ Chip.container = {} as Container;
 
 Object.defineProperty(Chip, "container", {
     get() {
-        if (Internal.container === undefined) {
+        if (State.container === undefined) {
             throw new Error("CHIP container accessed before initialization");
         }
 
-        return Internal.container;
+        return State.container;
     },
 });
 
@@ -60,28 +60,28 @@ Object.defineProperty(Chip, "container", {
  * Initialize.  This must run before defining tests to enable test definition via globs.
  */
 Chip.initialize = async () => {
-    await Internal.initialize();
+    await State.initialize();
 };
 
 /**
  * Shut down.  Deactivates any active testee and removes the test container.
  */
 Chip.close = async () => {
-    await Internal.close();
+    await State.close();
 };
 
 /**
  * Open a command pipe.
  */
 Chip.openPipe = async (name: string) => {
-    return Internal.openPipe(name);
+    return State.openPipe(name);
 };
 
 /**
  * Add teardown logic.
  */
 Chip.onClose = (fn: () => Promise<void>) => {
-    return Internal.onClose(fn);
+    return State.onClose(fn);
 };
 
 export namespace Chip {

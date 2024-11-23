@@ -14,9 +14,9 @@ import { PythonTests } from "./python-tests.js";
 import { YamlTests } from "./yaml-tests.js";
 
 /**
- * Internal state.
+ * Current process-wide state values.
  */
-const State = {
+const Values = {
     initialized: false,
     maybeOptions: undefined as Chip.Options | undefined,
     maybeContainer: undefined as Container | undefined,
@@ -39,9 +39,12 @@ const State = {
 
 let containerLifecycleInstalled = false;
 
-export const Internal = {
+/**
+ * Internal state management for CHIP testing.
+ */
+export const State = {
     get container() {
-        const container = State.maybeContainer;
+        const container = Values.maybeContainer;
 
         if (container === undefined) {
             throw new Error("Docker container is not initialized");
@@ -51,18 +54,18 @@ export const Internal = {
     },
 
     set options(options: Chip.Options) {
-        State.maybeOptions = options;
+        Values.maybeOptions = options;
     },
 
     /**
      * Setup.
      */
     async initialize() {
-        if (State.initialized) {
+        if (Values.initialized) {
             return;
         }
 
-        const { progress } = State.runner;
+        const { progress } = Values.runner;
         return await progress.run(
             `Initialize container ${progress.emphasize(Constants.containerName)} from ${progress.emphasize(Constants.imageName)}`,
             initialize,
@@ -76,7 +79,7 @@ export const Internal = {
         await deactivateSubject();
 
         let closer;
-        while ((closer = State.closers.pop())) {
+        while ((closer = Values.closers.pop())) {
             try {
                 await closer();
             } catch (e) {
@@ -89,7 +92,7 @@ export const Internal = {
      * Add cleanup logic.
      */
     onClose(fn: () => Promise<void>) {
-        State.closers.push(fn);
+        Values.closers.push(fn);
     },
 
     /**
@@ -97,7 +100,7 @@ export const Internal = {
      * wildcard.
      */
     select(include: string, exclude?: string) {
-        let tests = filterWithGlob(State.tests, include);
+        let tests = filterWithGlob(Values.tests, include);
 
         if (!tests.length) {
             throw new Error(`Test glob ${include} matched no tests`);
@@ -122,14 +125,14 @@ export const Internal = {
     implement(subject: Subject.Factory, tester: Test) {
         if (!containerLifecycleInstalled) {
             containerLifecycleInstalled = true;
-            beforeRun(Internal.initialize);
-            afterRun(Internal.close);
+            beforeRun(State.initialize);
+            afterRun(State.close);
         }
 
         it(tester.description ?? tester.name, async () => {
             await activateSubject(subject, tester);
             // TODO - show step title in progress
-            await tester.invoke(Internal.container, (_title: string) => {});
+            await tester.invoke(State.container, (_title: string) => {});
         }).timeout(tester.timeout ?? Constants.defaultTimeout);
     },
 
@@ -137,29 +140,32 @@ export const Internal = {
      * Pass a backchannel command to the active subject.
      */
     backchannel(command: BackchannelCommand) {
-        if (State.activeSubject === undefined) {
+        if (Values.activeSubject === undefined) {
             throw new Error(`Backchannel ${command.name} without active test subject`);
         }
 
-        return State.activeSubject.backchannel(command);
+        return Values.activeSubject.backchannel(command);
     },
 
     /**
      * Open a back-channel command pipe.
      */
     async openPipe(name: string) {
-        if (State.activePipes.has(name)) {
+        if (Values.activePipes.has(name)) {
             return;
         }
 
         const pipe = new ContainerCommandPipe(this.container, this, name);
 
-        Internal.onClose(async () => {
+        State.onClose(async () => {
             await pipe.close();
         });
     },
 };
 
+/**
+ * Perform one-time initialization required for CHIP testing.
+ */
 async function initialize() {
     await configureContainer();
     await configurePics();
@@ -167,6 +173,9 @@ async function initialize() {
     await configureNetwork();
 }
 
+/**
+ * Start a container based on the matter.js's Docker image.
+ */
 async function configureContainer() {
     const docker = new Docker();
 
@@ -177,15 +186,12 @@ async function configureContainer() {
 
     await docker.pull(Constants.imageName, Constants.platform);
 
-    const container = (State.maybeContainer = await docker.open({
+    const container = (Values.maybeContainer = await docker.open({
         image: Constants.imageName,
         name: Constants.containerName,
         autoRemove: true,
         network: "host",
         platform: Constants.platform,
-
-        // Ensure tools that drop files randomly to cwd get reset when we clear temp
-        cwd: "/tmp",
 
         // Keep the container running until we are through with it
         openStdin: true,
@@ -196,7 +202,7 @@ async function configureContainer() {
         },
     }));
 
-    Internal.onClose(async () => {
+    State.onClose(async () => {
         const docker = container.docker;
 
         try {
@@ -211,42 +217,59 @@ async function configureContainer() {
             console.error("Error closing docker connection:", e);
         }
 
-        State.maybeContainer = undefined;
+        Values.maybeContainer = undefined;
     });
 }
 
+/**
+ * Create a PICS file in the container appropriate for matter.js.
+ */
 async function configurePics() {
-    const ciPics = await Internal.container.readFile(ContainerPaths.chipPics);
+    const ciPics = await State.container.readFile(ContainerPaths.chipPics);
     const pics = new PicsFile(ciPics, true);
 
     const overrides = new PicsFile(Constants.inputPicsFile);
     pics.patch(overrides);
 
-    await Internal.container.writeFile(ContainerPaths.matterJsPics, pics.toString());
+    await State.container.writeFile(ContainerPaths.matterJsPics, pics.toString());
 }
 
+type TaggedTest = Test & { semanticName: string };
+
+/**
+ * Load tests defined in the container.
+ */
 async function configureTests() {
     // Load each type of test
-    State.tests.push(...(await YamlTests(Internal.container)));
-    State.tests.push(...(await PythonTests(Internal.container)));
+    Values.tests.push(...(await YamlTests(State.container)));
+    Values.tests.push(...(await PythonTests(State.container)));
 
     // Loaded tests are paths; convert to a normal form that just consists of the actual purpose of the test
-    for (const test of State.tests) {
+    for (const test of Values.tests) {
         test.name = testNameOf(test.name);
     }
 
-    // Try to order the tests logically
-    State.tests.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+    // Attempt to order tests logically
+    for (const test of Values.tests) {
+        (test as TaggedTest).semanticName = semanticNameOf(test.name);
+    }
+    Values.tests.sort(compareSemanticNames);
 
-    State.initialized = true;
+    Values.initialized = true;
 }
 
+/**
+ * Filter tests based on name using a UNIX-glob-like pattern.
+ */
 function filterWithGlob(list: Test[], glob: string, invert = false) {
     const globPattern = glob.replace(/\*/g, "[^\\/]+");
     const pattern = new RegExp(`^${globPattern}$`);
     return list.filter(s => !!s.name.match(pattern) === !invert);
 }
 
+/**
+ * Normalize the test name reported by the underlying test adapter.
+ */
 function testNameOf(path: string) {
     let name = basename(path);
     name = name.slice(0, name.length - extname(name).length);
@@ -256,10 +279,41 @@ function testNameOf(path: string) {
     return name;
 }
 
-async function configureNetwork() {
-    const accessoryServer = await AccessoryServer.create(Internal);
+/**
+ * Extract semantic meaning from test names for sorting purposes.
+ */
+function semanticNameOf(name: string) {
+    return name
+        .toLowerCase()
+        .split("_")
+        .map(segment => (segment.match(/^[0-9]+$/) ? segment.padStart(8, "0") : segment))
+        .join("_");
+}
 
-    Internal.onClose(async () => {
+/**
+ * Compare semantic test names.
+ */
+function compareSemanticNames(a: Test, b: Test) {
+    const nameA = (a as TaggedTest).semanticName;
+    const nameB = (b as TaggedTest).semanticName;
+
+    if (nameA < nameB) {
+        return -1;
+    }
+    if (nameA > nameB) {
+        return 1;
+    }
+    return 0;
+}
+
+/**
+ * Network "configuration" consists of activating the {@link AccessoryServer} used to field backchannel commands from
+ * YAML tests and rewriting hard-coded addresses in files for python tests.
+ */
+async function configureNetwork() {
+    const accessoryServer = await AccessoryServer.create(State);
+
+    State.onClose(async () => {
         try {
             await accessoryServer.close();
         } catch (e) {
@@ -274,11 +328,11 @@ async function configureNetwork() {
     // larger task.
     //
     // Instead we just rewrite the address back to the default 127.0.0.1 used by every other platform.
-    await Internal.container.exec(["sed", "-i", "s/10.10.10.5/127.0.0.1/g", ContainerPaths.accessoryClient]);
+    await State.container.exec(["sed", "-i", "s/10.10.10.5/127.0.0.1/g", ContainerPaths.accessoryClient]);
 
     // While we're at it we rewrite the port so we can rely on dynamic allocation.  This ensures multiple suites may run
     // in parallel and something unexpectedly running on 9000 doesn't interfere with us.
-    await Internal.container.exec([
+    await State.container.exec([
         "sed",
         "-i",
         `s/_PORT = 9000/_PORT = ${accessoryServer.port}/g`,
@@ -286,49 +340,103 @@ async function configureNetwork() {
     ]);
 }
 
-async function activateSubject(factory: Subject.Factory, test: Test) {
-    const subject = test.loadSubject(factory);
+const storageDirs = new WeakMap<Subject, string>();
+let nextStorageDirId = 1;
 
-    if (State.activeSubject === subject) {
+/**
+ * Prepare the test environment for a subject.
+ *
+ * On first activation, commissions the subject.  Thereafter the subject is either already active or reactivated here.
+ */
+async function activateSubject(factory: Subject.Factory, test: Test) {
+    const subject = loadSubject(factory, test.domain);
+
+    if (Values.activeSubject === subject) {
         return;
     }
 
-    const { progress } = State.runner;
+    const { progress } = Values.runner;
 
-    if (State.activeSubject) {
+    if (Values.activeSubject) {
         await progress.subtask("deactivating previous subject", deactivateSubject);
     }
 
     await progress.subtask("activating subject", async () => {
-        if (!State.initializedSubjects.has(subject)) {
+        if (!Values.initializedSubjects.has(subject)) {
             await subject.initialize();
-            Internal.onClose(subject.close.bind(subject));
+            State.onClose(subject.close.bind(subject));
 
             await subject.start();
-            await test.initializeSubject(Internal.container, subject);
 
-            State.initializedSubjects.add(subject);
+            await activateStorageFor(subject);
+            await test.initializeSubject(State.container, subject);
+
+            Values.initializedSubjects.add(subject);
         } else {
             await subject.start();
+            await activateStorageFor(subject);
         }
     });
 
-    State.activeSubject = subject;
+    Values.activeSubject = subject;
+}
+
+const subjects = new Map<Subject.Factory, Record<string, Subject>>();
+
+/**
+ * Obtain a subject.  Subjects are qualified by factory and test domain.
+ */
+function loadSubject(factory: Subject.Factory, domain: string) {
+    let forFactory = subjects.get(factory);
+    if (forFactory === undefined) {
+        subjects.set(factory, (forFactory = {}));
+    }
+
+    let subject = forFactory[domain];
+    if (subject === undefined) {
+        subject = forFactory[domain] = factory(domain);
+    }
+
+    return subject;
 }
 
 /**
- * Close the current test app, if any.
+ * Stop the current test subject, if any.
+ *
+ * This stops the subject but leaves it initialized (commissioned).  This allows us to quickly swap subjects depending
+ * on the current test.
+ *
+ * Final teardown of subjects occurs once all tests complete.
  */
 async function deactivateSubject() {
-    if (State.activeSubject === undefined) {
+    if (Values.activeSubject === undefined) {
         return;
     }
 
     try {
-        await State.activeSubject.stop();
+        await Values.activeSubject.stop();
     } catch (e) {
         console.warn("Error stopping test subject", e);
     }
 
-    State.activeSubject = undefined;
+    Values.activeSubject = undefined;
+}
+
+/**
+ * If you look in /connectedhomeip/src/platform/linux/CHIPLinuxStorage.h you will see default paths hard-coded to /tmp
+ * (irregardless of TMPDIR).  AFAICT these "defaults" are not configurable.  This is not helpful when running multiple
+ * DUTs commissioned simultaneously under different profiles.
+ *
+ * Further, there are various configuration options required to specify different storage pools across two different
+ * CHIP certification test frameworks.
+ *
+ * Rather than mess around with all of this we just swap /tmp to point at storage dedicated to each DUT.
+ */
+async function activateStorageFor(subject: Subject) {
+    let dir = storageDirs.get(subject);
+    if (dir === undefined) {
+        storageDirs.set(subject, (dir = `/storage/${nextStorageDirId++}`));
+    }
+
+    await State.container.exec(["bash", "-c", `mkdir -p "${dir}" && rm -rf /tmp && ln -s "${dir}" /tmp`]);
 }

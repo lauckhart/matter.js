@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Bytes } from "@matter/general";
+import { Bytes, InternalError } from "@matter/general";
 import { Endpoint, NumberTag, ServerNode } from "@matter/main";
 import {
     AdministratorCommissioningServer,
@@ -75,9 +75,9 @@ import { SwitchSimulator } from "./simulators/SwitchSimulator.js";
 
 export class AllClustersTestInstance extends NodeTestInstance {
     /** Set up the test instance MatterServer. */
-    override async setup() {
+    override async initialize() {
         await this.activateCommandPipe("all_clusters");
-        await super.setup();
+        await super.initialize();
     }
 
     /** Process a backchannel command */
@@ -91,7 +91,7 @@ export class AllClustersTestInstance extends NodeTestInstance {
             this.node?.visit(visitedEndpoint => {
                 if (visitedEndpoint.number === endpointId) {
                     if (endpoint !== undefined) {
-                        throw new Error("Duplicate endpoint number? Should never happen");
+                        throw new InternalError("Duplicate endpoint number? Should never happen");
                     }
                     endpoint = visitedEndpoint;
                 }
@@ -125,7 +125,7 @@ export class AllClustersTestInstance extends NodeTestInstance {
     async setupServer(): Promise<ServerNode> {
         const networkId = new Uint8Array(32);
 
-        let deviceTestEnableKey = Bytes.fromHex("00112233445566778899aabbccddeeff");
+        let deviceTestEnableKey = Bytes.fromHex("000102030405060708090a0b0c0d0e0f");
         const argsEnableKeyIndex = process.argv.indexOf("--enable-key");
         if (argsEnableKeyIndex !== -1) {
             deviceTestEnableKey = Bytes.fromHex(process.argv[argsEnableKeyIndex + 1]);
@@ -147,7 +147,7 @@ export class AllClustersTestInstance extends NodeTestInstance {
                 UserLabelServer,
             ),
             {
-                id: "binford-6100",
+                id: this.qualify("binford-6100"),
                 environment: this.env,
                 network: {
                     port: 5540,

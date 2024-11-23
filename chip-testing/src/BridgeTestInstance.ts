@@ -30,7 +30,7 @@ export class BridgeTestInstance extends NodeTestInstance {
                 NetworkCommissioningServer.with("EthernetNetworkInterface"),
             ),
             {
-                id: "binford-6100",
+                id: this.qualify("bridgeford-6100"),
                 environment: this.env,
                 network: {
                     port: 5540,

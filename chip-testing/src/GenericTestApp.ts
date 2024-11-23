@@ -65,7 +65,7 @@ export abstract class TestInstance {
         }
     }
 
-    abstract setup(): Promise<void>;
+    abstract initialize(): Promise<void>;
     abstract start(): Promise<void>;
 
     async stop(): Promise<void> {
@@ -93,6 +93,7 @@ export interface TestInstanceConfig {
     storage: Storage;
     discriminator?: number;
     passcode?: number;
+    domain?: string;
 
     /**
      * Initializes a {@link CommandPipe} for the application.
@@ -138,7 +139,7 @@ export async function startTestApp(
         passcode: getIntParameter("passcode"),
     });
 
-    await testInstance.setup();
+    await testInstance.initialize();
     await testInstance.start();
 
     console.log(`======> Waiting for tests`);

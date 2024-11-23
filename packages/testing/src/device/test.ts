@@ -12,9 +12,9 @@ import { Subject } from "./subject.js";
  */
 export interface Test {
     name: string;
+    domain: string;
     description?: string;
     timeout?: number;
-    loadSubject(subject: Subject.Factory): Subject;
     initializeSubject(container: Container, subject: Subject): Promise<void>;
     invoke(container: Container, step: (title: string) => void): Promise<void>;
 }

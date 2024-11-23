@@ -33,7 +33,7 @@ export abstract class NodeTestInstance extends TestInstance {
     protected abstract setupServer(): Promise<ServerNode>;
 
     /** Set up the test instance MatterServer. */
-    async setup() {
+    async initialize() {
         try {
             //await this.storageManager.initialize(); // hacky but works
             this.#node = await this.setupServer();
@@ -90,7 +90,7 @@ export abstract class NodeTestInstance extends TestInstance {
         switch (command.name) {
             case "reboot":
                 await this.close();
-                await this.setup();
+                await this.initialize();
                 await this.start();
                 break;
 
@@ -102,5 +102,13 @@ export abstract class NodeTestInstance extends TestInstance {
                 await super.backchannel(command);
                 break;
         }
+    }
+
+    protected qualify(id: string) {
+        const { domain } = this.config;
+        if (domain) {
+            return `${id}-${domain}`;
+        }
+        return id;
     }
 }

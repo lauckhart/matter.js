@@ -310,6 +310,11 @@ export class ServerNetworkRuntime extends NetworkRuntime {
     }
 
     protected override async stop() {
+        if (this.#mdnsBroadcaster) {
+            await this.#mdnsBroadcaster.close();
+            this.#mdnsBroadcaster = undefined;
+        }
+
         this.#observers.close();
 
         await this.owner.env.close(DeviceCommissioner);

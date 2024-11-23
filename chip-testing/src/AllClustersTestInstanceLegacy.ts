@@ -34,7 +34,7 @@ export class AllClustersTestInstanceLegacy extends TestInstance {
     }
 
     /** Set up the test instance MatterServer. */
-    async setup() {
+    async initialize() {
         try {
             await this.storageManager.initialize(); // hacky but works
             this.matterServer = new MatterServer(this.storageManager /*, { mdnsInterface: "en0" } */);
