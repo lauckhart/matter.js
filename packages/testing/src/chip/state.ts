@@ -14,7 +14,7 @@ import { PythonTests } from "./python-tests.js";
 import { YamlTests } from "./yaml-tests.js";
 
 /**
- * Current process-wide state values.
+ * Current process-wide state values.  Internal to this module.
  */
 const Values = {
     initialized: false,
@@ -25,6 +25,9 @@ const Values = {
     tests: Array<Test>(),
     activePipes: new Set<string>(),
     closers: Array<() => Promise<void>>(),
+    subjects: new Map<Subject.Factory, Record<string, Subject>>(),
+    snapshots: new Map<Subject, {}>(),
+    containerLifecycleInstalled: false,
 
     get runner() {
         const runner = this.maybeOptions?.runner;
@@ -36,8 +39,6 @@ const Values = {
         return runner;
     },
 };
-
-let containerLifecycleInstalled = false;
 
 /**
  * Internal state management for CHIP testing.
@@ -123,8 +124,8 @@ export const State = {
      * Installs a test into the current Mocha suite that activates {@link subject} then runs {@link tester}.
      */
     implement(subject: Subject.Factory, tester: Test) {
-        if (!containerLifecycleInstalled) {
-            containerLifecycleInstalled = true;
+        if (!Values.containerLifecycleInstalled) {
+            Values.containerLifecycleInstalled = true;
             beforeRun(State.initialize);
             afterRun(State.close);
         }
@@ -340,9 +341,6 @@ async function configureNetwork() {
     ]);
 }
 
-const storageDirs = new WeakMap<Subject, string>();
-let nextStorageDirId = 1;
-
 /**
  * Prepare the test environment for a subject.
  *
@@ -362,34 +360,48 @@ async function activateSubject(factory: Subject.Factory, test: Test) {
     }
 
     await progress.subtask("activating subject", async () => {
+        await State.container.exec(["bash", "-c", "rm -rf /tmp/*"]);
+
         if (!Values.initializedSubjects.has(subject)) {
             await subject.initialize();
             State.onClose(subject.close.bind(subject));
 
             await subject.start();
 
-            await activateStorageFor(subject);
             await test.initializeSubject(State.container, subject);
+
+            const dir = storageDirFor(subject);
+
+            // Capture state snapshot
+            Values.snapshots.set(subject, await subject.snapshot());
+            await State.container.exec(["bash", "-c", `mkdir -p "${dir}" && cp -a /tmp/* ${dir}`]);
 
             Values.initializedSubjects.add(subject);
         } else {
+            const snapshot = Values.snapshots.get(subject);
+            if (snapshot === undefined) {
+                // Internal error
+                throw new Error(`No snapshot captured for ${subject.id}`);
+            }
+
+            // Restore state snapshot
+            await subject.restore(snapshot);
+            await State.container.exec(["bash", "-c", `cp -a "/storage/${storageDirFor(subject)}" /tmp`]);
+
             await subject.start();
-            await activateStorageFor(subject);
         }
     });
 
     Values.activeSubject = subject;
 }
 
-const subjects = new Map<Subject.Factory, Record<string, Subject>>();
-
 /**
  * Obtain a subject.  Subjects are qualified by factory and test domain.
  */
 function loadSubject(factory: Subject.Factory, domain: string) {
-    let forFactory = subjects.get(factory);
+    let forFactory = Values.subjects.get(factory);
     if (forFactory === undefined) {
-        subjects.set(factory, (forFactory = {}));
+        Values.subjects.set(factory, (forFactory = {}));
     }
 
     let subject = forFactory[domain];
@@ -430,13 +442,12 @@ async function deactivateSubject() {
  * Further, there are various configuration options required to specify different storage pools across two different
  * CHIP certification test frameworks.
  *
- * Rather than mess around with all of this we just swap /tmp to point at storage dedicated to each DUT.
+ * So we don't bother even trying to specify a storage directory explicitly.  We instead make sure that /tmp is always
+ * correctly configured for the active test subject.
+ *
+ * This works out fine because we also reset state to "first commissioned" whenever starting a new test.  Within the
+ * container this means copying the files into /tmp.
  */
-async function activateStorageFor(subject: Subject) {
-    let dir = storageDirs.get(subject);
-    if (dir === undefined) {
-        storageDirs.set(subject, (dir = `/storage/${nextStorageDirId++}`));
-    }
-
-    await State.container.exec(["bash", "-c", `mkdir -p "${dir}" && rm -rf /tmp && ln -s "${dir}" /tmp`]);
+async function storageDirFor(subject: Subject) {
+    return `/storage/${subject.id}`;
 }

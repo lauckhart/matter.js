@@ -4,20 +4,24 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Environment, InternalError, StorageService, type ServerNode } from "@matter/main";
-import { BackchannelCommand } from "@matter/testing";
-import { TestInstance, log } from "./GenericTestApp.js";
+import { Environment, InternalError, StorageService, TimepointStorage, type ServerNode } from "@matter/main";
+import { BackchannelCommand, Subject } from "@matter/testing";
+import { TestInstance, TestInstanceConfig, log } from "./GenericTestApp.js";
 
 /**
  * {@link serverNode}-based test subject.
  */
-export abstract class NodeTestInstance extends TestInstance {
+export abstract class NodeTestInstance extends TestInstance implements Subject {
     #env?: Environment;
     #node?: ServerNode;
 
+    constructor(config: TestInstanceConfig) {
+        super(config);
+    }
+
     get node() {
         if (this.#node === undefined) {
-            throw new InternalError("Node is uninitialized");
+            throw new InternalError("Test subject node accessed before initialization");
         }
         return this.#node;
     }
@@ -86,6 +90,16 @@ export abstract class NodeTestInstance extends TestInstance {
         log.directive(`======> ${this.appName}: Instance stopped`);
     }
 
+    async snapshot() {
+        TimepointStorage.assert(this.config.storage);
+        return this.config.storage.snapshot();
+    }
+
+    async restore(snapshot: {}) {
+        TimepointStorage.assert(this.config.storage);
+        this.config.storage.restore(snapshot);
+    }
+
     override async backchannel(command: BackchannelCommand) {
         switch (command.name) {
             case "reboot":
@@ -95,20 +109,14 @@ export abstract class NodeTestInstance extends TestInstance {
                 break;
 
             case "factoryReset":
-                await this.node.reset();
+                // Factory reset makes the node unusable from the test suite.  Should we restore a snapshot from "newly
+                // commissioned" state?  Somehow reset then recommission?  For now just ignoring
+                // await this.node.reset();
                 break;
 
             default:
                 await super.backchannel(command);
                 break;
         }
-    }
-
-    protected qualify(id: string) {
-        const { domain } = this.config;
-        if (domain) {
-            return `${id}-${domain}`;
-        }
-        return id;
     }
 }

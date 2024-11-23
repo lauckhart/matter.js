@@ -16,6 +16,8 @@ import { NodeTestInstance } from "./NodeTestInstance.js";
 import { TestLowPowerServer } from "./cluster/TestLowPowerServer.js";
 
 export class TvTestInstance extends NodeTestInstance {
+    static override id = "bingeford-6100";
+
     serverNode: ServerNode | undefined;
 
     async setupServer(): Promise<ServerNode> {
@@ -25,7 +27,7 @@ export class TvTestInstance extends NodeTestInstance {
                 AdministratorCommissioningServer.with("Basic"),
             ),
             {
-                id: this.qualify("bingeford-6100"),
+                id: this.id,
                 environment: this.env,
                 network: {
                     port: 5540,

@@ -9,6 +9,7 @@ import { Chip, Subject } from "@matter/testing";
 import { AllClustersTestInstance } from "../src/AllClustersTestInstance.js";
 import { BridgeTestInstance } from "../src/BridgeTestInstance.js";
 import { TestInstanceConstructor } from "../src/GenericTestApp.js";
+import { NodeTestInstance } from "../src/NodeTestInstance.js";
 
 Chip.onClose(async () => {
     // Terminate and/or wait for any long-running services such as MdnsService
@@ -19,7 +20,7 @@ Chip.onClose(async () => {
     }
 });
 
-export function App(implementation: TestInstanceConstructor): (domain: string) => Subject {
+export function App(implementation: TestInstanceConstructor<NodeTestInstance>): (domain: string) => Subject {
     return (domain: string) => {
         return new implementation({
             domain,

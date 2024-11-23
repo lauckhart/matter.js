@@ -70,10 +70,17 @@ import { TestHepaFilterMonitoringServer } from "./cluster/TestHEPAFilterMonitori
 import { TestIdentifyServer } from "./cluster/TestIdentifyServer.js";
 import { TestLevelControlServer } from "./cluster/TestLevelControlServer.js";
 import { TestWindowCoveringServer } from "./cluster/TestWindowCoveringServer.js";
+import { TestInstanceConfig } from "./GenericTestApp.js";
 import { NodeTestInstance } from "./NodeTestInstance.js";
 import { SwitchSimulator } from "./simulators/SwitchSimulator.js";
 
 export class AllClustersTestInstance extends NodeTestInstance {
+    static override id = "binford-6100";
+
+    constructor(config: TestInstanceConfig) {
+        super(config);
+    }
+
     /** Set up the test instance MatterServer. */
     override async initialize() {
         await this.activateCommandPipe("all_clusters");
@@ -147,7 +154,7 @@ export class AllClustersTestInstance extends NodeTestInstance {
                 UserLabelServer,
             ),
             {
-                id: this.qualify("binford-6100"),
+                id: this.id,
                 environment: this.env,
                 network: {
                     port: 5540,

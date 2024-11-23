@@ -15,6 +15,8 @@ import { DeviceTypeId, VendorId } from "@matter/main/types";
 import { NodeTestInstance } from "./NodeTestInstance.js";
 
 export class BridgeTestInstance extends NodeTestInstance {
+    static override id = "bridgeford-6100";
+
     serverNode: ServerNode | undefined;
 
     async setupServer(): Promise<ServerNode> {
@@ -30,7 +32,7 @@ export class BridgeTestInstance extends NodeTestInstance {
                 NetworkCommissioningServer.with("EthernetNetworkInterface"),
             ),
             {
-                id: this.qualify("bridgeford-6100"),
+                id: this.id,
                 environment: this.env,
                 network: {
                     port: 5540,

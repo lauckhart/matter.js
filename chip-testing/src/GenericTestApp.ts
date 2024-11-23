@@ -37,8 +37,16 @@ export function getIntParameter(name: string) {
     return intValue;
 }
 
+const allocatedIds = new Set();
+
 export abstract class TestInstance {
+    static id = "test-node";
+    #id: string;
     #commandPipe?: CommandPipe;
+
+    get id() {
+        return this.#id;
+    }
 
     get baseAppName() {
         return this.constructor.name.replace(/TestInstance(?:Legacy)?/, "");
@@ -51,7 +59,21 @@ export abstract class TestInstance {
         return this.baseAppName;
     }
 
-    constructor(protected config: TestInstanceConfig) {}
+    constructor(protected config: TestInstanceConfig) {
+        this.#id = (this.constructor as { (): unknown; id: string }).id;
+        if (config.domain !== undefined) {
+            this.#id = `${this.#id}-${config.domain}`;
+        }
+        let nextId = 1;
+        while (allocatedIds.has(this.#id)) {
+            const qualifiedId = `${this.#id}-${nextId++}`;
+            if (!allocatedIds.has(qualifiedId)) {
+                this.#id = qualifiedId;
+                allocatedIds.add(this.#id);
+                break;
+            }
+        }
+    }
 
     async activateCommandPipe(name: string) {
         if (this.#commandPipe === undefined) {
@@ -104,8 +126,8 @@ export interface TestInstanceConfig {
     commandPipeFactory: (app: TestInstance, name: string) => Promise<void | CommandPipe>;
 }
 
-export interface TestInstanceConstructor {
-    new (config: TestInstanceConfig): TestInstance;
+export interface TestInstanceConstructor<T extends TestInstance = TestInstance> {
+    new (config: TestInstanceConfig): T;
 }
 
 export async function startTestApp(

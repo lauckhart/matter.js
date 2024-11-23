@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { StorageError, SyncStorage } from "./Storage.js";
+import { deepCopy } from "#util/DeepCopy.js";
+import { StorageError, SyncStorage, TimepointStorage } from "./Storage.js";
 import { SupportedStorageTypes } from "./StringifyTools.js";
 
-export class StorageBackendMemory extends SyncStorage {
+export class StorageBackendMemory extends SyncStorage implements TimepointStorage {
     protected isInitialized = false;
 
     constructor(protected store: any = {}) {
@@ -35,6 +36,20 @@ export class StorageBackendMemory extends SyncStorage {
         if (this.initialized) throw new StorageError("Storage already initialized!");
         this.isInitialized = true;
         // nothing else to do
+    }
+
+    /**
+     * Capture current state.
+     */
+    snapshot() {
+        return deepCopy(this.store);
+    }
+
+    /**
+     * Restore previously snapshotted state.
+     */
+    restore(snapshot: {}) {
+        this.store = deepCopy(snapshot);
     }
 
     close() {

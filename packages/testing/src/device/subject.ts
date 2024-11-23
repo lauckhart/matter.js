@@ -10,10 +10,13 @@ import { BackchannelCommand } from "./backchannel.js";
  * The test subject.
  */
 export interface Subject {
+    id: string;
     initialize(): Promise<void>;
     start(): Promise<void>;
     stop(): Promise<void>;
     close(): Promise<void>;
+    snapshot(): Promise<{}>;
+    restore(snapshot: {}): Promise<void>;
     backchannel(command: BackchannelCommand): Promise<void>;
 }
 
