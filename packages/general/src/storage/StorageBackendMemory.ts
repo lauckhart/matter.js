@@ -5,10 +5,10 @@
  */
 
 import { deepCopy } from "#util/DeepCopy.js";
-import { StorageError, SyncStorage, TimepointStorage } from "./Storage.js";
+import { CloneableStorage, StorageError, SyncStorage } from "./Storage.js";
 import { SupportedStorageTypes } from "./StringifyTools.js";
 
-export class StorageBackendMemory extends SyncStorage implements TimepointStorage {
+export class StorageBackendMemory extends SyncStorage implements CloneableStorage {
     protected isInitialized = false;
 
     constructor(protected store: any = {}) {
@@ -38,18 +38,10 @@ export class StorageBackendMemory extends SyncStorage implements TimepointStorag
         // nothing else to do
     }
 
-    /**
-     * Capture current state.
-     */
-    snapshot() {
-        return deepCopy(this.store);
-    }
-
-    /**
-     * Restore previously snapshotted state.
-     */
-    restore(snapshot: {}) {
-        this.store = deepCopy(snapshot);
+    clone() {
+        const clone = new StorageBackendMemory(deepCopy(this.store));
+        clone.initialize();
+        return clone;
     }
 
     close() {

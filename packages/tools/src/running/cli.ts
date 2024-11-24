@@ -6,10 +6,7 @@
 
 import { dirname, resolve } from "path";
 import { exit } from "process";
-import { Builder } from "../building/builder.js";
-import { Graph } from "../building/graph.js";
-import { Project } from "../building/project.js";
-import { Package } from "../util/package.js";
+import { ensureCompiled } from "./ensure-compiled.js";
 import { executeNode } from "./execute.js";
 
 /**
@@ -45,34 +42,7 @@ export async function main(argv = process.argv) {
         dir = dirname(script);
     }
 
-    const pkg = Package.forPath(dir);
-
-    let format: "esm" | "cjs" | "none";
-    if (!pkg.hasSrc) {
-        format = "none";
-    } else if (pkg.supportsEsm) {
-        format = "esm";
-    } else if (pkg.supportsCjs) {
-        format = "cjs";
-    } else {
-        console.error("Error: Could not identify project format");
-        exit(2);
-    }
-
-    // In development we currently build package and dependencies unconditionally before running
-    const isDevelopment = !dir.match(/[\\/]node_modules[\\/]/);
-    if (isDevelopment && format !== "none") {
-        const builder = new Builder();
-        const dependencies = await Graph.forProject(dir);
-        if (dependencies) {
-            // Project is in a workspace; build along with dependencies from the same workspace
-            await dependencies.build(builder, false);
-        } else {
-            // Project is not in a workspace; only build the project
-            const project = new Project(pkg);
-            await builder.build(project);
-        }
-    }
+    const { format, pkg } = await ensureCompiled(dir);
 
     // Determine the actual script to run
     if (format !== "none") {

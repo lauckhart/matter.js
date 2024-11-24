@@ -4,7 +4,7 @@ import { Subject } from "../device/subject.js";
 import { Test } from "../device/test.js";
 import { Container } from "../docker/container.js";
 import { Docker } from "../docker/docker.js";
-import { afterRun, beforeRun } from "../mocha.js";
+import { afterOne, afterRun, beforeOne, beforeRun } from "../mocha.js";
 import { AccessoryServer } from "./accessory-server.js";
 import type { Chip } from "./chip.js";
 import { Constants, ContainerPaths } from "./config.js";
@@ -77,6 +77,7 @@ export const State = {
      * Teardown.
      */
     async close() {
+        // Subjects deactivate automatically but may be dangling if there was an error
         await deactivateSubject();
 
         let closer;
@@ -130,11 +131,13 @@ export const State = {
             afterRun(State.close);
         }
 
-        it(tester.description ?? tester.name, async () => {
-            await activateSubject(subject, tester);
-            // TODO - show step title in progress
-            await tester.invoke(State.container, (_title: string) => {});
+        const test = it(tester.description ?? tester.name, async () => {
+            const { reporter } = Values.runner;
+            await tester.invoke(State.container, reporter.beginSection.bind(reporter));
         }).timeout(tester.timeout ?? Constants.defaultTimeout);
+
+        beforeOne(test, () => activateSubject(subject, tester));
+        afterOne(test, () => deactivateSubject());
     },
 
     /**
@@ -355,10 +358,6 @@ async function activateSubject(factory: Subject.Factory, test: Test) {
 
     const { progress } = Values.runner;
 
-    if (Values.activeSubject) {
-        await progress.subtask("deactivating previous subject", deactivateSubject);
-    }
-
     await progress.subtask("activating subject", async () => {
         await State.container.exec(["bash", "-c", "rm -rf /tmp/*"]);
 
@@ -374,7 +373,7 @@ async function activateSubject(factory: Subject.Factory, test: Test) {
 
             // Capture state snapshot
             Values.snapshots.set(subject, await subject.snapshot());
-            await State.container.exec(["bash", "-c", `mkdir -p "${dir}" && cp -a /tmp/* ${dir}`]);
+            await State.container.exec(["bash", "-c", `mkdir -p ${dir} && cp -a /tmp/* ${dir}`]);
 
             Values.initializedSubjects.add(subject);
         } else {
@@ -386,7 +385,7 @@ async function activateSubject(factory: Subject.Factory, test: Test) {
 
             // Restore state snapshot
             await subject.restore(snapshot);
-            await State.container.exec(["bash", "-c", `cp -a "/storage/${storageDirFor(subject)}" /tmp`]);
+            await State.container.exec(["bash", "-c", `cp -a ${storageDirFor(subject)}/* /tmp`]);
 
             await subject.start();
         }
@@ -428,10 +427,10 @@ async function deactivateSubject() {
     try {
         await Values.activeSubject.stop();
     } catch (e) {
-        console.warn("Error stopping test subject", e);
+        console.warn("Error deactivating test subject", e);
+    } finally {
+        Values.activeSubject = undefined;
     }
-
-    Values.activeSubject = undefined;
 }
 
 /**
@@ -448,6 +447,6 @@ async function deactivateSubject() {
  * This works out fine because we also reset state to "first commissioned" whenever starting a new test.  Within the
  * container this means copying the files into /tmp.
  */
-async function storageDirFor(subject: Subject) {
-    return `/storage/${subject.id}`;
+function storageDirFor(subject: Subject) {
+    return `"/storage/${subject.id}"`;
 }

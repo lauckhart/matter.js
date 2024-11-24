@@ -29,24 +29,18 @@ export interface Storage {
 /**
  * Extended interface for storage that supports snapshotting.
  */
-export interface TimepointStorage {
-    snapshot(): MaybePromise<{}>;
-    restore(snapshot: {}): MaybePromise;
+export interface CloneableStorage {
+    clone(): MaybePromise<Storage>;
 }
 
-export namespace TimepointStorage {
-    export function is<T extends {}>(storage: T): storage is T & TimepointStorage {
-        return (
-            "snapshot" in storage &&
-            "restore" in storage &&
-            typeof storage.snapshot === "function" &&
-            typeof storage.restore === "function"
-        );
+export namespace CloneableStorage {
+    export function is<T extends {}>(storage: T): storage is T & CloneableStorage {
+        return "clone" in storage && typeof storage.clone === "function";
     }
 
-    export function assert<T extends {}>(storage: T): asserts storage is T & TimepointStorage {
+    export function assert<T extends {}>(storage: T): asserts storage is T & CloneableStorage {
         if (!is(storage)) {
-            throw new ImplementationError("Storage does not support required timepoint function");
+            throw new ImplementationError("Storage does not support required snapshotting function");
         }
     }
 }

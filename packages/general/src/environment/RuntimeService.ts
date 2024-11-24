@@ -20,6 +20,7 @@ const logger = Logger.get("Runtime");
  * Handles lifecycle management of other components.
  */
 export class RuntimeService implements Multiplex {
+    #env: Environment;
     #workers = new Set<RuntimeService.Worker>();
     #cancelled = new Set<RuntimeService.Worker>();
     #workerDeleted = Observable<[]>();
@@ -29,6 +30,7 @@ export class RuntimeService implements Multiplex {
     #crashed = Observable<[cause: any]>();
 
     constructor(environment: Environment) {
+        this.#env = environment;
         environment.set(RuntimeService, this);
         DiagnosticSource.add(this);
     }
@@ -193,6 +195,7 @@ export class RuntimeService implements Multiplex {
     async close() {
         this.cancel();
         await this.inactive;
+        this.#env.delete(RuntimeService, this);
         DiagnosticSource.delete(this);
     }
 

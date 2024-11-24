@@ -4,7 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Environment, InternalError, StorageService, TimepointStorage, type ServerNode } from "@matter/main";
+import {
+    CloneableStorage,
+    Environment,
+    InternalError,
+    RuntimeService,
+    StorageService,
+    type ServerNode,
+} from "@matter/main";
 import { BackchannelCommand, Subject } from "@matter/testing";
 import { TestInstance, TestInstanceConfig, log } from "./GenericTestApp.js";
 
@@ -12,7 +19,7 @@ import { TestInstance, TestInstanceConfig, log } from "./GenericTestApp.js";
  * {@link serverNode}-based test subject.
  */
 export abstract class NodeTestInstance extends TestInstance implements Subject {
-    #env?: Environment;
+    #env = new Environment(`${this.id}-env`, Environment.default);
     #node?: ServerNode;
 
     constructor(config: TestInstanceConfig) {
@@ -28,18 +35,20 @@ export abstract class NodeTestInstance extends TestInstance implements Subject {
 
     get env() {
         if (!this.#env) {
-            this.#env = new Environment(`${this.appName}Environment`, Environment.default);
-            this.#env.set(StorageService, new StorageService(this.#env, () => this.config.storage));
+            throw new InternalError("Test subject environment accessed before initialization");
         }
         return this.#env;
     }
 
     protected abstract setupServer(): Promise<ServerNode>;
 
-    /** Set up the test instance MatterServer. */
     async initialize() {
+        if (this.#node) {
+            throw new InternalError("Already initialized");
+        }
+
         try {
-            //await this.storageManager.initialize(); // hacky but works
+            this.#env.set(StorageService, new StorageService(this.#env, () => this.config.storage));
             this.#node = await this.setupServer();
         } catch (error) {
             // Catch and log error, else the test framework hides issues here
@@ -50,9 +59,10 @@ export abstract class NodeTestInstance extends TestInstance implements Subject {
         log.directive(`======> ${this.appName}: Setup done`);
     }
 
-    /** Start the test instance MatterServer with the included device. */
     async start() {
-        if (!this.#node) throw new Error("serverNode not initialized on start");
+        if (!this.#node) {
+            this.#node = await this.setupServer();
+        }
 
         /*
         const env = Environment.default;
@@ -79,25 +89,34 @@ export abstract class NodeTestInstance extends TestInstance implements Subject {
     /** Stop the test instance MatterServer and the device. */
     override async stop() {
         await super.stop();
-        if (!this.#node) throw new Error("serverNode not initialized on stop");
-        await this.#node.cancel();
+        if (this.#node) {
+            await this.#node.close();
+            this.#node = undefined;
+        }
     }
 
     override async close() {
-        if (!this.#node) throw new Error("serverNode not initialized on close");
-        await this.#node.close();
-        this.#node = undefined;
+        await this.stop();
+
+        // Terminate and/or wait for any long-running services.  We do this for the default environment in support() but
+        // this is for our local environment
+        const runtime = Environment.default.maybeGet(RuntimeService);
+        if (runtime) {
+            await runtime.close();
+            Environment.default.delete(RuntimeService, runtime);
+        }
+
         log.directive(`======> ${this.appName}: Instance stopped`);
     }
 
     async snapshot() {
-        TimepointStorage.assert(this.config.storage);
-        return this.config.storage.snapshot();
+        CloneableStorage.assert(this.config.storage);
+        return this.config.storage.clone();
     }
 
     async restore(snapshot: {}) {
-        TimepointStorage.assert(this.config.storage);
-        this.config.storage.restore(snapshot);
+        CloneableStorage.assert(snapshot);
+        this.config.storage = await snapshot.clone();
     }
 
     override async backchannel(command: BackchannelCommand) {

@@ -6,12 +6,45 @@
 
 // Can't import Mocha in the browser so just import type here
 import type MochaType from "mocha";
+import { Test } from "mocha";
 import { FailureDetail } from "./failure-detail.js";
 import { Boot } from "./mocks/boot.js";
 import { LoggerHooks } from "./mocks/logging.js";
 import { TestOptions } from "./options.js";
 import { ConsoleProxyReporter, Reporter } from "./reporter.js";
 import { wtf } from "./util/wtf.js";
+
+// We allow fixed 60s. timeout for our extended "before/after each test" hooks.  To make this configurable we'd need
+// to perform timeout handling ourselves so avoiding for now
+const TEST_HOOK_TIMEOUT = 60000;
+
+const beforeOneHook = Symbol("before-hook");
+const afterOneHook = Symbol("after-hook");
+
+interface HookableTest extends Test {
+    [beforeOneHook]?: Mocha.Func | Mocha.AsyncFunc;
+    [afterOneHook]?: Mocha.Func | Mocha.AsyncFunc;
+}
+
+/**
+ * Extension to Mocha - allows installing a before handler for a specific test.
+ */
+export function beforeOne(test: HookableTest, fn: Mocha.Func | Mocha.AsyncFunc) {
+    if (test[beforeOneHook]) {
+        throw new Error("Only one beforeTest currently allowed");
+    }
+    test[beforeOneHook] = fn;
+}
+
+/**
+ * Extension to Mocha - allows installing an after handler for a specific test.
+ */
+export function afterOne(test: HookableTest, fn: Mocha.Func | Mocha.AsyncFunc) {
+    if (test[afterOneHook]) {
+        throw new Error("Only one afterTest currently allowed");
+    }
+    test[afterOneHook] = fn;
+}
 
 export function generalSetup(mocha: MochaType) {
     const Base = (mocha.constructor as typeof MochaType).reporters.Base;
@@ -45,10 +78,17 @@ export function generalSetup(mocha: MochaType) {
         hooks.unshift(myHook);
     }
 
-    mocha.suite.afterEach(() => {
+    mocha.suite.beforeEach(function (done) {
+        this.timeout(TEST_HOOK_TIMEOUT);
+        return (this.currentTest as HookableTest)[beforeOneHook]?.call(this, done);
+    });
+
+    mocha.suite.afterEach(function (done) {
+        this.timeout(TEST_HOOK_TIMEOUT);
         for (const hook of LoggerHooks.afterEach) {
             hook(mocha);
         }
+        return (this.currentTest as HookableTest)[afterOneHook]?.call(this, done);
     });
 
     FailureDetail.diff = Base.generateDiff.bind(Base);
