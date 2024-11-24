@@ -19,7 +19,7 @@ export {
     decodeUnknownEventValue,
     encodeAttributePayload,
     encodeEventPayload,
-    EventHandler,
+    OccurrenceManager as EventManager,
     eventPathToId,
     expandPathsInAttributeData,
     genericElementPathToId,

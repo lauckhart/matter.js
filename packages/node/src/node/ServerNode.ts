@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { EventsBehavior } from "#behavior/index.js";
 import { CommissioningServer } from "#behavior/system/commissioning/CommissioningServer.js";
 import { ControllerBehavior } from "#behavior/system/controller/ControllerBehavior.js";
 import { NetworkServer } from "#behavior/system/network/NetworkServer.js";
@@ -14,7 +15,7 @@ import { Endpoint } from "#endpoint/Endpoint.js";
 import { EndpointServer } from "#endpoint/EndpointServer.js";
 import type { Environment } from "#general";
 import { Construction, DiagnosticSource, Identity, MatterError, asyncNew, errorOf } from "#general";
-import { EventHandler, FabricManager, SessionManager } from "#protocol";
+import { FabricManager, OccurrenceManager, SessionManager } from "#protocol";
 import { RootEndpoint as BaseRootEndpoint } from "../endpoints/root.js";
 import { Node } from "./Node.js";
 import { ClientNodes } from "./client/ClientNodes.js";
@@ -187,7 +188,7 @@ export class ServerNode<T extends ServerNode.RootEndpoint = ServerNode.RootEndpo
     protected async resetStorage() {
         await this.env.get(SessionManager).clear();
         await this.env.get(FabricManager).clear();
-        await this.env.get(EventHandler).clear();
+        await this.env.get(OccurrenceManager).clear();
         await this.env.get(ServerNodeStore).erase();
     }
 
@@ -204,6 +205,7 @@ export namespace ServerNode {
         NetworkServer,
         ProductDescriptionServer,
         SessionsBehavior,
+        EventsBehavior,
         ControllerBehavior,
     );
 

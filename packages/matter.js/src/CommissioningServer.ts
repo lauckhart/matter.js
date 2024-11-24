@@ -40,7 +40,6 @@ import {
     ClusterDatasource,
     DeviceCertification,
     EndpointInterface,
-    EventHandler,
     Fabric,
     genericFabricScopedAttributeGetterFromFabric,
     genericFabricScopedAttributeSetterForFabric,
@@ -48,7 +47,9 @@ import {
     MdnsBroadcaster,
     MdnsInstanceBroadcaster,
     MdnsScanner,
+    OccurrenceManager,
     PaseClient,
+    VolatileEventStore,
 } from "#protocol";
 import {
     ClusterType,
@@ -228,7 +229,7 @@ export class CommissioningServer extends MatterNode {
     private mdnsInstanceBroadcaster?: MdnsInstanceBroadcaster;
 
     private deviceInstance?: MatterDevice;
-    private eventHandler?: EventHandler;
+    private eventManager?: OccurrenceManager;
     private endpointStructure: InteractionEndpointStructure;
     private interactionServer?: LegacyInteractionServer;
 
@@ -412,13 +413,13 @@ export class CommissioningServer extends MatterNode {
         // we initialize endpoint datasources before the InteractionServer
         // processes events
         this.endpointStructure.change.on(() => {
-            if (this.storage === undefined || this.eventHandler === undefined) {
+            if (this.storage === undefined || this.eventManager === undefined) {
                 throw new InternalError("Endpoint structure reports change prior to server initialization");
             }
 
             for (const endpoint of this.endpointStructure.endpoints.values()) {
                 for (const cluster of (endpoint as Endpoint).getAllClusterServers()) {
-                    new CommissioningServerClusterDatasource(endpoint, cluster, this.storage, this.eventHandler, () =>
+                    new CommissioningServerClusterDatasource(endpoint, cluster, this.storage, this.eventManager, () =>
                         this.deviceInstance!.getFabrics(),
                     );
                 }
@@ -512,7 +513,7 @@ export class CommissioningServer extends MatterNode {
             this.mdnsBroadcaster === undefined ||
             this.mdnsScanner === undefined ||
             this.storage === undefined ||
-            this.eventHandler === undefined ||
+            this.eventManager === undefined ||
             this.endpointStructureStorage === undefined ||
             this.port === undefined
         ) {
@@ -839,7 +840,9 @@ export class CommissioningServer extends MatterNode {
     async setStorage(storage: StorageContext<SyncStorage>) {
         this.storage = storage;
         this.endpointStructureStorage = this.storage.createContext("EndpointStructure");
-        this.eventHandler = await EventHandler.create(this.storage.createContext("EventHandler"));
+        this.eventManager = await OccurrenceManager.create({
+            store: new VolatileEventStore(this.storage.createContext("EventHandler")),
+        });
     }
 
     /**
@@ -989,21 +992,21 @@ export class CommissioningServer extends MatterNode {
     }
 }
 
-class CommissioningServerClusterDatasource implements ClusterDatasource<SyncStorage> {
+class CommissioningServerClusterDatasource implements ClusterDatasource {
     #version: number;
     #clusterDescription: string;
     #storage: StorageContext<SyncStorage>;
-    #eventHandler: EventHandler;
+    #eventManager: OccurrenceManager;
     #getFabrics: () => Fabric[];
 
     constructor(
         endpoint: EndpointInterface,
         cluster: ClusterServerObj,
         storage: StorageContext<SyncStorage>,
-        eventHandler: EventHandler<SyncStorage>,
+        eventManager: OccurrenceManager,
         getFabrics: () => Fabric[],
     ) {
-        this.#eventHandler = eventHandler;
+        this.#eventManager = eventManager;
         this.#clusterDescription = `cluster ${cluster.name} (${cluster.id})`;
         this.#storage = storage = storage.createContext(`Cluster-${endpoint.number}-${cluster.id}`);
         this.#getFabrics = getFabrics;
@@ -1037,8 +1040,8 @@ class CommissioningServerClusterDatasource implements ClusterDatasource<SyncStor
         return this.#version;
     }
 
-    get eventHandler() {
-        return this.#eventHandler;
+    get eventManager() {
+        return this.#eventManager;
     }
 
     get fabrics() {

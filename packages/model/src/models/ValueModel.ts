@@ -304,8 +304,8 @@ export abstract class ValueModel<T extends ValueElement = ValueElement> extends 
         return result as T;
     }
 
-    constructor(definition: BaseElement.Properties<T>) {
-        super(definition);
+    constructor(definition: BaseElement.Properties<T>, ...children: Model.Definition<FieldModel>[]) {
+        super(definition, ...children);
 
         const match = this.type?.match(/^list\[(.*)\]$/);
         if (match) {

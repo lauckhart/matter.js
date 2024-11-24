@@ -59,7 +59,7 @@ export abstract class Model<T extends BaseElement = BaseElement> {
      */
     operationalShadow?: Model | null;
 
-    #children?: Children<Model>;
+    #children?: Children;
     #parent?: Model;
 
     /**
@@ -430,7 +430,7 @@ export abstract class Model<T extends BaseElement = BaseElement> {
 
     constructor(definition: Model<T> | BaseElement.Properties<T>, ...children: Model.Definition<Model>[]) {
         if (typeof definition !== "object") {
-            throw new ImplementationError(`Model definition must be an object, not "${typeof definition}"`);
+            throw new ImplementationError(`Model definition must be an object, not ${typeof definition}`);
         }
 
         const isClone = definition instanceof Model;
@@ -556,7 +556,7 @@ export namespace Model {
     /**
      * Obtain the element type of a model type.
      */
-    export type ElementOf<T> = T extends Model<infer E extends AnyElement> ? E : never;
+    export type ElementOf<T> = T extends Model<infer E extends AnyElement> ? E : AnyElement;
 
     /**
      * Obtain the child type of a model type.

@@ -117,8 +117,8 @@ export function ClusterServer<const T extends ClusterType, const H extends Clust
             return datasource?.version ?? 0;
         },
 
-        get eventHandler() {
-            return datasource?.eventHandler;
+        get eventManager() {
+            return datasource?.eventManager;
         },
 
         get fabrics() {
@@ -146,7 +146,7 @@ export function ClusterServer<const T extends ClusterType, const H extends Clust
             return datasource;
         },
 
-        set datasource(newDatasource: ClusterDatasource<any> | undefined) {
+        set datasource(newDatasource: ClusterDatasource | undefined) {
             // This is not legal but TS requires setters to accept getter type
             if (newDatasource === undefined) {
                 throw new InternalError("Cluster datasource cannot be unset");
@@ -168,9 +168,9 @@ export function ClusterServer<const T extends ClusterType, const H extends Clust
                 });
             }
 
-            if (datasource.eventHandler) {
+            if (datasource.eventManager) {
                 for (const eventName in events) {
-                    const bindResult = (events as any)[eventName].bindToEventHandler(datasource.eventHandler);
+                    const bindResult = (events as any)[eventName].bindToEventManager(datasource.eventManager);
                     if (bindResult !== undefined && MaybePromise.is(bindResult)) {
                         throw new InternalError("Binding events to event handler should never return a promise");
                     }
