@@ -4,12 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import colors from "ansi-colors";
 import { basename, parse } from "path";
 import { Test } from "../device/test.js";
 import { Container } from "../docker/container.js";
 import { Terminal } from "../docker/terminal.js";
 import { deansify } from "../util/text.js";
+import { parseStep } from "./chip-test-common.js";
 import { ContainerPaths } from "./config.js";
 
 export async function YamlTests(container: Container): Promise<Test[]> {
@@ -61,15 +61,12 @@ class YamlTest implements Test {
         for await (let line of terminal) {
             line = line.replaceAll("\r\n", "\n").replaceAll("\t", "  ");
 
-            const text = deansify(line);
-            const stepMatch = text.match(/^\s*\*{5} Test Step \d+ : (.*)$/);
-            if (stepMatch) {
-                const [, stepName] = stepMatch;
-                step(stepName);
-                line = line.replace(/( Test Step \d+ )/, colors.greenBright.bold("$1"));
-            } else if (text.match(/Test finished.+ 0 errors .+/)) {
+            line = parseStep(line, step);
+
+            if (deansify(line).match(/Test finished.+ 0 errors .+/)) {
                 passed = true;
             }
+
             let first = true;
             for (let part of line.split("\r")) {
                 if (first) {

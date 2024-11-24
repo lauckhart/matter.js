@@ -133,7 +133,7 @@ export const State = {
 
         const test = it(tester.description ?? tester.name, async () => {
             const { reporter } = Values.runner;
-            await tester.invoke(State.container, reporter.beginSection.bind(reporter));
+            await tester.invoke(State.container, reporter.beginStep.bind(reporter));
         }).timeout(tester.timeout ?? Constants.defaultTimeout);
 
         beforeOne(test, () => activateSubject(subject, tester));

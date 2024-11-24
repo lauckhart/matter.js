@@ -18,7 +18,7 @@ export interface Reporter {
     beginRun(name: string, stats?: Stats, supportsSuites?: boolean): void;
     beginSuite(name: string[], stats?: Stats): void;
     beginTest(name: string, stats?: Stats): void;
-    beginSection(name: string): void;
+    beginStep(name: string): void;
     failTest(name: string, detail: FailureDetail): void;
     endRun(stats?: Stats): void;
     failRun(detail: FailureDetail): void;
@@ -27,14 +27,16 @@ export interface Reporter {
 export interface Failure {
     suite: string[];
     test: string;
-    section?: string;
+    step?: string;
     detail: FailureDetail;
 }
 
 export abstract class ProgressReporter implements Reporter {
     #run = "";
     #suite = Array<string>();
-    #section?: string;
+    #test?: string;
+    #step?: string;
+    #stats?: Stats;
     #failures = Array<Failure>();
     #lastTitle?: string;
 
@@ -54,25 +56,37 @@ export abstract class ProgressReporter implements Reporter {
     }
 
     beginTest(name: string, stats?: Stats): void {
-        this.#section = undefined;
+        this.#test = name;
+        this.#stats = stats;
+        this.#step = undefined;
 
         // If not a TTY, only update once per suite to keep the line count down for e.g. GH action logs
         const title = process.stdout.isTTY ? this.#formatName(this.#suite, name) : this.#suite[0];
-        if (this.#lastTitle !== title) {
-            this.#lastTitle = title;
-            this.progress.update(this.#summarize(stats), title);
+        this.#updateTitle(title);
+    }
+
+    beginStep(name: string): void {
+        this.#step = name;
+
+        if (process.stdout.isTTY && this.#test) {
+            const title = this.#formatName(this.#suite, this.#test, name);
+            this.#updateTitle(title);
         }
     }
 
-    beginSection(name: string): void {
-        this.#section = name;
+    #updateTitle(title: string) {
+        if (title === this.#lastTitle) {
+            return;
+        }
+        this.#lastTitle = title;
+        this.progress.update(this.#summarize(this.#stats), title);
     }
 
     failTest(name: string, detail: FailureDetail) {
         this.#failures.push({
             suite: this.#suite,
             test: name,
-            section: this.#section,
+            step: this.#step,
             detail,
         });
     }
@@ -107,18 +121,19 @@ export abstract class ProgressReporter implements Reporter {
         for (let i = 0; i < this.#failures.length; i++) {
             const failure = this.#failures[i];
             const index = `Failure ${colors.bold((i + 1).toString())} of ${this.#failures.length}`;
-            process.stdout.write(`\n${index} ${this.#formatName(failure.suite, failure.test, failure.section)}\n\n`);
+            process.stdout.write(`\n${index} ${this.#formatName(failure.suite, failure.test, failure.step)}\n\n`);
 
             FailureDetail.dump(failure.detail, "  ");
         }
     }
 
-    #formatName(suite: string[], test: string, section?: string) {
-        const suiteAndTest = `${suite.join(" ➡ ")} ➡ ${colors.bold(test)}`;
-        if (section === undefined) {
-            return suiteAndTest;
+    #formatName(suite: string[], test: string, step?: string) {
+        const breadcrumb = [...suite, test];
+        if (step) {
+            breadcrumb.push(step);
         }
-        return `${suiteAndTest} ➡ ${section}`;
+        breadcrumb[breadcrumb.length - 1] = colors.bold(breadcrumb[breadcrumb.length - 1]);
+        return breadcrumb.join(" ➡ ");
     }
 }
 
@@ -144,8 +159,8 @@ export class ConsoleProxyReporter implements Reporter {
         proxy("beginTest", name, stats);
     }
 
-    beginSection(name: string) {
-        proxy("beginSection", name);
+    beginStep(name: string) {
+        proxy("beginStep", name);
     }
 
     endRun(stats?: Stats) {

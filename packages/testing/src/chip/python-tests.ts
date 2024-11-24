@@ -9,6 +9,7 @@ import { basename } from "path";
 import { Test } from "../device/test.js";
 import { Container } from "../docker/container.js";
 import { Terminal } from "../docker/terminal.js";
+import { parseStep } from "./chip-test-common.js";
 import { ContainerPaths } from "./config.js";
 
 export async function PythonTests(container: Container): Promise<Test[]> {
@@ -82,7 +83,7 @@ class PythonTest implements Test {
         }
     }
 
-    async invoke(container: Container) {
+    async invoke(container: Container, step: (title: string) => void) {
         const terminal = await container.exec(
             ["python3", this.#filename, "--PICS", ContainerPaths.matterJsPics],
             Terminal.Line,
@@ -92,10 +93,13 @@ class PythonTest implements Test {
         );
 
         let passed = false;
-        for await (const line of terminal) {
+        for await (let line of terminal) {
+            line = parseStep(line, step);
+
             if (line.indexOf("Final result: PASS") !== -1) {
                 passed = true;
             }
+
             MockLogger.injectExternalMessage("CHIP", spiffy(line));
         }
 
