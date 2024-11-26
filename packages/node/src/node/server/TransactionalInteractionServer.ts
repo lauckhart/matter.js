@@ -12,9 +12,9 @@ import { OfflineContext } from "#behavior/context/server/OfflineContext.js";
 import { OnlineContext } from "#behavior/context/server/OnlineContext.js";
 import { AccessControlCluster } from "#clusters/access-control";
 import { Endpoint } from "#endpoint/Endpoint.js";
-import { EndpointServer } from "#endpoint/EndpointServer.js";
 import { EndpointLifecycle } from "#endpoint/properties/EndpointLifecycle.js";
 import { Diagnostic, InternalError, Logger, MaybePromise } from "#general";
+import { EndpointServer } from "#endpoint/server/EndpointServer.js";
 import {
     AccessDeniedError,
     AnyAttributeServer,

@@ -12,7 +12,7 @@ import { ServerNetworkRuntime } from "#behavior/system/network/ServerNetworkRunt
 import { ProductDescriptionServer } from "#behavior/system/product-description/ProductDescriptionServer.js";
 import { SessionsBehavior } from "#behavior/system/sessions/SessionsBehavior.js";
 import { Endpoint } from "#endpoint/Endpoint.js";
-import { EndpointServer } from "#endpoint/EndpointServer.js";
+import { EndpointServer } from "#endpoint/server/EndpointServer.js";
 import type { Environment } from "#general";
 import { Construction, DiagnosticSource, Identity, MatterError, asyncNew, errorOf } from "#general";
 import { FabricManager, OccurrenceManager, SessionManager } from "#protocol";

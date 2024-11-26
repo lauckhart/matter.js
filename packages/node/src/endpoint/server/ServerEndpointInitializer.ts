@@ -6,12 +6,13 @@
 
 import { Behavior } from "#behavior/Behavior.js";
 import { BehaviorBacking } from "#behavior/internal/BehaviorBacking.js";
+import { ServerBehaviorBacking } from "#behavior/internal/ServerBehaviorBacking.js";
 import { Endpoint } from "#endpoint/Endpoint.js";
-import { EndpointServer } from "#endpoint/EndpointServer.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
+import { EndpointServer } from "#endpoint/server/EndpointServer.js";
 import { Environment, InternalError, Logger } from "#general";
 import { DescriptorServer } from "../../behaviors/descriptor/DescriptorServer.js";
-import { ServerNodeStore } from "../storage/ServerNodeStore.js";
+import { ServerNodeStore } from "../../node/storage/ServerNodeStore.js";
 
 const logger = Logger.get("BehaviorInit");
 
@@ -55,8 +56,8 @@ export class ServerEndpointInitializer extends EndpointInitializer {
      *
      * This is where we adapt endpoints and behaviors for a server role.
      */
-    createBacking(endpoint: Endpoint, behavior: Behavior.Type): BehaviorBacking {
-        return EndpointServer.forEndpoint(endpoint).createBacking(behavior);
+    createBacking(endpoint: Endpoint, type: Behavior.Type): BehaviorBacking {
+        return new ServerBehaviorBacking(endpoint, type, endpoint.behaviors.optionsFor(type));
     }
 
     /**

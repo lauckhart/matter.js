@@ -12,7 +12,7 @@ import { ServerBehaviorBacking } from "#behavior/internal/ServerBehaviorBacking.
 import { ImplementationError, InternalError, NotImplementedError } from "#general";
 import { ClusterClientObj, ClusterServer, EndpointInterface } from "#protocol";
 import { ClusterId, ClusterType, EndpointNumber } from "#types";
-import { Endpoint } from "./Endpoint.js";
+import { Endpoint } from "../Endpoint.js";
 
 const SERVER = Symbol("server");
 interface ServerEndpoint extends Endpoint {
@@ -39,6 +39,10 @@ export class EndpointServer implements EndpointInterface {
         (endpoint as ServerEndpoint)[SERVER] = this;
         this.#endpoint = endpoint;
         this.#name = endpoint.type.name;
+
+        for (const behavior in endpoint.behaviors.supported) {
+            const behavior = endpoint.behaviors.
+        }
     }
 
     createBacking(type: Behavior.Type): BehaviorBacking {
