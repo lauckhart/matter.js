@@ -39,13 +39,13 @@ export class EventsBehavior extends Behavior {
         FieldElement({ name: "numberBlockSize", type: "uint16" }),
         FieldElement(
             { name: "buffer", type: "struct" },
-            FieldElement({ name: "minEventAllowance", type: "number" }),
-            FieldElement({ name: "maxEventAllowance", type: "number" }),
+            FieldElement({ name: "minEventAllowance", type: "uint32" }),
+            FieldElement({ name: "maxEventAllowance", type: "uint32" }),
             FieldElement(
                 { name: "minPriorityEventAllowance", type: "struct" },
-                FieldElement({ name: "critical", type: "number" }),
-                FieldElement({ name: "info", type: "number" }),
-                FieldElement({ name: "debug", type: "number" }),
+                FieldElement({ name: "critical", type: "uint32" }),
+                FieldElement({ name: "info", type: "uint32" }),
+                FieldElement({ name: "debug", type: "uint32" }),
             ),
         ),
     );

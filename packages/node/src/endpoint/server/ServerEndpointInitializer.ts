@@ -8,6 +8,7 @@ import { Behavior } from "#behavior/Behavior.js";
 import { BehaviorBacking } from "#behavior/internal/BehaviorBacking.js";
 import { ServerBehaviorBacking } from "#behavior/internal/ServerBehaviorBacking.js";
 import { Endpoint } from "#endpoint/Endpoint.js";
+import { Agent } from "#endpoint/index.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
 import { EndpointServer } from "#endpoint/server/EndpointServer.js";
 import { Environment, InternalError, Logger } from "#general";
@@ -51,13 +52,24 @@ export class ServerEndpointInitializer extends EndpointInitializer {
     }
 
     /**
-     * If a {@link Endpoint} does not yet have a {@link EndpointServer}, create one now, then create a
-     * {@link BehaviorBacking} for a specific {@link Behavior}.
+     * Create the backing.
      *
-     * This is where we adapt endpoints and behaviors for a server role.
+     * If the behavior is a cluster behavior and the node is already initialized, create a server when the behavior
+     * initializes.
      */
     createBacking(endpoint: Endpoint, type: Behavior.Type): BehaviorBacking {
         return new ServerBehaviorBacking(endpoint, type, endpoint.behaviors.optionsFor(type));
+    }
+
+    /**
+     * Once startup behaviors are initialized, create a server for each loaded behavior.
+     */
+    override behaviorsInitialized(agent: Agent) {
+        const { endpoint } = agent;
+        const server = EndpointServer.forEndpoint(endpoint);
+        for (const type of Object.values(endpoint.behaviors.supported)) {
+            server.serve(type, agent);
+        }
     }
 
     /**

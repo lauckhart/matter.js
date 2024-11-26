@@ -691,7 +691,7 @@ export namespace Construction {
         }
 
         const crashed = Object.values(subjectArray).filter(
-            backing => backing.construction.status === Lifecycle.Status.Crashed,
+            subject => subject.construction.status === Lifecycle.Status.Crashed,
         );
         if (crashed.length) {
             let error;

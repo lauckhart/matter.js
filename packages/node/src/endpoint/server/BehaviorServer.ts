@@ -8,17 +8,27 @@ import { AccessControl } from "#behavior/AccessControl.js";
 import { Behavior } from "#behavior/Behavior.js";
 import { ClusterBehavior } from "#behavior/cluster/ClusterBehavior.js";
 import { ValidatedElements } from "#behavior/cluster/ValidatedElements.js";
-import { ClusterEvents, Contextual, Resource } from "#behavior/index.js";
+import { Contextual, GlobalAttributeState, Resource } from "#behavior/index.js";
 import { StructManager } from "#behavior/state/managed/values/StructManager.js";
 import { Status } from "#behavior/state/transaction/Status.js";
 import { Val } from "#behavior/state/Val.js";
 import { Agent } from "#endpoint/Agent.js";
 import { Endpoint } from "#endpoint/Endpoint.js";
-import { camelize, Diagnostic, ImplementationError, InternalError, isObject, Logger, MaybePromise } from "#general";
+import {
+    camelize,
+    Diagnostic,
+    ImplementationError,
+    InternalError,
+    isObject,
+    Logger,
+    MaybePromise,
+    Observable,
+} from "#general";
 import { CommandModel, ElementTag } from "#model";
 import {
     AttributeServer,
     ClusterDatasource,
+    ClusterServer,
     CommandServer,
     createAttributeServer as ConstructAttributeServer,
     EventServer,
@@ -27,36 +37,33 @@ import {
     OccurrenceManager,
     SecureSession,
 } from "#protocol";
-import { Attribute, Command, Event, TlvNoResponse } from "#types";
-import { EndpointServer } from "./EndpointServer.js";
+import { Attribute, AttributeId, Command, CommandId, Event } from "#types";
+import type { EndpointServer } from "./EndpointServer.js";
 
-const logger = Logger.get("ClusterBehaviorServer");
+const logger = Logger.get("BehaviorServer");
 
-interface ElementServerContext {
-    endpoint: Endpoint;
-    type: ClusterBehavior.Type;
-    clusterDatasource: ClusterDatasource;
-    endpointServer: EndpointServer;
-}
-
-export function ClusterBehaviorServer(endpoint: Endpoint, agent: Agent, type: ClusterBehavior.Type) {
+/**
+ * Create a {@link ClusterServer} for a {@link ClusterBehavior}.
+ *
+ * Note that we only create servers for cluster behaviors.  Other {@link Behavior} implementations do not have proper
+ * metadata to go online.
+ *
+ * TODO - refactor element server management after we remove the old API
+ */
+export function BehaviorServer(endpointServer: EndpointServer, agent: Agent, type: ClusterBehavior.Type) {
     const { id, name, attributes, commands, events } = type.cluster;
 
-    const clusterServer = {
+    const { endpoint } = endpointServer;
+    const datasource = createClusterDatasource(endpoint, type);
+
+    const clusterServer: ClusterServer = {
         id,
         name,
-        datasource: createClusterDatasource(endpoint, type),
+        datasource,
         attributes: {},
         commands: {},
         events: {},
     };
-
-    const owner = {
-        endpoint,
-        type,
-        clusterDatasource: clusterServer.datasource,
-        endpointServer: EndpointServer.forEndpoint(endpoint),
-    } satisfies ElementServerContext;
 
     const behavior = agent.get(type);
 
@@ -64,30 +71,61 @@ export function ClusterBehaviorServer(endpoint: Endpoint, agent: Agent, type: Cl
     const elements = new ValidatedElements(type, behavior);
     elements.report();
 
-    // Attribute servers.  Include global attributes as well as cluster attributes
-    configureServers(
-        owner,
-        elements.attributes,
-        attributes,
-        clusterServer.attributes,
-        behavior,
-        ["attributeList"],
-        createAttributeServer,
-    );
+    // Extract read-only state and observables for setup purposes
+    const observables = endpoint.eventsOf(type) as unknown as Record<string, Observable>;
 
-    // Command servers
-    configureServers(
-        owner,
-        elements.commands,
-        commands,
-        clusterServer.commands,
-        behavior,
-        ["acceptedCommandList", "generatedCommandList"],
-        createCommandServer,
-    );
+    // Add attribute servers.  Include global attributes as well as cluster attributes
+    const attributeList = Array<AttributeId>();
+    const stateView = endpoint.stateOf(type) as Val.Struct;
+    const initState = behavior.state as Val.Struct;
+    for (const name of elements.attributes) {
+        const attribute = attributes[name];
+
+        const server = createAttributeServer(
+            name,
+            attribute,
+            endpoint,
+            type,
+            datasource,
+            stateView,
+            initState[name],
+            observables,
+        );
+
+        clusterServer.attributes[name] = server;
+        server.assignToEndpoint(endpointServer);
+
+        attributeList.push(attribute.id);
+    }
+
+    // Add command servers
+    const acceptedCommandList = Array<CommandId>();
+    const generatedCommandList = Array<CommandId>();
+    for (const name of elements.commands) {
+        const command = commands[name];
+
+        clusterServer.commands[name] = createCommandServer(name, command, endpoint, type);
+
+        acceptedCommandList.push(command.requestId);
+        if (command.responseId !== undefined) {
+            generatedCommandList.push(command.responseId);
+        }
+    }
 
     // Event servers
-    configureServers(owner, elements.events, events, clusterServer.events, behavior, undefined, createEventServer);
+    for (const name of elements.events) {
+        const server = createEventServer(name, events[name], endpoint, type, observables);
+
+        clusterServer.events[name] = server;
+        server.assignToEndpoint(endpointServer);
+    }
+
+    // Update global attributes detailing supported elements
+    (behavior.state as GlobalAttributeState).attributeList = attributeList;
+    (behavior.state as GlobalAttributeState).acceptedCommandList = acceptedCommandList;
+    (behavior.state as GlobalAttributeState).generatedCommandList = generatedCommandList;
+
+    return clusterServer;
 }
 
 /**
@@ -119,68 +157,32 @@ function createClusterDatasource(endpoint: Endpoint, type: Behavior.Type): Clust
     };
 }
 
-/**
- * Configure the servers for a set of elements (attributes, commands or events).
- */
-function configureServers<T, S>(
-    owner: ElementServerContext,
-    names: Iterable<string>,
-    definitions: Record<string, T>,
-    servers: Record<string, S>,
-    behavior: Behavior,
-    attributeNames: ["attributeList"] | ["acceptedCommandList", "generatedCommandList"] | undefined,
-    addServer: (
-        name: string,
-        definition: T,
-        backing: ElementServerContext,
-        behavior: Behavior,
-    ) => { ids: number[]; server: S },
-) {
-    const collectedIds = Array<Set<number>>();
-    if (attributeNames !== undefined) {
-        attributeNames.forEach(() => collectedIds.push(new Set()));
-    }
-
-    // Create a server for each supported element and record the ID
-    for (const name of names) {
-        const definition = definitions[name];
-        const { ids, server } = addServer(name, definition, owner, behavior);
-        if (attributeNames !== undefined) {
-            ids.forEach((id, index) => collectedIds[index].add(id));
-        }
-        servers[name] = server;
-    }
-
-    if (attributeNames !== undefined) {
-        // Set the global attribute detailing supported elements
-        attributeNames.forEach((attributeName, index) => {
-            (behavior.state as Record<string, number[]>)[attributeName] = [...collectedIds[index].values()];
-        });
-    }
-}
-
 function createAttributeServer(
     name: string,
     definition: Attribute<any, any>,
-    owner: ElementServerContext,
-    behavior: Behavior,
+    endpoint: Endpoint,
+    type: ClusterBehavior.Type,
+    datasource: ClusterDatasource,
+    stateView: Val.Struct,
+    initialValue: unknown,
+    observables: Record<string, Observable>,
 ) {
     function getter(_session: any, _endpoint: any, _isFabricFiltered: any, message?: Message) {
         if (!message) {
             // If there is no message this is getLocal
-            return (owner.endpoint.state as Val.Struct)[name];
+            return stateView[name];
         }
 
-        const behavior = behaviorFor(owner, message);
+        const behavior = behaviorFor(endpoint, type, message);
 
         behavior.context.activity?.frame(`read ${name}`);
 
         const trace = behavior.context.trace;
         if (trace) {
-            trace.path = owner.endpoint.path.at(name);
+            trace.path = endpoint.path.at(name);
         }
 
-        logger.debug("Read", Diagnostic.strong(`${owner}.state.${name}`), "via", behavior.context.transaction.via);
+        logger.debug("Read", Diagnostic.strong(`${endpoint}.state.${name}`), "via", behavior.context.transaction.via);
 
         const state = behavior.state as Val.Struct;
 
@@ -194,15 +196,15 @@ function createAttributeServer(
     }
 
     function setter(value: any, _session: any, _endpoint: any, message?: Message) {
-        const behavior = behaviorFor(owner, message);
+        const behavior = behaviorFor(endpoint, type, message);
 
         behavior.context.activity?.frame(`write ${name}`);
 
-        logger.info("Write", Diagnostic.strong(`${owner}.state.${name}`), "via", behavior.context.transaction.via);
+        logger.info("Write", Diagnostic.strong(`${endpoint}.state.${name}`), "via", behavior.context.transaction.via);
 
         const trace = behavior.context.trace;
         if (trace) {
-            trace.path = owner.endpoint.path.at(name);
+            trace.path = endpoint.path.at(name);
             trace.input = value;
         }
 
@@ -210,26 +212,15 @@ function createAttributeServer(
 
         state[name] = value;
 
-        // If the transaction is a write transaction, report that
-        // the attribute is updated
+        // If the transaction is a write transaction, report that the attribute is updated
         return behavior.context.transaction?.status === Status.Exclusive;
     }
 
-    const server = ConstructAttributeServer(
-        owner.type.cluster,
-        definition,
-        name,
-        (behavior.state as Val.Struct)[name],
-        owner.clusterDatasource,
-        getter,
-        setter,
-    );
+    const server = ConstructAttributeServer(type.cluster, definition, name, initialValue, datasource, getter, setter);
 
     // Wire events (FixedAttributeServer is not an AttributeServer so we skip that)
     if (server instanceof AttributeServer) {
-        const observable = (owner.endpoint.events as any)[`${name}$Changed`] as
-            | ClusterEvents.AttributeObservable
-            | undefined;
+        const observable = observables[`${name}$Changed`];
         observable?.on((_value, _oldValue, context) => {
             const session = context.session;
             if (session instanceof SecureSession) {
@@ -240,17 +231,17 @@ function createAttributeServer(
         });
     }
 
-    server.assignToEndpoint(owner.endpointServer);
-
-    return {
-        ids: [definition.id],
-        server,
-    };
+    return server;
 }
 
-function createCommandServer(name: string, definition: Command<any, any, any>, owner: ElementServerContext) {
+function createCommandServer(
+    name: string,
+    definition: Command<any, any, any>,
+    endpoint: Endpoint,
+    type: ClusterBehavior.Type,
+) {
     // TODO: Introduce nicer ways to get command incl caching and such, aka "make api suck less"
-    const schema = owner.type.schema?.member(camelize(name, true), [ElementTag.Command]) as CommandModel;
+    const schema = type.schema?.member(camelize(name, true), [ElementTag.Command]) as CommandModel;
     if (schema === undefined) {
         throw new ImplementationError(`There is no metadata for command ${name}`);
     }
@@ -266,13 +257,13 @@ function createCommandServer(name: string, definition: Command<any, any, any>, o
             requestDiagnostic = Diagnostic.weak("(no payload)");
         }
 
-        const behavior = behaviorFor(owner, message);
+        const behavior = behaviorFor(endpoint, type, message);
 
-        const path = owner.endpoint.path.at(name);
+        const path = endpoint.path.at(name);
 
         const trace = behavior.context.trace;
         if (trace) {
-            trace.path = owner.endpoint.path.at(name);
+            trace.path = endpoint.path.at(name);
             trace.input = request;
         }
 
@@ -348,22 +339,21 @@ function createCommandServer(name: string, definition: Command<any, any, any>, o
     // Eliminate redundant diagnostic messages
     server.debug = () => {};
 
-    const ids = [definition.requestId];
-    if (definition.responseSchema !== TlvNoResponse) {
-        ids.push(definition.responseId);
-    }
-    return {
-        ids,
-        server,
-    };
+    return server;
 }
 
-function createEventServer(name: string, definition: Event<any, any>, owner: ElementServerContext) {
-    const observable = (owner.endpoint.events as any)[name] as ClusterEvents.EventObservable;
+function createEventServer(
+    name: string,
+    definition: Event<any, any>,
+    endpoint: Endpoint,
+    type: ClusterBehavior.Type,
+    observables: Record<string, Observable>,
+) {
+    const observable = observables[name];
 
     const server = new EventServer(
         definition.id,
-        owner.type.cluster.id,
+        type.cluster.id,
         name,
         definition.schema,
         definition.priority,
@@ -373,30 +363,26 @@ function createEventServer(name: string, definition: Event<any, any>, owner: Ele
     observable?.on((payload, _context) => {
         const maybePromise = server.triggerEvent(payload);
         if (MaybePromise.is(maybePromise)) {
-            owner.endpoint.env.runtime.add(maybePromise);
+            endpoint.env.runtime.add(maybePromise);
         }
     });
 
-    server.assignToEndpoint(owner.endpointServer);
-    const promise = server.bindToEventManager(owner.endpoint.env.get(OccurrenceManager));
+    const promise = server.bindToEventManager(endpoint.env.get(OccurrenceManager));
     if (MaybePromise.is(promise)) {
         // Current code structure means this should never happen.  Refactor after removal of old API will resolve this
         throw new InternalError("Event handler binding returned a promise");
     }
 
-    return {
-        ids: [definition.id],
-        server,
-    };
+    return server;
 }
 
-function behaviorFor(owner: ElementServerContext, message: Message | undefined) {
+function behaviorFor(endpoint: Endpoint, type: ClusterBehavior.Type, message: Message | undefined) {
     const context = Contextual.contextOf(message);
     if (!context) {
         throw new InternalError("Message context not installed");
     }
 
-    const agent = context.agentFor(owner.endpoint);
+    const agent = context.agentFor(endpoint);
 
-    return agent.get(owner.type);
+    return agent.get(type);
 }

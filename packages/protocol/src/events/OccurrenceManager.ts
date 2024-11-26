@@ -28,10 +28,13 @@ export interface EventManagerContext {
 /**
  * Manages event occurrences.
  *
- * Each time an event is triggered it is stored as an {@link Occurrence} in this manager.  Occurrences are persisted
- * in an {@link EventStore} and may be retrieved using Matter query semantics.
+ * Each time an event is triggered it is stored as an {@link Occurrence} in this manager.  Occurrences are persisted in
+ * an {@link EventStore} and may be retrieved using Matter query semantics.
  *
  * Drops occurrences when the store becomes too full as configured by {@link OccurrenceManager.BufferConfig}.
+ *
+ * TODO - query is extremely inefficient.  For new code paths should build internal index and bypass EventServer to
+ * deliver query in wire form directly here
  */
 export class OccurrenceManager {
     #store: EventStore;
@@ -129,6 +132,7 @@ export class OccurrenceManager {
                             occurrence.number = entry.number;
                             return occurrence;
                         });
+                        occurrences.push(occurrence);
                         if (MaybePromise.is(occurrence)) {
                             isAsyncLoad = true;
                         }
@@ -155,7 +159,7 @@ export class OccurrenceManager {
             result = MaybePromise.then(result, (occurrences: NumberedOccurrence[]) =>
                 occurrences.filter(({ payload }) => {
                     const { fabricIndex } = payload as any;
-                    return fabricIndex === undefined && fabricIndex !== filterForFabricIndex;
+                    return fabricIndex === undefined || fabricIndex === filterForFabricIndex;
                 }),
             );
         }
@@ -176,6 +180,8 @@ export class OccurrenceManager {
 
             if (filterDesc) {
                 filterDesc = ` (filters: ${filterDesc})`;
+            } else {
+                filterDesc = "";
             }
 
             logger.debug(

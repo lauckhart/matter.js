@@ -20,7 +20,7 @@ const logger = Logger.get("BaseEventStore");
 export abstract class BaseEventStore implements EventStore {
     #storage: StorageContext;
     #eventStorage: StorageContext;
-    #nextNumber?: EventNumber;
+    #nextNumber?: bigint;
 
     constructor(storage: StorageContext) {
         this.#storage = storage;
@@ -39,7 +39,7 @@ export abstract class BaseEventStore implements EventStore {
         return MaybePromise.then(this.close(), () =>
             MaybePromise.then(this.#storage.clear(), () =>
                 MaybePromise.then(this.#eventStorage.clear(), () => {
-                    this.#nextNumber = EventNumber(1);
+                    this.#nextNumber = 1n;
                 }),
             ),
         );
@@ -76,7 +76,7 @@ export abstract class BaseEventStore implements EventStore {
             }
         }
 
-        this.#nextNumber = nextNumber as EventNumber;
+        this.#nextNumber = (nextNumber ?? 1n) as EventNumber;
 
         return { reservationEnd, eventIds: eventNumbers };
     }
@@ -88,8 +88,10 @@ export abstract class BaseEventStore implements EventStore {
         return this.#nextNumber;
     }
 
-    protected incrementNextNumber() {
-        this.#nextNumber = (this.nextNumber + 1n) as EventNumber;
+    protected allocateNumber() {
+        const number = this.nextNumber;
+        this.#nextNumber = this.nextNumber + 1n;
+        return number as EventNumber;
     }
 
     protected get storage() {

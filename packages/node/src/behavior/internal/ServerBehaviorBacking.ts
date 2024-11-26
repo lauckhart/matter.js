@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { EndpointServer } from "#endpoint/index.js";
 import { camelize } from "#general";
 import { FieldValue } from "#model";
 import { ServerNodeStore } from "#node/storage/ServerNodeStore.js";
@@ -43,6 +44,10 @@ export class ServerBehaviorBacking extends BehaviorBacking {
         }
 
         finalizeState();
+
+        if (this.endpoint.lifecycle.isReady) {
+            EndpointServer.forEndpoint(this.endpoint).serve(behavior.constructor as Behavior.Type, behavior.agent);
+        }
     }
 
     get #serverStore() {

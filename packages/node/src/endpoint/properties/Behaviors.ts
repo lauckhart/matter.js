@@ -146,7 +146,7 @@ export class Behaviors {
         }
 
         // Initialization action.  We initialize all behaviors in the same transaction
-        const initializeBehaviors = (context: ActionContext) => {
+        const initializeBehaviors = (context: ActionContext): MaybePromise => {
             const agent = context.agentFor(this.#endpoint);
 
             // Activate behaviors
@@ -159,7 +159,7 @@ export class Behaviors {
             }
 
             // Wait for all behaviors to initialize
-            return Construction.all(
+            let promise = Construction.all(
                 {
                     [Symbol.iterator]: () => {
                         return Object.values(this.#backings)[Symbol.iterator]();
@@ -168,6 +168,16 @@ export class Behaviors {
 
                 causes => new EndpointBehaviorsError(causes),
             );
+
+            // Notify other components that participate in initialization
+            const endpointInitializer = this.#endpoint.env.get(EndpointInitializer);
+            if (promise) {
+                promise = promise.then(() => endpointInitializer.behaviorsInitialized(agent));
+            } else {
+                promise = endpointInitializer.behaviorsInitialized(agent);
+            }
+
+            return promise;
         };
 
         // Initialize instrumentation

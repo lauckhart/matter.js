@@ -503,14 +503,14 @@ export class InteractionServer implements ProtocolHandler, InteractionRecipient 
                         );
                         const { schema } = event;
                         reportsForPath.push(
-                            ...matchingEvents.map(({ number, priority, epochTimestamp, payload: data }) => ({
+                            ...matchingEvents.map(({ number, priority, epochTimestamp, payload }) => ({
                                 hasFabricSensitiveData: event.hasFabricSensitiveData,
                                 eventData: {
                                     path,
                                     eventNumber: number,
                                     priority,
                                     epochTimestamp,
-                                    payload: data,
+                                    payload,
                                     schema,
                                 },
                             })),

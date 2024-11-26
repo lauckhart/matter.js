@@ -76,24 +76,21 @@ export class VolatileEventStore extends BaseEventStore {
             write = this.#reservationWrite.then(whenReady, whenReady);
         }
 
-        const number = this.nextNumber ?? EventNumber(1n);
+        const number = this.allocateNumber();
         const key = OccurrenceSummary(number, occurrence);
 
         const reservedTo = this.#numbersReservedTo ?? 1n;
         if (number >= reservedTo) {
             const reserveTo = reservedTo + BigInt(this.#numberBlockSize);
-            const write = MaybePromise.then(
-                this.storage.set(BaseEventStore.LAST_RESERVED_NUMBER_KEY, reserveTo),
-                () => {
-                    this.incrementNextNumber();
-                    this.#numbersReservedTo = reserveTo;
-                    this.#events.set(number, occurrence);
-                    if (this.#reservationWrite === write) {
-                        this.#reservationWrite = undefined;
-                    }
-                    return key;
-                },
-            );
+            let write: MaybePromise<void | OccurrenceSummary> = undefined;
+            write = MaybePromise.then(this.storage.set(BaseEventStore.LAST_RESERVED_NUMBER_KEY, reserveTo), () => {
+                this.#numbersReservedTo = reserveTo;
+                this.#events.set(number, occurrence);
+                if (write !== undefined && this.#reservationWrite === write) {
+                    this.#reservationWrite = undefined;
+                }
+                return key;
+            });
         }
 
         this.#events.set(number, occurrence);

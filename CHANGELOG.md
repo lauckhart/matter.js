@@ -13,10 +13,20 @@ The main work (all changes without a GitHub username in brackets in the below li
 
 -   @matter/node
     - Enhancement: Enhances the number assertations to only allow finite numbers
+    - Enhancement: EventsBehavior allows for configuration of event buffering
+    - Enhancement: Matter protocol initialization now runs independently of and after behavior initialization, giving behaviors more flexibility in participating in protocol setup
 
 -   Matter cluster definitions and implementations
     - Enhancement: Removes default value from attribute ColorMode of ColorControl cluster because feature specific enum value was used
     - Fix: Do not try to convert color mode details if they are not defined
+
+-   @matter/protocol
+    - Feature: The algorithm that chooses event occurrences to discard when the buffer overflows is now smarter and configurable
+    - Feature: Event occurrence buffering now offers optional persistence
+
+-   @matter/testing
+    - Feature: New test harness supports simplified management of Matter certification tests
+    - Feature: Build system for lightweight (relatively speaking) Docker image with chip-tool and CHIP certification tests available at https://github.com/matter-js/matter.js-chip
 
 ## 0.11.8 (2024-11-29)
 
@@ -66,10 +76,6 @@ The main work (all changes without a GitHub username in brackets in the below li
 
 -   @matter/protocol
     - Fix: Corrects the DataVersion Filter shortening logic to ensure maximum message size is not exceeded 
-
--   @matter/testing
-    - Feature: New test harness supports simplified management of Matter certification tests
-    - Feature: Build system for lightweight (relatively speaking) Docker image with chip-tool and CHIP certification tests available at https://github.com/matter-js/matter.js-chip
 
 -   @matter/tools
     - Multi-project test runs now use a single process to improve performance

@@ -81,12 +81,6 @@ export class RuntimeService implements Multiplex {
                         break;
                 }
             });
-        } else if (worker.then) {
-            if (worker.then) {
-                Promise.resolve(worker)
-                    .catch(error => this.#crash(error))
-                    .finally(() => this.delete(worker));
-            }
         }
     }
 

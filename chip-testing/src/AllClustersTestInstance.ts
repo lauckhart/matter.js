@@ -156,6 +156,9 @@ export class AllClustersTestInstance extends NodeTestInstance {
             {
                 id: this.id,
                 environment: this.env,
+                events: {
+                    nonvolatile: true,
+                },
                 network: {
                     port: 5540,
                     //advertiseOnStartup: false,

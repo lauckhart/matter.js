@@ -58,8 +58,7 @@ export class NonvolatileEventStore extends BaseEventStore {
     override add(occurrence: Occurrence): MaybePromise<OccurrenceSummary> {
         // Allocate a new number immediately.  If save fails but a subsequent save succeeds we will skip the number, but
         // this is unlikely, shouldn't be fatal, and this way we can run writes in parallel
-        const number = this.nextNumber;
-        this.incrementNextNumber();
+        const number = this.allocateNumber();
 
         // Persist the occurrence
         const result = MaybePromise.then(this.eventStorage.set(number.toString(), occurrence as any), () => {
