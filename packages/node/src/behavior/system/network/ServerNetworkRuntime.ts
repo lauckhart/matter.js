@@ -310,7 +310,11 @@ export class ServerNetworkRuntime extends NetworkRuntime {
     }
 
     protected override async stop() {
+        this.blockNewActivity();
+
         this.#observers.close();
+
+        await this.#mdnsBroadcaster?.expireAllAnnouncements();
 
         await this.owner.env.close(DeviceCommissioner);
         await this.owner.env.close(DeviceAdvertiser);
@@ -320,6 +324,9 @@ export class ServerNetworkRuntime extends NetworkRuntime {
 
         await this.#interactionServer?.[Symbol.asyncDispose]();
         this.#interactionServer = undefined;
+
+        await this.#mdnsBroadcaster?.close();
+        this.#mdnsBroadcaster = undefined;
     }
 
     protected override blockNewActivity() {

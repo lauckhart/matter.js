@@ -8,9 +8,7 @@ import { Behavior } from "#behavior/Behavior.js";
 import { BehaviorBacking } from "#behavior/internal/BehaviorBacking.js";
 import { ServerBehaviorBacking } from "#behavior/internal/ServerBehaviorBacking.js";
 import { Endpoint } from "#endpoint/Endpoint.js";
-import { Agent } from "#endpoint/index.js";
 import { EndpointInitializer } from "#endpoint/properties/EndpointInitializer.js";
-import { EndpointServer } from "#endpoint/server/EndpointServer.js";
 import { Environment, InternalError, Logger } from "#general";
 import { DescriptorServer } from "../../behaviors/descriptor/DescriptorServer.js";
 import { ServerNodeStore } from "../../node/storage/ServerNodeStore.js";
@@ -59,17 +57,6 @@ export class ServerEndpointInitializer extends EndpointInitializer {
      */
     createBacking(endpoint: Endpoint, type: Behavior.Type): BehaviorBacking {
         return new ServerBehaviorBacking(endpoint, type, endpoint.behaviors.optionsFor(type));
-    }
-
-    /**
-     * Once startup behaviors are initialized, create a server for each loaded behavior.
-     */
-    override behaviorsInitialized(agent: Agent) {
-        const { endpoint } = agent;
-        const server = EndpointServer.forEndpoint(endpoint);
-        for (const type of Object.values(endpoint.behaviors.supported)) {
-            server.serve(type, agent);
-        }
     }
 
     /**

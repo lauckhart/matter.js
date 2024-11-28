@@ -7,6 +7,7 @@
 import type { Agent } from "#endpoint/Agent.js";
 import type { Endpoint } from "#endpoint/Endpoint.js";
 import { BehaviorInitializationError } from "#endpoint/errors.js";
+import type { SupportedElements } from "#endpoint/properties/Behaviors.js";
 import { Construction, EventEmitter, ImplementationError, Lifecycle, Logger, MaybePromise, Observable } from "#general";
 import type { ClusterId } from "@matter/types";
 import type { Behavior } from "../Behavior.js";
@@ -210,6 +211,11 @@ export abstract class BehaviorBacking {
     get stateView() {
         return this.#datasource?.view ?? {};
     }
+
+    /**
+     * Supported elements.
+     */
+    abstract readonly elements: SupportedElements | undefined;
 
     /**
      * Install a reactor.

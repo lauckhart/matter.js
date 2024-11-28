@@ -6,7 +6,6 @@
 
 import { Behavior } from "#behavior/Behavior.js";
 import { ClusterBehavior } from "#behavior/cluster/ClusterBehavior.js";
-import { Agent } from "#endpoint/Agent.js";
 import { ImplementationError, InternalError, NotImplementedError } from "#general";
 import { ClusterClientObj, ClusterServer, EndpointInterface } from "#protocol";
 import { ClusterId, ClusterType, EndpointNumber } from "#types";
@@ -35,15 +34,24 @@ export class EndpointServer implements EndpointInterface {
     }
 
     constructor(endpoint: Endpoint) {
-        // Sanity check
+        // Sanity checks
         if ((endpoint as ServerEndpoint)[SERVER] !== undefined) {
             throw new InternalError(`Endpoint ${endpoint} cluster server is already initialized`);
         }
+        endpoint.construction.assert();
 
         this.#endpoint = endpoint;
         this.#name = endpoint.type.name;
 
         (endpoint as ServerEndpoint)[SERVER] = this;
+
+        for (const type of Object.values(endpoint.behaviors.supported)) {
+            if (!(type.prototype instanceof ClusterBehavior)) {
+                continue;
+            }
+
+            this.#serve(type);
+        }
     }
 
     get number() {
@@ -54,20 +62,18 @@ export class EndpointServer implements EndpointInterface {
         return this.#name;
     }
 
-    serve(type: Behavior.Type, agent: Agent) {
-        // We only expose ClusterBehaviors publicly
-        if (!(type.prototype instanceof ClusterBehavior)) {
-            return;
-        }
+    updateServers() {
+        for (const type of Object.values(this.#endpoint.behaviors.supported)) {
+            if (!(type.prototype instanceof ClusterBehavior)) {
+                continue;
+            }
 
-        // Sanity check
-        const { cluster } = type as ClusterBehavior.Type;
-        if (this.#clusterServers.has(cluster.id)) {
-            throw new ImplementationError(`Duplicate behaviors for ${agent.endpoint} define cluster ${cluster.id}`);
-        }
+            if (this.#clusterServers.has((type as ClusterBehavior.Type).cluster?.id)) {
+                continue;
+            }
 
-        const clusterServer = BehaviorServer(this, agent, type as ClusterBehavior.Type);
-        this.#clusterServers.set(cluster.id, clusterServer);
+            this.#serve(type);
+        }
     }
 
     getNumber(): EndpointNumber {
@@ -175,6 +181,24 @@ export class EndpointServer implements EndpointInterface {
                 return EndpointServer.forEndpoint(endpoint);
             }
         }
+    }
+
+    /**
+     * Install a ClusterServer for a behavior.
+     */
+    #serve(type: Behavior.Type) {
+        // Sanity checks
+        const { cluster } = type as ClusterBehavior.Type;
+        if (cluster === undefined) {
+            throw new InternalError(`Cannot serve ${this.endpoint} behavior ${type.id}} because it is not a cluster`);
+        }
+        if (this.#clusterServers.has(cluster.id)) {
+            throw new ImplementationError(`Duplicate behaviors for ${this.endpoint} define cluster ${cluster.id}`);
+        }
+
+        // Create ClusterServer
+        const clusterServer = BehaviorServer(this, type as ClusterBehavior.Type);
+        this.#clusterServers.set(cluster.id, clusterServer);
     }
 
     /**

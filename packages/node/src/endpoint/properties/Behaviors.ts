@@ -6,7 +6,6 @@
 
 import { Behavior } from "#behavior/Behavior.js";
 import type { ClusterBehavior } from "#behavior/cluster/ClusterBehavior.js";
-import { ValidatedElements } from "#behavior/cluster/ValidatedElements.js";
 import { ActionContext } from "#behavior/context/ActionContext.js";
 import { ActionTracer } from "#behavior/context/ActionTracer.js";
 import { NodeActivity } from "#behavior/context/NodeActivity.js";
@@ -38,6 +37,12 @@ import { EndpointLifecycle } from "./EndpointLifecycle.js";
 import type { SupportedBehaviors } from "./SupportedBehaviors.js";
 
 const logger = Logger.get("Behaviors");
+
+export interface SupportedElements {
+    attributes: Set<string>;
+    commands: Set<string>;
+    events: Set<string>;
+}
 
 /**
  * This class manages {@link Behavior} instances owned by a {@link Endpoint}.
@@ -78,9 +83,8 @@ export class Behaviors {
                 return result;
             }
 
+            const elements = this.elementsOf(type);
             const elementDiagnostic = Array<unknown>();
-
-            const elements = new ValidatedElements(type as ClusterBehavior.Type);
 
             const features = new FeatureSet(cluster.supportedFeatures);
             if (features.size) {
@@ -481,6 +485,24 @@ export class Behaviors {
     versionOf(type: Behavior.Type) {
         const backing = this.#backingFor(type);
         return backing.datasource.version;
+    }
+
+    /**
+     * Access elements supported by a behavior.
+     */
+    elementsOf(type: Behavior.Type): SupportedElements {
+        if (!this.has(type)) {
+            throw new ImplementationError(`Endpoint ${this.#endpoint} does not support behavior ${type.id}`);
+        }
+
+        const elements = this.#backingFor(type).elements;
+        if (elements === undefined) {
+            throw new ImplementationError(
+                `Endpoint ${this.#endpoint} behavior ${type.id} elements accessed before initialization`,
+            );
+        }
+
+        return elements;
     }
 
     #activateLate(type: Behavior.Type) {

@@ -7,12 +7,10 @@
 import { AccessControl } from "#behavior/AccessControl.js";
 import { Behavior } from "#behavior/Behavior.js";
 import { ClusterBehavior } from "#behavior/cluster/ClusterBehavior.js";
-import { ValidatedElements } from "#behavior/cluster/ValidatedElements.js";
-import { Contextual, GlobalAttributeState, Resource } from "#behavior/index.js";
+import { Contextual, Resource } from "#behavior/index.js";
 import { StructManager } from "#behavior/state/managed/values/StructManager.js";
 import { Status } from "#behavior/state/transaction/Status.js";
 import { Val } from "#behavior/state/Val.js";
-import { Agent } from "#endpoint/Agent.js";
 import { Endpoint } from "#endpoint/Endpoint.js";
 import {
     camelize,
@@ -50,7 +48,7 @@ const logger = Logger.get("BehaviorServer");
  *
  * TODO - refactor element server management after we remove the old API
  */
-export function BehaviorServer(endpointServer: EndpointServer, agent: Agent, type: ClusterBehavior.Type) {
+export function BehaviorServer(endpointServer: EndpointServer, type: ClusterBehavior.Type) {
     const { id, name, attributes, commands, events } = type.cluster;
 
     const { endpoint } = endpointServer;
@@ -65,32 +63,17 @@ export function BehaviorServer(endpointServer: EndpointServer, agent: Agent, typ
         events: {},
     };
 
-    const behavior = agent.get(type);
-
-    // Validate elements and determine which are applicable
-    const elements = new ValidatedElements(type, behavior);
-    elements.report();
-
     // Extract read-only state and observables for setup purposes
+    const stateView = endpoint.stateOf(type) as Val.Struct;
     const observables = endpoint.eventsOf(type) as unknown as Record<string, Observable>;
+    const elements = endpointServer.endpoint.behaviors.elementsOf(type);
 
     // Add attribute servers.  Include global attributes as well as cluster attributes
     const attributeList = Array<AttributeId>();
-    const stateView = endpoint.stateOf(type) as Val.Struct;
-    const initState = behavior.state as Val.Struct;
     for (const name of elements.attributes) {
         const attribute = attributes[name];
 
-        const server = createAttributeServer(
-            name,
-            attribute,
-            endpoint,
-            type,
-            datasource,
-            stateView,
-            initState[name],
-            observables,
-        );
+        const server = createAttributeServer(name, attribute, endpoint, type, datasource, stateView, observables);
 
         clusterServer.attributes[name] = server;
         server.assignToEndpoint(endpointServer);
@@ -119,11 +102,6 @@ export function BehaviorServer(endpointServer: EndpointServer, agent: Agent, typ
         clusterServer.events[name] = server;
         server.assignToEndpoint(endpointServer);
     }
-
-    // Update global attributes detailing supported elements
-    (behavior.state as GlobalAttributeState).attributeList = attributeList;
-    (behavior.state as GlobalAttributeState).acceptedCommandList = acceptedCommandList;
-    (behavior.state as GlobalAttributeState).generatedCommandList = generatedCommandList;
 
     return clusterServer;
 }
@@ -164,7 +142,6 @@ function createAttributeServer(
     type: ClusterBehavior.Type,
     datasource: ClusterDatasource,
     stateView: Val.Struct,
-    initialValue: unknown,
     observables: Record<string, Observable>,
 ) {
     function getter(_session: any, _endpoint: any, _isFabricFiltered: any, message?: Message) {
@@ -216,7 +193,15 @@ function createAttributeServer(
         return behavior.context.transaction?.status === Status.Exclusive;
     }
 
-    const server = ConstructAttributeServer(type.cluster, definition, name, initialValue, datasource, getter, setter);
+    const server = ConstructAttributeServer(
+        type.cluster,
+        definition,
+        name,
+        stateView[name],
+        datasource,
+        getter,
+        setter,
+    );
 
     // Wire events (FixedAttributeServer is not an AttributeServer so we skip that)
     if (server instanceof AttributeServer) {
