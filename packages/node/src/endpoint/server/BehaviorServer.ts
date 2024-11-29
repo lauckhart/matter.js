@@ -7,7 +7,7 @@
 import { AccessControl } from "#behavior/AccessControl.js";
 import { Behavior } from "#behavior/Behavior.js";
 import { ClusterBehavior } from "#behavior/cluster/ClusterBehavior.js";
-import { Contextual, Resource } from "#behavior/index.js";
+import { type ClusterEvents, Contextual, Resource } from "#behavior/index.js";
 import { StructManager } from "#behavior/state/managed/values/StructManager.js";
 import { Status } from "#behavior/state/transaction/Status.js";
 import { Val } from "#behavior/state/Val.js";
@@ -21,6 +21,7 @@ import {
     Logger,
     MaybePromise,
     Observable,
+    ObserverGroup,
 } from "#general";
 import { CommandModel, ElementTag } from "#model";
 import {
@@ -40,6 +41,10 @@ import type { EndpointServer } from "./EndpointServer.js";
 
 const logger = Logger.get("BehaviorServer");
 
+export interface BehaviorServer extends ClusterServer {
+    close(): void;
+}
+
 /**
  * Create a {@link ClusterServer} for a {@link ClusterBehavior}.
  *
@@ -48,19 +53,23 @@ const logger = Logger.get("BehaviorServer");
  *
  * TODO - refactor element server management after we remove the old API
  */
-export function BehaviorServer(endpointServer: EndpointServer, type: ClusterBehavior.Type) {
+export function BehaviorServer(endpointServer: EndpointServer, type: ClusterBehavior.Type): BehaviorServer {
     const { id, name, attributes, commands, events } = type.cluster;
 
     const { endpoint } = endpointServer;
     const datasource = createClusterDatasource(endpoint, type);
+    const observers = new ObserverGroup();
 
-    const clusterServer: ClusterServer = {
+    const clusterServer: BehaviorServer = {
         id,
         name,
         datasource,
         attributes: {},
         commands: {},
         events: {},
+        close() {
+            observers.close();
+        },
     };
 
     // Extract read-only state and observables for setup purposes
@@ -73,7 +82,16 @@ export function BehaviorServer(endpointServer: EndpointServer, type: ClusterBeha
     for (const name of elements.attributes) {
         const attribute = attributes[name];
 
-        const server = createAttributeServer(name, attribute, endpoint, type, datasource, stateView, observables);
+        const server = createAttributeServer(
+            name,
+            attribute,
+            endpoint,
+            type,
+            datasource,
+            stateView,
+            observables,
+            observers,
+        );
 
         clusterServer.attributes[name] = server;
         server.assignToEndpoint(endpointServer);
@@ -97,7 +115,7 @@ export function BehaviorServer(endpointServer: EndpointServer, type: ClusterBeha
 
     // Event servers
     for (const name of elements.events) {
-        const server = createEventServer(name, events[name], endpoint, type, observables);
+        const server = createEventServer(name, events[name], endpoint, type, observables, observers);
 
         clusterServer.events[name] = server;
         server.assignToEndpoint(endpointServer);
@@ -143,6 +161,7 @@ function createAttributeServer(
     datasource: ClusterDatasource,
     stateView: Val.Struct,
     observables: Record<string, Observable>,
+    observers: ObserverGroup,
 ) {
     function getter(_session: any, _endpoint: any, _isFabricFiltered: any, message?: Message) {
         if (!message) {
@@ -205,15 +224,17 @@ function createAttributeServer(
 
     // Wire events (FixedAttributeServer is not an AttributeServer so we skip that)
     if (server instanceof AttributeServer) {
-        const observable = observables[`${name}$Changed`];
-        observable?.on((_value, _oldValue, context) => {
-            const session = context.session;
-            if (session instanceof SecureSession) {
-                server.updated(session);
-            } else {
-                server.updatedLocal();
-            }
-        });
+        const observable = observables[`${name}$Changed`] as ClusterEvents.AttributeObservable;
+        if (observable !== undefined) {
+            observers.on(observable, (_value, _oldValue, context) => {
+                const session = context.session;
+                if (session instanceof SecureSession) {
+                    server.updated(session);
+                } else {
+                    server.updatedLocal();
+                }
+            });
+        }
     }
 
     return server;
@@ -333,8 +354,9 @@ function createEventServer(
     endpoint: Endpoint,
     type: ClusterBehavior.Type,
     observables: Record<string, Observable>,
+    observers: ObserverGroup,
 ) {
-    const observable = observables[name];
+    const observable = observables[name] as ClusterEvents.EventObservable;
 
     const server = new EventServer(
         definition.id,
@@ -345,12 +367,14 @@ function createEventServer(
         definition.readAcl,
     );
 
-    observable?.on((payload, _context) => {
-        const maybePromise = server.triggerEvent(payload);
-        if (MaybePromise.is(maybePromise)) {
-            endpoint.env.runtime.add(maybePromise);
-        }
-    });
+    if (observable !== undefined) {
+        observers.on(observable, (payload, _context) => {
+            const maybePromise = server.triggerEvent(payload);
+            if (MaybePromise.is(maybePromise)) {
+                endpoint.env.runtime.add(maybePromise);
+            }
+        });
+    }
 
     const promise = server.bindToEventManager(endpoint.env.get(OccurrenceManager));
     if (MaybePromise.is(promise)) {

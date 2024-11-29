@@ -13,11 +13,7 @@ import { NodeTestInstance } from "../src/NodeTestInstance.js";
 
 Chip.onClose(async () => {
     // Terminate and/or wait for any long-running services such as MdnsService
-    const runtime = Environment.default.maybeGet(RuntimeService);
-    if (runtime) {
-        await runtime.close();
-        Environment.default.delete(RuntimeService, runtime);
-    }
+    await Environment.default.maybeGet(RuntimeService)?.close();
 });
 
 export function App(implementation: TestInstanceConstructor<NodeTestInstance>): (domain: string) => Subject {

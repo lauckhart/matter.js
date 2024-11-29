@@ -49,6 +49,7 @@
                 "--spec",
                 "${input:testFile}",
                 "--all-logs",
+                "--wtf",
                 "esm"
             ],
             "program": "${workspaceFolder}/node_modules/.bin/matter-test"

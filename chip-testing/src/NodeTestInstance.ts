@@ -4,14 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-    CloneableStorage,
-    Environment,
-    InternalError,
-    RuntimeService,
-    StorageService,
-    type ServerNode,
-} from "@matter/main";
+import { CloneableStorage, Environment, InternalError, StorageService, type ServerNode } from "@matter/main";
 import { BackchannelCommand, Subject } from "@matter/testing";
 import { TestInstance, TestInstanceConfig, log } from "./GenericTestApp.js";
 
@@ -97,14 +90,6 @@ export abstract class NodeTestInstance extends TestInstance implements Subject {
 
     override async close() {
         await this.stop();
-
-        // Terminate and/or wait for any long-running services.  We do this for the default environment in support() but
-        // this is for our local environment
-        const runtime = Environment.default.maybeGet(RuntimeService);
-        if (runtime) {
-            await runtime.close();
-            Environment.default.delete(RuntimeService, runtime);
-        }
 
         log.directive(`======> ${this.appName}: Instance stopped`);
     }

@@ -23,7 +23,7 @@ interface ServerEndpoint extends Endpoint {
 export class EndpointServer implements EndpointInterface {
     #endpoint: Endpoint;
     #name = "";
-    readonly #clusterServers = new Map<ClusterId, ClusterServer>();
+    readonly #clusterServers = new Map<ClusterId, BehaviorServer>();
 
     get endpoint() {
         return this.#endpoint;
@@ -113,7 +113,9 @@ export class EndpointServer implements EndpointInterface {
     }
 
     async [Symbol.asyncDispose]() {
-        // I believe the cluster servers are effectively disposed when the structure is emptied
+        for (const server of this.#clusterServers.values()) {
+            server.close();
+        }
         this.#clusterServers.clear();
         delete (this.#endpoint as ServerEndpoint)[SERVER];
         for (const endpoint of this.#endpoint.parts) {
@@ -128,7 +130,7 @@ export class EndpointServer implements EndpointInterface {
         // Unused, should move out of EndpointInterface
     }
 
-    addClusterServer(server: ClusterServer): void {
+    addClusterServer(server: BehaviorServer): void {
         this.#clusterServers.set(server.id, server);
     }
 

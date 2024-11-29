@@ -314,8 +314,6 @@ export class ServerNetworkRuntime extends NetworkRuntime {
 
         this.#observers.close();
 
-        await this.#mdnsBroadcaster?.expireAllAnnouncements();
-
         await this.owner.env.close(DeviceCommissioner);
         await this.owner.env.close(DeviceAdvertiser);
         await this.owner.env.close(ExchangeManager);
@@ -325,6 +323,7 @@ export class ServerNetworkRuntime extends NetworkRuntime {
         await this.#interactionServer?.[Symbol.asyncDispose]();
         this.#interactionServer = undefined;
 
+        // DeviceAdvertiser does this but we do so here just in case DeviceAdvertiser did not initialize for some reason
         await this.#mdnsBroadcaster?.close();
         this.#mdnsBroadcaster = undefined;
     }
