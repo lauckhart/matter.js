@@ -245,20 +245,39 @@ type TaggedTest = Test & { semanticName: string };
  */
 async function configureTests() {
     // Load each type of test
-    Values.tests.push(...(await YamlTests(State.container)));
-    Values.tests.push(...(await PythonTests(State.container)));
+    const rawTests = [...(await YamlTests(State.container)), ...(await PythonTests(State.container))];
 
-    // Loaded tests are paths; convert to a normal form that just consists of the actual purpose of the test
-    for (const test of Values.tests) {
-        test.name = testNameOf(test.name);
+    // Raw test names are paths; normalize, resolve conflicts and note conflicts that we cannot resolve
+    const identifiedTests = new Set<string>();
+    const duplicateTests = new Set<string>();
+    const tests = Array<Test>();
+    for (const test of rawTests) {
+        const name = testNameOf(test.name);
+        const conflictResolution = Constants.conflictResolutions[name];
+        if (conflictResolution !== undefined && conflictResolution !== basename(test.name)) {
+            continue;
+        }
+        if (identifiedTests.has(name)) {
+            duplicateTests.add(name);
+            continue;
+        }
+        test.name = name;
+        tests.push(test);
+    }
+
+    // If this fails then testNameOf or Conflicts.conflictResolutions need tweaks
+    if (duplicateTests.size) {
+        throw new Error(`Test name normalization produced duplicate names: ${[...duplicateTests].join(", ")}`);
     }
 
     // Attempt to order tests logically
-    for (const test of Values.tests) {
+    for (const test of tests) {
         (test as TaggedTest).semanticName = semanticNameOf(test.name);
     }
-    Values.tests.sort(compareSemanticNames);
+    tests.sort(compareSemanticNames);
 
+    // Success
+    Values.tests = tests;
     Values.initialized = true;
 }
 
@@ -277,8 +296,14 @@ function filterWithGlob(list: Test[], glob: string, invert = false) {
 function testNameOf(path: string) {
     let name = basename(path);
     name = name.slice(0, name.length - extname(name).length);
-    if (name.startsWith("Test_TC_")) {
+    if (name.startsWith("Test_")) {
         name = name.slice(5);
+    }
+    if (name.startsWith("TC_")) {
+        name = name.slice(3);
+    }
+    if (name.startsWith("Test")) {
+        name = name.slice(4);
     }
     return name;
 }

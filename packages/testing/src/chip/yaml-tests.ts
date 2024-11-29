@@ -13,9 +13,10 @@ import { parseStep } from "./chip-test-common.js";
 import { ContainerPaths } from "./config.js";
 
 export async function YamlTests(container: Container): Promise<Test[]> {
-    const files = await container.resolveGlob(`${ContainerPaths.yamlTestDir}/Test_*.yaml`);
+    const files1 = await container.resolveGlob(`${ContainerPaths.yamlTestDir}/Test*.yaml`);
+    const files2 = await container.resolveGlob(`${ContainerPaths.yamlCertTestDir}/Test_*.yaml`);
 
-    return files.map(filename => new YamlTest(filename));
+    return [...files1, ...files2].map(filename => new YamlTest(filename));
 }
 
 class YamlTest implements Test {

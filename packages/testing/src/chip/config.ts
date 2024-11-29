@@ -16,13 +16,21 @@ import { env } from "process";
  */
 export namespace ContainerPaths {
     export const yamlRunner = `/scripts/tests/chipyaml/chiptool.py`;
-    export const yamlTestDir = `/src/app/tests/suites/certification`;
+    export const yamlTestDir = `/src/app/tests/suites`;
+    export const yamlCertTestDir = `${yamlTestDir}/certification`;
     export const pythonTestDir = `/src/python_testing`;
     export const pythonCommissioner = `${pythonTestDir}/hello_test.py`;
     export const chipPics = "/src/app/tests/suites/certification/ci-pics-values";
     export const matterJsPics = "/matter-js-pics.properties";
     export const accessoryClient =
         "/scripts/py_matter_yamltests/matter_yamltests/pseudo_clusters/clusters/accessory_server_bridge.py";
+}
+
+/**
+ * Specify the base filename to use for a test.  This specifies a "winner" in the case of conflicts.
+ */
+export interface TestConflictResolutions {
+    [name: string]: string;
 }
 
 /**
@@ -41,4 +49,13 @@ export namespace Constants {
     export const matterJsRoot = Package.workspace.path;
     export const inputPicsFile = resolve(matterJsRoot, "packages/testing/src/chip/matter-js-pics.properties");
     export const outputPicsFile = resolve(matterJsRoot, "packages/testing/build/pics.properties");
+
+    /**
+     * Resolves know conflicts in test definitions.
+     *
+     * Currently there is exactly one test name that conflicts between YAML and python.
+     */
+    export const conflictResolutions: TestConflictResolutions = {
+        DGSW_2_1: "TC_DGSW_2_1.py",
+    };
 }
