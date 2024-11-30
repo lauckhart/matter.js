@@ -8,6 +8,7 @@ import { Subject } from "../device/subject.js";
 import { Test } from "../device/test.js";
 import type { Container } from "../docker/container.js";
 import type { TestRunner } from "../runner.js";
+import { ContainerPaths } from "./config.js";
 import { State } from "./state.js";
 
 /**
@@ -29,6 +30,8 @@ export function Chip(subject: Subject.Factory, includeGlob: string, excludeGlob?
         State.implement(subject, test);
     }
 }
+
+Chip.paths = ContainerPaths;
 
 /**
  * Configure CHIP testing.  Set prior to use of other methods.

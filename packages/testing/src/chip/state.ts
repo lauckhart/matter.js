@@ -229,13 +229,13 @@ async function configureContainer() {
  * Create a PICS file in the container appropriate for matter.js.
  */
 async function configurePics() {
-    const ciPics = await State.container.readFile(ContainerPaths.chipPics);
+    const ciPics = await State.container.read(ContainerPaths.chipPics);
     const pics = new PicsFile(ciPics, true);
 
     const overrides = new PicsFile(Constants.inputPicsFile);
     pics.patch(overrides);
 
-    await State.container.writeFile(ContainerPaths.matterJsPics, pics.toString());
+    await State.container.write(ContainerPaths.matterJsPics, pics.toString());
 }
 
 type TaggedTest = Test & { semanticName: string };
@@ -357,16 +357,11 @@ async function configureNetwork() {
     // larger task.
     //
     // Instead we just rewrite the address back to the default 127.0.0.1 used by every other platform.
-    await State.container.exec(["sed", "-i", "s/10.10.10.5/127.0.0.1/g", ContainerPaths.accessoryClient]);
+    await State.container.edit("s/10.10.10.5/127.0.0.1/g", ContainerPaths.accessoryClient);
 
     // While we're at it we rewrite the port so we can rely on dynamic allocation.  This ensures multiple suites may run
     // in parallel and something unexpectedly running on 9000 doesn't interfere with us.
-    await State.container.exec([
-        "sed",
-        "-i",
-        `s/_PORT = 9000/_PORT = ${accessoryServer.port}/g`,
-        ContainerPaths.accessoryClient,
-    ]);
+    await State.container.edit(`s/_PORT = 9000/_PORT = ${accessoryServer.port}/g`, ContainerPaths.accessoryClient);
 }
 
 /**

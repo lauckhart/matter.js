@@ -6,6 +6,7 @@
 
 import colors from "ansi-colors";
 import { basename } from "path";
+import YAML from "yaml";
 import { Test } from "../device/test.js";
 import { Container } from "../docker/container.js";
 import { Terminal } from "../docker/terminal.js";
@@ -84,13 +85,9 @@ class PythonTest implements Test {
     }
 
     async invoke(container: Container, step: (title: string) => void) {
-        const terminal = await container.exec(
-            ["python3", this.#filename, "--PICS", ContainerPaths.matterJsPics],
-            Terminal.Line,
-            {
-                cwd: "/tmp",
-            },
-        );
+        const terminal = await container.exec(await createCommand(container, this.#filename), Terminal.Line, {
+            cwd: "/tmp",
+        });
 
         let passed = false;
         for await (let line of terminal) {
@@ -152,4 +149,66 @@ function spiffy(line: string) {
     }
 
     return `${timestamp.padEnd(19)}${level.padEnd(9)}${message}`;
+}
+
+/**
+ * Each Python test includes YAML defining arguments it expects in CI.  Most of these arguments are copy and pasted
+ * boilerplate that we ignore, have reasonable defaults or that we set (e.g. PICS file).  Some however must be present
+ * or the test will not run.  So we must extract these arguments to pass into the script.
+ *
+ * A program defining mandatory arguments to itself seems silly but we work with what we've got amiright?
+ *
+ * We read the entire configuration but all we currently extract are arguments to the first run that aren't
+ * "boilerplate" arguments that we don't need.
+ */
+async function createCommand(container: Container, filename: string) {
+    const result = ["python3", filename, "--PICS", ContainerPaths.matterJsPics];
+
+    const terminal = await container.exec(["cat", filename], Terminal.Line);
+
+    const yamlLines = new Array<string>();
+    let readingYaml = false;
+    for await (const line of terminal) {
+        if (readingYaml) {
+            if (line.indexOf("=== END CI TEST ARGUMENTS ===") !== -1) {
+                break;
+            }
+
+            // YAML in comment is a little underspecified but by convention seems first space is insignificant
+            yamlLines.push(line.replace(/^\s*# /, ""));
+            continue;
+        }
+
+        if (line.indexOf("=== BEGIN CI TEST ARGUMENTS ===") !== -1) {
+            readingYaml = true;
+            continue;
+        }
+    }
+
+    await terminal.close();
+
+    if (!yamlLines.length) {
+        return result;
+    }
+
+    const config = YAML.parse(yamlLines.join("\n"));
+    const runs = config?.["test-runner-runs"];
+    if (!runs) {
+        return result;
+    }
+
+    const run1 = Object.values(runs)?.[0] as any;
+    if (!run1) {
+        return result;
+    }
+
+    let args = run1["script-args"];
+    if (typeof args !== "string") {
+        return result;
+    }
+
+    args = args.replace(/--(?:storage-path|commissioning-method|discriminator|passcode|trace-to|PICS)\s+\S+\s+/g, "");
+    result.push(...args.trim().split(/\s+/));
+
+    return result;
 }

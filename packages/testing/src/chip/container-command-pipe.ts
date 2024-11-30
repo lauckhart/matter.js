@@ -44,7 +44,7 @@ export class ContainerCommandPipe extends CommandPipe {
                     deactivator = this.#deactivate = resolve;
                 });
 
-                const terminal = await this.#container.readFile(this.filename, Terminal.Raw);
+                const terminal = await this.#container.read(this.filename, Terminal.Raw);
                 try {
                     const result = await Promise.race([deactivated, terminal.consume()]);
                     if (result === undefined) {
@@ -66,7 +66,7 @@ export class ContainerCommandPipe extends CommandPipe {
             }
         } finally {
             try {
-                await this.#container.deleteFile(this.filename);
+                await this.#container.delete(this.filename);
             } catch (e) {
                 console.warn(`Error deleting FIFO ${this.filename}:`, e);
             }

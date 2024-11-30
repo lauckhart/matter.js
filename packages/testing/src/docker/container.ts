@@ -39,22 +39,27 @@ export interface Container {
     /**
      * Retrieve contents of a file as a string.
      */
-    readFile(path: string): Promise<string>;
+    read(path: string): Promise<string>;
 
     /**
      * Retrieve the contents of a file using a terminal.
      */
-    readFile<T extends Terminal.Factory>(path: string, terminal: T): Promise<ReturnType<T>>;
+    read<T extends Terminal.Factory>(path: string, terminal: T): Promise<ReturnType<T>>;
 
     /**
      * Set contents of a file.
      */
-    writeFile(path: string, contents: {}): Promise<void>;
+    write(path: string, contents: {}): Promise<void>;
 
     /**
      * Delete a file.
      */
-    deleteFile(path: string, options?: FileDeleteOptions): Promise<void>;
+    delete(path: string, options?: FileDeleteOptions): Promise<void>;
+
+    /**
+     * Modify one or more files using a sed script.
+     */
+    edit(script: string | string[], ...paths: string[]): Promise<void>;
 
     /**
      * List files matching a bash glob.
@@ -285,7 +290,7 @@ function adaptContainer(docker: Docker, ct: Dockerode.Container): Container {
             return terminal(this.docker, stream, exited) as ReturnType<T>;
         },
 
-        async readFile<T extends Terminal.Factory>(path: string, terminal?: T): Promise<string | T> {
+        async read<T extends Terminal.Factory>(path: string, terminal?: T): Promise<string | T> {
             const term = await this.exec(["cat", path], terminal ?? Terminal.Line);
             if (terminal === undefined) {
                 return (await term.consume()) as string | T;
@@ -293,14 +298,21 @@ function adaptContainer(docker: Docker, ct: Dockerode.Container): Container {
             return term as T;
         },
 
-        async writeFile(path: string, contents: unknown) {
+        async write(path: string, contents: unknown) {
             const terminal = await this.exec(["bash", "-c", `cat - > ${shesc(path)}`], Terminal.Raw, { stdin: true });
 
             await terminal.write(contents);
             await terminal.close();
         },
 
-        async deleteFile(path: string, options: FileDeleteOptions) {
+        async edit(script: string | string[], ...paths: string[]) {
+            if (Array.isArray(script)) {
+                script = script.join(";");
+            }
+            await this.exec(["sed", "-i", script, ...paths]);
+        },
+
+        async delete(path: string, options: FileDeleteOptions) {
             const command = ["rm"];
             if (options?.recursive) {
                 command.push("-r");
