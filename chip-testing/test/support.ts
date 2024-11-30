@@ -32,3 +32,5 @@ export function App(implementation: TestInstanceConstructor<NodeTestInstance>): 
 
 export const AllClustersApp = App(AllClustersTestInstance);
 export const BridgeApp = App(BridgeTestInstance);
+
+Chip.subject = AllClustersApp;

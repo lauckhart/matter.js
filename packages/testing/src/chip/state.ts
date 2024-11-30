@@ -5,6 +5,7 @@ import { Test } from "../device/test.js";
 import { Container } from "../docker/container.js";
 import { Docker } from "../docker/docker.js";
 import { afterOne, afterRun, beforeOne, beforeRun } from "../mocha.js";
+import type { TestRunner } from "../runner.js";
 import { AccessoryServer } from "./accessory-server.js";
 import type { Chip } from "./chip.js";
 import { Constants, ContainerPaths } from "./config.js";
@@ -18,7 +19,8 @@ import { YamlTests } from "./yaml-tests.js";
  */
 const Values = {
     initialized: false,
-    maybeOptions: undefined as Chip.Options | undefined,
+    maybeRunner: undefined as TestRunner | undefined,
+    maybeSubject: undefined as Subject.Factory | undefined,
     maybeContainer: undefined as Container | undefined,
     initializedSubjects: new WeakSet<Subject>(),
     activeSubject: undefined as Subject | undefined,
@@ -30,13 +32,23 @@ const Values = {
     containerLifecycleInstalled: false,
 
     get runner() {
-        const runner = this.maybeOptions?.runner;
+        const runner = this.maybeRunner;
 
         if (runner === undefined) {
             throw new Error("No test runner configured");
         }
 
         return runner;
+    },
+
+    get subject() {
+        const subject = this.maybeSubject;
+
+        if (subject === undefined) {
+            throw new Error("no default subject configured");
+        }
+
+        return subject;
     },
 };
 
@@ -54,8 +66,12 @@ export const State = {
         return container;
     },
 
-    set options(options: Chip.Options) {
-        Values.maybeOptions = options;
+    set runner(runner: TestRunner) {
+        Values.maybeRunner = runner;
+    },
+
+    set subject(subject: Subject.Factory) {
+        Values.maybeSubject = subject;
     },
 
     /**
@@ -101,7 +117,7 @@ export const State = {
      * Select tests based on string patterns.  {@link include} and {@link exclude} are "glob" patterns with "*" as a
      * wildcard.
      */
-    select(include: string, exclude?: string) {
+    select(include: string | string[], exclude?: string | string[]) {
         let tests = filterWithGlob(Values.tests, include);
 
         if (!tests.length) {
@@ -120,24 +136,34 @@ export const State = {
     },
 
     /**
-     * Define a new test.
-     *
-     * Installs a test into the current Mocha suite that activates {@link subject} then runs {@link tester}.
+     * Install a test into the current Mocha suite.
      */
-    implement(subject: Subject.Factory, tester: Test) {
+    implement(definition: {
+        beforeStart: Chip.BeforeHook;
+        beforeTest: Chip.BeforeHook;
+        subject: Subject.Factory | undefined;
+        test: Test;
+    }) {
         if (!Values.containerLifecycleInstalled) {
             Values.containerLifecycleInstalled = true;
             beforeRun(State.initialize);
             afterRun(State.close);
         }
 
-        const test = it(tester.description ?? tester.name, async () => {
+        const { test, beforeStart, beforeTest } = definition;
+        const mochaTest = it(test.description ?? test.name, async () => {
             const { reporter } = Values.runner;
-            await tester.invoke(State.container, reporter.beginStep.bind(reporter));
-        }).timeout(tester.timeout ?? Constants.defaultTimeout);
+            await beforeTest(Values.activeSubject!, test);
+            await test.invoke(State.container, reporter.beginStep.bind(reporter));
+        }).timeout(test.timeout ?? Constants.defaultTimeout);
 
-        beforeOne(test, () => activateSubject(subject, tester));
-        afterOne(test, () => deactivateSubject());
+        // We do this separately from the test itself because we don't want activation to appear as part of the test if
+        // it fails
+        beforeOne(mochaTest, async () => {
+            await activateSubject(definition.subject ?? Values.subject, test, beforeStart);
+        });
+
+        afterOne(mochaTest, () => deactivateSubject());
     },
 
     /**
@@ -284,9 +310,12 @@ async function configureTests() {
 /**
  * Filter tests based on name using a UNIX-glob-like pattern.
  */
-function filterWithGlob(list: Test[], glob: string, invert = false) {
-    const globPattern = glob.replace(/\*/g, "[^\\/]+");
-    const pattern = new RegExp(`^${globPattern}$`);
+function filterWithGlob(list: Test[], globs: string | string[], invert = false) {
+    if (!Array.isArray(globs)) {
+        globs = [globs];
+    }
+    const patterns = globs.map(glob => glob.replace(/\*/g, "[^\\/]+"));
+    const pattern = new RegExp(`^(?:${patterns.join("|")})$`);
     return list.filter(s => !!s.name.match(pattern) === !invert);
 }
 
@@ -369,7 +398,7 @@ async function configureNetwork() {
  *
  * On first activation, commissions the subject.  Thereafter the subject is either already active or reactivated here.
  */
-async function activateSubject(factory: Subject.Factory, test: Test) {
+async function activateSubject(factory: Subject.Factory, test: Test, beforeStart?: Chip.BeforeHook) {
     const subject = loadSubject(factory, test.domain);
 
     if (Values.activeSubject === subject) {
@@ -385,6 +414,7 @@ async function activateSubject(factory: Subject.Factory, test: Test) {
             await subject.initialize();
             State.onClose(subject.close.bind(subject));
 
+            await beforeStart?.(subject, test);
             await subject.start();
 
             await test.initializeSubject(State.container, subject);
@@ -407,6 +437,7 @@ async function activateSubject(factory: Subject.Factory, test: Test) {
             await subject.restore(snapshot);
             await State.container.exec(["bash", "-c", `cp -a ${storageDirFor(subject)}/* /tmp`]);
 
+            await beforeStart?.(subject, test);
             await subject.start();
         }
     });

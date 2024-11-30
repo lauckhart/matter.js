@@ -25,7 +25,7 @@ export class TestRunner {
         readonly progress: Progress,
         readonly options: TestOptions,
     ) {
-        Chip.options = { runner: this };
+        Chip.runner = this;
 
         this.reporter = new (class extends ProgressReporter {
             constructor() {

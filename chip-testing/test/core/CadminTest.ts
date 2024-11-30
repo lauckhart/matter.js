@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllClustersApp } from "../support.js";
-
 describe("CADMIN", () => {
-    chip(AllClustersApp, "CADMIN_*");
+    chip({ include: "CADMIN_*" });
 });

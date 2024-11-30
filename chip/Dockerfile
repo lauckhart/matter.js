@@ -60,7 +60,7 @@ WORKDIR /connectedhomeip
 RUN ./scripts/checkout_submodules.py --shallow --platform linux
 
 
-# STAGE 3 - built chip-tool and installed python packages
+# STAGE 3 - build chip-tool and installed python packages
 FROM --platform=$BUILDPLATFORM build as bins
 
 WORKDIR /connectedhomeip

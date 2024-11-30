@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllClustersApp } from "./support.js";
-
 describe("TestEventTrigger", () => {
-    chip(AllClustersApp, "TC_TestEventTrigger");
+    chip({ include: "TC_TestEventTrigger" });
 });

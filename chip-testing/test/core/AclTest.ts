@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllClustersApp } from "../support.js";
-
 describe("ACL", () => {
-    chip(AllClustersApp, "ACL_*", "ACL_2_11");
+    chip({
+        include: "ACL_*",
+        exclude: "ACL_2_11",
+    });
 });

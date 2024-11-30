@@ -5,6 +5,7 @@
  */
 
 import { CloneableStorage, Environment, InternalError, StorageService, type ServerNode } from "@matter/main";
+import { OccurrenceManager } from "@matter/main/protocol";
 import { BackchannelCommand, Subject } from "@matter/testing";
 import { TestInstance, TestInstanceConfig, log } from "./GenericTestApp.js";
 
@@ -52,9 +53,20 @@ export abstract class NodeTestInstance extends TestInstance implements Subject {
         log.directive(`======> ${this.appName}: Setup done`);
     }
 
+    async restore(snapshot: {}) {
+        if (this.#node) {
+            throw new InternalError("Already initialized");
+        }
+
+        CloneableStorage.assert(snapshot);
+        this.config.storage = await snapshot.clone();
+
+        this.#node = await this.setupServer();
+    }
+
     async start() {
         if (!this.#node) {
-            this.#node = await this.setupServer();
+            throw new InternalError("Started without initialization");
         }
 
         /*
@@ -99,16 +111,15 @@ export abstract class NodeTestInstance extends TestInstance implements Subject {
         return this.config.storage.clone();
     }
 
-    async restore(snapshot: {}) {
-        CloneableStorage.assert(snapshot);
-        this.config.storage = await snapshot.clone();
-    }
-
     override async backchannel(command: BackchannelCommand) {
         switch (command.name) {
             case "reboot":
                 await this.close();
                 await this.initialize();
+
+                // Some tests (BINFO_2_2 at least) are unhappy if events persist
+                await this.node.env.get(OccurrenceManager).clear();
+
                 await this.start();
                 break;
 

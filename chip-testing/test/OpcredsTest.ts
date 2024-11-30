@@ -4,9 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllClustersApp } from "./support.js";
-
 describe("OPCREDS", () => {
-    chip(AllClustersApp, "TC_OPCREDS_3_1");
-    chip(AllClustersApp, "TC_OPCREDS_3_2");
+    chip({ include: ["TC_OPCREDS_3_1", "TC_OPCREDS_3_2"] });
 });

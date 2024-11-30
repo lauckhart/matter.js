@@ -20,4 +20,6 @@ declare global {
 }
 Object.assign(globalThis, { chip: ChipType });
 
-await chip.initialize();
+await ChipType.initialize();
+
+await import("./support.js");

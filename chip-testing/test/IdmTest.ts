@@ -4,9 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllClustersApp } from "./support.js";
-
 describe("IDM", () => {
-    chip(AllClustersApp, "TC_DA_1_2");
-    chip(AllClustersApp, "TC_DA_4_2");
+    chip({ include: ["TC_DA_1_2", "TC_DA_4_2"] });
 });

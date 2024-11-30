@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllClustersApp } from "./support.js";
-
 describe("DGGEN", () => {
-    chip(AllClustersApp, "TC_DGGEN_3_2");
+    chip({ include: "TC_DGGEN_3_2" });
 });

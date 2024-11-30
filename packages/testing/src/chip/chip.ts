@@ -23,24 +23,78 @@ import { State } from "./state.js";
  *
  * We execute test logic within a Docker container available at {@link https://github.com/matter-js/matter.js-chip}.
  */
-export function Chip(subject: Subject.Factory, includeGlob: string, excludeGlob?: string) {
-    const tests = State.select(includeGlob, excludeGlob);
+export function Chip({ include, exclude }: Chip.Options): Chip.Builder {
+    const tests = State.select(include, exclude);
+
+    const beforeStartHooks = Array<Chip.BeforeHook>();
+    const beforeTestHooks = Array<Chip.BeforeHook>();
+    let subject: Subject.Factory | undefined;
 
     for (const test of tests) {
-        State.implement(subject, test);
+        State.implement({
+            test: test,
+
+            get subject() {
+                return subject;
+            },
+
+            beforeStart: (...args) => runBeforeHooks(beforeStartHooks, ...args),
+            beforeTest: (...args) => runBeforeHooks(beforeTestHooks, ...args),
+        });
+    }
+
+    return {
+        subject(newSubject: Subject.Factory) {
+            subject = newSubject;
+            return this;
+        },
+
+        beforeStart(hook) {
+            beforeStartHooks.push(hook);
+            return this;
+        },
+
+        beforeTest(hook) {
+            beforeTestHooks.push(hook);
+            return this;
+        },
+    };
+}
+
+function runBeforeHooks(hooks: Chip.BeforeHook[], ...args: Parameters<Chip.BeforeHook>) {
+    const promises = new Array<Promise<void>>();
+    for (const hook of hooks) {
+        const promise = hook(...args);
+        if (promise) {
+            promises.push(promise);
+        }
+    }
+    if (promises) {
+        return Promise.all(promises).then(() => {});
     }
 }
 
 Chip.paths = ContainerPaths;
 
 /**
- * Configure CHIP testing.  Set prior to use of other methods.
+ * Testing controller.  Must be set prior to use of other methods.
  */
-Chip.options = undefined as undefined | Chip.Options;
+Chip.runner = undefined as undefined | TestRunner;
 
-Object.defineProperty(Chip, "options", {
-    set(options: Chip.Options) {
-        State.options = options;
+Object.defineProperty(Chip, "runner", {
+    set(runner: TestRunner) {
+        State.runner = runner;
+    },
+});
+
+/**
+ * Default test subject.  If this is set, test implementations may omit the subject.
+ */
+Chip.subject = undefined as undefined | Subject.Factory;
+
+Object.defineProperty(Chip, "subject", {
+    set(subject: Subject.Factory) {
+        State.subject = subject;
     },
 });
 
@@ -93,11 +147,40 @@ export namespace Chip {
      */
     export type TestSelection = Test | string;
 
+    export interface BeforeHook {
+        (subject: Subject, test: Test): void | Promise<void>;
+    }
+
+    export interface Builder {
+        /**
+         * Set the test subject.  Optional if you set {@link Chip.subject}.
+         */
+        subject(subject: Subject.Factory): Builder;
+
+        /**
+         * Execute a function after initializing but before starting the subject.
+         */
+        beforeStart(hook: BeforeHook): Builder;
+
+        /**
+         * Execute a function after starting the subject but before running the test.
+         */
+        beforeTest(hook: BeforeHook): Builder;
+    }
+
     /**
-     * Configuration required from testing program.
+     * Options for instantiating tests.
      */
     export interface Options {
-        runner: TestRunner;
+        /**
+         * A glob selecting tests to include.
+         */
+        include: string | string[];
+
+        /**
+         * A glob that excludes tests from the include set.
+         */
+        exclude?: string | string[];
     }
 }
 

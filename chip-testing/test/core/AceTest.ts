@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllClustersApp } from "../support.js";
-
 describe("ACE", () => {
-    chip(AllClustersApp, "ACE_*", "ACE_1_6");
+    chip({
+        include: "ACE_*",
+        exclude: "ACE_1_6",
+    });
 });

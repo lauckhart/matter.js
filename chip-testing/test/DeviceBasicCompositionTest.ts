@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllClustersApp } from "./support.js";
-
 describe("DeviceBasicComposition", () => {
-    chip(AllClustersApp, "TC_DeviceBasicComposition");
+    chip({ include: "TC_DeviceBasicComposition" });
 });

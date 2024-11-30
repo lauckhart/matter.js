@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllClustersApp } from "../support.js";
+import { OccurrenceManager } from "@matter/main/protocol";
+import { NodeTestInstance } from "../../src/NodeTestInstance.js";
 
 describe("BINFO", () => {
     before(() =>
@@ -18,5 +19,11 @@ describe("BINFO", () => {
             `${chip.paths.yamlCertTestDir}/Test_TC_BINFO_2_1.yaml`,
         ),
     );
-    chip(AllClustersApp, "BINFO_*");
+
+    chip({ include: "BINFO_*", exclude: "BINFO_2_2" });
+
+    // For BINFO 2.2 we need to clear events because otherwise test will fail due to duplicate startup events
+    chip({ include: "BINFO_2_2" }).beforeStart(subject =>
+        (subject as NodeTestInstance).node.env.get(OccurrenceManager).clear(),
+    );
 });
