@@ -48,7 +48,7 @@ export namespace ModeBase {
      *
      * @see {@link MatterSpecification.v13.Cluster} § 1.10.5.1
      */
-    export const TlvModeTag = TlvObject({
+    export const TlvModeTagStruct = TlvObject({
         /**
          * If the MfgCode field exists, the Value field shall be in the manufacturer-specific value range (see Section
          * 1.10.8, “Mode Namespace”).
@@ -78,7 +78,7 @@ export namespace ModeBase {
      *
      * @see {@link MatterSpecification.v13.Cluster} § 1.10.5.1
      */
-    export interface ModeTag extends TypeFromSchema<typeof TlvModeTag> {}
+    export interface ModeTagStruct extends TypeFromSchema<typeof TlvModeTagStruct> {}
 
     /**
      * This is a struct representing a possible mode of the server.
@@ -138,7 +138,7 @@ export namespace ModeBase {
          *
          * @see {@link MatterSpecification.v13.Cluster} § 1.10.5.2.3
          */
-        modeTags: TlvField(2, TlvArray(TlvModeTag, { maxLength: 8 }))
+        modeTags: TlvField(2, TlvArray(TlvModeTagStruct, { maxLength: 8 }))
     });
 
     /**
@@ -243,7 +243,7 @@ export namespace ModeBase {
         InvalidInMode = 3
     }
 
-    export enum ModeTagEnum {
+    export enum ModeTag {
         /**
          * The device decides which options, features and setting values to use.
          *

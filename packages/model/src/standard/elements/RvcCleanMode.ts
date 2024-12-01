@@ -10,8 +10,8 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import {
     ClusterElement as Cluster,
     AttributeElement as Attribute,
-    DatatypeElement as Datatype,
-    FieldElement as Field
+    FieldElement as Field,
+    DatatypeElement as Datatype
 } from "../../elements/index.js";
 
 export const RvcCleanMode = Cluster({
@@ -22,7 +22,22 @@ export const RvcCleanMode = Cluster({
 
     children: [
         Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
-        Attribute({ name: "SupportedModes", id: 0x0, xref: { document: "cluster", section: "7.3.6" } }),
+
+        Attribute({
+            name: "SupportedModes", id: 0x0, type: "list", access: "R V", conformance: "M",
+            constraint: "2 to 255", quality: "F",
+
+            details: "This attribute shall contain the list of supported modes that may be selected for the CurrentMode " +
+                "attribute. Each item in this list represents a unique mode as indicated by the Mode field of the " +
+                "ModeOptionStruct." +
+                "\n" +
+                "Each entry in this list shall have a unique value for the Mode field. Each entry in this list shall " +
+                "have a unique value for the Label field.",
+
+            xref: { document: "cluster", section: "1.10.6.2" },
+            children: [Field({ name: "entry", type: "RvcCleanMode.ModeOptionStruct" })]
+        }),
+
         Attribute({ name: "CurrentMode", id: 0x1, xref: { document: "cluster", section: "7.3.6" } }),
         Attribute({ name: "StartUpMode", id: 0x2, conformance: "X", xref: { document: "cluster", section: "7.3.6" } }),
         Attribute({ name: "OnMode", id: 0x3, conformance: "D", xref: { document: "cluster", section: "7.3.6" } }),
@@ -34,7 +49,11 @@ export const RvcCleanMode = Cluster({
                 "\n" +
                 "At least one entry in the SupportedModes attribute shall include the Vacuum and/or the Mop mode tag " +
                 "in the ModeTags field list.",
-            xref: { document: "cluster", section: "7.3.5.1" }
+            xref: { document: "cluster", section: "7.3.5.1" },
+            children: [Field({
+                name: "ModeTags", type: "list",
+                children: [Field({ name: "entry", type: "RvcCleanMode.ModeTagStruct" })]
+            })]
         }),
 
         Datatype({
@@ -60,6 +79,11 @@ export const RvcCleanMode = Cluster({
                     xref: { document: "cluster", section: "7.3.7.2.3" }
                 })
             ]
+        }),
+
+        Datatype({
+            name: "ModeTagStruct", type: "ModeTagStruct",
+            children: [Field({ name: "Value", type: "RvcCleanMode.ModeTag" })]
         })
     ]
 });

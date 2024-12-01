@@ -10,8 +10,8 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import {
     ClusterElement as Cluster,
     AttributeElement as Attribute,
-    DatatypeElement as Datatype,
-    FieldElement as Field
+    FieldElement as Field,
+    DatatypeElement as Datatype
 } from "../../elements/index.js";
 
 export const DishwasherMode = Cluster({
@@ -22,10 +22,22 @@ export const DishwasherMode = Cluster({
 
     children: [
         Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 2 }),
+
         Attribute({
-            name: "SupportedModes", id: 0x0, conformance: "M",
-            xref: { document: "cluster", section: "8.3.5" }
+            name: "SupportedModes", id: 0x0, type: "list", access: "R V", conformance: "M",
+            constraint: "2 to 255", quality: "F",
+
+            details: "This attribute shall contain the list of supported modes that may be selected for the CurrentMode " +
+                "attribute. Each item in this list represents a unique mode as indicated by the Mode field of the " +
+                "ModeOptionStruct." +
+                "\n" +
+                "Each entry in this list shall have a unique value for the Mode field. Each entry in this list shall " +
+                "have a unique value for the Label field.",
+
+            xref: { document: "cluster", section: "1.10.6.2" },
+            children: [Field({ name: "entry", type: "DishwasherMode.ModeOptionStruct" })]
         }),
+
         Attribute({ name: "CurrentMode", id: 0x1, conformance: "M", xref: { document: "cluster", section: "8.3.5" } }),
 
         Attribute({
@@ -45,7 +57,11 @@ export const DishwasherMode = Cluster({
                 "\n" +
                 "At least one entry in the SupportedModes attribute shall include the Normal mode tag in the " +
                 "ModeTags field list.",
-            xref: { document: "cluster", section: "8.3.4.1" }
+            xref: { document: "cluster", section: "8.3.4.1" },
+            children: [Field({
+                name: "ModeTags", type: "list",
+                children: [Field({ name: "entry", type: "DishwasherMode.ModeTagStruct" })]
+            })]
         }),
 
         Datatype({
@@ -68,6 +84,11 @@ export const DishwasherMode = Cluster({
                     xref: { document: "cluster", section: "8.3.6.1.3" }
                 })
             ]
+        }),
+
+        Datatype({
+            name: "ModeTagStruct", type: "ModeTagStruct",
+            children: [Field({ name: "Value", type: "DishwasherMode.ModeTag" })]
         })
     ]
 });

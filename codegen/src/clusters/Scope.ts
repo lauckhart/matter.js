@@ -137,8 +137,8 @@ function allocateScope(definition: Model): Scope {
 
 enum Priority {
     LocalNamespace,
-    Struct,
     Enum,
+    Struct,
     Bitmap,
     OtherNamespace,
     Global,

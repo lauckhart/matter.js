@@ -15,10 +15,14 @@ import {
     Command,
     TlvNoResponse
 } from "../cluster/Cluster.js";
-import { TlvUInt8 } from "../tlv/TlvNumber.js";
+import { TlvUInt8, TlvEnum } from "../tlv/TlvNumber.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { TlvArray } from "../tlv/TlvArray.js";
+import { TlvField, TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
+import { TlvVendorId } from "../datatype/VendorId.js";
+import { TypeFromSchema } from "../tlv/TlvSchema.js";
+import { TlvString } from "../tlv/TlvString.js";
 import { ModeBase } from "./mode-base.js";
 import { Identity } from "#general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
@@ -73,6 +77,61 @@ export namespace DeviceEnergyManagementMode {
         GridOptimization = 16387
     }
 
+    export const TlvModeTagStruct = TlvObject({
+        value: TlvOptionalField(0, TlvEnum<ModeTag>()),
+
+        /**
+         * If the MfgCode field exists, the Value field shall be in the manufacturer-specific value range (see Section
+         * 1.10.8, “Mode Namespace”).
+         *
+         * This field shall indicate the manufacturer’s VendorID and it shall determine the meaning of the Value field.
+         *
+         * The same manufacturer code and mode tag value in separate cluster instances are part of the same namespace
+         * and have the same meaning. For example: a manufacturer tag meaning "pinch" can be used both in a cluster
+         * whose purpose is to choose the amount of sugar, or in a cluster whose purpose is to choose the amount of
+         * salt.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.5.1.1
+         */
+        mfgCode: TlvOptionalField(0, TlvVendorId)
+    });
+
+    export interface ModeTagStruct extends TypeFromSchema<typeof TlvModeTagStruct> {}
+
+    /**
+     * The table below lists the changes relative to the Mode Base cluster for the fields of the ModeOptionStruct type.
+     * A blank field indicates no change.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 9.6.4.1
+     */
+    export const TlvModeOption = TlvObject({
+        modeTags: TlvField(0, TlvArray(TlvModeTagStruct, { maxLength: 8 })),
+
+        /**
+         * This field shall indicate readable text that describes the mode option, so that a client can provide it to
+         * the user to indicate what this option means. This field is meant to be readable and understandable by the
+         * user.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.5.2.1
+         */
+        label: TlvField(0, TlvString.bound({ maxLength: 64 })),
+
+        /**
+         * This field is used to identify the mode option.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.5.2.2
+         */
+        mode: TlvField(1, TlvUInt8)
+    });
+
+    /**
+     * The table below lists the changes relative to the Mode Base cluster for the fields of the ModeOptionStruct type.
+     * A blank field indicates no change.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 9.6.4.1
+     */
+    export interface ModeOption extends TypeFromSchema<typeof TlvModeOption> {}
+
     /**
      * A DeviceEnergyManagementModeCluster supports these elements if it supports feature OnOff.
      */
@@ -122,7 +181,7 @@ export namespace DeviceEnergyManagementMode {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 1.10.6.2
              */
-            supportedModes: FixedAttribute(0x0, TlvArray(ModeBase.TlvModeOption, { minLength: 2, maxLength: 255 })),
+            supportedModes: FixedAttribute(0x0, TlvArray(TlvModeOption, { minLength: 2, maxLength: 255 })),
 
             /**
              * Indicates the current mode of the server.

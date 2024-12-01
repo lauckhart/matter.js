@@ -31,9 +31,9 @@ export const WildcardPathFlags = {
     wildcardSkipAttributeList: BitFlag(2),
 
     /**
-     * Reserved
+     * Skip the EventList global attribute during wildcard expansion.
      */
-    reserved: BitFlag(3),
+    wildcardSkipEventList: BitFlag(3),
 
     /**
      * Skip the AcceptedCommandList and GeneratedCommandList global attributes during wildcard expansion.
@@ -58,5 +58,5 @@ export const WildcardPathFlags = {
     /**
      * Skip all clusters with the Diagnostics (K) quality during wildcard expansion.
      */
-    wildcardSkipDiagnosticsClusters: BitFlag(8),
+    wildcardSkipDiagnosticsClusters: BitFlag(8)
 };

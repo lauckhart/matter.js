@@ -4,13 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { isDeepEqual, Logger } from "#general";
+import { InternalError, isDeepEqual, Logger } from "#general";
 import {
     AnyElement,
     AttributeModel,
     ClusterModel,
     CommandModel,
+    DatatypeElement,
     DatatypeModel,
+    FieldElement,
     FieldModel,
     MatterModel,
     Metatype,
@@ -21,6 +23,28 @@ import {
 } from "#model";
 
 const logger = Logger.get("create-model");
+
+/**
+ * Create and validate the final model for export
+ **/
+export function finalizeModel(matter: MatterModel) {
+    matter.children.forEach(c => {
+        if (c instanceof ClusterModel) {
+            patchClusterTypes(c);
+            patchOptionsTypes(c);
+            patchStatusTypes(c);
+            patchModeTags(c);
+        }
+    });
+
+    ejectZigbee(matter);
+
+    logger.info(`validate ${matter.name}`);
+
+    return Logger.nest(() => {
+        return ValidateModel(matter);
+    });
+}
 
 /**
  * Get the properties of children without xrefs so we can compare types using isDeepEqual
@@ -168,6 +192,53 @@ function patchStatusTypes(cluster: ClusterModel) {
     }
 }
 
+/**
+ * The spec extractor retrieves the ModeTag enum but it needs linking to the appropriate attribute.
+ */
+function patchModeTags(cluster: ClusterModel) {
+    const base = cluster.base;
+    if (base?.name !== "ModeBase") {
+        return;
+    }
+
+    const hasModeTag = cluster.get(DatatypeModel, "ModeTag");
+    if (!hasModeTag) {
+        return;
+    }
+
+    // Ensure SupportedModes attribute type is our local version of ModeOptionStruct
+    const baseSupportedModes = base.get(AttributeModel, "SupportedModes");
+    if (baseSupportedModes === undefined) {
+        throw new InternalError("ModeBase cluster is missing SupportedModes attribute");
+    }
+    cluster.children.patchOrPush(baseSupportedModes.clone());
+    cluster
+        .get(AttributeModel, baseSupportedModes.name)!
+        // Fully qualify type name to disable shadow inheritance which would point at wrong type
+        .children.patchOrPush(FieldElement({ name: "entry", type: `${cluster.name}.ModeOptionStruct` }));
+
+    // Ensure ModeOptionStruct value datatype type is our local version of ModeTagStruct
+    cluster.children.patchOrPush(
+        DatatypeElement({
+            name: "ModeOptionStruct",
+            type: "ModeOptionStruct",
+        }),
+    );
+    const modeOptionStruct = cluster.get(DatatypeModel, "ModeOptionStruct")!;
+    modeOptionStruct.children.patchOrPush(FieldElement({ name: "ModeTags", type: "list" }));
+    modeOptionStruct.children
+        .get(FieldModel, "ModeTags")!
+        // Fully qualify type name to disable shadow inheritance on entry
+        .children.patchOrPush(FieldElement({ name: "entry", type: `${cluster.name}.ModeTagStruct` }));
+
+    // Ensure ModeTagStruct value datatype is our local version
+    cluster.children.patchOrPush(DatatypeElement({ name: "ModeTagStruct", type: "ModeTagStruct" }));
+    cluster
+        .get(DatatypeModel, "ModeTagStruct")!
+        // Fully qualify type name to disable shadow inheritance on entry
+        .children.patchOrPush(FieldElement({ name: "Value", type: `${cluster.name}.ModeTag` }));
+}
+
 function isZigbee(model: Model, zigbeeFeatures?: string[]) {
     const conformance = (model as { conformance?: unknown }).conformance?.toString();
     if (conformance === undefined) {
@@ -225,25 +296,4 @@ function ejectZigbee(model: Model, zigbeeFeatures?: string[]) {
     if (filtered.length !== model.children.length) {
         model.children = filtered as AnyElement[];
     }
-}
-
-/**
- * Create and validate the final model for export
- **/
-export function finalizeModel(matter: MatterModel) {
-    matter.children.forEach(c => {
-        if (c instanceof ClusterModel) {
-            patchClusterTypes(c);
-            patchOptionsTypes(c);
-            patchStatusTypes(c);
-        }
-    });
-
-    ejectZigbee(matter);
-
-    logger.info(`validate ${matter.name}`);
-
-    return Logger.nest(() => {
-        return ValidateModel(matter);
-    });
 }

@@ -290,6 +290,18 @@ export abstract class ValueModel<T extends ValueElement = ValueElement> extends 
         return new ModelTraversal().findBitDefinition(this, bit);
     }
 
+    /**
+     * Clone the model with minimum metadata required to ensure model is valid.
+     */
+    cloneAsReference<This extends ValueModel>(this: This): This {
+        const Type = this.constructor as new (definition: T) => This;
+        return new Type(this.requiredFields as T);
+    }
+
+    get requiredFields() {
+        return { name: this.name } as T;
+    }
+
     override valueOf() {
         const result = super.valueOf() as any;
         for (const k of ["conformance", "access", "quality", "constraint"]) {
@@ -304,8 +316,8 @@ export abstract class ValueModel<T extends ValueElement = ValueElement> extends 
         return result as T;
     }
 
-    constructor(definition: BaseElement.Properties<T>) {
-        super(definition);
+    constructor(definition: BaseElement.Properties<T>, ...children: Model.Definition<FieldModel>[]) {
+        super(definition, ...children);
 
         const match = this.type?.match(/^list\[(.*)\]$/);
         if (match) {

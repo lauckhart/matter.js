@@ -48,6 +48,34 @@ export const EnergyEvseMode = Cluster({
                     xref: { document: "cluster", section: "9.4.4.1.3" }
                 })
             ]
+        }),
+
+        Attribute({
+            name: "SupportedModes", id: 0x0, type: "list", access: "R V", conformance: "M",
+            constraint: "2 to 255", quality: "F",
+
+            details: "This attribute shall contain the list of supported modes that may be selected for the CurrentMode " +
+                "attribute. Each item in this list represents a unique mode as indicated by the Mode field of the " +
+                "ModeOptionStruct." +
+                "\n" +
+                "Each entry in this list shall have a unique value for the Mode field. Each entry in this list shall " +
+                "have a unique value for the Label field.",
+
+            xref: { document: "cluster", section: "1.10.6.2" },
+            children: [Field({ name: "entry", type: "EnergyEvseMode.ModeOptionStruct" })]
+        }),
+
+        Datatype({
+            name: "ModeOptionStruct", type: "ModeOptionStruct",
+            children: [Field({
+                name: "ModeTags", type: "list",
+                children: [Field({ name: "entry", type: "EnergyEvseMode.ModeTagStruct" })]
+            })]
+        }),
+
+        Datatype({
+            name: "ModeTagStruct", type: "ModeTagStruct",
+            children: [Field({ name: "Value", type: "EnergyEvseMode.ModeTag" })]
         })
     ]
 });

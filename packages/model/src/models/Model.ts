@@ -59,7 +59,7 @@ export abstract class Model<T extends BaseElement = BaseElement> {
      */
     operationalShadow?: Model | null;
 
-    #children?: Children<Model>;
+    #children?: Children;
     #parent?: Model;
 
     /**
@@ -270,6 +270,15 @@ export abstract class Model<T extends BaseElement = BaseElement> {
     }
 
     /**
+     * Update a subset of fields.
+     */
+    patch(values: Partial<T>) {
+        for (const [k, v] of Object.entries(values.valueOf())) {
+            this[k as keyof this] = v;
+        }
+    }
+
+    /**
      * Determine whether this element applies to a specific revision.
      */
     appliesTo(revision: Specification.Revision) {
@@ -380,6 +389,13 @@ export abstract class Model<T extends BaseElement = BaseElement> {
     }
 
     /**
+     * Visit this model and each of its ancestors.
+     */
+    forEachAncestor(fn: (model: Model) => boolean | void) {
+        new ModelTraversal().visitInheritance(this, fn);
+    }
+
+    /**
      * Find all children that reference a specific type.
      */
     references(type: Model) {
@@ -430,7 +446,7 @@ export abstract class Model<T extends BaseElement = BaseElement> {
 
     constructor(definition: Model<T> | BaseElement.Properties<T>, ...children: Model.Definition<Model>[]) {
         if (typeof definition !== "object") {
-            throw new ImplementationError(`Model definition must be an object, not "${typeof definition}"`);
+            throw new ImplementationError(`Model definition must be an object, not ${typeof definition}`);
         }
 
         const isClone = definition instanceof Model;
@@ -556,7 +572,7 @@ export namespace Model {
     /**
      * Obtain the element type of a model type.
      */
-    export type ElementOf<T> = T extends Model<infer E extends AnyElement> ? E : never;
+    export type ElementOf<T> = T extends Model<infer E extends AnyElement> ? E : AnyElement;
 
     /**
      * Obtain the child type of a model type.

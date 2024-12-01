@@ -173,11 +173,8 @@ export class ModelTraversal {
         }
 
         const findBaseOp = () => {
-            // If I override another element (same identity and tag in parent's inheritance hierarchy) then I implicitly
-            // inherit from the shadow.
-            //
-            // Semantics would be wonky if the model designates a different type than the shadow, but we support this by
-            // ignoring the shadow in this case.
+            // If I override another element (same identity and tag in parent's inheritance hierarchy) and don't specify
+            // a type then I implicitly inherit from the shadow.
             const shadow = this.findShadow(model);
             if (
                 shadow !== undefined &&

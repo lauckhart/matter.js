@@ -30,7 +30,11 @@ export const DeviceEnergyManagementMode = Cluster({
             name: "ModeOptionStruct", type: "ModeOptionStruct",
             details: "The table below lists the changes relative to the Mode Base cluster for the fields of the " +
                 "ModeOptionStruct type. A blank field indicates no change.",
-            xref: { document: "cluster", section: "9.6.4.1" }
+            xref: { document: "cluster", section: "9.6.4.1" },
+            children: [Field({
+                name: "ModeTags", type: "list",
+                children: [Field({ name: "entry", type: "DeviceEnergyManagementMode.ModeTagStruct" })]
+            })]
         }),
 
         Datatype({
@@ -66,6 +70,26 @@ export const DeviceEnergyManagementMode = Cluster({
                     xref: { document: "cluster", section: "9.6.5.1.4" }
                 })
             ]
+        }),
+
+        Attribute({
+            name: "SupportedModes", id: 0x0, type: "list", access: "R V", conformance: "M",
+            constraint: "2 to 255", quality: "F",
+
+            details: "This attribute shall contain the list of supported modes that may be selected for the CurrentMode " +
+                "attribute. Each item in this list represents a unique mode as indicated by the Mode field of the " +
+                "ModeOptionStruct." +
+                "\n" +
+                "Each entry in this list shall have a unique value for the Mode field. Each entry in this list shall " +
+                "have a unique value for the Label field.",
+
+            xref: { document: "cluster", section: "1.10.6.2" },
+            children: [Field({ name: "entry", type: "DeviceEnergyManagementMode.ModeOptionStruct" })]
+        }),
+
+        Datatype({
+            name: "ModeTagStruct", type: "ModeTagStruct",
+            children: [Field({ name: "Value", type: "DeviceEnergyManagementMode.ModeTag" })]
         })
     ]
 });
