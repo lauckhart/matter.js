@@ -10,9 +10,9 @@ import { MatterDefinition } from "../MatterDefinition.js";
 import {
     ClusterElement as Cluster,
     AttributeElement as Attribute,
-    FieldElement as Field,
     CommandElement as Command,
-    DatatypeElement as Datatype
+    DatatypeElement as Datatype,
+    FieldElement as Field
 } from "../../elements/index.js";
 
 export const MicrowaveOvenMode = Cluster({
@@ -23,22 +23,7 @@ export const MicrowaveOvenMode = Cluster({
 
     children: [
         Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 1 }),
-
-        Attribute({
-            name: "SupportedModes", id: 0x0, type: "list", access: "R V", conformance: "M",
-            constraint: "2 to 255", quality: "F",
-
-            details: "This attribute shall contain the list of supported modes that may be selected for the CurrentMode " +
-                "attribute. Each item in this list represents a unique mode as indicated by the Mode field of the " +
-                "ModeOptionStruct." +
-                "\n" +
-                "Each entry in this list shall have a unique value for the Mode field. Each entry in this list shall " +
-                "have a unique value for the Label field.",
-
-            xref: { document: "cluster", section: "1.10.6.2" },
-            children: [Field({ name: "entry", type: "MicrowaveOvenMode.ModeOptionStruct" })]
-        }),
-
+        Attribute({ name: "SupportedModes", id: 0x0, xref: { document: "cluster", section: "8.12.4" } }),
         Attribute({ name: "CurrentMode", id: 0x1, xref: { document: "cluster", section: "8.12.4" } }),
         Attribute({ name: "StartUpMode", id: 0x2, conformance: "X", xref: { document: "cluster", section: "8.12.4" } }),
         Attribute({ name: "OnMode", id: 0x3, conformance: "X", xref: { document: "cluster", section: "8.12.4" } }),
@@ -61,19 +46,6 @@ export const MicrowaveOvenMode = Cluster({
                     xref: { document: "cluster", section: "8.12.6.1" }
                 })
             ]
-        }),
-
-        Datatype({
-            name: "ModeOptionStruct", type: "ModeOptionStruct",
-            children: [Field({
-                name: "ModeTags", type: "list",
-                children: [Field({ name: "entry", type: "MicrowaveOvenMode.ModeTagStruct" })]
-            })]
-        }),
-
-        Datatype({
-            name: "ModeTagStruct", type: "ModeTagStruct",
-            children: [Field({ name: "Value", type: "MicrowaveOvenMode.ModeTag" })]
         })
     ]
 });

@@ -9,7 +9,8 @@
 import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { FixedAttribute, Command, TlvNoResponse, Attribute, Event, EventPriority } from "../cluster/Cluster.js";
 import { TlvUInt32 } from "../tlv/TlvNumber.js";
-import { AlarmBase } from "./alarm-base.js";
+import { TlvField, TlvObject } from "../tlv/TlvObject.js";
+import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { Identity } from "#general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
@@ -28,6 +29,73 @@ export namespace RefrigeratorAlarm {
          */
         Reset = "Reset"
     }
+
+    /**
+     * Input to the RefrigeratorAlarm reset command
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 1.15.7.1
+     */
+    export const TlvResetRequest = TlvObject({
+        /**
+         * This field shall indicate a bitmap where each bit set in this field corresponds to an alarm that shall be
+         * reset to inactive in the State attribute unless the alarm definition requires manual intervention. If the
+         * alarms indicated are successfully reset, the response status code shall be SUCCESS, otherwise, the response
+         * status code shall be FAILURE.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.15.7.1.1
+         */
+        alarms: TlvField(0, TlvUInt32)
+    });
+
+    /**
+     * Input to the RefrigeratorAlarm reset command
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 1.15.7.1
+     */
+    export interface ResetRequest extends TypeFromSchema<typeof TlvResetRequest> {}
+
+    /**
+     * Body of the RefrigeratorAlarm notify event
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 1.15.8.1
+     */
+    export const TlvNotifyEvent = TlvObject({
+        /**
+         * This field shall indicate those alarms that have become active.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.15.8.1.1
+         */
+        active: TlvField(1, TlvUInt32),
+
+        /**
+         * This field shall indicate those alarms that have become inactive.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.15.8.1.2
+         */
+        inactive: TlvField(2, TlvUInt32),
+
+        /**
+         * This field shall be a copy of the new State attribute value that resulted in the event being generated. That
+         * is, this field shall have all the bits in Active set and shall NOT have any of the bits in Inactive set.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.15.8.1.4
+         */
+        state: TlvField(3, TlvUInt32),
+
+        /**
+         * This field shall be a copy of the Mask attribute when this event was generated.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.15.8.1.3
+         */
+        mask: TlvField(4, TlvUInt32)
+    });
+
+    /**
+     * Body of the RefrigeratorAlarm notify event
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 1.15.8.1
+     */
+    export interface NotifyEvent extends TypeFromSchema<typeof TlvNotifyEvent> {}
 
     /**
      * @see {@link MatterSpecification.v13.Cluster} § 8.8.5.1
@@ -61,7 +129,7 @@ export namespace RefrigeratorAlarm {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 1.15.7.1
              */
-            reset: Command(0x0, AlarmBase.TlvResetRequest, 0x0, TlvNoResponse)
+            reset: Command(0x0, TlvResetRequest, 0x0, TlvNoResponse)
         }
     });
 
@@ -116,7 +184,7 @@ export namespace RefrigeratorAlarm {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 1.15.8.1
              */
-            notify: Event(0x0, EventPriority.Info, AlarmBase.TlvNotifyEvent)
+            notify: Event(0x0, EventPriority.Info, TlvNotifyEvent)
         },
 
         /**

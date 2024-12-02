@@ -21,11 +21,34 @@ import { AccessLevel } from "#model";
 import { TlvUInt16, TlvUInt32 } from "../tlv/TlvNumber.js";
 import { TlvBoolean } from "../tlv/TlvBoolean.js";
 import { BasicInformation } from "./basic-information.js";
+import { TlvField, TlvObject } from "../tlv/TlvObject.js";
+import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Identity } from "#general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
 
 export namespace BridgedDeviceBasicInformation {
+    /**
+     * Body of the BridgedDeviceBasicInformation startUp event
+     *
+     * @see {@link MatterSpecification.v13.Core} § 11.1.6.1
+     */
+    export const TlvStartUpEvent = TlvObject({
+        /**
+         * This field shall be set to the same value as the one available in the SoftwareVersion attribute.
+         *
+         * @see {@link MatterSpecification.v13.Core} § 11.1.6.1.1
+         */
+        softwareVersion: TlvField(0, TlvUInt32)
+    });
+
+    /**
+     * Body of the BridgedDeviceBasicInformation startUp event
+     *
+     * @see {@link MatterSpecification.v13.Core} § 11.1.6.1
+     */
+    export interface StartUpEvent extends TypeFromSchema<typeof TlvStartUpEvent> {}
+
     /**
      * @see {@link Cluster}
      */
@@ -124,7 +147,7 @@ export namespace BridgedDeviceBasicInformation {
             /**
              * @see {@link MatterSpecification.v13.Core} § 9.13.5
              */
-            startUp: OptionalEvent(0x0, EventPriority.Critical, BasicInformation.TlvStartUpEvent),
+            startUp: OptionalEvent(0x0, EventPriority.Critical, TlvStartUpEvent),
 
             /**
              * @see {@link MatterSpecification.v13.Core} § 9.13.5

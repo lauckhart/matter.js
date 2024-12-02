@@ -24,6 +24,7 @@ import "./GroupsOverrides.js";
 import "./IlluminanceMeasurementOverrides.js";
 import "./LevelControlOverrides.js";
 import "./LocalizationConfigurationOverrides.js";
+import "./ModeBaseOverrides.js";
 import "./ModeSelectOverrides.js";
 import "./OperationalCredentialsOverrides.js";
 import "./PumpConfigurationAndControlOverrides.js";

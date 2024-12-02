@@ -12,7 +12,11 @@ The main work (all changes without a GitHub username in brackets in the below li
 ## __WORK IN PROGRESS__
 
 -   @matter/model
-    - Enhancement: The generated model now adds extensions cluster elements as required to enable Matter enums that extend parent enums
+    - Enhancement: The model generator now links to local mode tags for clusters inheriting from `ModeBase`
+
+-   @matter/types
+    - BREAKING: In `ContentLauncher` cluster `ParameterEnum` is renamed to `Parameter` and `Parameter` is renamed to `ParameterStruct`
+    - BREAKING: In 
 
 ## 0.11.8 (2024-11-29)
 

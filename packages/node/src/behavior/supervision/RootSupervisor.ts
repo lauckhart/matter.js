@@ -5,7 +5,7 @@
  */
 
 import { camelize, InternalError } from "#general";
-import { AttributeModel, ClusterModel, FeatureMap, FeatureSet, Matter, ValueModel } from "#model";
+import { AttributeModel, ClusterModel, FeatureMap, FeatureSet, Matter, ScopeExtensions, ValueModel } from "#model";
 import { AccessControl } from "../AccessControl.js";
 import { Val } from "../state/Val.js";
 import { ValueCaster } from "../state/managed/values/ValueCaster.js";
@@ -45,6 +45,7 @@ export class RootSupervisor implements ValueSupervisor {
     #featureMap: ValueModel;
     #supportedFeatures: FeatureSet;
     #members: Set<ValueModel>;
+    #extensions: ScopeExtensions;
     #root: ValueSupervisor;
     #memberNames?: Set<string>;
     #persistentNames?: Set<string>;
@@ -65,6 +66,7 @@ export class RootSupervisor implements ValueSupervisor {
             this.#supportedFeatures = new FeatureSet();
         }
         this.#members = new Set(schema.activeMembers);
+        this.#extensions = ScopeExtensions(schema);
 
         this.#root = this.#createValueSupervisor(schema);
     }
@@ -173,16 +175,26 @@ export class RootSupervisor implements ValueSupervisor {
         }
 
         let supervisor = this.#cache.get(schema);
+
         if (supervisor === undefined) {
-            if (schema.tag === "attribute" && schema.id !== undefined && schema.id in GlobalAttributeSupervisors) {
-                supervisor = {
-                    ...GlobalAttributeSupervisors[schema.id],
-                    owner: this,
-                    schema,
-                };
+            const extension = schema instanceof ValueModel ? this.#extensions.for(schema) : schema;
+
+            if (extension !== schema) {
+                // This schema is extended in the cluster's scope
+                supervisor = this.get(extension);
             } else {
-                supervisor = this.#createValueSupervisor(schema);
+                // No extension
+                if (schema.tag === "attribute" && schema.id !== undefined && schema.id in GlobalAttributeSupervisors) {
+                    supervisor = {
+                        ...GlobalAttributeSupervisors[schema.id],
+                        owner: this,
+                        schema,
+                    };
+                } else {
+                    supervisor = this.#createValueSupervisor(schema);
+                }
             }
+
             this.#cache.set(schema, supervisor);
         }
 

@@ -15,6 +15,7 @@ import {
     MatterModel,
     Metatype,
     Model,
+    ScopeExtensions,
     ValueModel,
 } from "#model";
 import { camelize } from "../util/string.js";
@@ -108,7 +109,8 @@ export function Scope(model: Model | Scope): Scope {
 }
 
 function allocateScope(definition: Model): Scope {
-    const { locations, names } = assignNames(definition);
+    const extensions = ScopeExtensions(definition);
+    const { locations, names } = assignNames(definition, extensions);
 
     return {
         owner: definition,
@@ -126,6 +128,9 @@ function allocateScope(definition: Model): Scope {
         },
 
         locationOf(model: Model) {
+            // Redirect to canonical model for public API
+            model = extensions.for(model);
+
             const location = locations.get(model);
             if (location === undefined) {
                 throw new InternalError(`No location identified for ${model} from scope ${definition}`);
@@ -156,14 +161,14 @@ interface BackingData {
     locations: Locations;
 }
 
-function assignNames(namespace: Model): BackingData {
-    const locations = identifyNamedModels(namespace);
+function assignNames(scope: Model, extensions: ScopeExtensions): BackingData {
+    const locations = identifyNamedModels(scope, extensions);
     const priorities = assignPriorities(locations);
     const names = assignNamesByPriority(priorities);
     return { names, locations };
 }
 
-function identifyNamedModels(rootScope: Model): Locations {
+function identifyNamedModels(rootScope: Model, extensions: ScopeExtensions): Locations {
     const locations = new Locations();
 
     locations.set(rootScope, {
@@ -183,6 +188,26 @@ function identifyNamedModels(rootScope: Model): Locations {
         });
     }
 
+    // Visit all direct descendents and identify locations
+    rootScope.visit(define);
+
+    // For clusters, also visit inherited attributes, commands and events
+    if (rootScope instanceof ClusterModel) {
+        const aces = rootScope.allAces;
+        for (const ace of aces) {
+            if (ace.parent === rootScope) {
+                continue;
+            }
+
+            ace.visit(define);
+        }
+    }
+
+    return locations;
+
+    /**
+     * Set the location for a model and, if the model is not local, its scope
+     */
     function define(model: Model) {
         if (!(model instanceof ValueModel)) {
             return;
@@ -209,21 +234,38 @@ function identifyNamedModels(rootScope: Model): Locations {
         }
 
         const definer = model.definingModel;
+        if (rootScope.name === "BridgedDeviceBasicInformation" && definer?.name === "StartUp") debugger;
         if (!definer) {
+            // Not a reference
+            return;
+        }
+        if (locations.has(definer)) {
+            // Already identified
             return;
         }
 
-        const scope = definer.owner(ClusterModel) ?? definer.owner(MatterModel);
+        let scope: Model | undefined = definer.owner(ClusterModel) ?? definer.owner(MatterModel);
         if (scope === undefined) {
             throw new InternalError(`Model ${definer} does not appear to be part of a proper hierarchy`);
         }
 
-        locations.set(definer, {
+        const location: Scope.Location = {
             definition: definer,
             scope,
             isLocal: scope === rootScope || definer === rootScope,
             isGlobal: scope.tag === ElementTag.Matter,
-        });
+        };
+
+        locations.set(definer, location);
+
+        // The model is not defined locally but we need to import any subtree that references shadowed elements.
+        if (definer instanceof ValueModel && referencesShadows(definer)) {
+            location.isLocal = true;
+            scope = rootScope;
+
+            // Now localize any sub-references
+            definer.visit(define);
+        }
 
         if (scope instanceof ClusterModel && scope !== rootScope) {
             locations.set(scope, {
@@ -235,22 +277,43 @@ function identifyNamedModels(rootScope: Model): Locations {
         }
     }
 
-    // Visit all direct descendents and assign names
-    rootScope.visit(define);
+    /**
+     * Search the model's structure for references to elements that shadow elements defined in the target scope.  If
+     * this occurs then we must import types for the subtree so we can redefine them.
+     */
+    function referencesShadows(model: Model) {
+        const visited = new Set([model]);
+        return (
+            model.visit(descendent => {
+                // Avoid revisiting models (and skip the root model)
+                if (visited.has(descendent)) {
+                    return;
+                }
+                visited.add(descendent);
 
-    // For clusters, also visit inherited attributes, commands and events
-    if (rootScope instanceof ClusterModel) {
-        const aces = rootScope.allAces;
-        for (const ace of aces) {
-            if (ace.parent === rootScope) {
-                continue;
-            }
+                // Only ValueModels are relevant and we need type narrowed
+                if (!(model instanceof ValueModel)) {
+                    return;
+                }
 
-            ace.visit(define);
-        }
+                // Not a reference if there is no base
+                const base = model.base;
+                if (!base) {
+                    return;
+                }
+
+                // If the base is a shadow then we've found a shadow reference
+                if (extensions.isShadow(base)) {
+                    return false;
+                }
+
+                // Check the base's subtree
+                if (referencesShadows(base)) {
+                    return false;
+                }
+            }) === false
+        );
     }
-
-    return locations;
 }
 
 function assignPriorities(locations: Locations): ModelsByPriority {

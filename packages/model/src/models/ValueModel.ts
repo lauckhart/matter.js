@@ -151,6 +151,13 @@ export abstract class ValueModel<T extends ValueElement = ValueElement> extends 
     }
 
     /**
+     * Like {@link defininingModel} but also considers models in derived scopes that extend this model.
+     */
+    definingModelFrom(scope: Model) {
+        return new ModelTraversal().findDefiningModelFrom(this, scope);
+    }
+
+    /**
      * Get the entry type for lists, if any.
      */
     get listEntry() {

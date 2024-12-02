@@ -256,7 +256,7 @@ export class TlvGenerator {
         const enumBlock = this.definitions.expressions(`export enum ${name} {`, "}");
 
         this.definitions.insertingBefore(enumBlock, () => {
-            model.children.forEach(child => {
+            model.members.forEach(child => {
                 let name = child.name;
                 if (name.match(/^\d+$/)) {
                     // Typescript doesn't allow numeric enum keys

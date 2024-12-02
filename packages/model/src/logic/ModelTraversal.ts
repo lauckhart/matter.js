@@ -296,6 +296,18 @@ export class ModelTraversal {
     }
 
     /**
+     * Find a defining model from a scope that derived from a model's scope.  In this case a model with same tag/name
+     * may be the defining instance.
+     */
+    findDefiningModelFrom(model: ValueModel, scope: Model): ValueModel | undefined {
+        let override: undefined | ValueModel;
+        if (scope !== model.parent) {
+            override = this.findMember(scope, model?.name, [model.tag]) as ValueModel | undefined;
+        }
+        return this.findDefiningModel(override ?? model);
+    }
+
+    /**
      * Find a child in the parent's inheritance hierarchy with the same tag and ID/name.
      */
     findShadow(model: Model | undefined): Model | undefined {

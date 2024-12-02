@@ -10,12 +10,11 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import { BitFlag } from "../schema/BitmapSchema.js";
 import { FixedAttribute, Attribute, Command, TlvNoResponse } from "../cluster/Cluster.js";
 import { TlvArray } from "../tlv/TlvArray.js";
-import { TlvField, TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
-import { TlvEnum, TlvUInt8 } from "../tlv/TlvNumber.js";
-import { TlvVendorId } from "../datatype/VendorId.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
+import { TlvField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvString } from "../tlv/TlvString.js";
+import { TlvUInt8 } from "../tlv/TlvNumber.js";
 import { ModeBase } from "./mode-base.js";
+import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { Identity } from "#general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
 
@@ -37,6 +36,111 @@ export namespace RvcCleanMode {
         OnOff = "OnOff"
     }
 
+    /**
+     * This is a struct representing a possible mode of the server.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 1.10.5.2
+     */
+    export const TlvModeOption = TlvObject({
+        /**
+         * This field shall indicate readable text that describes the mode option, so that a client can provide it to
+         * the user to indicate what this option means. This field is meant to be readable and understandable by the
+         * user.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.5.2.1
+         */
+        label: TlvField(0, TlvString.bound({ maxLength: 64 })),
+
+        /**
+         * This field is used to identify the mode option.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.5.2.2
+         */
+        mode: TlvField(1, TlvUInt8),
+
+        /**
+         * This field shall contain a list of tags that are associated with the mode option. This may be used by
+         * clients to determine the full or the partial semantics of a certain mode, depending on which tags they
+         * understand, using standard definitions and/or manufacturer specific namespace definitions.
+         *
+         * The standard mode tags are defined in this cluster specification. For the derived cluster instances, if the
+         * specification of the derived cluster defines a namespace, the set of standard mode tags also includes the
+         * mode tag values from that namespace.
+         *
+         * Mode tags can help clients look for options that meet certain criteria, render the user interface, use
+         *
+         * the mode in an automation, or to craft help text their voice-driven interfaces. A mode tag shall be either a
+         * standard tag or a manufacturer specific tag, as defined in each ModeTagStruct list entry.
+         *
+         * A mode option may have more than one mode tag. A mode option may be associated with a mixture of standard
+         * and manufacturer specific mode tags. A mode option shall be associated with at least one standard mode tag.
+         *
+         * A few examples are provided below.
+         *
+         *   • A mode named "100%" can have both the High (manufacturer specific) and Max (standard) mode tag. Clients
+         *     seeking the mode for either High or Max will find the same mode in this case.
+         *
+         *   • A mode that includes a LowEnergy tag can be displayed by the client using a widget icon that shows a
+         *     green leaf.
+         *
+         *   • A mode that includes a LowNoise tag may be used by the client when the user wishes for a lower level of
+         *     audible sound, less likely to disturb the household’s activities.
+         *
+         *   • A mode that includes a LowEnergy tag (standard, defined in this cluster specification) and also a
+         *     Delicate tag (standard, defined in the namespace of a Laundry Mode derived cluster).
+         *
+         *   • A mode that includes both a generic Quick tag (defined here), and Vacuum and Mop tags, (defined in the
+         *     RVC Clean cluster that is a derivation of this cluster).
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.5.2.3
+         */
+        modeTags: TlvField(2, TlvArray(ModeBase.TlvModeTagStruct, { maxLength: 8 }))
+    });
+
+    /**
+     * This is a struct representing a possible mode of the server.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 1.10.5.2
+     */
+    export interface ModeOption extends TypeFromSchema<typeof TlvModeOption> {}
+
+    export enum ModeChangeStatus {
+        /**
+         * @see {@link MatterSpecification.v13.Cluster} § 7.3.7.1
+         */
+        CleaningInProgress = 64,
+
+        /**
+         * Switching to the mode indicated by the NewMode field is allowed and possible. The CurrentMode attribute is
+         * set to the value of the NewMode field.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.7.2.1.2
+         */
+        Success = 0,
+
+        /**
+         * The value of the NewMode field doesn’t match any entries in the SupportedMode attribute.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.7.2.1.2
+         */
+        UnsupportedMode = 1,
+
+        /**
+         * Generic failure code, indicating that switching to the mode indicated by the NewMode field is not allowed or
+         * not possible.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.7.2.1.2
+         */
+        GenericFailure = 2,
+
+        /**
+         * The received request cannot be handled due to the current mode of the device
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.7.2.1.2
+         */
+        InvalidInMode = 3
+    }
+
     export enum ModeTag {
         /**
          * @see {@link MatterSpecification.v13.Cluster} § 7.3.7.2
@@ -55,75 +159,77 @@ export namespace RvcCleanMode {
          *
          * @see {@link MatterSpecification.v13.Cluster} § 7.3.7.2.3
          */
-        Mop = 16386
-    }
-
-    export const TlvModeTagStruct = TlvObject({
-        value: TlvOptionalField(0, TlvEnum<ModeTag>()),
+        Mop = 16386,
 
         /**
-         * If the MfgCode field exists, the Value field shall be in the manufacturer-specific value range (see Section
-         * 1.10.8, “Mode Namespace”).
+         * The device decides which options, features and setting values to use.
          *
-         * This field shall indicate the manufacturer’s VendorID and it shall determine the meaning of the Value field.
-         *
-         * The same manufacturer code and mode tag value in separate cluster instances are part of the same namespace
-         * and have the same meaning. For example: a manufacturer tag meaning "pinch" can be used both in a cluster
-         * whose purpose is to choose the amount of sugar, or in a cluster whose purpose is to choose the amount of
-         * salt.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 1.10.5.1.1
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.8
          */
-        mfgCode: TlvOptionalField(0, TlvVendorId)
-    });
-
-    export interface ModeTagStruct extends TypeFromSchema<typeof TlvModeTagStruct> {}
-
-    /**
-     * The table below lists the changes relative to the Mode Base cluster for the fields of the ModeOptionStruct type.
-     * A blank field indicates no change.
-     *
-     * At least one entry in the SupportedModes attribute shall include the Vacuum and/or the Mop mode tag in the
-     * ModeTags field list.
-     *
-     * @see {@link MatterSpecification.v13.Cluster} § 7.3.5.1
-     */
-    export const TlvModeOption = TlvObject({
-        modeTags: TlvField(0, TlvArray(TlvModeTagStruct, { maxLength: 8 })),
+        Auto = 0,
 
         /**
-         * This field shall indicate readable text that describes the mode option, so that a client can provide it to
-         * the user to indicate what this option means. This field is meant to be readable and understandable by the
-         * user.
+         * The mode of the device is optimizing for faster completion.
          *
-         * @see {@link MatterSpecification.v13.Cluster} § 1.10.5.2.1
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.8
          */
-        label: TlvField(0, TlvString.bound({ maxLength: 64 })),
+        Quick = 1,
 
         /**
-         * This field is used to identify the mode option.
+         * The device is silent or barely audible while in this mode.
          *
-         * @see {@link MatterSpecification.v13.Cluster} § 1.10.5.2.2
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.8
          */
-        mode: TlvField(1, TlvUInt8)
-    });
+        Quiet = 2,
 
-    /**
-     * The table below lists the changes relative to the Mode Base cluster for the fields of the ModeOptionStruct type.
-     * A blank field indicates no change.
-     *
-     * At least one entry in the SupportedModes attribute shall include the Vacuum and/or the Mop mode tag in the
-     * ModeTags field list.
-     *
-     * @see {@link MatterSpecification.v13.Cluster} § 7.3.5.1
-     */
-    export interface ModeOption extends TypeFromSchema<typeof TlvModeOption> {}
-
-    export enum ModeChangeStatus {
         /**
-         * @see {@link MatterSpecification.v13.Cluster} § 7.3.7.1
+         * Either the mode is inherently low noise or the device optimizes for that.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.8
          */
-        CleaningInProgress = 64
+        LowNoise = 3,
+
+        /**
+         * The device is optimizing for lower energy usage in this mode. Sometimes called "Eco mode".
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.8
+         */
+        LowEnergy = 4,
+
+        /**
+         * A mode suitable for use during vacations or other extended absences.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.8
+         */
+        Vacation = 5,
+
+        /**
+         * The mode uses the lowest available setting value.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.8
+         */
+        Min = 6,
+
+        /**
+         * The mode uses the highest available setting value.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.8
+         */
+        Max = 7,
+
+        /**
+         * The mode is recommended or suitable for use during night time.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.8
+         */
+        Night = 8,
+
+        /**
+         * The mode is recommended or suitable for use during day time.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.10.8
+         */
+        Day = 9
     }
 
     /**
@@ -148,16 +254,13 @@ export namespace RvcCleanMode {
 
         attributes: {
             /**
-             * This attribute shall contain the list of supported modes that may be selected for the CurrentMode
-             * attribute. Each item in this list represents a unique mode as indicated by the Mode field of the
-             * ModeOptionStruct.
-             *
-             * Each entry in this list shall have a unique value for the Mode field. Each entry in this list shall have
-             * a unique value for the Label field.
-             *
-             * @see {@link MatterSpecification.v13.Cluster} § 1.10.6.2
+             * @see {@link MatterSpecification.v13.Cluster} § 7.3.6
              */
-            supportedModes: FixedAttribute(0x0, TlvArray(TlvModeOption, { minLength: 2, maxLength: 255 })),
+            supportedModes: FixedAttribute(
+                0x0,
+                TlvArray(TlvModeOption, { minLength: 2, maxLength: 255 }),
+                { default: [] }
+            ),
 
             /**
              * @see {@link MatterSpecification.v13.Cluster} § 7.3.6

@@ -19,12 +19,44 @@ import { TlvArray } from "../tlv/TlvArray.js";
 import { TlvString } from "../tlv/TlvString.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { TlvUInt8, TlvUInt32 } from "../tlv/TlvNumber.js";
+import { TlvField, TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
+import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { OperationalState as OperationalStateNamespace } from "./operational-state.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
 import { Identity } from "#general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
 
 export namespace RvcOperationalState {
+    /**
+     * The OperationalStateStruct is used to indicate a possible state of the device.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 1.14.4.2
+     */
+    export const TlvOperationalStateStruct = TlvObject({
+        /**
+         * This shall be populated with a value from the OperationalStateEnum.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.14.4.2.1
+         */
+        operationalStateId: TlvField(0, TlvUInt8),
+
+        /**
+         * This field shall be present if the OperationalStateID is from the set reserved for Manufacturer Specific
+         * States, otherwise it shall NOT be present. If present, this shall contain a human-readable description of
+         * the operational state.
+         *
+         * @see {@link MatterSpecification.v13.Cluster} § 1.14.4.2.2
+         */
+        operationalStateLabel: TlvOptionalField(1, TlvString.bound({ maxLength: 64 }))
+    });
+
+    /**
+     * The OperationalStateStruct is used to indicate a possible state of the device.
+     *
+     * @see {@link MatterSpecification.v13.Cluster} § 1.14.4.2
+     */
+    export interface OperationalStateStruct extends TypeFromSchema<typeof TlvOperationalStateStruct> {}
+
     /**
      * The values defined herein are applicable to this derived cluster of Operational State only and are additional to
      * the set of values defined in Operational State itself.
@@ -176,11 +208,7 @@ export namespace RvcOperationalState {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 1.14.5.4
              */
-            operationalStateList: Attribute(
-                0x3,
-                TlvArray(OperationalStateNamespace.TlvOperationalStateStruct),
-                { default: [] }
-            ),
+            operationalStateList: Attribute(0x3, TlvArray(TlvOperationalStateStruct), { default: [] }),
 
             /**
              * This attribute specifies the current operational state of a device. This shall be populated with a valid
