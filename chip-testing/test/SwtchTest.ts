@@ -4,9 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllClustersTestInstance } from "../src/AllClustersTestInstance.js";
-import { App } from "./support.js";
-
 describe("SWTCH", () => {
-    Chip.python(App(AllClustersTestInstance), "TC_SWTCH");
+    chip({ include: "TC_SWTCH" });
 });

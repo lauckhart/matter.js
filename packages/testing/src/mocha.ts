@@ -6,12 +6,45 @@
 
 // Can't import Mocha in the browser so just import type here
 import type MochaType from "mocha";
+import { Test } from "mocha";
 import { FailureDetail } from "./failure-detail.js";
 import { Boot } from "./mocks/boot.js";
 import { LoggerHooks } from "./mocks/logging.js";
 import { TestOptions } from "./options.js";
 import { ConsoleProxyReporter, Reporter } from "./reporter.js";
 import { wtf } from "./util/wtf.js";
+
+// We allow fixed 60s. timeout for our extended "before/after each test" hooks.  To make this configurable we'd need
+// to perform timeout handling ourselves so avoiding for now
+const TEST_HOOK_TIMEOUT = 60000;
+
+const beforeOneHook = Symbol("before-hook");
+const afterOneHook = Symbol("after-hook");
+
+interface HookableTest extends Test {
+    [beforeOneHook]?: Mocha.Func | Mocha.AsyncFunc;
+    [afterOneHook]?: Mocha.Func | Mocha.AsyncFunc;
+}
+
+/**
+ * Extension to Mocha - allows installing a before handler for a specific test.
+ */
+export function beforeOne(test: HookableTest, fn: Mocha.Func | Mocha.AsyncFunc) {
+    if (test[beforeOneHook]) {
+        throw new Error("Only one beforeTest currently allowed");
+    }
+    test[beforeOneHook] = fn;
+}
+
+/**
+ * Extension to Mocha - allows installing an after handler for a specific test.
+ */
+export function afterOne(test: HookableTest, fn: Mocha.Func | Mocha.AsyncFunc) {
+    if (test[afterOneHook]) {
+        throw new Error("Only one afterTest currently allowed");
+    }
+    test[afterOneHook] = fn;
+}
 
 export function generalSetup(mocha: MochaType) {
     const Base = (mocha.constructor as typeof MochaType).reporters.Base;
@@ -21,28 +54,6 @@ export function generalSetup(mocha: MochaType) {
 
     // White text, 16-bit and 256-bit red background
     Base.colors["diff removed inline"] = "97;41;48;5;52" as any;
-
-    // Some of our test suites have setup/teardown logic that logs profusely. Hide these logs unless something goes
-    // wrong
-    async function onlyLogFailure(fn: () => any) {
-        if (!MatterHooks) {
-            throw new Error("Matter hooks not loaded");
-        }
-
-        const logs = Array<string>();
-        const existingSink = MatterHooks.loggerSink;
-        try {
-            MatterHooks.loggerSink = (_, message) => {
-                logs.push(message);
-            };
-            return await fn();
-        } catch (e) {
-            process.stdout.write(logs.join("\n"));
-            throw e;
-        } finally {
-            MatterHooks.loggerSink = existingSink;
-        }
-    }
 
     function filterLogs(hook: "beforeAll" | "afterAll" | "beforeEach" | "afterEach") {
         const actual = mocha.suite[hook] as (this: any, fn: Mocha.Func) => any;
@@ -67,13 +78,38 @@ export function generalSetup(mocha: MochaType) {
         hooks.unshift(myHook);
     }
 
-    mocha.suite.afterEach(() => {
+    mocha.suite.beforeEach(function (done) {
+        this.timeout(TEST_HOOK_TIMEOUT);
+        return (this.currentTest as HookableTest)[beforeOneHook]?.call(this, done);
+    });
+
+    mocha.suite.afterEach(function (done) {
+        this.timeout(TEST_HOOK_TIMEOUT);
         for (const hook of LoggerHooks.afterEach) {
             hook(mocha);
         }
+        return (this.currentTest as HookableTest)[afterOneHook]?.call(this, done);
     });
 
     FailureDetail.diff = Base.generateDiff.bind(Base);
+}
+
+export async function runMocha(mocha: Mocha) {
+    await onlyLogFailure(async () => {
+        for (const hook of beforeRunHooks) {
+            await hook();
+        }
+    });
+
+    await new Promise<Mocha.Runner>(resolve => {
+        const runner = mocha.run(() => resolve(runner));
+    });
+
+    await onlyLogFailure(async () => {
+        for (const hook of afterRunHooks) {
+            await hook();
+        }
+    });
 }
 
 // Reset mocks before each file.  Suites could conceivably have callbacks that occur across tests.  If individual tests
@@ -161,4 +197,37 @@ export function browserSetup(mocha: BrowserMocha) {
             });
         },
     };
+}
+const beforeRunHooks = Array<() => void | Promise<void>>();
+const afterRunHooks = Array<() => void | Promise<void>>();
+
+export function beforeRun(hook: () => void | Promise<void>) {
+    beforeRunHooks.push(hook);
+}
+
+export function afterRun(hook: () => void | Promise<void>) {
+    afterRunHooks.push(hook);
+}
+
+/**
+ * Some of our setup/teardown logic logs profusely. Hide these logs unless something goes wrong.
+ */
+async function onlyLogFailure(fn: () => any) {
+    if (!MatterHooks) {
+        throw new Error("Matter hooks not loaded");
+    }
+
+    const logs = Array<string>();
+    const existingSink = MatterHooks.loggerSink;
+    try {
+        MatterHooks.loggerSink = (_, message) => {
+            logs.push(message);
+        };
+        return await fn();
+    } catch (e) {
+        process.stdout.write(logs.join("\n"));
+        throw e;
+    } finally {
+        MatterHooks.loggerSink = existingSink;
+    }
 }

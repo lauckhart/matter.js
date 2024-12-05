@@ -4,9 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { AllClustersTestInstance } from "../src/AllClustersTestInstance.js";
-import { App } from "./support.js";
-
 describe("DGGEN", () => {
-    Chip.python(App(AllClustersTestInstance), "TC_DGGEN_3_2");
+    chip({ include: "TC_DGGEN_3_2" });
 });
