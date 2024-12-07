@@ -9,6 +9,7 @@ The matter.js test harness pulls this image automatically when running CHIP test
 This directory contains additional helper scripts:
 
 * [build](./build) builds the image
+* [rebuild](./rebuild) builds the image from scratch
 * [shell](./shell) starts an interactive bash shell inside a local container
 * [tool](./tool) runs chip-tool inside a local container
 * [publish](./publish) pushes the image to GHCR with "latest" tag

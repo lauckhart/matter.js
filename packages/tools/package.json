@@ -27,7 +27,7 @@
         },
         "./bootstrap": {
             "import": {
-                "default": "./dist/esm/util/bootstrap.mjs"
+                "default": "./src/util/bootstrap.mjs"
             }
         }
     },

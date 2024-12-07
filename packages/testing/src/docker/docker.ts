@@ -131,6 +131,13 @@ export class Docker {
             });
         });
     }
+}
 
-    async close() {}
+export namespace Docker {
+    export interface NetworkConfig {
+        name: string;
+        hostInterfaceName?: string;
+        containerInterfacePrefix?: string;
+        subnets?: string[];
+    }
 }

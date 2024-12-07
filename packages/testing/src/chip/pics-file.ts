@@ -93,7 +93,7 @@ function parseLine(line: string, values: Record<string, string>): boolean {
     }
 
     const [, key, value] = valueMatch;
-    const rangeMatch = key.match(/^(\S+)\.\.(\d[a-f]+)$/i);
+    const rangeMatch = key.match(/^(\S+)\.\.([\da-f]+)$/i);
     if (!rangeMatch) {
         values[key] = value;
         return true;

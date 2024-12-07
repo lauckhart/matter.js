@@ -37,11 +37,22 @@ export interface TestConflictResolutions {
  * Other misc configuration.
  */
 export namespace Constants {
-    // We only publish for x86.  This is appropriate for GH CI and runs fine under emulation on MacOS
+    /**
+     * We only publish for x86.  This is appropriate for GH CI and runs fine under emulation on MacOS
+     */
     export const platform = env.MATTER_CHIP_PLATFORM || "linux/amd64";
 
-    export const imageName = env.MATTER_CHIP_IMAGE || "ghcr.io/matter-js/chip:latest";
-    export const containerName = env.MATTER_CHIP_CONTAINER || "matter.js-chip-test";
+    export const networkName = "matter.js-chip";
+
+    /**
+     * We only have one container.  We use it both for MDNS (dbus + avahi) and CHIP
+     */
+    export const containerName = env.MATTER_CHIP_IMAGE || "ghcr.io/matter-js/chip:latest";
+
+    export const mdnsContainerName = env.MATTER_MDNS_CONTAINER || "matter.js-mdns";
+    export const mdnsVolumeName = env.MATTER_MDNS_VOLUME || "matter.js-mdns";
+
+    export const chipContainerName = env.MATTER_CHIP_CONTAINER || "matter.js-chip-test";
 
     export const initTimeout = 60_000;
     export const defaultTimeout = 60_000;
@@ -58,4 +69,30 @@ export namespace Constants {
     export const conflictResolutions: TestConflictResolutions = {
         DGSW_2_1: "TC_DGSW_2_1.py",
     };
+
+    /**
+     * We set the commissioning timeout value very low because this timeout is tested and waiting the default 180s.
+     * sucks.  The timeout must be high enough for actual commissioning to succeed.
+     */
+    const subjectCommissioningTimeoutS = 3;
+
+    /**
+     * The test harness sits around a bit after opening commissioning window.  Doesn't mention why, but I reeeally hate
+     * sitting around.  So aggressively tune from default 5s. to 500ms.
+     */
+    const delayAfterOpeningCommissioningWindowMs = 500;
+
+    /**
+     * Arguments provided to the YAML runner.
+     */
+    export const YamlRunnerArgs = [
+        "--PICS",
+        ContainerPaths.matterJsPics,
+        // "--show_adapter_logs",
+        // "true",
+        "--PIXIT.CADMIN.CwDuration",
+        `${subjectCommissioningTimeoutS}`,
+        "--waitAfterCommissioning",
+        `${delayAfterOpeningCommissioningWindowMs}`,
+    ];
 }

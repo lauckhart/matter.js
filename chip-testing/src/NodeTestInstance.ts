@@ -5,6 +5,7 @@
  */
 
 import { CloneableStorage, Environment, InternalError, StorageService, type ServerNode } from "@matter/main";
+import { AdministratorCommissioningServer } from "@matter/main/behaviors/administrator-commissioning";
 import { OccurrenceManager } from "@matter/main/protocol";
 import { BackchannelCommand, Subject } from "@matter/testing";
 import { TestInstance, TestInstanceConfig, log } from "./GenericTestApp.js";
@@ -36,6 +37,13 @@ export abstract class NodeTestInstance extends TestInstance implements Subject {
 
     protected abstract setupServer(): Promise<ServerNode>;
 
+    async #setupServer() {
+        const node = (this.#node = await this.setupServer());
+        node.lifecycle.ready.on(() => {
+            node.behaviors.internalsOf(AdministratorCommissioningServer).minimumCommissioningTimeoutS = 0;
+        });
+    }
+
     async initialize() {
         if (this.#node) {
             throw new InternalError("Already initialized");
@@ -43,7 +51,7 @@ export abstract class NodeTestInstance extends TestInstance implements Subject {
 
         try {
             this.#env.set(StorageService, new StorageService(this.#env, () => this.config.storage));
-            this.#node = await this.setupServer();
+            await this.#setupServer();
         } catch (error) {
             // Catch and log error, else the test framework hides issues here
             log.error(error);
@@ -61,7 +69,7 @@ export abstract class NodeTestInstance extends TestInstance implements Subject {
         CloneableStorage.assert(snapshot);
         this.config.storage = await snapshot.clone();
 
-        this.#node = await this.setupServer();
+        await this.#setupServer();
     }
 
     async start() {

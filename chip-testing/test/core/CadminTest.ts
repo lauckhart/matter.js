@@ -5,6 +5,5 @@
  */
 
 describe("CADMIN", () => {
-    chip({ include: "CADMIN_1_3" });
-    //chip({ include: "CADMIN_*" });
+    chip({ include: "CADMIN_*" });
 });

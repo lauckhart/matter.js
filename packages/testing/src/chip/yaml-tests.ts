@@ -10,7 +10,7 @@ import { Container } from "../docker/container.js";
 import { Terminal } from "../docker/terminal.js";
 import { deansify } from "../util/text.js";
 import { parseStep } from "./chip-test-common.js";
-import { ContainerPaths } from "./config.js";
+import { Constants, ContainerPaths } from "./config.js";
 
 export async function YamlTests(container: Container): Promise<Test[]> {
     const files1 = await container.resolveGlob(`${ContainerPaths.yamlTestDir}/Test*.yaml`);
@@ -46,16 +46,7 @@ class YamlTest implements Test {
 
     async invoke(container: Container, step: (title: string) => void) {
         const terminal = await container.exec(
-            [
-                "python3",
-                ContainerPaths.yamlRunner,
-                "tests",
-                basename(this.#filename),
-                "--PICS",
-                ContainerPaths.matterJsPics,
-                "--show_adapter_logs",
-                "true",
-            ],
+            ["python3", ContainerPaths.yamlRunner, "tests", basename(this.#filename), ...Constants.YamlRunnerArgs],
             Terminal.Line,
         );
 

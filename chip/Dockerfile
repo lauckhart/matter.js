@@ -9,7 +9,7 @@
 # TODO - either finish cross compilation, create CI & manifest for amd64 & arm64, or punt.  Current choice: punt
 
 # STAGE 1 - common base image
-FROM ubuntu:24.04 as base
+FROM ubuntu:24.04 AS base
 
 SHELL [ "/bin/bash", "-c" ]
 
@@ -24,11 +24,11 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN --mount=type=cache,target=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt \
     apt-get -qq update && \
-    apt-get -qq -y install python3 python-is-python3 libavahi-client3 libglib2.0-0 iproute2 less vim
+    apt-get -qq -y install python3 python-is-python3 libavahi-client3 libglib2.0-0 avahi-daemon iproute2 less vim
 
 
 # STAGE 2 - CHIP source code and build tooling
-FROM --platform=$BUILDPLATFORM base as build
+FROM --platform=$BUILDPLATFORM base AS build
 
 ARG TARGETPLATFORM
 
@@ -61,7 +61,7 @@ RUN ./scripts/checkout_submodules.py --shallow --platform linux
 
 
 # STAGE 3 - build chip-tool and installed python packages
-FROM --platform=$BUILDPLATFORM build as bins
+FROM --platform=$BUILDPLATFORM build AS bins
 
 WORKDIR /connectedhomeip
 
@@ -88,7 +88,7 @@ RUN scripts/build_python.sh --chip_mdns platform
 
 
 # STAGE 4 - install into final destination
-FROM bins as install
+FROM bins AS install
 
 # Install external python dependencies
 RUN pip install --break-system-packages -r src/python_testing/requirements.txt
@@ -99,7 +99,7 @@ RUN find out -name \*.whl | xargs pip install --break-system-packages --upgrade
 
 
 # STAGE 5 - extract CHIP subset required for runtime
-FROM base as final
+FROM base AS final
 
 LABEL org.opencontainers.image.title="matter.js CHIP tooling build"
 LABEL org.opencontainers.image.url=https://github.com/matter-js/matter.js-chip

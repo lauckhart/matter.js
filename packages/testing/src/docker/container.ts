@@ -10,7 +10,9 @@ import { finished } from "stream/promises";
 import { base64Of } from "../util/text.js";
 import type { Docker } from "./docker.js";
 import { DockerError, NonZeroExitError } from "./errors.js";
+import { Network } from "./network.js";
 import { Terminal } from "./terminal.js";
+import { Volume } from "./volume.js";
 
 /**
  * Container interface with various convenience methods.
@@ -113,16 +115,21 @@ export namespace Container {
         env?: Record<string, string>;
         privileged?: boolean;
         binds?: Record<string, string>;
-        network?: string;
+        network?: string | NetworkConfiguration[];
         input?: ReadStream;
         openStdin?: boolean;
         cwd?: string;
+        volumes?: (string | { volume: string | Volume; path: string })[];
     }
 
     export interface ExecOptions {
         stdin?: boolean;
         cwd?: string;
         env?: Record<string, string>;
+    }
+
+    export interface NetworkConfiguration {
+        network: string | Network;
     }
 }
 
@@ -146,12 +153,14 @@ function configureContainer(options: Container.Configuration) {
         AttachStderr: true,
     } as Dockerode.ContainerCreateOptions & { HostConfig: Dockerode.HostConfig };
 
-    const { name, entrypoint, env, binds, command, openStdin, network, cwd, platform } = options ?? {};
+    const { name, entrypoint, env, binds, command, openStdin, network, cwd, platform, volumes } = options ?? {};
 
     if (typeof network === "string") {
         createOptions.HostConfig.NetworkMode = network;
-    } else if (typeof network === "object") {
-        createOptions.NetworkingConfig = network;
+    } else if (network) {
+        createOptions.NetworkingConfig = {
+            EndpointsConfig: Object.fromEntries(network.map(n => [n.network, {}])),
+        };
     }
 
     if (cwd !== undefined) {
@@ -186,6 +195,15 @@ function configureContainer(options: Container.Configuration) {
 
     if (platform) {
         createOptions.platform = platform;
+    }
+
+    if (volumes) {
+        createOptions.Volumes = Object.fromEntries(
+            volumes.map(v => [
+                typeof v === "string" ? v : `${typeof v.volume === "string" ? v.volume : v.volume.name}:${v.path}`,
+                {},
+            ]),
+        );
     }
 
     return createOptions;

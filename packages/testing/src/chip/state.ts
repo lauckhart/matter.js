@@ -4,6 +4,8 @@ import { Subject } from "../device/subject.js";
 import { Test } from "../device/test.js";
 import { Container } from "../docker/container.js";
 import { Docker } from "../docker/docker.js";
+import { Network } from "../docker/network.js";
+import { Volume } from "../docker/volume.js";
 import { afterOne, afterRun, beforeOne, beforeRun } from "../mocha.js";
 import type { TestRunner } from "../runner.js";
 import { AccessoryServer } from "./accessory-server.js";
@@ -84,7 +86,7 @@ export const State = {
 
         const { progress } = Values.runner;
         return await progress.run(
-            `Initialize container ${progress.emphasize(Constants.containerName)} from ${progress.emphasize(Constants.imageName)}`,
+            `Initialize container ${progress.emphasize(Constants.chipContainerName)} from ${progress.emphasize(Constants.containerName)}`,
             initialize,
         );
     },
@@ -209,46 +211,69 @@ async function initialize() {
 async function configureContainer() {
     const docker = new Docker();
 
-    // TODO - define docker network to match CHIP's testing infrastructure
+    // Clear any previously existing container.  It may be stale or have inapplicable DUT state
+    await docker.erase(Constants.chipContainerName);
 
-    // Clear any previously existing container.  It would probably work but may be stale
-    await docker.erase(Constants.containerName);
+    await docker.pull(Constants.containerName, Constants.platform);
 
-    await docker.pull(Constants.imageName, Constants.platform);
-
-    const container = (Values.maybeContainer = await docker.open({
-        image: Constants.imageName,
-        name: Constants.containerName,
-        autoRemove: true,
-        network: "host",
-        platform: Constants.platform,
-
-        // Keep the container running until we are through with it
-        openStdin: true,
-
-        binds: {
-            // Better to run avahi in a separate container but use host version for now
-            "/var/run/dbus": "/run/dbus",
-        },
-    }));
+    const network = Network(docker, Constants.networkName);
+    const mdnsVolume = Volume(docker, Constants.mdnsVolumeName);
 
     State.onClose(async () => {
-        const docker = container.docker;
-
         try {
-            await container.kill();
+            await mdns?.kill();
         } catch (e) {
-            console.error("Error terminating test container:", e);
+            console.error("Error terminating mdns container:", e);
         }
 
         try {
-            await docker.close();
+            await chip?.kill();
         } catch (e) {
-            console.error("Error closing docker connection:", e);
+            console.error("Error terminating chip container:", e);
         }
+
+        await network.erase();
+        await mdnsVolume.erase();
 
         Values.maybeContainer = undefined;
     });
+
+    let mdns: undefined | Container, chip: undefined | Container;
+
+    const mdnsPromise = docker
+        .open({
+            image: Constants.containerName,
+            name: Constants.mdnsContainerName,
+            autoRemove: true,
+            network: [{ network }],
+            platform: Constants.platform,
+            volumes: [{ volume: mdnsVolume, path: "/var/run/dbus" }],
+        })
+        .then(container => (mdns = container));
+
+    const chipPromise = docker
+        .open({
+            image: Constants.containerName,
+            name: Constants.chipContainerName,
+            autoRemove: true,
+            network: [{ network }],
+            platform: Constants.platform,
+            volumes: [{ volume: mdnsVolume, path: "/run/dbus" }],
+
+            // Keep the container running until we are through with it
+            openStdin: true,
+        })
+        .then(container => (Values.maybeContainer = container));
+
+    const errors = (await Promise.allSettled([mdnsPromise, chipPromise]))
+        .filter(value => value.status === "rejected")
+        .map(value => value.reason);
+
+    if (errors) {
+        const error = AggregateError("Test containers failed to start");
+        error.errors = errors;
+        throw error;
+    }
 }
 
 /**
