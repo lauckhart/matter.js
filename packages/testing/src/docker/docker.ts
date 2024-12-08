@@ -7,6 +7,7 @@
 import { readdir } from "fs/promises";
 
 import Dockerode from "dockerode";
+import { Composition } from "./composition.js";
 import { Container } from "./container.js";
 import { DockerError } from "./errors.js";
 
@@ -18,6 +19,13 @@ export class Docker {
 
     get intf() {
         return this.#intf;
+    }
+
+    /**
+     * Build a composition of multiple containers.
+     */
+    compose(name: string, config?: Partial<Container.Configuration>) {
+        return new Composition(this, name, config);
     }
 
     /**
@@ -40,7 +48,7 @@ export class Docker {
     }
 
     /**
-     * Obtain a running {@link Container}.  Connects to existing container or creates new container.
+     * Obtain a running {@link Container}.  Connects to existing container or creates a new container.
      */
     async open(options: Container.Configuration & { name: string }) {
         const info = await this.containerStatus(options.name);
@@ -74,8 +82,8 @@ export class Docker {
         return Container(this, config);
     }
 
-    async start(options: Container.Configuration): Promise<Container> {
-        const ct = await this.create(options);
+    async start(config: Container.Configuration): Promise<Container> {
+        const ct = await this.create(config);
         await DockerError.adapt(ct.start());
         return ct;
     }

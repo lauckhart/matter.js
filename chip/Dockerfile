@@ -149,3 +149,5 @@ COPY --from=build /connectedhomeip/src/app/tests/suites /src/app/tests/suites
 
 # Development certs
 COPY --from=build /connectedhomeip/credentials/development/paa-root-certs /credentials/development/paa-root-certs
+
+RUN mkdir /run/dbus

@@ -12,7 +12,6 @@ import type { Docker } from "./docker.js";
 import { DockerError, NonZeroExitError } from "./errors.js";
 import { Network } from "./network.js";
 import { Terminal } from "./terminal.js";
-import { Volume } from "./volume.js";
 
 /**
  * Container interface with various convenience methods.
@@ -23,6 +22,7 @@ export interface Container {
     kill(): Promise<void>;
     remove(): Promise<void>;
     attach<T extends Terminal.Factory>(terminal: T): Promise<ReturnType<T>>;
+    wait(options?: Dockerode.ContainerWaitOptions): Promise<void>;
 
     /**
      * Execute a command with no input or output.
@@ -119,7 +119,6 @@ export namespace Container {
         input?: ReadStream;
         openStdin?: boolean;
         cwd?: string;
-        volumes?: (string | { volume: string | Volume; path: string })[];
     }
 
     export interface ExecOptions {
@@ -143,7 +142,7 @@ function configureContainer(options: Container.Configuration) {
     const createOptions: Dockerode.ContainerCreateOptions & { HostConfig: Dockerode.HostConfig } = {
         Image: options.image,
         HostConfig: {
-            AutoRemove: options?.autoRemove !== false,
+            AutoRemove: options?.autoRemove,
 
             // Ugh.  With a proper networking config we can perhaps avoid this.  Probably makes sense to run a utility
             // container with avahi
@@ -153,7 +152,7 @@ function configureContainer(options: Container.Configuration) {
         AttachStderr: true,
     } as Dockerode.ContainerCreateOptions & { HostConfig: Dockerode.HostConfig };
 
-    const { name, entrypoint, env, binds, command, openStdin, network, cwd, platform, volumes } = options ?? {};
+    const { name, entrypoint, env, binds, command, openStdin, network, cwd, platform } = options ?? {};
 
     if (typeof network === "string") {
         createOptions.HostConfig.NetworkMode = network;
@@ -197,15 +196,6 @@ function configureContainer(options: Container.Configuration) {
         createOptions.platform = platform;
     }
 
-    if (volumes) {
-        createOptions.Volumes = Object.fromEntries(
-            volumes.map(v => [
-                typeof v === "string" ? v : `${typeof v.volume === "string" ? v.volume : v.volume.name}:${v.path}`,
-                {},
-            ]),
-        );
-    }
-
     return createOptions;
 }
 
@@ -227,16 +217,7 @@ function adaptContainer(docker: Docker, ct: Dockerode.Container): Container {
 
         async attach<T extends Terminal.Factory>(terminal: T, stdin = false) {
             const exited = new Promise<void>((resolve, reject) => {
-                ct.wait().then(
-                    code => {
-                        if (code) {
-                            reject(new NonZeroExitError(code));
-                        } else {
-                            resolve();
-                        }
-                    },
-                    e => reject(DockerError.translate(e)),
-                );
+                this.wait().then(resolve, reject);
             });
 
             return terminal(
@@ -306,6 +287,13 @@ function adaptContainer(docker: Docker, ct: Dockerode.Container): Container {
 
             // Terminal overload
             return terminal(this.docker, stream, exited) as ReturnType<T>;
+        },
+
+        async wait(options?: Dockerode.ContainerWaitOptions) {
+            const code = (await DockerError.adapt(ct.wait(options))).StatusCode;
+            if (code) {
+                throw new NonZeroExitError(code);
+            }
         },
 
         async read<T extends Terminal.Factory>(path: string, terminal?: T): Promise<string | T> {

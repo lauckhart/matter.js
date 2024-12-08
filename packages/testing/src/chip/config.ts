@@ -47,12 +47,8 @@ export namespace Constants {
     /**
      * We only have one container.  We use it both for MDNS (dbus + avahi) and CHIP
      */
-    export const containerName = env.MATTER_CHIP_IMAGE || "ghcr.io/matter-js/chip:latest";
-
-    export const mdnsContainerName = env.MATTER_MDNS_CONTAINER || "matter.js-mdns";
+    export const imageName = env.MATTER_CHIP_IMAGE || "ghcr.io/matter-js/chip:latest";
     export const mdnsVolumeName = env.MATTER_MDNS_VOLUME || "matter.js-mdns";
-
-    export const chipContainerName = env.MATTER_CHIP_CONTAINER || "matter.js-chip-test";
 
     export const initTimeout = 60_000;
     export const defaultTimeout = 60_000;

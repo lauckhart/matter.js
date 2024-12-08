@@ -1,10 +1,15 @@
+/**
+ * @license
+ * Copyright 2022-2024 Matter.js Authors
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { basename, extname } from "path";
 import { BackchannelCommand } from "../device/backchannel.js";
 import { Subject } from "../device/subject.js";
 import { Test } from "../device/test.js";
 import { Container } from "../docker/container.js";
 import { Docker } from "../docker/docker.js";
-import { Network } from "../docker/network.js";
 import { Volume } from "../docker/volume.js";
 import { afterOne, afterRun, beforeOne, beforeRun } from "../mocha.js";
 import type { TestRunner } from "../runner.js";
@@ -85,10 +90,7 @@ export const State = {
         }
 
         const { progress } = Values.runner;
-        return await progress.run(
-            `Initialize container ${progress.emphasize(Constants.chipContainerName)} from ${progress.emphasize(Constants.containerName)}`,
-            initialize,
-        );
+        return await progress.run(`Initialize containers`, initialize);
     },
 
     /**
@@ -211,69 +213,41 @@ async function initialize() {
 async function configureContainer() {
     const docker = new Docker();
 
-    // Clear any previously existing container.  It may be stale or have inapplicable DUT state
-    await docker.erase(Constants.chipContainerName);
+    await docker.pull(Constants.imageName, Constants.platform);
 
-    await docker.pull(Constants.containerName, Constants.platform);
-
-    const network = Network(docker, Constants.networkName);
     const mdnsVolume = Volume(docker, Constants.mdnsVolumeName);
+    await mdnsVolume.open();
+
+    const composition = docker.compose("matter.js", {
+        image: Constants.imageName,
+        platform: Constants.platform,
+    });
+
+    await composition.add({
+        name: "dbus",
+        binds: { [mdnsVolume.name]: "/run/dbus" },
+        command: ["/usr/bin/dbus-daemon", "--nopidfile", "--system"],
+    });
+
+    await composition.add({
+        name: "mdns",
+        binds: { [mdnsVolume.name]: "/run/dbus" },
+        command: ["/usr/sbin/avahi-daemon"],
+    });
+
+    Values.maybeContainer = await composition.add({
+        name: "chip",
+    });
 
     State.onClose(async () => {
         try {
-            await mdns?.kill();
+            await composition.close();
         } catch (e) {
-            console.error("Error terminating mdns container:", e);
+            console.error("Error terminating containers:", e);
         }
-
-        try {
-            await chip?.kill();
-        } catch (e) {
-            console.error("Error terminating chip container:", e);
-        }
-
-        await network.erase();
-        await mdnsVolume.erase();
 
         Values.maybeContainer = undefined;
     });
-
-    let mdns: undefined | Container, chip: undefined | Container;
-
-    const mdnsPromise = docker
-        .open({
-            image: Constants.containerName,
-            name: Constants.mdnsContainerName,
-            autoRemove: true,
-            network: [{ network }],
-            platform: Constants.platform,
-            volumes: [{ volume: mdnsVolume, path: "/var/run/dbus" }],
-        })
-        .then(container => (mdns = container));
-
-    const chipPromise = docker
-        .open({
-            image: Constants.containerName,
-            name: Constants.chipContainerName,
-            autoRemove: true,
-            network: [{ network }],
-            platform: Constants.platform,
-            volumes: [{ volume: mdnsVolume, path: "/run/dbus" }],
-
-            // Keep the container running until we are through with it
-            openStdin: true,
-        })
-        .then(container => (Values.maybeContainer = container));
-
-    const errors = (await Promise.allSettled([mdnsPromise, chipPromise]))
-        .filter(value => value.status === "rejected")
-        .map(value => value.reason);
-
-    if (errors) {
-        const error = AggregateError("Test containers failed to start");
-        error.errors = errors;
-        throw error;
-    }
 }
 
 /**
