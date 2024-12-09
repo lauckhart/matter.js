@@ -4,7 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CloneableStorage, Environment, InternalError, StorageService, type ServerNode } from "@matter/main";
+import {
+    CloneableStorage,
+    Environment,
+    ImplementationError,
+    InternalError,
+    Node,
+    StorageService,
+    type ServerNode,
+} from "@matter/main";
 import { AdministratorCommissioningServer } from "@matter/main/behaviors/administrator-commissioning";
 import { OccurrenceManager } from "@matter/main/protocol";
 import { BackchannelCommand, Subject } from "@matter/testing";
@@ -139,5 +147,15 @@ export abstract class NodeTestInstance extends TestInstance implements Subject {
                 await super.backchannel(command);
                 break;
         }
+    }
+
+    static nodeOf(subject: Subject) {
+        const node = (subject as { node?: Node }).node;
+
+        if (node instanceof Node) {
+            return node;
+        }
+
+        throw new ImplementationError("Cannot extract node from non-node test instance");
     }
 }

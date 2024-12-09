@@ -50,7 +50,6 @@ import {
     Descriptor,
     LevelControl,
     ModeSelect,
-    NetworkCommissioning,
     OccupancySensing,
     PowerSource,
     PowerTopology,
@@ -130,7 +129,8 @@ export class AllClustersTestInstance extends NodeTestInstance {
     }
 
     async setupServer(): Promise<ServerNode> {
-        const networkId = new Uint8Array(32);
+        // Network ID is string "eth-app" in TC_CNET_4_3
+        const networkId = Bytes.fromHex("6574682D617070");
 
         let deviceTestEnableKey = Bytes.fromHex("000102030405060708090a0b0c0d0e0f");
         const argsEnableKeyIndex = process.argv.indexOf("--enable-key");
@@ -211,10 +211,12 @@ export class AllClustersTestInstance extends NodeTestInstance {
                 networkCommissioning: {
                     maxNetworks: 1,
                     interfaceEnabled: true,
-                    lastConnectErrorValue: 0,
-                    lastNetworkId: networkId,
-                    lastNetworkingStatus: NetworkCommissioning.NetworkCommissioningStatus.Success,
                     networks: [{ networkId: networkId, connected: true }],
+
+                    // We fail TC_CNET_4_3 with these
+                    //lastConnectErrorValue: 0,
+                    //lastNetworkId: networkId,
+                    //lastNetworkingStatus: NetworkCommissioning.NetworkCommissioningStatus.Success,
                 },
                 timeFormatLocalization: {
                     hourFormat: TimeFormatLocalization.HourFormat["24Hr"],

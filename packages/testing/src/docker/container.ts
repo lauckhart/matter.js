@@ -20,7 +20,7 @@ export interface Container {
     docker: Docker;
     start(): Promise<void>;
     kill(): Promise<void>;
-    remove(): Promise<void>;
+    remove(force?: boolean): Promise<void>;
     attach<T extends Terminal.Factory>(terminal: T): Promise<ReturnType<T>>;
     wait(options?: Dockerode.ContainerWaitOptions): Promise<void>;
 
@@ -47,6 +47,16 @@ export interface Container {
      * Retrieve the contents of a file using a terminal.
      */
     read<T extends Terminal.Factory>(path: string, terminal: T): Promise<ReturnType<T>>;
+
+    /**
+     * Retrieve the response of a command as a string.
+     */
+    execAndRead<T extends Terminal.Factory>(command: string | string[]): Promise<string>;
+
+    /**
+     * Retrieve the response of a command using a terminal.
+     */
+    execAndRead<T extends Terminal.Factory>(command: string | string[], terminal: T): Promise<ReturnType<T>>;
 
     /**
      * Set contents of a file.
@@ -115,7 +125,7 @@ export namespace Container {
         env?: Record<string, string>;
         privileged?: boolean;
         binds?: Record<string, string>;
-        network?: string | NetworkConfiguration[];
+        network?: string | Network | Network[];
         input?: ReadStream;
         openStdin?: boolean;
         cwd?: string;
@@ -157,8 +167,10 @@ function configureContainer(options: Container.Configuration) {
     if (typeof network === "string") {
         createOptions.HostConfig.NetworkMode = network;
     } else if (network) {
+        const networks = Array.isArray(network) ? network : [network];
+
         createOptions.NetworkingConfig = {
-            EndpointsConfig: Object.fromEntries(network.map(n => [n.network, {}])),
+            EndpointsConfig: Object.fromEntries(networks.map(n => [n.name, {}])),
         };
     }
 
@@ -211,8 +223,8 @@ function adaptContainer(docker: Docker, ct: Dockerode.Container): Container {
             await DockerError.adapt(ct.kill());
         },
 
-        async remove() {
-            await DockerError.adapt(ct.remove());
+        async remove(force?: boolean) {
+            await DockerError.adapt(ct.remove({ force }));
         },
 
         async attach<T extends Terminal.Factory>(terminal: T, stdin = false) {
@@ -298,6 +310,14 @@ function adaptContainer(docker: Docker, ct: Dockerode.Container): Container {
 
         async read<T extends Terminal.Factory>(path: string, terminal?: T): Promise<string | T> {
             const term = await this.exec(["cat", path], terminal ?? Terminal.Line);
+            if (terminal === undefined) {
+                return (await term.consume()) as string | T;
+            }
+            return term as T;
+        },
+
+        async execAndRead<T extends Terminal.Factory>(command: string | string[], terminal?: T): Promise<string | T> {
+            const term = await this.exec(command, terminal ?? Terminal.Line);
             if (terminal === undefined) {
                 return (await term.consume()) as string | T;
             }

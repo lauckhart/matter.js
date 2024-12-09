@@ -90,11 +90,12 @@ export class Composition {
 
         let ct: Container;
         if (recreate) {
-            ct = await this.#docker.erase(name).then(() => this.#docker.start(config as Container.Configuration));
+            ct = await this.#docker
+                .erase(config.name)
+                .then(() => this.#docker.start(config as Container.Configuration));
         } else {
             ct = await this.#docker.open(config as Container.Configuration & { name: string });
         }
-        this.#parts[name].ct = ct;
 
         if (waitForStartup) {
             await waitForStartup(ct);

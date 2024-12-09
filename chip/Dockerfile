@@ -20,11 +20,11 @@ RUN echo 'PS1="\[\033[01;32m\]matter.js-chip\[\033[00m\]:\[\033[01;34m\]\w\[\033
 ENV TZ=Etc/UTC
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Install a few packages required by final image.  Most are also required during build
-RUN --mount=type=cache,target=/var/cache/apt \
-    --mount=type=cache,target=/var/lib/apt \
+# Install a few packages required by final image and build
+RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
+    --mount=type=cache,sharing=locked,target=/var/lib/apt \
     apt-get -qq update && \
-    apt-get -qq -y install python3 python-is-python3 libavahi-client3 libglib2.0-0 avahi-daemon iproute2 less vim
+    apt-get -qq -y install python3 python-is-python3 libavahi-client3 libglib2.0-0
 
 
 # STAGE 2 - CHIP source code and build tooling
@@ -44,8 +44,8 @@ RUN case "${TARGETPLATFORM}" in \
 #COPY ubuntu-arm64.sources /etc/apt/sources.list.d
 
 # Install system packages required for build
-RUN --mount=type=cache,target=/var/cache/apt \
-    --mount=type=cache,target=/var/lib/apt \
+RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
+    --mount=type=cache,sharing=locked,target=/var/lib/apt \
     apt-get -qq update && \
     apt-get -qq -y install git gcc g++ pkg-config libssl-dev libdbus-1-dev libglib2.0-dev libavahi-client-dev \
         ninja-build python3-venv python3-dev unzip libgirepository1.0-dev libcairo2-dev libreadline-dev python3-pip
@@ -100,6 +100,15 @@ RUN find out -name \*.whl | xargs pip install --break-system-packages --upgrade
 
 # STAGE 5 - extract CHIP subset required for runtime
 FROM base AS final
+
+# Install some runtime-only packages
+RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
+    --mount=type=cache,sharing=locked,target=/var/lib/apt \
+    apt-get -qq update && \
+    apt-get -qq -y install avahi-daemon iproute2 less vim wget
+
+RUN wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && \
+    chmod +x /usr/bin/yq
 
 LABEL org.opencontainers.image.title="matter.js CHIP tooling build"
 LABEL org.opencontainers.image.url=https://github.com/matter-js/matter.js-chip

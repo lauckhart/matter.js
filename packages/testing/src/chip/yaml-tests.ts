@@ -11,12 +11,51 @@ import { Terminal } from "../docker/terminal.js";
 import { deansify } from "../util/text.js";
 import { parseStep } from "./chip-test-common.js";
 import { Constants, ContainerPaths } from "./config.js";
+import type { PicsFile } from "./pics-file.js";
 
-export async function YamlTests(container: Container): Promise<Test[]> {
+export async function YamlTests(container: Container, pics: PicsFile): Promise<Test[]> {
+    // Read YAML tests
     const files1 = await container.resolveGlob(`${ContainerPaths.yamlTestDir}/Test*.yaml`);
     const files2 = await container.resolveGlob(`${ContainerPaths.yamlCertTestDir}/Test_*.yaml`);
 
-    return [...files1, ...files2].map(filename => new YamlTest(filename));
+    // Filter tests based on PICS.  To do this as quickly as possible we use yq to isolate PICS from YAML
+    const rawFilePics = await container.execAndRead([
+        "/usr/bin/yq",
+        "[filename, .PICS]",
+        "-o=json",
+        "-I=0",
+        ...files1,
+        ...files2,
+    ]);
+
+    // Pics come in lines, each of the format ["filename.yaml",["pics1",...]].  Turn this into an object
+    const filenameToPics = Object.fromEntries(
+        rawFilePics
+            .trim()
+            .split("\n")
+            .map(line => JSON.parse(line)),
+    ) as Record<string, string[] | null>;
+
+    // Now select all files with applicable PICS
+    const files = Array<string>();
+    nextFile: for (const file of [...files1, ...files2]) {
+        const filePics = filenameToPics[file];
+
+        if (Array.isArray(filePics)) {
+            for (const entry of filePics) {
+                // Pics may be logical disjunction in form "key1 | key2".  Support this
+                const names = entry.split(/\s*\|\s*/);
+                if (!names.map(name => pics.values[name]).includes("1")) {
+                    // None of the required PICS values is present
+                    continue nextFile;
+                }
+            }
+        }
+
+        files.push(file);
+    }
+
+    return files.map(filename => new YamlTest(filename));
 }
 
 class YamlTest implements Test {

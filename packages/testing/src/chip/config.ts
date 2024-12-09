@@ -54,8 +54,7 @@ export namespace Constants {
     export const defaultTimeout = 60_000;
 
     export const matterJsRoot = Package.workspace.path;
-    export const inputPicsFile = resolve(matterJsRoot, "packages/testing/src/chip/matter-js-pics.properties");
-    export const outputPicsFile = resolve(matterJsRoot, "packages/testing/build/pics.properties");
+    export const localPicsOverrideFile = resolve(matterJsRoot, "packages/testing/src/chip/matter-js-pics.properties");
 
     /**
      * Resolves know conflicts in test definitions.

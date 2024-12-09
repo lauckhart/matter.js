@@ -12,8 +12,9 @@ import { Container } from "../docker/container.js";
 import { Terminal } from "../docker/terminal.js";
 import { parseStep } from "./chip-test-common.js";
 import { ContainerPaths } from "./config.js";
+import type { PicsFile } from "./pics-file.js";
 
-export async function PythonTests(container: Container): Promise<Test[]> {
+export async function PythonTests(container: Container, _pics: PicsFile): Promise<Test[]> {
     const files = await container.resolveGlob(`${ContainerPaths.pythonTestDir}/*.py`);
 
     const tests = Array<Test>();

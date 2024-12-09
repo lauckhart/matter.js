@@ -35,11 +35,8 @@ export class Docker {
         const info = await this.containerStatus(name);
         if (info) {
             const ct = Container(this, this.#intf.getContainer(info.id));
-            if (info.isRunning) {
-                await ct.kill();
-            }
             try {
-                await ct.remove();
+                await ct.remove(true);
             } catch (e) {
                 DockerError.accept(e, 404, 409);
             }

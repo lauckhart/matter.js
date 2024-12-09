@@ -29,6 +29,7 @@ const Values = {
     maybeRunner: undefined as TestRunner | undefined,
     maybeSubject: undefined as Subject.Factory | undefined,
     maybeContainer: undefined as Container | undefined,
+    maybePics: undefined as PicsFile | undefined,
     initializedSubjects: new WeakSet<Subject>(),
     activeSubject: undefined as Subject | undefined,
     tests: Array<Test>(),
@@ -79,6 +80,16 @@ export const State = {
 
     set subject(subject: Subject.Factory) {
         Values.maybeSubject = subject;
+    },
+
+    get pics() {
+        const pics = Values.maybePics;
+
+        if (pics === undefined) {
+            throw new Error("PICS not initialized");
+        }
+
+        return pics;
     },
 
     /**
@@ -221,22 +232,24 @@ async function configureContainer() {
     const composition = docker.compose("matter.js", {
         image: Constants.imageName,
         platform: Constants.platform,
+        network: "host", //Network(docker, Constants.networkName),
+        binds: { [mdnsVolume.name]: "/run/dbus" },
+        autoRemove: true,
     });
 
     await composition.add({
         name: "dbus",
-        binds: { [mdnsVolume.name]: "/run/dbus" },
-        command: ["/usr/bin/dbus-daemon", "--nopidfile", "--system"],
+        command: ["/usr/bin/dbus-daemon", "--nopidfile", "--system", "--nofork"],
     });
 
     await composition.add({
         name: "mdns",
-        binds: { [mdnsVolume.name]: "/run/dbus" },
         command: ["/usr/sbin/avahi-daemon"],
     });
 
     Values.maybeContainer = await composition.add({
         name: "chip",
+        recreate: true,
     });
 
     State.onClose(async () => {
@@ -257,8 +270,10 @@ async function configurePics() {
     const ciPics = await State.container.read(ContainerPaths.chipPics);
     const pics = new PicsFile(ciPics, true);
 
-    const overrides = new PicsFile(Constants.inputPicsFile);
+    const overrides = new PicsFile(Constants.localPicsOverrideFile);
     pics.patch(overrides);
+
+    Values.maybePics = pics;
 
     await State.container.write(ContainerPaths.matterJsPics, pics.toString());
 }
@@ -270,7 +285,10 @@ type TaggedTest = Test & { semanticName: string };
  */
 async function configureTests() {
     // Load each type of test
-    const rawTests = [...(await YamlTests(State.container)), ...(await PythonTests(State.container))];
+    const rawTests = [
+        ...(await YamlTests(State.container, State.pics)),
+        ...(await PythonTests(State.container, State.pics)),
+    ];
 
     // Raw test names are paths; normalize, resolve conflicts and note conflicts that we cannot resolve
     const identifiedTests = new Set<string>();
