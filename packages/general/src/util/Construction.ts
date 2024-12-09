@@ -458,7 +458,7 @@ export function Construction<const T extends Constructable>(
 
                 case Lifecycle.Status.Destroying:
                     if (newStatus !== Lifecycle.Status.Destroyed) {
-                        throw new ImplementationError("Cannog change status because destruction is ongoing");
+                        throw new ImplementationError("Cannot change status because destruction is ongoing");
                     }
                     break;
 

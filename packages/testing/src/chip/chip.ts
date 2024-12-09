@@ -114,6 +114,17 @@ Object.defineProperty(Chip, "container", {
 });
 
 /**
+ * Active test.  Will throw if no test is active.
+ */
+Chip.activeTest = {} as Test;
+
+Object.defineProperty(Chip, "activeTest", {
+    get() {
+        return State.test;
+    },
+});
+
+/**
  * Initialize.  This must run before defining tests to enable test definition via globs.
  */
 Chip.initialize = async () => {

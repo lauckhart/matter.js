@@ -11,8 +11,7 @@ export type BackchannelCommand =
     | BackchannelCommand.SimulateLongPress
     | BackchannelCommand.SimulateMultiPress
     | BackchannelCommand.SimulateLatchedPosition
-    | BackchannelCommand.Reboot
-    | BackchannelCommand.FactoryReset;
+    | BackchannelCommand.NoParameters;
 
 export namespace BackchannelCommand {
     export interface Subject {
@@ -44,11 +43,7 @@ export namespace BackchannelCommand {
         positionId: number;
     };
 
-    export type FactoryReset = {
-        name: "factoryReset";
-    };
-
-    export type Reboot = {
-        name: "reboot";
+    export type NoParameters = {
+        name: "factoryReset" | "reboot" | "start" | "stop";
     };
 }

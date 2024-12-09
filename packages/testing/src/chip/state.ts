@@ -28,6 +28,7 @@ const Values = {
     initialized: false,
     maybeRunner: undefined as TestRunner | undefined,
     maybeSubject: undefined as Subject.Factory | undefined,
+    maybeTest: undefined as Test | undefined,
     maybeContainer: undefined as Container | undefined,
     maybePics: undefined as PicsFile | undefined,
     initializedSubjects: new WeakSet<Subject>(),
@@ -83,13 +84,19 @@ export const State = {
     },
 
     get pics() {
-        const pics = Values.maybePics;
-
-        if (pics === undefined) {
+        if (Values.maybePics === undefined) {
             throw new Error("PICS not initialized");
         }
 
-        return pics;
+        return Values.maybePics;
+    },
+
+    get test() {
+        if (Values.maybeTest === undefined) {
+            throw new Error("No active test");
+        }
+
+        return Values.maybeTest;
     },
 
     /**
@@ -133,21 +140,36 @@ export const State = {
      * wildcard.
      */
     select(include: string | string[], exclude?: string | string[]) {
-        let tests = filterWithGlob(Values.tests, include);
+        const included = new Set<Test>();
 
-        if (!tests.length) {
-            throw new Error(`Test glob ${include} matched no tests`);
+        if (!Array.isArray(include)) {
+            include = [include];
         }
 
+        if (!include.length) {
+            throw new Error(`Test inclusion specifier is empty`);
+        }
+
+        // Process inclusions individually so we can throw if any individual one doesn't match.  We aren't as
+        // persnickety about exclusions because they will run too many tests if anything
+        for (const glob of include) {
+            const globTests = filterWithGlob(Values.tests, glob);
+            if (!globTests.length) {
+                throw new Error(`Test glob ${include} matched no tests`);
+            }
+            globTests.forEach(included.add.bind(included));
+        }
+
+        let result = [...included];
         if (exclude) {
-            tests = filterWithGlob(tests, exclude, true);
+            result = filterWithGlob(result, exclude, true);
+
+            if (!result.length) {
+                throw new Error(`Test exclusion glob ${exclude} eliminated all tests selected by glob ${include}`);
+            }
         }
 
-        if (!tests.length) {
-            throw new Error(`Test exclusion glob ${exclude} eliminated all tests selected by glob ${include}`);
-        }
-
-        return tests;
+        return result;
     },
 
     /**
@@ -168,8 +190,14 @@ export const State = {
         const { test, beforeStart, beforeTest } = definition;
         const mochaTest = it(test.description ?? test.name, async () => {
             const { reporter } = Values.runner;
-            await beforeTest(Values.activeSubject!, test);
-            await test.invoke(State.container, reporter.beginStep.bind(reporter));
+
+            try {
+                Values.maybeTest = test;
+                await beforeTest(Values.activeSubject!, test);
+                await test.invoke(State.container, reporter.beginStep.bind(reporter));
+            } finally {
+                Values.maybeTest = undefined;
+            }
         }).timeout(test.timeout ?? Constants.defaultTimeout);
 
         // We do this separately from the test itself because we don't want activation to appear as part of the test if
@@ -232,9 +260,11 @@ async function configureContainer() {
     const composition = docker.compose("matter.js", {
         image: Constants.imageName,
         platform: Constants.platform,
-        network: "host", //Network(docker, Constants.networkName),
         binds: { [mdnsVolume.name]: "/run/dbus" },
         autoRemove: true,
+
+        // Meh.  Don't have non-host network working yet
+        network: "host", //Network(docker, Constants.networkName),
     });
 
     await composition.add({

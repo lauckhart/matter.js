@@ -105,7 +105,7 @@ FROM base AS final
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     --mount=type=cache,sharing=locked,target=/var/lib/apt \
     apt-get -qq update && \
-    apt-get -qq -y install avahi-daemon iproute2 less vim wget
+    apt-get -qq -y install avahi-daemon avahi-utils iproute2 less vim wget
 
 RUN wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && \
     chmod +x /usr/bin/yq

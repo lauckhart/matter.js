@@ -107,6 +107,8 @@ export class AccessoryServer {
         switch (methodName) {
             case "reboot":
             case "factoryReset":
+            case "start":
+            case "stop":
                 await this.#subject.backchannel({ name: methodName });
                 return;
 
@@ -115,8 +117,6 @@ export class AccessoryServer {
             case "compareFiles":
             case "createFile":
             case "deleteFile":
-            case "start":
-            case "stop":
                 throw new AccessoryMethodError(`Unimplemented accessory method ${methodName}`, 404);
         }
 

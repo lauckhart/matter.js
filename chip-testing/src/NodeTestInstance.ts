@@ -11,11 +11,12 @@ import {
     InternalError,
     Node,
     StorageService,
+    Time,
     type ServerNode,
 } from "@matter/main";
 import { AdministratorCommissioningServer } from "@matter/main/behaviors/administrator-commissioning";
 import { OccurrenceManager } from "@matter/main/protocol";
-import { BackchannelCommand, Subject } from "@matter/testing";
+import { BackchannelCommand, Chip, Subject } from "@matter/testing";
 import { TestInstance, TestInstanceConfig, log } from "./GenericTestApp.js";
 
 /**
@@ -141,6 +142,24 @@ export abstract class NodeTestInstance extends TestInstance implements Subject {
 
             case "factoryReset":
                 await this.node.erase();
+                break;
+
+            case "stop":
+                await this.close();
+
+                // DiscoveryTest.yaml fails if we don't give MDNS a bit of time to propagate.  Kind of blows having to
+                // handle this way but haven't come up with a better idea other than injecting a PICS so we can disable
+                // "Check Instance Name" step.  Restarting Avahi might work but depends on how CHIP handles Avahi
+                // messages
+                if (Chip.activeTest.name === "Discovery") {
+                    await Time.sleep("wait for MDNS", 3000);
+                }
+
+                break;
+
+            case "start":
+                await this.initialize();
+                await this.start();
                 break;
 
             default:
