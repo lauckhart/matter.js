@@ -26,6 +26,9 @@ export namespace ContainerPaths {
         "/scripts/py_matter_yamltests/matter_yamltests/pseudo_clusters/clusters/accessory_server_bridge.py";
 }
 
+export type ContainerPathsType = typeof ContainerPaths;
+export interface ContainerPaths extends ContainerPathsType {}
+
 /**
  * Specify the base filename to use for a test.  This specifies a "winner" in the case of conflicts.
  */
@@ -99,18 +102,5 @@ export namespace Constants {
     /**
      * Default arguments provided to the Python runner.
      */
-    export const PythonRunnerArgs = [
-        "--PICS",
-        ContainerPaths.matterJsPics,
-
-        // We commission separately but some scripts require a passcode and discriminator (e.g. TC_DA_1_7.py)
-        "--passcode",
-        "20202021",
-
-        "--discriminator",
-        "3840",
-
-        // TC_DA_1_2.py looks for certs in a relative path by default
-        "--string-arg=cd_cert_dir:/credentials/development/cd-certs",
-    ];
+    export const PythonRunnerArgs = ["--PICS", ContainerPaths.matterJsPics];
 }

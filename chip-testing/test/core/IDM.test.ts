@@ -4,9 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-describe("ACE", () => {
-    chip({
-        include: "ACE_*",
-        exclude: "ACE_1_6",
-    });
+describe("IDM", () => {
+    chip("IDM_*");
 });

@@ -16,8 +16,8 @@ import {
 } from "@matter/main";
 import { AdministratorCommissioningServer } from "@matter/main/behaviors/administrator-commissioning";
 import { OccurrenceManager } from "@matter/main/protocol";
-import { BackchannelCommand, Chip, Subject } from "@matter/testing";
-import { TestInstance, TestInstanceConfig, log } from "./GenericTestApp.js";
+import { BackchannelCommand, chip, Subject } from "@matter/testing";
+import { log, TestInstance, TestInstanceConfig } from "./GenericTestApp.js";
 
 /**
  * {@link serverNode}-based test subject.
@@ -150,8 +150,8 @@ export abstract class NodeTestInstance extends TestInstance implements Subject {
                 // DiscoveryTest.yaml fails if we don't give MDNS a bit of time to propagate.  Kind of blows having to
                 // handle this way but haven't come up with a better idea other than injecting a PICS so we can disable
                 // "Check Instance Name" step.  Restarting Avahi might work but depends on how CHIP handles Avahi
-                // messages
-                if (Chip.activeTest.name === "Discovery") {
+                // messages and would kill part of the value of the test
+                if (chip.activeTest.name === "Discovery") {
                     await Time.sleep("wait for MDNS", 3000);
                 }
 

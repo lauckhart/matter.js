@@ -20,10 +20,8 @@ describe("BINFO", () => {
         ),
     );
 
-    chip({ include: "BINFO_*", exclude: "BINFO_2_2" });
+    chip("BINFO_*").exclude("BINFO_2_2");
 
     // For BINFO 2.2 we need to clear events because otherwise test will fail due to duplicate startup events
-    chip({ include: "BINFO_2_2" }).beforeStart(subject =>
-        (subject as NodeTestInstance).node.env.get(OccurrenceManager).clear(),
-    );
+    chip("BINFO_2_2").beforeStart(subject => (subject as NodeTestInstance).node.env.get(OccurrenceManager).clear());
 });

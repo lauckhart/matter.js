@@ -8,7 +8,7 @@ import { Package, Progress } from "#tools";
 import colors from "ansi-colors";
 import debug from "debug";
 import { relative } from "path";
-import { Chip } from "./chip/chip.js";
+import { chip } from "./chip/chip.js";
 import { FailureDetail } from "./failure-detail.js";
 import { testNode } from "./node.js";
 import { TestOptions } from "./options.js";
@@ -25,7 +25,7 @@ export class TestRunner {
         readonly progress: Progress,
         readonly options: TestOptions,
     ) {
-        Chip.runner = this;
+        chip.runner = this;
 
         this.reporter = new (class extends ProgressReporter {
             constructor() {

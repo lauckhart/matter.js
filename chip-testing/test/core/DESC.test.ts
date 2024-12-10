@@ -5,5 +5,5 @@
  */
 
 describe("DESC", () => {
-    chip({ include: "DESC_*" });
+    chip("DESC_*");
 });

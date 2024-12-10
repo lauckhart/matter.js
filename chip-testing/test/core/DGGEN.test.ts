@@ -14,5 +14,5 @@ describe("DGGEN", () => {
         ),
     );
 
-    chip({ include: "DGGEN_*" });
+    chip("DGGEN_*");
 });

@@ -85,8 +85,8 @@ class PythonTest implements Test {
         }
     }
 
-    async invoke(container: Container, step: (title: string) => void) {
-        const terminal = await container.exec(await createCommand(container, this.#filename), Terminal.Line, {
+    async invoke(container: Container, step: (title: string) => void, args: string[]) {
+        const terminal = await container.exec(await createCommand(container, this.#filename, args), Terminal.Line, {
             cwd: "/tmp",
         });
 
@@ -162,7 +162,7 @@ function spiffy(line: string) {
  * We read the entire configuration but all we currently extract are arguments to the first run that aren't
  * "boilerplate" arguments that we don't need.
  */
-async function createCommand(container: Container, filename: string) {
+async function createCommand(container: Container, filename: string, extraArgs: string[]) {
     const result = ["python3", filename, ...Constants.PythonRunnerArgs];
 
     const terminal = await container.exec(["cat", filename], Terminal.Line);
@@ -210,6 +210,8 @@ async function createCommand(container: Container, filename: string) {
 
     args = args.replace(/--(?:storage-path|commissioning-method|discriminator|passcode|trace-to|PICS)\s+\S+\s+/g, "");
     result.push(...args.trim().split(/\s+/));
+
+    result.push(...extraArgs);
 
     return result;
 }

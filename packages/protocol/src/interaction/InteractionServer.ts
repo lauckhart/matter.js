@@ -1234,7 +1234,7 @@ export class InteractionServer implements ProtocolHandler, InteractionRecipient 
                         MessageType.InvokeResponse,
                         TlvInvokeResponseForSend.encode({
                             ...invokeResponseMessage,
-                            moreChunkedMessages: invokeResultsProcessed < invokeRequests.length ? true : undefined,
+                            moreChunkedMessages: lastMessageProcessed ? undefined : true,
                         }),
                     );
                     invokeResponseMessage.invokeResponses = [];

@@ -4,6 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-describe("DA", () => {
-    chip({ include: "DA_*" });
+describe("CGEN", () => {
+    chip("CGEN_*");
 });

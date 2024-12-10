@@ -4,6 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-describe("CADMIN", () => {
-    chip({ include: "CADMIN_*" });
+describe("ACE", () => {
+    chip("ACE_*").exclude("ACE_1_6");
 });

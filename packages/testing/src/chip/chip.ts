@@ -23,45 +23,198 @@ import { State } from "./state.js";
  *
  * We execute test logic within a Docker container available at {@link https://github.com/matter-js/matter.js-chip}.
  */
-export function Chip({ include, exclude }: Chip.Options): Chip.Builder {
-    const tests = State.select(include, exclude);
+export interface Chip extends chip.Suite {
+    (...include: string[]): chip.Suite;
 
-    const beforeStartHooks = Array<Chip.BeforeHook>();
-    const beforeTestHooks = Array<Chip.BeforeHook>();
-    let subject: Subject.Factory | undefined;
+    /**
+     * Testing controller.  Must be set prior to use of other methods.
+     */
+    runner: undefined | TestRunner;
 
-    for (const test of tests) {
-        State.implement({
-            test: test,
+    /**
+     * Initialize.  This must run before defining tests to enable test definition via globs.
+     */
+    initialize(): Promise<void>;
 
-            get subject() {
-                return subject;
-            },
+    /**
+     * Shut down.  Deactivates any active testee and removes the test container.
+     */
+    close(): Promise<void>;
 
-            beforeStart: (...args) => runBeforeHooks(beforeStartHooks, ...args),
-            beforeTest: (...args) => runBeforeHooks(beforeTestHooks, ...args),
-        });
-    }
+    /**
+     * Open a command pipe.
+     */
+    openPipe(name: string): Promise<void>;
 
-    return {
+    /**
+     * Add teardown logic.
+     */
+    onClose(fn: () => Promise<void>): void;
+
+    /**
+     * Key paths within the CHIP container.
+     */
+    paths: ContainerPaths;
+
+    /**
+     * Default test subject.  If this is set, test implementations may omit the subject.
+     */
+    defaultSubject: Subject.Factory;
+
+    /**
+     * The CHIP container.  Must be initialized before access.
+     */
+    container: Container;
+
+    /**
+     * The active test.  Throws if no test is running.
+     */
+    activeTest: Test;
+}
+
+function createSuite(initial: {
+    include?: string | string[];
+    exclude?: string | string[];
+    defaultSubject?: Subject.Factory;
+    beforeStart?: chip.BeforeHook;
+    beforeTest?: chip.BeforeHook;
+}): chip.Suite {
+    const tests = new Set<Test>();
+    const implementations = new Map<Test, Mocha.Test>();
+    let subject: undefined | Subject.Factory;
+    const beforeStartHooks = Array<chip.BeforeHook>();
+    const beforeTestHooks = Array<chip.BeforeHook>();
+    const args = Array<string>();
+
+    const suite: chip.Suite = {
+        /**
+         * Add tests to include.
+         *
+         * @param glob one or more sh-style globs for selecting tests based on ID
+         */
+        include(...glob: string[]) {
+            for (const test of State.select(glob)) {
+                if (tests.has(test)) {
+                    continue;
+                }
+
+                implementations.set(
+                    test,
+                    State.implement({
+                        test: test,
+
+                        get subject() {
+                            return subject;
+                        },
+
+                        get args() {
+                            return args;
+                        },
+
+                        beforeStart: (...args) => runBeforeHooks(beforeStartHooks, ...args),
+                        beforeTest: (...args) => runBeforeHooks(beforeTestHooks, ...args),
+                    }),
+                );
+
+                tests.add(test);
+            }
+            return this;
+        },
+
+        /**
+         * Exclude tests.  Only affects tests already included.
+         */
+        exclude(...glob: string[]) {
+            for (const test of State.select(glob, tests)) {
+                implementations.get(test)?.skip();
+            }
+            return this;
+        },
+
+        /**
+         * Set the test subject.  Optional if you set {@link chip.subject}.
+         */
         subject(newSubject: Subject.Factory) {
             subject = newSubject;
             return this;
         },
 
-        beforeStart(hook) {
+        /**
+         * Execute a function after initializing but before starting the subject.
+         */
+        beforeStart(hook: chip.BeforeHook) {
             beforeStartHooks.push(hook);
             return this;
         },
 
-        beforeTest(hook) {
+        /**
+         * Execute a function after starting the subject but before running the test.
+         */
+        beforeTest(hook: chip.BeforeHook) {
             beforeTestHooks.push(hook);
             return this;
         },
+
+        /**
+         * Add additional arguments passed to the test runner.
+         */
+        args(...newArgs: string[]) {
+            args.push(...newArgs);
+            return this;
+        },
     };
+
+    for (const key in initial) {
+        const fn = (suite as unknown as Record<string, (...args: any[]) => chip.Suite>)[key];
+        if (typeof fn === "function") {
+            const arg = initial[key as keyof typeof initial];
+            if (Array.isArray(arg)) {
+                fn(...arg);
+            } else {
+                fn(arg);
+            }
+        }
+    }
+
+    return suite;
 }
 
-function runBeforeHooks(hooks: Chip.BeforeHook[], ...args: Parameters<Chip.BeforeHook>) {
+function chipFn(...include: string[]): chip.Suite {
+    return createSuite({ include });
+}
+
+Object.defineProperties(chipFn, {
+    runner: {
+        set(runner: TestRunner) {
+            State.runner = runner;
+        },
+    },
+
+    defaultSubject: {
+        set(subject: Subject.Factory) {
+            State.subject = subject;
+        },
+    },
+
+    activeTest: {
+        get: () => State.test,
+    },
+
+    container: {
+        get: () => State.container,
+    },
+
+    paths: { value: ContainerPaths },
+
+    initialize: { value: State.initialize },
+    close: { value: State.close },
+    openPipe: { value: State.openPipe },
+    onClose: { value: State.onClose },
+});
+
+export const chip = chipFn as Chip;
+
+function runBeforeHooks(hooks: chip.BeforeHook[], ...args: Parameters<chip.BeforeHook>) {
     const promises = new Array<Promise<void>>();
     for (const hook of hooks) {
         const promise = hook(...args);
@@ -74,85 +227,7 @@ function runBeforeHooks(hooks: Chip.BeforeHook[], ...args: Parameters<Chip.Befor
     }
 }
 
-Chip.paths = ContainerPaths;
-
-/**
- * Testing controller.  Must be set prior to use of other methods.
- */
-Chip.runner = undefined as undefined | TestRunner;
-
-Object.defineProperty(Chip, "runner", {
-    set(runner: TestRunner) {
-        State.runner = runner;
-    },
-});
-
-/**
- * Default test subject.  If this is set, test implementations may omit the subject.
- */
-Chip.subject = undefined as undefined | Subject.Factory;
-
-Object.defineProperty(Chip, "subject", {
-    set(subject: Subject.Factory) {
-        State.subject = subject;
-    },
-});
-
-/**
- * The test container.  Must be initialized before access.
- */
-Chip.container = {} as Container;
-
-Object.defineProperty(Chip, "container", {
-    get() {
-        if (State.container === undefined) {
-            throw new Error("CHIP container accessed before initialization");
-        }
-
-        return State.container;
-    },
-});
-
-/**
- * Active test.  Will throw if no test is active.
- */
-Chip.activeTest = {} as Test;
-
-Object.defineProperty(Chip, "activeTest", {
-    get() {
-        return State.test;
-    },
-});
-
-/**
- * Initialize.  This must run before defining tests to enable test definition via globs.
- */
-Chip.initialize = async () => {
-    await State.initialize();
-};
-
-/**
- * Shut down.  Deactivates any active testee and removes the test container.
- */
-Chip.close = async () => {
-    await State.close();
-};
-
-/**
- * Open a command pipe.
- */
-Chip.openPipe = async (name: string) => {
-    return State.openPipe(name);
-};
-
-/**
- * Add teardown logic.
- */
-Chip.onClose = (fn: () => Promise<void>) => {
-    return State.onClose(fn);
-};
-
-export namespace Chip {
+export namespace chip {
     /**
      * The test implementation.
      */
@@ -162,37 +237,37 @@ export namespace Chip {
         (subject: Subject, test: Test): void | Promise<void>;
     }
 
-    export interface Builder {
+    export interface Suite {
         /**
-         * Set the test subject.  Optional if you set {@link Chip.subject}.
+         * Add tests to include.
+         *
+         * @param glob one or more sh-style globs for selecting tests based on ID
          */
-        subject(subject: Subject.Factory): Builder;
+        include(...glob: string[]): Suite;
+
+        /**
+         * Exclude tests.  Only affects tests already included.
+         */
+        exclude(...glob: string[]): Suite;
+
+        /**
+         * Set the test subject.  Optional if you set {@link chip.subject}.
+         */
+        subject(subject: Subject.Factory): Suite;
 
         /**
          * Execute a function after initializing but before starting the subject.
          */
-        beforeStart(hook: BeforeHook): Builder;
+        beforeStart(hook: BeforeHook): Suite;
 
         /**
          * Execute a function after starting the subject but before running the test.
          */
-        beforeTest(hook: BeforeHook): Builder;
-    }
-
-    /**
-     * Options for instantiating tests.
-     */
-    export interface Options {
-        /**
-         * A glob selecting tests to include.
-         */
-        include: string | string[];
+        beforeTest(hook: BeforeHook): Suite;
 
         /**
-         * A glob that excludes tests from the include set.
+         * Add arguments to the test runner.
          */
-        exclude?: string | string[];
+        args(...args: string[]): Suite;
     }
 }
-
-export type Chip = typeof Chip;

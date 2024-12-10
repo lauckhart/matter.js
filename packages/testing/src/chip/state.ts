@@ -14,7 +14,7 @@ import { Volume } from "../docker/volume.js";
 import { afterOne, afterRun, beforeOne, beforeRun } from "../mocha.js";
 import type { TestRunner } from "../runner.js";
 import { AccessoryServer } from "./accessory-server.js";
-import type { Chip } from "./chip.js";
+import type { chip } from "./chip.js";
 import { Constants, ContainerPaths } from "./config.js";
 import { ContainerCommandPipe } from "./container-command-pipe.js";
 import { PicsFile } from "./pics-file.js";
@@ -108,7 +108,7 @@ export const State = {
         }
 
         const { progress } = Values.runner;
-        return await progress.run(`Initialize containers`, initialize);
+        return await progress.run(`Initializing containers`, initialize);
     },
 
     /**
@@ -139,47 +139,44 @@ export const State = {
      * Select tests based on string patterns.  {@link include} and {@link exclude} are "glob" patterns with "*" as a
      * wildcard.
      */
-    select(include: string | string[], exclude?: string | string[]) {
+    select(globs: string | string[], candidates: Iterable<Test> = Values.tests) {
         const included = new Set<Test>();
 
-        if (!Array.isArray(include)) {
-            include = [include];
+        if (!Array.isArray(globs)) {
+            globs = [globs];
         }
 
-        if (!include.length) {
+        if (!globs.length) {
             throw new Error(`Test inclusion specifier is empty`);
         }
 
-        // Process inclusions individually so we can throw if any individual one doesn't match.  We aren't as
-        // persnickety about exclusions because they will run too many tests if anything
-        for (const glob of include) {
-            const globTests = filterWithGlob(Values.tests, glob);
-            if (!globTests.length) {
-                throw new Error(`Test glob ${include} matched no tests`);
+        // Process inclusions individually so we can throw if any individual one doesn't match
+        for (const glob of globs) {
+            const pattern = glob.replace(/\*/g, "[^\\/]+");
+            let addedOne = false;
+            for (const candidate of candidates) {
+                if (candidate.name.match(pattern)) {
+                    included.add(candidate);
+                    addedOne = true;
+                }
             }
-            globTests.forEach(included.add.bind(included));
-        }
-
-        let result = [...included];
-        if (exclude) {
-            result = filterWithGlob(result, exclude, true);
-
-            if (!result.length) {
-                throw new Error(`Test exclusion glob ${exclude} eliminated all tests selected by glob ${include}`);
+            if (!addedOne) {
+                throw new Error(`Test glob ${glob} matched no tests`);
             }
         }
 
-        return result;
+        return included;
     },
 
     /**
      * Install a test into the current Mocha suite.
      */
     implement(definition: {
-        beforeStart: Chip.BeforeHook;
-        beforeTest: Chip.BeforeHook;
+        beforeStart: chip.BeforeHook;
+        beforeTest: chip.BeforeHook;
         subject: Subject.Factory | undefined;
         test: Test;
+        args: string[];
     }) {
         if (!Values.containerLifecycleInstalled) {
             Values.containerLifecycleInstalled = true;
@@ -194,7 +191,7 @@ export const State = {
             try {
                 Values.maybeTest = test;
                 await beforeTest(Values.activeSubject!, test);
-                await test.invoke(State.container, reporter.beginStep.bind(reporter));
+                await test.invoke(State.container, reporter.beginStep.bind(reporter), definition.args);
             } finally {
                 Values.maybeTest = undefined;
             }
@@ -207,6 +204,8 @@ export const State = {
         });
 
         afterOne(mochaTest, () => deactivateSubject());
+
+        return mochaTest;
     },
 
     /**
@@ -228,7 +227,7 @@ export const State = {
             return;
         }
 
-        const pipe = new ContainerCommandPipe(this.container, this, name);
+        const pipe = new ContainerCommandPipe(State.container, this, name);
 
         State.onClose(async () => {
             await pipe.close();
@@ -355,18 +354,6 @@ async function configureTests() {
 }
 
 /**
- * Filter tests based on name using a UNIX-glob-like pattern.
- */
-function filterWithGlob(list: Test[], globs: string | string[], invert = false) {
-    if (!Array.isArray(globs)) {
-        globs = [globs];
-    }
-    const patterns = globs.map(glob => glob.replace(/\*/g, "[^\\/]+"));
-    const pattern = new RegExp(`^(?:${patterns.join("|")})$`);
-    return list.filter(s => !!s.name.match(pattern) === !invert);
-}
-
-/**
  * Normalize the test name reported by the underlying test adapter.
  */
 function testNameOf(path: string) {
@@ -445,7 +432,7 @@ async function configureNetwork() {
  *
  * On first activation, commissions the subject.  Thereafter the subject is either already active or reactivated here.
  */
-async function activateSubject(factory: Subject.Factory, test: Test, beforeStart?: Chip.BeforeHook) {
+async function activateSubject(factory: Subject.Factory, test: Test, beforeStart?: chip.BeforeHook) {
     const subject = loadSubject(factory, test.domain);
 
     if (Values.activeSubject === subject) {

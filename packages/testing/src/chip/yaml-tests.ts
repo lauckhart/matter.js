@@ -18,31 +18,39 @@ export async function YamlTests(container: Container, pics: PicsFile): Promise<T
     const files1 = await container.resolveGlob(`${ContainerPaths.yamlTestDir}/Test*.yaml`);
     const files2 = await container.resolveGlob(`${ContainerPaths.yamlCertTestDir}/Test_*.yaml`);
 
-    // Filter tests based on PICS.  To do this as quickly as possible we use yq to isolate PICS from YAML
+    // Filter tests.  To do this as quickly as possible we use yq to isolate PICS and count of non-disabled steps from
+    // YAML.  Manual steps appear to be marked as disabled
     const rawFilePics = await container.execAndRead([
         "/usr/bin/yq",
-        "[filename, .PICS]",
+        "[filename, .tests | map(select(.disabled != true)) | length, .PICS]",
         "-o=json",
         "-I=0",
         ...files1,
         ...files2,
     ]);
 
-    // Pics come in lines, each of the format ["filename.yaml",["pics1",...]].  Turn this into an object
+    // Pics come in lines, each of the format ["filename.yaml",n,["pics1",...]].  Turn this into an object
     const filenameToPics = Object.fromEntries(
         rawFilePics
             .trim()
             .split("\n")
-            .map(line => JSON.parse(line)),
-    ) as Record<string, string[] | null>;
+            .map(line => {
+                const [filename, stepCount, pics] = JSON.parse(line) as [string, number, string[]];
+                return [filename, { stepCount, pics }];
+            }),
+    );
 
     // Now select all files with applicable PICS
     const files = Array<string>();
     nextFile: for (const file of [...files1, ...files2]) {
-        const filePics = filenameToPics[file];
+        const details = filenameToPics[file];
 
-        if (Array.isArray(filePics)) {
-            for (const entry of filePics) {
+        if (!details.stepCount) {
+            continue;
+        }
+
+        if (Array.isArray(details.pics)) {
+            for (const entry of details.pics) {
                 // Pics may be logical disjunction in form "key1 | key2".  Support this
                 const names = entry.split(/\s*\|\s*/);
                 if (!names.map(name => pics.values[name]).includes("1")) {
@@ -83,9 +91,16 @@ class YamlTest implements Test {
         }
     }
 
-    async invoke(container: Container, step: (title: string) => void) {
+    async invoke(container: Container, step: (title: string) => void, args: string[]) {
         const terminal = await container.exec(
-            ["python3", ContainerPaths.yamlRunner, "tests", basename(this.#filename), ...Constants.YamlRunnerArgs],
+            [
+                "python3",
+                ContainerPaths.yamlRunner,
+                "tests",
+                basename(this.#filename),
+                ...Constants.YamlRunnerArgs,
+                ...args,
+            ],
             Terminal.Line,
         );
 

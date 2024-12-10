@@ -16,5 +16,5 @@ export interface Test {
     description?: string;
     timeout?: number;
     initializeSubject(container: Container, subject: Subject): Promise<void>;
-    invoke(container: Container, step: (title: string) => void): Promise<void>;
+    invoke(container: Container, step: (title: string) => void, args: string[]): Promise<void>;
 }

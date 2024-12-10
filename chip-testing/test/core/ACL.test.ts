@@ -4,6 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-describe("OPCREDS", () => {
-    chip({ include: "OPCREDS_*" });
+describe("ACL", () => {
+    chip("ACL_*").exclude("ACL_2_11");
 });

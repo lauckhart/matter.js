@@ -5,6 +5,5 @@
  */
 
 describe("SC", () => {
-    // TODO - 4/17 of these fail, looks like mix of PICS and config requirements
-    chip({ include: "SC_*" });
+    chip("SC_*");
 });

@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-describe("CGEN", () => {
-    chip({
-        include: "CGEN_*",
-    });
+describe("CNET", () => {
+    chip("CNET_*");
 });

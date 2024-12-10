@@ -4,6 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-describe("CNET", () => {
-    chip({ include: "CNET_*" });
+describe("BRBINFO", () => {
+    chip("BRBINFO_*").exclude("BRBINFO_4_1"); // Exclude ICD
 });

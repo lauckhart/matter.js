@@ -5,13 +5,13 @@
  */
 
 import { Environment, RuntimeService, StorageBackendMemory } from "@matter/main";
-import { Chip, Subject } from "@matter/testing";
+import { Subject } from "@matter/testing";
 import { AllClustersTestInstance } from "../src/AllClustersTestInstance.js";
 import { BridgeTestInstance } from "../src/BridgeTestInstance.js";
 import { TestInstanceConstructor } from "../src/GenericTestApp.js";
 import { NodeTestInstance } from "../src/NodeTestInstance.js";
 
-Chip.onClose(async () => {
+chip.onClose(async () => {
     // Terminate and/or wait for any long-running services such as MdnsService
     await Environment.default.maybeGet(RuntimeService)?.close();
 });
@@ -22,7 +22,7 @@ export function App(implementation: TestInstanceConstructor<NodeTestInstance>): 
             domain,
             storage: new StorageBackendMemory(),
             async commandPipeFactory(_subject, name) {
-                await Chip.openPipe(name);
+                await chip.openPipe(name);
             },
             discriminator: 3840,
             passcode: 20202021,
@@ -33,4 +33,4 @@ export function App(implementation: TestInstanceConstructor<NodeTestInstance>): 
 export const AllClustersApp = App(AllClustersTestInstance);
 export const BridgeApp = App(BridgeTestInstance);
 
-Chip.subject = AllClustersApp;
+chip.defaultSubject = AllClustersApp;
