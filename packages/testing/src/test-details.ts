@@ -4,58 +4,78 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-const isSuite = Symbol("is-suite");
+const suiteKind = Symbol("suite-kind");
 
-interface SuiteDetails extends Record<string, SuiteDetails | TestDetails> {
-    [isSuite]: true;
+function isSuite(member: TestDetails.Suite | TestDetails.Test): member is TestDetails.Suite {
+    return suiteKind in member;
 }
 
-const root = {} as SuiteDetails;
+function createSuite(breadcrumb: string[]): TestDetails.Suite {
+    const members = {} as Record<string, TestDetails.Suite | TestDetails.Test>;
 
-export interface TestDetails {
-    name: string;
-    type: "js" | "ts" | "py" | "yaml";
-    disabled?: boolean;
-    manual?: boolean;
-    applies?: boolean;
-    pics?: string[];
+    return {
+        [suiteKind]: true,
+
+        list(prefix = "") {
+            for (const key in members) {
+                const member = members[key];
+                if (isSuite(member)) {
+                    console.log(key, " ➡");
+                    member.list(prefix + "    ");
+                } else {
+                    console.log(key, " ", member.toString());
+                }
+            }
+        },
+
+        suite(name: string) {
+            const existing = members[name];
+            if (!existing) {
+                return (members.name = createSuite([...breadcrumb, name]));
+            }
+            if (!isSuite(existing)) {
+                throw new Error(`Suite definition ${formatPath(breadcrumb)} conflicts with existing test`);
+            }
+            return existing;
+        },
+
+        test(test: TestDetails.Test) {
+            const existing = members[test.name];
+            if (!existing) {
+                return (members.name = { ...test });
+            }
+            if (isSuite(existing)) {
+                throw new Error(`Test definition ${formatPath(breadcrumb)} conflicts with existing suite`);
+            }
+            for (const key in test) {
+                const value = test[key as keyof TestDetails.Test];
+                if (value !== undefined) {
+                    (existing as any)[key] = value;
+                }
+            }
+            return existing;
+        },
+    };
 }
+
+export const TestDetails = createSuite([]);
 
 export namespace TestDetails {
-    export function list() {
-        // TODO
+    export interface Test {
+        name: string;
+        type: "js" | "ts" | "py" | "yaml";
+        disabled?: boolean;
+        manual?: boolean;
+        applies?: boolean;
+        pics?: string[];
     }
 
-    export function add(path: string[], test: TestDetails) {
-        let suite = root;
-        const breadcrumb = Array<string>();
-        for (const name of path) {
-            let local = suite[name];
-            if (!local) {
-                local = { [isSuite]: true };
-                suite[name] = local;
-                suite = local;
-                continue;
-            }
+    export interface Suite {
+        [suiteKind]: true;
 
-            breadcrumb.push(name);
-
-            if (!(isSuite in suite)) {
-                throw new Error(`Suite ${formatPath(breadcrumb)} conflicts with a test definition`);
-            }
-
-            suite = local as SuiteDetails;
-        }
-
-        breadcrumb.push(test.name);
-
-        const existing: TestDetails | undefined = suite[test.name];
-        if (existing === undefined) {
-            suite[test.name] = test;
-            return;
-        } else if (isSuite in suite) {
-            throw new Error(`Suite ${formatPath(breadcrumb)} conflicts with a test definition`);
-        }
+        suite(name: string): Suite;
+        test(test: Test): Test;
+        list(prefix?: string): void;
     }
 }
 
