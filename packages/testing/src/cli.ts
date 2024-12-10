@@ -10,9 +10,11 @@ import "./util/node-shims.js";
 import "./global-definitions.js";
 
 import { Builder, Graph, Package, Project } from "#tools";
+import { clear } from "console";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { TestRunner } from "./runner.js";
+import { TestDetails } from "./test-details.js";
 
 enum TestType {
     esm = "esm",
@@ -25,6 +27,7 @@ Error.stackTraceLimit = 50;
 export async function main(argv = process.argv) {
     const testTypes = new Set<TestType>();
 
+    let ls = false;
     let manual = false;
 
     const args = await yargs(hideBin(argv))
@@ -45,7 +48,7 @@ export async function main(argv = process.argv) {
             type: "array",
             string: true,
             describe: "One or more paths of tests to run",
-            default: "./test/**/*Test.ts",
+            default: "./test/**/*{.test,Test}.ts",
         })
         .option("all-logs", { type: "boolean", describe: "Emit log messages in real time" })
         .option("debug", { type: "boolean", describe: "Enable Mocha debugging" })
@@ -57,10 +60,12 @@ export async function main(argv = process.argv) {
         .option("profile", { type: "boolean", describe: "Write profiling data to build/profiles (node only)" })
         .option("wtf", { type: "boolean", describe: "Enlist wtfnode to detect test leaks" })
         .option("trace-unhandled", { type: "boolean", describe: "Detail unhandled rejections with trace-unhandled" })
+        .option("clear", { type: "boolean", describe: "Clear terminal before testing" })
         .command("*", "run all supported test types")
         .command("esm", "run tests on node (ES6 modules)", () => testTypes.add(TestType.esm))
         .command("cjs", "run tests on node (CommonJS modules)", () => testTypes.add(TestType.cjs))
         .command("web", "run tests in web browser", () => testTypes.add(TestType.web))
+        .command("ls", "lists available tests and their status", () => (ls = true))
         .command("manual", "start test server and print URL for manual testing", () => {
             testTypes.add(TestType.web);
             manual = true;
@@ -80,6 +85,11 @@ export async function main(argv = process.argv) {
     if (pkg.isWorkspace) {
         const graph = await Graph.load(pkg);
         await graph.build(builder, false);
+
+        if (args.clear) {
+            clear();
+        }
+
         for (const node of graph.nodes) {
             if (!node.pkg.hasTests || node.pkg.json.matter?.test === false) {
                 continue;
@@ -94,11 +104,21 @@ export async function main(argv = process.argv) {
         } else {
             await builder.build(new Project(pkg));
         }
+
+        if (args.clear) {
+            clear();
+        }
+
         await test(pkg);
     }
 
     async function test(pkg: Package) {
         process.chdir(pkg.path);
+
+        if (ls) {
+            TestDetails.list();
+            return;
+        }
 
         // If no test types are specified explicitly, run all enabled types
         if (!testTypes.size) {

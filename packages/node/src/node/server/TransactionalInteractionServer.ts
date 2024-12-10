@@ -15,6 +15,7 @@ import { Endpoint } from "#endpoint/Endpoint.js";
 import { EndpointLifecycle } from "#endpoint/properties/EndpointLifecycle.js";
 import { EndpointServer } from "#endpoint/server/EndpointServer.js";
 import { Diagnostic, InternalError, Logger, MaybePromise } from "#general";
+import { EndpointServer } from "#endpoint/server/EndpointServer.js";
 import {
     AccessDeniedError,
     AnyAttributeServer,

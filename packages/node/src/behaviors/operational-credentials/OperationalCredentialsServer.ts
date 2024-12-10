@@ -205,7 +205,7 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
 
         if (failsafeContext.fabricIndex !== undefined) {
             throw new StatusResponseError(
-                `addNoc received after ${failsafeContext.forUpdateNoc ? "UpdateNOC" : "AddNOC"} already invoked.`,
+                `AddNoc received after ${failsafeContext.forUpdateNoc ? "UpdateNOC" : "AddNOC"} already invoked.`,
                 StatusCode.ConstraintError,
             );
         }
@@ -313,22 +313,29 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
             );
         }
 
-        if (timedOp.forUpdateNoc) {
+        if (timedOp.forUpdateNoc === false) {
             throw new StatusResponseError(
-                `addNoc received after csr request was invoked for UpdateNOC.`,
+                `UpdateNoc received after csr request was invoked for UpdateNOC.`,
                 StatusCode.ConstraintError,
             );
         }
 
-        if (timedOp.hasRootCert) {
-            throw new StatusResponseError(
-                "Trusted root certificate added in this session which is now allowed for UpdateNOC.",
-                StatusCode.ConstraintError,
-            );
+        if (timedOp.rootCertSet) {
+            return {
+                // TC_OPCREDS_3_4 expects MissingCsr here...  Previously we used InvalidNoc which seems like it makes
+                // more sense
+                statusCode: OperationalCredentials.NodeOperationalCertStatus.MissingCsr,
+                fabricIndex: this.session.fabric?.fabricIndex,
+                debugText: "Trusted root certificate added in this session which is now allowed for UpdateNOC.",
+            };
         }
 
         if (!timedOp.forUpdateNoc) {
-            throw new StatusResponseError("csrRequest not invoked for UpdateNOC.", StatusCode.ConstraintError);
+            return {
+                statusCode: OperationalCredentials.NodeOperationalCertStatus.MissingCsr,
+                fabricIndex: this.session.fabric?.fabricIndex,
+                debugText: "csrRequest not invoked for UpdateNOC.",
+            };
         }
 
         if (this.session.associatedFabric.fabricIndex !== timedOp.associatedFabric?.fabricIndex) {
@@ -395,7 +402,10 @@ export class OperationalCredentialsServer extends OperationalCredentialsBehavior
     override addTrustedRootCertificate({ rootCaCertificate }: OperationalCredentials.AddTrustedRootCertificateRequest) {
         const failsafeContext = this.#failsafeContext;
 
-        if (failsafeContext.hasRootCert) {
+        // TC_OPCREDS_3_4 fails if we don't allow set of the root certificate in updates, even though that's illegal and
+        // UpdateNoc will subsequently fail.  So we can't just test for presence of root certificate; we actually need
+        // to test if it's been set
+        if (failsafeContext.rootCertSet) {
             throw new StatusResponseError(
                 "Trusted root certificate already added in this FailSafe context.",
                 StatusCode.ConstraintError,

@@ -8,7 +8,7 @@ import { mkdir, writeFile } from "fs/promises";
 import type { Session } from "inspector/promises";
 import Mocha from "mocha";
 import { relative } from "path";
-import { adaptReporter, generalSetup } from "./mocha.js";
+import { adaptReporter, afterRun, beforeRun, generalSetup, runMocha } from "./mocha.js";
 import { TestOptions } from "./options.js";
 import type { TestRunner } from "./runner.js";
 
@@ -32,6 +32,13 @@ export async function testNode(runner: TestRunner, format: "cjs" | "esm") {
     }
 
     process.on("unhandledRejection", unhandledRejection);
+
+    if (runner.options.profile) {
+        const profiler = new Profiler();
+        beforeRun(() => profiler.start());
+        afterRun(() => profiler.stop(runner.pkg.resolve("build/profiles")));
+    }
+
     try {
         const mocha = new Mocha({
             inlineDiffs: true,
@@ -53,18 +60,7 @@ export async function testNode(runner: TestRunner, format: "cjs" | "esm") {
 
         await mocha.loadFilesAsync();
 
-        const profiler = new Profiler();
-        if (runner.options.profile) {
-            await profiler.start();
-        }
-
-        await new Promise<Mocha.Runner>(resolve => {
-            const runner = mocha.run(() => resolve(runner));
-        });
-
-        if (runner.options.profile) {
-            await profiler.stop(runner.pkg.resolve("build/profiles"));
-        }
+        await runMocha(mocha);
     } finally {
         process.off("unhandledRejection", unhandledRejection);
 
