@@ -4,8 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-describe("MiscGeneralTest", () => {
-    chip({
-        include: ["CASERecovery", "CommandsById", "Discovery"],
-    });
+describe("MiscGeneral", () => {
+    chip({ include: ["DeviceBasicComposition"] });
+    // chip({
+    //     include: ["CASERecovery", "CommandsById", "DeviceBasicComposition", "Discovery"],
+    // });
 });

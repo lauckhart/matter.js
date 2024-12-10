@@ -4,6 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-describe("MiscSubscribe", () => {
-    chip({ include: ["Subscribe_*"] });
+describe("DA", () => {
+    chip({ include: "DA_*" });
 });

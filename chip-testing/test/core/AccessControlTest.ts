@@ -5,5 +5,5 @@
  */
 
 describe("AccessControl", () => {
-    chip({ include: ["AccessControlCluster", "AccessControlConstraints"] });
+    chip({ include: ["AccessChecker", "AccessControlCluster", "AccessControlConstraints"] });
 });

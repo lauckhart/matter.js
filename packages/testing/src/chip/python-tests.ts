@@ -11,7 +11,7 @@ import { Test } from "../device/test.js";
 import { Container } from "../docker/container.js";
 import { Terminal } from "../docker/terminal.js";
 import { parseStep } from "./chip-test-common.js";
-import { ContainerPaths } from "./config.js";
+import { Constants, ContainerPaths } from "./config.js";
 import type { PicsFile } from "./pics-file.js";
 
 export async function PythonTests(container: Container, _pics: PicsFile): Promise<Test[]> {
@@ -163,7 +163,7 @@ function spiffy(line: string) {
  * "boilerplate" arguments that we don't need.
  */
 async function createCommand(container: Container, filename: string) {
-    const result = ["python3", filename, "--PICS", ContainerPaths.matterJsPics];
+    const result = ["python3", filename, ...Constants.PythonRunnerArgs];
 
     const terminal = await container.exec(["cat", filename], Terminal.Line);
 

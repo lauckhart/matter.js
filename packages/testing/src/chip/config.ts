@@ -78,16 +78,39 @@ export namespace Constants {
     const delayAfterOpeningCommissioningWindowMs = 500;
 
     /**
-     * Arguments provided to the YAML runner.
+     * Default arguments provided to the YAML runner.
      */
     export const YamlRunnerArgs = [
         "--PICS",
         ContainerPaths.matterJsPics,
+
+        // This makes CHIP logs unconditional which would be nice if it intermingled with our logs but currently they
+        // only appear once test is run; haven't tracked down how to stream them yet
         // "--show_adapter_logs",
         // "true",
+
         "--PIXIT.CADMIN.CwDuration",
         `${subjectCommissioningTimeoutS}`,
+
         "--waitAfterCommissioning",
         `${delayAfterOpeningCommissioningWindowMs}`,
+    ];
+
+    /**
+     * Default arguments provided to the Python runner.
+     */
+    export const PythonRunnerArgs = [
+        "--PICS",
+        ContainerPaths.matterJsPics,
+
+        // We commission separately but some scripts require a passcode and discriminator (e.g. TC_DA_1_7.py)
+        "--passcode",
+        "20202021",
+
+        "--discriminator",
+        "3840",
+
+        // TC_DA_1_2.py looks for certs in a relative path by default
+        "--string-arg=cd_cert_dir:/credentials/development/cd-certs",
     ];
 }
