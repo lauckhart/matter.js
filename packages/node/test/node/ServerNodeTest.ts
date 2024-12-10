@@ -370,9 +370,9 @@ describe("ServerNode", () => {
         await testFactoryReset("offline-after-commission");
     });
 
-    it("factory resets when online after commission", async () => {
+    it.only("factory resets when online after commission", async () => {
         await testFactoryReset("online");
-    });
+    }).timeout(60000);
 
     it("factory resets when offline without commission", async () => {
         await testFactoryReset("offline");

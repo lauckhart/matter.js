@@ -11,3 +11,4 @@ export * from "./network/index.js";
 export * from "./parts/index.js";
 export * from "./product-description/index.js";
 export * from "./sessions/index.js";
+export * from "./events/index.js";
