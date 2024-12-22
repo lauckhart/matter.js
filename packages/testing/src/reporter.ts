@@ -6,6 +6,7 @@
 
 import { Progress } from "#tools";
 import colors from "ansi-colors";
+import { stdout } from "process";
 import { FailureDetail } from "./failure-detail.js";
 
 export type Stats = {
@@ -121,9 +122,10 @@ export abstract class ProgressReporter implements Reporter {
         for (let i = 0; i < this.#failures.length; i++) {
             const failure = this.#failures[i];
             const index = `Failure ${colors.bold((i + 1).toString())} of ${this.#failures.length}`;
-            process.stdout.write(`\n${index} ${this.#formatName(failure.suite, failure.test, failure.step)}\n\n`);
+            const title = `${index} ${this.#formatName(failure.suite, failure.test, failure.step)}`;
 
-            FailureDetail.dump(failure.detail, "  ");
+            stdout.write(FailureDetail.format(failure.detail, title, stdout.columns));
+            stdout.write("\n");
         }
     }
 

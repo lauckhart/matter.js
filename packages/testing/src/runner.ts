@@ -8,6 +8,7 @@ import { Package, Progress } from "#tools";
 import colors from "ansi-colors";
 import debug from "debug";
 import { relative } from "path";
+import { stderr } from "process";
 import { chip } from "./chip/chip.js";
 import { FailureDetail } from "./failure-detail.js";
 import { testNodejs } from "./nodejs.js";
@@ -31,9 +32,11 @@ export class TestRunner {
             constructor() {
                 super(progress);
             }
+
             override failRun(detail: FailureDetail) {
-                process.stdout.write("\n");
-                FailureDetail.dump(detail);
+                stderr.write("\n");
+                stderr.write(FailureDetail.format(detail, "Test suite crash", stderr.columns));
+                stderr.write("\n");
                 process.exit(1);
             }
         })();

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { wrapWords } from "#tools";
 import colors from "ansi-colors";
 
 export interface FailureDetail {
@@ -49,39 +50,6 @@ export function FailureDetail(error: any, logs?: string[]) {
     return result;
 }
 
-export namespace FailureDetail {
-    export function dump(failure: FailureDetail, prefix: string = "") {
-        process.stdout.write(colors.redBright(`${prefix}${failure.message}\n\n`));
-
-        if (failure.diff) {
-            process.stdout.write(`${prefix}    ${failure.diff.replace(/\n/gm, "\n      ")}\n\n`);
-        }
-
-        if (failure.stack) {
-            process.stdout.write(`${prefix}${colors.dim(failure.stack.replace(/\n/gm, `\n${prefix}`))}\n\n`);
-        }
-
-        if (failure.cause) {
-            process.stdout.write(`${prefix}Caused by:\n\n`);
-            dump(failure.cause, prefix);
-        }
-
-        if (failure.errors?.length) {
-            let num = 0;
-            for (const cause of failure.errors) {
-                process.stdout.write(`${prefix}Cause #${++num}:\n\n`);
-                dump(cause, `${prefix}  `);
-            }
-        }
-
-        if (failure.logs) {
-            process.stdout.write(`  ${failure.logs.replace(/\n/gm, "\n  ")}\n\n`);
-        }
-    }
-
-    export let diff: undefined | ((actual: string, expected: string) => string);
-}
-
 function parseError(error: Error) {
     let message, stack, cause: FailureDetail | undefined, errors: FailureDetail[] | undefined;
 
@@ -123,4 +91,90 @@ function parseError(error: Error) {
     }
 
     return { message, stack, cause, errors };
+}
+
+const OUTER_PREFIX = colors.red("▌ ");
+const INNER_PREFIX = "┆ ";
+
+// const OUTER_PREFIXES = {
+//     frst: colors.red("┣"),
+//     join: colors.red("┣"),
+//     cont: colors.red("┃"),
+//     last: colors.red("┗"),
+// };
+
+// const INNER_PREFIXES = {
+//     frst: "┌",
+//     join: "├",
+//     cont: "│",
+//     last: "└",
+// };
+
+export namespace FailureDetail {
+    export function format(failure: FailureDetail, title: string, wrapTo?: number) {
+        title = wrapWords(title, { width: wrapTo ? wrapTo - 4 : undefined, splitStyling: true }).replace("\n", "\n  ");
+        const parts = [`\n\u001b[0;30;41m\u001b[K\n\u001b[K${OUTER_PREFIX}${title}\n\u001b[K\u001b[0m\n`];
+
+        parts.push(`${OUTER_PREFIX.replace(/\s/g, "")}\n`);
+
+        parts.push(formatDetails(failure, OUTER_PREFIX, wrapTo));
+
+        return parts.join("");
+    }
+
+    export let diff: undefined | ((actual: string, expected: string) => string);
+}
+
+function formatDetails(failure: FailureDetail, prefix: string, wrapTo?: number) {
+    const details = [colors.redBright(failure.message)];
+
+    if (failure.diff) {
+        details.push(`    ${failure.diff.replace(/\n/gm, "\n    ")}`);
+    }
+
+    if (failure.stack) {
+        details.push(colors.dim(failure.stack));
+    }
+
+    if (failure.cause) {
+        details.push(`Caused by:\n\n${formatDetails(failure.cause, INNER_PREFIX, wrapTo)}`);
+    }
+
+    if (failure.errors?.length) {
+        let num = 0;
+        for (const cause of failure.errors) {
+            details.push(`Cause #${++num}:\n\n${formatDetails(cause, INNER_PREFIX, wrapTo)}`);
+        }
+    }
+
+    if (failure.logs) {
+        details.push(failure.logs);
+    }
+
+    const result = Array<string>();
+
+    for (let i = 0; i < details.length; i++) {
+        result.push(
+            details[i]
+                .split("\n")
+                .map(line => {
+                    return wrapWords(line, {
+                        width: wrapTo,
+                        initialPrefix: prefix,
+                        wrapPrefix: `${prefix}  `,
+                        preserveIndent: true,
+                        splitStyling: true,
+                    });
+                })
+                .join("\n"),
+        );
+
+        if (i !== details.length - 1) {
+            result.push(prefix.replace(/\s/g, ""));
+        }
+    }
+
+    result.push("");
+
+    return result.join("\n");
 }
