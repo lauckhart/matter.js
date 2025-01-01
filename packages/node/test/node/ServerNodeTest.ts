@@ -4,11 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { CommissioningServer } from "#behavior/system/commissioning/CommissioningServer.js";
-import { BasicInformationBehavior } from "#behaviors/basic-information";
 import { DescriptorBehavior } from "#behaviors/descriptor";
 import { PumpConfigurationAndControlServer } from "#behaviors/pump-configuration-and-control";
-import { GeneralCommissioning } from "#clusters/general-commissioning";
 import { PumpConfigurationAndControl } from "#clusters/pump-configuration-and-control";
 import { ColorTemperatureLightDevice } from "#devices/color-temperature-light";
 import { ExtendedColorLightDevice } from "#devices/extended-color-light";
@@ -21,38 +18,23 @@ import { AggregatorEndpoint } from "#endpoints/aggregator";
 import {
     Bytes,
     CrashedDependenciesError,
-    Crypto,
     DnsCodec,
     DnsMessage,
     DnsRecordType,
     Environment,
-    Key,
     MockUdpChannel,
     NetworkSimulator,
-    PrivateKey,
     StorageBackendMemory,
     StorageManager,
     StorageService,
 } from "#general";
 import { ServerNode } from "#node/ServerNode.js";
-import { AttestationCertificateManager, CertificationDeclarationManager, FabricManager } from "#protocol";
-import { NodeId, VendorId } from "#types";
+import { AttestationCertificateManager, CertificationDeclarationManager } from "#protocol";
+import { VendorId } from "#types";
 import { MockServerNode } from "./mock-server-node.js";
+import { CommissioningHelper, testFactoryReset } from "./node-helpers.js";
 
-let commissionForFabricNumber: number | undefined = undefined;
-
-Crypto.get().createKeyPair = () => {
-    const DEFAULT_SEC1_KEY = Bytes.fromHex(
-        "30770201010420aef3484116e9481ec57be0472df41bf499064e5024ad869eca5e889802d48075a00a06082a8648ce3d030107a144034200043c398922452b55caf389c25bd1bca4656952ccb90e8869249ad8474653014cbf95d687965e036b521c51037e6b8cedefca1eb44046694fa08882eed6519decba",
-    );
-
-    const sec1Key =
-        commissionForFabricNumber !== undefined
-            ? Fixtures.fabrics[commissionForFabricNumber]?.sec1Key
-            : DEFAULT_SEC1_KEY;
-
-    return Key({ sec1: sec1Key }) as PrivateKey;
-};
+const commissioning = CommissioningHelper();
 
 describe("ServerNode", () => {
     before(() => {
@@ -60,7 +42,7 @@ describe("ServerNode", () => {
     });
 
     beforeEach(() => {
-        commissionForFabricNumber = undefined;
+        commissioning.fabricNumber = undefined;
     });
 
     describe("emits correct lifecycle changes", () => {
@@ -226,7 +208,7 @@ describe("ServerNode", () => {
     });
 
     it("commissions", async () => {
-        const { node } = await commission();
+        const { node } = await commissioning.commission();
 
         await MockTime.resolve(node.cancel());
 
@@ -234,7 +216,7 @@ describe("ServerNode", () => {
     });
 
     it("times out commissioning", async () => {
-        const { node } = await almostCommission();
+        const { node } = await commissioning.almostCommission();
 
         const opcreds = node.state.operationalCredentials;
 
@@ -306,7 +288,7 @@ describe("ServerNode", () => {
     });
 
     it("decommissions and recommissions", async () => {
-        const { node, contextOptions } = await commission();
+        const { node, contextOptions } = await commissioning.commission();
 
         const fabricIndex = await node.online(
             contextOptions,
@@ -333,38 +315,10 @@ describe("ServerNode", () => {
         if (!node.lifecycle.isOnline) {
             await MockTime.resolve(node.lifecycle.online);
         }
-        await commission(node);
+        await commissioning.commission(node);
 
         await node.close();
     });
-
-    async function testFactoryReset(mode: "online" | "offline-after-commission" | "offline") {
-        let node: MockServerNode;
-        if (mode !== "offline") {
-            ({ node } = await commission());
-        } else {
-            node = await MockServerNode.createOnline({ online: false });
-        }
-
-        if (mode === "offline-after-commission") {
-            await node.cancel();
-        }
-
-        await MockTime.resolve(node.erase());
-
-        // Confirm previous online state is resumed
-        expect(node.lifecycle.isOnline).equals(mode === "online");
-
-        // Confirm basic state information is present
-        expect(node.stateOf(BasicInformationBehavior).vendorName).equals("Matter.js Test Vendor");
-
-        // Confirm pairing codes are available
-        const pairingCodes = node.stateOf(CommissioningServer).pairingCodes;
-        expect(typeof pairingCodes).equals("object");
-        expect(typeof pairingCodes.manualPairingCode).equals("string");
-
-        await node.close();
-    }
 
     it("factory resets when offline after commission", async () => {
         await testFactoryReset("offline-after-commission");
@@ -379,7 +333,7 @@ describe("ServerNode", () => {
     });
 
     it("commissions twice", async () => {
-        const { node } = await commission();
+        const { node } = await commissioning.commission();
 
         let lastCommissionedFabricCount;
         node.events.operationalCredentials.commissionedFabrics$Changed.on(commissionedFabrics => {
@@ -396,7 +350,7 @@ describe("ServerNode", () => {
             lastFabricsCount = fabrics.length;
         });
 
-        await commission(node, 1);
+        await commissioning.commission(node, 1);
 
         expect(node.state.operationalCredentials.nocs.length).equals(2);
         expect(Object.keys(node.state.commissioning.fabrics).length).equals(2);
@@ -426,7 +380,7 @@ describe("ServerNode", () => {
 
         const node = await MockServerNode.createOnline({ device: aggregator });
 
-        await commission(node);
+        await commissioning.commission(node);
 
         expect(node.stateOf(DescriptorBehavior).partsList).deep.equals([aggregator.number, light.number, pump.number]);
         expect(aggregator.stateOf(DescriptorBehavior).partsList).deep.equals([light.number, pump.number]);
@@ -548,91 +502,7 @@ describe("ServerNode", () => {
     });
 });
 
-async function almostCommission(node?: MockServerNode, number = 0) {
-    if (!node) {
-        node = await MockServerNode.createOnline();
-    }
-
-    const params = Fixtures.fabrics[number];
-    commissionForFabricNumber = number;
-
-    const exchange = await node.createExchange();
-
-    const context = { exchange, command: true };
-
-    await node.online(context, async agent => {
-        await agent.generalCommissioning.armFailSafe({ expiryLengthSeconds: Fixtures.failsafeLengthS, breadcrumb: 4 });
-    });
-
-    await node.online(context, async agent => {
-        await agent.generalCommissioning.setRegulatoryConfig({
-            newRegulatoryConfig: 2,
-            countryCode: "XX",
-            breadcrumb: 5,
-        });
-    });
-
-    await node.online(context, async agent => {
-        await agent.operationalCredentials.certificateChainRequest({ certificateType: 2 });
-    });
-
-    await node.online(context, async agent => {
-        await agent.operationalCredentials.certificateChainRequest({ certificateType: 1 });
-    });
-
-    await node.online(context, async agent => {
-        await agent.operationalCredentials.attestationRequest({ attestationNonce: params.attestationNonce });
-    });
-
-    await node.online(context, async agent => {
-        await agent.operationalCredentials.csrRequest({ csrNonce: params.csrNonce });
-    });
-
-    await node.online(context, async agent => {
-        agent.operationalCredentials.addTrustedRootCertificate({ rootCaCertificate: params.caCert });
-    });
-
-    await node.online(context, async agent => {
-        const result = await agent.operationalCredentials.addNoc({
-            nocValue: params.nocValue,
-            icacValue: params.icacValue,
-            ipkValue: params.ipkValue,
-            caseAdminSubject: NodeId((number + 1) * 100),
-            adminVendorId: VendorId(65521),
-        });
-        expect(result.statusCode).deep.equals(0);
-    });
-
-    return { node, context };
-}
-
-async function commission(existingNode?: MockServerNode, number = 0) {
-    const { node } = await almostCommission(existingNode, number);
-
-    // Do not reuse session from initial commissioning because we must now move from CASE to PASE
-    const fabric = node.env.get(FabricManager).fabrics[number];
-    const contextOptions = {
-        exchange: await node.createExchange({
-            fabric,
-            peerNodeId: NodeId(number + 1),
-        }),
-        command: true,
-    };
-
-    await node.online(contextOptions, async agent => {
-        // Use MockTime.resolve to wait for broadcaster cleanup
-        const result = await MockTime.resolve(agent.generalCommissioning.commissioningComplete());
-        expect(result).deep.equals({ errorCode: GeneralCommissioning.CommissioningError.Ok, debugText: "" });
-    });
-
-    if (!node.lifecycle.isCommissioned) {
-        await node.lifecycle.commissioned;
-    }
-
-    return { node, contextOptions };
-}
-
-namespace Fixtures {
+export namespace Fixtures {
     function u(hex: string) {
         return Bytes.fromHex(hex);
     }

@@ -30,7 +30,7 @@ export interface Options {
  *
  * Warning: This class is intended for command line use and will process.exit if things go wrong.
  */
-export class Builder {
+export class ProjectBuilder {
     unconditional: boolean;
     tsContext?: TypescriptContext;
     graph?: Graph;
