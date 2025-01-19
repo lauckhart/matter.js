@@ -10,15 +10,19 @@ export enum ScanDirective {
     // Ignore section in stream
     IGNORE = 1,
 
-    // Treat as one-level higher than actual in stream
+    // Treat as one level higher than actual in stream
     POP = 2,
 
+    // Treat as two levels higher
+    POP2 = 3,
+
     // Collect section as a "namespace" entry
-    NAMESPACE = 3,
+    NAMESPACE = 4,
 }
 
 const IGNORE = () => ScanDirective.IGNORE;
 const POP = () => ScanDirective.POP;
+const POP2 = () => ScanDirective.POP2;
 const NAMESPACE = () => ScanDirective.NAMESPACE;
 
 type HtmlRepairs = Record<string, (ref: HtmlReference) => ScanDirective | void>;
@@ -81,6 +85,33 @@ export const ClusterHtmlRepairs: Record<string, HtmlRepairs> = {
 
         // This at a reasonable level but is a one-off.  So easiest to handle here
         "Mode Namespace": NAMESPACE,
+    },
+
+    "ICD Management": {
+        // ClientTypeEnum is one level too deep (1.4 core)
+        "9.17.5.1.1": POP,
+    },
+
+    "Service Area": {
+        // SelectAreaStatus and SkipAreaStatus enums are too deep (1.4 cluster)
+        "1.17.5.6.1": POP,
+        "1.17.5.6.2": POP,
+    },
+
+    "Joint Fabric Datastore": {
+        // This is a fake section number for a datatype that generates at the same level as a field for the previous
+        // datatype (1.4 core)
+        "11.24.5.4.7": POP2,
+    },
+
+    "Joint Fabric PKI": {
+        // The joint fabric guys really don't adhere to conventions.  We can mostly correct automatically but in this
+        // case they spelled out Signing Request instead of using abbreviation SR from defining table
+        "11.25.4.1"(subref) {
+            if (subref.name === "ICAC Signing Request Status Enum Type") {
+                subref.name = "IcacsrRequestStatusEnum";
+            }
+        },
     },
 };
 

@@ -142,7 +142,7 @@ LocalMatter.children.push({
             name: "MoveColorTemperature",
 
             children: [
-                { tag: "field", name: "MoveMode", id: 0x0, type: "MoveMode", conformance: "M", constraint: "desc" },
+                { tag: "field", name: "MoveMode", id: 0x0, type: "MoveModeEnum", conformance: "M", constraint: "desc" },
             ],
         },
 
@@ -153,7 +153,7 @@ LocalMatter.children.push({
             name: "StepColorTemperature",
 
             children: [
-                { tag: "field", name: "StepMode", id: 0x0, type: "StepMode", conformance: "M", constraint: "desc" },
+                { tag: "field", name: "StepMode", id: 0x0, type: "StepModeEnum", conformance: "M", constraint: "desc" },
             ],
         },
     ],

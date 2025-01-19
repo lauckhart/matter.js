@@ -211,6 +211,7 @@ export function astToFunction(schema: ValueModel, supervisor: RootSupervisor): V
             count: 0,
             target: param.num,
             orMore: !!param.orMore,
+            orLess: !!param.orLess,
         };
 
         return {
