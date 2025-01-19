@@ -22,7 +22,7 @@ export class TextWriter implements Consumer {
 
     #terminalWidth?: number;
     #currentLineWidth = 0;
-    #out: (line: string) => void;
+    #out: (text: string) => void;
     #activeStyle = Style.Inherit;
     #styleDirty = true;
     #currentStyle = Style.Inherit;
@@ -30,6 +30,7 @@ export class TextWriter implements Consumer {
     #state: Consumer.State;
     #styleEnabled = true;
     #isNewLine = true;
+    #buffer?: string[];
 
     constructor(out: (text: string) => void, options?: Writer.Options) {
         const { tabWidth, terminalWidth, linePrefix } = options ?? {};
@@ -47,7 +48,7 @@ export class TextWriter implements Consumer {
 
             const revertTo = { ...self.state, options } as Consumer.Options;
 
-            const { linePrefix, style } = options;
+            const { linePrefix, style, buffer } = options;
             if (linePrefix) {
                 if (self.#linePrefix) {
                     self.#linePrefix.push(linePrefix);
@@ -63,6 +64,14 @@ export class TextWriter implements Consumer {
                     self.#currentStyle = style;
                 }
                 self.#styleDirty = true;
+            }
+
+            if (!!buffer !== !!self.#buffer) {
+                if (buffer) {
+                    self.#buffer = [];
+                } else {
+                    self.#buffer = undefined;
+                }
             }
 
             const context = {
@@ -174,6 +183,28 @@ export class TextWriter implements Consumer {
                     return self.#terminalWidth - self.#currentLineWidth;
                 },
             },
+
+            buffer: {
+                get(this: never) {
+                    return !!self.#buffer;
+                },
+
+                set(this: never, buffering: boolean) {
+                    if (!!self.#buffer === buffering) {
+                        return;
+                    }
+                    if (buffering) {
+                        self.#buffer = [];
+                        return;
+                    }
+                    if (self.#buffer) {
+                        self.#out(self.#buffer.join(""));
+                        self.#buffer = undefined;
+                    }
+                },
+
+                enumerable: true,
+            },
         });
     }
 
@@ -264,16 +295,24 @@ export class TextWriter implements Consumer {
 
     #writeText(text: string) {
         this.#writeStyle();
-        this.#out(text);
+        this.#emit(text);
     }
 
     #writeStyle() {
         if (this.#styleDirty && this.#styleEnabled) {
             this.#styleDirty = false;
 
-            this.#out(this.#activeStyle.diffStyle(this.#currentStyle).toString());
+            this.#emit(this.#activeStyle.diffStyle(this.#currentStyle).toString());
 
             this.#activeStyle = this.#currentStyle;
+        }
+    }
+
+    #emit(text: string) {
+        if (this.#buffer) {
+            this.#buffer.push(text);
+        } else {
+            this.#out(text);
         }
     }
 
@@ -281,7 +320,7 @@ export class TextWriter implements Consumer {
         this.#writeStyle();
         this.#beginLine();
         if (terminator) {
-            this.#out(terminator);
+            this.#emit(terminator);
         }
     }
 

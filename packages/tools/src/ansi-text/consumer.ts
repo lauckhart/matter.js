@@ -32,6 +32,7 @@ export namespace Consumer {
         style?: Style;
         terminalWidth?: number;
         styleEnabled?: boolean;
+        buffer?: boolean;
     }
 
     export interface State extends Options {

@@ -56,13 +56,15 @@ const writeStatus = (() => {
             return;
         }
 
-        if (lastStatus) {
-            lastStatus = undefined;
-        } else if (needNewline && !text.startsWith("\n")) {
-            std.out("\n");
-        }
+        std.out.state({ buffer: true }, () => {
+            if (lastStatus) {
+                lastStatus = undefined;
+            } else if (needNewline && !text.startsWith("\n")) {
+                std.out("\n");
+            }
 
-        std.out.writeTruncated(text);
+            std.out.writeTruncated(text);
+        });
 
         lastStatus = text;
     };
@@ -150,7 +152,7 @@ export class Progress {
     }
 
     warn(text: string) {
-        stdout.write(`    ${ansi.yellow("Warning:")} ${text}\n`);
+        std.out.write(`    ${ansi.yellow("Warning:")} ${text}\n`);
     }
 
     shutdown() {
