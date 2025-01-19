@@ -56,10 +56,8 @@ async function syncSubproject(node: Graph.Node, path: string, ...extraRefs: stri
         refs = [];
     }
 
-    const deps = node.dependencies
-        .filter(dep => dep.pkg.isLibrary)
-        .map(dep => dep.pkg.resolve("src"))
-        .filter(p => !p.match(/packages[\\/]tools/));
+    const deps = node.dependencies.filter(dep => dep.pkg.isLibrary).map(dep => dep.pkg.resolve("src"));
+    //.filter(p => !p.match(/packages[\\/]tools/));
 
     const desired = [...new Set([...deps, ...extraRefs])];
 

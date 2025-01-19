@@ -11,19 +11,28 @@ The main work (all changes without a GitHub username in brackets in the below li
 
 ## __WORK IN PROGRESS__
 
+-   @matter/general
+    - Enhancement: Limits MDNS expires just to te relevant operational records when removing a fabric
 -   @matter/node
     - Feature: Constraint and conformance expressions may now reference values by name in any owner of a constrained value
     - Enhancement: Each new PASE session now automatically arms the failsafe timer for 60s as required by specs
     - Enhancement: Optimizes Node shutdown logic to close sessions and subscriptions before shutting down the network
     - Fix: Fixes withBehaviors() method on endpoints
 
+-   @matter/nodejs
+    - Breaking: Also the Sync Storage classes mainly used in legacy API now have an async close method!
+
 -   @matter/nodejs-ble
+    - Enhancement: Restructures BLE connection handling to improve reliability and eliminate hanging commissioning processes
     - Fix: Adds support for advanced manufacturer data on Windows (Noble update)
     
 -   @matter/protocol
     - Feature: Reworks Event server handling and optionally allow Non-Volatile event storage (currently mainly used in tests)
     - Enhancement: Adds a too-fast-resubmission guard for Unicast MDNS messages
     - Enhancement: Optimized Logging for messages in various places
+    - Enhancement: Added support for concurrent and non-concurrent commissioning flows
+    - Enhancement: Re-arms the failsafe timer in commissioning flows before steps that could take longer and during operative reconnection
+    - Enhancement: Stores Matter relevant MDNS host information to faster reuse when new SRV announcements come in
     - Fix: Corrects some Batch invoke checks and logic
     - Fix: Fixes MDNS discovery duration for retransmission cases to be 5s
     - Fix: Processes all TXT/SRV records in MDNS messages and optimized the processing
@@ -41,7 +50,9 @@ The main work (all changes without a GitHub username in brackets in the below li
 -   @project-chip/matter.js
     - Feature: (Breaking) Added Fabric Label for Controller as required property to initialize the Controller
         including setting the Fabric Label when commissioning and validating and updating the Fabric Label on
-        connection 
+        connection
+    - Feature: Added autoConnect property to node connection options to allow to not automatically connect to a node when PairedNode instance is created. Also introduces a non-blocking PairedNode.connect() method to connect to a node
+    - Feature: Added CommissioningController.getNode() method to get a PairedNode instance for a node by its node ID without a direct connection
     - Feature: Allows to update the Fabric Label during controller runtime using `updateFabricLabel()` on CommissioningController
     - Enhancement: Improves Reconnection Handling for devices that use persisted subscriptions
     - Enhancement: Use data type definitions from Model for Controller Device type definitions

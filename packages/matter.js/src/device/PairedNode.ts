@@ -156,6 +156,12 @@ export enum NodeStateInformation {
 
 export type CommissioningControllerNodeOptions = {
     /**
+     * Unless set to false the node will be automatically connected when initialized. When set to false use
+     * connect() to connect to the node at a later timepoint.
+     */
+    readonly autoConnect?: boolean;
+
+    /**
      * Unless set to false all events and attributes are subscribed and value changes are reflected in the ClusterClient
      * instances. With this reading attributes values is mostly looked up in the locally cached data.
      * Additionally more features like reaction on shutdown event or endpoint structure changes (for bridges) are done
@@ -370,14 +376,16 @@ export class PairedNode {
                 await this.#initializeFromStoredData(storedAttributeData);
             }
 
-            // This kicks of the remote initialization and automatic reconnection handling if it can not be connected
-            this.#initialize().catch(error => {
-                logger.info(`Node ${nodeId}: Error during remote initialization`, error);
-                if (this.state !== NodeStates.Disconnected) {
-                    this.#setConnectionState(NodeStates.WaitingForDeviceDiscovery);
-                    this.#scheduleReconnect();
-                }
-            });
+            if (this.options.autoConnect !== false) {
+                // This kicks of the remote initialization and automatic reconnection handling if it can not be connected
+                this.#initialize().catch(error => {
+                    logger.info(`Node ${nodeId}: Error during remote initialization`, error);
+                    if (this.state !== NodeStates.Disconnected) {
+                        this.#setConnectionState(NodeStates.WaitingForDeviceDiscovery);
+                        this.#scheduleReconnect();
+                    }
+                });
+            }
         });
     }
 
@@ -453,6 +461,18 @@ export class PairedNode {
     }
 
     /**
+     * Schedule a connection to the device. This method is non-blocking and will return immediately.
+     * The connection happens in the background. Please monitor the state of the node to see if the
+     * connection was successful.
+     */
+    connect(connectOptions?: CommissioningControllerNodeOptions) {
+        if (connectOptions !== undefined) {
+            this.options = connectOptions;
+        }
+        this.triggerReconnect();
+    }
+
+    /**
      * Trigger a reconnection to the device. This method is non-blocking and will return immediately.
      * The reconnection happens in the background. Please monitor the state of the node to see if the
      * reconnection was successful.
@@ -460,7 +480,7 @@ export class PairedNode {
     triggerReconnect() {
         if (this.#reconnectionInProgress || this.#remoteInitializationInProgress) {
             logger.info(
-                `Ignoring reconnect request because ${this.#remoteInitializationInProgress ? "init" : "reconnect"} already underway.`,
+                `Node ${this.nodeId}: Ignoring reconnect request because ${this.#remoteInitializationInProgress ? "initialization" : "reconnect"} already in progress.`,
             );
             return;
         }
@@ -480,7 +500,7 @@ export class PairedNode {
         }
         if (this.#reconnectionInProgress || this.#remoteInitializationInProgress) {
             logger.debug(
-                `Ignoring reconnect request because ${this.#remoteInitializationInProgress ? "init" : "reconnect"} already underway.`,
+                `Node ${this.nodeId}: Ignoring reconnect request because ${this.#remoteInitializationInProgress ? "init" : "reconnect"} already underway.`,
             );
             return;
         }
@@ -522,7 +542,7 @@ export class PairedNode {
                 logger.info(`Node ${this.nodeId}: Node is unknown by controller, we can not connect.`);
                 this.#setConnectionState(NodeStates.Disconnected);
             } else if (this.#connectionState === NodeStates.Disconnected) {
-                logger.info("No reconnection desired because requested status is Disconnected.");
+                logger.info(`Node ${this.nodeId}: No reconnection desired because requested status is Disconnected.`);
             } else {
                 if (error instanceof ChannelStatusResponseError) {
                     logger.info(`Node ${this.nodeId}: Error while establishing new Channel, retrying ...`, error);
@@ -906,13 +926,13 @@ export class PairedNode {
             for (const [endpointId] of Object.entries(allData)) {
                 const endpointIdNumber = EndpointNumber(parseInt(endpointId));
                 if (this.#endpoints.has(endpointIdNumber)) {
-                    logger.debug("Retaining device", endpointId);
+                    logger.debug(`Node ${this.nodeId}: Retaining device`, endpointId);
                     endpointsToRemove.delete(endpointIdNumber);
                 }
             }
             // And remove all endpoints no longer in the structure
             for (const endpointId of endpointsToRemove.values()) {
-                logger.debug("Removing device", endpointId);
+                logger.debug(`Node ${this.nodeId}: Removing device`, endpointId);
                 this.#endpoints.get(endpointId)?.removeFromStructure();
                 this.#endpoints.delete(endpointId);
             }
@@ -934,7 +954,7 @@ export class PairedNode {
                 continue;
             }
 
-            logger.debug("Creating device", endpointId, Logger.toJSON(clusters));
+            logger.debug(`Node ${this.nodeId}: Creating device`, endpointId, Logger.toJSON(clusters));
             this.#endpoints.set(
                 endpointIdNumber,
                 this.#createDevice(endpointIdNumber, clusters, this.#interactionClient),

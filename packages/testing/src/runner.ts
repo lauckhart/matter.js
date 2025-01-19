@@ -4,11 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Package, Progress } from "#tools";
-import colors from "ansi-colors";
+import { ansi, Package, Progress, std } from "#tools";
 import debug from "debug";
 import { relative } from "path";
-import { stderr } from "process";
 import { chip } from "./chip/chip.js";
 import { FailureDetail } from "./failure-detail.js";
 import { testNodejs } from "./nodejs.js";
@@ -34,9 +32,9 @@ export class TestRunner {
             }
 
             override failRun(detail: FailureDetail) {
-                stderr.write("\n");
-                stderr.write(FailureDetail.format(detail, "Test suite crash", stderr.columns));
-                stderr.write("\n");
+                std.err.write("\n");
+                FailureDetail.dump(std.err, detail, "Test suite crash");
+                std.err.write("\n");
                 process.exit(1);
             }
         })();
@@ -90,6 +88,6 @@ export class TestRunner {
 }
 
 function fatal(message: string) {
-    process.stderr.write(colors.redBright(`\n${message}\n\n`));
+    std.err.write(ansi.bright.red(`\n${message}\n\n`));
     process.exit(1);
 }

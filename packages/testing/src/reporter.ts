@@ -4,9 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Progress } from "#tools";
-import colors from "ansi-colors";
-import { stdout } from "process";
+import { ansi, Progress, std } from "#tools";
 import { FailureDetail } from "./failure-detail.js";
 
 export type Stats = {
@@ -108,24 +106,27 @@ export abstract class ProgressReporter implements Reporter {
     #summarize(stats?: Stats) {
         let statStr;
         if (stats) {
-            const complete = colors.dim(`${stats.complete}/${stats.total}`);
-            const failures = stats.failures ? colors.redBright(` ${stats.failures.toString()} failed`) : "";
+            const complete = ansi.dim(`${stats.complete}/${stats.total}`);
+            const failures = stats.failures ? ansi.bright.red(` ${stats.failures.toString()} failed`) : "";
             statStr = ` ${complete}${failures}`;
         } else {
             statStr = "";
         }
 
-        return `${colors.bold(this.#run)}${statStr}`;
+        return `${ansi.bold(this.#run)}${statStr}`;
     }
 
     #dumpFailures() {
         for (let i = 0; i < this.#failures.length; i++) {
+            if (i !== 0) {
+                std.out("\n");
+            }
+
             const failure = this.#failures[i];
-            const index = `Failure ${colors.bold((i + 1).toString())} of ${this.#failures.length}`;
+            const index = `Failure ${ansi.bold((i + 1).toString())} of ${this.#failures.length}`;
             const title = `${index} ${this.#formatName(failure.suite, failure.test, failure.step)}`;
 
-            stdout.write(FailureDetail.format(failure.detail, title, stdout.columns));
-            stdout.write("\n");
+            FailureDetail.dump(std.out, failure.detail, title);
         }
     }
 
@@ -134,7 +135,7 @@ export abstract class ProgressReporter implements Reporter {
         if (step) {
             breadcrumb.push(step);
         }
-        breadcrumb[breadcrumb.length - 1] = colors.bold(breadcrumb[breadcrumb.length - 1]);
+        breadcrumb[breadcrumb.length - 1] = ansi.bold(breadcrumb[breadcrumb.length - 1]).toString();
         return breadcrumb.join(" ➡ ");
     }
 }

@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { wrapWords } from "#tools";
-import colors from "ansi-colors";
+import { ansi, Printer, screen } from "#tools";
 
 export interface FailureDetail {
     message: string;
@@ -93,88 +92,56 @@ function parseError(error: Error) {
     return { message, stack, cause, errors };
 }
 
-const OUTER_PREFIX = colors.red("▌ ");
+const OUTER_PREFIX = `${ansi.red}▌ ${ansi.not.red}`;
 const INNER_PREFIX = "┆ ";
 
-// const OUTER_PREFIXES = {
-//     frst: colors.red("┣"),
-//     join: colors.red("┣"),
-//     cont: colors.red("┃"),
-//     last: colors.red("┗"),
-// };
-
-// const INNER_PREFIXES = {
-//     frst: "┌",
-//     join: "├",
-//     cont: "│",
-//     last: "└",
-// };
-
 export namespace FailureDetail {
-    export function format(failure: FailureDetail, title: string, wrapTo?: number) {
-        title = wrapWords(title, { width: wrapTo ? wrapTo - 4 : undefined, splitStyling: true }).replace("\n", "\n  ");
-        const parts = [`\n\u001b[0;30;41m\u001b[K\n\u001b[K${OUTER_PREFIX}${title}\n\u001b[K\u001b[0m\n`];
+    export function dump(out: Printer, failure: FailureDetail, title: string) {
+        out.state({ style: ansi.reset.white.bg.red }, () => {
+            out(screen.erase.toEol, "\n ", title, screen.erase.toEol, "\n", screen.erase.toEol, "\n");
+        });
 
-        parts.push(`${OUTER_PREFIX.replace(/\s/g, "")}\n`);
+        out(screen.erase.toEol);
 
-        parts.push(formatDetails(failure, OUTER_PREFIX, wrapTo));
-
-        return parts.join("");
+        out.state({ linePrefix: OUTER_PREFIX }, () => {
+            dumpDetails(out, failure);
+        });
     }
 
     export let diff: undefined | ((actual: string, expected: string) => string);
 }
 
-function formatDetails(failure: FailureDetail, prefix: string, wrapTo?: number) {
-    const details = [colors.redBright(failure.message)];
+function dumpCause(out: Printer, failure: FailureDetail) {
+    out.state({ linePrefix: INNER_PREFIX }, () => {
+        dumpDetails(out, failure);
+    });
+}
 
-    if (failure.diff) {
-        details.push(`    ${failure.diff.replace(/\n/gm, "\n    ")}`);
+function dumpDetails(out: Printer, { message, diff, stack, cause, errors, logs }: FailureDetail) {
+    out("\n", ansi.bright.red(message), "\n");
+
+    if (diff) {
+        out("\n    ", diff, "\n");
     }
 
-    if (failure.stack) {
-        details.push(colors.dim(failure.stack));
+    if (stack) {
+        out("\n  ", ansi.dim(stack), "\n");
     }
 
-    if (failure.cause) {
-        details.push(`Caused by:\n\n${formatDetails(failure.cause, INNER_PREFIX, wrapTo)}`);
+    if (cause) {
+        out("\nCaused by:\n\n");
+        dumpCause(out, cause);
     }
 
-    if (failure.errors?.length) {
+    if (errors?.length) {
         let num = 0;
-        for (const cause of failure.errors) {
-            details.push(`Cause #${++num}:\n\n${formatDetails(cause, INNER_PREFIX, wrapTo)}`);
+        for (const cause of errors) {
+            out(`\nCause #${++num}:\n\n`);
+            dumpCause(out, cause);
         }
     }
 
-    if (failure.logs) {
-        details.push(failure.logs);
+    if (logs) {
+        out("\n", logs, "\n");
     }
-
-    const result = Array<string>();
-
-    for (let i = 0; i < details.length; i++) {
-        result.push(
-            details[i]
-                .split("\n")
-                .map(line => {
-                    return wrapWords(line, {
-                        width: wrapTo,
-                        initialPrefix: prefix,
-                        wrapPrefix: `${prefix}  `,
-                        preserveIndent: true,
-                        splitStyling: true,
-                    });
-                })
-                .join("\n"),
-        );
-
-        if (i !== details.length - 1) {
-            result.push(prefix.replace(/\s/g, ""));
-        }
-    }
-
-    result.push("");
-
-    return result.join("\n");
 }
