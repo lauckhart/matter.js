@@ -472,8 +472,9 @@ describe("ServerNode", () => {
                 id: "foo",
                 number: 1,
                 colorControl: {
-                    startUpColorTemperatureMireds: 0,
-                    coupleColorTempToLevelMinMireds: 0,
+                    colorMode: 0,
+                    startUpColorTemperatureMireds: 1,
+                    coupleColorTempToLevelMinMireds: 1,
                 },
             });
 
@@ -492,8 +493,8 @@ describe("ServerNode", () => {
                 id: "foo",
                 number: 1,
                 colorControl: {
-                    startUpColorTemperatureMireds: 0,
-                    coupleColorTempToLevelMinMireds: 0,
+                    startUpColorTemperatureMireds: 1,
+                    coupleColorTempToLevelMinMireds: 1,
                 },
             });
 

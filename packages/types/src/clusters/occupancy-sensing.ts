@@ -10,6 +10,7 @@ import { MutableCluster } from "../cluster/mutation/MutableCluster.js";
 import {
     OptionalWritableAttribute,
     Attribute,
+    FixedAttribute,
     OptionalFixedAttribute,
     OptionalEvent,
     EventPriority
@@ -428,12 +429,12 @@ export namespace OccupancySensing {
             /**
              * @see {@link MatterSpecification.v13.Cluster} § 2.7.6
              */
-            occupancySensorType: OptionalFixedAttribute(0x1, TlvEnum<OccupancySensorType>()),
+            occupancySensorType: FixedAttribute(0x1, TlvEnum<OccupancySensorType>()),
 
             /**
              * @see {@link MatterSpecification.v13.Cluster} § 2.7.6
              */
-            occupancySensorTypeBitmap: OptionalFixedAttribute(0x2, TlvBitmap(TlvUInt8, OccupancySensorTypeBitmap)),
+            occupancySensorTypeBitmap: FixedAttribute(0x2, TlvBitmap(TlvUInt8, OccupancySensorTypeBitmap)),
 
             /**
              * This attribute shall specify the time delay, in seconds, before the sensor changes to its unoccupied

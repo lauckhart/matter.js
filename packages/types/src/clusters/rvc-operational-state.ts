@@ -20,9 +20,9 @@ import { TlvString } from "../tlv/TlvString.js";
 import { TlvNullable } from "../tlv/TlvNullable.js";
 import { TlvUInt8, TlvUInt32, TlvEnum } from "../tlv/TlvNumber.js";
 import { TlvField, TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
+import { OperationalState as OperationalStateNamespace } from "./operational-state.js";
 import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { TlvNoArguments } from "../tlv/TlvNoArguments.js";
-import { OperationalState as OperationalStateNamespace } from "./operational-state.js";
 import { Identity } from "#general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
 
@@ -95,7 +95,7 @@ export namespace RvcOperationalState {
          *
          * @see {@link MatterSpecification.v13.Cluster} § 1.14.4.2.1
          */
-        operationalStateId: TlvField(0, TlvEnum<OperationalState>()),
+        operationalStateId: TlvField(0, TlvEnum<OperationalState | OperationalStateNamespace.OperationalStateEnum>()),
 
         /**
          * This field shall be present if the OperationalStateID is from the set reserved for Manufacturer Specific
@@ -191,7 +191,7 @@ export namespace RvcOperationalState {
          *
          * @see {@link MatterSpecification.v13.Cluster} § 1.14.4.4.1
          */
-        errorStateId: TlvField(0, TlvEnum<ErrorState>()),
+        errorStateId: TlvField(0, TlvEnum<ErrorState | OperationalStateNamespace.ErrorState>()),
 
         /**
          * This field shall be present if the ErrorStateID is from the set reserved for Manufacturer Specific Errors,
@@ -343,7 +343,10 @@ export namespace RvcOperationalState {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 1.14.5.5
              */
-            operationalState: Attribute(0x4, TlvEnum<OperationalState>()),
+            operationalState: Attribute(
+                0x4,
+                TlvEnum<OperationalState | OperationalStateNamespace.OperationalStateEnum>()
+            ),
 
             /**
              * This attribute shall specify the details of any current error condition being experienced on the device

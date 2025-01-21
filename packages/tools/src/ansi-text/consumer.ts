@@ -41,6 +41,9 @@ export namespace Consumer {
 
         readonly availableWidth: number | undefined;
         readonly remainingWidth: number | undefined;
+
+        onRevert(fn: () => void): void;
+        offRevert(fn: () => void): void;
     }
 
     export interface Context {

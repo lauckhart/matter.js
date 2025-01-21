@@ -14,6 +14,7 @@ import { TlvField, TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvString } from "../tlv/TlvString.js";
 import { TlvUInt8, TlvEnum } from "../tlv/TlvNumber.js";
 import { TlvVendorId } from "../datatype/VendorId.js";
+import { ModeBase } from "./mode-base.js";
 import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { Identity } from "#general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
@@ -126,7 +127,7 @@ export namespace MicrowaveOvenMode {
          *
          * @see {@link MatterSpecification.v13.Cluster} § 1.10.5.1.2
          */
-        value: TlvField(1, TlvEnum<ModeTag>())
+        value: TlvField(1, TlvEnum<ModeTag | ModeBase.ModeTag>())
     });
 
     /**

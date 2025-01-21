@@ -1237,7 +1237,7 @@ export namespace ColorControl {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 3.2.7.20
              */
-            colorTempPhysicalMinMireds: Attribute(0x400b, TlvUInt16.bound({ min: 1, max: 65279 })),
+            colorTempPhysicalMinMireds: Attribute(0x400b, TlvUInt16.bound({ min: 1, max: 65279 }), { default: 1 }),
 
             /**
              * Indicates the maximum mired value supported by the hardware. ColorTempPhysicalMaxMireds corresponds to
@@ -1247,7 +1247,7 @@ export namespace ColorControl {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 3.2.7.21
              */
-            colorTempPhysicalMaxMireds: Attribute(0x400c, TlvUInt16.bound({ max: 65279 })),
+            colorTempPhysicalMaxMireds: Attribute(0x400c, TlvUInt16.bound({ max: 65279 }), { default: 65279 }),
 
             /**
              * Indicates a lower bound on the value of the ColorTemperatureMireds attribute for the purposes of

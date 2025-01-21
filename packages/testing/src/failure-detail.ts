@@ -4,35 +4,24 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ansi, Printer, screen } from "#tools";
-
 export interface FailureDetail {
     message: string;
     stack?: string;
-    diff?: string;
+    stackLines?: string[];
+    actual?: string;
+    expected?: string;
     logs?: string;
     cause?: FailureDetail;
     errors?: FailureDetail[];
 }
 
-export function FailureDetail(error: any, logs?: string[]) {
-    let diff: string | undefined;
-
-    const { message, stack, cause, errors } = parseError(error);
-
-    if (error.expected && error.actual) {
-        if (FailureDetail.diff === undefined) {
-            diff = "(no diff implementation installed)";
-        } else {
-            diff = FailureDetail.diff(error.actual.toString(), error.expected.toString());
-            diff = diff.trim().replace(/^ {6}/gms, "");
-        }
-    }
-
+/**
+ * Captures all pertinent information about a failed test.
+ */
+export function FailureDetail(error: any, logs?: string[], parentStack?: string[]) {
+    const { message, stack, stackLines, cause, errors } = parseError(error, parentStack);
     const result = { message } as FailureDetail;
-    if (diff) {
-        result.diff = diff;
-    }
+
     if (stack) {
         result.stack = stack;
     }
@@ -45,13 +34,32 @@ export function FailureDetail(error: any, logs?: string[]) {
     if (errors) {
         result.errors = errors;
     }
+    if (stackLines) {
+        result.stackLines = stackLines;
+    }
+
+    const { actual, expected } = error;
+    if (actual) {
+        result.actual = actual;
+    }
+    if (expected) {
+        result.expected = expected;
+    }
 
     return result;
 }
 
-function parseError(error: Error) {
-    let message, stack, cause: FailureDetail | undefined, errors: FailureDetail[] | undefined;
+function messageAndStackFor(
+    error: Error,
+    parentStack?: string[],
+): { message: string; stack?: string; stackLines?: string[] } {
+    // If an error formatting hook is installed, use that
+    if (MatterHooks?.messageAndStackFor) {
+        return MatterHooks.messageAndStackFor(error, parentStack);
+    }
 
+    // Fallback message formatting
+    let message, stack;
     if (error === undefined || error === null) {
         message = `(error is ${error})`;
     } else {
@@ -67,81 +75,29 @@ function parseError(error: Error) {
         if (lines.length) {
             stack = lines.map(line => line.trim()).join("\n");
         }
-    } else if (error.message) {
-        message = error.message;
-    } else {
+    }
+
+    if (!message) {
         message = error.toString();
     }
 
-    message = message.trim().replace(/Error: /, "");
+    return { message, stack };
+}
 
-    if (message.endsWith(":")) {
-        message = message.slice(0, message.length - 1);
-    }
+function parseError(error: Error, parentStack?: string[]) {
+    const { message, stack, stackLines } = messageAndStackFor(error, parentStack);
+
+    let cause: FailureDetail | undefined, errors: FailureDetail[] | undefined;
 
     const errorCause = error.cause;
     if (errorCause) {
-        cause = FailureDetail(errorCause);
+        cause = FailureDetail(errorCause, undefined, stackLines);
     }
 
     const errorErrors = (error as AggregateError).errors;
     if (Array.isArray(errorErrors)) {
-        errors = errorErrors.map(e => FailureDetail(e));
+        errors = errorErrors.map(e => FailureDetail(e, undefined, stackLines));
     }
 
-    return { message, stack, cause, errors };
-}
-
-const OUTER_PREFIX = `${ansi.red}▌ ${ansi.not.red}`;
-const INNER_PREFIX = "┆ ";
-
-export namespace FailureDetail {
-    export function dump(out: Printer, failure: FailureDetail, title: string) {
-        out.state({ style: ansi.reset.white.bg.red }, () => {
-            out(screen.erase.toEol, "\n ", title, screen.erase.toEol, "\n", screen.erase.toEol, "\n");
-        });
-
-        out(screen.erase.toEol);
-
-        out.state({ linePrefix: OUTER_PREFIX }, () => {
-            dumpDetails(out, failure);
-        });
-    }
-
-    export let diff: undefined | ((actual: string, expected: string) => string);
-}
-
-function dumpCause(out: Printer, failure: FailureDetail) {
-    out.state({ linePrefix: INNER_PREFIX }, () => {
-        dumpDetails(out, failure);
-    });
-}
-
-function dumpDetails(out: Printer, { message, diff, stack, cause, errors, logs }: FailureDetail) {
-    out("\n", ansi.bright.red(message), "\n");
-
-    if (diff) {
-        out("\n    ", diff, "\n");
-    }
-
-    if (stack) {
-        out("\n  ", ansi.dim(stack), "\n");
-    }
-
-    if (cause) {
-        out("\nCaused by:\n\n");
-        dumpCause(out, cause);
-    }
-
-    if (errors?.length) {
-        let num = 0;
-        for (const cause of errors) {
-            out(`\nCause #${++num}:\n\n`);
-            dumpCause(out, cause);
-        }
-    }
-
-    if (logs) {
-        out("\n", logs, "\n");
-    }
+    return { message, stack, stackLines, cause, errors };
 }

@@ -23,10 +23,15 @@ export class Wrapper implements Consumer {
     #wrapPrefix?: ContiguousOutputSegment;
     #preserveIndent: boolean;
     #splitStyling: boolean;
-    #inputState: "newline" | "indent" | "word" | "space" = "newline";
+    #inputState: "newline" | "prefix" | "indent" | "word" | "space" = "newline";
     #outputState: "newline" | "newwrap" | "inline" = "newline";
     #indent?: ContiguousOutputSegment;
     #output?: ContiguousOutputSegment;
+    #onRevert = () => {
+        // When state reverts we may have buffered output we have yet to emit.  Do so now to ensure it receives proper
+        // styling
+        this.#emit();
+    };
 
     constructor(target: Consumer, options: Wrapper.Options) {
         const { wrapPrefix, preserveIndent, splitStyling } = options;
@@ -38,6 +43,8 @@ export class Wrapper implements Consumer {
         this.#preserveIndent = preserveIndent ?? true;
         this.#splitStyling =
             splitStyling ?? !!(this.#preserveIndent || this.#wrapPrefix || !this.#target.state.linePrefix);
+
+        this.#target.state.onRevert(this.#onRevert);
     }
 
     get state() {
@@ -57,6 +64,7 @@ export class Wrapper implements Consumer {
 
     close() {
         this.#emit();
+        this.#target.state.offRevert(this.#onRevert);
         this.#target.close();
     }
 
@@ -75,11 +83,28 @@ export class Wrapper implements Consumer {
                 break;
 
             case "ansi":
+                this.#enqueue(token);
+
+                switch (token.sequence) {
+                    case Wrapper.prefixStart:
+                        this.#inputState = "prefix";
+                        break;
+
+                    case Wrapper.prefixStop:
+                        this.#inputState = "indent";
+                        break;
+                }
+                break;
+
             case "style":
                 this.#enqueue(token);
                 break;
 
             case "nonbreaking":
+                if (this.#inputState === "prefix") {
+                    this.#enqueue(token);
+                    break;
+                }
                 if (this.#inputState === "indent") {
                     this.#indent = this.#output;
                     this.#output = undefined;
@@ -98,6 +123,7 @@ export class Wrapper implements Consumer {
                         this.#inputState = "indent";
                         break;
 
+                    case "prefix":
                     case "indent":
                         this.#enqueue(token);
                         break;
@@ -205,4 +231,14 @@ export namespace Wrapper {
         preserveIndent?: boolean;
         splitStyling?: boolean;
     }
+
+    /**
+     * Private - begin demarcation of line prefix.
+     */
+    export const prefixStart = "\x1b[<<~";
+
+    /**
+     * Private - end demarcation of line prefix.
+     */
+    export const prefixStop = "\x1b[>>~";
 }

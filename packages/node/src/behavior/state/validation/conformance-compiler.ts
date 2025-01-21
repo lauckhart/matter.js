@@ -58,9 +58,6 @@ export function astToFunction(schema: ValueModel, supervisor: RootSupervisor): V
         supervisor.supportedFeatures,
     );
 
-    // Compile the AST
-    const compiledNode = compile(ast);
-
     // Create a node for the given name.
     //
     // Name resolution scope may change as we visit the AST; the base version creates a name reference if the the name
@@ -83,6 +80,9 @@ export function astToFunction(schema: ValueModel, supervisor: RootSupervisor): V
         // Unresolved names are always undefined
         return { code: Code.Value, value: undefined };
     };
+
+    // Compile the AST
+    const compiledNode = compile(ast);
 
     let validator: ValueSupervisor.Validate | undefined;
 

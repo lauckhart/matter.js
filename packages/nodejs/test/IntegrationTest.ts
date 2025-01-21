@@ -165,6 +165,7 @@ describe("Integration Test", () => {
                 productName,
                 productId,
                 partNumber: "123456",
+                uniqueId: "supdog",
                 nodeLabel: "",
                 location: "US",
                 reachable: true,
@@ -540,7 +541,7 @@ describe("Integration Test", () => {
                 ],
             });
 
-            assert.equal(response.length, 42);
+            assert.equal(response.length, 43);
             assert.equal(
                 response.filter(
                     ({ path: { endpointId, clusterId } }) => endpointId === 0 && clusterId === Descriptor.Cluster.id,
@@ -583,7 +584,7 @@ describe("Integration Test", () => {
                     ({ path: { endpointId, clusterId } }) =>
                         endpointId === 0 && clusterId === BasicInformation.Cluster.id,
                 ).length,
-                23,
+                24,
             );
             const softwareVersionStringData = response.find(
                 ({ path: { endpointId, clusterId, attributeId } }) =>
@@ -1252,6 +1253,7 @@ describe("Integration Test", () => {
                         softwareVersion: 1,
                         softwareVersionString: "v1",
                         specificationVersion: Specification.SPECIFICATION_VERSION,
+                        uniqueId: "supdog",
                         vendorId: 65521,
                         vendorName: "matter-node.js",
                     },
@@ -1314,6 +1316,7 @@ describe("Integration Test", () => {
                     productName,
                     productId,
                     partNumber: "123456",
+                    uniqueId: "snotupdog",
                     nodeLabel: "",
                     location: "US",
                     reachable: true,
@@ -1459,6 +1462,7 @@ describe("Integration Test", () => {
                         softwareVersion: 1,
                         softwareVersionString: "v1",
                         specificationVersion: Specification.SPECIFICATION_VERSION,
+                        uniqueId: "supdog",
                         vendorId: 65521,
                         vendorName: "matter-node.js",
                     },
@@ -1525,6 +1529,7 @@ describe("Integration Test", () => {
                         softwareVersion: 1,
                         softwareVersionString: "v1",
                         specificationVersion: Specification.SPECIFICATION_VERSION,
+                        uniqueId: "snotupdog",
                         vendorId: 65521,
                         vendorName: "matter-node.js",
                     },
@@ -1776,6 +1781,7 @@ describe("Integration Test", () => {
                         softwareVersion: 1,
                         softwareVersionString: "v1",
                         specificationVersion: Specification.SPECIFICATION_VERSION,
+                        uniqueId: "supdog",
                         vendorId: 65521,
                         vendorName: "matter-node.js",
                     },
@@ -1831,6 +1837,7 @@ describe("Integration Test", () => {
                         softwareVersion: 1,
                         softwareVersionString: "v1",
                         specificationVersion: Specification.SPECIFICATION_VERSION,
+                        uniqueId: "snotupdog",
                         vendorId: 65521,
                         vendorName: "matter-node.js",
                     },
@@ -1904,6 +1911,7 @@ describe("Integration Test", () => {
                         softwareVersion: 1,
                         softwareVersionString: "v1",
                         specificationVersion: Specification.SPECIFICATION_VERSION,
+                        uniqueId: "supdog",
                         vendorId: 65521,
                         vendorName: "matter-node.js",
                     },

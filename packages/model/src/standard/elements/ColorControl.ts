@@ -554,7 +554,7 @@ export const ColorControl = Cluster(
     ),
 
     Attribute({
-        name: "ColorLoopDirection", id: 0x4003, type: "ColorLoopDirectionEnum", access: "R V",
+        name: "ColorLoopDirection", id: 0x4003, type: "ColorLoopDirectionEnum", access: "R V", asOf: "1.4",
         conformance: "CL", constraint: "max 1", default: 0, quality: "N S",
         details: "Indicates the current direction of the color loop. If this attribute has the value 0, the " +
             "EnhancedCurrentHue attribute shall be decremented. If this attribute has the value 1, the " +
@@ -608,7 +608,7 @@ export const ColorControl = Cluster(
 
     Attribute({
         name: "ColorTempPhysicalMinMireds", id: 0x400b, type: "uint16", access: "R V", conformance: "CT",
-        constraint: "1 to 65279",
+        constraint: "1 to 65279", default: 1,
         details: "Indicates the minimum mired value supported by the hardware. ColorTempPhysicalMinMireds corresponds " +
             "to the maximum color temperature in kelvins supported by the hardware." +
             "\n" +
@@ -618,7 +618,7 @@ export const ColorControl = Cluster(
 
     Attribute({
         name: "ColorTempPhysicalMaxMireds", id: 0x400c, type: "uint16", access: "R V", conformance: "CT",
-        constraint: "max 65279",
+        constraint: "max 65279", default: 65279,
         details: "Indicates the maximum mired value supported by the hardware. ColorTempPhysicalMaxMireds corresponds " +
             "to the minimum color temperature in kelvins supported by the hardware." +
             "\n" +

@@ -31,6 +31,7 @@ export class TextWriter implements Consumer {
     #styleEnabled = true;
     #isNewLine = true;
     #buffer?: string[];
+    #revertHandlers?: Set<() => void>;
 
     constructor(out: (text: string) => void, options?: Writer.Options) {
         const { tabWidth, terminalWidth, linePrefix } = options ?? {};
@@ -76,6 +77,12 @@ export class TextWriter implements Consumer {
 
             const context = {
                 close() {
+                    if (self.#revertHandlers) {
+                        for (const fn of self.#revertHandlers) {
+                            fn();
+                        }
+                    }
+
                     if (revertTo.style) {
                         revertTo.style = self.#currentStyle.undoStyle.addStyle(revertTo.style);
                     } else {
@@ -204,6 +211,23 @@ export class TextWriter implements Consumer {
                 },
 
                 enumerable: true,
+            },
+
+            onRevert: {
+                value(fn: () => void) {
+                    if (!self.#revertHandlers) {
+                        self.#revertHandlers = new Set();
+                    }
+                    self.#revertHandlers.add(fn);
+                },
+            },
+
+            offRevert: {
+                value(fn: () => void) {
+                    if (self.#revertHandlers) {
+                        self.#revertHandlers.add(fn);
+                    }
+                },
             },
         });
     }

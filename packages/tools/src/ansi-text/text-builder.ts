@@ -172,7 +172,11 @@ TextBuilder.prototype = Object.create(Style.prototype, {
                     done: true,
                 };
             }
-            const iterable = Producer.of(this.state.sequence);
+            let sequence = this.state.sequence;
+            if (this.state.revert) {
+                sequence = [...sequence, this.undoStyle.styleToken];
+            }
+            const iterable = Producer.of(sequence);
             return iterable[Symbol.iterator].bind(iterable);
         },
     },

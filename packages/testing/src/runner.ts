@@ -9,9 +9,11 @@ import debug from "debug";
 import { relative } from "path";
 import { chip } from "./chip/chip.js";
 import { FailureDetail } from "./failure-detail.js";
+import { FailureReporter } from "./failure-reporter.js";
+import { NodejsReporter } from "./nodejs-reporter.js";
 import { testNodejs } from "./nodejs.js";
 import { TestOptions } from "./options.js";
-import { ProgressReporter, Reporter } from "./reporter.js";
+import { Reporter } from "./reporter.js";
 import { listSupportFiles } from "./util/files.js";
 import { testWeb } from "./web.js";
 
@@ -26,14 +28,14 @@ export class TestRunner {
     ) {
         chip.runner = this;
 
-        this.reporter = new (class extends ProgressReporter {
+        this.reporter = new (class extends NodejsReporter {
             constructor() {
                 super(progress);
             }
 
             override failRun(detail: FailureDetail) {
                 std.err.write("\n");
-                FailureDetail.dump(std.err, detail, "Test suite crash");
+                FailureReporter.report(std.err, detail, "Test suite crash");
                 std.err.write("\n");
                 process.exit(1);
             }

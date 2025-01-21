@@ -81,10 +81,11 @@ LocalMatter.children.push({
             ],
         },
 
-        // In 1.4 they created ColorLoopDirectionEnum but did left the type of ColorLoopDirection attribute as uint8
+        // In 1.4 they created ColorLoopDirectionEnum but left the type of ColorLoopDirection attribute as uint8
         {
             tag: "attribute",
             id: 0x4003,
+            asOf: "1.4",
             name: "ColorLoopDirection",
             type: "ColorLoopDirectionEnum",
         },
@@ -138,6 +139,22 @@ LocalMatter.children.push({
                 },
             ],
         },
+
+        // In 1.4 the spec removed default values for these.  Unsure why but bring them back as they are mandatory
+        {
+            tag: "attribute",
+            id: 0x400b,
+            name: "ColorTempPhysicalMinMireds",
+            default: 1,
+        },
+        {
+            tag: "attribute",
+            id: 0x400c,
+            name: "ColorTempPhysicalMaxMireds",
+            default: 0xfeff,
+        },
+
+        // This field is mandatory but spec
 
         // Set the correct type of MoveMode because just in the description
         {

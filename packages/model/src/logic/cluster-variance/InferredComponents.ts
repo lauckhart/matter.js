@@ -291,9 +291,9 @@ function addElement(components: InferredComponents, element: ValueModel) {
         }
     }
 
-    if (text === "D" || text === "M, D") {
+    if (text === "D") {
         text = "O";
-    } else if (text === "P") {
+    } else if (text === "M, D" || text === "P") {
         text = "M";
     }
 

@@ -14,8 +14,8 @@ import { TlvField, TlvOptionalField, TlvObject } from "../tlv/TlvObject.js";
 import { TlvString } from "../tlv/TlvString.js";
 import { TlvUInt8, TlvEnum } from "../tlv/TlvNumber.js";
 import { TlvVendorId } from "../datatype/VendorId.js";
-import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { ModeBase } from "./mode-base.js";
+import { TypeFromSchema } from "../tlv/TlvSchema.js";
 import { Identity } from "#general";
 import { ClusterRegistry } from "../cluster/ClusterRegistry.js";
 
@@ -147,7 +147,7 @@ export namespace RvcRunMode {
          *
          * @see {@link MatterSpecification.v13.Cluster} § 1.10.5.1.2
          */
-        value: TlvField(1, TlvEnum<ModeTag>())
+        value: TlvField(1, TlvEnum<ModeTag | ModeBase.ModeTag>())
     });
 
     /**
@@ -266,37 +266,7 @@ export namespace RvcRunMode {
         /**
          * @see {@link MatterSpecification.v13.Cluster} § 7.2.7.1
          */
-        BatteryLow = 72,
-
-        /**
-         * Switching to the mode indicated by the NewMode field is allowed and possible. The CurrentMode attribute is
-         * set to the value of the NewMode field.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 1.10.7.2.1.2
-         */
-        Success = 0,
-
-        /**
-         * The value of the NewMode field doesn’t match any entries in the SupportedModes attribute.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 1.10.7.2.1.2
-         */
-        UnsupportedMode = 1,
-
-        /**
-         * Generic failure code, indicating that switching to the mode indicated by the NewMode field is not allowed or
-         * not possible.
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 1.10.7.2.1.2
-         */
-        GenericFailure = 2,
-
-        /**
-         * The received request cannot be handled due to the current mode of the device
-         *
-         * @see {@link MatterSpecification.v13.Cluster} § 1.10.7.2.1.2
-         */
-        InvalidInMode = 3
+        BatteryLow = 72
     }
 
     /**

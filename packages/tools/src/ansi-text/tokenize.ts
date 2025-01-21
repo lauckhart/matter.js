@@ -45,9 +45,13 @@ export function* tokenize(text: string): Producer {
                     case "[":
                         // Fe CSI
                         pos++;
+
+                        // Valid sequence members
                         while (text[pos] >= "\x30" && text[pos] <= "\x3f") {
                             pos++;
                         }
+
+                        // Valid sequence termination
                         if (text[pos] >= "\0x40" && text[pos] <= "\x7e") {
                             const param = text.slice(escapeStart + 2, pos);
 
