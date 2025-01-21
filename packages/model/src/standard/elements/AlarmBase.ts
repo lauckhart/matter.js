@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2022-2024 Matter.js Authors
+ * Copyright 2022-2025 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -145,8 +145,7 @@ export const AlarmBase = Cluster(
                 "currently enabled alarm shall respond with a status code of FAILURE; otherwise the server shall " +
                 "respond with a status code of SUCCESS." +
                 "\n" +
-                "On a SUCCESS case, the server shall also change the value of the Mask attribute to the value of the" +
-                "\n" +
+                "On a SUCCESS case, the server shall also change the value of the Mask attribute to the value of the " +
                 "Mask field from this command. After that the server shall also update the value of its State " +
                 "attribute to reflect the status of the new alarm set as indicated by the new value of the Mask " +
                 "attribute.",

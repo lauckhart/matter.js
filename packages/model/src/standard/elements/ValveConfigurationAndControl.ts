@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2022-2024 Matter.js Authors
+ * Copyright 2022-2025 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -302,7 +302,7 @@ export const ValveConfigurationAndControl = Cluster(
     Datatype(
         { name: "StatusCodeEnum", type: "enum8", xref: { document: "cluster", section: "4.6.6.1" } },
         Field({
-            name: "FailureDueToFault", id: 0x2,
+            name: "FailureDueToFault", id: 0x2, conformance: "M",
             description: "The requested action could not be performed due to a fault on the valve."
         })
     )
