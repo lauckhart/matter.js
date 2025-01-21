@@ -34,11 +34,6 @@ LocalMatter.children.push({
             id: 0x8,
             name: "ColorMode",
             default: FieldValue.None,
-            children: [
-                { tag: "field", name: "CurrentHueAndCurrentSaturation", id: 0x0, conformance: "HS" },
-                { tag: "field", name: "CurrentXAndCurrentY", id: 0x1, conformance: "XY" },
-                { tag: "field", name: "ColorTemperatureMireds", id: 0x2, conformance: "CT" },
-            ],
         },
 
         // Override primary conformance using our ">" extension to conformance syntax
@@ -79,10 +74,19 @@ LocalMatter.children.push({
             id: 0x4003,
             name: "ColorLoopDirection",
             type: "enum16",
+            until: "1.4",
             children: [
                 { tag: "field", name: "Decrement", id: 0 },
                 { tag: "field", name: "Increment", id: 1 },
             ],
+        },
+
+        // In 1.4 they created ColorLoopDirectionEnum but did left the type of ColorLoopDirection attribute as uint8
+        {
+            tag: "attribute",
+            id: 0x4003,
+            name: "ColorLoopDirection",
+            type: "ColorLoopDirectionEnum",
         },
 
         // Spec defines conformance on these as "CT | ColorTemperatureMireds" which doesn't make sense because

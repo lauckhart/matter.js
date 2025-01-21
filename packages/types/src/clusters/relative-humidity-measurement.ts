@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2022-2024 Matter.js Authors
+ * Copyright 2022-2025 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -48,7 +48,7 @@ export namespace RelativeHumidityMeasurement {
              *
              * @see {@link MatterSpecification.v13.Cluster} § 2.6.4.2
              */
-            minMeasuredValue: Attribute(0x1, TlvNullable(TlvUInt16)),
+            minMeasuredValue: Attribute(0x1, TlvNullable(TlvUInt16.bound({ max: 9999 }))),
 
             /**
              * The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. The

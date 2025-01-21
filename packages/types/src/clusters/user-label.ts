@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2022-2024 Matter.js Authors
+ * Copyright 2022-2025 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -39,7 +39,8 @@ export namespace UserLabel {
     });
 
     /**
-     * This cluster provides a feature to tag an endpoint with zero or more labels.
+     * This cluster is derived from the Label cluster and provides a feature to tag an endpoint with zero or more
+     * writable labels.
      *
      * @see {@link MatterSpecification.v13.Core} § 9.9
      */

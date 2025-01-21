@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2022-2024 Matter.js Authors
+ * Copyright 2022-2025 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -14,9 +14,8 @@ export namespace ContentLauncherInterface {
         /**
          * Upon receipt, this shall launch content from the specified URL.
          *
-         * The content types supported include those identified in the AcceptHeader and SupportedStreaming
-         *
-         * Protocols attributes.
+         * The content types supported include those identified in the AcceptHeader and SupportedStreamingProtocols
+         * attributes.
          *
          * A check shall be made to ensure the URL is secure (uses HTTPS).
          *

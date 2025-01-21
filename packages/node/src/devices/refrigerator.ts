@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2022-2024 Matter.js Authors
+ * Copyright 2022-2025 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -65,7 +65,7 @@ export namespace RefrigeratorRequirements {
 export const RefrigeratorDeviceDefinition = MutableEndpoint({
     name: "Refrigerator",
     deviceType: 0x70,
-    deviceRevision: 1,
+    deviceRevision: 2,
     requirements: RefrigeratorRequirements,
     behaviors: SupportedBehaviors()
 });

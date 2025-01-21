@@ -3404,29 +3404,36 @@ export const SpecMatter = Matter(
             })
         ),
 
-        Datatype({
-            name: "OperationalStateEnum", type: "enum8",
+        Datatype(
+            {
+                name: "OperationalStateEnum", type: "enum8",
 
-            details: "This type defines the set of known operational state values, and is derived from enum8. The " +
-                "following table defines the applicable ranges for values that are defined within this type. All " +
-                "values that are undefined shall be treated as reserved. As shown by the table, states that may be " +
-                "specific to a certain Device Type or other modality shall be defined in a derived cluster of this " +
-                "cluster." +
-                "\n" +
-                "The derived cluster-specific state definitions shall NOT duplicate any general state definitions. " +
-                "That is, a derived cluster specification of this cluster cannot define states with the same " +
-                "semantics as the general states defined below." +
-                "\n" +
-                "A manufacturer-specific state definition shall NOT duplicate the general state definitions or " +
-                "derived cluster state definitions. That is, a manufacturer-defined state defined for this cluster " +
-                "or a derived cluster thereof cannot define a state with the same semantics as the general states " +
-                "defined below or states defined in a derived cluster. Such manufacturer-specific state definitions " +
-                "shall be scoped in the context of the Vendor ID present in the Basic Information cluster." +
-                "\n" +
-                "The following table defines the generally applicable states.",
+                details: "This type defines the set of known operational state values, and is derived from enum8. The " +
+                    "following table defines the applicable ranges for values that are defined within this type. All " +
+                    "values that are undefined shall be treated as reserved. As shown by the table, states that may be " +
+                    "specific to a certain Device Type or other modality shall be defined in a derived cluster of this " +
+                    "cluster." +
+                    "\n" +
+                    "The derived cluster-specific state definitions shall NOT duplicate any general state definitions. " +
+                    "That is, a derived cluster specification of this cluster cannot define states with the same " +
+                    "semantics as the general states defined below." +
+                    "\n" +
+                    "A manufacturer-specific state definition shall NOT duplicate the general state definitions or " +
+                    "derived cluster state definitions. That is, a manufacturer-defined state defined for this cluster " +
+                    "or a derived cluster thereof cannot define a state with the same semantics as the general states " +
+                    "defined below or states defined in a derived cluster. Such manufacturer-specific state definitions " +
+                    "shall be scoped in the context of the Vendor ID present in the Basic Information cluster." +
+                    "\n" +
+                    "The following table defines the generally applicable states.",
 
-            xref: { document: "cluster", section: "1.14.4.1" }
-        }),
+                xref: { document: "cluster", section: "1.14.4.1" }
+            },
+
+            Field({ name: "Stopped", id: 0x0, conformance: "M", description: "The device is stopped" }),
+            Field({ name: "Running", id: 0x1, conformance: "M", description: "The device is operating" }),
+            Field({ name: "Paused", id: 0x2, conformance: "M", description: "The device is paused during an operation" }),
+            Field({ name: "Error", id: 0x3, conformance: "M", description: "The device is in an error state" })
+        ),
 
         Datatype(
             {
@@ -3449,39 +3456,34 @@ export const SpecMatter = Matter(
             })
         ),
 
-        Datatype({
-            name: "ErrorStateEnum", type: "enum8",
-
-            details: "This type defines the set of known operational error values, and is derived from enum8. The " +
-                "following table defines the applicable ranges for values that are defined within this type. All " +
-                "values that are undefined shall be treated as reserved. As shown by the table, errors that may be " +
-                "specific to a certain Device Type or other modality shall be defined in a derived cluster of this " +
-                "cluster." +
-                "\n" +
-                "The derived cluster-specific error definitions shall NOT duplicate the general error definitions." +
-                "\n" +
-                "That is, a derived cluster specification of this cluster cannot define errors with the same " +
-                "semantics as the general errors defined below." +
-                "\n" +
-                "The manufacturer-specific error definitions shall NOT duplicate the general error definitions or " +
-                "derived cluster-specific error definitions. That is, a manufacturer-defined error defined for this " +
-                "cluster or a derived cluster thereof cannot define errors with the same semantics as the general " +
-                "errors defined below or errors defined in a derived cluster. Such manufacturer-specific error " +
-                "definitions shall be scoped in the context of the Vendor ID present in the Basic Information " +
-                "cluster." +
-                "\n" +
-                "The set of ErrorStateID field values defined in each of the generic or derived Operational State " +
-                "cluster specifications is called ErrorState.",
-
-            xref: { document: "cluster", section: "1.14.4.3" }
-        }),
-
         Datatype(
             {
-                name: "GeneralErrorStateEnum", type: "enum8",
-                details: "The following table defines the generally applicable ErrorState values.",
-                xref: { document: "cluster", section: "1.14.4.3.1" }
+                name: "ErrorStateEnum", type: "enum8",
+
+                details: "This type defines the set of known operational error values, and is derived from enum8. The " +
+                    "following table defines the applicable ranges for values that are defined within this type. All " +
+                    "values that are undefined shall be treated as reserved. As shown by the table, errors that may be " +
+                    "specific to a certain Device Type or other modality shall be defined in a derived cluster of this " +
+                    "cluster." +
+                    "\n" +
+                    "The derived cluster-specific error definitions shall NOT duplicate the general error definitions." +
+                    "\n" +
+                    "That is, a derived cluster specification of this cluster cannot define errors with the same " +
+                    "semantics as the general errors defined below." +
+                    "\n" +
+                    "The manufacturer-specific error definitions shall NOT duplicate the general error definitions or " +
+                    "derived cluster-specific error definitions. That is, a manufacturer-defined error defined for this " +
+                    "cluster or a derived cluster thereof cannot define errors with the same semantics as the general " +
+                    "errors defined below or errors defined in a derived cluster. Such manufacturer-specific error " +
+                    "definitions shall be scoped in the context of the Vendor ID present in the Basic Information " +
+                    "cluster." +
+                    "\n" +
+                    "The set of ErrorStateID field values defined in each of the generic or derived Operational State " +
+                    "cluster specifications is called ErrorState.",
+
+                xref: { document: "cluster", section: "1.14.4.3" }
             },
+
             Field({ name: "NoError", id: 0x0, conformance: "M", description: "The device is not in an error state" }),
             Field({
                 name: "UnableToStartOrResume", id: 0x1, conformance: "M",
@@ -39502,7 +39504,15 @@ export const SpecMatter = Matter(
         Requirement(
             { name: "Descriptor", id: 0x1d, element: "serverCluster" },
             Requirement({ name: "DeviceTypeList", default: [ { deviceType: 304, revision: 1 } ], element: "attribute" })
-        )
+        ),
+        Requirement({
+            name: "JointFabricDatastore", id: 0x752, conformance: "M", element: "serverCluster",
+            xref: { document: "device", section: "2.9.4" }
+        }),
+        Requirement({
+            name: "JointFabricPki", id: 0x753, conformance: "M", element: "serverCluster",
+            xref: { document: "device", section: "2.9.4" }
+        })
     ),
 
     DeviceType(

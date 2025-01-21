@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2022-2024 Matter.js Authors
+ * Copyright 2022-2025 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -52,9 +52,8 @@ export namespace ChannelInterface {
         /**
          * This command retrieves the program guide. It accepts several filter parameters to return specific schedule
          * and program information from a content app. The command shall receive in response a ProgramGuideResponse.
-         * Standard error codes shall be used when arguments provided are not
-         *
-         * valid. For example, if StartTime is greater than EndTime, the status code INVALID_ACTION shall be returned.
+         * Standard error codes shall be used when arguments provided are not valid. For example, if StartTime is
+         * greater than EndTime, the status code INVALID_ACTION shall be returned.
          *
          * @see {@link MatterSpecification.v13.Cluster} § 6.6.7.5
          */

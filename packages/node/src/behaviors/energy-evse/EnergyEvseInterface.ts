@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2022-2024 Matter.js Authors
+ * Copyright 2022-2025 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -19,7 +19,8 @@ export namespace EnergyEvseInterface {
         disable(): MaybePromise;
 
         /**
-         * Allows a client to enable the EVSE to charge an EV.
+         * This command allows a client to enable the EVSE to charge an EV, and to provide or update the maximum and
+         * minimum charge current.
          *
          * @see {@link MatterSpecification.v13.Cluster} § 9.3.9.2
          */
@@ -35,7 +36,8 @@ export namespace EnergyEvseInterface {
 
     export interface V2X {
         /**
-         * Allows a client to enable the EVSE to discharge an EV.
+         * Upon receipt, this shall allow a client to enable the discharge of an EV, and to provide or update the
+         * maximum discharge current.
          *
          * @see {@link MatterSpecification.v13.Cluster} § 9.3.9.3
          */

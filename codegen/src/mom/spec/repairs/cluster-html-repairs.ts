@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { HtmlReference } from "../spec-types.js";
+import { InternalError } from "@matter/general";
+import { ClusterReference, GlobalReference, HtmlReference } from "../spec-types.js";
 
 export enum ScanDirective {
     // Ignore section in stream
@@ -25,7 +26,10 @@ const POP = () => ScanDirective.POP;
 const POP2 = () => ScanDirective.POP2;
 const NAMESPACE = () => ScanDirective.NAMESPACE;
 
-type HtmlRepairs = Record<string, (ref: HtmlReference) => ScanDirective | void>;
+type HtmlRepairs = Record<
+    string,
+    (ref: HtmlReference, ownerRef: ClusterReference | GlobalReference) => ScanDirective | void
+>;
 
 export const ClusterHtmlRepairs: Record<string, HtmlRepairs> = {
     "General Commissioning": {
@@ -70,11 +74,28 @@ export const ClusterHtmlRepairs: Record<string, HtmlRepairs> = {
     },
 
     "Operational State": {
-        // 1.2 and 1.3 use this terminology to define a subset of the values for ErrorStateEnum.  We turn into an
-        // independent enum
-        "ErrorStateEnum GeneralErrors Range"(subref) {
-            subref.name = "GeneralErrorStateEnum Type";
-            return ScanDirective.POP;
+        // 1.2+ use this terminology to define a subset of the values for ErrorStateEnum.  We inject the table into the
+        // previous section so translation picks them up
+        "ErrorStateEnum GeneralErrors Range"(subref, ownerRef) {
+            const { datatypes } = ownerRef as ClusterReference;
+            const datatype = datatypes?.[datatypes.length - 1];
+            if (datatype?.name !== "ErrorStateEnum" || !datatype.tables || !subref.tables?.length) {
+                throw new InternalError("OperationalState.ErrorStateEnum definition uses unexpected format");
+            }
+            datatype.tables[0] = subref.tables?.[0];
+            return ScanDirective.IGNORE;
+        },
+
+        // These values are in the correct section but there is another table priori that describes ranges; this
+        // confuses translation unless we skip
+        "OperationalStateEnum Type"(subref) {
+            const tables = subref.tables;
+            if (tables?.length !== 2) {
+                return;
+            }
+            if (tables[0].rows[0]?.value?.textContent?.match(/ to /)) {
+                tables.splice(0, 1);
+            }
         },
     },
 
@@ -116,14 +137,14 @@ export const ClusterHtmlRepairs: Record<string, HtmlRepairs> = {
 };
 
 // Modify incoming stream to workaround specific spec issues
-export function repairIncomingHtml(subref: HtmlReference, clusterRef: HtmlReference) {
-    const repairs = ClusterHtmlRepairs[clusterRef.name];
+export function repairIncomingHtml(subref: HtmlReference, ownerRef: ClusterReference | GlobalReference) {
+    const repairs = ClusterHtmlRepairs[ownerRef.name];
     if (!repairs) {
         return;
     }
 
     const repair = repairs[subref.xref.section] ?? repairs[subref.name];
     if (repair) {
-        return repair(subref);
+        return repair(subref, ownerRef);
     }
 }

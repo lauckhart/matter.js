@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2022-2024 Matter.js Authors
+ * Copyright 2022-2025 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -37,7 +37,7 @@ export namespace OvenRequirements {
 export const OvenDeviceDefinition = MutableEndpoint({
     name: "Oven",
     deviceType: 0x7b,
-    deviceRevision: 1,
+    deviceRevision: 2,
     requirements: OvenRequirements,
     behaviors: SupportedBehaviors()
 });

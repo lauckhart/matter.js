@@ -225,20 +225,14 @@ export const ColorControl = Cluster(
         }
     ),
 
-    Attribute(
-        {
-            name: "ColorMode", id: 0x8, type: "ColorModeEnum", access: "R V", conformance: "M", quality: "N",
-            details: "Indicates which attributes are currently determining the color of the device." +
-                "\n" +
-                "The value of the ColorMode attribute cannot be written directly - it is set upon reception of any " +
-                "command in section Commands to the appropriate mode for that command.",
-            xref: { document: "cluster", section: "3.2.7.10" }
-        },
-
-        Field({ name: "CurrentHueAndCurrentSaturation", id: 0x0, conformance: "HS" }),
-        Field({ name: "CurrentXAndCurrentY", id: 0x1, conformance: "XY" }),
-        Field({ name: "ColorTemperatureMireds", id: 0x2, conformance: "CT" })
-    ),
+    Attribute({
+        name: "ColorMode", id: 0x8, type: "ColorModeEnum", access: "R V", conformance: "M", quality: "N",
+        details: "Indicates which attributes are currently determining the color of the device." +
+            "\n" +
+            "The value of the ColorMode attribute cannot be written directly - it is set upon reception of any " +
+            "command in section Commands to the appropriate mode for that command.",
+        xref: { document: "cluster", section: "3.2.7.10" }
+    }),
 
     Attribute({
         name: "Options", id: 0xf, type: "OptionsBitmap", access: "RW VO", conformance: "M",
@@ -559,19 +553,14 @@ export const ColorControl = Cluster(
         Field({ name: "Active", id: 0x1 })
     ),
 
-    Attribute(
-        {
-            name: "ColorLoopDirection", id: 0x4003, type: "enum16", access: "R V", conformance: "CL",
-            constraint: "max 1", default: 0, quality: "N S",
-            details: "Indicates the current direction of the color loop. If this attribute has the value 0, the " +
-                "EnhancedCurrentHue attribute shall be decremented. If this attribute has the value 1, the " +
-                "EnhancedCurrentHue attribute shall be incremented.",
-            xref: { document: "cluster", section: "3.2.7.15" }
-        },
-
-        Field({ name: "Decrement", id: 0x0 }),
-        Field({ name: "Increment", id: 0x1 })
-    ),
+    Attribute({
+        name: "ColorLoopDirection", id: 0x4003, type: "ColorLoopDirectionEnum", access: "R V",
+        conformance: "CL", constraint: "max 1", default: 0, quality: "N S",
+        details: "Indicates the current direction of the color loop. If this attribute has the value 0, the " +
+            "EnhancedCurrentHue attribute shall be decremented. If this attribute has the value 1, the " +
+            "EnhancedCurrentHue attribute shall be incremented.",
+        xref: { document: "cluster", section: "3.2.7.15" }
+    }),
 
     Attribute({
         name: "ColorLoopTime", id: 0x4004, type: "uint16", access: "R V", conformance: "CL", default: 25,

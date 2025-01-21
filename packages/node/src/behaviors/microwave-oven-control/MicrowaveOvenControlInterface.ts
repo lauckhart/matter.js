@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2022-2024 Matter.js Authors
+ * Copyright 2022-2025 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -12,9 +12,8 @@ import { MicrowaveOvenControl } from "#clusters/microwave-oven-control";
 export namespace MicrowaveOvenControlInterface {
     export interface Base {
         /**
-         * This command is used to set the cooking parameters associated with the operation of the device.
-         *
-         * This command supports the following fields:
+         * This command is used to set the cooking parameters associated with the operation of the device. This command
+         * supports the following fields:
          *
          * @see {@link MatterSpecification.v13.Cluster} § 8.13.6.2
          */

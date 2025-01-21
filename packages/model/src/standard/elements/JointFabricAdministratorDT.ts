@@ -26,7 +26,15 @@ export const JointFabricAdministratorDt = DeviceType(
     Requirement(
         { name: "Descriptor", id: 0x1d, element: "serverCluster" },
         Requirement({ name: "DeviceTypeList", default: [ { deviceType: 304, revision: 1 } ], element: "attribute" })
-    )
+    ),
+    Requirement({
+        name: "JointFabricDatastore", id: 0x752, conformance: "M", element: "serverCluster",
+        xref: { document: "device", section: "2.9.4" }
+    }),
+    Requirement({
+        name: "JointFabricPki", id: 0x753, conformance: "M", element: "serverCluster",
+        xref: { document: "device", section: "2.9.4" }
+    })
 );
 
 MatterDefinition.children.push(JointFabricAdministratorDt);

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2022-2024 Matter.js Authors
+ * Copyright 2022-2025 Matter.js Authors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -280,8 +280,9 @@ export namespace Groups {
         groupId: TlvField(0, TlvGroupId),
 
         /**
-         * This field may be set to a human-readable name for the group. If the client has no name for the group, the
-         * GroupName field shall be set to the empty string.
+         * This field may be set to a human-readable name for the group. If the client has no name for the
+         *
+         * group, the GroupName field shall be set to the empty string.
          *
          * Support of group names is optional and is indicated by the FeatureMap and NameSupport attribute.
          *
