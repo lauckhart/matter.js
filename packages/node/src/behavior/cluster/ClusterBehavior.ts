@@ -5,7 +5,7 @@
  */
 
 import type { Agent } from "#endpoint/Agent.js";
-import { AsyncObservable, EventEmitter, ImplementationError, MaybePromise, Observable } from "#general";
+import { ImplementationError, MaybePromise } from "#general";
 import { ClusterComposer, ClusterType, ElementModifier, TypeFromBitSchema } from "#types";
 import { Behavior } from "../Behavior.js";
 import type { BehaviorBacking } from "../internal/BehaviorBacking.js";
@@ -361,21 +361,6 @@ export namespace ClusterBehavior {
 
                 [Symbol.asyncDispose](): MaybePromise<void>;
             };
-
-    /**
-     * All cluster behaviors support interaction events in addition to cluster-specific attribute mutation events.
-     */
-    export class Events extends EventEmitter {
-        /**
-         * Emitted when state associated with this behavior is first mutated by a specific interaction.
-         */
-        interactionBegin = Observable<[]>();
-
-        /**
-         * Emitted when a mutating interaction completes.
-         */
-        interactionEnd = AsyncObservable<[]>();
-    }
 
     /**
      * This is an unfortunate kludge required to work around https://github.com/microsoft/TypeScript/issues/27965.  It

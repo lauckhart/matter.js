@@ -602,7 +602,7 @@ export class Behaviors {
         Object.defineProperty(this.#endpoint.events, type.id, {
             get: () => {
                 if (!events) {
-                    events = new type.Events();
+                    events = new type.Events(this.#endpoint, type);
                 }
                 return events;
             },

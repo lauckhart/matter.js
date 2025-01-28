@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Time, Timer } from "#time/Time.js";
 import { ImplementationError } from "../MatterError.js";
 import { Logger } from "../log/Logger.js";
 import "../polyfills/disposable.js";
@@ -69,11 +70,30 @@ export interface Observable<T extends any[] = any[], R = void> extends AsyncIter
     isObservedBy(observer: Observer<T, R>): boolean;
 
     /**
-     * This flag indicates whether the observable is asynchronous.  Any observable that accepts promise returns may
-     * be asynchronous but this information is not available at runtime unless you specify here, typically via
-     * {@link AsyncObservable}.
+     * Errors throw by observers will interrupt emitters unless an error handler is installed here and the handler does
+     * not rethrow.
+     *
+     * The only exception to this is if {@link promiseHandler} is false and an observer is asynchronous.  In this case
+     * the emitter cannot be made aware of the exception.
      */
-    isAsync?: boolean;
+    errorHandler: ObserverErrorHandler;
+
+    /**
+     * We allow emitters to be async, but we do not want to overburden either the emitter or the observer with promise
+     * tracking if the lifetime of the observer is not relevant to the emitter.
+     *
+     * To facilitate this we allow observables to be configured in one of three promise handling modes:
+     *
+     * * If promiseHandler is a function, it is invoked for any observer promise and may return a value to the emitter
+     *
+     * * If promiseHandler is true, any observer promise is returned to the emitter which must handle the promise
+     *
+     * * If promiseHandler is false, we log observer promise errors but the promise is otherwise untracked
+     *
+     * If the promiseHandler returns a promise or is true and the emitter returns a promise, the observable will emit
+     * to successive observers only after the promise resolves.
+     */
+    promiseHandler: ObserverPromiseHandler | boolean;
 
     /**
      * Observable supports standard "for await (const value of observable").
@@ -98,9 +118,7 @@ export const observant = Symbol("consider-observed");
 /**
  * An {@link Observable} that explicitly supports asynchronous observers.
  */
-export interface AsyncObservable<T extends any[] = any[], R = void> extends Observable<T, MaybePromise<R>> {
-    isAsync: true;
-}
+export interface AsyncObservable<T extends any[] = any[], R = void> extends Observable<T, MaybePromise<R>> {}
 
 function defaultErrorHandler(error: Error) {
     throw error;
@@ -108,22 +126,24 @@ function defaultErrorHandler(error: Error) {
 
 export type ObserverErrorHandler = (error: Error, observer: Observer<any[], any>) => void;
 
+export type ObserverPromiseHandler = (promise: Promise<unknown>, observer: Observer<any[], any>) => unknown;
+
 /**
  * A concrete {@link Observable} implementation.
  */
 export class BasicObservable<T extends any[] = any[], R = void> implements Observable<T, R> {
-    #errorHandler: ObserverErrorHandler;
+    #errorHandler!: ObserverErrorHandler;
+    #promiseHandler!: ObserverPromiseHandler;
     #observers?: Set<Observer<T, R>>;
     #once?: Set<Observer<T, R>>;
-    #isAsync?: boolean;
 
     #joinIteration?: () => Promise<Next<T>>;
     #removeIterator?: () => void;
     #stopIteration?: () => void;
 
-    constructor(errorHandler?: ObserverErrorHandler, isAsync?: boolean) {
-        this.#errorHandler = errorHandler ?? defaultErrorHandler;
-        this.#isAsync = isAsync;
+    constructor(errorHandler?: ObserverErrorHandler, promiseHandler?: ObserverPromiseHandler | boolean) {
+        this.errorHandler = errorHandler ?? defaultErrorHandler;
+        this.promiseHandler = promiseHandler ?? false;
     }
 
     [Symbol.dispose]() {
@@ -132,12 +152,36 @@ export class BasicObservable<T extends any[] = any[], R = void> implements Obser
         this.#stopIteration?.();
     }
 
-    get isAsync() {
-        return this.#isAsync;
+    set errorHandler(errorHandler: ObserverErrorHandler) {
+        this.errorHandler = errorHandler;
     }
 
-    set isAsync(isAsync: boolean | undefined) {
-        this.#isAsync = isAsync;
+    set promiseHandler(promiseHandler: ObserverPromiseHandler | boolean) {
+        if (typeof promiseHandler === "function") {
+            // Promises handled externally
+            this.#promiseHandler = promiseHandler;
+        } else if (promiseHandler) {
+            // Promises handled by emitter
+            this.#promiseHandler = promise => promise;
+        } else {
+            // We log promise errors but do not otherwise track
+            this.#promiseHandler = async (promise, observer) => {
+                return promise.catch(error => {
+                    let identity: string;
+                    if (observer.name) {
+                        identity = ` "${observer.name}"`;
+                    } else {
+                        identity = "";
+                    }
+
+                    if (this.#errorHandler === defaultErrorHandler) {
+                        logger.error(`Unhandled error in async observer${identity}:`, error);
+                    } else {
+                        return this.#errorHandler(error, observer);
+                    }
+                });
+            };
+        }
     }
 
     get isObserved() {
@@ -198,27 +242,20 @@ export class BasicObservable<T extends any[] = any[], R = void> implements Obser
                 }
 
                 if (MaybePromise.is(result)) {
-                    if (!this.isAsync) {
-                        let identity: string;
-                        if (observer.name) {
-                            identity = ` "${observer.name}"`;
-                        } else {
-                            identity = "";
-                        }
+                    result = this.#promiseHandler(Promise.resolve(result), observer as Observer) as R | undefined;
 
-                        result.then(undefined, error =>
-                            logger.error(`Unhandled error in async observer${identity}:`, error),
-                        );
-
-                        continue;
+                    if (MaybePromise.is(result)) {
+                        return result.then(result => {
+                            if (result === undefined) {
+                                return emitNext();
+                            }
+                            return result;
+                        }) as R;
                     }
 
-                    return result.then(result => {
-                        if (result === undefined) {
-                            return emitNext();
-                        }
-                        return result;
-                    }) as R;
+                    if (result === undefined) {
+                        continue;
+                    }
                 }
 
                 return result;
@@ -418,7 +455,7 @@ export namespace EventEmitter {
 /**
  * An {@link Observable} that proxies to another {@link Observable}.
  *
- * Emits emitted here instead emit on the target {@link Observable}.  Events emitted on the target emit locally via
+ * Events emitted here instead emit on the target {@link Observable}.  Events emitted on the target emit locally via
  * a listener installed by the proxy.
  *
  * This is useful for managing a subset of {@link Observer}s for an {@link Observable}.
@@ -446,10 +483,6 @@ export class ObservableProxy extends BasicObservable {
     override [Symbol.dispose]() {
         this.#target.off(this.#emitter);
         super[Symbol.dispose]();
-    }
-
-    override get isAsync() {
-        return this.#target.isAsync;
     }
 
     override get isObserved(): boolean {
@@ -552,4 +585,279 @@ export namespace ObserverGroup {
      * use all arguments.
      */
     export type VarArgs<T extends any[]> = T extends [...infer R, infer A] ? [...R, A] : T extends [infer A] ? A : [];
+}
+
+/**
+ * An {@link Observable} that emits an algorithmically-reduced number of events.
+ */
+export class QuietObservable<T extends any[] = any[]> extends BasicObservable<T> implements QuietObservable.State<T> {
+    #emitAutomatically = QuietObservable.DefaultConfiguration.emitAutomatically;
+    #suppressionEnabled = QuietObservable.DefaultConfiguration.suppressionEnabled;
+    #minimumEmitIntervalMs = QuietObservable.DefaultConfiguration.minimumEmitIntervalMs;
+    #shouldEmit?: QuietObservable.EmitPredicate;
+    #source?: Observable<T>;
+    #sink?: Observable<T>;
+    #sourceObserver?: Observer<T>;
+    #sinkObserver?: Observer<T>;
+    #deferredPayload?: T;
+    #lastEmitAt?: number;
+    #emitTimer?: Timer;
+
+    constructor(config?: QuietObservable.Configuration<T>) {
+        super();
+        if (config) {
+            this.config = config;
+        }
+    }
+
+    get config() {
+        return this;
+    }
+
+    set config(config: QuietObservable.Configuration<T>) {
+        const { suppressionEnabled, minimumEmitIntervalMs, emitAutomatically } = config;
+        if (emitAutomatically !== undefined) {
+            this.emitAutomatically = emitAutomatically;
+        }
+        if (suppressionEnabled !== undefined) {
+            this.suppressionEnabled = suppressionEnabled;
+        }
+        if (minimumEmitIntervalMs !== undefined) {
+            this.minimumEmitIntervalMs = minimumEmitIntervalMs;
+        }
+        if ("shouldEmit" in config) {
+            this.shouldEmit = config.shouldEmit;
+        }
+        if ("source" in config) {
+            this.source = config.source;
+        }
+        if ("sink" in config) {
+            this.sink = config.sink;
+        }
+        if ("errorHandler" in config) {
+            this.errorHandler = config.errorHandler ?? defaultErrorHandler;
+        }
+        if ("promiseHandler" in config) {
+            this.promiseHandler = config.promiseHandler ?? false;
+        }
+    }
+
+    get emitAutomatically() {
+        return this.#emitAutomatically;
+    }
+
+    set emitAutomatically(value: boolean) {
+        this.#emitAutomatically = value;
+        if (value) {
+            this.emitSoon();
+        } else if (this.#emitTimer) {
+            this.#stop();
+        }
+    }
+
+    get suppressionEnabled() {
+        return this.#suppressionEnabled;
+    }
+
+    set suppressionEnabled(value: boolean) {
+        this.#suppressionEnabled = value;
+    }
+
+    get minimumEmitIntervalMs() {
+        return this.#minimumEmitIntervalMs;
+    }
+
+    set minimumEmitIntervalMs(value: number) {
+        if (this.#minimumEmitIntervalMs === value) {
+            return;
+        }
+        const needStart = this.#emitTimer !== undefined;
+        if (needStart) {
+            this.#stop();
+        }
+        this.#minimumEmitIntervalMs = value;
+        if (needStart) {
+            this.#start();
+        }
+    }
+
+    get source() {
+        return this.#source;
+    }
+
+    set source(source: Observable<T> | undefined) {
+        if (this.#source === source) {
+            return;
+        }
+        if (this.#source && this.#sourceObserver) {
+            this.#source.off(this.#sourceObserver);
+        } else if (this.#sourceObserver === undefined) {
+            this.#sourceObserver = (...payload) => this.emit(...payload);
+        }
+        this.#source = source;
+        if (source) {
+            source.on(this.#sourceObserver);
+        }
+    }
+
+    get sink() {
+        return this.#sink;
+    }
+
+    set sink(sink: Observable<T> | undefined) {
+        if (this.#sink === sink) {
+            return;
+        }
+        if (this.#sink && this.#sinkObserver) {
+            this.off(this.#sinkObserver);
+        }
+        this.#sink = sink;
+        if (sink) {
+            this.#sinkObserver = (...payload) => sink.emit(...payload);
+            this.#sinkObserver[observant] = false;
+            this.on(this.#sinkObserver);
+        }
+    }
+
+    get shouldEmit() {
+        return this.#shouldEmit;
+    }
+
+    set shouldEmit(shouldEmit: QuietObservable.EmitPredicate | undefined) {
+        this.#shouldEmit = shouldEmit;
+        if (this.#deferredPayload && shouldEmit?.(this.#deferredPayload) === false) {
+            this.#deferredPayload = undefined;
+            this.#stop();
+        }
+    }
+
+    override get isObserved() {
+        return super.isObserved || this.#sink?.isObserved || false;
+    }
+
+    override isObservedBy(observer: Observer<T>): boolean {
+        return this.#sink?.isObservedBy(observer) || this.isObservedBy(observer) || false;
+    }
+
+    override emit(...payload: T) {
+        if (this.#shouldEmit?.(payload) === false) {
+            return;
+        }
+        if (!this.#emitAutomatically) {
+            this.#deferredPayload = payload;
+            return;
+        }
+        const now = Time.nowMs();
+        if (this.#lastEmitAt === undefined || this.#lastEmitAt + this.#minimumEmitIntervalMs < now) {
+            return this.#emit(payload, now);
+        }
+        this.#deferredPayload = payload;
+        this.#start(now);
+    }
+
+    /**
+     * Emit immediately, regardless of suppression configuration.
+     */
+    emitNow() {
+        if (this.#emitTimer) {
+            this.#emitTimer.stop();
+            this.#emitTimer = undefined;
+        }
+        if (this.#deferredPayload) {
+            this.#emit(this.#deferredPayload);
+        }
+    }
+
+    /**
+     * Emit as soon as allowed by suppression.
+     */
+    emitSoon() {
+        if (this.#deferredPayload && this.#emitTimer === undefined) {
+            this.#start();
+        }
+    }
+
+    #emit(payload: T, now?: number) {
+        this.#deferredPayload = undefined;
+        this.#lastEmitAt = now ?? Time.nowMs();
+        this.#stop();
+        super.emit(...payload);
+    }
+
+    #start(now?: number) {
+        if (this.#emitTimer || this.#deferredPayload === undefined) {
+            return;
+        }
+        const timeout = this.#lastEmitAt === undefined ? 0 : (now ?? Time.nowMs()) - this.#lastEmitAt;
+        if (timeout <= 0) {
+            this.emitNow();
+        } else {
+            this.#emitTimer = Time.getTimer("delayed emit", timeout, this.emitNow.bind(this));
+            this.#emitTimer.start();
+        }
+    }
+
+    #stop() {
+        if (this.#emitTimer) {
+            this.#emitTimer.stop();
+            this.#emitTimer = undefined;
+        }
+    }
+}
+
+export namespace QuietObservable {
+    export interface State<T extends any[] = any[]> {
+        /**
+         * If true this observable will emit within the suppression constraints.  If false it will only emit after calls
+         * to {@link emitSoon} or {@link emitNow}.
+         */
+        emitAutomatically: boolean;
+
+        /**
+         * If true then emit rate is constrained.  If false emits will occur immediately.
+         */
+        suppressionEnabled: boolean;
+
+        /**
+         * The minimum time between emits in milliseconds.
+         */
+        minimumEmitIntervalMs: number;
+
+        /**
+         * An input observable this observable will automatically observe to produce events.
+         */
+        source?: Observable<T>;
+
+        /**
+         * An output observable this observable will automatically emit to whenever it emits.
+         */
+        sink?: Observable<T>;
+
+        /**
+         * A predicate that determine whether a payload should emit.
+         */
+        shouldEmit?: EmitPredicate<T>;
+
+        /**
+         * Handler for errors returned by observers.
+         */
+        errorHandler?: ObserverErrorHandler;
+
+        /**
+         * Handler for promises returned by observers.
+         */
+        promiseHandler?: ObserverPromiseHandler | boolean;
+    }
+
+    export interface EmitPredicate<T extends any[] = any[]> {
+        (...payload: T): boolean;
+    }
+
+    export interface Configuration<T extends any[] = any[]> extends Partial<State<T>> {}
+
+    export const DefaultConfiguration: State = {
+        emitAutomatically: true,
+        suppressionEnabled: true,
+        minimumEmitIntervalMs: 1000,
+    };
 }

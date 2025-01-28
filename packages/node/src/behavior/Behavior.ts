@@ -16,6 +16,7 @@ import {
 } from "#general";
 import type { ClusterType } from "#types";
 import { assertSecureSession } from "@matter/protocol";
+import { Events as BaseEvents } from "./Events.js";
 import { Reactor } from "./Reactor.js";
 import type { BehaviorBacking } from "./internal/BehaviorBacking.js";
 import { DerivedState, EmptyState } from "./state/StateType.js";
@@ -189,7 +190,7 @@ export abstract class Behavior {
     /**
      * Implementation of the events property.  Subclasses may override to extend.
      */
-    static Events = EventEmitter;
+    static Events = BaseEvents;
 
     /**
      * Behaviors are ephemeral and should not perform initialization in their constructor.  They can override this
@@ -354,7 +355,7 @@ export namespace Behavior {
         readonly dependencies?: Iterable<Behavior.Type>;
         readonly State: new () => {};
         readonly Internal: new () => {};
-        readonly Events: typeof EventEmitter;
+        readonly Events: typeof BaseEvents;
     }
 
     /**
