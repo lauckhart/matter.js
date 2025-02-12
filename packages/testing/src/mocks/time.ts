@@ -118,7 +118,7 @@ export const MockTime = {
      *
      * Moves time forward until the promise resolves.
      */
-    async resolve<T>(promise: PromiseLike<T>) {
+    async resolve<T>(promise: PromiseLike<T>, cycleTimeS?: number) {
         let resolved = false;
         let result: T | undefined;
         let error: any;
@@ -153,12 +153,16 @@ export const MockTime = {
                 );
             }
 
-            // Advance time exponentially, trying for granularity but also OK performance.  Note that we are not only
-            // advancing time but also yielding event loop.  So it's possible if we run out of time it's just because
-            // there were too few yields in one virtual hour.  As designed currently it's 360 macrotasks and 360
-            // microtasks (360 loops w/ 1 macro- and 1 micro-yield)
-            await this.advance(1000);
-            timeAdvanced += 1000;
+            if (cycleTimeS) {
+                await this.advance(cycleTimeS);
+            } else {
+                // Advance time exponentially, trying for granularity but also OK performance.  Note that we are not only
+                // advancing time but also yielding event loop.  So it's possible if we run out of time it's just because
+                // there were too few yields in one virtual hour.  As designed currently it's 360 macrotasks and 360
+                // microtasks (360 loops w/ 1 macro- and 1 micro-yield)
+                await this.advance(1000);
+                timeAdvanced += 1000;
+            }
 
             if (resolved) {
                 break;

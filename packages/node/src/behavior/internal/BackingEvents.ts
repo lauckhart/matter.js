@@ -1,9 +1,10 @@
 /**
  * @license
  * Copyright 2022-2025 Matter.js Authors
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Ident[ifier: Apache-2.0
  */
 
+import { OnlineEvent } from "#behavior/Events.js";
 import type { Endpoint } from "#endpoint/Endpoint.js";
 import { EventEmitter, GeneratedClass, Observable, ObservableProxy } from "#general";
 import type { BehaviorBacking } from "./BehaviorBacking.js";
@@ -39,6 +40,15 @@ export function BackingEvents(backing: BehaviorBacking): EventEmitter {
 
 const TARGET = Symbol("target");
 
+class EventProxy extends ObservableProxy {
+    constructor(target: Observable) {
+        super(target);
+    }
+    get quiet() {
+        return (this.target as OnlineEvent).quiet;
+    }
+}
+
 /**
  * Generates a proxy {@link EventEmitter} for the given {@link EventEmitter} instance.
  *
@@ -54,7 +64,7 @@ function EventEmitterProxy(instance: EventEmitter) {
             get(this: { [TARGET]: Record<string, Observable>; [property]: Observable }) {
                 let observable = this[property];
                 if (observable === undefined) {
-                    observable = this[property] = new ObservableProxy(this[TARGET][key]);
+                    observable = this[property] = new EventProxy(this[TARGET][key]);
                 }
                 return observable;
             },
