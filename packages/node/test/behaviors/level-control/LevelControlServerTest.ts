@@ -10,7 +10,7 @@ import { Time } from "#general";
 import { MockServerNode } from "../../node/mock-server-node.js";
 
 describe("LevelControlServer", () => {
-    it.only("emits CurrentLevel and RemainingTime updates quietly", async () => {
+    it("emits CurrentLevel and RemainingTime updates quietly", async () => {
         const { node, endpoint, events } = await setup();
 
         const complete = new Promise<void>(resolve =>
@@ -28,22 +28,22 @@ describe("LevelControlServer", () => {
         expect(events).deep.equals([
             { kind: "time", ms: 0, value: 150 },
             { kind: "level", ms: 300, value: 2 },
-            { kind: "level", ms: 1000, value: 12 },
-            { kind: "level", ms: 1000, value: 34 },
-            { kind: "level", ms: 1000, value: 44 },
+            { kind: "level", ms: 1000, value: 14 },
+            { kind: "level", ms: 1000, value: 24 },
+            { kind: "level", ms: 1000, value: 46 },
             { kind: "level", ms: 1000, value: 68 },
-            { kind: "level", ms: 1000, value: 80 },
+            { kind: "level", ms: 1000, value: 78 },
             { kind: "level", ms: 1000, value: 102 },
             { kind: "level", ms: 1000, value: 112 },
             { kind: "level", ms: 1000, value: 136 },
-            { kind: "level", ms: 1000, value: 148 },
+            { kind: "level", ms: 1000, value: 146 },
             { kind: "level", ms: 1000, value: 170 },
             { kind: "level", ms: 1000, value: 180 },
             { kind: "level", ms: 1000, value: 204 },
-            { kind: "level", ms: 1000, value: 216 },
+            { kind: "level", ms: 1000, value: 214 },
             { kind: "level", ms: 1000, value: 238 },
             { kind: "level", ms: 1000, value: 248 },
-            { kind: "level", ms: 400, value: 254 },
+            { kind: "level", ms: 500, value: 254 },
             { kind: "time", ms: 0, value: 0 },
         ]);
 
@@ -76,7 +76,12 @@ describe("LevelControlServer", () => {
             });
         });
 
-        await MockTime.resolve(endpoint.events.onOff.onOff$Changed, 10);
+        await MockTime.resolve(endpoint.events.onOff.onOff$Changed, { stepMs: 10 });
+
+        // Need extra effort to receive the final events
+        while (events[events.length - 1].kind !== "time") {
+            await MockTime.yield();
+        }
 
         expect(endpoint.state.levelControl.currentLevel).equals(1);
 
@@ -94,10 +99,10 @@ describe("LevelControlServer", () => {
             { kind: "level", value: 11, ms: 1000 },
 
             // Transition complete
-            { kind: "level", value: 2, ms: 300 },
-            { kind: "time", value: 0, ms: 0 },
+            { kind: "level", value: 1, ms: 330 },
+            { kind: "time", value: 0, ms: 30 },
         ]);
-    }).timeout(60000000);
+    });
 
     it("emits RemainingTime with command changes", async () => {
         const { node, endpoint } = await initializeDimmableLight();
@@ -130,6 +135,8 @@ describe("LevelControlServer", () => {
 });
 
 async function setup() {
+    MockTime.reset();
+
     const { node, endpoint } = await initializeDimmableLight();
 
     const events = Array<{

@@ -13,7 +13,7 @@ import { GeneralDiagnostics } from "#clusters/general-diagnostics";
 import { LevelControl } from "#clusters/level-control";
 import { Endpoint } from "#endpoint/index.js";
 import { RootEndpoint } from "#endpoints/root";
-import { AsyncObservable, cropValueRange, Diagnostic, Logger, MaybePromise, Time, Timer } from "#general";
+import { AsyncObservable, cropValueRange, Logger, MaybePromise } from "#general";
 import { Val } from "#protocol";
 import { StatusCode, StatusResponseError, TypeFromPartialBitSchema } from "#types";
 import { LevelControlBehavior } from "./LevelControlBehavior.js";
@@ -86,22 +86,6 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
     }
 
     override initialize() {
-        const { internal } = this;
-
-        if (this.state.managedTransitionTimeHandling) {
-            this.state.transitionEndTime = 0;
-            internal.transitionIntervalTimer = Time.getPeriodicTimer(
-                "LevelControl.step/move",
-                this.state.transitionStepIntervalMs,
-                this.callback(this.#stepIntervalTick, { lock: true }),
-            );
-
-            this.reactTo(
-                this.events.transitionEndTime$Changed,
-                this.features.lighting ? this.#onLightingTransitionEndTimeChanged : this.#onTransitionEndTimeChanged,
-            );
-        }
-
         // As a virtual attribute remaining time change only emits when we do so manually.  This works out well because
         // as a continuous value it should only emit under limited circumstances defined by spec
         //
@@ -113,11 +97,8 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
         // Current level change reports use standard "quieter" rate of 1s. but spec mandates emit in a few other cases.
         // One of which is transition to/from null which we handle here
         this.events.currentLevel$Changed.on((value, oldValue) => {
-            // Spec mandates emit when level changes to/from null and at transition end
-            if (
-                ((value === null || oldValue === null) && (value ?? oldValue) !== null) ||
-                this.internal.transitionEndedAt === value
-            ) {
+            // Spec mandates emit when level changes to/from null
+            if ((value === null || oldValue === null) && value !== oldValue) {
                 this.events.currentLevel$Changed.quiet.emitNow();
             }
         });
@@ -386,16 +367,6 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
      */
     protected stopLogic(_options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {}): MaybePromise<void> {
         this.#transition.stop();
-        this.internal.transitionState = undefined;
-        this.internal.transitionIntervalTimer?.stop();
-        if (this.state.transitionEndTime) {
-            this.state.transitionEndTime = 0;
-
-            this.reactTo(
-                this.events.transitionEndTime$Changed,
-                this.features.lighting ? this.#onLightingTransitionEndTimeChanged : this.#onTransitionEndTimeChanged,
-            );
-        }
     }
 
     /**
@@ -501,131 +472,21 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
         targetLevel?: number,
         options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {},
     ) {
-        this.#transition.start("currentLevel", changePerSecond, targetLevel);
-        this.internal.transitionIntervalTimer?.stop();
-
-        this.internal.transitionState = {
-            changeRate: changePerSecond,
-            withOnOff,
+        this.#transition.start(
+            "currentLevel",
+            changePerSecond,
             targetLevel,
-            options,
-            lastTickAt: Time.nowMs(),
-        };
-
-        let totalChange;
-        if (changePerSecond > 0) {
-            totalChange = (targetLevel ?? this.maxLevel) - this.currentLevel;
-        } else {
-            totalChange = (targetLevel ?? this.minLevel) - this.currentLevel;
-        }
-
-        const changeTime = Math.abs(totalChange / changePerSecond);
-
-        logger.info(
-            "Initiating transition",
-            Diagnostic.dict({
-                change: totalChange,
-                rate: `${Math.round(this.internal.transitionState.changeRate * 10) / 10}/s`,
-                time: `${Math.round(Math.round(changeTime * 10) / 10)} s.`,
-            }),
+            withOnOff ? this.asyncCallback(resetLevel) : undefined,
         );
 
-        // This will initiate transition if state commits successfully
-        this.state.transitionEndTime = Time.nowMs() + (totalChange / changePerSecond) * 1000;
-
-        // Reset the current level as start level for the step interval to handle OnOff state changes
-        return this.setLevel(this.currentLevel, withOnOff, options);
-    }
-
-    /**
-     * This listener is only relevant if we are managing transitions with "lighting" feature.
-     *
-     * We compute our "remaining time" attribute dynamically as (transition end time - current time).  In general we
-     * should not emit remaining time except in limited circumstances defined by the spec:
-     *
-     * - When remaining time goes from zero to 1s+
-     * - When remaining time goes from zero
-     * - When a command chnages remaining time changes by > 1s
-     *
-     * These can only occur when we've changed our transition end time, so we trigger emits in this listener.
-     *
-     * We also initiate our transition timer in this listener so we can ensure relevant state is committed before
-     * transitioning.
-     *
-     * We report -1 as the "old value" for remaining time because this value is meaningless for a continuous value.
-     */
-    #onLightingTransitionEndTimeChanged(_value: number, oldValue: number | undefined) {
-        // Skip initialization
-        if (oldValue === undefined) {
-            return;
+        if (withOnOff) {
+            return resetLevel.apply(this);
         }
 
-        const remainingTime = this.state.remainingTime;
-        const logRemainingTimeChange = (message: string) => {
-            logger.debug(
-                "Endpoint",
-                Diagnostic.strong(this.endpoint.toString()),
-                " remaining transition time is ",
-                Diagnostic.squash(
-                    Diagnostic.strong(`${this.state.remainingTime / 10}s`),
-                    Diagnostic.squash("; "),
-                    message,
-                ),
-            );
-        };
-
-        if (!remainingTime) {
-            // Per spec, emit remaining time unconditionally when transitioning to zero
-            if (this.internal.lastEndTimeEmittedAsRemaining) {
-                this.internal.lastEndTimeEmittedAsRemaining = undefined;
-                this.events.remainingTime$Changed.emit(0, -1, this.context);
-                logRemainingTimeChange("emitting because transition ended");
-            } else {
-                logRemainingTimeChange("not emitting as not previously reported");
-            }
-
-            // We should no longer be transitioning
-            this.internal.transitionIntervalTimer?.stop();
-
-            return;
+        // We use setLevel at the beginning and end of transitions to implement on/off behavior
+        function resetLevel(this: LevelControlServerLogic) {
+            this.setLevel(this.currentLevel, withOnOff, options);
         }
-
-        // We should be transitioning.  We enable timer in this listener so we are assured state is committed
-        if (!this.internal.transitionIntervalTimer?.isRunning) {
-            this.internal.transitionIntervalTimer?.start();
-        }
-
-        const emitRemainingTime = () => {
-            this.internal.lastEndTimeEmittedAsRemaining = this.state.transitionEndTime;
-            this.events.remainingTime$Changed.emit(remainingTime, -1, this.context);
-        };
-
-        // This call only occurs if the remaining time moves from zero or the transition end time was changed by a
-        // command.  The following tests handle cases where the spec mandates emit under these circumstances
-
-        // The spec mandates emit if remaining time changes from 0
-        const lastEndTime = this.internal.lastEndTimeEmittedAsRemaining;
-        if (lastEndTime === undefined) {
-            logRemainingTimeChange("emitting because because now transitioning");
-            emitRemainingTime();
-            return;
-        }
-
-        // The spec mandates emit for any change > 10 (1s.)
-        //
-        // When computing the delta, the last value we actually emitted for "remaining time" is irrelevant; we instead
-        // consider the remainder of the interval that was just replaced
-        //
-        // Spec isn't entirely clear but absolute value seems like right value to test.
-        const remainingTimeForLastEmit = remainingTimeFor(lastEndTime);
-        if (Math.abs(remainingTimeForLastEmit - remainingTime) > 10) {
-            logRemainingTimeChange("emitting because transition end time shifted > 1s.");
-            emitRemainingTime();
-            return;
-        }
-
-        // The spec does not allow emit because the transtion window changed by < 1s.
-        logRemainingTimeChange("not emitting because transition end time shifted < 1s.");
     }
 
     #getBootReason() {
@@ -649,23 +510,15 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
 
 export namespace LevelControlServerLogic {
     export class Internal {
-        /** Transition management */
+        /**
+         * Transition management.
+         */
         transition?: Transition<LevelControlServerLogic>;
 
-        /** Timer for the managed transition */
-        transitionIntervalTimer?: Timer;
-
-        /** Structure to store the data of the current managed transition */
-        transitionState?: {
-            changeRate: number;
-            withOnOff: boolean;
-            targetLevel?: number;
-            lastTickAt: number;
-            options?: TypeFromPartialBitSchema<typeof LevelControl.Options>;
-        };
-
-        /** The end time when we last emitted "remaining time" */
-        lastEndTimeEmittedAsRemaining?: number;
+        /**
+         * Notification of successful transition completion.
+         */
+        onFinish?: () => MaybePromise<void>;
     }
 
     export class State extends LevelControlLogicBase.State {
@@ -694,11 +547,11 @@ export namespace LevelControlServerLogic {
 
             return {
                 set remainingTime(value: number) {
-                    transition.remainingTime = value / 10;
+                    transition.remainingTime = value;
                 },
 
                 get remainingTime() {
-                    return Math.round(transition.remainingTime * 10);
+                    return transition.remainingTime;
                 },
             };
         }
@@ -771,6 +624,10 @@ export namespace LevelControlServerLogic {
                         },
                     },
                 },
+
+                onFinish() {
+                    return internal.onFinish?.();
+                },
             });
         }
 
@@ -781,18 +638,6 @@ export namespace LevelControlServerLogic {
 // We had turned on some more features to provide the default implementation, but export the cluster with default
 // Features again.
 export class LevelControlServer extends LevelControlServerLogic.with(LevelControl.Feature.OnOff) {}
-
-function remainingTimeFor(transitionEndTime?: number) {
-    if (!transitionEndTime) {
-        return 0;
-    }
-
-    const result = transitionEndTime - Time.nowMs();
-    if (result < 0) {
-        return 0;
-    }
-    return result / 100;
-}
 
 function asIntOrNull(value: number | null) {
     if (value === null) {

@@ -44,8 +44,21 @@ class EventProxy extends ObservableProxy {
     constructor(target: Observable) {
         super(target);
     }
+
+    get isQuieter() {
+        return (this.target as OnlineEvent).isQuieter;
+    }
+
     get quiet() {
         return (this.target as OnlineEvent).quiet;
+    }
+
+    get online() {
+        return (this.target as OnlineEvent).online;
+    }
+
+    override toString() {
+        return this.target.toString();
     }
 }
 

@@ -118,7 +118,7 @@ export const MockTime = {
      *
      * Moves time forward until the promise resolves.
      */
-    async resolve<T>(promise: PromiseLike<T>, cycleTimeS?: number) {
+    async resolve<T>(promise: PromiseLike<T>, { stepMs, macrotasks }: { stepMs?: number; macrotasks?: boolean } = {}) {
         let resolved = false;
         let result: T | undefined;
         let error: any;
@@ -137,10 +137,14 @@ export const MockTime = {
         let timeAdvanced = 0;
         while (!resolved) {
             // Interestingly, a Time.yield() works in almost every case.  However, on Node SubtleCrypto.deriveBits hangs
-            // if you only yield via microtask.  It seems to require yielding via macrotask.  So we use setTimeout here.
-            // Probably related to entropy collection but I think it's safe to classify as a Node bug.  Tested on
-            // version 20.11.0
-            await new Promise<void>(resolve => setTimeout(() => resolve(), 0));
+            // if you only yield via microtask.  It seems to require yielding via macrotask.  So we optionally use
+            // setTimeout here. Probably related to entropy collection but I think it's safe to classify as a Node bug.
+            // Tested on version 20.11.0
+            if (macrotasks) {
+                await new Promise<void>(resolve => setTimeout(() => resolve(), 0));
+            } else {
+                await MockTime.yield();
+            }
 
             if (resolved) {
                 break;
@@ -153,8 +157,8 @@ export const MockTime = {
                 );
             }
 
-            if (cycleTimeS) {
-                await this.advance(cycleTimeS);
+            if (stepMs) {
+                await this.advance(stepMs);
             } else {
                 // Advance time exponentially, trying for granularity but also OK performance.  Note that we are not only
                 // advancing time but also yielding event loop.  So it's possible if we run out of time it's just because
@@ -184,8 +188,7 @@ export const MockTime = {
     async advance(ms: number) {
         const newTimeMs = nowMs + ms;
 
-        while (true) {
-            if (callbacks.length === 0) break;
+        while (callbacks.length) {
             const { atMs, callback } = callbacks[0];
             if (atMs > newTimeMs) break;
             callbacks.shift();
@@ -197,21 +200,18 @@ export const MockTime = {
     },
 
     /**
-     * Yield to scheduled microtasks.  This means that all code paths waiting
-     * on resolved promises (including await) will proceed before this method
-     * returns.
+     * Yield to scheduled microtasks.  This means that all code paths waiting on resolved promises (including await)
+     * will proceed before this method returns.
      */
     async yield() {
         await Promise.resolve();
     },
 
     /**
-     * Due to its implementation, an older version of yield() would actually
-     * yield to microtasks three times.  Our tests then depended on this
-     * functionality -- one yield could trigger up to three nested awaits.
+     * Due to its implementation, an older version of yield() would actually yield to microtasks three times.  Our tests
+     * then depended on this functionality -- one yield could trigger up to three nested awaits.
      *
-     * To make this clear, the version of yield() that emulates old behavior
-     * is called "yield3".
+     * To make this clear, the version of yield() that emulates old behavior is called "yield3".
      */
     async yield3() {
         await Promise.resolve();
@@ -220,14 +220,12 @@ export const MockTime = {
     },
 
     /**
-     * Hook a method and invoke a callback just before the method completes.
-     * Unhooks after completion.
+     * Hook a method and invoke a callback just before the method completes. Unhooks after completion.
      *
-     * Handles both synchronous and asynchronous methods.  The interceptor
-     * should match the async-ness of the intercepted method.
+     * Handles both synchronous and asynchronous methods.  The interceptor should match the async-ness of the
+     * intercepted method.
      *
-     * The interceptor can optionally access and/or replace the resolve/reject
-     * value.
+     * The interceptor can optionally access and/or replace the resolve/reject value.
      */
     interceptOnce<NameT extends string, ReturnT, ObjT extends { [N in NameT]: (...args: any) => ReturnT }>(
         obj: ObjT,

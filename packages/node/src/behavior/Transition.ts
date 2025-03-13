@@ -17,6 +17,14 @@ const logger = Logger.get("Transition");
  *
  * This utility supports updates of one or more attributes of a single behavior when the change occurs gradually over
  * time.
+ *
+ * Implementation notes:
+ *
+ * - Transitions occur in small time increments, currently 100 ms. by default
+ * - To improve consistency, values such as end time, min/max, etc. update every iteration based on current state
+ * - Internal time keeping uses ms but published values are scaled based on configuration
+ * - Internal values are floats but rounded to integers when published
+ * - Supports correct semantics for LVL & CC "remaining time", will need additional options for PCC "remaining duration"
  */
 export class Transition<B extends Behavior> {
     #endpoint: Endpoint;
@@ -37,7 +45,7 @@ export class Transition<B extends Behavior> {
     /**
      * Initiate transition of an attribute.
      */
-    start(name: keyof B["state"], changePerS: number, targetValue?: number) {
+    start(name: keyof B["state"], changePerS: number, targetValue?: number, onFinish?: () => MaybePromise<void>) {
         if (this.#config.manageTransitions === false) {
             return;
         }
@@ -47,9 +55,10 @@ export class Transition<B extends Behavior> {
         const remainingTimeBeforeStart = this.remainingTime;
 
         this.#transitioning[name] = {
-            changePerS,
+            changePerMs: changePerS / 1000,
             targetValue,
-            lastStepAtS: Time.nowMs() / 1000,
+            lastStepAt: Time.nowMs(),
+            onFinish,
         };
 
         logger.info(
@@ -68,6 +77,7 @@ export class Transition<B extends Behavior> {
                 this.#config.stepIntervalMs ?? Transition.DEFAULT_STEP_INTERVAL_MS,
                 this.#step.bind(this),
             );
+            this.#timer.start();
         }
 
         const { remainingTimeEvent } = this.#config;
@@ -128,7 +138,7 @@ export class Transition<B extends Behavior> {
      * Set the static version of remaining time used when transition management is disabled.
      */
     set remainingTime(value: number) {
-        this.#staticRemainingTime = value;
+        this.#staticRemainingTime = this.#internalTimeOf(value);
     }
 
     /**
@@ -143,13 +153,13 @@ export class Transition<B extends Behavior> {
                 if (remaining < 0) {
                     return 0;
                 }
-                return remaining / 1000;
+                return this.#externalTimeOf(remaining);
             }
 
-            return this.#staticRemainingTime;
+            return this.#externalTimeOf(this.#staticRemainingTime);
         }
 
-        let remainingTimeS = 0;
+        let remainingTime = 0;
         const values = this.#endpoint.stateOf(this.#type) as Record<string, undefined | null | number>;
 
         for (const name in this.#transitioning) {
@@ -164,22 +174,25 @@ export class Transition<B extends Behavior> {
                 continue;
             }
 
-            const attrRemainingTime = Math.abs((currentValue - targetValue) / state.changePerS);
-            if (attrRemainingTime > remainingTimeS) {
-                remainingTimeS = attrRemainingTime;
+            const attrRemainingTime = Math.abs((currentValue - targetValue) / state.changePerMs);
+            if (attrRemainingTime > remainingTime) {
+                remainingTime = attrRemainingTime;
             }
         }
 
-        return remainingTimeS;
+        return this.#externalTimeOf(remainingTime);
     }
 
     #step() {
+        // Skip steps when callbacks overrun the tick interval
         if (this.#outstandingTick) {
             return;
         }
 
         // Apply updates and/or handle end of transition
-        const promise = Promise.resolve(this.#endpoint.act("transition", agent => this.#stepWithAgent(agent)))
+        const promise = (this.#outstandingTick = Promise.resolve(
+            this.#endpoint.act("transition", agent => this.#stepWithAgent(agent)),
+        )
             .catch(error => {
                 logger.error(
                     this.#logPrefix,
@@ -192,7 +205,7 @@ export class Transition<B extends Behavior> {
                 if (this.#outstandingTick === promise) {
                     this.#outstandingTick = undefined;
                 }
-            });
+            }));
     }
 
     #stepError(name: keyof B["state"], message: string) {
@@ -201,7 +214,7 @@ export class Transition<B extends Behavior> {
     }
 
     async #stepWithAgent(agent: Agent) {
-        const nowS = Time.nowMs() / 1000;
+        const now = Time.nowMs();
 
         const updates = {} as Record<keyof B["state"], number>;
         const behavior = agent.get(this.#type);
@@ -212,7 +225,7 @@ export class Transition<B extends Behavior> {
 
         const values = behavior.state as Record<string, undefined | null | number>;
 
-        let finished: undefined | Set<string>;
+        let finished: undefined | Set<{ name: string; onFinish?: () => MaybePromise<void> }>;
 
         // Compute updated values for all transitioning attributes
         for (const name in this.#transitioning) {
@@ -222,20 +235,20 @@ export class Transition<B extends Behavior> {
                 continue;
             }
 
-            const state = this.#transitioning[name];
+            const attrState = this.#transitioning[name];
 
             // Determine the unclamped next value
-            const secondsSinceLastStep = nowS - state.lastStepAtS;
-            let nextValue = state.changePerS * secondsSinceLastStep;
+            const msSinceLastStep = now - attrState.lastStepAt;
+            let nextValue = currentValue + attrState.changePerMs * msSinceLastStep;
 
-            const { targetValue, targetDescription } = this.#determineTargetValue(name, state);
+            const { targetValue, targetDescription } = this.#determineTargetValue(name, attrState);
 
             // Clamp nextValue to valid range
-            if (state.changePerS < 0) {
+            if (attrState.changePerMs < 0) {
                 if (targetValue !== undefined && Math.round(nextValue) < targetValue) {
                     nextValue = targetValue;
                 }
-            } else if (state.changePerS > 0) {
+            } else if (attrState.changePerMs > 0) {
                 if (targetValue !== undefined && Math.round(nextValue) > targetValue) {
                     nextValue = targetValue;
                 }
@@ -252,7 +265,7 @@ export class Transition<B extends Behavior> {
                 continue;
             }
 
-            updates[name] = nextValue;
+            updates[name] = Math.round(nextValue);
 
             // Handle transition completion
             if (nextValue === targetValue) {
@@ -263,20 +276,36 @@ export class Transition<B extends Behavior> {
                 if (finished === undefined) {
                     finished = new Set();
                 }
-                finished?.add(name);
+                finished?.add({ name, onFinish: attrState.onFinish });
+
                 continue;
             }
 
-            state.lastStepAtS = nowS;
+            attrState.lastStepAt = now;
         }
 
-        const state = behavior.state as Record<string, number>;
-
-        for (const key in updates) {
-            state[key] = updates[key];
-        }
+        Object.assign(values, updates);
 
         await agent.context.transaction.commit();
+
+        // Invoke per-attribute finish callbacks and, per the specification, force emit any Q attributes that have
+        // finished transition
+        if (finished) {
+            for (const attr of finished) {
+                const event = (behavior.events as unknown as Record<string, ClusterEvents.ChangedObservable<any>>)[
+                    `${attr.name}$Changed`
+                ];
+
+                if (event?.isQuieter) {
+                    event.quiet.emitNow();
+                }
+
+                const promise = this.#invokeFinishCallback(attr);
+                if (promise !== undefined) {
+                    await promise;
+                }
+            }
+        }
 
         if (Object.keys(this.#transitioning).length) {
             return;
@@ -285,25 +314,8 @@ export class Transition<B extends Behavior> {
         // Transition is finished.  Emit remaining time of zero per specification
         this.#config.remainingTimeEvent?.emit(0, -1, agent.context);
 
-        // Per the specification, force emit any Q attributes that have finished transition
-        for (const name in finished) {
-            const event = (behavior.events as unknown as Record<string, ClusterEvents.ChangedObservable<any>>)[
-                `${name}$Changed`
-            ];
-
-            if (event?.isQuieter) {
-                event.quiet.emitNow();
-            }
-        }
-
-        // Invoke any configured finish callback
-        const callbackPromise = MaybePromise.catch(
-            () => this.#config.onFinish?.apply(this),
-            error => {
-                logger.error(this.#logPrefix, "Unhandled error in finish callback:", error);
-            },
-        );
-
+        // Invoke any configured global finish callback
+        const callbackPromise = this.#invokeFinishCallback(this.#config);
         if (callbackPromise) {
             await callbackPromise;
         }
@@ -314,14 +326,14 @@ export class Transition<B extends Behavior> {
         let targetDescription = "target value";
 
         // Determine the actual target value and clamp nextValue to valid range
-        if (state.changePerS < 0) {
+        if (state.changePerMs < 0) {
             const minValue = this.#config.attributes[name]?.min;
 
             if (targetValue === undefined || (minValue !== undefined && targetValue < minValue)) {
                 targetDescription = "min value";
                 targetValue = minValue;
             }
-        } else if (state.changePerS > 0) {
+        } else if (state.changePerMs > 0) {
             const maxValue = this.#config.attributes[name]?.max;
 
             if (targetValue === undefined || (maxValue !== undefined && targetValue < maxValue)) {
@@ -336,8 +348,29 @@ export class Transition<B extends Behavior> {
         };
     }
 
+    #invokeFinishCallback({ onFinish }: { onFinish?: () => MaybePromise<void> }) {
+        if (!onFinish) {
+            return;
+        }
+
+        return MaybePromise.catch(
+            () => onFinish?.apply(this),
+            error => {
+                logger.error(this.#logPrefix, "Unhandled error in onFinish callback:", error);
+            },
+        );
+    }
+
     get #logPrefix() {
-        return Diagnostic.squash(`Transition `, Diagnostic.strong(`${this.#endpoint}#${this.#type.name}`), `:`);
+        return Diagnostic.squash(Diagnostic.strong(`${this.#endpoint}#${this.#type.name}`), `:`);
+    }
+
+    #externalTimeOf(ms: number) {
+        return Math.round(ms / (this.#config.externalTimeUnitMs ?? Transition.DEFAULT_EXTERNAL_TIME_UNIT_MS));
+    }
+
+    #internalTimeOf(externalUnits: number) {
+        return externalUnits * (this.#config.externalTimeUnitMs ?? Transition.DEFAULT_EXTERNAL_TIME_UNIT_MS);
     }
 }
 
@@ -345,13 +378,15 @@ export class Transition<B extends Behavior> {
  * Internal state related to actively transitioning attributes.
  */
 interface AttrState {
-    changePerS: number;
+    changePerMs: number;
     targetValue?: number;
-    lastStepAtS: number;
+    lastStepAt: number;
+    onFinish?: () => MaybePromise<void>;
 }
 
 export namespace Transition {
     export const DEFAULT_STEP_INTERVAL_MS = 100;
+    export const DEFAULT_EXTERNAL_TIME_UNIT_MS = 100;
 
     /**
      * Transition configuration.
@@ -366,6 +401,12 @@ export namespace Transition {
          * Default is true.
          */
         readonly manageTransitions?: boolean;
+
+        /**
+         * Milliseconds-per external time unit.  Defaults to 100 which is appropriate for CC & LVL "remaining time"
+         * attribute that is defined as 10ths of a second.
+         */
+        readonly externalTimeUnitMs?: number;
 
         /**
          * Additional configuration that applies to specific attributes.
