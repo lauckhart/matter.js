@@ -385,6 +385,7 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
      * Default stop logic. This aborts any level transition currently underway and sets the remaining time to 0.
      */
     protected stopLogic(_options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {}): MaybePromise<void> {
+        this.#transition.stop();
         this.internal.transitionState = undefined;
         this.internal.transitionIntervalTimer?.stop();
         if (this.state.transitionEndTime) {
@@ -500,6 +501,7 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
         targetLevel?: number,
         options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {},
     ) {
+        this.#transition.start("currentLevel", changePerSecond, targetLevel);
         this.internal.transitionIntervalTimer?.stop();
 
         this.internal.transitionState = {
@@ -626,75 +628,6 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
         logRemainingTimeChange("not emitting because transition end time shifted < 1s.");
     }
 
-    /**
-     * This listener is only relevant if we are managing transitions without "lighting" feature.
-     */
-    #onTransitionEndTimeChanged(_value: number, oldValue: undefined | number) {
-        // Skip initialization
-        if (oldValue === undefined) {
-            return;
-        }
-
-        const remainingTime = remainingTimeFor(this.state.transitionEndTime);
-        if (remainingTime) {
-            if (!this.internal.transitionIntervalTimer?.isRunning) {
-                this.internal.transitionIntervalTimer?.start();
-            }
-        } else {
-            this.internal.transitionIntervalTimer?.stop();
-        }
-    }
-
-    async #stepIntervalTick() {
-        const transition = this.internal.transitionState;
-        if (transition === undefined || this.state.currentLevel === null) {
-            this.internal.transitionIntervalTimer?.stop();
-            return;
-        }
-        const { changeRate, withOnOff, targetLevel, options, lastTickAt } = transition;
-
-        const now = Time.nowMs();
-        const secondsSinceLastTick = (now - lastTickAt) / 1000;
-        transition.lastTickAt = now;
-
-        const changeAmount = changeRate * secondsSinceLastTick;
-
-        const logEnd = (...level: unknown[]) => {
-            logger.debug("Endpoint", Diagnostic.strong(this.endpoint.toString()), " transition stopped", ...level);
-        };
-
-        const newLevel = this.state.currentLevel + changeAmount;
-        if (newLevel <= this.minLevel) {
-            logEnd("at min level", Diagnostic.strong(this.minLevel));
-            await this.setLevel(this.minLevel, withOnOff, options);
-            this.stopLogic();
-        } else if (newLevel >= this.maxLevel) {
-            logEnd("at max level", Diagnostic.strong(this.maxLevel));
-            await this.setLevel(this.maxLevel, withOnOff, options);
-            this.stopLogic();
-        } else {
-            // Check if we reached the targetLevel if there is one
-            if (targetLevel !== undefined) {
-                if (changeRate > 0 && newLevel >= targetLevel) {
-                    logEnd("at target level", Diagnostic.strong(Math.round(targetLevel)));
-                    logger.debug(`Stopping transition interval at target level ${Math.round(targetLevel)}`);
-                    await this.setLevel(targetLevel, withOnOff, options);
-                    this.stopLogic();
-                    return;
-                }
-
-                if (changeRate < 0 && newLevel <= targetLevel) {
-                    logEnd("at target level", Diagnostic.strong(Math.round(targetLevel)));
-                    await this.setLevel(targetLevel, withOnOff, options);
-                    this.stopLogic();
-                    return;
-                }
-            }
-
-            await this.setLevel(newLevel, withOnOff, options);
-        }
-    }
-
     #getBootReason() {
         const rootEndpoint = this.endpoint.ownerOfType(RootEndpoint);
         if (rootEndpoint !== undefined && rootEndpoint.behaviors.has(GeneralDiagnosticsBehavior)) {
@@ -702,31 +635,15 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
         }
     }
 
-    #transition() {
-        if (this.internal.transition === undefined) {
-            const endpoint = this.endpoint;
-
-            this.internal.transition = new Transition(this, {
-                attributes: {
-                    currentLevel: {
-                        get min() {
-                            return endpoint.stateOf(LevelControlServer).minLevel;
-                        },
-
-                        get max() {
-                            return endpoint.stateOf(LevelControlServer).maxLevel;
-                        },
-                    },
-                },
-            });
+    override async [Symbol.asyncDispose]() {
+        if (this.internal.transition) {
+            await this.internal.transition.close();
         }
-
-        return this.internal.transition;
+        await super[Symbol.asyncDispose]?.();
     }
 
-    override async [Symbol.asyncDispose]() {
-        this.internal.transitionIntervalTimer?.stop();
-        await super[Symbol.asyncDispose]?.();
+    get #transition() {
+        return LevelControlServerLogic.transitionFor(this.endpoint);
     }
 }
 
@@ -755,51 +672,33 @@ export namespace LevelControlServerLogic {
         /**
          * The default implementation always set the target level immediately and so ignores all transition times
          * requested or configured.
-         * Set this to true to manage transition times by changing the level value step wise every second. This is in
-         * most cases not the best way because hardware supporting levels usually have ways to specify the change rate
-         * or target value and transition time.
+         *
+         * Set this to true to manage transition changes using {@link Transition}.  You should only use this if your
+         * hardware doesn't support transition management on its own.
          */
         managedTransitionTimeHandling = false;
+
+        /**
+         * If transition management is disabled you may specify this as the "end time" for transitions.  The remaining
+         * time attribute will then report correctly.
+         */
+        transitionEndTimeMs = undefined;
 
         /**
          * When managing transitions, this is the interval at which steps occur in ms.
          */
         transitionStepIntervalMs = 100;
 
-        /**
-         * The end time for any ongoing transition.
-         *
-         * If {@link Internal#transitionEndTime} is:
-         *
-         * * undefined: {@link State#remainingTime} acts like a normal attribute with a static value
-         * * a time greater than current time: {@link State#remainingTime} is the interval remaining
-         * * 0 or a time in the past: {@link State#remainingTime} is zero
-         *
-         * If you enable {@link managedTransitionTimeHandling}, the transition end time is set for you.  However you may
-         * set it manually to enable dynamic reporting even if you otherwise manage transitions externally.
-         */
-        transitionEndTime?: number;
-
         [Val.properties](endpoint: Endpoint) {
-            const self = this;
+            const transition = transitionFor(endpoint);
 
             return {
                 set remainingTime(value: number) {
-                    self.remainingTime = value;
+                    transition.remainingTime = value / 10;
                 },
 
                 get remainingTime() {
-                    const { transitionEndTime } = endpoint.behaviors.internalsOf(LevelControlServerLogic);
-
-                    if (transitionEndTime === undefined) {
-                        return self.remainingTime;
-                    }
-
-                    if (transitionEndTime === 0) {
-                        return 0;
-                    }
-
-                    return Math.round(remainingTimeFor(transitionEndTime));
+                    return Math.round(transition.remainingTime * 10);
                 },
             };
         }
@@ -838,9 +737,48 @@ export namespace LevelControlServerLogic {
         setRemainingTime(remainingTime: number): void;
         handleOnOffChange(onOff: boolean): void;
     };
+
+    /**
+     * Access transition management for the level control behavior of a specific endpoint.
+     */
+    export function transitionFor(endpoint: Endpoint) {
+        const internal = endpoint.behaviors.internalsOf(LevelControlServerLogic);
+        const state = endpoint.stateOf(LevelControlServerLogic);
+
+        if (internal.transition === undefined) {
+            internal.transition = new Transition(endpoint, LevelControlServerLogic, {
+                remainingTimeEvent: endpoint.eventsOf(LevelControlServerLogic).remainingTime$Changed,
+
+                get manageTransitions() {
+                    return state.managedTransitionTimeHandling;
+                },
+
+                get transitionEndTimeMs() {
+                    return state.transitionEndTimeMs;
+                },
+
+                get stepIntervalMs() {
+                    return state.transitionStepIntervalMs;
+                },
+
+                attributes: {
+                    currentLevel: {
+                        get min() {
+                            return state.minLevel;
+                        },
+                        get max() {
+                            return state.maxLevel;
+                        },
+                    },
+                },
+            });
+        }
+
+        return internal.transition;
+    }
 }
 
-// We had turned on some more features to provide da default implementation, but export the cluster with default
+// We had turned on some more features to provide the default implementation, but export the cluster with default
 // Features again.
 export class LevelControlServer extends LevelControlServerLogic.with(LevelControl.Feature.OnOff) {}
 

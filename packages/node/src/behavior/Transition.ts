@@ -26,20 +26,25 @@ export class Transition<B extends Behavior> {
     #transitioning = {} as Record<keyof B["state"], AttrState>;
     #outstandingTick?: MaybePromise<void>;
     #outstandingRemainingTimeUpdate?: MaybePromise<void>;
+    #staticRemainingTime = 0;
 
-    constructor(owner: B, config: Transition.Configuration<B>) {
+    constructor(endpoint: Endpoint, type: Behavior.Type, config: Transition.Configuration<B>) {
         this.#config = config;
-        this.#endpoint = owner.endpoint;
-        this.#type = owner.constructor as Behavior.Type;
+        this.#endpoint = endpoint;
+        this.#type = type;
     }
 
     /**
      * Initiate transition of an attribute.
      */
     start(name: keyof B["state"], changePerS: number, targetValue?: number) {
+        if (this.#config.manageTransitions === false) {
+            return;
+        }
+
         this.stop(name);
 
-        const remainingTimeBeforeStart = this.remainingTimeS;
+        const remainingTimeBeforeStart = this.remainingTime;
 
         this.#transitioning[name] = {
             changePerS,
@@ -70,12 +75,12 @@ export class Transition<B extends Behavior> {
             return;
         }
 
-        if (this.#outstandingRemainingTimeUpdate || this.remainingTimeS - remainingTimeBeforeStart < 1) {
+        if (this.#outstandingRemainingTimeUpdate || this.remainingTime - remainingTimeBeforeStart < 1) {
             return;
         }
 
         this.#outstandingRemainingTimeUpdate = this.#endpoint.act("remaining-time-update", agent => {
-            remainingTimeEvent.emit(this.remainingTimeS, -1, agent.context);
+            remainingTimeEvent.emit(this.remainingTime, -1, agent.context);
         });
     }
 
@@ -120,11 +125,30 @@ export class Transition<B extends Behavior> {
     }
 
     /**
-     * Determine time remaining in transition.
+     * Set the static version of remaining time used when transition management is disabled.
+     */
+    set remainingTime(value: number) {
+        this.#staticRemainingTime = value;
+    }
+
+    /**
+     * Determine time remaining in transition in (possibly fractional) seconds.
      *
      * This is computed dynamically based on the longest running individual attribute transition.
      */
-    get remainingTimeS() {
+    get remainingTime() {
+        if (this.#config.manageTransitions === false) {
+            if (this.#config.transitionEndTimeMs !== undefined) {
+                const remaining = this.#config.transitionEndTimeMs - Time.nowMs();
+                if (remaining < 0) {
+                    return 0;
+                }
+                return remaining / 1000;
+            }
+
+            return this.#staticRemainingTime;
+        }
+
         let remainingTimeS = 0;
         const values = this.#endpoint.stateOf(this.#type) as Record<string, undefined | null | number>;
 
@@ -341,12 +365,12 @@ export namespace Transition {
          *
          * Default is true.
          */
-        manageTransitions?: boolean;
+        readonly manageTransitions?: boolean;
 
         /**
          * Additional configuration that applies to specific attributes.
          */
-        attributes: Partial<Record<keyof T["state"], AttributeConfiguration>>;
+        readonly attributes: Partial<Record<keyof T["state"], AttributeConfiguration>>;
 
         /**
          * The internal tick rate for transitions.
@@ -355,7 +379,12 @@ export namespace Transition {
          *
          * Defaults to {@link DEFAULT_STEP_INTERVAL_MS}.
          */
-        stepIntervalMs?: number;
+        readonly stepIntervalMs?: number;
+
+        /**
+         * The end time for a transition if transition management is disabled.
+         */
+        readonly transitionEndTimeMs?: number;
 
         /**
          * An observable associated with the "remaining time" value.
@@ -366,12 +395,12 @@ export namespace Transition {
          * This should also support Valve Configuration & Control cluster's "RemainingDuration" attribute with
          * additional options to support small variations in logic.
          */
-        remainingTimeEvent?: ClusterEvents.ChangedObservable;
+        readonly remainingTimeEvent?: ClusterEvents.ChangedObservable;
 
         /**
          * Invoked after transition completes.
          */
-        onFinish?: () => MaybePromise<void>;
+        readonly onFinish?: () => MaybePromise<void>;
     }
 
     /**
@@ -381,11 +410,11 @@ export namespace Transition {
         /**
          * A lower bounds on the transition value.
          */
-        min?: number | undefined;
+        readonly min?: number | undefined;
 
         /**
          * An upper bounds on the transition value.
          */
-        max?: number | undefined;
+        readonly max?: number | undefined;
     }
 }
