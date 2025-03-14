@@ -49,11 +49,6 @@ const LevelControlLogicBase = LevelControlBehavior.with(LevelControl.Feature.OnO
  * * {@link LevelControlServerLogic.stopLogic} Logic to stop any currently running transitions
  * * {@link LevelControlServerLogic.handleOnOffChange} Logic to handle dimming to onLevel when device got turned on by connected OnOff cluster
  *
- * If you extend this implementation you may use:
- *
- * * {@link LevelControlServerLogic.setLevel} to set the level attribute including automatic handling of the onoff dependency
- * * {@link Internal#transitionEndTime} to set the remaining time attribute when Lighting feature is enabled
- *
  * All overridable methods may be implemented sync or async by returning a Promise.
  */
 export class LevelControlServerLogic extends LevelControlLogicBase {
@@ -73,7 +68,8 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
 
     /**
      * The current level value as number.
-     * Throws an StatusResponse Error when null!
+     *
+     * Throws a StatusResponse Error when null.
      */
     get currentLevel(): number {
         if (this.state.currentLevel === null) {
@@ -94,8 +90,7 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
             suppressionEnabled: false,
         };
 
-        // Current level change reports use standard "quieter" rate of 1s. but spec mandates emit in a few other cases.
-        // One of which is transition to/from null which we handle here
+        // Wire in logic triggered by level changes
         this.events.currentLevel$Changed.on((value, oldValue) => {
             // Spec mandates emit when level changes to/from null
             if ((value === null || oldValue === null) && value !== oldValue) {
@@ -178,8 +173,7 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
      * Default "MoveToLevel" logic.
      *
      * When a transition time is not null the implementation uses a step based logic to manage the move. It also checks
-     * if the level is within min/max range and sets the level accordingly. We use {@link setLevel} to set the level and
-     * handle the on/off state if the method is called via a "WithOnOff" command variant.
+     * if the level is within min/max range and sets the level accordingly.
      *
      * @param level Level to set
      * @param transitionTime transition time
@@ -198,14 +192,15 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
         // Adjust target level
         level = cropValueRange(level, this.minLevel, this.maxLevel);
 
+        if (this.currentLevel === level) {
+            return;
+        }
+
         // If we should move to the new level as fast as possible ...
-        if (
-            !this.state.managedTransitionTimeHandling ||
-            transitionTimeValue === null ||
-            transitionTimeValue === 0 ||
-            this.currentLevel === level
-        ) {
-            return this.setLevel(level, withOnOff, options);
+        if (!this.state.managedTransitionTimeHandling || transitionTimeValue === null || transitionTimeValue === 0) {
+            this.state.currentLevel = level;
+            this.couple(withOnOff, options);
+            return;
         }
 
         // Else calculate a rate by second and manage the transition
@@ -246,9 +241,6 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
      * When move rate is null and there is no default move rate, we move to to the min or max level directly. Otherwise
      * we apply step logic and increase or decrease by step size for every step.
      *
-     * We use {@link setLevel} to set the level and handle the on/off state if invoked via the "WithOnOff" command
-     * variant.
-     *
      * @param moveMode Mode (Up/Down) of the move action
      * @param rate Rate of the move action, null if no rate is provided and the default should be used
      * @param withOnOff true if the method is called by a *WithOnOff command
@@ -275,7 +267,9 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
                       ? this.maxLevel
                       : this.minLevel;
             this.stopLogic();
-            return this.setLevel(level, withOnOff, options);
+            this.state.currentLevel = level;
+            this.couple(withOnOff, options);
+            return;
         }
 
         return this.#initiateTransition(
@@ -316,9 +310,6 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
      * When transition time is null, we move immediately to the min or max level. Otherwise we increase or decrease the
      * level by the step size for each step.
      *
-     * We use {@link setLevel} to set the level and handle the on/off state if invoked via the "WithOnOff" command
-     * variant.
-     *
      * @param stepMode Mode (Up/Down) of the step action
      * @param stepSize Size of the step action
      * @param transitionTime Time of the step action in 10th of a second
@@ -341,7 +332,9 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
         if (!this.state.managedTransitionTimeHandling || transitionTime === null || transitionTime === 0) {
             // If null/0 transitionTime is requested we should move as fast as possible, so we set to min/max value directly
             this.stopLogic();
-            return this.setLevel(targetLevel, withOnOff, options);
+            this.state.currentLevel = targetLevel;
+            this.couple(withOnOff, options);
+            return;
         }
 
         const effectiveRate = (stepSize / transitionTime) * 10 * (stepMode === LevelControl.StepMode.Up ? 1 : -1);
@@ -370,43 +363,44 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
     }
 
     /**
-     * This default logic sets the level including the handing of the on/off state if invoked via a "WithOnOff" command
-     * variant.
+     * Instrument the current transaction to couple state values of other clusters with the level.
      *
-     * We check if the level is at minLevel; if the device is on we turn off the device.  If the level is above the
-     * minLevel and the device is off we turn on the device.
+     * This handles of on/off state in the On/Off cluster and color temperature in the Color Control cluster.
      *
-     * @param level Level which is set by the command
-     * @param withOnOff true if the method is called by a *WithOnOff command
-     * @param options Options for the command
+     * The default impelmentation installs transaction participants to perform synchronization once the transaction
+     * commits. Thus changes to these clusters occurs non-atomically and only if the level successfully changes.
      */
-    protected setLevel(
-        level: number,
-        withOnOff: boolean,
-        options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {},
-    ): MaybePromise<void> {
-        const onOffServer =
-            this.features.onOff && withOnOff && this.agent.has(OnOffServer) ? this.agent.get(OnOffServer) : undefined;
+    protected couple(withOnOff: boolean, options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {}) {
+        const { endpoint } = this;
 
-        if (onOffServer !== undefined && level === this.minLevel && onOffServer.state.onOff) {
-            const offPromise = onOffServer.off();
-            return MaybePromise.then(offPromise, () => {
-                this.state.currentLevel = asIntOrNull(level);
+        // Couple with On/Off state
+        if (this.features.onOff && withOnOff && this.agent.has(OnOffServer)) {
+            this.context.transaction.addParticipants({
+                postCommit: () =>
+                    endpoint.act("couple-level-to-onoff", agent => {
+                        const levelControl = agent.get(LevelControlServer);
+                        const onOff = agent.get(OnOffServer);
+
+                        if (levelControl.currentLevel === levelControl.minLevel) {
+                            onOff.state.onOff = false;
+                        } else {
+                            onOff.state.onOff = true;
+                        }
+                    }),
             });
         }
 
-        this.state.currentLevel = asIntOrNull(level);
-
-        let colorSyncResult;
-        // Sync color temperature with level if the feature is enabled and the option is set
+        // Couple with ColorControl temp
         if (this.features.lighting && options.coupleColorTempToLevel && this.agent.has(ColorControlServer)) {
-            colorSyncResult = this.agent.get(ColorControlServer).syncColorTemperatureWithLevel(level);
-        }
+            this.context.transaction.addParticipants({
+                postCommit: () =>
+                    endpoint.act("couple-level-to-colortemp", agent => {
+                        const levelControl = agent.get(LevelControlServer);
+                        const colorControl = this.agent.get(ColorControlServer);
 
-        if (onOffServer !== undefined && level > this.minLevel && !onOffServer.state.onOff) {
-            return MaybePromise.then(colorSyncResult, () => onOffServer.on());
-        } else {
-            return colorSyncResult;
+                        colorControl.syncColorTemperatureWithLevel(levelControl.currentLevel);
+                    }),
+            });
         }
     }
 
@@ -472,21 +466,11 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
         targetLevel?: number,
         options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {},
     ) {
-        this.#transition.start(
-            "currentLevel",
-            changePerSecond,
-            targetLevel,
-            withOnOff ? this.asyncCallback(resetLevel) : undefined,
-        );
-
-        if (withOnOff) {
-            return resetLevel.apply(this);
-        }
-
-        // We use setLevel at the beginning and end of transitions to implement on/off behavior
-        function resetLevel(this: LevelControlServerLogic) {
-            this.setLevel(this.currentLevel, withOnOff, options);
-        }
+        this.#transition.start("currentLevel", changePerSecond, targetLevel, {
+            onStep() {
+                this.couple(withOnOff, options);
+            },
+        });
     }
 
     #getBootReason() {
@@ -582,11 +566,7 @@ export namespace LevelControlServerLogic {
             options: TypeFromPartialBitSchema<typeof LevelControl.Options>,
         ): MaybePromise<void>;
         stopLogic(options: TypeFromPartialBitSchema<typeof LevelControl.Options>): MaybePromise<void>;
-        setLevel(
-            level: number,
-            withOnOff: boolean,
-            options: TypeFromPartialBitSchema<typeof LevelControl.Options>,
-        ): MaybePromise<void>;
+        couple(withOnOff: boolean, options: TypeFromPartialBitSchema<typeof LevelControl.Options>): MaybePromise<void>;
         setRemainingTime(remainingTime: number): void;
         handleOnOffChange(onOff: boolean): void;
     };

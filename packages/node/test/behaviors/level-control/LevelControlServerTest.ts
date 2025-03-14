@@ -99,8 +99,8 @@ describe("LevelControlServer", () => {
             { kind: "level", value: 11, ms: 1000 },
 
             // Transition complete
-            { kind: "level", value: 1, ms: 330 },
-            { kind: "time", value: 0, ms: 30 },
+            { kind: "level", value: 1, ms: 360 },
+            { kind: "time", value: 0, ms: 0 },
         ]);
     });
 

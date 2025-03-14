@@ -31,7 +31,7 @@ export class Transition<B extends Behavior> {
     #type: Behavior.Type;
     #timer?: Timer;
     #config: Transition.Configuration<B>;
-    #transitioning = {} as Record<keyof B["state"], AttrState>;
+    #transitioning = {} as Record<keyof B["state"], AttrState<B>>;
     #outstandingTick?: MaybePromise<void>;
     #outstandingRemainingTimeUpdate?: MaybePromise<void>;
     #staticRemainingTime = 0;
@@ -45,7 +45,7 @@ export class Transition<B extends Behavior> {
     /**
      * Initiate transition of an attribute.
      */
-    start(name: keyof B["state"], changePerS: number, targetValue?: number, onFinish?: () => MaybePromise<void>) {
+    start(name: keyof B["state"], changePerS: number, targetValue?: number, callbacks?: Transition.Callbacks<B>) {
         if (this.#config.manageTransitions === false) {
             return;
         }
@@ -58,7 +58,7 @@ export class Transition<B extends Behavior> {
             changePerMs: changePerS / 1000,
             targetValue,
             lastStepAt: Time.nowMs(),
-            onFinish,
+            ...callbacks,
         };
 
         logger.info(
@@ -216,20 +216,18 @@ export class Transition<B extends Behavior> {
     async #stepWithAgent(agent: Agent) {
         const now = Time.nowMs();
 
-        const updates = {} as Record<keyof B["state"], number>;
-        const behavior = agent.get(this.#type);
+        const behavior = agent.get(this.#type) as B;
+        const state = behavior.state as Record<string, number>;
 
         // Obtain exclusive lock
         agent.context.transaction.addResourcesSync(behavior);
         await agent.context.transaction.begin();
 
-        const values = behavior.state as Record<string, undefined | null | number>;
-
         let finished: undefined | Set<{ name: string; onFinish?: () => MaybePromise<void> }>;
 
         // Compute updated values for all transitioning attributes
         for (const name in this.#transitioning) {
-            const currentValue = values[name];
+            const currentValue = state[name];
             if (typeof currentValue !== "number") {
                 this.#stepError(name, "current value is not numeric");
                 continue;
@@ -265,7 +263,13 @@ export class Transition<B extends Behavior> {
                 continue;
             }
 
-            updates[name] = Math.round(nextValue);
+            state[name] = Math.round(nextValue);
+
+            // Invoke step callback, if any
+            const callbackPromise = attrState.onStep?.call(behavior, nextValue);
+            if (callbackPromise !== undefined) {
+                await callbackPromise;
+            }
 
             // Handle transition completion
             if (nextValue === targetValue) {
@@ -284,8 +288,6 @@ export class Transition<B extends Behavior> {
             attrState.lastStepAt = now;
         }
 
-        Object.assign(values, updates);
-
         await agent.context.transaction.commit();
 
         // Invoke per-attribute finish callbacks and, per the specification, force emit any Q attributes that have
@@ -300,7 +302,7 @@ export class Transition<B extends Behavior> {
                     event.quiet.emitNow();
                 }
 
-                const promise = this.#invokeFinishCallback(attr);
+                const promise = this.#invokeFinishCallback(attr.onFinish?.bind(behavior));
                 if (promise !== undefined) {
                     await promise;
                 }
@@ -315,13 +317,13 @@ export class Transition<B extends Behavior> {
         this.#config.remainingTimeEvent?.emit(0, -1, agent.context);
 
         // Invoke any configured global finish callback
-        const callbackPromise = this.#invokeFinishCallback(this.#config);
+        const callbackPromise = this.#invokeFinishCallback(this.#config.onFinish);
         if (callbackPromise) {
             await callbackPromise;
         }
     }
 
-    #determineTargetValue(name: keyof B["state"], state: AttrState) {
+    #determineTargetValue(name: keyof B["state"], state: AttrState<B>) {
         let { targetValue } = state;
         let targetDescription = "target value";
 
@@ -348,7 +350,7 @@ export class Transition<B extends Behavior> {
         };
     }
 
-    #invokeFinishCallback({ onFinish }: { onFinish?: () => MaybePromise<void> }) {
+    #invokeFinishCallback(onFinish?: () => MaybePromise<void>) {
         if (!onFinish) {
             return;
         }
@@ -377,11 +379,10 @@ export class Transition<B extends Behavior> {
 /**
  * Internal state related to actively transitioning attributes.
  */
-interface AttrState {
+interface AttrState<B extends Behavior> extends Transition.Callbacks<B> {
     changePerMs: number;
     targetValue?: number;
     lastStepAt: number;
-    onFinish?: () => MaybePromise<void>;
 }
 
 export namespace Transition {
@@ -457,5 +458,20 @@ export namespace Transition {
          * An upper bounds on the transition value.
          */
         readonly max?: number | undefined;
+    }
+
+    /**
+     * Optional callbacks associated with a specific transition.
+     */
+    export interface Callbacks<B extends Behavior> {
+        /**
+         * Invoked every time the transitioning value changes before committing the mutating transaction.
+         */
+        onStep?: (this: B, value: number) => MaybePromise<void>;
+
+        /**
+         * Invoked every when the transition completes successfully.
+         */
+        onFinish?: (this: B) => MaybePromise<void>;
     }
 }
