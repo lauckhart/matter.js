@@ -26,17 +26,17 @@ const logger = Logger.get("Transition");
  * - Internal values are floats but rounded to integers when published
  * - Supports correct semantics for LVL & CC "remaining time", will need additional options for PCC "remaining duration"
  */
-export class Transition<B extends Behavior> {
+export class Transitions<T extends Behavior.Type> {
     #endpoint: Endpoint;
     #type: Behavior.Type;
     #timer?: Timer;
-    #config: Transition.Configuration<B>;
-    #transitioning = {} as Record<keyof B["state"], AttrState<B>>;
+    #config: Transitions.Configuration;
+    #transitioning = {} as Record<Transitions.AttrOf<T>, AttrState<T>>;
     #outstandingTick?: MaybePromise<void>;
     #outstandingRemainingTimeUpdate?: MaybePromise<void>;
     #staticRemainingTime = 0;
 
-    constructor(endpoint: Endpoint, type: Behavior.Type, config: Transition.Configuration<B>) {
+    constructor(endpoint: Endpoint, type: T, config: Transitions.Configuration) {
         this.#config = config;
         this.#endpoint = endpoint;
         this.#type = type;
@@ -45,20 +45,37 @@ export class Transition<B extends Behavior> {
     /**
      * Initiate transition of an attribute.
      */
-    start(name: keyof B["state"], changePerS: number, targetValue?: number, callbacks?: Transition.Callbacks<B>) {
-        if (this.#config.manageTransitions === false) {
-            return;
-        }
+    start(transition: Transitions.Transition<T>) {
+        const { name, owner, changePerS } = transition;
+        let { targetValue } = transition;
 
         this.stop(name);
 
+        // Handle immediate transition
+        if (!this.#config.manageTransitions || !changePerS) {
+            if (targetValue === undefined || targetValue === null) {
+                return;
+            }
+
+            if (transition.min !== undefined && targetValue < transition.min) {
+                targetValue = transition.min;
+            } else if (transition.max !== undefined && targetValue > transition.max) {
+                targetValue = transition.max;
+            }
+
+            (owner.state as Record<Transitions.AttrOf<T>, number>)[name] = targetValue;
+            return;
+        }
+
         const remainingTimeBeforeStart = this.remainingTime;
 
+        const currentValue = (owner.state as Record<Transitions.AttrOf<T>, number>)[name];
+
         this.#transitioning[name] = {
+            ...transition,
+            currentValue,
             changePerMs: changePerS / 1000,
-            targetValue,
-            lastStepAt: Time.nowMs(),
-            ...callbacks,
+            prevStepAt: Time.nowMs(),
         };
 
         logger.info(
@@ -66,7 +83,8 @@ export class Transition<B extends Behavior> {
             "Transitioning",
             Diagnostic.strong(name),
             Diagnostic.dict({
-                target: targetValue,
+                from: currentValue,
+                to: targetValue,
                 rate: `${changePerS.toPrecision(3)}/s`,
             }),
         );
@@ -74,7 +92,7 @@ export class Transition<B extends Behavior> {
         if (this.#timer === undefined) {
             this.#timer = Time.getPeriodicTimer(
                 `transition-${this.#endpoint}-${this.#type.name}`,
-                this.#config.stepIntervalMs ?? Transition.DEFAULT_STEP_INTERVAL_MS,
+                this.#config.stepIntervalMs ?? Transitions.DEFAULT_STEP_INTERVAL_MS,
                 this.#step.bind(this),
             );
             this.#timer.start();
@@ -97,7 +115,7 @@ export class Transition<B extends Behavior> {
     /**
      * Stop transition of one or all attributes.
      */
-    stop(name?: keyof B["state"]) {
+    stop(name?: Transitions.AttrOf<T>) {
         if (name === undefined) {
             this.#transitioning = {} as Record<any, any>;
         } else {
@@ -113,7 +131,7 @@ export class Transition<B extends Behavior> {
             }
         }
 
-        // We only get here if all transitions are stopped
+        // We only get here if all transitions have stopped
         if (this.#timer) {
             this.#timer.stop();
             this.#timer = undefined;
@@ -160,21 +178,15 @@ export class Transition<B extends Behavior> {
         }
 
         let remainingTime = 0;
-        const values = this.#endpoint.stateOf(this.#type) as Record<string, undefined | null | number>;
 
         for (const name in this.#transitioning) {
-            const currentValue = values[name];
-            if (typeof currentValue !== "number") {
-                continue;
-            }
-
-            const state = this.#transitioning[name];
-            const { targetValue } = this.#determineTargetValue(name, state);
+            const attrState = this.#transitioning[name];
+            const { targetValue } = this.#determineTargetValue(attrState);
             if (targetValue === undefined) {
                 continue;
             }
 
-            const attrRemainingTime = Math.abs((currentValue - targetValue) / state.changePerMs);
+            const attrRemainingTime = Math.abs((attrState.currentValue - targetValue) / attrState.changePerMs);
             if (attrRemainingTime > remainingTime) {
                 remainingTime = attrRemainingTime;
             }
@@ -208,7 +220,7 @@ export class Transition<B extends Behavior> {
             }));
     }
 
-    #stepError(name: keyof B["state"], message: string) {
+    #stepError(name: Transitions.AttrOf<T>, message: string) {
         logger.warn(this.#logPrefix, "Not transitioning", Diagnostic.strong(name), "because", message);
         this.stop(name);
     }
@@ -216,7 +228,7 @@ export class Transition<B extends Behavior> {
     async #stepWithAgent(agent: Agent) {
         const now = Time.nowMs();
 
-        const behavior = agent.get(this.#type) as B;
+        const behavior = agent.get(this.#type) as InstanceType<T>;
         const state = behavior.state as Record<string, number>;
 
         // Obtain exclusive lock
@@ -227,19 +239,19 @@ export class Transition<B extends Behavior> {
 
         // Compute updated values for all transitioning attributes
         for (const name in this.#transitioning) {
-            const currentValue = state[name];
+            const attrState = this.#transitioning[name];
+
+            const { currentValue } = attrState;
             if (typeof currentValue !== "number") {
-                this.#stepError(name, "current value is not numeric");
+                this.#stepError(name, "value is not numeric");
                 continue;
             }
 
-            const attrState = this.#transitioning[name];
-
             // Determine the unclamped next value
-            const msSinceLastStep = now - attrState.lastStepAt;
+            const msSinceLastStep = now - attrState.prevStepAt;
             let nextValue = currentValue + attrState.changePerMs * msSinceLastStep;
 
-            const { targetValue, targetDescription } = this.#determineTargetValue(name, attrState);
+            const { targetValue, targetDescription } = this.#determineTargetValue(attrState);
 
             // Clamp nextValue to valid range
             if (attrState.changePerMs < 0) {
@@ -263,6 +275,7 @@ export class Transition<B extends Behavior> {
                 continue;
             }
 
+            attrState.currentValue = nextValue;
             state[name] = Math.round(nextValue);
 
             // Invoke step callback, if any
@@ -285,7 +298,7 @@ export class Transition<B extends Behavior> {
                 continue;
             }
 
-            attrState.lastStepAt = now;
+            attrState.prevStepAt = now;
         }
 
         await agent.context.transaction.commit();
@@ -323,22 +336,22 @@ export class Transition<B extends Behavior> {
         }
     }
 
-    #determineTargetValue(name: keyof B["state"], state: AttrState<B>) {
+    #determineTargetValue(state: AttrState<T>) {
         let { targetValue } = state;
         let targetDescription = "target value";
 
         // Determine the actual target value and clamp nextValue to valid range
         if (state.changePerMs < 0) {
-            const minValue = this.#config.attributes[name]?.min;
+            const minValue = state.min;
 
             if (targetValue === undefined || (minValue !== undefined && targetValue < minValue)) {
                 targetDescription = "min value";
                 targetValue = minValue;
             }
         } else if (state.changePerMs > 0) {
-            const maxValue = this.#config.attributes[name]?.max;
+            const maxValue = state.max;
 
-            if (targetValue === undefined || (maxValue !== undefined && targetValue < maxValue)) {
+            if (targetValue === undefined || (maxValue !== undefined && targetValue > maxValue)) {
                 targetDescription = "min value";
                 targetValue = maxValue;
             }
@@ -368,34 +381,41 @@ export class Transition<B extends Behavior> {
     }
 
     #externalTimeOf(ms: number) {
-        return Math.round(ms / (this.#config.externalTimeUnitMs ?? Transition.DEFAULT_EXTERNAL_TIME_UNIT_MS));
+        return Math.round(ms / (this.#config.externalTimeUnitMs ?? Transitions.DEFAULT_EXTERNAL_TIME_UNIT_MS));
     }
 
     #internalTimeOf(externalUnits: number) {
-        return externalUnits * (this.#config.externalTimeUnitMs ?? Transition.DEFAULT_EXTERNAL_TIME_UNIT_MS);
+        return externalUnits * (this.#config.externalTimeUnitMs ?? Transitions.DEFAULT_EXTERNAL_TIME_UNIT_MS);
     }
 }
 
 /**
  * Internal state related to actively transitioning attributes.
  */
-interface AttrState<B extends Behavior> extends Transition.Callbacks<B> {
+interface AttrState<T extends Behavior.Type> extends Transitions.Transition<T> {
+    currentValue: number;
     changePerMs: number;
-    targetValue?: number;
-    lastStepAt: number;
+    prevStepAt: number;
 }
 
-export namespace Transition {
+export namespace Transitions {
     export const DEFAULT_STEP_INTERVAL_MS = 100;
     export const DEFAULT_EXTERNAL_TIME_UNIT_MS = 100;
 
     /**
+     * A valid transitionable attribute name for the specified type.
+     */
+    export type AttrOf<T extends Behavior.Type> = keyof {
+        [K in keyof InstanceType<T>["state"]]: T[K] extends number | undefined | null ? true : never;
+    };
+
+    /**
      * Transition configuration.
      *
-     * The {@link Transition} accesses this configuration on-demand so values that change after initial construction
+     * The {@link Transitions} accesses this configuration on-demand so values that change after initial construction
      * will affect ongoing behavior.
      */
-    export interface Configuration<T extends Behavior> {
+    export interface Configuration {
         /**
          * If this is false we do not manage transitions and "remaining time" behaves like a normal static value.
          *
@@ -408,11 +428,6 @@ export namespace Transition {
          * attribute that is defined as 10ths of a second.
          */
         readonly externalTimeUnitMs?: number;
-
-        /**
-         * Additional configuration that applies to specific attributes.
-         */
-        readonly attributes: Partial<Record<keyof T["state"], AttributeConfiguration>>;
 
         /**
          * The internal tick rate for transitions.
@@ -431,7 +446,7 @@ export namespace Transition {
         /**
          * An observable associated with the "remaining time" value.
          *
-         * If present, the {@link Transition} forces an emit under conditions defined in spec for the "RemainingTime"
+         * If present, the {@link Transitions} forces an emit under conditions defined in spec for the "RemainingTime"
          * attribute of Level Control & Color Control clusters.
          *
          * This should also support Valve Configuration & Control cluster's "RemainingDuration" attribute with
@@ -446,32 +461,48 @@ export namespace Transition {
     }
 
     /**
-     * Attribute-specific configuration.
+     * Configuration for transition of a specific attribute.
      */
-    export interface AttributeConfiguration {
+    export interface Transition<T extends Behavior.Type> {
         /**
-         * A lower bounds on the transition value.
+         * The attribute to transition.
+         */
+        readonly name: Transitions.AttrOf<T>;
+
+        /**
+         * The behavior instance requesting transition.
+         */
+        readonly owner: InstanceType<T>;
+
+        /**
+         * The amount to change the attribute per second.
+         */
+        readonly changePerS?: number | null;
+
+        /**
+         * The target value for the transition.  If undefined, transitions to the min/max value.  If no min or max is
+         * defined and no target value is supplied the transition will not run.
+         */
+        readonly targetValue?: number;
+
+        /**
+         * A lower bound on the transition value.
          */
         readonly min?: number | undefined;
 
         /**
-         * An upper bounds on the transition value.
+         * An upper bound on the transition value.
          */
         readonly max?: number | undefined;
-    }
 
-    /**
-     * Optional callbacks associated with a specific transition.
-     */
-    export interface Callbacks<B extends Behavior> {
         /**
          * Invoked every time the transitioning value changes before committing the mutating transaction.
          */
-        onStep?: (this: B, value: number) => MaybePromise<void>;
+        onStep?: (this: InstanceType<T>, value: number) => MaybePromise<void>;
 
         /**
          * Invoked every when the transition completes successfully.
          */
-        onFinish?: (this: B) => MaybePromise<void>;
+        onFinish?: (this: InstanceType<T>) => MaybePromise<void>;
     }
 }

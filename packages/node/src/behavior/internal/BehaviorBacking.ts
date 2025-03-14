@@ -108,6 +108,8 @@ export abstract class BehaviorBacking {
                 },
             );
 
+            result = MaybePromise.then(result, () => this.#events?.[Symbol.dispose]());
+
             if (invokeClose) {
                 result = MaybePromise.then(result, () => this.#invokeClose(agent));
             }

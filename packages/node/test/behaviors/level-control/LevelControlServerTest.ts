@@ -11,15 +11,7 @@ import { MockServerNode } from "../../node/mock-server-node.js";
 
 describe("LevelControlServer", () => {
     it("emits CurrentLevel and RemainingTime updates quietly", async () => {
-        const { node, endpoint, events } = await setup();
-
-        const complete = new Promise<void>(resolve =>
-            endpoint.events.levelControl.remainingTime$Changed.online.on(value => {
-                if (value === 0) {
-                    resolve();
-                }
-            }),
-        );
+        const { node, endpoint, events, complete } = await setup();
 
         await changeLevel(endpoint);
 
@@ -35,14 +27,14 @@ describe("LevelControlServer", () => {
             { kind: "level", ms: 1000, value: 78 },
             { kind: "level", ms: 1000, value: 102 },
             { kind: "level", ms: 1000, value: 112 },
-            { kind: "level", ms: 1000, value: 136 },
+            { kind: "level", ms: 1000, value: 135 },
             { kind: "level", ms: 1000, value: 146 },
-            { kind: "level", ms: 1000, value: 170 },
-            { kind: "level", ms: 1000, value: 180 },
-            { kind: "level", ms: 1000, value: 204 },
-            { kind: "level", ms: 1000, value: 214 },
-            { kind: "level", ms: 1000, value: 238 },
-            { kind: "level", ms: 1000, value: 248 },
+            { kind: "level", ms: 1000, value: 169 },
+            { kind: "level", ms: 1000, value: 179 },
+            { kind: "level", ms: 1000, value: 203 },
+            { kind: "level", ms: 1000, value: 213 },
+            { kind: "level", ms: 1000, value: 237 },
+            { kind: "level", ms: 1000, value: 247 },
             { kind: "level", ms: 500, value: 254 },
             { kind: "time", ms: 0, value: 0 },
         ]);
@@ -51,7 +43,7 @@ describe("LevelControlServer", () => {
     });
 
     it("transitions to off with correct events", async () => {
-        const { node, endpoint, events } = await setup();
+        const { node, endpoint, events, complete } = await setup();
 
         await endpoint.set({
             levelControl: {
@@ -70,18 +62,13 @@ describe("LevelControlServer", () => {
 
             await endpointAgent.levelControl.moveToLevelWithOnOff({
                 level: 1,
-                transitionTime: 50,
+                transitionTime: 40,
                 optionsMask: {},
                 optionsOverride: {},
             });
         });
 
-        await MockTime.resolve(endpoint.events.onOff.onOff$Changed, { stepMs: 10 });
-
-        // Need extra effort to receive the final events
-        while (events[events.length - 1].kind !== "time") {
-            await MockTime.yield();
-        }
+        await MockTime.resolve(complete, { stepMs: 10 });
 
         expect(endpoint.state.levelControl.currentLevel).equals(1);
 
@@ -90,16 +77,16 @@ describe("LevelControlServer", () => {
             { kind: "level", value: 128, ms: 0 },
 
             // Initiate transition
-            { kind: "time", value: 50, ms: 0 },
+            { kind: "time", value: 40, ms: 0 },
 
             // Transitioning
-            { kind: "level", value: 101, ms: 1000 },
-            { kind: "level", value: 71, ms: 1000 },
-            { kind: "level", value: 41, ms: 1000 },
-            { kind: "level", value: 11, ms: 1000 },
+            { kind: "level", value: 99, ms: 1000 },
+            { kind: "level", value: 68, ms: 1000 },
+            { kind: "level", value: 36, ms: 1000 },
+            { kind: "level", value: 4, ms: 1000 },
 
             // Transition complete
-            { kind: "level", value: 1, ms: 360 },
+            { kind: "level", value: 1, ms: 100 },
             { kind: "time", value: 0, ms: 0 },
         ]);
     });
@@ -157,7 +144,15 @@ async function setup() {
         last = Time.nowMs();
     });
 
-    return { node, endpoint, events };
+    const complete = new Promise<void>(resolve =>
+        endpoint.events.levelControl.remainingTime$Changed.online.on(value => {
+            if (value === 0) {
+                resolve();
+            }
+        }),
+    );
+
+    return { node, endpoint, events, complete };
 }
 
 async function initializeDimmableLight() {

@@ -5,7 +5,7 @@
  */
 
 import { ActionContext } from "#behavior/context/ActionContext.js";
-import { Transition } from "#behavior/Transition.js";
+import { Transitions } from "#behavior/Transitions.js";
 import { ColorControlServer } from "#behaviors/color-control";
 import { GeneralDiagnosticsBehavior } from "#behaviors/general-diagnostics";
 import { OnOffServer } from "#behaviors/on-off";
@@ -98,47 +98,98 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
             }
         });
 
+        // Configure transition management
+        this.initializeTransitions();
+
+        // Configure lighting feature
         if (this.features.lighting) {
-            if (this.state.currentLevel === 0) {
-                logger.warn(
-                    `The currentLevel value of ${this.state.currentLevel} is invalid according to Matter specification. The value must not be 0.`,
-                );
-            }
-            if (this.minLevel !== 1) {
-                logger.warn(
-                    `The minLevel value of ${this.minLevel} is invalid according to Matter specification. The value should be 1.`,
-                );
-            }
-            if (this.maxLevel !== 0xfe) {
-                logger.warn(
-                    `The maxLevel value of ${this.maxLevel} is invalid according to Matter specification. The value should be 254.`,
-                );
-            }
-
-            if (this.#getBootReason() !== GeneralDiagnostics.BootReason.SoftwareUpdateCompleted) {
-                const startUpLevelValue = this.state.startUpCurrentLevel ?? null;
-                const currentLevelValue = this.state.currentLevel;
-                let targetLevelValue: number | null;
-                switch (startUpLevelValue) {
-                    case 0:
-                        targetLevelValue = this.minLevel;
-                        break;
-                    case null:
-                        targetLevelValue = currentLevelValue;
-                        break;
-                    default:
-                        targetLevelValue = startUpLevelValue;
-                        break;
-                }
-                if (targetLevelValue !== currentLevelValue) {
-                    this.state.currentLevel = asIntOrNull(targetLevelValue);
-                }
-            }
+            this.initializeLighting();
         }
 
+        // Configure on/off feature
         if (this.features.onOff && this.agent.has(OnOffServer)) {
-            this.reactTo(this.agent.get(OnOffServer).events.onOff$Changed, this.handleOnOffChange);
+            this.initializeOnOff();
         }
+    }
+
+    /**
+     * Initialize transition management.
+     *
+     * We manage transitions using {@link Transitions} if
+     * {@link LevelControlServerLogic.State#managedTransitionTimeHandling} is true.
+     */
+    protected initializeTransitions() {
+        const { endpoint } = this;
+        const readOnlyState = endpoint.stateOf(LevelControlServerLogic);
+        this.internal.transition = new Transitions(this.endpoint, LevelControlServerLogic, {
+            remainingTimeEvent: this.events.remainingTime$Changed,
+
+            get manageTransitions() {
+                return readOnlyState.managedTransitionTimeHandling;
+            },
+
+            get transitionEndTimeMs() {
+                return readOnlyState.transitionEndTimeMs;
+            },
+
+            get stepIntervalMs() {
+                return readOnlyState.transitionStepIntervalMs;
+            },
+        });
+    }
+
+    /**
+     * Initialize lighting features.
+     *
+     * This only applies if the Level Control cluster has the "LT" feature enabled.
+     */
+    protected initializeLighting() {
+        if (this.state.currentLevel === 0) {
+            logger.warn(
+                `The currentLevel value of ${this.state.currentLevel} is invalid according to Matter specification. The value must not be 0.`,
+            );
+        }
+        if (this.minLevel !== 1) {
+            logger.warn(
+                `The minLevel value of ${this.minLevel} is invalid according to Matter specification. The value should be 1.`,
+            );
+        }
+        if (this.maxLevel !== 0xfe) {
+            logger.warn(
+                `The maxLevel value of ${this.maxLevel} is invalid according to Matter specification. The value should be 254.`,
+            );
+        }
+
+        if (this.#getBootReason() !== GeneralDiagnostics.BootReason.SoftwareUpdateCompleted) {
+            const startUpLevelValue = this.state.startUpCurrentLevel ?? null;
+            const currentLevelValue = this.state.currentLevel;
+            let targetLevelValue: number | null;
+
+            switch (startUpLevelValue) {
+                case 0:
+                    targetLevelValue = this.minLevel;
+                    break;
+                case null:
+                    targetLevelValue = currentLevelValue;
+                    break;
+                default:
+                    targetLevelValue = startUpLevelValue;
+                    break;
+            }
+
+            if (targetLevelValue !== currentLevelValue) {
+                this.state.currentLevel = asIntOrNull(targetLevelValue);
+            }
+        }
+    }
+
+    /**
+     * Initialize On/Off cluster integration.
+     *
+     * This only applies if the Level Control cluster has the "OO" feature enabled.
+     */
+    protected initializeOnOff() {
+        this.reactTo(this.agent.get(OnOffServer).events.onOff$Changed, this.handleOnOffChange);
     }
 
     /**
@@ -198,8 +249,7 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
 
         // If we should move to the new level as fast as possible ...
         if (!this.state.managedTransitionTimeHandling || transitionTimeValue === null || transitionTimeValue === 0) {
-            this.state.currentLevel = level;
-            this.couple(withOnOff, options);
+            this.setLevel(level, withOnOff, options);
             return;
         }
 
@@ -266,9 +316,7 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
                     : moveMode === LevelControl.MoveMode.Up
                       ? this.maxLevel
                       : this.minLevel;
-            this.stopLogic();
-            this.state.currentLevel = level;
-            this.couple(withOnOff, options);
+            this.setLevel(level, withOnOff, options);
             return;
         }
 
@@ -330,10 +378,9 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
         );
 
         if (!this.state.managedTransitionTimeHandling || transitionTime === null || transitionTime === 0) {
-            // If null/0 transitionTime is requested we should move as fast as possible, so we set to min/max value directly
-            this.stopLogic();
-            this.state.currentLevel = targetLevel;
-            this.couple(withOnOff, options);
+            // If null/0 transitionTime is requested we should move as fast as possible, so we set to min/max value
+            // directly
+            this.setLevel(targetLevel, withOnOff, options);
             return;
         }
 
@@ -359,7 +406,20 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
      * Default stop logic. This aborts any level transition currently underway and sets the remaining time to 0.
      */
     protected stopLogic(_options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {}): MaybePromise<void> {
-        this.#transition.stop();
+        this.internal.transition?.stop();
+    }
+
+    /**
+     * Set level immediately, terminating any ongoing transition.
+     */
+    setLevel(
+        newLevel: number,
+        withOnOff: boolean,
+        options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {},
+    ) {
+        this.stopLogic();
+        this.state.currentLevel = newLevel;
+        this.couple(withOnOff, options);
     }
 
     /**
@@ -367,39 +427,58 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
      *
      * This handles of on/off state in the On/Off cluster and color temperature in the Color Control cluster.
      *
-     * The default impelmentation installs transaction participants to perform synchronization once the transaction
-     * commits. Thus changes to these clusters occurs non-atomically and only if the level successfully changes.
+     * The default impelmentation installs transaction participants to perform synchronization before the transaction
+     * commits.
      */
-    protected couple(withOnOff: boolean, options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {}) {
-        const { endpoint } = this;
-
+    protected couple(
+        withOnOff: boolean,
+        options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {},
+        targetLevel?: number,
+    ) {
         // Couple with On/Off state
         if (this.features.onOff && withOnOff && this.agent.has(OnOffServer)) {
-            this.context.transaction.addParticipants({
-                postCommit: () =>
-                    endpoint.act("couple-level-to-onoff", agent => {
-                        const levelControl = agent.get(LevelControlServer);
-                        const onOff = agent.get(OnOffServer);
+            if (targetLevel === undefined) {
+                targetLevel = this.currentLevel;
+            }
 
-                        if (levelControl.currentLevel === levelControl.minLevel) {
-                            onOff.state.onOff = false;
-                        } else {
-                            onOff.state.onOff = true;
+            if (targetLevel === this.minLevel) {
+                // When moving to off, coupling occurs at end of transaction
+                this.context.transaction.addParticipants({
+                    preCommit: () => {
+                        if (this.currentLevel === this.minLevel) {
+                            const onOff = this.agent.get(OnOffServer);
+                            if (onOff.state.onOff) {
+                                onOff.state.onOff = false;
+                                return true;
+                            }
                         }
-                    }),
-            });
+
+                        return false;
+                    },
+                });
+            } else {
+                // When moving toward on, coupling has immediate affect (this is required by CHIP tests)
+                const onOff = this.agent.get(OnOffServer);
+                if (!onOff.state.onOff) {
+                    onOff.state.onOff = true;
+
+                    // Ensure we move to "on" level before initiating any transition
+                    this.handleOnOffChange(true);
+                }
+            }
         }
 
         // Couple with ColorControl temp
         if (this.features.lighting && options.coupleColorTempToLevel && this.agent.has(ColorControlServer)) {
             this.context.transaction.addParticipants({
-                postCommit: () =>
-                    endpoint.act("couple-level-to-colortemp", agent => {
-                        const levelControl = agent.get(LevelControlServer);
-                        const colorControl = this.agent.get(ColorControlServer);
+                preCommit: () => {
+                    const colorControl = this.agent.get(ColorControlServer);
+                    const prevTemp = colorControl.mireds;
 
-                        colorControl.syncColorTemperatureWithLevel(levelControl.currentLevel);
-                    }),
+                    colorControl.syncColorTemperatureWithLevel(this.currentLevel);
+
+                    return colorControl.mireds !== prevTemp;
+                },
             });
         }
     }
@@ -461,14 +540,31 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
     }
 
     #initiateTransition(
-        changePerSecond: number,
+        changePerS: number | null | undefined,
         withOnOff: boolean,
         targetLevel?: number,
         options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {},
     ) {
-        this.#transition.start("currentLevel", changePerSecond, targetLevel, {
+        this.couple(withOnOff, options, targetLevel);
+
+        const { endpoint } = this;
+
+        this.internal.transition?.start({
+            name: "currentLevel",
+            owner: this,
+            changePerS,
+            targetValue: targetLevel,
+
             onStep() {
-                this.couple(withOnOff, options);
+                this.couple(withOnOff, options, targetLevel);
+            },
+
+            get min() {
+                return endpoint.stateOf(LevelControlServerLogic).minLevel;
+            },
+
+            get max() {
+                return endpoint.stateOf(LevelControlServerLogic).maxLevel;
             },
         });
     }
@@ -483,12 +579,9 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
     override async [Symbol.asyncDispose]() {
         if (this.internal.transition) {
             await this.internal.transition.close();
+            this.internal.transition = undefined;
         }
         await super[Symbol.asyncDispose]?.();
-    }
-
-    get #transition() {
-        return LevelControlServerLogic.transitionFor(this.endpoint);
     }
 }
 
@@ -497,12 +590,7 @@ export namespace LevelControlServerLogic {
         /**
          * Transition management.
          */
-        transition?: Transition<LevelControlServerLogic>;
-
-        /**
-         * Notification of successful transition completion.
-         */
-        onFinish?: () => MaybePromise<void>;
+        transition?: Transitions<typeof LevelControlServerLogic>;
     }
 
     export class State extends LevelControlLogicBase.State {
@@ -510,7 +598,7 @@ export namespace LevelControlServerLogic {
          * The default implementation always set the target level immediately and so ignores all transition times
          * requested or configured.
          *
-         * Set this to true to manage transition changes using {@link Transition}.  You should only use this if your
+         * Set this to true to manage transition changes using {@link Transitions}.  You should only use this if your
          * hardware doesn't support transition management on its own.
          */
         managedTransitionTimeHandling = false;
@@ -527,15 +615,16 @@ export namespace LevelControlServerLogic {
         transitionStepIntervalMs = 100;
 
         [Val.properties](endpoint: Endpoint) {
-            const transition = transitionFor(endpoint);
-
             return {
                 set remainingTime(value: number) {
-                    transition.remainingTime = value;
+                    const transition = endpoint.behaviors.internalsOf(LevelControlServerLogic).transition;
+                    if (transition) {
+                        transition.remainingTime = value;
+                    }
                 },
 
                 get remainingTime() {
-                    return transition.remainingTime;
+                    return endpoint.behaviors.internalsOf(LevelControlServerLogic).transition?.remainingTime ?? 0;
                 },
             };
         }
@@ -570,49 +659,6 @@ export namespace LevelControlServerLogic {
         setRemainingTime(remainingTime: number): void;
         handleOnOffChange(onOff: boolean): void;
     };
-
-    /**
-     * Access transition management for the level control behavior of a specific endpoint.
-     */
-    export function transitionFor(endpoint: Endpoint) {
-        const internal = endpoint.behaviors.internalsOf(LevelControlServerLogic);
-        const state = endpoint.stateOf(LevelControlServerLogic);
-
-        if (internal.transition === undefined) {
-            internal.transition = new Transition(endpoint, LevelControlServerLogic, {
-                remainingTimeEvent: endpoint.eventsOf(LevelControlServerLogic).remainingTime$Changed,
-
-                get manageTransitions() {
-                    return state.managedTransitionTimeHandling;
-                },
-
-                get transitionEndTimeMs() {
-                    return state.transitionEndTimeMs;
-                },
-
-                get stepIntervalMs() {
-                    return state.transitionStepIntervalMs;
-                },
-
-                attributes: {
-                    currentLevel: {
-                        get min() {
-                            return state.minLevel;
-                        },
-                        get max() {
-                            return state.maxLevel;
-                        },
-                    },
-                },
-
-                onFinish() {
-                    return internal.onFinish?.();
-                },
-            });
-        }
-
-        return internal.transition;
-    }
 }
 
 // We had turned on some more features to provide the default implementation, but export the cluster with default

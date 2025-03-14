@@ -5,13 +5,9 @@
  */
 
 describe("LVL", () => {
-    chip("LVL/2.3");
+    chip("LVL/3.1", "LVL/4.1");
     // chip("LVL/*").exclude(
     //     // TODO - requires group management features
     //     "LVL/9.1",
-
-    //     // TODO - 2.3 fails due to too many remaining time reports; we need to add mechanism to Behavior to filter
-    //     // change reports as required by the specification
-    //     "LVL/2.3",
     // );
 });

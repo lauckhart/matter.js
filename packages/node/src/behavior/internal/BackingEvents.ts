@@ -65,7 +65,7 @@ class EventProxy extends ObservableProxy {
 /**
  * Generates a proxy {@link EventEmitter} for the given {@link EventEmitter} instance.
  *
- * This is a {@link Proxy} that automatically adds {@link ObservableProxy} properties for events on reference.
+ * This is a class that automatically adds {@link ObservableProxy} properties for events on reference.
  */
 function EventEmitterProxy(instance: EventEmitter) {
     const descriptors = {} as PropertyDescriptorMap;

@@ -634,10 +634,6 @@ export class Endpoint<T extends EndpointType = EndpointType.Empty> {
         await this.#parts?.close();
         await this.#behaviors?.close();
 
-        for (const events of Object.values(this.#events)) {
-            events[Symbol.dispose]();
-        }
-
         this.lifecycle.change(EndpointLifecycle.Change.Destroyed);
         this.#owner = undefined;
     }

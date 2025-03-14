@@ -800,10 +800,7 @@ export class QuietObservable<T extends any[] = any[]> extends BasicObservable<T>
      * Emit immediately, regardless of suppression configuration.
      */
     emitNow() {
-        if (this.#emitTimer) {
-            this.#emitTimer.stop();
-            this.#emitTimer = undefined;
-        }
+        this.#stop();
         if (this.#deferredPayload) {
             this.#emit(this.#deferredPayload);
             this.#deferredPayload = undefined;
@@ -817,6 +814,10 @@ export class QuietObservable<T extends any[] = any[]> extends BasicObservable<T>
         if (this.#deferredPayload && this.#emitTimer === undefined) {
             this.#start();
         }
+    }
+
+    override [Symbol.dispose]() {
+        this.#stop();
     }
 
     #emit(payload: T, now?: number) {

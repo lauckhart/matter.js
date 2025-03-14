@@ -197,6 +197,10 @@ export class QuietEvent<T extends any[] = any[], S extends ValueModel = ValueMod
     override get quiet(): QuietObservable<T> {
         return this.#quiet;
     }
+
+    override [Symbol.dispose]() {
+        this.#quiet[Symbol.dispose]();
+    }
 }
 
 function descriptionOf(observable: Observable, observer: Observer) {
