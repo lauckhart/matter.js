@@ -13,7 +13,7 @@ import { GeneralDiagnostics } from "#clusters/general-diagnostics";
 import { LevelControl } from "#clusters/level-control";
 import { Endpoint } from "#endpoint/index.js";
 import { RootEndpoint } from "#endpoints/root";
-import { AsyncObservable, cropValueRange, Logger, MaybePromise } from "#general";
+import { AsyncObservable, Logger, MaybePromise } from "#general";
 import { Val } from "#protocol";
 import { StatusCode, StatusResponseError, TypeFromPartialBitSchema } from "#types";
 import { LevelControlBehavior } from "./LevelControlBehavior.js";
@@ -25,17 +25,21 @@ const LevelControlLogicBase = LevelControlBehavior.with(LevelControl.Feature.OnO
 /**
  * This is the default server implementation of {@link LevelControlBehavior}.
  *
- * This implementation includes all features of {@link LevelControl.Cluster} and implements all mandatory commands. The
- * On-Off Feature is automatically turned on as defined by the matter specification.
  * You should use {@link LevelControlServer.with} to specialize the class for the features your implementation supports.
  *
- * This default implementation also handles the OnOff cluster dependency and the ColorControl dependency as defined by
- * the Matter specification automatically.
+ * This implementation includes all features of {@link LevelControl.Cluster} and implements all mandatory commands.
  *
- * This implementation ignores by default all transition times and sets the level immediately. Alternatively, you can
- * set the `managedTransitionTimeHandling` state attribute to true to have matter.js manage transition times by
- * changing the level value step-wise every second. This might be an intermediate solution if you develop
- * independently of defined hardware.
+ * This default handles the OnOff cluster dependency and the ColorControl dependency as defined by the Matter
+ * specification.
+ *
+ * By default this implementation ignores transition times and sets levels immediately.  You can set
+ * {@link LevelControl.State#managedTransitionTimeHandling} to enable higher-level logic in Matter.js to manage level
+ * changes.
+ *
+ * If your hardware supports transitions natively, you may override {@link initializeTransitions} to return a
+ * {@link Transitions} implementation adapted to your hardware.
+ *
+ * Alternatively, you may override methods in this class
  *
  * If you develop for a specific hardware you should extend the {@link LevelControlServer} class and implement the
  * following methods to natively use device features to correctly support the transition times. For this the default
@@ -43,11 +47,12 @@ const LevelControlLogicBase = LevelControlBehavior.with(LevelControl.Feature.OnO
  * actual value change logic. The benefit of this structure is that basic data validations and options checks are
  * already done, and you can focus on the actual hardware interaction:
  *
- * * {@link LevelControlServerLogic.moveToLevelLogic} Logic to move the value to a defined level with a transition time
- * * {@link LevelControlServerLogic.moveLogic} Logic to move the value up or down with a defined rate
- * * {@link LevelControlServerLogic.stepLogic} Logic to step the value up or down with a defined step size and transition
- * * {@link LevelControlServerLogic.stopLogic} Logic to stop any currently running transitions
- * * {@link LevelControlServerLogic.handleOnOffChange} Logic to handle dimming to onLevel when device got turned on by connected OnOff cluster
+ * * {@link LevelControlServerLogic.moveToLevelLogic} moves the value to a defined level with a transition time
+ * * {@link LevelControlServerLogic.moveLogic} moves the value up or down with a defined rate
+ * * {@link LevelControlServerLogic.stepLogic} steps the value up or down with a defined step size and
+ *   transition
+ * * {@link LevelControlServerLogic.stopLogic} stops any currently running transitions
+ * * {@link LevelControlServerLogic.handleOnOffChange} transition to onLevel when device when device turns on or off
  *
  * All overridable methods may be implemented sync or async by returning a Promise.
  */
@@ -99,7 +104,7 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
         });
 
         // Configure transition management
-        this.initializeTransitions();
+        this.internal.transitions = this.initializeTransitions();
 
         // Configure lighting feature
         if (this.features.lighting) {
@@ -117,11 +122,15 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
      *
      * We manage transitions using {@link Transitions} if
      * {@link LevelControlServerLogic.State#managedTransitionTimeHandling} is true.
+     *
+     * You may override this method to replace the {@link Transitions} implementation customized for your application.
      */
     protected initializeTransitions() {
         const { endpoint } = this;
         const readOnlyState = endpoint.stateOf(LevelControlServerLogic);
-        this.internal.transition = new Transitions(this.endpoint, LevelControlServerLogic, {
+        return new Transitions(this.endpoint, {
+            type: LevelControlServerLogic,
+
             remainingTimeEvent: this.events.remainingTime$Changed,
 
             get manageTransitions() {
@@ -134,6 +143,18 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
 
             get stepIntervalMs() {
                 return readOnlyState.transitionStepIntervalMs;
+            },
+
+            properties: {
+                currentLevel: {
+                    get min() {
+                        return endpoint.stateOf(LevelControlServerLogic).minLevel;
+                    },
+
+                    get max() {
+                        return endpoint.stateOf(LevelControlServerLogic).maxLevel;
+                    },
+                },
             },
         });
     }
@@ -221,7 +242,7 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
     }
 
     /**
-     * Default "MoveToLevel" logic.
+     * Default "MoveToLevel" implementation.
      *
      * When a transition time is not null the implementation uses a step based logic to manage the move. It also checks
      * if the level is within min/max range and sets the level accordingly.
@@ -237,25 +258,14 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
         withOnOff: boolean,
         options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {},
     ) {
-        // Determine effective transition time
-        const transitionTimeValue = transitionTime ?? this.state.onOffTransitionTime ?? null;
+        const effectiveTransitionTime = transitionTime ?? this.state.onOffTransitionTime ?? null;
 
-        // Adjust target level
-        level = cropValueRange(level, this.minLevel, this.maxLevel);
-
-        if (this.currentLevel === level) {
-            return;
+        let effectiveRate;
+        if (effectiveTransitionTime) {
+            effectiveRate = ((level - this.currentLevel) / effectiveTransitionTime) * 10;
         }
 
-        // If we should move to the new level as fast as possible ...
-        if (!this.state.managedTransitionTimeHandling || transitionTimeValue === null || transitionTimeValue === 0) {
-            this.setLevel(level, withOnOff, options);
-            return;
-        }
-
-        // Else calculate a rate by second and manage the transition
-        const effectiveRate = ((level - this.currentLevel) / transitionTimeValue) * 10;
-        return this.#initiateTransition(effectiveRate, withOnOff, level, options);
+        return this.transition(level, effectiveRate, withOnOff, options);
     }
 
     /**
@@ -306,26 +316,21 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
             throw new StatusResponseError(`Illegal move rate of 0`, StatusCode.InvalidCommand);
         }
 
-        const effectiveRate = rate ?? this.state.defaultMoveRate ?? null;
-        if (!this.state.managedTransitionTimeHandling || effectiveRate === null || effectiveRate === 0) {
-            // If null rate is requested and also no default rate is set, we should move as fast as possible, so we set
-            // to min/max value directly. If effectiveRate is 0 then defaultMoveRate is and we just ignore the command.
-            const level =
-                effectiveRate === 0
-                    ? this.currentLevel
-                    : moveMode === LevelControl.MoveMode.Up
-                      ? this.maxLevel
-                      : this.minLevel;
-            this.setLevel(level, withOnOff, options);
-            return;
+        if (rate === null) {
+            rate = this.state.defaultMoveRate ?? null;
         }
 
-        return this.#initiateTransition(
-            effectiveRate * (moveMode === LevelControl.MoveMode.Up ? 1 : -1),
-            withOnOff,
-            undefined,
-            options,
-        );
+        let targetLevel;
+        if (moveMode === LevelControl.MoveMode.Up) {
+            targetLevel = Infinity;
+        } else {
+            targetLevel = -Infinity;
+            if (rate) {
+                rate *= -1;
+            }
+        }
+
+        return this.transition(targetLevel, rate, withOnOff, options);
     }
 
     /**
@@ -371,22 +376,14 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
         withOnOff: boolean,
         options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {},
     ) {
-        const targetLevel = cropValueRange(
-            stepMode === LevelControl.StepMode.Up ? this.currentLevel + stepSize : this.currentLevel - stepSize,
-            this.minLevel,
-            this.maxLevel,
-        );
+        let direction = stepMode === LevelControl.StepMode.Up ? 1 : -1;
 
-        if (!this.state.managedTransitionTimeHandling || transitionTime === null || transitionTime === 0) {
-            // If null/0 transitionTime is requested we should move as fast as possible, so we set to min/max value
-            // directly
-            this.setLevel(targetLevel, withOnOff, options);
-            return;
+        let effectiveRate;
+        if (transitionTime !== null) {
+            effectiveRate = (stepSize / transitionTime) * 10 * direction;
         }
 
-        const effectiveRate = (stepSize / transitionTime) * 10 * (stepMode === LevelControl.StepMode.Up ? 1 : -1);
-
-        return this.#initiateTransition(effectiveRate, withOnOff, targetLevel, options);
+        return this.transition(this.currentLevel + stepSize * direction, effectiveRate, withOnOff, options);
     }
 
     override stop({ optionsMask, optionsOverride }: LevelControl.StopRequest) {
@@ -406,29 +403,41 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
      * Default stop logic. This aborts any level transition currently underway and sets the remaining time to 0.
      */
     protected stopLogic(_options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {}): MaybePromise<void> {
-        this.internal.transition?.stop();
+        this.internal.transitions?.stop();
     }
 
     /**
-     * Set level immediately, terminating any ongoing transition.
+     * Change to a designated level.
+     *
+     * @param targetLevel the new level once transition completes; if omitted transition will stop at min or max value
+     * @param changePerS the move rate; 0 or nullish means transition instantly
+     * @param withOnOff if true follows rules for On/Off command variants
+     * @param options additional options supplied by the client
      */
-    setLevel(
-        newLevel: number,
-        withOnOff: boolean,
+    protected transition(
+        targetLevel?: number,
+        changePerS?: number | null,
+        withOnOff = false,
         options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {},
     ) {
-        this.stopLogic();
-        this.state.currentLevel = newLevel;
-        this.couple(withOnOff, options);
+        this.couple(withOnOff, options, targetLevel);
+
+        this.internal.transitions?.start({
+            name: "currentLevel",
+            owner: this,
+            changePerS,
+            targetValue: targetLevel,
+
+            onStep() {
+                this.couple(withOnOff, options, targetLevel);
+            },
+        });
     }
 
     /**
-     * Instrument the current transaction to couple state values of other clusters with the level.
+     * Configure the current transaction to synchronize state with other clusters.
      *
      * This handles of on/off state in the On/Off cluster and color temperature in the Color Control cluster.
-     *
-     * The default impelmentation installs transaction participants to perform synchronization before the transaction
-     * commits.
      */
     protected couple(
         withOnOff: boolean,
@@ -483,6 +492,23 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
         }
     }
 
+    /**
+     * Implement mandatory interaction with the OnOff cluster on the same endpoint when "OnOff" feature is enabled
+     *
+     * By default we set the current level to the onLevel value when the device is turned on.
+     *
+     * Other fading up/down logic required by the {@link MatterSpecification.v12.Cluster} §1.6.4.1.1 needs to be
+     * implemented in a specialized implementation if needed.
+     *
+     * @param onOff The new onOff state
+     */
+    protected handleOnOffChange(onOff: boolean) {
+        if (!onOff || this.state.onLevel === null) {
+            return;
+        }
+        this.state.currentLevel = this.state.onLevel;
+    }
+
     #calculateEffectiveOptions(
         optionsMask: TypeFromPartialBitSchema<typeof LevelControl.Options>,
         optionsOverride: TypeFromPartialBitSchema<typeof LevelControl.Options>,
@@ -522,53 +548,6 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
         }
     }
 
-    /**
-     * Implement mandatory interaction with the OnOff cluster on the same endpoint when "OnOff" feature is enabled
-     *
-     * By default we set the current level to the onLevel value when the device is turned on.
-     *
-     * Other fading up/down logic required by the {@link MatterSpecification.v12.Cluster} §1.6.4.1.1 needs to be
-     * implemented in a specialized implementation if needed.
-     *
-     * @param onOff The new onOff state
-     */
-    protected handleOnOffChange(onOff: boolean) {
-        if (!onOff || this.state.onLevel === null) {
-            return;
-        }
-        this.state.currentLevel = this.state.onLevel;
-    }
-
-    #initiateTransition(
-        changePerS: number | null | undefined,
-        withOnOff: boolean,
-        targetLevel?: number,
-        options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {},
-    ) {
-        this.couple(withOnOff, options, targetLevel);
-
-        const { endpoint } = this;
-
-        this.internal.transition?.start({
-            name: "currentLevel",
-            owner: this,
-            changePerS,
-            targetValue: targetLevel,
-
-            onStep() {
-                this.couple(withOnOff, options, targetLevel);
-            },
-
-            get min() {
-                return endpoint.stateOf(LevelControlServerLogic).minLevel;
-            },
-
-            get max() {
-                return endpoint.stateOf(LevelControlServerLogic).maxLevel;
-            },
-        });
-    }
-
     #getBootReason() {
         const rootEndpoint = this.endpoint.ownerOfType(RootEndpoint);
         if (rootEndpoint !== undefined && rootEndpoint.behaviors.has(GeneralDiagnosticsBehavior)) {
@@ -577,9 +556,9 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
     }
 
     override async [Symbol.asyncDispose]() {
-        if (this.internal.transition) {
-            await this.internal.transition.close();
-            this.internal.transition = undefined;
+        if (this.internal.transitions) {
+            await this.internal.transitions.close();
+            this.internal.transitions = undefined;
         }
         await super[Symbol.asyncDispose]?.();
     }
@@ -590,7 +569,7 @@ export namespace LevelControlServerLogic {
         /**
          * Transition management.
          */
-        transition?: Transitions<typeof LevelControlServerLogic>;
+        transitions?: Transitions<LevelControlServerLogic>;
     }
 
     export class State extends LevelControlLogicBase.State {
@@ -617,14 +596,14 @@ export namespace LevelControlServerLogic {
         [Val.properties](endpoint: Endpoint) {
             return {
                 set remainingTime(value: number) {
-                    const transition = endpoint.behaviors.internalsOf(LevelControlServerLogic).transition;
+                    const transition = endpoint.behaviors.internalsOf(LevelControlServerLogic).transitions;
                     if (transition) {
                         transition.remainingTime = value;
                     }
                 },
 
                 get remainingTime() {
-                    return endpoint.behaviors.internalsOf(LevelControlServerLogic).transition?.remainingTime ?? 0;
+                    return endpoint.behaviors.internalsOf(LevelControlServerLogic).transitions?.remainingTime ?? 0;
                 },
             };
         }

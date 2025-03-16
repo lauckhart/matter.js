@@ -6,9 +6,10 @@
 
 import { Agent } from "#endpoint/Agent.js";
 import { Endpoint } from "#endpoint/Endpoint.js";
-import { Diagnostic, Logger, MaybePromise, Time, Timer } from "#general";
+import { Diagnostic, Logger, MaybePromise, ObserverGroup, Time, Timer } from "#general";
 import { Behavior } from "./Behavior.js";
 import { ClusterEvents } from "./cluster/ClusterEvents.js";
+import { BehaviorBacking } from "./internal/BehaviorBacking.js";
 
 const logger = Logger.get("Transition");
 
@@ -20,36 +21,57 @@ const logger = Logger.get("Transition");
  *
  * Implementation notes:
  *
- * - Transitions occur in small time increments, currently 100 ms. by default
+ * - You may extended this class to replace default timer-driven transition management
+ * - Managed transitions occur in small time increments, currently 100 ms. by default
  * - To improve consistency, values such as end time, min/max, etc. update every iteration based on current state
  * - Internal time keeping uses ms but published values are scaled based on configuration
  * - Internal values are floats but rounded to integers when published
  * - Supports correct semantics for LVL & CC "remaining time", will need additional options for PCC "remaining duration"
  */
-export class Transitions<T extends Behavior.Type> {
+export class Transitions<B extends Behavior> {
     #endpoint: Endpoint;
-    #type: Behavior.Type;
     #timer?: Timer;
-    #config: Transitions.Configuration;
-    #transitioning = {} as Record<Transitions.AttrOf<T>, AttrState<T>>;
+    #config: Transitions.Configuration<B>;
     #outstandingTick?: MaybePromise<void>;
     #outstandingRemainingTimeUpdate?: MaybePromise<void>;
     #staticRemainingTime = 0;
+    #propertyStates = {} as Record<string, Transitions.PropertyState<B>>;
+    #observers?: ObserverGroup;
+    #instrumentedProperties?: Set<string>;
 
-    constructor(endpoint: Endpoint, type: T, config: Transitions.Configuration) {
+    constructor(endpoint: Endpoint, config: Transitions.Configuration<B>) {
         this.#config = config;
         this.#endpoint = endpoint;
-        this.#type = type;
+    }
+
+    /**
+     * Iterate over all active transitions.
+     */
+    [Symbol.iterator]() {
+        return Object.values(this.#propertyStates)[Symbol.iterator]();
+    }
+
+    /**
+     * Get iteration state for a specific property.
+     */
+    stateOf(name: Transitions.PropertyOf<B>): Transitions.PropertyState<B> | undefined {
+        return this.#propertyStates[name];
     }
 
     /**
      * Initiate transition of an attribute.
      */
-    start(transition: Transitions.Transition<T>) {
+    start(transition: Transitions.Transition<B>) {
         const { name, owner, changePerS } = transition;
         let { targetValue } = transition;
 
         this.stop(name);
+
+        const currentValue = (owner.state as Record<string, number>)[name];
+
+        if (currentValue === targetValue) {
+            return;
+        }
 
         // Handle immediate transition
         if (!this.#config.manageTransitions || !changePerS) {
@@ -57,26 +79,32 @@ export class Transitions<T extends Behavior.Type> {
                 return;
             }
 
-            if (transition.min !== undefined && targetValue < transition.min) {
-                targetValue = transition.min;
-            } else if (transition.max !== undefined && targetValue > transition.max) {
-                targetValue = transition.max;
+            const { min, max } = this.#config.properties[name] ?? {};
+            if (min !== undefined && targetValue < min) {
+                targetValue = min;
+            } else if (max !== undefined && targetValue > max) {
+                targetValue = max;
             }
 
-            (owner.state as Record<Transitions.AttrOf<T>, number>)[name] = targetValue;
+            logger.info(this.#logPrefix, "Set", Diagnostic.strong(name), "to", Diagnostic.strong(targetValue));
+
+            this.transitionImmediately(owner, name, targetValue);
             return;
         }
 
         const remainingTimeBeforeStart = this.remainingTime;
 
-        const currentValue = (owner.state as Record<Transitions.AttrOf<T>, number>)[name];
+        this.#instrumentProperty(name);
 
-        this.#transitioning[name] = {
-            ...transition,
+        const attr: Transitions.PropertyState<B> = {
+            name,
+            configuration: transition,
             currentValue,
             changePerMs: changePerS / 1000,
-            prevStepAt: Time.nowMs(),
+            prevStepAt: Time.nowMs() - (this.#config.stepIntervalMs ?? Transitions.DEFAULT_STEP_INTERVAL_MS),
         };
+
+        this.#propertyStates[name] = attr;
 
         logger.info(
             this.#logPrefix,
@@ -89,14 +117,7 @@ export class Transitions<T extends Behavior.Type> {
             }),
         );
 
-        if (this.#timer === undefined) {
-            this.#timer = Time.getPeriodicTimer(
-                `transition-${this.#endpoint}-${this.#type.name}`,
-                this.#config.stepIntervalMs ?? Transitions.DEFAULT_STEP_INTERVAL_MS,
-                this.#step.bind(this),
-            );
-            this.#timer.start();
-        }
+        this.transitionGradually(attr);
 
         const { remainingTimeEvent } = this.#config;
         if (!remainingTimeEvent) {
@@ -113,19 +134,48 @@ export class Transitions<T extends Behavior.Type> {
     }
 
     /**
+     * Immediately change to a target value.
+     *
+     * The default implementation updates the local state value.
+     */
+    protected transitionImmediately(owner: B, name: Transitions.PropertyOf<B>, targetValue: number) {
+        (owner.state as Record<string, number>)[name] = targetValue;
+    }
+
+    /**
+     * Initiate gradual transition to a target value.
+     *
+     * The default implementation starts a timer to drive transitions over time.
+     */
+    protected transitionGradually(_attr: Transitions.PropertyState<B>) {
+        if (this.#timer === undefined) {
+            this.#timer = Time.getPeriodicTimer(
+                `transition-${this.#endpoint}-${this.#config.type.name}`,
+                this.#config.stepIntervalMs ?? Transitions.DEFAULT_STEP_INTERVAL_MS,
+                this.#step.bind(this),
+            );
+
+            this.#timer.start();
+
+            // Perform first step immediately
+            this.#step();
+        }
+    }
+
+    /**
      * Stop transition of one or all attributes.
      */
-    stop(name?: Transitions.AttrOf<T>) {
+    stop(name?: Transitions.PropertyOf<B>) {
         if (name === undefined) {
-            this.#transitioning = {} as Record<any, any>;
+            this.#propertyStates = {} as Record<any, any>;
         } else {
-            if (!(name in this.#transitioning)) {
+            if (!(name in this.#propertyStates)) {
                 return;
             }
 
-            delete this.#transitioning[name];
+            delete this.#propertyStates[name];
 
-            if (Object.keys(this.#transitioning).length) {
+            if (Object.keys(this.#propertyStates).length) {
                 // Other transitions are ongoing
                 return;
             }
@@ -150,6 +200,25 @@ export class Transitions<T extends Behavior.Type> {
         if (this.#outstandingRemainingTimeUpdate) {
             await this.#outstandingRemainingTimeUpdate;
         }
+        if (this.#observers) {
+            this.#observers.close();
+            this.#observers = undefined;
+        }
+        this.#instrumentedProperties = undefined;
+    }
+
+    /**
+     * Terminate a transition that has completed successfully.
+     */
+    protected finish(name: Transitions.PropertyOf<B>) {
+        const state = this.#propertyStates[name];
+        if (state === undefined) {
+            return;
+        }
+
+        this.stop(name);
+
+        // TODO - move logic here
     }
 
     /**
@@ -179,8 +248,8 @@ export class Transitions<T extends Behavior.Type> {
 
         let remainingTime = 0;
 
-        for (const name in this.#transitioning) {
-            const attrState = this.#transitioning[name];
+        for (const name in this.#propertyStates) {
+            const attrState = this.#propertyStates[name];
             const { targetValue } = this.#determineTargetValue(attrState);
             if (targetValue === undefined) {
                 continue;
@@ -220,15 +289,15 @@ export class Transitions<T extends Behavior.Type> {
             }));
     }
 
-    #stepError(name: Transitions.AttrOf<T>, message: string) {
+    #stepError(name: string, message: string) {
         logger.warn(this.#logPrefix, "Not transitioning", Diagnostic.strong(name), "because", message);
-        this.stop(name);
+        this.stop(name as Transitions.PropertyOf<B>);
     }
 
     async #stepWithAgent(agent: Agent) {
         const now = Time.nowMs();
 
-        const behavior = agent.get(this.#type) as InstanceType<T>;
+        const behavior = agent.get(this.#config.type) as B;
         const state = behavior.state as Record<string, number>;
 
         // Obtain exclusive lock
@@ -238,8 +307,8 @@ export class Transitions<T extends Behavior.Type> {
         let finished: undefined | Set<{ name: string; onFinish?: () => MaybePromise<void> }>;
 
         // Compute updated values for all transitioning attributes
-        for (const name in this.#transitioning) {
-            const attrState = this.#transitioning[name];
+        for (const name in this.#propertyStates) {
+            const attrState = this.#propertyStates[name];
 
             const { currentValue } = attrState;
             if (typeof currentValue !== "number") {
@@ -279,7 +348,7 @@ export class Transitions<T extends Behavior.Type> {
             state[name] = Math.round(nextValue);
 
             // Invoke step callback, if any
-            const callbackPromise = attrState.onStep?.call(behavior, nextValue);
+            const callbackPromise = attrState.configuration.onStep?.call(behavior, nextValue);
             if (callbackPromise !== undefined) {
                 await callbackPromise;
             }
@@ -288,12 +357,12 @@ export class Transitions<T extends Behavior.Type> {
             if (nextValue === targetValue) {
                 logger.debug(this.#logPrefix, "Transition of", Diagnostic.strong(name), "finished");
 
-                this.stop(name);
+                this.stop(name as Transitions.PropertyOf<B>);
 
                 if (finished === undefined) {
                     finished = new Set();
                 }
-                finished?.add({ name, onFinish: attrState.onFinish });
+                finished?.add({ name, onFinish: attrState.configuration.onFinish });
 
                 continue;
             }
@@ -322,7 +391,7 @@ export class Transitions<T extends Behavior.Type> {
             }
         }
 
-        if (Object.keys(this.#transitioning).length) {
+        if (Object.keys(this.#propertyStates).length) {
             return;
         }
 
@@ -336,20 +405,20 @@ export class Transitions<T extends Behavior.Type> {
         }
     }
 
-    #determineTargetValue(state: AttrState<T>) {
-        let { targetValue } = state;
+    #determineTargetValue(state: Transitions.PropertyState<B>) {
+        let { name, targetValue } = state.configuration;
         let targetDescription = "target value";
 
         // Determine the actual target value and clamp nextValue to valid range
         if (state.changePerMs < 0) {
-            const minValue = state.min;
+            const minValue = this.#config.properties[name]?.min;
 
             if (targetValue === undefined || (minValue !== undefined && targetValue < minValue)) {
                 targetDescription = "min value";
                 targetValue = minValue;
             }
         } else if (state.changePerMs > 0) {
-            const maxValue = state.max;
+            const maxValue = this.#config.properties[name]?.max;
 
             if (targetValue === undefined || (maxValue !== undefined && targetValue > maxValue)) {
                 targetDescription = "min value";
@@ -377,7 +446,7 @@ export class Transitions<T extends Behavior.Type> {
     }
 
     get #logPrefix() {
-        return Diagnostic.squash(Diagnostic.strong(`${this.#endpoint}#${this.#type.name}`), `:`);
+        return Diagnostic.squash(Diagnostic.strong(`${this.#endpoint}#${this.#config.type.name}`), `:`);
     }
 
     #externalTimeOf(ms: number) {
@@ -387,15 +456,51 @@ export class Transitions<T extends Behavior.Type> {
     #internalTimeOf(externalUnits: number) {
         return externalUnits * (this.#config.externalTimeUnitMs ?? Transitions.DEFAULT_EXTERNAL_TIME_UNIT_MS);
     }
-}
 
-/**
- * Internal state related to actively transitioning attributes.
- */
-interface AttrState<T extends Behavior.Type> extends Transitions.Transition<T> {
-    currentValue: number;
-    changePerMs: number;
-    prevStepAt: number;
+    /**
+     * We add event handlers for any property we transition.  If the property reaches the target value we end the
+     * transition.
+     *
+     * This allows us to detect "end of transition" independent of the means of transition.
+     */
+    #instrumentProperty(name: Transitions.PropertyOf<B>) {
+        if (this.#instrumentedProperties === undefined) {
+            this.#instrumentedProperties = new Set();
+        }
+
+        if (this.#instrumentedProperties.has(name)) {
+            return;
+        }
+
+        this.#instrumentedProperties.add(name);
+
+        const event = (
+            this.#endpoint.eventsOf(this.#config.type) as unknown as Record<
+                string,
+                ClusterEvents.ChangedObservable<any> | undefined
+            >
+        )[`${name}$Changed`];
+        if (!event) {
+            return;
+        }
+
+        if (!this.#observers) {
+            this.#observers = new ObserverGroup();
+        }
+
+        this.#observers.on(event, newValue => {
+            const state = this.#propertyStates[name];
+            if (state === undefined) {
+                return;
+            }
+
+            const targetValue = this.#determineTargetValue(state);
+
+            if (newValue === targetValue) {
+                this.finish(name);
+            }
+        });
+    }
 }
 
 export namespace Transitions {
@@ -415,7 +520,12 @@ export namespace Transitions {
      * The {@link Transitions} accesses this configuration on-demand so values that change after initial construction
      * will affect ongoing behavior.
      */
-    export interface Configuration {
+    export interface Configuration<B extends Behavior> {
+        /**
+         * The behavior type this configuration applies to.
+         */
+        readonly type: Behavior.Type & { new (agent: Agent, backing: BehaviorBacking): B };
+
         /**
          * If this is false we do not manage transitions and "remaining time" behaves like a normal static value.
          *
@@ -458,21 +568,46 @@ export namespace Transitions {
          * Invoked after transition completes.
          */
         readonly onFinish?: () => MaybePromise<void>;
+
+        /**
+         * The state properties that support transition.
+         */
+        readonly properties: Partial<Record<PropertyOf<B>, PropertyConfiguration>>;
     }
+
+    /**
+     * Configures a state property to support transitions.  This is typically an attribute but we support transition of
+     * any numeric property.
+     */
+    export interface PropertyConfiguration {
+        /**
+         * A lower bound on the transition value.
+         */
+        readonly min?: number | undefined;
+
+        /**
+         * An upper bound on the transition value.
+         */
+        readonly max?: number | undefined;
+    }
+
+    export type PropertyOf<B extends Behavior> = keyof {
+        [N in string & keyof B["state"]]: B[N] extends number | null | undefined ? true : never;
+    };
 
     /**
      * Configuration for transition of a specific attribute.
      */
-    export interface Transition<T extends Behavior.Type> {
+    export interface Transition<B extends Behavior> {
         /**
          * The attribute to transition.
          */
-        readonly name: Transitions.AttrOf<T>;
+        readonly name: PropertyOf<B>;
 
         /**
          * The behavior instance requesting transition.
          */
-        readonly owner: InstanceType<T>;
+        readonly owner: B;
 
         /**
          * The amount to change the attribute per second.
@@ -486,23 +621,46 @@ export namespace Transitions {
         readonly targetValue?: number;
 
         /**
-         * A lower bound on the transition value.
-         */
-        readonly min?: number | undefined;
-
-        /**
-         * An upper bound on the transition value.
-         */
-        readonly max?: number | undefined;
-
-        /**
          * Invoked every time the transitioning value changes before committing the mutating transaction.
          */
-        onStep?: (this: InstanceType<T>, value: number) => MaybePromise<void>;
+        onStep?: (this: B, value: number) => MaybePromise<void>;
 
         /**
          * Invoked every when the transition completes successfully.
          */
-        onFinish?: (this: InstanceType<T>) => MaybePromise<void>;
+        onFinish?: (this: B) => MaybePromise<void>;
+    }
+
+    /**
+     * Internal state related to actively transitioning attributes.
+     */
+    export interface PropertyState<B extends Behavior> {
+        /**
+         * The property name.
+         */
+        name: string;
+
+        /**
+         * Configuration for any active transition.
+         */
+        configuration: Transition<B>;
+
+        /**
+         * The current value for the transition.
+         *
+         * We track separately from canonical value because we transition using floats but values are typically integers
+         * and this allows us to avoid rounding errors.
+         */
+        currentValue: number;
+
+        /**
+         * The change in value per millisecond.
+         */
+        changePerMs: number;
+
+        /**
+         * The time of the last step.
+         */
+        prevStepAt: number;
     }
 }
