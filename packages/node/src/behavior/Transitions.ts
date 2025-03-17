@@ -9,6 +9,7 @@ import { Endpoint } from "#endpoint/Endpoint.js";
 import { Diagnostic, Logger, MaybePromise, ObserverGroup, Time, Timer } from "#general";
 import { Behavior } from "./Behavior.js";
 import { ClusterEvents } from "./cluster/ClusterEvents.js";
+import { OfflineContext } from "./context/index.js";
 import { BehaviorBacking } from "./internal/BehaviorBacking.js";
 
 const logger = Logger.get("Transition");
@@ -19,14 +20,29 @@ const logger = Logger.get("Transition");
  * This utility supports updates of one or more attributes of a single behavior when the change occurs gradually over
  * time.
  *
- * Implementation notes:
+ * The nuances of integrating Matter transition semantics with a device can be complicated.  Matter specifies the
+ * frequency of updates for levels and "remaining time" attributes.  These semantics may not map well to your device.
  *
- * - You may extended this class to replace default timer-driven transition management
- * - Managed transitions occur in small time increments, currently 100 ms. by default
- * - To improve consistency, values such as end time, min/max, etc. update every iteration based on current state
- * - Internal time keeping uses ms but published values are scaled based on configuration
- * - Internal values are floats but rounded to integers when published
- * - Supports correct semantics for LVL & CC "remaining time", will need additional options for PCC "remaining duration"
+ * This class attempts to offer implementors significant flexibility.  To that end, we offer several integration
+ * approaches:
+ *
+ * 1. If you instantiate with {@link Transitions.Configuration.manageTransitions} as false, no transition occurs and
+ *    device state updates instantly.
+ *
+ * 2. If you enable transition management but provide no other options, matter.js will perform transitions for you,
+ *    updating values using a timer.
+ *
+ * 3. If you implement transitions in hardware or a bridged device, you can still use matter.js to track ongoing
+ *    transitions and report remaining time.  To do this, extend this class and implement {@link transitionImmediately}
+ *    and {@link transitionGradually}.  matter.js will report changes as you update local state and report transition
+ *    completion when all attributes reach their target value or when you invoke {@link finish}.
+ *
+ * 4. You can also allow matter.js to operate a transition timer but apply value updates directly to hardware by
+ *    overriding {@link applyUpdates} or {@link step}.  This is useful if your device does not support transitions
+ *    natively but you want to ensure that matter.js does not report values that do not reflect hardware state.
+ *
+ * Whichever approach you take, matter.js attempts to implement the Matter protocol as accurately as possible with the
+ * information available.
  */
 export class Transitions<B extends Behavior> {
     #endpoint: Endpoint;
@@ -189,6 +205,48 @@ export class Transitions<B extends Behavior> {
     }
 
     /**
+     * Stop a transition of one or more attributes that has completed successfully.
+     */
+    finish(name?: Transitions.PropertyOf<B>): void {
+        const finishOne = (state: Transitions.PropertyState<B>) => {
+            logger.debug(this.#logPrefix, "Transition of", Diagnostic.strong(state.name), "finished");
+
+            this.stop(state.name);
+
+            const event = (
+                this.#endpoint.eventsOf(this.#config.type) as unknown as Record<
+                    string,
+                    ClusterEvents.ChangedObservable<any>
+                >
+            )[`${name}$Changed`];
+
+            // Per specification, quieter events always emit at end of transition.  This will need an option in the
+            // property configuration if this is ever not the case
+            if (event?.isQuieter) {
+                event.quiet.emitNow();
+            }
+        };
+
+        if (typeof name === "string") {
+            const state = this.#propertyStates[name];
+            if (state === undefined) {
+                return;
+            }
+
+            finishOne(state);
+        } else {
+            for (const state of this) {
+                finishOne(state);
+            }
+        }
+
+        // When all transitions are finished, emit remaining time of zero per specification
+        if (!Object.keys(this.#propertyStates).length) {
+            this.#config.remainingTimeEvent?.emit(0, -1, OfflineContext.ReadOnly);
+        }
+    }
+
+    /**
      * Free resources.
      */
     async close() {
@@ -205,20 +263,6 @@ export class Transitions<B extends Behavior> {
             this.#observers = undefined;
         }
         this.#instrumentedProperties = undefined;
-    }
-
-    /**
-     * Terminate a transition that has completed successfully.
-     */
-    protected finish(name: Transitions.PropertyOf<B>) {
-        const state = this.#propertyStates[name];
-        if (state === undefined) {
-            return;
-        }
-
-        this.stop(name);
-
-        // TODO - move logic here
     }
 
     /**
@@ -264,16 +308,93 @@ export class Transitions<B extends Behavior> {
         return this.#externalTimeOf(remainingTime);
     }
 
+    /**
+     * Update transitioning attributes for a behavior.
+     *
+     * You may override this method if you want matter.js to run a timer but you want to handle value updates yourself.
+     */
+    protected async step(behavior: B) {
+        const now = Time.nowMs();
+
+        // Compute updated values for all transitioning attributes
+        for (const prop of this) {
+            const { currentValue } = prop;
+            if (typeof currentValue !== "number") {
+                this.#stepError(prop.name, "value is not numeric");
+                continue;
+            }
+
+            // Determine the unclamped next value
+            const msSinceLastStep = now - prop.prevStepAt;
+            let nextValue = currentValue + prop.changePerMs * msSinceLastStep;
+
+            const { targetValue, targetDescription } = this.#determineTargetValue(prop);
+
+            // Clamp nextValue to valid range
+            if (prop.changePerMs < 0) {
+                if (targetValue !== undefined && Math.round(nextValue) < targetValue) {
+                    nextValue = targetValue;
+                }
+            } else if (prop.changePerMs > 0) {
+                if (targetValue !== undefined && Math.round(nextValue) > targetValue) {
+                    nextValue = targetValue;
+                }
+            } else {
+                // This shouldn't happen
+                this.#stepError(prop.name, "rate is zero");
+                continue;
+            }
+
+            // If there is no target value and no min/max value it is a configuration error and we do not step as this
+            // would be inifinite
+            if (targetValue === undefined) {
+                this.#stepError(prop.name, `there is no target value or ${targetDescription}`);
+                continue;
+            }
+
+            prop.currentValue = nextValue;
+
+            // Invoke step callback, if any
+            const callbackPromise = prop.configuration.onStep?.call(behavior, nextValue);
+            if (callbackPromise !== undefined) {
+                await callbackPromise;
+            }
+
+            prop.prevStepAt = now;
+        }
+
+        const applyPromise = this.applyUpdates(behavior);
+        if (applyPromise) {
+            await applyPromise;
+        }
+    }
+
+    protected applyUpdates(behavior: B): MaybePromise<void> {
+        const state = behavior.state as Record<string, number>;
+
+        for (const prop of this) {
+            state[prop.name] = Math.round(prop.currentValue);
+        }
+    }
+
     #step() {
         // Skip steps when callbacks overrun the tick interval
         if (this.#outstandingTick) {
             return;
         }
 
-        // Apply updates and/or handle end of transition
-        const promise = (this.#outstandingTick = Promise.resolve(
-            this.#endpoint.act("transition", agent => this.#stepWithAgent(agent)),
-        )
+        const executeStep = async (agent: Agent) => {
+            const behavior = agent.get(this.#config.type);
+
+            // Obtain exclusive lock
+            agent.context.transaction.addResourcesSync(behavior);
+            await agent.context.transaction.begin();
+
+            await this.step(behavior);
+        };
+
+        // Create a behavior to perform actual stepping
+        const promise = (this.#outstandingTick = Promise.resolve(this.#endpoint.act("transition", executeStep))
             .catch(error => {
                 logger.error(
                     this.#logPrefix,
@@ -294,119 +415,9 @@ export class Transitions<B extends Behavior> {
         this.stop(name as Transitions.PropertyOf<B>);
     }
 
-    async #stepWithAgent(agent: Agent) {
-        const now = Time.nowMs();
-
-        const behavior = agent.get(this.#config.type) as B;
-        const state = behavior.state as Record<string, number>;
-
-        // Obtain exclusive lock
-        agent.context.transaction.addResourcesSync(behavior);
-        await agent.context.transaction.begin();
-
-        let finished: undefined | Set<{ name: string; onFinish?: () => MaybePromise<void> }>;
-
-        // Compute updated values for all transitioning attributes
-        for (const name in this.#propertyStates) {
-            const attrState = this.#propertyStates[name];
-
-            const { currentValue } = attrState;
-            if (typeof currentValue !== "number") {
-                this.#stepError(name, "value is not numeric");
-                continue;
-            }
-
-            // Determine the unclamped next value
-            const msSinceLastStep = now - attrState.prevStepAt;
-            let nextValue = currentValue + attrState.changePerMs * msSinceLastStep;
-
-            const { targetValue, targetDescription } = this.#determineTargetValue(attrState);
-
-            // Clamp nextValue to valid range
-            if (attrState.changePerMs < 0) {
-                if (targetValue !== undefined && Math.round(nextValue) < targetValue) {
-                    nextValue = targetValue;
-                }
-            } else if (attrState.changePerMs > 0) {
-                if (targetValue !== undefined && Math.round(nextValue) > targetValue) {
-                    nextValue = targetValue;
-                }
-            } else {
-                // This shouldn't happen
-                this.#stepError(name, "rate is zero");
-                continue;
-            }
-
-            // If there is no target value and no min/max value it is a configuration error and we do not step as this
-            // would be inifinite
-            if (targetValue === undefined) {
-                this.#stepError(name, `there is no target value or ${targetDescription}`);
-                continue;
-            }
-
-            attrState.currentValue = nextValue;
-            state[name] = Math.round(nextValue);
-
-            // Invoke step callback, if any
-            const callbackPromise = attrState.configuration.onStep?.call(behavior, nextValue);
-            if (callbackPromise !== undefined) {
-                await callbackPromise;
-            }
-
-            // Handle transition completion
-            if (nextValue === targetValue) {
-                logger.debug(this.#logPrefix, "Transition of", Diagnostic.strong(name), "finished");
-
-                this.stop(name as Transitions.PropertyOf<B>);
-
-                if (finished === undefined) {
-                    finished = new Set();
-                }
-                finished?.add({ name, onFinish: attrState.configuration.onFinish });
-
-                continue;
-            }
-
-            attrState.prevStepAt = now;
-        }
-
-        await agent.context.transaction.commit();
-
-        // Invoke per-attribute finish callbacks and, per the specification, force emit any Q attributes that have
-        // finished transition
-        if (finished) {
-            for (const attr of finished) {
-                const event = (behavior.events as unknown as Record<string, ClusterEvents.ChangedObservable<any>>)[
-                    `${attr.name}$Changed`
-                ];
-
-                if (event?.isQuieter) {
-                    event.quiet.emitNow();
-                }
-
-                const promise = this.#invokeFinishCallback(attr.onFinish?.bind(behavior));
-                if (promise !== undefined) {
-                    await promise;
-                }
-            }
-        }
-
-        if (Object.keys(this.#propertyStates).length) {
-            return;
-        }
-
-        // Transition is finished.  Emit remaining time of zero per specification
-        this.#config.remainingTimeEvent?.emit(0, -1, agent.context);
-
-        // Invoke any configured global finish callback
-        const callbackPromise = this.#invokeFinishCallback(this.#config.onFinish);
-        if (callbackPromise) {
-            await callbackPromise;
-        }
-    }
-
     #determineTargetValue(state: Transitions.PropertyState<B>) {
-        let { name, targetValue } = state.configuration;
+        const { name } = state.configuration;
+        let { targetValue } = state.configuration;
         let targetDescription = "target value";
 
         // Determine the actual target value and clamp nextValue to valid range
@@ -430,19 +441,6 @@ export class Transitions<B extends Behavior> {
             targetDescription,
             targetValue,
         };
-    }
-
-    #invokeFinishCallback(onFinish?: () => MaybePromise<void>) {
-        if (!onFinish) {
-            return;
-        }
-
-        return MaybePromise.catch(
-            () => onFinish?.apply(this),
-            error => {
-                logger.error(this.#logPrefix, "Unhandled error in onFinish callback:", error);
-            },
-        );
     }
 
     get #logPrefix() {
@@ -494,10 +492,10 @@ export class Transitions<B extends Behavior> {
                 return;
             }
 
-            const targetValue = this.#determineTargetValue(state);
+            const { targetValue } = this.#determineTargetValue(state);
 
             if (newValue === targetValue) {
-                this.finish(name);
+                return this.finish(name);
             }
         });
     }
@@ -565,11 +563,6 @@ export namespace Transitions {
         readonly remainingTimeEvent?: ClusterEvents.ChangedObservable;
 
         /**
-         * Invoked after transition completes.
-         */
-        readonly onFinish?: () => MaybePromise<void>;
-
-        /**
          * The state properties that support transition.
          */
         readonly properties: Partial<Record<PropertyOf<B>, PropertyConfiguration>>;
@@ -624,11 +617,6 @@ export namespace Transitions {
          * Invoked every time the transitioning value changes before committing the mutating transaction.
          */
         onStep?: (this: B, value: number) => MaybePromise<void>;
-
-        /**
-         * Invoked every when the transition completes successfully.
-         */
-        onFinish?: (this: B) => MaybePromise<void>;
     }
 
     /**
@@ -638,7 +626,7 @@ export namespace Transitions {
         /**
          * The property name.
          */
-        name: string;
+        name: PropertyOf<B>;
 
         /**
          * Configuration for any active transition.
@@ -648,8 +636,8 @@ export namespace Transitions {
         /**
          * The current value for the transition.
          *
-         * We track separately from canonical value because we transition using floats but values are typically integers
-         * and this allows us to avoid rounding errors.
+         * We track separately from canonical value because we transition using floats but values are typically
+         * integers.  This allows us to avoid rounding errors.
          */
         currentValue: number;
 

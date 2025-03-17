@@ -27,30 +27,24 @@ const LevelControlLogicBase = LevelControlBehavior.with(LevelControl.Feature.OnO
  *
  * You should use {@link LevelControlServer.with} to specialize the class for the features your implementation supports.
  *
- * This implementation includes all features of {@link LevelControl.Cluster} and implements all mandatory commands.
- *
- * This default handles the OnOff cluster dependency and the ColorControl dependency as defined by the Matter
- * specification.
+ * This implementation includes all features of {@link LevelControl.Cluster} and all mandatory commands. It also handles
+ * the OnOff cluster dependency and the ColorControl dependency as defined by the Matter specification.
  *
  * By default this implementation ignores transition times and sets levels immediately.  You can set
  * {@link LevelControl.State#managedTransitionTimeHandling} to enable higher-level logic in Matter.js to manage level
  * changes.
  *
  * If your hardware supports transitions natively, you may override {@link initializeTransitions} to return a
- * {@link Transitions} implementation adapted to your hardware.
+ * {@link Transitions} implementation adapted to your hardware.  This allows matter.js to handle Matter requirements
+ * such as remaining time and level reporting.
  *
- * Alternatively, you may override methods in this class
- *
- * If you develop for a specific hardware you should extend the {@link LevelControlServer} class and implement the
- * following methods to natively use device features to correctly support the transition times. For this the default
- * implementation uses special protected methods which are used by the real commands and are only responsible for the
- * actual value change logic. The benefit of this structure is that basic data validations and options checks are
- * already done, and you can focus on the actual hardware interaction:
+ * Alternatively, you may override the following methods in this class to implement lower-level logic yourself.
+ * Implementing a cluster in this way will disable much of the logic matter.js implements for you in the default
+ * implementations.
  *
  * * {@link LevelControlServerLogic.moveToLevelLogic} moves the value to a defined level with a transition time
  * * {@link LevelControlServerLogic.moveLogic} moves the value up or down with a defined rate
- * * {@link LevelControlServerLogic.stepLogic} steps the value up or down with a defined step size and
- *   transition
+ * * {@link LevelControlServerLogic.stepLogic} steps the value up or down with a defined step size and transition
  * * {@link LevelControlServerLogic.stopLogic} stops any currently running transitions
  * * {@link LevelControlServerLogic.handleOnOffChange} transition to onLevel when device when device turns on or off
  *
@@ -376,7 +370,7 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
         withOnOff: boolean,
         options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {},
     ) {
-        let direction = stepMode === LevelControl.StepMode.Up ? 1 : -1;
+        const direction = stepMode === LevelControl.StepMode.Up ? 1 : -1;
 
         let effectiveRate;
         if (transitionTime !== null) {
@@ -439,7 +433,7 @@ export class LevelControlServerLogic extends LevelControlLogicBase {
      *
      * This handles of on/off state in the On/Off cluster and color temperature in the Color Control cluster.
      */
-    protected couple(
+    couple(
         withOnOff: boolean,
         options: TypeFromPartialBitSchema<typeof LevelControl.Options> = {},
         targetLevel?: number,

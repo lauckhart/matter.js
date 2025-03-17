@@ -19,23 +19,23 @@ describe("LevelControlServer", () => {
 
         expect(events).deep.equals([
             { kind: "time", ms: 0, value: 150 },
-            { kind: "level", ms: 300, value: 2 },
-            { kind: "level", ms: 1000, value: 14 },
-            { kind: "level", ms: 1000, value: 24 },
-            { kind: "level", ms: 1000, value: 46 },
-            { kind: "level", ms: 1000, value: 68 },
-            { kind: "level", ms: 1000, value: 78 },
-            { kind: "level", ms: 1000, value: 102 },
-            { kind: "level", ms: 1000, value: 112 },
-            { kind: "level", ms: 1000, value: 135 },
-            { kind: "level", ms: 1000, value: 146 },
-            { kind: "level", ms: 1000, value: 169 },
-            { kind: "level", ms: 1000, value: 179 },
-            { kind: "level", ms: 1000, value: 203 },
-            { kind: "level", ms: 1000, value: 213 },
-            { kind: "level", ms: 1000, value: 237 },
-            { kind: "level", ms: 1000, value: 247 },
-            { kind: "level", ms: 500, value: 254 },
+            { kind: "level", ms: 100, value: 2 },
+            { kind: "level", ms: 1000, value: 10 },
+            { kind: "level", ms: 1000, value: 32 },
+            { kind: "level", ms: 1000, value: 42 },
+            { kind: "level", ms: 1000, value: 66 },
+            { kind: "level", ms: 1000, value: 76 },
+            { kind: "level", ms: 1000, value: 100 },
+            { kind: "level", ms: 1000, value: 110 },
+            { kind: "level", ms: 1000, value: 134 },
+            { kind: "level", ms: 1000, value: 144 },
+            { kind: "level", ms: 1000, value: 168 },
+            { kind: "level", ms: 1000, value: 178 },
+            { kind: "level", ms: 1000, value: 202 },
+            { kind: "level", ms: 1000, value: 212 },
+            { kind: "level", ms: 1000, value: 235 },
+            { kind: "level", ms: 1000, value: 246 },
+            { kind: "level", ms: 200, value: 254 },
             { kind: "time", ms: 0, value: 0 },
         ]);
 
@@ -80,13 +80,12 @@ describe("LevelControlServer", () => {
             { kind: "time", value: 40, ms: 0 },
 
             // Transitioning
-            { kind: "level", value: 99, ms: 1000 },
-            { kind: "level", value: 68, ms: 1000 },
-            { kind: "level", value: 36, ms: 1000 },
-            { kind: "level", value: 4, ms: 1000 },
+            { kind: "level", value: 96, ms: 1000 },
+            { kind: "level", value: 65, ms: 1000 },
+            { kind: "level", value: 33, ms: 1000 },
 
             // Transition complete
-            { kind: "level", value: 1, ms: 100 },
+            { kind: "level", value: 1, ms: 930 },
             { kind: "time", value: 0, ms: 0 },
         ]);
     });

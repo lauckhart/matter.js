@@ -70,6 +70,10 @@ class EventProxy extends ObservableProxy {
 function EventEmitterProxy(instance: EventEmitter) {
     const descriptors = {} as PropertyDescriptorMap;
 
+    descriptors[Symbol.dispose] = {
+        value: () => instance[Symbol.dispose](),
+    };
+
     for (const key in instance) {
         const property = Symbol(key);
 

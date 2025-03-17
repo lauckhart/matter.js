@@ -443,7 +443,20 @@ export class EventEmitter {
     }
 
     get eventNames() {
-        return Object.keys(this).filter(k => typeof (this as any)[k]?.on === "function");
+        const names = new Set<string>();
+
+        // We walk the prototype chain to detect event getters defined via prototype
+        let object = this;
+        do {
+            for (const key in object) {
+                if ((typeof this[key] as any)?.on === "function") {
+                    names.add(key);
+                }
+            }
+            object = Object.getPrototypeOf(object);
+        } while (object && object !== Object.prototype);
+
+        return names;
     }
 
     [Symbol.dispose]() {
