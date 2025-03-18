@@ -422,6 +422,8 @@ function event<E, N extends string>(emitter: E, name: N) {
  * To maintain type safety, implementers define events as observable child properties.
  */
 export class EventEmitter {
+    #events?: Record<string, Observable | undefined>;
+
     emit<This, N extends EventEmitter.NamesOf<This>>(this: This, name: N, ...payload: EventEmitter.PayloadOf<This, N>) {
         event(this, name).emit(...payload);
     }
@@ -442,27 +444,40 @@ export class EventEmitter {
         event(this, name).off(handler as any);
     }
 
+    addEvent(name: string, event?: Observable) {
+        if (!this.#events) {
+            this.#events = {};
+        }
+
+        this.#events[name] = event;
+    }
+
+    getEvent(name: string) {
+        if (!this.#events || !(name in this.#events)) {
+            throw new ImplementationError(`No such event ${name}`);
+        }
+
+        return this.#events[name] ?? (this.#events[name] = new Observable());
+    }
+
+    hasEvent(name: string, onlyIfInitialized = false) {
+        return this.#events && (onlyIfInitialized ? this.#events[name] : name in this.#events);
+    }
+
     get eventNames() {
-        const names = new Set<string>();
-
-        // We walk the prototype chain to detect event getters defined via prototype
-        let object = this;
-        do {
-            for (const key in object) {
-                if ((typeof this[key] as any)?.on === "function") {
-                    names.add(key);
-                }
-            }
-            object = Object.getPrototypeOf(object);
-        } while (object && object !== Object.prototype);
-
-        return names;
+        return this.#events ? Object.keys(this.#events) : [];
     }
 
     [Symbol.dispose]() {
-        for (const name of this.eventNames) {
-            (this as unknown as Record<string, Observable>)[name][Symbol.dispose]?.();
+        if (!this.#events) {
+            return;
         }
+
+        for (const event of Object.values(this.#events)) {
+            event?.[Symbol.dispose]?.();
+        }
+
+        this.#events = undefined;
     }
 }
 

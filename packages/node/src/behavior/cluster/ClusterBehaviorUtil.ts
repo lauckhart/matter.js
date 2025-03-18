@@ -5,7 +5,7 @@
  */
 
 import { Events, OfflineEvent, OnlineEvent, QuietEvent } from "#behavior/Events.js";
-import { AsyncObservable, camelize, GeneratedClass, ImplementationError, Observable } from "#general";
+import { AsyncObservable, camelize, EventEmitter, GeneratedClass, ImplementationError, Observable } from "#general";
 import {
     ClusterModel,
     DefaultValue,
@@ -238,11 +238,6 @@ function createDerivedState(
 
 const OBSERVABLES = Symbol("observables");
 
-export interface InternalEvents {
-    [OBSERVABLES]: Record<string, AsyncObservable>;
-    [name: string]: AsyncObservable;
-}
-
 /**
  * Extend events with additional implementations.
  */
@@ -256,6 +251,8 @@ function createDerivedEvents(
 
     const baseInstance = new base.Events() as unknown as Record<string, unknown>;
 
+    const eventNames = new Set<string>();
+
     // Add mandatory events that are not present in the base class
     const applicableClusterEvents = new Set();
     for (const event of scope.membersOf(scope.owner as Schema, {
@@ -265,6 +262,7 @@ function createDerivedEvents(
         const name = camelize(event.name);
         applicableClusterEvents.add(name);
         if (!cluster.events[name]?.optional && baseInstance[name] === undefined) {
+            eventNames.add(name);
             instanceDescriptors[name] = createEventDescriptor(
                 name,
                 event,
@@ -278,11 +276,13 @@ function createDerivedEvents(
         const changing = `${attrName}$Changing`;
         const prop = newProps[attrName];
         if (baseInstance[changing] === undefined) {
+            eventNames.add(changing);
             instanceDescriptors[changing] = createEventDescriptor(changing, prop, OfflineEvent);
         }
 
         const changed = `${attrName}$Changed`;
         if (baseInstance[changed] === undefined) {
+            eventNames.add(changed);
             instanceDescriptors[changed] = createEventDescriptor(
                 changed,
                 prop,
@@ -299,10 +299,13 @@ function createDerivedEvents(
 
         instanceDescriptors,
 
-        initialize(this: InternalEvents) {
-            this[OBSERVABLES] = {};
-            this.interactionBegin = new AsyncObservable();
-            this.interactionEnd = new AsyncObservable();
+        initialize(this: EventEmitter) {
+            (this as unknown as Record<string, AsyncObservable>).interactionBegin = new AsyncObservable();
+            (this as unknown as Record<string, AsyncObservable>).interactionEnd = new AsyncObservable();
+
+            for (const name of eventNames) {
+                this.addEvent(name);
+            }
         },
     });
 }
@@ -445,11 +448,15 @@ function createEventDescriptor(
     constructor: new <T extends any[]>(schema: ValueModel, owner: Events) => Observable<T>,
 ) {
     return {
-        get(this: InternalEvents) {
-            return (
-                this[OBSERVABLES][name] ??
-                (this[OBSERVABLES][name] = new constructor(schema, this as unknown as Events))
-            );
+        get(this: EventEmitter) {
+            if (this.hasEvent(name, true)) {
+                return this.getEvent(name);
+            }
+
+            const event = new constructor(schema, this as unknown as Events);
+            this.addEvent(name, event);
+
+            return event;
         },
         enumerable: true,
     };

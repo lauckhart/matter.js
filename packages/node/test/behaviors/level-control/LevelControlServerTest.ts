@@ -118,6 +118,20 @@ describe("LevelControlServer", () => {
 
         await node.close();
     });
+
+    it("stops transition timers when destroyed", async () => {
+        const { node, endpoint } = await initializeDimmableLight();
+
+        await MockTime.yield();
+
+        // Partial steps so transition doesn't complete
+        await changeLevel(endpoint, 50);
+
+        await node.close();
+
+        // Advance time beyond when the timer would trigger.  If nothing blows up, timers were correctly shut down
+        await MockTime.advance(100_000);
+    });
 });
 
 async function setup() {
