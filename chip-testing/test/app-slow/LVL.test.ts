@@ -5,9 +5,8 @@
  */
 
 describe("LVL", () => {
-    chip("LVL/3.1", "LVL/4.1");
-    // chip("LVL/*").exclude(
-    //     // TODO - requires group management features
-    //     "LVL/9.1",
-    // );
+    chip("LVL/*").exclude(
+        // TODO - requires group management features
+        "LVL/9.1",
+    );
 });

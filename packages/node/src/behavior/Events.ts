@@ -200,6 +200,7 @@ export class QuietEvent<T extends any[] = any[], S extends ValueModel = ValueMod
 
     override [Symbol.dispose]() {
         this.#quiet[Symbol.dispose]();
+        super[Symbol.dispose]();
     }
 }
 

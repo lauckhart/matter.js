@@ -422,7 +422,8 @@ function event<E, N extends string>(emitter: E, name: N) {
  * To maintain type safety, implementers define events as observable child properties.
  */
 export class EventEmitter {
-    #events?: Record<string, Observable | undefined>;
+    // True private screws up TS types
+    private events?: Record<string, Observable | undefined>;
 
     emit<This, N extends EventEmitter.NamesOf<This>>(this: This, name: N, ...payload: EventEmitter.PayloadOf<This, N>) {
         event(this, name).emit(...payload);
@@ -445,39 +446,39 @@ export class EventEmitter {
     }
 
     addEvent(name: string, event?: Observable) {
-        if (!this.#events) {
-            this.#events = {};
+        if (!this.events) {
+            this.events = {};
         }
 
-        this.#events[name] = event;
+        this.events[name] = event;
     }
 
     getEvent(name: string) {
-        if (!this.#events || !(name in this.#events)) {
+        if (!this.events || !(name in this.events)) {
             throw new ImplementationError(`No such event ${name}`);
         }
 
-        return this.#events[name] ?? (this.#events[name] = new Observable());
+        return this.events[name] ?? (this.events[name] = new Observable());
     }
 
     hasEvent(name: string, onlyIfInitialized = false) {
-        return this.#events && (onlyIfInitialized ? this.#events[name] : name in this.#events);
+        return this.events && (onlyIfInitialized ? this.events[name] : name in this.events);
     }
 
     get eventNames() {
-        return this.#events ? Object.keys(this.#events) : [];
+        return this.events ? Object.keys(this.events) : [];
     }
 
     [Symbol.dispose]() {
-        if (!this.#events) {
+        if (!this.events) {
             return;
         }
 
-        for (const event of Object.values(this.#events)) {
+        for (const event of Object.values(this.events)) {
             event?.[Symbol.dispose]?.();
         }
 
-        this.#events = undefined;
+        this.events = undefined;
     }
 }
 

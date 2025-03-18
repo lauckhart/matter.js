@@ -120,19 +120,41 @@ describe("LevelControlServer", () => {
     });
 
     it("stops transition timers when destroyed", async () => {
+        (globalThis as any).KILLME = true;
+
+        // No timers should be present initially
+        expectTimers(0);
+
+        // Ensure test is repeatable regardless of previous tests
+        MockTime.reset();
+
         const { node, endpoint } = await initializeDimmableLight();
 
         await MockTime.yield();
 
-        // Partial steps so transition doesn't complete
+        // Partial steps so transition doesn't complete.  The step value here will affect the state of the tests; since
+        // state is deterministic we know that 50 (5 seconds) results in having a deferred emit queued
         await changeLevel(endpoint, 50);
 
-        await node.close();
+        // There should be two timers, one driving the transition and one to handled the delayed emit interval
+        expectTimers(1);
 
-        // Advance time beyond when the timer would trigger.  If nothing blows up, timers were correctly shut down
+        // Close with small step interval because otherwise timer may resolve while awaiting close
+        await node.close(10);
+
+        // Ensure ttimers are cleaned up
+        expectTimers(0);
+
+        // To be on the safe side, advance time beyond when the timer would trigger.  If nothing blows up, timers were
+        // correctly shut down
         await MockTime.advance(100_000);
-    });
+    }).timeout(200000);
 });
+
+function expectTimers(count: number) {
+    expect(MockTime.timerCountFor("transition-node0.part0-LevelControlServerLogic"), "transition timer").equals(count);
+    expect(MockTime.timerCountFor("delayed emit"), "deferred emit timer").equals(count);
+}
 
 async function setup() {
     MockTime.reset();

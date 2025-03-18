@@ -236,8 +236,6 @@ function createDerivedState(
     return StateType;
 }
 
-const OBSERVABLES = Symbol("observables");
-
 /**
  * Extend events with additional implementations.
  */

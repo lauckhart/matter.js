@@ -11,6 +11,12 @@ type TimerCallback = () => any;
 type MockTimeLike = typeof MockTime;
 export interface MockTime extends MockTimeLike {}
 
+const registry = {
+    timers: new Set<MockTimer>(),
+    register(_timer: MockTimer) {},
+    unregister(_timer: MockTimer) {},
+};
+
 // Must match matter.js Timer interface
 class MockTimer {
     name = "Test";
@@ -18,14 +24,18 @@ class MockTimer {
     intervalMs = 0;
     isPeriodic = false;
 
+    #mockTime: MockTime;
+    #durationMs: number;
+
     isRunning = false;
     private readonly callback: TimerCallback;
 
-    constructor(
-        private readonly mockTime: MockTime,
-        private readonly durationMs: number,
-        callback: TimerCallback,
-    ) {
+    constructor(mockTime: MockTime, name: string, durationMs: number, callback: TimerCallback) {
+        this.name = name;
+
+        this.#mockTime = mockTime;
+        this.#durationMs = durationMs;
+
         if (this instanceof MockInterval) {
             this.callback = callback;
         } else {
@@ -37,25 +47,27 @@ class MockTimer {
     }
 
     start() {
-        this.mockTime.callbackAtTime(this.mockTime.nowMs() + this.durationMs, this.callback);
+        registry.register(this);
+        this.#mockTime.callbackAtTime(this.#mockTime.nowMs() + this.#durationMs, this.callback);
         this.isRunning = true;
         return this;
     }
 
     stop() {
-        this.mockTime.removeCallback(this.callback);
+        registry.unregister(this);
+        this.#mockTime.removeCallback(this.callback);
         this.isRunning = false;
         return this;
     }
 }
 
 class MockInterval extends MockTimer {
-    constructor(mockTime: MockTime, durationMs: number, callback: TimerCallback) {
+    constructor(mockTime: MockTime, name: string, durationMs: number, callback: TimerCallback) {
         const intervalCallback = async () => {
             mockTime.callbackAtTime(mockTime.nowMs() + durationMs, intervalCallback);
             await callback();
         };
-        super(mockTime, durationMs, intervalCallback);
+        super(mockTime, name, durationMs, intervalCallback);
     }
 }
 
@@ -105,12 +117,12 @@ export const MockTime = {
         return nowMs;
     },
 
-    getTimer(_name: string, durationMs: number, callback: TimerCallback): MockTimer {
-        return new MockTimer(this, durationMs, callback);
+    getTimer(name: string, durationMs: number, callback: TimerCallback): MockTimer {
+        return new MockTimer(this, name, durationMs, callback);
     },
 
-    getPeriodicTimer(_name: string, intervalMs: number, callback: TimerCallback): MockTimer {
-        return new MockInterval(this, intervalMs, callback);
+    getPeriodicTimer(name: string, intervalMs: number, callback: TimerCallback): MockTimer {
+        return new MockInterval(this, name, intervalMs, callback);
     },
 
     /**
@@ -274,6 +286,13 @@ export const MockTime = {
         }
     },
 
+    /**
+     * Count the number of registered timers with a specific name.
+     */
+    timerCountFor(name: string) {
+        return [...registry.timers].filter(timer => timer.name === name).length;
+    },
+
     callbackAtTime(atMs: number, callback: TimerCallback) {
         callbacks.push({ atMs, callback });
         callbacks.sort(({ atMs: atMsA }, { atMs: atMsB }) => atMsA - atMsB);
@@ -288,7 +307,16 @@ export const MockTime = {
 
 let reinstallTime: undefined | (() => void);
 
-export function timeSetup(Time: { startup: { systemMs: number; processMs: number }; get(): unknown }) {
+export function timeSetup(Time: {
+    startup: { systemMs: number; processMs: number };
+    get(): unknown;
+    register(timer: MockTimer): void;
+    unregister(timer: MockTimer): void;
+    timers: Set<MockTimer>;
+}) {
+    registry.register = Time.register;
+    registry.unregister = Time.unregister;
+    registry.timers = Time.timers;
     Time.startup.systemMs = Time.startup.processMs = 0;
     real = Time.get();
     (MockTime as any).sleep = (real as any).sleep;

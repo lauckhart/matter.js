@@ -39,6 +39,7 @@ export function BackingEvents(backing: BehaviorBacking): EventEmitter {
 }
 
 const TARGET = Symbol("target");
+const PROXIES = Symbol("proxies");
 
 class EventProxy extends ObservableProxy {
     constructor(target: Observable) {
@@ -62,28 +63,42 @@ class EventProxy extends ObservableProxy {
     }
 }
 
+interface InternalEventEmitterProxy {
+    [TARGET]: Record<string, Observable>;
+    [PROXIES]?: Record<string, Observable>;
+}
+
 /**
  * Generates a proxy {@link EventEmitter} for the given {@link EventEmitter} instance.
  *
  * This is a class that automatically adds {@link ObservableProxy} properties for events on reference.
  */
 function EventEmitterProxy(instance: EventEmitter) {
-    const descriptors = {} as PropertyDescriptorMap;
-
-    descriptors[Symbol.dispose] = {
-        value: () => instance[Symbol.dispose](),
+    const descriptors: PropertyDescriptorMap = {
+        [Symbol.dispose]: {
+            value(this: InternalEventEmitterProxy) {
+                const proxies = this[PROXIES];
+                if (!proxies) {
+                    return;
+                }
+                for (const proxy of Object.values(proxies)) {
+                    proxy[Symbol.dispose]();
+                }
+                this[PROXIES] = undefined;
+            },
+        },
     };
 
     for (const key in instance) {
-        const property = Symbol(key);
-
         descriptors[key] = {
-            get(this: { [TARGET]: Record<string, Observable>; [property]: Observable }) {
-                let observable = this[property];
-                if (observable === undefined) {
-                    observable = this[property] = new EventProxy(this[TARGET][key]);
+            get(this: InternalEventEmitterProxy) {
+                let proxies = this[PROXIES];
+                if (proxies === undefined) {
+                    proxies = this[PROXIES] = {};
+                } else if (key in proxies) {
+                    return proxies[key];
                 }
-                return observable;
+                return (proxies[key] = new EventProxy(this[TARGET][key]));
             },
         };
     }
