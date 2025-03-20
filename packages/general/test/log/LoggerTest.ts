@@ -5,6 +5,7 @@
  */
 
 import { Diagnostic } from "#log/Diagnostic.js";
+import { LogDestination } from "#log/LogDestination.js";
 import { LogFormat } from "#log/LogFormat.js";
 import { LogLevel } from "#log/LogLevel.js";
 import { Logger, consoleLogger } from "#log/Logger.js";
@@ -16,24 +17,58 @@ type LogOptions = {
     format?: LogFormat.Type;
     levels?: typeof Logger.logLevels;
     method?: "notice" | "info" | "debug" | "warn" | "error" | "fatal";
-    fromLogger?: string;
+    destination?: LogDestination;
 };
 
-function captureOne(fn: () => void, fromLogger?: string) {
-    return Logger.capture(fn, fromLogger)[0];
+/**
+ * Invoke logic and return any log messages produced.
+ */
+function capture(fn: () => void, fromLogger = "default") {
+    if (!Logger) {
+        throw new Error("No logger loaded, cannot capture logs");
+    }
+    const logger = Logger.getLoggerForIdentifier(fromLogger);
+    const actualLogSettings = {
+        logFormatter: logger.logFormatter,
+        log: logger.log,
+        defaultLogLevel: logger.defaultLogLevel,
+        logLevels: { ...logger.logLevels },
+    };
+
+    try {
+        Logger.setFormatForLogger(fromLogger, LogFormat.PLAIN);
+        const captured = new Array<{ level: LogLevel; message: string }>();
+        Logger.setLogger(fromLogger, (level, message) =>
+            captured.push({
+                level,
+                message: message.replace(/\d{4}-\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d/, "xxxx-xx-xx xx:xx:xx.xxx"),
+            }),
+        );
+        fn();
+        return captured;
+    } finally {
+        Logger.setLogFormatterForLogger(fromLogger, actualLogSettings.logFormatter);
+        Logger.setDefaultLoglevelForLogger(fromLogger, actualLogSettings.defaultLogLevel);
+        Logger.setLogLevelsForLogger(fromLogger, actualLogSettings.logLevels);
+        Logger.setLogger(fromLogger, actualLogSettings.log);
+    }
+}
+
+function captureOne(fn: () => void, destination: LogDestination) {
+    return capture(fn, destination)[0];
 }
 
 describe("Logger", () => {
     const logger = Logger.get(LOGGER_NAME);
 
-    function capture(fn: () => void, { format, levels, fromLogger = "default" }: LogOptions) {
+    function capture(fn: () => void, { format, levels, destination = Logger.defaultDestination }: LogOptions) {
         return captureOne(() => {
-            Logger.setFormatForLogger(fromLogger, format ?? LogFormat.PLAIN);
+            destination.format = LogFormat(format ?? LogFormat.PLAIN);
             if (levels) {
-                Logger.setLogLevelsForLogger(fromLogger, levels);
+                destination.facilityLevels = { ...destination.facilityLevels, ...levels };
             }
             fn();
-        }, fromLogger);
+        }, destination);
     }
 
     function logTestLine(options: LogOptions = {}) {
@@ -61,7 +96,7 @@ describe("Logger", () => {
         });
 
         it("doesn't log a message if level is above debug", () => {
-            const result = Logger.capture(() => {
+            const result = capture(() => {
                 logTestLine({ levels: { [LOGGER_NAME]: LogLevel.INFO } });
             });
 
@@ -137,8 +172,10 @@ describe("Logger", () => {
     });
 
     describe("second logger with info/debug mix", () => {
+        const second: LogDestination = {};
+
         before(() => {
-            Logger.addLogger("second", () => {}, { defaultLogLevel: LogLevel.INFO });
+            Logger.addDestination(() => {}, { defaultLogLevel: LogLevel.INFO });
         });
 
         it("logs a message if level is info", () => {
