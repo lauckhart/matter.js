@@ -4,11 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Console } from "#log/Console.js";
 import { Diagnostic } from "#log/Diagnostic.js";
 import { LogDestination } from "#log/LogDestination.js";
 import { LogFormat } from "#log/LogFormat.js";
 import { LogLevel } from "#log/LogLevel.js";
-import { Logger, consoleLogger } from "#log/Logger.js";
+import { Logger } from "#log/Logger.js";
 import { Bytes } from "#util/Bytes.js";
 
 const LOGGER_NAME = "UnitTest";
@@ -17,55 +18,51 @@ type LogOptions = {
     format?: LogFormat.Type;
     levels?: typeof Logger.logLevels;
     method?: "notice" | "info" | "debug" | "warn" | "error" | "fatal";
-    destination?: LogDestination;
+    destination?: string;
 };
 
 /**
  * Invoke logic and return any log messages produced.
  */
-function capture(fn: () => void, fromLogger = "default") {
+function captureAll(fn: () => void, destination = "default") {
     if (!Logger) {
         throw new Error("No logger loaded, cannot capture logs");
     }
-    const logger = Logger.getLoggerForIdentifier(fromLogger);
-    const actualLogSettings = {
-        logFormatter: logger.logFormatter,
-        log: logger.log,
-        defaultLogLevel: logger.defaultLogLevel,
-        logLevels: { ...logger.logLevels },
-    };
+
+    const dest = Logger.destinations[destination];
+
+    const originalDestProps = { ...dest };
 
     try {
-        Logger.setFormatForLogger(fromLogger, LogFormat.PLAIN);
         const captured = new Array<{ level: LogLevel; message: string }>();
-        Logger.setLogger(fromLogger, (level, message) =>
+        dest.format = LogFormat.plain;
+        dest.write = (message: string, { level }: Diagnostic.Message) => {
             captured.push({
                 level,
                 message: message.replace(/\d{4}-\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d/, "xxxx-xx-xx xx:xx:xx.xxx"),
-            }),
-        );
+            });
+        };
         fn();
         return captured;
     } finally {
-        Logger.setLogFormatterForLogger(fromLogger, actualLogSettings.logFormatter);
-        Logger.setDefaultLoglevelForLogger(fromLogger, actualLogSettings.defaultLogLevel);
-        Logger.setLogLevelsForLogger(fromLogger, actualLogSettings.logLevels);
-        Logger.setLogger(fromLogger, actualLogSettings.log);
+        Object.assign(Logger.destinations[destination], originalDestProps);
     }
 }
 
-function captureOne(fn: () => void, destination: LogDestination) {
-    return capture(fn, destination)[0];
+function captureOne(fn: () => void, destination = "default") {
+    return captureAll(fn, destination)[0];
 }
 
 describe("Logger", () => {
     const logger = Logger.get(LOGGER_NAME);
 
-    function capture(fn: () => void, { format, levels, destination = Logger.defaultDestination }: LogOptions) {
+    function capture(fn: () => void, { format, levels, destination = "default" }: LogOptions) {
+        const dest = Logger.destinations[destination];
+
         return captureOne(() => {
-            destination.format = LogFormat(format ?? LogFormat.PLAIN);
+            dest.format = LogFormat(format ?? LogFormat.PLAIN);
             if (levels) {
-                destination.facilityLevels = { ...destination.facilityLevels, ...levels };
+                dest.facilityLevels = { ...dest.facilityLevels, ...levels };
             }
             fn();
         }, destination);
@@ -96,7 +93,7 @@ describe("Logger", () => {
         });
 
         it("doesn't log a message if level is above debug", () => {
-            const result = capture(() => {
+            const result = captureAll(() => {
                 logTestLine({ levels: { [LOGGER_NAME]: LogLevel.INFO } });
             });
 
@@ -172,16 +169,14 @@ describe("Logger", () => {
     });
 
     describe("second logger with info/debug mix", () => {
-        const second: LogDestination = {};
-
         before(() => {
-            Logger.addDestination(() => {}, { defaultLogLevel: LogLevel.INFO });
+            Logger.destinations.second = LogDestination();
         });
 
         it("logs a message if level is info", () => {
             const result = logTestLine({
                 method: "info",
-                fromLogger: "second",
+                destination: "second",
             });
 
             expect(result?.level).equal(LogLevel.INFO);
@@ -191,7 +186,7 @@ describe("Logger", () => {
             const result = logTestLine({
                 method: "info",
                 levels: { [LOGGER_NAME]: LogLevel.ERROR },
-                fromLogger: "second",
+                destination: "second",
             });
 
             expect(result).equal(undefined);
@@ -457,8 +452,8 @@ describe("Logger", () => {
 
     function itUsesCorrectConsoleMethod(sourceName: string, sinkName: string = sourceName) {
         it(`maps logger.${sourceName} to console.${sinkName}`, () => {
-            const actualLogger = Logger.log;
-            const actualConsole = consoleLogger.console;
+            const actualWrite = Logger.destinations.default.write;
+            const actualConsole = Console.console;
 
             let result: string | undefined = undefined;
             let calls = 0;
@@ -468,14 +463,14 @@ describe("Logger", () => {
             };
 
             try {
-                Logger.log = consoleLogger;
-                consoleLogger.console = {
+                Logger.destinations.default.write = Console.write;
+                Console.console = {
                     [sinkName]: mock,
                 } as any;
                 (<any>logger)[sourceName].call(logger, "test");
             } finally {
-                Logger.log = actualLogger;
-                consoleLogger.console = actualConsole;
+                Logger.destinations.default.write = actualWrite;
+                Console.console = actualConsole;
             }
 
             expect(calls).equal(1);

@@ -97,7 +97,7 @@ function executeCommand(scriptParamName: string) {
 
 const logFile = environment.vars.string("logfile.filename");
 if (logFile !== undefined) {
-    Logger.addDestination("filelogger", await createFileLogger(logFile), {
+    Logger.addLogger("filelogger", await createFileLogger(logFile), {
         defaultLogLevel: logLevelFromString(environment.vars.string("logfile.loglevel")) ?? LogLevel.DEBUG,
     });
 }

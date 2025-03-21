@@ -38,13 +38,18 @@ export function LogLevel(level: string | LogLevel): LogLevel {
     throw new ImplementationError(`Unsupported log level "${level}"`);
 }
 
+/**
+ * @deprecated use {@link LogLevel}
+ */
+export const logLevelFromString = LogLevel;
+
 export namespace LogLevel {
-    export const DEBUG = 0;
-    export const INFO = 1;
-    export const NOTICE = 2;
-    export const WARN = 3;
-    export const ERROR = 4;
-    export const FATAL = 5;
+    export const DEBUG: LogLevel = 0;
+    export const INFO: LogLevel = 1;
+    export const NOTICE: LogLevel = 2;
+    export const WARN: LogLevel = 3;
+    export const ERROR: LogLevel = 4;
+    export const FATAL: LogLevel = 5;
 
     export const names = ["debug", "info", "notice", "warn", "error", "fatal"];
 }

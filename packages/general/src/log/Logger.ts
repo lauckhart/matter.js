@@ -15,98 +15,20 @@ import { LogFormat } from "./LogFormat.js";
 import { LogLevel } from "./LogLevel.js";
 
 /**
- * Create a log formatter for a given format.
- */
-function logFormatterFor(formatName: string): LoggerDefinition["logFormatter"] {
-    const format = LogFormat(formatName);
-
-    return (now, level, facility, prefix, ...values) =>
-        format(Diagnostic.message({ now, level, facility, prefix, values }));
-}
-
-/**
- * Definition of one registered Logger.
- */
-type LoggerDefinition = {
-    logIdentifier: string;
-    logFormatter: (now: Date, level: LogLevel, facility: string, prefix: string, ...values: any[]) => string;
-    log: (level: LogLevel, formattedLog: string, facility?: string) => void;
-    defaultLogLevel: LogLevel;
-    logLevels: { [facility: string]: LogLevel };
-    context?: Diagnostic.Context;
-};
-
-function adaptDestinationToLegacy(destination: LogDestination): LoggerDefinition {
-    if (!LogDestination.isFormatting(destination)) {
-        throw new ImplementationError("Non-formatting destinations cannot be adapted to legacy API");
-    }
-
-    return {
-        get logIdentifier() {
-            return destination.name;
-        },
-
-        get logFormatter() {
-            return (now: Date, level: LogLevel, facility: string, prefix: string, ...values: any[]) =>
-                destination.format(Diagnostic.message({ now, level, facility, prefix, values }));
-        },
-
-        set logFormatter(logFormatter: LoggerDefinition["logFormatter"]) {
-            destination.format = (message: Diagnostic.Message) =>
-                logFormatter(message.now, message.level, message.facility, message.prefix, ...message.values);
-        },
-
-        get log() {
-            return (level: LogLevel, formattedLog: string, facility?: string) =>
-                destination.write(formattedLog, Diagnostic.message({ level, facility }));
-        },
-
-        set log(log: LoggerDefinition["log"]) {
-            destination.write = (text: string, message: Diagnostic.Message) =>
-                log(message.level, text, message.facility);
-        },
-
-        get defaultLogLevel() {
-            return destination.level;
-        },
-
-        set defaultLogLevel(level: LogLevel) {
-            destination.level = level;
-        },
-
-        get logLevels() {
-            return destination.facilityLevels;
-        },
-
-        set logLevels(levels: Record<string, LogLevel>) {
-            destination.facilityLevels = levels;
-        },
-    };
-}
-
-/**
- * Logger that can be used to emit traces.
- *
- * The class supports adding multiple loggers for different targets. A default logger (identifier "default") is added on
- * startup which logs to "console".
+ * matter.js logging API
  *
  * Usage:
  *
- *   const facility = Logger.get("loggerName");
- *   facility.debug("My debug message", "my extra value to log");
+ *   const logger = Logger.get("loggerName");
+ *   logger.debug("My debug message", "my extra value to log");
  *
- * The configuration of the default logger can be adjusted by using the static properties of the Logger class:
+ * matter.js writes logs to each {@link LogDestination} in {@link Logger.destinations}.  By default a single destination
+ * named "default" writes to the JS console.
  *
- *   - Logger.defaultLogLevel sets the default log level for all the facility
- *   - Logger.logLevels = { loggerName: Level.DEBUG } can set the level for the specific loggers
- *   - Logger.format = Format.ANSI enables colorization via ANSI escape sequences in default formatter
+ * You may adjust log verbosity and format by modifying the properties on each {@link LogDestination}.  For example:
  *
- * For additional loggers, use Logger.addLogger() to add a new logger with a specific identifier. Afterwards the
- * configuration of these can be adjusted using static methods with the identifier as first parameter:
- *
- *   - Logger.setFormatForLogger("loggerName", Format.ANSI)
- *   - Logger.setLogLevelsForLogger("loggerName", { loggerName: Level.DEBUG })
- *   - Logger.setDefaultLoglevelForLogger("loggerName", Level.DEBUG)
+ *   `Logger.destinations.default.format = LogFormat.ansi` writes log messages as ANSI formatted text
+ *   `Logger.destinations.default.level = LogLevel.NOTICE` limits log messages to NOTICE and above
  */
 export class Logger {
     /**
@@ -214,15 +136,31 @@ export class Logger {
         this.#name = name;
     }
 
-    debug = (...values: any[]) => this.#log(LogLevel.DEBUG, values);
-    info = (...values: any[]) => this.#log(LogLevel.INFO, values);
-    notice = (...values: any[]) => this.#log(LogLevel.NOTICE, values);
-    warn = (...values: any[]) => this.#log(LogLevel.WARN, values);
-    error = (...values: any[]) => this.#log(LogLevel.ERROR, values);
-    fatal = (...values: any[]) => this.#log(LogLevel.FATAL, values);
-    log = (level: LogLevel, ...values: any[]) => this.#log(level, values);
+    debug(...values: any[]) {
+        this.log(LogLevel.DEBUG, ...values);
+    }
 
-    #log(level: LogLevel, values: any[]) {
+    info(...values: any[]) {
+        this.log(LogLevel.INFO, ...values);
+    }
+
+    notice(...values: any[]) {
+        this.log(LogLevel.NOTICE, ...values);
+    }
+
+    warn(...values: any[]) {
+        this.log(LogLevel.WARN, ...values);
+    }
+
+    error(...values: any[]) {
+        this.log(LogLevel.ERROR, ...values);
+    }
+
+    fatal(...values: any[]) {
+        this.log(LogLevel.FATAL, ...values);
+    }
+
+    log(level: LogLevel, ...values: unknown[]) {
         for (const dest of Object.values(Logger.destinations)) {
             if (level < (dest.facilityLevels?.[this.#name] ?? dest.level)) {
                 return;
@@ -526,3 +464,76 @@ Boot.init(() => {
 });
 
 CancelablePromise.logger = Logger.get("CancelablePromise");
+
+/**
+ * Create a log formatter for a given format.
+ *
+ * @deprecated
+ */
+function logFormatterFor(formatName: string): LoggerDefinition["logFormatter"] {
+    const format = LogFormat(formatName);
+
+    return (now, level, facility, prefix, ...values) =>
+        format(Diagnostic.message({ now, level, facility, prefix, values }));
+}
+
+/**
+ * Definition of one registered Logger.
+ *
+ * @deprecated
+ */
+type LoggerDefinition = {
+    logIdentifier: string;
+    logFormatter: (now: Date, level: LogLevel, facility: string, prefix: string, ...values: any[]) => string;
+    log: (level: LogLevel, formattedLog: string, facility?: string) => void;
+    defaultLogLevel: LogLevel;
+    logLevels: { [facility: string]: LogLevel };
+    context?: Diagnostic.Context;
+};
+
+/**
+ * @deprecated
+ */
+function adaptDestinationToLegacy(destination: LogDestination): LoggerDefinition {
+    return {
+        get logIdentifier() {
+            return destination.name;
+        },
+
+        get logFormatter() {
+            return (now: Date, level: LogLevel, facility: string, prefix: string, ...values: any[]) =>
+                destination.format(Diagnostic.message({ now, level, facility, prefix, values }));
+        },
+
+        set logFormatter(logFormatter: LoggerDefinition["logFormatter"]) {
+            destination.format = (message: Diagnostic.Message) =>
+                logFormatter(message.now, message.level, message.facility, message.prefix, ...message.values);
+        },
+
+        get log() {
+            return (level: LogLevel, formattedLog: string, facility?: string) =>
+                destination.write(formattedLog, Diagnostic.message({ level, facility }));
+        },
+
+        set log(log: LoggerDefinition["log"]) {
+            destination.write = (text: string, message: Diagnostic.Message) =>
+                log(message.level, text, message.facility);
+        },
+
+        get defaultLogLevel() {
+            return destination.level;
+        },
+
+        set defaultLogLevel(level: LogLevel) {
+            destination.level = level;
+        },
+
+        get logLevels() {
+            return destination.facilityLevels;
+        },
+
+        set logLevels(levels: Record<string, LogLevel>) {
+            destination.facilityLevels = levels;
+        },
+    };
+}
