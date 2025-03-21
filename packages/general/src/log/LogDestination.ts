@@ -85,7 +85,7 @@ export namespace LogDestination {
             this.write(this.format(message), message);
         },
 
-        format: LogFormat.formats.plain,
+        format: LogFormat.formats.ansi,
 
         write: Console.write,
     };
