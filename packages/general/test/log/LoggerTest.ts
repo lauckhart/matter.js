@@ -15,7 +15,7 @@ import { Bytes } from "#util/Bytes.js";
 const LOGGER_NAME = "UnitTest";
 
 type LogOptions = {
-    format?: LogFormat.Type;
+    format?: string;
     levels?: typeof Logger.logLevels;
     method?: "notice" | "info" | "debug" | "warn" | "error" | "fatal";
     destination?: string;
@@ -35,7 +35,7 @@ function captureAll(fn: () => void, destination = "default") {
 
     try {
         const captured = new Array<{ level: LogLevel; message: string }>();
-        dest.format = LogFormat.plain;
+        dest.format = LogFormat.formats.plain;
         dest.write = (message: string, { level }: Diagnostic.Message) => {
             captured.push({
                 level,
@@ -193,7 +193,7 @@ describe("Logger", () => {
         });
 
         after(() => {
-            Logger.removeLogger("second");
+            delete Logger.destinations.second;
         });
     });
 
@@ -411,11 +411,11 @@ describe("Logger", () => {
 
     describe("toJSON", () => {
         it("works", () => {
-            expect(Logger.toJSON("foo")).equal('"foo"');
+            expect(Diagnostic.json("foo")).equal('"foo"');
         });
 
         it("handles BigInt", () => {
-            expect(Logger.toJSON(BigInt(4))).equal('"4"');
+            expect(Diagnostic.json(BigInt(4))).equal('"4"');
         });
     });
 

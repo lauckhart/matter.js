@@ -22,17 +22,12 @@ export interface LogDestination {
     name: string;
 
     /**
-     * Add an entry to the log.
-     */
-    add(message: Diagnostic.Message): void;
-
-    /**
      * The maximum level to log if not set explicitly.
      */
     level: LogLevel;
 
     /**
-     * The maximum level to log for specific facility IDs.
+     * The maximum level to log for specific facility names.
      */
     facilityLevels: Record<string, LogLevel>;
 
@@ -40,6 +35,13 @@ export interface LogDestination {
      * Contextual information used to optimize log output.
      */
     context?: Diagnostic.Context;
+
+    /**
+     * Add an entry to the log.
+     *
+     * The default implementation formats using {@link format} and writes using {@link write}.
+     */
+    add(message: Diagnostic.Message): void;
 
     /**
      * Format a log message.
@@ -83,7 +85,7 @@ export namespace LogDestination {
             this.write(this.format(message), message);
         },
 
-        format: LogFormat.ansi as LogDestination["format"],
+        format: LogFormat.formats.plain,
 
         write: Console.write,
     };

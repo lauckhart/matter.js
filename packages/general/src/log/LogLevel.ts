@@ -15,6 +15,10 @@ export type LogLevel = 0 | 1 | 2 | 3 | 4 | 5;
  * Map a string or number to a {@link LogLevel}
  */
 export function LogLevel(level: string | LogLevel): LogLevel {
+    if (typeof level === "string" && level.match(/^\d+$/)) {
+        level = Number.parseInt(level) as LogLevel;
+    }
+
     if (typeof level === "string") {
         switch (level.toLowerCase()) {
             case "debug":

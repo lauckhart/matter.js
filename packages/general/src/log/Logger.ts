@@ -25,16 +25,19 @@ import { LogLevel } from "./LogLevel.js";
  * matter.js writes logs to each {@link LogDestination} in {@link Logger.destinations}.  By default a single destination
  * named "default" writes to the JS console.
  *
- * You may adjust log verbosity and format by modifying the properties on each {@link LogDestination}.  For example:
+ * You may adjust log verbosity and format by modifying the properties on destinations.  For example:
  *
- *   `Logger.destinations.default.format = LogFormat.ansi` writes log messages as ANSI formatted text
- *   `Logger.destinations.default.level = LogLevel.NOTICE` limits log messages to NOTICE and above
+ *   `Logger.format = LogFormat.PLAIN` sets all destinations to write plaintext
+ *   `Logger.destinations.default.format = LogFormat.format.ansi` sets one destination to write ANSI
+ *   `Logger.level = LogLevel.NOTICE` sets "notice" as the minimum level for all destinations
+ *   `Logger.destinations.default.level = LogLevel.NOTICE` sets "notice" as level for one destination
  */
 export class Logger {
     /**
      * Log destinations.
      *
-     * By default there is a single destination named "default".  You may add or remove destinations.
+     * By default there is a single destination named "default".  You can create new destinations using
+     * {@link LogDestination}.  Add or remove destinations by modifying this object.
      *
      * Throws an error if you access a destination that doesn't exist.
      */
@@ -48,7 +51,7 @@ export class Logger {
     readonly #name: string;
 
     /**
-     * Create a new facility.
+     * Create a new logger for a facility.
      *
      * @param name the name of the facility
      * @returns a new facility
@@ -58,24 +61,67 @@ export class Logger {
     }
 
     /**
-     * Stringify a value (BigInt aware) as JSON.
-     *
-     * @param data the value to stringify
-     * @returns the stringified value
+     * Get the default log level.
      */
-    static toJSON(data: any) {
-        return JSON.stringify(data, (_, value) => {
-            if (typeof value === "bigint") {
-                return value.toString();
-            }
-            if (value instanceof Uint8Array) {
-                return Bytes.toHex(value);
-            }
-            if (value === undefined) {
-                return "undefined";
-            }
-            return value;
-        });
+    static get level() {
+        return LogDestination.defaults.level;
+    }
+
+    /**
+     * Set log level as name or number for all destinations.
+     */
+    static set level(level: LogLevel | string) {
+        level = LogLevel(level);
+
+        LogDestination.defaults.level = level;
+
+        for (const name in this.destinations) {
+            this.destinations[name].level = level;
+        }
+    }
+
+    /**
+     * Get the default facility levels.
+     */
+    static get facilityLevels() {
+        return LogDestination.defaults.facilityLevels;
+    }
+
+    /**
+     * Set log level as name or number for facilities in all destinations.
+     *
+     * Existing levels that are not named in {@link levels} will remain unchanged.
+     */
+    static set facilityLevels(levels: Record<string, LogLevel | string>) {
+        for (const name in levels) {
+            levels[name] = LogLevel(levels[name]);
+        }
+
+        Object.assign(LogDestination.defaults.facilityLevels, levels);
+
+        for (const name in this.destinations) {
+            Object.assign(this.destinations[name].facilityLevels, levels);
+        }
+    }
+
+    /**
+     * Get the default format name.
+     */
+    static get format(): string {
+        return LogDestination.defaults.format.name;
+    }
+
+    /**
+     * Set the format for all destinations.
+     */
+    static set format(format: string | LogFormat.Formatter) {
+        format = LogFormat(format);
+
+        LogDestination.defaults.format = format;
+
+        for (const name in this.destinations) {
+            this.destinations[name].format = format;
+        }
     }
 
     /**
@@ -136,32 +182,38 @@ export class Logger {
         this.#name = name;
     }
 
-    debug(...values: any[]) {
-        this.log(LogLevel.DEBUG, ...values);
+    debug(...values: unknown[]) {
+        this.#log(LogLevel.DEBUG, values);
     }
 
-    info(...values: any[]) {
-        this.log(LogLevel.INFO, ...values);
+    info(...values: unknown[]) {
+        this.#log(LogLevel.INFO, values);
     }
 
-    notice(...values: any[]) {
-        this.log(LogLevel.NOTICE, ...values);
+    notice(...values: unknown[]) {
+        this.#log(LogLevel.NOTICE, values);
     }
 
-    warn(...values: any[]) {
-        this.log(LogLevel.WARN, ...values);
+    warn(...values: unknown[]) {
+        this.#log(LogLevel.WARN, values);
     }
 
-    error(...values: any[]) {
-        this.log(LogLevel.ERROR, ...values);
+    error(...values: unknown[]) {
+        this.#log(LogLevel.ERROR, values);
     }
 
-    fatal(...values: any[]) {
-        this.log(LogLevel.FATAL, ...values);
+    fatal(...values: unknown[]) {
+        this.#log(LogLevel.FATAL, values);
     }
 
     log(level: LogLevel, ...values: unknown[]) {
-        for (const dest of Object.values(Logger.destinations)) {
+        this.#log(level, values);
+    }
+
+    #log(level: LogLevel, values: unknown[]) {
+        for (const name in Logger.destinations) {
+            const dest = Logger.destinations[name];
+
             if (level < (dest.facilityLevels?.[this.#name] ?? dest.level)) {
                 return;
             }
@@ -187,6 +239,29 @@ export class Logger {
     //
     // DEPRECATED API SURFACE FOLLOWS
     //
+
+    /**
+     * Stringify a value (BigInt aware) as JSON.
+     *
+     * @param data the value to stringify
+     * @returns the stringified value
+     *
+     * @deprecated use {@link Diagnostic.json}
+     */
+    static toJSON(data: any) {
+        return JSON.stringify(data, (_, value) => {
+            if (typeof value === "bigint") {
+                return value.toString();
+            }
+            if (value instanceof Uint8Array) {
+                return Bytes.toHex(value);
+            }
+            if (value === undefined) {
+                return "undefined";
+            }
+            return value;
+        });
+    }
 
     /**
      * Add additional logger to the list of loggers including the default configuration.
@@ -255,50 +330,6 @@ export class Logger {
     }
 
     /**
-     * Set log level using configuration-style level name for the default destination.
-     *
-     * @deprecated map level names using {@link LogLevel}
-     */
-    static set level(level: LogLevel | string) {
-        if (level === undefined) {
-            level = LogLevel.DEBUG;
-        }
-
-        let levelNum;
-        if (typeof level === "string") {
-            if (level.match(/^\d+$/)) {
-                levelNum = Number.parseInt(level) as LogLevel;
-            } else {
-                levelNum = (LogLevel as unknown as Record<string, number | undefined>)[level.toUpperCase()] as
-                    | LogLevel
-                    | undefined;
-                if (typeof levelNum !== "number") {
-                    throw new ImplementationError(`Unsupported log level "${level}"`);
-                }
-            }
-        } else {
-            levelNum = level;
-        }
-
-        if (LogLevel[levelNum] === undefined) {
-            throw new ImplementationError(`Unsupported log level "${level}"`);
-        }
-
-        this.destinations.default.level = levelNum;
-    }
-
-    /**
-     * Set logFormatter using configuration-style format name.
-     *
-     * @param format the name of the formatter (see Format enum)
-     *
-     * @deprecated map format names using {@link LogFormat}
-     */
-    static set format(format: string) {
-        Logger.setLogFormatterForLogger("default", logFormatterFor(format));
-    }
-
-    /**
      * Set facility loglevels for the default logger.
      * @param levels The levels to set
      *
@@ -311,7 +342,7 @@ export class Logger {
     /**
      * Get facility loglevels for the default logger.
      *
-     * @deprecated use {@link destinations}
+     * @deprecated use {@link Logger.facilityLevels}
      */
     public static get logLevels() {
         return Logger.getLoggerForIdentifier("default").logLevels;
@@ -322,7 +353,7 @@ export class Logger {
      *
      * @param level The level to set
      *
-     * @deprecated use {@link destinations}
+     * @deprecated use {@link Logger.level}
      */
     public static set defaultLogLevel(level: LogLevel) {
         Logger.setDefaultLoglevelForLogger("default", level);
@@ -484,7 +515,7 @@ function logFormatterFor(formatName: string): LoggerDefinition["logFormatter"] {
  */
 type LoggerDefinition = {
     logIdentifier: string;
-    logFormatter: (now: Date, level: LogLevel, facility: string, prefix: string, ...values: any[]) => string;
+    logFormatter: (now: Date, level: LogLevel, facility: string, prefix: string, values: any[]) => string;
     log: (level: LogLevel, formattedLog: string, facility?: string) => void;
     defaultLogLevel: LogLevel;
     logLevels: { [facility: string]: LogLevel };
@@ -501,13 +532,13 @@ function adaptDestinationToLegacy(destination: LogDestination): LoggerDefinition
         },
 
         get logFormatter() {
-            return (now: Date, level: LogLevel, facility: string, prefix: string, ...values: any[]) =>
+            return (now: Date, level: LogLevel, facility: string, prefix: string, values: any[]) =>
                 destination.format(Diagnostic.message({ now, level, facility, prefix, values }));
         },
 
         set logFormatter(logFormatter: LoggerDefinition["logFormatter"]) {
             destination.format = (message: Diagnostic.Message) =>
-                logFormatter(message.now, message.level, message.facility, message.prefix, ...message.values);
+                logFormatter(message.now, message.level, message.facility, message.prefix, message.values);
         },
 
         get log() {
