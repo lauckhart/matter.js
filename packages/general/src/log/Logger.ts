@@ -330,6 +330,13 @@ export class Logger {
     }
 
     /**
+     * @deprecated use {@link destinations}
+     */
+    public static getLoggerforIdentifier(identifier: string) {
+        return this.getLoggerForIdentifier(identifier);
+    }
+
+    /**
      * Set facility loglevels for the default logger.
      * @param levels The levels to set
      *
