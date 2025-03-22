@@ -70,46 +70,38 @@ RUN sed -i "s/is_debug = true/is_debug = false/" build/config/BUILDCONFIG.gn && 
     sed -i "s/-O2/-Os/" build/config/compiler/BUILD.gn && \
     sed -i "s/strip_symbols = false/strip_symbols = true/" build/config/compiler/compiler.gni
 
-# Build chip-tool
+# Bootstrap CHIP environment
+RUN source scripts/activate.sh
+
+# Tell build scripts where to find stuff
+ENV PW_PROJECT_ROOT=/connectedhomeip
+ENV PATH=/connectedhomeip/.environment/pigweed-venv/bin:/connectedhomeip/.environment/cipd/packages/pigweed:/connectedhomeip/.environment/cipd/packages/zap:$PATH
+
+# Create a script for building examples
 RUN case ${TARGETPLATFORM} in \
     "linux/amd64") \
-        source scripts/activate.sh && \
-        scripts/build/build_examples.py \
-          --target linux-x64-chip-tool-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          --target linux-x64-all-clusters-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          --target linux-x64-lock-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          --target linux-x64-tv-app-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          --target linux-x64-bridge-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          --target linux-x64-lit-icd-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          --target linux-x64-microwave-oven-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          --target linux-x64-rvc-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          --target linux-x64-network-manager-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          build \
+        ARCH=x64 \
     ;; \
     "linux/arm64") \
-        source scripts/activate.sh && \
-        scripts/build/build_examples.py \
-          --target linux-arm64-chip-tool-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          --target linux-arm64-all-clusters-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          --target linux-arm64-lock-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          --target linux-arm64-tv-app-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          --target linux-arm64-bridge-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          --target linux-arm64-lit-icd-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          --target linux-arm64-microwave-oven-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          --target linux-arm64-rvc-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          --target linux-arm64-network-manager-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns \
-          /bins build \
+        ARCH=arm64 \
     ;; \
-    esac
-RUN cp out/*/chip-tool out
-RUN cp out/*/chip-all-clusters-app out
-RUN cp out/*/chip-bridge-app out
-RUN cp out/*/chip-lock-app out
-RUN cp out/*/chip-tv-app out
-RUN cp out/*/lit-icd-app out
-RUN cp out/*/chip-microwave-oven-app out
-RUN cp out/*/chip-rvc-app out
-RUN cp out/*/matter-network-manager-app out
+    esac; \
+    echo "scripts/build/build_examples.py --target linux-${ARCH}-\${1}-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns build" > ./build-example.sh; \
+    chmod a+x ./build-example.sh
+
+# Build chip-tool and apps
+RUN ./build-example.sh chip-tool
+RUN ./build-example.sh all-clusters
+RUN ./build-example.sh lock
+RUN ./build-example.sh tv
+RUN ./build-example.sh bridge
+RUN ./build-example.sh lit-icd
+RUN ./build-example.sh microwave-oven
+RUN ./build-example.sh rvc
+RUN ./build-example.sh network-manager
+
+# Move binaries to platform-independent location so subsequent scripts have an easier time finding
+RUN cp out/*/chip-tool out/*/*-app out
 
 # Build python wheels
 RUN scripts/build_python.sh --chip_mdns platform
@@ -143,6 +135,7 @@ RUN rm -rf bin.usr-is-merged boot home media mnt opt sbin.usr-is-merged srv
 
 # chip-tool binary
 COPY --from=install /connectedhomeip/out/chip-tool /bin/chip-tool
+COPY --from=install /connectedhomeip/out/*-app /bin
 
 # Installed python packages
 COPY --from=install /usr/lib/python3/dist-packages /usr/lib/python3/dist-packages
