@@ -60,10 +60,10 @@ RUN case "${TARGETPLATFORM}" in \
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     --mount=type=cache,sharing=locked,target=/var/lib/apt \
     apt-get -qq update && \
-    apt-get -qq -y install git gcc g++ pkg-config libssl-dev libdbus-1-dev libglib2.0-dev libavahi-client-dev \
+    apt-get -qq -y install git gcc g++ clang pkg-config libssl-dev libdbus-1-dev libglib2.0-dev libavahi-client-dev \
         ninja-build python3-venv python3-dev unzip libgirepository1.0-dev libcairo2-dev libreadline-dev python3-pip
 
-# Install x86->arm cross compilers.  Not useful becauserequire installation of lib dependencies which we've not
+# Install x86->arm cross compilers.  Not useful because requires installation of lib dependencies which we've not
 # implemented
 # RUN apt-get -qq -y install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
 
@@ -81,7 +81,7 @@ ENV PATH=/connectedhomeip/.environment/pigweed-venv/bin:/connectedhomeip/.enviro
 
 # Reduce build size, saves about 1/3 of final image
 RUN sed -i "s/is_debug = true/is_debug = false/" build/config/BUILDCONFIG.gn && \
-    sed -i "s/-O2/-Os/" build/config/compiler/BUILD.gn && \
+    #sed -i "s/-O2/-Os/" build/config/compiler/BUILD.gn && \
     sed -i "s/strip_symbols = false/strip_symbols = true/" build/config/compiler/compiler.gni
 
 

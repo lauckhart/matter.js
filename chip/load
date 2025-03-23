@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Loads build targets into a local image tagged "chip/<target>"
+# Loads build targets into a local image tagged "chip/<target>" and runs bash
 
 set -e
 
@@ -23,3 +23,5 @@ docker buildx build . \
     --label org.opencontainers.image.revision=$(git rev-parse HEAD) \
     --platform linux/amd64 \
     $*
+
+docker run -it --rm "chip/${TARGET}"
