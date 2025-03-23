@@ -8,7 +8,14 @@
 
 # TODO - either finish cross compilation, create CI & manifest for amd64 & arm64, or punt.  Current choice: punt
 
+
+################################################################################
+#
 # STAGE 1 - common base image
+#
+# Includes just a few small tweaks on base Ubuntu
+#
+
 FROM ubuntu:24.04 AS base
 
 SHELL [ "/bin/bash", "-c" ]
@@ -27,7 +34,13 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     apt-get -qq -y install python3 python-is-python3 libavahi-client3 libglib2.0-0
 
 
+################################################################################
+#
 # STAGE 2 - CHIP source code and build tooling
+#
+# Performs git clone, installs build tools and bootstraps CHIP environment
+#
+
 FROM --platform=$BUILDPLATFORM base AS build
 
 ARG TARGETPLATFORM
@@ -59,55 +72,69 @@ RUN git clone --depth=1 https://github.com/project-chip/connectedhomeip.git
 WORKDIR /connectedhomeip
 RUN ./scripts/checkout_submodules.py --shallow --platform linux
 
+# Bootstrap CHIP environment
+RUN source scripts/bootstrap.sh
 
-# STAGE 3 - build chip-tool and installed python packages
-FROM --platform=$BUILDPLATFORM build AS bins
-
-WORKDIR /connectedhomeip
+# Tell build scripts where to find stuff
+ENV PW_PROJECT_ROOT=/connectedhomeip
+ENV PATH=/connectedhomeip/.environment/pigweed-venv/bin:/connectedhomeip/.environment/cipd/packages/pigweed:/connectedhomeip/.environment/cipd/packages/zap:$PATH
 
 # Reduce build size, saves about 1/3 of final image
 RUN sed -i "s/is_debug = true/is_debug = false/" build/config/BUILDCONFIG.gn && \
     sed -i "s/-O2/-Os/" build/config/compiler/BUILD.gn && \
     sed -i "s/strip_symbols = false/strip_symbols = true/" build/config/compiler/compiler.gni
 
-# Bootstrap CHIP environment
-RUN source scripts/activate.sh
 
-# Tell build scripts where to find stuff
-ENV PW_PROJECT_ROOT=/connectedhomeip
-ENV PATH=/connectedhomeip/.environment/pigweed-venv/bin:/connectedhomeip/.environment/cipd/packages/pigweed:/connectedhomeip/.environment/cipd/packages/zap:$PATH
+################################################################################
+#
+# STAGE 3 - builds CHIP and installed python packages
+#
+# Builds chip-tool, CHIP sample apps, and python wheels
+#
+FROM --platform=$BUILDPLATFORM build AS bins
 
-# Create a script for building examples
-RUN case ${TARGETPLATFORM} in \
-    "linux/amd64") \
-        ARCH=x64 \
-    ;; \
-    "linux/arm64") \
-        ARCH=arm64 \
-    ;; \
-    esac; \
-    echo "scripts/build/build_examples.py --target linux-${ARCH}-\${1}-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns build" > ./build-example.sh; \
-    chmod a+x ./build-example.sh
+# Generate build files
+RUN gn gen out
 
-# Build chip-tool and apps
-RUN ./build-example.sh chip-tool
-RUN ./build-example.sh all-clusters
-RUN ./build-example.sh lock
-RUN ./build-example.sh tv
-RUN ./build-example.sh bridge
-RUN ./build-example.sh lit-icd
-RUN ./build-example.sh microwave-oven
-RUN ./build-example.sh rvc
-RUN ./build-example.sh network-manager
+# Build
+RUN ninja -C out
 
-# Move binaries to platform-independent location so subsequent scripts have an easier time finding
-RUN cp out/*/chip-tool out/*/*-app out
+# # Create a script for building examples
+# RUN case ${TARGETPLATFORM} in \
+#     "linux/amd64") \
+#         ARCH=x64 \
+#     ;; \
+#     "linux/arm64") \
+#         ARCH=arm64 \
+#     ;; \
+#     esac; \
+#     echo "scripts/build/build_examples.py --target linux-${ARCH}-\${1}-ipv6only-no-ble-no-wifi-no-thread-no-shell-platform-mdns build" > ./build-example.sh; \
+#     chmod a+x ./build-example.sh
+
+# # Build chip-tool and apps
+# RUN ./build-example.sh chip-tool
+# RUN ./build-example.sh all-clusters
+# RUN ./build-example.sh lock
+# RUN ./build-example.sh tv
+# RUN ./build-example.sh bridge
+# RUN ./build-example.sh lit-icd
+# RUN ./build-example.sh microwave-oven
+# RUN ./build-example.sh rvc
+# RUN ./build-example.sh network-manager
+
+# # Move binaries to platform-independent location so subsequent scripts have an easier time finding
+# RUN cp out/*/chip-tool out/*/*-app out
 
 # Build python wheels
 RUN scripts/build_python.sh --chip_mdns platform
 
 
+################################################################################
+#
 # STAGE 4 - install into final destination
+#
+# Installs Python packages from build area into destination OS locations
+#
 FROM bins AS install
 
 # Install external python dependencies
@@ -118,7 +145,13 @@ RUN pip install --break-system-packages -r scripts/tests/requirements.txt
 RUN find out -name \*.whl | xargs pip install --break-system-packages --upgrade
 
 
+################################################################################
+#
 # STAGE 5 - extract CHIP subset required for runtime
+#
+# For the final working image we revert to the base target then copy over
+# binaries from the bins target
+#
 FROM base AS final
 
 # Install some runtime-only packages

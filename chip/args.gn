@@ -1,0 +1,13 @@
+# @license
+# Copyright 2022-2025 Matter.js Authors
+# SPDX-License-Identifier: Apache-2.0
+
+chip_inet_config_enable_ipv4 = false
+chip_config_network_layer_ble = false
+chip_enable_ble = false
+chip_enable_wifi = false
+chip_enable_openthread = false
+chip_build_libshell = false
+chip_mdns = "platform"
+is_debug = false
+strip_symbols = true
