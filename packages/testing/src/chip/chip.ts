@@ -278,8 +278,11 @@ function createBuilder(initial: {
         // We do this separately from the test itself because we don't want activation to appear as part of the test if
         // it fails
         beforeOne(mochaTest, async () =>
-            State.activateSubject(subject ?? State.subject, startCommissioned, test, (subject, test) =>
-                runBeforeHooks(beforeStartHooks, subject, test),
+            State.activateSubject(
+                subject ?? State.subject,
+                startCommissioned && !test.descriptor.startUncommissioned,
+                test,
+                (subject, test) => runBeforeHooks(beforeStartHooks, subject, test),
             ),
         );
 
