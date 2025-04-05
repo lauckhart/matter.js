@@ -98,7 +98,11 @@ function printDescriptor(descriptor: TestDescriptor, includeDisabled?: boolean, 
         }
 
         if (member.path && member.path !== path) {
-            title = `${title} ${colors.dim.blueBright(member.path)}`;
+            let { path } = member;
+            if (member.subpath) {
+                path = `${path}#${member.subpath}`;
+            }
+            title = `${title} ${colors.dim.blueBright(path)}`;
         }
 
         if (member.kind === "manual") {

@@ -133,8 +133,9 @@ export async function main(argv = process.argv) {
         if (ls) {
             const progress = pkg.start("Inspecting");
             const runner = new TestRunner(pkg, progress, args);
+            const report = await defaultDescriptor(runner);
             progress.close();
-            printReport(await defaultDescriptor(runner), true);
+            printReport(report, true);
             console.log();
             return;
         }

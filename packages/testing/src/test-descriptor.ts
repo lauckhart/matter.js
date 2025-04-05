@@ -16,6 +16,7 @@ export interface TestDescriptor {
     name: string;
     kind: TestDescriptor.Kind;
     path?: string;
+    subpath?: string;
     members?: TestDescriptor[];
     isDisabled?: boolean;
     timeoutMs?: number;

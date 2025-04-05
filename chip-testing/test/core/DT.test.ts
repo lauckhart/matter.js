@@ -4,6 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-describe("DeviceBasicComposition", () => {
-    chip("DeviceBasicComposition-run1");
+describe("DT", () => {
+    chip("DT/*");
 });
