@@ -28,6 +28,7 @@ import { State } from "./state.js";
  * We execute test logic within a Docker container available at {@link https://github.com/matter-js/matter.js-chip}.
  */
 export interface Chip extends chip.Builder {
+    (subject: Subject): chip.Builder;
     (...include: string[]): chip.Builder;
 
     /**
@@ -300,8 +301,16 @@ function createBuilder(initial: {
     }
 }
 
-function chipFn(...include: string[]): chip.Builder {
-    return createBuilder({ include });
+function chipFn(subjectOrFirstInclusion: Subject.Factory | string | undefined, ...include: string[]): chip.Builder {
+    if (typeof subjectOrFirstInclusion === "function") {
+        return chip.subject(subjectOrFirstInclusion).include(...include);
+    }
+
+    if (typeof subjectOrFirstInclusion === "string") {
+        include = [subjectOrFirstInclusion, ...include];
+    }
+
+    return createBuilder({ include: [...include] });
 }
 
 Object.defineProperties(chipFn, {

@@ -5,6 +5,7 @@
  */
 
 import {
+    camelize,
     CloneableStorage,
     Environment,
     ImplementationError,
@@ -30,6 +31,10 @@ export abstract class NodeTestInstance extends DeviceTestInstance implements Sub
     static forceFastTimeouts = false;
     static nonvolatileEvents = false;
     static testEnableKey = "00112233445566778899aabbccddeeff";
+
+    get app() {
+        return camelize(this.constructor.name.replace(/^TestInstance$/, ""), true);
+    }
 
     constructor(config: DeviceTestInstanceConfig) {
         super(config);

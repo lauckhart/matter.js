@@ -11,6 +11,7 @@ import { BackchannelCommand } from "./backchannel.js";
  */
 export interface Subject {
     id: string;
+    app: string;
     commissioning: Subject.CommissioningParameters;
     initialize(): Promise<void>;
     start(): Promise<void>;

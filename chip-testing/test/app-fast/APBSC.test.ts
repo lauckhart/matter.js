@@ -7,5 +7,5 @@
 import { TvApp } from "../support.js";
 
 describe("APBSC", () => {
-    chip("APBSC/*").subject(TvApp);
+    chip(TvApp).include("APBSC/*");
 });

@@ -177,11 +177,11 @@ def load_python():
 
         # Instantiate the test for introspection purposes
         instance = test_class(mobly_test_config)
-        all_test_methods = test_class.get_existing_test_names()
+        all_test_methods = instance.get_existing_test_names()
 
-        # Extract test names from run command line arguments                
+        # Extract run information from the YAML header.  Much of this is encoded as command line arguments                
         parsed_header = yaml.full_load("".join(header))
-        runs = parsed_header["test-runner-runs"]
+        runs = parsed_header["test-runner-runs"] if parsed_header else None
         run_tests = {}
         if runs:
             for run, config in runs.items():
@@ -198,8 +198,7 @@ def load_python():
                             else:
                                 tests_in_run.append(arg)
                                 continue
-                            
-                        if following == "--test-case":
+                        elif following == "--test-case":
                             tests_in_run.append(arg)
                             following = None
                             continue
@@ -210,12 +209,25 @@ def load_python():
 
                         args.append(arg)
 
-                    config["script-args"] = args.join(" ")
+                    config["script-args"] = " ".join(args)
 
                 if tests_in_run:
                     run_tests[run] = tests_in_run
                 else:
                     run_tests[run] = all_test_methods
+
+                app = config["app"]
+                if app:
+                    config["app"] = (
+                        app
+                            .removeprefix("${")
+                            .removeprefix("CHIP_")
+                            .removesuffix("}")
+                            .removesuffix("_APP")
+                            .replace("_", "-")
+                            .lower()
+                    )
+                print(config["app"], file=sys.stderr)
         
         # Add a test for every test/run pair
         for test_method_name in all_test_methods:
@@ -259,16 +271,14 @@ def load_python():
             if header:
                 if runs:
                     for run, config in runs.items():
-                        if not tests_in_run[run][test_method_name]:
+                        if not test_method_name in run_tests[run]:
                             continue
 
                         props["config"] = config
-                        
-                        print("{a} {b}".format(a=name, b=len(runs)), file=sys.stderr)
                         if len(runs) == 1:
                             tests.append(props)
                         else:
-                            tests.append({**props, "name": f"{props["name"]}-{run}"})
+                            tests.append({**props, "name": f"{props["name"]}-{run}", "app": config["app"]})
                 else:
                     tests.append(props)
             else:
