@@ -44,12 +44,15 @@ export namespace Specification {
     /**
      * Matter specification version.
      */
-    export type Revision = `${number}.${number}` | `${number}.${number}.${number}.${number}`;
+    export type Revision =
+        | `${number}.${number}`
+        | `${number}.${number}.${number}`
+        | `${number}.${number}.${number}.${number}`;
 
     /**
      * The default specification revision for Matter.js.
      */
-    export const REVISION = "1.4";
+    export const REVISION = "1.4.1";
 
     /**
      * Binary version of specification revision defined by Basic Information Cluster.

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Constraint } from "#model";
 import { camelize } from "../../util/string.js";
 import { Words } from "../../util/words.js";
 import { repairConformanceRule } from "./repairs/aspect-repairs.js";
@@ -63,7 +64,7 @@ export const Str = (el: HTMLElement) => {
  * Can also look for number<span>number</span> to generalize but unnecessary as of 1.3.
  */
 export const ConstraintStr = (el: HTMLElement) => {
-    const str = Str(el);
+    const str = Code(el);
 
     switch (str) {
         case "-262 to 262":
@@ -80,7 +81,35 @@ export const ConstraintStr = (el: HTMLElement) => {
         throw new Error("Unrecognized constraint definition apparently referencing 2**62");
     }
 
-    return str;
+    // As of 1.4.1 the constraint column is so badly butchered we must resolve to concatenating any two words that are
+    // side-by-side in a fashion that is illegal syntactically
+    const match = str.match(/\W+/g);
+    if (!match) {
+        return str;
+    }
+
+    const parts = [...match];
+    for (let i = 0; i < parts.length; ) {
+        // Skip parts that may legally stand alone or do not end with an identifier
+        const part = parts[i];
+        if (!part.match(/[a-z]+$/i) || Constraint.keywords.has(part.replace(/^.*[!a-z]))) {
+            i++;
+            continue;
+        }
+
+        // If the next part cannot legally appear after an identifier, concatenate parts
+        const nextPart = parts[i + 1];
+        if (nextPart?.match(/^\w+/) && nextPart !== "in" && nextPart !== "to") {
+            parts[i] += nextPart;
+            parts.splice(i + 1, 1);
+            continue;
+        }
+
+        i++;
+        continue;
+    }
+
+    return parts.join(" ");
 };
 
 /** String with no space at all */

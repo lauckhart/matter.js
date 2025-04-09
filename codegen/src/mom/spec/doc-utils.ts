@@ -53,7 +53,12 @@ export function loadHtml(path: string) {
 // Read an index file to find the portions of the spec we care about
 export function identifyDocument(path: string): IndexDetail {
     const source = loadHtml(path);
-    const titleEl = source.querySelector("h1");
+    let titleEl: Element | null | undefined = source.querySelector("h1");
+
+    if (!titleEl) {
+        titleEl = findTitleWithoutHeader(source);
+    }
+
     if (!titleEl || !titleEl.textContent) {
         throw new Error(`Cannot find specification title in ${path}`);
     }
@@ -116,4 +121,16 @@ export function identifyDocument(path: string): IndexDetail {
         hasDevices,
         hasNamespaces,
     };
+}
+
+function findTitleWithoutHeader(source: Document) {
+    for (const el of source.body.children) {
+        switch (el.textContent?.toLowerCase().replace(/[^a-z]/g, "")) {
+            case "matterspecification":
+            case "matterapplicationclusters":
+            case "matterdevicelibrary":
+            case "mattersemantictagnamespaces":
+                return el;
+        }
+    }
 }
