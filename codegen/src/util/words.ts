@@ -13,6 +13,9 @@ Words.add("namespace");
 Words.add("config");
 Words.add("systime");
 Words.add("dataset");
+Words.add("min");
+Words.add("max");
+Words.add("setpoint");
 
 // Acronym for "micro reciprocal degree" used by color cluster
 Words.add("mireds");

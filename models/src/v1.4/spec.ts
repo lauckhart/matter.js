@@ -4732,14 +4732,14 @@ export const SpecMatter = Matter(
         }),
 
         Field({
-            name: "PercentMiN", id: 0x3, type: "percent100ths", conformance: "[PercentMax]",
+            name: "PercentMin", id: 0x3, type: "percent100ths", conformance: "[PercentMax]",
             constraint: "max percentTypical", quality: "F",
             details: "This field shall indicate the minimum +/- percentage accuracy for the associated measurement.",
             xref: { document: "cluster", section: "2.1.4.3.4" }
         }),
 
         Field({
-            name: "PercentTypical", id: 0x4, type: "percent100ths", conformance: "[PercentMi, n]",
+            name: "PercentTypical", id: 0x4, type: "percent100ths", conformance: "[PercentMin]",
             constraint: "percentMin to percentMax", quality: "F",
             details: "This field shall indicate the typical +/- percentage accuracy for the associated measurement.",
             xref: { document: "cluster", section: "2.1.4.3.5" }
@@ -8590,7 +8590,7 @@ export const SpecMatter = Matter(
         Attribute({ name: "ClusterRevision", id: 0xfffd, type: "ClusterRevision", default: 4 }),
 
         Attribute({
-            name: "PhysicalMInLevel", id: 0x0, type: "uint8", access: "R V", conformance: "M",
+            name: "PhysicalMinLevel", id: 0x0, type: "uint8", access: "R V", conformance: "M",
             constraint: "1 to 254", default: 1,
             details: "This attribute shall specify the minimum light output the ballast can achieve according to the " +
                 "dimming light curve (see Dimming Curve).",
@@ -8615,7 +8615,8 @@ export const SpecMatter = Matter(
 
         Attribute({
             name: "MinLevel", id: 0x10, type: "uint8", access: "RW VM", conformance: "M",
-            constraint: "physicalMinLevel to maxLevel", default: "PhysicalMinLevel",
+            constraint: "physicalMinLevel to maxLevel",
+            default: { type: "reference", name: "PhysicalMinLevel" },
 
             details: "This attribute shall specify the light output of the ballast according to the dimming light curve " +
                 "(see Dimming Curve) when the Level Control Cluster’s CurrentLevel attribute equals to 1 (and the " +
@@ -9504,7 +9505,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "OutdoorTEmperatuRe", id: 0x1, type: "temperature", access: "R V", conformance: "O",
+            name: "OutdoorTemperature", id: 0x1, type: "temperature", access: "R V", conformance: "O",
             default: null, quality: "X",
             details: "Indicates the outdoor temperature, as measured locally or remotely (over the network).",
             xref: { document: "cluster", section: "4.3.9.3" }
@@ -9528,7 +9529,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "AbsMaxHeatSetpoinTLimit", id: 0x4, type: "temperature", access: "R V", conformance: "[HEAT]",
+            name: "AbsMaxHeatSetpointLimit", id: 0x4, type: "temperature", access: "R V", conformance: "[HEAT]",
             constraint: "desc", default: { type: "celsius", value: 30 }, quality: "F",
             xref: { document: "cluster", section: "4.3.9" }
         }),
@@ -9569,7 +9570,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "HvacSystemTypeCoNfiguratioN", id: 0x9, type: "HVACSystemTypeBitmap", access: "R[W] VM",
+            name: "HvacSystemTypeConfiguration", id: 0x9, type: "HVACSystemTypeBitmap", access: "R[W] VM",
             conformance: "D", constraint: "desc", default: 0, quality: "N",
             details: "Indicates the HVAC system type controlled by the thermostat. If the thermostat uses physical DIP " +
                 "switches to set these parameters, this information shall be available read-only from the DIP " +
@@ -9598,7 +9599,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "OccupiedCoolingSetpOint", id: 0x11, type: "temperature", access: "RW VO",
+            name: "OccupiedCoolingSetpoint", id: 0x11, type: "temperature", access: "RW VO",
             conformance: "COOL", constraint: "desc", default: { type: "celsius", value: 26 }, quality: "N",
 
             details: "Indicates the cooling mode setpoint when the room is occupied. Refer to Setpoint Limits for " +
@@ -9622,7 +9623,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "OccupiedHeatingSeTpoint", id: 0x12, type: "temperature", access: "RW VO",
+            name: "OccupiedHeatingSetpoint", id: 0x12, type: "temperature", access: "RW VO",
             conformance: "HEAT", constraint: "desc", default: { type: "celsius", value: 20 }, quality: "N",
 
             details: "Indicates the heating mode setpoint when the room is occupied. Refer to Setpoint Limits for " +
@@ -9646,7 +9647,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "UnoccupiedCoolingSEtpoint", id: 0x13, type: "temperature", access: "RW VO",
+            name: "UnoccupiedCoolingSetpoint", id: 0x13, type: "temperature", access: "RW VO",
             conformance: "COOL & OCC", constraint: "desc", default: { type: "celsius", value: 26 },
             quality: "N",
 
@@ -9670,7 +9671,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "UnoccupiedHeatingSEtpoint", id: 0x14, type: "temperature", access: "RW VO",
+            name: "UnoccupiedHeatingSetpoint", id: 0x14, type: "temperature", access: "RW VO",
             conformance: "HEAT & OCC", constraint: "desc", default: { type: "celsius", value: 20 },
             quality: "N",
 
@@ -9694,7 +9695,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "MinHeatSEtpointLimit", id: 0x15, type: "temperature", access: "RW VM", conformance: "[HEAT]",
+            name: "MinHeatSetpointLimit", id: 0x15, type: "temperature", access: "RW VM", conformance: "[HEAT]",
             constraint: "desc", default: { type: "reference", name: "AbsMinHeatSetpointLimit" }, quality: "N",
 
             details: "Indicates the minimum level that the heating setpoint may be set to." +
@@ -9713,8 +9714,8 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "MaxHeatSEtpointLimit", id: 0x16, type: "temperature", access: "RW VM", conformance: "[HEAT]",
-            constraint: "desc", default: "AbsMaxHeatSetpointLimit", quality: "N",
+            name: "MaxHeatSetpointLimit", id: 0x16, type: "temperature", access: "RW VM", conformance: "[HEAT]",
+            constraint: "desc", default: { type: "reference", name: "AbsMaxHeatSetpointLimit" }, quality: "N",
 
             details: "Indicates the maximum level that the heating setpoint may be set to." +
                 "\n" +
@@ -9728,7 +9729,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "MinCoolSeTpointLimit", id: 0x17, type: "temperature", access: "RW VM", conformance: "[COOL]",
+            name: "MinCoolSetpointLimit", id: 0x17, type: "temperature", access: "RW VM", conformance: "[COOL]",
             constraint: "desc", default: { type: "reference", name: "AbsMinCoolSetpointLimit" }, quality: "N",
 
             details: "Indicates the minimum level that the cooling setpoint may be set to." +
@@ -9743,7 +9744,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "MaxCoolSEtpointLimit", id: 0x18, type: "temperature", access: "RW VM", conformance: "[COOL]",
+            name: "MaxCoolSetpointLimit", id: 0x18, type: "temperature", access: "RW VM", conformance: "[COOL]",
             constraint: "desc", default: { type: "reference", name: "AbsMaxCoolSetpointLimit" }, quality: "N",
 
             details: "Indicates the maximum level that the cooling setpoint may be set to." +
@@ -9758,7 +9759,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "MinSetpoiNtDeadBand", id: 0x19, type: "SignedTemperature", access: "R[W] VM",
+            name: "MinSetpointDeadBand", id: 0x19, type: "SignedTemperature", access: "R[W] VM",
             conformance: "AUTO", constraint: "0 to 12.7°C", default: { type: "celsius", value: 2 },
             quality: "N",
             details: "On devices which support the AUTO feature, this attribute shall indicate the minimum difference " +
@@ -9844,7 +9845,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "TemperatureSetpoiNtHold", id: 0x23, type: "TemperatureSetpointHoldEnum", access: "RW VM",
+            name: "TemperatureSetpointHold", id: 0x23, type: "TemperatureSetpointHoldEnum", access: "RW VM",
             conformance: "O", constraint: "desc", default: 0, quality: "N",
 
             details: "Indicates the temperature hold status on the thermostat. If hold status is on, the thermostat SHOULD " +
@@ -9868,7 +9869,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "TemperatureSetpoiNtHoldDuration", id: 0x24, type: "uint16", access: "RW VM",
+            name: "TemperatureSetpointHoldDuration", id: 0x24, type: "uint16", access: "RW VM",
             conformance: "O", constraint: "max 1440", default: null, quality: "X N",
 
             details: "Indicates the period in minutes for which a setpoint hold is active. Thermostats that support hold " +
@@ -9998,7 +9999,7 @@ export const SpecMatter = Matter(
 
         Attribute({
             name: "UnoccupiedSetback", id: 0x37, type: "UnsignedTemperature", access: "RW VM",
-            conformance: "SB & OCC", constraint: "unoccupiedSetbackMintoUnoccupiedSetbackMax", default: null,
+            conformance: "SB & OCC", constraint: "unoccupiedSetbackMin to unoccupiedSetbackMax", default: null,
             quality: "X N",
 
             details: "Indicates the amount that the Thermostat server will allow the Calculated Local Temperature to float " +
@@ -10038,7 +10039,8 @@ export const SpecMatter = Matter(
 
         Attribute({
             name: "UnoccupiedSetbackMax", id: 0x39, type: "UnsignedTemperature", access: "R V",
-            conformance: "SB & OCC", constraint: "UnoccupiedSetbackMinto 25.4°C", default: null, quality: "X F",
+            conformance: "SB & OCC", constraint: "unoccupiedSetbackMin to 25.4°C", default: null,
+            quality: "X F",
             details: "Indicates the maximum value that the Thermostat server will allow the UnoccupiedSetback attribute to " +
                 "be configured by a user." +
                 "\n" +
@@ -10126,7 +10128,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "AcCoilTeMperaturE", id: 0x46, type: "temperature", access: "R V", conformance: "O",
+            name: "AcCoilTemperature", id: 0x46, type: "temperature", access: "R V", conformance: "O",
             default: null, quality: "X",
             details: "Indicates the temperature of the AC coil, as measured locally or remotely (over the network).",
             xref: { document: "cluster", section: "4.3.9.50" }
@@ -11144,7 +11146,7 @@ export const SpecMatter = Matter(
             }),
 
             Field({
-                name: "CoolingSetPoint", id: 0x3, type: "temperature", conformance: "COOL", constraint: "desc",
+                name: "CoolingSetpoint", id: 0x3, type: "temperature", conformance: "COOL", constraint: "desc",
                 default: { type: "celsius", value: 26 },
                 details: "This field shall indicate the cooling setpoint for the preset. Refer to Setpoint Limits for value " +
                     "constraints.",
@@ -11152,7 +11154,7 @@ export const SpecMatter = Matter(
             }),
 
             Field({
-                name: "HeatingSeTpoint", id: 0x4, type: "temperature", conformance: "HEAT", constraint: "desc",
+                name: "HeatingSetpoint", id: 0x4, type: "temperature", conformance: "HEAT", constraint: "desc",
                 default: { type: "celsius", value: 20 },
                 details: "This field shall indicate the heating setpoint for the preset. Refer to Setpoint Limits for value " +
                     "constraints.",
@@ -11203,12 +11205,12 @@ export const SpecMatter = Matter(
             }),
 
             Field({
-                name: "HeatSetpoInt", id: 0x1, type: "temperature", conformance: "M", quality: "X",
+                name: "HeatSetpoint", id: 0x1, type: "temperature", conformance: "M", quality: "X",
                 details: "This field shall represent the heat setpoint to be applied at this associated transition start time.",
                 xref: { document: "cluster", section: "4.3.8.30.2" }
             }),
             Field({
-                name: "CoolSetpoiNt", id: 0x2, type: "temperature", conformance: "M", quality: "X",
+                name: "CoolSetpoint", id: 0x2, type: "temperature", conformance: "M", quality: "X",
                 details: "This field shall represent the cool setpoint to be applied at this associated transition start time.",
                 xref: { document: "cluster", section: "4.3.8.30.3" }
             })
@@ -11393,14 +11395,14 @@ export const SpecMatter = Matter(
             }),
 
             Field({
-                name: "CoolingSetPoint", id: 0x4, type: "temperature", conformance: "[COOL]", constraint: "desc",
+                name: "CoolingSetpoint", id: 0x4, type: "temperature", conformance: "[COOL]", constraint: "desc",
                 details: "This field shall specify the cooling setpoint for the transition. If PresetHandle is set, this field " +
                     "shall NOT be included. Refer to Setpoint Limits for value constraints.",
                 xref: { document: "cluster", section: "4.3.8.32.5" }
             }),
 
             Field({
-                name: "HeatingSeTpoint", id: 0x5, type: "temperature", conformance: "[HEAT]", constraint: "desc",
+                name: "HeatingSetpoint", id: 0x5, type: "temperature", conformance: "[HEAT]", constraint: "desc",
                 details: "This field shall specify the cooling setpoint for the transition. If PresetHandle is set, this field " +
                     "shall NOT be included. Refer to Setpoint Limits for value constraints.",
                 xref: { document: "cluster", section: "4.3.8.32.6" }
@@ -11750,7 +11752,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "SchedulePRogrammiNgVisibility", id: 0x2, type: "ScheduleProgrammingVisibilityEnum",
+            name: "ScheduleProgrammingVisibility", id: 0x2, type: "ScheduleProgrammingVisibilityEnum",
             access: "RW VM", conformance: "O", default: 0,
 
             details: "This attribute is used to hide the weekly schedule programming functionality or menu on a thermostat " +
@@ -12459,7 +12461,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "DefaultCoNfiguratioNRegister", id: 0x27, type: "ConfigurationRegisterBitmap", access: "R V",
+            name: "DefaultConfigurationRegister", id: 0x27, type: "ConfigurationRegisterBitmap", access: "R V",
             conformance: "O", default: 0, quality: "P",
 
             details: "Indicates the default configurations as they are physically set on the device (example: hardware dip " +
@@ -13531,7 +13533,7 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "HolidayIndex", id: 0x0, type: "uint8", conformance: "M",
-                constraint: "1 toNumberOfHolidaySchedulesSupported"
+                constraint: "1 to numberOfHolidaySchedulesSupported"
             })
         ),
 
@@ -20234,7 +20236,7 @@ export const SpecMatter = Matter(
         ),
 
         Attribute({
-            name: "TemperatureSetpoiNt", id: 0x0, type: "temperature", access: "R V", conformance: "TN",
+            name: "TemperatureSetpoint", id: 0x0, type: "temperature", access: "R V", conformance: "TN",
             constraint: "minTemperature to maxTemperature",
             details: "Indicates the desired Temperature Setpoint on the device.",
             xref: { document: "cluster", section: "8.2.5.1" }
@@ -20276,7 +20278,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "SelectedTeMperaturELevel", id: 0x4, type: "uint8", access: "R V", conformance: "TL",
+            name: "SelectedTemperatureLevel", id: 0x4, type: "uint8", access: "R V", conformance: "TL",
             constraint: "max 31",
             details: "Indicates the currently selected temperature level setting of the server. This attribute shall be " +
                 "the positional index of the list item in the SupportedTemperatureLevels list that represents the " +
@@ -31601,7 +31603,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "BasicComMissioningInfo", id: 0x1, type: "BasicCommissioningInfo", access: "R V",
+            name: "BasicCommissioningInfo", id: 0x1, type: "BasicCommissioningInfo", access: "R V",
             conformance: "M", constraint: "desc", quality: "F",
             details: "This attribute shall describe critical parameters needed at the beginning of commissioning flow. See " +
                 "BasicCommissioningInfo for more information.",

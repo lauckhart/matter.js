@@ -109,8 +109,6 @@ export const ConstraintStr = (el: HTMLElement) => {
         continue;
     }
 
-    if (parts.find(str => str === "toNumberOfHolidaySchedulesSupported")) debugger;
-
     return parts.join(" ");
 };
 
@@ -160,6 +158,23 @@ export const Bit = (el: HTMLElement) => {
  * narrow columns and we don't want to end up with FoO
  */
 export const Code = (el: HTMLElement) => {
+    // Ensure textContent will produce space for P
+    let shouldBeSpaced = false;
+    for (let child = el.firstChild; child; child = child.nextSibling) {
+        if (shouldBeSpaced) {
+            el.insertBefore(el.ownerDocument.createTextNode(" "), child);
+            shouldBeSpaced = false;
+        }
+        switch ((child as Element).tagName) {
+            case "P":
+                shouldBeSpaced = true;
+                break;
+
+            default:
+                shouldBeSpaced = false;
+        }
+    }
+
     let str = Str(el);
 
     // Use the english dictionary to heuristically repair whitespace errors
@@ -170,22 +185,30 @@ export const Code = (el: HTMLElement) => {
             continue;
         }
 
-        // If a word starts with lowercase, see if it's a word when concatenated with the previous word
-        if (parts[i + 1].match(/^[a-z]/)) {
-            // Get beginning of word from current part
-            const beginning = parts[i].replace(/^.*([A-Z])/, "$1");
+        // For all subsequent words that start with lowercase, see if they form an actual word when concatenated with
+        // the previous word
+        let beginning = parts[i].replace(/^.*([A-Z])/, "$1");
+        for (let j = i + 1; j < parts.length; j++) {
+            // Abort if next part does not appear to be a word segment
+            if (!parts[j].match(/^[a-z]/)) {
+                break;
+            }
 
             // Get ending of word from next part
-            const ending = parts[i + 1].replace(/^([a-z]+).*/, "$1");
+            const ending = parts[j].replace(/^([a-z]+).*/, "$1");
 
             // If the concatenation is a word, assume it should be joined
             if (Words.has(`${beginning}${ending}`.toLowerCase())) {
-                parts[i] = `${parts[i]}${parts[i + 1]}`;
-                parts.splice(i + 1, 1);
+                // Join
+                parts[i] += parts.splice(i + 1, j - i).join("");
 
                 // Redo check from current point
                 i--;
+                break;
             }
+
+            // Extend beginning for next iteration
+            beginning += parts[j];
         }
     }
     str = parts.join(" ");

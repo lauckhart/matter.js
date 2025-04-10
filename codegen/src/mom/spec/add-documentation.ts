@@ -65,9 +65,10 @@ function extractUsefulDocumentation(p: HTMLElement) {
 }
 
 /**
- * Similarly to what we do within paragraphs, look for obvious word splits spanning paragraphs and reassemble.
+ * Look for obvious split paragraphs and reassemble.
  */
 function mergeSplitParagraphs(paragraphs: string[]) {
+    // First merge by identifying word splits.  These we want to merge without an intervening space
     for (let i = 0; i < paragraphs.length - 1; i++) {
         const trailing = paragraphs[i].replace(/^.*\s(\w+)$/, "$1").toLowerCase();
         const leading = paragraphs[i + 1].replace(/^(\w+)\W.*$/, "$1").toLowerCase();
@@ -76,8 +77,32 @@ function mergeSplitParagraphs(paragraphs: string[]) {
         }
         const possibleWord = `${trailing}${leading}`;
         if (Words.has(possibleWord)) {
-            paragraphs.splice(i, 2, `${paragraphs[i]}${paragraphs[i + 1]}`);
+            joinParagraphs(i, "");
         }
+    }
+
+    // Next merge by identifying sentence splits
+    for (let i = 0; i < paragraphs.length - 1; i++) {
+        if (paragraphs[i].endsWith(".")) {
+            continue;
+        }
+
+        const sentences = paragraphs[i].split(". ");
+        const lastSentence = sentences[sentences.length - 1];
+        if (!lastSentence.match(/^[A-Z]/)) {
+            continue;
+        }
+
+        const nextParagraph = paragraphs[i + 1];
+        if (nextParagraph.match(/^[a-z0-9]/)) {
+            if (nextParagraph.indexOf(". ") !== -1 || nextParagraph.endsWith(".")) {
+                joinParagraphs(i, " ");
+            }
+        }
+    }
+
+    function joinParagraphs(index: number, separator: string) {
+        paragraphs.splice(index, 2, `${paragraphs[index]}${separator}${paragraphs[index + 1]}`);
     }
 }
 

@@ -40,9 +40,7 @@ export const Children = (translator: ChildTranslator) => ({ option: "children", 
  * A simple schema format.  This is all a little fancy for an ugly scraping
  * tool but accuracy and repeatability is the goal
  */
-type TableSchema = {
-    [name: string]: any;
-};
+type TableSchema = Record<string, unknown>;
 
 type FieldType<F> =
     F extends Optional<infer W>
@@ -116,7 +114,17 @@ export function translateTable<T extends TableSchema>(
             }
         }
 
-        translators.push([k, v]);
+        switch (typeof v) {
+            case "string":
+            case "number":
+            case "function":
+                break;
+
+            default:
+                throw new Error(`Invalid value type ${typeof v} for ${v}`);
+        }
+
+        translators.push([k, v as string | number | Translator<any>]);
     }
 
     // Translate each table row
