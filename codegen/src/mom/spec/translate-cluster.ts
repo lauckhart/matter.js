@@ -18,7 +18,6 @@ import {
 import { camelize } from "../../util/string.js";
 import { addDocumentation } from "./add-documentation.js";
 import {
-    Code,
     ConformanceCode,
     Identifier,
     Integer,
@@ -294,7 +293,7 @@ function translateInvokable(definition: ClusterReference, children: Array<Cluste
     function translateCommands() {
         const records = translateTable("command", definition.commands, {
             id: Integer,
-            name: Code,
+            name: Identifier,
             direction: Optional(Str),
             response: Optional(Identifier),
             access: Optional(Str),
