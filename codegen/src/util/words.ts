@@ -13,3 +13,5 @@ Words.add("namespace");
 
 // Acronym for "micro reciprocal degree" used by color cluster
 Words.add("mireds");
+
+Words.add("config");

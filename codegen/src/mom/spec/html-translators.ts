@@ -83,7 +83,7 @@ export const ConstraintStr = (el: HTMLElement) => {
 
     // As of 1.4.1 the constraint column is so badly butchered we must resolve to concatenating any two words that are
     // side-by-side in a fashion that is illegal syntactically
-    const match = str.match(/\W+/g);
+    const match = str.match(/\S+/g);
     if (!match) {
         return str;
     }
@@ -92,14 +92,14 @@ export const ConstraintStr = (el: HTMLElement) => {
     for (let i = 0; i < parts.length; ) {
         // Skip parts that may legally stand alone or do not end with an identifier
         const part = parts[i];
-        if (!part.match(/[a-z]+$/i) || Constraint.keywords.has(part.replace(/^.*[!a-z]))) {
+        if (!part.match(/[a-z_]+$/i) || Constraint.keywords.has(part.replace(/^.*[^a-z_]/i, ""))) {
             i++;
             continue;
         }
 
         // If the next part cannot legally appear after an identifier, concatenate parts
         const nextPart = parts[i + 1];
-        if (nextPart?.match(/^\w+/) && nextPart !== "in" && nextPart !== "to") {
+        if (nextPart?.match(/^[a-z_]+/i) && nextPart !== "in" && nextPart !== "to") {
             parts[i] += nextPart;
             parts.splice(i + 1, 1);
             continue;
@@ -163,8 +163,7 @@ export const Code = (el: HTMLElement) => {
     // Use the english dictionary to heuristically repair whitespace errors
     const parts = str.split(/\s+/);
     for (let i = 0; i < parts.length - 1; i++) {
-        // If the current word is all uppercase, assume it's a standalone
-        // identifier
+        // If the current word is all uppercase, assume it's a standalone identifier
         if (parts[i].match(/^[A-Z_]+$/)) {
             continue;
         }

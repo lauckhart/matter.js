@@ -60,7 +60,13 @@ export function repairConformanceRule(conformance?: string) {
         return "M";
     }
 
-    conformance = conformance?.replace(/\|CO N/, "|CON").replace("PIRUnoccupiedToOccupied", "PirUnoccupiedToOccupied");
+    conformance = conformance
+        // At some point should maybe fix up similarly to how we do constraints but for now there are few enough errors
+        // we can get away with hard-coded list
+        ?.replace(/\|CO N/, "|CON")
+        .replace("PIRUnoccupiedToOccupied", "PirUnoccupiedToOccupied")
+        .replace("EndSystim e", "EndSystime")
+        .replace("NumberOf Primaries", "NumberOfPrimaries");
 
     return conformance;
 }
