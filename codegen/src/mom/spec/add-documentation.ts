@@ -87,7 +87,7 @@ function mergeSplitParagraphs(paragraphs: string[]) {
             continue;
         }
 
-        const sentences = paragraphs[i].split(". ");
+        const sentences = paragraphs[i].split(/[.?!:]\s/);
         const lastSentence = sentences[sentences.length - 1];
         if (!lastSentence.match(/^[A-Z]/)) {
             continue;
@@ -95,7 +95,7 @@ function mergeSplitParagraphs(paragraphs: string[]) {
 
         const nextParagraph = paragraphs[i + 1];
         if (nextParagraph.match(/^[a-z0-9]/)) {
-            if (nextParagraph.indexOf(". ") !== -1 || nextParagraph.endsWith(".")) {
+            if (!nextParagraph.match(/[.?!]\s/) || nextParagraph.match(/[.?!]$/)) {
                 joinParagraphs(i, " ");
             }
         }
@@ -117,6 +117,8 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
     }
 
     const paragraphs = Array<string>();
+
+    let collectNote = false;
 
     prose: for (const p of prose) {
         // Anchors receive special examination
@@ -140,6 +142,19 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
 
         // Extract text
         let text = extractUsefulDocumentation(p);
+
+        // Next paragraph is a note if text is "NOTE"
+        if (text === "NOTE") {
+            collectNote = true;
+            continue;
+        }
+
+        // Create note if we we saw "NOTE" previously
+        if (collectNote) {
+            paragraphs.push(`> [!NOTE]\n> ${text}`);
+            collectNote = false;
+            continue;
+        }
 
         // Terminate if flagged
         for (const flag of EndContentFlags) {

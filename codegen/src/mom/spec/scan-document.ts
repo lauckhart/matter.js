@@ -79,6 +79,18 @@ export function* scanDocument(docRef: HtmlReference) {
                 case "H4":
                 case "H5":
                 case "H6":
+                    // New for 1.4.1 notes are formatted such that Acrobat decides the "NOTE" marker is a heading.
+                    // Just add to prose
+                    if (Str(element) === "NOTE") {
+                        if (currentRef) {
+                            if (!currentRef.prose) {
+                                currentRef.prose = [];
+                            }
+                            currentRef.prose.push(element);
+                        }
+                        continue;
+                    }
+
                     // If we're lucky, there's actually a header tag
                     yield* emit();
                     const heading = parseHeading(element);
