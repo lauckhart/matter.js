@@ -16,6 +16,13 @@ Words.add("dataset");
 Words.add("min");
 Words.add("max");
 Words.add("setpoint");
+Words.add("setpoints");
+Words.add("struct");
+Words.add("structs");
+Words.add("pausable");
+Words.add("passphrase");
+Words.add("arl");
+Words.add("passcode");
 
-// Acronym for "micro reciprocal degree" used by color cluster
+// Acronym for "micro reciprocal degrees" used by color cluster
 Words.add("mireds");

@@ -57,9 +57,9 @@ export namespace Specification {
     /**
      * Binary version of specification revision defined by Basic Information Cluster.
      *
-     * Currently spec says least significant octet is "reserved", so we don't stick the .1 into it.
+     * Currently spec says least significant octet is "reserved", so it should remain zero.
      */
-    export const SPECIFICATION_VERSION = 0x01040000;
+    export const SPECIFICATION_VERSION = 0x01040100;
 
     /**
      * Data model revision associated with the default revision of Matter.
