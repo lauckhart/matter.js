@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { Bullets } from "@matter/general";
 import { Words } from "../../util/words.js";
 import { Str } from "./html-translators.js";
 import { HtmlReference } from "./spec-types.js";
@@ -21,6 +22,8 @@ export const EndContentFlags = [
  * Uncommon english words that are part of known splits.
  */
 export const NotWords = new Set(["cur"]);
+
+const liTest = new RegExp(`^[${Bullets.join("")}]\\s]`);
 
 /**
  * A light attempt at dropping text to make documentation seem slightly less scavenged.
@@ -61,6 +64,7 @@ function extractUsefulDocumentation(p: HTMLElement) {
             /The table below lists the changes relative to the Mode Base Cluster for the fields of the ModeOptionStruct type\./,
             "",
         )
+        .replace(/. if the AbsolutePosition/, ".\nif the AbsolutePosition")
         .trim();
 }
 
@@ -120,6 +124,8 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
 
     let collectNote = false;
 
+    const listIndent = Array<number>();
+
     prose: for (const p of prose) {
         // Anchors receive special examination
         let looksLikeHeading = false;
@@ -129,6 +135,7 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
 
             // Ignore table notations
             if (text.match(/^Table \d+/)) {
+                listIndent.length = 0;
                 continue;
             }
 
@@ -145,12 +152,14 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
 
         // Next paragraph is a note if text is "NOTE"
         if (text === "NOTE") {
+            listIndent.length = 0;
             collectNote = true;
             continue;
         }
 
         // Create note if we we saw "NOTE" previously
         if (collectNote) {
+            listIndent.length = 0;
             paragraphs.push(`> [!NOTE]\n> ${text}`);
             collectNote = false;
             continue;
@@ -166,7 +175,31 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
         // Add the text
         if (text) {
             if (looksLikeHeading) {
+                // Special case, likely not necessary anymore
+                listIndent.length = 0;
                 text = `### ${text}`;
+            } else if (liTest.exec(text)) {
+                // Create proper list indentation relying on the fact that Acrobat injects bullets as text and indents
+                // using left padding
+                const indentStr = p.getAttribute("style")?.replace(/.*padding-left: (\d+).*/, "$1");
+                let indent;
+                if (indentStr) {
+                    indent = Number.parseInt(indentStr);
+                    if (Number.isNaN(listIndent)) {
+                        indent = 0;
+                    }
+                } else {
+                    indent = 0;
+                }
+                while (listIndent && listIndent[listIndent.length - 1] > indent) {
+                    listIndent.pop();
+                }
+                if (!listIndent.length || listIndent[listIndent.length - 1] == indent) {
+                    listIndent.push(indent);
+                }
+                text = `${" ".repeat((listIndent.length - 1) * 2)} ${text}`;
+            } else {
+                listIndent.length = 0;
             }
             paragraphs.push(text);
         }

@@ -280,42 +280,42 @@ export const GeneralCommissioning = Cluster(
                 "If the fail-safe timer expires before the CommissioningComplete command is successfully invoked, the " +
                 "following sequence of clean-up steps shall be executed, in order, by the receiver:" +
                 "\n" +
-                "  1. Terminate any open PASE secure session by clearing any associated Secure Session Context at the " +
-                "      Server." +
+                "1. Terminate any open PASE secure session by clearing any associated Secure Session Context at the " +
+                "Server." +
                 "\n" +
-                "  2. Revoke the temporary administrative privileges granted to any open PASE session (see Section " +
-                "      6.6.2.9, “Bootstrapping of the Access Control Cluster”) at the Server." +
+                "2. Revoke the temporary administrative privileges granted to any open PASE session (see Section " +
+                "6.6.2.9, “Bootstrapping of the Access Control Cluster”) at the Server." +
                 "\n" +
-                "  3. If an AddNOC or UpdateNOC command has been successfully invoked, terminate all CASE sessions " +
-                "      associated with the Fabric whose Fabric Index is recorded in the Fail-Safe context (see " +
-                "      ArmFailSafe) by clearing any associated Secure Session Context at the Server." +
+                "3. If an AddNOC or UpdateNOC command has been successfully invoked, terminate all CASE sessions " +
+                "associated with the Fabric whose Fabric Index is recorded in the Fail-Safe context (see ArmFailSafe) " +
+                "by clearing any associated Secure Session Context at the Server." +
                 "\n" +
-                "  4. Reset the configuration of all Network Commissioning Networks attribute to their state prior to " +
-                "      the Fail-Safe being armed." +
+                "4. Reset the configuration of all Network Commissioning Networks attribute to their state prior to " +
+                "the Fail-Safe being armed." +
                 "\n" +
-                "  5. If an UpdateNOC command had been successfully invoked, revert the state of operational key " +
-                "      pair, NOC and ICAC for that Fabric to the state prior to the Fail-Safe timer being armed, for " +
-                "      the Fabric Index that was the subject of the UpdateNOC command." +
+                "5. If an UpdateNOC command had been successfully invoked, revert the state of operational key pair, " +
+                "NOC and ICAC for that Fabric to the state prior to the Fail-Safe timer being armed, for the Fabric " +
+                "Index that was the subject of the UpdateNOC command." +
                 "\n" +
-                "  6. If an AddNOC command had been successfully invoked, achieve the equivalent effect of invoking " +
-                "      the RemoveFabric command against the Fabric Index stored in the Fail-Safe Context for the " +
-                "      Fabric Index that was the subject of the AddNOC command. This shall remove all associations to " +
-                "      that Fabric including all fabric-scoped data, and may possibly factory-reset the device " +
-                "      depending on current device state. This shall only apply to Fabrics added during the fail-safe " +
-                "      period as the result of the AddNOC command." +
+                "6. If an AddNOC command had been successfully invoked, achieve the equivalent effect of invoking the " +
+                "RemoveFabric command against the Fabric Index stored in the Fail-Safe Context for the Fabric Index " +
+                "that was the subject of the AddNOC command. This shall remove all associations to that Fabric " +
+                "including all fabric-scoped data, and may possibly factory-reset the device depending on current " +
+                "device state. This shall only apply to Fabrics added during the fail-safe period as the result of " +
+                "the AddNOC command." +
                 "\n" +
-                "  7. If the CSRRequest command had been successfully invoked, but no AddNOC or UpdateNOC command had " +
-                "      been successfully invoked, then the new operational key pair temporarily generated for the " +
-                "      purposes of NOC addition or update (see Node Operational CSR Procedure) shall be removed as it " +
-                "      is no longer needed." +
+                "7. If the CSRRequest command had been successfully invoked, but no AddNOC or UpdateNOC command had " +
+                "been successfully invoked, then the new operational key pair temporarily generated for the purposes " +
+                "of NOC addition or update (see Node Operational CSR Procedure) shall be removed as it is no longer " +
+                "needed." +
                 "\n" +
-                "  8. Remove any RCACs added by the AddTrustedRootCertificate command that are not currently " +
-                "      referenced by any entry in the Fabrics attribute." +
+                "8. Remove any RCACs added by the AddTrustedRootCertificate command that are not currently referenced " +
+                "by any entry in the Fabrics attribute." +
                 "\n" +
-                "  9. Reset the Breadcrumb attribute to zero." +
+                "9. Reset the Breadcrumb attribute to zero." +
                 "\n" +
-                "  10. Optionally: if no factory-reset resulted from the previous steps, it is recommended that the " +
-                "      Node rollback the state of all non fabric-scoped data present in the Fail-Safe context.",
+                "10. Optionally: if no factory-reset resulted from the previous steps, it is recommended that the " +
+                "Node rollback the state of all non fabric-scoped data present in the Fail-Safe context.",
 
             xref: { document: "core", section: "11.10.7.2" }
         },
@@ -459,17 +459,16 @@ export const GeneralCommissioning = Cluster(
             "CommissioningCompleteResponse has an ErrorCode of OK, the following actions shall be undertaken on " +
             "the Server:" +
             "\n" +
-            "  1. The Fail-Safe timer associated with the current Fail-Safe context shall be disarmed." +
+            "1. The Fail-Safe timer associated with the current Fail-Safe context shall be disarmed." +
             "\n" +
-            "  2. The commissioning window at the Server shall be closed." +
+            "2. The commissioning window at the Server shall be closed." +
             "\n" +
-            "  3. Any temporary administrative privileges automatically granted to any open PASE session shall be " +
-            "     revoked (see Section 6.6.2.9, “Bootstrapping of the Access Control Cluster”)." +
+            "3. Any temporary administrative privileges automatically granted to any open PASE session shall be " +
+            "revoked (see Section 6.6.2.9, “Bootstrapping of the Access Control Cluster”)." +
             "\n" +
-            "  4. The Secure Session Context of any PASE session still established at the Server shall be " +
-            "     cleared." +
+            "4. The Secure Session Context of any PASE session still established at the Server shall be cleared." +
             "\n" +
-            "  5. The Breadcrumb attribute shall be reset to zero." +
+            "5. The Breadcrumb attribute shall be reset to zero." +
             "\n" +
             "After receipt of a CommissioningCompleteResponse with an ErrorCode value of OK, a client cannot " +
             "expect any previously established PASE session to still be usable, due to the server having cleared " +

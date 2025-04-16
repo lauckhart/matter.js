@@ -654,18 +654,18 @@ export const NetworkCommissioning = Cluster(
                 "ConnectNetwork command, the client SHOULD re-invoke the Arm Fail-Safe command with a duration that " +
                 "meets the following:" +
                 "\n" +
-                "  1. Sufficient time to meet the minimum required time (see ConnectMaxTimeSeconds) that may be taken " +
-                "     by the server to connect to the desired network." +
+                "1. Sufficient time to meet the minimum required time (see ConnectMaxTimeSeconds) that may be taken " +
+                "by the server to connect to the desired network." +
                 "\n" +
-                "  2. Sufficient time to account for possible message-layer retries when a response is requested." +
+                "2. Sufficient time to account for possible message-layer retries when a response is requested." +
                 "\n" +
-                "  3. Sufficient time to allow operational discovery on the new network by a Commissioner or " +
-                "     Administrator." +
+                "3. Sufficient time to allow operational discovery on the new network by a Commissioner or " +
+                "Administrator." +
                 "\n" +
-                "  4. Sufficient time to establish a CASE session after operational discovery" +
+                "4. Sufficient time to establish a CASE session after operational discovery" +
                 "\n" +
-                "  5. Not so long that, in error situations, the delay to reverting back to being discoverable for " +
-                "     commissioning with a previous configuration would cause significant user-perceived delay." +
+                "5. Not so long that, in error situations, the delay to reverting back to being discoverable for " +
+                "commissioning with a previous configuration would cause significant user-perceived delay." +
                 "\n" +
                 "Note as well that the CommissioningTimeout duration provided in a prior OpenCommissioningWindow or " +
                 "OpenBasicCommissioningWindow command may impact the total time available to proceed with error " +
