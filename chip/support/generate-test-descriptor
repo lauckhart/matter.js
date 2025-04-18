@@ -27,6 +27,16 @@ from chip.testing.matter_testing import MatterBaseTest, MatterTestConfig, genera
 YAML_DIR = "/src/app/tests/suites"
 PYTHON_DIR = "/src/python_testing"
 
+# JS test harness is higher level than the Python test harness so we ignore boilerplate arguments
+PYTHON_IGNORE_ARGS = [
+    "--storage-path",
+    "--commissioning-method",
+    "--discriminator",
+    "--passcode",
+    "--trace-to",
+    "--PICS"
+]
+
 # Somewhere in the code we run for test reflection CHIP decides to create a directory for the test name.  So execute in
 # /tmp/metadata-garbage and clean up when we're done
 os.mkdir("/tmp/metadata-garbage")
@@ -202,7 +212,14 @@ def load_python():
                             tests_in_run.append(arg)
                             following = None
                             continue
-                        
+                        elif following == "ignored":
+                            following = None
+                            continue
+
+                        if arg in PYTHON_IGNORE_ARGS:
+                            following = "ignored"
+                            continue 
+
                         if arg == "--scripts" or arg == "--test-case":
                             following = arg
                             continue
@@ -216,10 +233,9 @@ def load_python():
                 else:
                     run_tests[run] = all_test_methods
 
-                app = config["app"]
-                if app:
+                if "app" in config:
                     config["app"] = (
-                        app
+                        config["app"]
                             .removeprefix("${")
                             .removeprefix("CHIP_")
                             .removesuffix("}")
@@ -227,7 +243,6 @@ def load_python():
                             .replace("_", "-")
                             .lower()
                     )
-                print(config["app"], file=sys.stderr)
         
         # Add a test for every test/run pair
         for test_method_name in all_test_methods:
@@ -267,18 +282,26 @@ def load_python():
             if basename in manual:
                 props["isManual"] = manual[basename]
 
-            # Install a test for each run configured to invoke the test; suffix with run name if there are multiple runs
+            # Install a test for each run configured to invoke the test; if there are multiple runs we create a suite
+            # with a test for each run, otherwise the we just create the test
             if header:
                 if runs:
-                    for run, config in runs.items():
-                        if not test_method_name in run_tests[run]:
-                            continue
+                    suite = None
+                    
+                    method_runs = {k: v for k, v in runs.items() if test_method_name in run_tests[run]}
+                    if not method_runs:
+                        continue
 
+                    if len(method_runs) > 1:
+                        suite = { "kind": "suite", "name": props["name"], "members": [] }
+                        tests.append(suite)
+                    
+                    for run, config in method_runs.items():
                         props["config"] = config
-                        if len(runs) == 1:
-                            tests.append(props)
+                        if suite:
+                            suite["members"].append({**props, "name": run, "app": config["app"]})
                         else:
-                            tests.append({**props, "name": f"{props["name"]}-{run}", "app": config["app"]})
+                            tests.append(props)
                 else:
                     tests.append(props)
             else:
