@@ -207,7 +207,7 @@ COPY --from=source /connectedhomeip/examples/placeholder/py_matter_placeholder_a
 COPY --from=source /connectedhomeip/src/controller/python/py_matter_yamltest_repl_adapter/matter_yamltest_repl_adapter matter_yamltest_repl_adapter
 
 # Link various bits to original connectedhomeip locations for discovery and/or convenience
-RUN ln -s "$(realpath chip/testing/data_model)" /data_model
+#RUN ln -s "$(realpath chip/testing/data_model)" /data_model
 RUN mkdir -p /scripts/tests
 RUN ln -s "$(realpath chiptest)" /scripts/tests/chiptest
 RUN mkdir -p /scripts/py_matter_yamltests
@@ -220,7 +220,7 @@ COPY --from=source /connectedhomeip/scripts/tests/chipyaml /scripts/tests/chipya
 # Ensure python logic can find the data model (spec_parsing.yaml looks for "scraper_version" but the wheels don't
 # include it)
 ENV PW_PROJECT_ROOT=/
-RUN touch /data_model/master/scraper_version
+#RUN touch /data_model/master/scraper_version
 
 # YAML tests of course use a different data model
 COPY --from=source /connectedhomeip/src/app/zap-templates/zcl/data-model/chip \

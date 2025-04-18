@@ -6,7 +6,9 @@
 
 # Build the CHIP container
 #
-# Takes an optional single argument:
+# Usage: build [debug] [fast | <CHIP SHA or tag>]
+#
+# Where:
 #
 #   - If not provided, builds full container from latest CHIP master branch
 #
@@ -18,6 +20,14 @@ source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
 
 if ! docker buildx inspect matter.js-chip > /dev/null 2>&1; then
     docker buildx create --name matter.js-chip
+fi
+
+if [ "$1" == "debug" ]; then
+    export BUILDX_EXPERIMENTAL=1
+    COMMAND='debug --invoke entrypoint=["/bin/bash"],args=["-i"] build --progress plain'
+    shift
+else
+    COMMAND="build"
 fi
 
 if [ -z "$1" ]; then
@@ -37,10 +47,9 @@ fi
 
 VERSION="$ACTOR-$(date -u +%Y%m%dT%H%M%S)-$(git rev-parse HEAD | cut -c 1-12)"
 
-docker buildx build "$CHIP_DIR" \
+docker buildx $COMMAND "$CHIP_DIR" \
     --builder matter.js-chip \
     --load \
-    --progress plain \
     -t ghcr.io/matter-js/chip \
     --label org.opencontainers.image.name=matter.js-chip \
     --label org.opencontainers.image.version="$VERSION" \
