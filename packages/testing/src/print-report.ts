@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Progress, STATUS_ICON_FAILURE, STATUS_ICON_SUCCESS } from "@matter/tools";
+import { Progress, STATUS_ICON_FAILURE, STATUS_ICON_SKIPPED, STATUS_ICON_SUCCESS } from "@matter/tools";
 import colors from "ansi-colors";
 import { chip } from "./chip/chip.js";
 import { InvalidPicsExpressionError, PicsExpression } from "./chip/pics-expression.js";
@@ -64,7 +64,7 @@ function printDescriptor(descriptor: TestDescriptor, includeDisabled?: boolean, 
                     break;
 
                 default:
-                    title = `  ${title}`;
+                    title = `${STATUS_ICON_SKIPPED} ${title}`;
             }
         }
 

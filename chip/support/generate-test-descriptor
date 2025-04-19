@@ -209,6 +209,7 @@ def load_python():
                                 tests_in_run.append(arg)
                                 continue
                         elif following == "--test-case":
+                            print(arg, file=sys.stderr)
                             tests_in_run.append(arg)
                             following = None
                             continue
@@ -288,7 +289,7 @@ def load_python():
                 if runs:
                     suite = None
                     
-                    method_runs = {k: v for k, v in runs.items() if test_method_name in run_tests[run]}
+                    method_runs = {k: v for k, v in runs.items() if test_method_name in run_tests[k]}
                     if not method_runs:
                         continue
 

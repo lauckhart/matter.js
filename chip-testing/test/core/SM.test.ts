@@ -5,5 +5,8 @@
  */
 
 describe("SM", () => {
-    chip("SM/*");
+    // All clusters
+    chip("SM/*/run1");
+
+    //chip("SM/*/run12").subject(RvcApp);
 });
