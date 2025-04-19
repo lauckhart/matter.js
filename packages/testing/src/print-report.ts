@@ -135,19 +135,10 @@ export async function defaultDescriptor(runner: TestRunner) {
             used.add(descriptor);
         });
 
-        let unused = TestDescriptor.filter(chip.tests.descriptor, (descriptor, recurse) => {
-            if (descriptor.kind === "py" || descriptor.kind === "yaml") {
-                if (used.has(descriptor)) {
-                    return;
-                }
-            }
-
-            const result = recurse();
-            if (!result || (result.kind === "suite" && !result.members?.length)) {
-                return;
-            }
-
-            return result;
+        let unused = TestDescriptor.filter(chip.tests.descriptor, {
+            predicate(descriptor) {
+                return (descriptor.kind !== "py" && descriptor.kind !== "yaml") || !used.has(descriptor);
+            },
         });
 
         if (unused) {

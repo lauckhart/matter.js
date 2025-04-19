@@ -51,32 +51,44 @@ export namespace TestDescriptor {
         descriptor: TestDescriptor;
     }
 
+    export type Criteria = {
+        includePaths?: string[];
+        kinds?: Kind[];
+        pics?: PicsFile;
+        predicate?: (descriptor: TestDescriptor) => boolean;
+    };
+
     /**
-     * Create a filtering predicate based on specified criteria.
+     * Create a filter function for specified criteria.
      *
-     * The predicate treats tests as atomic and ignores empty suites.
+     * The filter treats tests as atomic and ignores empty suites.
      */
-    export function predicateFor(criteria: { includePaths?: string[]; kinds?: Kind[]; pics?: PicsFile }): Predicate {
-        const { includePaths, kinds, pics } = criteria;
+    export function filter(descriptor: TestDescriptor, criteria: Criteria): TestDescriptor | undefined {
+        const { includePaths, kinds, pics, predicate } = criteria;
 
         // Index the inclusion paths so we can efficiently short-circuit search
-        interface InclusionNode extends Record<string, InclusionNode> {}
-        let inclusion: undefined | InclusionNode;
+        interface NameNode extends Record<string, NameNode | undefined> {}
+        let memberNames: undefined | NameNode;
         if (includePaths) {
-            inclusion = {};
+            memberNames = {};
             for (const path of includePaths) {
-                let incl = inclusion;
-                for (const segment of path.split("/").filter(segment => segment !== "")) {
-                    incl = incl[segment] ??= {};
+                let incl = memberNames;
+                const segments = path.split("/");
+                if (segments[0] === "") {
+                    segments[0] = descriptor.name;
+                }
+                for (const segment of segments) {
+                    incl = (incl[segment] as NameNode) ??= {};
                 }
             }
         }
 
-        let firstLevel = true;
+        return filter(descriptor, memberNames);
 
-        return (descriptor, recurse) => {
+        function filter(descriptor: TestDescriptor, names?: NameNode): TestDescriptor | undefined {
             // Short circuit irrelevant paths
-            if (!firstLevel && inclusion && !inclusion[descriptor.name]) {
+            const memberNames = names?.[descriptor.name];
+            if (names && !memberNames) {
                 return;
             }
 
@@ -90,23 +102,34 @@ export namespace TestDescriptor {
 
             // Recurse into suites
             if (descriptor.kind === "suite") {
-                const revertInclusion = inclusion;
-                try {
-                    if (firstLevel) {
-                        firstLevel = false;
-                    } else if (inclusion) {
-                        inclusion = inclusion[descriptor.name];
-                    }
-
-                    const result = recurse();
-                    if (!result?.members?.length) {
-                        return;
-                    }
-
-                    return result;
-                } finally {
-                    inclusion = revertInclusion;
+                const { members } = descriptor;
+                if (!members?.length) {
+                    return;
                 }
+
+                let filteredMembers: undefined | TestDescriptor[];
+                for (const member of members) {
+                    const filteredMember = filter(member, memberNames);
+                    if (!filteredMember) {
+                        continue;
+                    }
+                    if (predicate && !predicate(filteredMember)) {
+                        continue;
+                    }
+                    if (filteredMembers) {
+                        filteredMembers.push(filteredMember);
+                    } else {
+                        filteredMembers = [filteredMember];
+                    }
+                }
+
+                // Return filtered member if any children apply
+                if (filteredMembers) {
+                    return { ...descriptor, members: filteredMembers };
+                }
+
+                // All members excluded
+                return;
             }
 
             // Filter tests based on kind
@@ -115,37 +138,7 @@ export namespace TestDescriptor {
             }
 
             return descriptor;
-        };
-    }
-
-    export interface Predicate {
-        (descriptor: TestDescriptor, recurse: () => TestDescriptor | undefined): TestDescriptor | undefined;
-    }
-
-    /**
-     * Filter a {@link TestDescriptor} hierarchy using a predicate.
-     */
-    export function filter(descriptor: TestDescriptor, predicate: Predicate): TestDescriptor | undefined {
-        return predicate(descriptor, () => {
-            let { members } = descriptor;
-
-            if (members) {
-                members = members.map(member => filter(member, predicate)).filter(member => member) as TestDescriptor[];
-            }
-
-            if (descriptor.members === undefined || members?.length === descriptor.members?.length) {
-                return descriptor;
-            }
-
-            descriptor = { ...descriptor };
-            if (members?.length) {
-                descriptor.members = members;
-            } else {
-                delete descriptor.members;
-            }
-
-            return descriptor;
-        });
+        }
     }
 
     /**

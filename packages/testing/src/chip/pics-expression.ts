@@ -112,7 +112,8 @@ function parse(definition: string) {
 
     const result = parseExpr();
 
-    if (tokenizer.peek() !== undefined) {
+    // Note - allow garbage trailing "(" as this seems to be a way to provide a hint as to purpose of expression
+    if (tokenizer.peek() !== undefined && tokenizer.peek()?.kind !== "(") {
         throw new InvalidPicsExpressionError(definition, tokenizer.peek());
     }
 

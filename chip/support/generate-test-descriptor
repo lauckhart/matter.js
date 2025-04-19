@@ -294,7 +294,7 @@ def load_python():
                         continue
 
                     if len(method_runs) > 1:
-                        suite = { "kind": "suite", "name": props["name"], "members": [] }
+                        suite = { "kind": "suite", "path": props["path"], "name": props["name"], "members": [] }
                         tests.append(suite)
                     
                     for run, config in method_runs.items():

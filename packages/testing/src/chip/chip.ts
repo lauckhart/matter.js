@@ -141,16 +141,17 @@ function createBuilder(initial: {
                 }
             }
 
-            const predicate = TestDescriptor.predicateFor({
+            if (glob[0] === "SWTCH/**") debugger;
+            const tests = TestDescriptor.filter(chip.tests.descriptor, {
                 includePaths: [...includePaths],
                 kinds: ["py", "yaml"],
                 pics: chip.pics,
             });
 
-            const tests = TestDescriptor.filter(chip.tests.descriptor, predicate);
             if (!tests?.members) {
                 return this;
             }
+            if (tests?.members.length > 10) debugger;
 
             for (const member of tests.members) {
                 defineTests(member);
@@ -160,10 +161,7 @@ function createBuilder(initial: {
         },
 
         exclude(...glob: string[]) {
-            const tests = TestDescriptor.filter(
-                chip.tests.descriptor,
-                TestDescriptor.predicateFor({ includePaths: globSync(glob, chip.tests) }),
-            );
+            const tests = TestDescriptor.filter(chip.tests.descriptor, { includePaths: globSync(glob, chip.tests) });
 
             if (!tests) {
                 return this;
