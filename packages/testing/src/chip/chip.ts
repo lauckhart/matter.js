@@ -141,7 +141,6 @@ function createBuilder(initial: {
                 }
             }
 
-            if (glob[0] === "SWTCH/**") debugger;
             const tests = TestDescriptor.filter(chip.tests.descriptor, {
                 includePaths: [...includePaths],
                 kinds: ["py", "yaml"],
@@ -151,7 +150,6 @@ function createBuilder(initial: {
             if (!tests?.members) {
                 return this;
             }
-            if (tests?.members.length > 10) debugger;
 
             for (const member of tests.members) {
                 defineTests(member);

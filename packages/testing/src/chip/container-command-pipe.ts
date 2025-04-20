@@ -45,7 +45,10 @@ export class ContainerCommandPipe extends CommandPipe {
     async #processCommands() {
         let terminal: Terminal<string> | undefined;
         try {
-            terminal = await this.#container.follow(FIFO_PATH);
+            terminal = await this.#container.exec(
+                ["bash", "-c", `while true; do cat ${FIFO_PATH}; done`],
+                Terminal.StdoutLine,
+            );
 
             const iterator = terminal[Symbol.asyncIterator]();
 

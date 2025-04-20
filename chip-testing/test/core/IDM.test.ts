@@ -5,8 +5,8 @@
  */
 
 describe("IDM", () => {
-    chip("IDM/**")
+    chip("IDM/*")
         // test excluded till we adjusted for https://github.com/project-chip/connectedhomeip/pull/38263
         .exclude("IDM/1.2");
-    chip("IDM/*");
+    chip("IDM/*/run1");
 });
