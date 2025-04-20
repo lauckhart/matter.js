@@ -177,7 +177,7 @@ export async function startDeviceTestApp(
                         return app.backchannel(command);
                     },
                 },
-                name,
+                CommandPipe.filenameFor(name),
             );
 
             await pipe.initialize();

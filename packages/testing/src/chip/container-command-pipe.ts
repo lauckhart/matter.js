@@ -19,19 +19,20 @@ export class ContainerCommandPipe extends CommandPipe {
     #deactivate?: () => void;
     #stopped?: Promise<void>;
 
-    constructor(container: Container, subject: BackchannelCommand.Subject, appName: string) {
-        super(subject, appName);
+    constructor(container: Container, subject: BackchannelCommand.Subject) {
+        super(subject, "/command-pipe.fifo");
         this.#container = container;
     }
 
     override async initialize() {
-        // Many test files are hard-coded to /tmp so we swap out temp files to preserve state when we switch test
-        // agents.  This would overwrite our FIFO, however, so we symlink to the real FIFO to prevent it from being
-        // overwritten
+        // We create a single FIFO for the container and symlink to the hard-coded name expected by CHIP
         await this.#container.createPipe(FIFO_PATH);
-        await this.#container.exec(["ln", "-sf", "/command-pipe.fifo", this.filename]);
 
         this.#stopped = this.#processCommands();
+    }
+
+    async installForApp(name: string) {
+        await this.#container.exec(["ln", "-sf", this.filename, ContainerCommandPipe.filenameFor(name)]);
     }
 
     override async close() {

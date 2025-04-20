@@ -40,13 +40,13 @@ const Values = {
     initializedSubjects: new WeakSet<Subject>(),
     activeSubject: undefined as Subject | undefined,
     singleUseSubject: false,
-    activePipes: new Set<string>(),
     closers: Array<() => Promise<void>>(),
     subjects: new Map<Subject.Factory, Record<string, Subject>>(),
     snapshots: new Map<Subject, {}>(),
     containerLifecycleInstalled: false,
     testMap: new Map<TestDescriptor, Test>(),
     pullBeforeTesting: true,
+    commandPipe: undefined as ContainerCommandPipe | undefined,
 };
 
 /**
@@ -240,20 +240,16 @@ export const State = {
      * Open a back-channel command pipe.
      */
     async openPipe(name: string) {
-        if (Values.activePipes.has(name)) {
-            return;
+        if (Values.commandPipe === undefined) {
+            Values.commandPipe = new ContainerCommandPipe(State.container, this);
+            await Values.commandPipe.initialize();
+            State.onClose(async () => {
+                await Values.commandPipe?.close();
+                Values.commandPipe = undefined;
+            });
         }
 
-        const pipe = new ContainerCommandPipe(State.container, this, name);
-
-        await pipe.initialize();
-
-        Values.activePipes.add(name);
-
-        State.onClose(async () => {
-            await pipe.close();
-            Values.activePipes.delete(name);
-        });
+        await Values.commandPipe.installForApp(name);
     },
 
     /**
