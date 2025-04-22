@@ -202,7 +202,7 @@ def load_python():
                 if script_args:
                     following = None
                     for arg in script_args.split():
-                        if following == "--scripts":
+                        if following == "--tests":
                             if arg.startswith("-"):
                                  following = None
                             else:
@@ -219,15 +219,18 @@ def load_python():
 
                         if arg in PYTHON_IGNORE_ARGS:
                             following = "ignored"
-                            continue 
+                            continue
 
-                        if arg == "--scripts" or arg == "--test-case":
+                        if arg == "--tests" or arg == "--test-case":
                             following = arg
                             continue
 
                         args.append(arg)
 
-                    config["script-args"] = " ".join(args)
+                    if args:
+                        config["script-args"] = " ".join(args)
+                    else:
+                        del config["script-args"]
 
                 if tests_in_run:
                     run_tests[run] = tests_in_run
@@ -261,9 +264,9 @@ def load_python():
                 props["description"] = desc
 
             # Extract PICS if present
-            pics = instance.get_test_pics(name)
+            pics = instance.get_test_pics(test_method_name)
             if pics:
-                props["pics"] = " & ".join(instance.get_test_pics(name))
+                props["pics"] = " & ".join(pics)
 
             # Extract steps if present
             steps = instance.get_defined_test_steps(name)

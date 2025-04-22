@@ -188,13 +188,16 @@ async function createCommand(descriptor: TestFileDescriptor, subject: Subject, e
 }
 
 function scriptArgsOf(descriptor: TestFileDescriptor) {
-    const scriptArgs = descriptor.config?.["script-args"];
-    if (typeof scriptArgs !== "string") {
-        return;
+    let args: string[] | undefined;
+
+    const predefined = descriptor.config?.["script-args"];
+    if (typeof predefined === "string") {
+        args = predefined.trim().split(/\s+/);
     }
 
-    return scriptArgs
-        .replace(/--(?:storage-path|commissioning-method|discriminator|passcode|trace-to|PICS)\s+\S+\s+/g, "")
-        .trim()
-        .split(/\s+/);
+    if (descriptor.subpath) {
+        (args ?? (args = [])).push("--test-case", descriptor.subpath);
+    }
+
+    return args;
 }
