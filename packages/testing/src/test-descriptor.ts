@@ -6,8 +6,8 @@
 
 import type { FilesystemSync } from "#tools";
 import { readFile, writeFile } from "node:fs/promises";
-import { PicsExpression } from "./chip/pics-expression.js";
-import type { PicsFile } from "./chip/pics-file.js";
+import { PicsExpression } from "./chip/pics/expression.js";
+import type { PicsFile } from "./chip/pics/file.js";
 
 /**
  * Metadata for a single test or group of tests.
@@ -28,6 +28,7 @@ export interface TestDescriptor {
     runAt?: Date;
     passed?: boolean;
     durationMs?: number;
+    picsValues?: PicsFile;
 }
 
 export interface TestFileDescriptor extends TestDescriptor {
@@ -38,7 +39,16 @@ export interface TestSuiteDescriptor extends TestDescriptor {
     members: TestDescriptor[];
 }
 
+export interface RootTestDescriptor extends TestDescriptor {
+    format?: number;
+}
+
 export namespace TestDescriptor {
+    /**
+     * Used to validate format of test descriptor files.
+     */
+    export const CURRENT_FORMAT = 2;
+
     export type Kind = "suite" | "js" | "py" | "yaml" | "manual" | "step";
 
     export const DEFAULT_FILENAME = "build/test-report.json";
@@ -94,6 +104,7 @@ export namespace TestDescriptor {
 
             // Apply PICS to any descriptor with a PICS expression
             if (pics && descriptor.pics !== undefined) {
+                descriptor.picsValues = pics;
                 const expr = new PicsExpression(descriptor.pics);
                 if (!expr.evaluate(pics)) {
                     return;

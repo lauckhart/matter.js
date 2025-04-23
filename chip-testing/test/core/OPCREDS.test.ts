@@ -6,10 +6,7 @@
 
 describe("OPCREDS", () => {
     chip("OPCREDS/*").exclude(
-        // Hmm, test expects us to provide NOC field to a different fabric even though it's fabric sensitive.  This
-        // seems likely a CHIP + test bug
-        //
-        // TODO - validate and remove exclusion once resolved
+        // This is Matter 1.5
         "OPCREDS/3.9",
     );
 });

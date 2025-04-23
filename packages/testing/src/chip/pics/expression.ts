@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { PicsFile } from "./pics-file.js";
+import { PicsFile } from "./file.js";
 
 /**
  * A set of PICS specifiers, each of which must be true for the set to apply.
@@ -192,7 +192,7 @@ function test(ast: Ast, file: PicsFile): boolean {
             return !test(ast.operand, file);
 
         case "name":
-            return file.values[ast.name] === "1";
+            return file.values[ast.name] === 1;
 
         case "&":
             return test(ast.lhs, file) && test(ast.rhs, file);

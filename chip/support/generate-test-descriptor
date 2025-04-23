@@ -27,7 +27,7 @@ from chip.testing.matter_testing import MatterBaseTest, MatterTestConfig, genera
 YAML_DIR = "/src/app/tests/suites"
 PYTHON_DIR = "/src/python_testing"
 
-# JS test harness is higher level than the Python test harness so we ignore boilerplate arguments
+# JS test harness is higher level than CHIP CI so we ignore boilerplate arguments
 PYTHON_IGNORE_ARGS = [
     "--storage-path",
     "--commissioning-method",
@@ -127,6 +127,24 @@ def load_yaml():
 
         tests.append(props)
 
+def parse_command_line(str: str):
+    # Some scripts have strings with spaces.  Currently only use single quotes but try to handle both that and double
+    args = re.findall(r"((?:'[^']+'|\"(?:\\\"|[^\"]+)\"|\S)+)", str)
+    for i in range(len(args)):
+        arg = args[i]
+
+        # If quoted, implement rudimentary unescaping
+        parts = re.findall(r"([^'\"\\]+|'[^']*'|\"(?:\\\"|[^\"]+)\")", arg)
+        if len(parts) > 1:
+            for j in range(len(parts)):
+                part = parts[j]
+                if part.startswith("'") or part.startswith('"'):
+                    part = part[1:-1]
+                    parts[j] = bytes(part, "utf-8").decode("unicode_escape")
+            args[i] = "".join(parts)
+
+    return args
+
 def load_python():
     """ Load metadata from Python tests.  This requires a bit more fiddling because:
 
@@ -201,7 +219,7 @@ def load_python():
                 
                 if script_args:
                     following = None
-                    for arg in script_args.split():
+                    for arg in parse_command_line(script_args):
                         if following == "--tests":
                             if arg.startswith("-"):
                                  following = None
@@ -209,7 +227,6 @@ def load_python():
                                 tests_in_run.append(arg)
                                 continue
                         elif following == "--test-case":
-                            print(arg, file=sys.stderr)
                             tests_in_run.append(arg)
                             following = None
                             continue
@@ -228,7 +245,7 @@ def load_python():
                         args.append(arg)
 
                     if args:
-                        config["script-args"] = " ".join(args)
+                        config["script-args"] = args
                     else:
                         del config["script-args"]
 
@@ -352,4 +369,4 @@ for test in tests:
         members.append(test)
 
 # Write the result
-print(json.dumps({ "name": "chip", "kind": "suite", "members": members }))
+print(json.dumps({ "name": "chip", "format": 2, "kind": "suite", "members": members }))

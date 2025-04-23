@@ -17,7 +17,7 @@ import {
 } from "@matter/main";
 import { AdministratorCommissioningServer } from "@matter/main/behaviors/administrator-commissioning";
 import { OccurrenceManager } from "@matter/main/protocol";
-import { BackchannelCommand, chip, Subject } from "@matter/testing";
+import { BackchannelCommand, chip, PicsFile, Subject } from "@matter/testing";
 import { DeviceTestInstance, DeviceTestInstanceConfig, log } from "./GenericTestApp.js";
 
 /**
@@ -26,6 +26,8 @@ import { DeviceTestInstance, DeviceTestInstanceConfig, log } from "./GenericTest
 export abstract class NodeTestInstance extends DeviceTestInstance implements Subject {
     #env = new Environment(`${this.id}-env`, Environment.default);
     #node?: ServerNode;
+
+    static pics?: PicsFile;
 
     // Configuration values that differ between test runner implementations
     static forceFastTimeouts = false;
@@ -38,6 +40,10 @@ export abstract class NodeTestInstance extends DeviceTestInstance implements Sub
 
     constructor(config: DeviceTestInstanceConfig) {
         super(config);
+    }
+
+    get pics() {
+        return (this.constructor as Subject.Factory).pics ?? chip.defaultPics;
     }
 
     get commissioning(): Subject.CommissioningParameters {

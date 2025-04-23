@@ -31,7 +31,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     --mount=type=cache,sharing=locked,target=/var/lib/apt \
     apt-get -qq update && \
-    apt-get -qq -y install python3 python-is-python3 libavahi-client3 libglib2.0-0
+    apt-get -qq -y install python3 python-is-python3 libavahi-client3 libglib2.0-0 netcat-openbsd
 
 
 ################################################################################
@@ -236,6 +236,12 @@ RUN mkdir /run/dbus
 # Summarize tests for efficient metadata load at runtime
 COPY support/generate-test-descriptor /bin/generate-test-descriptor
 RUN generate-test-descriptor > /lib/test-descriptor.json
+
+# Install extra PICS files
+RUN mkdir -p examples/rvc-app/rvc-common/pics
+COPY --from=source \
+    /connectedhomeip/examples/rvc-app/rvc-common/pics/rvc-app-pics-values \
+    /examples/rvc-app/rvc-common/pics/rvc-app-pics-values
 
 # Install MDNS scripts
 COPY support/mdns-* /bin
