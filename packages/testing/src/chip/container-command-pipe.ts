@@ -4,11 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { createSocket, Socket } from "node:dgram";
 import { BackchannelCommand } from "../device/backchannel.js";
 import { Container } from "../docker/container.js";
 import { Terminal } from "../docker/terminal.js";
 import { CommandPipe } from "./command-pipe.js";
 
+const FIFO_HOST = "localhost";
+const FIFO_PORT = 7027;
 const FIFO_PATH = "/command-pipe.fifo";
 
 /**
@@ -19,19 +22,20 @@ export class ContainerCommandPipe extends CommandPipe {
     #deactivate?: () => void;
     #stopped?: Promise<void>;
 
-    constructor(container: Container, subject: BackchannelCommand.Subject, appName: string) {
-        super(subject, appName);
+    constructor(container: Container, subject: BackchannelCommand.Subject) {
+        super(subject, "/command-pipe.fifo");
         this.#container = container;
     }
 
     override async initialize() {
-        // Many test files are hard-coded to /tmp so we swap out temp files to preserve state when we switch test
-        // agents.  This would overwrite our FIFO, however, so we symlink to the real FIFO to prevent it from being
-        // overwritten
+        // We create a single FIFO for the container and symlink to the hard-coded name expected by CHIP
         await this.#container.createPipe(FIFO_PATH);
-        await this.#container.exec(["ln", "-sf", "/command-pipe.fifo", this.filename]);
 
         this.#stopped = this.#processCommands();
+    }
+
+    async installForApp(name: string) {
+        await this.#container.exec(["ln", "-sf", this.filename, ContainerCommandPipe.filenameFor(name)]);
     }
 
     override async close() {
@@ -43,39 +47,36 @@ export class ContainerCommandPipe extends CommandPipe {
     }
 
     async #processCommands() {
-        let terminal: Terminal<string> | undefined;
+        let proxy: Terminal<string> | undefined;
+        let socket: Socket | undefined;
         try {
-            terminal = await this.#container.follow(FIFO_PATH);
+            socket = createSocket("udp4");
+            socket.on("message", msg => this.onData(msg.toString("utf-8")));
+            socket.bind(FIFO_PORT, FIFO_HOST);
+            proxy = await this.#container.exec(
+                ["bash", "-c", `while true; do nc -u -q0 localhost ${FIFO_PORT} < ${FIFO_PATH}; done`],
+                Terminal.StdoutLine,
+            );
 
-            const iterator = terminal[Symbol.asyncIterator]();
+            const deactivated = new Promise<void>(resolve => {
+                this.#deactivate = resolve;
+            });
 
-            while (true) {
-                let deactivator;
-                const deactivated = new Promise<void>(resolve => {
-                    deactivator = this.#deactivate = resolve;
-                });
-
-                const iteration = iterator.next().then(result => result.value as undefined | string);
-
+            await deactivated;
+        } finally {
+            if (proxy) {
                 try {
-                    const line = await Promise.race([deactivated, iteration]);
-                    if (line === undefined) {
-                        break;
-                    }
-
-                    this.onData(line);
-                } finally {
-                    if (this.#deactivate === deactivator) {
-                        this.#deactivate = undefined;
-                    }
+                    await proxy.close();
+                } catch (e) {
+                    console.warn(`Error closing command proxy for ${this.filename}:`, e);
                 }
             }
-        } finally {
-            if (terminal) {
+
+            if (socket) {
                 try {
-                    await terminal.close();
+                    socket.close();
                 } catch (e) {
-                    console.warn(`Error closing FIFO listener for ${this.filename}:`, e);
+                    console.warn(`Error closing command socket for ${this.filename}:`, e);
                 }
             }
 

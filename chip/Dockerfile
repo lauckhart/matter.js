@@ -31,7 +31,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     --mount=type=cache,sharing=locked,target=/var/lib/apt \
     apt-get -qq update && \
-    apt-get -qq -y install python3 python-is-python3 libavahi-client3 libglib2.0-0
+    apt-get -qq -y install python3 python-is-python3 libavahi-client3 libglib2.0-0 netcat-openbsd
 
 
 ################################################################################
@@ -207,7 +207,6 @@ COPY --from=source /connectedhomeip/examples/placeholder/py_matter_placeholder_a
 COPY --from=source /connectedhomeip/src/controller/python/py_matter_yamltest_repl_adapter/matter_yamltest_repl_adapter matter_yamltest_repl_adapter
 
 # Link various bits to original connectedhomeip locations for discovery and/or convenience
-RUN ln -s "$(realpath chip/testing/data_model)" /data_model
 RUN mkdir -p /scripts/tests
 RUN ln -s "$(realpath chiptest)" /scripts/tests/chiptest
 RUN mkdir -p /scripts/py_matter_yamltests
@@ -217,10 +216,8 @@ RUN ln -s "$(realpath matter_yamltests)" /scripts/py_matter_yamltests/matter_yam
 WORKDIR /
 COPY --from=source /connectedhomeip/scripts/tests/chipyaml /scripts/tests/chipyaml
 
-# Ensure python logic can find the data model (spec_parsing.yaml looks for "scraper_version" but the wheels don't
-# include it)
+# Whatever "pigweed" is, configure it
 ENV PW_PROJECT_ROOT=/
-RUN touch /data_model/master/scraper_version
 
 # YAML tests of course use a different data model
 COPY --from=source /connectedhomeip/src/app/zap-templates/zcl/data-model/chip \
@@ -239,6 +236,12 @@ RUN mkdir /run/dbus
 # Summarize tests for efficient metadata load at runtime
 COPY support/generate-test-descriptor /bin/generate-test-descriptor
 RUN generate-test-descriptor > /lib/test-descriptor.json
+
+# Install extra PICS files
+RUN mkdir -p examples/rvc-app/rvc-common/pics
+COPY --from=source \
+    /connectedhomeip/examples/rvc-app/rvc-common/pics/rvc-app-pics-values \
+    /examples/rvc-app/rvc-common/pics/rvc-app-pics-values
 
 # Install MDNS scripts
 COPY support/mdns-* /bin

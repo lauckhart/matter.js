@@ -9,6 +9,8 @@ import { edit } from "@matter/testing";
 // Note - SC/4.3 fails intermittently (22 of 156 runs) on step 8, sometimes because of a name mismatch, sometimes
 // because no name is found and the test doesn't check for None
 //
+// SC/4.1 seems to have a similar issue
+//
 // I believe this is because of other Matter devices on my local network.  Fixing will require coming up with an
 // isolated networking solution...  Easiest might be to just create an Avahi MDNS implementation and run Avahi with no
 // networking
@@ -55,6 +57,8 @@ describe("SC", () => {
         // These require additional configuration below
         "SC/4.1",
         "SC/7.1",
+
+        //
     );
 
     // SC/4.1 needs MDNS cleared
