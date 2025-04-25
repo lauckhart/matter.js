@@ -1,0 +1,32 @@
+# Bootstrap CHIP environment
+set -e
+
+scripts/checkout_submodules.py --shallow --platform linux --jobs 8
+
+# We do not need extra 1.3GB of ARM toolchain
+sed -i '/arm.json/d' scripts/setup/environment.json
+
+# Nor 2.5GB of CIPD packages we ignore
+function exclude {
+    sed -i "/_LIST_OF_PACKAGES_TO_EXCLUDE =/a 'fuchsia/third_party/$1/'," scripts/setup/gen_pigweed_cipd_json.py
+}
+exclude bloaty
+exclude clang
+exclude sysroot
+exclude rust_bindgen
+exclude qemu
+
+source scripts/bootstrap.sh
+
+# Not convenient to install zap-cli standalone but we can at least drop GUI etc.
+rm -rf .environment/cipd/packages/zap/{zap,resources,locales}
+
+# Drop build artifacts we apparently don't need
+rm -rf .environment/gn_out
+
+# Drop python tests
+shopt -s globstar
+rm -rf .environment/**/*-venv/lib/python*/**/tests
+
+# Done with git
+rm -rf .git

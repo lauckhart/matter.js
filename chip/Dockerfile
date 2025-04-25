@@ -8,7 +8,6 @@
 
 # TODO - either finish cross compilation, create CI & manifest for amd64 & arm64, or punt.  Current choice: punt
 
-
 ################################################################################
 #
 # STAGE 1 - common base image
@@ -82,7 +81,7 @@ FROM --platform=$BUILDPLATFORM build AS source
 
 ARG CHIP_COMMIT
 
-# Pull CHIP source code (which is ugly because we want want to pull a shallow copy of a specific SHA)
+# Pull CHIP source code (which is ugly because we want to pull a shallow copy of a specific SHA)
 RUN <<EOF
     set -e
     if [ -z "$CHIP_COMMIT" ]; then
@@ -99,12 +98,11 @@ RUN <<EOF
     echo "$CHIP_COMMIT" > /etc/chip-version
 EOF
 
-# Checkout submodules
 WORKDIR /connectedhomeip
-RUN ./scripts/checkout_submodules.py --shallow --platform linux
 
-# Bootstrap CHIP environment
-RUN source scripts/bootstrap.sh
+# Bootstrap CHIP
+COPY support/bootstrap-chip /bin
+RUN bootstrap-chip
 
 # Tell build scripts where to find stuff (allows us to skip bootstrap going forward)
 ENV PW_PROJECT_ROOT=/connectedhomeip
@@ -132,16 +130,8 @@ ARG SKIP_APPS
 # Build directory
 RUN mkdir -p out
 
-# Build binaries
-RUN build-one chip-tool
-RUN build-one all-clusters
-RUN build-one lock
-RUN build-one tv-app
-RUN build-one bridge
-RUN build-one lit-icd
-RUN build-one microwave-oven
-RUN build-one rvc
-RUN build-one network-manager
+# Activation is unnecessary will fail because we've dropped things it expects 
+RUN sed -i '/scripts\/activate.sh/d' scripts/build_python.sh
 
 # Build python wheels
 RUN scripts/build_python.sh --chip_mdns platform
@@ -154,6 +144,9 @@ RUN scripts/build_python.sh --chip_mdns platform
 # Installs Python packages from build area into destination OS locations
 #
 FROM bins AS install
+
+# Build chip-tool
+RUN build-one chip-tool
 
 # Revert to standard path so Python doesn't think packages are already installed
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -173,7 +166,7 @@ RUN find out -name \*.whl | xargs pip install --break-system-packages --upgrade
 # For the final working image we revert to the base target then copy over
 # binaries from the bins target
 #
-FROM base AS final
+FROM base AS chip
 
 # Install some runtime-only packages
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
@@ -190,7 +183,7 @@ LABEL org.opencontainers.image.source=https://github.com/project-chip/matter.js/
 
 RUN rm -rf bin.usr-is-merged boot home media mnt opt sbin.usr-is-merged srv
 
-# chip-tool and test app binaries
+# chip-tool
 COPY --from=install /dist/bin/* /bin
 
 # Installed python packages
@@ -251,3 +244,33 @@ COPY --from=source /etc/chip-version /etc
 
 # Configure avahi
 RUN echo allow-interfaces
+
+
+################################################################################
+#
+# STAGE 7 - build example apps
+#
+
+FROM install AS app-bins
+
+# Build binaries
+RUN build-one all-clusters
+RUN build-one lock
+RUN build-one tv-app
+RUN build-one bridge
+RUN build-one lit-icd
+RUN build-one microwave-oven
+RUN build-one rvc
+RUN build-one network-manager
+
+
+################################################################################
+#
+# STAGE 8 - augment base container with example binaries
+#
+
+FROM chip AS chip-apps
+
+COPY --from=app-bins /dist/bin/* /bin
+
+WORKDIR /

@@ -29,7 +29,7 @@ import { OperationalState } from "@matter/main/clusters/operational-state";
 import { RvcOperationalState } from "@matter/main/clusters/rvc-operational-state";
 import { RoboticVacuumCleanerDevice } from "@matter/main/devices/robotic-vacuum-cleaner";
 import { DeviceTypeId, VendorId } from "@matter/main/types";
-import { BackchannelCommand, PicsSource } from "@matter/testing";
+import { BackchannelCommand, chip, PicsSource } from "@matter/testing";
 import { TestRvcCleanModeServer } from "./cluster/TestRvcCleanModeServer.js";
 import { TestRvcOperationalStateServer } from "./cluster/TestRvcOperationalStateServer.js";
 import { TestRvcRunModeServer } from "./cluster/TestRvcRunModeServer.js";
@@ -396,10 +396,12 @@ export class RvcTestInstance extends NodeTestInstance {
     }
 }
 
-RvcTestInstance.pics = await PicsSource.load({
-    kind: "composite",
-    sources: [
-        { kind: "chip", name: "examples/rvc-app/rvc-common/pics/rvc-app-pics-values" },
-        { kind: "file", name: "src/chip/matter-js-pics.properties" },
-    ],
-});
+if (chip.isInitialized) {
+    RvcTestInstance.pics = await PicsSource.load({
+        kind: "composite",
+        sources: [
+            { kind: "chip", name: "examples/rvc-app/rvc-common/pics/rvc-app-pics-values" },
+            { kind: "file", name: "src/chip/matter-js-pics.properties" },
+        ],
+    });
+}
