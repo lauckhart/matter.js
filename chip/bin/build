@@ -22,21 +22,8 @@ if ! docker buildx inspect matter.js-chip > /dev/null 2>&1; then
     docker buildx create --name matter.js-chip
 fi
 
-if [ "$1" == "debug" ]; then
-    export BUILDX_EXPERIMENTAL=1
-    COMMAND='debug --invoke entrypoint=["/bin/bash"],args=["-i"] build --progress plain'
-    shift
-else
-    COMMAND="build"
-fi
-
-if [ -z "$1" ]; then
-    CHIP_COMMIT=$(git ls-remote https://github.com/project-chip/connectedhomeip -t master | cut -f 1)
-elif [ "$1" == fast ]; then
-    CHIP_COMMIT=master
-    SKIP_APPS=1
-else
-    CHIP_COMMIT="$1"
+if [ -e "$CHIP_COMMIT" ]; then
+    export CHIP_COMMIT="$(cat "$CHIP_DIR/sha.txt")"
 fi
 
 if [ -e "$GITHUB_ACTION" ]; then
@@ -45,14 +32,10 @@ else
     ACTOR=$(whoami)
 fi
 
-VERSION="$ACTOR-$(date -u +%Y%m%dT%H%M%S)-$(git rev-parse HEAD | cut -c 1-12)"
+export VERSION="$ACTOR-$(date -u +%Y%m%dT%H%M%S)-$(git rev-parse HEAD | cut -c 1-12)"
 
-docker buildx $COMMAND "$CHIP_DIR" \
+docker buildx bake \
+    --file "$CHIP_DIR/docker-bake.hcl" \
     --builder matter.js-chip \
-    --load \
-    -t ghcr.io/matter-js/chip \
-    --label org.opencontainers.image.name=matter.js-chip \
-    --label org.opencontainers.image.version="$VERSION" \
-    --label org.opencontainers.image.revision="$CHIP_COMMIT" \
-    --build-arg CHIP_COMMIT="$CHIP_COMMIT" \
-    --build-arg SKIP_APPS="$SKIP_APPS"
+    --allow=fs.write=/tmp/chip.tar \
+    $*
