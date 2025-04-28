@@ -1,6 +1,5 @@
 name: 'Install Dependencies'
 description: 'Installs all dependencies needed for testing'
-author: 'Apollon77'
 inputs:
   node-version:
     description: 'Node.js version'
