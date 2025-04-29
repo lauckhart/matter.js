@@ -97,6 +97,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image-source: ${{ needs.chip-build.result == 'true' && 'artifact' || 'repository' }}
+    steps:
+      - name: Dummy
+        run: true
 
   test-core:
     needs: image-available
