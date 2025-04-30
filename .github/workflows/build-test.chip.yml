@@ -89,7 +89,6 @@ jobs:
         run: |
           cd chip
           ./bin/build chip-artifact
-          ./bin/info
 
       - name: Upload chip artifact
         if: needs.workflow-conditions.outputs.build-needed == 'true'
