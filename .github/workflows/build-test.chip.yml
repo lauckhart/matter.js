@@ -22,14 +22,14 @@
 #
 #   * It publishes the new image if tests pass after nightly runs
 
-name: CHIP Image Build and Test
+name: CHIP Image - Build and Test
 
 on:
   schedule:
     - cron: 0 3 * * * # Every day at 03:00
   workflow_dispatch: # Manually on demand
   push:
-    branches: [ "main" ]
+    branches: [ "main", "chip-testing-updates-dev" ]
   pull_request:
     branches: [ "main" ]
   merge_group:
@@ -43,7 +43,7 @@ jobs:
   # Determine whether we should run and/or build new CHIP container
   workflow-conditions:
     runs-on: ubuntu-latest
-    if: github.repository == 'project-chip/matter.js'
+    if: github.repository == 'project-chip/matter.js' || github.repository == 'lauckhart/matter.js'
     outputs:
       build-needed: ${{ steps.check-rebuild.outputs.build-needed }}
     steps:
@@ -53,10 +53,13 @@ jobs:
       - uses: dorny/paths-filter@v3
         id: changes
         with:
+          base: main
           filters: |
             src:
               - "chip/**"
               - ".github/workflows/build-test.chip.yml"
+              - ".github/actions/load-chip/action.yml"
+              - ".github/actions/run-chip-tests/action.yml"
 
       - name: Docker rebuild needed
         if: >-
@@ -71,76 +74,76 @@ jobs:
         run: echo "build-needed=true" >> $GITHUB_OUTPUT
 
   # Build the CHIP container if necessary
-  chip-build:
+  chip-image:
     needs: workflow-conditions
-    if: needs.workflow-conditions.outputs.build-needed == 'true'
     runs-on: ubuntu-latest
+    outputs:
+      source: ${{ needs.workflow-conditions.outputs.build-needed == 'true' && 'artifact' || 'repository' }}
     steps:
       - name: Check out matter.js
+        if: needs.workflow-conditions.outputs.build-needed == 'true'
         uses: actions/checkout@v4
 
       - name: Build chip image
+        if: needs.workflow-conditions.outputs.build-needed == 'true'
         run: |
           cd chip
-          ./bin/build chip-tar
+          ./bin/build chip-artifact
           ./bin/info
 
       - name: Upload chip artifact
+        if: needs.workflow-conditions.outputs.build-needed == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: chip-image
           path: /tmp/chip.tar
 
-  image-available:
-    needs: chip-build
-    if: ${{ !failure() && !cancelled() }}
-    runs-on: ubuntu-latest
-    outputs:
-      image-source: ${{ needs.chip-build.result == 'true' && 'artifact' || 'repository' }}
-    steps:
-      - name: Dummy
-        run: true
-
   test-core:
-    needs: image-available
+    needs: chip-image
     runs-on: ubuntu-latest
     steps:
+      - name: Check out matter.js
+        uses: actions/checkout@v4
+
       - uses: ./.github/actions/run-chip-tests
         with:
+          image-source: ${{ needs.chip-image.outputs.source }}
           test-group: core
 
   test-app-fast:
-    needs: image-available
+    needs: chip-image
     runs-on: ubuntu-latest
     steps:
+      - name: Check out matter.js
+        uses: actions/checkout@v4
+        
       - uses: ./.github/actions/run-chip-tests
         with:
+          image-source: ${{ needs.chip-image.outputs.source }}
           test-group: app-fast
 
   test-app-slow:
-    needs: image-available
+    needs: chip-image
     runs-on: ubuntu-latest
     steps:
+      - name: Check out matter.js
+        uses: actions/checkout@v4
+        
       - uses: ./.github/actions/run-chip-tests
         with:
+          image-source: ${{ needs.chip-image.outputs.source }}
           test-group: app-slow
 
+  # Publish if this is nightly run or triggered manually
   publish-image:
     name: Publish docker image
     runs-on: ubuntu-latest
-    needs: [ workflow-conditions, test-core, test-app-fast, test-app-slow ]
-    if: >-
-      (
-        github.event_name == 'schedule' ||
-        github.event_name == 'manual-dispatch'
-      ) &&
-        needs.workflow-conditions.outputs.build-needed == 'true'
+    needs: [ chip-image, test-core, test-app-fast, test-app-slow ]
+    if: needs.chip-image.outputs.source == 'artifact'
     steps:
       - name: Publish docker image
         run: |
           cd chip
           ./bin/info
           ./bin/publish
-
-  # Publish if this is nightly run
   

@@ -52,7 +52,7 @@ target "chip-artifact" {
     inherits = [ "chip" ]
     output = [
         {
-            type = "oci"
+            type = "docker"
             dest = "${TMPDIR}/chip.tar"
         }
     ]
