@@ -16,23 +16,25 @@
 #
 #   - Otherwise the argument should be a CHIP SHA or tag and triggers a full container build of that version
 
+set -x
 source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
 
 if ! docker buildx inspect matter.js-chip > /dev/null 2>&1; then
     docker buildx create --name matter.js-chip
 fi
 
-if [ -e "$CHIP_COMMIT" ]; then
+if [ -z "$CHIP_COMMIT" ]; then
     export CHIP_COMMIT="$(cat "$CHIP_DIR/sha.txt")"
 fi
 
-if [ -e "$GITHUB_ACTION" ]; then
+if [ -z "$GITHUB_ACTION" ]; then
     ACTOR=ci
 else
     ACTOR=$(whoami)
 fi
 
 export VERSION="$ACTOR-$(date -u +%Y%m%dT%H%M%S)-$(git rev-parse HEAD | cut -c 1-12)"
+
 
 docker buildx bake \
     --file "$CHIP_DIR/docker-bake.hcl" \
