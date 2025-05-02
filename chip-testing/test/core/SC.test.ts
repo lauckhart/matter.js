@@ -48,23 +48,24 @@ describe("SC", () => {
         );
     }).timeout(10000);
 
-    // Exclude 5.1 and 5.2 because our GroupKeyManagement is too limited, and 7.1 because we configure separately below
-    chip("SC/*").exclude(
-        // Our GroupKeyManagment is too limited for these
-        "SC/5.1",
-        "SC/5.2",
+    // // Exclude 5.1 and 5.2 because our GroupKeyManagement is too limited, and 7.1 because we configure separately below
+    // chip("SC/*").exclude(
+    //     // Our GroupKeyManagment is too limited for these
+    //     "SC/5.1",
+    //     "SC/5.2",
 
-        // These require additional configuration below
-        "SC/4.1",
-        "SC/7.1",
-    );
+    //     // These require additional configuration below
+    //     "SC/4.1",
+    //     "SC/7.1",
+    // );
 
     // SC/4.1 needs MDNS cleared
     chip("SC/4.1").beforeStart(async () => {
         await chip.clearMdns();
 
-        // Try waiting a bit for Avahi restart as we're having issues in CI
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log(">>> PICS");
+        console.log(chip.defaultPics.toString());
+        console.log("<<< PICS");
     });
 
     // 7.1 must start factory fresh
