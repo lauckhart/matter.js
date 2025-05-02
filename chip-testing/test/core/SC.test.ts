@@ -60,8 +60,12 @@ describe("SC", () => {
     );
 
     // SC/4.1 needs MDNS cleared
-    //
-    chip("SC/4.1").beforeStart(() => chip.clearMdns());
+    chip("SC/4.1").beforeStart(async () => {
+        await chip.clearMdns();
+
+        // Try waiting a bit for Avahi restart as we're having issues in CI
+        await new Promise(resolve => setTimeout(resolve, 250));
+    });
 
     // 7.1 must start factory fresh
     chip("SC/7.1").uncommissioned();
