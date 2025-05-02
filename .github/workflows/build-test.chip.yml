@@ -133,12 +133,24 @@ jobs:
           image-source: ${{ needs.chip-image.outputs.source }}
           test-group: app-slow
 
+  test-app-cc:
+    needs: chip-image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out matter.js
+        uses: actions/checkout@v4
+        
+      - uses: ./.github/actions/run-chip-tests
+        with:
+          image-source: ${{ needs.chip-image.outputs.source }}
+          test-group: app-cc
+
   # Publish if this is nightly run or triggered manually
   publish-image:
     name: Publish docker image
     runs-on: ubuntu-latest
-    needs: [ chip-image, test-core, test-app-fast, test-app-slow ]
-    if: needs.chip-image.outputs.source == 'artifact'
+    needs: [ chip-image, test-core, test-app-fast, test-app-slow, test-app-cc ]
+    if: needs.chip-image.outputs.source == 'artifact' && github.event_name == 'schedule'
     steps:
       - name: Publish docker image
         run: |

@@ -181,7 +181,7 @@ export namespace TestDescriptor {
 
         try {
             const json = await readFile(path, "utf-8");
-            descriptor = JSON.parse(json);
+            descriptor = JSON.parse(json, (k, v) => (k === "picsValues" ? undefined : v));
             if (
                 typeof descriptor?.name !== "string" ||
                 descriptor.kind !== "suite" ||
@@ -202,7 +202,10 @@ export namespace TestDescriptor {
      * Persist a descriptor.
      */
     export async function save(path: string, descriptor: TestSuiteDescriptor) {
-        await writeFile(path, JSON.stringify(descriptor, undefined, 4));
+        await writeFile(
+            path,
+            JSON.stringify(descriptor, (k, v) => (k === "picsValues" ? undefined : v), 4),
+        );
     }
 
     /**
