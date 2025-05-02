@@ -69,6 +69,15 @@ target "chip-apps" {
     }
 }
 
+target "base" {
+    inherits = [ "chip" ]
+    target = "base"
+
+    tags = [
+        "ghcr.io/matter-js/chip-base"
+    ]
+}
+
 target "build" {
     inherits = [ "chip" ]
     target = "build"

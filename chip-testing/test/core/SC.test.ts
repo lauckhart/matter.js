@@ -57,8 +57,6 @@ describe("SC", () => {
         // These require additional configuration below
         "SC/4.1",
         "SC/7.1",
-
-        //
     );
 
     // SC/4.1 needs MDNS cleared

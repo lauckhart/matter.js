@@ -27,7 +27,7 @@ if [ -z "$CHIP_COMMIT" ]; then
     export CHIP_COMMIT="$(cat "$CHIP_DIR/sha.txt")"
 fi
 
-if [ -z "$GITHUB_ACTION" ]; then
+if [ -n "$GITHUB_ACTION" ]; then
     ACTOR=ci
 else
     ACTOR=$(whoami)

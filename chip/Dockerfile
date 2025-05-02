@@ -6,8 +6,6 @@
 #
 # Intermediate stages don't focus on optimization but the final image is minimal (relatively speaking).
 
-# TODO - either finish cross compilation, create CI & manifest for amd64 & arm64, or punt.  Current choice: punt
-
 ################################################################################
 #
 # STAGE 1 - common base image
@@ -32,7 +30,6 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     apt-get -qq update && \
     apt-get -qq -y install python3 python-is-python3 libavahi-client3 libglib2.0-0 netcat-openbsd
 
-
 ################################################################################
 #
 # STAGE 2 - OS build tooling
@@ -51,10 +48,6 @@ RUN <<EOF
     esac
 EOF
 
-# Configure for cross compilation
-#RUN dpkg --add-architecture arm64
-#COPY support/ubuntu-arm64.sources /etc/apt/sources.list.d
-
 # Install system packages required for build
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
     --mount=type=cache,sharing=locked,target=/var/lib/apt \
@@ -65,9 +58,8 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
         ninja-build python3-venv python3-dev unzip libgirepository1.0-dev libcairo2-dev libreadline-dev python3-pip
 EOF
 
-# Install x86->arm cross compilers.  Not useful because requires installation of lib dependencies which we've not
-# implemented
-# RUN apt-get -qq -y install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu
+# INI editor.  Version that comes with Ubuntu is too old
+RUN pip install --break-system-packages git+https://github.com/pixelb/crudini.git#egg=crudini
 
 
 ################################################################################
@@ -81,22 +73,9 @@ FROM --platform=$BUILDPLATFORM build AS source
 
 ARG CHIP_COMMIT
 
-# Pull CHIP source code (which is ugly because we want to pull a shallow copy of a specific SHA)
-RUN <<EOF
-    set -e
-    if [ -z "$CHIP_COMMIT" ]; then
-        CHIP_COMMIT="$(git ls-remote https://github.com/project-chip/connectedhomeip -t master | cut -f 1)"
-    fi
-    mkdir connectedhomeip
-    cd connectedhomeip
-    git config --global init.defaultBranch main
-    git config --global advice.detachedHead false
-    git init
-    git remote add origin https://github.com/project-chip/connectedhomeip.git
-    git fetch --depth 1 origin "$CHIP_COMMIT"
-    git checkout FETCH_HEAD
-    echo "$CHIP_COMMIT" > /etc/chip-version
-EOF
+# Pull CHIP source code
+COPY support/clone-chip /bin
+RUN clone-chip
 
 WORKDIR /connectedhomeip
 
@@ -151,6 +130,9 @@ RUN build-one chip-tool
 # Revert to standard path so Python doesn't think packages are already installed
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
+# We don't need Mypy and it's big
+RUN sed -i /mypy/d scripts/tests/requirements.txt
+
 # Install external python dependencies
 RUN pip install --break-system-packages -r src/python_testing/requirements.txt
 RUN pip install --break-system-packages -r scripts/tests/requirements.txt
@@ -158,6 +140,10 @@ RUN pip install --break-system-packages -r scripts/tests/requirements.txt
 # Install CHIP wheels globally
 RUN find out -name \*.whl | xargs pip install --break-system-packages --upgrade
 
+# Nuke some of the larger dependencies we don't need
+RUN rm -rf /usr/local/lib/python*/dist-packages/{debugpy,jedi} \
+    rm -rf /usr/local/lib/python*/dist-packages/*.dist-info \
+    rm -rf /usr/lib/python*/dist-packages/*.dist-info
 
 ################################################################################
 #
@@ -209,7 +195,7 @@ RUN ln -s "$(realpath matter_yamltests)" /scripts/py_matter_yamltests/matter_yam
 WORKDIR /
 COPY --from=source /connectedhomeip/scripts/tests/chipyaml /scripts/tests/chipyaml
 
-# Whatever "pigweed" is, configure it
+# Some scripts expect pigweed root
 ENV PW_PROJECT_ROOT=/
 
 # YAML tests of course use a different data model
