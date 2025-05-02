@@ -4,14 +4,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { createSocket, Socket } from "node:dgram";
 import { BackchannelCommand } from "../device/backchannel.js";
 import { Container } from "../docker/container.js";
 import { Terminal } from "../docker/terminal.js";
 import { CommandPipe } from "./command-pipe.js";
 
-const FIFO_HOST = "localhost";
-const FIFO_PORT = 7027;
 const FIFO_PATH = "/command-pipe.fifo";
 
 /**
@@ -47,14 +44,10 @@ export class ContainerCommandPipe extends CommandPipe {
     }
 
     async #processCommands() {
-        let proxy: Terminal<string> | undefined;
-        let socket: Socket | undefined;
+        let commands: Terminal<string> | undefined;
         try {
-            socket = createSocket("udp4");
-            socket.on("message", msg => this.onData(msg.toString("utf-8")));
-            socket.bind(FIFO_PORT, FIFO_HOST);
-            proxy = await this.#container.exec(
-                ["bash", "-c", `while true; do nc -u -q0 localhost ${FIFO_PORT} < ${FIFO_PATH}; done`],
+            commands = await this.#container.exec(
+                ["bash", "-c", `while true; do cat ${FIFO_PATH}; done`],
                 Terminal.StdoutLine,
             );
 
@@ -62,21 +55,25 @@ export class ContainerCommandPipe extends CommandPipe {
                 this.#deactivate = resolve;
             });
 
+            const iterator = commands[Symbol.asyncIterator]();
+
+            while (true) {
+                const command = await Promise.race([
+                    deactivated,
+                    iterator.next().then(result => result.value as string),
+                ]);
+                if (command === undefined) {
+                    break;
+                }
+                this.onData(command);
+            }
             await deactivated;
         } finally {
-            if (proxy) {
+            if (commands) {
                 try {
-                    await proxy.close();
+                    await commands.close();
                 } catch (e) {
                     console.warn(`Error closing command proxy for ${this.filename}:`, e);
-                }
-            }
-
-            if (socket) {
-                try {
-                    socket.close();
-                } catch (e) {
-                    console.warn(`Error closing command socket for ${this.filename}:`, e);
                 }
             }
 

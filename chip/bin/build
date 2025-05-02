@@ -16,7 +16,8 @@
 #
 #   - Otherwise the argument should be a CHIP SHA or tag and triggers a full container build of that version
 
-set -x
+set -e
+
 source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
 
 if ! docker buildx inspect matter.js-chip > /dev/null 2>&1; then

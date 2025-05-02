@@ -104,3 +104,12 @@ target "bins" {
         "ghcr.io/matter-js/chip-bins"
     ]
 }
+
+target "install" {
+    inherits = [ "chip" ]
+    target = "install"
+
+    tags = [
+        "ghcr.io/matter-js/chip-install"
+    ]
+}

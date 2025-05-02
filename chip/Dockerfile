@@ -127,23 +127,9 @@ FROM bins AS install
 # Build chip-tool
 RUN build-one chip-tool
 
-# Revert to standard path so Python doesn't think packages are already installed
-ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-
-# We don't need Mypy and it's big
-RUN sed -i /mypy/d scripts/tests/requirements.txt
-
-# Install external python dependencies
-RUN pip install --break-system-packages -r src/python_testing/requirements.txt
-RUN pip install --break-system-packages -r scripts/tests/requirements.txt
-
-# Install CHIP wheels globally
-RUN find out -name \*.whl | xargs pip install --break-system-packages --upgrade
-
-# Nuke some of the larger dependencies we don't need
-RUN rm -rf /usr/local/lib/python*/dist-packages/{debugpy,jedi} \
-    rm -rf /usr/local/lib/python*/dist-packages/*.dist-info \
-    rm -rf /usr/lib/python*/dist-packages/*.dist-info
+# Install Python stuff
+COPY support/install-chip-python /bin
+RUN install-chip-python
 
 ################################################################################
 #
@@ -160,7 +146,7 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
 <<EOF
     set -e
     apt-get -qq update
-    apt-get -qq -y install avahi-daemon avahi-utils iproute2 less vim wget
+    apt-get -qq -y install avahi-daemon avahi-utils iproute2 less vim-tiny wget
 EOF
 
 LABEL org.opencontainers.image.title="matter.js CHIP tooling build"
