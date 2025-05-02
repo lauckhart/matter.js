@@ -64,7 +64,7 @@ describe("SC", () => {
         await chip.clearMdns();
 
         // Try waiting a bit for Avahi restart as we're having issues in CI
-        await new Promise(resolve => setTimeout(resolve, 250));
+        await new Promise(resolve => setTimeout(resolve, 1000));
     });
 
     // 7.1 must start factory fresh
