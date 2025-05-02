@@ -48,7 +48,7 @@ describe("SC", () => {
         );
     }).timeout(10000);
 
-    // // Exclude 5.1 and 5.2 because our GroupKeyManagement is too limited, and 7.1 because we configure separately below
+    // Exclude 5.1 and 5.2 because our GroupKeyManagement is too limited, and 7.1 because we configure separately below
     // chip("SC/*").exclude(
     //     // Our GroupKeyManagment is too limited for these
     //     "SC/5.1",
@@ -62,10 +62,6 @@ describe("SC", () => {
     // SC/4.1 needs MDNS cleared
     chip("SC/4.1").beforeStart(async () => {
         await chip.clearMdns();
-
-        console.log(">>> PICS");
-        console.log(chip.defaultPics.toString());
-        console.log("<<< PICS");
     });
 
     // 7.1 must start factory fresh
