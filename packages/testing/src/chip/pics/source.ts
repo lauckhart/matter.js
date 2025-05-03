@@ -13,6 +13,8 @@ import { PicsFile } from "./file.js";
 const dataCache = new WeakMap<PicsSource, PicsFile>();
 const filenameCache = new WeakMap<PicsFile, string>();
 
+let nextFileNo = 1;
+
 /**
  * Source of PICS values.
  */
@@ -106,10 +108,7 @@ export namespace PicsSource {
             return filename;
         }
 
-        let fileNo = 1;
-        do {
-            filename = `/pics-${fileNo++}.properties`;
-        } while (Object.values(filenameCache).includes(filename));
+        filename = `/pics-${nextFileNo++}.properties`;
 
         try {
             filenameCache.set(file, filename);
