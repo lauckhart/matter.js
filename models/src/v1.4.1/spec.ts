@@ -34,9 +34,8 @@ export const SpecMatter = Matter(
                 "The state of this cluster may be shared on more than one endpoint on a node." +
                 "\n" +
                 "For Example: Two endpoints on a single node, one a temperature sensor, and one a humidity sensor, " +
-                "may both share the same cluster instance and therefore identification state" +
-                "\n" +
-                "LED on the node).",
+                "may both share the same cluster instance and therefore identification state (e.g. single LED on the " +
+                "node).",
 
             xref: { document: "cluster", section: "1.2" }
         },
@@ -1027,8 +1026,9 @@ export const SpecMatter = Matter(
                     "    attribute’s type after accounting for constraints shall be considered to be the valid attribute " +
                     "    value that is closest to the provided value." +
                     "\n" +
-                    "  ◦ In the event that an invalid provided value is of equal numerical distance to the two closest " +
-                    "    valid values, the lowest of those values shall be considered the closest valid attribute value." +
+                    "    ◦ In the event that an invalid provided value is of equal numerical distance to the two closest " +
+                    "      valid values, the lowest of those values shall be considered the closest valid attribute " +
+                    "      value." +
                     "\n" +
                     "If the used field does not match the data type of the attribute indicated by AttributeID, the " +
                     "AttributeValuePairStruct shall be considered invalid." +
@@ -1037,18 +1037,18 @@ export const SpecMatter = Matter(
                     "\n" +
                     "  • ColorControl cluster CurrentX (AttributeID 0x0003) has a type of uint16 and is not nullable." +
                     "\n" +
-                    "  ◦ ValueUnsigned16 of 0xAB12 would be used as-is, as it is in range." +
+                    "    ◦ ValueUnsigned16 of 0xAB12 would be used as-is, as it is in range." +
                     "\n" +
-                    "  ◦ ValueUnsigned16 of 0xFF80 is outside of the range allowed for attribute CurrentX, and would be " +
-                    "    saturated to the closest valid value, which is the maximum of the attribute’s constraint range: " +
-                    "    0xFEFF." +
+                    "    ◦ ValueUnsigned16 of 0xFF80 is outside of the range allowed for attribute CurrentX, and would be " +
+                    "      saturated to the closest valid value, which is the maximum of the attribute’s constraint " +
+                    "      range: 0xFEFF." +
                     "\n" +
                     "  • LevelControl cluster CurrentLevel (AttributeID 0x0000) has a type of uint8 and is nullable." +
                     "\n" +
-                    "  ◦ ValueUnsigned8 of 0xA1 would be used as-is, as it is in range." +
+                    "    ◦ ValueUnsigned8 of 0xA1 would be used as-is, as it is in range." +
                     "\n" +
-                    "  ◦ ValueUnsigned8 of 0xFF is outside the range allowed for nullable attribute CurrentLevel, and " +
-                    "    would be considered as the null value.",
+                    "    ◦ ValueUnsigned8 of 0xFF is outside the range allowed for nullable attribute CurrentLevel, and " +
+                    "      would be considered as the null value.",
 
                 xref: { document: "cluster", section: "1.4.7.3.1" }
             }),
@@ -1688,12 +1688,10 @@ export const SpecMatter = Matter(
 
                 details: "This field shall indicate the rate of movement in units per second. The actual rate of movement " +
                     "SHOULD be as close to this rate as the device is able. If the Rate field is null, then the value of " +
-                    "the" +
-                    "\n" +
-                    "DefaultMoveRate attribute shall be used if that attribute is supported and its value is not null. If " +
-                    "the Rate field is null and the DefaultMoveRate attribute is either not supported or set to null, " +
-                    "then the device SHOULD move as fast as it is able. If the device is not able to move at a variable " +
-                    "rate, this field may be disregarded.",
+                    "the DefaultMoveRate attribute shall be used if that attribute is supported and its value is not " +
+                    "null. If the Rate field is null and the DefaultMoveRate attribute is either not supported or set to " +
+                    "null, then the device SHOULD move as fast as it is able. If the device is not able to move at a " +
+                    "variable rate, this field may be disregarded.",
 
                 xref: { document: "cluster", section: "1.6.7.2.2" }
             }),
@@ -2107,8 +2105,8 @@ export const SpecMatter = Matter(
                 "tag, the mode is anonymous, and the selection is made by the user solely based on the Label string." +
                 "\n" +
                 "Each cluster ID that indicates this specification shall define a distinct purpose for the cluster " +
-                "instance. For example: A LightBlinking cluster ID supports blinking modes for a light described that " +
-                "way)." +
+                "instance. For example: A LightBlinking cluster ID supports blinking modes for a light (and is " +
+                "described that way)." +
                 "\n" +
                 "An anonymous mode shall support the derived cluster purpose. A manufacturer specific semantic tag " +
                 "shall support the derived cluster purpose. An anonymous mode shall NOT replace the meaning of a " +
@@ -2282,9 +2280,8 @@ export const SpecMatter = Matter(
                     details: "This field is a list of semantic tags that map to the mode option. This may be used by clients to " +
                         "determine the meaning of the mode option as defined in a standard or manufacturer specific " +
                         "namespace. Semantic tags can help clients look for options that meet certain criteria. A semantic " +
-                        "tag shall be either a standard tag or manufacturer specific tag as defined in each" +
-                        "\n" +
-                        "SemanticTagStruct list entry." +
+                        "tag shall be either a standard tag or manufacturer specific tag as defined in each SemanticTagStruct " +
+                        "list entry." +
                         "\n" +
                         "A mode option may have more than one semantic tag. A mode option may be mapped to a mixture of " +
                         "standard and manufacturer specific semantic tags." +
@@ -2858,22 +2855,22 @@ export const SpecMatter = Matter(
                     "\n" +
                     "  • When the AS feature flag is set, this event:" +
                     "\n" +
-                    "  ◦ shall NOT be generated during a multi-press sequence (since a long press is a separate cycle " +
-                    "    from any multi-press cycles);" +
+                    "    ◦ shall NOT be generated during a multi-press sequence (since a long press is a separate cycle " +
+                    "      from any multi-press cycles);" +
                     "\n" +
-                    "  ◦ shall only be generated after the first InitialPress following a MultiPressComplete when a long " +
-                    "    press is detected after the idle time." +
+                    "    ◦ shall only be generated after the first InitialPress following a MultiPressComplete when a " +
+                    "      long press is detected after the idle time." +
                     "\n" +
                     "  • Else, when the MSM feature flag is set, this event:" +
                     "\n" +
-                    "  ◦ shall NOT be generated during a multi-press sequence (since a long press is a separate cycle " +
-                    "    from any multi-press cycles);" +
+                    "    ◦ shall NOT be generated during a multi-press sequence (since a long press is a separate cycle " +
+                    "      from any multi-press cycles);" +
                     "\n" +
-                    "  ◦ shall only be generated after the first InitialPress following a MultiPressComplete when a long " +
-                    "    press is detected after the idle time;" +
+                    "    ◦ shall only be generated after the first InitialPress following a MultiPressComplete when a " +
+                    "      long press is detected after the idle time;" +
                     "\n" +
-                    "  ◦ shall NOT be generated after a MultiPressOngoing event without an intervening MultiPressComplete " +
-                    "    event." +
+                    "    ◦ shall NOT be generated after a MultiPressOngoing event without an intervening " +
+                    "      MultiPressComplete event." +
                     "\n" +
                     "The above constraints imply that for a given activity detection cycle of a switch having MSM and/or " +
                     "MSL feature flags set, the entire activity is either a single long press detection cycle of " +
@@ -3011,13 +3008,13 @@ export const SpecMatter = Matter(
                     "  • a value of N when there were exactly N presses in a multi-press sequence (and the sequence has " +
                     "    ended)." +
                     "\n" +
-                    "> [!NOTE]" +
+                    "    > [!NOTE]" +
                     "\n" +
-                    "> The introduction of TotalNumberOfPressesCounted supporting the value 0 may impact clients of " +
-                    "  switches using cluster revision 1 since such servers would not use this value of " +
-                    "  TotalNumberOfPressesCounted to indicate an aborted sequence. Clients SHOULD always act using the " +
-                    "  TotalNumberOfPressesCounted field taken into account since for values from 1 to MultiPressMax, the " +
-                    "  user action that led to the event was different depending on the count.",
+                    "    > The introduction of TotalNumberOfPressesCounted supporting the value 0 may impact clients of " +
+                    "      switches using cluster revision 1 since such servers would not use this value of " +
+                    "      TotalNumberOfPressesCounted to indicate an aborted sequence. Clients SHOULD always act using " +
+                    "      the TotalNumberOfPressesCounted field taken into account since for values from 1 to " +
+                    "      MultiPressMax, the user action that led to the event was different depending on the count.",
 
                 xref: { document: "cluster", section: "1.13.6.7" }
             },
@@ -3312,8 +3309,7 @@ export const SpecMatter = Matter(
                 "status code of CommandInvalidInState if a Start command is received prior to the required on-device " +
                 "action." +
                 "\n" +
-                "If this command is received when already in the Running state the device shall respond with an" +
-                "\n" +
+                "If this command is received when already in the Running state the device shall respond with an " +
                 "OperationalCommandResponse command with an ErrorStateID of NoError but take no further action." +
                 "\n" +
                 "A device that is unable to honor the Start command for whatever reason shall respond with an " +
@@ -4334,10 +4330,11 @@ export const SpecMatter = Matter(
                 "\n" +
                 "  • when it changes to or from null" +
                 "\n" +
-                "> [!NOTE]" +
+                "    > [!NOTE]" +
                 "\n" +
-                "> If the device is capable of pausing its operation, this attribute may be set to null, to indicate " +
-                "  that completion time is unknown, or increment the value while being in the paused state.",
+                "    > If the device is capable of pausing its operation, this attribute may be set to null, to " +
+                "      indicate that completion time is unknown, or increment the value while being in the paused " +
+                "      state.",
 
             xref: { document: "cluster", section: "1.17.6.5" }
         }),
@@ -4827,27 +4824,27 @@ export const SpecMatter = Matter(
                 "  • If both PercentMax and FixedMax are indicated, then for a given true value in the range between " +
                 "    RangeMin and RangeMax," +
                 "\n" +
-                "  ◦ the reported value shall be less than or equal to the sum of the true value, FixedMax and " +
-                "    PercentMax percent of the true value." +
+                "    ◦ the reported value shall be less than or equal to the sum of the true value, FixedMax and " +
+                "      PercentMax percent of the true value." +
                 "\n" +
-                "  ◦ the reported value shall be greater than or equal to the true value minus the sum of FixedMax " +
-                "    and PercentMax percent of the true value." +
+                "    ◦ the reported value shall be greater than or equal to the true value minus the sum of FixedMax " +
+                "      and PercentMax percent of the true value." +
                 "\n" +
                 "  • If only PercentMax is indicated, then for a given true value in the range between RangeMin and " +
                 "    RangeMax," +
                 "\n" +
-                "  ◦ the reported value shall be less than or equal to the sum of the true value and PercentMax " +
-                "    percent of the true value." +
+                "    ◦ the reported value shall be less than or equal to the sum of the true value and PercentMax " +
+                "      percent of the true value." +
                 "\n" +
-                "  ◦ the reported value shall be greater than or equal to the true value minus PercentMax percent of " +
-                "    the true value." +
+                "    ◦ the reported value shall be greater than or equal to the true value minus PercentMax percent " +
+                "      of the true value." +
                 "\n" +
                 "  • If only FixedMax is indicated, then for a given true value in the range between RangeMin and " +
                 "    RangeMax," +
                 "\n" +
-                "  ◦ the reported value shall be less than or equal to the sum of the true value and FixedMax." +
+                "    ◦ the reported value shall be less than or equal to the sum of the true value and FixedMax." +
                 "\n" +
-                "  ◦ the reported value shall be greater than or equal to the true value minus FixedMax.",
+                "    ◦ the reported value shall be greater than or equal to the true value minus FixedMax.",
 
             xref: { document: "cluster", section: "2.1.4.3" }
         },
@@ -5114,9 +5111,7 @@ export const SpecMatter = Matter(
                 constraint: "minMeasuredValue to maxMeasuredValue", quality: "X P",
                 details: "Indicates the pressure in kPa as follows:" +
                     "\n" +
-                    "MeasuredValue = 10 x Pressure [kPa]" +
-                    "\n" +
-                    "The null value indicates that the value is not available.",
+                    "MeasuredValue = 10 x Pressure [kPa] The null value indicates that the value is not available.",
                 xref: { document: "cluster", section: "2.4.5.1" }
             }
         ),
@@ -5152,9 +5147,8 @@ export const SpecMatter = Matter(
             {
                 name: "ScaledValue", id: 0x10, type: "int16", access: "R V", conformance: "EXT",
                 constraint: "minScaledValue to maxScaledValue", default: 0, quality: "X",
-                details: "Indicates the pressure in Pascals as follows: ScaledValue = 10Scale x Pressure [Pa]" +
-                    "\n" +
-                    "The null value indicates that the value is not available.",
+                details: "Indicates the pressure in Pascals as follows: ScaledValue = 10Scale x Pressure [Pa] The null value " +
+                    "indicates that the value is not available.",
                 xref: { document: "cluster", section: "2.4.5.5" }
             }
         ),
@@ -5179,9 +5173,7 @@ export const SpecMatter = Matter(
             name: "ScaledTolerance", id: 0x13, type: "uint16", access: "R V", conformance: "[EXT]",
             constraint: "max 2048", default: 0,
             details: "Indicates the magnitude of the possible error that is associated with ScaledValue. The true value is " +
-                "located in the range" +
-                "\n" +
-                "(ScaledValue – ScaledTolerance) to (ScaledValue + ScaledTolerance).",
+                "located in the range (ScaledValue – ScaledTolerance) to (ScaledValue + ScaledTolerance).",
             xref: { document: "cluster", section: "2.4.5.8" }
         }),
 
@@ -5207,14 +5199,10 @@ export const SpecMatter = Matter(
             {
                 name: "MeasuredValue", id: 0x0, type: "uint16", access: "R V", conformance: "M",
                 constraint: "minMeasuredValue to maxMeasuredValue", default: null, quality: "X P",
-
                 details: "Indicates the flow in m/h as follows:" +
                     "\n" +
-                    "MeasuredValue = 10 x Flow" +
-                    "\n" +
-                    "The null value indicates that the flow measurement is unknown, otherwise the range shall be as " +
-                    "described in Measured Value.",
-
+                    "MeasuredValue = 10 x Flow The null value indicates that the flow measurement is unknown, otherwise " +
+                    "the range shall be as described in Measured Value.",
                 xref: { document: "cluster", section: "2.5.4.1" }
             }
         ),
@@ -5265,10 +5253,8 @@ export const SpecMatter = Matter(
 
                 details: "MeasuredValue represents the water content in % as follows:" +
                     "\n" +
-                    "MeasuredValue = 100 x water content" +
-                    "\n" +
-                    "Where 0% < = water content < = 100%, corresponding to a MeasuredValue in the range 0 to 10000. The " +
-                    "maximum resolution this format allows is 0.01%." +
+                    "MeasuredValue = 100 x water content Where 0% < = water content < = 100%, corresponding to a " +
+                    "MeasuredValue in the range 0 to 10000. The maximum resolution this format allows is 0.01%." +
                     "\n" +
                     "MinMeasuredValue and MaxMeasuredValue define the range of the sensor." +
                     "\n" +
@@ -5381,10 +5367,8 @@ export const SpecMatter = Matter(
                 "*OccupiedToUnoccupiedDelay attributes." +
                 "\n" +
                 "The value of HoldTime shall be within the limits provided in the HoldTimeLimits attribute, i.e. " +
-                "HoldTimeMin <= HoldTime <= HoldTimeMax" +
-                "\n" +
-                "Low values of HoldTime SHOULD be avoided since they could lead to many reporting messages. A value 0 " +
-                "for HoldTime shall NOT be used." +
+                "HoldTimeMin <= HoldTime <= HoldTimeMax Low values of HoldTime SHOULD be avoided since they could " +
+                "lead to many reporting messages. A value 0 for HoldTime shall NOT be used." +
                 "\n" +
                 "The figure below illustrates this with an example of how this attribute is used for a PIR sensor. It " +
                 "uses threshold detection to generate an \"internal detection\" signal, which needs post-processing to " +
@@ -6002,8 +5986,7 @@ export const SpecMatter = Matter(
                 "priority. Priority order of conditions is determined by the manufacturer and shall be supplied as a " +
                 "part of certification procedure. If the value of ExpressedState is not Normal, the attribute " +
                 "corresponding to the value shall NOT be Normal. For example, if the ExpressedState is set to " +
-                "SmokeAlarm, the value of the SmokeState will indicate the severity of the alarm" +
-                "\n" +
+                "SmokeAlarm, the value of the SmokeState will indicate the severity of the alarm (Warning or " +
                 "Critical). Clients SHOULD also read the other attributes to be aware of further alarm conditions " +
                 "beyond the one indicated in ExpressedState." +
                 "\n" +
@@ -7966,12 +7949,10 @@ export const SpecMatter = Matter(
                     "correspond to a CurrentLevel value of 254 (100%)." +
                     "\n" +
                     "This attribute shall be set such that the following relationship exists: ColorTempPhysicalMinMireds " +
-                    "<= CoupleColorTempToLevelMinMireds <= ColorTemperatureMireds" +
-                    "\n" +
-                    "Note that since this attribute is stored as a micro reciprocal degree (mired) value (i.e. color " +
-                    "temperature in kelvins = 1,000,000 / CoupleColorTempToLevelMinMireds), the " +
-                    "CoupleColorTempToLevelMinMireds attribute corresponds to an upper bound on the value of the color " +
-                    "temperature in kelvins supported by the device.",
+                    "<= CoupleColorTempToLevelMinMireds <= ColorTemperatureMireds Note that since this attribute is " +
+                    "stored as a micro reciprocal degree (mired) value (i.e. color temperature in kelvins = 1,000,000 / " +
+                    "CoupleColorTempToLevelMinMireds), the CoupleColorTempToLevelMinMireds attribute corresponds to an " +
+                    "upper bound on the value of the color temperature in kelvins supported by the device.",
 
                 xref: { document: "cluster", section: "3.2.7.22" }
             }
@@ -8469,9 +8450,7 @@ export const SpecMatter = Matter(
                 details: "This field shall indicate a lower bound on the ColorTemperatureMireds attribute (≡ an upper bound on " +
                     "the color temperature in kelvins) for the current move operation" +
                     "\n" +
-                    "ColorTempPhysicalMinMireds <= ColorTemperatureMinimumMireds field <=" +
-                    "\n" +
-                    "ColorTemperatureMireds" +
+                    "ColorTempPhysicalMinMireds <= ColorTemperatureMinimumMireds field <= ColorTemperatureMireds" +
                     "\n" +
                     "As such if the move operation takes the ColorTemperatureMireds attribute towards the value of the " +
                     "ColorTemperatureMinimumMireds field it shall be clipped so that the above invariant is satisfied. If " +
@@ -8488,9 +8467,7 @@ export const SpecMatter = Matter(
                 details: "This field shall indicate an upper bound on the ColorTemperatureMireds attribute (≡ a lower bound on " +
                     "the color temperature in kelvins) for the current move operation" +
                     "\n" +
-                    "ColorTemperatureMireds <= ColorTemperatureMaximumMireds field <=" +
-                    "\n" +
-                    "ColorTempPhysicalMaxMireds" +
+                    "ColorTemperatureMireds <= ColorTemperatureMaximumMireds field <= ColorTempPhysicalMaxMireds" +
                     "\n" +
                     "As such if the move operation takes the ColorTemperatureMireds attribute towards the value of the " +
                     "ColorTemperatureMaximumMireds field it shall be clipped so that the above invariant is satisfied. If " +
@@ -8531,8 +8508,7 @@ export const SpecMatter = Matter(
             Field({
                 name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M", constraint: "max 65534",
                 details: "This field shall indicate, in units of 1/10ths of a second, the time that shall be taken to perform " +
-                    "the step. A step is a change to the device’s color temperature of a magnitude corresponding to the" +
-                    "\n" +
+                    "the step. A step is a change to the device’s color temperature of a magnitude corresponding to the " +
                     "StepSize field.",
                 xref: { document: "cluster", section: "3.2.8.22.3" }
             }),
@@ -8544,9 +8520,7 @@ export const SpecMatter = Matter(
                 details: "This field shall indicate a lower bound on the ColorTemperatureMireds attribute (≡ an upper bound on " +
                     "the color temperature in kelvins) for the current step operation" +
                     "\n" +
-                    "ColorTempPhysicalMinMireds <= ColorTemperatureMinimumMireds field <=" +
-                    "\n" +
-                    "ColorTemperatureMireds" +
+                    "ColorTempPhysicalMinMireds <= ColorTemperatureMinimumMireds field <= ColorTemperatureMireds" +
                     "\n" +
                     "As such if the step operation takes the ColorTemperatureMireds attribute towards the value of the " +
                     "ColorTemperatureMinimumMireds field it shall be clipped so that the above invariant is satisfied. If " +
@@ -8563,9 +8537,8 @@ export const SpecMatter = Matter(
                 details: "This field shall indicate an upper bound on the ColorTemperatureMireds attribute (≡ a lower bound on " +
                     "the color temperature in kelvins) for the current step operation" +
                     "\n" +
-                    "ColorTemperatureMireds ≤ ColorTemperatureMaximumMireds field ≤ ColorTempPhysicalMaxMireds" +
-                    "\n" +
-                    "As such if the step operation takes the ColorTemperatureMireds attribute towards the value of the " +
+                    "ColorTemperatureMireds ≤ ColorTemperatureMaximumMireds field ≤ ColorTempPhysicalMaxMireds As such if " +
+                    "the step operation takes the ColorTemperatureMireds attribute towards the value of the " +
                     "ColorTemperatureMaximumMireds field it shall be clipped so that the above invariant is satisfied. If " +
                     "the ColorTemperatureMaximumMireds field is set to 0, ColorTempPhysicalMaxMireds shall be used as the " +
                     "upper bound for the ColorTemperatureMireds attribute.",
@@ -8990,13 +8963,9 @@ export const SpecMatter = Matter(
                 "\n" +
                 "### Pump controller Pump" +
                 "\n" +
-                "C Pump configuration and control S C Level control S" +
+                "C Pump configuration and control S C Level control S C On/Off S" +
                 "\n" +
-                "C On/Off S" +
-                "\n" +
-                "C = Client S = Server" +
-                "\n" +
-                "Note: Device names are examples for illustration purposes only" +
+                "C = Client S = Server Note: Device names are examples for illustration purposes only" +
                 "\n" +
                 "Figure 14. Typical Usage of Pump Configuration and Control Cluster",
 
@@ -9160,14 +9129,11 @@ export const SpecMatter = Matter(
         Attribute({
             name: "MaxConstTemp", id: 0xc, type: "int16", access: "R V", conformance: "TEMP, [AUTO]",
             constraint: "min -27315", default: null, quality: "X F",
-
             details: "This attribute specifies the maximum temperature the pump can maintain in the system when it is " +
                 "working with the ControlMode attribute set to ConstantTemperature." +
                 "\n" +
-                "MaxConstTemp shall be greater than or equal to MinConstTemp" +
-                "\n" +
-                "Valid range is –273.15 °C to 327.67 °C (steps of 0.01 °C). Null if the value is invalid.",
-
+                "MaxConstTemp shall be greater than or equal to MinConstTemp Valid range is –273.15 °C to 327.67 °C " +
+                "(steps of 0.01 °C). Null if the value is invalid.",
             xref: { document: "cluster", section: "4.2.7.13" }
         }),
 
@@ -9318,10 +9284,8 @@ export const SpecMatter = Matter(
                 "ControlMode and the optional connection of a remote sensor. The operation and control is prioritized " +
                 "as shown in the scheme below:" +
                 "\n" +
-                "Priority Scheme of Pump Operation and Control" +
-                "\n" +
-                "If this attribute is Maximum, Minimum or Local, the OperationMode attribute decides how the pump is " +
-                "operated." +
+                "Priority Scheme of Pump Operation and Control If this attribute is Maximum, Minimum or Local, the " +
+                "OperationMode attribute decides how the pump is operated." +
                 "\n" +
                 "If this attribute is Normal and a remote sensor is connected to the pump, the type of the remote " +
                 "sensor decides the control mode of the pump. A connected remote pressure sensor will make the pump " +
@@ -9452,8 +9416,7 @@ export const SpecMatter = Matter(
             Field({
                 name: "LocalOverride", constraint: "4",
                 description: "Device control is overridden by hardware, such as an external STOP button or via a local HMI.",
-                details: "While this bit is set, the EffectiveOperationMode is adjusted to Local. Any request changing" +
-                    "\n" +
+                details: "While this bit is set, the EffectiveOperationMode is adjusted to Local. Any request changing " +
                     "OperationMode shall generate a FAILURE error status until LocalOverride is cleared on the physical " +
                     "device. When LocalOverride is cleared, the device shall return to the operation mode set in " +
                     "OperationMode.",
@@ -9582,37 +9545,25 @@ export const SpecMatter = Matter(
 
             details: "This cluster provides an interface to the functionality of a thermostat." +
                 "\n" +
-                "Optional temperature, humidity and occupancy sensors" +
+                "Optional temperature, humidity and occupancy sensors Thermostat" +
                 "\n" +
-                "Thermostat" +
+                "Heating / cooling control panel C" +
                 "\n" +
-                "Heating / cooling control panel" +
-                "\n" +
-                "C" +
-                "\n" +
-                "Dehumidification configuration" +
-                "\n" +
-                "Dehumidification notification" +
+                "Dehumidification configuration Dehumidification notification" +
                 "\n" +
                 "ThermostatS" +
                 "\n" +
-                "Heating / cooling device (e.g. indoor air handler)" +
+                "Heating / cooling device (e.g. indoor air handler) S" +
                 "\n" +
-                "S user interface S" +
+                "user interface S" +
                 "\n" +
                 "configuration" +
                 "\n" +
-                "C" +
+                "C Configuration tool" +
                 "\n" +
-                "Configuration tool" +
+                "Thermostat configuration C C Fan control S" +
                 "\n" +
-                "Thermostat configuration" +
-                "\n" +
-                "C C Fan control S" +
-                "\n" +
-                "ThermostatS notification C" +
-                "\n" +
-                "C = Client S = Server" +
+                "ThermostatS notification C C = Client S = Server" +
                 "\n" +
                 "Note: Device names are examples for illustration purposes only" +
                 "\n" +
@@ -9677,10 +9628,10 @@ export const SpecMatter = Matter(
                 "\n" +
                 "  • If the LTNE feature is not supported:" +
                 "\n" +
-                "  ◦ If the LocalTemperatureCalibration is invalid or currently unavailable, the attribute shall " +
-                "    report null." +
+                "    ◦ If the LocalTemperatureCalibration is invalid or currently unavailable, the attribute shall " +
+                "      report null." +
                 "\n" +
-                "  ◦ If the LocalTemperatureCalibration is valid, the attribute shall report that value." +
+                "    ◦ If the LocalTemperatureCalibration is valid, the attribute shall report that value." +
                 "\n" +
                 "  • Otherwise, if the LTNE feature is supported, there is no feedback externally available for the " +
                 "    LocalTemperatureCalibration. In that case, the LocalTemperature attribute shall always report " +
@@ -10161,11 +10112,10 @@ export const SpecMatter = Matter(
                 "OccupiedHeatingSetpoint setpoint (i.e., OccupiedHeatingSetpoint – OccupiedSetback) before initiating " +
                 "a state change to bring the temperature back to the user’s" +
                 "\n" +
-                "desired setpoint. This attribute is sometimes also referred to as the “span.”" +
-                "\n" +
-                "The purpose of this attribute is to allow remote configuration of the span between the desired " +
-                "setpoint and the measured temperature to help prevent over-cycling and reduce energy bills, though " +
-                "this may result in lower comfort on the part of some users." +
+                "desired setpoint. This attribute is sometimes also referred to as the “span.” The purpose of this " +
+                "attribute is to allow remote configuration of the span between the desired setpoint and the measured " +
+                "temperature to help prevent over-cycling and reduce energy bills, though this may result in lower " +
+                "comfort on the part of some users." +
                 "\n" +
                 "The null value indicates the attribute is unused." +
                 "\n" +
@@ -10210,11 +10160,10 @@ export const SpecMatter = Matter(
                 "above the UnoccupiedCoolingSetpoint (i.e., UnoccupiedCoolingSetpoint + UnoccupiedSetback) or below " +
                 "the UnoccupiedHeatingSetpoint setpoint (i.e., UnoccupiedHeatingSetpoint - UnoccupiedSetback) before " +
                 "initiating a state change to bring the temperature back to the user’s desired setpoint. This " +
-                "attribute is sometimes also referred to as the “span.”" +
-                "\n" +
-                "The purpose of this attribute is to allow remote configuration of the span between the desired " +
-                "setpoint and the measured temperature to help prevent over-cycling and reduce energy bills, though " +
-                "this may result in lower comfort on the part of some users." +
+                "attribute is sometimes also referred to as the “span.” The purpose of this attribute is to allow " +
+                "remote configuration of the span between the desired setpoint and the measured temperature to help " +
+                "prevent over-cycling and reduce energy bills, though this may result in lower comfort on the part of " +
+                "some users." +
                 "\n" +
                 "The null value indicates the attribute is unused." +
                 "\n" +
@@ -10424,72 +10373,72 @@ export const SpecMatter = Matter(
                     "  1. If the PresetHandle field is null, the PresetStruct shall be treated as an added preset, and " +
                     "     the device shall create a new unique value for the PresetHandle field." +
                     "\n" +
-                    "  a. If the BuiltIn field is true, a response with the status code CONSTRAINT_ERROR shall be " +
-                    "     returned." +
+                    "    a. If the BuiltIn field is true, a response with the status code CONSTRAINT_ERROR shall be " +
+                    "       returned." +
                     "\n" +
-                    "2. If the PresetHandle field is not null, the PresetStruct shall be treated as a modification of an " +
-                    "existing preset." +
+                    "  2. If the PresetHandle field is not null, the PresetStruct shall be treated as a modification of " +
+                    "     an existing preset." +
                     "\n" +
-                    "  a. If the value of the PresetHandle field does not match any of the existing presets, a response " +
-                    "     with the status code NOT_FOUND shall be returned." +
+                    "    a. If the value of the PresetHandle field does not match any of the existing presets, a response " +
+                    "       with the status code NOT_FOUND shall be returned." +
                     "\n" +
-                    "  b. If the value of the PresetHandle field is duplicated on multiple presets in the updated list, a " +
-                    "     response with the status code CONSTRAINT_ERROR shall be returned." +
+                    "    b. If the value of the PresetHandle field is duplicated on multiple presets in the updated list, " +
+                    "       a response with the status code CONSTRAINT_ERROR shall be returned." +
                     "\n" +
-                    "  c. If the BuiltIn field is true, and the PresetStruct in the current value with a matching " +
-                    "     PresetHandle field has a BuiltIn field set to false, a response with the status code " +
-                    "     CONSTRAINT_ERROR shall be returned." +
+                    "    c. If the BuiltIn field is true, and the PresetStruct in the current value with a matching " +
+                    "       PresetHandle field has a BuiltIn field set to false, a response with the status code " +
+                    "       CONSTRAINT_ERROR shall be returned." +
                     "\n" +
-                    "  d. If the BuiltIn field is false, and the PresetStruct in the current value with a matching " +
-                    "     PresetHandle field has a BuiltIn field set to true, a response with the status code " +
-                    "     CONSTRAINT_ERROR shall be returned." +
+                    "    d. If the BuiltIn field is false, and the PresetStruct in the current value with a matching " +
+                    "       PresetHandle field has a BuiltIn field set to true, a response with the status code " +
+                    "       CONSTRAINT_ERROR shall be returned." +
                     "\n" +
-                    "3. If the specified PresetScenarioEnum value does not exist in PresetTypes, a response with the " +
-                    "status code CONSTRAINT_ERROR shall be returned." +
+                    "  3. If the specified PresetScenarioEnum value does not exist in PresetTypes, a response with the " +
+                    "     status code CONSTRAINT_ERROR shall be returned." +
                     "\n" +
-                    "4. If the Name is set, but the associated PresetTypeStruct does not have the SupportsNames bit set, " +
-                    "a response with the status code CONSTRAINT_ERROR shall be returned." +
+                    "  4. If the Name is set, but the associated PresetTypeStruct does not have the SupportsNames bit " +
+                    "     set, a response with the status code CONSTRAINT_ERROR shall be returned." +
                     "\n" +
-                    "5. If appending the received PresetStruct to the pending list of Presets would cause the total " +
-                    "number of pending presets to exceed the value of the NumberOfPresets attribute, a response with the " +
-                    "status code RESOURCE_EXHAUSTED shall be returned." +
+                    "  5. If appending the received PresetStruct to the pending list of Presets would cause the total " +
+                    "     number of pending presets to exceed the value of the NumberOfPresets attribute, a response with " +
+                    "     the status code RESOURCE_EXHAUSTED shall be returned." +
                     "\n" +
-                    "6. If appending the received PresetStruct to the pending list of Presets would cause the total " +
-                    "number of pending presets whose PresetScenario field matches the appended preset’s PresetScenario " +
-                    "field to exceed the value of the NumberOfPresets field on the PresetTypeStruct whose PresetScenario " +
-                    "matches the appended preset’s PresetScenario field, a response with the status code " +
-                    "RESOURCE_EXHAUSTED shall be returned." +
+                    "  6. If appending the received PresetStruct to the pending list of Presets would cause the total " +
+                    "     number of pending presets whose PresetScenario field matches the appended preset’s " +
+                    "     PresetScenario field to exceed the value of the NumberOfPresets field on the PresetTypeStruct " +
+                    "     whose PresetScenario matches the appended preset’s PresetScenario field, a response with the " +
+                    "     status code RESOURCE_EXHAUSTED shall be returned." +
                     "\n" +
-                    "7. Otherwise, the write shall be pended until receipt of a commit request, and the status code " +
-                    "SUCCESS shall be returned." +
+                    "  7. Otherwise, the write shall be pended until receipt of a commit request, and the status code " +
+                    "     SUCCESS shall be returned." +
                     "\n" +
-                    "  a. If the BuiltIn field is null:" +
+                    "    a. If the BuiltIn field is null:" +
                     "\n" +
-                    "  i. If there is a PresetStruct in the current value with a matching PresetHandle field, the BuiltIn " +
-                    "     field on the pending PresetStruct shall be set to the value of the BuiltIn on the matching " +
-                    "     PresetStruct." +
+                    "      i. If there is a PresetStruct in the current value with a matching PresetHandle field, the " +
+                    "         BuiltIn field on the pending PresetStruct shall be set to the value of the BuiltIn on the " +
+                    "         matching PresetStruct." +
                     "\n" +
-                    "  ii. Otherwise, the BuiltIn field on the pending PresetStruct shall be set to false." +
+                    "      ii. Otherwise, the BuiltIn field on the pending PresetStruct shall be set to false." +
                     "\n" +
                     "On an attempt to commit, the status of this attribute shall be determined as follows:" +
                     "\n" +
                     "  1. For all existing presets:" +
                     "\n" +
-                    "  a. If, after applying all pending changes, the updated value of the Presets attribute would not " +
-                    "     contain a PresetStruct with a matching PresetHandle field, indicating the removal of the " +
-                    "     PresetStruct, the server shall check for invalid removal of the PresetStruct:" +
+                    "    a. If, after applying all pending changes, the updated value of the Presets attribute would not " +
+                    "       contain a PresetStruct with a matching PresetHandle field, indicating the removal of the " +
+                    "       PresetStruct, the server shall check for invalid removal of the PresetStruct:" +
                     "\n" +
-                    "  i. If the BuiltIn field is true on the removed PresetStruct, the attribute status shall be " +
-                    "     CONSTRAINT_ERROR." +
+                    "      i. If the BuiltIn field is true on the removed PresetStruct, the attribute status shall be " +
+                    "         CONSTRAINT_ERROR." +
                     "\n" +
-                    "  ii. If the MSCH feature is supported and the removed PresetHandle would be referenced by any " +
-                    "      PresetHandle on any ScheduleTransitionStruct on any ScheduleStruct in the updated value of the " +
-                    "      Schedules attribute, the attribute status shall be INVALID_IN_STATE." +
+                    "      ii. If the MSCH feature is supported and the removed PresetHandle would be referenced by any " +
+                    "          PresetHandle on any ScheduleTransitionStruct on any ScheduleStruct in the updated value of " +
+                    "          the Schedules attribute, the attribute status shall be INVALID_IN_STATE." +
                     "\n" +
-                    "  iii. If the removed PresetHandle is equal to the value of the ActivePresetHandle attribute, the " +
-                    "       attribute status shall be INVALID_IN_STATE." +
+                    "      iii. If the removed PresetHandle is equal to the value of the ActivePresetHandle attribute, " +
+                    "           the attribute status shall be INVALID_IN_STATE." +
                     "\n" +
-                    "2. Otherwise, the attribute status shall be SUCCESS.",
+                    "  2. Otherwise, the attribute status shall be SUCCESS.",
 
                 xref: { document: "cluster", section: "4.3.9.60" }
             },
@@ -10506,108 +10455,109 @@ export const SpecMatter = Matter(
                     "\n" +
                     "  1. For all schedules in the write request:" +
                     "\n" +
-                    "  a. If the ScheduleHandle field is null, the ScheduleStruct shall be treated as an added schedule, " +
-                    "     and the device shall create a new unique value for the ScheduleHandle field." +
+                    "    a. If the ScheduleHandle field is null, the ScheduleStruct shall be treated as an added " +
+                    "       schedule, and the device shall create a new unique value for the ScheduleHandle field." +
                     "\n" +
-                    "  i. If the BuiltIn field is true, a response with the status code CONSTRAINT_ERROR shall be " +
-                    "     returned." +
+                    "      i. If the BuiltIn field is true, a response with the status code CONSTRAINT_ERROR shall be " +
+                    "         returned." +
                     "\n" +
-                    "b. Otherwise, if the ScheduleHandle field is not null, the ScheduleStruct shall be treated as a " +
-                    "modification of an existing schedule." +
+                    "    b. Otherwise, if the ScheduleHandle field is not null, the ScheduleStruct shall be treated as a " +
+                    "       modification of an existing schedule." +
                     "\n" +
-                    "  i. If the value of the ScheduleHandle field does not match any of the existing schedules, a " +
-                    "     response with the status code NOT_FOUND shall be returned." +
+                    "      i. If the value of the ScheduleHandle field does not match any of the existing schedules, a " +
+                    "         response with the status code NOT_FOUND shall be returned." +
                     "\n" +
-                    "  ii. If the BuiltIn field is true, and the ScheduleStruct in the current value with a matching " +
-                    "      ScheduleHandle field has a BuiltIn field set to false, a response with the status code " +
-                    "      CONSTRAINT_ERROR shall be returned." +
+                    "      ii. If the BuiltIn field is true, and the ScheduleStruct in the current value with a matching " +
+                    "          ScheduleHandle field has a BuiltIn field set to false, a response with the status code " +
+                    "          CONSTRAINT_ERROR shall be returned." +
                     "\n" +
-                    "  iii. If the BuiltIn field is false, and the ScheduleStruct in the current value with a matching " +
-                    "       ScheduleHandle field has a BuiltIn field set to true, a response with the status code " +
+                    "      iii. If the BuiltIn field is false, and the ScheduleStruct in the current value with a " +
+                    "           matching ScheduleHandle field has a BuiltIn field set to true, a response with the status " +
+                    "           code CONSTRAINT_ERROR shall be returned." +
+                    "\n" +
+                    "    c. If the specified SystemMode does not exist in ScheduleTypes, a response with the status code " +
                     "       CONSTRAINT_ERROR shall be returned." +
                     "\n" +
-                    "c. If the specified SystemMode does not exist in ScheduleTypes, a response with the status code " +
-                    "CONSTRAINT_ERROR shall be returned." +
+                    "    d. If the number of transitions exceeds the NumberOfScheduleTransitions value, a response with " +
+                    "       the status code RESOURCE_EXHAUSTED shall be returned." +
                     "\n" +
-                    "d. If the number of transitions exceeds the NumberOfScheduleTransitions value, a response with the " +
-                    "status code RESOURCE_EXHAUSTED shall be returned." +
+                    "    e. If the value of the NumberOfScheduleTransitionsPerDay attribute is not null, and the number " +
+                    "       of transitions on any single day of the week exceeds the NumberOfScheduleTransitionsPerDay " +
+                    "       value, a response with the status code RESOURCE_EXHAUSTED shall be returned." +
                     "\n" +
-                    "e. If the value of the NumberOfScheduleTransitionsPerDay attribute is not null, and the number of " +
-                    "transitions on any single day of the week exceeds the NumberOfScheduleTransitionsPerDay value, a " +
-                    "response with the status code RESOURCE_EXHAUSTED shall be returned." +
+                    "    f. If the PresetHandle field is present, but the associated ScheduleTypeStruct does not have the " +
+                    "       SupportsPresets bit set, a response with the status code CONSTRAINT_ERROR shall be returned." +
                     "\n" +
-                    "f. If the PresetHandle field is present, but the associated ScheduleTypeStruct does not have the " +
-                    "SupportsPresets bit set, a response with the status code CONSTRAINT_ERROR shall be returned." +
+                    "    g. If the PresetHandle field is present, but after applying all pending changes, the Presets " +
+                    "       attribute would not contain a PresetStruct whose PresetHandle field matches the value of the " +
+                    "       PresetHandle field, a response with the status code CONSTRAINT_ERROR shall be returned." +
                     "\n" +
-                    "g. If the PresetHandle field is present, but after applying all pending changes, the Presets " +
-                    "attribute would not contain a PresetStruct whose PresetHandle field matches the value of the " +
-                    "PresetHandle field, a response with the status code CONSTRAINT_ERROR shall be returned." +
+                    "    h. If the Name is set, but the associated ScheduleTypeStruct does not have the SupportsNames bit " +
+                    "       set, a response with the status code CONSTRAINT_ERROR shall be returned." +
                     "\n" +
-                    "h. If the Name is set, but the associated ScheduleTypeStruct does not have the SupportsNames bit " +
-                    "set, a response with the status code CONSTRAINT_ERROR shall be returned." +
+                    "      i. For all transitions in all schedules in the write request:" +
                     "\n" +
-                    "  i. For all transitions in all schedules in the write request:" +
+                    "      i. If the PresetHandle field is present, but the ScheduleTypeStruct matching the value of the " +
+                    "         SystemMode field on the encompassing ScheduleStruct does not have the SupportsPresets bit " +
+                    "         set, a response with the status code CONSTRAINT_ERROR shall be returned." +
                     "\n" +
-                    "  i. If the PresetHandle field is present, but the ScheduleTypeStruct matching the value of the " +
-                    "     SystemMode field on the encompassing ScheduleStruct does not have the SupportsPresets bit set, " +
-                    "     a response with the status code CONSTRAINT_ERROR shall be returned." +
+                    "    j. If the PresetHandle field is present, but after applying all pending changes, the Presets " +
+                    "       attribute would not contain a PresetStruct whose PresetHandle field matches the value of the " +
+                    "       PresetHandle field, a response with the status code CONSTRAINT_ERROR shall be returned." +
                     "\n" +
-                    "j. If the PresetHandle field is present, but after applying all pending changes, the Presets " +
-                    "attribute would not contain a PresetStruct whose PresetHandle field matches the value of the " +
-                    "PresetHandle field, a response with the status code CONSTRAINT_ERROR shall be returned." +
+                    "      i. If the SystemMode field is present, but the ScheduleTypeStruct matching the value of the " +
+                    "         SystemMode field on the encompassing ScheduleStruct does not have the SupportsSetpoints bit " +
+                    "         set, a response with the status code CONSTRAINT_ERROR shall be returned." +
                     "\n" +
-                    "  i. If the SystemMode field is present, but the ScheduleTypeStruct matching the value of the " +
-                    "     SystemMode field on the encompassing ScheduleStruct does not have the SupportsSetpoints bit " +
-                    "     set, a response with the status code CONSTRAINT_ERROR shall be returned." +
+                    "      ii. If the SystemMode field is has a value of SystemModeOff, but the ScheduleTypeStruct " +
+                    "          matching the value of the SystemMode field on the encompassing ScheduleStruct does not " +
+                    "          have the SupportsOff bit set, a response with the status code CONSTRAINT_ERROR shall be " +
+                    "          returned." +
                     "\n" +
-                    "  ii. If the SystemMode field is has a value of SystemModeOff, but the ScheduleTypeStruct matching " +
-                    "      the value of the SystemMode field on the encompassing ScheduleStruct does not have the " +
-                    "      SupportsOff bit set, a response with the status code CONSTRAINT_ERROR shall be returned." +
+                    "    k. If the HeatingSetpoint field is present, but the ScheduleTypeStruct matching the value of the " +
+                    "       SystemMode field on the encompassing ScheduleStruct does not have the SupportsSetpoints bit " +
+                    "       set, a response with the status code CONSTRAINT_ERROR shall be returned." +
                     "\n" +
-                    "k. If the HeatingSetpoint field is present, but the ScheduleTypeStruct matching the value of the " +
-                    "SystemMode field on the encompassing ScheduleStruct does not have the SupportsSetpoints bit set, a " +
-                    "response with the status code CONSTRAINT_ERROR shall be returned." +
+                    "    l. If the CoolingSetpoint field is present, but the ScheduleTypeStruct matching the value of the " +
+                    "       SystemMode field on the encompassing ScheduleStruct does not have the SupportsSetpoints bit " +
+                    "       set, a response with the status code CONSTRAINT_ERROR shall be returned." +
                     "\n" +
-                    "l. If the CoolingSetpoint field is present, but the ScheduleTypeStruct matching the value of the " +
-                    "SystemMode field on the encompassing ScheduleStruct does not have the SupportsSetpoints bit set, a " +
-                    "response with the status code CONSTRAINT_ERROR shall be returned." +
+                    "  2. If appending the received ScheduleStruct to the pending list of Schedules would cause the total " +
+                    "     number of pending schedules to exceed the value of the NumberOfSchedules attribute, a response " +
+                    "     with the status code RESOURCE_EXHAUSTED shall be returned." +
                     "\n" +
-                    "2. If appending the received ScheduleStruct to the pending list of Schedules would cause the total " +
-                    "number of pending schedules to exceed the value of the NumberOfSchedules attribute, a response with " +
-                    "the status code RESOURCE_EXHAUSTED shall be returned." +
+                    "  3. If appending the received ScheduleStruct to the pending list of Schedules would cause the total " +
+                    "     number of pending schedules whose SystemMode field matches the appended schedule’s SystemMode " +
+                    "     field to exceed the value of the NumberOfSchedules field on the ScheduleTypeStruct whose " +
+                    "     SystemMode field matches the appended schedule’s SystemMode field, a response with the status " +
+                    "     code RESOURCE_EXHAUSTED shall be returned." +
                     "\n" +
-                    "3. If appending the received ScheduleStruct to the pending list of Schedules would cause the total " +
-                    "number of pending schedules whose SystemMode field matches the appended schedule’s SystemMode field " +
-                    "to exceed the value of the NumberOfSchedules field on the ScheduleTypeStruct whose SystemMode field " +
-                    "matches the appended schedule’s SystemMode field, a response with the status code RESOURCE_EXHAUSTED " +
-                    "shall be returned." +
+                    "  4. Otherwise, the write shall be pended until receipt of a commit request, and the attribute " +
+                    "     status shall be SUCCESS." +
                     "\n" +
-                    "4. Otherwise, the write shall be pended until receipt of a commit request, and the attribute status " +
-                    "shall be SUCCESS." +
+                    "    a. If the BuiltIn field is null:" +
                     "\n" +
-                    "  a. If the BuiltIn field is null:" +
+                    "      i. If there is a ScheduleStruct in the current value with a matching ScheduleHandle field, the " +
+                    "         BuiltIn field on the pending ScheduleStruct shall be set to the value of the BuiltIn on the " +
+                    "         matching ScheduleStruct." +
                     "\n" +
-                    "  i. If there is a ScheduleStruct in the current value with a matching ScheduleHandle field, the " +
-                    "     BuiltIn field on the pending ScheduleStruct shall be set to the value of the BuiltIn on the " +
-                    "     matching ScheduleStruct." +
-                    "\n" +
-                    "  ii. Otherwise, the BuiltIn field on the pending ScheduleStruct shall be set to false." +
+                    "      ii. Otherwise, the BuiltIn field on the pending ScheduleStruct shall be set to false." +
                     "\n" +
                     "On an attempt to commit, the status of this attribute shall be determined as follows:" +
                     "\n" +
                     "  1. For all existing schedules:" +
                     "\n" +
-                    "  a. If, after applying all pending changes, the updated value of the Schedules attribute would not " +
-                    "     contain a ScheduleStruct with a matching ScheduleHandle field, indicating the removal of the " +
-                    "     ScheduleStruct, the server shall check for invalid removal of the ScheduleStruct:" +
+                    "    a. If, after applying all pending changes, the updated value of the Schedules attribute would " +
+                    "       not contain a ScheduleStruct with a matching ScheduleHandle field, indicating the removal of " +
+                    "       the ScheduleStruct, the server shall check for invalid removal of the ScheduleStruct:" +
                     "\n" +
-                    "  i. If the BuiltIn field is true on the removed ScheduleStruct, the attribute status shall be " +
-                    "     CONSTRAINT_ERROR." +
+                    "      i. If the BuiltIn field is true on the removed ScheduleStruct, the attribute status shall be " +
+                    "         CONSTRAINT_ERROR." +
                     "\n" +
-                    "  ii. If the removed ScheduleHandle is equal to the value of the ActiveScheduleHandle attribute, the " +
-                    "      attribute status shall be INVALID_IN_STATE." +
+                    "      ii. If the removed ScheduleHandle is equal to the value of the ActiveScheduleHandle attribute, " +
+                    "          the attribute status shall be INVALID_IN_STATE." +
                     "\n" +
-                    "2. Otherwise, the attribute status shall be SUCCESS.",
+                    "  2. Otherwise, the attribute status shall be SUCCESS.",
 
                 xref: { document: "cluster", section: "4.3.9.61" }
             },
@@ -11523,16 +11473,16 @@ export const SpecMatter = Matter(
                     "\n" +
                     "  2. If either the HeatingSetpoint or CoolingSetpoint is provided, then it shall be used" +
                     "\n" +
-                    "  a. If the SystemMode field is provided, the HeatingSetpoint and CoolingSetpoint fields shall be " +
-                    "     interpreted using the SystemMode field" +
+                    "    a. If the SystemMode field is provided, the HeatingSetpoint and CoolingSetpoint fields shall be " +
+                    "       interpreted using the SystemMode field" +
                     "\n" +
-                    "  b. If the SystemMode field is not provided, the HeatingSetpoint and CoolingSetpoint fields shall " +
-                    "     be interpreted using the SystemMode field on the parent ScheduleStruct" +
+                    "    b. If the SystemMode field is not provided, the HeatingSetpoint and CoolingSetpoint fields shall " +
+                    "       be interpreted using the SystemMode field on the parent ScheduleStruct" +
                     "\n" +
-                    "3. If neither the PresetHandle field or any Setpoint field is provided, then the PresetHandle field " +
-                    "on the parent ScheduleStruct shall be used to determine the active PresetStruct 4. If the " +
-                    "PresetHandle is not indicated and no setpoint is provided for the current SystemMode, the server " +
-                    "shall use a default value for the current SystemMode." +
+                    "  3. If neither the PresetHandle field or any Setpoint field is provided, then the PresetHandle " +
+                    "     field on the parent ScheduleStruct shall be used to determine the active PresetStruct 4. If the " +
+                    "     PresetHandle is not indicated and no setpoint is provided for the current SystemMode, the " +
+                    "     server shall use a default value for the current SystemMode." +
                     "\n" +
                     "If the setpoint was derived from a preset, then the ActivePresetHandle shall be set to the " +
                     "PresetHandle of that preset." +
@@ -12805,9 +12755,7 @@ export const SpecMatter = Matter(
             constraint: "1 to 2880", quality: "P",
             details: "Indicates the number of minutes a PIN, RFID, Fingerprint, or other credential associated with a user " +
                 "of type ExpiringUser shall remain valid after its first use before expiring. When the credential " +
-                "expires the UserStatus for the corresponding user record shall be set to" +
-                "\n" +
-                "OccupiedDisabled.",
+                "expires the UserStatus for the corresponding user record shall be set to OccupiedDisabled.",
             xref: { document: "cluster", section: "5.2.9.36" }
         }),
 
@@ -12965,16 +12913,16 @@ export const SpecMatter = Matter(
                     "    the door lock server shall generate a LockOperationError event with LockOperationType set to " +
                     "    Unlatch and a LockOperation event with LockOperationType set to Unlock." +
                     "\n" +
-                    "  ◦ If it fails before reaching the unlocked state, the door lock server shall generate only a " +
-                    "    LockOperationError event with LockOperationType set to Unlock." +
+                    "    ◦ If it fails before reaching the unlocked state, the door lock server shall generate only a " +
+                    "      LockOperationError event with LockOperationType set to Unlock." +
                     "\n" +
                     "  • Upon manual actuation, a door lock server that supports the Unbolting feature:" +
                     "\n" +
-                    "  ◦ shall generate a LockOperation event of LockOperationType Unlatch when it is actuated from the " +
-                    "    outside." +
+                    "    ◦ shall generate a LockOperation event of LockOperationType Unlatch when it is actuated from the " +
+                    "      outside." +
                     "\n" +
-                    "  ◦ may generate a LockOperation event of LockOperationType Unlatch when it is actuated from the " +
-                    "    inside.",
+                    "    ◦ may generate a LockOperation event of LockOperationType Unlatch when it is actuated from the " +
+                    "      inside.",
 
                 xref: { document: "cluster", section: "5.2.11.3" }
             },
@@ -13287,11 +13235,9 @@ export const SpecMatter = Matter(
                     "following format:" +
                     "\n" +
                     "UserID = requested User ID UserStatus = 0 (Available) UserType = Null (Not supported) PINCode = 0 " +
-                    "(zero length)" +
-                    "\n" +
-                    "If the requested UserID is invalid, send Default Response with an error status. The error status " +
-                    "shall be equal to CONSTRAINT_ERROR when User_ID is less than the max number of users supported, and " +
-                    "NOT_FOUND if greater than or equal to the max number of users supported.",
+                    "(zero length) If the requested UserID is invalid, send Default Response with an error status. The " +
+                    "error status shall be equal to CONSTRAINT_ERROR when User_ID is less than the max number of users " +
+                    "supported, and NOT_FOUND if greater than or equal to the max number of users supported.",
 
                 xref: { document: "cluster", section: "5.2.10.6" }
             },
@@ -13966,11 +13912,9 @@ export const SpecMatter = Matter(
                     "following format:" +
                     "\n" +
                     "User ID = requested User ID UserStatus = 0 (available) UserType = 0xFF (not supported) RFID Code = 0 " +
-                    "(zero length)" +
-                    "\n" +
-                    "If requested User ID is invalid, send Default Response with an error status. The error status shall " +
-                    "be equal to CONSTRAINT_ERROR when User_ID is less than the max number of users supported, and " +
-                    "NOT_FOUND if greater than or equal to the max number of users supported.",
+                    "(zero length) If requested User ID is invalid, send Default Response with an error status. The error " +
+                    "status shall be equal to CONSTRAINT_ERROR when User_ID is less than the max number of users " +
+                    "supported, and NOT_FOUND if greater than or equal to the max number of users supported.",
 
                 xref: { document: "cluster", section: "5.2.10.29" }
             },
@@ -14153,14 +14097,10 @@ export const SpecMatter = Matter(
             {
                 name: "GetUser", id: 0x1b, access: "A", conformance: "USR", direction: "request",
                 response: "GetUserResponse",
-
                 details: "Retrieve user." +
                     "\n" +
-                    "An InvokeResponse command shall be sent with an appropriate error" +
-                    "\n" +
-                    "INVALID_COMMAND, etc.) as needed otherwise the GetUserResponse Command shall be sent implying a " +
-                    "status of SUCCESS.",
-
+                    "An InvokeResponse command shall be sent with an appropriate error (e.g. FAILURE, INVALID_COMMAND, " +
+                    "etc.) as needed otherwise the GetUserResponse Command shall be sent implying a status of SUCCESS.",
                 xref: { document: "cluster", section: "5.2.10.33" }
             },
 
@@ -14372,12 +14312,12 @@ export const SpecMatter = Matter(
                     "  • RESOURCE_EXHAUSTED, if OperationType is Add and the new credential cannot be added due to " +
                     "    resource constraints such as:" +
                     "\n" +
-                    "  ◦ The user referred to by UserIndex already has NumberOfCredentialsSupportedPerUser credentials " +
-                    "    associated." +
+                    "    ◦ The user referred to by UserIndex already has NumberOfCredentialsSupportedPerUser credentials " +
+                    "      associated." +
                     "\n" +
-                    "  ◦ The credential is of type AliroEvictableEndpointKey or AliroNonEvictableEndpointKey, and adding " +
-                    "    it would cause the total number of credentials of those two types to exceed " +
-                    "    NumberOfAliroEndpointKeysSupported." +
+                    "    ◦ The credential is of type AliroEvictableEndpointKey or AliroNonEvictableEndpointKey, and " +
+                    "      adding it would cause the total number of credentials of those two types to exceed " +
+                    "      NumberOfAliroEndpointKeysSupported." +
                     "\n" +
                     "  • INVALID_COMMAND, if one or more fields violate constraints or are invalid." +
                     "\n" +
@@ -16344,8 +16284,7 @@ export const SpecMatter = Matter(
 
         Attribute({
             name: "ProductId", id: 0x3, type: "uint16", access: "R V", conformance: "O", quality: "F",
-            details: "This attribute, if present, shall specify a numeric ID assigned by the vendor to identify a specific" +
-                "\n" +
+            details: "This attribute, if present, shall specify a numeric ID assigned by the vendor to identify a specific " +
                 "Content App made by them. If the Content App is certified by the Connectivity Standards Alliance, " +
                 "then this would be the Product ID as specified by the vendor for the certification.",
             xref: { document: "cluster", section: "6.3.5.4" }
@@ -19703,9 +19642,8 @@ export const SpecMatter = Matter(
                     "changes shall be made to RemainingScreenTime." +
                     "\n" +
                     "If a client with Manage privilege or greater invokes this command, the media device shall ignore the " +
-                    "PINCode field and directly increase the RemainingScreenTime attribute by the specified" +
-                    "\n" +
-                    "BonusTime value." +
+                    "PINCode field and directly increase the RemainingScreenTime attribute by the specified BonusTime " +
+                    "value." +
                     "\n" +
                     "A server that does not support the PM feature shall respond with InvalidPINCode to clients that only " +
                     "have Operate privilege unless:" +
@@ -20740,8 +20678,7 @@ export const SpecMatter = Matter(
         Datatype(
             {
                 name: "ModeOptionStruct", type: "struct",
-                details: "The table below lists the changes relative to the Mode Base cluster for the fields of the" +
-                    "\n" +
+                details: "The table below lists the changes relative to the Mode Base cluster for the fields of the " +
                     "ModeOptionStruct type. A blank field indicates no change.",
                 xref: { document: "cluster", section: "8.5.5.1" }
             },
@@ -21110,8 +21047,7 @@ export const SpecMatter = Matter(
         Datatype(
             {
                 name: "ModeOptionStruct", type: "struct",
-                details: "The table below lists the changes relative to the Mode Base cluster for the fields of the" +
-                    "\n" +
+                details: "The table below lists the changes relative to the Mode Base cluster for the fields of the " +
                     "ModeOptionStruct type. A blank field indicates no change.",
                 xref: { document: "cluster", section: "8.11.5.1" }
             },
@@ -21329,10 +21265,9 @@ export const SpecMatter = Matter(
             details: "Indicates the increment of power that can be set on the server. The value of this attribute shall be " +
                 "between 1 and MaxPower inclusive." +
                 "\n" +
-                "The value of this attribute shall be such that (MaxPower - MinPower) % PowerStep == 0" +
-                "\n" +
-                "For example, if MinPower is 1, MaxPower is 10, and PowerSetting can be set to any integer between " +
-                "MinPower and MaxPower, PowerStep would be set to 1.",
+                "The value of this attribute shall be such that (MaxPower - MinPower) % PowerStep == 0 For example, " +
+                "if MinPower is 1, MaxPower is 10, and PowerSetting can be set to any integer between MinPower and " +
+                "MaxPower, PowerStep would be set to 1.",
 
             xref: { document: "cluster", section: "8.13.5.6" }
         }),
@@ -21492,9 +21427,7 @@ export const SpecMatter = Matter(
                 "carbon intensity', 'time of use' or 'type of use' tariffs to schedule its operation to run at the " +
                 "cheapest and greenest times." +
                 "\n" +
-                "Figure 18. Example of the how an HVAC may use multiple clusters" +
-                "\n" +
-                "> [!NOTE]" +
+                "Figure 18. Example of the how an HVAC may use multiple clusters > [!NOTE]" +
                 "\n" +
                 "> Grid Services are market dependent and will use other protocols ([OpenADR] / [IEEE2030.5]) to " +
                 "  communicate grid events to the EMS. These are outside the scope of Matter." +
@@ -21632,9 +21565,7 @@ export const SpecMatter = Matter(
                     "power values shall be negative to indicate discharging to the loads in the home, and positive to " +
                     "indicate when it is charging its battery." +
                     "\n" +
-                    "GRID meter = Σ LoadPowers + Σ GeneratorPowers" +
-                    "\n" +
-                    "Example:",
+                    "GRID meter = Σ LoadPowers + Σ GeneratorPowers Example:",
 
                 xref: { document: "cluster", section: "9.2.8.2" }
             }
@@ -21760,9 +21691,8 @@ export const SpecMatter = Matter(
                 "If the user changes the Opt-Out state of the ESA which currently has the ESAStateEnum with value " +
                 "Paused due to a previous PauseRequest command that would now not be permitted due to the new Opt-out " +
                 "state, and the ESA supports the PFR or SFR features (i.e. the Forecast attribute " +
-                "ForecastUpdateReason field currently contains a reason which is now opted out), the ESA shall" +
-                "\n" +
-                "behave as if it had received a ResumeRequest command." +
+                "ForecastUpdateReason field currently contains a reason which is now opted out), the ESA shall behave " +
+                "as if it had received a ResumeRequest command." +
                 "\n" +
                 "If the user changes the Opt-Out state of the ESA which currently has the ESAStateEnum with value " +
                 "PowerAdjustActive due to a previous PowerAdjustRequest command that would now not be permitted due " +
@@ -22219,8 +22149,9 @@ export const SpecMatter = Matter(
                 name: "MinPower", id: 0x0, type: "power-mW", conformance: "M", default: 0,
                 details: "This field shall indicate the minimum power that the ESA can have its power adjusted to." +
                     "\n" +
-                    "Note that this is a signed value. Negative values indicate power flows out of the node discharging a " +
-                    "battery).",
+                    "Note that this is a signed value. Negative values indicate power flows out of the node" +
+                    "\n" +
+                    "discharging a battery).",
                 xref: { document: "cluster", section: "9.2.7.10.1" }
             }),
 
@@ -22990,10 +22921,9 @@ export const SpecMatter = Matter(
                 "This is a feature that is mandated in some markets (such as UK) where the EVSE should by default " +
                 "randomize its start time within the randomization window. By default in the UK this should be 600s." +
                 "\n" +
-                "For example, if the RandomizationDelayWindow is 600s (i.e. 10 minutes) and if there was a cheap" +
-                "\n" +
-                "rate energy starting at 00:30, then the EVSE must compute a random delay between 0-599s and add this " +
-                "to its initial planned start time.",
+                "For example, if the RandomizationDelayWindow is 600s (i.e. 10 minutes) and if there was a cheap rate " +
+                "energy starting at 00:30, then the EVSE must compute a random delay between 0-599s and add this to " +
+                "its initial planned start time.",
 
             xref: { document: "cluster", section: "9.3.8.11" }
         }),
@@ -23076,17 +23006,14 @@ export const SpecMatter = Matter(
                     "To convert from Wh into Range:" +
                     "\n" +
                     "AddedRange (km) = AddedEnergy (Wh) x ApproxEVEfficiency (km/kWh x 1000) AddedRange (Miles) = " +
-                    "AddedEnergy (Wh) x ApproxEVEfficiency (km/kWh x 1000) x 0.6213" +
+                    "AddedEnergy (Wh) x ApproxEVEfficiency (km/kWh x 1000) x 0.6213 Example:" +
                     "\n" +
-                    "Example:" +
+                    "ApproxEVEfficiency (km/kWh x 1000): 4800 (i.e. 4.8km/kWh x 1000) AddedEnergy (Wh): 10,000" +
                     "\n" +
-                    "ApproxEVEfficiency (km/kWh x 1000): 4800 (i.e. 4.8km/kWh x 1000)" +
+                    "AddedRange (km) = 10,000 x 4800 / 1,000,000 = 48 km AddedRange (Miles) = AddedEnergy (Wh) x " +
+                    "ApproxEVEfficiency (km/kWh x 1000) x" +
                     "\n" +
-                    "AddedEnergy (Wh): 10,000" +
-                    "\n" +
-                    "AddedRange (km) = 10,000 x 4800 / 1,000,000 = 48 km" +
-                    "\n" +
-                    "AddedRange (Miles) = AddedEnergy (Wh) x ApproxEVEfficiency (km/kWh x 1000) x 0.6213" +
+                    "0.6213" +
                     "\n" +
                     "= 29.82 Miles",
 
@@ -23458,8 +23385,7 @@ export const SpecMatter = Matter(
                 {
                     name: "ChargingTargetSchedules", id: 0x0, type: "list", conformance: "M", constraint: "max 7",
                     details: "This field shall indicate a list of up to 7 sets of daily charging targets together with their " +
-                        "associated days of the week. Each of the days of the week may only be included in a single" +
-                        "\n" +
+                        "associated days of the week. Each of the days of the week may only be included in a single " +
                         "ChargingTargetSchedule within this list field.",
                     xref: { document: "cluster", section: "9.3.9.5.1" }
                 },
@@ -23650,9 +23576,8 @@ export const SpecMatter = Matter(
                     "can be fulfilled by knowing the charging Power (W) and the time needed to charge." +
                     "\n" +
                     "To compute the Charging Time: Required Energy (Wh) = Power (W) x ChargingTime (s) / 3600 Therefore: " +
-                    "ChargingTime (s) = (3600 x RequiredEnergy (wH)) / Power (W)" +
-                    "\n" +
-                    "To compute the charging time: Charging StartTime = TargetTimeMinutesPastMidnight - ChargingTime",
+                    "ChargingTime (s) = (3600 x RequiredEnergy (wH)) / Power (W) To compute the charging time: Charging " +
+                    "StartTime = TargetTimeMinutesPastMidnight - ChargingTime",
 
                 xref: { document: "cluster", section: "9.3.7.6" }
             },
@@ -23722,8 +23647,9 @@ export const SpecMatter = Matter(
                 details: "This field represents the amount of energy that the user would like to have added to the vehicle " +
                     "before the TargetTimeMinutesPastMidnight." +
                     "\n" +
-                    "This represents a positive value in mWh that SHOULD be added during the session vehicle has been " +
-                    "plugged in)." +
+                    "This represents a positive value in mWh that SHOULD be added during the session (i.e. if the vehicle " +
+                    "charging is stopped and started several times, this equates to the total energy since the vehicle " +
+                    "has been plugged in)." +
                     "\n" +
                     "The maximum value (500kWh) is much larger than most EV batteries on the market today. If the client " +
                     "tries to set this value too high then the EVSE will need to start charging immediately and continue " +
@@ -23931,9 +23857,7 @@ export const SpecMatter = Matter(
                     "For example, if the target temperature was 60°C, the current temperature was 20°C and the tank " +
                     "volume was 100L:" +
                     "\n" +
-                    "Mass of water = 1kg per Litre" +
-                    "\n" +
-                    "Total Mass = 100 x 1kg = 100kg" +
+                    "Mass of water = 1kg per Litre Total Mass = 100 x 1kg = 100kg" +
                     "\n" +
                     "Δ Temperature = (target temperature - current temperature)" +
                     "\n" +
@@ -23989,9 +23913,7 @@ export const SpecMatter = Matter(
                     "(COLD_WATER_TEMP) was assumed to be 20°C:" +
                     "\n" +
                     "TankPercentage = int(((current temperature - COLD_WATER_TEMP) / (target temperature - " +
-                    "COLD_WATER_TEMP)) * 100)" +
-                    "\n" +
-                    "TankPercentage = min( max(TankPercentage,0), 100)" +
+                    "COLD_WATER_TEMP)) * 100) TankPercentage = min( max(TankPercentage,0), 100)" +
                     "\n" +
                     "TankPercentage = 50%",
 
@@ -24001,9 +23923,7 @@ export const SpecMatter = Matter(
 
         Attribute({
             name: "BoostState", id: 0x5, type: "BoostStateEnum", access: "R V", conformance: "M", default: 0,
-            details: "Indicates whether the Boost, as triggered by a Boost command, is currently" +
-                "\n" +
-                "Active or Inactive." +
+            details: "Indicates whether the Boost, as triggered by a Boost command, is currently Active or Inactive." +
                 "\n" +
                 "See Boost and CancelBoost commands for more details.",
             xref: { document: "cluster", section: "9.5.7.6" }
@@ -24275,8 +24195,7 @@ export const SpecMatter = Matter(
                 "If an attempt is made to set this attribute to an index outside the maximum index for " +
                 "EnergyBalances, a response with the status code CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "If the value of EnergyBalances changes after an update, the device shall migrate the value of the" +
-                "\n" +
+                "If the value of EnergyBalances changes after an update, the device shall migrate the value of the " +
                 "CurrentEnergyBalance attribute to the index which the manufacturer specifies most closely matches " +
                 "the previous value, while preserving extreme preferences as follows:" +
                 "\n" +
@@ -24747,9 +24666,8 @@ export const SpecMatter = Matter(
                     "INVALID_COMMAND." +
                     "\n" +
                     "Otherwise, this command shall configure the pending dataset of the Thread network to which the " +
-                    "Border Router is connected, with the value given in the PendingDataset parameter. The Border" +
-                    "\n" +
-                    "Router will manage activation of the pending dataset as defined in the Thread specification.",
+                    "Border Router is connected, with the value given in the PendingDataset parameter. The Border Router " +
+                    "will manage activation of the pending dataset as defined in the Thread specification.",
 
                 xref: { document: "cluster", section: "10.3.6.5" }
             },
@@ -25536,9 +25454,8 @@ export const SpecMatter = Matter(
                 "\n" +
                 "The range is constrained by absolute zero: -273.15°C to 327.67°C." +
                 "\n" +
-                "Conversion of Temperature Values for Display" +
-                "\n" +
-                "When converting temperature values for display manufacturers SHOULD ensure that calculations",
+                "Conversion of Temperature Values for Display When converting temperature values for display " +
+                "manufacturers SHOULD ensure that calculations",
 
             xref: { document: "core", section: "7.19.2.11" }
         }
@@ -25966,7 +25883,7 @@ export const SpecMatter = Matter(
             "\n" +
             "  • The first octet shall encode the prefix length, in bits, in the range of 0 to 128." +
             "\n" +
-            "  ◦ A value of 0 indicates an absent/invalid prefix." +
+            "    ◦ A value of 0 indicates an absent/invalid prefix." +
             "\n" +
             "  • The subsequent octets shall encode the contiguous leftmost bits of the prefix, in network byte " +
             "    order, with left justification, such that the first bit of the prefix is in the most significant " +
@@ -26681,11 +26598,10 @@ export const SpecMatter = Matter(
             details: "This attribute shall provide the minimum number of ACL Entries per fabric that are supported by this " +
                 "server." +
                 "\n" +
-                "Since reducing this value over time may invalidate ACL entries already written, this value shall" +
-                "\n" +
-                "NOT decrease across time as software updates occur that could impact this value. If this is a " +
-                "concern for a given implementation, it is recommended to only use the minimum value required and " +
-                "avoid reporting a higher value than the required minimum.",
+                "Since reducing this value over time may invalidate ACL entries already written, this value shall NOT " +
+                "decrease across time as software updates occur that could impact this value. If this is a concern " +
+                "for a given implementation, it is recommended to only use the minimum value required and avoid " +
+                "reporting a higher value than the required minimum.",
 
             xref: { document: "core", section: "9.10.6.7" }
         }),
@@ -26932,12 +26848,12 @@ export const SpecMatter = Matter(
                         "\n" +
                         "  • A manufacturer contemplating using this flow should realize that" +
                         "\n" +
-                        "  ◦ This flow typically requires internet access to access the URL, and access extension may fail " +
-                        "    when internet connectivity is not available." +
+                        "    ◦ This flow typically requires internet access to access the URL, and access extension may fail " +
+                        "      when internet connectivity is not available." +
                         "\n" +
-                        "  ◦ If the flow prefers to redirect the user to an app which is available on popular platforms, it " +
-                        "    SHOULD also provide a fallback option such as a web browser interface to ensure users can " +
-                        "    complete access extension." +
+                        "    ◦ If the flow prefers to redirect the user to an app which is available on popular platforms, it " +
+                        "      SHOULD also provide a fallback option such as a web browser interface to ensure users can " +
+                        "      complete access extension." +
                         "\n" +
                         "### ARLRequestFlowUrl format" +
                         "\n" +
@@ -27030,12 +26946,9 @@ export const SpecMatter = Matter(
         Datatype(
             {
                 name: "AccessControlEntryPrivilegeEnum", type: "enum8",
-                details: "Proxy View Value" +
-                    "\n" +
-                    "This value implicitly grants View privileges",
+                details: "Proxy View Value This value implicitly grants View privileges",
                 xref: { document: "core", section: "9.10.5.2" }
             },
-
             Field({
                 name: "View", id: 0x1, conformance: "M",
                 description: "Can read and observe all (except Access Control Cluster and as seen by a non-Proxy)"
@@ -27170,8 +27083,7 @@ export const SpecMatter = Matter(
             Field({
                 name: "Data", id: 0x1, type: "octstr", access: "S", conformance: "M", constraint: "max 128",
 
-                details: "This field may be used by manufacturers to store arbitrary TLV-encoded data related to a fabric’s" +
-                    "\n" +
+                details: "This field may be used by manufacturers to store arbitrary TLV-encoded data related to a fabric’s " +
                     "Access Control Entries." +
                     "\n" +
                     "The contents shall consist of a top-level anonymous list; each list element shall include a " +
@@ -27471,9 +27383,8 @@ export const SpecMatter = Matter(
                     "  • If the bridged device is a Matter Intermittently Connected Device, then the server shall send a " +
                     "    StayActiveRequest command with the StayActiveDuration field set to value of the " +
                     "    StayActiveDuration field in the received command to the bridged device when the bridged device " +
-                    "    next sends a checks-in message or subscription report. See Intermittently Connected" +
-                    "\n" +
-                    "Devices Behavior for details on ICD state management." +
+                    "    next sends a checks-in message or subscription report. See Intermittently Connected Devices " +
+                    "    Behavior for details on ICD state management." +
                     "\n" +
                     "When the bridge detects that the bridged device goes into an active state, an ActiveChanged event " +
                     "shall be generated." +
@@ -27532,9 +27443,7 @@ export const SpecMatter = Matter(
             name: "Actions", id: 0x25, classification: "application", pics: "ACT",
 
             details: "This cluster provides a standardized way for a Node (typically a Bridge, but could be any Node) to " +
-                "expose" +
-                "\n" +
-                "  • Information about logical grouping of endpoints on the Node (example: lights in a room)" +
+                "expose • Information about logical grouping of endpoints on the Node (example: lights in a room)" +
                 "\n" +
                 "  • Information about named actions that can be performed on such a group of endpoints (example: " +
                 "    recall a scene for a group of lights by its name)" +
@@ -27606,9 +27515,9 @@ export const SpecMatter = Matter(
                     "  • When used without suffix, it shall provide information about the various actions which the " +
                     "    cluster provides." +
                     "\n" +
-                    "  ◦ Example: SetupURL could take the value of example://Actions or https://domain.example/ " +
-                    "    Matter/bridgev1/Actions for this generic case (access generic info how to use actions provided " +
-                    "    by this cluster)." +
+                    "    ◦ Example: SetupURL could take the value of example://Actions or https://domain.example/ " +
+                    "      Matter/bridgev1/Actions for this generic case (access generic info how to use actions provided " +
+                    "      by this cluster)." +
                     "\n" +
                     "  • When used with a suffix of \"/?a=\" and the decimal value of ActionID for one of the actions, it " +
                     "    may provide information about that particular action. This could be a deeplink to " +
@@ -27616,8 +27525,8 @@ export const SpecMatter = Matter(
                     "    screen for this action so that the user can view and update details of the action, e.g. edit the " +
                     "    scene, or change the wake-up experience time period." +
                     "\n" +
-                    "  ◦ Example of SetupURL with suffix added: example://Actions/?a=12345 or " +
-                    "    https://domain.example/Matter/bridgev1/Actions/?a=12345 for linking to specific info/editing" +
+                    "    ◦ Example of SetupURL with suffix added: example://Actions/?a=12345 or " +
+                    "      https://domain.example/Matter/bridgev1/Actions/?a=12345 for linking to specific info/editing" +
                     "\n" +
                     "of the action with ActionID 0x3039.",
 
@@ -27912,9 +27821,8 @@ export const SpecMatter = Matter(
                     "Active. After the specified Duration, the action or automation will stop, and the action’s state " +
                     "shall change to Disabled." +
                     "\n" +
-                    "Example: enable a \"presence mimicking\" behavior for the lights in your home during a vacation;" +
-                    "\n" +
-                    "the Duration field is used to indicated the length of your absence from home. After that period, the " +
+                    "Example: enable a \"presence mimicking\" behavior for the lights in your home during a vacation; the " +
+                    "Duration field is used to indicated the length of your absence from home. After that period, the " +
                     "presence mimicking behavior will no longer control these lights.",
 
                 xref: { document: "core", section: "9.14.6.10" }
@@ -28837,9 +28745,7 @@ export const SpecMatter = Matter(
                 name: "DeviceDirectory", id: 0x0, type: "list", access: "R F M", conformance: "M", quality: "N",
                 details: "This attribute shall contain the list of logical devices represented by a Bridged Node. Most of the " +
                     "time this will contain a single entry, but may grow with more complex device compositions (e.g. " +
-                    "another bridge.)" +
-                    "\n" +
-                    "An empty list indicates that the information is not available.",
+                    "another bridge.) An empty list indicates that the information is not available.",
                 xref: { document: "core", section: "9.18.5.1" }
             },
 
@@ -28854,9 +28760,7 @@ export const SpecMatter = Matter(
                     "entries, and shall NOT contain locations which are dynamically generated and removed by an " +
                     "ecosystem. (E.g. a location that is generated and removed based on the user being home is not " +
                     "permitted. However, an initially generated location name that does not quickly change is " +
-                    "acceptable.)" +
-                    "\n" +
-                    "An empty list indicates that the information is not available." +
+                    "acceptable.) An empty list indicates that the information is not available." +
                     "\n" +
                     "LocationDirectory entries shall be removed if there is no DeviceDirectory that references it.",
 
@@ -28971,11 +28875,9 @@ export const SpecMatter = Matter(
                     "assignment.)" +
                     "\n" +
                     "UniqueLocationID shall NOT be changed when the LocationDescriptor changes name, but still represents " +
-                    "the same location. (For example, the user renames a room.)" +
-                    "\n" +
-                    "UniqueLocationID shall be changed when LocationDescriptor changes as a result of another Ecosystem " +
-                    "Information Cluster server instance changing and the UniqueLocationID on the remote server instance " +
-                    "also changes." +
+                    "the same location. (For example, the user renames a room.) UniqueLocationID shall be changed when " +
+                    "LocationDescriptor changes as a result of another Ecosystem Information Cluster server instance " +
+                    "changing and the UniqueLocationID on the remote server instance also changes." +
                     "\n" +
                     "UniqueLocationID shall NOT be changed when LocationDescriptor changes as a result of another " +
                     "Ecosystem Information Cluster server instance changing and the UniqueLocationID on the remote server " +
@@ -29180,8 +29082,7 @@ export const SpecMatter = Matter(
         Attribute({
             name: "LocalConfigDisabled", id: 0x10, type: "bool", access: "RW VM", conformance: "O",
             default: false, quality: "N",
-            details: "This attribute shall allow a local Node configuration to be disabled. When this attribute is set to" +
-                "\n" +
+            details: "This attribute shall allow a local Node configuration to be disabled. When this attribute is set to " +
                 "True the Node shall disable the ability to configure the Node through an on-Node user interface. The " +
                 "value of the LocalConfigDisabled attribute shall NOT in any way modify, disable, or otherwise affect " +
                 "the user’s ability to trigger a factory reset on the Node.",
@@ -29206,9 +29107,8 @@ export const SpecMatter = Matter(
                 "manner." +
                 "\n" +
                 "It may be constructed using a permanent device identifier (such as device MAC address) as basis. In " +
-                "order to prevent tracking," +
-                "\n" +
-                "  • it SHOULD NOT be identical to (or easily derived from) such permanent device identifier" +
+                "order to prevent tracking, • it SHOULD NOT be identical to (or easily derived from) such permanent " +
+                "device identifier" +
                 "\n" +
                 "  • it shall be updated when the device is factory reset" +
                 "\n" +
@@ -29566,9 +29466,8 @@ export const SpecMatter = Matter(
                 details: "This command is used by Administrators to set the state of a given Group Key Set, including " +
                     "atomically updating the state of all epoch keys." +
                     "\n" +
-                    "Effect on Receipt" +
-                    "\n" +
-                    "The following validations shall be done against the content of the GroupKeySet field:" +
+                    "Effect on Receipt The following validations shall be done against the content of the GroupKeySet " +
+                    "field:" +
                     "\n" +
                     "  • If the EpochKey0 field is null or its associated EpochStartTime0 field is null, then this " +
                     "    command shall fail with an INVALID_COMMAND status code responded to the client." +
@@ -29642,11 +29541,9 @@ export const SpecMatter = Matter(
 
                 details: "This command is used by Administrators to read the state of a given Group Key Set." +
                     "\n" +
-                    "Effect on Receipt" +
-                    "\n" +
-                    "If there exists a Group Key Set associated with the accessing fabric which has the same " +
-                    "GroupKeySetID as that provided in the GroupKeySetID field, then the contents of that Group Key Set " +
-                    "shall be sent in a KeySetReadResponse command, but with the EpochKey0, EpochKey1 and EpochKey2 " +
+                    "Effect on Receipt If there exists a Group Key Set associated with the accessing fabric which has the " +
+                    "same GroupKeySetID as that provided in the GroupKeySetID field, then the contents of that Group Key " +
+                    "Set shall be sent in a KeySetReadResponse command, but with the EpochKey0, EpochKey1 and EpochKey2 " +
                     "fields replaced by null." +
                     "\n" +
                     "Otherwise, if the GroupKeySetID does not refer to a Group Key Set associated with the accessing " +
@@ -29677,11 +29574,9 @@ export const SpecMatter = Matter(
 
                 details: "This command is used by Administrators to remove all state of a given Group Key Set." +
                     "\n" +
-                    "Effect on Receipt" +
-                    "\n" +
-                    "If there exists a Group Key Set associated with the accessing fabric which has the same " +
-                    "GroupKeySetID as that provided in the GroupKeySetID field, then the contents of that Group Key Set " +
-                    "shall be removed, including all epoch keys it contains." +
+                    "Effect on Receipt If there exists a Group Key Set associated with the accessing fabric which has the " +
+                    "same GroupKeySetID as that provided in the GroupKeySetID field, then the contents of that Group Key " +
+                    "Set shall be removed, including all epoch keys it contains." +
                     "\n" +
                     "If there exist any entries for the accessing fabric within the GroupKeyMap attribute that refer to " +
                     "the GroupKeySetID just removed, then these entries shall be removed from that list." +
@@ -29708,11 +29603,9 @@ export const SpecMatter = Matter(
                 details: "This command is used by Administrators to query a list of all Group Key Sets associated with the " +
                     "accessing fabric." +
                     "\n" +
-                    "Effect on Receipt" +
-                    "\n" +
-                    "Upon receipt, this command shall iterate all stored GroupKeySetStruct associated with the accessing " +
-                    "fabric and generate a KeySetReadAllIndicesResponse command containing the list of GroupKeySetID " +
-                    "values from those structs.",
+                    "Effect on Receipt Upon receipt, this command shall iterate all stored GroupKeySetStruct associated " +
+                    "with the accessing fabric and generate a KeySetReadAllIndicesResponse command containing the list of " +
+                    "GroupKeySetID values from those structs.",
 
                 xref: { document: "core", section: "11.2.7.5" }
             },
@@ -29825,9 +29718,7 @@ export const SpecMatter = Matter(
             Field({
                 name: "EpochStartTime0", id: 0x3, type: "epoch-us", access: "S", conformance: "M", quality: "X",
                 details: "This field, if not null, shall define when EpochKey0 becomes valid as specified by Section 4.17.3, " +
-                    "“Epoch Keys”. Units are absolute UTC time in microseconds encoded using the epoch-us" +
-                    "\n" +
-                    "representation.",
+                    "“Epoch Keys”. Units are absolute UTC time in microseconds encoded using the epoch-us representation.",
                 xref: { document: "core", section: "11.2.5.4.4" }
             }),
 
@@ -31239,8 +31130,7 @@ export const SpecMatter = Matter(
             Field({
                 name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O",
                 details: "The Breadcrumb field, if present, shall be used to atomically set the Breadcrumb attribute in the " +
-                    "General Commissioning cluster on success of the associated command. If the command fails, the" +
-                    "\n" +
+                    "General Commissioning cluster on success of the associated command. If the command fails, the " +
                     "Breadcrumb attribute in the General Commissioning cluster shall be left unchanged.",
                 xref: { document: "core", section: "11.9.7.1.2" }
             })
@@ -31392,10 +31282,8 @@ export const SpecMatter = Matter(
                     "\n" +
                     "  • 8..63 bytes: WPA/WPA2/WPA3 passphrase" +
                     "\n" +
-                    "  • 64 bytes: WPA/WPA2/WPA3 raw hex PSK" +
-                    "\n" +
-                    "These lengths shall be contextually interpreted based on the security type of the BSSID where " +
-                    "connection will occur." +
+                    "  • 64 bytes: WPA/WPA2/WPA3 raw hex PSK These lengths shall be contextually interpreted based on the " +
+                    "    security type of the BSSID where connection will occur." +
                     "\n" +
                     "When the length of Credentials and available set of BSSID admits more than one option, such as the " +
                     "presence of both WPA2 and WPA security type within the result set, WPA2 shall be considered more " +
@@ -31698,20 +31586,20 @@ export const SpecMatter = Matter(
 
                 details: "  • ErrorValue interpretation for Wi-Fi association errors:" +
                     "\n" +
-                    "  ◦ On any association failure during enabling of a network, the ErrorValue field shall be set to " +
-                    "    the Status Code value that was present in the last frame related to association where Status " +
-                    "    Code was not equal to zero and which caused the failure of a final retry attempt, if this final " +
-                    "    failure was due to one of the following Management frames:" +
+                    "    ◦ On any association failure during enabling of a network, the ErrorValue field shall be set to " +
+                    "      the Status Code value that was present in the last frame related to association where Status " +
+                    "      Code was not equal to zero and which caused the failure of a final retry attempt, if this " +
+                    "      final failure was due to one of the following Management frames:" +
                     "\n" +
-                    "  ▪ Association Response (Type 0, Subtype 1)" +
+                    "      ▪ Association Response (Type 0, Subtype 1)" +
                     "\n" +
-                    "  ▪ Reassociation Response (Type 0, Subtype 3)" +
+                    "      ▪ Reassociation Response (Type 0, Subtype 3)" +
                     "\n" +
-                    "  ▪ Authentication (Type 0, Subtype 11)" +
+                    "      ▪ Authentication (Type 0, Subtype 11)" +
                     "\n" +
-                    "  ◦ Table 9-50 \"Status Codes\" in IEEE 802.11-2020 contains a description of all values possible, " +
-                    "    which can unambiguously be used to determine the cause, such as an invalid security type, " +
-                    "    unsupported rate, etc." +
+                    "    ◦ Table 9-50 \"Status Codes\" in IEEE 802.11-2020 contains a description of all values possible, " +
+                    "      which can unambiguously be used to determine the cause, such as an invalid security type, " +
+                    "      unsupported rate, etc." +
                     "\n" +
                     "  • Otherwise, the ErrorValue field shall contain an implementation-dependent value which may be " +
                     "    used by a reader of the structure to record, report or diagnose the failure.",
@@ -31749,10 +31637,9 @@ export const SpecMatter = Matter(
 
                     details: "See Breadcrumb for usage." +
                         "\n" +
-                        "Effect when received" +
-                        "\n" +
-                        "If the Networks attribute does not contain a matching entry, the command shall immediately respond " +
-                        "with NetworkConfigResponse having NetworkingStatus status field set to NetworkIdNotFound." +
+                        "Effect when received If the Networks attribute does not contain a matching entry, the command shall " +
+                        "immediately respond with NetworkConfigResponse having NetworkingStatus status field set to " +
+                        "NetworkIdNotFound." +
                         "\n" +
                         "If the NetworkIndex field has a value larger or equal to the current number of entries in the " +
                         "Networks attribute, the command shall immediately respond with NetworkConfigResponse having " +
@@ -31769,10 +31656,8 @@ export const SpecMatter = Matter(
                         "Re-ordering to the same NetworkIndex as the current location shall be considered as a success and " +
                         "yield no visible changes of the Networks attribute." +
                         "\n" +
-                        "Examples of re-ordering" +
-                        "\n" +
-                        "To better illustrate the re-ordering operation, consider this initial state, exemplary of a Wi-Fi " +
-                        "device:" +
+                        "Examples of re-ordering To better illustrate the re-ordering operation, consider this initial state, " +
+                        "exemplary of a Wi-Fi device:" +
                         "\n" +
                         "On receiving ReorderNetwork with:" +
                         "\n" +
@@ -32402,10 +32287,8 @@ export const SpecMatter = Matter(
                 "the Server is configured in a state such that it still has all necessary elements to be fully " +
                 "operable within a Fabric, such as ACL entries (see Section 9.10, “Access Control Cluster”) and " +
                 "operational credentials (see Section 6.4, “Node Operational Credentials Specification”), and that " +
-                "the" +
-                "\n" +
-                "Node is reachable using CASE (see Section 4.14.2, “Certificate Authenticated Session Establishment " +
-                "(CASE)”) over an operational network." +
+                "the Node is reachable using CASE (see Section 4.14.2, “Certificate Authenticated Session " +
+                "Establishment (CASE)”) over an operational network." +
                 "\n" +
                 "An ErrorCode of NoFailSafe shall be responded to the invoker if the CommissioningComplete command " +
                 "was received when no Fail-Safe context exists." +
@@ -32665,9 +32548,8 @@ export const SpecMatter = Matter(
                 details: "This field shall be present if the RequestedProtocol is BDX. The TransferFileDesignator shall be set " +
                     "as the File Designator of the BDX transfer if initiated." +
                     "\n" +
-                    "Effect on Receipt" +
-                    "\n" +
-                    "On receipt of this command, the Node shall respond with a RetrieveLogsResponse command." +
+                    "Effect on Receipt On receipt of this command, the Node shall respond with a RetrieveLogsResponse " +
+                    "command." +
                     "\n" +
                     "If the RequestedProtocol is set to BDX the Node SHOULD immediately realize the RetrieveLogsResponse " +
                     "command by initiating a BDX Transfer, sending a BDX SendInit message with the File Designator field " +
@@ -33047,8 +32929,7 @@ export const SpecMatter = Matter(
             Field(
                 {
                     name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 4",
-                    details: "This field shall represent the set of faults detected prior to this change event, as per" +
-                        "\n" +
+                    details: "This field shall represent the set of faults detected prior to this change event, as per " +
                         "NetworkFaultEnum.",
                     xref: { document: "core", section: "11.12.8.3.2" }
                 },
@@ -33222,9 +33103,7 @@ export const SpecMatter = Matter(
                 details: "This field shall indicate the number of times to repeat the Value in the PayloadTestResponse’s " +
                     "Payload field." +
                     "\n" +
-                    "Effect upon receipt" +
-                    "\n" +
-                    "This command shall respond with a response status of CONSTRAINT_ERROR if either:" +
+                    "Effect upon receipt This command shall respond with a response status of CONSTRAINT_ERROR if either:" +
                     "\n" +
                     "  • The EnableKey field does not match the a-priori value configured on the device." +
                     "\n" +
@@ -33579,10 +33458,8 @@ export const SpecMatter = Matter(
                 "\n" +
                 "  • The CurrentHeapHighWatermark attribute This command has no payload." +
                 "\n" +
-                "Effect on Receipt" +
-                "\n" +
-                "On receipt of this command, the Node shall make the following modifications to attributes it " +
-                "supports:" +
+                "Effect on Receipt On receipt of this command, the Node shall make the following modifications to " +
+                "attributes it supports:" +
                 "\n" +
                 "If implemented, the server shall set the value of the CurrentHeapHighWatermark attribute to the " +
                 "value of the CurrentHeapUsed attribute." +
@@ -33802,8 +33679,7 @@ export const SpecMatter = Matter(
         Attribute({
             name: "ChildRoleCount", id: 0xf, type: "uint16", access: "R V", conformance: "[MLECNT]", default: 0,
             quality: "C",
-            details: "The ChildRoleCount attribute shall indicate the number of times the Node entered the" +
-                "\n" +
+            details: "The ChildRoleCount attribute shall indicate the number of times the Node entered the " +
                 "OT_DEVICE_ROLE_CHILD role as specified within the Thread specification. This value shall only be " +
                 "reset upon a Node reboot.",
             xref: { document: "core", section: "11.14.6.16" }
@@ -36086,39 +35962,40 @@ export const SpecMatter = Matter(
                     "     associated with the new Fabric Scope, along with the RootCACertificate provided with the prior " +
                     "     successful AddTrustedRootCertificate command invoked in the same fail-safe period." +
                     "\n" +
-                    "  a. Implementation of certificate chain storage may separate or otherwise encode the components of " +
-                    "     the array in implementation-specific ways, as long as they follow the correct format when being " +
-                    "     read from the NOCs list or used within other protocols such as CASE." +
+                    "    a. Implementation of certificate chain storage may separate or otherwise encode the components " +
+                    "       of the array in implementation-specific ways, as long as they follow the correct format when " +
+                    "       being read from the NOCs list or used within other protocols such as CASE." +
                     "\n" +
-                    "5. The NOCs list shall reflect the incoming NOC from the NOCValue field and ICAC from the ICACValue " +
-                    "field (if present)." +
+                    "  5. The NOCs list shall reflect the incoming NOC from the NOCValue field and ICAC from the " +
+                    "     ICACValue field (if present)." +
                     "\n" +
-                    "6. The operational discovery service record shall immediately reflect the new Operational " +
-                    "Identifier, such that the Node immediately begins to exist within the Fabric and becomes reachable " +
-                    "over CASE under the new operational identity." +
+                    "  6. The operational discovery service record shall immediately reflect the new Operational " +
+                    "     Identifier, such that the Node immediately begins to exist within the Fabric and becomes " +
+                    "     reachable over CASE under the new operational identity." +
                     "\n" +
-                    "7. The receiver shall create and add a new Access Control Entry using the CaseAdminSubject field to " +
-                    "grant subsequent Administer access to an Administrator member of the new Fabric. It is recommended " +
-                    "that the Administrator presented in CaseAdminSubject exist within the same entity that is currently " +
-                    "invoking the AddNOC command, within another of the Fabrics of which it is a member." +
+                    "  7. The receiver shall create and add a new Access Control Entry using the CaseAdminSubject field " +
+                    "     to grant subsequent Administer access to an Administrator member of the new Fabric. It is " +
+                    "     recommended that the Administrator presented in CaseAdminSubject exist within the same entity " +
+                    "     that is currently invoking the AddNOC command, within another of the Fabrics of which it is a " +
+                    "     member." +
                     "\n" +
-                    "  a. If the Managed Device Feature is implemented by the ACL cluster, then one or more ARL entries " +
-                    "     with the new FabricIndex may be added to the ARL attribute." +
+                    "    a. If the Managed Device Feature is implemented by the ACL cluster, then one or more ARL entries " +
+                    "       with the new FabricIndex may be added to the ARL attribute." +
                     "\n" +
-                    "8. The incoming IPKValue shall be stored in the Fabric-scoped slot within the Group Key Management " +
-                    "cluster (see KeySetWrite), for subsequent use during CASE." +
+                    "  8. The incoming IPKValue shall be stored in the Fabric-scoped slot within the Group Key Management " +
+                    "     cluster (see KeySetWrite), for subsequent use during CASE." +
                     "\n" +
-                    "9. The Fabric Index associated with the armed fail-safe context (see ArmFailSafe) shall be updated " +
-                    "to match the Fabric Index just allocated." +
+                    "  9. The Fabric Index associated with the armed fail-safe context (see ArmFailSafe) shall be updated " +
+                    "     to match the Fabric Index just allocated." +
                     "\n" +
-                    "10. If the current secure session was established with PASE, the receiver shall:" +
+                    "  10. If the current secure session was established with PASE, the receiver shall:" +
                     "\n" +
-                    "  a. Augment the secure session context with the FabricIndex generated above, such that subsequent " +
-                    "     interactions have the proper accessing fabric." +
+                    "    a. Augment the secure session context with the FabricIndex generated above, such that subsequent " +
+                    "       interactions have the proper accessing fabric." +
                     "\n" +
-                    "11. If the current secure session was established with CASE, subsequent configuration of the newly " +
-                    "installed Fabric requires the opening of a new CASE session from the Administrator from the Fabric " +
-                    "just installed. This Administrator is the one listed in the CaseAdminSubject argument." +
+                    "  11. If the current secure session was established with CASE, subsequent configuration of the newly " +
+                    "      installed Fabric requires the opening of a new CASE session from the Administrator from the " +
+                    "      Fabric just installed. This Administrator is the one listed in the CaseAdminSubject argument." +
                     "\n" +
                     "Thereafter, the Node shall respond with an NOCResponse with a StatusCode of OK and a FabricIndex " +
                     "field matching the FabricIndex under which the new Node Operational Certificate (NOC) is scoped.",
@@ -36142,10 +36019,9 @@ export const SpecMatter = Matter(
                     "A Commissioner or Administrator SHOULD issue this command after performing the Attestation " +
                     "Procedure." +
                     "\n" +
-                    "Effect When Received" +
-                    "\n" +
-                    "If this command is received without an armed fail-safe context (see ArmFailSafe), then this command " +
-                    "shall fail with a FAILSAFE_REQUIRED status code sent back to the initiator." +
+                    "Effect When Received If this command is received without an armed fail-safe context (see " +
+                    "ArmFailSafe), then this command shall fail with a FAILSAFE_REQUIRED status code sent back to the " +
+                    "initiator." +
                     "\n" +
                     "If a prior UpdateNOC or AddNOC command was successfully executed within the fail-safe timer period, " +
                     "then this command shall fail with a CONSTRAINT_ERROR status code sent back to the initiator." +
@@ -36173,18 +36049,18 @@ export const SpecMatter = Matter(
                     "     to match the incoming NOCValue and ICACValue (if present), such that the Node’s Operational " +
                     "     Identifier within the Fabric immediately changes." +
                     "\n" +
-                    "  a. The operational key pair associated with the incoming NOC from the NOCValue, and generated by " +
-                    "     the prior CSRRequest command, shall be committed to permanent storage, for subsequent use " +
-                    "     during CASE." +
+                    "    a. The operational key pair associated with the incoming NOC from the NOCValue, and generated by " +
+                    "       the prior CSRRequest command, shall be committed to permanent storage, for subsequent use " +
+                    "       during CASE." +
                     "\n" +
-                    "  b. The operational discovery service record shall immediately reflect the new Operational " +
-                    "     Identifier." +
+                    "    b. The operational discovery service record shall immediately reflect the new Operational " +
+                    "       Identifier." +
                     "\n" +
-                    "  c. All internal data reflecting the prior operational identifier of the Node within the Fabric " +
-                    "     shall be revoked and removed, to an outcome equivalent to the disappearance of the prior Node, " +
-                    "     except for the ongoing CASE session context, which shall temporarily remain valid until the " +
-                    "     NOCResponse has been successfully delivered or until the next transport-layer error, so that " +
-                    "     the response can be received by the Administrator invoking the command." +
+                    "    c. All internal data reflecting the prior operational identifier of the Node within the Fabric " +
+                    "       shall be revoked and removed, to an outcome equivalent to the disappearance of the prior " +
+                    "       Node, except for the ongoing CASE session context, which shall temporarily remain valid until " +
+                    "       the NOCResponse has been successfully delivered or until the next transport-layer error, so " +
+                    "       that the response can be received by the Administrator invoking the command." +
                     "\n" +
                     "Thereafter, the Node shall respond with an NOCResponse with a StatusCode of OK and a FabricIndex " +
                     "field matching the FabricIndex under which the updated NOC is scoped.",
@@ -36264,11 +36140,10 @@ export const SpecMatter = Matter(
 
                 details: "This field shall contain the label to set for the fabric associated with the current secure session." +
                     "\n" +
-                    "Effect on Receipt" +
-                    "\n" +
-                    "If the Label field is identical to a Label already in use by a Fabric within the Fabrics list that " +
-                    "is not the accessing fabric, then an NOCResponse with a StatusCode of LabelConflict shall be " +
-                    "returned for the command and there shall NOT be any permanent changes to any Fabric data." +
+                    "Effect on Receipt If the Label field is identical to a Label already in use by a Fabric within the " +
+                    "Fabrics list that is not the accessing fabric, then an NOCResponse with a StatusCode of " +
+                    "LabelConflict shall be returned for the command and there shall NOT be any permanent changes to any " +
+                    "Fabric data." +
                     "\n" +
                     "Otherwise, the Label field for the accessing fabric shall immediately be updated to reflect the " +
                     "Label argument provided. Following the update, an NOCResponse with a StatusCode of OK shall be " +
@@ -37124,8 +36999,7 @@ export const SpecMatter = Matter(
                 "consistent view of the Joint Fabric including Nodes, Groups, settings and privileges." +
                 "\n" +
                 "The Joint Fabric Datastore cluster server shall only be accessible on a Node which is acting as the " +
-                "Joint Fabric Anchor Administrator. When not acting as the Joint Fabric Anchor Administrator, the" +
-                "\n" +
+                "Joint Fabric Anchor Administrator. When not acting as the Joint Fabric Anchor Administrator, the " +
                 "Joint Fabric Datastore cluster shall NOT be accessible." +
                 "\n" +
                 "The Admin level of access to the Joint Fabric Datastore cluster server shall be limited to JF " +

@@ -28,8 +28,8 @@ const liTest = new RegExp(`^[${Bullets.join("")}]\\s]`);
 /**
  * A light attempt at dropping text to make documentation seem slightly less scavenged.
  */
-function extractUsefulDocumentation(p: HTMLElement) {
-    return Str(p)
+function extractUsefulDocumentation(text: string) {
+    return text
         .replace(/SHALL/g, "shall")
         .replace(/MAY/g, "may")
         .replace(/RECOMMENDED/g, "recommended")
@@ -65,6 +65,8 @@ function extractUsefulDocumentation(p: HTMLElement) {
             "",
         )
         .replace(/. if the AbsolutePosition/, ".\nif the AbsolutePosition")
+        .replace(/Optional temperature, humidity and occupancy sensors.*/, "")
+        .replace(/([a-z])- ([a-z])/, "$1-$2")
         .trim();
 }
 
@@ -87,18 +89,21 @@ function mergeSplitParagraphs(paragraphs: string[]) {
 
     // Next merge by identifying sentence splits
     for (let i = 0; i < paragraphs.length - 1; i++) {
-        if (paragraphs[i].endsWith(".") || paragraphs[i].endsWith(":")) {
+        if (paragraphs[i].endsWith(".") || paragraphs[i].endsWith(":") || paragraphs[i].startsWith("###")) {
             continue;
         }
 
         const sentences = paragraphs[i].split(/[.?!:]\s/);
+        while (sentences.length > 1 && !sentences[sentences.length - 1].match(/^[A-Z]/)) {
+            sentences[sentences.length - 2] = sentences.splice(sentences.length - 2, 2).join("");
+        }
         const lastSentence = sentences[sentences.length - 1];
         if (!lastSentence.match(/^[A-Z]/)) {
             continue;
         }
 
         const nextParagraph = paragraphs[i + 1];
-        if (nextParagraph.match(/^[a-z0-9]/)) {
+        if (nextParagraph.match(/^[a-z0-9]/i) || nextParagraph.match(/^[^)]*\)/)) {
             if (!nextParagraph.match(/[.?!]\s/) || nextParagraph.match(/[.?!]$/)) {
                 joinParagraphs(i, " ");
             }
@@ -120,7 +125,7 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
         return;
     }
 
-    const paragraphs = Array<string>();
+    let paragraphs = Array<string>();
 
     let collectNote = false;
 
@@ -148,7 +153,7 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
         }
 
         // Extract text
-        let text = extractUsefulDocumentation(p);
+        let text = Str(p);
 
         // Next paragraph is a note if text is "NOTE"
         if (text === "NOTE") {
@@ -160,7 +165,7 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
         // Create note if we we saw "NOTE" previously
         if (collectNote) {
             listIndent.length = 0;
-            paragraphs.push(`> [!NOTE]\n> ${text}`);
+            paragraphs.push(`> [!NOTE]\n> ${extractUsefulDocumentation(text)}`);
             collectNote = false;
             continue;
         }
@@ -175,7 +180,7 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
         // Add the text
         if (text) {
             if (looksLikeHeading) {
-                // Special case, likely not necessary anymore
+                // Special case
                 listIndent.length = 0;
                 text = `### ${text}`;
             } else if (liTest.exec(text)) {
@@ -205,8 +210,9 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
         }
     }
 
-    if (paragraphs) {
+    if (paragraphs.length) {
         mergeSplitParagraphs(paragraphs);
+        paragraphs = paragraphs.map(extractUsefulDocumentation).filter(p => p !== "");
         target.details = paragraphs.join("\n");
     }
 }

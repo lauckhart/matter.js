@@ -13,16 +13,6 @@ export { camelize, describeList, serialize } from "./String.js";
  * formatted lines.
  *
  * Contains specialized support for lists, ESDoc directives and ANSI escape codes.
- *
- * TODO The text format we support is neither markdown nor asciidoc but it is moving in that direction.  It would be
- * best to have a solution that will ignore ANSI escape codes, is vaguely esdoc aware and doesn't require as many
- * newlines but it would also be nice to move to e.g. marked.
- *
- * TODO This code handles aspects of interpreting scavenged text.  That should probably move to codegen and have it
- * generate a more standard format.
- *
- * TODO There is redundancy between this code and the ANSI code in the tooling module.  Need to build a way to share
- * code with the tooling module which will require additional bootstrapping logic.
  */
 export function FormattedText(text: string, width = 120) {
     const structure = detectStructure(text);
@@ -67,13 +57,18 @@ const Empty: Block = {
     entries: [],
 };
 
+/**
+ * Detect block prefixes.  This is designed to handle scavenged, poorly formatted text so does not use indentation.  It
+ * just focus on the prefix characters of the paragraph/line (which are the same thing as paragraphs do not include
+ * newlines).
+ */
 function detectBlock(text: string, breadcrumb: Block[]) {
-    const match = text.match(/^(\s*)(\S+)/);
+    const match = text.match(/^\s*(\S+)/);
     if (!match) {
         return;
     }
 
-    const [, indent, marker] = match;
+    const [, marker] = match;
 
     if (Bullets.includes(marker as BlockKind) || marker === BlockKind.Quote) {
         enterBlock(marker as BlockKind);
@@ -90,23 +85,17 @@ function detectBlock(text: string, breadcrumb: Block[]) {
     breadcrumb.length = 1;
 
     function enterBlock(kind: BlockKind) {
-        const indentWidth = visibleWidthOf(indent);
-        while (breadcrumb.length && breadcrumb[breadcrumb.length - 1].indentWidth > indentWidth) {
-            breadcrumb.pop();
+        // If we are already in block of this kind, ensure it is the deepest level
+        const level = breadcrumb.findIndex(entry => entry.kind === kind);
+        if (level !== -1) {
+            breadcrumb.length = level + 1;
+            return;
         }
 
-        if (breadcrumb[breadcrumb.length - 1]?.indentWidth === indentWidth) {
-            if (breadcrumb[breadcrumb.length - 1].kind === kind) {
-                return;
-            }
-            if (breadcrumb.length > 1) {
-                breadcrumb.pop();
-            }
-        }
-
+        // Need to start a new block
         const block = {
             kind,
-            indentWidth,
+            indentWidth: (breadcrumb[breadcrumb.length - 1]?.indentWidth ?? 0) + kind === BlockKind.Quote ? 0 : 2,
             entries: [],
         };
 
@@ -119,10 +108,9 @@ function detectBlock(text: string, breadcrumb: Block[]) {
             return false;
         }
 
-        // Only consider enumeration if a.) we are already in same type of enumeration at same level of indentation, or
-        // b.) the marker is the first element of the enumeration (e.g. "1." or "i.")
-        const indentWidth = visibleWidthOf(indent);
-        if (!breadcrumb.find(block => block.indentWidth === indentWidth && block.kind === kind)) {
+        // Only consider enumeration if a.) we are already in same type of enumeration, or b.) the marker is the first
+        // element of the enumeration (e.g. "1." or "i.")
+        if (!breadcrumb.find(block => block.kind === kind)) {
             if (marker !== `${startsWith}.`) {
                 return false;
             }
@@ -133,6 +121,9 @@ function detectBlock(text: string, breadcrumb: Block[]) {
     }
 }
 
+/**
+ * Builds a block structure by detecting lists and/or quoted sections.
+ */
 function detectStructure(text: string): Block {
     const lines = text.split(/\n+/).map(line => line.trimEnd());
     if (!lines.some(p => p)) {
