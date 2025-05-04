@@ -43,12 +43,12 @@ export enum BlockKind {
     Bullet6 = "‣",
     Bullet7 = "⁃",
     Bullet8 = "◘",
+    Quote = ">",
     Number = "number",
     LowerAlpha = "alpha",
     UpperAlpha = "ALPHA",
     LowerRoman = "roman",
     UpperRoman = "ROMAN",
-    Quote = ">",
 }
 
 export const Bullets = Object.entries(BlockKind)
@@ -75,13 +75,8 @@ function detectBlock(text: string, breadcrumb: Block[]) {
 
     const [, indent, marker] = match;
 
-    if (Bullets.includes(marker as BlockKind)) {
+    if (Bullets.includes(marker as BlockKind) || marker === BlockKind.Quote) {
         enterBlock(marker as BlockKind);
-        return;
-    }
-
-    if (marker === BlockKind.Quote && text[1] === " ") {
-        enterBlock(BlockKind.Quote);
         return;
     }
 
