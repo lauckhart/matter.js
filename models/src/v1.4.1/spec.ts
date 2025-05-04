@@ -1027,9 +1027,8 @@ export const SpecMatter = Matter(
                     "    attribute’s type after accounting for constraints shall be considered to be the valid attribute " +
                     "    value that is closest to the provided value." +
                     "\n" +
-                    "    ◦ In the event that an invalid provided value is of equal numerical distance to the two closest " +
-                    "      valid values, the lowest of those values shall be considered the closest valid attribute " +
-                    "      value." +
+                    "  ◦ In the event that an invalid provided value is of equal numerical distance to the two closest " +
+                    "    valid values, the lowest of those values shall be considered the closest valid attribute value." +
                     "\n" +
                     "If the used field does not match the data type of the attribute indicated by AttributeID, the " +
                     "AttributeValuePairStruct shall be considered invalid." +
@@ -1038,18 +1037,18 @@ export const SpecMatter = Matter(
                     "\n" +
                     "  • ColorControl cluster CurrentX (AttributeID 0x0003) has a type of uint16 and is not nullable." +
                     "\n" +
-                    "    ◦ ValueUnsigned16 of 0xAB12 would be used as-is, as it is in range." +
+                    "  ◦ ValueUnsigned16 of 0xAB12 would be used as-is, as it is in range." +
                     "\n" +
-                    "    ◦ ValueUnsigned16 of 0xFF80 is outside of the range allowed for attribute CurrentX, and would be " +
-                    "      saturated to the closest valid value, which is the maximum of the attribute’s constraint " +
-                    "      range: 0xFEFF." +
+                    "  ◦ ValueUnsigned16 of 0xFF80 is outside of the range allowed for attribute CurrentX, and would be " +
+                    "    saturated to the closest valid value, which is the maximum of the attribute’s constraint range: " +
+                    "    0xFEFF." +
                     "\n" +
                     "  • LevelControl cluster CurrentLevel (AttributeID 0x0000) has a type of uint8 and is nullable." +
                     "\n" +
-                    "    ◦ ValueUnsigned8 of 0xA1 would be used as-is, as it is in range." +
+                    "  ◦ ValueUnsigned8 of 0xA1 would be used as-is, as it is in range." +
                     "\n" +
-                    "    ◦ ValueUnsigned8 of 0xFF is outside the range allowed for nullable attribute CurrentLevel, and " +
-                    "      would be considered as the null value.",
+                    "  ◦ ValueUnsigned8 of 0xFF is outside the range allowed for nullable attribute CurrentLevel, and " +
+                    "    would be considered as the null value.",
 
                 xref: { document: "cluster", section: "1.4.7.3.1" }
             }),
@@ -2859,22 +2858,22 @@ export const SpecMatter = Matter(
                     "\n" +
                     "  • When the AS feature flag is set, this event:" +
                     "\n" +
-                    "    ◦ shall NOT be generated during a multi-press sequence (since a long press is a separate cycle " +
-                    "      from any multi-press cycles);" +
+                    "  ◦ shall NOT be generated during a multi-press sequence (since a long press is a separate cycle " +
+                    "    from any multi-press cycles);" +
                     "\n" +
-                    "    ◦ shall only be generated after the first InitialPress following a MultiPressComplete when a " +
-                    "      long press is detected after the idle time." +
+                    "  ◦ shall only be generated after the first InitialPress following a MultiPressComplete when a long " +
+                    "    press is detected after the idle time." +
                     "\n" +
                     "  • Else, when the MSM feature flag is set, this event:" +
                     "\n" +
-                    "    ◦ shall NOT be generated during a multi-press sequence (since a long press is a separate cycle " +
-                    "      from any multi-press cycles);" +
+                    "  ◦ shall NOT be generated during a multi-press sequence (since a long press is a separate cycle " +
+                    "    from any multi-press cycles);" +
                     "\n" +
-                    "    ◦ shall only be generated after the first InitialPress following a MultiPressComplete when a " +
-                    "      long press is detected after the idle time;" +
+                    "  ◦ shall only be generated after the first InitialPress following a MultiPressComplete when a long " +
+                    "    press is detected after the idle time;" +
                     "\n" +
-                    "    ◦ shall NOT be generated after a MultiPressOngoing event without an intervening " +
-                    "      MultiPressComplete event." +
+                    "  ◦ shall NOT be generated after a MultiPressOngoing event without an intervening MultiPressComplete " +
+                    "    event." +
                     "\n" +
                     "The above constraints imply that for a given activity detection cycle of a switch having MSM and/or " +
                     "MSL feature flags set, the entire activity is either a single long press detection cycle of " +
@@ -3012,13 +3011,13 @@ export const SpecMatter = Matter(
                     "  • a value of N when there were exactly N presses in a multi-press sequence (and the sequence has " +
                     "    ended)." +
                     "\n" +
-                    "  > [!NOTE]" +
+                    "> [!NOTE]" +
                     "\n" +
-                    "  > The introduction of TotalNumberOfPressesCounted supporting the value 0 may impact clients of " +
-                    "    switches using cluster revision 1 since such servers would not use this value of " +
-                    "    TotalNumberOfPressesCounted to indicate an aborted sequence. Clients SHOULD always act using the " +
-                    "    TotalNumberOfPressesCounted field taken into account since for values from 1 to MultiPressMax, " +
-                    "    the user action that led to the event was different depending on the count.",
+                    "> The introduction of TotalNumberOfPressesCounted supporting the value 0 may impact clients of " +
+                    "  switches using cluster revision 1 since such servers would not use this value of " +
+                    "  TotalNumberOfPressesCounted to indicate an aborted sequence. Clients SHOULD always act using the " +
+                    "  TotalNumberOfPressesCounted field taken into account since for values from 1 to MultiPressMax, the " +
+                    "  user action that led to the event was different depending on the count.",
 
                 xref: { document: "cluster", section: "1.13.6.7" }
             },
@@ -4335,11 +4334,10 @@ export const SpecMatter = Matter(
                 "\n" +
                 "  • when it changes to or from null" +
                 "\n" +
-                "  > [!NOTE]" +
+                "> [!NOTE]" +
                 "\n" +
-                "  > If the device is capable of pausing its operation, this attribute may be set to null, to " +
-                "    indicate that completion time is unknown, or increment the value while being in the paused " +
-                "    state.",
+                "> If the device is capable of pausing its operation, this attribute may be set to null, to indicate " +
+                "  that completion time is unknown, or increment the value while being in the paused state.",
 
             xref: { document: "cluster", section: "1.17.6.5" }
         }),
@@ -4829,27 +4827,27 @@ export const SpecMatter = Matter(
                 "  • If both PercentMax and FixedMax are indicated, then for a given true value in the range between " +
                 "    RangeMin and RangeMax," +
                 "\n" +
-                "    ◦ the reported value shall be less than or equal to the sum of the true value, FixedMax and " +
-                "      PercentMax percent of the true value." +
+                "  ◦ the reported value shall be less than or equal to the sum of the true value, FixedMax and " +
+                "    PercentMax percent of the true value." +
                 "\n" +
-                "    ◦ the reported value shall be greater than or equal to the true value minus the sum of FixedMax " +
-                "      and PercentMax percent of the true value." +
+                "  ◦ the reported value shall be greater than or equal to the true value minus the sum of FixedMax " +
+                "    and PercentMax percent of the true value." +
                 "\n" +
                 "  • If only PercentMax is indicated, then for a given true value in the range between RangeMin and " +
                 "    RangeMax," +
                 "\n" +
-                "    ◦ the reported value shall be less than or equal to the sum of the true value and PercentMax " +
-                "      percent of the true value." +
+                "  ◦ the reported value shall be less than or equal to the sum of the true value and PercentMax " +
+                "    percent of the true value." +
                 "\n" +
-                "    ◦ the reported value shall be greater than or equal to the true value minus PercentMax percent " +
-                "      of the true value." +
+                "  ◦ the reported value shall be greater than or equal to the true value minus PercentMax percent of " +
+                "    the true value." +
                 "\n" +
                 "  • If only FixedMax is indicated, then for a given true value in the range between RangeMin and " +
                 "    RangeMax," +
                 "\n" +
-                "    ◦ the reported value shall be less than or equal to the sum of the true value and FixedMax." +
+                "  ◦ the reported value shall be less than or equal to the sum of the true value and FixedMax." +
                 "\n" +
-                "    ◦ the reported value shall be greater than or equal to the true value minus FixedMax.",
+                "  ◦ the reported value shall be greater than or equal to the true value minus FixedMax.",
 
             xref: { document: "cluster", section: "2.1.4.3" }
         },
@@ -9679,10 +9677,10 @@ export const SpecMatter = Matter(
                 "\n" +
                 "  • If the LTNE feature is not supported:" +
                 "\n" +
-                "    ◦ If the LocalTemperatureCalibration is invalid or currently unavailable, the attribute shall " +
-                "      report null." +
+                "  ◦ If the LocalTemperatureCalibration is invalid or currently unavailable, the attribute shall " +
+                "    report null." +
                 "\n" +
-                "    ◦ If the LocalTemperatureCalibration is valid, the attribute shall report that value." +
+                "  ◦ If the LocalTemperatureCalibration is valid, the attribute shall report that value." +
                 "\n" +
                 "  • Otherwise, if the LTNE feature is supported, there is no feedback externally available for the " +
                 "    LocalTemperatureCalibration. In that case, the LocalTemperature attribute shall always report " +
@@ -10421,9 +10419,10 @@ export const SpecMatter = Matter(
                 name: "Presets", id: 0x50, type: "list", access: "RW VM", conformance: "PRES",
                 constraint: "max numberOfPresets", default: [], quality: "N T",
 
-                details: "This attribute shall contain the current list of configured presets. On receipt of a write request: " +
-                    "1. If the PresetHandle field is null, the PresetStruct shall be treated as an added preset, and the " +
-                    "device shall create a new unique value for the PresetHandle field." +
+                details: "This attribute shall contain the current list of configured presets. On receipt of a write request:" +
+                    "\n" +
+                    "  1. If the PresetHandle field is null, the PresetStruct shall be treated as an added preset, and " +
+                    "     the device shall create a new unique value for the PresetHandle field." +
                     "\n" +
                     "  a. If the BuiltIn field is true, a response with the status code CONSTRAINT_ERROR shall be " +
                     "     returned." +
@@ -10464,9 +10463,11 @@ export const SpecMatter = Matter(
                     "7. Otherwise, the write shall be pended until receipt of a commit request, and the status code " +
                     "SUCCESS shall be returned." +
                     "\n" +
-                    "  a. If the BuiltIn field is null: i. If there is a PresetStruct in the current value with a " +
-                    "      matching PresetHandle field, the BuiltIn field on the pending PresetStruct shall be set to the " +
-                    "      value of the BuiltIn on the matching PresetStruct." +
+                    "  a. If the BuiltIn field is null:" +
+                    "\n" +
+                    "  i. If there is a PresetStruct in the current value with a matching PresetHandle field, the BuiltIn " +
+                    "     field on the pending PresetStruct shall be set to the value of the BuiltIn on the matching " +
+                    "     PresetStruct." +
                     "\n" +
                     "  ii. Otherwise, the BuiltIn field on the pending PresetStruct shall be set to false." +
                     "\n" +
@@ -10474,20 +10475,21 @@ export const SpecMatter = Matter(
                     "\n" +
                     "  1. For all existing presets:" +
                     "\n" +
-                    "    a. If, after applying all pending changes, the updated value of the Presets attribute would not " +
-                    "         contain a PresetStruct with a matching PresetHandle field, indicating the removal of the " +
-                    "         PresetStruct, the server shall check for invalid removal of the PresetStruct: i. If the " +
-                    "         BuiltIn field is true on the removed PresetStruct, the attribute status shall be " +
-                    "         CONSTRAINT_ERROR." +
+                    "  a. If, after applying all pending changes, the updated value of the Presets attribute would not " +
+                    "     contain a PresetStruct with a matching PresetHandle field, indicating the removal of the " +
+                    "     PresetStruct, the server shall check for invalid removal of the PresetStruct:" +
                     "\n" +
-                    "    ii. If the MSCH feature is supported and the removed PresetHandle would be referenced by any " +
-                    "         PresetHandle on any ScheduleTransitionStruct on any ScheduleStruct in the updated value of " +
-                    "         the Schedules attribute, the attribute status shall be INVALID_IN_STATE." +
+                    "  i. If the BuiltIn field is true on the removed PresetStruct, the attribute status shall be " +
+                    "     CONSTRAINT_ERROR." +
                     "\n" +
-                    "    iii. If the removed PresetHandle is equal to the value of the ActivePresetHandle attribute, the " +
-                    "         attribute status shall be INVALID_IN_STATE." +
+                    "  ii. If the MSCH feature is supported and the removed PresetHandle would be referenced by any " +
+                    "      PresetHandle on any ScheduleTransitionStruct on any ScheduleStruct in the updated value of the " +
+                    "      Schedules attribute, the attribute status shall be INVALID_IN_STATE." +
                     "\n" +
-                    "  2. Otherwise, the attribute status shall be SUCCESS.",
+                    "  iii. If the removed PresetHandle is equal to the value of the ActivePresetHandle attribute, the " +
+                    "       attribute status shall be INVALID_IN_STATE." +
+                    "\n" +
+                    "2. Otherwise, the attribute status shall be SUCCESS.",
 
                 xref: { document: "cluster", section: "4.3.9.60" }
             },
@@ -10502,22 +10504,23 @@ export const SpecMatter = Matter(
 
                 details: "This attribute shall contain a list of ScheduleStructs. On receipt of a write request:" +
                     "\n" +
-                    "  1. For all schedules in the write request: a. If the ScheduleHandle field is null, the " +
-                    "     ScheduleStruct shall be treated as an added schedule, and the device shall create a new unique " +
-                    "     value for the ScheduleHandle field." +
+                    "  1. For all schedules in the write request:" +
                     "\n" +
-                    "    i. If the BuiltIn field is true, a response with the status code CONSTRAINT_ERROR shall be " +
-                    "       returned." +
+                    "  a. If the ScheduleHandle field is null, the ScheduleStruct shall be treated as an added schedule, " +
+                    "     and the device shall create a new unique value for the ScheduleHandle field." +
+                    "\n" +
+                    "  i. If the BuiltIn field is true, a response with the status code CONSTRAINT_ERROR shall be " +
+                    "     returned." +
                     "\n" +
                     "b. Otherwise, if the ScheduleHandle field is not null, the ScheduleStruct shall be treated as a " +
                     "modification of an existing schedule." +
                     "\n" +
                     "  i. If the value of the ScheduleHandle field does not match any of the existing schedules, a " +
-                    "       response with the status code NOT_FOUND shall be returned." +
+                    "     response with the status code NOT_FOUND shall be returned." +
                     "\n" +
                     "  ii. If the BuiltIn field is true, and the ScheduleStruct in the current value with a matching " +
-                    "       ScheduleHandle field has a BuiltIn field set to false, a response with the status code " +
-                    "       CONSTRAINT_ERROR shall be returned." +
+                    "      ScheduleHandle field has a BuiltIn field set to false, a response with the status code " +
+                    "      CONSTRAINT_ERROR shall be returned." +
                     "\n" +
                     "  iii. If the BuiltIn field is false, and the ScheduleStruct in the current value with a matching " +
                     "       ScheduleHandle field has a BuiltIn field set to true, a response with the status code " +
@@ -10543,18 +10546,19 @@ export const SpecMatter = Matter(
                     "h. If the Name is set, but the associated ScheduleTypeStruct does not have the SupportsNames bit " +
                     "set, a response with the status code CONSTRAINT_ERROR shall be returned." +
                     "\n" +
-                    "  i. For all transitions in all schedules in the write request: i. If the PresetHandle field is " +
-                    "     present, but the ScheduleTypeStruct matching the value of the SystemMode field on the " +
-                    "     encompassing ScheduleStruct does not have the SupportsPresets bit set, a response with the " +
-                    "     status code CONSTRAINT_ERROR shall be returned." +
+                    "  i. For all transitions in all schedules in the write request:" +
+                    "\n" +
+                    "  i. If the PresetHandle field is present, but the ScheduleTypeStruct matching the value of the " +
+                    "     SystemMode field on the encompassing ScheduleStruct does not have the SupportsPresets bit set, " +
+                    "     a response with the status code CONSTRAINT_ERROR shall be returned." +
                     "\n" +
                     "j. If the PresetHandle field is present, but after applying all pending changes, the Presets " +
                     "attribute would not contain a PresetStruct whose PresetHandle field matches the value of the " +
                     "PresetHandle field, a response with the status code CONSTRAINT_ERROR shall be returned." +
                     "\n" +
                     "  i. If the SystemMode field is present, but the ScheduleTypeStruct matching the value of the " +
-                    "      SystemMode field on the encompassing ScheduleStruct does not have the SupportsSetpoints bit " +
-                    "      set, a response with the status code CONSTRAINT_ERROR shall be returned." +
+                    "     SystemMode field on the encompassing ScheduleStruct does not have the SupportsSetpoints bit " +
+                    "     set, a response with the status code CONSTRAINT_ERROR shall be returned." +
                     "\n" +
                     "  ii. If the SystemMode field is has a value of SystemModeOff, but the ScheduleTypeStruct matching " +
                     "      the value of the SystemMode field on the encompassing ScheduleStruct does not have the " +
@@ -10581,9 +10585,11 @@ export const SpecMatter = Matter(
                     "4. Otherwise, the write shall be pended until receipt of a commit request, and the attribute status " +
                     "shall be SUCCESS." +
                     "\n" +
-                    "  a. If the BuiltIn field is null: i. If there is a ScheduleStruct in the current value with a " +
-                    "      matching ScheduleHandle field, the BuiltIn field on the pending ScheduleStruct shall be set to " +
-                    "      the value of the BuiltIn on the matching ScheduleStruct." +
+                    "  a. If the BuiltIn field is null:" +
+                    "\n" +
+                    "  i. If there is a ScheduleStruct in the current value with a matching ScheduleHandle field, the " +
+                    "     BuiltIn field on the pending ScheduleStruct shall be set to the value of the BuiltIn on the " +
+                    "     matching ScheduleStruct." +
                     "\n" +
                     "  ii. Otherwise, the BuiltIn field on the pending ScheduleStruct shall be set to false." +
                     "\n" +
@@ -10591,16 +10597,17 @@ export const SpecMatter = Matter(
                     "\n" +
                     "  1. For all existing schedules:" +
                     "\n" +
-                    "    a. If, after applying all pending changes, the updated value of the Schedules attribute would " +
-                    "        not contain a ScheduleStruct with a matching ScheduleHandle field, indicating the removal of " +
-                    "        the ScheduleStruct, the server shall check for invalid removal of the ScheduleStruct: i. If " +
-                    "        the BuiltIn field is true on the removed ScheduleStruct, the attribute status shall be " +
-                    "        CONSTRAINT_ERROR." +
+                    "  a. If, after applying all pending changes, the updated value of the Schedules attribute would not " +
+                    "     contain a ScheduleStruct with a matching ScheduleHandle field, indicating the removal of the " +
+                    "     ScheduleStruct, the server shall check for invalid removal of the ScheduleStruct:" +
                     "\n" +
-                    "    ii. If the removed ScheduleHandle is equal to the value of the ActiveScheduleHandle attribute, " +
-                    "        the attribute status shall be INVALID_IN_STATE." +
+                    "  i. If the BuiltIn field is true on the removed ScheduleStruct, the attribute status shall be " +
+                    "     CONSTRAINT_ERROR." +
                     "\n" +
-                    "  2. Otherwise, the attribute status shall be SUCCESS.",
+                    "  ii. If the removed ScheduleHandle is equal to the value of the ActiveScheduleHandle attribute, the " +
+                    "      attribute status shall be INVALID_IN_STATE." +
+                    "\n" +
+                    "2. Otherwise, the attribute status shall be SUCCESS.",
 
                 xref: { document: "cluster", section: "4.3.9.61" }
             },
@@ -11516,16 +11523,16 @@ export const SpecMatter = Matter(
                     "\n" +
                     "  2. If either the HeatingSetpoint or CoolingSetpoint is provided, then it shall be used" +
                     "\n" +
-                    "    a. If the SystemMode field is provided, the HeatingSetpoint and CoolingSetpoint fields shall be " +
-                    "       interpreted using the SystemMode field" +
+                    "  a. If the SystemMode field is provided, the HeatingSetpoint and CoolingSetpoint fields shall be " +
+                    "     interpreted using the SystemMode field" +
                     "\n" +
-                    "    b. If the SystemMode field is not provided, the HeatingSetpoint and CoolingSetpoint fields shall " +
-                    "       be interpreted using the SystemMode field on the parent ScheduleStruct" +
+                    "  b. If the SystemMode field is not provided, the HeatingSetpoint and CoolingSetpoint fields shall " +
+                    "     be interpreted using the SystemMode field on the parent ScheduleStruct" +
                     "\n" +
-                    "  3. If neither the PresetHandle field or any Setpoint field is provided, then the PresetHandle " +
-                    "     field on the parent ScheduleStruct shall be used to determine the active PresetStruct 4. If the " +
-                    "     PresetHandle is not indicated and no setpoint is provided for the current SystemMode, the " +
-                    "     server shall use a default value for the current SystemMode." +
+                    "3. If neither the PresetHandle field or any Setpoint field is provided, then the PresetHandle field " +
+                    "on the parent ScheduleStruct shall be used to determine the active PresetStruct 4. If the " +
+                    "PresetHandle is not indicated and no setpoint is provided for the current SystemMode, the server " +
+                    "shall use a default value for the current SystemMode." +
                     "\n" +
                     "If the setpoint was derived from a preset, then the ActivePresetHandle shall be set to the " +
                     "PresetHandle of that preset." +
@@ -12958,16 +12965,16 @@ export const SpecMatter = Matter(
                     "    the door lock server shall generate a LockOperationError event with LockOperationType set to " +
                     "    Unlatch and a LockOperation event with LockOperationType set to Unlock." +
                     "\n" +
-                    "    ◦ If it fails before reaching the unlocked state, the door lock server shall generate only a " +
-                    "      LockOperationError event with LockOperationType set to Unlock." +
+                    "  ◦ If it fails before reaching the unlocked state, the door lock server shall generate only a " +
+                    "    LockOperationError event with LockOperationType set to Unlock." +
                     "\n" +
                     "  • Upon manual actuation, a door lock server that supports the Unbolting feature:" +
                     "\n" +
-                    "    ◦ shall generate a LockOperation event of LockOperationType Unlatch when it is actuated from the " +
-                    "      outside." +
+                    "  ◦ shall generate a LockOperation event of LockOperationType Unlatch when it is actuated from the " +
+                    "    outside." +
                     "\n" +
-                    "    ◦ may generate a LockOperation event of LockOperationType Unlatch when it is actuated from the " +
-                    "      inside.",
+                    "  ◦ may generate a LockOperation event of LockOperationType Unlatch when it is actuated from the " +
+                    "    inside.",
 
                 xref: { document: "cluster", section: "5.2.11.3" }
             },
@@ -14365,12 +14372,12 @@ export const SpecMatter = Matter(
                     "  • RESOURCE_EXHAUSTED, if OperationType is Add and the new credential cannot be added due to " +
                     "    resource constraints such as:" +
                     "\n" +
-                    "    ◦ The user referred to by UserIndex already has NumberOfCredentialsSupportedPerUser credentials " +
-                    "      associated." +
+                    "  ◦ The user referred to by UserIndex already has NumberOfCredentialsSupportedPerUser credentials " +
+                    "    associated." +
                     "\n" +
-                    "    ◦ The credential is of type AliroEvictableEndpointKey or AliroNonEvictableEndpointKey, and " +
-                    "      adding it would cause the total number of credentials of those two types to exceed " +
-                    "      NumberOfAliroEndpointKeysSupported." +
+                    "  ◦ The credential is of type AliroEvictableEndpointKey or AliroNonEvictableEndpointKey, and adding " +
+                    "    it would cause the total number of credentials of those two types to exceed " +
+                    "    NumberOfAliroEndpointKeysSupported." +
                     "\n" +
                     "  • INVALID_COMMAND, if one or more fields violate constraints or are invalid." +
                     "\n" +
@@ -15633,15 +15640,18 @@ export const SpecMatter = Matter(
 
             details: "Upon receipt of this command, the window covering will adjust its position so the physical " +
                 "lift/slide and tilt is at the maximum open/up position. This will happen as fast as possible. The " +
-                "server attributes shall be updated as follows: if the PositionAware feature is supported:" +
+                "server attributes shall be updated as follows:" +
+                "\n" +
+                "if the PositionAware feature is supported:" +
                 "\n" +
                 "  • TargetPositionLiftPercent100ths attribute shall be set to 0.00%." +
                 "\n" +
                 "  • TargetPositionTiltPercent100ths attribute shall be set to 0.00%." +
                 "\n" +
                 "The server positioning attributes will follow the movements, once the movement has successfully " +
-                "finished, the server attributes shall be updated as follows: if the PositionAware feature is " +
-                "supported:" +
+                "finished, the server attributes shall be updated as follows:" +
+                "\n" +
+                "if the PositionAware feature is supported:" +
                 "\n" +
                 "  • CurrentPositionLiftPercent100ths attribute shall be 0.00%." +
                 "\n" +
@@ -15649,8 +15659,9 @@ export const SpecMatter = Matter(
                 "\n" +
                 "  • CurrentPositionTiltPercent100ths attribute shall be 0.00%." +
                 "\n" +
-                "  • CurrentPositionTiltPercentage attribute shall be 0%. if the AbsolutePosition feature is " +
-                "    supported:" +
+                "  • CurrentPositionTiltPercentage attribute shall be 0%." +
+                "\n" +
+                "if the AbsolutePosition feature is supported:" +
                 "\n" +
                 "  • CurrentPositionLift attribute shall be equal to the InstalledOpenLimitLift attribute." +
                 "\n" +
@@ -15665,16 +15676,18 @@ export const SpecMatter = Matter(
 
             details: "Upon receipt of this command, the window covering will adjust its position so the physical " +
                 "lift/slide and tilt is at the maximum closed/down position. This will happen as fast as possible. " +
-                "The server attributes supported shall be updated as follows: if the PositionAware feature is " +
-                "supported:" +
+                "The server attributes supported shall be updated as follows:" +
+                "\n" +
+                "if the PositionAware feature is supported:" +
                 "\n" +
                 "  • TargetPositionLiftPercent100ths attribute shall be set to 100.00%." +
                 "\n" +
                 "  • TargetPositionTiltPercent100ths attribute shall be set to 100.00%." +
                 "\n" +
                 "The server positioning attributes will follow the movements, once the movement has successfully " +
-                "finished, the server attributes shall be updated as follows: if the PositionAware feature is " +
-                "supported:" +
+                "finished, the server attributes shall be updated as follows:" +
+                "\n" +
+                "if the PositionAware feature is supported:" +
                 "\n" +
                 "  • CurrentPositionLiftPercent100ths attribute shall be 100.00%." +
                 "\n" +
@@ -15682,8 +15695,9 @@ export const SpecMatter = Matter(
                 "\n" +
                 "  • CurrentPositionTiltPercent100ths attribute shall be 100.00%." +
                 "\n" +
-                "  • CurrentPositionTiltPercentage attribute shall be 100%. if the AbsolutePosition feature is " +
-                "    supported:" +
+                "  • CurrentPositionTiltPercentage attribute shall be 100%." +
+                "\n" +
+                "if the AbsolutePosition feature is supported:" +
                 "\n" +
                 "  • CurrentPositionLift attribute shall be equal to the InstalledClosedLimitLift attribute." +
                 "\n" +
@@ -16071,14 +16085,16 @@ export const SpecMatter = Matter(
                 "\n" +
                 "Often a fabric administrator will facilitate commissioning of a Client (such as a Casting Video " +
                 "Client), and invoke commands on the AccountLogin cluster on the Content App associated with that " +
-                "client. Specifically: 1. GetSetupPIN in order to attempt to obtain the Passcode for commissioning." +
+                "client. Specifically:" +
                 "\n" +
-                "2. Login in order to let the Content App know that commissioning has completed. The Content App can " +
-                "use information provided in this command in order to determine the user account associated with the " +
-                "client, and potentially assume that user account." +
+                "  1. GetSetupPIN in order to attempt to obtain the Passcode for commissioning." +
                 "\n" +
-                "3. Logout in order to let the Content App know that client access has been removed, and potentially " +
-                "clear the current user account." +
+                "  2. Login in order to let the Content App know that commissioning has completed. The Content App " +
+                "     can use information provided in this command in order to determine the user account associated " +
+                "     with the client, and potentially assume that user account." +
+                "\n" +
+                "  3. Logout in order to let the Content App know that client access has been removed, and " +
+                "     potentially clear the current user account." +
                 "\n" +
                 "The cluster server for this cluster may be supported on each endpoint that represents a Content App " +
                 "on a Video Player device." +
@@ -19288,18 +19304,20 @@ export const SpecMatter = Matter(
                 "on both sides of the communication between the Content App Observer endpoint and the Content App " +
                 "endpoint." +
                 "\n" +
-                "By using standard cluster and commands: 1. The Content App Platform is able to easily determine that " +
-                "a binding is needed on the Content App endpoint because it can recognize the Content App Observer " +
-                "cluster implemented by a client node." +
+                "By using standard cluster and commands:" +
                 "\n" +
-                "2. The Content App Platform is able to easily identify commands that are allowed to be sent by the " +
-                "Content App to a client node because those commands use the Content App Observer cluster." +
+                "  1. The Content App Platform is able to easily determine that a binding is needed on the Content " +
+                "     App endpoint because it can recognize the Content App Observer cluster implemented by a client " +
+                "     node." +
                 "\n" +
-                "3. The Content App is able to easily determine that a node supports the Content App Observer cluster " +
-                "because it has received a binding which specifies the Content App Observer cluster." +
+                "  2. The Content App Platform is able to easily identify commands that are allowed to be sent by the " +
+                "     Content App to a client node because those commands use the Content App Observer cluster." +
                 "\n" +
-                "4. The Casting Video Client is able to support a single cluster for receiving commands from any " +
-                "Content App and does not need to explicitly list every Content App it understands." +
+                "  3. The Content App is able to easily determine that a node supports the Content App Observer " +
+                "     cluster because it has received a binding which specifies the Content App Observer cluster." +
+                "\n" +
+                "  4. The Casting Video Client is able to support a single cluster for receiving commands from any " +
+                "     Content App and does not need to explicitly list every Content App it understands." +
                 "\n" +
                 "A Content App Observer SHOULD ignore the Data and EncodingHint field values in commands from a " +
                 "Content App it does not recognize. A Content App SHOULD ignore the Data field values in responses " +
@@ -24260,14 +24278,16 @@ export const SpecMatter = Matter(
                 "If the value of EnergyBalances changes after an update, the device shall migrate the value of the" +
                 "\n" +
                 "CurrentEnergyBalance attribute to the index which the manufacturer specifies most closely matches " +
-                "the previous value, while preserving extreme preferences as follows: 1. If the previous value of " +
-                "CurrentEnergyBalance was zero, indicating a total preference for the priority specified by the first " +
-                "element in EnergyPriorities, the new value of CurrentEnergyBalance shall also be zero." +
+                "the previous value, while preserving extreme preferences as follows:" +
                 "\n" +
-                "2. If the previous value of CurrentEnergyBalance was the index of the last BalanceStruct in the " +
-                "previous value of EnergyBalances, indicating a total preference for the priority specified by the " +
-                "last element in EnergyPriorities, the new value of CurrentEnergyBalance shall be the index of the " +
-                "last element in the updated value of EnergyBalances.",
+                "  1. If the previous value of CurrentEnergyBalance was zero, indicating a total preference for the " +
+                "     priority specified by the first element in EnergyPriorities, the new value of " +
+                "     CurrentEnergyBalance shall also be zero." +
+                "\n" +
+                "  2. If the previous value of CurrentEnergyBalance was the index of the last BalanceStruct in the " +
+                "     previous value of EnergyBalances, indicating a total preference for the priority specified by " +
+                "     the last element in EnergyPriorities, the new value of CurrentEnergyBalance shall be the index " +
+                "     of the last element in the updated value of EnergyBalances.",
 
             xref: { document: "cluster", section: "9.7.6.2" }
         }),
@@ -25409,16 +25429,18 @@ export const SpecMatter = Matter(
                 "specific context of that use. This may be done, for example, by simply saying the time is a UTC " +
                 "time, in which case the local time offset is 0." +
                 "\n" +
-                "A given Epoch Time value may be interpreted in at least two ways: 1. The value can be converted to a " +
-                "local clock date/time (year, month, day, hours, minutes, seconds, microseconds) by treating the " +
-                "local time offset as 0 and finding the UTC (year, month, day, hours, minutes, seconds, microseconds) " +
-                "tuple that corresponds to an elapsed time since the epoch time equal to the given value. The value " +
-                "then represents that tuple, but interpreted in the specific timezone and DST situation associated " +
-                "with the value. This procedure does not require knowing the local time offset of the value." +
+                "A given Epoch Time value may be interpreted in at least two ways:" +
                 "\n" +
-                "2. The value can be converted to a UTC time by subtracting the associated local time offset from the " +
-                "Epoch Time value and then treating the resulting value as an elapsed count of microseconds since the " +
-                "epoch time." +
+                "  1. The value can be converted to a local clock date/time (year, month, day, hours, minutes, " +
+                "     seconds, microseconds) by treating the local time offset as 0 and finding the UTC (year, month, " +
+                "     day, hours, minutes, seconds, microseconds) tuple that corresponds to an elapsed time since the " +
+                "     epoch time equal to the given value. The value then represents that tuple, but interpreted in " +
+                "     the specific timezone and DST situation associated with the value. This procedure does not " +
+                "     require knowing the local time offset of the value." +
+                "\n" +
+                "  2. The value can be converted to a UTC time by subtracting the associated local time offset from " +
+                "     the Epoch Time value and then treating the resulting value as an elapsed count of microseconds " +
+                "     since the epoch time." +
                 "\n" +
                 "For example, an Epoch Time value of 0x0000_0BF1_B7E1_0000 corresponds to an offset of exactly 152 " +
                 "days. This can be interpreted as \"00:00:00 on June 1, 2000\" in whatever local time zone is " +
@@ -25944,7 +25966,7 @@ export const SpecMatter = Matter(
             "\n" +
             "  • The first octet shall encode the prefix length, in bits, in the range of 0 to 128." +
             "\n" +
-            "    ◦ A value of 0 indicates an absent/invalid prefix." +
+            "  ◦ A value of 0 indicates an absent/invalid prefix." +
             "\n" +
             "  • The subsequent octets shall encode the contiguous leftmost bits of the prefix, in network byte " +
             "    order, with left justification, such that the first bit of the prefix is in the most significant " +
@@ -26910,12 +26932,12 @@ export const SpecMatter = Matter(
                         "\n" +
                         "  • A manufacturer contemplating using this flow should realize that" +
                         "\n" +
-                        "    ◦ This flow typically requires internet access to access the URL, and access extension may fail " +
-                        "      when internet connectivity is not available." +
+                        "  ◦ This flow typically requires internet access to access the URL, and access extension may fail " +
+                        "    when internet connectivity is not available." +
                         "\n" +
-                        "    ◦ If the flow prefers to redirect the user to an app which is available on popular platforms, it " +
-                        "      SHOULD also provide a fallback option such as a web browser interface to ensure users can " +
-                        "      complete access extension." +
+                        "  ◦ If the flow prefers to redirect the user to an app which is available on popular platforms, it " +
+                        "    SHOULD also provide a fallback option such as a web browser interface to ensure users can " +
+                        "    complete access extension." +
                         "\n" +
                         "### ARLRequestFlowUrl format" +
                         "\n" +
@@ -27584,9 +27606,9 @@ export const SpecMatter = Matter(
                     "  • When used without suffix, it shall provide information about the various actions which the " +
                     "    cluster provides." +
                     "\n" +
-                    "    ◦ Example: SetupURL could take the value of example://Actions or https://domain.example/ " +
-                    "      Matter/bridgev1/Actions for this generic case (access generic info how to use actions provided " +
-                    "      by this cluster)." +
+                    "  ◦ Example: SetupURL could take the value of example://Actions or https://domain.example/ " +
+                    "    Matter/bridgev1/Actions for this generic case (access generic info how to use actions provided " +
+                    "    by this cluster)." +
                     "\n" +
                     "  • When used with a suffix of \"/?a=\" and the decimal value of ActionID for one of the actions, it " +
                     "    may provide information about that particular action. This could be a deeplink to " +
@@ -27594,8 +27616,8 @@ export const SpecMatter = Matter(
                     "    screen for this action so that the user can view and update details of the action, e.g. edit the " +
                     "    scene, or change the wake-up experience time period." +
                     "\n" +
-                    "    ◦ Example of SetupURL with suffix added: example://Actions/?a=12345 or " +
-                    "      https://domain.example/Matter/bridgev1/Actions/?a=12345 for linking to specific info/editing" +
+                    "  ◦ Example of SetupURL with suffix added: example://Actions/?a=12345 or " +
+                    "    https://domain.example/Matter/bridgev1/Actions/?a=12345 for linking to specific info/editing" +
                     "\n" +
                     "of the action with ActionID 0x3039.",
 
@@ -31583,17 +31605,19 @@ export const SpecMatter = Matter(
                     "channel will be started. It is possible that the only method to determine success of the operation " +
                     "is operational discovery of the Node on the new operational network. Therefore, before invoking the " +
                     "ConnectNetwork command, the client SHOULD re-invoke the Arm Fail-Safe command with a duration that " +
-                    "meets the following: 1. Sufficient time to meet the minimum required time (see " +
-                    "ConnectMaxTimeSeconds) that may be taken by the server to connect to the desired network." +
+                    "meets the following:" +
                     "\n" +
-                    "2. Sufficient time to account for possible message-layer retries when a response is requested." +
+                    "  1. Sufficient time to meet the minimum required time (see ConnectMaxTimeSeconds) that may be taken " +
+                    "     by the server to connect to the desired network." +
                     "\n" +
-                    "3. Sufficient time to allow operational discovery on the new network by a Commissioner or " +
-                    "Administrator." +
+                    "  2. Sufficient time to account for possible message-layer retries when a response is requested." +
                     "\n" +
-                    "4. Sufficient time to establish a CASE session after operational discovery 5. Not so long that, in " +
-                    "error situations, the delay to reverting back to being discoverable for commissioning with a " +
-                    "previous configuration would cause significant user-perceived delay." +
+                    "  3. Sufficient time to allow operational discovery on the new network by a Commissioner or " +
+                    "     Administrator." +
+                    "\n" +
+                    "  4. Sufficient time to establish a CASE session after operational discovery 5. Not so long that, in " +
+                    "     error situations, the delay to reverting back to being discoverable for commissioning with a " +
+                    "     previous configuration would cause significant user-perceived delay." +
                     "\n" +
                     "Note as well that the CommissioningTimeout duration provided in a prior OpenCommissioningWindow or " +
                     "OpenBasicCommissioningWindow command may impact the total time available to proceed with error " +
@@ -31674,20 +31698,20 @@ export const SpecMatter = Matter(
 
                 details: "  • ErrorValue interpretation for Wi-Fi association errors:" +
                     "\n" +
-                    "    ◦ On any association failure during enabling of a network, the ErrorValue field shall be set to " +
-                    "      the Status Code value that was present in the last frame related to association where Status " +
-                    "      Code was not equal to zero and which caused the failure of a final retry attempt, if this " +
-                    "      final failure was due to one of the following Management frames:" +
+                    "  ◦ On any association failure during enabling of a network, the ErrorValue field shall be set to " +
+                    "    the Status Code value that was present in the last frame related to association where Status " +
+                    "    Code was not equal to zero and which caused the failure of a final retry attempt, if this final " +
+                    "    failure was due to one of the following Management frames:" +
                     "\n" +
-                    "      ▪ Association Response (Type 0, Subtype 1)" +
+                    "  ▪ Association Response (Type 0, Subtype 1)" +
                     "\n" +
-                    "      ▪ Reassociation Response (Type 0, Subtype 3)" +
+                    "  ▪ Reassociation Response (Type 0, Subtype 3)" +
                     "\n" +
-                    "      ▪ Authentication (Type 0, Subtype 11)" +
+                    "  ▪ Authentication (Type 0, Subtype 11)" +
                     "\n" +
-                    "    ◦ Table 9-50 \"Status Codes\" in IEEE 802.11-2020 contains a description of all values possible, " +
-                    "      which can unambiguously be used to determine the cause, such as an invalid security type, " +
-                    "      unsupported rate, etc." +
+                    "  ◦ Table 9-50 \"Status Codes\" in IEEE 802.11-2020 contains a description of all values possible, " +
+                    "    which can unambiguously be used to determine the cause, such as an invalid security type, " +
+                    "    unsupported rate, etc." +
                     "\n" +
                     "  • Otherwise, the ErrorValue field shall contain an implementation-dependent value which may be " +
                     "    used by a reader of the structure to record, report or diagnose the failure.",
@@ -32232,42 +32256,44 @@ export const SpecMatter = Matter(
                     "### Behavior on expiry of Fail-Safe timer" +
                     "\n" +
                     "If the fail-safe timer expires before the CommissioningComplete command is successfully invoked, the " +
-                    "following sequence of clean-up steps shall be executed, in order, by the receiver: 1. Terminate any " +
-                    "open PASE secure session by clearing any associated Secure Session Context at the Server." +
+                    "following sequence of clean-up steps shall be executed, in order, by the receiver:" +
                     "\n" +
-                    "2. Revoke the temporary administrative privileges granted to any open PASE session (see Section " +
-                    "6.6.2.9, “Bootstrapping of the Access Control Cluster”) at the Server." +
+                    "  1. Terminate any open PASE secure session by clearing any associated Secure Session Context at the " +
+                    "     Server." +
                     "\n" +
-                    "3. If an AddNOC or UpdateNOC command has been successfully invoked, terminate all CASE sessions " +
-                    "associated with the Fabric whose Fabric Index is recorded in the Fail-Safe context (see ArmFailSafe) " +
-                    "by clearing any associated Secure Session Context at the Server." +
+                    "  2. Revoke the temporary administrative privileges granted to any open PASE session (see Section " +
+                    "     6.6.2.9, “Bootstrapping of the Access Control Cluster”) at the Server." +
                     "\n" +
-                    "4. Reset the configuration of all Network Commissioning Networks attribute to their state prior to " +
-                    "the Fail-Safe being armed." +
+                    "  3. If an AddNOC or UpdateNOC command has been successfully invoked, terminate all CASE sessions " +
+                    "     associated with the Fabric whose Fabric Index is recorded in the Fail-Safe context (see " +
+                    "     ArmFailSafe) by clearing any associated Secure Session Context at the Server." +
                     "\n" +
-                    "5. If an UpdateNOC command had been successfully invoked, revert the state of operational key pair, " +
-                    "NOC and ICAC for that Fabric to the state prior to the Fail-Safe timer being armed, for the Fabric " +
-                    "Index that was the subject of the UpdateNOC command." +
+                    "  4. Reset the configuration of all Network Commissioning Networks attribute to their state prior to " +
+                    "     the Fail-Safe being armed." +
                     "\n" +
-                    "6. If an AddNOC command had been successfully invoked, achieve the equivalent effect of invoking the " +
-                    "RemoveFabric command against the Fabric Index stored in the Fail-Safe Context for the Fabric Index " +
-                    "that was the subject of the AddNOC command. This shall remove all associations to that Fabric " +
-                    "including all fabric-scoped data, and may possibly factory-reset the device depending on current " +
-                    "device state. This shall only apply to Fabrics added during the fail-safe period as the result of " +
-                    "the AddNOC command." +
+                    "  5. If an UpdateNOC command had been successfully invoked, revert the state of operational key " +
+                    "     pair, NOC and ICAC for that Fabric to the state prior to the Fail-Safe timer being armed, for " +
+                    "     the Fabric Index that was the subject of the UpdateNOC command." +
                     "\n" +
-                    "7. If the CSRRequest command had been successfully invoked, but no AddNOC or UpdateNOC command had " +
-                    "been successfully invoked, then the new operational key pair temporarily generated for the purposes " +
-                    "of NOC addition or update (see Node Operational CSR Procedure) shall be removed as it is no longer " +
-                    "needed." +
+                    "  6. If an AddNOC command had been successfully invoked, achieve the equivalent effect of invoking " +
+                    "     the RemoveFabric command against the Fabric Index stored in the Fail-Safe Context for the " +
+                    "     Fabric Index that was the subject of the AddNOC command. This shall remove all associations to " +
+                    "     that Fabric including all fabric-scoped data, and may possibly factory-reset the device " +
+                    "     depending on current device state. This shall only apply to Fabrics added during the fail-safe " +
+                    "     period as the result of the AddNOC command." +
                     "\n" +
-                    "8. Remove any RCACs added by the AddTrustedRootCertificate command that are not currently referenced " +
-                    "by any entry in the Fabrics attribute." +
+                    "  7. If the CSRRequest command had been successfully invoked, but no AddNOC or UpdateNOC command had " +
+                    "     been successfully invoked, then the new operational key pair temporarily generated for the " +
+                    "     purposes of NOC addition or update (see Node Operational CSR Procedure) shall be removed as it " +
+                    "     is no longer needed." +
                     "\n" +
-                    "9. Reset the Breadcrumb attribute to zero." +
+                    "  8. Remove any RCACs added by the AddTrustedRootCertificate command that are not currently " +
+                    "     referenced by any entry in the Fabrics attribute." +
                     "\n" +
-                    "10. Optionally: if no factory-reset resulted from the previous steps, it is recommended that the " +
-                    "Node rollback the state of all non fabric-scoped data present in the Fail-Safe context.",
+                    "  9. Reset the Breadcrumb attribute to zero." +
+                    "\n" +
+                    "  10. Optionally: if no factory-reset resulted from the previous steps, it is recommended that the " +
+                    "      Node rollback the state of all non fabric-scoped data present in the Fail-Safe context.",
 
                 xref: { document: "core", section: "11.10.7.2" }
             },
@@ -32409,16 +32435,19 @@ export const SpecMatter = Matter(
                 "\n" +
                 "On successful execution of the CommissioningComplete command, where the " +
                 "CommissioningCompleteResponse has an ErrorCode of OK, the following actions shall be undertaken on " +
-                "the Server: 1. The Fail-Safe timer associated with the current Fail-Safe context shall be disarmed." +
+                "the Server:" +
                 "\n" +
-                "2. The commissioning window at the Server shall be closed." +
+                "  1. The Fail-Safe timer associated with the current Fail-Safe context shall be disarmed." +
                 "\n" +
-                "3. Any temporary administrative privileges automatically granted to any open PASE session shall be " +
-                "revoked (see Section 6.6.2.9, “Bootstrapping of the Access Control Cluster”)." +
+                "  2. The commissioning window at the Server shall be closed." +
                 "\n" +
-                "4. The Secure Session Context of any PASE session still established at the Server shall be cleared." +
+                "  3. Any temporary administrative privileges automatically granted to any open PASE session shall be " +
+                "     revoked (see Section 6.6.2.9, “Bootstrapping of the Access Control Cluster”)." +
                 "\n" +
-                "5. The Breadcrumb attribute shall be reset to zero." +
+                "  4. The Secure Session Context of any PASE session still established at the Server shall be " +
+                "     cleared." +
+                "\n" +
+                "  5. The Breadcrumb attribute shall be reset to zero." +
                 "\n" +
                 "After receipt of a CommissioningCompleteResponse with an ErrorCode value of OK, a client cannot " +
                 "expect any previously established PASE session to still be usable, due to the server having cleared " +
@@ -36039,22 +36068,23 @@ export const SpecMatter = Matter(
                     "11.18.6.7.2, “Handling Errors”." +
                     "\n" +
                     "Otherwise, the command is considered an addition of credentials, also known as \"joining a fabric\", " +
-                    "and the following shall apply: 1. A new FabricIndex shall be allocated, taking the next valid " +
-                    "fabric-index value in monotonically incrementing order, wrapping around from 254 (0xFE) to 1, since " +
-                    "value 0 is reserved and using 255 (0xFF) would prevent cluster specifications from using nullable " +
-                    "fabric- idx fields." +
+                    "and the following shall apply:" +
                     "\n" +
-                    "2. An entry within the Fabrics attribute table shall be added, reflecting the matter-fabric-id RDN " +
-                    "within the NOC’s subject, along with the public key of the trusted root of the chain and the " +
-                    "AdminVendorID field." +
+                    "  1. A new FabricIndex shall be allocated, taking the next valid fabric-index value in monotonically " +
+                    "     incrementing order, wrapping around from 254 (0xFE) to 1, since value 0 is reserved and using " +
+                    "     255 (0xFF) would prevent cluster specifications from using nullable fabric- idx fields." +
                     "\n" +
-                    "3. The operational key pair associated with the incoming NOC from the NOCValue, and generated by the " +
-                    "prior CSRRequest command, shall be recorded for subsequent use during CASE within the fail-safe " +
-                    "timer period (see Section 5.5, “Commissioning Flows”)." +
+                    "  2. An entry within the Fabrics attribute table shall be added, reflecting the matter-fabric-id RDN " +
+                    "     within the NOC’s subject, along with the public key of the trusted root of the chain and the " +
+                    "     AdminVendorID field." +
                     "\n" +
-                    "4. The incoming NOCValue and ICACValue (if present) shall be stored under the FabricIndex associated " +
-                    "with the new Fabric Scope, along with the RootCACertificate provided with the prior successful " +
-                    "AddTrustedRootCertificate command invoked in the same fail-safe period." +
+                    "  3. The operational key pair associated with the incoming NOC from the NOCValue, and generated by " +
+                    "     the prior CSRRequest command, shall be recorded for subsequent use during CASE within the " +
+                    "     fail-safe timer period (see Section 5.5, “Commissioning Flows”)." +
+                    "\n" +
+                    "  4. The incoming NOCValue and ICACValue (if present) shall be stored under the FabricIndex " +
+                    "     associated with the new Fabric Scope, along with the RootCACertificate provided with the prior " +
+                    "     successful AddTrustedRootCertificate command invoked in the same fail-safe period." +
                     "\n" +
                     "  a. Implementation of certificate chain storage may separate or otherwise encode the components of " +
                     "     the array in implementation-specific ways, as long as they follow the correct format when being " +
@@ -36081,9 +36111,10 @@ export const SpecMatter = Matter(
                     "9. The Fabric Index associated with the armed fail-safe context (see ArmFailSafe) shall be updated " +
                     "to match the Fabric Index just allocated." +
                     "\n" +
-                    "10. If the current secure session was established with PASE, the receiver shall: a. Augment the " +
-                    "secure session context with the FabricIndex generated above, such that subsequent interactions have " +
-                    "the proper accessing fabric." +
+                    "10. If the current secure session was established with PASE, the receiver shall:" +
+                    "\n" +
+                    "  a. Augment the secure session context with the FabricIndex generated above, such that subsequent " +
+                    "     interactions have the proper accessing fabric." +
                     "\n" +
                     "11. If the current secure session was established with CASE, subsequent configuration of the newly " +
                     "installed Fabric requires the opening of a new CASE session from the Administrator from the Fabric " +
@@ -36136,9 +36167,11 @@ export const SpecMatter = Matter(
                     "    match the FabricID associated with the accessing fabric." +
                     "\n" +
                     "Otherwise, the command is considered an update of existing credentials for a given Fabric, and the " +
-                    "following shall apply: 1. The Operational Certificate under the accessing fabric index in the NOCs " +
-                    "list shall be updated to match the incoming NOCValue and ICACValue (if present), such that the " +
-                    "Node’s Operational Identifier within the Fabric immediately changes." +
+                    "following shall apply:" +
+                    "\n" +
+                    "  1. The Operational Certificate under the accessing fabric index in the NOCs list shall be updated " +
+                    "     to match the incoming NOCValue and ICACValue (if present), such that the Node’s Operational " +
+                    "     Identifier within the Fabric immediately changes." +
                     "\n" +
                     "  a. The operational key pair associated with the incoming NOC from the NOCValue, and generated by " +
                     "     the prior CSRRequest command, shall be committed to permanent storage, for subsequent use " +

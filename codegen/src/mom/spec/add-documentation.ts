@@ -87,7 +87,7 @@ function mergeSplitParagraphs(paragraphs: string[]) {
 
     // Next merge by identifying sentence splits
     for (let i = 0; i < paragraphs.length - 1; i++) {
-        if (paragraphs[i].endsWith(".")) {
+        if (paragraphs[i].endsWith(".") || paragraphs[i].endsWith(":")) {
             continue;
         }
 

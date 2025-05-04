@@ -85,11 +85,11 @@ function detectBlock(text: string, breadcrumb: Block[]) {
         return;
     }
 
-    if (detectEnumeration(/^\d+\.$/, BlockKind.Number)) return;
-    if (detectEnumeration(/^[ivx]+\.$/, BlockKind.LowerRoman)) return;
-    if (detectEnumeration(/^[IVX]+\.$/, BlockKind.UpperRoman)) return;
-    if (detectEnumeration(/^[a-z]+\.$/, BlockKind.LowerAlpha)) return;
-    if (detectEnumeration(/^[A-Z]+\.$/, BlockKind.UpperAlpha)) return;
+    if (detectEnumeration(/^\d+\.$/, "1", BlockKind.Number)) return;
+    if (detectEnumeration(/^[ivx]+\.$/, "i", BlockKind.LowerRoman)) return;
+    if (detectEnumeration(/^[IVX]+\.$/, "I", BlockKind.UpperRoman)) return;
+    if (detectEnumeration(/^[a-z]+\.$/, "a", BlockKind.LowerAlpha)) return;
+    if (detectEnumeration(/^[A-Z]+\.$/, "A", BlockKind.UpperAlpha)) return;
 
     // Not in a block
     breadcrumb.length = 1;
@@ -119,9 +119,18 @@ function detectBlock(text: string, breadcrumb: Block[]) {
         breadcrumb.push(block);
     }
 
-    function detectEnumeration(test: RegExp, kind: BlockKind) {
-        if (!text.match(test)) {
+    function detectEnumeration(test: RegExp, startsWith: string, kind: BlockKind) {
+        if (!marker.match(test)) {
             return false;
+        }
+
+        // Only consider enumeration if a.) we are already in same type of enumeration at same level of indentation, or
+        // b.) the marker is the first element of the enumeration (e.g. "1." or "i.")
+        const indentWidth = visibleWidthOf(indent);
+        if (!breadcrumb.find(block => block.indentWidth === indentWidth && block.kind === kind)) {
+            if (marker !== `${startsWith}.`) {
+                return false;
+            }
         }
 
         enterBlock(kind);
