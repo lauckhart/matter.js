@@ -45,6 +45,13 @@ export const Bullets = Object.entries(BlockKind)
     .filter(([key]) => key.startsWith("Bullet"))
     .map(([, value]) => value);
 
+const enumTest = "(?:\\d+|[ivx]+|[a-z])\\.";
+const listItemTest = new RegExp(`^(?:[${Bullets.join("")}]|${enumTest})\\s`, "i");
+
+export function looksLikeListItem(text: string) {
+    return !!listItemTest.exec(text);
+}
+
 type Block = {
     kind: BlockKind;
     indentWidth: number;

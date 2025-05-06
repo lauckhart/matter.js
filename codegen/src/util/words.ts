@@ -23,6 +23,8 @@ Words.add("pausable");
 Words.add("passphrase");
 Words.add("arl");
 Words.add("passcode");
+Words.add("led");
+Words.add("url");
 
 // Acronym for "micro reciprocal degrees" used by color cluster
 Words.add("mireds");

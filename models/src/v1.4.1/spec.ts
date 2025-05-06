@@ -129,7 +129,7 @@ export const SpecMatter = Matter(
             }),
             Field({
                 name: "Actuator", id: 0x5, conformance: "M",
-                description: "Presentation will be conveyed by actuator functionality such as through a window blind operation or in- wall relay."
+                description: "Presentation will be conveyed by actuator functionality such as through a window blind operation or in-wall relay."
             })
         ),
 
@@ -478,7 +478,7 @@ export const SpecMatter = Matter(
             name: "SceneTableSize", id: 0x1, type: "uint16", access: "R V", conformance: "M",
             constraint: "desc", default: 16, quality: "F",
             details: "Indicates the number of entries in the Scene Table on this endpoint. This is the total across all " +
-                "fabrics; note that a single fabric cannot use all those entries (see Handling of fabric- scoping). " +
+                "fabrics; note that a single fabric cannot use all those entries (see Handling of fabric-scoping). " +
                 "The minimum size of this table, (i.e., the minimum number of scenes to support across all fabrics " +
                 "per endpoint) shall be 16, unless a device type in which this cluster is used, defines a larger " +
                 "value in the device type definition.",
@@ -975,7 +975,7 @@ export const SpecMatter = Matter(
             },
 
             Field({
-                name: "AttributeID", id: 0x0, type: "attrib-id", conformance: "M",
+                name: "AttributeId", id: 0x0, type: "attrib-id", conformance: "M",
 
                 details: "This field shall be present for all instances in a given ExtensionFieldSetStruct." +
                     "\n" +
@@ -2686,8 +2686,8 @@ export const SpecMatter = Matter(
             name: "LinkLocalAddress", id: 0x1, type: "ipv6adr", access: "R V", conformance: "O",
             constraint: "desc", quality: "F",
 
-            details: "Indicates the current link-local address of the device. Only 128-bit IPv6 link- local addresses " +
-                "shall be used for this attribute." +
+            details: "Indicates the current link-local address of the device. Only 128-bit IPv6 link-local addresses shall " +
+                "be used for this attribute." +
                 "\n" +
                 "> [!NOTE]" +
                 "\n" +
@@ -2904,10 +2904,9 @@ export const SpecMatter = Matter(
                     "\n" +
                     "This event shall be generated, when the momentary switch has been released (after debouncing)." +
                     "\n" +
-                    "  • If the server has the Momentary Switch LongPress (MSL) feature flag set, then this event shall" +
-                    "\n" +
-                    "be generated when the switch is released if no LongPress event had been generated since the previous " +
-                    "InitialPress event." +
+                    "  • If the server has the Momentary Switch LongPress (MSL) feature flag set, then this event shall " +
+                    "    be generated when the switch is released if no LongPress event had been generated since the " +
+                    "    previous InitialPress event." +
                     "\n" +
                     "  • If the server does not have the Momentary Switch LongPress (MSL) feature flag set, this event " +
                     "    shall be generated when the switch is released - even when the switch was pressed for a long " +
@@ -3441,7 +3440,7 @@ export const SpecMatter = Matter(
             Field({
                 name: "OperationalStateLabel", id: 0x1, type: "string", conformance: "desc", constraint: "max 64",
                 details: "This field shall be present if the OperationalStateID is from the set reserved for Manufacturer " +
-                    "Specific States, otherwise it shall NOT be present. If present, this shall contain a human- readable " +
+                    "Specific States, otherwise it shall NOT be present. If present, this shall contain a human-readable " +
                     "description of the operational state.",
                 xref: { document: "cluster", section: "1.14.4.2.2" }
             })
@@ -3492,7 +3491,7 @@ export const SpecMatter = Matter(
         Datatype(
             { name: "ErrorStateStruct", type: "struct", xref: { document: "cluster", section: "1.14.4.4" } },
             Field({
-                name: "ErrorStateID", id: 0x0, type: "ErrorStateEnum", conformance: "M", default: 0,
+                name: "ErrorStateId", id: 0x0, type: "ErrorStateEnum", conformance: "M", default: 0,
                 details: "This shall be populated with a value from the ErrorStateEnum.",
                 xref: { document: "cluster", section: "1.14.4.4.1" }
             }),
@@ -5700,8 +5699,8 @@ export const SpecMatter = Matter(
         Datatype(
             {
                 name: "ProductIdentifierTypeEnum", type: "enum8",
-                details: "Indicate the type of identifier used to describe the product. Devices SHOULD use globally- " +
-                    "recognized IDs over OEM specific ones.",
+                details: "Indicate the type of identifier used to describe the product. Devices SHOULD use globally-recognized " +
+                    "IDs over OEM specific ones.",
                 xref: { document: "cluster", section: "2.8.5.3" }
             },
 
@@ -5733,8 +5732,8 @@ export const SpecMatter = Matter(
     Cluster(
         {
             name: "AirQuality", id: 0x5b, classification: "application", pics: "AIRQUAL",
-            details: "This cluster provides an interface to air quality classification using distinct levels with human- " +
-                "readable labels.",
+            details: "This cluster provides an interface to air quality classification using distinct levels with " +
+                "human-readable labels.",
             xref: { document: "cluster", section: "2.9" }
         },
 
@@ -5981,7 +5980,7 @@ export const SpecMatter = Matter(
             name: "ExpressedState", id: 0x0, type: "ExpressedStateEnum", access: "R V", conformance: "M",
             quality: "N",
 
-            details: "Indicates the visibly- and audibly-expressed state of the alarm. When multiple alarm conditions are " +
+            details: "Indicates the visibly-and audibly-expressed state of the alarm. When multiple alarm conditions are " +
                 "being reflected in the server, this attribute shall indicate the condition with the highest " +
                 "priority. Priority order of conditions is determined by the manufacturer and shall be supplied as a " +
                 "part of certification procedure. If the value of ExpressedState is not Normal, the attribute " +
@@ -6029,8 +6028,8 @@ export const SpecMatter = Matter(
 
         Attribute({
             name: "TestInProgress", id: 0x5, type: "bool", access: "R V", conformance: "M",
-            details: "Indicates whether the device self-test is currently activated. If the device self- test is " +
-                "activated, this attribute shall be set to True, otherwise it shall be set to False.",
+            details: "Indicates whether the device self-test is currently activated. If the device self-test is activated, " +
+                "this attribute shall be set to True, otherwise it shall be set to False.",
             xref: { document: "cluster", section: "2.11.6.6" }
         }),
 
@@ -6178,7 +6177,7 @@ export const SpecMatter = Matter(
 
         Event(
             {
-                name: "InterconnectCOAlarm", id: 0x9, access: "V", conformance: "[CO]", priority: "critical",
+                name: "InterconnectCoAlarm", id: 0x9, access: "V", conformance: "[CO]", priority: "critical",
                 details: "This event shall be generated when the device hosting the server receives a CO alarm from an " +
                     "interconnected sensor.",
                 xref: { document: "cluster", section: "2.11.8.10" }
@@ -8415,12 +8414,20 @@ export const SpecMatter = Matter(
             })
         ),
 
-        Command({
-            name: "StopMoveStep", id: 0x47, access: "O", conformance: "HS | XY | CT", direction: "request",
-            response: "status",
-            details: "This command is provided to allow MoveTo and Step commands to be stopped.",
-            xref: { document: "cluster", section: "3.2.8.20" }
-        }),
+        Command(
+            {
+                name: "StopMoveStep", id: 0x47, access: "O", conformance: "HS | XY | CT", direction: "request",
+                response: "status",
+                details: "This command is provided to allow MoveTo and Step commands to be stopped.",
+                xref: { document: "cluster", section: "3.2.8.20" }
+            },
+
+            Field({ name: "OptionsMask", id: 0x0, type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+            Field({
+                name: "OptionsOverride", id: 0x1, type: "OptionsBitmap", conformance: "M", constraint: "desc",
+                default: 0
+            })
+        ),
 
         Command(
             {
@@ -9545,8 +9552,6 @@ export const SpecMatter = Matter(
 
             details: "This cluster provides an interface to the functionality of a thermostat." +
                 "\n" +
-                "Optional temperature, humidity and occupancy sensors Thermostat" +
-                "\n" +
                 "Heating / cooling control panel C" +
                 "\n" +
                 "Dehumidification configuration Dehumidification notification" +
@@ -10008,8 +10013,8 @@ export const SpecMatter = Matter(
                 "If the server supports a setpoint hold for a specific duration, it SHOULD also implement the " +
                 "SetpointHoldExpiryTimestamp attribute." +
                 "\n" +
-                "If this attribute is updated to SetpointHoldOn and the TemperatureSetpointHoldDuration has a non- " +
-                "null value and the SetpointHoldExpiryTimestamp is supported, the server shall update the " +
+                "If this attribute is updated to SetpointHoldOn and the TemperatureSetpointHoldDuration has a " +
+                "non-null value and the SetpointHoldExpiryTimestamp is supported, the server shall update the " +
                 "SetpointHoldExpiryTimestamp with a value of current UTC timestamp, in seconds, plus the value in " +
                 "TemperatureSetpointHoldDuration multiplied by 60." +
                 "\n" +
@@ -10769,7 +10774,7 @@ export const SpecMatter = Matter(
                 quality: "X"
             }),
             Field({
-                name: "SetPoint", id: 0x4, type: "temperature", conformance: "M",
+                name: "Setpoint", id: 0x4, type: "temperature", conformance: "M",
                 details: "This field shall indicate the target setpoint temperature when the log is captured.",
                 xref: { document: "cluster", section: "4.3.10.7.5" }
             }),
@@ -10971,7 +10976,7 @@ export const SpecMatter = Matter(
                 name: "Automatic", constraint: "0",
                 description: "Preset may be automatically activated by the thermostat"
             }),
-            Field({ name: "SupportsNames", constraint: "1", description: "Preset supports user- provided names" })
+            Field({ name: "SupportsNames", constraint: "1", description: "Preset supports user-provided names" })
         ),
 
         Datatype(
@@ -11157,7 +11162,7 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Occupied", id: 0x1, conformance: "M",
-                description: "The thermostat- controlled area is occupied",
+                description: "The thermostat-controlled area is occupied",
                 details: "This value shall indicate the preset for periods when the thermostat’s temperature-controlled area " +
                     "is occupied. It is intended for thermostats that can automatically determine occupancy.",
                 xref: { document: "cluster", section: "4.3.8.22.2" }
@@ -11165,7 +11170,7 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Unoccupied", id: 0x2, conformance: "M",
-                description: "The thermostat- controlled area is unoccupied",
+                description: "The thermostat-controlled area is unoccupied",
                 details: "This value shall indicate the preset for periods when the thermostat’s temperature-controlled area " +
                     "is unoccupied. It is intended for thermostats that can automatically determine occupancy.",
                 xref: { document: "cluster", section: "4.3.8.22.3" }
@@ -11184,8 +11189,8 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Vacation", id: 0x5, conformance: "M", description: "Users are on vacation",
-                details: "This value shall indicate the preset for periods when users are on vacation, or otherwise out-of- " +
-                    "home for extended periods of time.",
+                details: "This value shall indicate the preset for periods when users are on vacation, or otherwise " +
+                    "out-of-home for extended periods of time.",
                 xref: { document: "cluster", section: "4.3.8.22.6" }
             }),
 
@@ -11480,9 +11485,10 @@ export const SpecMatter = Matter(
                     "       be interpreted using the SystemMode field on the parent ScheduleStruct" +
                     "\n" +
                     "  3. If neither the PresetHandle field or any Setpoint field is provided, then the PresetHandle " +
-                    "     field on the parent ScheduleStruct shall be used to determine the active PresetStruct 4. If the " +
-                    "     PresetHandle is not indicated and no setpoint is provided for the current SystemMode, the " +
-                    "     server shall use a default value for the current SystemMode." +
+                    "     field on the parent ScheduleStruct shall be used to determine the active PresetStruct" +
+                    "\n" +
+                    "  4. If the PresetHandle is not indicated and no setpoint is provided for the current SystemMode, " +
+                    "     the server shall use a default value for the current SystemMode." +
                     "\n" +
                     "If the setpoint was derived from a preset, then the ActivePresetHandle shall be set to the " +
                     "PresetHandle of that preset." +
@@ -11536,7 +11542,7 @@ export const SpecMatter = Matter(
                 details: "This shall specify the time of day at which the transition becomes active, in terms of minutes " +
                     "within the day representing the wall clock, where 0 is 00:00:00, 1 is 00:01:00 and 1439 is 23:59:00." +
                     "\n" +
-                    "Handling of transitions during the changeover of Daylight Saving Time is implementation- dependent.",
+                    "Handling of transitions during the changeover of Daylight Saving Time is implementation-dependent.",
                 xref: { document: "cluster", section: "4.3.8.32.2" }
             }),
 
@@ -12660,7 +12666,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "EnableInsideStatusLEd", id: 0x2a, type: "bool", access: "RW VM", conformance: "O",
+            name: "EnableInsideStatusLed", id: 0x2a, type: "bool", access: "RW VM", conformance: "O",
             default: true, quality: "P",
             details: "This attribute shall enable/disable an inside LED that allows the user to see at a glance if the " +
                 "door is locked.",
@@ -12737,7 +12743,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "RequirePiNforRemoteOperation", id: 0x33, type: "bool", access: "R[W] VA",
+            name: "RequirePinForRemoteOperation", id: 0x33, type: "bool", access: "R[W] VA",
             conformance: "COTA & PIN", default: true, quality: "P",
             details: "Indicates if the door lock requires an optional PIN. If this attribute is set to True, the door lock " +
                 "server requires that an optional PINs be included in the payload of remote lock operation events " +
@@ -12822,7 +12828,7 @@ export const SpecMatter = Matter(
 
         Attribute(
             {
-                name: "AliroSupportedBleUwbProtocolVersions", id: 0x85, type: "list", access: "R A",
+                name: "AliroSupportedBleuwbProtocolVersions", id: 0x85, type: "list", access: "R A",
                 conformance: "ALBU", constraint: "max 16[2]", default: [], quality: "F",
                 details: "Indicates the list of protocol versions supported for the Bluetooth LE + UWB Access Control Flow as " +
                     "defined in [Aliro].",
@@ -17336,7 +17342,7 @@ export const SpecMatter = Matter(
 
             Field(
                 {
-                    name: "ExternalIDList", id: 0x12, type: "list", conformance: "O", constraint: "max 255",
+                    name: "ExternalIdList", id: 0x12, type: "list", conformance: "O", constraint: "max 255",
                     default: [],
                     details: "This field shall indicate the list of additional external content identifiers.",
                     xref: { document: "cluster", section: "6.6.5.7.19" }
@@ -17418,7 +17424,7 @@ export const SpecMatter = Matter(
             Field({
                 name: "After", id: 0x1, type: "string", conformance: "O", constraint: "max 8192",
                 details: "This field shall indicate the cursor that pinpoints the start of the upcoming data page. In a " +
-                    "Cursor- based pagination system, the field acts as a reference point, ensuring the set of results " +
+                    "Cursor-based pagination system, the field acts as a reference point, ensuring the set of results " +
                     "corresponds directly to the data following the specified cursor. In a Offset-based pagination " +
                     "system, the field, along with limit, indicate the offset from which entries in the program guide " +
                     "will be retrieved.",
@@ -17427,8 +17433,8 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Before", id: 0x2, type: "string", conformance: "O", constraint: "max 8192",
-                details: "This field shall indicate the cursor that pinpoints the end of the upcoming data page. In a Cursor- " +
-                    "based pagination system, the field acts as a reference point, ensuring the set of results " +
+                details: "This field shall indicate the cursor that pinpoints the end of the upcoming data page. In a " +
+                    "Cursor-based pagination system, the field acts as a reference point, ensuring the set of results " +
                     "corresponds directly to the data preceding the specified cursor. In a Offset-based pagination " +
                     "system, the field, along with limit, indicate the offset from which entries in the program guide " +
                     "will be retrieved.",
@@ -17488,7 +17494,7 @@ export const SpecMatter = Matter(
             { name: "FeatureMap", id: 0xfffc, type: "FeatureMap", xref: { document: "cluster", section: "6.7.4" } },
             Field({
                 name: "CS", constraint: "0", description: "ContentSearch",
-                details: "Device supports content search (non- app specific)"
+                details: "Device supports content search (non-app specific)"
             }),
             Field({
                 name: "UP", constraint: "1", description: "UrlPlayback",
@@ -17824,7 +17830,7 @@ export const SpecMatter = Matter(
 
             Field(
                 {
-                    name: "ExternalIDList", id: 0x2, type: "list", conformance: "O", default: [],
+                    name: "ExternalIdList", id: 0x2, type: "list", conformance: "O", default: [],
                     details: "This field shall indicate the list of additional external content identifiers.",
                     xref: { document: "cluster", section: "6.7.5.6.3" }
                 },
@@ -17956,7 +17962,7 @@ export const SpecMatter = Matter(
             }),
 
             Field({
-                name: "WaterMark", id: 0x5, type: "StyleInformationStruct", conformance: "O",
+                name: "Watermark", id: 0x5, type: "StyleInformationStruct", conformance: "O",
                 details: "This field shall indicate watermark shown when the media is playing.",
                 xref: { document: "cluster", section: "6.7.5.10.6" }
             })
@@ -18688,8 +18694,8 @@ export const SpecMatter = Matter(
         Command({
             name: "Next", id: 0x5, access: "O", conformance: "O", direction: "request",
             response: "PlaybackResponse",
-            details: "Upon receipt, this shall cause the handler to be invoked for \"Next\". User experience is context- " +
-                "specific. This will often Go forward to the next media playback item.",
+            details: "Upon receipt, this shall cause the handler to be invoked for \"Next\". User experience is " +
+                "context-specific. This will often Go forward to the next media playback item.",
             xref: { document: "cluster", section: "6.10.7.6" }
         }),
 
@@ -21470,7 +21476,32 @@ export const SpecMatter = Matter(
                     "challenging and only a basic level of forecast is possible." +
                     "\n" +
                     "Forecasts are defined from a current time, using a slot format, where the slot is akin to a " +
-                    "relatively constant operating mode.",
+                    "relatively constant operating mode." +
+                    "\n" +
+                    "In some circumstances the ESA may allow the stage to be delayed or paused (subject to safety and " +
+                    "manufacturer’s discretion and user preferences)." +
+                    "\n" +
+                    "Typically, appliances with a heating element cannot have their power consumption adjusted and can " +
+                    "only be paused or delayed." +
+                    "\n" +
+                    "Some ESAs may not be flexible other than a delayed cycle start (for example, once the washing cycle " +
+                    "has been started then they run continuously until the cycle completes)." +
+                    "\n" +
+                    "Appliances that only support the PowerForecastReporting and not any of the adjustment features may " +
+                    "indicate that they are not flexible in the forecast slot format." +
+                    "\n" +
+                    "The PowerForecastReporting and the adjustment features aim to align to the [SAREF4ENER] ontology." +
+                    "\n" +
+                    "For example, a single phase EVSE can be adjusted in the range of 6-32Amps in 0.6 Amp steps in EU or " +
+                    "on a hardwired 120V supply in the range of 6-15 Amps in US." +
+                    "\n" +
+                    "For example, a home battery may be adjusted to charge or discharge in steps of 1W." +
+                    "\n" +
+                    "For example, a heat pump may be able to modulate its compressor inverter between 20-100% of its " +
+                    "rated power." +
+                    "\n" +
+                    "The ESA indicates its power adjustment range and its nominal power consumption as part of its " +
+                    "Forecast.",
 
                 xref: { document: "cluster", section: "9.2.4.2" }
             }),
@@ -21496,32 +21527,96 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "STA", conformance: "O", constraint: "3", description: "StartTimeAdjustment",
+
                 details: "ESAs which support the Start Time Adjustment feature, allow an EMS to recommend a change to the " +
-                    "start time of the energy transfer that the ESA has previously suggested it would use.",
+                    "start time of the energy transfer that the ESA has previously suggested it would use." +
+                    "\n" +
+                    "However, the EMS is aware that a grid event has occurred, making it cheaper to run the cycle at a " +
+                    "later time, but the washing machine is not aware of this." +
+                    "\n" +
+                    "The EMS first requests the Forecast data from each of its registered ESAs. It determines that the " +
+                    "washing machine has a power profile suggesting it will start the wash cycle at 9pm, but the EMS now " +
+                    "knows that the grid event means it will be cheaper to delay the start until 11pm." +
+                    "\n" +
+                    "The EMS can then optimize the cost by asking the washing machine to delay starting the wash cycle " +
+                    "until 11pm." +
+                    "\n" +
+                    "It does this by sending a StartTimeAdjustRequest to the washing machine to request delaying the " +
+                    "start of the washing cycle.",
+
                 xref: { document: "cluster", section: "9.2.4.4" }
             }),
 
             Field({
                 name: "PAU", conformance: "O", constraint: "4", description: "Pausable",
+
                 details: "ESAs which support the Pausable feature, allow an EMS to recommend a pause in the middle of a " +
-                    "forecast power profile that the ESA is currently using.",
+                    "forecast power profile that the ESA is currently using." +
+                    "\n" +
+                    "However, the EMS becomes aware from the smart meter that the total home load on the grid is close to " +
+                    "exceeding its allowed total grid load." +
+                    "\n" +
+                    "The EMS first requests the Forecast data from each of its registered ESAs. It determines that the " +
+                    "washing machine has a power profile suggesting its current step in the wash cycle is using power to " +
+                    "heat the water, but that this step can be paused." +
+                    "\n" +
+                    "The EMS can then reduce the grid load by asking the washing machine to pause the wash cycle for a " +
+                    "short duration." +
+                    "\n" +
+                    "It does this by sending a PauseRequest to the washing machine to request pausing the current step of " +
+                    "the forecast power usage for a period to allow other home loads to finish before resuming the " +
+                    "washing cycle.",
+
                 xref: { document: "cluster", section: "9.2.4.5" }
             }),
 
             Field({
                 name: "FA", conformance: "O", constraint: "5", description: "ForecastAdjustment",
+
                 details: "ESAs which support the Forecast adjustment feature, allow an EMS to recommend a change to the start, " +
                     "duration and/or power level limits of the steps of the power profile that the ESA has previously " +
-                    "suggested it would use.",
+                    "suggested it would use." +
+                    "\n" +
+                    "However, the hot water tank is likely to need to be reheated before the homeowner comes home in the " +
+                    "evening. The heat pump is not aware that the property also has a solar PV inverter which is also an " +
+                    "ESA that is communicating with the EMS." +
+                    "\n" +
+                    "The EMS first requests the Forecast data from each of its registered ESAs. It determines that the " +
+                    "heat pump has a power profile suggesting it needs to heat hot water around 6pm. The solar PV " +
+                    "inverter has forecast that it will generate 3.6kW of power during the middle of the day and into the " +
+                    "afternoon before the sun goes down." +
+                    "\n" +
+                    "The EMS can then optimize the home considering other non-ESA loads and can ask the heat pump to heat " +
+                    "the hot water around 3pm when it has forecast that excess solar power will be available." +
+                    "\n" +
+                    "It does this by sending a ModifyForecastRequest to the heat pump and asks the heat pump to expect to " +
+                    "run at a lower power consumption (within the solar excess power) which requires the heat pump to run " +
+                    "for a longer duration to achieve its required energy demand.",
+
                 xref: { document: "cluster", section: "9.2.4.6" }
             }),
 
             Field({
                 name: "CON", conformance: "O", constraint: "6", description: "ConstraintBasedAdjustment",
+
                 details: "ESAs which support the Constraint-Based Adjustment feature allow an EMS to inform the ESA of periods " +
                     "during which power usage should be modified (for example when the EMS has been made aware that the " +
                     "grid supplier has requested reduced energy usage due to overall peak grid demand) and may cause the " +
-                    "ESA to modify the intended power profile has previously suggested it would use.",
+                    "ESA to modify the intended power profile has previously suggested it would use." +
+                    "\n" +
+                    "However, the DSR service provider has informed the EMS that due to high forecast winds it is now " +
+                    "forecast that there will be very cheap energy available from wind generation between 2am and 3am." +
+                    "\n" +
+                    "The EMS first requests the Forecast data from each of its registered ESAs. It determines that the " +
+                    "EVSE has a power profile suggesting it plans to start charging the vehicle at 1am." +
+                    "\n" +
+                    "The EMS can then try to reduce the cost of charging the EV by informing the EVSE of the desire to " +
+                    "increase the charging between scheduled times." +
+                    "\n" +
+                    "It does this by sending a RequestConstraintBasedForecast to the EVSE and asks it to run at a higher " +
+                    "NominalPower consumption during the constraint period, which may require it to decrease its charge " +
+                    "rate outside the constraint period to achieve its required energy demand.",
+
                 xref: { document: "cluster", section: "9.2.4.7" }
             })
         ),
@@ -21684,7 +21779,7 @@ export const SpecMatter = Matter(
                 "\n" +
                 "If the user changes the Opt-Out state of the ESA which is currently operating with a Forecast that " +
                 "is due to a previous StartTimeAdjustRequest, ModifyForecastRequest or RequestConstraintBasedForecast " +
-                "command that would now not be permitted due to the new Opt- out state (i.e. the Forecast attribute " +
+                "command that would now not be permitted due to the new Opt-out state (i.e. the Forecast attribute " +
                 "ForecastUpdateReason field currently contains a reason which is now opted out), the ESA shall behave " +
                 "as if it had received a CancelRequest command." +
                 "\n" +
@@ -22002,7 +22097,7 @@ export const SpecMatter = Matter(
             { name: "ESAStateEnum", type: "enum8", xref: { document: "cluster", section: "9.2.7.3" } },
             Field({
                 name: "Offline", id: 0x0, conformance: "M",
-                description: "The ESA is not available to the EMS (e.g. start- up, maintenance mode)"
+                description: "The ESA is not available to the EMS (e.g. start-up, maintenance mode)"
             }),
             Field({
                 name: "Online", id: 0x1, conformance: "M",
@@ -22244,7 +22339,7 @@ export const SpecMatter = Matter(
             },
 
             Field({
-                name: "ForecastID", id: 0x0, type: "uint32", conformance: "M", default: 0,
+                name: "ForecastId", id: 0x0, type: "uint32", conformance: "M", default: 0,
 
                 details: "This field shall indicate the sequence number for the current forecast. If the ESA updates a " +
                     "forecast, it shall monotonically increase this value." +
@@ -22413,7 +22508,13 @@ export const SpecMatter = Matter(
                     "\n" +
                     "Manufacturers can use this value to indicate a variety of states in an unspecified way. For example, " +
                     "they may choose to use values between 0-100 as a percentage of compressor modulation, or could use " +
-                    "these values as Enum states meaning heating with fan, heating without fan etc.",
+                    "these values as Enum states meaning heating with fan, heating without fan etc." +
+                    "\n" +
+                    "By providing this information a smart EMS may be able to learn the observed power draw when the ESA " +
+                    "is put into a specific state. It can potentially then use the ManufacturerESAState field in the " +
+                    "Forecast attribute along with observed power drawn to predict the power draw from the appliance and " +
+                    "potentially ask it to modify its timing via one of the adjustment request commands, or adjust other " +
+                    "ESAs power to compensate.",
 
                 xref: { document: "cluster", section: "9.2.7.14.9" }
             }),
@@ -23484,7 +23585,7 @@ export const SpecMatter = Matter(
             }),
             Field({
                 name: "DisabledDiagnostics", id: 0x4, conformance: "M",
-                description: "The EV is not currently allowed to charge or discharge due to self- diagnostics mode."
+                description: "The EV is not currently allowed to charge or discharge due to self-diagnostics mode."
             }),
             Field({
                 name: "Enabled", id: 0x5, conformance: "[V2X]",
@@ -24996,7 +25097,7 @@ export const SpecMatter = Matter(
             xref: { document: "core", section: "7.15.5" }
         },
         Field({
-            name: "AttributeID", id: 0x0, type: "attrib-id", conformance: "M",
+            name: "AttributeId", id: 0x0, type: "attrib-id", conformance: "M",
             details: "This field shall indicate the ID of the attribute with the associated StatusCode.",
             xref: { document: "core", section: "7.15.5.1" }
         }),
@@ -25306,29 +25407,29 @@ export const SpecMatter = Matter(
         },
         Field({
             name: "Year", id: 0x0, type: "uint8", conformance: "M", default: null, quality: "X",
-            details: "The year subfield represents years from 1900 (0) to 2155 (255).",
+            details: "Year Field The year subfield represents years from 1900 (0) to 2155 (255).",
             xref: { document: "core", section: "7.19.2.4.1" }
         }),
 
         Field({
             name: "Month", id: 0x1, type: "uint8", conformance: "M", constraint: "1 to 12", default: null,
             quality: "X",
-            details: "This field represents months January (1) to December (12).",
+            details: "Month Field This field represents months January (1) to December (12).",
             xref: { document: "core", section: "7.19.2.4.2" }
         }),
 
         Field({
             name: "Day", id: 0x2, type: "uint8", conformance: "M", constraint: "1 to 31", default: null,
             quality: "X",
-            details: "This field represents the day of the month. Note that values in the range 29 to 31 may be invalid, " +
-                "depending on the month and year.",
+            details: "Day Field This field represents the day of the month. Note that values in the range 29 to 31 may be " +
+                "invalid, depending on the month and year.",
             xref: { document: "core", section: "7.19.2.4.3" }
         }),
 
         Field({
             name: "DayOfWeek", id: 0x3, type: "uint8", conformance: "M", constraint: "1 to 7", default: null,
             quality: "X",
-            details: "This represents the day of the week from Monday (1) to Sunday (7).",
+            details: "DayOfWeek Field This represents the day of the week from Monday (1) to Sunday (7).",
             xref: { document: "core", section: "7.19.2.4.4" }
         })
     ),
@@ -25455,7 +25556,16 @@ export const SpecMatter = Matter(
                 "The range is constrained by absolute zero: -273.15°C to 327.67°C." +
                 "\n" +
                 "Conversion of Temperature Values for Display When converting temperature values for display " +
-                "manufacturers SHOULD ensure that calculations",
+                "manufacturers SHOULD ensure that calculations" +
+                "\n" +
+                "Sample Conversion Code Sample code provided to ensure consistent Fahrenheit to Celsius and " +
+                "vice-versa conversion between devices and across vendors." +
+                "\n" +
+                "For degF: the value is a int8u representing 2x temperature value in Fahrenheit (to get 0.5 " +
+                "resolution)." +
+                "\n" +
+                "For degC: the value is a int16s representing Celsius in 0.01 resolution as expected by the ZCL " +
+                "format.",
 
             xref: { document: "core", section: "7.19.2.11" }
         }
@@ -25919,9 +26029,9 @@ export const SpecMatter = Matter(
         Field({
             name: "MfgCode", id: 0x0, type: "vendor-id", conformance: "M", default: null, quality: "X",
 
-            details: "If the MfgCode field is not null, it shall be the Vendor ID of the manufacturer who has defined a " +
-                "certain namespace and the NamespaceID field shall be the ID of a namespace defined by the " +
-                "manufacturer identified in the MfgCode field." +
+            details: "MfgCode Field If the MfgCode field is not null, it shall be the Vendor ID of the manufacturer who " +
+                "has defined a certain namespace and the NamespaceID field shall be the ID of a namespace defined by " +
+                "the manufacturer identified in the MfgCode field." +
                 "\n" +
                 "If a manufacturer specific Tag field is indicated in a list of SemanticTagStruct entries, the list " +
                 "shall include at least one standard tag which is not from any manufacturer’s namespace. A standard " +
@@ -25935,7 +26045,7 @@ export const SpecMatter = Matter(
 
         Field({
             name: "NamespaceId", id: 0x1, type: "namespace", conformance: "M",
-            details: "The NamespaceID field shall identify a namespace." +
+            details: "NamespaceID Field The NamespaceID field shall identify a namespace." +
                 "\n" +
                 "The common and device-specific semantic tag namespaces are listed in StandardNamespaces.",
             xref: { document: "core", section: "7.19.2.42.2" }
@@ -25943,7 +26053,7 @@ export const SpecMatter = Matter(
 
         Field({
             name: "Tag", id: 0x2, type: "tag", conformance: "M",
-            details: "The Tag field shall be the ID of a semantic tag located within the namespace indicated by " +
+            details: "Tag Field The Tag field shall be the ID of a semantic tag located within the namespace indicated by " +
                 "NamespaceID." +
                 "\n" +
                 "A device may expose tags from the common or device-specific namespaces and from " +
@@ -25955,8 +26065,8 @@ export const SpecMatter = Matter(
             name: "Label", id: 0x3, type: "string", conformance: "MfgCode != null, O", constraint: "max 64",
             default: null, quality: "X",
 
-            details: "The Label field, if present, shall contain human-readable text suitable for display on a client. The " +
-                "content of the Label field is defined by the manufacturer." +
+            details: "Label Field The Label field, if present, shall contain human-readable text suitable for display on a " +
+                "client. The content of the Label field is defined by the manufacturer." +
                 "\n" +
                 "This field shall be present when the MfgCode is not null. This field SHOULD NOT be used if the Tag " +
                 "is from a standard namespace, unless the Tag requires further qualification. For example: A Tag that " +
@@ -25987,7 +26097,7 @@ export const SpecMatter = Matter(
 
         Field({
             name: "LocationName", id: 0x0, type: "string", conformance: "M", constraint: "max 128",
-            details: "This field shall indicate the name of the location. For example, \"blue room\"." +
+            details: "LocationName Field This field shall indicate the name of the location. For example, \"blue room\"." +
                 "\n" +
                 "If the location name is not user provided, the logic that generates it (clients, devices etc.) " +
                 "SHOULD utilize synthesized user-friendly, understandable, names for the location, rather than opaque " +
@@ -25998,7 +26108,8 @@ export const SpecMatter = Matter(
         Field({
             name: "FloorNumber", id: 0x1, type: "int16", conformance: "M", quality: "X",
 
-            details: "This field shall indicate the level number. Negative values correspond to basement levels." +
+            details: "FloorNumber Field This field shall indicate the level number. Negative values correspond to basement " +
+                "levels." +
                 "\n" +
                 "Value zero indicates this is the main floor, which typically includes the main entrance to the " +
                 "user’s home. For a building with multiple levels, it is the client’s responsibility to map each " +
@@ -26032,8 +26143,8 @@ export const SpecMatter = Matter(
         Field({
             name: "AreaType", id: 0x2, type: "tag", conformance: "M", quality: "X",
 
-            details: "This field shall be the ID of an area semantic tag, located within the Common Area Namespace. For " +
-                "example, this tag may indicate that the location refers to a bedroom." +
+            details: "AreaType Field This field shall be the ID of an area semantic tag, located within the Common Area " +
+                "Namespace. For example, this tag may indicate that the location refers to a bedroom." +
                 "\n" +
                 "If this field is null, that indicates that the area type information is not available." +
                 "\n" +
@@ -26217,15 +26328,15 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "DeviceType", id: 0x0, type: "devtype-id", conformance: "M",
-                details: "This shall indicate the device type definition. The endpoint shall conform to the device type " +
-                    "definition and cluster specifications required by the device type.",
+                details: "DeviceType Field This shall indicate the device type definition. The endpoint shall conform to the " +
+                    "device type definition and cluster specifications required by the device type.",
                 xref: { document: "core", section: "9.5.5.1.1" }
             }),
 
             Field({
                 name: "Revision", id: 0x1, type: "uint16", conformance: "M", constraint: "min 1",
-                details: "This is the implemented revision of the device type definition. The endpoint shall conform to this " +
-                    "revision of the device type.",
+                details: "Revision Field This is the implemented revision of the device type definition. The endpoint shall " +
+                    "conform to this revision of the device type.",
                 xref: { document: "core", section: "9.5.5.1.2" }
             })
         )
@@ -26288,31 +26399,31 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Node", id: 0x1, type: "node-id", access: "F", conformance: "Endpoint",
-                details: "This field is the remote target node ID. If the Endpoint field is present, this field shall be " +
-                    "present.",
+                details: "Node Field This field is the remote target node ID. If the Endpoint field is present, this field " +
+                    "shall be present.",
                 xref: { document: "core", section: "9.6.5.1.1" }
             }),
 
             Field({
                 name: "Group", id: 0x2, type: "group-id", access: "F", conformance: "!Endpoint",
                 constraint: "min 1",
-                details: "This field is the target group ID that represents remote endpoints. If the Endpoint field is " +
-                    "present, this field shall NOT be present.",
+                details: "Group Field This field is the target group ID that represents remote endpoints. If the Endpoint " +
+                    "field is present, this field shall NOT be present.",
                 xref: { document: "core", section: "9.6.5.1.2" }
             }),
 
             Field({
                 name: "Endpoint", id: 0x3, type: "endpoint-no", access: "F", conformance: "!Group",
-                details: "This field is the remote endpoint that the local endpoint is bound to. If the Group field is " +
-                    "present, this field shall NOT be present.",
+                details: "Endpoint Field This field is the remote endpoint that the local endpoint is bound to. If the Group " +
+                    "field is present, this field shall NOT be present.",
                 xref: { document: "core", section: "9.6.5.1.3" }
             }),
 
             Field({
                 name: "Cluster", id: 0x4, type: "cluster-id", access: "F", conformance: "O",
-                details: "This field is the cluster ID (client & server) on the local and target endpoint(s). If this field is " +
-                    "present, the client cluster shall also exist on this endpoint (with this Binding cluster). If this " +
-                    "field is present, the target shall be this cluster on the target endpoint(s).",
+                details: "Cluster Field This field is the cluster ID (client & server) on the local and target endpoint(s). If " +
+                    "this field is present, the client cluster shall also exist on this endpoint (with this Binding " +
+                    "cluster). If this field is present, the target shall be this cluster on the target endpoint(s).",
                 xref: { document: "core", section: "9.6.5.1.4" }
             }),
 
@@ -26348,14 +26459,16 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Label", id: 0x0, type: "string", conformance: "M", constraint: "max 16",
-                details: "The Label or Value semantic is not defined here. Label examples: \"room\", \"zone\", \"group\", " +
-                    "\"direction\".",
+                details: "Label Field The Label or Value semantic is not defined here. Label examples: \"room\", \"zone\", " +
+                    "\"group\", \"direction\".",
                 xref: { document: "core", section: "9.7.4.1.1" }
             }),
 
             Field({
                 name: "Value", id: 0x1, type: "string", conformance: "M", constraint: "max 16",
-                details: "The Label or Value semantic is not defined here. The Value is a discriminator for a Label that may " +
+                details: "Value Field" +
+                    "\n" +
+                    "The Label or Value semantic is not defined here. The Value is a discriminator for a Label that may " +
                     "have multiple instances. Label:Value examples: \"room\":\"bedroom 2\", \"orientation\":\"North\", " +
                     "\"floor\":\"2\", \"direction\":\"up\"",
                 xref: { document: "core", section: "9.7.4.1.2" }
@@ -26381,8 +26494,8 @@ export const SpecMatter = Matter(
                 "    Using such indication, the user interface of a Node controlling this luminaire knows which of " +
                 "    the endpoints is which of the lights." +
                 "\n" +
-                "Note that the TagList in the Descriptor cluster provides an alternative mechanism for such self- " +
-                "description using standardized tags rather than manufacturer-selected strings, yielding a " +
+                "Note that the TagList in the Descriptor cluster provides an alternative mechanism for such " +
+                "self-description using standardized tags rather than manufacturer-selected strings, yielding a " +
                 "standardized mechanism for features defined in the various namespaces. The second example above can " +
                 "be implemented using semantic tags Direction.Upward and Direction.Downward instead of (or in " +
                 "addition to) the Fixed Label cluster.",
@@ -26472,7 +26585,7 @@ export const SpecMatter = Matter(
                     "command, such as user interfaces or service interactions associated with a service provider or the " +
                     "device manufacturer, which allows the owner (or subscriber) to manage access restrictions for each " +
                     "fabric. The user interface design, which includes the way restrictions are organized and presented " +
-                    "to the user, is not specified, but SHOULD be usable by non-expert end- users from common mobile " +
+                    "to the user, is not specified, but SHOULD be usable by non-expert end-users from common mobile " +
                     "devices, personal computers, or an on-device user interface." +
                     "\n" +
                     "Controllers and clients SHOULD incorporate generic handling of the ACCESS_RESTRICTED error code, " +
@@ -26680,7 +26793,8 @@ export const SpecMatter = Matter(
             Field({
                 name: "AdminNodeId", id: 0x1, type: "node-id", access: "S", conformance: "M", constraint: "desc",
                 quality: "X",
-                details: "The Node ID of the Administrator that made the change, if the change occurred via a CASE session." +
+                details: "AdminNodeID Field The Node ID of the Administrator that made the change, if the change occurred via " +
+                    "a CASE session." +
                     "\n" +
                     "Exactly one of AdminNodeID and AdminPasscodeID shall be set, depending on whether the change " +
                     "occurred via a CASE or PASE session; the other shall be null.",
@@ -26691,9 +26805,9 @@ export const SpecMatter = Matter(
                 name: "AdminPasscodeId", id: 0x2, type: "uint16", access: "S", conformance: "M", constraint: "desc",
                 quality: "X",
 
-                details: "The Passcode ID of the Administrator that made the change, if the change occurred via a PASE " +
-                    "session. Non-zero values are reserved for future use (see PasscodeId generation in " +
-                    "PBKDFParamRequest)." +
+                details: "AdminPasscodeID Field The Passcode ID of the Administrator that made the change, if the change " +
+                    "occurred via a PASE session. Non-zero values are reserved for future use (see PasscodeId generation " +
+                    "in PBKDFParamRequest)." +
                     "\n" +
                     "Exactly one of AdminNodeID and AdminPasscodeID shall be set, depending on whether the change " +
                     "occurred via a CASE or PASE session; the other shall be null.",
@@ -26703,14 +26817,14 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "ChangeType", id: 0x3, type: "ChangeTypeEnum", access: "S", conformance: "M",
-                details: "The type of change as appropriate.",
+                details: "ChangeType Field The type of change as appropriate.",
                 xref: { document: "core", section: "9.10.9.1.3" }
             }),
 
             Field({
                 name: "LatestValue", id: 0x4, type: "AccessControlEntryStruct", access: "S", conformance: "M",
                 quality: "X",
-                details: "The latest value of the changed entry." +
+                details: "LatestValue Field The latest value of the changed entry." +
                     "\n" +
                     "This field SHOULD be set if resources are adequate for it; otherwise it shall be set to NULL if " +
                     "resources are scarce.",
@@ -26740,7 +26854,8 @@ export const SpecMatter = Matter(
             Field({
                 name: "AdminNodeId", id: 0x1, type: "node-id", access: "S", conformance: "M", constraint: "desc",
                 quality: "X",
-                details: "The Node ID of the Administrator that made the change, if the change occurred via a CASE session." +
+                details: "AdminNodeID Field The Node ID of the Administrator that made the change, if the change occurred via " +
+                    "a CASE session." +
                     "\n" +
                     "Exactly one of AdminNodeID and AdminPasscodeID shall be set, depending on whether the change " +
                     "occurred via a CASE or PASE session; the other shall be null.",
@@ -26751,9 +26866,9 @@ export const SpecMatter = Matter(
                 name: "AdminPasscodeId", id: 0x2, type: "uint16", access: "S", conformance: "M", constraint: "desc",
                 quality: "X",
 
-                details: "The Passcode ID of the Administrator that made the change, if the change occurred via a PASE " +
-                    "session. Non-zero values are reserved for future use (see PasscodeId generation in " +
-                    "PBKDFParamRequest)." +
+                details: "AdminPasscodeID Field The Passcode ID of the Administrator that made the change, if the change " +
+                    "occurred via a PASE session. Non-zero values are reserved for future use (see PasscodeId generation " +
+                    "in PBKDFParamRequest)." +
                     "\n" +
                     "Exactly one of AdminNodeID and AdminPasscodeID shall be set, depending on whether the change " +
                     "occurred via a CASE or PASE session; the other shall be null.",
@@ -26763,14 +26878,14 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "ChangeType", id: 0x3, type: "ChangeTypeEnum", access: "S", conformance: "M",
-                details: "The type of change as appropriate.",
+                details: "ChangeType Field The type of change as appropriate.",
                 xref: { document: "core", section: "9.10.9.2.3" }
             }),
 
             Field({
                 name: "LatestValue", id: 0x4, type: "AccessControlExtensionStruct", access: "S", conformance: "M",
                 quality: "X",
-                details: "The latest value of the changed extension." +
+                details: "LatestValue Field The latest value of the changed extension." +
                     "\n" +
                     "This field SHOULD be set if resources are adequate for it; otherwise it shall be set to NULL if " +
                     "resources are scarce.",
@@ -26794,16 +26909,16 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Token", id: 0x0, type: "uint64", access: "S", conformance: "M",
-                details: "This field shall indicate the Token that can be used to correlate a ReviewFabricRestrictionsResponse " +
-                    "with a FabricRestrictionReviewUpdate event.",
+                details: "Token Field This field shall indicate the Token that can be used to correlate a " +
+                    "ReviewFabricRestrictionsResponse with a FabricRestrictionReviewUpdate event.",
                 xref: { document: "core", section: "9.10.9.3.1" }
             }),
 
             Field({
                 name: "Instruction", id: 0x1, type: "string", access: "S", conformance: "O", constraint: "max 512",
 
-                details: "This field shall provide human readable text that may be displayed to the user to help them locate " +
-                    "the user interface for managing access restrictions for each fabric." +
+                details: "Instruction Field This field shall provide human readable text that may be displayed to the user to " +
+                    "help them locate the user interface for managing access restrictions for each fabric." +
                     "\n" +
                     "A device SHOULD implement the Localization Configuration Cluster when it has no other means to " +
                     "determine the locale to use for this text." +
@@ -26819,9 +26934,9 @@ export const SpecMatter = Matter(
                     name: "ArlRequestFlowUrl", id: 0x2, type: "string", access: "S", conformance: "O",
                     constraint: "max 256",
 
-                    details: "This field shall indicate the URL for the service associated with the device maker which the user " +
-                        "can visit to manage fabric limitations. The syntax of this field shall follow the syntax as " +
-                        "specified in RFC 1738 and shall use the https scheme for internet-hosted URLs." +
+                    details: "ARLRequestFlowUrl Field This field shall indicate the URL for the service associated with the device " +
+                        "maker which the user can visit to manage fabric limitations. The syntax of this field shall follow " +
+                        "the syntax as specified in RFC 1738 and shall use the https scheme for internet-hosted URLs." +
                         "\n" +
                         "  • The URL may embed the token, fabric index, fabric vendor, or other information transparently in " +
                         "    order to pass context about the originating ReviewFabricRestrictions command to the service " +
@@ -26834,9 +26949,8 @@ export const SpecMatter = Matter(
                         "    the ARL attribute shall remain unchanged and a failure response shall be returned to the device " +
                         "    making the request using the MTaer field of the callbackUrl." +
                         "\n" +
-                        "  • The device using this mechanism shall provide a service at the URL that can accept requests" +
-                        "\n" +
-                        "for additional access and return responses indicating whether the requests were granted or denied." +
+                        "  • The device using this mechanism shall provide a service at the URL that can accept requests for " +
+                        "    additional access and return responses indicating whether the requests were granted or denied." +
                         "\n" +
                         "  • This URL will typically lead to a server which (e.g. by looking at the User-Agent) redirects the " +
                         "    user to allow viewing, downloading, installing or using a manufacturer-provided means for " +
@@ -26862,9 +26976,8 @@ export const SpecMatter = Matter(
                         "\n" +
                         "  • The query shall use the & delimiter between key/value pairs." +
                         "\n" +
-                        "  • The key-value pairs shall in the format name=<value> where name is the key name, and <value>" +
-                        "\n" +
-                        "is the contents of the value encoded with proper URL-encoded escaping." +
+                        "  • The key-value pairs shall in the format name=<value> where name is the key name, and <value> is " +
+                        "    the contents of the value encoded with proper URL-encoded escaping." +
                         "\n" +
                         "  • If key MTcu is present, it shall have a value of \"_\" (i.e. MTcu=_). This is the \"callback URL " +
                         "    (CallbackUrl) placeholder\"." +
@@ -26874,7 +26987,114 @@ export const SpecMatter = Matter(
                         "    the ARLRequestFlowUrl unless they are referenced by a version of this specification." +
                         "\n" +
                         "Any other element in the ARLRequestFlowUrl query field not covered by the above rules, as well as " +
-                        "the fragment field (if present), shall remain including the order of query key/value pairs present.",
+                        "the fragment field (if present), shall remain including the order of query key/value pairs present." +
+                        "\n" +
+                        "Once the URL is obtained, it shall be expanded to form a final URL (ExpandedARLRequestFlowUrl) by " +
+                        "proceeding with the following substitution algorithm on the original ARLRequestFlowUrl:" +
+                        "\n" +
+                        "  1. If key MTcu is present, compute the CallbackUrl desired (see Section 9.10.9.3.5, “CallbackUrl " +
+                        "     format for ARL Request Flow response”), and substitute the placeholder value \"_\" (i.e. in " +
+                        "     MTcu=_) in the ARLRequestFlowUrl with the desired contents, encoded with proper URL-encoded " +
+                        "     escaping (see RFC 3986 section 2)." +
+                        "\n" +
+                        "The final URL after expansion (ExpandedARLRequestFlowUrl) shall be the one to follow, rather than " +
+                        "the original value obtained from the FabricRestrictionReviewUpdate event." +
+                        "\n" +
+                        "### CallbackUrl format for ARL Request Flow response" +
+                        "\n" +
+                        "If a CallbackUrl field (i.e. MTcu=) query field placeholder is present in the ARLRequestFlowUrl, the " +
+                        "client may replace the placeholder value \"_\" in the ExpandedARLRequestFlowUrl with a URL that the " +
+                        "manufacturer flow can use to make a smooth return to the client when the ARL flow has terminated." +
+                        "\n" +
+                        "This URL field may contain a query component (see RFC 3986 section 3.4). If a query is present, it " +
+                        "shall be composed of one or more key-value pairs:" +
+                        "\n" +
+                        "  • The query shall use the & delimiter between key/value pairs." +
+                        "\n" +
+                        "  • The key-value pairs shall follow the format name=<value> where name is the key name, and <value> " +
+                        "    is the contents of the value encoded with proper URL-encoded escaping." +
+                        "\n" +
+                        "  • If key MTaer is present, it shall have a value of \"_\" (i.e. MTaer=_). This is the placeholder " +
+                        "    for a \"access extension response\" provided by the manufacturer flow to the client. The " +
+                        "    manufacturer flow shall replace this placeholder with the final status of the access extension " +
+                        "    request, which shall be formatted following Expansion of CallbackUrl by the manufacturer custom " +
+                        "    flow and encoded with proper URL-encoded escaping." +
+                        "\n" +
+                        "  • Any key whose name begins with MT not mentioned in the previous bullets shall be reserved for " +
+                        "    future use by this specification." +
+                        "\n" +
+                        "Any other element in the CallbackUrl query field not covered by the above rules, as well as the " +
+                        "fragment field (if present), shall remain as provided by the client through embedding within the " +
+                        "ExpandedARLRequestFlowUrl, including the order of query key/value pairs present." +
+                        "\n" +
+                        "Once the CallbackUrl is obtained by the manufacturer flow, it may be expanded to form a final " +
+                        "ExpandedARLRequestCallbackUrl URL to be used by proceeding with the following substitution algorithm " +
+                        "on the provided CallbackUrl:" +
+                        "\n" +
+                        "  • If key MTaer is present, the manufacturer custom flow having received the initial query " +
+                        "    containing the CallbackUrl shall substitute the placeholder value \"_\" (i.e. in MTaer=_) in the " +
+                        "    CallbackUrl with the final status of the access extension request flow which shall be one of the " +
+                        "    following. Any value returned in the MTaer field not listed above shall be considered an error " +
+                        "    and shall be treated as GeneralFailure." +
+                        "\n" +
+                        "    ◦ Success - The flow completed successfully and the ARL attribute was updated. The client may " +
+                        "      now read the ARL attribute to determine the new access restrictions." +
+                        "\n" +
+                        "    ◦ NoChange - The ARL attribute was already listing minimum restrictions for the requesting " +
+                        "      fabric." +
+                        "\n" +
+                        "    ◦ GeneralFailure - The flow failed for an unspecified reason." +
+                        "\n" +
+                        "    ◦ FlowAuthFailure - The user failed to authenticate to the flow." +
+                        "\n" +
+                        "    ◦ NotFound - Access extension failed because the target fabric was not found." +
+                        "\n" +
+                        "A manufacturer custom flow having received an ExpandedARLRequestFlowUrl SHOULD attempt to open the " +
+                        "ExpandedARLRequestCallbackUrl, on completion of the request, if an ExpandedARLRequestCallbackUrl was " +
+                        "computed from the CallbackUrl and opening such a URL is supported." +
+                        "\n" +
+                        "Examples of ARLRequestFlowUrl URLs Below are some examples of valid ExpandedARLRequestFlowUrl for " +
+                        "several valid values of" +
+                        "\n" +
+                        "ARLRequestFlowUrl, as well as some examples of invalid values of ARLRequestFlowUrl:" +
+                        "\n" +
+                        "  • Invalid URL with no query string: http scheme is not allowed:" +
+                        "\n" +
+                        "    ◦ http://company.domain.example/matter/arl/vFFF1p1234" +
+                        "\n" +
+                        "  • Valid URL :" +
+                        "\n" +
+                        "    ◦ https://company.domain.example/matter/arl/vFFF1p1234" +
+                        "\n" +
+                        "  • Valid URL, CallbackUrl requested:" +
+                        "\n" +
+                        "    ◦ Before expansion:" +
+                        "\n" +
+                        "https://company.domain.example/matter/arl?vid=FFF1&pid=1234&MTcu=_" +
+                        "\n" +
+                        "  ◦ After expansion: " +
+                        "    https://company.domain.example/matter/arl?vid=FFF1&pid=1234&MTcu=https%3A%2F%2Fc " +
+                        "    lient.domain.example%2Fcb%3Ftoken%3DmAsJ6_vqbr-vjDiG_w%253D%253D%26MTaer%3D_" +
+                        "\n" +
+                        "  ◦ The ExpandedARLRequestFlowUrl URL contains:" +
+                        "\n" +
+                        "    ▪ A CallbackUrl with a client-provided arbitrary token= key/value pair and the MTaer= key/value " +
+                        "      pair place-holder to indicate support for a return access extension completion status: " +
+                        "      https://client.domain.example/cb?token=mAsJ6_vqbr-vjDiG_w%3D%3D&MTaer=_" +
+                        "\n" +
+                        "    ▪ After expansion of the CallbackUrl (MTcu key) into an ExpandedCallbackUrl, with an example " +
+                        "      return access extension completion status of Success, the ExpandedARLRequestCallbackUrl would " +
+                        "      be:" +
+                        "\n" +
+                        "https://client.domain.example/cb?token=mAsJ6_vqbr-vjDiG_w%3D%3D&MTaer=Success" +
+                        "\n" +
+                        "Note that the MTcu key/value pair was initially provided URL-encoded within the " +
+                        "ExpandedARLRequestFlowUrl URL and the MTaer=_ key/value pair placeholder now contains a substituted " +
+                        "returned completion status." +
+                        "\n" +
+                        "  • Invalid URL, due to MTza=79 key/value pair in reserved MT-prefixed keys reserved for future use:" +
+                        "\n" +
+                        "    ◦ https://company.domain.example/matter/arl?vid=FFF1&pid=1234&MTop=_&MTza=79",
 
                     xref: { document: "core", section: "9.10.9.3.3" }
                 }
@@ -26911,8 +27131,8 @@ export const SpecMatter = Matter(
             Field(
                 {
                     name: "Arl", id: 0x0, type: "list", conformance: "M", constraint: "desc",
-                    details: "When the ARL field is provided, it indicates the specific restrictions that are requested for " +
-                        "review. An empty list represents a generic request for review of all restrictions.",
+                    details: "ARL Field When the ARL field is provided, it indicates the specific restrictions that are requested " +
+                        "for review. An empty list represents a generic request for review of all restrictions.",
                     xref: { document: "core", section: "9.10.8.1.1" }
                 },
 
@@ -26930,8 +27150,8 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Token", id: 0x0, type: "uint64", conformance: "M",
-                details: "This field shall specify a Token that can be used to correlate a ReviewFabricRestrictionsResponse " +
-                    "with a FabricRestrictionReviewUpdate event.",
+                details: "Token Field This field shall specify a Token that can be used to correlate a " +
+                    "ReviewFabricRestrictionsResponse with a FabricRestrictionReviewUpdate event.",
                 xref: { document: "core", section: "9.10.8.2.1" }
             })
         ),
@@ -26961,21 +27181,21 @@ export const SpecMatter = Matter(
             Field({
                 name: "Operate", id: 0x3, conformance: "M",
                 description: "View privileges, and can perform the primary function of this Node (except Access Control Cluster)",
-                details: "This value implicitly grants View privileges",
+                details: "Operate Value This value implicitly grants View privileges",
                 xref: { document: "core", section: "9.10.5.2.1" }
             }),
 
             Field({
                 name: "Manage", id: 0x4, conformance: "M",
                 description: "Operate privileges, and can modify persistent configuration of this Node (except Access Control Cluster)",
-                details: "This value implicitly grants Operate & View privileges",
+                details: "Manage Value This value implicitly grants Operate & View privileges",
                 xref: { document: "core", section: "9.10.5.2.2" }
             }),
 
             Field({
                 name: "Administer", id: 0x5, conformance: "M",
                 description: "Manage privileges, and can observe and modify the Access Control Cluster",
-                details: "This value implicitly grants Manage, Operate, Proxy View & View privileges",
+                details: "Administer Value This value implicitly grants Manage, Operate, Proxy View & View privileges",
                 xref: { document: "core", section: "9.10.5.2.3" }
             })
         ),
@@ -27016,14 +27236,38 @@ export const SpecMatter = Matter(
 
         Datatype(
             { name: "AccessControlEntryStruct", type: "struct", xref: { document: "core", section: "9.10.5.6" } },
+
             Field({
                 name: "Privilege", id: 0x1, type: "AccessControlEntryPrivilegeEnum", access: "S", conformance: "M",
-                details: "The privilege field shall specify the level of privilege granted by this Access Control Entry.",
+
+                details: "Privilege Field The privilege field shall specify the level of privilege granted by this Access " +
+                    "Control Entry." +
+                    "\n" +
+                    "Each privilege builds upon its predecessor, expanding the set of actions that can be performed upon " +
+                    "a Node. Administer is the highest privilege, and is special as it pertains to the administration of " +
+                    "privileges itself, via the Access Control Cluster." +
+                    "\n" +
+                    "When a Node is granted a particular privilege, it is also implicitly granted all logically lower " +
+                    "privilege levels as well. The following diagram illustrates how the higher privilege levels subsume " +
+                    "the lower privilege levels:" +
+                    "\n" +
+                    "Figure 46. Access Control Privilege Levels Individual clusters shall define whether attributes are " +
+                    "readable, writable, or both readable and writable. Clusters also shall define which privilege is " +
+                    "minimally required to be able to perform a particular read or write action on those attributes, or " +
+                    "invoke particular commands. Device type specifications may further restrict the privilege required." +
+                    "\n" +
+                    "The Access Control Cluster shall require the Administer privilege to observe and modify the Access " +
+                    "Control Cluster itself. The Administer privilege shall NOT be used on Access Control Entries which " +
+                    "use the Group auth mode.",
+
                 xref: { document: "core", section: "9.10.5.6.1" }
             }),
+
             Field({
                 name: "AuthMode", id: 0x2, type: "AccessControlEntryAuthModeEnum", access: "S", conformance: "M",
-                details: "The AuthMode field shall specify the authentication mode required by this Access Control Entry.",
+                details: "### AuthMode Field" +
+                    "\n" +
+                    "The AuthMode field shall specify the authentication mode required by this Access Control Entry.",
                 xref: { document: "core", section: "9.10.5.6.2" }
             }),
 
@@ -27032,7 +27276,9 @@ export const SpecMatter = Matter(
                     name: "Subjects", id: 0x3, type: "list", access: "S", conformance: "M",
                     constraint: "max subjectsPerAccessControlEntry", quality: "X",
 
-                    details: "The subjects field shall specify a list of Subject IDs, to which this Access Control Entry grants " +
+                    details: "### Subjects Field" +
+                        "\n" +
+                        "The subjects field shall specify a list of Subject IDs, to which this Access Control Entry grants " +
                         "access." +
                         "\n" +
                         "Device types may impose additional constraints on the minimum number of subjects per Access Control " +
@@ -27041,7 +27287,28 @@ export const SpecMatter = Matter(
                         "An attempt to create an entry with more subjects than the node can support shall result in a " +
                         "RESOURCE_EXHAUSTED error and the entry shall NOT be created." +
                         "\n" +
-                        "### Subject ID shall be of type uint64 with semantics depending on the entry’s AuthMode as follows:",
+                        "### Subject ID shall be of type uint64 with semantics depending on the entry’s AuthMode as follows:" +
+                        "\n" +
+                        "An empty subjects list indicates a wildcard; that is, this entry shall grant access to any Node that " +
+                        "successfully authenticates via AuthMode. The subjects list shall NOT be empty if the entry’s " +
+                        "AuthMode is PASE." +
+                        "\n" +
+                        "The PASE AuthMode is reserved for future use (see Section 6.6.2.9, “Bootstrapping of the Access " +
+                        "Control Cluster”). An attempt to write an entry with AuthMode set to PASE shall fail with a status " +
+                        "code of CONSTRAINT_ERROR." +
+                        "\n" +
+                        "For PASE authentication, the Passcode ID identifies the required passcode verifier, and shall be 0 " +
+                        "for the default commissioning passcode." +
+                        "\n" +
+                        "For CASE authentication, the Subject ID is a distinguished name within the Operational Certificate " +
+                        "shared during CASE session establishment, the type of which is determined by its range to be one of:" +
+                        "\n" +
+                        "  • a Node ID, which identifies the required source node directly (by ID)" +
+                        "\n" +
+                        "  • a CASE Authenticated Tag, which identifies the required source node indirectly (by tag)" +
+                        "\n" +
+                        "For Group authentication, the Group ID identifies the required group, as defined in the Group Key " +
+                        "Management Cluster.",
 
                     xref: { document: "core", section: "9.10.5.6.3" }
                 },
@@ -27054,7 +27321,9 @@ export const SpecMatter = Matter(
                     name: "Targets", id: 0x4, type: "list", access: "S", conformance: "M",
                     constraint: "max targetsPerAccessControlEntry", quality: "X",
 
-                    details: "The targets field shall specify a list of AccessControlTargetStruct, which define the clusters on " +
+                    details: "### Targets Field" +
+                        "\n" +
+                        "The targets field shall specify a list of AccessControlTargetStruct, which define the clusters on " +
                         "this Node to which this Access Control Entry grants access." +
                         "\n" +
                         "Device types may impose additional constraints on the minimum number of targets per Access Control " +
@@ -27066,7 +27335,10 @@ export const SpecMatter = Matter(
                         "A single target shall contain at least one field (Cluster, Endpoint, or DeviceType), and shall NOT " +
                         "contain both an Endpoint field and a DeviceType field." +
                         "\n" +
-                        "A target grants access based on the presence of fields as follows:",
+                        "A target grants access based on the presence of fields as follows:" +
+                        "\n" +
+                        "An empty targets list indicates a wildcard: that is, this entry shall grant access to all cluster " +
+                        "instances on all endpoints on this Node.",
 
                     xref: { document: "core", section: "9.10.5.6.4" }
                 },
@@ -27083,7 +27355,9 @@ export const SpecMatter = Matter(
             Field({
                 name: "Data", id: 0x1, type: "octstr", access: "S", conformance: "M", constraint: "max 128",
 
-                details: "This field may be used by manufacturers to store arbitrary TLV-encoded data related to a fabric’s " +
+                details: "### Data Field" +
+                    "\n" +
+                    "This field may be used by manufacturers to store arbitrary TLV-encoded data related to a fabric’s " +
                     "Access Control Entries." +
                     "\n" +
                     "The contents shall consist of a top-level anonymous list; each list element shall include a " +
@@ -27109,19 +27383,19 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Type", id: 0x0, type: "AccessRestrictionTypeEnum", conformance: "M",
-                details: "This field shall indicate the type of restriction, for example, AttributeAccessForbidden.",
+                details: "Type Field This field shall indicate the type of restriction, for example, AttributeAccessForbidden.",
                 xref: { document: "core", section: "9.10.5.8.1" }
             }),
 
             Field({
                 name: "Id", id: 0x1, type: "uint32", conformance: "M", quality: "X",
 
-                details: "This field shall indicate the element Manufacturer Extensible Identifier (MEI) associated with the " +
-                    "element type subject to the access restriction, based upon the AccessRestrictionTypeEnum. When the " +
-                    "Type is AttributeAccessForbidden or AttributeWriteForbidden, this value shall be considered of type " +
-                    "attrib-id (i.e. an attribute identifier). When the Type is CommandForbidden, this value shall be " +
-                    "considered of type command-id (i.e. an attribute identifier). When the Type is EventForbidden, this " +
-                    "value shall be considered of type event-id (i.e. an event identifier)." +
+                details: "ID Field This field shall indicate the element Manufacturer Extensible Identifier (MEI) associated " +
+                    "with the element type subject to the access restriction, based upon the AccessRestrictionTypeEnum. " +
+                    "When the Type is AttributeAccessForbidden or AttributeWriteForbidden, this value shall be considered " +
+                    "of type attrib-id (i.e. an attribute identifier). When the Type is CommandForbidden, this value " +
+                    "shall be considered of type command-id (i.e. an attribute identifier). When the Type is " +
+                    "EventForbidden, this value shall be considered of type event-id (i.e. an event identifier)." +
                     "\n" +
                     "A null value shall indicate the wildcard value for the given value of Type (i.e. all elements " +
                     "associated with the Type under the associated endpoint and cluster for the containing " +
@@ -27140,23 +27414,23 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Endpoint", id: 0x0, type: "endpoint-no", access: "S", conformance: "M",
-                details: "This field shall indicate the endpoint having associated access restrictions scoped to the " +
-                    "associated fabric of the list containing the entry.",
+                details: "Endpoint Field This field shall indicate the endpoint having associated access restrictions scoped " +
+                    "to the associated fabric of the list containing the entry.",
                 xref: { document: "core", section: "9.10.5.9.1" }
             }),
 
             Field({
                 name: "Cluster", id: 0x1, type: "cluster-id", access: "S", conformance: "M",
-                details: "This field shall indicate the cluster having associated access restrictions under the entry’s " +
-                    "Endpoint, scoped to the associated fabric of the list containing the entry.",
+                details: "Cluster Field This field shall indicate the cluster having associated access restrictions under the " +
+                    "entry’s Endpoint, scoped to the associated fabric of the list containing the entry.",
                 xref: { document: "core", section: "9.10.5.9.2" }
             }),
 
             Field(
                 {
                     name: "Restrictions", id: 0x2, type: "list", access: "S", conformance: "M", constraint: "min 1",
-                    details: "This field shall indicate the set of restrictions applying to the Cluster under the given Endpoint, " +
-                        "scoped to the associated fabric of the list containing the entry." +
+                    details: "Restrictions Field This field shall indicate the set of restrictions applying to the Cluster under " +
+                        "the given Endpoint, scoped to the associated fabric of the list containing the entry." +
                         "\n" +
                         "This list shall NOT be empty.",
                     xref: { document: "core", section: "9.10.5.9.3" }
@@ -27177,23 +27451,23 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Endpoint", id: 0x0, type: "endpoint-no", conformance: "M",
-                details: "This field shall indicate the endpoint having associated access restrictions scoped to the " +
-                    "associated fabric of the list containing the entry.",
+                details: "Endpoint Field This field shall indicate the endpoint having associated access restrictions scoped " +
+                    "to the associated fabric of the list containing the entry.",
                 xref: { document: "core", section: "9.10.5.10.1" }
             }),
 
             Field({
                 name: "Cluster", id: 0x1, type: "cluster-id", conformance: "M",
-                details: "This field shall indicate the cluster having associated access restrictions under the entry’s " +
-                    "Endpoint, scoped to the associated fabric of the list containing the entry.",
+                details: "Cluster Field This field shall indicate the cluster having associated access restrictions under the " +
+                    "entry’s Endpoint, scoped to the associated fabric of the list containing the entry.",
                 xref: { document: "core", section: "9.10.5.10.2" }
             }),
 
             Field(
                 {
                     name: "Restrictions", id: 0x2, type: "list", conformance: "M", constraint: "min 1",
-                    details: "This field shall indicate the set of restrictions applying to the Cluster under the given Endpoint, " +
-                        "scoped to the associated fabric of the list containing the entry." +
+                    details: "Restrictions Field This field shall indicate the set of restrictions applying to the Cluster under " +
+                        "the given Endpoint, scoped to the associated fabric of the list containing the entry." +
                         "\n" +
                         "This list shall NOT be empty.",
                     xref: { document: "core", section: "9.10.5.10.3" }
@@ -27266,7 +27540,7 @@ export const SpecMatter = Matter(
         ),
         Attribute({ name: "ManufacturingDate", id: 0xb, conformance: "O", xref: { document: "core", section: "9.13.5" } }),
         Attribute({ name: "PartNumber", id: 0xc, conformance: "O", xref: { document: "core", section: "9.13.5" } }),
-        Attribute({ name: "ProductURl", id: 0xd, conformance: "O", xref: { document: "core", section: "9.13.5" } }),
+        Attribute({ name: "ProductUrl", id: 0xd, conformance: "O", xref: { document: "core", section: "9.13.5" } }),
         Attribute({ name: "ProductLabel", id: 0xe, conformance: "O", xref: { document: "core", section: "9.13.5" } }),
         Attribute({ name: "SerialNumber", id: 0xf, conformance: "O", xref: { document: "core", section: "9.13.5" } }),
         Attribute(
@@ -27356,8 +27630,9 @@ export const SpecMatter = Matter(
             Field({
                 name: "PromisedActiveDuration", id: 0x0, type: "uint32", conformance: "M", constraint: "desc",
 
-                details: "This field shall indicate the minimum duration, in milliseconds, that the bridged device will remain " +
-                    "active after receiving the initial request from the KeepActive processing steps." +
+                details: "PromisedActiveDuration Field This field shall indicate the minimum duration, in milliseconds, that " +
+                    "the bridged device will remain active after receiving the initial request from the KeepActive " +
+                    "processing steps." +
                     "\n" +
                     "If the bridged device is a Matter Intermittently Connected Device, PromisedActiveDuration shall be " +
                     "set to the PromisedActiveDuration value returned in the StayActiveResponse command." +
@@ -27408,8 +27683,8 @@ export const SpecMatter = Matter(
             Field({
                 name: "StayActiveDuration", id: 0x0, type: "uint32", conformance: "M",
 
-                details: "This field shall indicate the duration, in milliseconds, that the device is requested to remain " +
-                    "active, once the device becomes active again." +
+                details: "StayActiveDuration Field This field shall indicate the duration, in milliseconds, that the device is " +
+                    "requested to remain active, once the device becomes active again." +
                     "\n" +
                     "The value of this field may be longer than the value supported by the bridged device and would, " +
                     "typically, be used by the client to request the server of the bridged device to stay active and " +
@@ -27424,8 +27699,8 @@ export const SpecMatter = Matter(
             Field({
                 name: "TimeoutMs", id: 0x1, type: "uint32", conformance: "M", constraint: "30000 to 3600000",
 
-                details: "This field shall indicate the period, in milliseconds, that the server will wait before the \"pending " +
-                    "active\" state expires. See the KeepActive Command description for details." +
+                details: "TimeoutMs Field This field shall indicate the period, in milliseconds, that the server will wait " +
+                    "before the \"pending active\" state expires. See the KeepActive Command description for details." +
                     "\n" +
                     "> [!NOTE]" +
                     "\n" +
@@ -27521,14 +27796,13 @@ export const SpecMatter = Matter(
                     "\n" +
                     "  • When used with a suffix of \"/?a=\" and the decimal value of ActionID for one of the actions, it " +
                     "    may provide information about that particular action. This could be a deeplink to " +
-                    "    manufacturer-app/website (associated somehow to the server node) with the information/edit- " +
-                    "    screen for this action so that the user can view and update details of the action, e.g. edit the " +
-                    "    scene, or change the wake-up experience time period." +
+                    "    manufacturer-app/website (associated somehow to the server node) with the " +
+                    "    information/edit-screen for this action so that the user can view and update details of the " +
+                    "    action, e.g. edit the scene, or change the wake-up experience time period." +
                     "\n" +
                     "    ◦ Example of SetupURL with suffix added: example://Actions/?a=12345 or " +
-                    "      https://domain.example/Matter/bridgev1/Actions/?a=12345 for linking to specific info/editing" +
-                    "\n" +
-                    "of the action with ActionID 0x3039.",
+                    "      https://domain.example/Matter/bridgev1/Actions/?a=12345 for linking to specific info/editing " +
+                    "      of the action with ActionID 0x3039.",
 
                 xref: { document: "core", section: "9.14.5.3" }
             }
@@ -27555,20 +27829,20 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                details: "This field shall be set to the ActionID of the action which has changed state.",
+                details: "ActionID Field This field shall be set to the ActionID of the action which has changed state.",
                 xref: { document: "core", section: "9.14.7.1.1" }
             }),
 
             Field({
                 name: "InvokeId", id: 0x1, type: "uint32", conformance: "M",
-                details: "This field shall be set to the InvokeID which was provided to the most recent command referencing " +
-                    "this ActionID.",
+                details: "InvokeID Field This field shall be set to the InvokeID which was provided to the most recent command " +
+                    "referencing this ActionID.",
                 xref: { document: "core", section: "9.14.7.1.2" }
             }),
 
             Field({
                 name: "NewState", id: 0x2, type: "ActionStateEnum", conformance: "M",
-                details: "This field shall be set to state that the action has changed to.",
+                details: "NewState Field This field shall be set to state that the action has changed to.",
                 xref: { document: "core", section: "9.14.7.1.3" }
             })
         ),
@@ -27608,25 +27882,28 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                details: "This field shall be set to the ActionID of the action which encountered an error.",
+                details: "ActionID Field This field shall be set to the ActionID of the action which encountered an error.",
                 xref: { document: "core", section: "9.14.7.2.1" }
             }),
 
             Field({
                 name: "InvokeId", id: 0x1, type: "uint32", conformance: "M",
-                details: "This field shall be set to the InvokeID which was provided to the most recent command referencing " +
-                    "this ActionID.",
+                details: "InvokeID Field This field shall be set to the InvokeID which was provided to the most recent command " +
+                    "referencing this ActionID.",
                 xref: { document: "core", section: "9.14.7.2.2" }
             }),
 
             Field({
                 name: "NewState", id: 0x2, type: "ActionStateEnum", conformance: "M",
-                details: "This field shall be set to state that the action is in at the time of generating the event.",
+                details: "NewState Field This field shall be set to state that the action is in at the time of generating the " +
+                    "event.",
                 xref: { document: "core", section: "9.14.7.2.3" }
             }),
+
             Field({
                 name: "Error", id: 0x3, type: "ActionErrorEnum", conformance: "M",
-                details: "This field shall be set to indicate the reason for non-successful progress of the action.",
+                details: "Error Field This field shall be set to indicate the reason for non-successful progress of the " +
+                    "action.",
                 xref: { document: "core", section: "9.14.7.2.4" }
             })
         ),
@@ -27668,7 +27945,7 @@ export const SpecMatter = Matter(
             Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
             Field({
                 name: "TransitionTime", id: 0x2, type: "uint16", conformance: "M",
-                details: "This field shall indicate the transition time in 1/10th of seconds.",
+                details: "TransitionTime Field This field shall indicate the transition time in 1/10th of seconds.",
                 xref: { document: "core", section: "9.14.6.2.1" }
             })
         ),
@@ -27713,7 +27990,7 @@ export const SpecMatter = Matter(
             Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
             Field({
                 name: "Duration", id: 0x2, type: "uint32", conformance: "M",
-                details: "This field shall indicate the requested duration in seconds.",
+                details: "Duration Field This field shall indicate the requested duration in seconds.",
                 xref: { document: "core", section: "9.14.6.4.1" }
             })
         ),
@@ -27773,7 +28050,7 @@ export const SpecMatter = Matter(
             Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
             Field({
                 name: "Duration", id: 0x2, type: "uint32", conformance: "M",
-                details: "This field shall indicate the requested duration in seconds.",
+                details: "Duration Field This field shall indicate the requested duration in seconds.",
                 xref: { document: "core", section: "9.14.6.7.1" }
             })
         ),
@@ -27832,7 +28109,7 @@ export const SpecMatter = Matter(
             Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
             Field({
                 name: "Duration", id: 0x2, type: "uint32", conformance: "M",
-                details: "This field shall indicate the requested duration in seconds.",
+                details: "Duration Field This field shall indicate the requested duration in seconds.",
                 xref: { document: "core", section: "9.14.6.10.1" }
             })
         ),
@@ -27872,7 +28149,7 @@ export const SpecMatter = Matter(
             Field({ name: "InvokeId", id: 0x1, type: "uint32", conformance: "O" }),
             Field({
                 name: "Duration", id: 0x2, type: "uint32", conformance: "M",
-                details: "This field shall indicate the requested duration in seconds.",
+                details: "Duration Field This field shall indicate the requested duration in seconds.",
                 xref: { document: "core", section: "9.14.6.12.1" }
             })
         ),
@@ -27922,11 +28199,11 @@ export const SpecMatter = Matter(
             Field({
                 name: "Scene", id: 0x1, conformance: "M", description: "Bring the endpoints into a certain state",
 
-                details: "Can be used to set a static state of the associated endpoints (typically using InstantAction or " +
-                    "InstantActionWithTransition), or to bring these endpoints into a more dynamic state (typically using " +
-                    "StartAction), where the endpoints would e.g. gradually cycle through certain colors for a pleasing " +
-                    "effect. A voice controller could use \"set\" (to map to InstantAction) or \"play\" (to map to " +
-                    "StartAction) to trigger such actions." +
+                details: "Scene Value Can be used to set a static state of the associated endpoints (typically using " +
+                    "InstantAction or InstantActionWithTransition), or to bring these endpoints into a more dynamic state " +
+                    "(typically using StartAction), where the endpoints would e.g. gradually cycle through certain colors " +
+                    "for a pleasing effect. A voice controller could use \"set\" (to map to InstantAction) or \"play\" (to " +
+                    "map to StartAction) to trigger such actions." +
                     "\n" +
                     "Example: see examples 1 and 2.",
 
@@ -27936,8 +28213,8 @@ export const SpecMatter = Matter(
             Field({
                 name: "Sequence", id: 0x2, conformance: "M",
                 description: "A sequence of states with a certain time pattern",
-                details: "Indicates an action which involves a sequence of events/states of the associated endpoints, such as " +
-                    "a wake-up experience." +
+                details: "Sequence Value Indicates an action which involves a sequence of events/states of the associated " +
+                    "endpoints, such as a wake-up experience." +
                     "\n" +
                     "Example: see example 4.",
                 xref: { document: "core", section: "9.14.4.2.2" }
@@ -27946,16 +28223,16 @@ export const SpecMatter = Matter(
             Field({
                 name: "Automation", id: 0x3, conformance: "M",
                 description: "Control an automation (e.g. motion sensor controlling lights)",
-                details: "Indications an automation (e.g. a motion sensor controlling lights, an alarm system) which can " +
-                    "bee.g. started, stopped, paused, resumed. Example: see example 3.",
+                details: "Automation Value Indications an automation (e.g. a motion sensor controlling lights, an alarm " +
+                    "system) which can bee.g. started, stopped, paused, resumed. Example: see example 3.",
                 xref: { document: "core", section: "9.14.4.2.3" }
             }),
 
             Field({
                 name: "Exception", id: 0x4, conformance: "M",
                 description: "Sequence that will run when something doesn’t happen",
-                details: "Indicates some action which the server will execute when a certain condition (which normally does " +
-                    "not happen) is not met." +
+                details: "Exception Value Indicates some action which the server will execute when a certain condition (which " +
+                    "normally does not happen) is not met." +
                     "\n" +
                     "Example: lock the doors when the server’s system has detected no one is at home while the doors are " +
                     "in the 'unlocked' state.",
@@ -27965,7 +28242,8 @@ export const SpecMatter = Matter(
             Field({
                 name: "Notification", id: 0x5, conformance: "M",
                 description: "Use the endpoints to send a message to user",
-                details: "Indicates an action that can be triggered (e.g. by InstantAction) to notify the user." +
+                details: "Notification Value Indicates an action that can be triggered (e.g. by InstantAction) to notify the " +
+                    "user." +
                     "\n" +
                     "Example: play a pattern on the lights in the living room if there is someone in the garden in the " +
                     "evening.",
@@ -27974,8 +28252,8 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Alarm", id: 0x6, conformance: "M", description: "Higher priority notification",
-                details: "Similar to Notification but with a higher priority (and might override other endpoint states which " +
-                    "Type=Notification would not override)." +
+                details: "Alarm Value Similar to Notification but with a higher priority (and might override other endpoint " +
+                    "states which Type=Notification would not override)." +
                     "\n" +
                     "Example: flash all lights in the house when CO sensor triggers.",
                 xref: { document: "core", section: "9.14.4.2.6" }
@@ -28015,21 +28293,21 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Other", id: 0x0, conformance: "M", description: "Another group of endpoints",
-                details: "This value is provided for the case of an endpoint list which is tied specifically to this action " +
-                    "i.e. not independently created by the user. For Type=Other the Name may be empty. A Matter " +
-                    "controller would typically not use this for anything else than just to know which endpoints would be " +
-                    "affected by the action.",
+                details: "Other Value This value is provided for the case of an endpoint list which is tied specifically to " +
+                    "this action i.e. not independently created by the user. For Type=Other the Name may be empty. A " +
+                    "Matter controller would typically not use this for anything else than just to know which endpoints " +
+                    "would be affected by the action.",
                 xref: { document: "core", section: "9.14.4.5.1" }
             }),
 
             Field({
                 name: "Room", id: 0x1, conformance: "M",
                 description: "User-configured group of endpoints where an endpoint can be in only one room",
-                details: "Is used for the situation where an endpoint can only be part of one such rooms (e.g. physical " +
-                    "mapping). Using these exposed logical groups, a Matter controller who has a similar grouping concept " +
-                    "can use it to place each endpoint (bridged device) in the right room automatically, without user " +
-                    "having to redo that setup for each device in each system - both at first contact and upon later " +
-                    "updates to the endpoints (e.g. user adds a bridged device or creates a new room).",
+                details: "Room Value Is used for the situation where an endpoint can only be part of one such rooms (e.g. " +
+                    "physical mapping). Using these exposed logical groups, a Matter controller who has a similar " +
+                    "grouping concept can use it to place each endpoint (bridged device) in the right room automatically, " +
+                    "without user having to redo that setup for each device in each system - both at first contact and " +
+                    "upon later updates to the endpoints (e.g. user adds a bridged device or creates a new room).",
                 xref: { document: "core", section: "9.14.4.5.2" }
             }),
 
@@ -28037,12 +28315,12 @@ export const SpecMatter = Matter(
                 name: "Zone", id: 0x2, conformance: "M",
                 description: "User-configured group of endpoints where an endpoint can be in any number of zones",
 
-                details: "Is a more general concept where an endpoint can be part of multiple zones, e.g. a light in the " +
-                    "living room can be part of the \"reading corner\" zone (subset of the lights in the living room) but " +
-                    "also part of the \"downstairs\" zone which contains all the lights on a floor, e.g. combining living " +
-                    "room, kitchen and hallway. This indicates that a user has defined this list of endpoints as " +
-                    "something they logically would like to control as a group, so Matter controllers could provide the " +
-                    "user with a way to do as such.",
+                details: "Zone Value Is a more general concept where an endpoint can be part of multiple zones, e.g. a light " +
+                    "in the living room can be part of the \"reading corner\" zone (subset of the lights in the living " +
+                    "room) but also part of the \"downstairs\" zone which contains all the lights on a floor, e.g. " +
+                    "combining living room, kitchen and hallway. This indicates that a user has defined this list of " +
+                    "endpoints as something they logically would like to control as a group, so Matter controllers could " +
+                    "provide the user with a way to do as such.",
 
                 xref: { document: "core", section: "9.14.4.5.3" }
             })
@@ -28056,44 +28334,44 @@ export const SpecMatter = Matter(
             },
             Field({
                 name: "ActionId", id: 0x0, type: "uint16", conformance: "M",
-                details: "This field shall provide an unique identifier used to identify an action.",
+                details: "ActionID Field This field shall provide an unique identifier used to identify an action.",
                 xref: { document: "core", section: "9.14.4.6.1" }
             }),
 
             Field({
                 name: "Name", id: 0x1, type: "string", conformance: "M", constraint: "max 128{32}",
-                details: "This field shall indicate the name (as assigned by the user or automatically by the server) " +
-                    "associated with this action. This can be used for identifying the action to the user by the client. " +
-                    "Example: \"my colorful scene\".",
+                details: "Name Field This field shall indicate the name (as assigned by the user or automatically by the " +
+                    "server) associated with this action. This can be used for identifying the action to the user by the " +
+                    "client. Example: \"my colorful scene\".",
                 xref: { document: "core", section: "9.14.4.6.2" }
             }),
 
             Field({
                 name: "Type", id: 0x2, type: "ActionTypeEnum", conformance: "M",
-                details: "This field shall indicate the type of action. The value of Type of an action, along with its " +
-                    "SupportedCommands can be used by the client in its UX or logic to determine how to present or use " +
-                    "such action. See ActionTypeEnum for details and examples.",
+                details: "Type Field This field shall indicate the type of action. The value of Type of an action, along with " +
+                    "its SupportedCommands can be used by the client in its UX or logic to determine how to present or " +
+                    "use such action. See ActionTypeEnum for details and examples.",
                 xref: { document: "core", section: "9.14.4.6.3" }
             }),
 
             Field({
-                name: "EndpointListId", id: 0x3, type: "uint16", conformance: "M",
-                details: "This field shall provide a reference to the associated endpoint list, which specifies the endpoints " +
-                    "on this Node which will be impacted by this ActionID.",
+                name: "EndPointListId", id: 0x3, type: "uint16", conformance: "M",
+                details: "EndPointListID Field This field shall provide a reference to the associated endpoint list, which " +
+                    "specifies the endpoints on this Node which will be impacted by this ActionID.",
                 xref: { document: "core", section: "9.14.4.6.4" }
             }),
 
             Field({
                 name: "SupportedCommands", id: 0x4, type: "CommandBits", conformance: "M", constraint: "0 to 4095",
-                details: "This field is a bitmap which shall be used to indicate which of the cluster’s commands are supported " +
-                    "for this particular action, with a bit set to 1 for each supported command according to the table " +
-                    "below. Other bits shall be set to 0.",
+                details: "SupportedCommands Field This field is a bitmap which shall be used to indicate which of the " +
+                    "cluster’s commands are supported for this particular action, with a bit set to 1 for each supported " +
+                    "command according to the table below. Other bits shall be set to 0.",
                 xref: { document: "core", section: "9.14.4.6.5" }
             }),
 
             Field({
                 name: "State", id: 0x5, type: "ActionStateEnum", conformance: "M",
-                details: "This field shall indicate the current state of this action.",
+                details: "State Field This field shall indicate the current state of this action.",
                 xref: { document: "core", section: "9.14.4.6.6" }
             })
         ),
@@ -28107,29 +28385,30 @@ export const SpecMatter = Matter(
             },
 
             Field({
-                name: "EndpointListId", id: 0x0, type: "uint16", conformance: "M",
-                details: "This field shall provide an unique identifier used to identify the endpoint list.",
+                name: "EndPointListId", id: 0x0, type: "uint16", conformance: "M",
+                details: "EndPointListID Field This field shall provide an unique identifier used to identify the endpoint " +
+                    "list.",
                 xref: { document: "core", section: "9.14.4.7.1" }
             }),
 
             Field({
                 name: "Name", id: 0x1, type: "string", conformance: "M", constraint: "max 128{32}",
-                details: "This field shall indicate the name (as assigned by the user or automatically by the server) " +
-                    "associated with the set of endpoints in this list. This can be used for identifying the action to " +
-                    "the user by the client. Example: \"living room\".",
+                details: "Name Field This field shall indicate the name (as assigned by the user or automatically by the " +
+                    "server) associated with the set of endpoints in this list. This can be used for identifying the " +
+                    "action to the user by the client. Example: \"living room\".",
                 xref: { document: "core", section: "9.14.4.7.2" }
             }),
 
             Field({
                 name: "Type", id: 0x2, type: "EndpointListTypeEnum", conformance: "M",
-                details: "This field shall indicate the type of endpoint list, see EndpointListTypeEnum.",
+                details: "Type Field This field shall indicate the type of endpoint list, see EndpointListTypeEnum.",
                 xref: { document: "core", section: "9.14.4.7.3" }
             }),
 
             Field(
                 {
-                    name: "Endpoints", id: 0x3, type: "list", conformance: "M", constraint: "max 256",
-                    details: "This field shall provide a list of endpoint numbers.",
+                    name: "EndPoints", id: 0x3, type: "list", conformance: "M", constraint: "max 256",
+                    details: "EndPoints Field This field shall provide a list of endpoint numbers.",
                     xref: { document: "core", section: "9.14.4.7.4" }
                 },
                 Field({ name: "entry", type: "endpoint-no" })
@@ -28156,9 +28435,25 @@ export const SpecMatter = Matter(
                 xref: { document: "core", section: "9.15.12.4.1" }
             },
 
-            Field({ name: "SourceNodeId", id: 0x0, type: "node-id", conformance: "M" }),
-            Field({ name: "NumAttributePaths", id: 0x1, type: "uint16", conformance: "M", constraint: "desc" }),
-            Field({ name: "NumEventPaths", id: 0x2, type: "uint16", conformance: "M", constraint: "desc" })
+            Field({
+                name: "SourceNodeId", id: 0x0, type: "node-id", conformance: "M",
+                details: "This is the Node ID of the source for which a client seeks to find a Proxy.",
+                xref: { document: "core", section: "9.15.12.4.1.1" }
+            }),
+
+            Field({
+                name: "NumAttributePaths", id: 0x1, type: "uint16", conformance: "M", constraint: "desc",
+                details: "The number of attribute paths the client will have in the subscription request. This is a " +
+                    "heuristic/hint to allow a Proxy to better ascertain whether it can support the ensuing subscription.",
+                xref: { document: "core", section: "9.15.12.4.1.2" }
+            }),
+
+            Field({
+                name: "NumEventPaths", id: 0x2, type: "uint16", conformance: "M", constraint: "desc",
+                details: "The number of event paths the client will have in the subscription request. This is a heuristic/hint " +
+                    "to allow a Proxy to better ascertain whether it can support the ensuing subscription.",
+                xref: { document: "core", section: "9.15.12.4.1.3" }
+            })
         ),
 
         Command(
@@ -28169,9 +28464,34 @@ export const SpecMatter = Matter(
                 xref: { document: "core", section: "9.15.12.4.2" }
             },
 
-            Field({ name: "SourceNodeId", id: 0x0, type: "node-id", conformance: "M" }),
-            Field({ name: "NumHopsToSource", id: 0x1, type: "uint16", conformance: "M", constraint: "desc" }),
-            Field({ name: "AvailableCapacity", id: 0x2, type: "uint16", conformance: "M", constraint: "desc" })
+            Field({
+                name: "SourceNodeId", id: 0x0, type: "node-id", conformance: "M",
+                details: "This is the Node ID of the source the proxy can proxy for. This shall match the node id in the " +
+                    "corresponding Proxy Discover Request Command message.",
+                xref: { document: "core", section: "9.15.12.4.2.1" }
+            }),
+
+            Field({
+                name: "NumHopsToSource", id: 0x1, type: "uint16", conformance: "M", constraint: "desc",
+
+                details: "If the proxy currently subscribes to the source (either directly or indirectly), this indicates the " +
+                    "number of hops to the source. Sensible values start at 1, with 1 being used for a proxy that " +
+                    "subscribes directly to the source. If the proxy is not subscribed directly to the source, this value " +
+                    "shall be one greater than the NumHopsToSource for the given Node ID of the proxy it is subscribed " +
+                    "to." +
+                    "\n" +
+                    "0 indicates that the proxy currently does not have a subscription to the source.",
+
+                xref: { document: "core", section: "9.15.12.4.2.2" }
+            }),
+
+            Field({
+                name: "AvailableCapacity", id: 0x2, type: "uint16", conformance: "M", constraint: "desc",
+                details: "A number indicating the number of Cluster Attribute Paths the proxy has space for support. This " +
+                    "allows for an absolute comparison of different memory capacities of candidate proxies by the client " +
+                    "in selecting the best possible candidate.",
+                xref: { document: "core", section: "9.15.12.4.2.3" }
+            })
         )
     ),
 
@@ -28196,16 +28516,24 @@ export const SpecMatter = Matter(
 
         Datatype(
             { name: "ConfigurationStruct", type: "struct", xref: { document: "core", section: "9.15.13.4.1" } },
+
             Field({
                 name: "ProxyAllNodes", id: 0x1, type: "bool", access: "RW", conformance: "M", constraint: "desc",
-                default: false
+                default: false,
+                details: "This field shall be set to true to indicate to the proxy that it shall proxy all nodes. When true, " +
+                    "the SourceList attribute is ignored.",
+                xref: { document: "core", section: "9.15.13.4.1.1" }
             }),
 
             Field(
                 {
                     name: "SourceList", id: 0x2, type: "list", access: "RW", conformance: "M", constraint: "desc",
-                    default: []
+                    default: [],
+                    details: "When ProxyAllNodes is false, this list contains the set of Node IDs of sources that this proxy shall " +
+                        "specifically proxy.",
+                    xref: { document: "core", section: "9.15.13.4.1.2" }
                 },
+
                 Field({ name: "entry", type: "node-id" })
             )
         )
@@ -28424,12 +28752,12 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "MaximumCheckInBaCkoff", id: 0x9, type: "uint32", access: "R V", conformance: "CIP",
+            name: "MaximumCheckInBackoff", id: 0x9, type: "uint32", access: "R V", conformance: "CIP",
             constraint: "idleModeDuration to 64800", default: 1, quality: "F",
             details: "Indicates the maximum time in seconds between two Check-In messages when back-off is active. The " +
                 "MaximumCheckInBackoff shall NOT be smaller than the IdleModeDuration." +
                 "\n" +
-                "If the MaximumCheckInBackoff is equal to the IdleModeDuration, it means the ICD does notback- off.",
+                "If the MaximumCheckInBackoff is equal to the IdleModeDuration, it means the ICD does notback-off.",
             xref: { document: "core", section: "9.17.6.10" }
         }),
 
@@ -28557,7 +28885,10 @@ export const SpecMatter = Matter(
             Field({
                 name: "PromisedActiveDuration", id: 0x0, type: "uint32", conformance: "M", constraint: "desc",
                 details: "This field shall provide the actual duration that the ICD server can stay active from the time it " +
-                    "receives the StayActiveRequest command.",
+                    "receives the StayActiveRequest command." +
+                    "\n" +
+                    "The minimum value of the PromisedActiveDuration field shall be equal to either 30000 milliseconds or " +
+                    "StayActiveDuration (from the received StayActiveRequest command), whichever is smaller.",
                 xref: { document: "core", section: "9.17.7.5.1" }
             })
         ),
@@ -28977,9 +29308,9 @@ export const SpecMatter = Matter(
                 "operation, such as radio transmission power levels in given spectrum allocation bands if " +
                 "technologies where this is applicable are used. The Location’s region code shall be interpreted in a " +
                 "case-insensitive manner. If the Node cannot understand the location code with which it was " +
-                "configured, or the location code has not yet been configured, it shall configure itself in a region- " +
-                "agnostic manner as determined by the vendor, avoiding region-specific assumptions as much as is " +
-                "practical. The special value XX shall indicate that region-agnostic mode is used.",
+                "configured, or the location code has not yet been configured, it shall configure itself in a " +
+                "region-agnostic manner as determined by the vendor, avoiding region-specific assumptions as much as " +
+                "is practical. The special value XX shall indicate that region-agnostic mode is used.",
 
             xref: { document: "core", section: "11.1.5.7" }
         }),
@@ -29053,7 +29384,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "ProductURl", id: 0xd, type: "string", access: "R V", conformance: "O", constraint: "max 256",
+            name: "ProductUrl", id: 0xd, type: "string", access: "R V", conformance: "O", constraint: "max 256",
             quality: "F",
             details: "This attribute shall specify a link to a product specific web page. The specified URL SHOULD resolve " +
                 "to a maintained web page available for the lifetime of the product. The syntax of this attribute " +
@@ -29225,7 +29556,8 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M",
-                details: "This field shall be set to the same value as the one available in the SoftwareVersion attribute.",
+                details: "SoftwareVersion Field This field shall be set to the same value as the one available in the " +
+                    "SoftwareVersion attribute.",
                 xref: { document: "core", section: "11.1.6.1.1" }
             })
         ),
@@ -29234,9 +29566,9 @@ export const SpecMatter = Matter(
             name: "ShutDown", id: 0x1, access: "V", conformance: "O", priority: "critical",
             details: "The ShutDown event SHOULD be generated by a Node prior to any orderly shutdown sequence on a " +
                 "best-effort basis. When a ShutDown event is generated, it SHOULD be the last Data Model event " +
-                "recorded by the Node. This event SHOULD be delivered urgently to current subscribers on a best- " +
-                "effort basis. Any subsequent incoming interactions to the Node may be dropped until the completion " +
-                "of a future boot or reboot process.",
+                "recorded by the Node. This event SHOULD be delivered urgently to current subscribers on a " +
+                "best-effort basis. Any subsequent incoming interactions to the Node may be dropped until the " +
+                "completion of a future boot or reboot process.",
             xref: { document: "core", section: "11.1.6.2" }
         }),
 
@@ -29259,7 +29591,8 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M", constraint: "1 to 254",
-                details: "This field shall contain the local Fabric Index of the fabric which the node is about to leave.",
+                details: "FabricIndex Field This field shall contain the local Fabric Index of the fabric which the node is " +
+                    "about to leave.",
                 xref: { document: "core", section: "11.1.6.3.1" }
             })
         ),
@@ -29277,7 +29610,8 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "ReachableNewValue", id: 0x0, type: "bool", conformance: "M",
-                details: "This field shall indicate the value of the Reachable attribute after it was changed.",
+                details: "ReachableNewValue Field This field shall indicate the value of the Reachable attribute after it was " +
+                    "changed.",
                 xref: { document: "core", section: "11.1.6.4.1" }
             })
         ),
@@ -29336,14 +29670,14 @@ export const SpecMatter = Matter(
             },
             Field({
                 name: "Finish", id: 0x0, type: "ProductFinishEnum", conformance: "M",
-                details: "This field shall indicate the visible finish of the product.",
+                details: "Finish Field This field shall indicate the visible finish of the product.",
                 xref: { document: "core", section: "11.1.4.3.1" }
             }),
 
             Field({
                 name: "PrimaryColor", id: 0x1, type: "ColorEnum", conformance: "M", quality: "X",
-                details: "This field indicates the representative color of the visible parts of the product. If the product " +
-                    "has no representative color, the field shall be null.",
+                details: "PrimaryColor Field This field indicates the representative color of the visible parts of the " +
+                    "product. If the product has no representative color, the field shall be null.",
                 xref: { document: "core", section: "11.1.4.3.2" }
             })
         ),
@@ -29359,8 +29693,8 @@ export const SpecMatter = Matter(
             Field({
                 name: "CaseSessionsPerFabric", id: 0x0, type: "uint16", conformance: "M", constraint: "min 3",
                 default: 3,
-                details: "This field shall indicate the actual minimum number of concurrent CASE sessions that are supported " +
-                    "per fabric." +
+                details: "CaseSessionsPerFabric Field This field shall indicate the actual minimum number of concurrent CASE " +
+                    "sessions that are supported per fabric." +
                     "\n" +
                     "This value shall NOT be smaller than the required minimum indicated in Section 4.14.2.8, “Minimal " +
                     "Number of CASE Sessions”.",
@@ -29370,8 +29704,8 @@ export const SpecMatter = Matter(
             Field({
                 name: "SubscriptionsPerFabric", id: 0x1, type: "uint16", conformance: "M", constraint: "min 3",
                 default: 3,
-                details: "This field shall indicate the actual minimum number of concurrent subscriptions supported per " +
-                    "fabric." +
+                details: "SubscriptionsPerFabric Field This field shall indicate the actual minimum number of concurrent " +
+                    "subscriptions supported per fabric." +
                     "\n" +
                     "This value shall NOT be smaller than the required minimum indicated in Section 8.5.1, “Subscribe " +
                     "Transaction”.",
@@ -29624,8 +29958,8 @@ export const SpecMatter = Matter(
             Field(
                 {
                     name: "GroupKeySetIDs", id: 0x0, type: "list", conformance: "M",
-                    details: "This field references the set of group keys that generate operational group keys for use with the " +
-                        "accessing fabric." +
+                    details: "GroupKeySetIDs Field This field references the set of group keys that generate operational group " +
+                        "keys for use with the accessing fabric." +
                         "\n" +
                         "Each entry in GroupKeySetIDs is a GroupKeySetID field.",
                     xref: { document: "core", section: "11.2.7.6.1" }
@@ -29653,14 +29987,15 @@ export const SpecMatter = Matter(
             Field({
                 name: "PerGroupId", id: 0x0, conformance: "M",
                 description: "Indicates filtering of multicast messages for a specific Group ID",
-                details: "The 16-bit Group Identifier of the Multicast Address shall be the Group ID of the group.",
+                details: "PerGroupID Value The 16-bit Group Identifier of the Multicast Address shall be the Group ID of the " +
+                    "group.",
                 xref: { document: "core", section: "11.2.5.2.1" }
             }),
 
             Field({
                 name: "AllNodes", id: 0x1, conformance: "M",
                 description: "Indicates not filtering of multicast messages",
-                details: "The 16-bit Group Identifier of the Multicast Address shall be 0xFFFF.",
+                details: "AllNodes Value The 16-bit Group Identifier of the Multicast Address shall be 0xFFFF.",
                 xref: { document: "core", section: "11.2.5.2.2" }
             })
         ),
@@ -29669,15 +30004,15 @@ export const SpecMatter = Matter(
             { name: "GroupKeyMapStruct", type: "struct", xref: { document: "core", section: "11.2.5.3" } },
             Field({
                 name: "GroupId", id: 0x1, type: "group-id", access: "F", conformance: "M",
-                details: "This field uniquely identifies the group within the scope of the given Fabric.",
+                details: "GroupId Field This field uniquely identifies the group within the scope of the given Fabric.",
                 xref: { document: "core", section: "11.2.5.3.1" }
             }),
 
             Field({
                 name: "GroupKeySetId", id: 0x2, type: "uint16", access: "F", conformance: "M",
                 constraint: "1 to 65535",
-                details: "This field references the set of group keys that generate operational group keys for use with this " +
-                    "group, as specified in Section 4.17.3.5.1, “Group Key Set ID”." +
+                details: "GroupKeySetID Field This field references the set of group keys that generate operational group keys " +
+                    "for use with this group, as specified in Section 4.17.3.5.1, “Group Key Set ID”." +
                     "\n" +
                     "A GroupKeyMapStruct shall NOT accept GroupKeySetID of 0, which is reserved for the IPK.",
                 xref: { document: "core", section: "11.2.5.3.2" }
@@ -29691,33 +30026,39 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "GroupKeySetId", id: 0x0, type: "uint16", conformance: "M",
-                details: "This field shall provide the fabric-unique index for the associated group key set, as specified in " +
-                    "Section 4.17.3.5.1, “Group Key Set ID”.",
+                details: "GroupKeySetID Field This field shall provide the fabric-unique index for the associated group key " +
+                    "set, as specified in Section 4.17.3.5.1, “Group Key Set ID”.",
                 xref: { document: "core", section: "11.2.5.4.1" }
             }),
 
             Field({
                 name: "GroupKeySecurityPolicy", id: 0x1, type: "GroupKeySecurityPolicyEnum", access: "S",
                 conformance: "M",
-                details: "This field shall provide the security policy for an operational group key set." +
+
+                details: "### GroupKeySecurityPolicy Field" +
+                    "\n" +
+                    "This field shall provide the security policy for an operational group key set." +
                     "\n" +
                     "When CacheAndSync is not supported in the FeatureMap of this cluster, any action attempting to set " +
                     "CacheAndSync in the GroupKeySecurityPolicy field shall fail with an INVALID_COMMAND error.",
+
                 xref: { document: "core", section: "11.2.5.4.2" }
             }),
 
             Field({
                 name: "EpochKey0", id: 0x2, type: "octstr", access: "S", conformance: "M", constraint: "16",
                 quality: "X",
-                details: "This field, if not null, shall be the root credential used in the derivation of an operational group " +
-                    "key for epoch slot 0 of the given group key set. If EpochKey0 is not null, EpochStartTime0 shall NOT " +
-                    "be null.",
+                details: "EpochKey0 Field This field, if not null, shall be the root credential used in the derivation of an " +
+                    "operational group key for epoch slot 0 of the given group key set. If EpochKey0 is not null, " +
+                    "EpochStartTime0 shall NOT be null.",
                 xref: { document: "core", section: "11.2.5.4.3" }
             }),
 
             Field({
                 name: "EpochStartTime0", id: 0x3, type: "epoch-us", access: "S", conformance: "M", quality: "X",
-                details: "This field, if not null, shall define when EpochKey0 becomes valid as specified by Section 4.17.3, " +
+                details: "EpochStartTime0 Field" +
+                    "\n" +
+                    "This field, if not null, shall define when EpochKey0 becomes valid as specified by Section 4.17.3, " +
                     "“Epoch Keys”. Units are absolute UTC time in microseconds encoded using the epoch-us representation.",
                 xref: { document: "core", section: "11.2.5.4.4" }
             }),
@@ -29725,32 +30066,34 @@ export const SpecMatter = Matter(
             Field({
                 name: "EpochKey1", id: 0x4, type: "octstr", access: "S", conformance: "M", constraint: "16",
                 quality: "X",
-                details: "This field, if not null, shall be the root credential used in the derivation of an operational group " +
-                    "key for epoch slot 1 of the given group key set. If EpochKey1 is not null, EpochStartTime1 shall NOT " +
-                    "be null.",
+                details: "EpochKey1 Field This field, if not null, shall be the root credential used in the derivation of an " +
+                    "operational group key for epoch slot 1 of the given group key set. If EpochKey1 is not null, " +
+                    "EpochStartTime1 shall NOT be null.",
                 xref: { document: "core", section: "11.2.5.4.5" }
             }),
 
             Field({
                 name: "EpochStartTime1", id: 0x5, type: "epoch-us", access: "S", conformance: "M", quality: "X",
-                details: "This field, if not null, shall define when EpochKey1 becomes valid as specified by Section 4.17.3, " +
-                    "“Epoch Keys”. Units are absolute UTC time in microseconds encoded using the epoch-us representation.",
+                details: "EpochStartTime1 Field This field, if not null, shall define when EpochKey1 becomes valid as " +
+                    "specified by Section 4.17.3, “Epoch Keys”. Units are absolute UTC time in microseconds encoded using " +
+                    "the epoch-us representation.",
                 xref: { document: "core", section: "11.2.5.4.6" }
             }),
 
             Field({
                 name: "EpochKey2", id: 0x6, type: "octstr", access: "S", conformance: "M", constraint: "16",
                 quality: "X",
-                details: "This field, if not null, shall be the root credential used in the derivation of an operational group " +
-                    "key for epoch slot 2 of the given group key set. If EpochKey2 is not null, EpochStartTime2 shall NOT " +
-                    "be null.",
+                details: "EpochKey2 Field This field, if not null, shall be the root credential used in the derivation of an " +
+                    "operational group key for epoch slot 2 of the given group key set. If EpochKey2 is not null, " +
+                    "EpochStartTime2 shall NOT be null.",
                 xref: { document: "core", section: "11.2.5.4.7" }
             }),
 
             Field({
                 name: "EpochStartTime2", id: 0x7, type: "epoch-us", access: "S", conformance: "M", quality: "X",
-                details: "This field, if not null, shall define when EpochKey2 becomes valid as specified by Section 4.17.3, " +
-                    "“Epoch Keys”. Units are absolute UTC time in microseconds encoded using the epoch-us representation.",
+                details: "EpochStartTime2 Field This field, if not null, shall define when EpochKey2 becomes valid as " +
+                    "specified by Section 4.17.3, “Epoch Keys”. Units are absolute UTC time in microseconds encoded using " +
+                    "the epoch-us representation.",
                 xref: { document: "core", section: "11.2.5.4.8" }
             }),
 
@@ -29758,7 +30101,9 @@ export const SpecMatter = Matter(
                 name: "GroupKeyMulticastPolicy", id: 0x8, type: "GroupKeyMulticastPolicyEnum", access: "S",
                 conformance: "P, M",
 
-                details: "This field specifies how the IPv6 Multicast Address shall be formed for groups using this " +
+                details: "### GroupKeyMulticastPolicy Field" +
+                    "\n" +
+                    "This field specifies how the IPv6 Multicast Address shall be formed for groups using this " +
                     "operational group key set." +
                     "\n" +
                     "The PerGroupID method maximizes filtering of multicast messages, so that receiving nodes receive " +
@@ -29780,15 +30125,15 @@ export const SpecMatter = Matter(
             { name: "GroupInfoMapStruct", type: "struct", xref: { document: "core", section: "11.2.5.5" } },
             Field({
                 name: "GroupId", id: 0x1, type: "group-id", access: "F", conformance: "M",
-                details: "This field uniquely identifies the group within the scope of the given Fabric.",
+                details: "GroupId Field This field uniquely identifies the group within the scope of the given Fabric.",
                 xref: { document: "core", section: "11.2.5.5.1" }
             }),
 
             Field(
                 {
                     name: "Endpoints", id: 0x2, type: "list", access: "F", conformance: "M", constraint: "min 1",
-                    details: "This field provides the list of Endpoint IDs on the Node to which messages to this group shall be " +
-                        "forwarded.",
+                    details: "Endpoints Field This field provides the list of Endpoint IDs on the Node to which messages to this " +
+                        "group shall be forwarded.",
                     xref: { document: "core", section: "11.2.5.5.2" }
                 },
 
@@ -29797,8 +30142,8 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "GroupName", id: 0x3, type: "string", access: "F", conformance: "O", constraint: "max 16",
-                details: "This field provides a name for the group. This field shall contain the last GroupName written for a " +
-                    "given GroupId on any Endpoint via the Groups cluster.",
+                details: "GroupName Field This field provides a name for the group. This field shall contain the last " +
+                    "GroupName written for a given GroupId on any Endpoint via the Groups cluster.",
                 xref: { document: "core", section: "11.2.5.5.3" }
             }),
 
@@ -30125,7 +30470,7 @@ export const SpecMatter = Matter(
         Attribute({
             name: "WiredCurrentType", id: 0x5, type: "WiredCurrentTypeEnum", access: "R V",
             conformance: "WIRED", constraint: "desc", quality: "F",
-            details: "Indicates the type of current the Node expects to be provided by the hard- wired source as specified " +
+            details: "Indicates the type of current the Node expects to be provided by the hard-wired source as specified " +
                 "in WiredCurrentTypeEnum.",
             xref: { document: "core", section: "11.7.7.6" }
         }),
@@ -30133,7 +30478,7 @@ export const SpecMatter = Matter(
         Attribute({
             name: "WiredAssessedCurrent", id: 0x6, type: "uint32", access: "R V", conformance: "[WIRED]",
             quality: "X C",
-            details: "Indicates the assessed instantaneous current draw of the Node on the hard- wired source, in mA " +
+            details: "Indicates the assessed instantaneous current draw of the Node on the hard-wired source, in mA " +
                 "(milliamps). A value of NULL shall indicate the Node is currently unable to assess the value. If the " +
                 "wired source is not connected, but the Node is still able to assess a value, then the assessed value " +
                 "may be reported.",
@@ -30319,14 +30664,14 @@ export const SpecMatter = Matter(
         Attribute({
             name: "BatCapacity", id: 0x18, type: "uint32", access: "R V", conformance: "[REPLC | RECHG]",
             quality: "F",
-            details: "Indicates the preferred minimum charge capacity rating in mAh of individual, user- or " +
+            details: "Indicates the preferred minimum charge capacity rating in mAh of individual, user-or " +
                 "factory-serviceable battery cells or packs in the battery source.",
             xref: { document: "core", section: "11.7.7.25" }
         }),
 
         Attribute({
             name: "BatQuantity", id: 0x19, type: "uint8", access: "R V", conformance: "REPLC", quality: "F",
-            details: "Indicates the quantity of individual, user- or factory-serviceable battery cells or packs in the " +
+            details: "Indicates the quantity of individual, user-or factory-serviceable battery cells or packs in the " +
                 "battery source.",
             xref: { document: "core", section: "11.7.7.26" }
         }),
@@ -30409,7 +30754,17 @@ export const SpecMatter = Matter(
                     "resides." +
                     "\n" +
                     "The above rules allow that some endpoints can have an unknown power source, and therefore would not " +
-                    "be indicated by any instance of this cluster.",
+                    "be indicated by any instance of this cluster." +
+                    "\n" +
+                    "Typically, there is one power source for the node. Also common is mains power for the node with " +
+                    "battery backup power for the node. In both these common cases, for each cluster instance described, " +
+                    "the list is empty." +
+                    "\n" +
+                    "A node has a mains power source with Order as 0 (zero), but some application endpoints (not all) " +
+                    "have a battery back up source with Order as 1, which means this list is empty for the Power Source " +
+                    "cluster associated with the mains power, because it indicates the entire node, but the Power Source " +
+                    "cluster instance associated with the battery backup would list the endpoints that have a battery " +
+                    "backup.",
 
                 xref: { document: "core", section: "11.7.7.32" }
             },
@@ -30429,17 +30784,19 @@ export const SpecMatter = Matter(
             Field(
                 {
                     name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 8", default: [],
-                    details: "This field shall represent the set of faults currently detected, as per ActiveWiredFaults.",
+                    details: "Current Field This field shall represent the set of faults currently detected, as per " +
+                        "ActiveWiredFaults.",
                     xref: { document: "core", section: "11.7.8.1.1" }
                 },
+
                 Field({ name: "entry", type: "WiredFaultEnum" })
             ),
 
             Field(
                 {
                     name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 8", default: [],
-                    details: "This field shall represent the set of faults detected prior to this change event, as per " +
-                        "ActiveWiredFaults.",
+                    details: "Previous Field This field shall represent the set of faults detected prior to this change event, as " +
+                        "per ActiveWiredFaults.",
                     xref: { document: "core", section: "11.7.8.1.2" }
                 },
 
@@ -30459,17 +30816,19 @@ export const SpecMatter = Matter(
             Field(
                 {
                     name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 8", default: [],
-                    details: "This field shall represent the set of faults currently detected, as per ActiveBatFaults.",
+                    details: "Current Field This field shall represent the set of faults currently detected, as per " +
+                        "ActiveBatFaults.",
                     xref: { document: "core", section: "11.7.8.2.1" }
                 },
+
                 Field({ name: "entry", type: "BatFaultEnum" })
             ),
 
             Field(
                 {
                     name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 8", default: [],
-                    details: "This field shall represent the set of faults detected prior to this change event, as per " +
-                        "ActiveBatFaults.",
+                    details: "Previous Field This field shall represent the set of faults detected prior to this change event, as " +
+                        "per ActiveBatFaults.",
                     xref: { document: "core", section: "11.7.8.2.2" }
                 },
 
@@ -30489,17 +30848,19 @@ export const SpecMatter = Matter(
             Field(
                 {
                     name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 16", default: [],
-                    details: "This field shall represent the set of faults currently detected, as per ActiveBatChargeFaults.",
+                    details: "Current Field This field shall represent the set of faults currently detected, as per " +
+                        "ActiveBatChargeFaults.",
                     xref: { document: "core", section: "11.7.8.3.1" }
                 },
+
                 Field({ name: "entry", type: "BatChargeFaultEnum" })
             ),
 
             Field(
                 {
                     name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 16", default: [],
-                    details: "This field shall represent the set of faults detected prior to this change event, as per " +
-                        "ActiveBatChargeFaults.",
+                    details: "Previous Field This field shall represent the set of faults detected prior to this change event, as " +
+                        "per ActiveBatChargeFaults.",
                     xref: { document: "core", section: "11.7.8.3.2" }
                 },
 
@@ -31121,15 +31482,18 @@ export const SpecMatter = Matter(
             Field({
                 name: "Ssid", id: 0x0, type: "octstr", conformance: "[WI]", constraint: "1 to 32", default: null,
                 quality: "X",
-                details: "This field, if present, shall contain the SSID for a directed scan of that particular Wi-Fi SSID. " +
-                    "Otherwise, if the field is absent, or if it is null, this shall indicate scanning of all BSSID in " +
-                    "range. This field shall be ignored for ScanNetworks invocations on non-Wi-Fi server instances.",
+                details: "SSID Field This field, if present, shall contain the SSID for a directed scan of that particular " +
+                    "Wi-Fi SSID. Otherwise, if the field is absent, or if it is null, this shall indicate scanning of all " +
+                    "BSSID in range. This field shall be ignored for ScanNetworks invocations on non-Wi-Fi server " +
+                    "instances.",
                 xref: { document: "core", section: "11.9.7.1.1" }
             }),
 
             Field({
                 name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O",
-                details: "The Breadcrumb field, if present, shall be used to atomically set the Breadcrumb attribute in the " +
+                details: "### Breadcrumb Field" +
+                    "\n" +
+                    "The Breadcrumb field, if present, shall be used to atomically set the Breadcrumb attribute in the " +
                     "General Commissioning cluster on success of the associated command. If the command fails, the " +
                     "Breadcrumb attribute in the General Commissioning cluster shall be left unchanged.",
                 xref: { document: "core", section: "11.9.7.1.2" }
@@ -31155,8 +31519,8 @@ export const SpecMatter = Matter(
                 name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum", conformance: "M",
                 constraint: "desc",
 
-                details: "The NetworkingStatus field shall indicate the status of the last scan operation, taking one of these " +
-                    "values:" +
+                details: "NetworkingStatus Field The NetworkingStatus field shall indicate the status of the last scan " +
+                    "operation, taking one of these values:" +
                     "\n" +
                     "  • Success: Scanning succeeded." +
                     "\n" +
@@ -31175,7 +31539,9 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "DebugText", id: 0x1, type: "string", conformance: "O", constraint: "max 512",
-                details: "This field, if present and non-empty, may contain error information which may be communicated to the " +
+                details: "### DebugText Field" +
+                    "\n" +
+                    "This field, if present and non-empty, may contain error information which may be communicated to the " +
                     "user in case the NetworkingStatus was not Success. Its purpose is to help developers in " +
                     "troubleshooting errors and may go into logs or crash reports.",
                 xref: { document: "core", section: "11.9.7.2.2" }
@@ -31185,7 +31551,9 @@ export const SpecMatter = Matter(
                 {
                     name: "WiFiScanResults", id: 0x2, type: "list", conformance: "WI", constraint: "desc",
 
-                    details: "If NetworkingStatus was Success, this field shall contain the Wi-Fi network scan results. The list " +
+                    details: "WiFiScanResults Field" +
+                        "\n" +
+                        "If NetworkingStatus was Success, this field shall contain the Wi-Fi network scan results. The list " +
                         "may be empty if none were found in range on the bands supported by the interface, or if directed " +
                         "scanning had been used and the desired SSID was not found in range." +
                         "\n" +
@@ -31208,8 +31576,9 @@ export const SpecMatter = Matter(
                 {
                     name: "ThreadScanResults", id: 0x3, type: "list", conformance: "TH", constraint: "desc",
 
-                    details: "If NetworkingStatus was Success, this field shall contain the Thread network scan results. The list " +
-                        "may be empty if none were found in range on the bands supported by the interface." +
+                    details: "ThreadScanResults Field If NetworkingStatus was Success, this field shall contain the Thread network " +
+                        "scan results. The list may be empty if none were found in range on the bands supported by the " +
+                        "interface." +
                         "\n" +
                         "The maximum number of results present in the result list supported may depend on memory and may " +
                         "contain a subset of possibilities, to avoid memory exhaustion on the cluster server and avoid " +
@@ -31251,17 +31620,17 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Ssid", id: 0x0, type: "octstr", conformance: "M", constraint: "max 32",
-                details: "This field shall contain the SSID to which to attempt connection. Specific BSSID selection is not " +
-                    "supported by this cluster.",
+                details: "SSID Field This field shall contain the SSID to which to attempt connection. Specific BSSID " +
+                    "selection is not supported by this cluster.",
                 xref: { document: "core", section: "11.9.7.3.1" }
             }),
 
             Field({
                 name: "Credentials", id: 0x1, type: "octstr", conformance: "M", constraint: "max 64",
 
-                details: "Credentials is the passphrase or PSK for the network (if any is needed)." +
+                details: "Credentials Field Credentials is the passphrase or PSK for the network (if any is needed)." +
                     "\n" +
-                    "Security type, cipher and credential format (passphrase or PSK) shall be contextually auto- selected " +
+                    "Security type, cipher and credential format (passphrase or PSK) shall be contextually auto-selected " +
                     "during execution of the ConnectNetwork Command and during subsequent operational state network " +
                     "connections, based on the most secure Wi-Fi security type available within beacons and probe " +
                     "responses for the set of all discovered BSSIDs for the configured SSID. The type of PSK or " +
@@ -31282,8 +31651,10 @@ export const SpecMatter = Matter(
                     "\n" +
                     "  • 8..63 bytes: WPA/WPA2/WPA3 passphrase" +
                     "\n" +
-                    "  • 64 bytes: WPA/WPA2/WPA3 raw hex PSK These lengths shall be contextually interpreted based on the " +
-                    "    security type of the BSSID where connection will occur." +
+                    "  • 64 bytes: WPA/WPA2/WPA3 raw hex PSK" +
+                    "\n" +
+                    "These lengths shall be contextually interpreted based on the security type of the BSSID where " +
+                    "connection will occur." +
                     "\n" +
                     "When the length of Credentials and available set of BSSID admits more than one option, such as the " +
                     "presence of both WPA2 and WPA security type within the result set, WPA2 shall be considered more " +
@@ -31298,7 +31669,7 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O",
-                details: "See Breadcrumb for usage.",
+                details: "Breadcrumb Field See Breadcrumb for usage.",
                 xref: { document: "core", section: "11.9.7.3.3" }
             })
         ),
@@ -31329,8 +31700,8 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "OperationalDataset", id: 0x0, type: "octstr", conformance: "M", constraint: "max 254",
-                details: "The OperationalDataset field shall contain the Thread Network Parameters, including channel, PAN ID, " +
-                    "and Extended PAN ID." +
+                details: "OperationalDataset Field The OperationalDataset field shall contain the Thread Network Parameters, " +
+                    "including channel, PAN ID, and Extended PAN ID." +
                     "\n" +
                     "The encoding for the OperationalDataset field is defined in the Thread specification. The client " +
                     "shall pass the OperationalDataset as an opaque octet string.",
@@ -31339,7 +31710,7 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O",
-                details: "See Breadcrumb for usage.",
+                details: "Breadcrumb Field See Breadcrumb for usage.",
                 xref: { document: "core", section: "11.9.7.4.2" }
             })
         ),
@@ -31368,14 +31739,14 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32",
-                details: "This field shall contain the NetworkID for the entry to remove: the SSID for Wi-Fi and XPAN ID for " +
-                    "Thread.",
+                details: "NetworkID Field This field shall contain the NetworkID for the entry to remove: the SSID for Wi-Fi " +
+                    "and XPAN ID for Thread.",
                 xref: { document: "core", section: "11.9.7.6.1" }
             }),
 
             Field({
                 name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O",
-                details: "See Breadcrumb for usage.",
+                details: "Breadcrumb Field See Breadcrumb for usage.",
                 xref: { document: "core", section: "11.9.7.6.2" }
             })
         ),
@@ -31402,8 +31773,8 @@ export const SpecMatter = Matter(
                 name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum", conformance: "M",
                 constraint: "desc",
 
-                details: "The NetworkingStatus field shall indicate the status of the last operation attempting to modify the " +
-                    "Networks attribute configuration, taking one of these values:" +
+                details: "NetworkingStatus Field The NetworkingStatus field shall indicate the status of the last operation " +
+                    "attempting to modify the Networks attribute configuration, taking one of these values:" +
                     "\n" +
                     "  • Success: Operation succeeded." +
                     "\n" +
@@ -31421,15 +31792,15 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "DebugText", id: 0x1, type: "string", conformance: "O", constraint: "max 512",
-                details: "See DebugText for usage.",
+                details: "DebugText Field See DebugText for usage.",
                 xref: { document: "core", section: "11.9.7.7.2" }
             }),
 
             Field({
                 name: "NetworkIndex", id: 0x2, type: "uint8", conformance: "O", constraint: "max maxNetworks - 1",
-                details: "When the NetworkingStatus is Success, this field shall be present. It shall contain the 0-based " +
-                    "index of the entry in the Networks attribute that was last added, updated or removed successfully by " +
-                    "the associated request command.",
+                details: "NetworkIndex Field When the NetworkingStatus is Success, this field shall be present. It shall " +
+                    "contain the 0-based index of the entry in the Networks attribute that was last added, updated or " +
+                    "removed successfully by the associated request command.",
                 xref: { document: "core", section: "11.9.7.7.3" }
             })
         ),
@@ -31467,7 +31838,7 @@ export const SpecMatter = Matter(
                     "\n" +
                     "The amount of time needed to determine successful or failing connectivity on the cluster server’s " +
                     "associated interface is provided by the ConnectMaxTimeSeconds attribute. Clients shall NOT consider " +
-                    "the connection to have timed-out until at least that duration has taken place. For non- concurrent " +
+                    "the connection to have timed-out until at least that duration has taken place. For non-concurrent " +
                     "commissioning situations, the client SHOULD allow additional margin of time to account for its delay " +
                     "in executing operational discovery of the Node once it is connected to the new network." +
                     "\n" +
@@ -31503,9 +31874,10 @@ export const SpecMatter = Matter(
                     "  3. Sufficient time to allow operational discovery on the new network by a Commissioner or " +
                     "     Administrator." +
                     "\n" +
-                    "  4. Sufficient time to establish a CASE session after operational discovery 5. Not so long that, in " +
-                    "     error situations, the delay to reverting back to being discoverable for commissioning with a " +
-                    "     previous configuration would cause significant user-perceived delay." +
+                    "  4. Sufficient time to establish a CASE session after operational discovery" +
+                    "\n" +
+                    "  5. Not so long that, in error situations, the delay to reverting back to being discoverable for " +
+                    "     commissioning with a previous configuration would cause significant user-perceived delay." +
                     "\n" +
                     "Note as well that the CommissioningTimeout duration provided in a prior OpenCommissioningWindow or " +
                     "OpenBasicCommissioningWindow command may impact the total time available to proceed with error " +
@@ -31520,14 +31892,14 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32",
-                details: "This field shall contain the NetworkID for the entry used to configure the connection: the SSID for " +
-                    "Wi-Fi and XPAN ID for Thread.",
+                details: "NetworkID Field This field shall contain the NetworkID for the entry used to configure the " +
+                    "connection: the SSID for Wi-Fi and XPAN ID for Thread.",
                 xref: { document: "core", section: "11.9.7.8.1" }
             }),
 
             Field({
                 name: "Breadcrumb", id: 0x1, type: "uint64", conformance: "O",
-                details: "See Breadcrumb for usage.",
+                details: "Breadcrumb Field See Breadcrumb for usage.",
                 xref: { document: "core", section: "11.9.7.8.2" }
             })
         ),
@@ -31552,8 +31924,8 @@ export const SpecMatter = Matter(
             Field({
                 name: "NetworkingStatus", id: 0x0, type: "NetworkCommissioningStatusEnum", conformance: "M",
 
-                details: "The NetworkingStatus field shall indicate the status of the last connection attempt, taking one of " +
-                    "these values:" +
+                details: "NetworkingStatus Field The NetworkingStatus field shall indicate the status of the last connection " +
+                    "attempt, taking one of these values:" +
                     "\n" +
                     "  • Success: Connection succeeded." +
                     "\n" +
@@ -31577,14 +31949,16 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "DebugText", id: 0x1, type: "string", conformance: "O",
-                details: "See DebugText for usage.",
+                details: "DebugText Field See DebugText for usage.",
                 xref: { document: "core", section: "11.9.7.9.2" }
             }),
 
             Field({
                 name: "ErrorValue", id: 0x2, type: "int32", conformance: "M", quality: "X",
 
-                details: "  • ErrorValue interpretation for Wi-Fi association errors:" +
+                details: "ErrorValue Field" +
+                    "\n" +
+                    "  • ErrorValue interpretation for Wi-Fi association errors:" +
                     "\n" +
                     "    ◦ On any association failure during enabling of a network, the ErrorValue field shall be set to " +
                     "      the Status Code value that was present in the last frame related to association where Status " +
@@ -31619,15 +31993,15 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32",
-                details: "This field shall contain the NetworkID for the entry to reorder: the SSID for Wi-Fi and XPAN ID for " +
-                    "Thread.",
+                details: "NetworkID Field This field shall contain the NetworkID for the entry to reorder: the SSID for Wi-Fi " +
+                    "and XPAN ID for Thread.",
                 xref: { document: "core", section: "11.9.7.10.1" }
             }),
 
             Field({
                 name: "NetworkIndex", id: 0x1, type: "uint8", conformance: "M", constraint: "desc",
-                details: "This field shall contain the 0-based index of the new desired position of the entry in the Networks " +
-                    "attribute.",
+                details: "NetworkIndex Field This field shall contain the 0-based index of the new desired position of the " +
+                    "entry in the Networks attribute.",
                 xref: { document: "core", section: "11.9.7.10.2" }
             }),
 
@@ -31635,7 +32009,7 @@ export const SpecMatter = Matter(
                 {
                     name: "Breadcrumb", id: 0x2, type: "uint64", conformance: "O",
 
-                    details: "See Breadcrumb for usage." +
+                    details: "Breadcrumb Field See Breadcrumb for usage." +
                         "\n" +
                         "Effect when received If the Networks attribute does not contain a matching entry, the command shall " +
                         "immediately respond with NetworkConfigResponse having NetworkingStatus status field set to " +
@@ -31705,8 +32079,8 @@ export const SpecMatter = Matter(
             {
                 name: "ThreadCapabilitiesBitmap", type: "map16",
 
-                details: "The ThreadCapabilitiesBitmap encodes the supported Thread features and capabilities of a Thread- " +
-                    "enabled network interface." +
+                details: "The ThreadCapabilitiesBitmap encodes the supported Thread features and capabilities of a " +
+                    "Thread-enabled network interface." +
                     "\n" +
                     "> [!NOTE]" +
                     "\n" +
@@ -31797,10 +32171,10 @@ export const SpecMatter = Matter(
             },
 
             Field({
-                name: "NetworkID", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32",
+                name: "NetworkId", id: 0x0, type: "octstr", conformance: "M", constraint: "1 to 32",
 
-                details: "Every network is uniquely identified (for purposes of commissioning) by a NetworkID mapping to the " +
-                    "following technology-specific properties:" +
+                details: "NetworkID Field Every network is uniquely identified (for purposes of commissioning) by a NetworkID " +
+                    "mapping to the following technology-specific properties:" +
                     "\n" +
                     "  • SSID for Wi-Fi" +
                     "\n" +
@@ -31829,9 +32203,9 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Connected", id: 0x1, type: "bool", conformance: "M",
-                details: "This field shall indicate the connected status of the associated network, where \"connected\" means " +
-                    "currently linked to the network technology (e.g. Associated for a Wi-Fi network, media connected for " +
-                    "an Ethernet network).",
+                details: "Connected Field This field shall indicate the connected status of the associated network, where " +
+                    "\"connected\" means currently linked to the network technology (e.g. Associated for a Wi-Fi network, " +
+                    "media connected for an Ethernet network).",
                 xref: { document: "core", section: "11.9.5.5.2" }
             })
         ),
@@ -31849,14 +32223,15 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "WiFiBand", id: 0x4, type: "WiFiBandEnum", conformance: "[WI]",
-                details: "This field, if present, may be used to differentiate overlapping channel number values across " +
-                    "different Wi-Fi frequency bands.",
+                details: "WiFiBand Field This field, if present, may be used to differentiate overlapping channel number " +
+                    "values across different Wi-Fi frequency bands.",
                 xref: { document: "core", section: "11.9.5.6.1" }
             }),
 
             Field({
                 name: "Rssi", id: 0x5, type: "int8", conformance: "[WI]",
-                details: "This field, if present, shall denote the signal strength in dBm of the associated scan result.",
+                details: "RSSI Field This field, if present, shall denote the signal strength in dBm of the associated scan " +
+                    "result.",
                 xref: { document: "core", section: "11.9.5.6.2" }
             })
         ),
@@ -31874,7 +32249,7 @@ export const SpecMatter = Matter(
             Field({ name: "Version", id: 0x4, type: "uint8", conformance: "TH" }),
             Field({
                 name: "ExtendedAddress", id: 0x5, type: "hwadr", conformance: "TH",
-                details: "ExtendedAddress stands for an IEEE 802.15.4 Extended Address.",
+                details: "ExtendedAddress Field ExtendedAddress stands for an IEEE 802.15.4 Extended Address.",
                 xref: { document: "core", section: "11.9.5.7.1" }
             }),
             Field({ name: "Rssi", id: 0x6, type: "int8", conformance: "TH" }),
@@ -32195,14 +32570,14 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M", default: 0,
-                details: "This field shall contain the result of the operation, based on the behavior specified in the " +
-                    "functional description of the ArmFailSafe command.",
+                details: "ErrorCode Field This field shall contain the result of the operation, based on the behavior " +
+                    "specified in the functional description of the ArmFailSafe command.",
                 xref: { document: "core", section: "11.10.7.3.1" }
             }),
 
             Field({
                 name: "DebugText", id: 0x1, type: "string", conformance: "M", constraint: "max 128", default: "",
-                details: "See Section 11.10.7.1, “Common fields in General Commissioning cluster responses”.",
+                details: "DebugText Field See Section 11.10.7.1, “Common fields in General Commissioning cluster responses”.",
                 xref: { document: "core", section: "11.10.7.3.2" }
             })
         ),
@@ -32259,14 +32634,14 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M", default: 0,
-                details: "This field shall contain the result of the operation, based on the behavior specified in the " +
-                    "functional description of the SetRegulatoryConfig command.",
+                details: "ErrorCode Field This field shall contain the result of the operation, based on the behavior " +
+                    "specified in the functional description of the SetRegulatoryConfig command.",
                 xref: { document: "core", section: "11.10.7.5.1" }
             }),
 
             Field({
                 name: "DebugText", id: 0x1, type: "string", conformance: "M", default: "",
-                details: "See Section 11.10.7.1, “Common fields in General Commissioning cluster responses”.",
+                details: "DebugText Field See Section 11.10.7.1, “Common fields in General Commissioning cluster responses”.",
                 xref: { document: "core", section: "11.10.7.5.2" }
             })
         ),
@@ -32347,14 +32722,14 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M", default: 0,
-                details: "This field shall contain the result of the operation, based on the behavior specified in the " +
-                    "functional description of the CommissioningComplete command.",
+                details: "ErrorCode Field This field shall contain the result of the operation, based on the behavior " +
+                    "specified in the functional description of the CommissioningComplete command.",
                 xref: { document: "core", section: "11.10.7.7.1" }
             }),
 
             Field({
                 name: "DebugText", id: 0x1, type: "string", conformance: "M", default: "",
-                details: "See Section 11.10.7.1, “Common fields in General Commissioning cluster responses”.",
+                details: "DebugText Field See Section 11.10.7.1, “Common fields in General Commissioning cluster responses”.",
                 xref: { document: "core", section: "11.10.7.7.2" }
             })
         ),
@@ -32370,17 +32745,17 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "TcVersion", id: 0x0, type: "uint16", conformance: "M",
-                details: "This field shall contain the version of the Enhanced Setup Flow Terms & Conditions that were " +
-                    "presented to the user.",
+                details: "TCVersion field This field shall contain the version of the Enhanced Setup Flow Terms & Conditions " +
+                    "that were presented to the user.",
                 xref: { document: "core", section: "11.10.7.8.1" }
             }),
 
             Field({
                 name: "TcUserResponse", id: 0x1, type: "map16", conformance: "M",
 
-                details: "This field shall contain the user responses to the Enhanced Setup Flow Terms & Conditions as a map " +
-                    "where each bit set in the bitmap corresponds to an accepted term in the file located at " +
-                    "EnhancedSetupFlowTCUrl." +
+                details: "TCUserResponse field This field shall contain the user responses to the Enhanced Setup Flow Terms & " +
+                    "Conditions as a map where each bit set in the bitmap corresponds to an accepted term in the file " +
+                    "located at EnhancedSetupFlowTCUrl." +
                     "\n" +
                     "### Effect on Receipt" +
                     "\n" +
@@ -32413,8 +32788,8 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "ErrorCode", id: 0x0, type: "CommissioningErrorEnum", conformance: "M", default: 0,
-                details: "This field shall contain the result of the operation, based on the behavior specified in the " +
-                    "functional description of the SetTCAcknowledgements command.",
+                details: "ErrorCode Field This field shall contain the result of the operation, based on the behavior " +
+                    "specified in the functional description of the SetTCAcknowledgements command.",
                 xref: { document: "core", section: "11.10.7.9.1" }
             })
         ),
@@ -32440,7 +32815,7 @@ export const SpecMatter = Matter(
             }),
             Field({
                 name: "BusyWithOtherAdmin", id: 0x4, conformance: "M",
-                description: "Attempting to arm fail- safe or execute CommissioningComplet e from a fabric different than the one associated with the current fail-safe context."
+                description: "Attempting to arm fail-safe or execute CommissioningComplet e from a fabric different than the one associated with the current fail-safe context."
             }),
             Field({
                 name: "RequiredTcNotAccepted", id: 0x5, conformance: "TC",
@@ -32478,19 +32853,20 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "FailSafeExpiryLengthSeconds", id: 0x0, type: "uint16", conformance: "M",
-                details: "This field shall contain a conservative initial duration (in seconds) to set in the FailSafe for the " +
-                    "commissioning flow to complete successfully. This may vary depending on the speed or sleepiness of " +
-                    "the Commissionee. This value, if used in the ArmFailSafe command’s ExpiryLengthSeconds field SHOULD " +
-                    "allow a Commissioner to proceed with a nominal commissioning without having to-rearm the fail-safe, " +
-                    "with some margin.",
+                details: "FailSafeExpiryLengthSeconds Field This field shall contain a conservative initial duration (in " +
+                    "seconds) to set in the FailSafe for the commissioning flow to complete successfully. This may vary " +
+                    "depending on the speed or sleepiness of the Commissionee. This value, if used in the ArmFailSafe " +
+                    "command’s ExpiryLengthSeconds field SHOULD allow a Commissioner to proceed with a nominal " +
+                    "commissioning without having to-rearm the fail-safe, with some margin.",
                 xref: { document: "core", section: "11.10.5.3.1" }
             }),
 
             Field({
-                name: "MaxCumulativeFailsAfeSeconds", id: 0x1, type: "uint16", conformance: "M", constraint: "desc",
+                name: "MaxCumulativeFailsafeSeconds", id: 0x1, type: "uint16", conformance: "M", constraint: "desc",
 
-                details: "This field shall contain a conservative value in seconds denoting the maximum total duration for " +
-                    "which a fail safe timer can be re-armed. See Section 11.10.7.2.1, “Fail Safe Context”." +
+                details: "MaxCumulativeFailsafeSeconds Field This field shall contain a conservative value in seconds denoting " +
+                    "the maximum total duration for which a fail safe timer can be re-armed. See Section 11.10.7.2.1, " +
+                    "“Fail Safe Context”." +
                     "\n" +
                     "The value of this field shall be greater than or equal to the FailSafeExpiryLengthSeconds. Absent " +
                     "additional guidelines, it is recommended that the value of this field be aligned with the initial " +
@@ -32524,19 +32900,19 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Intent", id: 0x0, type: "IntentEnum", conformance: "M",
-                details: "This field shall indicate why the diagnostic logs are being retrieved from the Node. A Node may " +
-                    "utilize this field to selectively determine the logs to transfer.",
+                details: "Intent Field This field shall indicate why the diagnostic logs are being retrieved from the Node. A " +
+                    "Node may utilize this field to selectively determine the logs to transfer.",
                 xref: { document: "core", section: "11.11.5.1.1" }
             }),
 
             Field({
                 name: "RequestedProtocol", id: 0x1, type: "TransferProtocolEnum", conformance: "M",
 
-                details: "This field shall be used to indicate how the log transfer is to be realized. If the field is set to " +
-                    "BDX, then if the receiving Node supports BDX it shall attempt to use BDX to transfer any potential " +
-                    "diagnostic logs; if the receiving Node does not support BDX then the Node shall follow the " +
-                    "requirements defined for a TransferProtocolEnum of ResponsePayload. If this field is set to " +
-                    "ResponsePayload the receiving Node shall only utilize the LogContent field of the " +
+                details: "RequestedProtocol Field This field shall be used to indicate how the log transfer is to be realized. " +
+                    "If the field is set to BDX, then if the receiving Node supports BDX it shall attempt to use BDX to " +
+                    "transfer any potential diagnostic logs; if the receiving Node does not support BDX then the Node " +
+                    "shall follow the requirements defined for a TransferProtocolEnum of ResponsePayload. If this field " +
+                    "is set to ResponsePayload the receiving Node shall only utilize the LogContent field of the " +
                     "RetrieveLogsResponse command to transfer diagnostic log information.",
 
                 xref: { document: "core", section: "11.11.5.1.2" }
@@ -32545,8 +32921,8 @@ export const SpecMatter = Matter(
             Field({
                 name: "TransferFileDesignator", id: 0x2, type: "string", conformance: "O", constraint: "max 32",
 
-                details: "This field shall be present if the RequestedProtocol is BDX. The TransferFileDesignator shall be set " +
-                    "as the File Designator of the BDX transfer if initiated." +
+                details: "TransferFileDesignator Field This field shall be present if the RequestedProtocol is BDX. The " +
+                    "TransferFileDesignator shall be set as the File Designator of the BDX transfer if initiated." +
                     "\n" +
                     "Effect on Receipt On receipt of this command, the Node shall respond with a RetrieveLogsResponse " +
                     "command." +
@@ -32590,13 +32966,15 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Status", id: 0x0, type: "StatusEnum", conformance: "M",
-                details: "This field shall indicate the result of an attempt to retrieve diagnostic logs.",
+                details: "Status Field This field shall indicate the result of an attempt to retrieve diagnostic logs.",
                 xref: { document: "core", section: "11.11.5.2.1" }
             }),
 
             Field({
                 name: "LogContent", id: 0x1, type: "octstr", conformance: "M", constraint: "max 1024",
-                details: "This field shall be included in the command if the Status field has a value of Success or Exhausted. " +
+                details: "### LogContent Field" +
+                    "\n" +
+                    "This field shall be included in the command if the Status field has a value of Success or Exhausted. " +
                     "A Node SHOULD utilize this field to transfer the newest diagnostic log entries. This field shall be " +
                     "empty if BDX is requested and the Status field has a value of Success.",
                 xref: { document: "core", section: "11.11.5.2.2" }
@@ -32604,18 +32982,18 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "UtcTimeStamp", id: 0x2, type: "epoch-us", conformance: "O",
-                details: "This field SHOULD be included in the command if the Status field has a value of Success and the Node " +
-                    "maintains a wall clock. When included, the UTCTimeStamp field shall contain the value of the oldest " +
-                    "log entry in the diagnostic logs that are being transferred.",
+                details: "UTCTimeStamp Field This field SHOULD be included in the command if the Status field has a value of " +
+                    "Success and the Node maintains a wall clock. When included, the UTCTimeStamp field shall contain the " +
+                    "value of the oldest log entry in the diagnostic logs that are being transferred.",
                 xref: { document: "core", section: "11.11.5.2.3" }
             }),
 
             Field({
                 name: "TimeSinceBoot", id: 0x3, type: "systime-us", conformance: "O",
-                details: "This field SHOULD be included in the command if the Status field has a value of Success. When " +
-                    "included, the TimeSinceBoot field shall contain the time of the oldest log entry in the diagnostic " +
-                    "logs that are being transferred represented by the number of microseconds since the last time the " +
-                    "Node went through a reboot.",
+                details: "TimeSinceBoot Field This field SHOULD be included in the command if the Status field has a value of " +
+                    "Success. When included, the TimeSinceBoot field shall contain the time of the oldest log entry in " +
+                    "the diagnostic logs that are being transferred represented by the number of microseconds since the " +
+                    "last time the Node went through a reboot.",
                 xref: { document: "core", section: "11.11.5.2.4" }
             })
         ),
@@ -32625,24 +33003,25 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "EndUserSupport", id: 0x0, conformance: "M",
-                description: "Logs to be used for end- user support",
-                details: "shall indicate that the purpose of the log request is to retrieve logs for the intention of " +
-                    "providing support to an end-user.",
+                description: "Logs to be used for end-user support",
+                details: "EndUserSupport Value shall indicate that the purpose of the log request is to retrieve logs for the " +
+                    "intention of providing support to an end-user.",
                 xref: { document: "core", section: "11.11.4.1.1" }
             }),
 
             Field({
                 name: "NetworkDiag", id: 0x1, conformance: "M",
                 description: "Logs to be used for network diagnostics",
-                details: "shall indicate that the purpose of the log request is to diagnose the network(s) for which the Node " +
-                    "is currently commissioned (and/or connected) or has previously been commissioned (and/or connected).",
+                details: "NetworkDiag Value shall indicate that the purpose of the log request is to diagnose the network(s) " +
+                    "for which the Node is currently commissioned (and/or connected) or has previously been commissioned " +
+                    "(and/or connected).",
                 xref: { document: "core", section: "11.11.4.1.2" }
             }),
 
             Field({
                 name: "CrashLogs", id: 0x2, conformance: "M", description: "Obtain crash logs from the Node",
-                details: "shall indicate that the purpose of the log request is to retrieve any crash logs that may be present " +
-                    "on a Node.",
+                details: "CrashLogs Value shall indicate that the purpose of the log request is to retrieve any crash logs " +
+                    "that may be present on a Node.",
                 xref: { document: "core", section: "11.11.4.1.3" }
             })
         ),
@@ -32651,35 +33030,36 @@ export const SpecMatter = Matter(
             { name: "StatusEnum", type: "enum8", xref: { document: "core", section: "11.11.4.2" } },
             Field({
                 name: "Success", id: 0x0, conformance: "M", description: "Successful transfer of logs",
-                details: "shall be used if diagnostic logs will be or are being transferred.",
+                details: "Success Value shall be used if diagnostic logs will be or are being transferred.",
                 xref: { document: "core", section: "11.11.4.2.1" }
             }),
 
             Field({
                 name: "Exhausted", id: 0x1, conformance: "M", description: "All logs has been transferred",
-                details: "shall be used when a BDX session is requested, however, all available logs were provided in a " +
-                    "LogContent field.",
+                details: "Exhausted Value shall be used when a BDX session is requested, however, all available logs were " +
+                    "provided in a LogContent field.",
                 xref: { document: "core", section: "11.11.4.2.2" }
             }),
 
             Field({
                 name: "NoLogs", id: 0x2, conformance: "M", description: "No logs of the requested type available",
-                details: "shall be used if the Node does not currently have any diagnostic logs of the requested type (Intent) " +
-                    "to transfer.",
+                details: "NoLogs Value shall be used if the Node does not currently have any diagnostic logs of the requested " +
+                    "type (Intent) to transfer.",
                 xref: { document: "core", section: "11.11.4.2.3" }
             }),
 
             Field({
                 name: "Busy", id: 0x3, conformance: "M", description: "Unable to handle request, retry later",
-                details: "shall be used if the Node is unable to handle the request (e.g. in the process of another transfer) " +
-                    "and the Client SHOULD re-attempt the request later.",
+                details: "Busy Value shall be used if the Node is unable to handle the request (e.g. in the process of another " +
+                    "transfer) and the Client SHOULD re-attempt the request later.",
                 xref: { document: "core", section: "11.11.4.2.4" }
             }),
 
             Field({
                 name: "Denied", id: 0x4, conformance: "M",
                 description: "The request is denied, no logs being transferred",
-                details: "shall be used if the Node is denying the current transfer of diagnostic logs for any reason.",
+                details: "Denied Value shall be used if the Node is denying the current transfer of diagnostic logs for any " +
+                    "reason.",
                 xref: { document: "core", section: "11.11.4.2.5" }
             })
         ),
@@ -32690,14 +33070,15 @@ export const SpecMatter = Matter(
             Field({
                 name: "ResponsePayload", id: 0x0, conformance: "M",
                 description: "Logs to be returned as a response",
-                details: "shall be used by a Client to request that logs are transferred using the LogContent attribute of the " +
-                    "response",
+                details: "ResponsePayload Value shall be used by a Client to request that logs are transferred using the " +
+                    "LogContent attribute of the response",
                 xref: { document: "core", section: "11.11.4.3.1" }
             }),
 
             Field({
                 name: "Bdx", id: 0x1, conformance: "M", description: "Logs to be returned using BDX",
-                details: "shall be used by a Client to request that logs are transferred using BDX as defined in BDX Protocol",
+                details: "BDX Value shall be used by a Client to request that logs are transferred using BDX as defined in BDX " +
+                    "Protocol",
                 xref: { document: "core", section: "11.11.4.3.2" }
             })
         )
@@ -32862,17 +33243,19 @@ export const SpecMatter = Matter(
             Field(
                 {
                     name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 11",
-                    details: "This field shall represent the set of faults currently detected, as per HardwareFaultEnum.",
+                    details: "Current Field This field shall represent the set of faults currently detected, as per " +
+                        "HardwareFaultEnum.",
                     xref: { document: "core", section: "11.12.8.1.1" }
                 },
+
                 Field({ name: "entry", type: "HardwareFaultEnum" })
             ),
 
             Field(
                 {
                     name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 11",
-                    details: "This field shall represent the set of faults detected prior to this change event, as per " +
-                        "HardwareFaultEnum.",
+                    details: "Previous Field This field shall represent the set of faults detected prior to this change event, as " +
+                        "per HardwareFaultEnum.",
                     xref: { document: "core", section: "11.12.8.1.2" }
                 },
 
@@ -32891,17 +33274,19 @@ export const SpecMatter = Matter(
             Field(
                 {
                     name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 7",
-                    details: "This field shall represent the set of faults currently detected, as per RadioFaultEnum.",
+                    details: "Current Field This field shall represent the set of faults currently detected, as per " +
+                        "RadioFaultEnum.",
                     xref: { document: "core", section: "11.12.8.2.1" }
                 },
+
                 Field({ name: "entry", type: "RadioFaultEnum" })
             ),
 
             Field(
                 {
                     name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 7",
-                    details: "This field shall represent the set of faults detected prior to this change event, as per " +
-                        "RadioFaultEnum.",
+                    details: "Previous Field This field shall represent the set of faults detected prior to this change event, as " +
+                        "per RadioFaultEnum.",
                     xref: { document: "core", section: "11.12.8.2.2" }
                 },
 
@@ -32920,16 +33305,20 @@ export const SpecMatter = Matter(
             Field(
                 {
                     name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 4",
-                    details: "This field shall represent the set of faults currently detected, as per NetworkFaultEnum.",
+                    details: "Current Field This field shall represent the set of faults currently detected, as per " +
+                        "NetworkFaultEnum.",
                     xref: { document: "core", section: "11.12.8.3.1" }
                 },
+
                 Field({ name: "entry", type: "NetworkFaultEnum" })
             ),
 
             Field(
                 {
                     name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 4",
-                    details: "This field shall represent the set of faults detected prior to this change event, as per " +
+                    details: "Previous Field This field shall represent the set of faults detected prior to this change event, as " +
+                        "per" +
+                        "\n" +
                         "NetworkFaultEnum.",
                     xref: { document: "core", section: "11.12.8.3.2" }
                 },
@@ -32946,7 +33335,7 @@ export const SpecMatter = Matter(
             },
             Field({
                 name: "BootReason", id: 0x0, type: "BootReasonEnum", conformance: "M",
-                details: "This field shall contain the reason for this BootReason event.",
+                details: "BootReason Field This field shall contain the reason for this BootReason event.",
                 xref: { document: "core", section: "11.12.8.4.1" }
             })
         ),
@@ -32956,8 +33345,8 @@ export const SpecMatter = Matter(
                 name: "TestEventTrigger", id: 0x0, access: "M", conformance: "M", direction: "request",
                 response: "status",
 
-                details: "This command shall be supported to provide a means for certification tests to trigger some test- " +
-                    "plan-specific events, necessary to assist in automation of device interactions for some " +
+                details: "This command shall be supported to provide a means for certification tests to trigger some " +
+                    "test-plan-specific events, necessary to assist in automation of device interactions for some " +
                     "certification test cases. This command shall NOT cause any changes to the state of the device that " +
                     "persist after the last fabric is removed." +
                     "\n" +
@@ -32969,7 +33358,9 @@ export const SpecMatter = Matter(
             Field({
                 name: "EnableKey", id: 0x0, type: "octstr", conformance: "M", constraint: "16",
 
-                details: "The EnableKey is a 128 bit value provided by the client in this command, which needs to match a " +
+                details: "### EnableKey Field" +
+                    "\n" +
+                    "The EnableKey is a 128 bit value provided by the client in this command, which needs to match a " +
                     "value chosen by the manufacturer and configured on the server using manufacturer-specific means, " +
                     "such as pre-provisioning. The value of all zeroes is reserved to indicate that no EnableKey is set. " +
                     "Therefore, if the EnableKey field is received with all zeroes, this command shall FAIL with a " +
@@ -32990,7 +33381,8 @@ export const SpecMatter = Matter(
             Field({
                 name: "EventTrigger", id: 0x1, type: "uint64", conformance: "M",
 
-                details: "This field shall indicate the test or test mode which the client wants to trigger." +
+                details: "EventTrigger Field This field shall indicate the test or test mode which the client wants to " +
+                    "trigger." +
                     "\n" +
                     "The expected side-effects of EventTrigger values are out of scope of this specification and will be " +
                     "described within appropriate certification test literature provided to manufacturers by the " +
@@ -33046,18 +33438,23 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "SystemTimeMs", id: 0x0, type: "systime-ms", conformance: "M",
-                details: "This shall indicate the current System Time in milliseconds (type system-ms), with the value taken " +
-                    "at the time of processing of the TimeSnapshot command that generated this response." +
+
+                details: "SystemTimeMs Field This shall indicate the current System Time in milliseconds (type system-ms), " +
+                    "with the value taken at the time of processing of the TimeSnapshot command that generated this " +
+                    "response." +
                     "\n" +
                     "The value shall be taken from the same clock which populates the Timestamp field in events when " +
                     "using System Time for the field.",
+
                 xref: { document: "core", section: "11.12.7.3.1" }
             }),
 
             Field({
-                name: "PosixTimeMS", id: 0x1, type: "posix-ms", conformance: "M", default: null, quality: "X",
+                name: "PosixTimeMs", id: 0x1, type: "posix-ms", conformance: "M", default: null, quality: "X",
 
-                details: "This shall indicate the current time in POSIX Time in milliseconds, with the value taken from the " +
+                details: "PosixTimeMs Field" +
+                    "\n" +
+                    "This shall indicate the current time in POSIX Time in milliseconds, with the value taken from the " +
                     "same source that could populate the Timestamp field of events. This value shall only be null when " +
                     "any the following are true:" +
                     "\n" +
@@ -33088,20 +33485,23 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "EnableKey", id: 0x0, type: "octstr", conformance: "M", constraint: "16",
-                details: "This field shall have the same meaning and usage as the TestEventTrigger EnableKey field.",
+                details: "EnableKey field This field shall have the same meaning and usage as the TestEventTrigger EnableKey " +
+                    "field.",
                 xref: { document: "core", section: "11.12.7.4.1" }
             }),
+
             Field({
                 name: "Value", id: 0x1, type: "uint8", conformance: "M",
-                details: "This field shall indicate the value to use in every byte of the PayloadTestResponse’s Payload field.",
+                details: "Value field This field shall indicate the value to use in every byte of the PayloadTestResponse’s " +
+                    "Payload field.",
                 xref: { document: "core", section: "11.12.7.4.2" }
             }),
 
             Field({
                 name: "Count", id: 0x2, type: "uint16", conformance: "M", constraint: "max 2048",
 
-                details: "This field shall indicate the number of times to repeat the Value in the PayloadTestResponse’s " +
-                    "Payload field." +
+                details: "Count field This field shall indicate the number of times to repeat the Value in the " +
+                    "PayloadTestResponse’s Payload field." +
                     "\n" +
                     "Effect upon receipt This command shall respond with a response status of CONSTRAINT_ERROR if either:" +
                     "\n" +
@@ -33118,10 +33518,9 @@ export const SpecMatter = Matter(
                     "  • If Value is 0x55 and the Count is zero, then the PayloadTestResponse would have the Payload " +
                     "    field set to an empty octet string." +
                     "\n" +
-                    "  • If Value is 0xA5 and the Count is 10, the PayloadTestResponse would have the Payload field set" +
-                    "\n" +
-                    "to a content whose hexadecimal representation would be A5A5A5A5A5A5A5A5A5A5, and base64 " +
-                    "representation would be paWlpaWlpaWlpQ==.",
+                    "  • If Value is 0xA5 and the Count is 10, the PayloadTestResponse would have the Payload field set " +
+                    "    to a content whose hexadecimal representation would be A5A5A5A5A5A5A5A5A5A5, and base64 " +
+                    "    representation would be paWlpaWlpaWlpQ==.",
 
                 xref: { document: "core", section: "11.12.7.4.3" }
             })
@@ -33135,7 +33534,7 @@ export const SpecMatter = Matter(
             },
             Field({
                 name: "Payload", id: 0x0, type: "octstr", conformance: "M", constraint: "max 2048",
-                details: "This field shall contain the computed response of the PayloadTestRequest command.",
+                details: "Payload Field This field shall contain the computed response of the PayloadTestRequest command.",
                 xref: { document: "core", section: "11.12.7.5.1" }
             })
         ),
@@ -33156,11 +33555,11 @@ export const SpecMatter = Matter(
             }),
             Field({
                 name: "ResettableOverTemp", id: 0x3, conformance: "O",
-                description: "The Node has encountered an over- temperature fault that is resettable."
+                description: "The Node has encountered an over-temperature fault that is resettable."
             }),
             Field({
                 name: "NonResettableOverTemp", id: 0x4, conformance: "O",
-                description: "The Node has encountered an over- temperature fault that is not resettable."
+                description: "The Node has encountered an over-temperature fault that is not resettable."
             }),
             Field({
                 name: "PowerSource", id: 0x5, conformance: "O",
@@ -33294,50 +33693,51 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Name", id: 0x0, type: "string", conformance: "M", constraint: "max 32",
-                details: "This field shall indicate a human-readable (displayable) name for the network interface, that is " +
-                    "different from all other interfaces.",
+                details: "Name Field This field shall indicate a human-readable (displayable) name for the network interface, " +
+                    "that is different from all other interfaces.",
                 xref: { document: "core", section: "11.12.5.6.1" }
             }),
 
             Field({
                 name: "IsOperational", id: 0x1, type: "bool", conformance: "M",
-                details: "This field shall indicate if the Node is currently advertising itself operationally on this network " +
-                    "interface and is capable of successfully receiving incoming traffic from other Nodes.",
+                details: "IsOperational Field This field shall indicate if the Node is currently advertising itself " +
+                    "operationally on this network interface and is capable of successfully receiving incoming traffic " +
+                    "from other Nodes.",
                 xref: { document: "core", section: "11.12.5.6.2" }
             }),
 
             Field({
                 name: "OffPremiseServicesReachableIPv4", id: 0x2, type: "bool", conformance: "M", default: null,
                 quality: "X",
-                details: "This field shall indicate whether the Node is currently able to reach off-premise services it uses " +
-                    "by utilizing IPv4. The value shall be null if the Node does not use such services or does not know " +
-                    "whether it can reach them.",
+                details: "OffPremiseServicesReachableIPv4 Field This field shall indicate whether the Node is currently able " +
+                    "to reach off-premise services it uses by utilizing IPv4. The value shall be null if the Node does " +
+                    "not use such services or does not know whether it can reach them.",
                 xref: { document: "core", section: "11.12.5.6.3" }
             }),
 
             Field({
                 name: "OffPremiseServicesReachableIPv6", id: 0x3, type: "bool", conformance: "M", default: null,
                 quality: "X",
-                details: "This field shall indicate whether the Node is currently able to reach off-premise services it uses " +
-                    "by utilizing IPv6. The value shall be null if the Node does not use such services or does not know " +
-                    "whether it can reach them.",
+                details: "OffPremiseServicesReachableIPv6 Field This field shall indicate whether the Node is currently able " +
+                    "to reach off-premise services it uses by utilizing IPv6. The value shall be null if the Node does " +
+                    "not use such services or does not know whether it can reach them.",
                 xref: { document: "core", section: "11.12.5.6.4" }
             }),
 
             Field({
                 name: "HardwareAddress", id: 0x4, type: "hwadr", conformance: "M",
-                details: "This field shall contain the current link-layer address for a 802.3 or IEEE 802.11-2020 network " +
-                    "interface and contain the current extended MAC address for a 802.15.4 interface. The byte order of " +
-                    "the octstr shall be in wire byte order. For addresses values less than 64 bits, the first two bytes " +
-                    "shall be zero.",
+                details: "HardwareAddress Field This field shall contain the current link-layer address for a 802.3 or IEEE " +
+                    "802.11-2020 network interface and contain the current extended MAC address for a 802.15.4 interface. " +
+                    "The byte order of the octstr shall be in wire byte order. For addresses values less than 64 bits, " +
+                    "the first two bytes shall be zero.",
                 xref: { document: "core", section: "11.12.5.6.5" }
             }),
 
             Field(
                 {
                     name: "IPv4Addresses", id: 0x5, type: "list", conformance: "M", constraint: "max 4",
-                    details: "This field shall provide a list of the IPv4 addresses that are currently assigned to the network " +
-                        "interface.",
+                    details: "IPv4Addresses Field This field shall provide a list of the IPv4 addresses that are currently " +
+                        "assigned to the network interface.",
                     xref: { document: "core", section: "11.12.5.6.6" }
                 },
 
@@ -33347,10 +33747,10 @@ export const SpecMatter = Matter(
             Field(
                 {
                     name: "IPv6Addresses", id: 0x6, type: "list", conformance: "M", constraint: "max 8",
-                    details: "This field shall provide a list of the unicast IPv6 addresses that are currently assigned to the " +
-                        "network interface. This list shall include the Node’s link-local address and SHOULD include any " +
-                        "assigned GUA and ULA addresses. This list shall NOT include any multicast group addresses to which " +
-                        "the Node is subscribed.",
+                    details: "IPv6Addresses Field This field shall provide a list of the unicast IPv6 addresses that are currently " +
+                        "assigned to the network interface. This list shall include the Node’s link-local address and SHOULD " +
+                        "include any assigned GUA and ULA addresses. This list shall NOT include any multicast group " +
+                        "addresses to which the Node is subscribed.",
                     xref: { document: "core", section: "11.12.5.6.7" }
                 },
 
@@ -33359,7 +33759,7 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Type", id: 0x7, type: "InterfaceTypeEnum", conformance: "M",
-                details: "This field shall indicate the type of the interface using the InterfaceTypeEnum.",
+                details: "Type Field This field shall indicate the type of the interface using the InterfaceTypeEnum.",
                 xref: { document: "core", section: "11.12.5.6.8" }
             })
         )
@@ -33427,21 +33827,23 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Id", id: 0x0, type: "uint64", conformance: "M", default: 0,
-                details: "The ID field shall be set to the ID of the software thread in which the last software fault " +
+                details: "ID Field The ID field shall be set to the ID of the software thread in which the last software fault " +
                     "occurred.",
                 xref: { document: "core", section: "11.13.8.1.1" }
             }),
 
             Field({
                 name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8",
-                details: "The Name field shall be set to a manufacturer-specified name or prefix of the software thread in " +
-                    "which the last software fault occurred.",
+                details: "Name Field The Name field shall be set to a manufacturer-specified name or prefix of the software " +
+                    "thread in which the last software fault occurred.",
                 xref: { document: "core", section: "11.13.8.1.2" }
             }),
 
             Field({
                 name: "FaultRecording", id: 0x2, type: "octstr", conformance: "O", constraint: "max 1024",
-                details: "The FaultRecording field shall be a manufacturer-specified payload intended to convey information to " +
+                details: "FaultRecording Field" +
+                    "\n" +
+                    "The FaultRecording field shall be a manufacturer-specified payload intended to convey information to " +
                     "assist in further diagnosing or debugging a software fault. The FaultRecording field may be used to " +
                     "convey information such as, but not limited to, thread backtraces or register contents.",
                 xref: { document: "core", section: "11.13.8.1.3" }
@@ -33475,38 +33877,44 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Id", id: 0x0, type: "uint64", conformance: "M",
-                details: "The Id field shall be a server-assigned per-thread unique ID that is constant for the duration of " +
-                    "the thread. Efforts SHOULD be made to avoid reusing ID values when possible.",
+                details: "ID Field The Id field shall be a server-assigned per-thread unique ID that is constant for the " +
+                    "duration of the thread. Efforts SHOULD be made to avoid reusing ID values when possible.",
                 xref: { document: "core", section: "11.13.5.1.1" }
             }),
 
             Field({
                 name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "max 8",
-                details: "The Name field shall be set to a vendor defined name or prefix of the software thread that is static " +
-                    "for the duration of the thread.",
+                details: "Name Field The Name field shall be set to a vendor defined name or prefix of the software thread " +
+                    "that is static for the duration of the thread.",
                 xref: { document: "core", section: "11.13.5.1.2" }
             }),
 
             Field({
                 name: "StackFreeCurrent", id: 0x2, type: "uint32", conformance: "O",
-                details: "The StackFreeCurrent field shall indicate the current amount of stack memory, in bytes, that are not " +
+                details: "### StackFreeCurrent Field" +
+                    "\n" +
+                    "The StackFreeCurrent field shall indicate the current amount of stack memory, in bytes, that are not " +
                     "being utilized on the respective thread.",
                 xref: { document: "core", section: "11.13.5.1.3" }
             }),
 
             Field({
                 name: "StackFreeMinimum", id: 0x3, type: "uint32", conformance: "O",
-                details: "The StackFreeMinimum field shall indicate the minimum amount of stack memory, in bytes, that has " +
+
+                details: "### StackFreeMinimum Field" +
+                    "\n" +
+                    "The StackFreeMinimum field shall indicate the minimum amount of stack memory, in bytes, that has " +
                     "been available at any point between the current time and this attribute being reset or initialized " +
                     "on the respective thread. This value shall only be reset upon a Node reboot or upon receiving of the " +
                     "ResetWatermarks command.",
+
                 xref: { document: "core", section: "11.13.5.1.4" }
             }),
 
             Field({
                 name: "StackSize", id: 0x4, type: "uint32", conformance: "O",
-                details: "The StackSize field shall indicate the amount of stack memory, in bytes, that has been allocated for " +
-                    "use by the respective thread.",
+                details: "StackSize Field The StackSize field shall indicate the amount of stack memory, in bytes, that has " +
+                    "been allocated for use by the respective thread.",
                 xref: { document: "core", section: "11.13.5.1.5" }
             })
         )
@@ -33980,7 +34388,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "RxDestAdDrFilteredCount", id: 0x30, type: "uint32", access: "R V", conformance: "[MACCNT]",
+            name: "RxDestAddrFilteredCount", id: 0x30, type: "uint32", access: "R V", conformance: "[MACCNT]",
             default: 0, quality: "C",
             details: "The RxDestAddrFilteredCount attribute shall indicate the total number of received unique MAC frame " +
                 "requests that have been dropped as a result of a destination address check. This value shall only be " +
@@ -34016,7 +34424,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "RxErrInvalidSrcAddRCount", id: 0x34, type: "uint32", access: "R V", conformance: "[MACCNT]",
+            name: "RxErrInvalidSrcAddrCount", id: 0x34, type: "uint32", access: "R V", conformance: "[MACCNT]",
             default: 0, quality: "C",
             details: "The RxErrInvalidSrcAddrCount attribute shall indicate the total number of received unique MAC frame " +
                 "requests that have been dropped as a result of containing an invalid source address. This value " +
@@ -34138,8 +34546,8 @@ export const SpecMatter = Matter(
             Field(
                 {
                     name: "Current", id: 0x0, type: "list", conformance: "M", constraint: "max 4",
-                    details: "This field shall represent the set of faults currently detected, as per Section 11.14.5.1, " +
-                        "“NetworkFaultEnum Type”.",
+                    details: "Current Field This field shall represent the set of faults currently detected, as per Section " +
+                        "11.14.5.1, “NetworkFaultEnum Type”.",
                     xref: { document: "core", section: "11.14.8.1.1" }
                 },
 
@@ -34149,8 +34557,8 @@ export const SpecMatter = Matter(
             Field(
                 {
                     name: "Previous", id: 0x1, type: "list", conformance: "M", constraint: "max 4",
-                    details: "This field shall represent the set of faults detected prior to this change event, as per Section " +
-                        "11.14.5.1, “NetworkFaultEnum Type”.",
+                    details: "Previous Field This field shall represent the set of faults detected prior to this change event, as " +
+                        "per Section 11.14.5.1, “NetworkFaultEnum Type”.",
                     xref: { document: "core", section: "11.14.8.1.2" }
                 },
 
@@ -34214,104 +34622,108 @@ export const SpecMatter = Matter(
 
         Datatype(
             { name: "NeighborTableStruct", type: "struct", xref: { document: "core", section: "11.14.5.4" } },
+
             Field({
                 name: "ExtAddress", id: 0x0, type: "uint64", conformance: "M",
-                details: "This field shall specify the IEEE 802.15.4 extended address for the neighboring Node.",
+                details: "ExtAddress Field This field shall specify the IEEE 802.15.4 extended address for the neighboring " +
+                    "Node.",
                 xref: { document: "core", section: "11.14.5.4.1" }
             }),
 
             Field({
                 name: "Age", id: 0x1, type: "uint32", conformance: "M",
-                details: "This field shall specify the duration of time, in seconds, since a frame has been received from the " +
-                    "neighboring Node.",
+                details: "Age Field This field shall specify the duration of time, in seconds, since a frame has been received " +
+                    "from the neighboring Node.",
                 xref: { document: "core", section: "11.14.5.4.2" }
             }),
 
             Field({
                 name: "Rloc16", id: 0x2, type: "uint16", conformance: "M",
-                details: "This field shall specify the RLOC16 of the neighboring Node.",
+                details: "Rloc16 Field This field shall specify the RLOC16 of the neighboring Node.",
                 xref: { document: "core", section: "11.14.5.4.3" }
             }),
 
             Field({
                 name: "LinkFrameCounter", id: 0x3, type: "uint32", conformance: "M",
-                details: "This field shall specify the number of link layer frames that have been received from the " +
-                    "neighboring node. This field shall be reset to 0 upon a reboot of the Node.",
+                details: "LinkFrameCounter Field This field shall specify the number of link layer frames that have been " +
+                    "received from the neighboring node. This field shall be reset to 0 upon a reboot of the Node.",
                 xref: { document: "core", section: "11.14.5.4.4" }
             }),
 
             Field({
                 name: "MleFrameCounter", id: 0x4, type: "uint32", conformance: "M",
-                details: "This field shall specify the number of Mesh Link Establishment frames that have been received from " +
-                    "the neighboring node. This field shall be reset to 0 upon a reboot of the Node.",
+                details: "MleFrameCounter Field This field shall specify the number of Mesh Link Establishment frames that " +
+                    "have been received from the neighboring node. This field shall be reset to 0 upon a reboot of the " +
+                    "Node.",
                 xref: { document: "core", section: "11.14.5.4.5" }
             }),
 
             Field({
                 name: "Lqi", id: 0x5, type: "uint8", conformance: "M", constraint: "0 to 255",
-                details: "This field shall specify the implementation specific mix of IEEE 802.15.4 PDU receive quality " +
-                    "indicators, scaled from 0 to 255.",
+                details: "LQI Field This field shall specify the implementation specific mix of IEEE 802.15.4 PDU receive " +
+                    "quality indicators, scaled from 0 to 255.",
                 xref: { document: "core", section: "11.14.5.4.6" }
             }),
 
             Field({
-                name: "AverageRsSi", id: 0x6, type: "int8", conformance: "M", constraint: "-128 to 0",
+                name: "AverageRssi", id: 0x6, type: "int8", conformance: "M", constraint: "-128 to 0",
                 default: null, quality: "X",
-                details: "This field SHOULD specify the average RSSI across all received frames from the neighboring Node " +
-                    "since the receiving Node’s last reboot. If there is no known received frames this field SHOULD have " +
-                    "the value of null. This field shall have the units of dBm, having the range -128 dBm to 0 dBm.",
+                details: "AverageRssi Field This field SHOULD specify the average RSSI across all received frames from the " +
+                    "neighboring Node since the receiving Node’s last reboot. If there is no known received frames this " +
+                    "field SHOULD have the value of null. This field shall have the units of dBm, having the range -128 " +
+                    "dBm to 0 dBm.",
                 xref: { document: "core", section: "11.14.5.4.7" }
             }),
 
             Field({
                 name: "LastRssi", id: 0x7, type: "int8", conformance: "M", constraint: "-128 to 0", default: null,
                 quality: "X",
-                details: "This field shall specify the RSSI of the most recently received frame from the neighboring Node. If " +
-                    "there is no known last received frame the LastRssi field SHOULD have the value of null. This field " +
-                    "shall have the units of dBm, having the range -128 dBm to 0 dBm.",
+                details: "LastRssi Field This field shall specify the RSSI of the most recently received frame from the " +
+                    "neighboring Node. If there is no known last received frame the LastRssi field SHOULD have the value " +
+                    "of null. This field shall have the units of dBm, having the range -128 dBm to 0 dBm.",
                 xref: { document: "core", section: "11.14.5.4.8" }
             }),
 
             Field({
                 name: "FrameErrorRate", id: 0x8, type: "uint8", conformance: "M", constraint: "0 to 100",
                 default: 0,
-                details: "This field shall specify the percentage of received frames from the neighboring Node that have " +
-                    "resulted in errors.",
+                details: "FrameErrorRate Field This field shall specify the percentage of received frames from the neighboring " +
+                    "Node that have resulted in errors.",
                 xref: { document: "core", section: "11.14.5.4.9" }
             }),
 
             Field({
                 name: "MessageErrorRate", id: 0x9, type: "uint8", conformance: "M", constraint: "0 to 100",
                 default: 0,
-                details: "This field shall specify the percentage of received messages from the neighboring Node that have " +
-                    "resulted in errors.",
+                details: "MessageErrorRate Field This field shall specify the percentage of received messages from the " +
+                    "neighboring Node that have resulted in errors.",
                 xref: { document: "core", section: "11.14.5.4.10" }
             }),
 
             Field({
                 name: "RxOnWhenIdle", id: 0xa, type: "bool", conformance: "M",
-                details: "This field shall specify if the neighboring Node is capable of receiving frames while the Node is in " +
-                    "an idle state.",
+                details: "RxOnWhenIdle Field This field shall specify if the neighboring Node is capable of receiving frames " +
+                    "while the Node is in an idle state.",
                 xref: { document: "core", section: "11.14.5.4.11" }
             }),
 
             Field({
                 name: "FullThreadDevice", id: 0xb, type: "bool", conformance: "M",
-                details: "This field shall specify if the neighboring Node is a full Thread device.",
+                details: "FullThreadDevice Field This field shall specify if the neighboring Node is a full Thread device.",
                 xref: { document: "core", section: "11.14.5.4.12" }
             }),
 
             Field({
                 name: "FullNetworkData", id: 0xc, type: "bool", conformance: "M",
-                details: "This field shall specify if the neighboring Node requires the full Network Data. If set to False, " +
-                    "the neighboring Node only requires the stable Network Data.",
+                details: "FullNetworkData Field This field shall specify if the neighboring Node requires the full Network " +
+                    "Data. If set to False, the neighboring Node only requires the stable Network Data.",
                 xref: { document: "core", section: "11.14.5.4.13" }
             }),
 
             Field({
                 name: "IsChild", id: 0xd, type: "bool", conformance: "M",
-                details: "This field shall specify if the neighboring Node is a direct child of the Node reporting the " +
-                    "NeighborTable attribute.",
+                details: "IsChild Field This field shall specify if the neighboring Node is a direct child of the Node " +
+                    "reporting the NeighborTable attribute.",
                 xref: { document: "core", section: "11.14.5.4.14" }
             })
         ),
@@ -34321,68 +34733,73 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "ExtAddress", id: 0x0, type: "uint64", conformance: "M",
-                details: "This field shall specify the IEEE 802.15.4 extended address for the Node for which this route table " +
-                    "entry corresponds.",
+                details: "ExtAddress Field This field shall specify the IEEE 802.15.4 extended address for the Node for which " +
+                    "this route table entry corresponds.",
                 xref: { document: "core", section: "11.14.5.5.1" }
             }),
 
             Field({
                 name: "Rloc16", id: 0x1, type: "uint16", conformance: "M",
-                details: "This field shall specify the RLOC16 for the Node for which this route table entry corresponds.",
+                details: "Rloc16 Field This field shall specify the RLOC16 for the Node for which this route table entry " +
+                    "corresponds.",
                 xref: { document: "core", section: "11.14.5.5.2" }
             }),
+
             Field({
                 name: "RouterId", id: 0x2, type: "uint8", conformance: "M",
-                details: "This field shall specify the Router ID for the Node for which this route table entry corresponds.",
+                details: "RouterId Field This field shall specify the Router ID for the Node for which this route table entry " +
+                    "corresponds.",
                 xref: { document: "core", section: "11.14.5.5.3" }
             }),
 
             Field({
                 name: "NextHop", id: 0x3, type: "uint8", conformance: "M",
-                details: "This field shall specify the Router ID for the next hop in the route to the Node for which this " +
-                    "route table entry corresponds.",
+                details: "NextHop Field This field shall specify the Router ID for the next hop in the route to the Node for " +
+                    "which this route table entry corresponds.",
                 xref: { document: "core", section: "11.14.5.5.4" }
             }),
 
             Field({
                 name: "PathCost", id: 0x4, type: "uint8", conformance: "M",
-                details: "This Field shall specify the cost of the route to the Node for which this route table entry " +
-                    "corresponds.",
+                details: "PathCost Field This Field shall specify the cost of the route to the Node for which this route table " +
+                    "entry corresponds.",
                 xref: { document: "core", section: "11.14.5.5.5" }
             }),
 
             Field({
                 name: "LqiIn", id: 0x5, type: "uint8", conformance: "M",
-                details: "This field shall specify the implementation specific mix of IEEE 802.15.4 PDU receive quality " +
-                    "indicators, scaled from 0 to 255, from the perspective of the Node reporting the neighbor table.",
+                details: "LQIIn Field This field shall specify the implementation specific mix of IEEE 802.15.4 PDU receive " +
+                    "quality indicators, scaled from 0 to 255, from the perspective of the Node reporting the neighbor " +
+                    "table.",
                 xref: { document: "core", section: "11.14.5.5.6" }
             }),
 
             Field({
                 name: "LqiOut", id: 0x6, type: "uint8", conformance: "M",
-                details: "This field shall specify the implementation specific mix of IEEE 802.15.4 PDU receive quality " +
-                    "indicators, scaled from 0 to 255, from the perspective of the Node specified within the NextHop " +
-                    "field.",
+                details: "LQIOut Field This field shall specify the implementation specific mix of IEEE 802.15.4 PDU receive " +
+                    "quality indicators, scaled from 0 to 255, from the perspective of the Node specified within the " +
+                    "NextHop field.",
                 xref: { document: "core", section: "11.14.5.5.7" }
             }),
 
             Field({
                 name: "Age", id: 0x7, type: "uint8", conformance: "M",
-                details: "This field shall specify the duration of time, in seconds, since a frame has been received from the " +
-                    "Node for which this route table entry corresponds.",
+                details: "Age Field This field shall specify the duration of time, in seconds, since a frame has been received " +
+                    "from the Node for which this route table entry corresponds.",
                 xref: { document: "core", section: "11.14.5.5.8" }
             }),
 
             Field({
                 name: "Allocated", id: 0x8, type: "bool", conformance: "M",
-                details: "This field shall specify if the router ID as defined within the RouterId field has been allocated.",
+                details: "Allocated Field This field shall specify if the router ID as defined within the RouterId field has " +
+                    "been allocated.",
                 xref: { document: "core", section: "11.14.5.5.9" }
             }),
 
             Field({
                 name: "LinkEstablished", id: 0x9, type: "bool", conformance: "M",
-                details: "This field shall specify if a link has been established to the Node for which this route table entry " +
-                    "corresponds.",
+                details: "LinkEstablished Field This field shall specify if a link has been established to the Node for which " +
+                    "this route table entry corresponds.",
                 xref: { document: "core", section: "11.14.5.5.10" }
             })
         ),
@@ -34392,85 +34809,100 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "RotationTime", id: 0x0, type: "uint16", conformance: "M",
-                details: "This field shall specify the interval of time, in hours, that Thread security keys are rotated. Null " +
-                    "when there is no dataset configured.",
+                details: "RotationTime Field This field shall specify the interval of time, in hours, that Thread security " +
+                    "keys are rotated. Null when there is no dataset configured.",
                 xref: { document: "core", section: "11.14.5.6.1" }
             }),
 
             Field({
                 name: "Flags", id: 0x1, type: "uint16", conformance: "M",
-                details: "This field shall specify the flags as specified in Thread 1.3.0 section 8.10.1.15. Null when there " +
-                    "is no dataset configured.",
+                details: "Flags Field This field shall specify the flags as specified in Thread 1.3.0 section 8.10.1.15. Null " +
+                    "when there is no dataset configured.",
                 xref: { document: "core", section: "11.14.5.6.2" }
             })
         ),
 
         Datatype(
             { name: "OperationalDatasetComponents", type: "struct", xref: { document: "core", section: "11.14.5.7" } },
+
             Field({
                 name: "ActiveTimestampPresent", id: 0x0, type: "bool", conformance: "M",
-                details: "This field shall be True if the Node has an active timestamp present, else False.",
+                details: "ActiveTimestampPresent Field This field shall be True if the Node has an active timestamp present, " +
+                    "else False.",
                 xref: { document: "core", section: "11.14.5.7.1" }
             }),
+
             Field({
                 name: "PendingTimestampPresent", id: 0x1, type: "bool", conformance: "M",
-                details: "This field shall be True if the Node has a pending timestamp is present, else False.",
+                details: "PendingTimestampPresent Field This field shall be True if the Node has a pending timestamp is " +
+                    "present, else False.",
                 xref: { document: "core", section: "11.14.5.7.2" }
             }),
+
             Field({
                 name: "MasterKeyPresent", id: 0x2, type: "bool", conformance: "M",
-                details: "This field shall be True if the Node has the Thread master key, else False.",
+                details: "MasterKeyPresent Field This field shall be True if the Node has the Thread master key, else False.",
                 xref: { document: "core", section: "11.14.5.7.3" }
             }),
+
             Field({
                 name: "NetworkNamePresent", id: 0x3, type: "bool", conformance: "M",
-                details: "This field shall be True if the Node has the Thread network’s name, else False.",
+                details: "NetworkNamePresent Field This field shall be True if the Node has the Thread network’s name, else " +
+                    "False.",
                 xref: { document: "core", section: "11.14.5.7.4" }
             }),
+
             Field({
                 name: "ExtendedPanIdPresent", id: 0x4, type: "bool", conformance: "M",
-                details: "This field shall be True if the Node has an extended Pan ID, else False.",
+                details: "ExtendedPanIdPresent Field This field shall be True if the Node has an extended Pan ID, else False.",
                 xref: { document: "core", section: "11.14.5.7.5" }
             }),
+
             Field({
                 name: "MeshLocalPrefixPresent", id: 0x5, type: "bool", conformance: "M",
-                details: "This field shall be True if the Node has the mesh local prefix, else False.",
+                details: "MeshLocalPrefixPresent Field This field shall be True if the Node has the mesh local prefix, else " +
+                    "False.",
                 xref: { document: "core", section: "11.14.5.7.6" }
             }),
+
             Field({
                 name: "DelayPresent", id: 0x6, type: "bool", conformance: "M",
-                details: "This field shall be True if the Node has the Thread network delay set, else False.",
+                details: "DelayPresent Field This field shall be True if the Node has the Thread network delay set, else " +
+                    "False.",
                 xref: { document: "core", section: "11.14.5.7.7" }
             }),
+
             Field({
                 name: "PanIdPresent", id: 0x7, type: "bool", conformance: "M",
-                details: "This field shall be True if the Node has a Pan ID, else False.",
+                details: "PanIdPresent Field This field shall be True if the Node has a Pan ID, else False.",
                 xref: { document: "core", section: "11.14.5.7.8" }
             }),
 
             Field({
                 name: "ChannelPresent", id: 0x8, type: "bool", conformance: "M",
-                details: "This field shall be True if the Node has configured an operational channel for the Thread network, " +
-                    "else False.",
+                details: "ChannelPresent Field This field shall be True if the Node has configured an operational channel for " +
+                    "the Thread network, else False.",
                 xref: { document: "core", section: "11.14.5.7.9" }
             }),
 
             Field({
                 name: "PskcPresent", id: 0x9, type: "bool", conformance: "M",
-                details: "This field shall be True if the Node has been configured with the Thread network Pskc, else False.",
+                details: "PskcPresent Field This field shall be True if the Node has been configured with the Thread network " +
+                    "Pskc, else False.",
                 xref: { document: "core", section: "11.14.5.7.10" }
             }),
 
             Field({
                 name: "SecurityPolicyPresent", id: 0xa, type: "bool", conformance: "M",
-                details: "This field shall be True if the Node has been configured with the Thread network security policies, " +
-                    "else False.",
+                details: "SecurityPolicyPresent Field This field shall be True if the Node has been configured with the Thread " +
+                    "network security policies, else False.",
                 xref: { document: "core", section: "11.14.5.7.11" }
             }),
 
             Field({
                 name: "ChannelMaskPresent", id: 0xb, type: "bool", conformance: "M",
-                details: "This field shall be True if the Node has available a mask of available channels, else False.",
+                details: "ChannelMaskPresent Field This field shall be True if the Node has available a mask of available " +
+                    "channels, else False.",
                 xref: { document: "core", section: "11.14.5.7.12" }
             })
         )
@@ -34576,7 +35008,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "PacketUniCastRxCount", id: 0x9, type: "uint32", access: "R V", conformance: "PKTCNT",
+            name: "PacketUnicastRxCount", id: 0x9, type: "uint32", access: "R V", conformance: "PKTCNT",
             default: 0, quality: "X C",
             details: "The PacketUnicastRxCount attribute shall indicate the number of unicast packets received by the " +
                 "Node.",
@@ -34584,7 +35016,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "PacketUniCastTxCount", id: 0xa, type: "uint32", access: "R V", conformance: "PKTCNT",
+            name: "PacketUnicastTxCount", id: 0xa, type: "uint32", access: "R V", conformance: "PKTCNT",
             default: 0, quality: "X C",
             details: "The PacketUnicastTxCount attribute shall indicate the number of unicast packets transmitted by the " +
                 "Node.",
@@ -34618,9 +35050,9 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "ReasonCode", id: 0x0, type: "uint16", conformance: "M",
-                details: "This field shall contain the Reason Code field value for the Disassociation or Deauthentication " +
-                    "event that caused the disconnection and the value shall align with Table 9-49 \"Reason codes\" of IEEE " +
-                    "802.11-2020.",
+                details: "ReasonCode Field This field shall contain the Reason Code field value for the Disassociation or " +
+                    "Deauthentication event that caused the disconnection and the value shall align with Table 9-49 " +
+                    "\"Reason codes\" of IEEE 802.11-2020.",
                 xref: { document: "core", section: "11.15.8.1.1" }
             })
         ),
@@ -34636,16 +35068,17 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "AssociationFailureCause", id: 0x0, type: "AssociationFailureCauseEnum", conformance: "M",
-                details: "The Status field shall be set to a value from the AssociationFailureCauseEnum.",
+                details: "AssociationFailureCause Field The Status field shall be set to a value from the " +
+                    "AssociationFailureCauseEnum.",
                 xref: { document: "core", section: "11.15.8.2.1" }
             }),
 
             Field({
                 name: "Status", id: 0x1, type: "uint16", conformance: "M",
 
-                details: "The Status field shall be set to the Status Code value that was present in the last frame related to " +
-                    "association where Status Code was not equal to zero and which caused the failure of a last trial " +
-                    "attempt, if this last failure was due to one of the following Management frames:" +
+                details: "Status Field The Status field shall be set to the Status Code value that was present in the last " +
+                    "frame related to association where Status Code was not equal to zero and which caused the failure of " +
+                    "a last trial attempt, if this last failure was due to one of the following Management frames:" +
                     "\n" +
                     "  • Association Response (Type 0, Subtype 1)" +
                     "\n" +
@@ -35004,7 +35437,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "DefaultNtP", id: 0x4, type: "string", access: "R V", conformance: "NTPC",
+            name: "DefaultNtp", id: 0x4, type: "string", access: "R V", conformance: "NTPC",
             constraint: "max 128", default: null, quality: "X N",
 
             details: "The default NTP server that this Node may use if other time sources are unavailable. This attribute " +
@@ -35135,7 +35568,7 @@ export const SpecMatter = Matter(
         }),
 
         Attribute({
-            name: "SupportsDNsResolve", id: 0xc, type: "bool", access: "R V", conformance: "NTPC",
+            name: "SupportsDnsResolve", id: 0xc, type: "bool", access: "R V", conformance: "NTPC",
             default: false, quality: "F",
             details: "This attribute is true if the node supports resolving a domain name. DefaultNTP Address values for " +
                 "these nodes may include domain names. If this is False, the Address for a DefaultNTP shall be an " +
@@ -35169,8 +35602,8 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "DstOffsetActive", id: 0x0, type: "bool", conformance: "M",
-                details: "Indicates whether the current DST offset is being applied (i.e, daylight savings time is applied, as " +
-                    "opposed to standard time).",
+                details: "DSTOffsetActive Field Indicates whether the current DST offset is being applied (i.e, daylight " +
+                    "savings time is applied, as opposed to standard time).",
                 xref: { document: "core", section: "11.17.10.2.1" }
             })
         ),
@@ -35185,14 +35618,14 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "-43200 to 50400",
-                details: "Current time zone offset from UTC in seconds.",
+                details: "Offset Field Current time zone offset from UTC in seconds.",
                 xref: { document: "core", section: "11.17.10.3.1" }
             }),
 
             Field({
                 name: "Name", id: 0x1, type: "string", conformance: "O", constraint: "0 to 64",
-                details: "Current time zone name. This name SHOULD use the country/city format specified by the IANA Time Zone " +
-                    "Database.",
+                details: "Name Field Current time zone name. This name SHOULD use the country/city format specified by the " +
+                    "IANA Time Zone Database.",
                 xref: { document: "core", section: "11.17.10.3.2" }
             })
         ),
@@ -35246,17 +35679,17 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "UtcTime", id: 0x0, type: "epoch-us", conformance: "M", default: 0,
-                details: "This shall give the Client’s UTC Time.",
+                details: "UTCTime Field This shall give the Client’s UTC Time.",
                 xref: { document: "core", section: "11.17.9.1.1" }
             }),
             Field({
                 name: "Granularity", id: 0x1, type: "GranularityEnum", conformance: "M", default: 0,
-                details: "This shall give the Client’s Granularity, as described in Granularity.",
+                details: "Granularity Field This shall give the Client’s Granularity, as described in Granularity.",
                 xref: { document: "core", section: "11.17.9.1.2" }
             }),
             Field({
                 name: "TimeSource", id: 0x2, type: "TimeSourceEnum", conformance: "O", default: 0,
-                details: "This shall give the Client’s TimeSource, as described in TimeSource.",
+                details: "TimeSource Field This shall give the Client’s TimeSource, as described in TimeSource.",
                 xref: { document: "core", section: "11.17.9.1.3" }
             })
         ),
@@ -35281,7 +35714,8 @@ export const SpecMatter = Matter(
             Field({
                 name: "TrustedTimeSource", id: 0x0, type: "FabricScopedTrustedTimeSourceStruct", access: "F",
                 conformance: "M", quality: "X",
-                details: "This field contains the Node ID and endpoint of a trusted time source on the accessing fabric.",
+                details: "TrustedTimeSource Field This field contains the Node ID and endpoint of a trusted time source on the " +
+                    "accessing fabric.",
                 xref: { document: "core", section: "11.17.9.2.1" }
             }),
 
@@ -35327,9 +35761,10 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "DstOffsetsRequired", id: 0x0, type: "bool", conformance: "M", default: true,
-                details: "If the node supports a time zone database with information for the time zone that will be applied, " +
-                    "it may use this information to set the DSTOffset attribute. If the node is setting its own DSTOffset " +
-                    "attribute, the DSTOffsetsRequired field shall be set to false, otherwise it shall be set to true.",
+                details: "DSTOffsetsRequired Field If the node supports a time zone database with information for the time " +
+                    "zone that will be applied, it may use this information to set the DSTOffset attribute. If the node " +
+                    "is setting its own DSTOffset attribute, the DSTOffsetsRequired field shall be set to false, " +
+                    "otherwise it shall be set to true.",
                 xref: { document: "core", section: "11.17.9.4.1" }
             })
         ),
@@ -35378,9 +35813,9 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "DefaultNtp", id: 0x0, type: "string", conformance: "M", constraint: "max 128", quality: "X",
-                details: "This field contains the address of an NTP server than can be used as a fallback for time " +
-                    "synchronization. The format of this field shall follow the requirements in the DefaultNTP attribute " +
-                    "description.",
+                details: "DefaultNTP Field This field contains the address of an NTP server than can be used as a fallback for " +
+                    "time synchronization. The format of this field shall follow the requirements in the DefaultNTP " +
+                    "attribute description.",
                 xref: { document: "core", section: "11.17.9.6.1" }
             })
         ),
@@ -35401,11 +35836,11 @@ export const SpecMatter = Matter(
             }),
             Field({
                 name: "MillisecondsGranularity", id: 0x3, conformance: "M",
-                description: "This indicates the node is synchronized to an upstream source using high resolution time- synchronization protocol such as NTP, or has built-in GNSS with some amount of jitter applying its GNSS timestamp. UTC Time is accurate to ± 50 ms."
+                description: "This indicates the node is synchronized to an upstream source using high resolution time-synchronization protocol such as NTP, or has built-in GNSS with some amount of jitter applying its GNSS timestamp. UTC Time is accurate to ± 50 ms."
             }),
             Field({
                 name: "MicrosecondsGranularity", id: 0x4, conformance: "M",
-                description: "This indicates the node is synchronized to an upstream source using a highly precise time- synchronization protocol such as PTP, or has built-in GNSS. UTC time is accurate to ± 10 μs."
+                description: "This indicates the node is synchronized to an upstream source using a highly precise time-synchronization protocol such as PTP, or has built-in GNSS. UTC time is accurate to ± 10 μs."
             })
         ),
 
@@ -35497,19 +35932,21 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M",
-                details: "The Fabric Index associated with the Fabric of the client which last set the value of the trusted " +
-                    "time source node.",
+                details: "FabricIndex Field The Fabric Index associated with the Fabric of the client which last set the value " +
+                    "of the trusted time source node.",
                 xref: { document: "core", section: "11.17.6.4.1" }
             }),
 
             Field({
                 name: "NodeId", id: 0x1, type: "node-id", conformance: "M",
-                details: "Node ID of the trusted time source node on the Fabric associated with the entry.",
+                details: "NodeID Field Node ID of the trusted time source node on the Fabric associated with the entry.",
                 xref: { document: "core", section: "11.17.6.4.2" }
             }),
+
             Field({
                 name: "Endpoint", id: 0x2, type: "endpoint-no", conformance: "M",
-                details: "Endpoint on the trusted time source node that contains the Time Synchronization cluster server.",
+                details: "Endpoint Field Endpoint on the trusted time source node that contains the Time Synchronization " +
+                    "cluster server.",
                 xref: { document: "core", section: "11.17.6.4.3" }
             })
         ),
@@ -35521,15 +35958,15 @@ export const SpecMatter = Matter(
             },
             Field({
                 name: "NodeId", id: 0x0, type: "node-id", conformance: "M",
-                details: "Node ID of the trusted time source node on the Fabric of the issuer.",
+                details: "NodeID Field Node ID of the trusted time source node on the Fabric of the issuer.",
                 xref: { document: "core", section: "11.17.6.5.1" }
             }),
 
             Field({
                 name: "Endpoint", id: 0x1, type: "endpoint-no", conformance: "M",
-                details: "Endpoint on the trusted time source node that contains the Time Synchronization cluster server. This " +
-                    "is provided to avoid having to do discovery of the location of that endpoint by walking over all " +
-                    "endpoints and checking their Descriptor Cluster.",
+                details: "Endpoint Field Endpoint on the trusted time source node that contains the Time Synchronization " +
+                    "cluster server. This is provided to avoid having to do discovery of the location of that endpoint by " +
+                    "walking over all endpoints and checking their Descriptor Cluster.",
                 xref: { document: "core", section: "11.17.6.5.2" }
             })
         ),
@@ -35538,21 +35975,21 @@ export const SpecMatter = Matter(
             { name: "TimeZoneStruct", type: "struct", xref: { document: "core", section: "11.17.6.6" } },
             Field({
                 name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "-43200 to 50400",
-                details: "The time zone offset from UTC in seconds.",
+                details: "Offset Field The time zone offset from UTC in seconds.",
                 xref: { document: "core", section: "11.17.6.6.1" }
             }),
             Field({
                 name: "ValidAt", id: 0x1, type: "epoch-us", conformance: "M",
-                details: "The UTC time when the offset shall be applied.",
+                details: "ValidAt Field The UTC time when the offset shall be applied.",
                 xref: { document: "core", section: "11.17.6.6.2" }
             }),
 
             Field({
                 name: "Name", id: 0x2, type: "string", conformance: "O", constraint: "0 to 64",
-                details: "The time zone name SHOULD provide a human-readable time zone name and it SHOULD use the country/city " +
-                    "format specified by the IANA Time Zone Database. The Name field may be used for display. If the node " +
-                    "supports a TimeZoneDatabase it may use the Name field to set its own DST offsets if it has database " +
-                    "information for the supplied time zone Name and the given Offset matches.",
+                details: "Name Field The time zone name SHOULD provide a human-readable time zone name and it SHOULD use the " +
+                    "country/city format specified by the IANA Time Zone Database. The Name field may be used for " +
+                    "display. If the node supports a TimeZoneDatabase it may use the Name field to set its own DST " +
+                    "offsets if it has database information for the supplied time zone Name and the given Offset matches.",
                 xref: { document: "core", section: "11.17.6.6.3" }
             })
         ),
@@ -35562,23 +35999,23 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Offset", id: 0x0, type: "int32", conformance: "M", constraint: "desc",
-                details: "The DST offset in seconds. Normally this is in the range of 0 to 3600 seconds (1 hour), but this " +
-                    "field will accept any values in the int32 range to accommodate potential future legislation that " +
-                    "does not fit with these assumptions.",
+                details: "Offset Field The DST offset in seconds. Normally this is in the range of 0 to 3600 seconds (1 hour), " +
+                    "but this field will accept any values in the int32 range to accommodate potential future legislation " +
+                    "that does not fit with these assumptions.",
                 xref: { document: "core", section: "11.17.6.7.1" }
             }),
 
             Field({
                 name: "ValidStarting", id: 0x1, type: "epoch-us", conformance: "M",
-                details: "The UTC time when the offset shall be applied.",
+                details: "ValidStarting Field The UTC time when the offset shall be applied.",
                 xref: { document: "core", section: "11.17.6.7.2" }
             }),
 
             Field({
                 name: "ValidUntil", id: 0x2, type: "epoch-us", conformance: "M", quality: "X",
-                details: "The UTC time when the offset shall stop being applied. Providing a null value here indicates a " +
-                    "permanent DST change. If this value is non-null the value shall be larger than the ValidStarting " +
-                    "time.",
+                details: "ValidUntil Field The UTC time when the offset shall stop being applied. Providing a null value here " +
+                    "indicates a permanent DST change. If this value is non-null the value shall be larger than the " +
+                    "ValidStarting time.",
                 xref: { document: "core", section: "11.17.6.7.3" }
             })
         ),
@@ -35731,14 +36168,15 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "AttestationElements", id: 0x0, type: "octstr", conformance: "M", constraint: "max respMax",
-                details: "This field shall contain the octet string of the serialized attestation_elements_message.",
+                details: "AttestationElements Field This field shall contain the octet string of the serialized " +
+                    "attestation_elements_message.",
                 xref: { document: "core", section: "11.18.6.2.1" }
             }),
 
             Field({
                 name: "AttestationSignature", id: 0x1, type: "octstr", conformance: "M", constraint: "64",
-                details: "This field shall contain the octet string of the necessary attestation_signature as described in " +
-                    "Section 11.18.4.7, “Attestation Information”.",
+                details: "AttestationSignature Field This field shall contain the octet string of the necessary " +
+                    "attestation_signature as described in Section 11.18.4.7, “Attestation Information”.",
                 xref: { document: "core", section: "11.18.6.2.2" }
             })
         ),
@@ -35767,8 +36205,8 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Certificate", id: 0x0, type: "octstr", conformance: "M", constraint: "max 600",
-                details: "This field shall be the DER encoded certificate corresponding to the CertificateType field in the " +
-                    "CertificateChainRequest command.",
+                details: "Certificate Field This field shall be the DER encoded certificate corresponding to the " +
+                    "CertificateType field in the CertificateChainRequest command.",
                 xref: { document: "core", section: "11.18.6.4.1" }
             })
         ),
@@ -35829,14 +36267,15 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "NocsrElements", id: 0x0, type: "octstr", conformance: "M", constraint: "max respMax",
-                details: "This field shall contain the octet string of the serialized nocsr_elements_message.",
+                details: "NOCSRElements Field This field shall contain the octet string of the serialized " +
+                    "nocsr_elements_message.",
                 xref: { document: "core", section: "11.18.6.6.1" }
             }),
 
             Field({
                 name: "AttestationSignature", id: 0x1, type: "octstr", conformance: "M", constraint: "64",
-                details: "This field shall contain the octet string of the necessary attestation_signature as described in " +
-                    "Section 11.18.4.9, “NOCSR Information”.",
+                details: "AttestationSignature Field This field shall contain the octet string of the necessary " +
+                    "attestation_signature as described in Section 11.18.4.9, “NOCSR Information”.",
                 xref: { document: "core", section: "11.18.6.6.2" }
             })
         ),
@@ -35866,7 +36305,9 @@ export const SpecMatter = Matter(
             Field({
                 name: "IpkValue", id: 0x2, type: "octstr", conformance: "M", constraint: "16",
 
-                details: "This field shall contain the value of the Epoch Key for the Identity Protection Key (IPK) to set for " +
+                details: "### IPKValue Field" +
+                    "\n" +
+                    "This field shall contain the value of the Epoch Key for the Identity Protection Key (IPK) to set for " +
                     "the Fabric which is to be added. This is needed to bootstrap a necessary configuration value for " +
                     "subsequent CASE to succeed. See Section 4.14.2.6.1, “Identity Protection Key (IPK)” for details." +
                     "\n" +
@@ -35883,7 +36324,9 @@ export const SpecMatter = Matter(
             Field({
                 name: "CaseAdminSubject", id: 0x3, type: "subject-id", conformance: "M",
 
-                details: "If the AddNOC command succeeds according to the semantics of the following subsections, then the " +
+                details: "### CaseAdminSubject Field" +
+                    "\n" +
+                    "If the AddNOC command succeeds according to the semantics of the following subsections, then the " +
                     "Access Control SubjectID shall be used to atomically add an Access Control Entry enabling that " +
                     "Subject to subsequently administer the Node whose operational identity is being added by this " +
                     "command." +
@@ -35908,7 +36351,9 @@ export const SpecMatter = Matter(
             Field({
                 name: "AdminVendorId", id: 0x4, type: "vendor-id", conformance: "M",
 
-                details: "This field shall be set to the Vendor ID of the entity issuing the AddNOC command. This value shall " +
+                details: "### AdminVendorID Field" +
+                    "\n" +
+                    "This field shall be set to the Vendor ID of the entity issuing the AddNOC command. This value shall " +
                     "NOT be one of the reserved Vendor ID values defined in Table 1, “Vendor ID Allocations”." +
                     "\n" +
                     "### Effect When Received" +
@@ -35948,7 +36393,7 @@ export const SpecMatter = Matter(
                     "\n" +
                     "  1. A new FabricIndex shall be allocated, taking the next valid fabric-index value in monotonically " +
                     "     incrementing order, wrapping around from 254 (0xFE) to 1, since value 0 is reserved and using " +
-                    "     255 (0xFF) would prevent cluster specifications from using nullable fabric- idx fields." +
+                    "     255 (0xFF) would prevent cluster specifications from using nullable fabric-idx fields." +
                     "\n" +
                     "  2. An entry within the Fabrics attribute table shall be added, reflecting the matter-fabric-id RDN " +
                     "     within the NOC’s subject, along with the public key of the trusted root of the chain and the " +
@@ -36094,22 +36539,23 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "StatusCode", id: 0x0, type: "NodeOperationalCertStatusEnum", conformance: "M",
-                details: "This field shall contain an NOCStatus value representing the status of an operation involving a NOC.",
+                details: "StatusCode Field This field shall contain an NOCStatus value representing the status of an operation " +
+                    "involving a NOC.",
                 xref: { document: "core", section: "11.18.6.10.1" }
             }),
 
             Field({
                 name: "FabricIndex", id: 0x1, type: "fabric-idx", conformance: "O", constraint: "1 to 254",
-                details: "This field shall be present whenever StatusCode has a value of OK. If present, it shall contain the " +
-                    "Fabric Index of the Fabric last added, removed or updated.",
+                details: "FabricIndex Field This field shall be present whenever StatusCode has a value of OK. If present, it " +
+                    "shall contain the Fabric Index of the Fabric last added, removed or updated.",
                 xref: { document: "core", section: "11.18.6.10.2" }
             }),
 
             Field({
                 name: "DebugText", id: 0x2, type: "string", conformance: "O", constraint: "max 128",
-                details: "This field may contain debugging textual information from the cluster implementation, which SHOULD " +
-                    "NOT be presented to user interfaces in any way. Its purpose is to help developers in troubleshooting " +
-                    "errors and the contents may go into logs or crash reports.",
+                details: "DebugText Field This field may contain debugging textual information from the cluster " +
+                    "implementation, which SHOULD NOT be presented to user interfaces in any way. Its purpose is to help " +
+                    "developers in troubleshooting errors and the contents may go into logs or crash reports.",
                 xref: { document: "core", section: "11.18.6.10.3" }
             })
         ),
@@ -36138,7 +36584,8 @@ export const SpecMatter = Matter(
             Field({
                 name: "Label", id: 0x0, type: "string", access: "F", conformance: "M", constraint: "max 32",
 
-                details: "This field shall contain the label to set for the fabric associated with the current secure session." +
+                details: "Label Field This field shall contain the label to set for the fabric associated with the current " +
+                    "secure session." +
                     "\n" +
                     "Effect on Receipt If the Label field is identical to a Label already in use by a Fabric within the " +
                     "Fabrics list that is not the accessing fabric, then an NOCResponse with a StatusCode of " +
@@ -36161,22 +36608,114 @@ export const SpecMatter = Matter(
             Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
         ),
 
-        Command({
-            name: "RemoveFabric", id: 0xa, access: "A", conformance: "M", direction: "request",
-            response: "NocResponse",
-            details: "This command is used by Administrators to remove a given Fabric and delete all associated " +
-                "fabric-scoped data." +
-                "\n" +
-                "If the given Fabric being removed is the last one to reference a given Trusted Root CA Certificate " +
-                "stored in the Trusted Root Certificates list, then that Trusted Root Certificate shall be removed.",
-            xref: { document: "core", section: "11.18.6.12" }
-        }),
+        Command(
+            {
+                name: "RemoveFabric", id: 0xa, access: "A", conformance: "M", direction: "request",
+                response: "NocResponse",
 
-        Command({
-            name: "AddTrustedRootCertificate", id: 0xb, access: "A", conformance: "M", direction: "request",
-            response: "status",
-            xref: { document: "core", section: "11.18.6" }
-        }),
+                details: "This command is used by Administrators to remove a given Fabric and delete all associated " +
+                    "fabric-scoped data." +
+                    "\n" +
+                    "If the given Fabric being removed is the last one to reference a given Trusted Root CA Certificate " +
+                    "stored in the Trusted Root Certificates list, then that Trusted Root Certificate shall be removed." +
+                    "\n" +
+                    "This command, if referring to an already existing Fabric not under the control of the invoking " +
+                    "Administrator, shall ONLY be invoked after obtaining some form of explicit user consent through some " +
+                    "method executed by the Administrator or Commissioner. This method of obtaining consent SHOULD employ " +
+                    "as much data as possible about the existing Fabric associations within the Fabrics list, so that " +
+                    "likelihood is as small as possible of a user removing a Fabric unwittingly. If a method exists for " +
+                    "an Administrator or Commissioner to convey Fabric Removal to an entity related to that Fabric, " +
+                    "whether in-band or out-of-band, then this method SHOULD be used to notify the other Administrative " +
+                    "Domain’s party of the removal. Otherwise, users may only observe the removal of a Fabric association " +
+                    "as persistently failing attempts to reach a Node operationally.",
+
+                xref: { document: "core", section: "11.18.6.12" }
+            },
+
+            Field({
+                name: "FabricIndex", id: 0x0, type: "fabric-idx", conformance: "M", constraint: "1 to 254",
+
+                details: "FabricIndex Field This field shall contain the Fabric Index reference (see fabric-index) associated " +
+                    "with the Fabric which is to be removed from the device." +
+                    "\n" +
+                    "Effect on Receipt If the FabricIndex field does not match the FabricIndex of any entry within the " +
+                    "Fabrics list, then an NOCResponse with a StatusCode of InvalidFabricIndex shall be returned for the " +
+                    "command and there shall NOT be any permanent changes to any device data." +
+                    "\n" +
+                    "Otherwise, one of the following outcomes shall occur:" +
+                    "\n" +
+                    "  1. If the FabricIndex matches the last remaining entry in the Fabrics list, then the device shall " +
+                    "     delete all Matter related data on the node which was created since it was commissioned. This " +
+                    "     includes all Fabric-Scoped data, including Access Control List, Access Restriction List, " +
+                    "     bindings, scenes, group keys, operational certificates, etc. All Trusted Roots shall also be " +
+                    "     removed. If a time synchronization cluster is present on the Node, the TrustedTimeSource and " +
+                    "     DefaultNtp shall be set to null. Any Matter related data including logs, secure sessions, " +
+                    "     exchanges and interaction model constructs shall also be removed. Since this operation involves " +
+                    "     the removal of the secure session data that may underpin the current set of exchanges, the Node " +
+                    "     invoking the command SHOULD NOT expect a response before terminating its secure session with " +
+                    "     the target." +
+                    "\n" +
+                    "  2. If the FabricIndex does not equal the accessing fabric index, then the device shall begin the " +
+                    "     process of irrevocably deleting all associated Fabric-Scoped data, including Access Control " +
+                    "     Entries, Access Restriction Entries, bindings, group keys, operational certificates, etc. Any " +
+                    "     remaining Trusted Roots no longer referenced by any operational certificate shall also be " +
+                    "     removed. If a time synchronization cluster is present on the Node, and the TrustedTimeSource " +
+                    "     FabricIndex matches the given FabricIndex, the TrustedTimeSource shall be set to null. All " +
+                    "     secure sessions, exchanges and interaction model constructs related to the Operational Identity " +
+                    "     under the given Fabric shall also be removed. Following the removal, an NOCResponse with a " +
+                    "     StatusCode of OK shall be returned." +
+                    "\n" +
+                    "  3. If the FabricIndex equals the accessing fabric index, then the device shall begin the process " +
+                    "     of irrevocably deleting all associated Fabric-Scoped data, including Access Control Entries, " +
+                    "     Access Restriction Entries, bindings, group keys, operational certificates, etc. Any remaining " +
+                    "     Trusted Roots no longer referenced by any operational certificate shall also be removed. If a " +
+                    "     time synchronization cluster is present on the Node, and the TrustedTimeSource FabricIndex " +
+                    "     matches the given FabricIndex, the TrustedTimeSource shall be set to null. All secure sessions, " +
+                    "     exchanges and interaction model constructs related to the Operational Identity under the given " +
+                    "     Fabric shall also be removed. Since this operation involves the removal of the secure session " +
+                    "     data that may underpin the current set of exchanges, the Node invoking the command SHOULD NOT " +
+                    "     expect a response before terminating its secure session with the target.",
+
+                xref: { document: "core", section: "11.18.6.12.1" }
+            })
+        ),
+
+        Command(
+            {
+                name: "AddTrustedRootCertificate", id: 0xb, access: "A", conformance: "M", direction: "request",
+                response: "status",
+
+                details: "This command shall add a Trusted Root CA Certificate, provided as its Matter Certificate Encoding " +
+                    "representation, to the TrustedRootCertificates Attribute list and shall ensure the next AddNOC " +
+                    "command executed uses the provided certificate as its root of trust." +
+                    "\n" +
+                    "If the certificate from the RootCACertificate field is already installed, based on exact " +
+                    "byte-for-byte equality, then this command shall succeed with no change to the list." +
+                    "\n" +
+                    "If this command is received without an armed fail-safe context (see ArmFailSafe), then this command " +
+                    "shall fail with a FAILSAFE_REQUIRED status code sent back to the initiator." +
+                    "\n" +
+                    "If a prior AddTrustedRootCertificate command was successfully invoked within the fail-safe timer " +
+                    "period, which would cause the new invocation to add a second root certificate within a given " +
+                    "fail-safe timer period, then this command shall fail with a CONSTRAINT_ERROR status code sent back " +
+                    "to the initiator." +
+                    "\n" +
+                    "If a prior UpdateNOC or AddNOC command was successfully executed within the fail-safe timer period, " +
+                    "then this command shall fail with a CONSTRAINT_ERROR status code sent back to the initiator." +
+                    "\n" +
+                    "If the certificate from the RootCACertificate field fails any validity checks, not fulfilling all " +
+                    "the requirements for a valid Matter Certificate Encoding representation, including a truncated or " +
+                    "oversize value, then this command shall fail with an INVALID_COMMAND status code sent back to the " +
+                    "initiator." +
+                    "\n" +
+                    "Note that the only method of removing a trusted root is by removing the Fabric that uses it as its " +
+                    "root of trust using the RemoveFabric command.",
+
+                xref: { document: "core", section: "11.18.6.13" }
+            },
+
+            Field({ name: "RootCaCertificate", id: 0x0, type: "octstr", conformance: "M", constraint: "max 400" })
+        ),
 
         Datatype(
             {
@@ -36247,7 +36786,7 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "Noc", id: 0x1, type: "octstr", access: "S", conformance: "M", constraint: "max 400",
-                details: "This field shall contain the NOC for the struct’s associated fabric, encoded using Matter " +
+                details: "NOC Field This field shall contain the NOC for the struct’s associated fabric, encoded using Matter " +
                     "Certificate Encoding.",
                 xref: { document: "core", section: "11.18.4.4.1" }
             }),
@@ -36255,7 +36794,7 @@ export const SpecMatter = Matter(
             Field({
                 name: "Icac", id: 0x2, type: "octstr", access: "S", conformance: "M", constraint: "max 400",
                 quality: "X",
-                details: "This field shall contain the ICAC or the struct’s associated fabric, encoded using Matter " +
+                details: "ICAC Field This field shall contain the ICAC or the struct’s associated fabric, encoded using Matter " +
                     "Certificate Encoding. If no ICAC is present in the chain, this field shall be set to null.",
                 xref: { document: "core", section: "11.18.4.4.2" }
             }),
@@ -36273,17 +36812,20 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "RootPublicKey", id: 0x1, type: "octstr", access: "F", conformance: "M", constraint: "65",
-                details: "This field shall contain the public key for the trusted root that scopes the fabric referenced by " +
-                    "FabricIndex and its associated operational credential (see Section 6.4.5.3, “Trusted Root CA " +
-                    "Certificates”). The format for the key shall be the same as that used in the ec-pub-key field of the " +
-                    "Matter Certificate Encoding for the root in the operational certificate chain.",
+                details: "RootPublicKey Field This field shall contain the public key for the trusted root that scopes the " +
+                    "fabric referenced by FabricIndex and its associated operational credential (see Section 6.4.5.3, " +
+                    "“Trusted Root CA Certificates”). The format for the key shall be the same as that used in the " +
+                    "ec-pub-key field of the Matter Certificate Encoding for the root in the operational certificate " +
+                    "chain.",
                 xref: { document: "core", section: "11.18.4.5.1" }
             }),
 
             Field({
                 name: "VendorId", id: 0x2, type: "vendor-id", access: "F", conformance: "M", constraint: "desc",
 
-                details: "This field shall contain the value of AdminVendorID provided in the AddNOC command that led to the " +
+                details: "### VendorID Field" +
+                    "\n" +
+                    "This field shall contain the value of AdminVendorID provided in the AddNOC command that led to the " +
                     "creation of this FabricDescriptorStruct. The set of allowed values is defined in AdminVendorID." +
                     "\n" +
                     "The intent is to provide some measure of user transparency about which entities have Administer " +
@@ -36297,24 +36839,26 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "FabricId", id: 0x3, type: "fabric-id", access: "F", conformance: "M",
-                details: "This field shall contain the FabricID allocated to the fabric referenced by FabricIndex. This field " +
-                    "shall match the value found in the matter-fabric-id field from the operational certificate providing " +
-                    "the operational identity under this Fabric.",
+                details: "FabricID Field This field shall contain the FabricID allocated to the fabric referenced by " +
+                    "FabricIndex. This field shall match the value found in the matter-fabric-id field from the " +
+                    "operational certificate providing the operational identity under this Fabric.",
                 xref: { document: "core", section: "11.18.4.5.3" }
             }),
 
             Field({
                 name: "NodeId", id: 0x4, type: "node-id", access: "F", conformance: "M",
-                details: "This field shall contain the NodeID in use within the fabric referenced by FabricIndex. This field " +
-                    "shall match the value found in the matter-node-id field from the operational certificate providing " +
-                    "this operational identity.",
+                details: "NodeID Field This field shall contain the NodeID in use within the fabric referenced by FabricIndex. " +
+                    "This field shall match the value found in the matter-node-id field from the operational certificate " +
+                    "providing this operational identity.",
                 xref: { document: "core", section: "11.18.4.5.4" }
             }),
 
             Field({
                 name: "Label", id: 0x5, type: "string", access: "F", conformance: "M", constraint: "max 32",
                 default: "",
-                details: "This field shall contain a commissioner-set label for the fabric referenced by FabricIndex. This " +
+                details: "### Label Field" +
+                    "\n" +
+                    "This field shall contain a commissioner-set label for the fabric referenced by FabricIndex. This " +
                     "label is set by the UpdateFabricLabel command.",
                 xref: { document: "core", section: "11.18.4.5.5" }
             }),
@@ -36451,51 +36995,60 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "CommissioningTimeout", id: 0x0, type: "uint16", conformance: "M", constraint: "desc",
-                details: "This field shall specify the time in seconds during which commissioning session establishment is " +
+
+                details: "### CommissioningTimeout Field" +
+                    "\n" +
+                    "This field shall specify the time in seconds during which commissioning session establishment is " +
                     "allowed by the Node. This timeout value shall follow guidance as specified in the initial " +
                     "Announcement Duration. The CommissioningTimeout applies only to cessation of any announcements and " +
                     "to accepting of new commissioning sessions; it does not apply to abortion of connections, i.e., a " +
                     "commissioning session SHOULD NOT abort prematurely upon expiration of this timeout.",
+
                 xref: { document: "core", section: "11.19.8.1.1" }
             }),
 
             Field({
                 name: "PakePasscodeVerifier", id: 0x1, type: "octstr", conformance: "M",
 
-                details: "This field shall specify an ephemeral PAKE passcode verifier (see Section 3.10, “Password- " +
-                    "Authenticated Key Exchange (PAKE)”) computed by the existing Administrator to be used for this " +
-                    "commissioning. The field is concatenation of two values (w0 || L) shall be (CRYPTO_GROUP_SIZE_BYTES " +
-                    "+ CRYPTO_PUBLIC_KEY_SIZE_BYTES)-octets long as detailed in Crypto_PAKEValues_Responder. It shall be " +
-                    "derived from an ephemeral passcode (See PAKE). It shall be deleted by the Node at the end of " +
-                    "commissioning or expiration of the OpenCommissioningWindow command, and shall be deleted by the " +
-                    "existing Administrator after sending it to the Node(s).",
+                details: "PAKEPasscodeVerifier Field This field shall specify an ephemeral PAKE passcode verifier (see Section " +
+                    "3.10, “Password- Authenticated Key Exchange (PAKE)”) computed by the existing Administrator to be " +
+                    "used for this commissioning. The field is concatenation of two values (w0 || L) shall be " +
+                    "(CRYPTO_GROUP_SIZE_BYTES + CRYPTO_PUBLIC_KEY_SIZE_BYTES)-octets long as detailed in " +
+                    "Crypto_PAKEValues_Responder. It shall be derived from an ephemeral passcode (See PAKE). It shall be " +
+                    "deleted by the Node at the end of commissioning or expiration of the OpenCommissioningWindow " +
+                    "command, and shall be deleted by the existing Administrator after sending it to the Node(s).",
 
                 xref: { document: "core", section: "11.19.8.1.2" }
             }),
 
             Field({
                 name: "Discriminator", id: 0x2, type: "uint16", conformance: "M", constraint: "0 to 4095",
-                details: "This field shall be used by the Node as the long discriminator for DNS-SD advertisement (see " +
-                    "Commissioning Discriminator) for discovery by the new Administrator. The new Administrator can find " +
-                    "and filter DNS-SD records by long discriminator to locate and initiate commissioning with the " +
-                    "appropriate Node.",
+                details: "Discriminator Field This field shall be used by the Node as the long discriminator for DNS-SD " +
+                    "advertisement (see Commissioning Discriminator) for discovery by the new Administrator. The new " +
+                    "Administrator can find and filter DNS-SD records by long discriminator to locate and initiate " +
+                    "commissioning with the appropriate Node.",
                 xref: { document: "core", section: "11.19.8.1.3" }
             }),
 
             Field({
                 name: "Iterations", id: 0x3, type: "uint32", conformance: "M", constraint: "1000 to 100000",
-                details: "This field shall be used by the Node as the PAKE iteration count associated with the ephemeral PAKE " +
-                    "passcode verifier to be used for this commissioning, which shall be sent by the Node to the new " +
-                    "Administrator’s software as response to the PBKDFParamRequest during PASE negotiation. The permitted " +
-                    "range of values shall match the range specified in Section 3.9, “Password-Based Key Derivation " +
-                    "Function (PBKDF)”, within the definition of the Crypto_PBKDFParameterSet.",
+
+                details: "Iterations Field This field shall be used by the Node as the PAKE iteration count associated with " +
+                    "the ephemeral PAKE passcode verifier to be used for this commissioning, which shall be sent by the " +
+                    "Node to the new Administrator’s software as response to the PBKDFParamRequest during PASE " +
+                    "negotiation. The permitted range of values shall match the range specified in Section 3.9, " +
+                    "“Password-Based Key Derivation Function (PBKDF)”, within the definition of the " +
+                    "Crypto_PBKDFParameterSet.",
+
                 xref: { document: "core", section: "11.19.8.1.4" }
             }),
 
             Field({
                 name: "Salt", id: 0x4, type: "octstr", conformance: "M", constraint: "16 to 32",
 
-                details: "This field shall be used by the Node as the PAKE Salt associated with the ephemeral PAKE passcode " +
+                details: "Salt Field" +
+                    "\n" +
+                    "This field shall be used by the Node as the PAKE Salt associated with the ephemeral PAKE passcode " +
                     "verifier to be used for this commissioning, which shall be sent by the Node to the new " +
                     "Administrator’s software as response to the PBKDFParamRequest during PASE negotiation. The " +
                     "constraints on the value shall match those specified in Section 3.9, “Password-Based Key Derivation " +
@@ -36544,7 +37097,9 @@ export const SpecMatter = Matter(
             Field({
                 name: "CommissioningTimeout", id: 0x0, type: "uint16", conformance: "M", constraint: "desc",
 
-                details: "This field shall specify the time in seconds during which commissioning session establishment is " +
+                details: "### CommissioningTimeout Field" +
+                    "\n" +
+                    "This field shall specify the time in seconds during which commissioning session establishment is " +
                     "allowed by the Node. This timeout shall follow guidance as specified in the initial Announcement " +
                     "Duration." +
                     "\n" +
@@ -36623,74 +37178,451 @@ export const SpecMatter = Matter(
             {
                 name: "QueryImage", id: 0x0, access: "O", conformance: "M", direction: "request",
                 response: "QueryImageResponse",
-                details: "Upon receipt, this command shall trigger an attempt to find an updated Software Image by the OTA " +
+                details: "### QueryImage Command" +
+                    "\n" +
+                    "Upon receipt, this command shall trigger an attempt to find an updated Software Image by the OTA " +
                     "Provider to match the OTA Requestor’s constraints provided in the payload fields.",
                 xref: { document: "core", section: "11.20.6.5.1" }
             },
 
-            Field({ name: "VendorId", id: 0x0, type: "vendor-id", conformance: "M" }),
-            Field({ name: "ProductId", id: 0x1, type: "uint16", conformance: "M" }),
-            Field({ name: "SoftwareVersion", id: 0x2, type: "uint32", conformance: "M" }),
+            Field({
+                name: "VendorId", id: 0x0, type: "vendor-id", conformance: "M",
+                details: "The value shall be the Vendor ID applying to the OTA Requestor’s Node and shall match the value " +
+                    "reported by the Basic Information Cluster VendorID attribute.",
+                xref: { document: "core", section: "11.20.6.5.1.1" }
+            }),
+
+            Field({
+                name: "ProductId", id: 0x1, type: "uint16", conformance: "M",
+                details: "The value shall be the Product ID applying to the OTA Requestor’s Node and shall match the value " +
+                    "reported by the Basic Information Cluster ProductID attribute.",
+                xref: { document: "core", section: "11.20.6.5.1.2" }
+            }),
+
+            Field({
+                name: "SoftwareVersion", id: 0x2, type: "uint32", conformance: "M",
+                details: "The SoftwareVersion included in the request payload shall provide the value representing the current " +
+                    "version running on the OTA Requestor invoking the command. This version shall be equal to the " +
+                    "Software Version attribute of the Basic Information Cluster.",
+                xref: { document: "core", section: "11.20.6.5.1.3" }
+            }),
+
             Field(
-                { name: "ProtocolsSupported", id: 0x3, type: "list", conformance: "M", constraint: "max 8" },
+                {
+                    name: "ProtocolsSupported", id: 0x3, type: "list", conformance: "M", constraint: "max 8",
+
+                    details: "This field shall contain a list of all download protocols supported by the OTA Requestor." +
+                        "\n" +
+                        "This field shall be used by the OTA Provider to generate the correct URI for the location of the " +
+                        "Software Image when one is found to be available. The values of BDX Synchronous and BDX Asynchronous " +
+                        "shall always be supported by an OTA Provider. Furthermore, OTA Providers with access to external " +
+                        "networking SHOULD support the HTTPS protocol. OTA Providers may support other protocols." +
+                        "\n" +
+                        "The algorithm to select the specific protocol to use in a given Software Image URI is " +
+                        "implementation-dependent, provided that the rules in Section 11.20.3.3.1, “Download Protocol " +
+                        "selection” are followed." +
+                        "\n" +
+                        "See Section 11.20.3.2, “Querying the OTA Provider” and Section 11.20.3.5, “Transfer of OTA Software " +
+                        "Update images” for more details about usage of this field.",
+
+                    xref: { document: "core", section: "11.20.6.5.1.4" }
+                },
+
                 Field({ name: "entry", type: "DownloadProtocolEnum" })
             ),
-            Field({ name: "HardwareVersion", id: 0x4, type: "uint16", conformance: "O" }),
-            Field({ name: "Location", id: 0x5, type: "string", conformance: "O", constraint: "2" }),
-            Field({ name: "RequestorCanConsent", id: 0x6, type: "bool", conformance: "O", default: false }),
-            Field({ name: "MetadataForProvider", id: 0x7, type: "octstr", conformance: "O", constraint: "max 512" })
+
+            Field({
+                name: "HardwareVersion", id: 0x4, type: "uint16", conformance: "O",
+                details: "The value of this field, if present, shall contain the OTA Requestor’s hardware version, and shall " +
+                    "be equal to the HardwareVersion attribute of the Basic Information Cluster.",
+                xref: { document: "core", section: "11.20.6.5.1.5" }
+            }),
+
+            Field({
+                name: "Location", id: 0x5, type: "string", conformance: "O", constraint: "2",
+                details: "The location, if present, shall provide the same value as the Basic Information Cluster Location " +
+                    "attribute for the OTA Requestor as configured. This may be used by the OTA Provider logic to allow " +
+                    "per-region selection of the Software Image.",
+                xref: { document: "core", section: "11.20.6.5.1.6" }
+            }),
+
+            Field({
+                name: "RequestorCanConsent", id: 0x6, type: "bool", conformance: "O", default: false,
+                details: "This field shall be set to true by an OTA Requestor that is capable of obtaining user consent for " +
+                    "OTA application by virtue of built-in user interface capabilities. Otherwise, it shall be false." +
+                    "\n" +
+                    "See Section 11.20.3.4, “Obtaining user consent for updating software” for application details about " +
+                    "usage.",
+                xref: { document: "core", section: "11.20.6.5.1.7" }
+            }),
+
+            Field({
+                name: "MetadataForProvider", id: 0x7, type: "octstr", conformance: "O", constraint: "max 512",
+
+                details: "This optional field, if present, shall consist of a top-level anonymous list; each list element " +
+                    "shall have a profile-specific tag encoded in fully-qualified form. Each list element shall contain a " +
+                    "manufacturer-specific payload, which the OTA Requestor invoking this command wants to expose to the " +
+                    "receiving OTA Provider. This payload may be used for any purpose and SHOULD be as small as " +
+                    "practical." +
+                    "\n" +
+                    "The use of this field SHOULD be restricted to Vendor-specific usage and shall NOT be used as a " +
+                    "selector required to match for the selection of a Software Image in production environments, unless " +
+                    "absolutely necessary, as the interpretation of this field may be ambiguous to OTA Providers " +
+                    "implementing the Cluster in a compliant but divergent way from the sender." +
+                    "\n" +
+                    "An example of usage for this field is for an OTA Requestor to provide specific data about grouping " +
+                    "or authentication in field trial environments, where the OTA Provider is likely to understand it and " +
+                    "be able to act upon it, either for special selection of image, or recording of activity." +
+                    "\n" +
+                    "An OTA Provider shall report the availability of Software Images, if one is found to be applicable " +
+                    "using the other provided fields, even if the MetadataForProvider field is deemed to contain invalid " +
+                    "or unknown information. That is, the contents of the MetadataForProvider field shall NOT be used to " +
+                    "deny a software update to an OTA Requestor, unless both OTA Requestor and OTA Provider have an " +
+                    "externally agreed-upon policy whereby strictly correct additional MetadataForProvider is expected to " +
+                    "fulfill the OTA Software Update process." +
+                    "\n" +
+                    "OTA Requestors shall send a QueryImage command to the OTA Provider to determine the availability of " +
+                    "a new Software Image." +
+                    "\n" +
+                    "See Section 11.20.3.2, “Querying the OTA Provider” for full details about the OTA Software Update " +
+                    "Query flow which makes use of this command.",
+
+                xref: { document: "core", section: "11.20.6.5.1.8" }
+            })
         ),
 
         Command(
             {
                 name: "QueryImageResponse", id: 0x1, conformance: "M", direction: "response",
+                details: "### QueryImageResponse Command",
                 xref: { document: "core", section: "11.20.6.5.2" }
             },
-            Field({ name: "Status", id: 0x0, type: "StatusEnum", conformance: "M" }),
-            Field({ name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "O" }),
-            Field({ name: "ImageUri", id: 0x2, type: "string", conformance: "O", constraint: "max 256" }),
-            Field({ name: "SoftwareVersion", id: 0x3, type: "uint32", conformance: "O" }),
-            Field({ name: "SoftwareVersionString", id: 0x4, type: "string", conformance: "O", constraint: "1 to 64" }),
-            Field({ name: "UpdateToken", id: 0x5, type: "octstr", conformance: "O", constraint: "8 to 32" }),
-            Field({ name: "UserConsentNeeded", id: 0x6, type: "bool", conformance: "O", default: false }),
-            Field({ name: "MetadataForRequestor", id: 0x7, type: "octstr", conformance: "O", constraint: "max 512" })
+
+            Field({
+                name: "Status", id: 0x0, type: "StatusEnum", conformance: "M",
+                details: "This field shall contain the primary response regarding the availability of a Software Image." +
+                    "\n" +
+                    "See Section 11.20.3.2, “Querying the OTA Provider” for details about the possible values for this " +
+                    "field and their meaning.",
+                xref: { document: "core", section: "11.20.6.5.2.1" }
+            }),
+
+            Field({
+                name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "O",
+
+                details: "This field shall convey the minimum time to wait, in seconds from the time of this response, before " +
+                    "sending another QueryImage command or beginning a download from the OTA Provider. OTA Requestors " +
+                    "shall respect this minimum delay, unless they had previously restarted and lost track of it. OTA " +
+                    "Providers SHOULD expect OTA Requestors to follow this value to their best capability, however, a " +
+                    "restarting Node may come back sooner, due to having lost track of this state response." +
+                    "\n" +
+                    "The DelayedActionTime field shall only be present if the Status field is set to Busy." +
+                    "\n" +
+                    "See Section 11.20.3.2, “Querying the OTA Provider” for details about the rules regarding this field.",
+
+                xref: { document: "core", section: "11.20.6.5.2.2" }
+            }),
+
+            Field(
+                {
+                    name: "ImageUri", id: 0x2, type: "string", conformance: "O", constraint: "max 256",
+
+                    details: "This field, when present, shall contain a URI where the OTA Requestor SHOULD download a Software " +
+                        "Image. The syntax of the ImageURI field shall follow the URI syntax as specified in RFC 3986." +
+                        "\n" +
+                        "This field shall be present if it appears in a QueryImageResponse with a Status of UpdateAvailable." +
+                        "\n" +
+                        "If the ImageURI specifies a BDX Protocol bdx: scheme, then the following rules describe the location " +
+                        "to be used for download:" +
+                        "\n" +
+                        "  1. The URI’s scheme field shall be exactly bdx in lowercase characters." +
+                        "\n" +
+                        "  2. The URI’s authority field shall contain only the host portion and shall use string " +
+                        "     representation of the Operational Node ID of the Node where to proceed with the download, on " +
+                        "     the same Fabric on which the OTA Requestor received the QueryImageResponse." +
+                        "\n" +
+                        "  3. The encoding of the Node ID in the host field shall use an uppercase hexadecimal format, using " +
+                        "     exactly 16 characters to encode the network byte order value of the NodeID, in a similar " +
+                        "     fashion as the Node Identifier portion of the Operational Instance Name." +
+                        "\n" +
+                        "    a. The Operational Node ID in the host field shall match the NodeID of the OTA Provider " +
+                        "       responding with the QueryImageResponse. The usage of a different Node ID than that of the " +
+                        "       provider is reserved for future use. This constraint reduces the number of independent CASE " +
+                        "       secure channel sessions that have to be maintained to proceed with OTA software updates, thus " +
+                        "       reducing energy and resource utilization for the software update process." +
+                        "\n" +
+                        "  4. The user section of the authority field shall be absent, as there are no \"users\" to be " +
+                        "     considered." +
+                        "\n" +
+                        "  5. The port section of the authority field shall be absent, as the port for transport shall be " +
+                        "     determined through Operational Discovery of the target Node." +
+                        "\n" +
+                        "  6. The URI shall NOT contain a query field." +
+                        "\n" +
+                        "  7. The URI shall NOT contain a fragment field." +
+                        "\n" +
+                        "  8. The path field shall employ absolute path representation and shall contain the file designator " +
+                        "     of the software image to download at the BDX server. When used with the BDX server, the leading " +
+                        "     / separating the URI authority from the path shall be omitted. When contacting the BDX server, " +
+                        "     further processing of the file designator shall NOT be done, including handling of URL-encoded " +
+                        "     escape sequences. Rather, the exact octets of the path, as received shall be the values used by " +
+                        "     both client and server in handling the file designator." +
+                        "\n" +
+                        "    a. The path shall only contain valid URI characters." +
+                        "\n" +
+                        "These rules above for BDX URIs simplify parsing for OTA Requestors receiving Image URIs. The " +
+                        "following example procedure shows how the format constraints simplify the extraction of the " +
+                        "necessary data to reach the BDX server for download." +
+                        "\n" +
+                        "  1. Verify that the URI is 24 characters or longer, which is the minimum length of a valid BDX URI " +
+                        "     with all elements present, for example bdx://00112233AABBCCDD/0." +
+                        "\n" +
+                        "  2. Verify the presence of prefix bdx:// indicating a BDX URI." +
+                        "\n" +
+                        "  3. Extract the next 16 characters and convert from uppercase hexadecimal to a 64-bit scalar value, " +
+                        "     considering network byte order. This is the destination Node ID." +
+                        "\n" +
+                        "  4. Verify the presence of a path separator / and skip it." +
+                        "\n" +
+                        "  5. Extract the remaining characters of the string as the file designator to employ when initiating " +
+                        "     the BDX transfer." +
+                        "\n" +
+                        "Example ImageURI values are below, and illustrate some but not all of valid and invalid cases:" +
+                        "\n" +
+                        "  • Synchronous or Asynchronous BDX Protocol:" +
+                        "\n" +
+                        "    ◦ Valid: bdx://8899AABBCCDDEEFF/the_file_designator123" +
+                        "\n" +
+                        "      ▪ Node ID: 0x8899AABBCCDDEEFF" +
+                        "\n" +
+                        "      ▪ File designator: the_file_designator123" +
+                        "\n" +
+                        "    ◦ Valid: bdx://0099AABBCCDDEE77/the%20file%20designator/some_more" +
+                        "\n" +
+                        "      ▪ Node ID: 0x0099AABBCCDDEE77" +
+                        "\n" +
+                        "      ▪ File designator: the%20file%20designator/some_more. Note that the %20 are retained and not " +
+                        "        converted to ASCII 0x20 (space). The file designator is the path as received verbatim, after " +
+                        "        the first '/' (U+002F / SOLIDUS) following the host." +
+                        "\n" +
+                        "    ◦ Invalid: bdx://99AABBCCDDEE77/the_file_designator123" +
+                        "\n" +
+                        "      ▪ Node ID: Invalid since it is not exactly 16 characters long, due to having omitted leading " +
+                        "        zeros." +
+                        "\n" +
+                        "    ◦ Invalid: bdx://0099aabbccddee77/the_file_designator123" +
+                        "\n" +
+                        "      ▪ Node ID: Invalid since lowercase hexadecimal was used." +
+                        "\n" +
+                        "    ◦ Invalid: bdx:8899AABBCCDDEEFF/the_file_designator123" +
+                        "\n" +
+                        "      ▪ Invalid since bdx scheme does not contain an authority, that is, it does not have // after " +
+                        "        the first :." +
+                        "\n" +
+                        "  • HTTP over TLS:" +
+                        "\n" +
+                        "    ◦ Valid: https://example.domain:8466/software/image.bin" +
+                        "\n" +
+                        "See Section 11.20.3.2, “Querying the OTA Provider” for additional details about the flow.",
+
+                    xref: { document: "core", section: "11.20.6.5.2.3" }
+                }
+            ),
+
+            Field({
+                name: "SoftwareVersion", id: 0x3, type: "uint32", conformance: "O",
+
+                details: "This field indicates the version of the image being provided to the OTA Requestor by the OTA " +
+                    "Provider when the Status is UpdateAvailable." +
+                    "\n" +
+                    "This field shall be present if it appears in a QueryImageResponse with a Status of UpdateAvailable." +
+                    "\n" +
+                    "See Section 11.20.3.2, “Querying the OTA Provider” for additional details about the flow and " +
+                    "acceptable values.",
+
+                xref: { document: "core", section: "11.20.6.5.2.4" }
+            }),
+
+            Field({
+                name: "SoftwareVersionString", id: 0x4, type: "string", conformance: "O", constraint: "1 to 64",
+
+                details: "This field provides a string version of the image being provided to the OTA Requestor by the OTA " +
+                    "Provider when the Status is UpdateAvailable." +
+                    "\n" +
+                    "This field shall be present if it appears in a QueryImageResponse with a Status of UpdateAvailable." +
+                    "\n" +
+                    "See Section 11.20.3.2, “Querying the OTA Provider” for additional details about the flow and " +
+                    "acceptable values.",
+
+                xref: { document: "core", section: "11.20.6.5.2.5" }
+            }),
+
+            Field({
+                name: "UpdateToken", id: 0x5, type: "octstr", conformance: "O", constraint: "8 to 32",
+                details: "This optional field shall be present when the Status field contains UpdateAvailable." +
+                    "\n" +
+                    "See Section 11.20.3.6.1, “UpdateToken usage” for additional details about the generation and usage " +
+                    "of UpdateToken.",
+                xref: { document: "core", section: "11.20.6.5.2.6" }
+            }),
+
+            Field({
+                name: "UserConsentNeeded", id: 0x6, type: "bool", conformance: "O", default: false,
+
+                details: "This field, if present, shall only be interpreted if the OTA Requestor had previously indicated a " +
+                    "value of True in the RequestorCanConsent field of the QueryImageRequest. This field, when present " +
+                    "and set to True, shall indicate that a capable OTA Requestor must obtain user-visible consent prior " +
+                    "to downloading the OTA Software Image." +
+                    "\n" +
+                    "See Section 11.20.3.4, “Obtaining user consent for updating software” for application details about " +
+                    "usage.",
+
+                xref: { document: "core", section: "11.20.6.5.2.7" }
+            }),
+
+            Field({
+                name: "MetadataForRequestor", id: 0x7, type: "octstr", conformance: "O", constraint: "max 512",
+
+                details: "This optional field, if present, shall consist of a top-level anonymous list; each list element " +
+                    "shall have a profile-specific tag encoded in fully-qualified form. Each list element shall contain a " +
+                    "manufacturer-specific payload, which the OTA Provider wants to expose to the receiving OTA " +
+                    "Requestor. This payload may be used for any purpose and SHOULD be as small as practical." +
+                    "\n" +
+                    "The presence of this field shall NOT be required for correct operation of any OTA Provider compliant " +
+                    "with this Cluster specification." +
+                    "\n" +
+                    "The data for this field does not exist in any Distributed Compliance Ledger record and SHOULD only " +
+                    "be emitted by an OTA Provider with this additional knowledge if it has knowledge that the receiving " +
+                    "OTA Requestor may be able to use it.",
+
+                xref: { document: "core", section: "11.20.6.5.2.8" }
+            })
         ),
 
         Command(
             {
                 name: "ApplyUpdateRequest", id: 0x2, access: "O", conformance: "M", direction: "request",
                 response: "ApplyUpdateResponse",
+                details: "### ApplyUpdateRequest Command",
                 xref: { document: "core", section: "11.20.6.5.3" }
             },
-            Field({ name: "UpdateToken", id: 0x0, type: "octstr", conformance: "M", constraint: "8 to 32" }),
-            Field({ name: "NewVersion", id: 0x1, type: "uint32", conformance: "M" })
+
+            Field({
+                name: "UpdateToken", id: 0x0, type: "octstr", conformance: "M", constraint: "8 to 32",
+                details: "This field shall contain the UpdateToken as specified in Section 11.20.3.6.1, “UpdateToken usage”. " +
+                    "This field may be used by the OTA Provider to track minimal lifecycle state to allow finer-grained " +
+                    "scheduling of the application of Software Images by OTA Requestors.",
+                xref: { document: "core", section: "11.20.6.5.3.1" }
+            }),
+
+            Field({
+                name: "NewVersion", id: 0x1, type: "uint32", conformance: "M",
+
+                details: "The NewVersion field included in the request payload shall provide the SoftwareVersion value of the " +
+                    "new Software Image which the OTA Requestor is ready to start applying. The OTA Provider may use this " +
+                    "new version to track or record Software Image application by OTA Requestors." +
+                    "\n" +
+                    "The ApplyUpdateRequest Command shall be invoked by an OTA Requestor once it is ready to apply a " +
+                    "previously downloaded Software Image." +
+                    "\n" +
+                    "Upon receipt of this command the OTA Provider shall respond with an Action field consistent with the " +
+                    "next action the OTA Requestor should take, including any possible time delay." +
+                    "\n" +
+                    "The OTA Provider shall NOT refer to previously stored state about any download progress to reply. If " +
+                    "any state keeping is done by the OTA Provider, it shall only relate to the UpdateToken and the " +
+                    "history of prior ApplyUpdateRequest commands." +
+                    "\n" +
+                    "See Section 11.20.3.6, “Applying a software update” for a description of the flow in response to an " +
+                    "OTA Provider receiving an invocation of this command." +
+                    "\n" +
+                    "See Section 11.20.3.6, “Applying a software update” for all error-handling information.",
+
+                xref: { document: "core", section: "11.20.6.5.3.2" }
+            })
         ),
 
         Command(
             {
                 name: "ApplyUpdateResponse", id: 0x3, conformance: "M", direction: "response",
+                details: "### ApplyUpdateResponse Command",
                 xref: { document: "core", section: "11.20.6.5.4" }
             },
-            Field({ name: "Action", id: 0x0, type: "ApplyUpdateActionEnum", conformance: "M" }),
-            Field({ name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "M" })
+
+            Field({
+                name: "Action", id: 0x0, type: "ApplyUpdateActionEnum", conformance: "M",
+                details: "The Action field shall express the action that the OTA Provider requests from the OTA Requestor. See " +
+                    "Section 11.20.3.6, “Applying a software update” for a description of the Action values provided in " +
+                    "response to an OTA Provider receiving an invocation of this command.",
+                xref: { document: "core", section: "11.20.6.5.4.1" }
+            }),
+
+            Field({
+                name: "DelayedActionTime", id: 0x1, type: "uint32", conformance: "M",
+                details: "The minimum time period the OTA Requestor shall wait before executing the Action, in seconds from " +
+                    "receipt." +
+                    "\n" +
+                    "If this field has a value higher than 86400 seconds (24 hours), then the OTA Requestor may assume a " +
+                    "value of 86400, in order to reduce undue Software Image application delays.",
+                xref: { document: "core", section: "11.20.6.5.4.2" }
+            })
         ),
 
         Command(
             {
                 name: "NotifyUpdateApplied", id: 0x4, access: "O", conformance: "M", direction: "request",
                 response: "status",
+                details: "NotifyUpdateApplied Command",
                 xref: { document: "core", section: "11.20.6.5.5" }
             },
-            Field({ name: "UpdateToken", id: 0x0, type: "octstr", conformance: "M", constraint: "8 to 32" }),
-            Field({ name: "SoftwareVersion", id: 0x1, type: "uint32", conformance: "M" })
+
+            Field({
+                name: "UpdateToken", id: 0x0, type: "octstr", conformance: "M", constraint: "8 to 32",
+                details: "This field shall contain the UpdateToken as specified in Section 11.20.3.6.1, “UpdateToken usage”.",
+                xref: { document: "core", section: "11.20.6.5.5.1" }
+            }),
+
+            Field({
+                name: "SoftwareVersion", id: 0x1, type: "uint32", conformance: "M",
+
+                details: "The SoftwareVersion included in the request payload shall provide the same value as the " +
+                    "SoftwareVersion attribute in the invoking OTA Requestor’s Basic Information Cluster, and SHOULD be " +
+                    "consistent with the value representing a new version running on the Node invoking the command." +
+                    "\n" +
+                    "The NotifyUpdateApplied command SHOULD be invoked in the following two circumstances:" +
+                    "\n" +
+                    "  1. An OTA Requestor has just successfully applied a Software Image it had obtained from a previous " +
+                    "     QueryImage response." +
+                    "\n" +
+                    "  2. An OTA Requestor has just successfully applied a Software Image it had obtained through means " +
+                    "     different than those of this Cluster." +
+                    "\n" +
+                    "An OTA Provider may use the state of invocation of this command to help track the progress of update " +
+                    "for OTA Requestors it knows require a new OTA Software Image. However, due to the possibility that " +
+                    "an OTA Requestor may never come back (e.g. device removed from Fabric altogether, or a critical " +
+                    "malfunction), an OTA Provider shall NOT expect every OTA Requestor to invoke this command for " +
+                    "correct operation of the OTA Provider." +
+                    "\n" +
+                    "This command shall be considered optional and shall NOT result in reduced availability of the OTA " +
+                    "Provider functionality if OTA Requestors never invoke this command." +
+                    "\n" +
+                    "An OTA Provider receiving an invocation of this command may log it internally." +
+                    "\n" +
+                    "On receiving this command, an OTA Provider may use the information to update its bookkeeping of " +
+                    "cached Software Images, or use it for other similar administrative purposes.",
+
+                xref: { document: "core", section: "11.20.6.5.5.2" }
+            })
         ),
 
         Datatype(
             {
                 name: "StatusEnum", type: "enum8",
-                details: "See Section 11.20.3.2, “Querying the OTA Provider” for the semantics of these values.",
+                details: "### StatusEnum Type" +
+                    "\n" +
+                    "See Section 11.20.3.2, “Querying the OTA Provider” for the semantics of these values.",
                 xref: { document: "core", section: "11.20.6.4.1" }
             },
+
             Field({
                 name: "UpdateAvailable", id: 0x0, conformance: "M",
                 description: "Indicates that the OTA Provider has an update available."
@@ -36712,7 +37644,9 @@ export const SpecMatter = Matter(
         Datatype(
             {
                 name: "ApplyUpdateActionEnum", type: "enum8",
-                details: "See Section 11.20.3.6, “Applying a software update” for the semantics of the values. This " +
+                details: "### ApplyUpdateActionEnum Type" +
+                    "\n" +
+                    "See Section 11.20.3.6, “Applying a software update” for the semantics of the values. This " +
                     "enumeration is used in the Action field of the ApplyUpdateResponse command. See (Action).",
                 xref: { document: "core", section: "11.20.6.4.2" }
             },
@@ -36728,7 +37662,9 @@ export const SpecMatter = Matter(
         Datatype(
             {
                 name: "DownloadProtocolEnum", type: "enum8",
-                details: "Note that only HTTP over TLS (HTTPS) is supported (see RFC 7230). Using HTTP without TLS shall NOT " +
+                details: "### DownloadProtocolEnum Type" +
+                    "\n" +
+                    "Note that only HTTP over TLS (HTTPS) is supported (see RFC 7230). Using HTTP without TLS shall NOT " +
                     "be supported, as there is no way to authenticate the involved participants.",
                 xref: { document: "core", section: "11.20.6.4.3" }
             },
@@ -36758,10 +37694,12 @@ export const SpecMatter = Matter(
 
         Attribute(
             {
-                name: "DefaultOtAProviders", id: 0x0, type: "list", access: "RW F VA", conformance: "M",
+                name: "DefaultOtaProviders", id: 0x0, type: "list", access: "RW F VA", conformance: "M",
                 constraint: "desc", default: [], quality: "N",
 
-                details: "This field is a list of ProviderLocation whose entries shall be set by Administrators, either during " +
+                details: "### DefaultOTAProviders Attribute" +
+                    "\n" +
+                    "This field is a list of ProviderLocation whose entries shall be set by Administrators, either during " +
                     "Commissioning or at a later time, to set the ProviderLocation for the default OTA Provider Node to " +
                     "use for software updates on a given Fabric." +
                     "\n" +
@@ -36779,19 +37717,27 @@ export const SpecMatter = Matter(
 
         Attribute({
             name: "UpdatePossible", id: 0x1, type: "bool", access: "R V", conformance: "M", default: true,
-            details: "This field shall be set to True if the OTA Requestor is currently able to be updated. Otherwise, it " +
+
+            details: "UpdatePossible Attribute" +
+                "\n" +
+                "This field shall be set to True if the OTA Requestor is currently able to be updated. Otherwise, it " +
                 "shall be set to False in case of any condition preventing update being possible, such as " +
                 "insufficient capacity of an internal battery. This field is merely informational for diagnostics " +
                 "purposes and shall NOT affect the responses provided by an OTA Provider to an OTA Requestor.",
+
             xref: { document: "core", section: "11.20.7.5.2" }
         }),
 
         Attribute({
             name: "UpdateState", id: 0x2, type: "UpdateStateEnum", access: "R V", conformance: "M", default: 0,
-            details: "This field shall reflect the current state of the OTA Requestor with regards to obtaining software " +
+
+            details: "### UpdateState Attribute" +
+                "\n" +
+                "This field shall reflect the current state of the OTA Requestor with regards to obtaining software " +
                 "updates. See Section 11.20.7.4.2, “UpdateStateEnum Type” for possible values." +
                 "\n" +
                 "This field SHOULD be updated in a timely manner whenever OTA Requestor internal state updates.",
+
             xref: { document: "core", section: "11.20.7.5.3" }
         }),
 
@@ -36799,15 +37745,15 @@ export const SpecMatter = Matter(
             name: "UpdateStateProgress", id: 0x3, type: "uint8", access: "R V", conformance: "M",
             constraint: "0 to 100", default: null, quality: "X",
 
-            details: "This field shall reflect the percentage value of progress, relative to the current UpdateState, if " +
-                "applicable to the state." +
+            details: "UpdateStateProgress Attribute This field shall reflect the percentage value of progress, relative to " +
+                "the current UpdateState, if applicable to the state." +
                 "\n" +
                 "The value of this field shall be null if a progress indication does not apply to the current state." +
                 "\n" +
                 "A value of 0 shall indicate that the beginning has occurred. A value of 100 shall indicate " +
                 "completion." +
                 "\n" +
-                "This field may be updated infrequently. Some care SHOULD be taken by Nodes to avoid over- reporting " +
+                "This field may be updated infrequently. Some care SHOULD be taken by Nodes to avoid over-reporting " +
                 "progress when this attribute is part of a subscription.",
 
             xref: { document: "core", section: "11.20.7.5.4" }
@@ -36816,112 +37762,320 @@ export const SpecMatter = Matter(
         Event(
             {
                 name: "StateTransition", id: 0x0, access: "V", conformance: "M", priority: "info",
-                details: "This event shall be generated when a change of the UpdateState attribute occurs due to an OTA " +
-                    "Requestor moving through the states necessary to query for updates.",
+                details: "StateTransition Event This event shall be generated when a change of the UpdateState attribute " +
+                    "occurs due to an OTA Requestor moving through the states necessary to query for updates.",
                 xref: { document: "core", section: "11.20.7.7.1" }
             },
 
-            Field({ name: "PreviousState", id: 0x0, type: "UpdateStateEnum", conformance: "M", default: 0 }),
-            Field({ name: "NewState", id: 0x1, type: "UpdateStateEnum", conformance: "M" }),
-            Field({ name: "Reason", id: 0x2, type: "ChangeReasonEnum", conformance: "M" }),
-            Field({ name: "TargetSoftwareVersion", id: 0x3, type: "uint32", conformance: "M", default: null, quality: "X" })
+            Field({
+                name: "PreviousState", id: 0x0, type: "UpdateStateEnum", conformance: "M", default: 0,
+                details: "This field shall be set to the state that preceded the transition causing this event to be " +
+                    "generated, if such a state existed. If no previous state exists, the value shall be Unknown.",
+                xref: { document: "core", section: "11.20.7.7.1.1" }
+            }),
+
+            Field({
+                name: "NewState", id: 0x1, type: "UpdateStateEnum", conformance: "M",
+                details: "This field shall be set to the state now in effect through the transition causing this event to be " +
+                    "generated.",
+                xref: { document: "core", section: "11.20.7.7.1.2" }
+            }),
+
+            Field({
+                name: "Reason", id: 0x2, type: "ChangeReasonEnum", conformance: "M",
+                details: "This field shall be set to the reason why this event was generated.",
+                xref: { document: "core", section: "11.20.7.7.1.3" }
+            }),
+
+            Field({
+                name: "TargetSoftwareVersion", id: 0x3, type: "uint32", conformance: "M", default: null,
+                quality: "X",
+                details: "This field shall be set to the target SoftwareVersion which is the subject of the operation, " +
+                    "whenever the NewState is Downloading, Applying or RollingBack. Otherwise TargetSoftwareVersion shall " +
+                    "be null.",
+                xref: { document: "core", section: "11.20.7.7.1.4" }
+            })
         ),
 
         Event(
             {
                 name: "VersionApplied", id: 0x1, access: "V", conformance: "M", priority: "critical",
-                details: "This event shall be generated whenever a new version starts executing after being applied due to a " +
-                    "software update. This event SHOULD be generated even if a software update was done using means " +
-                    "outside of this cluster.",
+                details: "VersionApplied Event This event shall be generated whenever a new version starts executing after " +
+                    "being applied due to a software update. This event SHOULD be generated even if a software update was " +
+                    "done using means outside of this cluster.",
                 xref: { document: "core", section: "11.20.7.7.2" }
             },
 
-            Field({ name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" }),
-            Field({ name: "ProductId", id: 0x1, type: "uint16", conformance: "M" })
+            Field({
+                name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M",
+                details: "This field shall be set to the same value as the one available in the Software Version attribute of " +
+                    "the Basic Information Cluster for the newly executing version.",
+                xref: { document: "core", section: "11.20.7.7.2.1" }
+            }),
+
+            Field({
+                name: "ProductId", id: 0x1, type: "uint16", conformance: "M",
+                details: "This field shall be set to the ProductID applying to the executing version, as reflected by the " +
+                    "Basic Information Cluster. This can be used to detect a product updating its definition due to a " +
+                    "large-scale functional update that may impact aspects of the product reflected in the DeviceModel " +
+                    "schema of the Distributed Compliance Ledger.",
+                xref: { document: "core", section: "11.20.7.7.2.2" }
+            })
         ),
 
         Event(
             {
                 name: "DownloadError", id: 0x2, access: "V", conformance: "M", priority: "info",
-                details: "This event shall be generated whenever an error occurs during OTA Requestor download operation.",
+                details: "DownloadError Event This event shall be generated whenever an error occurs during OTA Requestor " +
+                    "download operation.",
                 xref: { document: "core", section: "11.20.7.7.3" }
             },
-            Field({ name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M" }),
-            Field({ name: "BytesDownloaded", id: 0x1, type: "uint64", conformance: "M" }),
+
+            Field({
+                name: "SoftwareVersion", id: 0x0, type: "uint32", conformance: "M",
+                details: "This field shall be set to the value of the SoftwareVersion being downloaded, matching the " +
+                    "SoftwareVersion field of the QueryImageResponse that caused the failing download to take place.",
+                xref: { document: "core", section: "11.20.7.7.3.1" }
+            }),
+
+            Field({
+                name: "BytesDownloaded", id: 0x1, type: "uint64", conformance: "M",
+                details: "This field shall be set to the number of bytes that have been downloaded during the failing transfer " +
+                    "that caused this event to be generated.",
+                xref: { document: "core", section: "11.20.7.7.3.2" }
+            }),
+
             Field({
                 name: "ProgressPercent", id: 0x2, type: "uint8", conformance: "M", constraint: "0 to 100",
-                default: null, quality: "X"
+                default: null, quality: "X",
+                details: "This field shall be set to the nearest integer percent value reflecting how far within the transfer " +
+                    "the failure occurred during the failing transfer that caused this event to be generated, unless the " +
+                    "total length of the transfer is unknown, in which case it shall be null.",
+                xref: { document: "core", section: "11.20.7.7.3.3" }
             }),
-            Field({ name: "PlatformCode", id: 0x3, type: "int64", conformance: "M", default: null, quality: "X" })
+
+            Field({
+                name: "PlatformCode", id: 0x3, type: "int64", conformance: "M", default: null, quality: "X",
+                details: "This field SHOULD be set to some internal product-specific error code, closest in " +
+                    "temporal/functional proximity to the failure that caused this event to be generated. Otherwise, it " +
+                    "shall be null. This event field may be used for debugging purposes and no uniform definition exists " +
+                    "related to its meaning.",
+                xref: { document: "core", section: "11.20.7.7.3.4" }
+            })
         ),
 
         Command(
             {
                 name: "AnnounceOtaProvider", id: 0x0, access: "A", conformance: "O", direction: "request",
                 response: "status",
-                details: "This command may be invoked by Administrators to announce the presence of a particular OTA Provider." +
+
+                details: "### AnnounceOTAProvider Command" +
+                    "\n" +
+                    "This command may be invoked by Administrators to announce the presence of a particular OTA Provider." +
                     "\n" +
                     "This command shall be scoped to the accessing fabric." +
                     "\n" +
                     "If the accessing fabric index is 0, this command shall fail with an UNSUPPORTED_ACCESS status code.",
+
                 xref: { document: "core", section: "11.20.7.6.1" }
             },
 
-            Field({ name: "ProviderNodeId", id: 0x0, type: "node-id", access: "F", conformance: "M" }),
-            Field({ name: "VendorId", id: 0x1, type: "vendor-id", access: "F", conformance: "M" }),
-            Field({ name: "AnnouncementReason", id: 0x2, type: "AnnouncementReasonEnum", access: "F", conformance: "M" }),
-            Field({ name: "MetadataForNode", id: 0x3, type: "octstr", access: "F", conformance: "O", constraint: "max 512" }),
-            Field({ name: "Endpoint", id: 0x4, type: "endpoint-no", access: "F", conformance: "M" }),
+            Field({
+                name: "ProviderNodeId", id: 0x0, type: "node-id", access: "F", conformance: "M",
+                details: "This field shall contain the Node ID of a Node implementing the OTA Provider cluster server, on the " +
+                    "accessing fabric.",
+                xref: { document: "core", section: "11.20.7.6.1.1" }
+            }),
+
+            Field({
+                name: "VendorId", id: 0x1, type: "vendor-id", access: "F", conformance: "M",
+                details: "This field shall contain the assigned Vendor ID of the Node invoking this command, as it would " +
+                    "appear in that Node’s Basic Information Cluster VendorID attribute.",
+                xref: { document: "core", section: "11.20.7.6.1.2" }
+            }),
+
+            Field({
+                name: "AnnouncementReason", id: 0x2, type: "AnnouncementReasonEnum", access: "F", conformance: "M",
+                details: "This field shall contain a value expressing the reason for the announcement.",
+                xref: { document: "core", section: "11.20.7.6.1.3" }
+            }),
+
+            Field({
+                name: "MetadataForNode", id: 0x3, type: "octstr", access: "F", conformance: "O",
+                constraint: "max 512",
+
+                details: "This optional field, if present, shall consist of a top-level anonymous list; each list element " +
+                    "shall have a profile-specific tag encoded in fully-qualified form. Each list element shall contain a " +
+                    "manufacturer-specific payload, which the Node invoking this command wants to expose to the receiving " +
+                    "Node. This payload may be used for any purpose and SHOULD be as small as practical, especially if " +
+                    "invoked to groups, in order to reduce networking burden of these payloads." +
+                    "\n" +
+                    "This field SHOULD only be included if the sending OTA Provider has knowledge that some recipient can " +
+                    "make use of it.",
+
+                xref: { document: "core", section: "11.20.7.6.1.4" }
+            }),
+
+            Field({
+                name: "Endpoint", id: 0x4, type: "endpoint-no", access: "F", conformance: "M",
+
+                details: "This field shall contain the endpoint number which has the OTA Provider device type and OTA Software " +
+                    "Update Provider cluster server on the ProviderNodeID. This is provided to avoid having to do " +
+                    "discovery of the location of that endpoint by walking over all endpoints and checking their " +
+                    "Descriptor Cluster." +
+                    "\n" +
+                    "An OTA Provider may invoke this command directly to an OTA Requestor, to announce its presence as an " +
+                    "OTA Provider on the Fabric." +
+                    "\n" +
+                    "These announcements, if made, SHOULD be made at most once every 24 hours for any given target Node, " +
+                    "to assist OTA Requestors in discovering available OTA Provider resources, unless the " +
+                    "AnnouncementReason is UrgentUpdateAvailable, in which case this command may be more frequent." +
+                    "\n" +
+                    "Any invocation shall be made with a delay of at least 1 second between invocations from a given OTA " +
+                    "Provider, to reduce burden on the networking infrastructure and affect a form of serialized" +
+                    "\n" +
+                    "jitter. It is recommended to offset the first announcement of a round (i.e. new set of announcements " +
+                    "after a previous complete set) by a random delay time with a distribution span of" +
+                    "\n" +
+                    ">= 60 seconds to jitter announcement schedules over time." +
+                    "\n" +
+                    "On receipt of this command, an OTA Requestor SHOULD consider the new ProviderNodeID and " +
+                    "AnnouncementReason to possibly query for new software sooner than it would have with its default " +
+                    "behavior." +
+                    "\n" +
+                    "The OTA Requestor SHOULD NOT update entries in the DefaultOTAProviders list based on announcements." +
+                    "\n" +
+                    "The receiving Node may ignore the content of the announcement if it is unable or unwilling to " +
+                    "further query OTA Providers temporarily, or if its provider list is full. If the announcement is " +
+                    "ignored, the response SHOULD be SUCCESS." +
+                    "\n" +
+                    "Depending on the value of the AnnouncementReason field, the OTA Requestor may have to query the OTA " +
+                    "Provider. See Section 11.20.7.6.1.3, “AnnouncementReason Field” for the different values and their " +
+                    "meaning." +
+                    "\n" +
+                    "If present, the MetadataForNode field’s may be used by a receiving OTA Requestor in any way it deems " +
+                    "satisfactory. The MetadataForNode field SHOULD be empty under most normal operational circumstance, " +
+                    "but can be useful in environments such as field trials or integration test environments to hint at " +
+                    "additional capabilities which OTA Requestors may use in a particular Vendor-specific context.",
+
+                xref: { document: "core", section: "11.20.7.6.1.5" }
+            }),
+
             Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
         ),
 
         Datatype(
-            { name: "AnnouncementReasonEnum", type: "enum8", xref: { document: "core", section: "11.20.7.4.1" } },
+            {
+                name: "AnnouncementReasonEnum", type: "enum8",
+                details: "### AnnouncementReasonEnum Type",
+                xref: { document: "core", section: "11.20.7.4.1" }
+            },
+
             Field({
                 name: "SimpleAnnouncement", id: 0x0, conformance: "M",
-                description: "An OTA Provider is announcing its presence."
+                description: "An OTA Provider is announcing its presence.",
+                details: "An OTA Provider is announcing its presence, but there is no implication that an OTA Requestor would " +
+                    "have a new Software Image available if it queried immediately.",
+                xref: { document: "core", section: "11.20.7.4.1.1" }
             }),
+
             Field({
                 name: "UpdateAvailable", id: 0x1, conformance: "M",
-                description: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be available."
+                description: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be available.",
+                details: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software " +
+                    "Image may be available. The details may only be obtained by executing a OTA Software Update Query " +
+                    "procedure. A receiving OTA Requestor SHOULD only query the indicated OTA Provider at the " +
+                    "ProviderLocation at its next upcoming OTA Provider query.",
+                xref: { document: "core", section: "11.20.7.4.1.2" }
             }),
+
             Field({
                 name: "UrgentUpdateAvailable", id: 0x2, conformance: "M",
-                description: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be available, which contains an update that needs to be applied urgently."
+                description: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software Image MAY be available, which contains an update that needs to be applied urgently.",
+
+                details: "An OTA Provider is announcing, either to a single Node or to a group of Nodes, that a new Software " +
+                    "Image may be available, which contains an update that needs to be applied urgently. The details may " +
+                    "only be obtained by executing a OTA Software Update Query procedure. A receiving OTA Requestor " +
+                    "SHOULD query the indicated OTA Provider at the ProviderLocation after a random jitter delay between " +
+                    "1 and 600 seconds. This particular reason SHOULD only be employed when an urgent update is " +
+                    "available, such as an important security update, or just after initial commissioning of a device, to " +
+                    "assist OTA Requestors in more rapidly obtaining updated software.",
+
+                xref: { document: "core", section: "11.20.7.4.1.3" }
             })
         ),
 
         Datatype(
-            { name: "UpdateStateEnum", type: "enum8", xref: { document: "core", section: "11.20.7.4.2" } },
-            Field({ name: "Unknown", id: 0x0, conformance: "M", description: "Current state is not yet determined." }),
+            {
+                name: "UpdateStateEnum", type: "enum8",
+                details: "### UpdateStateEnum Type",
+                xref: { document: "core", section: "11.20.7.4.2" }
+            },
+
+            Field({
+                name: "Unknown", id: 0x0, conformance: "M", description: "Current state is not yet determined.",
+                details: "This value shall indicate that the current state is not yet determined. Nodes SHOULD attempt a " +
+                    "better state reporting.",
+                xref: { document: "core", section: "11.20.7.4.2.1" }
+            }),
+
             Field({
                 name: "Idle", id: 0x1, conformance: "M",
-                description: "Indicate a Node not yet in the process of software update."
+                description: "Indicate a Node not yet in the process of software update.",
+                details: "This value shall indicate a Node not yet in the process of software update, for example because it " +
+                    "is awaiting the moment when a query will be made.",
+                xref: { document: "core", section: "11.20.7.4.2.2" }
             }),
+
             Field({
                 name: "Querying", id: 0x2, conformance: "M",
-                description: "Indicate a Node in the process of querying an OTA Provider."
+                description: "Indicate a Node in the process of querying an OTA Provider.",
+                details: "This value shall indicate a Node in the process of querying an OTA Provider with QueryImage command, " +
+                    "including during the process of awaiting a response to that command.",
+                xref: { document: "core", section: "11.20.7.4.2.3" }
             }),
+
             Field({
                 name: "DelayedOnQuery", id: 0x3, conformance: "M",
-                description: "Indicate a Node waiting after a Busy response."
+                description: "Indicate a Node waiting after a Busy response.",
+                details: "This value shall indicate a Node waiting because it received a prior QueryImageResponse with a " +
+                    "Status field indicating Busy.",
+                xref: { document: "core", section: "11.20.7.4.2.4" }
             }),
+
             Field({
                 name: "Downloading", id: 0x4, conformance: "M",
-                description: "Indicate a Node currently in the process of downloading a software update."
+                description: "Indicate a Node currently in the process of downloading a software update.",
+                details: "This value shall indicate a Node currently in the process of downloading a software update.",
+                xref: { document: "core", section: "11.20.7.4.2.5" }
             }),
+
             Field({
                 name: "Applying", id: 0x5, conformance: "M",
-                description: "Indicate a Node currently in the process of verifying and applying a software update."
+                description: "Indicate a Node currently in the process of verifying and applying a software update.",
+                details: "This value shall indicate a Node currently in the process of verifying and applying a software " +
+                    "update.",
+                xref: { document: "core", section: "11.20.7.4.2.6" }
             }),
+
             Field({
                 name: "DelayedOnApply", id: 0x6, conformance: "M",
-                description: "Indicate a Node waiting caused by AwaitNextAction response."
+                description: "Indicate a Node waiting caused by AwaitNextAction response.",
+                details: "This value shall indicate a Node waiting because it received a prior ApplyUpdateResponse with an " +
+                    "Action field set to AwaitNextAction.",
+                xref: { document: "core", section: "11.20.7.4.2.7" }
             }),
+
             Field({
                 name: "RollingBack", id: 0x7, conformance: "M",
-                description: "Indicate a Node in the process of recovering to a previous version."
+                description: "Indicate a Node in the process of recovering to a previous version.",
+                details: "This value shall indicate a Node in the process of recovering to a previous version from a new " +
+                    "version that was applied, but that could not remain in force, for reasons such as invalid data " +
+                    "detected on boot, or significant runtime issues such as reboot loops. Eventually, the next state " +
+                    "seen SHOULD be Unknown or Idle.",
+                xref: { document: "core", section: "11.20.7.4.2.8" }
             }),
+
             Field({
                 name: "DelayedOnUserConsent", id: 0x8, conformance: "M",
                 description: "Indicate a Node is capable of user consent."
@@ -36929,31 +38083,75 @@ export const SpecMatter = Matter(
         ),
 
         Datatype(
-            { name: "ChangeReasonEnum", type: "enum8", xref: { document: "core", section: "11.20.7.4.3" } },
-            Field({ name: "Unknown", id: 0x0, conformance: "M", description: "The reason for a state change is unknown." }),
+            {
+                name: "ChangeReasonEnum", type: "enum8",
+                details: "### ChangeReasonEnum Type",
+                xref: { document: "core", section: "11.20.7.4.3" }
+            },
+
+            Field({
+                name: "Unknown", id: 0x0, conformance: "M",
+                description: "The reason for a state change is unknown.",
+                details: "This value shall indicate that the reason for a state change is unknown.",
+                xref: { document: "core", section: "11.20.7.4.3.1" }
+            }),
+
             Field({
                 name: "Success", id: 0x1, conformance: "M",
-                description: "The reason for a state change is the success of a prior operation."
+                description: "The reason for a state change is the success of a prior operation.",
+                details: "This value shall indicate that the reason for a state change is the success of a prior operation.",
+                xref: { document: "core", section: "11.20.7.4.3.2" }
             }),
+
             Field({
                 name: "Failure", id: 0x2, conformance: "M",
-                description: "The reason for a state change is the failure of a prior operation."
+                description: "The reason for a state change is the failure of a prior operation.",
+                details: "This value shall indicate that the reason for a state change is the failure of a prior operation.",
+                xref: { document: "core", section: "11.20.7.4.3.3" }
             }),
-            Field({ name: "TimeOut", id: 0x3, conformance: "M", description: "The reason for a state change is a time-out." }),
+
+            Field({
+                name: "TimeOut", id: 0x3, conformance: "M",
+                description: "The reason for a state change is a time-out.",
+                details: "This value shall indicate that the reason for a state change is a time-out condition as determined " +
+                    "by the OTA Requestor.",
+                xref: { document: "core", section: "11.20.7.4.3.4" }
+            }),
+
             Field({
                 name: "DelayByProvider", id: 0x4, conformance: "O",
-                description: "The reason for a state change is a request by the OTA Provider to wait."
+                description: "The reason for a state change is a request by the OTA Provider to wait.",
+                details: "This value shall indicate that the reason for a state change is a request by the OTA Provider to " +
+                    "await for a delay.",
+                xref: { document: "core", section: "11.20.7.4.3.5" }
             })
         ),
 
         Datatype(
             {
                 name: "ProviderLocation", type: "struct",
-                details: "This structure encodes a fabric-scoped location of an OTA provider on a given fabric.",
+                details: "### ProviderLocation Type" +
+                    "\n" +
+                    "This structure encodes a fabric-scoped location of an OTA provider on a given fabric.",
                 xref: { document: "core", section: "11.20.7.4.4" }
             },
-            Field({ name: "ProviderNodeId", id: 0x1, type: "node-id", access: "F", conformance: "M" }),
-            Field({ name: "Endpoint", id: 0x2, type: "endpoint-no", access: "F", conformance: "M" }),
+
+            Field({
+                name: "ProviderNodeId", id: 0x1, type: "node-id", access: "F", conformance: "M",
+                details: "This field shall contain the Node ID of the OTA Provider to contact within the Fabric identified by " +
+                    "the FabricIndex.",
+                xref: { document: "core", section: "11.20.7.4.4.1" }
+            }),
+
+            Field({
+                name: "Endpoint", id: 0x2, type: "endpoint-no", access: "F", conformance: "M",
+                details: "This field shall contain the endpoint number which has the OTA Provider device type and OTA Software " +
+                    "Update Provider cluster server on the ProviderNodeID. This is provided to avoid having to do " +
+                    "discovery of the location of that endpoint by walking over all endpoints and checking their " +
+                    "Descriptor Cluster.",
+                xref: { document: "core", section: "11.20.7.4.4.2" }
+            }),
+
             Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
         )
     ),
@@ -37208,12 +38406,12 @@ export const SpecMatter = Matter(
             { name: "DatastoreStatusEntry", type: "struct", xref: { document: "core", section: "11.24.5.2" } },
             Field({
                 name: "State", id: 0x0, type: "DatastoreStateEnum", access: "R F V", conformance: "M", default: 0,
-                details: "This field shall contain the current state of the target device operation.",
+                details: "State Field This field shall contain the current state of the target device operation.",
                 xref: { document: "core", section: "11.24.5.2.1" }
             }),
             Field({
                 name: "UpdateTimestamp", id: 0x1, type: "epoch-s", access: "R F V", conformance: "M", default: null,
-                details: "This field shall contain the timestamp of the last update.",
+                details: "UpdateTimestamp Field This field shall contain the timestamp of the last update.",
                 xref: { document: "core", section: "11.24.5.2.2" }
             }),
             Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
@@ -37224,7 +38422,7 @@ export const SpecMatter = Matter(
             Field({ name: "GroupKeySetId", id: 0x0, type: "uint16", access: "R F V", conformance: "M" }),
             Field({
                 name: "StatusEntry", id: 0x1, type: "DatastoreStatusEntry", access: "R F V", conformance: "M",
-                details: "Indicates whether entry in this list is pending, committed, or delete-pending.",
+                details: "StatusEntry Field Indicates whether entry in this list is pending, committed, or delete-pending.",
                 xref: { document: "core", section: "11.24.5.3.2" }
             }),
             Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
@@ -37237,44 +38435,45 @@ export const SpecMatter = Matter(
             },
             Field({
                 name: "GroupId", id: 0x0, type: "uint64", access: "R F V", conformance: "M",
-                details: "The unique identifier for the group.",
+                details: "GroupID Field The unique identifier for the group.",
                 xref: { document: "core", section: "11.24.5.4.1" }
             }),
 
             Field({
                 name: "FriendlyName", id: 0x1, type: "string", access: "R F V", conformance: "M",
                 constraint: "max 32",
-                details: "The friendly name for the group.",
+                details: "FriendlyName Field The friendly name for the group.",
                 xref: { document: "core", section: "11.24.5.4.2" }
             }),
 
             Field({
                 name: "GroupKeySetId", id: 0x2, type: "uint16", access: "R F V", conformance: "M",
                 constraint: "1 to 65535",
-                details: "The unique identifier for the group key set.",
+                details: "GroupKeySetID Field The unique identifier for the group key set.",
                 xref: { document: "core", section: "11.24.5.4.3" }
             }),
 
             Field({
                 name: "GroupCat", id: 0x3, type: "uint16", access: "R F V", conformance: "M",
                 constraint: "1 to 65535",
-                details: "CAT value for this group. This is used for control of individual members of a group (non-broadcast " +
-                    "commands).",
+                details: "GroupCAT Field CAT value for this group. This is used for control of individual members of a group " +
+                    "(non-broadcast commands).",
                 xref: { document: "core", section: "11.24.5.4.4" }
             }),
 
             Field({
                 name: "GroupCatVersion", id: 0x4, type: "uint16", access: "R F V", conformance: "M",
                 constraint: "1 to 65535",
-                details: "Current version number for this CAT.",
+                details: "GroupCATVersion Field Current version number for this CAT.",
                 xref: { document: "core", section: "11.24.5.4.5" }
             }),
 
             Field({
                 name: "GroupPermission", id: 0x5, type: "AccessControl.AccessControlEntryPrivilegeEnum",
                 access: "R F V", conformance: "M",
-                details: "The permission level associated with ACL entries for this group. There should be only one " +
-                    "Administrator group per fabric, and at most one Manage group per Ecosystem (Vendor Entry).",
+                details: "GroupPermission Field The permission level associated with ACL entries for this group. There should " +
+                    "be only one Administrator group per fabric, and at most one Manage group per Ecosystem (Vendor " +
+                    "Entry).",
                 xref: { document: "core", section: "11.24.5.4.6" }
             }),
 
@@ -37282,23 +38481,29 @@ export const SpecMatter = Matter(
         ),
 
         Datatype(
-            { name: "DatastoreBindingEntry", type: "struct", xref: { document: "core", section: "11.24.5.4.7" } },
+            {
+                name: "DatastoreBindingEntry", type: "struct",
+                details: "### Datastore Binding Entry Type",
+                xref: { document: "core", section: "11.24.5.4.7" }
+            },
+
             Field({
                 name: "ListId", id: 0x0, type: "uint16", access: "R F V", conformance: "M",
-                details: "The unique identifier for the Binding entry in the Datastore’s list of DatastoreBindingEntry.",
+                details: "ListID Field The unique identifier for the Binding entry in the Datastore’s list of " +
+                    "DatastoreBindingEntry.",
                 xref: { document: "core", section: "11.24.5.4.7.1" }
             }),
 
             Field({
                 name: "Binding", id: 0x1, type: "Binding.TargetStruct", access: "R F V", conformance: "M",
                 constraint: "desc",
-                details: "The binding target structure.",
+                details: "Binding Field The binding target structure.",
                 xref: { document: "core", section: "11.24.5.4.7.2" }
             }),
 
             Field({
                 name: "StatusEntry", id: 0x2, type: "DatastoreStatusEntry", access: "R F V", conformance: "M",
-                details: "Indicates whether entry in this list is pending, committed, or delete-pending.",
+                details: "StatusEntry Field Indicates whether entry in this list is pending, committed, or delete-pending.",
                 xref: { document: "core", section: "11.24.5.4.7.3" }
             }),
             Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
@@ -37308,12 +38513,12 @@ export const SpecMatter = Matter(
             { name: "DatastoreGroupIDEntry", type: "struct", xref: { document: "core", section: "11.24.5.5" } },
             Field({
                 name: "GroupId", id: 0x0, type: "group-id", access: "R F V", conformance: "M",
-                details: "The unique identifier for the group.",
+                details: "GroupID Field The unique identifier for the group.",
                 xref: { document: "core", section: "11.24.5.5.1" }
             }),
             Field({
                 name: "StatusEntry", id: 0x1, type: "DatastoreStatusEntry", access: "R F V", conformance: "M",
-                details: "Indicates whether entry in this list is pending, committed, or delete-pending.",
+                details: "StatusEntry Field Indicates whether entry in this list is pending, committed, or delete-pending.",
                 xref: { document: "core", section: "11.24.5.5.2" }
             }),
             Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
@@ -37322,36 +38527,37 @@ export const SpecMatter = Matter(
         Datatype(
             { name: "DatastoreEndpointEntry", type: "struct", xref: { document: "core", section: "11.24.5.6" } },
             Field({
-                name: "EndpointID", id: 0x0, type: "endpoint-no", access: "R F V", conformance: "M",
-                details: "The unique identifier for the endpoint.",
+                name: "EndpointId", id: 0x0, type: "endpoint-no", access: "R F V", conformance: "M",
+                details: "EndpointID Field The unique identifier for the endpoint.",
                 xref: { document: "core", section: "11.24.5.6.1" }
             }),
             Field({
                 name: "NodeId", id: 0x1, type: "node-id", access: "R F V", conformance: "M",
-                details: "The unique identifier for the node.",
+                details: "NodeID Field The unique identifier for the node.",
                 xref: { document: "core", section: "11.24.5.6.2" }
             }),
 
             Field({
                 name: "FriendlyName", id: 0x2, type: "string", access: "R F V", conformance: "M",
                 constraint: "max 32",
-                details: "Friendly name for this endpoint which is propagated to nodes. Any changes to Friendly Name or Group " +
-                    "Id List (add/remove entry) must follow the pending→committed workflow with current state reflected " +
-                    "in the Status Entry.",
+                details: "FriendlyName Field Friendly name for this endpoint which is propagated to nodes. Any changes to " +
+                    "Friendly Name or Group Id List (add/remove entry) must follow the pending→committed workflow with " +
+                    "current state reflected in the Status Entry.",
                 xref: { document: "core", section: "11.24.5.6.3" }
             }),
 
             Field({
                 name: "StatusEntry", id: 0x3, type: "DatastoreStatusEntry", access: "R F V", conformance: "M",
-                details: "Indicates whether changes to Friendly Name are pending or committed.",
+                details: "StatusEntry Field Indicates whether changes to Friendly Name are pending or committed.",
                 xref: { document: "core", section: "11.24.5.6.4" }
             }),
 
             Field(
                 {
                     name: "GroupIdList", id: 0x4, type: "list", access: "R F V", conformance: "M",
-                    details: "List of Group IDs that this endpoint is a member of. Any changes to Group Id List (add/remove entry) " +
-                        "must follow the pending→committed workflow with current state reflected in the Status Entry.",
+                    details: "GroupIDList Field List of Group IDs that this endpoint is a member of. Any changes to Group Id List " +
+                        "(add/remove entry) must follow the pending→committed workflow with current state reflected in the " +
+                        "Status Entry.",
                     xref: { document: "core", section: "11.24.5.6.5" }
                 },
 
@@ -37361,8 +38567,8 @@ export const SpecMatter = Matter(
             Field(
                 {
                     name: "BindingList", id: 0x5, type: "list", access: "R F V", conformance: "M",
-                    details: "List of Binding Targets for this endpoint. Any changes to Binding List (add/remove entry) must " +
-                        "follow the pending→committed workflow with current state reflected in the Status Entry.",
+                    details: "BindingList Field List of Binding Targets for this endpoint. Any changes to Binding List (add/remove " +
+                        "entry) must follow the pending→committed workflow with current state reflected in the Status Entry.",
                     xref: { document: "core", section: "11.24.5.6.6" }
                 },
 
@@ -37376,20 +38582,20 @@ export const SpecMatter = Matter(
             { name: "DatastoreACLEntry", type: "struct", xref: { document: "core", section: "11.24.5.7" } },
             Field({
                 name: "ListId", id: 0x0, type: "uint16", access: "R F V", conformance: "M",
-                details: "The unique identifier for the ACL entry in the Datastore’s list of DatastoreACLEntry.",
+                details: "ListID Field The unique identifier for the ACL entry in the Datastore’s list of DatastoreACLEntry.",
                 xref: { document: "core", section: "11.24.5.7.1" }
             }),
 
             Field({
                 name: "AclEntry", id: 0x1, type: "AccessControl.AccessControlEntryStruct", access: "R F V",
                 conformance: "M",
-                details: "The Access Control Entry structure.",
+                details: "ACLEntry Field The Access Control Entry structure.",
                 xref: { document: "core", section: "11.24.5.7.2" }
             }),
 
             Field({
                 name: "StatusEntry", id: 0x2, type: "DatastoreStatusEntry", access: "R F V", conformance: "M",
-                details: "Indicates whether entry in this list is pending, committed, or delete-pending.",
+                details: "StatusEntry Field Indicates whether entry in this list is pending, committed, or delete-pending.",
                 xref: { document: "core", section: "11.24.5.7.3" }
             }),
             Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
@@ -37399,31 +38605,31 @@ export const SpecMatter = Matter(
             { name: "DatastoreNodeInformationEntry", type: "struct", xref: { document: "core", section: "11.24.5.8" } },
             Field({
                 name: "NodeId", id: 0x1, type: "node-id", access: "R F V", conformance: "M",
-                details: "The unique identifier for the node.",
+                details: "NodeID Field The unique identifier for the node.",
                 xref: { document: "core", section: "11.24.5.8.1" }
             }),
 
             Field({
                 name: "FriendlyName", id: 0x2, type: "string", access: "R F V", conformance: "M",
                 constraint: "max 32",
-                details: "Friendly name for this node which is not propagated to nodes.",
+                details: "FriendlyName Field Friendly name for this node which is not propagated to nodes.",
                 xref: { document: "core", section: "11.24.5.8.2" }
             }),
 
             Field({
                 name: "CommissioningStatusEntry", id: 0x3, type: "DatastoreStatusEntry", access: "R F V",
                 conformance: "M",
-                details: "Set to pending prior to completing commissioning, and set to completed after commissioning complete " +
-                    "is successful.",
+                details: "CommissioningStatusEntry Field Set to pending prior to completing commissioning, and set to " +
+                    "completed after commissioning complete is successful.",
                 xref: { document: "core", section: "11.24.5.8.3" }
             }),
 
             Field(
                 {
                     name: "NodeKeySetList", id: 0x4, type: "list", access: "R F V", conformance: "M",
-                    details: "List of Key Set information for the given Node. Updates to the Group Key List must follow the " +
-                        "pending→committed workflow with current state reflected in the Status Entry for the corresponding " +
-                        "entry in the list.",
+                    details: "NodeKeySetList Field List of Key Set information for the given Node. Updates to the Group Key List " +
+                        "must follow the pending→committed workflow with current state reflected in the Status Entry for the " +
+                        "corresponding entry in the list.",
                     xref: { document: "core", section: "11.24.5.8.4" }
                 },
 
@@ -37433,10 +38639,10 @@ export const SpecMatter = Matter(
             Field(
                 {
                     name: "AclList", id: 0x5, type: "list", access: "R F V", conformance: "M",
-                    details: "List of ACL entries. Group membership for this node is inferred from the ACLs. Client access to a " +
-                        "Node Information Entry will be determined from the ACL List. Any changes to ACL List (add/remove " +
-                        "entry) must follow the pending→committed workflow with current state reflected in the Status Entry " +
-                        "for the corresponding entry in the list.",
+                    details: "ACLList Field List of ACL entries. Group membership for this node is inferred from the ACLs. Client " +
+                        "access to a Node Information Entry will be determined from the ACL List. Any changes to ACL List " +
+                        "(add/remove entry) must follow the pending→committed workflow with current state reflected in the " +
+                        "Status Entry for the corresponding entry in the list.",
                     xref: { document: "core", section: "11.24.5.8.5" }
                 },
 
@@ -37446,9 +38652,9 @@ export const SpecMatter = Matter(
             Field(
                 {
                     name: "EndpointList", id: 0x6, type: "list", access: "R F V", conformance: "M",
-                    details: "The list of endpoints for this node. Any changes to Endpoint List (add/remove entry) must follow the " +
-                        "pending→committed workflow with current state reflected in the Status Entry for the corresponding " +
-                        "entry in the list.",
+                    details: "EndpointList Field The list of endpoints for this node. Any changes to Endpoint List (add/remove " +
+                        "entry) must follow the pending→committed workflow with current state reflected in the Status Entry " +
+                        "for the corresponding entry in the list.",
                     xref: { document: "core", section: "11.24.5.8.6" }
                 },
 
@@ -37465,25 +38671,25 @@ export const SpecMatter = Matter(
             },
             Field({
                 name: "NodeId", id: 0x1, type: "node-id", access: "R F V", conformance: "M",
-                details: "The unique identifier for the node.",
+                details: "NodeID Field The unique identifier for the node.",
                 xref: { document: "core", section: "11.24.5.9.1" }
             }),
 
             Field({
                 name: "FriendlyName", id: 0x2, type: "string", access: "R F V", conformance: "M",
                 constraint: "max 32",
-                details: "Friendly name for this node which is not propagated to nodes.",
+                details: "FriendlyName Field Friendly name for this node which is not propagated to nodes.",
                 xref: { document: "core", section: "11.24.5.9.2" }
             }),
 
             Field({
                 name: "VendorId", id: 0x3, type: "vendor-id", access: "R F V", conformance: "M",
-                details: "The Vendor ID for the node.",
+                details: "VendorID Field The Vendor ID for the node.",
                 xref: { document: "core", section: "11.24.5.9.3" }
             }),
             Field({
                 name: "Icac", id: 0x4, type: "octstr", access: "R F V", conformance: "M", constraint: "max 400",
-                details: "The ICAC used to issue the NOC.",
+                details: "ICAC Field The ICAC used to issue the NOC.",
                 xref: { document: "core", section: "11.24.5.9.4" }
             }),
             Field({ name: "FabricIndex", id: 0xfe, type: "FabricIndex" })
@@ -37524,14 +38730,16 @@ export const SpecMatter = Matter(
 
             Field({
                 name: "StatusCode", id: 0x0, type: "IcacsrRequestStatusEnum", conformance: "M",
-                details: "This field shall contain an ICACSRRequestStatusEnum value representing the status of the Section " +
+                details: "### StatusCode Field" +
+                    "\n" +
+                    "This field shall contain an ICACSRRequestStatusEnum value representing the status of the Section " +
                     "11.25.5.1, “ICACSRRequest Command” operation.",
                 xref: { document: "core", section: "11.25.5.2.1" }
             }),
 
             Field({
                 name: "Icac", id: 0x1, type: "octstr", conformance: "O", constraint: "max 400",
-                details: "If present, it shall contain the NOC Issuer Certificate in PEM format.",
+                details: "ICAC Field If present, it shall contain the NOC Issuer Certificate in PEM format.",
                 xref: { document: "core", section: "11.25.5.2.2" }
             })
         ),
@@ -37592,7 +38800,7 @@ export const SpecMatter = Matter(
             Field({ name: "Ok", id: 0x0, conformance: "M", description: "No error" }),
             Field({
                 name: "TransferAnchorStatusDatastoreBusy", id: 0x1, conformance: "M",
-                description: "Anchor Transfer was not started due to on- going Datastore operations"
+                description: "Anchor Transfer was not started due to on-going Datastore operations"
             }),
             Field({
                 name: "TransferAnchorStatusNoUserConsent", id: 0x2, conformance: "M",
@@ -37760,8 +38968,8 @@ export const SpecMatter = Matter(
             Field({
                 name: "FabricSynchronization", constraint: "0",
                 description: "Aggregators which support Fabric Synchronization may be commissioned.",
-                details: "The FabricSynchronization bit shall be set to 1 if and only if the server supports commissioning " +
-                    "nodes that support Fabric Synchronization.",
+                details: "FabricSynchronization Bit The FabricSynchronization bit shall be set to 1 if and only if the server " +
+                    "supports commissioning nodes that support Fabric Synchronization.",
                 xref: { document: "core", section: "11.26.4.1.1" }
             })
         )
@@ -41365,7 +42573,7 @@ export const SpecMatter = Matter(
         }),
 
         SemanticTag({
-            name: "EV", id: 0x4,
+            name: "Ev", id: 0x4,
             description: "The Power Source cluster is related to power provided from an electric vehicle",
             details: "Power Source clusters with this tag shall implement the BAT feature.",
             xref: { document: "namespace", section: "15.4" }

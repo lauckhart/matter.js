@@ -53,6 +53,9 @@ export const Str = (el: HTMLElement) => {
 
             // Collapse whitespace
             .replace(/\s/g, " ")
+
+            // Convert "foo- bar" to "foo-bar"
+            .replace(/([a-z]-) ([a-z])/g, "$1$2")
     );
 };
 

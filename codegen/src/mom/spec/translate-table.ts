@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Logger, isObject } from "#general";
+import { Logger, camelize, isObject } from "#general";
 import { AnyElement, FieldElement, Specification } from "#model";
 import { addDocumentation } from "./add-documentation.js";
 import { Str } from "./html-translators.js";
@@ -241,10 +241,13 @@ function installPreciseDetails(
         // We identify the detail section associated with a row using both "name" and "description", optionally followed
         // by a suffix specific to the type of thing
         let detail: HtmlReference | undefined;
+        let identifiedAs = "";
         for (let identifier of [record.name, (record as { description?: string }).description]) {
             if (identifier === undefined) {
                 continue;
             }
+
+            identifiedAs = identifier;
 
             identifier = identifier.toLowerCase();
 
@@ -270,19 +273,49 @@ function installPreciseDetails(
             }
         }
 
-        if (detail) {
-            record.xref = detail.xref;
+        // If we didn't identify a detail section we must skip
+        if (!detail) {
+            continue;
+        }
 
-            addDocumentation(record, detail);
+        // Heuristically identifying proper case from table cells in the newer specs is pretty much impossible.  They
+        // usually appear in a badly garbled narrow, wrapped name column where it's difficult to tell where actual word
+        // boundaries are, especially in acronyms
+        //
+        // Fortunately the name is usually repeated in the detail section header and there it is not wrapped.  So we use
+        // that to determine proper case
+        if (identifiedAs === record.name) {
+            let detailName = detail.name.substring(0, identifiedAs.length);
 
-            if (record.details && record.details.indexOf("SHALL indicate the of the") !== -1) {
-                // Goofballs copy & pasted this typo a couple times
-                record.details = record.details.replace("the of the", "the status of the");
+            // Global types usually are all lowercase.  Leave their case alone.  Otherwise the names should start with a
+            // capital letter and we want them properly camelized
+            if (detailName.match(/[A-Z]/)) {
+                detailName = camelize(detailName, true);
             }
 
-            if (childTranslator) {
-                record.children = childTranslator(tag, record, detail);
+            if (
+                detailName !== record.name &&
+                // Don't do this for features where "description" is the long name and may match the "name" except with
+                // incorrect case (which should be uppercase)
+                identifiedAs.toLowerCase() !== (record as { description?: string }).description?.toLowerCase()
+            ) {
+                record.name = detailName;
             }
+        }
+
+        // Update metadata
+        record.xref = detail.xref;
+        addDocumentation(record, detail);
+
+        // One-off repair, should move somewhere where such hacks are appropriate
+        if (record.details && record.details.indexOf("SHALL indicate the of the") !== -1) {
+            // Goofballs copy & pasted this typo a couple times
+            record.details = record.details.replace("the of the", "the status of the");
+        }
+
+        // Translate children (such as datatype or ACE fields)
+        if (childTranslator) {
+            record.children = childTranslator(tag, record, detail);
         }
     }
 }

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Bullets } from "@matter/general";
+import { looksLikeListItem } from "@matter/general";
 import { Words } from "../../util/words.js";
 import { Str } from "./html-translators.js";
 import { HtmlReference } from "./spec-types.js";
@@ -22,8 +22,6 @@ export const EndContentFlags = [
  * Uncommon english words that are part of known splits.
  */
 export const NotWords = new Set(["cur"]);
-
-const liTest = new RegExp(`^[${Bullets.join("")}]\\s]`);
 
 /**
  * A light attempt at dropping text to make documentation seem slightly less scavenged.
@@ -66,7 +64,6 @@ function extractUsefulDocumentation(text: string) {
         )
         .replace(/. if the AbsolutePosition/, ".\nif the AbsolutePosition")
         .replace(/Optional temperature, humidity and occupancy sensors.*/, "")
-        .replace(/([a-z])- ([a-z])/, "$1-$2")
         .trim();
 }
 
@@ -90,6 +87,10 @@ function mergeSplitParagraphs(paragraphs: string[]) {
     // Next merge by identifying sentence splits
     for (let i = 0; i < paragraphs.length - 1; i++) {
         if (paragraphs[i].endsWith(".") || paragraphs[i].endsWith(":") || paragraphs[i].startsWith("###")) {
+            continue;
+        }
+
+        if (i && looksLikeListItem(paragraphs[i - 1]) && looksLikeListItem(paragraphs[i])) {
             continue;
         }
 
@@ -129,7 +130,8 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
 
     let collectNote = false;
 
-    const listIndent = Array<number>();
+    let listIndent = 0;
+    let listSpacing = 0;
 
     prose: for (const p of prose) {
         // Anchors receive special examination
@@ -140,7 +142,7 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
 
             // Ignore table notations
             if (text.match(/^Table \d+/)) {
-                listIndent.length = 0;
+                listIndent = 0;
                 continue;
             }
 
@@ -157,14 +159,14 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
 
         // Next paragraph is a note if text is "NOTE"
         if (text === "NOTE") {
-            listIndent.length = 0;
+            listIndent = 0;
             collectNote = true;
             continue;
         }
 
         // Create note if we we saw "NOTE" previously
         if (collectNote) {
-            listIndent.length = 0;
+            listIndent = 0;
             paragraphs.push(`> [!NOTE]\n> ${extractUsefulDocumentation(text)}`);
             collectNote = false;
             continue;
@@ -181,30 +183,25 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
         if (text) {
             if (looksLikeHeading) {
                 // Special case
-                listIndent.length = 0;
+                listIndent = 0;
                 text = `### ${text}`;
-            } else if (liTest.exec(text)) {
-                // Create proper list indentation relying on the fact that Acrobat injects bullets as text and indents
-                // using left padding
-                const indentStr = p.getAttribute("style")?.replace(/.*padding-left: (\d+).*/, "$1");
-                let indent;
-                if (indentStr) {
-                    indent = Number.parseInt(indentStr);
-                    if (Number.isNaN(listIndent)) {
-                        indent = 0;
-                    }
-                } else {
-                    indent = 0;
+            } else if (looksLikeListItem(text)) {
+                // This looks like a list entry; record metadata required to detect broken list entry "paragraphs" that
+                // occur due to page split
+                listIndent = getIndent(p);
+
+                // We use this as an additional heuristic to avoid joining lists with paragraphs that have the same
+                // indentation
+                listSpacing = getPaddingTop(p);
+            } else if (listIndent) {
+                // Repair split list entries.  We do this earlier than other repairs because we leverage styling
+                // information that is unavailable after conversion to text
+                if (getIndent(p) >= listIndent && getPaddingTop(p) <= listSpacing) {
+                    paragraphs[paragraphs.length - 1] += ` ${text}`;
+                    continue;
                 }
-                while (listIndent && listIndent[listIndent.length - 1] > indent) {
-                    listIndent.pop();
-                }
-                if (!listIndent.length || listIndent[listIndent.length - 1] == indent) {
-                    listIndent.push(indent);
-                }
-                text = `${" ".repeat((listIndent.length - 1) * 2)} ${text}`;
-            } else {
-                listIndent.length = 0;
+
+                listIndent = 0;
             }
             paragraphs.push(text);
         }
@@ -215,4 +212,41 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
         paragraphs = paragraphs.map(extractUsefulDocumentation).filter(p => p !== "");
         target.details = paragraphs.join("\n");
     }
+}
+
+function getIndent(el: HTMLElement) {
+    return sumStyles(el, "padding-left", "margin-left", "text-indent");
+}
+
+function getPaddingTop(el: HTMLElement) {
+    let value = sumStyles(el, "padding-top");
+
+    // Acrobat's formatting is terrible.  Detect "<p><br/></p>" which often ends up separating paragraphs from lists
+    if (el.previousElementSibling?.children[0]?.tagName === "BR") {
+        value += 10;
+    }
+
+    return value;
+}
+
+function sumStyles(el: HTMLElement, ...names: string[]) {
+    const styles = el.style;
+
+    let sum = 0;
+
+    for (const name of names) {
+        const value = styles.getPropertyValue(name)?.toString();
+        if (!value) {
+            continue;
+        }
+        const number = Number.parseInt(value);
+        if (!number) {
+            continue;
+        }
+
+        // Do not worry about units; we're just spitballing anyway
+        sum += number;
+    }
+
+    return sum;
 }
