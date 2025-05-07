@@ -35,7 +35,7 @@ export namespace GeneralCommissioningInterface {
          *     timer shall be armed for that duration.
          *
          *   • If ExpiryLengthSeconds is non-zero and the fail-safe timer was currently armed, and the accessing Fabric
-         *     matches the fail-safe context’s associated Fabric, then the fail-safe timer shall be re- armed to expire
+         *     matches the fail-safe context’s associated Fabric, then the fail-safe timer shall be re-armed to expire
          *     in ExpiryLengthSeconds.
          *
          *   • Otherwise, the command shall leave the current fail-safe state unchanged and immediately respond with
@@ -147,11 +147,10 @@ export namespace GeneralCommissioningInterface {
          * attribute reflected by the Basic Information Cluster configuration, but the SetRegulatoryConfigResponse
          * replied shall have the ErrorCode field set to ValueOutsideRange error.
          *
-         * If the LocationCapability attribute is not Indoor/Outdoor and the NewRegulatoryConfig value
-         *
-         * received does not match either the Indoor or Outdoor fixed value in LocationCapability, then the
-         * SetRegulatoryConfigResponse replied shall have the ErrorCode field set to ValueOutsideRange error and the
-         * RegulatoryConfig attribute and associated internal radio configuration shall remain unchanged.
+         * If the LocationCapability attribute is not Indoor/Outdoor and the NewRegulatoryConfig value received does not
+         * match either the Indoor or Outdoor fixed value in LocationCapability, then the SetRegulatoryConfigResponse
+         * replied shall have the ErrorCode field set to ValueOutsideRange error and the RegulatoryConfig attribute and
+         * associated internal radio configuration shall remain unchanged.
          *
          * If the LocationCapability attribute is set to Indoor/Outdoor, then the RegulatoryConfig attribute shall be
          * set to match the NewRegulatoryConfig field.
@@ -178,9 +177,8 @@ export namespace GeneralCommissioningInterface {
          * Administrator operations requiring usage of the Fail Safe timer. It ensures that the Server is configured in
          * a state such that it still has all necessary elements to be fully operable within a Fabric, such as ACL
          * entries (see Section 9.10, “Access Control Cluster”) and operational credentials (see Section 6.4, “Node
-         * Operational Credentials Specification”), and that the Node is reachable using CASE
-         *
-         * (CASE)”) over an operational network.
+         * Operational Credentials Specification”), and that the Node is reachable using CASE (see Section 4.14.2,
+         * “Certificate Authenticated Session Establishment (CASE)”) over an operational network.
          *
          * An ErrorCode of NoFailSafe shall be responded to the invoker if the CommissioningComplete command was
          * received when no Fail-Safe context exists.
