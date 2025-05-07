@@ -2007,8 +2007,8 @@ export namespace Thermostat {
              *     a. If the BuiltIn field is null:
              *
              *       i. If there is a PresetStruct in the current value with a matching PresetHandle field, the BuiltIn
-             *           field on the pending PresetStruct shall be set to the value of the BuiltIn on the matching
-             *           PresetStruct.
+             *          field on the pending PresetStruct shall be set to the value of the BuiltIn on the matching
+             *          PresetStruct.
              *
              *       ii. Otherwise, the BuiltIn field on the pending PresetStruct shall be set to false.
              *
@@ -2021,11 +2021,11 @@ export namespace Thermostat {
              *        PresetStruct, the server shall check for invalid removal of the PresetStruct:
              *
              *       i. If the BuiltIn field is true on the removed PresetStruct, the attribute status shall be
-             *            CONSTRAINT_ERROR.
+             *          CONSTRAINT_ERROR.
              *
              *       ii. If the MSCH feature is supported and the removed PresetHandle would be referenced by any
-             *            PresetHandle on any ScheduleTransitionStruct on any ScheduleStruct in the updated value of the
-             *            Schedules attribute, the attribute status shall be INVALID_IN_STATE.
+             *           PresetHandle on any ScheduleTransitionStruct on any ScheduleStruct in the updated value of the
+             *           Schedules attribute, the attribute status shall be INVALID_IN_STATE.
              *
              *       iii. If the removed PresetHandle is equal to the value of the ActivePresetHandle attribute, the
              *            attribute status shall be INVALID_IN_STATE.
@@ -2109,11 +2109,11 @@ export namespace Thermostat {
              *        modification of an existing schedule.
              *
              *       i. If the value of the ScheduleHandle field does not match any of the existing schedules, a
-             *            response with the status code NOT_FOUND shall be returned.
+             *          response with the status code NOT_FOUND shall be returned.
              *
              *       ii. If the BuiltIn field is true, and the ScheduleStruct in the current value with a matching
-             *            ScheduleHandle field has a BuiltIn field set to false, a response with the status code
-             *            CONSTRAINT_ERROR shall be returned.
+             *           ScheduleHandle field has a BuiltIn field set to false, a response with the status code
+             *           CONSTRAINT_ERROR shall be returned.
              *
              *       iii. If the BuiltIn field is false, and the ScheduleStruct in the current value with a matching
              *            ScheduleHandle field has a BuiltIn field set to true, a response with the status code
@@ -2150,8 +2150,8 @@ export namespace Thermostat {
              *        PresetHandle field, a response with the status code CONSTRAINT_ERROR shall be returned.
              *
              *       i. If the SystemMode field is present, but the ScheduleTypeStruct matching the value of the
-             *           SystemMode field on the encompassing ScheduleStruct does not have the SupportsSetpoints bit
-             *           set, a response with the status code CONSTRAINT_ERROR shall be returned.
+             *          SystemMode field on the encompassing ScheduleStruct does not have the SupportsSetpoints bit set,
+             *          a response with the status code CONSTRAINT_ERROR shall be returned.
              *
              *       ii. If the SystemMode field is has a value of SystemModeOff, but the ScheduleTypeStruct matching
              *           the value of the SystemMode field on the encompassing ScheduleStruct does not have the
@@ -2181,8 +2181,8 @@ export namespace Thermostat {
              *     a. If the BuiltIn field is null:
              *
              *       i. If there is a ScheduleStruct in the current value with a matching ScheduleHandle field, the
-             *           BuiltIn field on the pending ScheduleStruct shall be set to the value of the BuiltIn on the
-             *           matching ScheduleStruct.
+             *          BuiltIn field on the pending ScheduleStruct shall be set to the value of the BuiltIn on the
+             *          matching ScheduleStruct.
              *
              *       ii. Otherwise, the BuiltIn field on the pending ScheduleStruct shall be set to false.
              *
@@ -2195,7 +2195,7 @@ export namespace Thermostat {
              *        ScheduleStruct, the server shall check for invalid removal of the ScheduleStruct:
              *
              *       i. If the BuiltIn field is true on the removed ScheduleStruct, the attribute status shall be
-             *           CONSTRAINT_ERROR.
+             *          CONSTRAINT_ERROR.
              *
              *       ii. If the removed ScheduleHandle is equal to the value of the ActiveScheduleHandle attribute, the
              *           attribute status shall be INVALID_IN_STATE.

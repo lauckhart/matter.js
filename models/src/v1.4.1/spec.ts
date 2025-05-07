@@ -38048,7 +38048,7 @@ export const SpecMatter = Matter(
 
     Cluster(
         {
-            name: "JointFabricDatastoreCluster", id: 0x752, classification: "node", pics: "JFDS",
+            name: "JointFabricDatastore", id: 0x752, classification: "node", pics: "JFDS",
 
             details: "The Joint Fabric Datastore Cluster is a cluster that provides a mechanism for the Joint Fabric " +
                 "Administrators to manage the set of Nodes, Groups, and Group membership among Nodes in the Joint " +

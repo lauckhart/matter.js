@@ -97,31 +97,31 @@ export namespace GeneralCommissioningInterface {
          *   1. Terminate any open PASE secure session by clearing any associated Secure Session Context at the Server.
          *
          *   2. Revoke the temporary administrative privileges granted to any open PASE session (see Section 6.6.2.9,
-         *       “Bootstrapping of the Access Control Cluster”) at the Server.
+         *      “Bootstrapping of the Access Control Cluster”) at the Server.
          *
          *   3. If an AddNOC or UpdateNOC command has been successfully invoked, terminate all CASE sessions associated
-         *       with the Fabric whose Fabric Index is recorded in the Fail-Safe context (see ArmFailSafe) by clearing
-         *       any associated Secure Session Context at the Server.
+         *      with the Fabric whose Fabric Index is recorded in the Fail-Safe context (see ArmFailSafe) by clearing
+         *      any associated Secure Session Context at the Server.
          *
          *   4. Reset the configuration of all Network Commissioning Networks attribute to their state prior to the
-         *       Fail-Safe being armed.
+         *      Fail-Safe being armed.
          *
          *   5. If an UpdateNOC command had been successfully invoked, revert the state of operational key pair, NOC and
-         *       ICAC for that Fabric to the state prior to the Fail-Safe timer being armed, for the Fabric Index that
-         *       was the subject of the UpdateNOC command.
+         *      ICAC for that Fabric to the state prior to the Fail-Safe timer being armed, for the Fabric Index that
+         *      was the subject of the UpdateNOC command.
          *
          *   6. If an AddNOC command had been successfully invoked, achieve the equivalent effect of invoking the
-         *       RemoveFabric command against the Fabric Index stored in the Fail-Safe Context for the Fabric Index that
-         *       was the subject of the AddNOC command. This shall remove all associations to that Fabric including all
-         *       fabric-scoped data, and may possibly factory-reset the device depending on current device state. This
-         *       shall only apply to Fabrics added during the fail-safe period as the result of the AddNOC command.
+         *      RemoveFabric command against the Fabric Index stored in the Fail-Safe Context for the Fabric Index that
+         *      was the subject of the AddNOC command. This shall remove all associations to that Fabric including all
+         *      fabric-scoped data, and may possibly factory-reset the device depending on current device state. This
+         *      shall only apply to Fabrics added during the fail-safe period as the result of the AddNOC command.
          *
          *   7. If the CSRRequest command had been successfully invoked, but no AddNOC or UpdateNOC command had been
-         *       successfully invoked, then the new operational key pair temporarily generated for the purposes of NOC
-         *       addition or update (see Node Operational CSR Procedure) shall be removed as it is no longer needed.
+         *      successfully invoked, then the new operational key pair temporarily generated for the purposes of NOC
+         *      addition or update (see Node Operational CSR Procedure) shall be removed as it is no longer needed.
          *
          *   8. Remove any RCACs added by the AddTrustedRootCertificate command that are not currently referenced by any
-         *       entry in the Fabrics attribute.
+         *      entry in the Fabrics attribute.
          *
          *   9. Reset the Breadcrumb attribute to zero.
          *

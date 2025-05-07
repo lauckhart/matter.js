@@ -85,14 +85,14 @@ export const EnergyPreference = Cluster(
             "CurrentEnergyBalance attribute to the index which the manufacturer specifies most closely matches " +
             "the previous value, while preserving extreme preferences as follows:" +
             "\n" +
-            "1. If the previous value of CurrentEnergyBalance was zero, indicating a total preference for the " +
-            "priority specified by the first element in EnergyPriorities, the new value of CurrentEnergyBalance " +
-            "shall also be zero." +
+            "  1. If the previous value of CurrentEnergyBalance was zero, indicating a total preference for the " +
+            "     priority specified by the first element in EnergyPriorities, the new value of " +
+            "     CurrentEnergyBalance shall also be zero." +
             "\n" +
-            "2. If the previous value of CurrentEnergyBalance was the index of the last BalanceStruct in the " +
-            "previous value of EnergyBalances, indicating a total preference for the priority specified by the " +
-            "last element in EnergyPriorities, the new value of CurrentEnergyBalance shall be the index of the " +
-            "last element in the updated value of EnergyBalances.",
+            "  2. If the previous value of CurrentEnergyBalance was the index of the last BalanceStruct in the " +
+            "     previous value of EnergyBalances, indicating a total preference for the priority specified by " +
+            "     the last element in EnergyPriorities, the new value of CurrentEnergyBalance shall be the index " +
+            "     of the last element in the updated value of EnergyBalances.",
 
         xref: { document: "cluster", section: "9.7.6.2" }
     }),

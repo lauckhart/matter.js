@@ -98,15 +98,15 @@ export const AccessControl = Cluster(
                 "\n" +
                 "In addition, use of this feature shall NOT restrict the following clusters on any endpoint:" +
                 "\n" +
-                "1. the Descriptor Cluster (0x001D)" +
+                "  1. the Descriptor Cluster (0x001D)" +
                 "\n" +
-                "2. the Binding Cluster (0x001E)" +
+                "  2. the Binding Cluster (0x001E)" +
                 "\n" +
-                "3. the Network Commissioning Cluster (0x0031)" +
+                "  3. the Network Commissioning Cluster (0x0031)" +
                 "\n" +
-                "4. the Identify Cluster (0x0003)" +
+                "  4. the Identify Cluster (0x0003)" +
                 "\n" +
-                "5. the Groups Cluster (0x0004)" +
+                "  5. the Groups Cluster (0x0004)" +
                 "\n" +
                 "In addition, use of this feature shall NOT restrict the global attributes of any cluster." +
                 "\n" +
@@ -472,10 +472,10 @@ export const AccessControl = Cluster(
                     "Once the URL is obtained, it shall be expanded to form a final URL (ExpandedARLRequestFlowUrl) by " +
                     "proceeding with the following substitution algorithm on the original ARLRequestFlowUrl:" +
                     "\n" +
-                    "1. If key MTcu is present, compute the CallbackUrl desired (see Section 9.10.9.3.5, “CallbackUrl " +
-                    "format for ARL Request Flow response”), and substitute the placeholder value \"_\" (i.e. in MTcu=_) in " +
-                    "the ARLRequestFlowUrl with the desired contents, encoded with proper URL-encoded escaping (see RFC " +
-                    "3986 section 2)." +
+                    "  1. If key MTcu is present, compute the CallbackUrl desired (see Section 9.10.9.3.5, “CallbackUrl " +
+                    "     format for ARL Request Flow response”), and substitute the placeholder value \"_\" (i.e. in " +
+                    "     MTcu=_) in the ARLRequestFlowUrl with the desired contents, encoded with proper URL-encoded " +
+                    "     escaping (see RFC 3986 section 2)." +
                     "\n" +
                     "The final URL after expansion (ExpandedARLRequestFlowUrl) shall be the one to follow, rather than " +
                     "the original value obtained from the FabricRestrictionReviewUpdate event." +

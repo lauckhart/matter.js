@@ -25,16 +25,16 @@ export const epochUs = Datatype(
             "\n" +
             "A given Epoch Time value may be interpreted in at least two ways:" +
             "\n" +
-            "1. The value can be converted to a local clock date/time (year, month, day, hours, minutes, seconds, " +
-            "microseconds) by treating the local time offset as 0 and finding the UTC (year, month, day, hours, " +
-            "minutes, seconds, microseconds) tuple that corresponds to an elapsed time since the epoch time equal " +
-            "to the given value. The value then represents that tuple, but interpreted in the specific timezone " +
-            "and DST situation associated with the value. This procedure does not require knowing the local time " +
-            "offset of the value." +
+            "  1. The value can be converted to a local clock date/time (year, month, day, hours, minutes, " +
+            "     seconds, microseconds) by treating the local time offset as 0 and finding the UTC (year, month, " +
+            "     day, hours, minutes, seconds, microseconds) tuple that corresponds to an elapsed time since the " +
+            "     epoch time equal to the given value. The value then represents that tuple, but interpreted in " +
+            "     the specific timezone and DST situation associated with the value. This procedure does not " +
+            "     require knowing the local time offset of the value." +
             "\n" +
-            "2. The value can be converted to a UTC time by subtracting the associated local time offset from the " +
-            "Epoch Time value and then treating the resulting value as an elapsed count of microseconds since the " +
-            "epoch time." +
+            "  2. The value can be converted to a UTC time by subtracting the associated local time offset from " +
+            "     the Epoch Time value and then treating the resulting value as an elapsed count of microseconds " +
+            "     since the epoch time." +
             "\n" +
             "For example, an Epoch Time value of 0x0000_0BF1_B7E1_0000 corresponds to an offset of exactly 152 " +
             "days. This can be interpreted as \"00:00:00 on June 1, 2000\" in whatever local time zone is " +

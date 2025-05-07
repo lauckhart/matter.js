@@ -866,74 +866,75 @@ export const Thermostat = Cluster(
 
             details: "This attribute shall contain the current list of configured presets. On receipt of a write request:" +
                 "\n" +
-                "1. If the PresetHandle field is null, the PresetStruct shall be treated as an added preset, and the " +
-                "device shall create a new unique value for the PresetHandle field." +
+                "  1. If the PresetHandle field is null, the PresetStruct shall be treated as an added preset, and " +
+                "     the device shall create a new unique value for the PresetHandle field." +
                 "\n" +
-                "a. If the BuiltIn field is true, a response with the status code CONSTRAINT_ERROR shall be returned." +
+                "    a. If the BuiltIn field is true, a response with the status code CONSTRAINT_ERROR shall be " +
+                "       returned." +
                 "\n" +
-                "2. If the PresetHandle field is not null, the PresetStruct shall be treated as a modification of an " +
-                "existing preset." +
+                "  2. If the PresetHandle field is not null, the PresetStruct shall be treated as a modification of " +
+                "     an existing preset." +
                 "\n" +
-                "a. If the value of the PresetHandle field does not match any of the existing presets, a response " +
-                "with the status code NOT_FOUND shall be returned." +
+                "    a. If the value of the PresetHandle field does not match any of the existing presets, a response " +
+                "       with the status code NOT_FOUND shall be returned." +
                 "\n" +
-                "b. If the value of the PresetHandle field is duplicated on multiple presets in the updated list, a " +
-                "response with the status code CONSTRAINT_ERROR shall be returned." +
+                "    b. If the value of the PresetHandle field is duplicated on multiple presets in the updated list, " +
+                "       a response with the status code CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "c. If the BuiltIn field is true, and the PresetStruct in the current value with a matching " +
-                "PresetHandle field has a BuiltIn field set to false, a response with the status code " +
-                "CONSTRAINT_ERROR shall be returned." +
+                "    c. If the BuiltIn field is true, and the PresetStruct in the current value with a matching " +
+                "       PresetHandle field has a BuiltIn field set to false, a response with the status code " +
+                "       CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "d. If the BuiltIn field is false, and the PresetStruct in the current value with a matching " +
-                "PresetHandle field has a BuiltIn field set to true, a response with the status code CONSTRAINT_ERROR " +
-                "shall be returned." +
+                "    d. If the BuiltIn field is false, and the PresetStruct in the current value with a matching " +
+                "       PresetHandle field has a BuiltIn field set to true, a response with the status code " +
+                "       CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "3. If the specified PresetScenarioEnum value does not exist in PresetTypes, a response with the " +
-                "status code CONSTRAINT_ERROR shall be returned." +
+                "  3. If the specified PresetScenarioEnum value does not exist in PresetTypes, a response with the " +
+                "     status code CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "4. If the Name is set, but the associated PresetTypeStruct does not have the SupportsNames bit set, " +
-                "a response with the status code CONSTRAINT_ERROR shall be returned." +
+                "  4. If the Name is set, but the associated PresetTypeStruct does not have the SupportsNames bit " +
+                "     set, a response with the status code CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "5. If appending the received PresetStruct to the pending list of Presets would cause the total " +
-                "number of pending presets to exceed the value of the NumberOfPresets attribute, a response with the " +
-                "status code RESOURCE_EXHAUSTED shall be returned." +
+                "  5. If appending the received PresetStruct to the pending list of Presets would cause the total " +
+                "     number of pending presets to exceed the value of the NumberOfPresets attribute, a response with " +
+                "     the status code RESOURCE_EXHAUSTED shall be returned." +
                 "\n" +
-                "6. If appending the received PresetStruct to the pending list of Presets would cause the total " +
-                "number of pending presets whose PresetScenario field matches the appended preset’s PresetScenario " +
-                "field to exceed the value of the NumberOfPresets field on the PresetTypeStruct whose PresetScenario " +
-                "matches the appended preset’s PresetScenario field, a response with the status code " +
-                "RESOURCE_EXHAUSTED shall be returned." +
+                "  6. If appending the received PresetStruct to the pending list of Presets would cause the total " +
+                "     number of pending presets whose PresetScenario field matches the appended preset’s " +
+                "     PresetScenario field to exceed the value of the NumberOfPresets field on the PresetTypeStruct " +
+                "     whose PresetScenario matches the appended preset’s PresetScenario field, a response with the " +
+                "     status code RESOURCE_EXHAUSTED shall be returned." +
                 "\n" +
-                "7. Otherwise, the write shall be pended until receipt of a commit request, and the status code " +
-                "SUCCESS shall be returned." +
+                "  7. Otherwise, the write shall be pended until receipt of a commit request, and the status code " +
+                "     SUCCESS shall be returned." +
                 "\n" +
-                "a. If the BuiltIn field is null:" +
+                "    a. If the BuiltIn field is null:" +
                 "\n" +
-                "i. If there is a PresetStruct in the current value with a matching PresetHandle field, the BuiltIn " +
-                "field on the pending PresetStruct shall be set to the value of the BuiltIn on the matching " +
-                "PresetStruct." +
+                "      i. If there is a PresetStruct in the current value with a matching PresetHandle field, the " +
+                "         BuiltIn field on the pending PresetStruct shall be set to the value of the BuiltIn on the " +
+                "         matching PresetStruct." +
                 "\n" +
-                "ii. Otherwise, the BuiltIn field on the pending PresetStruct shall be set to false." +
+                "      ii. Otherwise, the BuiltIn field on the pending PresetStruct shall be set to false." +
                 "\n" +
                 "On an attempt to commit, the status of this attribute shall be determined as follows:" +
                 "\n" +
-                "1. For all existing presets:" +
+                "  1. For all existing presets:" +
                 "\n" +
-                "a. If, after applying all pending changes, the updated value of the Presets attribute would not " +
-                "contain a PresetStruct with a matching PresetHandle field, indicating the removal of the " +
-                "PresetStruct, the server shall check for invalid removal of the PresetStruct:" +
+                "    a. If, after applying all pending changes, the updated value of the Presets attribute would not " +
+                "       contain a PresetStruct with a matching PresetHandle field, indicating the removal of the " +
+                "       PresetStruct, the server shall check for invalid removal of the PresetStruct:" +
                 "\n" +
-                "i. If the BuiltIn field is true on the removed PresetStruct, the attribute status shall be " +
-                "CONSTRAINT_ERROR." +
+                "      i. If the BuiltIn field is true on the removed PresetStruct, the attribute status shall be " +
+                "         CONSTRAINT_ERROR." +
                 "\n" +
-                "ii. If the MSCH feature is supported and the removed PresetHandle would be referenced by any " +
-                "PresetHandle on any ScheduleTransitionStruct on any ScheduleStruct in the updated value of the " +
-                "Schedules attribute, the attribute status shall be INVALID_IN_STATE." +
+                "      ii. If the MSCH feature is supported and the removed PresetHandle would be referenced by any " +
+                "          PresetHandle on any ScheduleTransitionStruct on any ScheduleStruct in the updated value of " +
+                "          the Schedules attribute, the attribute status shall be INVALID_IN_STATE." +
                 "\n" +
-                "iii. If the removed PresetHandle is equal to the value of the ActivePresetHandle attribute, the " +
-                "attribute status shall be INVALID_IN_STATE." +
+                "      iii. If the removed PresetHandle is equal to the value of the ActivePresetHandle attribute, " +
+                "           the attribute status shall be INVALID_IN_STATE." +
                 "\n" +
-                "2. Otherwise, the attribute status shall be SUCCESS.",
+                "  2. Otherwise, the attribute status shall be SUCCESS.",
 
             xref: { document: "cluster", section: "4.3.9.60" }
         },
@@ -948,109 +949,111 @@ export const Thermostat = Cluster(
 
             details: "This attribute shall contain a list of ScheduleStructs. On receipt of a write request:" +
                 "\n" +
-                "1. For all schedules in the write request:" +
+                "  1. For all schedules in the write request:" +
                 "\n" +
-                "a. If the ScheduleHandle field is null, the ScheduleStruct shall be treated as an added schedule, " +
-                "and the device shall create a new unique value for the ScheduleHandle field." +
+                "    a. If the ScheduleHandle field is null, the ScheduleStruct shall be treated as an added " +
+                "       schedule, and the device shall create a new unique value for the ScheduleHandle field." +
                 "\n" +
-                "i. If the BuiltIn field is true, a response with the status code CONSTRAINT_ERROR shall be returned." +
+                "      i. If the BuiltIn field is true, a response with the status code CONSTRAINT_ERROR shall be " +
+                "         returned." +
                 "\n" +
-                "b. Otherwise, if the ScheduleHandle field is not null, the ScheduleStruct shall be treated as a " +
-                "modification of an existing schedule." +
+                "    b. Otherwise, if the ScheduleHandle field is not null, the ScheduleStruct shall be treated as a " +
+                "       modification of an existing schedule." +
                 "\n" +
-                "i. If the value of the ScheduleHandle field does not match any of the existing schedules, a response " +
-                "with the status code NOT_FOUND shall be returned." +
+                "      i. If the value of the ScheduleHandle field does not match any of the existing schedules, a " +
+                "         response with the status code NOT_FOUND shall be returned." +
                 "\n" +
-                "ii. If the BuiltIn field is true, and the ScheduleStruct in the current value with a matching " +
-                "ScheduleHandle field has a BuiltIn field set to false, a response with the status code " +
-                "CONSTRAINT_ERROR shall be returned." +
+                "      ii. If the BuiltIn field is true, and the ScheduleStruct in the current value with a matching " +
+                "          ScheduleHandle field has a BuiltIn field set to false, a response with the status code " +
+                "          CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "iii. If the BuiltIn field is false, and the ScheduleStruct in the current value with a matching " +
-                "ScheduleHandle field has a BuiltIn field set to true, a response with the status code " +
-                "CONSTRAINT_ERROR shall be returned." +
+                "      iii. If the BuiltIn field is false, and the ScheduleStruct in the current value with a " +
+                "           matching ScheduleHandle field has a BuiltIn field set to true, a response with the status " +
+                "           code CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "c. If the specified SystemMode does not exist in ScheduleTypes, a response with the status code " +
-                "CONSTRAINT_ERROR shall be returned." +
+                "    c. If the specified SystemMode does not exist in ScheduleTypes, a response with the status code " +
+                "       CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "d. If the number of transitions exceeds the NumberOfScheduleTransitions value, a response with the " +
-                "status code RESOURCE_EXHAUSTED shall be returned." +
+                "    d. If the number of transitions exceeds the NumberOfScheduleTransitions value, a response with " +
+                "       the status code RESOURCE_EXHAUSTED shall be returned." +
                 "\n" +
-                "e. If the value of the NumberOfScheduleTransitionsPerDay attribute is not null, and the number of " +
-                "transitions on any single day of the week exceeds the NumberOfScheduleTransitionsPerDay value, a " +
-                "response with the status code RESOURCE_EXHAUSTED shall be returned." +
+                "    e. If the value of the NumberOfScheduleTransitionsPerDay attribute is not null, and the number " +
+                "       of transitions on any single day of the week exceeds the NumberOfScheduleTransitionsPerDay " +
+                "       value, a response with the status code RESOURCE_EXHAUSTED shall be returned." +
                 "\n" +
-                "f. If the PresetHandle field is present, but the associated ScheduleTypeStruct does not have the " +
-                "SupportsPresets bit set, a response with the status code CONSTRAINT_ERROR shall be returned." +
+                "    f. If the PresetHandle field is present, but the associated ScheduleTypeStruct does not have the " +
+                "       SupportsPresets bit set, a response with the status code CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "g. If the PresetHandle field is present, but after applying all pending changes, the Presets " +
-                "attribute would not contain a PresetStruct whose PresetHandle field matches the value of the " +
-                "PresetHandle field, a response with the status code CONSTRAINT_ERROR shall be returned." +
+                "    g. If the PresetHandle field is present, but after applying all pending changes, the Presets " +
+                "       attribute would not contain a PresetStruct whose PresetHandle field matches the value of the " +
+                "       PresetHandle field, a response with the status code CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "h. If the Name is set, but the associated ScheduleTypeStruct does not have the SupportsNames bit " +
-                "set, a response with the status code CONSTRAINT_ERROR shall be returned." +
+                "    h. If the Name is set, but the associated ScheduleTypeStruct does not have the SupportsNames bit " +
+                "       set, a response with the status code CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "i. For all transitions in all schedules in the write request:" +
+                "      i. For all transitions in all schedules in the write request:" +
                 "\n" +
-                "i. If the PresetHandle field is present, but the ScheduleTypeStruct matching the value of the " +
-                "SystemMode field on the encompassing ScheduleStruct does not have the SupportsPresets bit set, a " +
-                "response with the status code CONSTRAINT_ERROR shall be returned." +
+                "      i. If the PresetHandle field is present, but the ScheduleTypeStruct matching the value of the " +
+                "         SystemMode field on the encompassing ScheduleStruct does not have the SupportsPresets bit " +
+                "         set, a response with the status code CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "j. If the PresetHandle field is present, but after applying all pending changes, the Presets " +
-                "attribute would not contain a PresetStruct whose PresetHandle field matches the value of the " +
-                "PresetHandle field, a response with the status code CONSTRAINT_ERROR shall be returned." +
+                "    j. If the PresetHandle field is present, but after applying all pending changes, the Presets " +
+                "       attribute would not contain a PresetStruct whose PresetHandle field matches the value of the " +
+                "       PresetHandle field, a response with the status code CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "i. If the SystemMode field is present, but the ScheduleTypeStruct matching the value of the " +
-                "SystemMode field on the encompassing ScheduleStruct does not have the SupportsSetpoints bit set, a " +
-                "response with the status code CONSTRAINT_ERROR shall be returned." +
+                "      i. If the SystemMode field is present, but the ScheduleTypeStruct matching the value of the " +
+                "         SystemMode field on the encompassing ScheduleStruct does not have the SupportsSetpoints bit " +
+                "         set, a response with the status code CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "ii. If the SystemMode field is has a value of SystemModeOff, but the ScheduleTypeStruct matching the " +
-                "value of the SystemMode field on the encompassing ScheduleStruct does not have the SupportsOff bit " +
-                "set, a response with the status code CONSTRAINT_ERROR shall be returned." +
+                "      ii. If the SystemMode field is has a value of SystemModeOff, but the ScheduleTypeStruct " +
+                "          matching the value of the SystemMode field on the encompassing ScheduleStruct does not " +
+                "          have the SupportsOff bit set, a response with the status code CONSTRAINT_ERROR shall be " +
+                "          returned." +
                 "\n" +
-                "k. If the HeatingSetpoint field is present, but the ScheduleTypeStruct matching the value of the " +
-                "SystemMode field on the encompassing ScheduleStruct does not have the SupportsSetpoints bit set, a " +
-                "response with the status code CONSTRAINT_ERROR shall be returned." +
+                "    k. If the HeatingSetpoint field is present, but the ScheduleTypeStruct matching the value of the " +
+                "       SystemMode field on the encompassing ScheduleStruct does not have the SupportsSetpoints bit " +
+                "       set, a response with the status code CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "l. If the CoolingSetpoint field is present, but the ScheduleTypeStruct matching the value of the " +
-                "SystemMode field on the encompassing ScheduleStruct does not have the SupportsSetpoints bit set, a " +
-                "response with the status code CONSTRAINT_ERROR shall be returned." +
+                "    l. If the CoolingSetpoint field is present, but the ScheduleTypeStruct matching the value of the " +
+                "       SystemMode field on the encompassing ScheduleStruct does not have the SupportsSetpoints bit " +
+                "       set, a response with the status code CONSTRAINT_ERROR shall be returned." +
                 "\n" +
-                "2. If appending the received ScheduleStruct to the pending list of Schedules would cause the total " +
-                "number of pending schedules to exceed the value of the NumberOfSchedules attribute, a response with " +
-                "the status code RESOURCE_EXHAUSTED shall be returned." +
+                "  2. If appending the received ScheduleStruct to the pending list of Schedules would cause the total " +
+                "     number of pending schedules to exceed the value of the NumberOfSchedules attribute, a response " +
+                "     with the status code RESOURCE_EXHAUSTED shall be returned." +
                 "\n" +
-                "3. If appending the received ScheduleStruct to the pending list of Schedules would cause the total " +
-                "number of pending schedules whose SystemMode field matches the appended schedule’s SystemMode field " +
-                "to exceed the value of the NumberOfSchedules field on the ScheduleTypeStruct whose SystemMode field " +
-                "matches the appended schedule’s SystemMode field, a response with the status code RESOURCE_EXHAUSTED " +
-                "shall be returned." +
+                "  3. If appending the received ScheduleStruct to the pending list of Schedules would cause the total " +
+                "     number of pending schedules whose SystemMode field matches the appended schedule’s SystemMode " +
+                "     field to exceed the value of the NumberOfSchedules field on the ScheduleTypeStruct whose " +
+                "     SystemMode field matches the appended schedule’s SystemMode field, a response with the status " +
+                "     code RESOURCE_EXHAUSTED shall be returned." +
                 "\n" +
-                "4. Otherwise, the write shall be pended until receipt of a commit request, and the attribute status " +
-                "shall be SUCCESS." +
+                "  4. Otherwise, the write shall be pended until receipt of a commit request, and the attribute " +
+                "     status shall be SUCCESS." +
                 "\n" +
-                "a. If the BuiltIn field is null:" +
+                "    a. If the BuiltIn field is null:" +
                 "\n" +
-                "i. If there is a ScheduleStruct in the current value with a matching ScheduleHandle field, the " +
-                "BuiltIn field on the pending ScheduleStruct shall be set to the value of the BuiltIn on the matching " +
-                "ScheduleStruct." +
+                "      i. If there is a ScheduleStruct in the current value with a matching ScheduleHandle field, the " +
+                "         BuiltIn field on the pending ScheduleStruct shall be set to the value of the BuiltIn on the " +
+                "         matching ScheduleStruct." +
                 "\n" +
-                "ii. Otherwise, the BuiltIn field on the pending ScheduleStruct shall be set to false." +
+                "      ii. Otherwise, the BuiltIn field on the pending ScheduleStruct shall be set to false." +
                 "\n" +
                 "On an attempt to commit, the status of this attribute shall be determined as follows:" +
                 "\n" +
-                "1. For all existing schedules:" +
+                "  1. For all existing schedules:" +
                 "\n" +
-                "a. If, after applying all pending changes, the updated value of the Schedules attribute would not " +
-                "contain a ScheduleStruct with a matching ScheduleHandle field, indicating the removal of the " +
-                "ScheduleStruct, the server shall check for invalid removal of the ScheduleStruct:" +
+                "    a. If, after applying all pending changes, the updated value of the Schedules attribute would " +
+                "       not contain a ScheduleStruct with a matching ScheduleHandle field, indicating the removal of " +
+                "       the ScheduleStruct, the server shall check for invalid removal of the ScheduleStruct:" +
                 "\n" +
-                "i. If the BuiltIn field is true on the removed ScheduleStruct, the attribute status shall be " +
-                "CONSTRAINT_ERROR." +
+                "      i. If the BuiltIn field is true on the removed ScheduleStruct, the attribute status shall be " +
+                "         CONSTRAINT_ERROR." +
                 "\n" +
-                "ii. If the removed ScheduleHandle is equal to the value of the ActiveScheduleHandle attribute, the " +
-                "attribute status shall be INVALID_IN_STATE." +
+                "      ii. If the removed ScheduleHandle is equal to the value of the ActiveScheduleHandle attribute, " +
+                "          the attribute status shall be INVALID_IN_STATE." +
                 "\n" +
-                "2. Otherwise, the attribute status shall be SUCCESS.",
+                "  2. Otherwise, the attribute status shall be SUCCESS.",
 
             xref: { document: "cluster", section: "4.3.9.61" }
         },
@@ -1954,22 +1957,22 @@ export const Thermostat = Cluster(
                 "schedule. The thermostat shall use the following order of precedence for determining a new setpoint " +
                 "at the time of transition:" +
                 "\n" +
-                "1. If the PresetHandle field is provided, then the setpoint for the PresetStruct in the Presets " +
-                "attribute with that identifier shall be used" +
+                "  1. If the PresetHandle field is provided, then the setpoint for the PresetStruct in the Presets " +
+                "     attribute with that identifier shall be used" +
                 "\n" +
-                "2. If either the HeatingSetpoint or CoolingSetpoint is provided, then it shall be used" +
+                "  2. If either the HeatingSetpoint or CoolingSetpoint is provided, then it shall be used" +
                 "\n" +
-                "a. If the SystemMode field is provided, the HeatingSetpoint and CoolingSetpoint fields shall be " +
-                "interpreted using the SystemMode field" +
+                "    a. If the SystemMode field is provided, the HeatingSetpoint and CoolingSetpoint fields shall be " +
+                "       interpreted using the SystemMode field" +
                 "\n" +
-                "b. If the SystemMode field is not provided, the HeatingSetpoint and CoolingSetpoint fields shall be " +
-                "interpreted using the SystemMode field on the parent ScheduleStruct" +
+                "    b. If the SystemMode field is not provided, the HeatingSetpoint and CoolingSetpoint fields shall " +
+                "       be interpreted using the SystemMode field on the parent ScheduleStruct" +
                 "\n" +
-                "3. If neither the PresetHandle field or any Setpoint field is provided, then the PresetHandle field " +
-                "on the parent ScheduleStruct shall be used to determine the active PresetStruct" +
+                "  3. If neither the PresetHandle field or any Setpoint field is provided, then the PresetHandle " +
+                "     field on the parent ScheduleStruct shall be used to determine the active PresetStruct" +
                 "\n" +
-                "4. If the PresetHandle is not indicated and no setpoint is provided for the current SystemMode, the " +
-                "server shall use a default value for the current SystemMode." +
+                "  4. If the PresetHandle is not indicated and no setpoint is provided for the current SystemMode, " +
+                "     the server shall use a default value for the current SystemMode." +
                 "\n" +
                 "If the setpoint was derived from a preset, then the ActivePresetHandle shall be set to the " +
                 "PresetHandle of that preset." +

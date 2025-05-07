@@ -28,14 +28,14 @@ export const AccountLogin = Cluster(
             "Client), and invoke commands on the AccountLogin cluster on the Content App associated with that " +
             "client. Specifically:" +
             "\n" +
-            "1. GetSetupPIN in order to attempt to obtain the Passcode for commissioning." +
+            "  1. GetSetupPIN in order to attempt to obtain the Passcode for commissioning." +
             "\n" +
-            "2. Login in order to let the Content App know that commissioning has completed. The Content App can " +
-            "use information provided in this command in order to determine the user account associated with the " +
-            "client, and potentially assume that user account." +
+            "  2. Login in order to let the Content App know that commissioning has completed. The Content App " +
+            "     can use information provided in this command in order to determine the user account associated " +
+            "     with the client, and potentially assume that user account." +
             "\n" +
-            "3. Logout in order to let the Content App know that client access has been removed, and potentially " +
-            "clear the current user account." +
+            "  3. Logout in order to let the Content App know that client access has been removed, and " +
+            "     potentially clear the current user account." +
             "\n" +
             "The cluster server for this cluster may be supported on each endpoint that represents a Content App " +
             "on a Video Player device." +
