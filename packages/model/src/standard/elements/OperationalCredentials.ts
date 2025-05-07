@@ -311,17 +311,17 @@ export const OperationalCredentials = Cluster(
                 "\n" +
                 "The format of the new Access Control Entry, created from this, shall be:" +
                 "\n" +
-                "NOTE" +
+                "> [!NOTE]" +
                 "\n" +
-                "Unless such an Access Control Entry is added atomically as described here, there would be no way for " +
-                "the caller on its given Fabric to eventually add another Access Control Entry for CASE " +
-                "authentication mode, to enable the new Administrator to administer the device, since the Fabric " +
-                "Scoping of the Access Control List prevents the current Node from being able to write new entries " +
-                "scoped to that Fabric, if the session is established from CASE. While a session established from " +
-                "PASE does gain Fabric Scope of a newly-joined Fabric, this argument is made mandatory to provide " +
-                "symmetry between both types of session establishment, both of which need to eventually add an " +
-                "\"Administer Node over CASE\" Access Control Entry to finalize new Fabric configuration and " +
-                "subsequently be able to call the CommissioningComplete command.",
+                "> Unless such an Access Control Entry is added atomically as described here, there would be no way " +
+                "  for the caller on its given Fabric to eventually add another Access Control Entry for CASE " +
+                "  authentication mode, to enable the new Administrator to administer the device, since the Fabric " +
+                "  Scoping of the Access Control List prevents the current Node from being able to write new entries " +
+                "  scoped to that Fabric, if the session is established from CASE. While a session established from " +
+                "  PASE does gain Fabric Scope of a newly-joined Fabric, this argument is made mandatory to provide " +
+                "  symmetry between both types of session establishment, both of which need to eventually add an " +
+                "  \"Administer Node over CASE\" Access Control Entry to finalize new Fabric configuration and " +
+                "  subsequently be able to call the CommissioningComplete command.",
 
             xref: { document: "core", section: "11.18.6.8.2" }
         }),
@@ -440,7 +440,7 @@ export const OperationalCredentials = Cluster(
                 "A Commissioner or Administrator SHOULD issue this command after performing the Attestation " +
                 "Procedure." +
                 "\n" +
-                "Effect When Received" +
+                "### Effect When Received" +
                 "\n" +
                 "If this command is received without an armed fail-safe context (see ArmFailSafe), then this command " +
                 "shall fail with a FAILSAFE_REQUIRED status code sent back to the initiator." +
@@ -562,7 +562,7 @@ export const OperationalCredentials = Cluster(
 
             details: "This field shall contain the label to set for the fabric associated with the current secure session." +
                 "\n" +
-                "Effect on Receipt" +
+                "### Effect on Receipt" +
                 "\n" +
                 "If the Label field is identical to a Label already in use by a Fabric within the Fabrics list that " +
                 "is not the accessing fabric, then an NOCResponse with a StatusCode of LabelConflict shall be " +
@@ -595,8 +595,6 @@ export const OperationalCredentials = Cluster(
                 "If the given Fabric being removed is the last one to reference a given Trusted Root CA Certificate " +
                 "stored in the Trusted Root Certificates list, then that Trusted Root Certificate shall be removed." +
                 "\n" +
-                "WARNING" +
-                "\n" +
                 "This command, if referring to an already existing Fabric not under the control of the invoking " +
                 "Administrator, shall ONLY be invoked after obtaining some form of explicit user consent through some " +
                 "method executed by the Administrator or Commissioner. This method of obtaining consent SHOULD employ " +
@@ -616,13 +614,13 @@ export const OperationalCredentials = Cluster(
             details: "This field shall contain the Fabric Index reference (see fabric-index) associated with the Fabric " +
                 "which is to be removed from the device." +
                 "\n" +
-                "Effect on Receipt" +
+                "### Effect on Receipt" +
                 "\n" +
                 "If the FabricIndex field does not match the FabricIndex of any entry within the Fabrics list, then " +
-                "an NOCResponse with a StatusCode of InvalidFabricIndex shall be returned for the command and" +
+                "an NOCResponse with a StatusCode of InvalidFabricIndex shall be returned for the command and there " +
+                "shall NOT be any permanent changes to any device data." +
                 "\n" +
-                "there shall NOT be any permanent changes to any device data. Otherwise, one of the following " +
-                "outcomes shall occur:" +
+                "Otherwise, one of the following outcomes shall occur:" +
                 "\n" +
                 "  1. If the FabricIndex matches the last remaining entry in the Fabrics list, then the device shall " +
                 "     delete all Matter related data on the node which was created since it was commissioned. This " +
@@ -676,10 +674,9 @@ export const OperationalCredentials = Cluster(
                 "shall fail with a FAILSAFE_REQUIRED status code sent back to the initiator." +
                 "\n" +
                 "If a prior AddTrustedRootCertificate command was successfully invoked within the fail-safe timer " +
-                "period, which would cause the new invocation to add a second root certificate within a given fail-" +
-                "\n" +
-                "safe timer period, then this command shall fail with a CONSTRAINT_ERROR status code sent back to the " +
-                "initiator." +
+                "period, which would cause the new invocation to add a second root certificate within a given " +
+                "fail-safe timer period, then this command shall fail with a CONSTRAINT_ERROR status code sent back " +
+                "to the initiator." +
                 "\n" +
                 "If a prior UpdateNOC or AddNOC command was successfully executed within the fail-safe timer period, " +
                 "then this command shall fail with a CONSTRAINT_ERROR status code sent back to the initiator." +
