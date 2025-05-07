@@ -10,12 +10,15 @@ import { Str } from "./html-translators.js";
 import { HtmlReference } from "./spec-types.js";
 
 /**
- * Extraction terminates when it encounters these flags.  These are for places
- * where we don't have an elegant way of determining that content is unusable.
+ * Extraction terminates when it encounters these flags.  These are for places where we don't have an elegant way of
+ * determining that content is unusable.
  */
 export const EndContentFlags = [
     // OnOff cluster state diagram becomes a total mess
     /These concepts are illustrated in Explanation of the Behavior of Store/,
+
+    // Similar issue for thermostat cluster
+    /Optional temperature, humidity and occupancy sensors/,
 ];
 
 /**
@@ -64,6 +67,10 @@ function extractUsefulDocumentation(text: string) {
         )
         .replace(/. if the AbsolutePosition/, ".\nif the AbsolutePosition")
         .replace(/Optional temperature, humidity and occupancy sensors.*/, "")
+        .replace(/Maintenan ce/, "Maintenance")
+        .replace(/\.Command not/, ". Command not")
+        .replace(/notback-off/, "not back-off")
+        .replace(/-(or|and) /, "- $1 ")
         .trim();
 }
 
@@ -86,15 +93,23 @@ function mergeSplitParagraphs(paragraphs: string[]) {
 
     // Next merge by identifying sentence splits
     for (let i = 0; i < paragraphs.length - 1; i++) {
-        if (paragraphs[i].endsWith(".") || paragraphs[i].endsWith(":") || paragraphs[i].startsWith("###")) {
+        const paragraph = paragraphs[i];
+        if (
+            paragraph.endsWith(".") ||
+            paragraph.endsWith(":") ||
+            paragraph.endsWith(".”") ||
+            paragraph.endsWith('."') ||
+            paragraph.startsWith("###")
+        ) {
             continue;
         }
 
-        if (i && looksLikeListItem(paragraphs[i - 1]) && looksLikeListItem(paragraphs[i])) {
+        // If anything in the "paragraph" looks like an equation, merging will likely do more harm than good
+        if (looksLikeEquation(paragraph)) {
             continue;
         }
 
-        const sentences = paragraphs[i].split(/[.?!:]\s/);
+        const sentences = paragraph.split(/[.?!:]\s/);
         while (sentences.length > 1 && !sentences[sentences.length - 1].match(/^[A-Z]/)) {
             sentences[sentences.length - 2] = sentences.splice(sentences.length - 2, 2).join("");
         }
@@ -104,11 +119,25 @@ function mergeSplitParagraphs(paragraphs: string[]) {
         }
 
         const nextParagraph = paragraphs[i + 1];
-        if (nextParagraph.match(/^[a-z0-9]/i) || nextParagraph.match(/^[^)]*\)/)) {
-            if (!nextParagraph.match(/[.?!]\s/) || nextParagraph.match(/[.?!]$/)) {
-                joinParagraphs(i, " ");
-            }
+
+        // Do not merge list items, paragraphs, or embedded headings
+        if (looksLikeListItem(nextParagraph) || nextParagraph.startsWith("###") || looksLikeEquation(nextParagraph)) {
+            continue;
         }
+
+        if (nextParagraph)
+            if (
+                // Starts with number or lowercase letter
+                nextParagraph.match(/^[a-z0-9]/i) ||
+                // Has an unmatched closing parenthesis
+                nextParagraph.match(/^[^(]*\)/) ||
+                // Has an unmatched double quotation
+                nextParagraph.match(/^[^“]*”/)
+            ) {
+                if (!nextParagraph.match(/[.?!]\s/) || nextParagraph.match(/[.?!:]$/)) {
+                    joinParagraphs(i, " ");
+                }
+            }
     }
 
     function joinParagraphs(index: number, separator: string) {
@@ -157,6 +186,12 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
         // Extract text
         let text = Str(p);
 
+        // Ignore figure annotations
+        if (text.match(/^Figure \d+/)) {
+            listIndent = 0;
+            continue;
+        }
+
         // Next paragraph is a note if text is "NOTE"
         if (text === "NOTE") {
             listIndent = 0;
@@ -177,6 +212,17 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
             if (text.match(flag)) {
                 break prose;
             }
+        }
+
+        // Additional "heading" detection - short line that starts with capital and can't be a sentence fragment
+        if (
+            text.length < 50 &&
+            text.match(/^[A-Z]/) &&
+            !text.match(/[.?!:]$/) &&
+            !looksLikeListItem(text) &&
+            !looksLikeEquation(text)
+        ) {
+            looksLikeHeading = true;
         }
 
         // Add the text
@@ -209,7 +255,7 @@ export function addDocumentation(target: { details?: string }, definition: HtmlR
 
     if (paragraphs.length) {
         mergeSplitParagraphs(paragraphs);
-        paragraphs = paragraphs.map(extractUsefulDocumentation).filter(p => p !== "");
+        paragraphs = paragraphs.map(extractUsefulDocumentation).filter(p => p !== "" && p !== "###");
         target.details = paragraphs.join("\n");
     }
 }
@@ -249,4 +295,18 @@ function sumStyles(el: HTMLElement, ...names: string[]) {
     }
 
     return sum;
+}
+
+/**
+ * Very simple (currently) heuristics to identify equations so we don't munge them in with other stuff too terribly.
+ */
+function looksLikeEquation(text: string) {
+    // Count mathematical operators
+    const operators = text.match(/\s[=x*\-/+÷]\s/g)?.length ?? 0;
+
+    // Count balanced groups
+    const groups = Math.max(text.match(/\(/g)?.length ?? 0, text.match(/\)/g)?.length ?? 0);
+
+    // Must have at least one operator and 2+ operators/groups
+    return operators && operators + groups > 1;
 }

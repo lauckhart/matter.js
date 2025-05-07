@@ -313,6 +313,9 @@ function installPreciseDetails(
             record.details = record.details.replace("the of the", "the status of the");
         }
 
+        // And another one-off repair, this happens in several places in core spec
+        record.name = record.name.replace(/EndPoint/g, "Endpoint");
+
         // Translate children (such as datatype or ACE fields)
         if (childTranslator) {
             record.children = childTranslator(tag, record, detail);

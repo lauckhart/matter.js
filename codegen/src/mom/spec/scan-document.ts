@@ -110,6 +110,7 @@ export function* scanDocument(docRef: HtmlReference) {
                         const fakeGen = detectUnnumberedHeading(ref, text);
                         if (fakeGen) {
                             yield* fakeGen();
+                            break;
                         }
                     }
                     break;
@@ -161,6 +162,7 @@ export function* scanDocument(docRef: HtmlReference) {
                         const fakeGen = detectUnnumberedHeading(ref, text);
                         if (fakeGen) {
                             yield* fakeGen();
+                            break;
                         }
 
                         // Not a heading so save as prose

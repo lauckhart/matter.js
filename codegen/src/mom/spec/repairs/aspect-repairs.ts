@@ -60,13 +60,10 @@ export function repairConformanceRule(conformance?: string) {
         return "M";
     }
 
-    conformance = conformance
-        // At some point should maybe fix up similarly to how we do constraints but for now there are few enough errors
-        // we can get away with hard-coded list
-        ?.replace(/\|CO N/, "|CON")
-        .replace("PIRUnoccupiedToOccupied", "PirUnoccupiedToOccupied")
-        .replace("EndSystim e", "EndSystime")
-        .replace("NumberOf Primaries", "NumberOfPrimaries");
+    conformance = conformance?.replace("PIRUnoccupiedToOccupied", "PirUnoccupiedToOccupied");
+
+    // Words separated by space is illegal and we can safely assume should be joined
+    conformance = conformance?.replace(/([a-z])\s+([a-z])/gi, "$1$2");
 
     return conformance;
 }
