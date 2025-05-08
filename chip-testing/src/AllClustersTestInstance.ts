@@ -202,6 +202,12 @@ export class AllClustersTestInstance extends NodeTestInstance {
                                     operationalState: OperationalState.OperationalStateEnum.Running,
                                 });
                                 break;
+                            case 1:
+                                await endpoint.setStateOf(ServerType, {
+                                    startBlocked: true,
+                                    operationalState: OperationalState.OperationalStateEnum.Error,
+                                });
+                                break;
                             case 2:
                                 await endpoint.setStateOf(ServerType, {
                                     startBlocked: true,
