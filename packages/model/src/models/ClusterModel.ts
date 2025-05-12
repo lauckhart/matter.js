@@ -9,7 +9,6 @@ import { Access } from "../aspects/Access.js";
 import { Quality } from "../aspects/Quality.js";
 import { SchemaImplementationError } from "../common/errors.js";
 import { ElementTag, FeatureSet, Metatype } from "../common/index.js";
-import { Mei } from "../common/Mei.js";
 import { ClusterElement } from "../elements/index.js";
 import { ClusterRevision } from "../standard/elements/ClusterRevision.js";
 import { FeatureMap } from "../standard/elements/FeatureMap.js";
@@ -27,9 +26,6 @@ const QUALITY = Symbol("quality");
 
 export class ClusterModel extends ScopeModel<ClusterElement> implements ClusterElement {
     override tag: ClusterElement.Tag = ClusterElement.Tag;
-    declare id: Mei;
-    declare classification?: ClusterElement.Classification;
-    declare pics?: string;
 
     override get children(): Children<ClusterModel.Child> {
         return super.children as Children<ClusterModel.Child>;
@@ -67,6 +63,28 @@ export class ClusterModel extends ScopeModel<ClusterElement> implements ClusterE
 
     get datatypes() {
         return this.scope.membersOf(this, { tags: [ElementTag.Datatype] }) as DatatypeModel[];
+    }
+
+    get classification() {
+        return this.hasResources
+            ? (this.resources.classification as ClusterElement.Classification | undefined)
+            : undefined;
+    }
+
+    set classification(classification: ClusterElement.Classification | undefined) {
+        if (classification || this.hasResources) {
+            this.resources.classification = classification;
+        }
+    }
+
+    get pics() {
+        return this.hasResources ? this.resources.pics : undefined;
+    }
+
+    set pics(pics: string | undefined) {
+        if (pics || this.hasResources) {
+            this.resources.pics = pics;
+        }
     }
 
     /**
@@ -168,6 +186,9 @@ export class ClusterModel extends ScopeModel<ClusterElement> implements ClusterE
         if (definition instanceof Model) {
             Aspects.cloneAspects(definition, this, QUALITY);
         }
+
+        this.pics = definition.pics;
+        this.classification = definition.classification as ClusterElement.Classification;
     }
 
     static Tag = ClusterElement.Tag;

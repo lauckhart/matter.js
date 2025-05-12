@@ -11,7 +11,6 @@ import { Model } from "./Model.js";
 
 export class EndpointModel extends Model<EndpointModel> implements EndpointElement {
     override tag: EndpointElement.Tag = EndpointElement.Tag;
-    declare id: number;
 
     override get children(): Children<DeviceTypeModel> {
         return super.children as Children<DeviceTypeModel>;
@@ -23,6 +22,14 @@ export class EndpointModel extends Model<EndpointModel> implements EndpointEleme
 
     get deviceTypes() {
         return this.children;
+    }
+
+    override get id() {
+        return super.id;
+    }
+
+    override set id(id: number) {
+        super.id = id;
     }
 
     static Tag = EndpointElement.Tag;

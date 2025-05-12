@@ -27,9 +27,9 @@ const QUALITY: unique symbol = Symbol("quality");
  * Each {@link ValueElement} type has a corresponding implementation that derives from this class.
  */
 export abstract class ValueModel<T extends ValueElement = ValueElement> extends Model<T> implements ValueElement {
-    declare byteSize?: ValueElement.ByteSize;
-    declare default?: FieldValue;
-    declare metatype?: Metatype;
+    byteSize?: ValueElement.ByteSize;
+    default?: FieldValue;
+    metatype?: Metatype;
     override isType? = true;
 
     override get children(): Children<FieldModel> {
@@ -284,6 +284,13 @@ export abstract class ValueModel<T extends ValueElement = ValueElement> extends 
 
     constructor(definition: BaseElement.Properties<T>, ...children: Model.Definition<FieldModel>[]) {
         super(definition, ...children);
+
+        this.byteSize = definition.byteSize;
+        this.default = definition.default;
+        this.constraint = definition.constraint;
+        this.conformance = definition.conformance;
+        this.access = definition.access;
+        this.quality = definition.quality;
 
         const match = this.type?.match(/^list\[(.*)\]$/);
         if (match) {

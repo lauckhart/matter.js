@@ -43,8 +43,8 @@ const args = await yargs(hideBin(process.argv))
     .strict().argv;
 
 let revisionComponents = args.revision.split(".");
-if (revisionComponents.length > 3) {
-    revisionComponents = revisionComponents.slice(0, 3);
+if (revisionComponents.length > 2) {
+    revisionComponents = revisionComponents.slice(0, 2);
     args.revision = revisionComponents.join(".");
 }
 
@@ -71,12 +71,32 @@ function generateElementFile(element: Model) {
 
     file.addImport(`../MatterDefinition.js`, `MatterDefinition`);
     const exportName = elementIdentifierName(element);
-    generateElement(file, "!model/elements/index.js", element, `export const ${exportName} = `);
+    generateElement({
+        target: file,
+        importFrom: "!model/elements/index.js",
+        element,
+        prefix: `export const ${exportName} = `,
+    });
     file.atom(`MatterDefinition.children.push(${exportName})`);
 
     if (args.save) {
         file.save();
     }
+}
+
+function generateResourceFile(element: Model) {
+    logger.debug(`${element.name} resources`);
+
+    const file = new TsFile(`!resources/${elementDiscriminatedName(element)}`);
+    if (!generateResources(file, element)) {
+        return false;
+    }
+
+    if (args.save) {
+        file.save();
+    }
+
+    return true;
 }
 
 function generateDefinitions(elements: Model[]) {
@@ -143,13 +163,21 @@ if (args.save) {
 
 logger.info("generate matter model");
 Logger.nest(() => {
+    const withResources = Array<Model>();
+
     for (const child of matter.children) {
-        Logger.nest(() => generateElementFile(child));
+        Logger.nest(() => {
+            generateElementFile(child);
+            if (generateResourceFile(child)) {
+                withResources.push(child);
+            }
+        });
     }
 
     logger.info("index");
     generateDefinitions(matter.children as Model[]);
     generateModels(matter.children as Model[]);
+    generateResources(withResources);
 });
 
 validationResult.report();

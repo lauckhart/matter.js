@@ -5,7 +5,6 @@
  */
 
 import { DeviceClassification } from "../common/DeviceClassification.js";
-import { Mei } from "../common/Mei.js";
 import { DeviceTypeElement } from "../elements/index.js";
 import { Children } from "./Children.js";
 import { FieldModel } from "./FieldModel.js";
@@ -14,8 +13,6 @@ import { RequirementModel } from "./RequirementModel.js";
 
 export class DeviceTypeModel extends Model<DeviceTypeElement> implements DeviceTypeElement {
     override tag: DeviceTypeElement.Tag = DeviceTypeElement.Tag;
-    declare id: Mei;
-    declare classification: DeviceClassification;
 
     override get children(): Children<DeviceTypeModel.Child> {
         return super.children as Children<DeviceTypeModel.Child>;
@@ -33,6 +30,31 @@ export class DeviceTypeModel extends Model<DeviceTypeElement> implements DeviceT
         return (
             this?.get(RequirementModel, "Descriptor")?.get(RequirementModel, "DeviceTypeList")?.default[0].revision ?? 1
         );
+    }
+
+    get classification() {
+        return this.hasResources
+            ? (this.resources.classification as DeviceClassification)
+            : DeviceClassification.Simple;
+    }
+
+    set classification(classification: DeviceClassification) {
+        if (classification || this.hasResources) {
+            this.resources.classification = classification;
+        }
+    }
+
+    constructor(definition: DeviceTypeModel | DeviceTypeElement.Properties, ...children: Model.Definition<Model>[]) {
+        super(definition, ...children);
+        this.classification = definition.classification as DeviceClassification;
+    }
+
+    override get id() {
+        return super.id as number;
+    }
+
+    override set id(id: number) {
+        super.id = id;
     }
 
     static Tag = DeviceTypeElement.Tag;

@@ -6,7 +6,7 @@
 
 import { InternalError } from "@matter/general";
 import { Access, Aspect, Constraint } from "../aspects/index.js";
-import { ElementTag, FieldValue, Metatype } from "../common/index.js";
+import { ElementTag, FieldValue, Metatype, Specification } from "../common/index.js";
 import { AnyElement } from "../elements/index.js";
 import { Children } from "../models/Children.js";
 import {
@@ -263,7 +263,7 @@ export class ModelTraversal {
     /**
      * Find an xref from this model or a parent.
      */
-    findXref(model: Model | undefined): Model.CrossReference | undefined {
+    findXref(model: Model | undefined): Specification.CrossReference | undefined {
         return this.operationWithDismissal(model, () => {
             if (!model) {
                 return;

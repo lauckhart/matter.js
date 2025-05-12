@@ -11,7 +11,6 @@ import { NodeModel } from "./NodeModel.js";
 
 export class FabricModel extends Model<FabricElement> implements FabricElement {
     override tag: FabricElement.Tag = FabricElement.Tag;
-    declare id: number;
 
     override get children(): Children<NodeModel> {
         return super.children as Children<NodeModel>;
@@ -23,6 +22,14 @@ export class FabricModel extends Model<FabricElement> implements FabricElement {
 
     get nodes() {
         return this.children;
+    }
+
+    override get id() {
+        return super.id;
+    }
+
+    override set id(id: number) {
+        super.id = id;
     }
 
     static Tag = FabricElement.Tag;

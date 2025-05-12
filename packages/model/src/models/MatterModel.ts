@@ -24,7 +24,7 @@ import { SemanticNamespaceModel } from "./SemanticNamespaceModel.js";
  */
 export class MatterModel extends ScopeModel<MatterElement> implements MatterElement {
     override tag: MatterElement.Tag = MatterElement.Tag;
-    declare revision?: Specification.Revision;
+    revision?: Specification.Revision;
 
     override get children(): Children<MatterModel.Child> {
         return super.children as Children<MatterModel.Child>;
@@ -93,6 +93,8 @@ export class MatterModel extends ScopeModel<MatterElement> implements MatterElem
         const name = definition.name ?? "Matter";
         const definitionChildren = [...(definition.children || [])];
         super({ ...definition, name, children: definitionChildren }, ...children);
+
+        this.id = definition.id;
     }
 
     /**

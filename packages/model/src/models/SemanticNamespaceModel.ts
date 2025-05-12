@@ -11,7 +11,6 @@ import { Model } from "./Model.js";
 
 export class SemanticNamespaceModel extends Model<SemanticNamespaceElement> implements SemanticNamespaceElement {
     override tag: SemanticNamespaceElement.Tag = SemanticNamespaceElement.Tag;
-    declare id: number;
     mfgCode?: number;
 
     override get children(): Children<SemanticTagModel> {
@@ -24,6 +23,14 @@ export class SemanticNamespaceModel extends Model<SemanticNamespaceElement> impl
 
     get endpoints() {
         return this.children;
+    }
+
+    override get id() {
+        return super.id;
+    }
+
+    override set id(id: number) {
+        super.id = id;
     }
 
     static Tag = SemanticNamespaceElement.Tag;

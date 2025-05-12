@@ -4,13 +4,21 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { BaseElement } from "#elements/BaseElement.js";
 import { Metatype } from "../common/index.js";
 import { DatatypeElement } from "../elements/DatatypeElement.js";
+import type { FieldModel } from "./FieldModel.js";
+import type { Model } from "./Model.js";
 import { ValueModel } from "./ValueModel.js";
 
 export class DatatypeModel extends ValueModel<DatatypeElement> implements DatatypeElement {
     override tag: DatatypeElement.Tag = DatatypeElement.Tag;
-    declare id: undefined;
+
+    override get id() {
+        return undefined;
+    }
+
+    override set id(_id: undefined) {}
 
     get definesFields() {
         switch (this.effectiveMetatype) {
@@ -23,6 +31,11 @@ export class DatatypeModel extends ValueModel<DatatypeElement> implements Dataty
     }
 
     static Tag = DatatypeElement.Tag;
+
+    constructor(definition: BaseElement.Properties<DatatypeElement>, ...children: Model.Definition<FieldModel>[]) {
+        super(definition, ...children);
+        this.metatype = definition.metatype as Metatype | undefined;
+    }
 }
 
 DatatypeModel.register();

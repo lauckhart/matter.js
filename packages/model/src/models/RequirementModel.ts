@@ -5,7 +5,7 @@
  */
 
 import { Access, Aspect, Conformance, Constraint, Quality } from "../aspects/index.js";
-import { RequirementElement } from "../elements/index.js";
+import { type BaseElement, RequirementElement } from "../elements/index.js";
 import { Aspects } from "./Aspects.js";
 import { Children } from "./Children.js";
 import { FieldModel } from "./FieldModel.js";
@@ -81,6 +81,16 @@ export class RequirementModel extends Model<RequirementElement> implements Requi
      */
     get isMandatory() {
         return this.conformance.isMandatory;
+    }
+
+    constructor(
+        definition: RequirementModel | BaseElement.Properties<RequirementElement>,
+        ...children: Model.Definition<Model>[]
+    ) {
+        super(definition, ...children);
+
+        this.element = definition.element as RequirementElement.ElementType;
+        this.default = definition.default;
     }
 
     static Tag = RequirementElement.Tag;

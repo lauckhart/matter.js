@@ -58,6 +58,17 @@
                 "types": "./dist/cjs/index.d.ts",
                 "default": "./dist/cjs/index.js"
             }
+        },
+
+        "./full": {
+            "import": {
+                "types": "./dist/esm/full.d.ts",
+                "default": "./dist/esm/full.js"
+            },
+            "require": {
+                "types": "./dist/cjs/full.d.ts",
+                "default": "./dist/cjs/full.js"
+            }
         }
     },
     "imports": {

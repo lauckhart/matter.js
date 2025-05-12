@@ -4,12 +4,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { FormattedText } from "#general";
 import { Model } from "#model";
 import { Block } from "../../util/TsFile.js";
 import { camelize, serialize } from "../../util/string.js";
+import { addDetailsAndCrossReferences } from "./generate-resource.js";
 
-export function generateElement(target: Block, importFrom: string, element: Model, prefix = "", suffix = "") {
+export function generateElement({
+    target,
+    importFrom,
+    element,
+    prefix = "",
+    suffix = "",
+    operational = true,
+}: {
+    target: Block;
+    importFrom: string;
+    element: Model;
+    prefix?: string;
+    suffix?: string;
+    operational?: boolean;
+}) {
     const factory = camelize(element.tag, true);
     target.file.addImport(importFrom, `${factory}Element as ${factory}`);
     const expr = target.expressions(`${prefix}${factory}(`, `)${suffix}`);
@@ -21,6 +35,14 @@ export function generateElement(target: Block, importFrom: string, element: Mode
     delete fields.xref;
     delete fields.children;
     delete fields.details;
+
+    if (operational) {
+        delete fields.description;
+        delete fields.pics;
+        delete fields.asOf;
+        delete fields.until;
+        delete fields.matchTo;
+    }
 
     // First, tag/ID/name/type
     const properties = Array<string>(`name: ${serialize(element.name)}`);
@@ -62,29 +84,15 @@ export function generateElement(target: Block, importFrom: string, element: Mode
         head.atom(row.join(", "));
     }
 
-    // Next row: Details
-    if (element.details) {
-        const lines = FormattedText(element.details, 100);
-        for (let i = 0; i < lines.length; i++) {
-            const prefix = i ? "    " : "details: ";
-            const suffix = i < lines.length - 1 ? " +" : "";
-            lines[i] = `${prefix}${serialize(lines[i] === "" ? "\n" : lines[i])}${suffix}`;
-        }
-        const text = lines.join("\n");
-        if (text) {
-            head.atom(text);
-        }
-    }
-
-    // Next row: Cross reference
-    if (element.xref) {
-        head.atom("xref", serialize(element.xref));
+    // Details and cross-references
+    if (!operational) {
+        addDetailsAndCrossReferences(head, element);
     }
 
     // Children
     if (element.children?.length) {
         for (const child of element.children) {
-            generateElement(expr, importFrom, child);
+            generateElement({ target: expr, importFrom, element: child, operational: includeResources });
         }
     }
 }
