@@ -75,8 +75,8 @@ export interface Transaction {
     /**
      * Add {@link ResourceType}s to the transaction synchronously.
      *
-     * Unlike {@link addResources}, this method will throw an error if the
-     * transaction is exclusive and the resources cannot be locked.
+     * Unlike {@link addResources}, this method will throw an error if the transaction is exclusive and the resources
+     * cannot be locked.
      */
     addResourcesSync(...resources: Resource[]): void;
 

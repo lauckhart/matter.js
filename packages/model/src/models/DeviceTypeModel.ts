@@ -6,21 +6,12 @@
 
 import { DeviceClassification } from "../common/DeviceClassification.js";
 import { DeviceTypeElement } from "../elements/index.js";
-import { Children } from "./Children.js";
 import { FieldModel } from "./FieldModel.js";
 import { Model } from "./Model.js";
 import { RequirementModel } from "./RequirementModel.js";
 
-export class DeviceTypeModel extends Model<DeviceTypeElement> implements DeviceTypeElement {
+export class DeviceTypeModel extends Model<DeviceTypeElement, DeviceTypeModel.Child> implements DeviceTypeElement {
     override tag: DeviceTypeElement.Tag = DeviceTypeElement.Tag;
-
-    override get children(): Children<DeviceTypeModel.Child> {
-        return super.children as Children<DeviceTypeModel.Child>;
-    }
-
-    override set children(children: Children.InputIterable<DeviceTypeModel.Child>) {
-        super.children = children;
-    }
 
     get requirements() {
         return this.all(RequirementModel);
@@ -44,9 +35,16 @@ export class DeviceTypeModel extends Model<DeviceTypeElement> implements DeviceT
         }
     }
 
-    constructor(definition: DeviceTypeModel | DeviceTypeElement.Properties, ...children: Model.Definition<Model>[]) {
+    constructor(definition: Model.Definition<DeviceTypeModel>, ...children: Model.ChildDefinition<DeviceTypeModel>[]) {
         super(definition, ...children);
         this.classification = definition.classification as DeviceClassification;
+    }
+
+    override toElement(omitResources = false, extra?: Record<string, unknown>) {
+        return super.toElement(omitResources, {
+            classification: this.classification,
+            ...extra,
+        });
     }
 
     override get id() {

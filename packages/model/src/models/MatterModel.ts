@@ -8,7 +8,6 @@ import { Specification } from "../common/index.js";
 import { MatterElement } from "../elements/index.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
 import { AttributeModel } from "./AttributeModel.js";
-import { Children } from "./Children.js";
 import { ClusterModel } from "./ClusterModel.js";
 import { DatatypeModel } from "./DatatypeModel.js";
 import { DeviceTypeModel } from "./DeviceTypeModel.js";
@@ -22,17 +21,9 @@ import { SemanticNamespaceModel } from "./SemanticNamespaceModel.js";
 /**
  * The root of a Matter model.  This is the parent for global models.
  */
-export class MatterModel extends ScopeModel<MatterElement> implements MatterElement {
+export class MatterModel extends ScopeModel<MatterElement, MatterModel.Child> implements MatterElement {
     override tag: MatterElement.Tag = MatterElement.Tag;
     revision?: Specification.Revision;
-
-    override get children(): Children<MatterModel.Child> {
-        return super.children as Children<MatterModel.Child>;
-    }
-
-    override set children(children: Children.InputIterable<MatterModel.Child>) {
-        super.children = children;
-    }
 
     /**
      * The default instance of the canonical MatterModel (also exported directly simply as "Matter").
@@ -85,19 +76,6 @@ export class MatterModel extends ScopeModel<MatterElement> implements MatterElem
     }
 
     /**
-     * Create a new MatterModel.
-     *
-     * @param definition the MatterElement that defines the model
-     */
-    constructor(definition: MatterElement.Definition, ...children: Model.Definition<MatterModel.Child>[]) {
-        const name = definition.name ?? "Matter";
-        const definitionChildren = [...(definition.children || [])];
-        super({ ...definition, name, children: definitionChildren }, ...children);
-
-        this.id = definition.id;
-    }
-
-    /**
      * All sub-cluster global elements from this model.
      *
      * This is the set of utility datatypes required by cluster definitions.
@@ -106,6 +84,31 @@ export class MatterModel extends ScopeModel<MatterElement> implements MatterElem
      */
     get seedGlobals(): MatterModel.Child[] {
         return this.children.filter(child => child.isSeed).map(child => child.clone());
+    }
+
+    constructor(definition?: MatterModel.Definition, ...children: Model.ChildDefinition<MatterModel>[]) {
+        if (definition instanceof Model) {
+            super(definition, ...children);
+            return;
+        }
+
+        super(
+            {
+                name: "Matter",
+                children: [],
+                ...definition,
+            } as MatterElement,
+            ...children,
+        );
+
+        this.revision = definition?.revision;
+    }
+
+    override toElement(omitResources = false, extra?: Record<string, unknown>) {
+        return super.toElement(omitResources, {
+            revision: this.revision,
+            ...extra,
+        });
     }
 
     static Tag = MatterElement.Tag;
@@ -122,6 +125,11 @@ export namespace MatterModel {
         | AttributeModel
         | FabricModel
         | SemanticNamespaceModel;
+
+    export type Definition = Omit<Model.Definition<MatterModel>, "name" | "children"> & {
+        name?: string;
+        children?: Model.ChildDefinition<MatterModel>[];
+    };
 }
 
 ModelTraversal.fallbackScope = MatterModel.standard;

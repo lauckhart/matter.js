@@ -6,7 +6,6 @@
 
 import { CommandElement } from "../elements/index.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
-import type { FieldModel } from "./FieldModel.js";
 import type { Model } from "./Model.js";
 import { ValueModel } from "./ValueModel.js";
 
@@ -56,11 +55,19 @@ export class CommandModel extends ValueModel<CommandElement> implements CommandE
         return this.direction;
     }
 
-    constructor(definition: CommandModel | CommandElement.Properties, ...children: Model.Definition<FieldModel>[]) {
+    constructor(definition: Model.Definition<CommandModel>, ...children: Model.ChildDefinition<CommandModel>[]) {
         super(definition, ...children);
 
         this.direction = definition.direction as CommandElement.Direction;
         this.response = definition.response;
+    }
+
+    override toElement(omitResources = false, extra?: Record<string, unknown>) {
+        return super.toElement(omitResources, {
+            direction: this.direction,
+            response: this.response,
+            ...extra,
+        });
     }
 
     static Tag = CommandElement.Tag;

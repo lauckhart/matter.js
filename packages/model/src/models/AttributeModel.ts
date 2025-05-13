@@ -38,8 +38,8 @@ export class AttributeModel extends PropertyModel<AttributeElement> implements A
         return { ...super.requiredFields, id: this.id };
     }
 
-    constructor(definition: AttributeElement.Properties) {
-        super(definition);
+    constructor(definition: Model.Definition<AttributeModel>, ...children: Model.ChildDefinition<AttributeModel>[]) {
+        super(definition, ...children);
     }
 
     static isGlobal(model: Model) {

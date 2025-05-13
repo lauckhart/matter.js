@@ -22,14 +22,14 @@ export class StructuralModelError extends ImplementationError {}
 /**
  * A "model" is a class that implements runtime functionality associated with the corresponding element type.
  *
- * @template T the element type this model implements
+ * @template E the element type this model implements
  */
-export abstract class Model<T extends BaseElement = BaseElement> {
+export abstract class Model<E extends BaseElement = BaseElement, C extends Model = Model<BaseElement, any>> {
     abstract readonly tag: ElementTag;
     type?: string;
     isSeed?: boolean;
 
-    #id: T["id"];
+    #id: E["id"];
     #name: string;
     #frozen?: boolean;
     #resources?: Resources;
@@ -54,14 +54,14 @@ export abstract class Model<T extends BaseElement = BaseElement> {
      */
     operationalShadow?: Model | null;
 
-    #children?: Children;
+    #children?: Children<C>;
     #parent?: Model;
 
-    get id(): T["id"] {
+    get id(): E["id"] {
         return this.#id;
     }
 
-    set id(value: T["id"]) {
+    set id(value: E["id"]) {
         const oldId = this.effectiveId;
         this.#id = value;
         this.#parent?.children.updateId(this, oldId);
@@ -188,18 +188,18 @@ export abstract class Model<T extends BaseElement = BaseElement> {
     /**
      * Children of models are always models.
      */
-    get children(): Children {
+    get children(): Children<C> {
         if (!this.#children) {
             // Construct new Children instance via setter
             this.children = [];
         }
-        return this.#children as Children;
+        return this.#children as Children<C>;
     }
 
     /**
      * Set the children of the model.
      */
-    set children(children: Children.InputIterable<Model<AnyElement>>) {
+    set children(children: Children.InputIterable<C>) {
         this.#children = Children(
             children,
 
@@ -305,7 +305,7 @@ export abstract class Model<T extends BaseElement = BaseElement> {
      *
      * Only allows for updates to element properties.  Recurses to children.
      */
-    patch(values: Model.Patch<T>) {
+    patch(values: Model.Patch<E>) {
         for (const [k, v] of Object.entries(values.valueOf())) {
             if (k === "children") {
                 for (let i = 0; i < v?.length; i++) {
@@ -398,27 +398,33 @@ export abstract class Model<T extends BaseElement = BaseElement> {
      * Convert to non-class structure.
      */
     valueOf() {
-        const result = {} as { [name: string]: any };
+        return this.toElement();
+    }
 
-        // Return all iterable properties minus metadata
-        for (const key in this) {
-            switch (key) {
-                case "parent":
-                case "errors":
-                case "scope":
-                case "isType":
-                case "operationalBase":
-                case "isScope":
-                    continue;
-
-                default:
-                    if (this[key] !== undefined && (this[key] !== null || key === "default")) {
-                        result[key] = this[key];
-                    }
-            }
+    /**
+     * Convert to elemental form.
+     */
+    toElement(omitResources = false, extra?: Record<string, unknown>) {
+        if (omitResources) {
+            return {
+                tag: this.tag,
+                type: this.type,
+                isSeed: this.isSeed,
+                id: this.id,
+                name: this.name,
+                ...extra,
+            } as unknown as E;
         }
 
-        return result as T;
+        return {
+            tag: this.tag,
+            type: this.type,
+            isSeed: this.isSeed,
+            id: this.#id,
+            name: this.#name,
+            ...this.resources,
+            ...extra,
+        } as unknown as E;
     }
 
     /**
@@ -499,8 +505,8 @@ export abstract class Model<T extends BaseElement = BaseElement> {
      */
     extend<This extends Model>(
         this: This,
-        properties?: Partial<BaseElement.Properties<T>>,
-        ...children: Model.Definition<Model>[]
+        properties?: Partial<BaseElement.Properties<E>>,
+        ...children: Model.ChildDefinition<Model>[]
     ): This {
         const constructor = this.constructor as new (properties: unknown) => This;
 
@@ -527,7 +533,7 @@ export abstract class Model<T extends BaseElement = BaseElement> {
         return extension;
     }
 
-    constructor(definition: Model<T> | BaseElement.Properties<T>, ...children: Model.Definition<Model>[]) {
+    constructor(definition: Model.Definition<Model<E>>, ...children: Model.TaggedDefinition<C>[]) {
         if (typeof definition !== "object") {
             throw new StructuralModelError(`Model definition must be an object, not ${typeof definition}`);
         }
@@ -538,10 +544,13 @@ export abstract class Model<T extends BaseElement = BaseElement> {
         this.#name = definition.name;
         this.type = definition.type;
         this.isSeed = definition.isSeed;
+        this.operationalBase = definition.operationalBase;
+        this.operationalShadow = definition.operationalShadow;
 
         if ("resources" in definition) {
             this.resources = definition.resources;
         } else if (
+            "description" in definition ||
             "xref" in definition ||
             "details" in definition ||
             "xref" in definition ||
@@ -561,6 +570,8 @@ export abstract class Model<T extends BaseElement = BaseElement> {
             for (const child of definition.children) {
                 this.children.push(child.clone() as Model.ChildOf<typeof this>);
             }
+        } else if (definition.children) {
+            this.children.push(...(definition.children as Iterable<Model.ChildOf<typeof this>>));
         }
 
         if (children.length) {
@@ -647,7 +658,7 @@ export abstract class Model<T extends BaseElement = BaseElement> {
     }
 
     get asOf() {
-        return this.asOf;
+        return this.#resources?.asOf;
     }
 
     set asOf(asOf: Specification.Revision | undefined) {
@@ -657,7 +668,7 @@ export abstract class Model<T extends BaseElement = BaseElement> {
     }
 
     get until() {
-        return this.until;
+        return this.#resources?.until;
     }
 
     set until(until: Specification.Revision | undefined) {
@@ -708,22 +719,41 @@ export namespace Model {
     /**
      * Obtain the element type of a model type.
      */
-    export type ElementOf<T> = T extends Model<infer E extends AnyElement> ? E : AnyElement;
+    export type ElementOf<T extends Model> = T extends Model<infer E extends BaseElement> ? E : never;
 
     /**
      * Obtain the child type of a model type.
      */
-    export type ChildOf<T> = T extends { children: Children<infer C> } ? C : never;
+    export type ChildOf<T extends Model> = T extends Model<any, infer C extends Model> ? C : never;
 
     /**
-     * Input model.  In most places elements and models are interchangeable on input.
+     * Constructor input.
+     *
+     * In most places elements and models are interchangeable on input.
      */
-    export type Definition<T extends Model> = ElementOf<T> | T;
+    export type Definition<T extends Model> =
+        | (BaseElement.Properties<ElementOf<T>> & { operationalBase?: Model; operationalShadow?: Model })
+        | T;
+
+    /**
+     * Tagged input.  Like {@link Definition} but for places where model type is not implied.
+     */
+    export type TaggedDefinition<T extends Model> =
+        | (ElementOf<T> & {
+              operationalBase?: Model;
+              operationalShadow?: Model;
+          })
+        | T;
+
+    /**
+     * Input model for children.
+     */
+    export type ChildDefinition<T extends Model> = TaggedDefinition<ChildOf<T>>;
 
     /**
      * A model constructor.
      */
-    export type Type<T extends Model = Model> = abstract new (...args: any) => T;
+    export type Type<T extends Model = Model> = abstract new (definition: any) => T;
 
     /**
      * A model constructor for a specific element type.
@@ -734,7 +764,12 @@ export namespace Model {
      * A patch to a model tree.
      */
     export type Patch<T extends BaseElement> = Omit<Partial<T>, "children" | "tag"> & {
-        children?: Patch<ElementOf<Exclude<T["children"], undefined>[number]>>;
+        children?: Patch<Exclude<T["children"], undefined>[number]>;
+    };
+
+    export type Properties<T extends BaseElement.Properties = BaseElement.Properties> = T & {
+        operationalBase?: Model;
+        operationalShadow?: Model;
     };
 
     export type LookupPredicate<T extends Model> = Type<T> | { type: Type<T>; test: (model: Model) => boolean };
@@ -747,3 +782,5 @@ export namespace Model {
         values?: { [name: string]: any };
     };
 }
+
+Children.installModelConstructor(Model);

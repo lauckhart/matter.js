@@ -25,7 +25,7 @@ export class Conformance extends Aspect<Conformance.Definition> {
         return this.ast.type;
     }
 
-    override get empty() {
+    override get isEmpty() {
         return this.type === Conformance.Special.Empty;
     }
 

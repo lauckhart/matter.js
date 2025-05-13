@@ -337,15 +337,20 @@ export class ModelTraversal {
      * and the model's inheritance. This is because aspects can be inherited by overriding an element in the parent or
      * by direct type inheritance.  Aspects in shadowed elements take priority as they are presumably more specific.
      */
-    findAspect(model: Model | undefined, symbol: symbol): Aspect<any> | undefined {
+    findAspect<T extends Aspect, N extends string, M extends Model & { [n in N]: T }>(
+        model: M | undefined,
+        name: N,
+        factory: new (definition: undefined) => T,
+    ): T | undefined {
         if (!model) {
+            // We do not specify "create" in factory argument type because it breaks TS type inference
             return;
         }
 
         const findAspectOp = () => {
-            let aspect = (model as any)[symbol] as Aspect<any> | undefined;
+            let aspect = model[name] as T;
 
-            const inheritedAspect = this.findAspect(this.findBase(model), symbol);
+            const inheritedAspect = this.findAspect(this.findBase(model) as M | undefined, name, factory);
             if (inheritedAspect) {
                 if (aspect) {
                     aspect = inheritedAspect.extend(aspect);
@@ -356,15 +361,16 @@ export class ModelTraversal {
 
             return aspect;
         };
+
         return this.operation(findAspectOp);
     }
 
     /**
      * Constraint aspects are specialized because we infer constraint fields that are referenced in other models.
      */
-    findConstraint(model: ValueModel, symbol: symbol, field?: "value" | "min" | "max"): Constraint | undefined {
+    findConstraint(model: ValueModel, field?: "value" | "min" | "max"): Constraint | undefined {
         return this.operation(() => {
-            let constraint = this.findAspect(model, symbol) as Constraint;
+            let constraint = this.findAspect(model, "constraint", Constraint);
             if (constraint === undefined) {
                 return;
             }
@@ -372,7 +378,7 @@ export class ModelTraversal {
             const bounds = {} as Constraint.Ast;
 
             const resolve = (field: "value" | "min" | "max") => {
-                const value = constraint[field];
+                const value = constraint![field];
                 const name = FieldValue.referenced(value);
                 if (name === undefined) {
                     return;
@@ -386,7 +392,7 @@ export class ModelTraversal {
                     return;
                 }
 
-                const otherConstraint = this.findConstraint(referenced, symbol, field);
+                const otherConstraint = this.findConstraint(referenced, field);
                 if (otherConstraint?.[field]) {
                     bounds[field] = otherConstraint[field];
                 }
@@ -425,23 +431,23 @@ export class ModelTraversal {
      * This method uses {@link findAspect} for 1-3 then extends the result with 4 & 5 as necessary until
      * {@link Access.complete} is true.
      */
-    findAccess(model: ValueModel | undefined, symbol: symbol, VM: typeof ValueModel): Access {
+    findAccess(model: ValueModel | undefined, VM: typeof ValueModel): Access {
         if (model === undefined) {
             return Access.Default;
         }
 
         return this.operation(() => {
-            const access = this.findAspect(model, symbol) as Access | undefined;
+            const access = this.findAspect(model, "access", Access);
 
             if (!access) {
-                return this.findAccess(this.findOwner(VM, model), symbol, VM);
+                return this.findAccess(this.findOwner(VM, model), VM);
             }
 
             if (access.complete) {
                 return access;
             }
 
-            return this.findAccess(this.findOwner(VM, model), symbol, VM).extend(access);
+            return this.findAccess(this.findOwner(VM, model), VM).extend(access);
         });
     }
 

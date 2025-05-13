@@ -5,20 +5,11 @@
  */
 
 import { FabricElement } from "../elements/index.js";
-import { Children } from "./Children.js";
 import { Model } from "./Model.js";
 import { NodeModel } from "./NodeModel.js";
 
-export class FabricModel extends Model<FabricElement> implements FabricElement {
+export class FabricModel extends Model<FabricElement, NodeModel> implements FabricElement {
     override tag: FabricElement.Tag = FabricElement.Tag;
-
-    override get children(): Children<NodeModel> {
-        return super.children as Children<NodeModel>;
-    }
-
-    override set children(children: Children.InputIterable<NodeModel>) {
-        super.children = children;
-    }
 
     get nodes() {
         return this.children;
