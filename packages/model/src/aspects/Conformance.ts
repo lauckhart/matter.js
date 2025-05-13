@@ -25,10 +25,6 @@ export class Conformance extends Aspect<Conformance.Definition> {
         return this.ast.type;
     }
 
-    override get isEmpty() {
-        return this.type === Conformance.Special.Empty;
-    }
-
     /**
      * Initialize from a Conformance.Definition or the conformance DSL defined by the Matter Specification.
      */
@@ -57,7 +53,14 @@ export class Conformance extends Aspect<Conformance.Definition> {
             ast = definition.ast;
         }
         this.ast = ast;
+
+        this.isEmpty = this.type === Conformance.Special.Empty;
+
         this.freeze();
+    }
+
+    override extend(other: Conformance) {
+        return other.isEmpty ? this : other;
     }
 
     validateReferences(errorTarget: Conformance.ErrorTarget, lookup: Conformance.ReferenceResolver) {

@@ -24,6 +24,7 @@ const aspectCache: Record<string, Record<string, Aspect>> = {
  */
 export abstract class Aspect<D = any> {
     definition: D;
+    isEmpty = false;
     declare errors?: DefinitionError[];
 
     get valid() {
@@ -32,15 +33,6 @@ export abstract class Aspect<D = any> {
 
     constructor(definition: D) {
         this.definition = definition;
-    }
-
-    get isEmpty() {
-        for (const [k, v] of Object.entries(this)) {
-            if (k !== "definition" && v !== undefined) {
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
@@ -71,23 +63,7 @@ export abstract class Aspect<D = any> {
         });
     }
 
-    extend<This extends Aspect<any>>(this: This, other: Exclude<D, "string">) {
-        const descriptors = [
-            ...Object.entries(Object.getOwnPropertyDescriptors(this)),
-            ...Object.entries(Object.getOwnPropertyDescriptors(other)),
-        ];
-
-        const definition = {} as { [name: string]: any };
-        for (const [name, descriptor] of descriptors) {
-            if (name === "definition" || name === "errors" || descriptor.value === undefined) {
-                continue;
-            }
-            definition[name] = descriptor.value;
-        }
-
-        const constructor = this.constructor as new (definition: any) => Aspect<D>;
-        return new constructor(definition) as This;
-    }
+    abstract extend(other: Aspect): Aspect;
 
     static create<D, T extends Aspect<D>, This extends new (definition: D) => T>(
         this: This,

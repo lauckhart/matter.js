@@ -353,7 +353,7 @@ export class ModelTraversal {
             const inheritedAspect = this.findAspect(this.findBase(model) as M | undefined, name, factory);
             if (inheritedAspect) {
                 if (aspect) {
-                    aspect = inheritedAspect.extend(aspect);
+                    aspect = inheritedAspect.extend(aspect) as T;
                 } else {
                     aspect = inheritedAspect;
                 }
@@ -410,7 +410,7 @@ export class ModelTraversal {
             }
 
             if (Object.keys(bounds).length) {
-                constraint = constraint.extend(bounds);
+                constraint = constraint.extend(Constraint.create(bounds as Constraint.Definition));
             }
 
             return constraint;
