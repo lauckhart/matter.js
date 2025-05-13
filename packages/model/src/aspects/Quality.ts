@@ -131,6 +131,8 @@ export class Quality extends Aspect<Quality.Definition> implements Quality.Ast {
             singleton: other.singleton ?? this.singleton,
             quieter: other.quieter ?? this.quieter,
             largeMessage: other.largeMessage ?? this.largeMessage,
+            diagnostics: other.diagnostics ?? this.diagnostics,
+            disallowed: other.disallowed ?? this.disallowed,
         });
     }
 

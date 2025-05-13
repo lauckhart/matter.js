@@ -4,10 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Specification } from "../common/index.js";
+import { ElementTag } from "#common/ElementTag.js";
+import { Specification } from "#common/Specification.js";
 import { MatterElement } from "../elements/index.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
 import { AttributeModel } from "./AttributeModel.js";
+import type { InternalChildren } from "./Children.js";
 import { ClusterModel } from "./ClusterModel.js";
 import { DatatypeModel } from "./DatatypeModel.js";
 import { DeviceTypeModel } from "./DeviceTypeModel.js";
@@ -24,6 +26,7 @@ import { SemanticNamespaceModel } from "./SemanticNamespaceModel.js";
 export class MatterModel extends ScopeModel<MatterElement, MatterModel.Child> implements MatterElement {
     override tag: MatterElement.Tag = MatterElement.Tag;
     revision?: Specification.Revision;
+    #permanentDatatypes?: Record<string, Model>;
 
     /**
      * The default instance of the canonical MatterModel (also exported directly simply as "Matter").
@@ -86,6 +89,41 @@ export class MatterModel extends ScopeModel<MatterElement, MatterModel.Child> im
         return this.children.filter(child => child.isSeed).map(child => child.clone());
     }
 
+    /**
+     * MatterModel always owns itself.
+     */
+    override get root() {
+        return this;
+    }
+
+    /**
+     * The set of "permanent" datatypes.
+     *
+     * These are datatypes owned by this model with the "isSeed" value set.  For performance reasons we disallow
+     * overriding these values.
+     */
+    get permanentDatatypes() {
+        if (this.#permanentDatatypes) {
+            return this.#permanentDatatypes;
+        }
+
+        this.#permanentDatatypes = Object.fromEntries(
+            this.children
+                .filter(model => model.tag === ElementTag.Datatype && model.isSeed)
+                .map(model => [model.name, model]),
+        );
+
+        (this.children as InternalChildren<MatterModel.Child>).onNameChanged = (name, model) => {
+            if (model === undefined) {
+                delete this.#permanentDatatypes![name];
+            } else {
+                this.#permanentDatatypes![model.name] = model;
+            }
+        };
+
+        return this.#permanentDatatypes;
+    }
+
     constructor(definition?: MatterModel.Definition, ...children: Model.ChildDefinition<MatterModel>[]) {
         if (definition instanceof Model) {
             super(definition, ...children);
@@ -132,4 +170,4 @@ export namespace MatterModel {
     };
 }
 
-ModelTraversal.fallbackScope = MatterModel.standard;
+ModelTraversal.fallbackRoot = MatterModel.standard;

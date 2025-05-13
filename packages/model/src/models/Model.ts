@@ -8,8 +8,9 @@ import { camelize, decamelize, ImplementationError } from "#general";
 import { DefinitionError, ElementTag, Metatype, Specification } from "../common/index.js";
 import { AnyElement, BaseElement } from "../elements/index.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
-import { Children } from "./Children.js";
+import { Children, InternalChildren } from "./Children.js";
 import { CrossReference } from "./CrossReference.js";
+import type { MatterModel } from "./MatterModel.js";
 import { Resources } from "./Resources.js";
 
 const inspect = Symbol.for("nodejs.util.inspect.custom");
@@ -54,8 +55,9 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
      */
     operationalShadow?: Model | null;
 
-    #children?: Children<C>;
+    #children?: InternalChildren<C>;
     #parent?: Model;
+    #root?: MatterModel;
 
     get id(): E["id"] {
         return this.#id;
@@ -64,7 +66,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
     set id(value: E["id"]) {
         const oldId = this.effectiveId;
         this.#id = value;
-        this.#parent?.children.updateId(this, oldId);
+        (this.#parent?.children as InternalChildren).updateId(this, oldId);
     }
 
     get name() {
@@ -74,7 +76,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
     set name(value: string) {
         const oldName = this.#name;
         this.#name = value;
-        this.#parent?.children.updateName(this, oldName);
+        (this.#parent?.children as InternalChildren).updateName(this, oldName);
     }
 
     /**
@@ -134,6 +136,13 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
      */
     get parent(): Model | undefined {
         return this.#parent;
+    }
+
+    /**
+     * The structural root.  This is the MatterModel that owns this model.
+     */
+    get root() {
+        return this.#root;
     }
 
     set parent(parent: Model | undefined) {
@@ -196,6 +205,10 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
         return this.#children as Children<C>;
     }
 
+    get maybeChildren(): Children<C> | undefined {
+        return this.#children as Children<C> | undefined;
+    }
+
     /**
      * Set the children of the model.
      */
@@ -203,7 +216,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
         this.#children = Children(
             children,
 
-            (child: Model) => {
+            child => {
                 if (child.#parent === this) {
                     return;
                 }
@@ -213,13 +226,25 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
                     if (position !== -1) {
                         child.#parent.children.splice(position, 1);
                     }
-                    child.#parent = undefined;
                 }
 
                 child.#parent = this;
+                child.#root = this.#root;
             },
 
-            (child: Model) => {
+            (child, sharesRoot) => {
+                const root = sharesRoot ? this.#root : undefined;
+
+                if (child.#root === undefined) {
+                    return false;
+                }
+
+                child.#root = root;
+
+                return true;
+            },
+
+            child => {
                 if (child.#parent === this) {
                     child.#parent = undefined;
                     return true;
@@ -596,7 +621,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
         const shadow = this.operationalShadow ?? (this.operationalShadow = this.shadow ?? null);
         this.#frozen = true;
         Object.freeze(this);
-        this.children.freeze();
+        (this.children as InternalChildren<C>).freeze();
         base?.freeze();
         shadow?.freeze();
     }

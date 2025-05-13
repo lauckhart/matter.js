@@ -23,7 +23,7 @@ import {
 } from "../standard/elements/definitions.js";
 
 // These must be types to avoid circular references
-import type { CommandModel, Model, ScopeModel, ValueModel } from "../models/index.js";
+import type { CommandModel, MatterModel, Model, ScopeModel, ValueModel } from "../models/index.js";
 
 const OPERATION_DEPTH_LIMIT = 20;
 
@@ -500,6 +500,15 @@ export class ModelTraversal {
             return;
         }
 
+        // We do not allow for extension of "permanent" datatypes.  This allows us to short circuit most scope search
+        // logic for global types
+        const permanent = (owner.root ?? ModelTraversal.fallbackRoot)?.permanentDatatypes[name];
+        if (permanent) {
+            return permanent;
+        }
+
+        //console.log(`${"".padStart(this.#operationDepth * 2)}${owner.name}.${name}`);
+
         const memoKey = `${name} ${tag}`;
         const memosForScope = memos?.types.get(owner);
         if (memosForScope && memoKey in memosForScope) {
@@ -532,8 +541,8 @@ export class ModelTraversal {
             // If the model is not part of a MatterModel hierarchy, findBase and findParent will use the fallback model for
             // resolution.  However, if the model is part of an incomplete MatterModel hierarchy, that logic is not
             // triggered.  So handle the case where a global type is missing here
-            if (ModelTraversal.fallbackScope && owner !== ModelTraversal.fallbackScope) {
-                return this.findType(ModelTraversal.fallbackScope, name, tag);
+            if (ModelTraversal.fallbackRoot && owner !== ModelTraversal.fallbackRoot) {
+                return this.findType(ModelTraversal.fallbackRoot, name, tag);
             }
         };
         const type = this.operation(findTypeOp);
@@ -778,14 +787,14 @@ export class ModelTraversal {
         }
 
         // Finally, fall back to the canonical MatterModel
-        return ModelTraversal.fallbackScope;
+        return ModelTraversal.fallbackRoot;
     }
 
     /**
      * If a model is not owned by a MatterModel, global resolution won't work.  This model acts as a fallback to work
      * around this.
      */
-    static fallbackScope: ScopeModel | undefined;
+    static fallbackRoot: MatterModel | undefined;
 
     /**
      * This is a cheap hack to optimize analysis of large static models.  It temporarily memoizes key operations.

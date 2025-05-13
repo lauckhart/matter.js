@@ -62,7 +62,9 @@ export interface Children<T extends Model = Model> extends Array<T> {
      * Like {@link select} but retrieves all models for which selection applies.
      */
     selectAll(selector: Children.Selector, allowedTags?: Children.TagSelector, except?: Set<Model>): Model.ChildOf<T>[];
+}
 
+export interface InternalChildren<T extends Model = Model> extends Children<T> {
     /**
      * Models invoke this when their ID changes so we can update internal bookkeeping.
      */
@@ -77,6 +79,11 @@ export interface Children<T extends Model = Model> extends Array<T> {
      * Freeze the set of children.
      */
     freeze(): void;
+
+    /**
+     * Callback to notify of name changes.
+     */
+    onNameChanged?: (name: string, model?: Model) => void;
 }
 
 type IndexEntry = Model | Model[];
@@ -87,6 +94,7 @@ type IndexEntry = Model | Model[];
 export function Children<T extends Model = Model>(
     initial: Children.InputIterable<T>,
     adopt: (child: Model) => void,
+    reroot: (child: Model, isOwned: boolean) => boolean,
     disown: (child: Model) => boolean,
 ) {
     // The actual list of children.  We maintain children as elements until they're accessed.  This allows us to build
@@ -121,6 +129,9 @@ export function Children<T extends Model = Model>(
               }
           >;
 
+    // Callback; used to maintain external indices
+    let onNameChanged: undefined | ((name: string, model?: Model) => void);
+
     /**
      * Enter "reified" mode (see comment above).
      */
@@ -134,7 +145,7 @@ export function Children<T extends Model = Model>(
                 continue;
             }
             child = ModelConstructor.create(child as unknown as AnyElement) as T;
-            adopt(child);
+            doAdopt(child);
             children[i] = child;
         }
         reified = true;
@@ -250,7 +261,8 @@ export function Children<T extends Model = Model>(
             }
         }
 
-        disown(child);
+        onNameChanged?.(child.name, undefined);
+        doDisown(child);
     }
 
     /**
@@ -273,6 +285,30 @@ export function Children<T extends Model = Model>(
         }
 
         adopt(child);
+        onNameChanged?.(child.name, child);
+    }
+
+    function doReroot(child: Model, isOwned: boolean) {
+        if (!reroot(child, isOwned) || !child.maybeChildren) {
+            return;
+        }
+        for (const child2 of child.children) {
+            if (child2 instanceof ModelConstructor) {
+                doReroot(child2, isOwned);
+            }
+        }
+    }
+
+    function doAdopt(child: Model) {
+        onNameChanged?.(child.name, child);
+        adopt(child);
+        doReroot(child, true);
+    }
+
+    function doDisown(child: Model) {
+        onNameChanged?.(child.name, undefined);
+        disown(child);
+        doReroot(child, false);
     }
 
     function get(type: typeof Model, idOrName: number | string) {
@@ -454,9 +490,15 @@ export function Children<T extends Model = Model>(
     }
 
     function updateName(child: Model, oldName: string) {
+        if (onNameChanged) {
+            onNameChanged(oldName, undefined);
+            onNameChanged(child.name, child);
+        }
+
         if (!indices) {
             return;
         }
+
         for (const [type, slot] of indices.entries()) {
             if (child instanceof type) {
                 if (oldName !== undefined) {
@@ -476,7 +518,7 @@ export function Children<T extends Model = Model>(
         toAdd = toAdd.map(child => {
             child = insertionFormOf(child);
             if (child instanceof ModelConstructor) {
-                adopt(child);
+                doAdopt(child);
             }
             return child;
         });
@@ -487,7 +529,7 @@ export function Children<T extends Model = Model>(
         // Convert deleted elements to models and disown elements that are already models
         return result.map(child => {
             if (child instanceof ModelConstructor) {
-                disown(child);
+                doDisown(child);
             } else {
                 child = ModelConstructor.create(child as unknown as AnyElement) as T;
             }
@@ -525,7 +567,7 @@ export function Children<T extends Model = Model>(
     }
 
     const self = new Proxy(children, {
-        get: (_target, name, receiver) => {
+        get(_target, name, receiver) {
             if (typeof name === "string" && name.match(/^\d+$/)) {
                 let child = children[name as unknown as number];
                 if (child && !(child instanceof ModelConstructor)) {
@@ -569,13 +611,20 @@ export function Children<T extends Model = Model>(
             return Reflect.get(children, name, receiver);
         },
 
-        set: (_target, name, value, receiver) => {
+        set(_target, name, value, receiver) {
             if (typeof name !== "string" || !name.match(/^\d+$/)) {
-                if (name === "length") {
-                    if (value > children.length) {
-                        // Do not allow preallocation that would create gaps
+                switch (name) {
+                    case "length":
+                        if (value > children.length) {
+                            // Do not allow preallocation that would create gaps
+                            return true;
+                        }
+                        break;
+
+                    case "onNameChanged":
+                        reify();
+                        onNameChanged = value;
                         return true;
-                    }
                 }
                 return Reflect.set(children, name, value, receiver);
             }
@@ -643,7 +692,7 @@ export function Children<T extends Model = Model>(
 
     self.push(...initial);
 
-    return self as Children<T>;
+    return self as InternalChildren<T>;
 }
 
 export namespace Children {
