@@ -29,20 +29,13 @@ export function generateElement({
     const expr = target.expressions(`${prefix}${factory}(`, `)${suffix}`);
     const head = expr.expressions("{", "}");
 
-    const fields = element.valueOf() as { [name: string]: any };
+    const fields = element.toElement(operational) as { [name: string]: any };
 
     delete fields.tag;
     delete fields.xref;
     delete fields.children;
     delete fields.details;
-
-    if (operational) {
-        delete fields.description;
-        delete fields.pics;
-        delete fields.asOf;
-        delete fields.until;
-        delete fields.matchTo;
-    }
+    delete fields.resources;
 
     // First, tag/ID/name/type
     const properties = Array<string>(`name: ${serialize(element.name)}`);
@@ -92,7 +85,7 @@ export function generateElement({
     // Children
     if (element.children?.length) {
         for (const child of element.children) {
-            generateElement({ target: expr, importFrom, element: child, operational: includeResources });
+            generateElement({ target: expr, importFrom, element: child, operational });
         }
     }
 }

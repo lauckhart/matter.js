@@ -205,8 +205,8 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
         return this.#children as Children<C>;
     }
 
-    get maybeChildren(): Children<C> | undefined {
-        return this.#children as Children<C> | undefined;
+    get hasChildren(): boolean {
+        return !!this.#children?.length;
     }
 
     /**

@@ -289,7 +289,7 @@ export function Children<T extends Model = Model>(
     }
 
     function doReroot(child: Model, isOwned: boolean) {
-        if (!reroot(child, isOwned) || !child.maybeChildren) {
+        if (!reroot(child, isOwned) || !child.hasChildren) {
             return;
         }
         for (const child2 of child.children) {

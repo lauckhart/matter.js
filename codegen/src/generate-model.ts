@@ -19,6 +19,7 @@ import {
     Specification,
     TraverseMap,
 } from "#model";
+import { generateResource } from "#mom/common/generate-resource.js";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { generateElement } from "./mom/common/generate-element.js";
@@ -87,8 +88,10 @@ function generateElementFile(element: Model) {
 function generateResourceFile(element: Model) {
     logger.debug(`${element.name} resources`);
 
-    const file = new TsFile(`!resources/${elementDiscriminatedName(element)}`);
-    if (!generateResources(file, element)) {
+    const filename = elementDiscriminatedName(element);
+    const identifierName = elementIdentifierName(element);
+    const file = new TsFile(`!resources/${filename}`);
+    if (!generateResource(file, element, identifierName)) {
         return false;
     }
 
@@ -122,6 +125,14 @@ function generateModels(elements: Model[]) {
 
     if (args.save) {
         file.save();
+    }
+}
+
+function generateResources(elements: Model[]) {
+    const file = new TsFile(`!elements/resources/index`);
+    file.addImport("../elements/models.js");
+    for (const element of elements) {
+        file.addImport(`./${elementIdentifierName(element)}.js`);
     }
 }
 

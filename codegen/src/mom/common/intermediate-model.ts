@@ -60,6 +60,7 @@ export class IntermediateModel {
                 importFrom: "#model",
                 element: matter,
                 prefix: `export const ${camelize(this.#source, true)}Matter = `,
+                operational: false,
             });
             file.save();
         }
