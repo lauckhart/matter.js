@@ -9,12 +9,9 @@ import { type Specification } from "#common/Specification.js";
 import { CrossReference } from "./CrossReference.js";
 
 /**
- * Model metadata that is not required for operational purposes.
+ * Model information that is currently not required for operational purposes.
  */
 export class Resources {
-    description?: string;
-    details?: string;
-    xref?: Specification.CrossReference;
     errors?: DefinitionError[];
     asOf?: Specification.Revision;
     until?: Specification.Revision;
@@ -24,6 +21,9 @@ export class Resources {
     };
     classification?: string;
     pics?: string;
+    description?: string;
+    xref?: Specification.CrossReference;
+    details?: string;
 
     constructor(resources?: Resources) {
         if (!resources) {

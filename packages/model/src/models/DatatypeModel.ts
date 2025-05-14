@@ -34,6 +34,13 @@ export class DatatypeModel extends ValueModel<DatatypeElement> implements Dataty
         super(definition, ...children);
         this.metatype = definition.metatype as Metatype | undefined;
     }
+
+    override toElement(omitResources = false, extra?: Record<string, unknown>) {
+        return super.toElement(omitResources, {
+            metatype: this.metatype,
+            ...extra,
+        });
+    }
 }
 
 DatatypeModel.register();
