@@ -21,11 +21,11 @@ export const ElectricalPowerMeasurement = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "DIRC", conformance: "O.a+", constraint: "0" }),
-        Field({ name: "ALTC", conformance: "O.a+", constraint: "1" }),
-        Field({ name: "POLY", conformance: "[ALTC]", constraint: "2" }),
-        Field({ name: "HARM", conformance: "[ALTC]", constraint: "3" }),
-        Field({ name: "PWRQ", conformance: "[ALTC]", constraint: "4" })
+        Field({ name: "DIRC", conformance: "O.a+", constraint: "0", description: "DirectCurrent" }),
+        Field({ name: "ALTC", conformance: "O.a+", constraint: "1", description: "AlternatingCurrent" }),
+        Field({ name: "POLY", conformance: "[ALTC]", constraint: "2", description: "PolyphasePower" }),
+        Field({ name: "HARM", conformance: "[ALTC]", constraint: "3", description: "Harmonics" }),
+        Field({ name: "PWRQ", conformance: "[ALTC]", constraint: "4", description: "PowerQuality" })
     ),
 
     Attribute({ id: 0x0, name: "PowerMode", type: "PowerModeEnum", access: "R V", conformance: "M" }),
@@ -93,7 +93,7 @@ export const ElectricalPowerMeasurement = Cluster(
     Attribute(
         {
             id: 0xf, name: "HarmonicCurrents", type: "list",
-            access: "R V", conformance: "HARM", constraint: "all", default: null, quality: "X Q"
+            access: "R V", conformance: "HARM", constraint: "desc", default: null, quality: "X Q"
         },
         Field({ name: "entry", type: "HarmonicMeasurementStruct" })
     ),
@@ -101,7 +101,7 @@ export const ElectricalPowerMeasurement = Cluster(
     Attribute(
         {
             id: 0x10, name: "HarmonicPhases", type: "list",
-            access: "R V", conformance: "PWRQ", constraint: "all", default: null, quality: "X Q"
+            access: "R V", conformance: "PWRQ", constraint: "desc", default: null, quality: "X Q"
         },
         Field({ name: "entry", type: "HarmonicMeasurementStruct" })
     ),

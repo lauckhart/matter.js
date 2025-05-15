@@ -22,10 +22,10 @@ export const TimeSynchronization = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "TZ", constraint: "0" }),
-        Field({ name: "NTPC", constraint: "1" }),
-        Field({ name: "NTPS", constraint: "2" }),
-        Field({ name: "TSC", constraint: "3" })
+        Field({ name: "TZ", constraint: "0", description: "TimeZone" }),
+        Field({ name: "NTPC", constraint: "1", description: "NtpClient" }),
+        Field({ name: "NTPS", constraint: "2", description: "NtpServer" }),
+        Field({ name: "TSC", constraint: "3", description: "TimeSyncClient" })
     ),
 
     Attribute(
@@ -33,11 +33,11 @@ export const TimeSynchronization = Cluster(
     ),
     Attribute({
         id: 0x1, name: "Granularity", type: "GranularityEnum",
-        access: "R V", conformance: "M", constraint: "all", default: 0
+        access: "R V", conformance: "M", constraint: "desc", default: 0
     }),
     Attribute({
         id: 0x2, name: "TimeSource", type: "TimeSourceEnum",
-        access: "R V", conformance: "O", constraint: "all", default: 0
+        access: "R V", conformance: "O", constraint: "desc", default: 0
     }),
     Attribute({
         id: 0x3, name: "TrustedTimeSource", type: "TrustedTimeSourceStruct",
@@ -51,7 +51,8 @@ export const TimeSynchronization = Cluster(
     Attribute(
         {
             id: 0x5, name: "TimeZone", type: "list",
-            access: "R V", default: [ { type: "properties", properties: { offset: 0, validAt: 0 } } ]
+            access: "R V", constraint: "1 to 2",
+            default: [ { type: "properties", properties: { offset: 0, validAt: 0 } } ], quality: "N"
         },
         Field({ name: "entry", type: "TimeZoneStruct" })
     ),
@@ -198,7 +199,7 @@ export const TimeSynchronization = Cluster(
 
     Datatype(
         { name: "DSTOffsetStruct", type: "struct" },
-        Field({ id: 0x0, name: "Offset", type: "int32", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "Offset", type: "int32", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "ValidStarting", type: "epoch-us", conformance: "M" }),
         Field({ id: 0x2, name: "ValidUntil", type: "epoch-us", conformance: "M", quality: "X" })
     ),

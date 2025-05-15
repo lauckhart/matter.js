@@ -22,10 +22,10 @@ export const ThreadNetworkDiagnostics = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "PKTCNT", constraint: "0" }),
-        Field({ name: "ERRCNT", constraint: "1" }),
-        Field({ name: "MLECNT", constraint: "2" }),
-        Field({ name: "MACCNT", constraint: "3" })
+        Field({ name: "PKTCNT", constraint: "0", description: "PacketCounts" }),
+        Field({ name: "ERRCNT", constraint: "1", description: "ErrorCounts" }),
+        Field({ name: "MLECNT", constraint: "2", description: "MleCounts" }),
+        Field({ name: "MACCNT", constraint: "3", description: "MacCounts" })
     ),
 
     Attribute({ id: 0x0, name: "Channel", type: "uint16", access: "R V", conformance: "M", quality: "X" }),

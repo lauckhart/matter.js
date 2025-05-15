@@ -18,7 +18,10 @@ import {
 export const AudioOutput = Cluster(
     { id: 0x50b, name: "AudioOutput" },
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
-    Attribute({ id: 0xfffc, name: "FeatureMap", type: "FeatureMap" }, Field({ name: "NU", constraint: "0" })),
+    Attribute(
+        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        Field({ name: "NU", constraint: "0", description: "NameUpdates" })
+    ),
     Attribute(
         { id: 0x0, name: "OutputList", type: "list", access: "R V", conformance: "M" },
         Field({ name: "entry", type: "OutputInfoStruct" })
@@ -47,7 +50,7 @@ export const AudioOutput = Cluster(
     Datatype(
         { name: "OutputInfoStruct", type: "struct" },
         Field({ id: 0x0, name: "Index", type: "uint8", conformance: "M" }),
-        Field({ id: 0x1, name: "OutputType", type: "OutputTypeEnum", conformance: "M", constraint: "all" }),
+        Field({ id: 0x1, name: "OutputType", type: "OutputTypeEnum", conformance: "M", constraint: "desc" }),
         Field({ id: 0x2, name: "Name", type: "string", conformance: "M" })
     )
 );

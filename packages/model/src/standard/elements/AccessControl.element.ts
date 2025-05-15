@@ -21,15 +21,15 @@ export const AccessControl = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "EXTS", conformance: "O", constraint: "0" }),
-        Field({ name: "MNGD", conformance: "desc", constraint: "1" })
+        Field({ name: "EXTS", conformance: "O", constraint: "0", description: "Extension" }),
+        Field({ name: "MNGD", conformance: "desc", constraint: "1", description: "ManagedDevice" })
     ),
     Attribute(
-        { id: 0x0, name: "Acl", type: "list", access: "RW F A", conformance: "M", constraint: "all" },
+        { id: 0x0, name: "Acl", type: "list", access: "RW F A", conformance: "M", constraint: "desc" },
         Field({ name: "entry", type: "AccessControlEntryStruct" })
     ),
     Attribute(
-        { id: 0x1, name: "Extension", type: "list", access: "RW F A", conformance: "EXTS", constraint: "all" },
+        { id: 0x1, name: "Extension", type: "list", access: "RW F A", conformance: "EXTS", constraint: "desc" },
         Field({ name: "entry", type: "AccessControlExtensionStruct" })
     ),
     Attribute({
@@ -48,13 +48,13 @@ export const AccessControl = Cluster(
     Attribute(
         {
             id: 0x5, name: "CommissioningArL", type: "list",
-            access: "R V", conformance: "MNGD", constraint: "all", default: [], quality: "F"
+            access: "R V", conformance: "MNGD", constraint: "desc", default: [], quality: "F"
         },
         Field({ name: "entry", type: "CommissioningAccessRestrictionEntryStruct" })
     ),
 
     Attribute(
-        { id: 0x6, name: "Arl", type: "list", access: "R F V", conformance: "MNGD", constraint: "all", default: [] },
+        { id: 0x6, name: "Arl", type: "list", access: "R F V", conformance: "MNGD", constraint: "desc", default: [] },
         Field({ name: "entry", type: "AccessRestrictionEntryStruct" })
     ),
 
@@ -62,11 +62,11 @@ export const AccessControl = Cluster(
         { id: 0x0, name: "AccessControlEntryChanged", access: "S A", conformance: "M", priority: "info" },
         Field({
             id: 0x1, name: "AdminNodeId", type: "node-id",
-            access: "S", conformance: "M", constraint: "all", quality: "X"
+            access: "S", conformance: "M", constraint: "desc", quality: "X"
         }),
         Field({
             id: 0x2, name: "AdminPasscodeId", type: "uint16",
-            access: "S", conformance: "M", constraint: "all", quality: "X"
+            access: "S", conformance: "M", constraint: "desc", quality: "X"
         }),
         Field({ id: 0x3, name: "ChangeType", type: "ChangeTypeEnum", access: "S", conformance: "M" }),
         Field({ id: 0x4, name: "LatestValue", type: "AccessControlEntryStruct", access: "S", conformance: "M", quality: "X" }),
@@ -77,11 +77,11 @@ export const AccessControl = Cluster(
         { id: 0x1, name: "AccessControlExtensionChanged", access: "S A", conformance: "EXTS", priority: "info" },
         Field({
             id: 0x1, name: "AdminNodeId", type: "node-id",
-            access: "S", conformance: "M", constraint: "all", quality: "X"
+            access: "S", conformance: "M", constraint: "desc", quality: "X"
         }),
         Field({
             id: 0x2, name: "AdminPasscodeId", type: "uint16",
-            access: "S", conformance: "M", constraint: "all", quality: "X"
+            access: "S", conformance: "M", constraint: "desc", quality: "X"
         }),
         Field({ id: 0x3, name: "ChangeType", type: "ChangeTypeEnum", access: "S", conformance: "M" }),
         Field({
@@ -106,7 +106,7 @@ export const AccessControl = Cluster(
             response: "ReviewFabricRestrictionsResponse"
         },
         Field(
-            { id: 0x0, name: "Arl", type: "list", conformance: "M", constraint: "all" },
+            { id: 0x0, name: "Arl", type: "list", conformance: "M", constraint: "desc" },
             Field({ name: "entry", type: "CommissioningAccessRestrictionEntryStruct" })
         )
     ),

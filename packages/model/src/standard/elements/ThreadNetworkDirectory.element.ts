@@ -33,7 +33,7 @@ export const ThreadNetworkDirectory = Cluster(
 
     Attribute({
         id: 0x2, name: "ThreadNetworkTableSize", type: "uint8",
-        access: "R V", conformance: "M", constraint: "all", default: 10, quality: "F"
+        access: "R V", conformance: "M", constraint: "desc", default: 10, quality: "F"
     }),
     Command(
         { id: 0x0, name: "AddNetwork", access: "M T", conformance: "M", direction: "request", response: "status" },

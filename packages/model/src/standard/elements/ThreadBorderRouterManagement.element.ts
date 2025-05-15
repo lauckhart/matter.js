@@ -19,7 +19,7 @@ export const ThreadBorderRouterManagement = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "PC", conformance: "O", constraint: "0" })
+        Field({ name: "PC", conformance: "O", constraint: "0", description: "PanChange" })
     ),
     Attribute(
         { id: 0x0, name: "BorderRouterName", type: "string", access: "R V", conformance: "M", constraint: "1 to 63" }

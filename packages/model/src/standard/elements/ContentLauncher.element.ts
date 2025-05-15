@@ -21,11 +21,11 @@ export const ContentLauncher = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "CS", constraint: "0" }),
-        Field({ name: "UP", constraint: "1" }),
-        Field({ name: "AS", constraint: "2" }),
-        Field({ name: "TT", constraint: "3" }),
-        Field({ name: "AT", constraint: "4" })
+        Field({ name: "CS", constraint: "0", description: "ContentSearch" }),
+        Field({ name: "UP", constraint: "1", description: "UrlPlayback" }),
+        Field({ name: "AS", constraint: "2", description: "AdvancedSeek" }),
+        Field({ name: "TT", constraint: "3", description: "TextTracks" }),
+        Field({ name: "AT", constraint: "4", description: "AudioTracks" })
     ),
 
     Attribute(
@@ -46,11 +46,11 @@ export const ContentLauncher = Cluster(
             id: 0x0, name: "LaunchContent",
             access: "O", conformance: "CS", direction: "request", response: "LauncherResponse"
         },
-        Field({ id: 0x0, name: "Search", type: "ContentSearchStruct", conformance: "M", constraint: "all" }),
-        Field({ id: 0x1, name: "AutoPlay", type: "bool", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "Search", type: "ContentSearchStruct", conformance: "M", constraint: "desc" }),
+        Field({ id: 0x1, name: "AutoPlay", type: "bool", conformance: "M", constraint: "desc" }),
         Field({ id: 0x2, name: "Data", type: "string", conformance: "O" }),
         Field({ id: 0x3, name: "PlaybackPreferences", type: "PlaybackPreferencesStruct", conformance: "O" }),
-        Field({ id: 0x4, name: "UseCurrentContext", type: "bool", conformance: "O", constraint: "all", default: true })
+        Field({ id: 0x4, name: "UseCurrentContext", type: "bool", conformance: "O", constraint: "desc", default: true })
     ),
 
     Command(

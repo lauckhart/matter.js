@@ -19,8 +19,8 @@ export const LaundryWasherControls = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "SPIN", conformance: "O.a+", constraint: "0" }),
-        Field({ name: "RINSE", conformance: "O.a+", constraint: "1" })
+        Field({ name: "SPIN", conformance: "O.a+", constraint: "0", description: "Spin" }),
+        Field({ name: "RINSE", conformance: "O.a+", constraint: "1", description: "Rinse" })
     ),
     Attribute(
         { id: 0x0, name: "SpinSpeeds", type: "list", access: "R V", conformance: "SPIN", constraint: "max 16[max 64]" },
@@ -32,7 +32,7 @@ export const LaundryWasherControls = Cluster(
     }),
     Attribute({
         id: 0x2, name: "NumberOfRinses", type: "NumberOfRinsesEnum",
-        access: "RW VO", conformance: "RINSE", constraint: "all", default: 1
+        access: "RW VO", conformance: "RINSE", constraint: "desc", default: 1
     }),
     Attribute(
         { id: 0x3, name: "SupportedRinses", type: "list", access: "R V", conformance: "RINSE", constraint: "max 4" },

@@ -20,9 +20,9 @@ export const TemperatureControl = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "TN", conformance: "O.a", constraint: "0" }),
-        Field({ name: "TL", conformance: "O.a", constraint: "1" }),
-        Field({ name: "STEP", conformance: "[TN]", constraint: "2" })
+        Field({ name: "TN", conformance: "O.a", constraint: "0", description: "TemperatureNumber" }),
+        Field({ name: "TL", conformance: "O.a", constraint: "1", description: "TemperatureLevel" }),
+        Field({ name: "STEP", conformance: "[TN]", constraint: "2", description: "TemperatureStep" })
     ),
 
     Attribute({
@@ -35,7 +35,7 @@ export const TemperatureControl = Cluster(
     }),
     Attribute({
         id: 0x2, name: "MaxTemperature", type: "temperature",
-        access: "R V", conformance: "TN", constraint: "all", quality: "F"
+        access: "R V", conformance: "TN", constraint: "desc", quality: "F"
     }),
     Attribute({
         id: 0x3, name: "Step", type: "temperature",
@@ -56,8 +56,8 @@ export const TemperatureControl = Cluster(
 
     Command(
         { id: 0x0, name: "SetTemperature", access: "O", conformance: "M", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "TargetTemperature", type: "temperature", conformance: "TN", constraint: "all" }),
-        Field({ id: 0x1, name: "TargetTemperatureLevel", type: "uint8", conformance: "TL", constraint: "all" })
+        Field({ id: 0x0, name: "TargetTemperature", type: "temperature", conformance: "TN", constraint: "desc" }),
+        Field({ id: 0x1, name: "TargetTemperatureLevel", type: "uint8", conformance: "TL", constraint: "desc" })
     )
 );
 

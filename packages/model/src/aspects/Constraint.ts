@@ -62,6 +62,7 @@ export class Constraint extends Aspect<Constraint.Definition> implements Constra
         }
 
         if (!ast) {
+            this.isEmpty = true;
             return;
         }
 

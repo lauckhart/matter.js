@@ -30,10 +30,13 @@ export const EcosystemInformation = Cluster(
         { name: "EcosystemDeviceStruct", type: "struct" },
         Field({ id: 0x0, name: "DeviceName", type: "string", access: "S", conformance: "O", constraint: "max 64" }),
         Field({ id: 0x1, name: "DeviceNameLastEdit", type: "epoch-us", access: "S", conformance: "desc", default: 0 }),
-        Field({ id: 0x2, name: "BridgedEndpoint", type: "endpoint-no", access: "S", conformance: "desc", constraint: "all" }),
-        Field({ id: 0x3, name: "OriginalEndpoint", type: "endpoint-no", access: "S", conformance: "desc", constraint: "all" }),
+        Field({ id: 0x2, name: "BridgedEndpoint", type: "endpoint-no", access: "S", conformance: "desc", constraint: "desc" }),
+        Field({
+            id: 0x3, name: "OriginalEndpoint", type: "endpoint-no",
+            access: "S", conformance: "desc", constraint: "desc"
+        }),
         Field(
-            { id: 0x4, name: "DeviceTypes", type: "list", access: "S", conformance: "M", constraint: "all" },
+            { id: 0x4, name: "DeviceTypes", type: "list", access: "S", conformance: "M", constraint: "desc" },
             Field({ name: "entry", type: "Descriptor.DeviceTypeStruct" })
         ),
 

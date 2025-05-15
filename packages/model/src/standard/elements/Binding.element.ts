@@ -21,7 +21,7 @@ export const Binding = Cluster(
     Attribute(
         {
             id: 0x0, name: "Binding", type: "list",
-            access: "RW F VM", conformance: "M", constraint: "all", default: [], quality: "N"
+            access: "RW F VM", conformance: "M", constraint: "desc", default: [], quality: "N"
         },
         Field({ name: "entry", type: "TargetStruct" })
     ),

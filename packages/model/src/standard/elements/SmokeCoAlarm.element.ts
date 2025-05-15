@@ -21,8 +21,8 @@ export const SmokeCoAlarm = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "SMOKE", conformance: "O.a+", constraint: "0" }),
-        Field({ name: "CO", conformance: "O.a+", constraint: "1" })
+        Field({ name: "SMOKE", conformance: "O.a+", constraint: "0", description: "SmokeAlarm" }),
+        Field({ name: "CO", conformance: "O.a+", constraint: "1", description: "CoAlarm" })
     ),
     Attribute(
         { id: 0x0, name: "ExpressedState", type: "ExpressedStateEnum", access: "R V", conformance: "M", quality: "N" }

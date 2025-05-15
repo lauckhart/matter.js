@@ -22,11 +22,11 @@ export const EnergyEvse = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "PREF", conformance: "M", constraint: "0" }),
-        Field({ name: "SOC", conformance: "P, O", constraint: "1" }),
-        Field({ name: "PNC", conformance: "P, O", constraint: "2" }),
-        Field({ name: "RFID", conformance: "O", constraint: "3" }),
-        Field({ name: "V2X", conformance: "P, O", constraint: "4" })
+        Field({ name: "PREF", conformance: "M", constraint: "0", description: "ChargingPreferences" }),
+        Field({ name: "SOC", conformance: "P, O", constraint: "1", description: "SoCReporting" }),
+        Field({ name: "PNC", conformance: "P, O", constraint: "2", description: "PlugAndCharge" }),
+        Field({ name: "RFID", conformance: "O", constraint: "3", description: "Rfid" }),
+        Field({ name: "V2X", conformance: "P, O", constraint: "4", description: "V2X" })
     ),
 
     Attribute({ id: 0x0, name: "State", type: "StateEnum", access: "R V", conformance: "M", quality: "X" }),
@@ -58,7 +58,7 @@ export const EnergyEvse = Cluster(
     }),
     Attribute({
         id: 0x9, name: "UserMaximumChargeCurrent", type: "amperage-mA",
-        access: "RW VM", conformance: "O", constraint: "all", default: 0, quality: "N"
+        access: "RW VM", conformance: "O", constraint: "desc", default: 0, quality: "N"
     }),
     Attribute({
         id: 0xa, name: "RandomizationDelayWindow", type: "elapsed-s",
@@ -82,7 +82,7 @@ export const EnergyEvse = Cluster(
     }),
     Attribute({
         id: 0x27, name: "ApproximateEvEfficiency", type: "uint16",
-        access: "RW VM", conformance: "[PREF]", constraint: "all", default: null, quality: "X N"
+        access: "RW VM", conformance: "[PREF]", constraint: "desc", default: null, quality: "X N"
     }),
     Attribute({
         id: 0x30, name: "StateOfCharge", type: "percent",

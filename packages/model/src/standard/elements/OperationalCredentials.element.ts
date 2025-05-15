@@ -18,7 +18,10 @@ import {
 export const OperationalCredentials = Cluster(
     { id: 0x3e, name: "OperationalCredentials" },
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
-    Attribute({ id: 0x0, name: "Nocs", type: "list", access: "R F A" }, Field({ name: "entry", type: "NOCStruct" })),
+    Attribute(
+        { id: 0x0, name: "Nocs", type: "list", access: "R F A", constraint: "max supportedFabrics", quality: "N C" },
+        Field({ name: "entry", type: "NOCStruct" })
+    ),
 
     Attribute(
         {
@@ -66,7 +69,7 @@ export const OperationalCredentials = Cluster(
             id: 0x2, name: "CertificateChainRequest",
             access: "A", conformance: "M", direction: "request", response: "CertificateChainResponse"
         },
-        Field({ id: 0x0, name: "CertificateType", type: "CertificateChainTypeEnum", conformance: "M", constraint: "all" })
+        Field({ id: 0x0, name: "CertificateType", type: "CertificateChainTypeEnum", conformance: "M", constraint: "desc" })
     ),
 
     Command(
@@ -159,7 +162,7 @@ export const OperationalCredentials = Cluster(
     Datatype(
         { name: "FabricDescriptorStruct", type: "struct" },
         Field({ id: 0x1, name: "RootPublicKey", type: "octstr", access: "F", conformance: "M", constraint: "65" }),
-        Field({ id: 0x2, name: "VendorId", type: "vendor-id", access: "F", conformance: "M", constraint: "all" }),
+        Field({ id: 0x2, name: "VendorId", type: "vendor-id", access: "F", conformance: "M", constraint: "desc" }),
         Field({ id: 0x3, name: "FabricId", type: "fabric-id", access: "F", conformance: "M" }),
         Field({ id: 0x4, name: "NodeId", type: "node-id", access: "F", conformance: "M" }),
         Field({ id: 0x5, name: "Label", type: "string", access: "F", conformance: "M", constraint: "max 32" }),

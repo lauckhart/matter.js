@@ -20,7 +20,7 @@ export const ScenesManagement = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "SN", conformance: "O", constraint: "0" })
+        Field({ name: "SN", conformance: "O", constraint: "0", description: "SceneNames" })
     ),
     Attribute({
         id: 0x0, name: "LastConfiguredBy", type: "node-id",
@@ -28,10 +28,10 @@ export const ScenesManagement = Cluster(
     }),
     Attribute({
         id: 0x1, name: "SceneTableSize", type: "uint16",
-        access: "R V", conformance: "M", constraint: "all", default: 16, quality: "F"
+        access: "R V", conformance: "M", constraint: "desc", default: 16, quality: "F"
     }),
     Attribute(
-        { id: 0x2, name: "FabricSceneInfo", type: "list", access: "R F V", conformance: "M", constraint: "all" },
+        { id: 0x2, name: "FabricSceneInfo", type: "list", access: "R F V", conformance: "M", constraint: "desc" },
         Field({ name: "entry", type: "SceneInfoStruct" })
     ),
 
@@ -45,14 +45,14 @@ export const ScenesManagement = Cluster(
         Field({ id: 0x2, name: "TransitionTime", type: "uint32", conformance: "M", constraint: "max 60000000" }),
         Field({ id: 0x3, name: "SceneName", type: "string", conformance: "M", constraint: "max 16" }),
         Field(
-            { id: 0x4, name: "ExtensionFieldSetStructs", type: "list", conformance: "M", constraint: "all" },
+            { id: 0x4, name: "ExtensionFieldSetStructs", type: "list", conformance: "M", constraint: "desc" },
             Field({ name: "entry", type: "ExtensionFieldSetStruct" })
         )
     ),
 
     Command(
         { id: 0x0, name: "AddSceneResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "GroupId", type: "group-id", conformance: "M" }),
         Field({ id: 0x2, name: "SceneId", type: "uint8", conformance: "M", constraint: "max 254" })
     ),
@@ -68,7 +68,7 @@ export const ScenesManagement = Cluster(
 
     Command(
         { id: 0x1, name: "ViewSceneResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "GroupId", type: "group-id", conformance: "M" }),
         Field({ id: 0x2, name: "SceneId", type: "uint8", conformance: "M", constraint: "max 254" }),
         Field({ id: 0x3, name: "TransitionTime", type: "uint32", conformance: "desc", constraint: "max 60000000" }),
@@ -90,7 +90,7 @@ export const ScenesManagement = Cluster(
 
     Command(
         { id: 0x2, name: "RemoveSceneResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "GroupId", type: "group-id", conformance: "M" }),
         Field({ id: 0x2, name: "SceneId", type: "uint8", conformance: "M", constraint: "max 254" })
     ),
@@ -105,7 +105,7 @@ export const ScenesManagement = Cluster(
 
     Command(
         { id: 0x3, name: "RemoveAllScenesResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "GroupId", type: "group-id", conformance: "M" })
     ),
 
@@ -120,7 +120,7 @@ export const ScenesManagement = Cluster(
 
     Command(
         { id: 0x4, name: "StoreSceneResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "GroupId", type: "group-id", conformance: "M" }),
         Field({ id: 0x2, name: "SceneId", type: "uint8", conformance: "M", constraint: "max 254" })
     ),
@@ -142,7 +142,7 @@ export const ScenesManagement = Cluster(
 
     Command(
         { id: 0x6, name: "GetSceneMembershipResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "Capacity", type: "uint8", conformance: "M", quality: "X" }),
         Field({ id: 0x2, name: "GroupId", type: "group-id", conformance: "M" }),
         Field(
@@ -156,7 +156,7 @@ export const ScenesManagement = Cluster(
             id: 0x40, name: "CopyScene",
             access: "F M", conformance: "O", direction: "request", response: "CopySceneResponse"
         },
-        Field({ id: 0x0, name: "Mode", type: "CopyModeBitmap", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "Mode", type: "CopyModeBitmap", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "GroupIdentifierFrom", type: "group-id", conformance: "M" }),
         Field({ id: 0x2, name: "SceneIdentifierFrom", type: "uint8", conformance: "M", constraint: "max 254" }),
         Field({ id: 0x3, name: "GroupIdentifierTo", type: "group-id", conformance: "M" }),
@@ -165,7 +165,7 @@ export const ScenesManagement = Cluster(
 
     Command(
         { id: 0x40, name: "CopySceneResponse", conformance: "CopyScene", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "GroupIdentifierFrom", type: "group-id", conformance: "M" }),
         Field({ id: 0x2, name: "SceneIdentifierFrom", type: "uint8", conformance: "M", constraint: "max 254" })
     ),
@@ -177,7 +177,7 @@ export const ScenesManagement = Cluster(
         Field({ id: 0x0, name: "SceneCount", type: "uint8", access: "F", conformance: "M", default: 0 }),
         Field({
             id: 0x1, name: "CurrentScene", type: "uint8",
-            access: "S", conformance: "M", constraint: "all", default: 255
+            access: "S", conformance: "M", constraint: "desc", default: 255
         }),
         Field({ id: 0x2, name: "CurrentGroup", type: "group-id", access: "S", conformance: "M", default: 0 }),
         Field({ id: 0x3, name: "SceneValid", type: "bool", access: "S", conformance: "M", default: false }),
@@ -202,7 +202,7 @@ export const ScenesManagement = Cluster(
         { name: "ExtensionFieldSetStruct", type: "struct" },
         Field({ id: 0x0, name: "ClusterId", type: "cluster-id", conformance: "M" }),
         Field(
-            { id: 0x1, name: "AttributeValueList", type: "list", conformance: "M", constraint: "all" },
+            { id: 0x1, name: "AttributeValueList", type: "list", conformance: "M", constraint: "desc" },
             Field({ name: "entry", type: "AttributeValuePairStruct" })
         )
     ),

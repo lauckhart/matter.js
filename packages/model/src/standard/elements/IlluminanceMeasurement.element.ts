@@ -31,7 +31,7 @@ export const IlluminanceMeasurement = Cluster(
         access: "R V", conformance: "M", constraint: "min minMeasuredValue + 1", quality: "X"
     }),
     Attribute({ id: 0x3, name: "Tolerance", type: "uint16", access: "R V", conformance: "O", constraint: "max 2048" }),
-    Attribute({ id: 0x4, name: "LightSensorType", type: "uint8", access: "R V", default: null }),
+    Attribute({ id: 0x4, name: "LightSensorType", type: "uint8", access: "R V", default: null, quality: "X" }),
     Datatype(
         { name: "LightSensorTypeEnum", type: "enum8" },
         Field({ id: 0x0, name: "Photodiode", conformance: "M" }),

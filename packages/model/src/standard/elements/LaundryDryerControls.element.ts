@@ -28,7 +28,7 @@ export const LaundryDryerControls = Cluster(
 
     Attribute({
         id: 0x1, name: "SelectedDrynessLevel", type: "DrynessLevelEnum",
-        access: "RW VO", conformance: "M", constraint: "all", quality: "X"
+        access: "RW VO", conformance: "M", constraint: "desc", quality: "X"
     }),
 
     Datatype(

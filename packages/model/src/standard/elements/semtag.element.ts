@@ -14,7 +14,7 @@ export const semtag = Datatype(
     Field({ id: 0x0, name: "MfgCode", type: "vendor-id", conformance: "M", default: null, quality: "X" }),
     Field({ id: 0x1, name: "NamespaceId", type: "namespace", conformance: "M" }),
     Field({ id: 0x2, name: "Tag", type: "tag", conformance: "M" }),
-    Field({ id: 0x3, name: "Label", type: "string", conformance: "O", default: null })
+    Field({ id: 0x3, name: "Label", type: "string", conformance: "O", constraint: "max 64", default: null, quality: "X" })
 );
 
 MatterDefinition.children.push(semtag);

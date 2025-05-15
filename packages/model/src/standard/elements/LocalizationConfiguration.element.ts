@@ -16,7 +16,7 @@ import {
 export const LocalizationConfiguration = Cluster(
     { id: 0x2b, name: "LocalizationConfiguration" },
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
-    Attribute({ id: 0x0, name: "ActiveLocale", type: "string", access: "RW VM", constraint: "in SupportedLocales" }),
+    Attribute({ id: 0x0, name: "ActiveLocale", type: "string", access: "RW VM", constraint: "in SupportedLocales", quality: "N" }),
 
     Attribute(
         {

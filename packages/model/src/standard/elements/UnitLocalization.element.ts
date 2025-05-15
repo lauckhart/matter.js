@@ -17,7 +17,10 @@ import {
 export const UnitLocalization = Cluster(
     { id: 0x2d, name: "UnitLocalization" },
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
-    Attribute({ id: 0xfffc, name: "FeatureMap", type: "FeatureMap" }, Field({ name: "TEMP", constraint: "0" })),
+    Attribute(
+        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        Field({ name: "TEMP", constraint: "0", description: "TemperatureUnit" })
+    ),
     Attribute(
         { id: 0x0, name: "TemperatureUnit", type: "TempUnitEnum", access: "RW VM", conformance: "TEMP", quality: "N" }
     ),

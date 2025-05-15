@@ -19,7 +19,10 @@ import {
 export const SoftwareDiagnostics = Cluster(
     { id: 0x34, name: "SoftwareDiagnostics", quality: "K" },
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
-    Attribute({ id: 0xfffc, name: "FeatureMap", type: "FeatureMap" }, Field({ name: "WTRMRK", constraint: "0" })),
+    Attribute(
+        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        Field({ name: "WTRMRK", constraint: "0", description: "Watermarks" })
+    ),
     Attribute(
         { id: 0x0, name: "ThreadMetrics", type: "list", access: "R V", conformance: "O", constraint: "max 64" },
         Field({ name: "entry", type: "ThreadMetricsStruct" })

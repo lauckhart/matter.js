@@ -20,7 +20,7 @@ export const RefrigeratorAlarm = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "RESET", conformance: "X", constraint: "0" })
+        Field({ name: "RESET", conformance: "X", constraint: "0", description: "Reset" })
     ),
     Command({ id: 0x1, name: "ModifyEnabledAlarms", conformance: "X" }),
     Datatype({ name: "AlarmBitmap", type: "map32" }, Field({ name: "DoorOpen", constraint: "0" }))

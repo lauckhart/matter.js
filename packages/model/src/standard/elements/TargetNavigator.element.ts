@@ -23,7 +23,10 @@ export const TargetNavigator = Cluster(
         { id: 0x0, name: "TargetList", type: "list", access: "R V", conformance: "M" },
         Field({ name: "entry", type: "TargetInfoStruct" })
     ),
-    Attribute({ id: 0x1, name: "CurrentTarget", type: "uint8", access: "R V", conformance: "O", constraint: "all", default: 255 }),
+    Attribute({
+        id: 0x1, name: "CurrentTarget", type: "uint8",
+        access: "R V", conformance: "O", constraint: "desc", default: 255
+    }),
 
     Event(
         { id: 0x0, name: "TargetUpdated", access: "V", conformance: "O", priority: "info" },
@@ -31,7 +34,7 @@ export const TargetNavigator = Cluster(
             { id: 0x0, name: "TargetList", type: "list", conformance: "O" },
             Field({ name: "entry", type: "TargetInfoStruct" })
         ),
-        Field({ id: 0x1, name: "CurrentTarget", type: "uint8", conformance: "O", constraint: "all", default: 255 }),
+        Field({ id: 0x1, name: "CurrentTarget", type: "uint8", conformance: "O", constraint: "desc", default: 255 }),
         Field({ id: 0x2, name: "Data", type: "octstr", conformance: "O", constraint: "max 900" })
     ),
 

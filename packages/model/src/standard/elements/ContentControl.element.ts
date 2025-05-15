@@ -22,14 +22,14 @@ export const ContentControl = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "ST", constraint: "0" }),
-        Field({ name: "PM", constraint: "1" }),
-        Field({ name: "BU", constraint: "2" }),
-        Field({ name: "OCR", constraint: "3" }),
-        Field({ name: "SCR", constraint: "4" }),
-        Field({ name: "BC", constraint: "5" }),
-        Field({ name: "BA", constraint: "6" }),
-        Field({ name: "BTW", constraint: "7" })
+        Field({ name: "ST", constraint: "0", description: "ScreenTime" }),
+        Field({ name: "PM", constraint: "1", description: "PinManagement" }),
+        Field({ name: "BU", constraint: "2", description: "BlockUnrated" }),
+        Field({ name: "OCR", constraint: "3", description: "OnDemandContentRating" }),
+        Field({ name: "SCR", constraint: "4", description: "ScheduledContentRating" }),
+        Field({ name: "BC", constraint: "5", description: "BlockChannels" }),
+        Field({ name: "BA", constraint: "6", description: "BlockApplications" }),
+        Field({ name: "BTW", constraint: "7", description: "BlockContentTimeWindow" })
     ),
 
     Attribute({ id: 0x0, name: "Enabled", type: "bool", access: "R V", conformance: "M" }),
@@ -89,7 +89,7 @@ export const ContentControl = Cluster(
     Command(
         { id: 0x5, name: "AddBonusTime", access: "O", conformance: "ST", direction: "request", response: "status" },
         Field({ id: 0x0, name: "PinCode", type: "string", conformance: "O", constraint: "max 6" }),
-        Field({ id: 0x1, name: "BonusTime", type: "elapsed-s", conformance: "M", constraint: "all", default: 300 })
+        Field({ id: 0x1, name: "BonusTime", type: "elapsed-s", conformance: "M", constraint: "desc", default: 300 })
     ),
 
     Command(
@@ -216,9 +216,9 @@ export const ContentControl = Cluster(
     Datatype(
         { name: "TimeWindowStruct", type: "struct" },
         Field({ id: 0x0, name: "TimeWindowIndex", type: "uint16", conformance: "M", quality: "X" }),
-        Field({ id: 0x1, name: "DayOfWeek", type: "DayOfWeekBitmap", conformance: "M", constraint: "all" }),
+        Field({ id: 0x1, name: "DayOfWeek", type: "DayOfWeekBitmap", conformance: "M", constraint: "desc" }),
         Field(
-            { id: 0x2, name: "TimePeriod", type: "list", conformance: "M", constraint: "all" },
+            { id: 0x2, name: "TimePeriod", type: "list", conformance: "M", constraint: "desc" },
             Field({ name: "entry", type: "TimePeriodStruct" })
         )
     ),

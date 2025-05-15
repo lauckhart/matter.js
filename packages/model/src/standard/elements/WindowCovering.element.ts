@@ -21,16 +21,16 @@ export const WindowCovering = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "LF", conformance: "O.a+", constraint: "0" }),
-        Field({ name: "TL", conformance: "O.a+", constraint: "1" }),
-        Field({ name: "PA_LF", conformance: "[LF]", constraint: "2" }),
-        Field({ name: "ABS", conformance: "O", constraint: "3" }),
-        Field({ name: "PA_TL", conformance: "[TL]", constraint: "4" })
+        Field({ name: "LF", conformance: "O.a+", constraint: "0", description: "Lift" }),
+        Field({ name: "TL", conformance: "O.a+", constraint: "1", description: "Tilt" }),
+        Field({ name: "PA_LF", conformance: "[LF]", constraint: "2", description: "PositionAwareLift" }),
+        Field({ name: "ABS", conformance: "O", constraint: "3", description: "AbsolutePosition" }),
+        Field({ name: "PA_TL", conformance: "[TL]", constraint: "4", description: "PositionAwareTilt" })
     ),
 
     Attribute({
         id: 0x0, name: "Type", type: "TypeEnum",
-        access: "R V", conformance: "M", constraint: "all", default: 0, quality: "F"
+        access: "R V", conformance: "M", constraint: "desc", default: 0, quality: "F"
     }),
     Attribute({
         id: 0x1, name: "PhysicalClosedLimitLift", type: "uint16",
@@ -60,7 +60,7 @@ export const WindowCovering = Cluster(
     }),
     Attribute({
         id: 0x7, name: "ConfigStatus", type: "ConfigStatusBitmap",
-        access: "R V", conformance: "M", constraint: "all", quality: "N"
+        access: "R V", conformance: "M", constraint: "desc", quality: "N"
     }),
     Attribute({
         id: 0x8, name: "CurrentPositionLiftPercentage", type: "percent",
@@ -84,7 +84,7 @@ export const WindowCovering = Cluster(
     }),
     Attribute({
         id: 0xd, name: "EndProductType", type: "EndProductTypeEnum",
-        access: "R V", conformance: "M", constraint: "all", default: 0, quality: "F"
+        access: "R V", conformance: "M", constraint: "desc", default: 0, quality: "F"
     }),
     Attribute({
         id: 0xe, name: "CurrentPositionLiftPercent100ths", type: "percent100ths",
@@ -120,7 +120,7 @@ export const WindowCovering = Cluster(
     Attribute({ id: 0x19, name: "IntermediateSetpointsTilt", conformance: "D" }),
     Attribute({
         id: 0x1a, name: "SafetyStatus", type: "SafetyStatusBitmap",
-        access: "R V", conformance: "O", constraint: "all", default: 0, quality: "P"
+        access: "R V", conformance: "O", constraint: "desc", default: 0, quality: "P"
     }),
     Command({ id: 0x0, name: "UpOrOpen", access: "O", conformance: "M", direction: "request", response: "status" }),
     Command({ id: 0x1, name: "DownOrClose", access: "O", conformance: "M", direction: "request", response: "status" }),
@@ -136,7 +136,7 @@ export const WindowCovering = Cluster(
 
     Command(
         { id: 0x5, name: "GoToLiftPercentage", access: "O", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "LiftPercent100thsValue", type: "percent100ths", conformance: "M" }),
+        Field({ id: 0x0, name: "LiftPercent100thsValue", type: "percent100ths", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "Ignored", conformance: "X" })
     ),
 
@@ -150,7 +150,7 @@ export const WindowCovering = Cluster(
 
     Command(
         { id: 0x8, name: "GoToTiltPercentage", access: "O", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "TiltPercent100thsValue", type: "percent100ths", conformance: "M" }),
+        Field({ id: 0x0, name: "TiltPercent100thsValue", type: "percent100ths", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "Ignored", conformance: "X" })
     ),
 

@@ -23,7 +23,7 @@ export const OtaSoftwareUpdateRequestor = Cluster(
     Attribute(
         {
             id: 0x0, name: "DefaultOtaProviders", type: "list",
-            access: "RW F VA", conformance: "M", constraint: "all", default: [], quality: "N"
+            access: "RW F VA", conformance: "M", constraint: "desc", default: [], quality: "N"
         },
         Field({ name: "entry", type: "ProviderLocation" })
     ),

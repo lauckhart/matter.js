@@ -20,13 +20,13 @@ export const GroupKeyManagement = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "CS", conformance: "P", constraint: "0" })
+        Field({ name: "CS", conformance: "P", constraint: "0", description: "CacheAndSync" })
     ),
 
     Attribute(
         {
             id: 0x0, name: "GroupKeyMap", type: "list",
-            access: "RW F VM", conformance: "M", constraint: "all", default: [], quality: "N"
+            access: "RW F VM", conformance: "M", constraint: "desc", default: [], quality: "N"
         },
         Field({ name: "entry", type: "GroupKeyMapStruct" })
     ),
@@ -34,7 +34,7 @@ export const GroupKeyManagement = Cluster(
     Attribute(
         {
             id: 0x1, name: "GroupTable", type: "list",
-            access: "R F V", conformance: "M", constraint: "all", default: []
+            access: "R F V", conformance: "M", constraint: "desc", default: []
         },
         Field({ name: "entry", type: "GroupInfoMapStruct" })
     ),

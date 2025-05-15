@@ -26,13 +26,13 @@ export const ProxyConfiguration = Cluster(
         { name: "ConfigurationStruct", type: "struct" },
         Field({
             id: 0x1, name: "ProxyAllNodes", type: "bool",
-            access: "RW", conformance: "M", constraint: "all", default: false
+            access: "RW", conformance: "M", constraint: "desc", default: false
         }),
 
         Field(
             {
                 id: 0x2, name: "SourceList", type: "list",
-                access: "RW", conformance: "M", constraint: "all", default: []
+                access: "RW", conformance: "M", constraint: "desc", default: []
             },
             Field({ name: "entry", type: "node-id" })
         )

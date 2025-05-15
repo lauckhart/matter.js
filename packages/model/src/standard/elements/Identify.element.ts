@@ -19,17 +19,15 @@ export const Identify = Cluster(
     { id: 0x3, name: "Identify" },
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 5 }),
     Attribute({ id: 0x0, name: "IdentifyTime", type: "uint16", access: "RW VO", conformance: "M", default: 0 }),
-    Attribute(
-        { id: 0x1, name: "IdentifyType", type: "IdentifyTypeEnum", access: "R V", conformance: "M", constraint: "all" }
-    ),
+    Attribute({ id: 0x1, name: "IdentifyType", type: "IdentifyTypeEnum", access: "R V", conformance: "M", constraint: "desc" }),
     Command(
         { id: 0x0, name: "Identify", access: "M", conformance: "M", direction: "request", response: "status" },
         Field({ id: 0x0, name: "IdentifyTime", type: "uint16", conformance: "M" })
     ),
     Command(
         { id: 0x40, name: "TriggerEffect", access: "M", conformance: "O", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "EffectIdentifier", type: "EffectIdentifierEnum", conformance: "M", constraint: "all" }),
-        Field({ id: 0x1, name: "EffectVariant", type: "EffectVariantEnum", conformance: "M", constraint: "all" })
+        Field({ id: 0x0, name: "EffectIdentifier", type: "EffectIdentifierEnum", conformance: "M", constraint: "desc" }),
+        Field({ id: 0x1, name: "EffectVariant", type: "EffectVariantEnum", conformance: "M", constraint: "desc" })
     ),
 
     Datatype(

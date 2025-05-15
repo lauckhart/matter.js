@@ -20,7 +20,7 @@ export const BasicInformation = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 4 }),
     Attribute({
         id: 0x0, name: "DataModelRevision", type: "uint16",
-        access: "R V", conformance: "M", constraint: "all", quality: "F"
+        access: "R V", conformance: "M", constraint: "desc", quality: "F"
     }),
     Attribute({
         id: 0x1, name: "VendorName", type: "string",
@@ -49,7 +49,7 @@ export const BasicInformation = Cluster(
     }),
     Attribute({
         id: 0x9, name: "SoftwareVersion", type: "uint32",
-        access: "R V", conformance: "M", constraint: "all", default: 0, quality: "F"
+        access: "R V", conformance: "M", constraint: "desc", default: 0, quality: "F"
     }),
     Attribute({
         id: 0xa, name: "SoftwareVersionString", type: "string",
@@ -91,7 +91,7 @@ export const BasicInformation = Cluster(
     }),
     Attribute({
         id: 0x15, name: "SpecificationVersion", type: "uint32",
-        access: "R V", conformance: "M", constraint: "all", default: 0, quality: "F"
+        access: "R V", conformance: "M", constraint: "desc", default: 0, quality: "F"
     }),
     Attribute({
         id: 0x16, name: "MaxPathsPerInvoke", type: "uint16",

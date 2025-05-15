@@ -19,7 +19,7 @@ export const DishwasherMode = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 3 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "DEPONOFF", conformance: "X", constraint: "0" })
+        Field({ name: "DEPONOFF", conformance: "X", constraint: "0", description: "OnOff" })
     ),
     Attribute({ id: 0x0, name: "SupportedModes", conformance: "M" }),
     Attribute({ id: 0x1, name: "CurrentMode", conformance: "M" }),

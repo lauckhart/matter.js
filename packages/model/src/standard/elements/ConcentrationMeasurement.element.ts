@@ -20,12 +20,12 @@ export const ConcentrationMeasurement = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "MEA", conformance: "O.a+", constraint: "0" }),
-        Field({ name: "LEV", conformance: "O.a+", constraint: "1" }),
-        Field({ name: "MED", conformance: "[LEV]", constraint: "2" }),
-        Field({ name: "CRI", conformance: "[LEV]", constraint: "3" }),
-        Field({ name: "PEA", conformance: "[MEA]", constraint: "4" }),
-        Field({ name: "AVG", conformance: "[MEA]", constraint: "5" })
+        Field({ name: "MEA", conformance: "O.a+", constraint: "0", description: "NumericMeasurement" }),
+        Field({ name: "LEV", conformance: "O.a+", constraint: "1", description: "LevelIndication" }),
+        Field({ name: "MED", conformance: "[LEV]", constraint: "2", description: "MediumLevel" }),
+        Field({ name: "CRI", conformance: "[LEV]", constraint: "3", description: "CriticalLevel" }),
+        Field({ name: "PEA", conformance: "[MEA]", constraint: "4", description: "PeakMeasurement" }),
+        Field({ name: "AVG", conformance: "[MEA]", constraint: "5", description: "AverageMeasurement" })
     ),
 
     Attribute({

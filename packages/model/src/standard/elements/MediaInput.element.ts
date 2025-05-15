@@ -18,7 +18,10 @@ import {
 export const MediaInput = Cluster(
     { id: 0x507, name: "MediaInput" },
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
-    Attribute({ id: 0xfffc, name: "FeatureMap", type: "FeatureMap" }, Field({ name: "NU", constraint: "0" })),
+    Attribute(
+        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        Field({ name: "NU", constraint: "0", description: "NameUpdates" })
+    ),
     Attribute(
         { id: 0x0, name: "InputList", type: "list", access: "R V", conformance: "M" },
         Field({ name: "entry", type: "InputInfoStruct" })
@@ -55,7 +58,7 @@ export const MediaInput = Cluster(
     Datatype(
         { name: "InputInfoStruct", type: "struct" },
         Field({ id: 0x0, name: "Index", type: "uint8", conformance: "M" }),
-        Field({ id: 0x1, name: "InputType", type: "InputTypeEnum", conformance: "M", constraint: "all" }),
+        Field({ id: 0x1, name: "InputType", type: "InputTypeEnum", conformance: "M", constraint: "desc" }),
         Field({ id: 0x2, name: "Name", type: "string", conformance: "M" }),
         Field({ id: 0x3, name: "Description", type: "string", conformance: "M" })
     )

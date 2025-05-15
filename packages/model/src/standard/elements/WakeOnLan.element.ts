@@ -18,7 +18,7 @@ export const WakeOnLan = Cluster(
     }),
     Attribute({
         id: 0x1, name: "LinkLocalAddress", type: "ipv6adr",
-        access: "R V", conformance: "O", constraint: "all", quality: "F"
+        access: "R V", conformance: "O", constraint: "desc", quality: "F"
     })
 );
 

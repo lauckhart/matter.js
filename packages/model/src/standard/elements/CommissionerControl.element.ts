@@ -28,7 +28,7 @@ export const CommissionerControl = Cluster(
         { id: 0x0, name: "CommissioningRequestResult", access: "S M", conformance: "M", priority: "info" },
         Field({ id: 0x0, name: "RequestId", type: "uint64", access: "S", conformance: "M" }),
         Field({ id: 0x1, name: "ClientNodeId", type: "node-id", access: "S", conformance: "M" }),
-        Field({ id: 0x2, name: "StatusCode", type: "status", access: "S", conformance: "M", constraint: "all" }),
+        Field({ id: 0x2, name: "StatusCode", type: "status", access: "S", conformance: "M", constraint: "desc" }),
         Field({ id: 0xfe, name: "FabricIndex", type: "FabricIndex" })
     ),
 
@@ -57,7 +57,7 @@ export const CommissionerControl = Cluster(
 
     Command(
         { id: 0x2, name: "ReverseOpenCommissioningWindow", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "CommissioningTimeout", type: "uint16", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "CommissioningTimeout", type: "uint16", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "PakePasscodeVerifier", type: "octstr", conformance: "M" }),
         Field({ id: 0x2, name: "Discriminator", type: "uint16", conformance: "M", constraint: "max 4095" }),
         Field({ id: 0x3, name: "Iterations", type: "uint32", conformance: "M", constraint: "1000 to 100000" }),

@@ -19,8 +19,8 @@ export const EnergyPreference = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "BALA", conformance: "O.a+", constraint: "0" }),
-        Field({ name: "LPMS", conformance: "O.a+", constraint: "1" })
+        Field({ name: "BALA", conformance: "O.a+", constraint: "0", description: "EnergyBalance" }),
+        Field({ name: "LPMS", conformance: "O.a+", constraint: "1", description: "LowPowerModeSensitivity" })
     ),
 
     Attribute(

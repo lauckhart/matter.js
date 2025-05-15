@@ -21,14 +21,14 @@ export const PowerSource = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "WIRED", conformance: "O.a", constraint: "0" }),
-        Field({ name: "BAT", conformance: "O.a", constraint: "1" }),
-        Field({ name: "RECHG", conformance: "[BAT]", constraint: "2" }),
-        Field({ name: "REPLC", conformance: "[BAT]", constraint: "3" })
+        Field({ name: "WIRED", conformance: "O.a", constraint: "0", description: "Wired" }),
+        Field({ name: "BAT", conformance: "O.a", constraint: "1", description: "Battery" }),
+        Field({ name: "RECHG", conformance: "[BAT]", constraint: "2", description: "Rechargeable" }),
+        Field({ name: "REPLC", conformance: "[BAT]", constraint: "3", description: "Replaceable" })
     ),
 
     Attribute(
-        { id: 0x0, name: "Status", type: "PowerSourceStatusEnum", access: "R V", conformance: "M", constraint: "all" }
+        { id: 0x0, name: "Status", type: "PowerSourceStatusEnum", access: "R V", conformance: "M", constraint: "desc" }
     ),
     Attribute({ id: 0x1, name: "Order", type: "uint8", access: "R V", conformance: "M", quality: "N" }),
     Attribute({
@@ -45,7 +45,7 @@ export const PowerSource = Cluster(
     }),
     Attribute({
         id: 0x5, name: "WiredCurrentType", type: "WiredCurrentTypeEnum",
-        access: "R V", conformance: "WIRED", constraint: "all", quality: "F"
+        access: "R V", conformance: "WIRED", constraint: "desc", quality: "F"
     }),
     Attribute({ id: 0x6, name: "WiredAssessedCurrent", type: "uint32", access: "R V", conformance: "[WIRED]", quality: "X C" }),
     Attribute(
@@ -72,7 +72,7 @@ export const PowerSource = Cluster(
     Attribute({ id: 0xd, name: "BatTimeRemaining", type: "uint32", access: "R V", conformance: "[BAT]", quality: "X Q" }),
     Attribute({
         id: 0xe, name: "BatChargeLevel", type: "BatChargeLevelEnum",
-        access: "R V", conformance: "BAT", constraint: "all"
+        access: "R V", conformance: "BAT", constraint: "desc"
     }),
     Attribute({ id: 0xf, name: "BatReplacementNeeded", type: "bool", access: "R V", conformance: "BAT" }),
     Attribute({
@@ -90,7 +90,7 @@ export const PowerSource = Cluster(
     }),
     Attribute({
         id: 0x14, name: "BatCommonDesignation", type: "BatCommonDesignationEnum",
-        access: "R V", conformance: "[REPLC]", constraint: "all", quality: "F"
+        access: "R V", conformance: "[REPLC]", constraint: "desc", quality: "F"
     }),
     Attribute({
         id: 0x15, name: "BatAnsiDesignation", type: "string",
@@ -102,7 +102,7 @@ export const PowerSource = Cluster(
     }),
     Attribute({
         id: 0x17, name: "BatApprovedChemistry", type: "BatApprovedChemistryEnum",
-        access: "R V", conformance: "[REPLC]", constraint: "all", quality: "F"
+        access: "R V", conformance: "[REPLC]", constraint: "desc", quality: "F"
     }),
     Attribute(
         { id: 0x18, name: "BatCapacity", type: "uint32", access: "R V", conformance: "[REPLC | RECHG]", quality: "F" }
@@ -110,7 +110,7 @@ export const PowerSource = Cluster(
     Attribute({ id: 0x19, name: "BatQuantity", type: "uint8", access: "R V", conformance: "REPLC", quality: "F" }),
     Attribute({
         id: 0x1a, name: "BatChargeState", type: "BatChargeStateEnum",
-        access: "R V", conformance: "RECHG", constraint: "all"
+        access: "R V", conformance: "RECHG", constraint: "desc"
     }),
     Attribute({ id: 0x1b, name: "BatTimeToFullCharge", type: "uint32", access: "R V", conformance: "[RECHG]", quality: "X Q" }),
     Attribute({ id: 0x1c, name: "BatFunctionalWhileCharging", type: "bool", access: "R V", conformance: "RECHG" }),

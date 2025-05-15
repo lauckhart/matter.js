@@ -17,17 +17,20 @@ import {
 export const TimeFormatLocalization = Cluster(
     { id: 0x2c, name: "TimeFormatLocalization" },
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
-    Attribute({ id: 0xfffc, name: "FeatureMap", type: "FeatureMap" }, Field({ name: "CALFMT", constraint: "0" })),
+    Attribute(
+        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        Field({ name: "CALFMT", constraint: "0", description: "CalendarFormat" })
+    ),
     Attribute({ id: 0x0, name: "HourFormat", type: "HourFormatEnum", access: "RW VM", conformance: "M", quality: "N" }),
     Attribute({
         id: 0x1, name: "ActiveCalendarType", type: "CalendarTypeEnum",
-        access: "RW VM", constraint: "in SupportedCalendarTypes"
+        access: "RW VM", constraint: "in SupportedCalendarTypes", quality: "N"
     }),
 
     Attribute(
         {
             id: 0x2, name: "SupportedCalendarTypes", type: "list",
-            access: "R V", conformance: "CALFMT", constraint: "all", quality: "F"
+            access: "R V", conformance: "CALFMT", constraint: "desc", quality: "F"
         },
         Field({ name: "entry", type: "CalendarTypeEnum" })
     ),

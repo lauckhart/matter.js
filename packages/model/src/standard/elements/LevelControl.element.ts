@@ -21,9 +21,9 @@ export const LevelControl = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "OO", conformance: "O", constraint: "0", default: 1 }),
-        Field({ name: "LT", conformance: "O", constraint: "1", default: 0 }),
-        Field({ name: "FQ", conformance: "P", constraint: "2", default: 0 })
+        Field({ name: "OO", conformance: "O", constraint: "0", default: 1, description: "OnOff" }),
+        Field({ name: "LT", conformance: "O", constraint: "1", default: 0, description: "Lighting" }),
+        Field({ name: "FQ", conformance: "P", constraint: "2", default: 0, description: "Frequency" })
     ),
 
     Attribute({
@@ -75,42 +75,42 @@ export const LevelControl = Cluster(
     }),
     Attribute({
         id: 0xf, name: "Options", type: "OptionsBitmap",
-        access: "RW VO", conformance: "M", constraint: "all", default: 0
+        access: "RW VO", conformance: "M", constraint: "desc", default: 0
     }),
     Attribute({
         id: 0x4000, name: "StartUpCurrentLevel", type: "uint8",
-        access: "RW VM", conformance: "LT", constraint: "all", quality: "X N"
+        access: "RW VM", conformance: "LT", constraint: "desc", quality: "X N"
     }),
 
     Command(
         { id: 0x0, name: "MoveToLevel", access: "O", conformance: "M", direction: "request", response: "status" },
         Field({ id: 0x0, name: "Level", type: "uint8", conformance: "M", constraint: "max 254" }),
         Field({ id: 0x1, name: "TransitionTime", type: "uint16", conformance: "M", quality: "X" }),
-        Field({ id: 0x2, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x3, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x2, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x3, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
         { id: 0x1, name: "Move", access: "O", conformance: "M", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "MoveMode", type: "MoveModeEnum", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "MoveMode", type: "MoveModeEnum", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "Rate", type: "uint8", conformance: "M", quality: "X" }),
-        Field({ id: 0x2, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x3, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x2, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x3, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
         { id: 0x2, name: "Step", access: "O", conformance: "M", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "StepMode", type: "StepModeEnum", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "StepMode", type: "StepModeEnum", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "StepSize", type: "uint8", conformance: "M" }),
         Field({ id: 0x2, name: "TransitionTime", type: "uint16", conformance: "M", quality: "X" }),
-        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
         { id: 0x3, name: "Stop", access: "O", conformance: "M", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x1, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x0, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x1, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
     Command({
         id: 0x4, name: "MoveToLevelWithOnOff", type: "MoveToLevel",

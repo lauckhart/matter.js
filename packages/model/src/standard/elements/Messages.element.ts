@@ -22,10 +22,10 @@ export const Messages = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "CONF", conformance: "O", constraint: "0" }),
-        Field({ name: "RESP", conformance: "[CONF]", constraint: "1" }),
-        Field({ name: "RPLY", conformance: "[CONF]", constraint: "2" }),
-        Field({ name: "PROT", conformance: "O", constraint: "3" })
+        Field({ name: "CONF", conformance: "O", constraint: "0", description: "ReceivedConfirmation" }),
+        Field({ name: "RESP", conformance: "[CONF]", constraint: "1", description: "ConfirmationResponse" }),
+        Field({ name: "RPLY", conformance: "[CONF]", constraint: "2", description: "ConfirmationReply" }),
+        Field({ name: "PROT", conformance: "O", constraint: "3", description: "ProtectedMessages" })
     ),
 
     Attribute(

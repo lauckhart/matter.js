@@ -21,9 +21,9 @@ export const KeypadInput = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "NV", constraint: "0" }),
-        Field({ name: "LK", constraint: "1" }),
-        Field({ name: "NK", constraint: "2" })
+        Field({ name: "NV", constraint: "0", description: "NavigationKeyCodes" }),
+        Field({ name: "LK", constraint: "1", description: "LocationKeys" }),
+        Field({ name: "NK", constraint: "2", description: "NumberKeys" })
     ),
 
     Command(

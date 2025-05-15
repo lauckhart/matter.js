@@ -21,15 +21,15 @@ export const ProxyDiscovery = Cluster(
     Command(
         { id: 0x0, name: "ProxyDiscoverRequest", access: "O", conformance: "M", direction: "request" },
         Field({ id: 0x0, name: "SourceNodeId", type: "node-id", conformance: "M" }),
-        Field({ id: 0x1, name: "NumAttributePaths", type: "uint16", conformance: "M", constraint: "all" }),
-        Field({ id: 0x2, name: "NumEventPaths", type: "uint16", conformance: "M", constraint: "all" })
+        Field({ id: 0x1, name: "NumAttributePaths", type: "uint16", conformance: "M", constraint: "desc" }),
+        Field({ id: 0x2, name: "NumEventPaths", type: "uint16", conformance: "M", constraint: "desc" })
     ),
 
     Command(
         { id: 0x1, name: "ProxyDiscoverResponse", conformance: "M", direction: "response" },
         Field({ id: 0x0, name: "SourceNodeId", type: "node-id", conformance: "M" }),
-        Field({ id: 0x1, name: "NumHopsToSource", type: "uint16", conformance: "M", constraint: "all" }),
-        Field({ id: 0x2, name: "AvailableCapacity", type: "uint16", conformance: "M", constraint: "all" })
+        Field({ id: 0x1, name: "NumHopsToSource", type: "uint16", conformance: "M", constraint: "desc" }),
+        Field({ id: 0x2, name: "AvailableCapacity", type: "uint16", conformance: "M", constraint: "desc" })
     )
 );
 

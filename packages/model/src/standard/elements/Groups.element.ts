@@ -18,9 +18,16 @@ import {
 export const Groups = Cluster(
     { id: 0x4, name: "Groups" },
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 4 }),
-    Attribute({ id: 0xfffc, name: "FeatureMap", type: "FeatureMap" }, Field({ name: "GN", default: 1 })),
     Attribute(
-        { id: 0x0, name: "NameSupport", type: "NameSupportBitmap", access: "R V", default: 0 },
+        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        Field({ name: "GN", constraint: "0", default: 1, description: "GroupNames" })
+    ),
+
+    Attribute(
+        {
+            id: 0x0, name: "NameSupport", type: "NameSupportBitmap",
+            access: "R V", constraint: "desc", default: 0, quality: "F"
+        },
         Field({ name: "NameSupport", constraint: "7", default: 1 })
     ),
 
@@ -75,13 +82,13 @@ export const Groups = Cluster(
 
     Command(
         { id: 0x0, name: "AddGroupResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "GroupId", type: "group-id", conformance: "M", constraint: "min 1" })
     ),
 
     Command(
         { id: 0x1, name: "ViewGroupResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "GroupId", type: "group-id", conformance: "M", constraint: "min 1" }),
         Field({ id: 0x2, name: "GroupName", type: "string", conformance: "M", constraint: "max 16" })
     ),
@@ -97,7 +104,7 @@ export const Groups = Cluster(
 
     Command(
         { id: 0x3, name: "RemoveGroupResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "Status", type: "status", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "GroupId", type: "group-id", conformance: "M", constraint: "min 1" })
     ),
     Datatype({ name: "NameSupportBitmap", type: "map8" }, Field({ name: "GroupNames", constraint: "7" }))

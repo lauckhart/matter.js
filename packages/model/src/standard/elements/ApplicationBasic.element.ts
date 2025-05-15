@@ -24,15 +24,15 @@ export const ApplicationBasic = Cluster(
     Attribute({ id: 0x1, name: "VendorId", type: "vendor-id", access: "R V", conformance: "O", quality: "F" }),
     Attribute({
         id: 0x2, name: "ApplicationName", type: "string",
-        access: "R V", conformance: "M", constraint: "all", quality: "F"
+        access: "R V", conformance: "M", constraint: "desc", quality: "F"
     }),
     Attribute({ id: 0x3, name: "ProductId", type: "uint16", access: "R V", conformance: "O", quality: "F" }),
     Attribute({
         id: 0x4, name: "Application", type: "ApplicationStruct",
-        access: "R V", conformance: "M", constraint: "all", quality: "F"
+        access: "R V", conformance: "M", constraint: "desc", quality: "F"
     }),
     Attribute(
-        { id: 0x5, name: "Status", type: "ApplicationStatusEnum", access: "R V", conformance: "M", constraint: "all" }
+        { id: 0x5, name: "Status", type: "ApplicationStatusEnum", access: "R V", conformance: "M", constraint: "desc" }
     ),
     Attribute({
         id: 0x6, name: "ApplicationVersion", type: "string",

@@ -20,8 +20,8 @@ export const EthernetNetworkDiagnostics = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "PKTCNT", constraint: "0" }),
-        Field({ name: "ERRCNT", constraint: "1" })
+        Field({ name: "PKTCNT", constraint: "0", description: "PacketCounts" }),
+        Field({ name: "ERRCNT", constraint: "1", description: "ErrorCounts" })
     ),
     Attribute(
         { id: 0x0, name: "PhyRate", type: "PHYRateEnum", access: "R V", conformance: "O", default: null, quality: "X" }

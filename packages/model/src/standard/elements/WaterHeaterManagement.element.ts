@@ -21,8 +21,8 @@ export const WaterHeaterManagement = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "EM", conformance: "O", constraint: "0" }),
-        Field({ name: "TP", conformance: "O", constraint: "1" })
+        Field({ name: "EM", conformance: "O", constraint: "0", description: "EnergyManagement" }),
+        Field({ name: "TP", conformance: "O", constraint: "1", description: "TankPercent" })
     ),
     Attribute({
         id: 0x0, name: "HeaterTypes", type: "WaterHeaterHeatSourceBitmap",
@@ -67,7 +67,7 @@ export const WaterHeaterManagement = Cluster(
         Field({ id: 0x0, name: "Duration", type: "elapsed-s", conformance: "M", constraint: "min 1" }),
         Field({ id: 0x1, name: "OneShot", type: "bool", conformance: "[!TP], [TP].a-", default: false }),
         Field({ id: 0x2, name: "EmergencyBoost", type: "bool", conformance: "O", default: false }),
-        Field({ id: 0x3, name: "TemporarySetpoint", type: "temperature", conformance: "O", constraint: "all" }),
+        Field({ id: 0x3, name: "TemporarySetpoint", type: "temperature", conformance: "O", constraint: "desc" }),
         Field({ id: 0x4, name: "TargetPercentage", type: "percent", conformance: "TargetReheat, [TP]" }),
         Field({ id: 0x5, name: "TargetReheat", type: "percent", conformance: "[TP].a-", constraint: "max targetPercentage" })
     )

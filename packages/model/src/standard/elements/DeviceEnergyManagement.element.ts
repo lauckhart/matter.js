@@ -22,20 +22,27 @@ export const DeviceEnergyManagement = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "PA", conformance: "O", constraint: "0" }),
-        Field({ name: "PFR", conformance: "[!PA].a, STA | PAU | FA | CON, O", constraint: "1" }),
-        Field({ name: "SFR", conformance: "[!PA].a", constraint: "2" }),
-        Field({ name: "STA", conformance: "O", constraint: "3" }),
-        Field({ name: "PAU", conformance: "O", constraint: "4" }),
-        Field({ name: "FA", conformance: "O", constraint: "5" }),
-        Field({ name: "CON", conformance: "O", constraint: "6" })
+        Field({ name: "PA", conformance: "O", constraint: "0", description: "PowerAdjustment" }),
+        Field({
+            name: "PFR",
+            conformance: "[!PA].a, STA | PAU | FA | CON, O", constraint: "1",
+            description: "PowerForecastReporting"
+        }),
+        Field({ name: "SFR", conformance: "[!PA].a", constraint: "2", description: "StateForecastReporting" }),
+        Field({ name: "STA", conformance: "O", constraint: "3", description: "StartTimeAdjustment" }),
+        Field({ name: "PAU", conformance: "O", constraint: "4", description: "Pausable" }),
+        Field({ name: "FA", conformance: "O", constraint: "5", description: "ForecastAdjustment" }),
+        Field({ name: "CON", conformance: "O", constraint: "6", description: "ConstraintBasedAdjustment" })
     ),
 
     Attribute(
         { id: 0x0, name: "EsaType", type: "ESATypeEnum", access: "R V", conformance: "M", default: 255, quality: "F" }
     ),
     Attribute({ id: 0x1, name: "EsaCanGenerate", type: "bool", access: "R V", conformance: "M", default: false, quality: "F" }),
-    Attribute({ id: 0x2, name: "EsaState", type: "ESAStateEnum", access: "R V", conformance: "M", constraint: "all", default: 0 }),
+    Attribute({
+        id: 0x2, name: "EsaState", type: "ESAStateEnum",
+        access: "R V", conformance: "M", constraint: "desc", default: 0
+    }),
     Attribute({ id: 0x3, name: "AbsMinPower", type: "power-mW", access: "R V", conformance: "M", default: 0 }),
     Attribute({
         id: 0x4, name: "AbsMaxPower", type: "power-mW",
@@ -51,7 +58,7 @@ export const DeviceEnergyManagement = Cluster(
     }),
     Attribute({
         id: 0x7, name: "OptOutState", type: "OptOutStateEnum",
-        access: "R V", conformance: "PA | STA | PAU | FA | CON", constraint: "all", default: 0
+        access: "R V", conformance: "PA | STA | PAU | FA | CON", constraint: "desc", default: 0
     }),
     Event({ id: 0x0, name: "PowerAdjustStart", access: "V", conformance: "PA", priority: "info" }),
 
@@ -73,9 +80,9 @@ export const DeviceEnergyManagement = Cluster(
             id: 0x0, name: "PowerAdjustRequest",
             access: "O", conformance: "PA", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "Power", type: "power-mW", conformance: "M", constraint: "all" }),
-        Field({ id: 0x1, name: "Duration", type: "elapsed-s", conformance: "M", constraint: "all" }),
-        Field({ id: 0x2, name: "Cause", type: "AdjustmentCauseEnum", conformance: "M", constraint: "all" })
+        Field({ id: 0x0, name: "Power", type: "power-mW", conformance: "M", constraint: "desc" }),
+        Field({ id: 0x1, name: "Duration", type: "elapsed-s", conformance: "M", constraint: "desc" }),
+        Field({ id: 0x2, name: "Cause", type: "AdjustmentCauseEnum", conformance: "M", constraint: "desc" })
     ),
 
     Command({
@@ -88,13 +95,13 @@ export const DeviceEnergyManagement = Cluster(
             id: 0x2, name: "StartTimeAdjustRequest",
             access: "O", conformance: "STA", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "RequestedStartTime", type: "epoch-s", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "RequestedStartTime", type: "epoch-s", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "Cause", type: "AdjustmentCauseEnum", conformance: "M" })
     ),
 
     Command(
         { id: 0x3, name: "PauseRequest", access: "O", conformance: "PAU", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "Duration", type: "elapsed-s", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "Duration", type: "elapsed-s", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "Cause", type: "AdjustmentCauseEnum", conformance: "M" })
     ),
     Command({ id: 0x4, name: "ResumeRequest", access: "O", conformance: "PAU", direction: "request", response: "status" }),
@@ -275,16 +282,16 @@ export const DeviceEnergyManagement = Cluster(
 
     Datatype(
         { name: "SlotAdjustmentStruct", type: "struct" },
-        Field({ id: 0x0, name: "SlotIndex", type: "uint8", conformance: "M", constraint: "all" }),
-        Field({ id: 0x1, name: "NominalPower", type: "power-mW", conformance: "PFR", constraint: "all" }),
-        Field({ id: 0x2, name: "Duration", type: "elapsed-s", conformance: "M", constraint: "all" })
+        Field({ id: 0x0, name: "SlotIndex", type: "uint8", conformance: "M", constraint: "desc" }),
+        Field({ id: 0x1, name: "NominalPower", type: "power-mW", conformance: "PFR", constraint: "desc" }),
+        Field({ id: 0x2, name: "Duration", type: "elapsed-s", conformance: "M", constraint: "desc" })
     ),
 
     Datatype(
         { name: "ConstraintsStruct", type: "struct" },
-        Field({ id: 0x0, name: "StartTime", type: "epoch-s", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "StartTime", type: "epoch-s", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "Duration", type: "elapsed-s", conformance: "M", constraint: "max 86400" }),
-        Field({ id: 0x2, name: "NominalPower", type: "power-mW", conformance: "PFR", constraint: "all" }),
+        Field({ id: 0x2, name: "NominalPower", type: "power-mW", conformance: "PFR", constraint: "desc" }),
         Field({ id: 0x3, name: "MaximumEnergy", type: "energy-mWh", conformance: "PFR" }),
         Field({ id: 0x4, name: "LoadControl", type: "int8", conformance: "SFR" })
     )

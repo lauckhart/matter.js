@@ -18,7 +18,10 @@ import {
 export const ModeBase = Cluster(
     { name: "ModeBase" },
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
-    Attribute({ id: 0xfffc, name: "FeatureMap", type: "FeatureMap" }, Field({ name: "DEPONOFF", constraint: "0" })),
+    Attribute(
+        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        Field({ name: "DEPONOFF", constraint: "0", description: "OnOff" })
+    ),
 
     Attribute(
         {
@@ -28,14 +31,14 @@ export const ModeBase = Cluster(
         Field({ name: "entry", type: "ModeOptionStruct" })
     ),
 
-    Attribute({ id: 0x1, name: "CurrentMode", type: "uint8", access: "R V", conformance: "M", constraint: "all", quality: "N" }),
+    Attribute({ id: 0x1, name: "CurrentMode", type: "uint8", access: "R V", conformance: "M", constraint: "desc", quality: "N" }),
     Attribute({
         id: 0x2, name: "StartUpMode", type: "uint8",
-        access: "RW VO", conformance: "O", constraint: "all", quality: "X N"
+        access: "RW VO", conformance: "O", constraint: "desc", quality: "X N"
     }),
     Attribute({
         id: 0x3, name: "OnMode", type: "uint8",
-        access: "RW VO", conformance: "DEPONOFF", constraint: "all", default: null, quality: "X N"
+        access: "RW VO", conformance: "DEPONOFF", constraint: "desc", default: null, quality: "X N"
     }),
 
     Command(
@@ -43,17 +46,17 @@ export const ModeBase = Cluster(
             id: 0x0, name: "ChangeToMode",
             access: "O", conformance: "M", direction: "request", response: "ChangeToModeResponse"
         },
-        Field({ id: 0x0, name: "NewMode", type: "uint8", conformance: "M", constraint: "all" })
+        Field({ id: 0x0, name: "NewMode", type: "uint8", conformance: "M", constraint: "desc" })
     ),
 
     Command(
         { id: 0x1, name: "ChangeToModeResponse", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "ModeChangeStatus" }),
+        Field({ id: 0x0, name: "Status", type: "ModeChangeStatus", constraint: "desc" }),
         Field({ id: 0x1, name: "StatusText", type: "string", conformance: "[Status == Success], M", constraint: "max 64" })
     ),
     Datatype(
         { name: "ModeTagStruct", type: "struct" },
-        Field({ id: 0x0, name: "MfgCode", type: "vendor-id", conformance: "O", constraint: "all" }),
+        Field({ id: 0x0, name: "MfgCode", type: "vendor-id", conformance: "O", constraint: "desc" }),
         Field({ id: 0x1, name: "Value", type: "ModeTag" })
     ),
 

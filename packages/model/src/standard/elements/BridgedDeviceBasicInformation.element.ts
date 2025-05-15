@@ -20,7 +20,7 @@ export const BridgedDeviceBasicInformation = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 4 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "BIS", conformance: "O", constraint: "20" })
+        Field({ name: "BIS", conformance: "O", constraint: "20", description: "BridgedIcdSupport" })
     ),
     Attribute({ id: 0x0, name: "DataModelRevision", conformance: "X" }),
     Attribute({ id: 0x1, name: "VendorName", conformance: "O" }),
@@ -54,7 +54,7 @@ export const BridgedDeviceBasicInformation = Cluster(
     Event({ id: 0x3, name: "ReachableChanged", conformance: "M", priority: "critical" }),
     Event(
         { id: 0x80, name: "ActiveChanged", access: "V", conformance: "BIS", priority: "info" },
-        Field({ id: 0x0, name: "PromisedActiveDuration", type: "uint32", conformance: "M", constraint: "all" })
+        Field({ id: 0x0, name: "PromisedActiveDuration", type: "uint32", conformance: "M", constraint: "desc" })
     ),
     Command(
         { id: 0x80, name: "KeepActive", access: "O", conformance: "BIS", direction: "request", response: "status" },

@@ -18,7 +18,7 @@ export const PressureMeasurement = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 3 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "EXT", conformance: "O", constraint: "0" })
+        Field({ name: "EXT", conformance: "O", constraint: "0", description: "Extended" })
     ),
     Attribute({
         id: 0x0, name: "MeasuredValue", type: "int16",

@@ -20,12 +20,12 @@ export const GeneralCommissioning = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "TC", conformance: "P", constraint: "0" })
+        Field({ name: "TC", conformance: "P", constraint: "0", description: "TermsAndConditions" })
     ),
     Attribute({ id: 0x0, name: "Breadcrumb", type: "uint64", access: "RW VA", conformance: "M", default: 0 }),
     Attribute({
         id: 0x1, name: "BasicCommissioningInfo", type: "BasicCommissioningInfo",
-        access: "R V", conformance: "M", constraint: "all", quality: "F"
+        access: "R V", conformance: "M", constraint: "desc", quality: "F"
     }),
     Attribute({
         id: 0x2, name: "RegulatoryConfig", type: "RegulatoryLocationTypeEnum",
@@ -124,7 +124,7 @@ export const GeneralCommissioning = Cluster(
     Datatype(
         { name: "BasicCommissioningInfo", type: "struct" },
         Field({ id: 0x0, name: "FailSafeExpiryLengthSeconds", type: "uint16", conformance: "M" }),
-        Field({ id: 0x1, name: "MaxCumulativeFailsafeSeconds", type: "uint16", conformance: "M", constraint: "all" })
+        Field({ id: 0x1, name: "MaxCumulativeFailsafeSeconds", type: "uint16", conformance: "M", constraint: "desc" })
     )
 );
 

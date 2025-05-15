@@ -28,17 +28,20 @@ export const OperationalState = Cluster(
         Field({ name: "entry", type: "string" })
     ),
 
-    Attribute({ id: 0x1, name: "CurrentPhase", type: "uint8", access: "R V", conformance: "M", constraint: "all", quality: "X" }),
+    Attribute({ id: 0x1, name: "CurrentPhase", type: "uint8", access: "R V", conformance: "M", constraint: "desc", quality: "X" }),
     Attribute({
         id: 0x2, name: "CountdownTime", type: "elapsed-s",
         access: "R V", conformance: "O", constraint: "max 259200", default: null, quality: "X Q"
     }),
     Attribute(
-        { id: 0x3, name: "OperationalStateList", type: "list", access: "R V", conformance: "M", constraint: "all" },
+        { id: 0x3, name: "OperationalStateList", type: "list", access: "R V", conformance: "M", constraint: "desc" },
         Field({ name: "entry", type: "OperationalStateStruct" })
     ),
     Attribute({ id: 0x4, name: "OperationalState", type: "OperationalStateEnum", access: "R V", conformance: "M" }),
-    Attribute({ id: 0x5, name: "OperationalError", type: "ErrorStateStruct", access: "R V", conformance: "M", constraint: "all" }),
+    Attribute({
+        id: 0x5, name: "OperationalError", type: "ErrorStateStruct",
+        access: "R V", conformance: "M", constraint: "desc"
+    }),
     Event(
         { id: 0x0, name: "OperationalError", access: "V", conformance: "M", priority: "critical" },
         Field({ id: 0x0, name: "ErrorState", type: "ErrorStateStruct", conformance: "M" })

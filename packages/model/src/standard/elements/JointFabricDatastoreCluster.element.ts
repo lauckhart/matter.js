@@ -111,7 +111,7 @@ export const JointFabricDatastoreCluster = Cluster(
         Field({ id: 0x0, name: "ListId", type: "uint16", access: "R F V", conformance: "M" }),
         Field({
             id: 0x1, name: "Binding", type: "Binding.TargetStruct",
-            access: "R F V", conformance: "M", constraint: "all"
+            access: "R F V", conformance: "M", constraint: "desc"
         }),
         Field({ id: 0x2, name: "StatusEntry", type: "DatastoreStatusEntry", access: "R F V", conformance: "M" }),
         Field({ id: 0xfe, name: "FabricIndex", type: "FabricIndex" })

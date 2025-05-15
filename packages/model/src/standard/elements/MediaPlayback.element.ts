@@ -22,72 +22,75 @@ export const MediaPlayback = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "AS", constraint: "0" }),
-        Field({ name: "VS", constraint: "1" }),
-        Field({ name: "TT", constraint: "2" }),
-        Field({ name: "AT", constraint: "3" }),
-        Field({ name: "AA", constraint: "4" })
+        Field({ name: "AS", constraint: "0", description: "AdvancedSeek" }),
+        Field({ name: "VS", constraint: "1", description: "VariableSpeed" }),
+        Field({ name: "TT", constraint: "2", description: "TextTracks" }),
+        Field({ name: "AT", constraint: "3", description: "AudioTracks" }),
+        Field({ name: "AA", constraint: "4", description: "AudioAdvance" })
     ),
 
-    Attribute({ id: 0x0, name: "CurrentState", type: "PlaybackStateEnum", access: "R V", conformance: "M", constraint: "all" }),
+    Attribute({ id: 0x0, name: "CurrentState", type: "PlaybackStateEnum", access: "R V", conformance: "M", constraint: "desc" }),
     Attribute({
         id: 0x1, name: "StartTime", type: "epoch-us",
-        access: "R V", conformance: "AS", constraint: "all", default: null, quality: "X"
+        access: "R V", conformance: "AS", constraint: "desc", default: null, quality: "X"
     }),
     Attribute({
         id: 0x2, name: "Duration", type: "uint64",
-        access: "R V", conformance: "AS", constraint: "all", default: null, quality: "X"
+        access: "R V", conformance: "AS", constraint: "desc", default: null, quality: "X"
     }),
     Attribute({
         id: 0x3, name: "SampledPosition", type: "PlaybackPositionStruct",
-        access: "R V", conformance: "AS", constraint: "all", default: null, quality: "X"
+        access: "R V", conformance: "AS", constraint: "desc", default: null, quality: "X"
     }),
-    Attribute({ id: 0x4, name: "PlaybackSpeed", type: "single", access: "R V", conformance: "AS", constraint: "all", default: 0 }),
+    Attribute({
+        id: 0x4, name: "PlaybackSpeed", type: "single",
+        access: "R V", conformance: "AS", constraint: "desc", default: 0
+    }),
     Attribute({
         id: 0x5, name: "SeekRangeEnd", type: "uint64",
-        access: "R V", conformance: "AS", constraint: "all", default: null, quality: "X"
+        access: "R V", conformance: "AS", constraint: "desc", default: null, quality: "X"
     }),
     Attribute({
         id: 0x6, name: "SeekRangeStart", type: "uint64",
-        access: "R V", conformance: "AS", constraint: "all", default: null, quality: "X"
+        access: "R V", conformance: "AS", constraint: "desc", default: null, quality: "X"
     }),
     Attribute({
         id: 0x7, name: "ActiveAudioTrack", type: "TrackStruct",
-        access: "R V", conformance: "AT", constraint: "all", default: null, quality: "X"
+        access: "R V", conformance: "AT", constraint: "desc", default: null, quality: "X"
     }),
 
     Attribute(
         {
             id: 0x8, name: "AvailableAudioTracks", type: "list",
-            access: "R V", conformance: "AT", constraint: "all", default: null, quality: "X"
+            access: "R V", conformance: "AT", constraint: "desc", default: null, quality: "X"
         },
         Field({ name: "entry", type: "TrackStruct" })
     ),
 
     Attribute({
         id: 0x9, name: "ActiveTextTrack", type: "TrackStruct",
-        access: "R V", conformance: "TT", constraint: "all", default: null, quality: "X"
+        access: "R V", conformance: "TT", constraint: "desc", default: null, quality: "X"
     }),
 
     Attribute(
         {
             id: 0xa, name: "AvailableTextTracks", type: "list",
-            access: "R V", conformance: "TT", constraint: "all", default: null, quality: "X"
+            access: "R V", conformance: "TT", constraint: "desc", default: null, quality: "X"
         },
         Field({ name: "entry", type: "TrackStruct" })
     ),
 
     Event(
         { id: 0x0, name: "StateChanged", access: "V", conformance: "O", priority: "info" },
-        Field({ id: 0x0, name: "CurrentState", type: "PlaybackStateEnum", conformance: "M", constraint: "all" }),
-        Field({ id: 0x1, name: "StartTime", type: "epoch-us", conformance: "AS", constraint: "all" }),
-        Field({ id: 0x2, name: "Duration", type: "uint64", conformance: "AS", constraint: "all" }),
-        Field({ id: 0x3, name: "SampledPosition", type: "PlaybackPositionStruct", conformance: "AS", constraint: "all" }),
-        Field({ id: 0x4, name: "PlaybackSpeed", type: "single", conformance: "AS", constraint: "all" }),
-        Field({ id: 0x5, name: "SeekRangeEnd", type: "uint64", conformance: "AS", constraint: "all" }),
-        Field({ id: 0x6, name: "SeekRangeStart", type: "uint64", conformance: "AS", constraint: "all" }),
+        Field({ id: 0x0, name: "CurrentState", type: "PlaybackStateEnum", conformance: "M", constraint: "desc" }),
+        Field({ id: 0x1, name: "StartTime", type: "epoch-us", conformance: "AS", constraint: "desc" }),
+        Field({ id: 0x2, name: "Duration", type: "uint64", conformance: "AS", constraint: "desc" }),
+        Field({ id: 0x3, name: "SampledPosition", type: "PlaybackPositionStruct", conformance: "AS", constraint: "desc" }),
+        Field({ id: 0x4, name: "PlaybackSpeed", type: "single", conformance: "AS", constraint: "desc" }),
+        Field({ id: 0x5, name: "SeekRangeEnd", type: "uint64", conformance: "AS", constraint: "desc" }),
+        Field({ id: 0x6, name: "SeekRangeStart", type: "uint64", conformance: "AS", constraint: "desc" }),
         Field({ id: 0x7, name: "Data", type: "octstr", conformance: "O", constraint: "max 900" }),
-        Field({ id: 0x8, name: "AudioAdvanceUnmuted", type: "bool", conformance: "AA", constraint: "all", default: false })
+        Field({ id: 0x8, name: "AudioAdvanceUnmuted", type: "bool", conformance: "AA", constraint: "desc", default: false })
     ),
 
     Command({ id: 0x0, name: "Play", access: "O", conformance: "M", direction: "request", response: "PlaybackResponse" }),
@@ -127,7 +130,7 @@ export const MediaPlayback = Cluster(
 
     Command(
         { id: 0xa, name: "PlaybackResponse", conformance: "M", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "StatusEnum", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "Status", type: "StatusEnum", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "Data", type: "string", conformance: "O", constraint: "any" })
     ),
     Command(

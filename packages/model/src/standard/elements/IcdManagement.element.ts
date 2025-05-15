@@ -21,10 +21,10 @@ export const IcdManagement = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "CIP", conformance: "LITS, O", constraint: "0" }),
-        Field({ name: "UAT", conformance: "LITS, O", constraint: "1" }),
-        Field({ name: "LITS", conformance: "O", constraint: "2" }),
-        Field({ name: "DSLS", conformance: "[LITS]", constraint: "3" })
+        Field({ name: "CIP", conformance: "LITS, O", constraint: "0", description: "CheckInProtocolSupport" }),
+        Field({ name: "UAT", conformance: "LITS, O", constraint: "1", description: "UserActiveModeTrigger" }),
+        Field({ name: "LITS", conformance: "O", constraint: "2", description: "LongIdleTimeSupport" }),
+        Field({ name: "DSLS", conformance: "[LITS]", constraint: "3", description: "DynamicSitLitSupport" })
     ),
 
     Attribute({
@@ -43,7 +43,7 @@ export const IcdManagement = Cluster(
     Attribute(
         {
             id: 0x3, name: "RegisteredClients", type: "list",
-            access: "R F A", conformance: "CIP", constraint: "all", default: [], quality: "N"
+            access: "R F A", conformance: "CIP", constraint: "desc", default: [], quality: "N"
         },
         Field({ name: "entry", type: "MonitoringRegistrationStruct" })
     ),
@@ -57,7 +57,7 @@ export const IcdManagement = Cluster(
     }),
     Attribute({
         id: 0x6, name: "UserActiveModeTriggerHint", type: "UserActiveModeTriggerBitmap",
-        access: "R V", conformance: "UAT", constraint: "all", default: 0, quality: "F"
+        access: "R V", conformance: "UAT", constraint: "desc", default: 0, quality: "F"
     }),
     Attribute({
         id: 0x7, name: "UserActiveModeTriggerInstruction", type: "string",
@@ -106,7 +106,7 @@ export const IcdManagement = Cluster(
 
     Command(
         { id: 0x4, name: "StayActiveResponse", conformance: "LITS, O", direction: "response" },
-        Field({ id: 0x0, name: "PromisedActiveDuration", type: "uint32", conformance: "M", constraint: "all" })
+        Field({ id: 0x0, name: "PromisedActiveDuration", type: "uint32", conformance: "M", constraint: "desc" })
     ),
 
     Datatype(

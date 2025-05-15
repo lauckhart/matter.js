@@ -21,9 +21,9 @@ export const OnOff = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "LT", conformance: "[!OFFONLY]", constraint: "0" }),
-        Field({ name: "DF", conformance: "[!OFFONLY]", constraint: "1" }),
-        Field({ name: "OFFONLY", conformance: "[!LT | DF]", constraint: "2" })
+        Field({ name: "LT", conformance: "[!OFFONLY]", constraint: "0", description: "Lighting" }),
+        Field({ name: "DF", conformance: "[!OFFONLY]", constraint: "1", description: "DeadFrontBehavior" }),
+        Field({ name: "OFFONLY", conformance: "[!LT | DF]", constraint: "2", description: "OffOnly" })
     ),
 
     Attribute({ id: 0x0, name: "OnOff", type: "bool", access: "R V", conformance: "M", default: false, quality: "N S" }),
@@ -32,15 +32,15 @@ export const OnOff = Cluster(
     Attribute({ id: 0x4002, name: "OffWaitTime", type: "uint16", access: "RW VO", conformance: "LT", default: 0 }),
     Attribute({
         id: 0x4003, name: "StartUpOnOff", type: "StartUpOnOffEnum",
-        access: "RW VM", conformance: "LT", constraint: "all", quality: "X N"
+        access: "RW VM", conformance: "LT", constraint: "desc", quality: "X N"
     }),
     Command({ id: 0x0, name: "Off", access: "O", conformance: "M", direction: "request", response: "status" }),
     Command({ id: 0x1, name: "On", access: "O", conformance: "!OFFONLY", direction: "request", response: "status" }),
     Command({ id: 0x2, name: "Toggle", access: "O", conformance: "!OFFONLY", direction: "request", response: "status" }),
     Command(
         { id: 0x40, name: "OffWithEffect", access: "O", conformance: "LT", direction: "request", response: "status" },
-        Field({ id: 0x0, name: "EffectIdentifier", type: "EffectIdentifierEnum", conformance: "M", constraint: "all" }),
-        Field({ id: 0x1, name: "EffectVariant", type: "enum8", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x0, name: "EffectIdentifier", type: "EffectIdentifierEnum", conformance: "M", constraint: "desc" }),
+        Field({ id: 0x1, name: "EffectVariant", type: "enum8", conformance: "M", constraint: "desc", default: 0 })
     ),
     Command({
         id: 0x41, name: "OnWithRecallGlobalScene",

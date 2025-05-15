@@ -21,15 +21,15 @@ export const ResourceMonitoring = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "CON", conformance: "O", constraint: "0" }),
-        Field({ name: "WRN", conformance: "O", constraint: "1" }),
-        Field({ name: "REP", conformance: "O", constraint: "2" })
+        Field({ name: "CON", conformance: "O", constraint: "0", description: "Condition" }),
+        Field({ name: "WRN", conformance: "O", constraint: "1", description: "Warning" }),
+        Field({ name: "REP", conformance: "O", constraint: "2", description: "ReplacementProductList" })
     ),
 
     Attribute({ id: 0x0, name: "Condition", type: "percent", access: "R V", conformance: "CON" }),
     Attribute({
         id: 0x1, name: "DegradationDirection", type: "DegradationDirectionEnum",
-        access: "R V", conformance: "CON", constraint: "all", quality: "F"
+        access: "R V", conformance: "CON", constraint: "desc", quality: "F"
     }),
     Attribute({ id: 0x2, name: "ChangeIndication", type: "ChangeIndicationEnum", access: "R V", conformance: "M", default: 0 }),
     Attribute({ id: 0x3, name: "InPlaceIndicator", type: "bool", access: "R V", conformance: "O" }),
@@ -73,7 +73,7 @@ export const ResourceMonitoring = Cluster(
         { name: "ReplacementProductStruct", type: "struct" },
         Field({
             id: 0x0, name: "ProductIdentifierType", type: "ProductIdentifierTypeEnum",
-            conformance: "M", constraint: "all"
+            conformance: "M", constraint: "desc"
         }),
         Field({ id: 0x1, name: "ProductIdentifierValue", type: "string", conformance: "M", constraint: "max 20" })
     )

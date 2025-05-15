@@ -14,15 +14,15 @@ export const TemperatureMeasurement = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 4 }),
     Attribute({
         id: 0x0, name: "MeasuredValue", type: "temperature",
-        access: "R V", constraint: "minMeasuredValue to maxMeasuredValue"
+        access: "R V", constraint: "minMeasuredValue to maxMeasuredValue", quality: "X P"
     }),
     Attribute({
         id: 0x1, name: "MinMeasuredValue", type: "temperature",
-        access: "R V", constraint: "-27315 to maxMeasuredValue - 1", default: -27315
+        access: "R V", constraint: "-27315 to maxMeasuredValue - 1", default: -27315, quality: "X"
     }),
     Attribute({
         id: 0x2, name: "MaxMeasuredValue", type: "temperature",
-        access: "R V", constraint: "minMeasuredValue + 1 to 32767", default: 32767
+        access: "R V", constraint: "minMeasuredValue + 1 to 32767", default: 32767, quality: "X"
     }),
     Attribute({ id: 0x3, name: "Tolerance", type: "uint16", access: "R V", conformance: "O", constraint: "max 2048", default: 0 })
 );

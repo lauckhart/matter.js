@@ -109,6 +109,20 @@ export class Quality extends Aspect<Quality.Definition> implements Quality.Ast {
         this.atomic = ast?.atomic;
         this.disallowed = ast?.disallowed;
 
+        this.isEmpty = !(
+            this.nullable ||
+            this.nonvolatile ||
+            this.fixed ||
+            this.changesOmitted ||
+            this.scene ||
+            this.reportable ||
+            this.singleton ||
+            this.quieter ||
+            this.largeMessage ||
+            this.diagnostics ||
+            this.atomic
+        );
+
         this.freeze();
     }
 

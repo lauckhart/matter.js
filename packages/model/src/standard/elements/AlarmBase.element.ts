@@ -19,7 +19,10 @@ import {
 export const AlarmBase = Cluster(
     { name: "AlarmBase" },
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
-    Attribute({ id: 0xfffc, name: "FeatureMap", type: "FeatureMap" }, Field({ name: "RESET", constraint: "0" })),
+    Attribute(
+        { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
+        Field({ name: "RESET", constraint: "0", description: "Reset" })
+    ),
     Attribute({ id: 0x0, name: "Mask", type: "AlarmBitmap", access: "R V", conformance: "M", default: 0 }),
     Attribute(
         { id: 0x1, name: "Latch", type: "AlarmBitmap", access: "R V", conformance: "RESET", default: 0, quality: "F" }

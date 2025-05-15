@@ -21,12 +21,12 @@ export const FanControl = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "SPD", constraint: "0" }),
-        Field({ name: "AUT", constraint: "1" }),
-        Field({ name: "RCK", constraint: "2" }),
-        Field({ name: "WND", constraint: "3" }),
-        Field({ name: "STEP", constraint: "4" }),
-        Field({ name: "DIR", constraint: "5" })
+        Field({ name: "SPD", constraint: "0", description: "MultiSpeed" }),
+        Field({ name: "AUT", constraint: "1", description: "Auto" }),
+        Field({ name: "RCK", constraint: "2", description: "Rocking" }),
+        Field({ name: "WND", constraint: "3", description: "Wind" }),
+        Field({ name: "STEP", constraint: "4", description: "Step" }),
+        Field({ name: "DIR", constraint: "5", description: "AirflowDirection" })
     ),
 
     Attribute(
@@ -52,23 +52,23 @@ export const FanControl = Cluster(
     }),
     Attribute({
         id: 0x7, name: "RockSupport", type: "RockBitmap",
-        access: "R V", conformance: "RCK", constraint: "all", default: 0, quality: "F"
+        access: "R V", conformance: "RCK", constraint: "desc", default: 0, quality: "F"
     }),
     Attribute({
         id: 0x8, name: "RockSetting", type: "RockBitmap",
-        access: "RW VO", conformance: "RCK", constraint: "all", default: 0, quality: "P"
+        access: "RW VO", conformance: "RCK", constraint: "desc", default: 0, quality: "P"
     }),
     Attribute({
         id: 0x9, name: "WindSupport", type: "WindBitmap",
-        access: "R V", conformance: "WND", constraint: "all", default: 0, quality: "F"
+        access: "R V", conformance: "WND", constraint: "desc", default: 0, quality: "F"
     }),
     Attribute({
         id: 0xa, name: "WindSetting", type: "WindBitmap",
-        access: "RW VO", conformance: "WND", constraint: "all", default: 0, quality: "P"
+        access: "RW VO", conformance: "WND", constraint: "desc", default: 0, quality: "P"
     }),
     Attribute({
         id: 0xb, name: "AirflowDirection", type: "AirflowDirectionEnum",
-        access: "RW VO", conformance: "DIR", constraint: "all", default: 0, quality: "P"
+        access: "RW VO", conformance: "DIR", constraint: "desc", default: 0, quality: "P"
     }),
 
     Command(

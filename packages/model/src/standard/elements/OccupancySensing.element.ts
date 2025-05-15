@@ -21,14 +21,14 @@ export const OccupancySensing = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "OTHER", conformance: "O.a+", constraint: "0" }),
-        Field({ name: "PIR", conformance: "O.a+", constraint: "1" }),
-        Field({ name: "US", conformance: "O.a+", constraint: "2" }),
-        Field({ name: "PHY", conformance: "O.a+", constraint: "3" }),
-        Field({ name: "AIR", conformance: "O.a+", constraint: "4" }),
-        Field({ name: "RAD", conformance: "O.a+", constraint: "5" }),
-        Field({ name: "RFS", conformance: "O.a+", constraint: "6" }),
-        Field({ name: "VIS", conformance: "O.a+", constraint: "7" })
+        Field({ name: "OTHER", conformance: "O.a+", constraint: "0", description: "Other" }),
+        Field({ name: "PIR", conformance: "O.a+", constraint: "1", description: "PassiveInfrared" }),
+        Field({ name: "US", conformance: "O.a+", constraint: "2", description: "Ultrasonic" }),
+        Field({ name: "PHY", conformance: "O.a+", constraint: "3", description: "PhysicalContact" }),
+        Field({ name: "AIR", conformance: "O.a+", constraint: "4", description: "ActiveInfrared" }),
+        Field({ name: "RAD", conformance: "O.a+", constraint: "5", description: "Radar" }),
+        Field({ name: "RFS", conformance: "O.a+", constraint: "6", description: "RfSensing" }),
+        Field({ name: "VIS", conformance: "O.a+", constraint: "7", description: "Vision" })
     ),
 
     Attribute({
@@ -37,13 +37,13 @@ export const OccupancySensing = Cluster(
     }),
     Attribute({
         id: 0x1, name: "OccupancySensorType", type: "OccupancySensorTypeEnum",
-        access: "R V", conformance: "M, D", constraint: "all", quality: "F"
+        access: "R V", conformance: "M, D", constraint: "desc", quality: "F"
     }),
     Attribute({
         id: 0x2, name: "OccupancySensorTypeBitmap", type: "OccupancySensorTypeBitmap",
         access: "R V", conformance: "M, D", constraint: "0 to 7", quality: "F"
     }),
-    Attribute({ id: 0x3, name: "HoldTime", type: "uint16", access: "RW VM", conformance: "O", constraint: "all", quality: "N" }),
+    Attribute({ id: 0x3, name: "HoldTime", type: "uint16", access: "RW VM", conformance: "O", constraint: "desc", quality: "N" }),
     Attribute({
         id: 0x4, name: "HoldTimeLimits", type: "HoldTimeLimitsStruct",
         access: "R V", conformance: "HoldTime", quality: "F"

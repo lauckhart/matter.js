@@ -21,13 +21,13 @@ export const PumpConfigurationAndControl = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "PRSCONST", conformance: "O.a+", constraint: "0" }),
-        Field({ name: "PRSCOMP", conformance: "O.a+", constraint: "1" }),
-        Field({ name: "FLW", conformance: "O.a+", constraint: "2" }),
-        Field({ name: "SPD", conformance: "O.a+", constraint: "3" }),
-        Field({ name: "TEMP", conformance: "O.a+", constraint: "4" }),
-        Field({ name: "AUTO", conformance: "O", constraint: "5" }),
-        Field({ name: "LOCAL", conformance: "O", constraint: "6" })
+        Field({ name: "PRSCONST", conformance: "O.a+", constraint: "0", description: "ConstantPressure" }),
+        Field({ name: "PRSCOMP", conformance: "O.a+", constraint: "1", description: "CompensatedPressure" }),
+        Field({ name: "FLW", conformance: "O.a+", constraint: "2", description: "ConstantFlow" }),
+        Field({ name: "SPD", conformance: "O.a+", constraint: "3", description: "ConstantSpeed" }),
+        Field({ name: "TEMP", conformance: "O.a+", constraint: "4", description: "ConstantTemperature" }),
+        Field({ name: "AUTO", conformance: "O", constraint: "5", description: "Automatic" }),
+        Field({ name: "LOCAL", conformance: "O", constraint: "6", description: "LocalOperation" })
     ),
 
     Attribute(
@@ -79,15 +79,15 @@ export const PumpConfigurationAndControl = Cluster(
     }),
     Attribute({
         id: 0x10, name: "PumpStatus", type: "PumpStatusBitmap",
-        access: "R V", conformance: "O", constraint: "all", default: 0, quality: "P"
+        access: "R V", conformance: "O", constraint: "desc", default: 0, quality: "P"
     }),
     Attribute({
         id: 0x11, name: "EffectiveOperationMode", type: "OperationModeEnum",
-        access: "R V", conformance: "M", constraint: "all", quality: "N"
+        access: "R V", conformance: "M", constraint: "desc", quality: "N"
     }),
     Attribute({
         id: 0x12, name: "EffectiveControlMode", type: "ControlModeEnum",
-        access: "R V", conformance: "M", constraint: "all", quality: "N"
+        access: "R V", conformance: "M", constraint: "desc", quality: "N"
     }),
     Attribute(
         { id: 0x13, name: "Capacity", type: "int16", access: "R V", conformance: "M", default: null, quality: "X P" }
@@ -104,11 +104,11 @@ export const PumpConfigurationAndControl = Cluster(
     }),
     Attribute({
         id: 0x20, name: "OperationMode", type: "OperationModeEnum",
-        access: "RW VM", conformance: "M", constraint: "all", default: 0, quality: "N"
+        access: "RW VM", conformance: "M", constraint: "desc", default: 0, quality: "N"
     }),
     Attribute({
         id: 0x21, name: "ControlMode", type: "ControlModeEnum",
-        access: "RW VM", conformance: "O", constraint: "all", default: 0, quality: "N"
+        access: "RW VM", conformance: "O", constraint: "desc", default: 0, quality: "N"
     }),
     Attribute({ id: 0x22, name: "AlarmMask", type: "uint16" }),
     Event({ id: 0x0, name: "SupplyVoltageLow", access: "V", conformance: "O", priority: "info" }),

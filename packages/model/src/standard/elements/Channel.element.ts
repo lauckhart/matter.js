@@ -21,10 +21,10 @@ export const Channel = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "CL", constraint: "0" }),
-        Field({ name: "LI", constraint: "1" }),
-        Field({ name: "EG", constraint: "2" }),
-        Field({ name: "RP", constraint: "3" })
+        Field({ name: "CL", constraint: "0", description: "ChannelList" }),
+        Field({ name: "LI", constraint: "1", description: "LineupInfo" }),
+        Field({ name: "EG", constraint: "2", description: "ElectronicGuide" }),
+        Field({ name: "RP", constraint: "3", description: "RecordProgram" })
     ),
 
     Attribute(
@@ -33,11 +33,11 @@ export const Channel = Cluster(
     ),
     Attribute({
         id: 0x1, name: "Lineup", type: "LineupInfoStruct",
-        access: "R V", conformance: "LI", constraint: "all", default: null, quality: "X"
+        access: "R V", conformance: "LI", constraint: "desc", default: null, quality: "X"
     }),
     Attribute({
         id: 0x2, name: "CurrentChannel", type: "ChannelInfoStruct",
-        access: "R V", conformance: "O", constraint: "all", default: null, quality: "X"
+        access: "R V", conformance: "O", constraint: "desc", default: null, quality: "X"
     }),
 
     Command(
@@ -50,7 +50,7 @@ export const Channel = Cluster(
 
     Command(
         { id: 0x1, name: "ChangeChannelResponse", conformance: "CL | LI", direction: "response" },
-        Field({ id: 0x0, name: "Status", type: "StatusEnum", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "Status", type: "StatusEnum", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "Data", type: "string", conformance: "O", constraint: "any" })
     ),
 
@@ -165,7 +165,7 @@ export const Channel = Cluster(
         Field({ id: 0x0, name: "OperatorName", type: "string", conformance: "M" }),
         Field({ id: 0x1, name: "LineupName", type: "string", conformance: "O" }),
         Field({ id: 0x2, name: "PostalCode", type: "string", conformance: "O" }),
-        Field({ id: 0x3, name: "LineupInfoType", type: "LineupInfoTypeEnum", conformance: "M", constraint: "all" })
+        Field({ id: 0x3, name: "LineupInfoType", type: "LineupInfoTypeEnum", conformance: "M", constraint: "desc" })
     ),
 
     Datatype(

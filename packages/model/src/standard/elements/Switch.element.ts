@@ -20,12 +20,12 @@ export const Switch = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "LS", conformance: "O.a", constraint: "0" }),
-        Field({ name: "MS", conformance: "O.a", constraint: "1" }),
-        Field({ name: "MSR", conformance: "[MS & !AS]", constraint: "2" }),
-        Field({ name: "MSL", conformance: "[MS & (MSR | AS)]", constraint: "3" }),
-        Field({ name: "MSM", conformance: "AS, [MS & MSR]", constraint: "4" }),
-        Field({ name: "AS", conformance: "[MS]", constraint: "5" })
+        Field({ name: "LS", conformance: "O.a", constraint: "0", description: "LatchingSwitch" }),
+        Field({ name: "MS", conformance: "O.a", constraint: "1", description: "MomentarySwitch" }),
+        Field({ name: "MSR", conformance: "[MS & !AS]", constraint: "2", description: "MomentarySwitchRelease" }),
+        Field({ name: "MSL", conformance: "[MS & (MSR | AS)]", constraint: "3", description: "MomentarySwitchLongPress" }),
+        Field({ name: "MSM", conformance: "AS, [MS & MSR]", constraint: "4", description: "MomentarySwitchMultiPress" }),
+        Field({ name: "AS", conformance: "[MS]", constraint: "5", description: "ActionSwitch" })
     ),
 
     Attribute({

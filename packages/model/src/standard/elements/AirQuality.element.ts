@@ -20,15 +20,15 @@ export const AirQuality = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "FAIR", conformance: "O", constraint: "0" }),
-        Field({ name: "MOD", conformance: "O", constraint: "1" }),
-        Field({ name: "VPOOR", conformance: "O", constraint: "2" }),
-        Field({ name: "XPOOR", conformance: "O", constraint: "3" })
+        Field({ name: "FAIR", conformance: "O", constraint: "0", description: "Fair" }),
+        Field({ name: "MOD", conformance: "O", constraint: "1", description: "Moderate" }),
+        Field({ name: "VPOOR", conformance: "O", constraint: "2", description: "VeryPoor" }),
+        Field({ name: "XPOOR", conformance: "O", constraint: "3", description: "ExtremelyPoor" })
     ),
 
     Attribute({
         id: 0x0, name: "AirQuality", type: "AirQualityEnum",
-        access: "R V", conformance: "M", constraint: "all", default: 0
+        access: "R V", conformance: "M", constraint: "desc", default: 0
     }),
 
     Datatype(

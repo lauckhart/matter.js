@@ -21,11 +21,11 @@ export const ColorControl = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "HS", conformance: "EHUE, O", constraint: "0" }),
-        Field({ name: "EHUE", conformance: "CL, O", constraint: "1" }),
-        Field({ name: "CL", conformance: "O", constraint: "2" }),
-        Field({ name: "XY", conformance: "O", constraint: "3" }),
-        Field({ name: "CT", conformance: "O", constraint: "4" })
+        Field({ name: "HS", conformance: "EHUE, O", constraint: "0", description: "HueSaturation" }),
+        Field({ name: "EHUE", conformance: "CL, O", constraint: "1", description: "EnhancedHue" }),
+        Field({ name: "CL", conformance: "O", constraint: "2", description: "ColorLoop" }),
+        Field({ name: "XY", conformance: "O", constraint: "3", description: "Xy" }),
+        Field({ name: "CT", conformance: "O", constraint: "4", description: "ColorTemperature" })
     ),
 
     Attribute({
@@ -36,7 +36,10 @@ export const ColorControl = Cluster(
         id: 0x1, name: "CurrentSaturation", type: "uint8",
         access: "R V", conformance: "HS", constraint: "max 254", default: 0, quality: "N S P Q"
     }),
-    Attribute({ id: 0x2, name: "RemainingTime", type: "uint16", access: "R V", constraint: "0 to 65535", default: 0 }),
+    Attribute({
+        id: 0x2, name: "RemainingTime", type: "uint16",
+        access: "R V", constraint: "0 to 65535", default: 0, quality: "Q"
+    }),
     Attribute({
         id: 0x3, name: "CurrentX", type: "uint16",
         access: "R V", conformance: "XY", constraint: "max 65279", default: 24939, quality: "N S P Q"
@@ -51,35 +54,90 @@ export const ColorControl = Cluster(
     ),
     Attribute({
         id: 0x7, name: "ColorTemperatureMireds", type: "uint16",
-        access: "R V", constraint: "colorTempPhysicalMinMireds to colorTempPhysicalMaxMireds", default: 250
+        access: "R V", constraint: "colorTempPhysicalMinMireds to colorTempPhysicalMaxMireds", default: 250,
+        quality: "N S P Q"
     }),
-    Attribute({ id: 0x8, name: "ColorMode", type: "ColorModeEnum", access: "R V" }),
+    Attribute({ id: 0x8, name: "ColorMode", type: "ColorModeEnum", access: "R V", quality: "N" }),
     Attribute({
         id: 0xf, name: "Options", type: "OptionsBitmap",
-        access: "RW VO", conformance: "M", constraint: "all", default: 0
+        access: "RW VO", conformance: "M", constraint: "desc", default: 0
     }),
     Attribute({
         id: 0x10, name: "NumberOfPrimaries", type: "uint8",
         access: "R V", conformance: "M", constraint: "max 6", quality: "X F"
     }),
-    Attribute({ id: 0x11, name: "Primary1X", type: "uint16", access: "R V", conformance: "NumberOfPrimaries > 0" }),
-    Attribute({ id: 0x12, name: "Primary1Y", type: "uint16", access: "R V", conformance: "NumberOfPrimaries > 0" }),
-    Attribute({ id: 0x13, name: "Primary1Intensity", type: "uint8", access: "R V", conformance: "NumberOfPrimaries > 0" }),
-    Attribute({ id: 0x15, name: "Primary2X", type: "uint16", access: "R V", conformance: "NumberOfPrimaries > 1" }),
-    Attribute({ id: 0x16, name: "Primary2Y", type: "uint16", access: "R V", conformance: "NumberOfPrimaries > 1" }),
-    Attribute({ id: 0x17, name: "Primary2Intensity", type: "uint8", access: "R V", conformance: "NumberOfPrimaries > 1" }),
-    Attribute({ id: 0x19, name: "Primary3X", type: "uint16", access: "R V", conformance: "NumberOfPrimaries > 2" }),
-    Attribute({ id: 0x1a, name: "Primary3Y", type: "uint16", access: "R V", conformance: "NumberOfPrimaries > 2" }),
-    Attribute({ id: 0x1b, name: "Primary3Intensity", type: "uint8", access: "R V", conformance: "NumberOfPrimaries > 2" }),
-    Attribute({ id: 0x20, name: "Primary4X", type: "uint16", access: "R V", conformance: "NumberOfPrimaries > 3" }),
-    Attribute({ id: 0x21, name: "Primary4Y", type: "uint16", access: "R V", conformance: "NumberOfPrimaries > 3" }),
-    Attribute({ id: 0x22, name: "Primary4Intensity", type: "uint8", access: "R V", conformance: "NumberOfPrimaries > 3" }),
-    Attribute({ id: 0x24, name: "Primary5X", type: "uint16", access: "R V", conformance: "NumberOfPrimaries > 4" }),
-    Attribute({ id: 0x25, name: "Primary5Y", type: "uint16", access: "R V", conformance: "NumberOfPrimaries > 4" }),
-    Attribute({ id: 0x26, name: "Primary5Intensity", type: "uint8", access: "R V", conformance: "NumberOfPrimaries > 4" }),
-    Attribute({ id: 0x28, name: "Primary6X", type: "uint16", access: "R V", conformance: "NumberOfPrimaries > 5" }),
-    Attribute({ id: 0x29, name: "Primary6Y", type: "uint16", access: "R V", conformance: "NumberOfPrimaries > 5" }),
-    Attribute({ id: 0x2a, name: "Primary6Intensity", type: "uint8", access: "R V", conformance: "NumberOfPrimaries > 5" }),
+    Attribute({
+        id: 0x11, name: "Primary1X", type: "uint16",
+        access: "R V", conformance: "NumberOfPrimaries > 0", constraint: "max 65279", quality: "F"
+    }),
+    Attribute({
+        id: 0x12, name: "Primary1Y", type: "uint16",
+        access: "R V", conformance: "NumberOfPrimaries > 0", constraint: "max 65279", quality: "F"
+    }),
+    Attribute({
+        id: 0x13, name: "Primary1Intensity", type: "uint8",
+        access: "R V", conformance: "NumberOfPrimaries > 0", quality: "X F"
+    }),
+    Attribute({
+        id: 0x15, name: "Primary2X", type: "uint16",
+        access: "R V", conformance: "NumberOfPrimaries > 1", constraint: "max 65279", quality: "F"
+    }),
+    Attribute({
+        id: 0x16, name: "Primary2Y", type: "uint16",
+        access: "R V", conformance: "NumberOfPrimaries > 1", constraint: "max 65279", quality: "F"
+    }),
+    Attribute({
+        id: 0x17, name: "Primary2Intensity", type: "uint8",
+        access: "R V", conformance: "NumberOfPrimaries > 1", quality: "X F"
+    }),
+    Attribute({
+        id: 0x19, name: "Primary3X", type: "uint16",
+        access: "R V", conformance: "NumberOfPrimaries > 2", constraint: "max 65279", quality: "F"
+    }),
+    Attribute({
+        id: 0x1a, name: "Primary3Y", type: "uint16",
+        access: "R V", conformance: "NumberOfPrimaries > 2", constraint: "max 65279", quality: "F"
+    }),
+    Attribute({
+        id: 0x1b, name: "Primary3Intensity", type: "uint8",
+        access: "R V", conformance: "NumberOfPrimaries > 2", quality: "X F"
+    }),
+    Attribute({
+        id: 0x20, name: "Primary4X", type: "uint16",
+        access: "R V", conformance: "NumberOfPrimaries > 3", constraint: "max 65279", quality: "F"
+    }),
+    Attribute({
+        id: 0x21, name: "Primary4Y", type: "uint16",
+        access: "R V", conformance: "NumberOfPrimaries > 3", constraint: "max 65279", quality: "F"
+    }),
+    Attribute({
+        id: 0x22, name: "Primary4Intensity", type: "uint8",
+        access: "R V", conformance: "NumberOfPrimaries > 3", quality: "X F"
+    }),
+    Attribute({
+        id: 0x24, name: "Primary5X", type: "uint16",
+        access: "R V", conformance: "NumberOfPrimaries > 4", constraint: "max 65279", quality: "F"
+    }),
+    Attribute({
+        id: 0x25, name: "Primary5Y", type: "uint16",
+        access: "R V", conformance: "NumberOfPrimaries > 4", constraint: "max 65279", quality: "F"
+    }),
+    Attribute({
+        id: 0x26, name: "Primary5Intensity", type: "uint8",
+        access: "R V", conformance: "NumberOfPrimaries > 4", quality: "X F"
+    }),
+    Attribute({
+        id: 0x28, name: "Primary6X", type: "uint16",
+        access: "R V", conformance: "NumberOfPrimaries > 5", constraint: "max 65279", quality: "F"
+    }),
+    Attribute({
+        id: 0x29, name: "Primary6Y", type: "uint16",
+        access: "R V", conformance: "NumberOfPrimaries > 5", constraint: "max 65279", quality: "F"
+    }),
+    Attribute({
+        id: 0x2a, name: "Primary6Intensity", type: "uint8",
+        access: "R V", conformance: "NumberOfPrimaries > 5", quality: "X F"
+    }),
     Attribute(
         { id: 0x30, name: "WhitePointX", type: "uint16", access: "RW VM", conformance: "O", constraint: "max 65279" }
     ),
@@ -115,12 +173,20 @@ export const ColorControl = Cluster(
         id: 0x4001, name: "EnhancedColorMode", type: "EnhancedColorModeEnum",
         access: "R V", conformance: "M", default: 1, quality: "N S"
     }),
+
     Attribute(
-        { id: 0x4002, name: "ColorLoopActive", type: "enum16", access: "R V", default: 0 },
+        {
+            id: 0x4002, name: "ColorLoopActive", type: "enum16",
+            access: "R V", constraint: "max 1", default: 0, quality: "N S"
+        },
         Field({ id: 0x0, name: "Inactive" }),
         Field({ id: 0x1, name: "Active" })
     ),
-    Attribute({ id: 0x4003, name: "ColorLoopDirection", type: "ColorLoopDirectionEnum", access: "R V", default: 0 }),
+
+    Attribute({
+        id: 0x4003, name: "ColorLoopDirection", type: "ColorLoopDirectionEnum",
+        access: "R V", constraint: "max 1", default: 0, quality: "N S"
+    }),
     Attribute({
         id: 0x4004, name: "ColorLoopTime", type: "uint16",
         access: "R V", conformance: "CL", default: 25, quality: "N S"
@@ -129,7 +195,7 @@ export const ColorControl = Cluster(
     Attribute({ id: 0x4006, name: "ColorLoopStoredEnhancedHue", type: "uint16", access: "R V", conformance: "CL", default: 0 }),
 
     Attribute(
-        { id: 0x400a, name: "ColorCapabilities", type: "map16", access: "R V", default: 0 },
+        { id: 0x400a, name: "ColorCapabilities", type: "map16", access: "R V", constraint: "max 31", default: 0 },
         Field({ name: "HueSaturation", constraint: "0" }),
         Field({ name: "EnhancedHue", constraint: "1" }),
         Field({ name: "ColorLoop", constraint: "2" }),
@@ -147,11 +213,13 @@ export const ColorControl = Cluster(
     }),
     Attribute({
         id: 0x400d, name: "CoupleColorTempToLevelMinMireds", type: "uint16",
-        access: "R V", conformance: "CT & ColorTemperatureMireds"
+        access: "R V", conformance: "CT & ColorTemperatureMireds",
+        constraint: "colorTempPhysicalMinMireds to colorTemperatureMireds"
     }),
     Attribute({
         id: 0x4010, name: "StartUpColorTemperatureMireds", type: "uint16",
-        access: "RW VM", conformance: "CT & ColorTemperatureMireds"
+        access: "RW VM", conformance: "CT & ColorTemperatureMireds", constraint: "1 to 65279",
+        quality: "X N"
     }),
 
     Command(
@@ -159,16 +227,16 @@ export const ColorControl = Cluster(
         Field({ id: 0x0, name: "Hue", type: "uint8", conformance: "M", constraint: "max 254" }),
         Field({ id: 0x1, name: "Direction", type: "DirectionEnum", conformance: "M" }),
         Field({ id: 0x2, name: "TransitionTime", type: "uint16", conformance: "M", constraint: "max 65534" }),
-        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
         { id: 0x1, name: "MoveHue", access: "O", conformance: "HS", direction: "request", response: "status" },
         Field({ id: 0x0, name: "MoveMode", type: "MoveModeEnum", conformance: "M" }),
         Field({ id: 0x1, name: "Rate", type: "uint8", conformance: "M" }),
-        Field({ id: 0x2, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x3, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x2, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x3, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
@@ -176,24 +244,24 @@ export const ColorControl = Cluster(
         Field({ id: 0x0, name: "StepMode", type: "StepModeEnum", conformance: "M" }),
         Field({ id: 0x1, name: "StepSize", type: "uint8", conformance: "M" }),
         Field({ id: 0x2, name: "TransitionTime", type: "uint8", conformance: "M" }),
-        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
         { id: 0x3, name: "MoveToSaturation", access: "O", conformance: "HS", direction: "request", response: "status" },
         Field({ id: 0x0, name: "Saturation", type: "uint8", conformance: "M", constraint: "max 254" }),
         Field({ id: 0x1, name: "TransitionTime", type: "uint16", conformance: "M", constraint: "max 65534" }),
-        Field({ id: 0x2, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x3, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x2, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x3, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
         { id: 0x4, name: "MoveSaturation", access: "O", conformance: "HS", direction: "request", response: "status" },
         Field({ id: 0x0, name: "MoveMode", type: "MoveModeEnum", conformance: "M" }),
         Field({ id: 0x1, name: "Rate", type: "uint8", conformance: "M" }),
-        Field({ id: 0x2, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x3, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x2, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x3, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
@@ -201,8 +269,8 @@ export const ColorControl = Cluster(
         Field({ id: 0x0, name: "StepMode", type: "StepModeEnum", conformance: "M" }),
         Field({ id: 0x1, name: "StepSize", type: "uint8", conformance: "M" }),
         Field({ id: 0x2, name: "TransitionTime", type: "uint8", conformance: "M" }),
-        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
@@ -213,8 +281,8 @@ export const ColorControl = Cluster(
         Field({ id: 0x0, name: "Hue", type: "uint8", conformance: "M", constraint: "max 254" }),
         Field({ id: 0x1, name: "Saturation", type: "uint8", conformance: "M", constraint: "max 254" }),
         Field({ id: 0x2, name: "TransitionTime", type: "uint16", conformance: "M", constraint: "max 65534" }),
-        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
@@ -222,16 +290,16 @@ export const ColorControl = Cluster(
         Field({ id: 0x0, name: "ColorX", type: "uint16", conformance: "M", constraint: "max 65279" }),
         Field({ id: 0x1, name: "ColorY", type: "uint16", conformance: "M", constraint: "max 65279" }),
         Field({ id: 0x2, name: "TransitionTime", type: "uint16", conformance: "M", constraint: "max 65534" }),
-        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
         { id: 0x8, name: "MoveColor", access: "O", conformance: "XY", direction: "request", response: "status" },
         Field({ id: 0x0, name: "RateX", type: "int16", conformance: "M" }),
         Field({ id: 0x1, name: "RateY", type: "int16", conformance: "M" }),
-        Field({ id: 0x2, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x3, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x2, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x3, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
@@ -239,8 +307,8 @@ export const ColorControl = Cluster(
         Field({ id: 0x0, name: "StepX", type: "int16", conformance: "M" }),
         Field({ id: 0x1, name: "StepY", type: "int16", conformance: "M" }),
         Field({ id: 0x2, name: "TransitionTime", type: "uint16", conformance: "M", constraint: "max 65534" }),
-        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
@@ -250,8 +318,8 @@ export const ColorControl = Cluster(
         },
         Field({ id: 0x0, name: "ColorTemperatureMireds", type: "uint16", conformance: "M", constraint: "max 65279" }),
         Field({ id: 0x1, name: "TransitionTime", type: "uint16", conformance: "M", constraint: "max 65534" }),
-        Field({ id: 0x2, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x3, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x2, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x3, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
@@ -262,8 +330,8 @@ export const ColorControl = Cluster(
         Field({ id: 0x0, name: "EnhancedHue", type: "uint16", conformance: "M" }),
         Field({ id: 0x1, name: "Direction", type: "DirectionEnum", conformance: "M" }),
         Field({ id: 0x2, name: "TransitionTime", type: "uint16", conformance: "M", constraint: "max 65534" }),
-        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
@@ -271,10 +339,10 @@ export const ColorControl = Cluster(
             id: 0x41, name: "EnhancedMoveHue",
             access: "O", conformance: "EHUE", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "MoveMode", type: "MoveModeEnum", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "MoveMode", type: "MoveModeEnum", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "Rate", type: "uint16", conformance: "M" }),
-        Field({ id: 0x2, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x3, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x2, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x3, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
@@ -282,11 +350,11 @@ export const ColorControl = Cluster(
             id: 0x42, name: "EnhancedStepHue",
             access: "O", conformance: "EHUE", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "StepMode", type: "StepModeEnum", conformance: "M", constraint: "all" }),
+        Field({ id: 0x0, name: "StepMode", type: "StepModeEnum", conformance: "M", constraint: "desc" }),
         Field({ id: 0x1, name: "StepSize", type: "uint16", conformance: "M" }),
         Field({ id: 0x2, name: "TransitionTime", type: "uint16", conformance: "M", constraint: "max 65534" }),
-        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
@@ -297,8 +365,8 @@ export const ColorControl = Cluster(
         Field({ id: 0x0, name: "EnhancedHue", type: "uint16", conformance: "M" }),
         Field({ id: 0x1, name: "Saturation", type: "uint8", conformance: "M", constraint: "max 254" }),
         Field({ id: 0x2, name: "TransitionTime", type: "uint16", conformance: "M", constraint: "max 65534" }),
-        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x3, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x4, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
@@ -308,8 +376,8 @@ export const ColorControl = Cluster(
         Field({ id: 0x2, name: "Direction", type: "ColorLoopDirectionEnum", conformance: "M" }),
         Field({ id: 0x3, name: "Time", type: "uint16", conformance: "M" }),
         Field({ id: 0x4, name: "StartHue", type: "uint16", conformance: "M" }),
-        Field({ id: 0x5, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x6, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x5, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x6, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
@@ -317,8 +385,8 @@ export const ColorControl = Cluster(
             id: 0x47, name: "StopMoveStep",
             access: "O", conformance: "HS | XY | CT", direction: "request", response: "status"
         },
-        Field({ id: 0x0, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x1, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x0, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x1, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
@@ -330,8 +398,8 @@ export const ColorControl = Cluster(
         Field({ id: 0x1, name: "Rate", type: "uint16", conformance: "M" }),
         Field({ id: 0x2, name: "ColorTemperatureMinimumMireds", type: "uint16", conformance: "M", constraint: "max 65279" }),
         Field({ id: 0x3, name: "ColorTemperatureMaximumMireds", type: "uint16", conformance: "M", constraint: "max 65279" }),
-        Field({ id: 0x4, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x5, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x4, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x5, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Command(
@@ -344,8 +412,8 @@ export const ColorControl = Cluster(
         Field({ id: 0x2, name: "TransitionTime", type: "uint16", conformance: "M", constraint: "max 65534" }),
         Field({ id: 0x3, name: "ColorTemperatureMinimumMireds", type: "uint16", conformance: "M", constraint: "max 65279" }),
         Field({ id: 0x4, name: "ColorTemperatureMaximumMireds", type: "uint16", conformance: "M", constraint: "max 65279" }),
-        Field({ id: 0x5, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 }),
-        Field({ id: 0x6, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "all", default: 0 })
+        Field({ id: 0x5, name: "OptionsMask", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 }),
+        Field({ id: 0x6, name: "OptionsOverride", type: "OptionsBitmap", conformance: "M", constraint: "desc", default: 0 })
     ),
 
     Datatype({ name: "OptionsBitmap", type: "map8" }, Field({ name: "ExecuteIfOff", constraint: "0" })),

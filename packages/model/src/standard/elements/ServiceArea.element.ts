@@ -21,9 +21,9 @@ export const ServiceArea = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "SELRUN", constraint: "0" }),
-        Field({ name: "PROG", constraint: "1" }),
-        Field({ name: "MAPS", constraint: "2" })
+        Field({ name: "SELRUN", constraint: "0", description: "SelectWhileRunning" }),
+        Field({ name: "PROG", constraint: "1", description: "ProgressReporting" }),
+        Field({ name: "MAPS", constraint: "2", description: "Maps" })
     ),
 
     Attribute(
@@ -38,14 +38,14 @@ export const ServiceArea = Cluster(
     Attribute(
         {
             id: 0x2, name: "SelectedAreas", type: "list",
-            access: "R V", conformance: "M", constraint: "all", default: []
+            access: "R V", conformance: "M", constraint: "desc", default: []
         },
         Field({ name: "entry", type: "uint32" })
     ),
 
     Attribute({
         id: 0x3, name: "CurrentArea", type: "uint32",
-        access: "R V", conformance: "desc", constraint: "all", default: null, quality: "X"
+        access: "R V", conformance: "desc", constraint: "desc", default: null, quality: "X"
     }),
     Attribute({
         id: 0x4, name: "EstimatedEndTime", type: "epoch-s",
@@ -66,7 +66,7 @@ export const ServiceArea = Cluster(
             access: "O", conformance: "M", direction: "request", response: "SelectAreasResponse"
         },
         Field(
-            { id: 0x0, name: "NewAreas", type: "list", conformance: "M", constraint: "all" },
+            { id: 0x0, name: "NewAreas", type: "list", conformance: "M", constraint: "desc" },
             Field({ name: "entry", type: "uint32" })
         )
     ),
@@ -82,7 +82,7 @@ export const ServiceArea = Cluster(
             id: 0x2, name: "SkipArea",
             access: "O", conformance: "desc", direction: "request", response: "SkipAreaResponse"
         },
-        Field({ id: 0x0, name: "SkippedArea", type: "uint32", conformance: "M", constraint: "all" })
+        Field({ id: 0x0, name: "SkippedArea", type: "uint32", conformance: "M", constraint: "desc" })
     ),
 
     Command(
@@ -109,7 +109,7 @@ export const ServiceArea = Cluster(
     Datatype(
         { name: "AreaStruct", type: "struct" },
         Field({ id: 0x0, name: "AreaId", type: "uint32", conformance: "M" }),
-        Field({ id: 0x1, name: "MapId", type: "uint32", conformance: "M", constraint: "all", quality: "X" }),
+        Field({ id: 0x1, name: "MapId", type: "uint32", conformance: "M", constraint: "desc", quality: "X" }),
         Field({ id: 0x2, name: "AreaInfo", type: "AreaInfoStruct", conformance: "M" })
     ),
 
@@ -118,7 +118,7 @@ export const ServiceArea = Cluster(
         Field({ id: 0x0, name: "AreaId", type: "uint32", conformance: "M" }),
         Field({ id: 0x1, name: "Status", type: "OperationalStatusEnum", conformance: "M" }),
         Field({ id: 0x2, name: "TotalOperationalTime", type: "elapsed-s", conformance: "O", quality: "X" }),
-        Field({ id: 0x3, name: "EstimatedTime", type: "elapsed-s" })
+        Field({ id: 0x3, name: "EstimatedTime", type: "elapsed-s", quality: "X" })
     ),
 
     Datatype(
