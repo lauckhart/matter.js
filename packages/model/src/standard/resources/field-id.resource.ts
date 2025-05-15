@@ -9,6 +9,7 @@
 import { fieldId } from "#index.js";
 
 fieldId.patch({
+    description: "Field ID",
     details: "An identifier that indicates a field defined in a struct." +
         "\n" +
         "Field IDs shall be a Manufacturer Extensible Identifier. The specifics of its representation are " +

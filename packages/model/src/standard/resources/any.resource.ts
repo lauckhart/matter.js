@@ -8,4 +8,7 @@
 
 import { any } from "#index.js";
 
-any.patch({ details: "We use this type in places where the Matter specification allows for values of any type." });
+any.patch({
+    description: "A datatype that may represent any value.",
+    details: "We use this type in places where the Matter specification allows for values of any type."
+});

@@ -9,6 +9,8 @@
 import { BasicVideoPlayerDt } from "#index.js";
 
 BasicVideoPlayerDt.patch({
+    classification: "simple",
+
     details: "This defines conformance to the Basic Video Player device type." +
         "\n" +
         "A Video Player (either Basic or Casting) represents a device that is able to play media to a " +
@@ -30,17 +32,23 @@ BasicVideoPlayerDt.patch({
 
     children: [
         undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        { children: [{ description: "The device has physical inputs for media." }] }
+        { xref: { document: "device", section: "10.2.4" } },
+        { xref: { document: "device", section: "10.2.4" } },
+        { xref: { document: "device", section: "10.2.4" } },
+        { xref: { document: "device", section: "10.2.4" } },
+        { xref: { document: "device", section: "10.2.4" } },
+        { xref: { document: "device", section: "10.2.4" } },
+        { xref: { document: "device", section: "10.2.4" } },
+        { xref: { document: "device", section: "10.2.4" } },
+        { xref: { document: "device", section: "10.2.4" } },
+        { xref: { document: "device", section: "10.2.4" } },
+        { xref: { document: "device", section: "10.2.4" } },
+
+        {
+            children: [{
+                description: "The device has physical inputs for media.",
+                xref: { document: "device", section: "10.2.3" }
+            }]
+        }
     ]
 });

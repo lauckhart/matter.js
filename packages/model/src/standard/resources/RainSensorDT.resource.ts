@@ -9,6 +9,14 @@
 import { RainSensorDt } from "#index.js";
 
 RainSensorDt.patch({
+    classification: "simple",
     details: "This defines conformance to the Rain Sensor device type.",
-    xref: { document: "device", section: "7.13" }
+    xref: { document: "device", section: "7.13" },
+
+    children: [
+        undefined,
+        { xref: { document: "device", section: "7.13.4" } },
+        { xref: { document: "device", section: "7.13.4" } },
+        { xref: { document: "device", section: "7.13.4" } }
+    ]
 });

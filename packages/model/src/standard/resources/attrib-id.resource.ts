@@ -9,6 +9,7 @@
 import { attribId } from "#index.js";
 
 attribId.patch({
+    description: "Attribute ID",
     details: "An identifier that indicates an attribute defined in a cluster specification." +
         "\n" +
         "Attribute IDs shall be a Manufacturer Extensible Identifier. The specifics of its representation are " +

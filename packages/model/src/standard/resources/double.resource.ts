@@ -9,6 +9,8 @@
 import { double } from "#index.js";
 
 double.patch({
+    description: "Double precision",
+
     details: "The double precision number format is based on the IEEE 754-2019 double precision (64-bit) format " +
         "for binary floating-point arithmetic." +
         "\n" +

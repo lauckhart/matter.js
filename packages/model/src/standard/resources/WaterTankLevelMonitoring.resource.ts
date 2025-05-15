@@ -8,4 +8,4 @@
 
 import { WaterTankLevelMonitoring } from "#index.js";
 
-WaterTankLevelMonitoring.patch({});
+WaterTankLevelMonitoring.patch({ pics: "WTLREPMON" });

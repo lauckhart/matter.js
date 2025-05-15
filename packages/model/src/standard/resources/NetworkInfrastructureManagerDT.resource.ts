@@ -9,6 +9,8 @@
 import { NetworkInfrastructureManagerDt } from "#index.js";
 
 NetworkInfrastructureManagerDt.patch({
+    classification: "simple",
+
     details: "A Network Infrastructure Manager provides interfaces that allow for the management of the Wi-Fi, " +
         "Thread, and Ethernet networks underlying a Matter deployment, realizing the Star Network Topology " +
         "described in [MatterCore]." +
@@ -25,5 +27,12 @@ NetworkInfrastructureManagerDt.patch({
         "Section 15.2.5.1, “Access Control MNGD Conformance”). Consequently, Commissioners of this device " +
         "type should be aware of this feature and its use.",
 
-    xref: { document: "device", section: "15.2" }
+    xref: { document: "device", section: "15.2" },
+
+    children: [
+        undefined,
+        { xref: { document: "device", section: "15.2.4" } },
+        { xref: { document: "device", section: "15.2.4" } },
+        { xref: { document: "device", section: "15.2.4" } }
+    ]
 });

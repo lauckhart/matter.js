@@ -9,6 +9,8 @@
 import { LowPower } from "#index.js";
 
 LowPower.patch({
+    classification: "application", pics: "LOWPOWER",
+
     details: "This cluster provides an interface for managing low power mode on a device." +
         "\n" +
         "This cluster would be supported on an endpoint that represents a physical device with a low power " +
@@ -25,5 +27,13 @@ LowPower.patch({
         "We have considered a “DisableLowPowerMode” command but have not added it due to suspected issues " +
         "with energy consumption regulations. This can be added in the future.",
 
-    xref: { document: "cluster", section: "1.11" }
+    xref: { document: "cluster", section: "1.11" },
+
+    children: [
+        undefined,
+        {
+            details: "This command shall put the device into low power mode.",
+            xref: { document: "cluster", section: "1.11.4.1" }
+        }
+    ]
 });

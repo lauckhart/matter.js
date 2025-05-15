@@ -9,6 +9,8 @@
 import { struct } from "#index.js";
 
 struct.patch({
+    description: "Struct",
+
     details: "A struct is a sequence of fields of any data type. Individual fields are identified by a field ID of " +
         "unsigned integer, starting at 0 (zero), for the first field." +
         "\n" +

@@ -8,4 +8,4 @@
 
 import { HepaFilterMonitoring } from "#index.js";
 
-HepaFilterMonitoring.patch({});
+HepaFilterMonitoring.patch({ pics: "HEPAFREMON" });

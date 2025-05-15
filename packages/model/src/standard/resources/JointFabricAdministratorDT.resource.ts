@@ -9,6 +9,8 @@
 import { JointFabricAdministratorDt } from "#index.js";
 
 JointFabricAdministratorDt.patch({
+    classification: "utility",
+
     details: "A Joint Fabric Administrator device provides capabilities to manage the Joint Fabric Datastore and " +
         "issue an ICAC signed by the Joint Fabric Anchor Root CA." +
         "\n" +
@@ -16,5 +18,10 @@ JointFabricAdministratorDt.patch({
         "Commissioning Method to be commissioned onto the Joint Fabric. Once commissioned, a client may " +
         "access the capabilities of the Joint Fabric Administrator.",
 
-    xref: { document: "device", section: "2.9" }
+    xref: { document: "device", section: "2.9" },
+    children: [
+        undefined,
+        { xref: { document: "device", section: "2.9.4" } },
+        { xref: { document: "device", section: "2.9.4" } }
+    ]
 });

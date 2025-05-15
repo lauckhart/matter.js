@@ -9,6 +9,7 @@
 import { eventId } from "#index.js";
 
 eventId.patch({
+    description: "Event ID",
     details: "An identifier that indicates an Event defined in a cluster specification." +
         "\n" +
         "Event IDs shall be a Manufacturer Extensible Identifier. The specifics of its representation are " +

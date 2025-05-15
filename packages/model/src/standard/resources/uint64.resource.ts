@@ -8,4 +8,4 @@
 
 import { uint64 } from "#index.js";
 
-uint64.patch({ xref: { document: "core", section: "7.19.1" } });
+uint64.patch({ description: "Unsigned 64-bit integer", xref: { document: "core", section: "7.19.1" } });

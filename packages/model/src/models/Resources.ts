@@ -25,7 +25,7 @@ export class Resources {
     xref?: Specification.CrossReference;
     details?: string;
 
-    constructor(resources?: Resources) {
+    constructor(resources?: Resources.Definition) {
         if (!resources) {
             return;
         }
@@ -40,4 +40,8 @@ export class Resources {
         this.classification = resources.classification;
         this.pics = resources.pics;
     }
+}
+
+export namespace Resources {
+    export type Definition = Omit<Resources, "xref"> & { xref?: CrossReference.Definition };
 }

@@ -9,6 +9,8 @@
 import { ipv4Adr } from "#index.js";
 
 ipv4Adr.patch({
+    description: "IPv4 Address",
+
     details: "The IPv4 address data type is derived from an octet string. The octets shall correspond to the four " +
         "octets in network byte order that comprise an IPv4 address represented utilizing quad-dotted " +
         "notation." +

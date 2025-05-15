@@ -9,6 +9,12 @@
 import { GenericSwitchDt } from "#index.js";
 
 GenericSwitchDt.patch({
+    classification: "simple",
     details: "This defines conformance for the Generic Switch device type.",
-    xref: { document: "device", section: "6.6" }
+    xref: { document: "device", section: "6.6" },
+    children: [
+        undefined,
+        { xref: { document: "device", section: "6.6.4" } },
+        { xref: { document: "device", section: "6.6.4" } }
+    ]
 });

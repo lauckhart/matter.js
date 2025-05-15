@@ -9,6 +9,7 @@
 import { vendorId } from "#index.js";
 
 vendorId.patch({
+    description: "Vendor ID",
     details: "A Vendor ID." +
         "\n" +
         "Vendor IDs may be used as a prefix in a Manufacturer Extensible Identifier format.",

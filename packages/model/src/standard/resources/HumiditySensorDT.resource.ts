@@ -9,6 +9,12 @@
 import { HumiditySensorDt } from "#index.js";
 
 HumiditySensorDt.patch({
+    classification: "simple",
     details: "A humidity sensor (in most cases a Relative humidity sensor) reports humidity measurements.",
-    xref: { document: "device", section: "7.7" }
+    xref: { document: "device", section: "7.7" },
+    children: [
+        undefined,
+        { xref: { document: "device", section: "7.7.4" } },
+        { xref: { document: "device", section: "7.7.4" } }
+    ]
 });

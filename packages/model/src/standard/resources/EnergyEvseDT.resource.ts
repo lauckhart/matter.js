@@ -9,8 +9,17 @@
 import { EnergyEvseDt } from "#index.js";
 
 EnergyEvseDt.patch({
+    classification: "simple",
     details: "An EVSE (Electric Vehicle Supply Equipment) is a device that allows an EV (Electric Vehicle) to be " +
         "connected to the mains electricity supply to allow it to be charged (or discharged in case of " +
         "Vehicle to Grid / Vehicle to Home applications).",
-    xref: { document: "device", section: "14.1" }
+    xref: { document: "device", section: "14.1" },
+
+    children: [
+        undefined,
+        { xref: { document: "device", section: "14.1.6" } },
+        { xref: { document: "device", section: "14.1.6" } },
+        { xref: { document: "device", section: "14.1.6" } },
+        { xref: { document: "device", section: "14.1.6" } }
+    ]
 });

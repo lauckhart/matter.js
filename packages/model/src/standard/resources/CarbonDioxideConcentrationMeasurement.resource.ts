@@ -8,4 +8,4 @@
 
 import { CarbonDioxideConcentrationMeasurement } from "#index.js";
 
-CarbonDioxideConcentrationMeasurement.patch({});
+CarbonDioxideConcentrationMeasurement.patch({ pics: "CDOCONC" });

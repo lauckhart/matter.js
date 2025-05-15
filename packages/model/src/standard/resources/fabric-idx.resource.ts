@@ -9,6 +9,7 @@
 import { fabricIdx } from "#index.js";
 
 fabricIdx.patch({
+    description: "Fabric Index",
     details: "This is an index that maps to a particular fabric on the node, see Fabric-Index. It is used for:" +
         "\n" +
         "  • the accessing fabric index of an interaction" +

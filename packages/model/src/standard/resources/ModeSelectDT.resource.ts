@@ -9,6 +9,8 @@
 import { ModeSelectDt } from "#index.js";
 
 ModeSelectDt.patch({
+    classification: "simple",
     details: "This defines conformance to the Mode Select device type.",
-    xref: { document: "device", section: "11.1" }
+    xref: { document: "device", section: "11.1" },
+    children: [undefined, { xref: { document: "device", section: "11.1.4" } }]
 });

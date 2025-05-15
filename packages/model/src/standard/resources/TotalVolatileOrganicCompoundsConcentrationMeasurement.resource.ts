@@ -8,4 +8,4 @@
 
 import { TotalVolatileOrganicCompoundsConcentrationMeasurement } from "#index.js";
 
-TotalVolatileOrganicCompoundsConcentrationMeasurement.patch({});
+TotalVolatileOrganicCompoundsConcentrationMeasurement.patch({ pics: "TVOCCONC" });

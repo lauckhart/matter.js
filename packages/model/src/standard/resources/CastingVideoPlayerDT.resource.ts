@@ -9,6 +9,8 @@
 import { CastingVideoPlayerDt } from "#index.js";
 
 CastingVideoPlayerDt.patch({
+    classification: "simple",
+
     details: "This defines conformance to the Casting Video Player device type." +
         "\n" +
         "A Video Player (either Basic or Casting) represents a device that is able to play media to a " +
@@ -28,27 +30,31 @@ CastingVideoPlayerDt.patch({
 
     children: [
         undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
+        { xref: { document: "device", section: "10.3.4" } },
+        { xref: { document: "device", section: "10.3.4" } },
+        { xref: { document: "device", section: "10.3.4" } },
+        { xref: { document: "device", section: "10.3.4" } },
+        { xref: { document: "device", section: "10.3.4" } },
+        { xref: { document: "device", section: "10.3.4" } },
+        { xref: { document: "device", section: "10.3.4" } },
+        { xref: { document: "device", section: "10.3.4" } },
+        { xref: { document: "device", section: "10.3.4" } },
+        { xref: { document: "device", section: "10.3.4" } },
+        { xref: { document: "device", section: "10.3.4" } },
+        { xref: { document: "device", section: "10.3.4" } },
+        { xref: { document: "device", section: "10.3.4" } },
+        { xref: { document: "device", section: "10.3.4" } },
 
         {
             children: [
                 {
-                    description: "The device includes a Content App Platform. A Content App is usually an application built by a Content Provider. A Casting Video Player with a Content App Platform is able to launch Content Apps and represent these apps as separate endpoints."
+                    description: "The device includes a Content App Platform. A Content App is usually an application built by a Content Provider. A Casting Video Player with a Content App Platform is able to launch Content Apps and represent these apps as separate endpoints.",
+                    xref: { document: "device", section: "10.3.3" }
                 },
-                { description: "The device has physical inputs for media." }
+                {
+                    description: "The device has physical inputs for media.",
+                    xref: { document: "device", section: "10.3.3" }
+                }
             ]
         }
     ]

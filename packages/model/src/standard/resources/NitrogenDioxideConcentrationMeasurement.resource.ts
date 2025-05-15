@@ -8,4 +8,4 @@
 
 import { NitrogenDioxideConcentrationMeasurement } from "#index.js";
 
-NitrogenDioxideConcentrationMeasurement.patch({});
+NitrogenDioxideConcentrationMeasurement.patch({ pics: "NDOCONC" });

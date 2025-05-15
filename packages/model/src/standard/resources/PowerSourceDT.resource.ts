@@ -8,4 +8,8 @@
 
 import { PowerSourceDt } from "#index.js";
 
-PowerSourceDt.patch({ xref: { document: "device", section: "2.2" } });
+PowerSourceDt.patch({
+    classification: "utility",
+    xref: { document: "device", section: "2.2" },
+    children: [undefined, { xref: { document: "device", section: "2.2.3" } }]
+});

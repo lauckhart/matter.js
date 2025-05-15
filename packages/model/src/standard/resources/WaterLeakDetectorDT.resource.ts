@@ -9,6 +9,14 @@
 import { WaterLeakDetectorDt } from "#index.js";
 
 WaterLeakDetectorDt.patch({
+    classification: "simple",
     details: "This defines conformance to the Water Leak Detector device type.",
-    xref: { document: "device", section: "7.12" }
+    xref: { document: "device", section: "7.12" },
+
+    children: [
+        undefined,
+        { xref: { document: "device", section: "7.12.4" } },
+        { xref: { document: "device", section: "7.12.4" } },
+        { xref: { document: "device", section: "7.12.4" } }
+    ]
 });

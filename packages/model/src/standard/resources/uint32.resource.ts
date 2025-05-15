@@ -8,4 +8,4 @@
 
 import { uint32 } from "#index.js";
 
-uint32.patch({ xref: { document: "core", section: "7.19.1" } });
+uint32.patch({ description: "Unsigned 32-bit integer", xref: { document: "core", section: "7.19.1" } });

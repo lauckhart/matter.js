@@ -8,4 +8,4 @@
 
 import { OzoneConcentrationMeasurement } from "#index.js";
 
-OzoneConcentrationMeasurement.patch({});
+OzoneConcentrationMeasurement.patch({ pics: "OZCONC" });

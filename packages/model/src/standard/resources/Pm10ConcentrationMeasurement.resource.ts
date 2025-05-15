@@ -8,4 +8,4 @@
 
 import { Pm10ConcentrationMeasurement } from "#index.js";
 
-Pm10ConcentrationMeasurement.patch({});
+Pm10ConcentrationMeasurement.patch({ pics: "PMKCONC" });

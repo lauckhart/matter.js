@@ -8,4 +8,4 @@
 
 import { int48 } from "#index.js";
 
-int48.patch({ xref: { document: "core", section: "7.19.1" } });
+int48.patch({ description: "Signed 48-bit integer", xref: { document: "core", section: "7.19.1" } });

@@ -8,4 +8,4 @@
 
 import { FormaldehydeConcentrationMeasurement } from "#index.js";
 
-FormaldehydeConcentrationMeasurement.patch({});
+FormaldehydeConcentrationMeasurement.patch({ pics: "FLDCONC" });

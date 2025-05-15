@@ -8,4 +8,4 @@
 
 import { map16 } from "#index.js";
 
-map16.patch({ xref: { document: "core", section: "7.19.1" } });
+map16.patch({ description: "16-bit bitmap", xref: { document: "core", section: "7.19.1" } });

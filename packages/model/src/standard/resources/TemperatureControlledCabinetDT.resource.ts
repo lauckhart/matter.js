@@ -9,6 +9,7 @@
 import { TemperatureControlledCabinetDt } from "#index.js";
 
 TemperatureControlledCabinetDt.patch({
+    classification: "simple",
     details: "A Temperature Controlled Cabinet only exists composed as part of another device type. It represents " +
         "a single cabinet that is capable of having its temperature controlled. Such a cabinet may be " +
         "chilling or freezing food, for example as part of a refrigerator, freezer, wine chiller, or other " +
@@ -18,16 +19,22 @@ TemperatureControlledCabinetDt.patch({
 
     children: [
         undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
+        { xref: { document: "device", section: "13.4.4" } },
+        { xref: { document: "device", section: "13.4.4" } },
+        { xref: { document: "device", section: "13.4.4" } },
+        { xref: { document: "device", section: "13.4.4" } },
+        { xref: { document: "device", section: "13.4.4" } },
 
         {
             children: [
-                { description: "The device has cooling functionality." },
-                { description: "The device has heating functionality." }
+                {
+                    description: "The device has cooling functionality.",
+                    xref: { document: "device", section: "13.4.3" }
+                },
+                {
+                    description: "The device has heating functionality.",
+                    xref: { document: "device", section: "13.4.3" }
+                }
             ]
         }
     ]

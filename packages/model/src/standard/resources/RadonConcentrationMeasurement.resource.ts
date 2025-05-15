@@ -8,4 +8,4 @@
 
 import { RadonConcentrationMeasurement } from "#index.js";
 
-RadonConcentrationMeasurement.patch({});
+RadonConcentrationMeasurement.patch({ pics: "RNCONC" });

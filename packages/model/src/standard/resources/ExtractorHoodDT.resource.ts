@@ -9,6 +9,8 @@
 import { ExtractorHoodDt } from "#index.js";
 
 ExtractorHoodDt.patch({
+    classification: "simple",
+
     details: "An Extractor Hood is a device that is generally installed above a cooking surface in residential " +
         "kitchens. An Extractor Hood’s primary purpose is to reduce odors that arise during the cooking " +
         "process by either extracting the air above the cooking surface or by recirculating and filtering it. " +
@@ -28,5 +30,13 @@ ExtractorHoodDt.patch({
         "\n" +
         "  • Telescoping Extractors",
 
-    xref: { document: "device", section: "13.10" }
+    xref: { document: "device", section: "13.10" },
+
+    children: [
+        undefined,
+        { xref: { document: "device", section: "13.10.5" } },
+        { xref: { document: "device", section: "13.10.5" } },
+        { xref: { document: "device", section: "13.10.5" } },
+        { xref: { document: "device", section: "13.10.5" } }
+    ]
 });

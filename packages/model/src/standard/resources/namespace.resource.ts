@@ -9,6 +9,7 @@
 import { namespace } from "#index.js";
 
 namespace.patch({
+    description: "Namespace",
     details: "The Namespace type identifies the namespace used for a semantic tag.",
     xref: { document: "core", section: "7.19.2.43" }
 });

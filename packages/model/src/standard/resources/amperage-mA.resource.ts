@@ -9,6 +9,7 @@
 import { amperageMA } from "#index.js";
 
 amperageMA.patch({
+    description: "Amperage",
     details: "This type represents amperage measured in milliamps.",
     xref: { document: "core", section: "7.19.2.13" }
 });

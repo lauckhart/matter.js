@@ -9,6 +9,8 @@
 import { AggregatorDt } from "#index.js";
 
 AggregatorDt.patch({
+    classification: "simple",
+
     details: "This device type aggregates endpoints as a collection. Clusters on the endpoint indicating this " +
         "device type provide functionality for the collection of descendant endpoints present in the " +
         "PartsList of the endpoint’s descriptor, for example the Actions cluster." +
@@ -20,5 +22,12 @@ AggregatorDt.patch({
         "System Model specification.",
 
     xref: { document: "device", section: "11.2" },
-    children: [undefined, undefined, undefined, undefined, { children: [{ description: "See description below." }] }]
+
+    children: [
+        undefined,
+        { xref: { document: "device", section: "11.2.4" } },
+        { xref: { document: "device", section: "11.2.4" } },
+        { xref: { document: "device", section: "11.2.4" } },
+        { children: [{ description: "See description below.", xref: { document: "device", section: "11.2.3" } }] }
+    ]
 });

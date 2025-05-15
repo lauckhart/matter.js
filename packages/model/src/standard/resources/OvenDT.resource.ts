@@ -9,8 +9,10 @@
 import { OvenDt } from "#index.js";
 
 OvenDt.patch({
+    classification: "simple",
     details: "An oven represents a device that contains one or more cabinets, and optionally a single cooktop, " +
         "that are all capable of heating food. Examples of consumer products implementing this device type " +
         "include ovens, wall ovens, convection ovens, etc.",
-    xref: { document: "device", section: "13.9" }
+    xref: { document: "device", section: "13.9" },
+    children: [undefined, { xref: { document: "device", section: "13.9.6" } }]
 });

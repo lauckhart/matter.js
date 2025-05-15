@@ -8,4 +8,4 @@
 
 import { uint24 } from "#index.js";
 
-uint24.patch({ xref: { document: "core", section: "7.19.1" } });
+uint24.patch({ description: "Unsigned 24-bit integer", xref: { document: "core", section: "7.19.1" } });

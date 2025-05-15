@@ -9,6 +9,8 @@
 import { FixedLabel } from "#index.js";
 
 FixedLabel.patch({
+    classification: "endpoint", pics: "FLABEL",
+
     details: "This cluster is derived from the Label cluster and provides a feature for the device to tag an " +
         "endpoint with zero or more read-only labels." +
         "\n" +
@@ -30,5 +32,6 @@ FixedLabel.patch({
         "be implemented using semantic tags Direction.Upward and Direction.Downward instead of (or in " +
         "addition to) the Fixed Label cluster.",
 
-    xref: { document: "core", section: "9.8" }
+    xref: { document: "core", section: "9.8" },
+    children: [undefined, { xref: { document: "core", section: "9.8.4" } }]
 });

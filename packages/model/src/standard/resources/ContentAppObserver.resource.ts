@@ -9,6 +9,8 @@
 import { ContentAppObserver } from "#index.js";
 
 ContentAppObserver.patch({
+    classification: "application", pics: "APPOBSERVER",
+
     details: "This cluster provides an interface for sending targeted commands to an Observer of a Content App on " +
         "a Video Player device such as a Streaming Media Player, Smart TV or Smart Screen." +
         "\n" +
@@ -54,10 +56,49 @@ ContentAppObserver.patch({
 
     children: [
         undefined,
-        undefined,
-        undefined,
 
         {
+            details: "Upon receipt, the data field may be parsed and interpreted. Message encoding is specific to the " +
+                "Content App. A Content App may when possible read attributes from the Basic Information Cluster on " +
+                "the Observer and use this to determine the Message encoding." +
+                "\n" +
+                "This command returns a ContentAppMessage Response.",
+            xref: { document: "cluster", section: "6.12.5.1" },
+
+            children: [
+                {
+                    details: "This field shall indicate content app-specific data.",
+                    xref: { document: "cluster", section: "6.12.5.1.1" }
+                },
+                {
+                    details: "This optional field shall indicate a content app-specific hint to the encoding of the data.",
+                    xref: { document: "cluster", section: "6.12.5.1.2" }
+                }
+            ]
+        },
+
+        {
+            details: "This command shall be generated in response to ContentAppMessage command.",
+            xref: { document: "cluster", section: "6.12.5.2" },
+
+            children: [
+                {
+                    details: "This field shall indicate the status of the command which resulted in this response.",
+                    xref: { document: "cluster", section: "6.12.5.2.1" }
+                },
+                {
+                    details: "This optional field shall indicate content app-specific data.",
+                    xref: { document: "cluster", section: "6.12.5.2.2" }
+                },
+                {
+                    details: "This optional field shall indicate a content app-specific hint to the encoding of the data.",
+                    xref: { document: "cluster", section: "6.12.5.2.3" }
+                }
+            ]
+        },
+
+        {
+            xref: { document: "cluster", section: "6.12.4.1" },
             children: [
                 { description: "Command succeeded" },
                 { description: "Data field in command was not understood by the Observer" }

@@ -8,4 +8,4 @@
 
 import { CarbonMonoxideConcentrationMeasurement } from "#index.js";
 
-CarbonMonoxideConcentrationMeasurement.patch({});
+CarbonMonoxideConcentrationMeasurement.patch({ pics: "CMOCONC" });

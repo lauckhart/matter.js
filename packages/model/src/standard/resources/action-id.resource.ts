@@ -9,6 +9,7 @@
 import { actionId } from "#index.js";
 
 actionId.patch({
+    description: "Action ID",
     details: "An identifier that indicates an action as defined in the Interaction Model specification.",
     xref: { document: "core", section: "7.19.2.31" }
 });

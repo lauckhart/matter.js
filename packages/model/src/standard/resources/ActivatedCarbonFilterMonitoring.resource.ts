@@ -8,4 +8,4 @@
 
 import { ActivatedCarbonFilterMonitoring } from "#index.js";
 
-ActivatedCarbonFilterMonitoring.patch({});
+ActivatedCarbonFilterMonitoring.patch({ pics: "ACFREMON" });

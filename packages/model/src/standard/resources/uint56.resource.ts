@@ -8,4 +8,4 @@
 
 import { uint56 } from "#index.js";
 
-uint56.patch({ xref: { document: "core", section: "7.19.1" } });
+uint56.patch({ description: "Unsigned 56-bit integer", xref: { document: "core", section: "7.19.1" } });

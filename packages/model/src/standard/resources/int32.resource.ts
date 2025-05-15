@@ -8,4 +8,4 @@
 
 import { int32 } from "#index.js";
 
-int32.patch({ xref: { document: "core", section: "7.19.1" } });
+int32.patch({ description: "Signed 32-bit integer", xref: { document: "core", section: "7.19.1" } });

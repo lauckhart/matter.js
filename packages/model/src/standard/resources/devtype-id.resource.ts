@@ -9,6 +9,7 @@
 import { devtypeId } from "#index.js";
 
 devtypeId.patch({
+    description: "Device Type ID",
     details: "An identifier that indicates conformance to a device type." +
         "\n" +
         "Device Type IDs shall be a Manufacturer Extensible Identifier. The specifics of its representation " +

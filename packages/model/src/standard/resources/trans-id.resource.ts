@@ -9,6 +9,7 @@
 import { transId } from "#index.js";
 
 transId.patch({
+    description: "Transaction ID",
     details: "An identifier for a transaction as defined in the Interaction Model specification, see Transaction " +
         "ID.",
     xref: { document: "core", section: "7.19.2.32" }

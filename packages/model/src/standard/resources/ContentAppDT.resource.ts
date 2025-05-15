@@ -9,6 +9,7 @@
 import { ContentAppDt } from "#index.js";
 
 ContentAppDt.patch({
+    classification: "simple",
     details: "This defines conformance to the Content App device type." +
         "\n" +
         "A Content App is usually an application built by a Content Provider. A Casting Video Player with a " +
@@ -17,16 +18,22 @@ ContentAppDt.patch({
 
     children: [
         undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        { children: [{ description: "The node is a client for ContentAppObservers." }] }
+        { xref: { document: "device", section: "10.5.4" } },
+        { xref: { document: "device", section: "10.5.4" } },
+        { xref: { document: "device", section: "10.5.4" } },
+        { xref: { document: "device", section: "10.5.4" } },
+        { xref: { document: "device", section: "10.5.4" } },
+        { xref: { document: "device", section: "10.5.4" } },
+        { xref: { document: "device", section: "10.5.4" } },
+        { xref: { document: "device", section: "10.5.4" } },
+        { xref: { document: "device", section: "10.5.4" } },
+        { xref: { document: "device", section: "10.5.4" } },
+
+        {
+            children: [{
+                description: "The node is a client for ContentAppObservers.",
+                xref: { document: "device", section: "10.5.3" }
+            }]
+        }
     ]
 });

@@ -5,7 +5,7 @@
  */
 
 import { FormattedText, serialize } from "#general";
-import { Model } from "#model";
+import { Specification } from "#model";
 import { Block } from "#util/TsFile.js";
 
 export function addProperties(target: Block, ...sets: Record<string, unknown>[]) {
@@ -35,7 +35,10 @@ export function addProperties(target: Block, ...sets: Record<string, unknown>[])
     }
 }
 
-export function addDetailsAndCrossReferences(target: Block, element: Model) {
+export function addDetailsAndCrossReferences(
+    target: Block,
+    element: { xref?: Specification.CrossReference; details?: string },
+) {
     // Next row: Details
     if (element.details) {
         const lines = FormattedText(element.details, 100);

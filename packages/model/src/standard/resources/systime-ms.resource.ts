@@ -9,6 +9,7 @@
 import { systimeMs } from "#index.js";
 
 systimeMs.patch({
+    description: "System Time in milliseconds",
     details: "System time in milliseconds is an unsigned 64-bit value representing the number of milliseconds " +
         "since boot." +
         "\n" +

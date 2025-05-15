@@ -9,7 +9,16 @@
 import { WaterHeaterDt } from "#index.js";
 
 WaterHeaterDt.patch({
+    classification: "simple",
     details: "A water heater is a device that is generally installed in properties to heat water for showers, " +
         "baths etc.",
-    xref: { document: "device", section: "14.2" }
+    xref: { document: "device", section: "14.2" },
+
+    children: [
+        undefined,
+        { xref: { document: "device", section: "14.2.6" } },
+        { xref: { document: "device", section: "14.2.6" } },
+        { xref: { document: "device", section: "14.2.6" } },
+        { xref: { document: "device", section: "14.2.6" } }
+    ]
 });

@@ -9,6 +9,8 @@
 import { RootNodeDt } from "#index.js";
 
 RootNodeDt.patch({
+    classification: "node",
+
     details: "This defines conformance for a root node endpoint (see System Model specification). This endpoint is " +
         "akin to a \"read me first\" endpoint that describes itself and the other endpoints that make up the " +
         "node." +
@@ -25,33 +27,35 @@ RootNodeDt.patch({
 
     children: [
         undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
+        { xref: { document: "device", section: "2.1.5" } },
 
         {
             children: [
                 {
-                    description: "The node only supports out-of-band-configured networking (e.g. rich user interface, manufacturer-specific means, custom commissioning flows, or future IP-compliant network technology not yet directly supported by NetworkCommissioning cluster)."
+                    description: "The node only supports out-of-band-configured networking (e.g. rich user interface, manufacturer-specific means, custom commissioning flows, or future IP-compliant network technology not yet directly supported by NetworkCommissioning cluster).",
+                    xref: { document: "device", section: "2.1.3" }
                 },
                 {
-                    description: "The node has at least one endpoint where some Device Type present on the endpoint has a Device Library element requirement table entry that sets this condition to true."
+                    description: "The node has at least one endpoint where some Device Type present on the endpoint has a Device Library element requirement table entry that sets this condition to true.",
+                    xref: { document: "device", section: "2.1.3" }
                 }
             ]
         }

@@ -9,6 +9,8 @@
 import { SpeakerDt } from "#index.js";
 
 SpeakerDt.patch({
+    classification: "simple",
+
     details: "This defines conformance to the Speaker device type. This feature controls the speaker volume of the " +
         "device." +
         "\n" +
@@ -23,5 +25,10 @@ SpeakerDt.patch({
         "cluster) was made in order to treat volume in a fashion consistent with lighting which also uses " +
         "these clusters and has matching functional requirements.",
 
-    xref: { document: "device", section: "10.4" }
+    xref: { document: "device", section: "10.4" },
+    children: [
+        undefined,
+        { xref: { document: "device", section: "10.4.4" } },
+        { xref: { document: "device", section: "10.4.4" } }
+    ]
 });

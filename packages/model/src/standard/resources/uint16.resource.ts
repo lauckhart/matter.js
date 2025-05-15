@@ -8,4 +8,4 @@
 
 import { uint16 } from "#index.js";
 
-uint16.patch({ xref: { document: "core", section: "7.19.1" } });
+uint16.patch({ description: "Unsigned 16-bit integer", xref: { document: "core", section: "7.19.1" } });

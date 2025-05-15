@@ -8,4 +8,4 @@
 
 import { ipadr } from "#index.js";
 
-ipadr.patch({ xref: { document: "core", section: "7.19.2" } });
+ipadr.patch({ description: "IP Address", xref: { document: "core", section: "7.19.2" } });

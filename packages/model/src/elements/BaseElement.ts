@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { CrossReference } from "#models/CrossReference.js";
 import { ElementTag, Specification } from "../common/index.js";
 
 /**
@@ -44,7 +45,7 @@ export interface BaseElement {
     /**
      * Reference to Matter specification document.
      */
-    xref?: Specification.CrossReference;
+    xref?: CrossReference.Definition;
 
     /**
      * Child elements.

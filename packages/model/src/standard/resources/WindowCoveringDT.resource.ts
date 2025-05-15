@@ -9,6 +9,14 @@
 import { WindowCoveringDt } from "#index.js";
 
 WindowCoveringDt.patch({
+    classification: "simple",
     details: "This defines conformance to the Window Covering device type.",
-    xref: { document: "device", section: "8.3" }
+    xref: { document: "device", section: "8.3" },
+
+    children: [
+        undefined,
+        { xref: { document: "device", section: "8.3.4" } },
+        { xref: { document: "device", section: "8.3.4" } },
+        { xref: { document: "device", section: "8.3.4" } }
+    ]
 });

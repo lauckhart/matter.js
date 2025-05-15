@@ -9,9 +9,20 @@
 import { DimmablePlugInUnitDt } from "#index.js";
 
 DimmablePlugInUnitDt.patch({
+    classification: "simple",
     details: "A Dimmable Plug-In Unit is a device that provides power to another device that is plugged into it, " +
         "and is capable of being switched on or off and have its level adjusted. The Dimmable Plug-in Unit is " +
         "typically used to control a conventional non-communicating light through its mains connection using " +
         "phase cutting.",
-    xref: { document: "device", section: "5.2" }
+    xref: { document: "device", section: "5.2" },
+
+    children: [
+        undefined,
+        { xref: { document: "device", section: "5.2.4" } },
+        { xref: { document: "device", section: "5.2.4" } },
+        { xref: { document: "device", section: "5.2.4" } },
+        { xref: { document: "device", section: "5.2.4" } },
+        { xref: { document: "device", section: "5.2.4" } },
+        { xref: { document: "device", section: "5.2.4" } }
+    ]
 });

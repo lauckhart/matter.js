@@ -9,8 +9,54 @@
 import { RvcCleanMode } from "#index.js";
 
 RvcCleanMode.patch({
+    classification: "application", pics: "RVCCLEANM",
     details: "This cluster is derived from the Mode Base cluster and defines additional mode tags and namespaced " +
         "enumerated values for the cleaning type of robotic vacuum cleaner devices.",
     xref: { document: "cluster", section: "7.3" },
-    children: [undefined, { children: [{ description: "OnOff" }] }]
+
+    children: [
+        undefined,
+        {
+            xref: { document: "cluster", section: "7.3.4" },
+            children: [{ description: "OnOff", details: "Dependency with the OnOff cluster" }]
+        },
+        {
+            details: "At least one entry in the SupportedModes attribute shall include the Vacuum and/or the Mop mode tag " +
+                "in the ModeTags field list.",
+            xref: { document: "cluster", section: "7.3.6.1" }
+        },
+        { xref: { document: "cluster", section: "7.3.6" } },
+        { xref: { document: "cluster", section: "7.3.6" } },
+        { xref: { document: "cluster", section: "7.3.6" } },
+        {
+            details: "The table below lists the changes relative to the Mode Base cluster for the fields of the " +
+                "ModeOptionStruct type. A blank field indicates no change.",
+            xref: { document: "cluster", section: "7.3.5.1" }
+        },
+        { children: [{ xref: { document: "cluster", section: "7.3.7.1" } }] },
+
+        {
+            children: [
+                { xref: { document: "cluster", section: "7.3.7.2" } },
+                { xref: { document: "cluster", section: "7.3.7.2" } },
+                { xref: { document: "cluster", section: "7.3.7.2" } },
+                { xref: { document: "cluster", section: "7.3.7.2" } },
+                { xref: { document: "cluster", section: "7.3.7.2" } },
+                { xref: { document: "cluster", section: "7.3.7.2" } },
+                { xref: { document: "cluster", section: "7.3.7.2" } },
+                { xref: { document: "cluster", section: "7.3.7.2" } },
+                { xref: { document: "cluster", section: "7.3.7.2" } },
+                { xref: { document: "cluster", section: "7.3.7.2" } },
+                { xref: { document: "cluster", section: "7.3.7.2" } },
+                {
+                    details: "The device’s vacuuming feature is enabled in this mode.",
+                    xref: { document: "cluster", section: "7.3.7.2.2" }
+                },
+                {
+                    details: "The device’s mopping feature is enabled in this mode.",
+                    xref: { document: "cluster", section: "7.3.7.2.3" }
+                }
+            ]
+        }
+    ]
 });

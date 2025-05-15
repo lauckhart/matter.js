@@ -29,6 +29,13 @@ SwitchesNs.patch({
         { description: "e.g. select next scene" },
         { description: "e.g. select previous scene" },
         undefined,
-        { description: "Textual description provided in Label field" }
+
+        {
+            description: "Textual description provided in Label field",
+            details: "When this value is used, the Label field in the same Semantic Tag structure shall be filled with a " +
+                "textual description of the function indicated on the button, such as a label or icon printed on the " +
+                "button, e.g. \"dining\".",
+            xref: { document: "namespace", section: "18.1" }
+        }
     ]
 });

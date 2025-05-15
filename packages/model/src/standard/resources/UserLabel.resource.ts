@@ -9,7 +9,13 @@
 import { UserLabel } from "#index.js";
 
 UserLabel.patch({
+    classification: "endpoint", pics: "ULABEL",
     details: "This cluster is derived from the Label cluster and provides a feature to tag an endpoint with zero " +
         "or more writable labels.",
-    xref: { document: "core", section: "9.9" }
+    xref: { document: "core", section: "9.9" },
+    children: [{
+        details: "An implementation shall support at least 4 list entries per node for all User Label cluster " +
+            "instances on the node.",
+        xref: { document: "core", section: "9.9.4.1" }
+    }]
 });

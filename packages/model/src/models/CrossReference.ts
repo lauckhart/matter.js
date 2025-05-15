@@ -13,25 +13,38 @@ export class CrossReference implements Specification.CrossReference {
     section: string;
     private static instances = {} as { [key: string]: CrossReference };
 
-    private constructor({ document, section }: Specification.CrossReference) {
-        this.document = document as Specification;
-        this.section = section;
+    private constructor(definition: CrossReference.Definition) {
+        if (typeof definition === "object") {
+            this.document = definition.document as Specification;
+            this.section = definition.section;
+        } else {
+            [this.document, this.section] = definition.split("§") as [Specification, string];
+        }
     }
 
     toString() {
         return `${this.document}§${this.section}`;
     }
 
-    static get(xref: Specification.CrossReference) {
-        const key = `${xref.document}:${xref.section}`;
+    static get(xref: CrossReference.Definition) {
+        if (xref instanceof CrossReference) {
+            return xref;
+        }
+
+        const key = xref.toString();
         const canonical = this.instances[key];
         if (canonical) {
             return canonical;
         }
+
         return (this.instances[key] = new CrossReference(xref));
     }
 
     [inspect](_depth: any, options: any, inspect: any) {
         return inspect(this.toString(), options);
     }
+}
+
+export namespace CrossReference {
+    export type Definition = Specification.CrossReference | `${string}§${string}`;
 }

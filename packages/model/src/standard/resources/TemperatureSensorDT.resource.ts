@@ -9,6 +9,12 @@
 import { TemperatureSensorDt } from "#index.js";
 
 TemperatureSensorDt.patch({
+    classification: "simple",
     details: "A Temperature Sensor device reports measurements of temperature.",
-    xref: { document: "device", section: "7.4" }
+    xref: { document: "device", section: "7.4" },
+    children: [
+        undefined,
+        { xref: { document: "device", section: "7.4.4" } },
+        { xref: { document: "device", section: "7.4.4" } }
+    ]
 });

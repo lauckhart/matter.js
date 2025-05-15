@@ -9,6 +9,8 @@
 import { HeatPumpDt } from "#index.js";
 
 HeatPumpDt.patch({
+    classification: "simple",
+
     details: "A Heat Pump device is a device that uses electrical energy to heat either spaces or water tanks " +
         "using ground, water or air as the heat source. These typically can heat the air or can pump water " +
         "via central heating radiators or underfloor heating systems. It is typical to also heat hot water " +
@@ -17,5 +19,10 @@ HeatPumpDt.patch({
         "Note that the Water Heater device type can also be heated by a heat pump and has similar " +
         "requirements, but that cannot be used for space heating.",
 
-    xref: { document: "device", section: "14.5" }
+    xref: { document: "device", section: "14.5" },
+    children: [
+        undefined,
+        { xref: { document: "device", section: "14.5.6" } },
+        { xref: { document: "device", section: "14.5.6" } }
+    ]
 });

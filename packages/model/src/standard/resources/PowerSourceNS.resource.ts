@@ -15,9 +15,25 @@ PowerSourceNs.patch({
 
     children: [
         { description: "The Power Source cluster is related to power provided from an unknown source" },
-        { description: "The Power Source cluster is related to power provided from the electrical grid" },
-        { description: "The Power Source cluster is related to power provided from a solar panel array" },
-        { description: "The Power Source cluster is related to power provided from a battery" },
-        { description: "The Power Source cluster is related to power provided from an electric vehicle" }
+        {
+            description: "The Power Source cluster is related to power provided from the electrical grid",
+            details: "Power Source clusters with this tag shall implement the WIRED feature.",
+            xref: { document: "namespace", section: "15.1" }
+        },
+        {
+            description: "The Power Source cluster is related to power provided from a solar panel array",
+            details: "Power Source clusters with this tag shall implement the WIRED feature.",
+            xref: { document: "namespace", section: "15.2" }
+        },
+        {
+            description: "The Power Source cluster is related to power provided from a battery",
+            details: "Power Source clusters with this tag shall implement the BAT feature.",
+            xref: { document: "namespace", section: "15.3" }
+        },
+        {
+            description: "The Power Source cluster is related to power provided from an electric vehicle",
+            details: "Power Source clusters with this tag shall implement the BAT feature.",
+            xref: { document: "namespace", section: "15.4" }
+        }
     ]
 });

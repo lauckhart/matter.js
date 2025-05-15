@@ -9,6 +9,14 @@
 import { ContactSensorDt } from "#index.js";
 
 ContactSensorDt.patch({
+    classification: "simple",
     details: "This defines conformance to the Contact Sensor device type.",
-    xref: { document: "device", section: "7.1" }
+    xref: { document: "device", section: "7.1" },
+
+    children: [
+        undefined,
+        { xref: { document: "device", section: "7.1.4" } },
+        { xref: { document: "device", section: "7.1.4" } },
+        { xref: { document: "device", section: "7.1.4" } }
+    ]
 });

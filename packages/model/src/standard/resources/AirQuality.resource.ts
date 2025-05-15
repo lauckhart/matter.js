@@ -9,6 +9,7 @@
 import { AirQuality } from "#index.js";
 
 AirQuality.patch({
+    classification: "application", pics: "AIRQUAL",
     details: "This cluster provides an interface to air quality classification using distinct levels with " +
         "human-readable labels.",
     xref: { document: "cluster", section: "2.9" },
@@ -17,17 +18,27 @@ AirQuality.patch({
         undefined,
 
         {
+            xref: { document: "cluster", section: "2.9.4" },
+
             children: [
-                { description: "Fair" },
-                { description: "Moderate" },
-                { description: "VeryPoor" },
-                { description: "ExtremelyPoor" }
+                { description: "Fair", details: "Cluster supports the Fair air quality level" },
+                { description: "Moderate", details: "Cluster supports the Moderate air quality level" },
+                { description: "VeryPoor", details: "Cluster supports the Very poor air quality level" },
+                { description: "ExtremelyPoor", details: "Cluster supports the Extremely poor air quality level" }
             ]
         },
 
-        undefined,
+        {
+            details: "Indicates a value from AirQualityEnum that is indicative of the currently measured air quality.",
+            xref: { document: "cluster", section: "2.9.6.1" }
+        },
 
         {
+            details: "The AirQualityEnum provides a representation of the quality of the analyzed air. It is up to the " +
+                "device manufacturer to determine the mapping between the measured values and their corresponding " +
+                "enumeration values.",
+            xref: { document: "cluster", section: "2.9.5.1" },
+
             children: [
                 { description: "The air quality is unknown." },
                 { description: "The air quality is good." },

@@ -9,7 +9,25 @@
 import { PumpDt } from "#index.js";
 
 PumpDt.patch({
+    classification: "simple",
     details: "A Pump device is a pump that may have variable speed. It may have optional built-in sensors and a " +
         "regulation mechanism. It is typically used for pumping fluids like water.",
-    xref: { document: "device", section: "5.5" }
+    xref: { document: "device", section: "5.5" },
+
+    children: [
+        undefined,
+        { xref: { document: "device", section: "5.5.4" } },
+        { xref: { document: "device", section: "5.5.4" } },
+        { xref: { document: "device", section: "5.5.4" } },
+        { xref: { document: "device", section: "5.5.4" } },
+        { xref: { document: "device", section: "5.5.4" } },
+        { xref: { document: "device", section: "5.5.4" } },
+        { xref: { document: "device", section: "5.5.4" } },
+        { xref: { document: "device", section: "5.5.4" } },
+        { xref: { document: "device", section: "5.5.4" } },
+        { xref: { document: "device", section: "5.5.4" } },
+        { xref: { document: "device", section: "5.5.4" } },
+        { xref: { document: "device", section: "5.5.4" } },
+        { xref: { document: "device", section: "5.5.4" } }
+    ]
 });

@@ -9,6 +9,8 @@
 import { epochS } from "#index.js";
 
 epochS.patch({
+    description: "Epoch Time in seconds",
+
     details: "This type has the same semantics as Epoch Time in Microseconds, except that:" +
         "\n" +
         "  • the value encodes an offset in seconds, rather than microseconds;" +

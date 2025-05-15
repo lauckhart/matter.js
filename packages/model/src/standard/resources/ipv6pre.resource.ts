@@ -9,6 +9,8 @@
 import { ipv6Pre } from "#index.js";
 
 ipv6Pre.patch({
+    description: "IPv6 Prefix",
+
     details: "The IPv6 prefix data type is derived from an octet string. The octets shall be encoded" +
         "\n" +
         "  • The first octet shall encode the prefix length, in bits, in the range of 0 to 128." +

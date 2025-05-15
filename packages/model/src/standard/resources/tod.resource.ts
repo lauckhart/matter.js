@@ -9,6 +9,7 @@
 import { tod } from "#index.js";
 
 tod.patch({
+    description: "Time of day",
     details: "Represents time without a date component.",
     xref: { document: "core", section: "7.19.2.3" },
 

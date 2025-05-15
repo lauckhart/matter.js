@@ -9,6 +9,8 @@
 import { LocalizationConfiguration } from "#index.js";
 
 LocalizationConfiguration.patch({
+    classification: "node", pics: "LCFG",
+
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
         "may have differing common languages, units of measurements, and numerical formatting standards. As " +
         "such, Nodes that visually or audibly convey information need a mechanism by which they can be " +
@@ -17,5 +19,28 @@ LocalizationConfiguration.patch({
         "This cluster supports an interface to a Node. It provides attributes for determining and configuring " +
         "localization information that a Node shall utilize when conveying values to a user.",
 
-    xref: { document: "core", section: "11.3" }
+    xref: { document: "core", section: "11.3" },
+
+    children: [
+        undefined,
+
+        {
+            details: "The ActiveLocale attribute shall represent the locale that the Node is currently configured to use " +
+                "when conveying information. The ActiveLocale attribute shall be a Language Tag as defined by BCP47. " +
+                "The ActiveLocale attribute shall have a default value assigned by the Vendor and shall be a value " +
+                "contained within the SupportedLocales attribute." +
+                "\n" +
+                "An attempt to write a value to ActiveLocale that is not present in SupportedLocales shall result in " +
+                "a CONSTRAINT_ERROR error.",
+
+            xref: { document: "core", section: "11.3.4.1" }
+        },
+
+        {
+            details: "The SupportedLocales attribute shall represent a list of locale strings that are valid values for " +
+                "the ActiveLocale attribute. The list shall NOT contain any duplicate entries. The ordering of items " +
+                "within the list SHOULD NOT express any meaning.",
+            xref: { document: "core", section: "11.3.4.2" }
+        }
+    ]
 });

@@ -8,4 +8,4 @@
 
 import { uint8 } from "#index.js";
 
-uint8.patch({ xref: { document: "core", section: "7.19.1" } });
+uint8.patch({ description: "Unsigned 8-bit integer", xref: { document: "core", section: "7.19.1" } });

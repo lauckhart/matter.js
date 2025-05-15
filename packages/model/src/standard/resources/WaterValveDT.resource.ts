@@ -9,6 +9,15 @@
 import { WaterValveDt } from "#index.js";
 
 WaterValveDt.patch({
+    classification: "simple",
     details: "This defines conformance to the Water Valve device type.",
-    xref: { document: "device", section: "5.6" }
+    xref: { document: "device", section: "5.6" },
+
+    children: [
+        undefined,
+        { xref: { document: "device", section: "5.6.4" } },
+        { xref: { document: "device", section: "5.6.4" } },
+        { xref: { document: "device", section: "5.6.4" } },
+        { xref: { document: "device", section: "5.6.4" } }
+    ]
 });

@@ -9,7 +9,15 @@
 import { OccupancySensorDt } from "#index.js";
 
 OccupancySensorDt.patch({
+    classification: "simple",
     details: "An Occupancy Sensor is a measurement and sensing device that is capable of measuring and reporting " +
         "the occupancy state in a designated area.",
-    xref: { document: "device", section: "7.3" }
+    xref: { document: "device", section: "7.3" },
+
+    children: [
+        undefined,
+        { xref: { document: "device", section: "7.3.4" } },
+        { xref: { document: "device", section: "7.3.4" } },
+        { xref: { document: "device", section: "7.3.4" } }
+    ]
 });

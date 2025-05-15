@@ -9,6 +9,8 @@
 import { string } from "#index.js";
 
 string.patch({
+    description: "Character String",
+
     details: "The character string data type is derived from an octet string. The octets shall be characters with " +
         "UTF-8 encoding. An instance of this data type shall NOT contain truncated code points." +
         "\n" +

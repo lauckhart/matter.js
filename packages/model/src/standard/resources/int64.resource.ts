@@ -8,4 +8,4 @@
 
 import { int64 } from "#index.js";
 
-int64.patch({ xref: { document: "core", section: "7.19.1" } });
+int64.patch({ description: "Signed 64-bit integer", xref: { document: "core", section: "7.19.1" } });

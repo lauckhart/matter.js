@@ -9,6 +9,7 @@
 import { bool } from "#index.js";
 
 bool.patch({
+    description: "Boolean",
     details: "The Boolean type represents a logical value, either FALSE or TRUE." +
         "\n" +
         "  • FALSE shall be equivalent to the value 0 (zero)." +

@@ -9,6 +9,7 @@
 import { commandId } from "#index.js";
 
 commandId.patch({
+    description: "Command ID",
     details: "An identifier that indicates a command defined in a cluster specification." +
         "\n" +
         "Command IDs shall be a Manufacturer Extensible Identifier. The specifics of its representation are " +

@@ -8,4 +8,4 @@
 
 import { percent } from "#index.js";
 
-percent.patch({ xref: { document: "core", section: "7.19.2" } });
+percent.patch({ description: "Percentage units 1%", xref: { document: "core", section: "7.19.2" } });

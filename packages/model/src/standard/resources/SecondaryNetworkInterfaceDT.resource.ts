@@ -9,6 +9,8 @@
 import { SecondaryNetworkInterfaceDt } from "#index.js";
 
 SecondaryNetworkInterfaceDt.patch({
+    classification: "utility",
+
     details: "A Secondary Network Interface device provides an additional network interface supported by the Node, " +
         "supplementing the primary interface hosted by the Root Node endpoint." +
         "\n" +
@@ -17,5 +19,13 @@ SecondaryNetworkInterfaceDt.patch({
         "interfaces are determined by the order of their endpoints, where interfaces with smaller endpoint " +
         "numbers are higher priority.",
 
-    xref: { document: "device", section: "2.8" }
+    xref: { document: "device", section: "2.8" },
+
+    children: [
+        undefined,
+        { xref: { document: "device", section: "2.8.3" } },
+        { xref: { document: "device", section: "2.8.3" } },
+        { xref: { document: "device", section: "2.8.3" } },
+        { xref: { document: "device", section: "2.8.3" } }
+    ]
 });

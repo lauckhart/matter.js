@@ -9,6 +9,8 @@
 import { list } from "#index.js";
 
 list.patch({
+    description: "List",
+
     details: "A list is defined as a collection of entries of the same data type, with a finite count from 0 to " +
         "65534. A cluster specification may define further constraints on the maximum possible count. The " +
         "list entry data type shall be any defined data type, except a list data type, or any data type " +

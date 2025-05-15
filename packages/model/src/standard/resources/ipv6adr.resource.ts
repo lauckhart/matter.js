@@ -9,6 +9,8 @@
 import { ipv6Adr } from "#index.js";
 
 ipv6Adr.patch({
+    description: "IPv6 Address",
+
     details: "The IPv6 address data type is derived from an octet string. The octets shall correspond to the full " +
         "16 octets that comprise an IPv6 address as defined by RFC 4291. The octets shall be presented in " +
         "network byte order." +

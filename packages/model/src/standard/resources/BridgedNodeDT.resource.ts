@@ -9,6 +9,7 @@
 import { BridgedNodeDt } from "#index.js";
 
 BridgedNodeDt.patch({
+    classification: "utility",
     details: "This defines conformance for a Bridged Node root endpoint. This endpoint is akin to a \"read me " +
         "first\" endpoint that describes itself and any other endpoints that make up the Bridged Node. A " +
         "Bridged Node endpoint represents a device on a foreign network, but is not the root endpoint of the " +
@@ -17,11 +18,11 @@ BridgedNodeDt.patch({
 
     children: [
         undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        { children: [{ description: "See description below." }] }
+        { xref: { document: "device", section: "2.5.5" } },
+        { xref: { document: "device", section: "2.5.5" } },
+        { xref: { document: "device", section: "2.5.5" } },
+        { xref: { document: "device", section: "2.5.5" } },
+        { xref: { document: "device", section: "2.5.5" } },
+        { children: [{ description: "See description below.", xref: { document: "device", section: "2.5.3" } }] }
     ]
 });

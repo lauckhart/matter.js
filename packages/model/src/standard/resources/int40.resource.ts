@@ -8,4 +8,4 @@
 
 import { int40 } from "#index.js";
 
-int40.patch({ xref: { document: "core", section: "7.19.1" } });
+int40.patch({ description: "Signed 40-bit integer", xref: { document: "core", section: "7.19.1" } });

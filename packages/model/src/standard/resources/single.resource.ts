@@ -8,4 +8,4 @@
 
 import { single } from "#index.js";
 
-single.patch({ xref: { document: "core", section: "7.19.1" } });
+single.patch({ description: "Single precision", xref: { document: "core", section: "7.19.1" } });

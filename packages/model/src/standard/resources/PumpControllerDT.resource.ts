@@ -9,6 +9,21 @@
 import { PumpControllerDt } from "#index.js";
 
 PumpControllerDt.patch({
+    classification: "simple",
     details: "A Pump Controller device is capable of configuring and controlling a Pump device.",
-    xref: { document: "device", section: "6.5" }
+    xref: { document: "device", section: "6.5" },
+
+    children: [
+        undefined,
+        { xref: { document: "device", section: "6.5.3" } },
+        { xref: { document: "device", section: "6.5.3" } },
+        { xref: { document: "device", section: "6.5.3" } },
+        { xref: { document: "device", section: "6.5.3" } },
+        { xref: { document: "device", section: "6.5.3" } },
+        { xref: { document: "device", section: "6.5.3" } },
+        { xref: { document: "device", section: "6.5.3" } },
+        { xref: { document: "device", section: "6.5.3" } },
+        { xref: { document: "device", section: "6.5.3" } },
+        { xref: { document: "device", section: "6.5.3" } }
+    ]
 });
