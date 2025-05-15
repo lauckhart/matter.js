@@ -1,0 +1,17 @@
+/**
+ * @license
+ * Copyright 2022-2025 Matter.js Authors
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*** THIS FILE IS GENERATED, DO NOT EDIT ***/
+
+import { fieldId } from "#index.js";
+
+fieldId.patch({
+    details: "An identifier that indicates a field defined in a struct." +
+        "\n" +
+        "Field IDs shall be a Manufacturer Extensible Identifier. The specifics of its representation are " +
+        "described in Data Model Types.",
+    xref: { document: "core", section: "7.19.2.28" }
+});

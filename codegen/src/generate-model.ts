@@ -68,7 +68,7 @@ function elementIdentifierName(element: Model) {
 function generateElementFile(element: Model) {
     logger.debug(element.name);
 
-    const file = new TsFile(`!elements/${elementDiscriminatedName(element)}`);
+    const file = new TsFile(`!elements/${elementDiscriminatedName(element)}.element`);
 
     file.addImport(`../MatterDefinition.js`, `MatterDefinition`);
     const exportName = elementIdentifierName(element);
@@ -90,7 +90,7 @@ function generateResourceFile(element: Model) {
 
     const filename = elementDiscriminatedName(element);
     const identifierName = elementIdentifierName(element);
-    const file = new TsFile(`!resources/${filename}`);
+    const file = new TsFile(`!resources/${filename}.resource`);
     if (!generateResource(file, element, identifierName)) {
         return false;
     }
@@ -102,10 +102,10 @@ function generateResourceFile(element: Model) {
     return true;
 }
 
-function generateDefinitions(elements: Model[]) {
+function generateElementIndex(elements: Model[]) {
     const file = new TsFile(`!elements/definitions`);
     for (const element of elements) {
-        file.addReexport(`./${elementDiscriminatedName(element)}.js`);
+        file.addReexport(`./${elementDiscriminatedName(element)}.element.js`);
     }
 
     if (args.save) {
@@ -113,7 +113,7 @@ function generateDefinitions(elements: Model[]) {
     }
 }
 
-function generateModels(elements: Model[]) {
+function generateModelIndex(elements: Model[]) {
     const file = new TsFile(`!elements/models`);
     file.addImport("./definitions.js", "* as definitions");
     for (const element of elements) {
@@ -128,11 +128,15 @@ function generateModels(elements: Model[]) {
     }
 }
 
-function generateResources(elements: Model[]) {
-    const file = new TsFile(`!elements/resources/index`);
+function generateResourceIndex(elements: Model[]) {
+    const file = new TsFile(`!resources/index`);
     file.addImport("../elements/models.js");
     for (const element of elements) {
-        file.addImport(`./${elementIdentifierName(element)}.js`);
+        file.addImport(`./${elementDiscriminatedName(element)}.resource.js`);
+    }
+
+    if (args.save) {
+        file.save();
     }
 }
 
@@ -186,9 +190,9 @@ Logger.nest(() => {
     }
 
     logger.info("index");
-    generateDefinitions(matter.children as Model[]);
-    generateModels(matter.children as Model[]);
-    generateResources(withResources);
+    generateElementIndex(matter.children as Model[]);
+    generateModelIndex(matter.children as Model[]);
+    generateResourceIndex(withResources);
 });
 
 validationResult.report();

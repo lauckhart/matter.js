@@ -15,7 +15,7 @@ export function generateResource(target: TsFile, element: Model, identifierName:
         return false;
     }
 
-    target.addImport("!elements/models.js", identifierName);
+    target.addImport("#index.js", identifierName);
     const expr = target.expressions(`${identifierName}.patch({`, "})");
 
     if (patch.resources) {

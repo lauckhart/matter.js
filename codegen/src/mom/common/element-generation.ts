@@ -36,6 +36,7 @@ export function addProperties(target: Block, ...sets: Record<string, unknown>[])
 }
 
 export function addDetailsAndCrossReferences(target: Block, element: Model) {
+    if (element.name === "IdentifyTime") debugger;
     // Next row: Details
     if (element.details) {
         const lines = FormattedText(element.details, 100);

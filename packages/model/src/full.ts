@@ -4,5 +4,5 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export * from "./index.js";
 import "./standard/resources/index.js";
+export * from "./index.js";

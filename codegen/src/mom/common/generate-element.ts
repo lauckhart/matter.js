@@ -64,11 +64,9 @@ export function generateElement({
     if (element.id !== undefined) {
         const idStr = element.id < 0 ? element : serialize.asIs(`0x${element.id.toString(16)}`);
         row1.id = idStr;
-        delete fields.id;
     }
-    if (fields.type) {
+    if (element.type) {
         row1.type = (element as any).type;
-        delete fields.type;
     }
 
     addProperties(head, row1, fields);

@@ -84,6 +84,11 @@ export interface InternalChildren<T extends Model = Model> extends Children<T> {
      * Callback to notify of name changes.
      */
     onNameChanged?: (name: string, model?: Model) => void;
+
+    /**
+     * Ensure roots of children are synced with parent.
+     */
+    rerootAll(isOwned: boolean): void;
 }
 
 type IndexEntry = Model | Model[];
@@ -284,31 +289,45 @@ export function Children<T extends Model = Model>(
             }
         }
 
-        adopt(child);
-        onNameChanged?.(child.name, child);
+        doAdopt(child);
     }
 
+    /**
+     * Recursively reroot a single child & descendents.
+     *
+     * Invoked when the child's parent changes.
+     */
     function doReroot(child: Model, isOwned: boolean) {
         if (!reroot(child, isOwned) || !child.hasChildren) {
             return;
         }
-        for (const child2 of child.children) {
-            if (child2 instanceof ModelConstructor) {
-                doReroot(child2, isOwned);
+        (child.children as InternalChildren).rerootAll(isOwned);
+    }
+
+    /**
+     * Recursively reroot all children & descendents.
+     *
+     * Invoked when the owner's root changes.  Only affects reified models.
+     */
+    function rerootAll(isOwned: boolean) {
+        for (const child of children) {
+            if (child instanceof ModelConstructor) {
+                doReroot(child, isOwned);
             }
         }
     }
 
     function doAdopt(child: Model) {
-        onNameChanged?.(child.name, child);
         adopt(child);
+        onNameChanged?.(child.name, child);
         doReroot(child, true);
     }
 
     function doDisown(child: Model) {
         onNameChanged?.(child.name, undefined);
-        disown(child);
-        doReroot(child, false);
+        if (disown(child)) {
+            doReroot(child, false);
+        }
     }
 
     function get(type: typeof Model, idOrName: number | string) {
@@ -606,6 +625,9 @@ export function Children<T extends Model = Model>(
 
                 case "toString":
                     return () => `[Children: ${children.length}]`;
+
+                case "rerootAll":
+                    return rerootAll;
             }
 
             return Reflect.get(children, name, receiver);
