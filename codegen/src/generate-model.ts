@@ -89,9 +89,8 @@ function generateResourceFile(element: Model) {
     logger.debug(`${element.name} resources`);
 
     const filename = elementDiscriminatedName(element);
-    const identifierName = elementIdentifierName(element);
     const file = new TsFile(`!resources/${filename}.resource`);
-    if (!generateResource(file, element, identifierName)) {
+    if (!generateResource(file, element)) {
         return false;
     }
 

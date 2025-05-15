@@ -331,23 +331,6 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
      */
     patch(values: Model.Patch<E>) {
         for (const [name, value] of Object.entries(values.valueOf())) {
-            if (name === "children") {
-                const { children } = this;
-                if (!Array.isArray(value)) {
-                    throw new ImplementationError("Patch for children is not array");
-                }
-
-                for (let i = 0; i < value?.length; i++) {
-                    if (!value[i]) {
-                        continue;
-                    }
-
-                    children[i].patch(value[i]);
-                }
-
-                continue;
-            }
-
             this[name as keyof typeof this] = value;
         }
     }

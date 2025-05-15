@@ -37,7 +37,7 @@ export function addProperties(target: Block, ...sets: Record<string, unknown>[])
 
 export function addDetailsAndCrossReferences(
     target: Block,
-    element: { xref?: Specification.CrossReference; details?: string },
+    element: { xref?: Specification.CrossReference | string; details?: string },
 ) {
     // Next row: Details
     if (element.details) {

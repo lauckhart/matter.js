@@ -60,14 +60,14 @@
             }
         },
 
-        "./full": {
+        "./resources": {
             "import": {
-                "types": "./dist/esm/full.d.ts",
-                "default": "./dist/esm/full.js"
+                "types": "./dist/esm/standard/resources/index.d.ts",
+                "default": "./dist/esm/standard/resources/index.js"
             },
             "require": {
-                "types": "./dist/cjs/full.d.ts",
-                "default": "./dist/cjs/full.js"
+                "types": "./dist/cjs/standard/resources/index.d.ts",
+                "default": "./dist/cjs/standard/resources/index.js"
             }
         }
     },

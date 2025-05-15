@@ -4,39 +4,63 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Model, Resource } from "#model";
+import { Model, Resources, ValueModel } from "#model";
 import { Block, TsFile } from "#util/TsFile.js";
 import { addDetailsAndCrossReferences, addProperties } from "./element-generation.js";
 
-export function generateResource(target: TsFile, element: Model, identifierName: string): boolean {
-    const patch = generateResourcePatch(element);
+export function generateResource(target: TsFile, element: Model): boolean {
+    const patch = generateResourceDefinition(element);
     if (!patch) {
         return false;
     }
 
-    target.addImport("#index.js", identifierName);
-    const expr = target.expressions(`${identifierName}.patch(`, ")");
+    target.addImport("!model/model/Resources", "Resources");
+    const expr = target.expressions(`Resources.add(`, ")");
 
     addResource(expr, patch);
 
     return true;
 }
 
-function addResource(target: Block, patch: ResourcePatch) {
+function addResource(target: Block, definition: Resources.Named) {
     const expr = target.expressions("{", "}");
 
-    if (patch.resources) {
-        const smallProps = { ...patch.resources };
-        delete smallProps.xref;
-        delete smallProps.details;
+    const props = { ...definition } as Record<string, unknown>;
 
-        addProperties(expr, smallProps);
-        addDetailsAndCrossReferences(expr, patch.resources);
+    delete props.tag;
+    delete props.name;
+    delete props.discriminator;
+    delete props.children;
+
+    const hasProps = !!Object.keys(props).length;
+    const hasChildren = !!definition.children?.length;
+
+    if (!hasProps && !hasChildren) {
+        return;
     }
 
-    if (patch.children) {
+    // Add identifying fields
+    if (hasProps || hasChildren) {
+        const { tag, name, discriminator } = definition;
+        const identity = { tag, name } as Record<string, unknown>;
+        if (discriminator) {
+            identity.discriminator = discriminator;
+        }
+
+        addProperties(expr, identity);
+    }
+
+    if (hasProps) {
+        delete props.description;
+        delete props.xref;
+
+        addProperties(expr, props);
+        addDetailsAndCrossReferences(expr, definition);
+    }
+
+    if (hasChildren) {
         const children = expr.expressions("children: [", "]");
-        for (const child of patch.children) {
+        for (const child of definition.children!) {
             if (child) {
                 addResource(children, child);
             } else {
@@ -48,36 +72,36 @@ function addResource(target: Block, patch: ResourcePatch) {
     return true;
 }
 
-interface ResourcePatch {
-    resources?: Resource;
-    children?: ResourcePatch[];
-}
-
-function generateResourcePatch(element: Model): ResourcePatch | undefined {
+function generateResourceDefinition(element: Model): Resources.Named | undefined {
     const resources = element.hasLocalResource ? element.resource : undefined;
-    const children = element.hasChildren ? element.children.map(generateResourcePatch) : undefined;
+    const children = element.hasChildren
+        ? (element.children.map(generateResourceDefinition).filter(c => c) as Resources.Named[])
+        : undefined;
 
-    let patch: ResourcePatch | undefined;
+    let definition: Resources.Named | undefined;
     if (resources) {
         const entries = Object.entries(resources).filter(
             ([k, v]) => v !== undefined && k !== "asOf" && k !== "until" && k !== "matchTo" && k !== "errors",
         );
         if (entries.length) {
-            patch = { resources: Object.fromEntries(entries) };
+            definition = { tag: element.tag, name: element.name, ...Object.fromEntries(entries) };
         }
     }
 
-    if (children?.some(c => c)) {
-        while (children.length && children[children.length - 1] === undefined) {
-            children.length = children.length - 1;
-        }
-
-        if (patch) {
-            patch.children = children as ResourcePatch[];
+    if (children?.length) {
+        if (definition) {
+            definition.children = children;
         } else {
-            patch = { children: children as ResourcePatch[] };
+            definition = { tag: element.tag, name: element.name, children: children };
         }
     }
 
-    return patch;
+    if (definition && (element.parent?.all(element.constructor as Model.Type, definition.name).length ?? 0) > 1) {
+        const conformance = (element as ValueModel).conformance;
+        if (conformance?.isEmpty === false) {
+            definition.discriminator = conformance.toString();
+        }
+    }
+
+    return definition;
 }
