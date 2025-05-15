@@ -12,5 +12,5 @@ systimeUs.patch({
     description: "System Time in microseconds",
     details: "System time in microseconds is an unsigned 64-bit value representing the number of microseconds " +
         "since boot.",
-    xref: { document: "core", section: "7.19.2.8" }
+    xref: "core§7.19.2.8"
 });

@@ -47,19 +47,19 @@ Actions.patch(
             "The term 'action' in the description of this cluster should not be confused with the term 'action' " +
             "as used in the Interaction Model.",
 
-        xref: { document: "core", section: "9.14" },
+        xref: "core§9.14",
 
         children: [
             undefined,
             {
                 details: "The ActionList attribute holds the list of actions. Each entry shall have an unique ActionID, and " +
                     "its EndpointListID shall exist in the EndpointLists attribute.",
-                xref: { document: "core", section: "9.14.5.1" }
+                xref: "core§9.14.5.1"
             },
             {
                 details: "The EndpointLists attribute holds the list of endpoint lists. Each entry shall have an unique " +
                     "EndpointListID.",
-                xref: { document: "core", section: "9.14.5.2" }
+                xref: "core§9.14.5.2"
             },
 
             {
@@ -84,7 +84,7 @@ Actions.patch(
                     "      https://domain.example/Matter/bridgev1/Actions/?a=12345 for linking to specific info/editing " +
                     "      of the action with ActionID 0x3039.",
 
-                xref: { document: "core", section: "9.14.5.3" }
+                xref: "core§9.14.5.3"
             },
 
             {
@@ -100,21 +100,21 @@ Actions.patch(
                     "\n" +
                     "  • one when the transition completed (NewState=Inactive)",
 
-                xref: { document: "core", section: "9.14.7.1" },
+                xref: "core§9.14.7.1",
 
                 children: [
                     {
                         details: "This field shall be set to the ActionID of the action which has changed state.",
-                        xref: { document: "core", section: "9.14.7.1.1" }
+                        xref: "core§9.14.7.1.1"
                     },
                     {
                         details: "This field shall be set to the InvokeID which was provided to the most recent command referencing " +
                             "this ActionID.",
-                        xref: { document: "core", section: "9.14.7.1.2" }
+                        xref: "core§9.14.7.1.2"
                     },
                     {
                         details: "This field shall be set to state that the action has changed to.",
-                        xref: { document: "core", section: "9.14.7.1.3" }
+                        xref: "core§9.14.7.1.3"
                     }
                 ]
             },
@@ -146,25 +146,25 @@ Actions.patch(
                     "  • StateChanged (InvokeID=2, NewState=Inactive) upon the execution of the action for the second " +
                     "    command",
 
-                xref: { document: "core", section: "9.14.7.2" },
+                xref: "core§9.14.7.2",
 
                 children: [
                     {
                         details: "This field shall be set to the ActionID of the action which encountered an error.",
-                        xref: { document: "core", section: "9.14.7.2.1" }
+                        xref: "core§9.14.7.2.1"
                     },
                     {
                         details: "This field shall be set to the InvokeID which was provided to the most recent command referencing " +
                             "this ActionID.",
-                        xref: { document: "core", section: "9.14.7.2.2" }
+                        xref: "core§9.14.7.2.2"
                     },
                     {
                         details: "This field shall be set to state that the action is in at the time of generating the event.",
-                        xref: { document: "core", section: "9.14.7.2.3" }
+                        xref: "core§9.14.7.2.3"
                     },
                     {
                         details: "This field shall be set to indicate the reason for non-successful progress of the action.",
-                        xref: { document: "core", section: "9.14.7.2.4" }
+                        xref: "core§9.14.7.2.4"
                     }
                 ]
             },
@@ -174,7 +174,7 @@ Actions.patch(
                     "manner. Afterwards, the action’s state shall be Inactive." +
                     "\n" +
                     "Example: recall a scene on a number of lights.",
-                xref: { document: "core", section: "9.14.6.1" }
+                xref: "core§9.14.6.1"
             },
 
             {
@@ -188,14 +188,14 @@ Actions.patch(
                     "\n" +
                     "Example: recall a scene on a number of lights, with a specified transition time.",
 
-                xref: { document: "core", section: "9.14.6.2" },
+                xref: "core§9.14.6.2",
 
                 children: [
                     undefined,
                     undefined,
                     {
                         details: "This field shall indicate the transition time in 1/10th of seconds.",
-                        xref: { document: "core", section: "9.14.6.2.1" }
+                        xref: "core§9.14.6.2.1"
                     }
                 ]
             },
@@ -210,7 +210,7 @@ Actions.patch(
                     "Example: start a sequence of events such as a wake-up experience involving lights moving through " +
                     "several brightness/color combinations and the window covering gradually opening.",
 
-                xref: { document: "core", section: "9.14.6.3" }
+                xref: "core§9.14.6.3"
             },
 
             {
@@ -221,14 +221,14 @@ Actions.patch(
                     "Example: start a dynamic lighting pattern (such as gradually rotating the colors around the " +
                     "setpoints of the scene) on a set of lights for 1 hour (Duration=3600).",
 
-                xref: { document: "core", section: "9.14.6.4" },
+                xref: "core§9.14.6.4",
 
                 children: [
                     undefined,
                     undefined,
                     {
                         details: "This field shall indicate the requested duration in seconds.",
-                        xref: { document: "core", section: "9.14.6.4.1" }
+                        xref: "core§9.14.6.4.1"
                     }
                 ]
             },
@@ -238,7 +238,7 @@ Actions.patch(
                     "shall be Inactive." +
                     "\n" +
                     "Example: stop a dynamic lighting pattern which was previously started with StartAction.",
-                xref: { document: "core", section: "9.14.6.5" }
+                xref: "core§9.14.6.5"
             },
 
             {
@@ -246,7 +246,7 @@ Actions.patch(
                     "\n" +
                     "Example: pause a dynamic lighting effect (the lights stay at their current color) which was " +
                     "previously started with StartAction.",
-                xref: { document: "core", section: "9.14.6.6" }
+                xref: "core§9.14.6.6"
             },
 
             {
@@ -263,14 +263,14 @@ Actions.patch(
                     "automatically resumed after some hours or during a nightly reset, while an Disable would remain in " +
                     "effect until explicitly enabled again).",
 
-                xref: { document: "core", section: "9.14.6.7" },
+                xref: "core§9.14.6.7",
 
                 children: [
                     undefined,
                     undefined,
                     {
                         details: "This field shall indicate the requested duration in seconds.",
-                        xref: { document: "core", section: "9.14.6.7.1" }
+                        xref: "core§9.14.6.7.1"
                     }
                 ]
             },
@@ -284,14 +284,14 @@ Actions.patch(
                     "Example: resume a dynamic lighting effect (the lights' colors will change gradually, continuing from " +
                     "the point they were paused).",
 
-                xref: { document: "core", section: "9.14.6.8" }
+                xref: "core§9.14.6.8"
             },
 
             {
                 details: "This command enables a certain action or automation. Afterwards, the action’s state shall be Active." +
                     "\n" +
                     "Example: enable a motion sensor to control the lights in an area.",
-                xref: { document: "core", section: "9.14.6.9" }
+                xref: "core§9.14.6.9"
             },
 
             {
@@ -303,14 +303,14 @@ Actions.patch(
                     "Duration field is used to indicated the length of your absence from home. After that period, the " +
                     "presence mimicking behavior will no longer control these lights.",
 
-                xref: { document: "core", section: "9.14.6.10" },
+                xref: "core§9.14.6.10",
 
                 children: [
                     undefined,
                     undefined,
                     {
                         details: "This field shall indicate the requested duration in seconds.",
-                        xref: { document: "core", section: "9.14.6.10.1" }
+                        xref: "core§9.14.6.10.1"
                     }
                 ]
             },
@@ -320,7 +320,7 @@ Actions.patch(
                     "Inactive." +
                     "\n" +
                     "Example: disable a motion sensor to no longer control the lights in an area.",
-                xref: { document: "core", section: "9.14.6.11" }
+                xref: "core§9.14.6.11"
             },
 
             {
@@ -332,21 +332,21 @@ Actions.patch(
                     "from turning on in the morning while you’re not at home). After this period, the wakeup experience " +
                     "will control the lights as before.",
 
-                xref: { document: "core", section: "9.14.6.12" },
+                xref: "core§9.14.6.12",
 
                 children: [
                     undefined,
                     undefined,
                     {
                         details: "This field shall indicate the requested duration in seconds.",
-                        xref: { document: "core", section: "9.14.6.12.1" }
+                        xref: "core§9.14.6.12.1"
                     }
                 ]
             },
 
             {
                 details: "Note - The bit allocation of this bitmap shall follow the ID’s of the Commands of this cluster.",
-                xref: { document: "core", section: "9.14.4.1" },
+                xref: "core§9.14.4.1",
 
                 children: [
                     { description: "Indicate support for InstantAction command" },
@@ -365,7 +365,7 @@ Actions.patch(
             },
 
             {
-                xref: { document: "core", section: "9.14.4.2" },
+                xref: "core§9.14.4.2",
 
                 children: [
                     { description: "Use this only when none of the other values applies" },
@@ -383,7 +383,7 @@ Actions.patch(
                             "\n" +
                             "Example: see examples 1 and 2.",
 
-                        xref: { document: "core", section: "9.14.4.2.1" }
+                        xref: "core§9.14.4.2.1"
                     },
 
                     {
@@ -392,14 +392,14 @@ Actions.patch(
                             "a wake-up experience." +
                             "\n" +
                             "Example: see example 4.",
-                        xref: { document: "core", section: "9.14.4.2.2" }
+                        xref: "core§9.14.4.2.2"
                     },
 
                     {
                         description: "Control an automation (e.g. motion sensor controlling lights)",
                         details: "Indications an automation (e.g. a motion sensor controlling lights, an alarm system) which can " +
                             "bee.g. started, stopped, paused, resumed. Example: see example 3.",
-                        xref: { document: "core", section: "9.14.4.2.3" }
+                        xref: "core§9.14.4.2.3"
                     },
 
                     {
@@ -409,7 +409,7 @@ Actions.patch(
                             "\n" +
                             "Example: lock the doors when the server’s system has detected no one is at home while the doors are " +
                             "in the 'unlocked' state.",
-                        xref: { document: "core", section: "9.14.4.2.4" }
+                        xref: "core§9.14.4.2.4"
                     },
 
                     {
@@ -418,7 +418,7 @@ Actions.patch(
                             "\n" +
                             "Example: play a pattern on the lights in the living room if there is someone in the garden in the " +
                             "evening.",
-                        xref: { document: "core", section: "9.14.4.2.5" }
+                        xref: "core§9.14.4.2.5"
                     },
 
                     {
@@ -427,7 +427,7 @@ Actions.patch(
                             "Type=Notification would not override)." +
                             "\n" +
                             "Example: flash all lights in the house when CO sensor triggers.",
-                        xref: { document: "core", section: "9.14.4.2.6" }
+                        xref: "core§9.14.4.2.6"
                     }
                 ]
             },
@@ -435,7 +435,7 @@ Actions.patch(
             {
                 details: "Note that some of these states are applicable only for certain actions, as determined by their " +
                     "SupportedCommands.",
-                xref: { document: "core", section: "9.14.4.3" },
+                xref: "core§9.14.4.3",
 
                 children: [
                     { description: "The action is not active" },
@@ -446,7 +446,7 @@ Actions.patch(
             },
 
             {
-                xref: { document: "core", section: "9.14.4.4" },
+                xref: "core§9.14.4.4",
                 children: [
                     { description: "Other reason not listed in the row(s) below" },
                     { description: "The action was interrupted by another command or interaction" }
@@ -456,7 +456,7 @@ Actions.patch(
             {
                 details: "The Room and Zone values are provided for the cases where a user (or the system on behalf of the " +
                     "user) has created logical grouping of the endpoints (e.g. bridged devices) based on location.",
-                xref: { document: "core", section: "9.14.4.5" },
+                xref: "core§9.14.4.5",
 
                 children: [
                     {
@@ -465,7 +465,7 @@ Actions.patch(
                             "i.e. not independently created by the user. For Type=Other the Name may be empty. A Matter " +
                             "controller would typically not use this for anything else than just to know which endpoints would be " +
                             "affected by the action.",
-                        xref: { document: "core", section: "9.14.4.5.1" }
+                        xref: "core§9.14.4.5.1"
                     },
 
                     {
@@ -475,7 +475,7 @@ Actions.patch(
                             "can use it to place each endpoint (bridged device) in the right room automatically, without user " +
                             "having to redo that setup for each device in each system - both at first contact and upon later " +
                             "updates to the endpoints (e.g. user adds a bridged device or creates a new room).",
-                        xref: { document: "core", section: "9.14.4.5.2" }
+                        xref: "core§9.14.4.5.2"
                     },
 
                     {
@@ -490,81 +490,75 @@ Actions.patch(
                             "logically would like to control as a group, so Matter controllers could provide the user with a way " +
                             "to do as such.",
 
-                        xref: { document: "core", section: "9.14.4.5.3" }
+                        xref: "core§9.14.4.5.3"
                     }
                 ]
             },
 
             {
                 details: "This data type holds the details of a single action, and contains the data fields below.",
-                xref: { document: "core", section: "9.14.4.6" },
+                xref: "core§9.14.4.6",
 
                 children: [
                     {
                         details: "This field shall provide an unique identifier used to identify an action.",
-                        xref: { document: "core", section: "9.14.4.6.1" }
+                        xref: "core§9.14.4.6.1"
                     },
 
                     {
                         details: "This field shall indicate the name (as assigned by the user or automatically by the server) " +
                             "associated with this action. This can be used for identifying the action to the user by the client. " +
                             "Example: \"my colorful scene\".",
-                        xref: { document: "core", section: "9.14.4.6.2" }
+                        xref: "core§9.14.4.6.2"
                     },
 
                     {
                         details: "This field shall indicate the type of action. The value of Type of an action, along with its " +
                             "SupportedCommands can be used by the client in its UX or logic to determine how to present or use " +
                             "such action. See ActionTypeEnum for details and examples.",
-                        xref: { document: "core", section: "9.14.4.6.3" }
+                        xref: "core§9.14.4.6.3"
                     },
 
                     {
                         details: "This field shall provide a reference to the associated endpoint list, which specifies the endpoints " +
                             "on this Node which will be impacted by this ActionID.",
-                        xref: { document: "core", section: "9.14.4.6.4" }
+                        xref: "core§9.14.4.6.4"
                     },
 
                     {
                         details: "This field is a bitmap which shall be used to indicate which of the cluster’s commands are supported " +
                             "for this particular action, with a bit set to 1 for each supported command according to the table " +
                             "below. Other bits shall be set to 0.",
-                        xref: { document: "core", section: "9.14.4.6.5" }
+                        xref: "core§9.14.4.6.5"
                     },
 
-                    {
-                        details: "This field shall indicate the current state of this action.",
-                        xref: { document: "core", section: "9.14.4.6.6" }
-                    }
+                    { details: "This field shall indicate the current state of this action.", xref: "core§9.14.4.6.6" }
                 ]
             },
 
             {
                 details: "This data type holds the details of a single endpoint list, which relates to a set of endpoints that " +
                     "have some logical relation, and contains the data fields below.",
-                xref: { document: "core", section: "9.14.4.7" },
+                xref: "core§9.14.4.7",
 
                 children: [
                     {
                         details: "This field shall provide an unique identifier used to identify the endpoint list.",
-                        xref: { document: "core", section: "9.14.4.7.1" }
+                        xref: "core§9.14.4.7.1"
                     },
 
                     {
                         details: "This field shall indicate the name (as assigned by the user or automatically by the server) " +
                             "associated with the set of endpoints in this list. This can be used for identifying the action to " +
                             "the user by the client. Example: \"living room\".",
-                        xref: { document: "core", section: "9.14.4.7.2" }
+                        xref: "core§9.14.4.7.2"
                     },
 
                     {
                         details: "This field shall indicate the type of endpoint list, see EndpointListTypeEnum.",
-                        xref: { document: "core", section: "9.14.4.7.3" }
+                        xref: "core§9.14.4.7.3"
                     },
-                    {
-                        details: "This field shall provide a list of endpoint numbers.",
-                        xref: { document: "core", section: "9.14.4.7.4" }
-                    }
+                    { details: "This field shall provide a list of endpoint numbers.", xref: "core§9.14.4.7.4" }
                 ]
             }
         ]

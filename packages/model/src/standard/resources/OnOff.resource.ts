@@ -11,13 +11,13 @@ import { OnOff } from "#index.js";
 OnOff.patch({
     classification: "application", pics: "OO",
     details: "Attributes and commands for turning devices on and off.",
-    xref: { document: "cluster", section: "1.5" },
+    xref: "cluster§1.5",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "1.5.4" },
+            xref: "cluster§1.5.4",
 
             children: [
                 {
@@ -32,7 +32,7 @@ OnOff.patch({
                         "the value of the OnTime attribute is equal to 0, the server shall set the OffWaitTime attribute to " +
                         "0.",
 
-                    xref: { document: "cluster", section: "1.5.4.1" }
+                    xref: "cluster§1.5.4.1"
                 },
 
                 {
@@ -70,7 +70,7 @@ OnOff.patch({
                         "attribute changes from value 4 to null on \"dead front\" behavior due to an Off command being " +
                         "received, this change shall be processed for reporting and subscriptions.",
 
-                    xref: { document: "cluster", section: "1.5.4.2" }
+                    xref: "cluster§1.5.4.2"
                 },
 
                 {
@@ -83,7 +83,7 @@ OnOff.patch({
                         "instance of this cluster but cannot be turned on via commands received by an instance of this " +
                         "cluster due to regulatory requirements.",
 
-                    xref: { document: "cluster", section: "1.5.4.3" }
+                    xref: "cluster§1.5.4.3"
                 }
             ]
         },
@@ -91,7 +91,7 @@ OnOff.patch({
         {
             details: "This attribute indicates whether the device type implemented on the endpoint is turned off or turned " +
                 "on, in these cases the value of the OnOff attribute equals FALSE, or TRUE respectively.",
-            xref: { document: "cluster", section: "1.5.6.2" }
+            xref: "cluster§1.5.6.2"
         },
 
         {
@@ -110,7 +110,7 @@ OnOff.patch({
                 "\n" +
                 "This attribute is set to FALSE after reception of a OffWithEffect command.",
 
-            xref: { document: "cluster", section: "1.5.6.3" }
+            xref: "cluster§1.5.6.3"
         },
 
         {
@@ -118,7 +118,7 @@ OnOff.patch({
                 "maintained before automatically transitioning to the Off state when using the OnWithTimedOff " +
                 "command. This attribute can be written at any time, but writing a value only has effect when in the " +
                 "Timed On state. See OnWithTimedOff for more details.",
-            xref: { document: "cluster", section: "1.5.6.4" }
+            xref: "cluster§1.5.6.4"
         },
 
         {
@@ -129,7 +129,7 @@ OnOff.patch({
                 "only has an effect when in the Timed On state followed by a transition to the Delayed Off state, or " +
                 "in the Delayed Off state. See OnWithTimedOff for more details.",
 
-            xref: { document: "cluster", section: "1.5.6.5" }
+            xref: "cluster§1.5.6.5"
         },
 
         {
@@ -141,22 +141,22 @@ OnOff.patch({
                 "This behavior does not apply to reboots associated with OTA. After an OTA restart, the OnOff " +
                 "attribute shall return to its value prior to the restart.",
 
-            xref: { document: "cluster", section: "1.5.6.6" }
+            xref: "cluster§1.5.6.6"
         },
 
-        { xref: { document: "cluster", section: "1.5.7.1" } },
-        { xref: { document: "cluster", section: "1.5.7.2" } },
-        { xref: { document: "cluster", section: "1.5.7.3" } },
+        { xref: "cluster§1.5.7.1" },
+        { xref: "cluster§1.5.7.2" },
+        { xref: "cluster§1.5.7.3" },
 
         {
             details: "The OffWithEffect command allows devices to be turned off using enhanced ways of fading.",
-            xref: { document: "cluster", section: "1.5.7.4" },
+            xref: "cluster§1.5.7.4",
 
             children: [
                 {
                     details: "This field specifies the fading effect to use when turning the device off. This field shall contain " +
                         "one of the non-reserved values listed in EffectIdentifierEnum.",
-                    xref: { document: "cluster", section: "1.5.7.4.1" }
+                    xref: "cluster§1.5.7.4.1"
                 },
 
                 {
@@ -165,14 +165,14 @@ OnOff.patch({
                         "variant. This field is dependent on the value of the EffectIdentifier field and shall contain one of " +
                         "the non-reserved values listed in either DelayedAllOffEffectVariantEnum or " +
                         "DyingLightEffectVariantEnum.",
-                    xref: { document: "cluster", section: "1.5.7.4.2" }
+                    xref: "cluster§1.5.7.4.2"
                 }
             ]
         },
 
         {
             details: "This command allows the recall of the settings when the device was turned off.",
-            xref: { document: "cluster", section: "1.5.7.5" }
+            xref: "cluster§1.5.7.5"
         },
 
         {
@@ -180,31 +180,31 @@ OnOff.patch({
                 "that SHOULD the device be subsequently turned off, further OnWithTimedOff commands, received during " +
                 "this time, are prevented from turning the devices back on. Further OnWithTimedOff commands received " +
                 "while the server is turned on, will update the period that the device is turned on.",
-            xref: { document: "cluster", section: "1.5.7.6" },
+            xref: "cluster§1.5.7.6",
 
             children: [
                 {
                     details: "This field contains information on how the server is to be operated.",
-                    xref: { document: "cluster", section: "1.5.7.6.1" }
+                    xref: "cluster§1.5.7.6.1"
                 },
                 {
                     details: "This field is used to adjust the value of the OnTime attribute.",
-                    xref: { document: "cluster", section: "1.5.7.6.2" }
+                    xref: "cluster§1.5.7.6.2"
                 },
                 {
                     details: "This field is used to adjust the value of the OffWaitTime attribute.",
-                    xref: { document: "cluster", section: "1.5.7.6.3" }
+                    xref: "cluster§1.5.7.6.3"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "1.5.5.1" },
+            xref: "cluster§1.5.5.1",
             children: [{ description: "Indicates a command is only accepted when in On state." }]
         },
 
         {
-            xref: { document: "cluster", section: "1.5.5.2" },
+            xref: "cluster§1.5.5.2",
 
             children: [
                 { description: "Set the OnOff attribute to FALSE" },
@@ -215,13 +215,10 @@ OnOff.patch({
             ]
         },
 
-        {
-            xref: { document: "cluster", section: "1.5.5.3" },
-            children: [{ description: "Delayed All Off" }, { description: "Dying Light" }]
-        },
+        { xref: "cluster§1.5.5.3", children: [{ description: "Delayed All Off" }, { description: "Dying Light" }] },
 
         {
-            xref: { document: "cluster", section: "1.5.5.4" },
+            xref: "cluster§1.5.5.4",
             children: [
                 { description: "Fade to off in 0.8 seconds" },
                 { description: "No fade" },
@@ -229,9 +226,6 @@ OnOff.patch({
             ]
         },
 
-        {
-            xref: { document: "cluster", section: "1.5.5.5" },
-            children: [{ description: "20% dim up in 0.5s then fade to off in 1 second" }]
-        }
+        { xref: "cluster§1.5.5.5", children: [{ description: "20% dim up in 0.5s then fade to off in 1 second" }] }
     ]
 });

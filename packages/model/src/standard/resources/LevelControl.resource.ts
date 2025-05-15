@@ -13,13 +13,13 @@ LevelControl.patch({
     details: "This cluster provides an interface for controlling a characteristic of a device that can be set to a " +
         "level, for example the brightness of a light, the degree of closure of a door, or the power output " +
         "of a heater.",
-    xref: { document: "cluster", section: "1.6" },
+    xref: "cluster§1.6",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "1.6.4" },
+            xref: "cluster§1.6.4",
 
             children: [
                 { description: "OnOff", details: "Dependency with the On/Off cluster" },
@@ -38,13 +38,13 @@ LevelControl.patch({
                         "\n" +
                         "All other values are application specific gradations from the minimum to the maximum level.",
 
-                    xref: { document: "cluster", section: "1.6.4.2" }
+                    xref: "cluster§1.6.4.2"
                 },
 
                 {
                     description: "Frequency",
                     details: "NOTE The Frequency feature is provisional.",
-                    xref: { document: "cluster", section: "1.6.4.3" }
+                    xref: "cluster§1.6.4.3"
                 }
             ]
         },
@@ -60,7 +60,7 @@ LevelControl.patch({
                 "\n" +
                 "  • When it changes from null to any other value and vice versa.",
 
-            xref: { document: "cluster", section: "1.6.6.2" }
+            xref: "cluster§1.6.6.2"
         },
 
         {
@@ -81,20 +81,20 @@ LevelControl.patch({
                 "As this attribute is not being reported during a regular countdown, clients SHOULD NOT rely on the " +
                 "reporting of this attribute in order to keep track of the remaining duration.",
 
-            xref: { document: "cluster", section: "1.6.6.3" }
+            xref: "cluster§1.6.6.3"
         },
 
         {
             details: "Indicates the minimum value of CurrentLevel that is capable of being assigned.",
-            xref: { document: "cluster", section: "1.6.6.4" }
+            xref: "cluster§1.6.6.4"
         },
         {
             details: "Indicates the minimum value of CurrentLevel that is capable of being assigned.",
-            xref: { document: "cluster", section: "1.6.6.4" }
+            xref: "cluster§1.6.6.4"
         },
         {
             details: "Indicates the maximum value of CurrentLevel that is capable of being assigned.",
-            xref: { document: "cluster", section: "1.6.6.5" }
+            xref: "cluster§1.6.6.5"
         },
 
         {
@@ -108,18 +108,18 @@ LevelControl.patch({
                 "\n" +
                 "  • At the end of the movement/transition.",
 
-            xref: { document: "cluster", section: "1.6.6.6" }
+            xref: "cluster§1.6.6.6"
         },
 
         {
             details: "Indicates the minimum value of CurrentFrequency that is capable of being assigned. MinFrequency " +
                 "shall be less than or equal to MaxFrequency. A value of 0 indicates undefined.",
-            xref: { document: "cluster", section: "1.6.6.7" }
+            xref: "cluster§1.6.6.7"
         },
         {
             details: "Indicates the maximum value of CurrentFrequency that is capable of being assigned. MaxFrequency " +
                 "shall be greater than or equal to MinFrequency. A value of 0 indicates undefined.",
-            xref: { document: "cluster", section: "1.6.6.8" }
+            xref: "cluster§1.6.6.8"
         },
 
         {
@@ -130,7 +130,7 @@ LevelControl.patch({
                 "that if the device is not able to move at a variable rate, the OnOffTransitionTime attribute SHOULD " +
                 "NOT be implemented.",
 
-            xref: { document: "cluster", section: "1.6.6.10" }
+            xref: "cluster§1.6.6.10"
         },
 
         {
@@ -142,7 +142,7 @@ LevelControl.patch({
                 "OnLevel represents a mandatory field that was previously not present or optional. Implementers " +
                 "should be aware that older devices may not implement it.",
 
-            xref: { document: "cluster", section: "1.6.6.11" }
+            xref: "cluster§1.6.6.11"
         },
 
         {
@@ -150,7 +150,7 @@ LevelControl.patch({
                 "an On command is received by an On/Off cluster on the same endpoint. It is specified in 1/10ths of a " +
                 "second. If this attribute is not implemented, or contains a null value, the OnOffTransitionTime " +
                 "shall be used instead.",
-            xref: { document: "cluster", section: "1.6.6.12" }
+            xref: "cluster§1.6.6.12"
         },
 
         {
@@ -158,13 +158,13 @@ LevelControl.patch({
                 "an Off command is received by an On/Off cluster on the same endpoint. It is specified in 1/10ths of " +
                 "a second. If this attribute is not implemented, or contains a null value, the OnOffTransitionTime " +
                 "shall be used instead.",
-            xref: { document: "cluster", section: "1.6.6.13" }
+            xref: "cluster§1.6.6.13"
         },
 
         {
             details: "Indicates the movement rate, in units per second, when a Move command is received with a null value " +
                 "Rate parameter.",
-            xref: { document: "cluster", section: "1.6.6.14" }
+            xref: "cluster§1.6.6.14"
         },
 
         {
@@ -189,7 +189,7 @@ LevelControl.patch({
                 "\n" +
                 "  • The value of the ExecuteIfOff bit is 0.",
 
-            xref: { document: "cluster", section: "1.6.6.9" }
+            xref: "cluster§1.6.6.9"
         },
 
         {
@@ -200,18 +200,18 @@ LevelControl.patch({
                 "This behavior does not apply to reboots associated with OTA. After an OTA restart, the CurrentLevel " +
                 "attribute shall return to its value prior to the restart.",
 
-            xref: { document: "cluster", section: "1.6.6.15" }
+            xref: "cluster§1.6.6.15"
         },
 
-        { xref: { document: "cluster", section: "1.6.7.1" } },
+        { xref: "cluster§1.6.7.1" },
 
         {
-            xref: { document: "cluster", section: "1.6.7.2" },
+            xref: "cluster§1.6.7.2",
 
             children: [
                 {
                     details: "This field shall be one of the non-reserved values in MoveModeEnum.",
-                    xref: { document: "cluster", section: "1.6.7.2.1" }
+                    xref: "cluster§1.6.7.2.1"
                 },
 
                 {
@@ -224,23 +224,20 @@ LevelControl.patch({
                         "\n" +
                         "field may be disregarded.",
 
-                    xref: { document: "cluster", section: "1.6.7.2.2" }
+                    xref: "cluster§1.6.7.2.2"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "1.6.7.3" },
+            xref: "cluster§1.6.7.3",
 
             children: [
                 {
                     details: "This field shall be one of the non-reserved values in StepModeEnum.",
-                    xref: { document: "cluster", section: "1.6.7.3.1" }
+                    xref: "cluster§1.6.7.3.1"
                 },
-                {
-                    details: "This field shall indicate the change to CurrentLevel.",
-                    xref: { document: "cluster", section: "1.6.7.3.2" }
-                },
+                { details: "This field shall indicate the change to CurrentLevel.", xref: "cluster§1.6.7.3.2" },
 
                 {
                     details: "This field shall indicate the time that shall be taken to perform the step, in tenths of a second. A " +
@@ -251,42 +248,39 @@ LevelControl.patch({
                         "\n" +
                         "If the device is not able to move at a variable rate, the TransitionTime field may be disregarded.",
 
-                    xref: { document: "cluster", section: "1.6.7.3.3" }
+                    xref: "cluster§1.6.7.3.3"
                 }
             ]
         },
 
-        { xref: { document: "cluster", section: "1.6.7.4" } },
-        { xref: { document: "cluster", section: "1.6.7" } },
-        { xref: { document: "cluster", section: "1.6.7" } },
-        { xref: { document: "cluster", section: "1.6.7" } },
-        { xref: { document: "cluster", section: "1.6.7" } },
-        { xref: { document: "cluster", section: "1.6.7.5" } },
+        { xref: "cluster§1.6.7.4" },
+        { xref: "cluster§1.6.7" },
+        { xref: "cluster§1.6.7" },
+        { xref: "cluster§1.6.7" },
+        { xref: "cluster§1.6.7" },
+        { xref: "cluster§1.6.7.5" },
 
         {
-            xref: { document: "cluster", section: "1.6.5.1" },
+            xref: "cluster§1.6.5.1",
 
             children: [
                 {
                     description: "Dependency on On/Off cluster",
                     details: "This bit indicates if this cluster has a dependency with the On/Off cluster.",
-                    xref: { document: "cluster", section: "1.6.5.1.1" }
+                    xref: "cluster§1.6.5.1.1"
                 },
                 {
                     description: "Dependency on Color Control cluster",
                     details: "This bit indicates if this cluster has a dependency with the Color Control cluster.",
-                    xref: { document: "cluster", section: "1.6.5.1.2" }
+                    xref: "cluster§1.6.5.1.2"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "1.6.5.2" },
+            xref: "cluster§1.6.5.2",
             children: [{ description: "Increase the level" }, { description: "Decrease the level" }]
         },
-        {
-            xref: { document: "cluster", section: "1.6.5.3" },
-            children: [{ description: "Step upwards" }, { description: "Step downwards" }]
-        }
+        { xref: "cluster§1.6.5.3", children: [{ description: "Step upwards" }, { description: "Step downwards" }] }
     ]
 });

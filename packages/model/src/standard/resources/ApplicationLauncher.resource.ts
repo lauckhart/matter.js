@@ -21,13 +21,13 @@ ApplicationLauncher.patch({
         "launching the application corresponding to the endpoint on which the cluster is supported (AP " +
         "feature not supported) or it can support launching any application (AP feature supported).",
 
-    xref: { document: "cluster", section: "6.4" },
+    xref: "cluster§6.4",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "6.4.4" },
+            xref: "cluster§6.4.4",
             children: [{
                 description: "ApplicationPlatform",
                 details: "Support for attributes and commands required for endpoint to support launching any application " +
@@ -43,14 +43,14 @@ ApplicationLauncher.patch({
                 "It is expected that Content App Platform providers will have their own catalog vendor ID (set to " +
                 "their own Vendor ID) and will assign an ApplicationID to each Content App.",
 
-            xref: { document: "cluster", section: "6.4.6.1" }
+            xref: "cluster§6.4.6.1"
         },
 
         {
             details: "This attribute shall specify the current in-focus application, identified using an Application ID, " +
                 "catalog vendor ID and the corresponding endpoint number when the application is represented by a " +
                 "Content App endpoint. A null shall be used to indicate there is no current in-focus application.",
-            xref: { document: "cluster", section: "6.4.6.2" }
+            xref: "cluster§6.4.6.2"
         },
 
         {
@@ -70,13 +70,10 @@ ApplicationLauncher.patch({
                 "\n" +
                 "This command returns a Launcher Response.",
 
-            xref: { document: "cluster", section: "6.4.7.1" },
+            xref: "cluster§6.4.7.1",
 
             children: [
-                {
-                    details: "This field shall specify the Application to launch.",
-                    xref: { document: "cluster", section: "6.4.7.1.1" }
-                },
+                { details: "This field shall specify the Application to launch.", xref: "cluster§6.4.7.1.1" },
 
                 {
                     details: "This field shall specify optional app-specific data to be sent to the app." +
@@ -88,7 +85,7 @@ ApplicationLauncher.patch({
                         "data. Apps that are not yet Matter aware can be launched via Matter, while retaining the existing " +
                         "ability to launch with proprietary data.",
 
-                    xref: { document: "cluster", section: "6.4.7.1.2" }
+                    xref: "cluster§6.4.7.1.2"
                 }
             ]
         },
@@ -107,11 +104,8 @@ ApplicationLauncher.patch({
                 "\n" +
                 "This command returns a Launcher Response.",
 
-            xref: { document: "cluster", section: "6.4.7.2" },
-            children: [{
-                details: "This field shall specify the Application to stop.",
-                xref: { document: "cluster", section: "6.4.7.2.1" }
-            }]
+            xref: "cluster§6.4.7.2",
+            children: [{ details: "This field shall specify the Application to stop.", xref: "cluster§6.4.7.2.1" }]
         },
 
         {
@@ -129,31 +123,25 @@ ApplicationLauncher.patch({
                 "\n" +
                 "This command returns a Launcher Response.",
 
-            xref: { document: "cluster", section: "6.4.7.3" },
-            children: [{
-                details: "This field shall specify the Application to hide.",
-                xref: { document: "cluster", section: "6.4.7.3.1" }
-            }]
+            xref: "cluster§6.4.7.3",
+            children: [{ details: "This field shall specify the Application to hide.", xref: "cluster§6.4.7.3.1" }]
         },
 
         {
             details: "This command shall be generated in response to LaunchApp/StopApp/HideApp commands.",
-            xref: { document: "cluster", section: "6.4.7.4" },
+            xref: "cluster§6.4.7.4",
 
             children: [
                 {
                     details: "This field shall indicate the status of the command which resulted in this response.",
-                    xref: { document: "cluster", section: "6.4.7.4.1" }
+                    xref: "cluster§6.4.7.4.1"
                 },
-                {
-                    details: "This field shall specify Optional app-specific data.",
-                    xref: { document: "cluster", section: "6.4.7.4.2" }
-                }
+                { details: "This field shall specify Optional app-specific data.", xref: "cluster§6.4.7.4.2" }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "6.4.5.1" },
+            xref: "cluster§6.4.5.1",
 
             children: [
                 { description: "Command succeeded" },
@@ -167,7 +155,7 @@ ApplicationLauncher.patch({
 
         {
             details: "This indicates a global identifier for an Application given a catalog.",
-            xref: { document: "cluster", section: "6.4.5.2" },
+            xref: "cluster§6.4.5.2",
 
             children: [
                 {
@@ -176,7 +164,7 @@ ApplicationLauncher.patch({
                         "\n" +
                         "Content App Platform providers will have their own catalog vendor ID (set to their own Vendor ID) " +
                         "and will assign an ApplicationID to each Content App.",
-                    xref: { document: "cluster", section: "6.4.5.2.1" }
+                    xref: "cluster§6.4.5.2.1"
                 },
 
                 {
@@ -184,14 +172,11 @@ ApplicationLauncher.patch({
                         "\"Company X\". This field shall be unique within a catalog." +
                         "\n" +
                         "For the DIAL registry catalog, this value shall be the DIAL prefix (see [DIAL Registry]).",
-                    xref: { document: "cluster", section: "6.4.5.2.2" }
+                    xref: "cluster§6.4.5.2.2"
                 }
             ]
         },
 
-        {
-            details: "This specifies an app along with its corresponding endpoint.",
-            xref: { document: "cluster", section: "6.4.5.3" }
-        }
+        { details: "This specifies an app along with its corresponding endpoint.", xref: "cluster§6.4.5.3" }
     ]
 });

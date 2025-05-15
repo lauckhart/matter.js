@@ -23,15 +23,15 @@ SmokeCoAlarmDt.patch({
         "Some smoke alarms may be capable of adjusting sensitivity. Smoke CO Alarm may have the ability to " +
         "detect and report humidity levels, temperature levels, and contamination levels.",
 
-    xref: { document: "device", section: "7.9" },
+    xref: "device§7.9",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "7.9.5" } },
-        { xref: { document: "device", section: "7.9.5" } },
-        { xref: { document: "device", section: "7.9.5" } },
-        { xref: { document: "device", section: "7.9.5" } },
-        { xref: { document: "device", section: "7.9.5" } },
-        { xref: { document: "device", section: "7.9.5" } }
+        { xref: "device§7.9.5" },
+        { xref: "device§7.9.5" },
+        { xref: "device§7.9.5" },
+        { xref: "device§7.9.5" },
+        { xref: "device§7.9.5" },
+        { xref: "device§7.9.5" }
     ]
 });

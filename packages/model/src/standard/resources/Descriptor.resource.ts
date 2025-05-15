@@ -25,19 +25,19 @@ Descriptor.patch({
         "The cluster supports a PartsList attribute that is a list of zero or more endpoints to support a " +
         "composed device type.",
 
-    xref: { document: "core", section: "9.5" },
+    xref: "core§9.5",
 
     children: [
         undefined,
 
         {
-            xref: { document: "core", section: "9.5.4" },
+            xref: "core§9.5.4",
 
             children: [{
                 description: "TagList",
                 details: "See the Disambiguation section in the System Model spec for conformance requirements for this " +
                     "feature and the corresponding attribute.",
-                xref: { document: "core", section: "9.5.4.1" }
+                xref: "core§9.5.4.1"
             }]
         },
 
@@ -49,16 +49,16 @@ Descriptor.patch({
                 "is in common for more than one device type in the DeviceTypeList shall be supported as a shared " +
                 "cluster instance on the endpoint.",
 
-            xref: { document: "core", section: "9.5.6.1" }
+            xref: "core§9.5.6.1"
         },
 
         {
             details: "This attribute shall list each cluster ID for the server clusters present on the endpoint instance.",
-            xref: { document: "core", section: "9.5.6.2" }
+            xref: "core§9.5.6.2"
         },
         {
             details: "This attribute shall list each cluster ID for the client clusters present on the endpoint instance.",
-            xref: { document: "core", section: "9.5.6.3" }
+            xref: "core§9.5.6.3"
         },
 
         {
@@ -66,7 +66,7 @@ Descriptor.patch({
                 "shall include the endpoints in this list." +
                 "\n" +
                 "See Endpoint Composition for more information about which endpoints to include in this list.",
-            xref: { document: "core", section: "9.5.6.4" }
+            xref: "core§9.5.6.4"
         },
 
         {
@@ -90,24 +90,24 @@ Descriptor.patch({
                 "indicate characteristics of an endpoint, or to augment what is provided in the TagID field of the " +
                 "same structure.",
 
-            xref: { document: "core", section: "9.5.6.5" }
+            xref: "core§9.5.6.5"
         },
 
         {
             details: "The device type and revision define endpoint conformance to a release of a device type definition. " +
                 "See the Data Model specification for more information.",
-            xref: { document: "core", section: "9.5.5.1" },
+            xref: "core§9.5.5.1",
 
             children: [
                 {
                     details: "This shall indicate the device type definition. The endpoint shall conform to the device type " +
                         "definition and cluster specifications required by the device type.",
-                    xref: { document: "core", section: "9.5.5.1.1" }
+                    xref: "core§9.5.5.1.1"
                 },
                 {
                     details: "This is the implemented revision of the device type definition. The endpoint shall conform to this " +
                         "revision of the device type.",
-                    xref: { document: "core", section: "9.5.5.1.2" }
+                    xref: "core§9.5.5.1.2"
                 }
             ]
         }

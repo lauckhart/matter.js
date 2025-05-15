@@ -19,13 +19,13 @@ TimeFormatLocalization.patch({
         "This cluster supports an interface to a Node. It provides attributes for determining and configuring " +
         "time and date formatting information that a Node shall utilize when conveying values to a user.",
 
-    xref: { document: "core", section: "11.4" },
+    xref: "core§11.4",
 
     children: [
         undefined,
 
         {
-            xref: { document: "core", section: "11.4.4" },
+            xref: "core§11.4.4",
             children: [{
                 description: "CalendarFormat",
                 details: "The Node can be configured to use different calendar formats when conveying values to a user."
@@ -42,7 +42,7 @@ TimeFormatLocalization.patch({
                 "If UseActiveLocale, any unit implied through the ActiveLocale attribute is used as the hour format, " +
                 "and if ActiveLocale is not present, the hour format is unknown.",
 
-            xref: { document: "core", section: "11.4.6.1" }
+            xref: "core§11.4.6.1"
         },
 
         {
@@ -54,7 +54,7 @@ TimeFormatLocalization.patch({
                 "If UseActiveLocale, any unit implied through the ActiveLocale attribute is used as the calendar " +
                 "type, and if ActiveLocale is not present, the calendar type is unknown.",
 
-            xref: { document: "core", section: "11.4.6.2" }
+            xref: "core§11.4.6.2"
         },
 
         {
@@ -62,11 +62,11 @@ TimeFormatLocalization.patch({
                 "contain any duplicate entries. The ordering of items within the list SHOULD NOT express any meaning. " +
                 "The maximum length of the SupportedCalendarTypes list shall be equivalent to the number of " +
                 "enumerations within CalendarTypeEnum.",
-            xref: { document: "core", section: "11.4.6.3" }
+            xref: "core§11.4.6.3"
         },
 
         {
-            xref: { document: "core", section: "11.4.5.1" },
+            xref: "core§11.4.5.1",
             children: [
                 { description: "Time conveyed with a 12-hour clock" },
                 { description: "Time conveyed with a 24-hour clock" },
@@ -75,7 +75,7 @@ TimeFormatLocalization.patch({
         },
 
         {
-            xref: { document: "core", section: "11.4.5.2" },
+            xref: "core§11.4.5.2",
 
             children: [
                 { description: "Dates conveyed using the Buddhist calendar" },

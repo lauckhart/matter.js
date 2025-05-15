@@ -12,17 +12,17 @@ ThermostatUserInterfaceConfiguration.patch({
     classification: "application", pics: "TSUIC",
     details: "This cluster provides an interface to allow configuration of the user interface for a thermostat, or " +
         "a thermostat controller device, that supports a keypad and LCD screen.",
-    xref: { document: "cluster", section: "4.5" },
+    xref: "cluster§4.5",
 
     children: [
         undefined,
         {
             details: "Indicates the units of the temperature displayed on the thermostat screen.",
-            xref: { document: "cluster", section: "4.5.6.1" }
+            xref: "cluster§4.5.6.1"
         },
         {
             details: "Indicates the level of functionality that is available to the user via the keypad.",
-            xref: { document: "cluster", section: "4.5.6.2" }
+            xref: "cluster§4.5.6.2"
         },
 
         {
@@ -35,11 +35,11 @@ ThermostatUserInterfaceConfiguration.patch({
                 "been programmed by users or service providers via a more capable remote interface. The programming " +
                 "schedule shall continue to run even though it is not visible to the user locally at the thermostat.",
 
-            xref: { document: "cluster", section: "4.5.6.3" }
+            xref: "cluster§4.5.6.3"
         },
 
         {
-            xref: { document: "cluster", section: "4.5.5.1" },
+            xref: "cluster§4.5.5.1",
             children: [
                 { description: "Temperature displayed in °C" },
                 { description: "Temperature displayed in °F" }
@@ -48,7 +48,7 @@ ThermostatUserInterfaceConfiguration.patch({
 
         {
             details: "The interpretation of the various levels is device-dependent.",
-            xref: { document: "cluster", section: "4.5.5.2" },
+            xref: "cluster§4.5.5.2",
 
             children: [
                 { description: "All functionality available to the user" },
@@ -61,7 +61,7 @@ ThermostatUserInterfaceConfiguration.patch({
         },
 
         {
-            xref: { document: "cluster", section: "4.5.5.3" },
+            xref: "cluster§4.5.5.3",
             children: [
                 { description: "Local schedule programming functionality is enabled at the thermostat" },
                 { description: "Local schedule programming functionality is disabled at the thermostat" }

@@ -11,29 +11,29 @@ import { PowerSourceNs } from "#index.js";
 PowerSourceNs.patch({
     details: "The tags contained in this namespace are restricted for use in the power source domain and shall NOT " +
         "be used in any other domain or context.",
-    xref: { document: "namespace", section: "15" },
+    xref: "namespace§15",
 
     children: [
         { description: "The Power Source cluster is related to power provided from an unknown source" },
         {
             description: "The Power Source cluster is related to power provided from the electrical grid",
             details: "Power Source clusters with this tag shall implement the WIRED feature.",
-            xref: { document: "namespace", section: "15.1" }
+            xref: "namespace§15.1"
         },
         {
             description: "The Power Source cluster is related to power provided from a solar panel array",
             details: "Power Source clusters with this tag shall implement the WIRED feature.",
-            xref: { document: "namespace", section: "15.2" }
+            xref: "namespace§15.2"
         },
         {
             description: "The Power Source cluster is related to power provided from a battery",
             details: "Power Source clusters with this tag shall implement the BAT feature.",
-            xref: { document: "namespace", section: "15.3" }
+            xref: "namespace§15.3"
         },
         {
             description: "The Power Source cluster is related to power provided from an electric vehicle",
             details: "Power Source clusters with this tag shall implement the BAT feature.",
-            xref: { document: "namespace", section: "15.4" }
+            xref: "namespace§15.4"
         }
     ]
 });

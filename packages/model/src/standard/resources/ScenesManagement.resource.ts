@@ -22,17 +22,17 @@ ScenesManagement.patch({
         "\n" +
         "NOTE Support for Scenes Management cluster is provisional.",
 
-    xref: { document: "cluster", section: "1.4" },
+    xref: "cluster§1.4",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "1.4.4" },
+            xref: "cluster§1.4.4",
             children: [{
                 description: "SceneNames",
                 details: "This feature indicates the ability to store a name for a scene when a scene is added.",
-                xref: { document: "cluster", section: "1.4.4.1" }
+                xref: "cluster§1.4.4.1"
             }]
         },
 
@@ -44,7 +44,7 @@ ScenesManagement.patch({
                 "\n" +
                 "The Node ID is scoped to the accessing fabric.",
 
-            xref: { document: "cluster", section: "1.4.8.1" }
+            xref: "cluster§1.4.8.1"
         },
 
         {
@@ -53,7 +53,7 @@ ScenesManagement.patch({
                 "The minimum size of this table, (i.e., the minimum number of scenes to support across all fabrics " +
                 "per endpoint) shall be 16, unless a device type in which this cluster is used, defines a larger " +
                 "value in the device type definition.",
-            xref: { document: "cluster", section: "1.4.8.2" }
+            xref: "cluster§1.4.8.2"
         },
 
         {
@@ -61,213 +61,207 @@ ScenesManagement.patch({
                 "\n" +
                 "The number of list entries for this attribute shall NOT exceed the number of supported fabrics by " +
                 "the device.",
-            xref: { document: "cluster", section: "1.4.8.3" }
+            xref: "cluster§1.4.8.3"
         },
 
         {
             details: "It is not mandatory for an extension field set to be included in the command for every cluster on " +
                 "that endpoint that has a defined extension field set. Extension field sets may be omitted, including " +
                 "the case of no extension field sets at all.",
-            xref: { document: "cluster", section: "1.4.9.2" },
+            xref: "cluster§1.4.9.2",
 
             children: [
                 {
                     details: "This field shall indicate the group identifier in the Group Table.",
-                    xref: { document: "cluster", section: "1.4.9.2.1" }
+                    xref: "cluster§1.4.9.2.1"
                 },
                 {
                     details: "This field shall indicate the scene identifier in the Scene Table.",
-                    xref: { document: "cluster", section: "1.4.9.2.2" }
+                    xref: "cluster§1.4.9.2.2"
                 },
                 {
                     details: "This field shall indicate the transition time of the scene, measured in milliseconds.",
-                    xref: { document: "cluster", section: "1.4.9.2.3" }
+                    xref: "cluster§1.4.9.2.3"
                 },
-                {
-                    details: "This field shall indicate the name of the scene.",
-                    xref: { document: "cluster", section: "1.4.9.2.4" }
-                },
-                {
-                    details: "This field shall contains the list of extension fields.",
-                    xref: { document: "cluster", section: "1.4.9.2.5" }
-                }
+                { details: "This field shall indicate the name of the scene.", xref: "cluster§1.4.9.2.4" },
+                { details: "This field shall contains the list of extension fields.", xref: "cluster§1.4.9.2.5" }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "1.4.9.3" },
+            xref: "cluster§1.4.9.3",
 
             children: [
                 {
                     details: "This field shall be set according to the Effect on Receipt section for AddScene command.",
-                    xref: { document: "cluster", section: "1.4.9.3.1" }
+                    xref: "cluster§1.4.9.3.1"
                 },
                 {
                     details: "The GroupID field shall be set to the corresponding field of the received AddScene command.",
-                    xref: { document: "cluster", section: "1.4.9.3.2" }
+                    xref: "cluster§1.4.9.3.2"
                 },
                 {
                     details: "The SceneID field shall be set to the corresponding field of the received AddScene command.",
-                    xref: { document: "cluster", section: "1.4.9.3.3" }
+                    xref: "cluster§1.4.9.3.3"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "1.4.9.4" },
+            xref: "cluster§1.4.9.4",
 
             children: [
                 {
                     details: "This field shall indicate the group identifier in the Group Table.",
-                    xref: { document: "cluster", section: "1.4.9.4.1" }
+                    xref: "cluster§1.4.9.4.1"
                 },
                 {
                     details: "This field shall indicate the scene identifier in the Scene Table.",
-                    xref: { document: "cluster", section: "1.4.9.4.2" }
+                    xref: "cluster§1.4.9.4.2"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "1.4.9.5" },
+            xref: "cluster§1.4.9.5",
 
             children: [
                 {
                     details: "This field shall be set according to the Effect on Receipt section for ViewScene command.",
-                    xref: { document: "cluster", section: "1.4.9.5.1" }
+                    xref: "cluster§1.4.9.5.1"
                 },
                 {
                     details: "The GroupID field shall be set to the corresponding field of the received ViewScene command.",
-                    xref: { document: "cluster", section: "1.4.9.5.2" }
+                    xref: "cluster§1.4.9.5.2"
                 },
                 {
                     details: "The SceneID field shall be set to the corresponding field of the received ViewScene command.",
-                    xref: { document: "cluster", section: "1.4.9.5.3" }
+                    xref: "cluster§1.4.9.5.3"
                 },
                 {
                     details: "If the status is SUCCESS, this field shall be copied from the corresponding field in the Scene Table " +
                         "entry, otherwise it shall be omitted.",
-                    xref: { document: "cluster", section: "1.4.9.5.4" }
+                    xref: "cluster§1.4.9.5.4"
                 },
                 {
                     details: "If the status is SUCCESS, this field shall be copied from the corresponding field in the Scene Table " +
                         "entry, otherwise it shall be omitted.",
-                    xref: { document: "cluster", section: "1.4.9.5.5" }
+                    xref: "cluster§1.4.9.5.5"
                 },
                 {
                     details: "If the status is SUCCESS, this field shall be copied from the corresponding field in the Scene Table " +
                         "entry, otherwise it shall be omitted.",
-                    xref: { document: "cluster", section: "1.4.9.5.6" }
+                    xref: "cluster§1.4.9.5.6"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "1.4.9.6" },
+            xref: "cluster§1.4.9.6",
 
             children: [
                 {
                     details: "This field shall indicate the group identifier in the Group Table.",
-                    xref: { document: "cluster", section: "1.4.9.6.1" }
+                    xref: "cluster§1.4.9.6.1"
                 },
                 {
                     details: "This field shall indicate the scene identifier in the Scene Table.",
-                    xref: { document: "cluster", section: "1.4.9.6.2" }
+                    xref: "cluster§1.4.9.6.2"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "1.4.9.7" },
+            xref: "cluster§1.4.9.7",
 
             children: [
                 {
                     details: "This field shall be set according to the Effect on Receipt section for RemoveScene command.",
-                    xref: { document: "cluster", section: "1.4.9.7.1" }
+                    xref: "cluster§1.4.9.7.1"
                 },
                 {
                     details: "The GroupID field shall be set to the corresponding field of the received RemoveScene command.",
-                    xref: { document: "cluster", section: "1.4.9.7.2" }
+                    xref: "cluster§1.4.9.7.2"
                 },
                 {
                     details: "The SceneID field shall be set to the corresponding field of the received RemoveScene command.",
-                    xref: { document: "cluster", section: "1.4.9.7.3" }
+                    xref: "cluster§1.4.9.7.3"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "1.4.9.8" },
+            xref: "cluster§1.4.9.8",
             children: [{
                 details: "This field shall indicate the group identifier in the Group Table.",
-                xref: { document: "cluster", section: "1.4.9.8.1" }
+                xref: "cluster§1.4.9.8.1"
             }]
         },
 
         {
-            xref: { document: "cluster", section: "1.4.9.9" },
+            xref: "cluster§1.4.9.9",
 
             children: [
                 {
                     details: "This field shall be set according to the Effect on Receipt section for RemoveAllScenes command.",
-                    xref: { document: "cluster", section: "1.4.9.9.1" }
+                    xref: "cluster§1.4.9.9.1"
                 },
                 {
                     details: "The GroupID field shall be set to the corresponding field of the received RemoveAllScenes command.",
-                    xref: { document: "cluster", section: "1.4.9.9.2" }
+                    xref: "cluster§1.4.9.9.2"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "1.4.9.10" },
+            xref: "cluster§1.4.9.10",
 
             children: [
                 {
                     details: "This field shall indicate the group identifier in the Group Table.",
-                    xref: { document: "cluster", section: "1.4.9.10.1" }
+                    xref: "cluster§1.4.9.10.1"
                 },
                 {
                     details: "This field shall indicate the scene identifier in the Scene Table.",
-                    xref: { document: "cluster", section: "1.4.9.10.2" }
+                    xref: "cluster§1.4.9.10.2"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "1.4.9.11" },
+            xref: "cluster§1.4.9.11",
 
             children: [
                 {
                     details: "This field shall be set according to the Effect on Receipt section for StoreScene command.",
-                    xref: { document: "cluster", section: "1.4.9.11.1" }
+                    xref: "cluster§1.4.9.11.1"
                 },
                 {
                     details: "The GroupID field shall be set to the corresponding field of the received StoreScene command.",
-                    xref: { document: "cluster", section: "1.4.9.11.2" }
+                    xref: "cluster§1.4.9.11.2"
                 },
                 {
                     details: "The SceneID field shall be set to the corresponding field of the received StoreScene command.",
-                    xref: { document: "cluster", section: "1.4.9.11.3" }
+                    xref: "cluster§1.4.9.11.3"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "1.4.9.12" },
+            xref: "cluster§1.4.9.12",
 
             children: [
                 {
                     details: "This field shall indicate the group identifier in the Group Table.",
-                    xref: { document: "cluster", section: "1.4.9.12.1" }
+                    xref: "cluster§1.4.9.12.1"
                 },
                 {
                     details: "This field shall indicate the scene identifier in the Scene Table.",
-                    xref: { document: "cluster", section: "1.4.9.12.2" }
+                    xref: "cluster§1.4.9.12.2"
                 },
                 {
                     details: "This field shall indicate the transition time of the scene, measured in milliseconds.",
-                    xref: { document: "cluster", section: "1.4.9.12.3" }
+                    xref: "cluster§1.4.9.12.3"
                 }
             ]
         },
@@ -275,20 +269,20 @@ ScenesManagement.patch({
         {
             details: "This command can be used to get the used scene identifiers within a certain group, for the endpoint " +
                 "that implements this cluster.",
-            xref: { document: "cluster", section: "1.4.9.13" },
+            xref: "cluster§1.4.9.13",
             children: [{
                 details: "This field shall indicate the group identifier in the Group Table.",
-                xref: { document: "cluster", section: "1.4.9.13.1" }
+                xref: "cluster§1.4.9.13.1"
             }]
         },
 
         {
-            xref: { document: "cluster", section: "1.4.9.14" },
+            xref: "cluster§1.4.9.14",
 
             children: [
                 {
                     details: "This field shall be set according to the Effect on Receipt section for GetSceneMembership command.",
-                    xref: { document: "cluster", section: "1.4.9.14.1" }
+                    xref: "cluster§1.4.9.14.1"
                 },
 
                 {
@@ -303,17 +297,17 @@ ScenesManagement.patch({
                         "\n" +
                         "  • null - It is unknown if any further scenes may be added.",
 
-                    xref: { document: "cluster", section: "1.4.9.14.2" }
+                    xref: "cluster§1.4.9.14.2"
                 },
 
                 {
                     details: "This field shall be set to the corresponding field of the received GetSceneMembership command.",
-                    xref: { document: "cluster", section: "1.4.9.14.3" }
+                    xref: "cluster§1.4.9.14.3"
                 },
                 {
                     details: "If the status is not SUCCESS then this field shall be omitted, else this field shall contain the " +
                         "identifiers of all the scenes in the Scene Table with the corresponding Group ID.",
-                    xref: { document: "cluster", section: "1.4.9.14.4" }
+                    xref: "cluster§1.4.9.14.4"
                 }
             ]
         },
@@ -321,7 +315,7 @@ ScenesManagement.patch({
         {
             details: "This command allows a client to efficiently copy scenes from one group/scene identifier pair to " +
                 "another group/scene identifier pair.",
-            xref: { document: "cluster", section: "1.4.9.15" },
+            xref: "cluster§1.4.9.15",
 
             children: [
                 {
@@ -330,67 +324,64 @@ ScenesManagement.patch({
                         "The CopyAllScenes bit of the Mode indicates whether all scenes are to be copied. If this value is " +
                         "set to 1, all scenes are to be copied and the SceneIdentifierFrom and SceneIdentifierTo fields shall " +
                         "be ignored. Otherwise this bit is set to 0.",
-                    xref: { document: "cluster", section: "1.4.9.15.1" }
+                    xref: "cluster§1.4.9.15.1"
                 },
 
                 {
                     details: "This field shall indicate the identifier of the group from which the scene is to be copied. Together " +
                         "with the SceneIdentifierFrom field, this field uniquely identifies the scene to copy from the Scene " +
                         "Table.",
-                    xref: { document: "cluster", section: "1.4.9.15.2" }
+                    xref: "cluster§1.4.9.15.2"
                 },
 
                 {
                     details: "This field shall indicate the identifier of the scene from which the scene is to be copied. Together " +
                         "with the GroupIdentifierFrom field, this field uniquely identifies the scene to copy from the Scene " +
                         "Table.",
-                    xref: { document: "cluster", section: "1.4.9.15.3" }
+                    xref: "cluster§1.4.9.15.3"
                 },
 
                 {
                     details: "This field shall indicate the identifier of the group to which the scene is to be copied. Together " +
                         "with the SceneIdentifierTo field, this field uniquely identifies the scene to copy to the Scene " +
                         "Table.",
-                    xref: { document: "cluster", section: "1.4.9.15.4" }
+                    xref: "cluster§1.4.9.15.4"
                 },
 
                 {
                     details: "This field shall indicate the identifier of the scene to which the scene is to be copied. Together " +
                         "with the GroupIdentifierTo field, this field uniquely identifies the scene to copy to the Scene " +
                         "Table.",
-                    xref: { document: "cluster", section: "1.4.9.15.5" }
+                    xref: "cluster§1.4.9.15.5"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "1.4.9.16" },
+            xref: "cluster§1.4.9.16",
 
             children: [
                 {
                     details: "This field shall be set according to the Effect on Receipt section for the CopyScene command.",
-                    xref: { document: "cluster", section: "1.4.9.16.1" }
+                    xref: "cluster§1.4.9.16.1"
                 },
                 {
                     details: "This field shall be set to the same values as in the corresponding fields of the received CopyScene " +
                         "command.",
-                    xref: { document: "cluster", section: "1.4.9.16.2" }
+                    xref: "cluster§1.4.9.16.2"
                 },
                 {
                     details: "This field shall be set to the same values as in the corresponding fields of the received CopyScene " +
                         "command.",
-                    xref: { document: "cluster", section: "1.4.9.16.3" }
+                    xref: "cluster§1.4.9.16.3"
                 }
             ]
         },
 
-        {
-            xref: { document: "cluster", section: "1.4.7.1" },
-            children: [{ description: "Copy all scenes in the scene table" }]
-        },
+        { xref: "cluster§1.4.7.1", children: [{ description: "Copy all scenes in the scene table" }] },
 
         {
-            xref: { document: "cluster", section: "1.4.7.2" },
+            xref: "cluster§1.4.7.2",
 
             children: [
                 {
@@ -398,18 +389,18 @@ ScenesManagement.patch({
                         "endpoint where the Scenes Management cluster appears." +
                         "\n" +
                         "This only includes the count for the associated fabric.",
-                    xref: { document: "cluster", section: "1.4.7.2.1" }
+                    xref: "cluster§1.4.7.2.1"
                 },
 
                 {
                     details: "This field shall indicate the scene identifier of the scene last invoked on the associated fabric. " +
                         "If no scene has been invoked, the value of this field shall be 0xFF, the undefined scene identifier.",
-                    xref: { document: "cluster", section: "1.4.7.2.2" }
+                    xref: "cluster§1.4.7.2.2"
                 },
                 {
                     details: "This field shall indicate the group identifier of the scene last invoked on the associated fabric, " +
                         "or 0 if the scene last invoked is not associated with a group.",
-                    xref: { document: "cluster", section: "1.4.7.2.3" }
+                    xref: "cluster§1.4.7.2.3"
                 },
 
                 {
@@ -427,7 +418,7 @@ ScenesManagement.patch({
                         "scene was previously invoked for that fabric, the CurrentScene and CurrentGroup fields shall be " +
                         "their default values.",
 
-                    xref: { document: "cluster", section: "1.4.7.2.4" }
+                    xref: "cluster§1.4.7.2.4"
                 },
 
                 {
@@ -435,14 +426,14 @@ ScenesManagement.patch({
                         "accessing fabric. Note that this value may change between reads, even if no entries are added or " +
                         "deleted on the accessing fabric, due to other clients associated with other fabrics adding or " +
                         "deleting entries that impact the resource usage on the device.",
-                    xref: { document: "cluster", section: "1.4.7.2.5" }
+                    xref: "cluster§1.4.7.2.5"
                 }
             ]
         },
 
         {
             details: "This data type indicates a combination of an identifier and the value of an attribute.",
-            xref: { document: "cluster", section: "1.4.7.3" },
+            xref: "cluster§1.4.7.3",
 
             children: [{
                 details: "This field shall be present for all instances in a given ExtensionFieldSetStruct." +
@@ -519,19 +510,19 @@ ScenesManagement.patch({
                     "    ◦ ValueUnsigned8 of 0xFF is outside the range allowed for nullable attribute CurrentLevel, and " +
                     "      would be considered as the null value.",
 
-                xref: { document: "cluster", section: "1.4.7.3.1" }
+                xref: "cluster§1.4.7.3.1"
             }]
         },
 
         {
             details: "This data type indicates for a given cluster a set of attributes and their values.",
-            xref: { document: "cluster", section: "1.4.7.4" },
+            xref: "cluster§1.4.7.4",
 
             children: [
                 {
                     details: "This field shall indicate the cluster-id of the cluster whose attributes are in the " +
                         "AttributeValueList field.",
-                    xref: { document: "cluster", section: "1.4.7.4.1" }
+                    xref: "cluster§1.4.7.4.1"
                 },
 
                 {
@@ -539,7 +530,7 @@ ScenesManagement.patch({
                         "\n" +
                         "Attributes which do not have the Scenes (\"S\") designation in the Quality column of their cluster " +
                         "specification shall NOT be used in the AttributeValueList field.",
-                    xref: { document: "cluster", section: "1.4.7.4.2" }
+                    xref: "cluster§1.4.7.4.2"
                 }
             ]
         },
@@ -555,17 +546,17 @@ ScenesManagement.patch({
                 "entry struct are illustrated below. An ExtensionFieldSetStruct may be present for each " +
                 "Scenes-supporting cluster implemented on the same endpoint.",
 
-            xref: { document: "cluster", section: "1.4.7.5" },
+            xref: "cluster§1.4.7.5",
 
             children: [
                 {
                     details: "This field is the group identifier for which this scene applies, or 0 if the scene is not associated " +
                         "with a group.",
-                    xref: { document: "cluster", section: "1.4.7.5.1" }
+                    xref: "cluster§1.4.7.5.1"
                 },
                 {
                     details: "This field is unique within this group, which is used to identify this scene.",
-                    xref: { document: "cluster", section: "1.4.7.5.2" }
+                    xref: "cluster§1.4.7.5.2"
                 },
 
                 {
@@ -573,13 +564,13 @@ ScenesManagement.patch({
                         "\n" +
                         "If scene names are not supported, any commands that write a scene name shall simply discard the " +
                         "name, and any command that returns a scene name shall return an empty string.",
-                    xref: { document: "cluster", section: "1.4.7.5.3" }
+                    xref: "cluster§1.4.7.5.3"
                 },
 
                 {
                     details: "This field is the amount of time, in milliseconds, it will take for a cluster to change from its " +
                         "current state to the requested state.",
-                    xref: { document: "cluster", section: "1.4.7.5.4" }
+                    xref: "cluster§1.4.7.5.4"
                 },
 
                 {
@@ -588,7 +579,7 @@ ScenesManagement.patch({
                         "these attributes for a cluster implemented on the same endpoint where the Scene (\"S\") designation " +
                         "appears in the quality column. A scene is the aggregate of all such fields across all clusters on " +
                         "the endpoint.",
-                    xref: { document: "cluster", section: "1.4.7.5.5" }
+                    xref: "cluster§1.4.7.5.5"
                 }
             ]
         }

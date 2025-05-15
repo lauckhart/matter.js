@@ -26,13 +26,13 @@ NetworkCommissioning.patch(
             "present. An interface, in this context, is a unique entity that can have an IPv6 address assigned to " +
             "it and ingress and egress IP packets.",
 
-        xref: { document: "core", section: "11.9" },
+        xref: "core§11.9",
 
         children: [
             undefined,
 
             {
-                xref: { document: "core", section: "11.9.4" },
+                xref: "core§11.9.4",
                 children: [
                     { description: "WiFiNetworkInterface", details: "Wi-Fi related features" },
                     { description: "ThreadNetworkInterface", details: "Thread related features" },
@@ -44,7 +44,7 @@ NetworkCommissioning.patch(
                 details: "This shall indicate the maximum number of network configuration entries that can be added, based on " +
                     "available device resources. The length of the Networks attribute shall be less than or equal to this " +
                     "value.",
-                xref: { document: "core", section: "11.9.6.1" }
+                xref: "core§11.9.6.1"
             },
 
             {
@@ -64,7 +64,7 @@ NetworkCommissioning.patch(
                     "Networks attribute. There shall be no way to add, update or remove Ethernet network configurations " +
                     "to those Cluster instances.",
 
-                xref: { document: "core", section: "11.9.6.2" }
+                xref: "core§11.9.6.2"
             },
 
             {
@@ -72,7 +72,7 @@ NetworkCommissioning.patch(
                     "instance to provide scan results." +
                     "\n" +
                     "See ScanNetworks for usage.",
-                xref: { document: "core", section: "11.9.6.3" }
+                xref: "core§11.9.6.3"
             },
 
             {
@@ -83,7 +83,7 @@ NetworkCommissioning.patch(
                     "deemed to have occurred, including, for example, obtaining IP addresses, or the execution of " +
                     "necessary internal retries.",
 
-                xref: { document: "core", section: "11.9.6.4" }
+                xref: "core§11.9.6.4"
             },
 
             {
@@ -103,7 +103,7 @@ NetworkCommissioning.patch(
                     "On Ethernet-only Nodes, there shall always be at least one of the Network Commissioning server " +
                     "cluster instances with InterfaceEnabled set to true.",
 
-                xref: { document: "core", section: "11.9.6.5" }
+                xref: "core§11.9.6.5"
             },
 
             {
@@ -115,7 +115,7 @@ NetworkCommissioning.patch(
                     "This attribute is present to assist with error recovery during Network commissioning and to assist " +
                     "in non-concurrent networking commissioning flows.",
 
-                xref: { document: "core", section: "11.9.6.6" }
+                xref: "core§11.9.6.6"
             },
 
             {
@@ -131,7 +131,7 @@ NetworkCommissioning.patch(
                     "This attribute is present to assist with error recovery during Network commissioning and to assist " +
                     "in non-concurrent networking commissioning flows.",
 
-                xref: { document: "core", section: "11.9.6.7" }
+                xref: "core§11.9.6.7"
             },
 
             {
@@ -146,13 +146,13 @@ NetworkCommissioning.patch(
                     "This attribute is present to assist with error recovery during Network commissioning and to assist " +
                     "in non-concurrent networking commissioning flows.",
 
-                xref: { document: "core", section: "11.9.6.8" }
+                xref: "core§11.9.6.8"
             },
 
             {
                 details: "Indicates all the frequency bands supported by the Wi-Fi interface configured by the cluster " +
                     "instance.",
-                xref: { document: "core", section: "11.9.6.9" }
+                xref: "core§11.9.6.9"
             },
 
             {
@@ -164,7 +164,7 @@ NetworkCommissioning.patch(
                     "configuration. Note that most run-time details of the actual Thread interface are found in the " +
                     "Thread Network Diagnostics cluster, if supported.",
 
-                xref: { document: "core", section: "11.9.6.10" }
+                xref: "core§11.9.6.10"
             },
 
             {
@@ -172,7 +172,7 @@ NetworkCommissioning.patch(
                     "\n" +
                     "The format shall match the value mapping found in the \"Version TLV\" section of Thread specification. " +
                     "For example, Thread 1.3.0 would have ThreadVersion set to 4.",
-                xref: { document: "core", section: "11.9.6.11" }
+                xref: "core§11.9.6.11"
             },
 
             {
@@ -217,21 +217,21 @@ NetworkCommissioning.patch(
                     "other clients, while the network interface is processing the scan. Clients SHOULD NOT use this " +
                     "command unless actively in the process of re-configuring network connectivity.",
 
-                xref: { document: "core", section: "11.9.7.1" },
+                xref: "core§11.9.7.1",
 
                 children: [
                     {
                         details: "This field, if present, shall contain the SSID for a directed scan of that particular Wi-Fi SSID. " +
                             "Otherwise, if the field is absent, or if it is null, this shall indicate scanning of all BSSID in " +
                             "range. This field shall be ignored for ScanNetworks invocations on non-Wi-Fi server instances.",
-                        xref: { document: "core", section: "11.9.7.1.1" }
+                        xref: "core§11.9.7.1.1"
                     },
 
                     {
                         details: "The Breadcrumb field, if present, shall be used to atomically set the Breadcrumb attribute in the " +
                             "General Commissioning cluster on success of the associated command. If the command fails, the " +
                             "Breadcrumb attribute in the General Commissioning cluster shall be left unchanged.",
-                        xref: { document: "core", section: "11.9.7.1.2" }
+                        xref: "core§11.9.7.1.2"
                     }
                 ]
             },
@@ -245,7 +245,7 @@ NetworkCommissioning.patch(
                     "Before generating a ScanNetworksResponse, the server shall set the LastNetworkingStatus attribute " +
                     "value to the NetworkingStatus matching the response.",
 
-                xref: { document: "core", section: "11.9.7.2" },
+                xref: "core§11.9.7.2",
 
                 children: [
                     {
@@ -264,14 +264,14 @@ NetworkCommissioning.patch(
                             "\n" +
                             "  • UnknownError: An internal error occurred during scanning.",
 
-                        xref: { document: "core", section: "11.9.7.2.1" }
+                        xref: "core§11.9.7.2.1"
                     },
 
                     {
                         details: "This field, if present and non-empty, may contain error information which may be communicated to the " +
                             "user in case the NetworkingStatus was not Success. Its purpose is to help developers in " +
                             "troubleshooting errors and may go into logs or crash reports.",
-                        xref: { document: "core", section: "11.9.7.2.2" }
+                        xref: "core§11.9.7.2.2"
                     },
 
                     {
@@ -288,7 +288,7 @@ NetworkCommissioning.patch(
                             "decreasing RSSI order, even if RSSI is not reported in the response, to maximize the likelihood that " +
                             "most likely to be reachable elements are included within the size limits of the response.",
 
-                        xref: { document: "core", section: "11.9.7.2.3" }
+                        xref: "core§11.9.7.2.3"
                     },
 
                     {
@@ -304,7 +304,7 @@ NetworkCommissioning.patch(
                             "decreasing LQI order, to maximize the likelihood that most likely to be reachable elements are " +
                             "included within the size limits of the response.",
 
-                        xref: { document: "core", section: "11.9.7.2.4" }
+                        xref: "core§11.9.7.2.4"
                     }
                 ]
             },
@@ -324,13 +324,13 @@ NetworkCommissioning.patch(
                     "See Section 11.9.7.5, “Common processing of AddOrUpdateWiFiNetwork and AddOrUpdateThreadNetwork” for " +
                     "behavior of addition/update.",
 
-                xref: { document: "core", section: "11.9.7.3" },
+                xref: "core§11.9.7.3",
 
                 children: [
                     {
                         details: "This field shall contain the SSID to which to attempt connection. Specific BSSID selection is not " +
                             "supported by this cluster.",
-                        xref: { document: "core", section: "11.9.7.3.1" }
+                        xref: "core§11.9.7.3.1"
                     },
 
                     {
@@ -370,10 +370,10 @@ NetworkCommissioning.patch(
                             "security and selects a lower security connectivity type if the link quality is deemed to be too low " +
                             "to achieve successful operation, or if all retry attempts fail.",
 
-                        xref: { document: "core", section: "11.9.7.3.2" }
+                        xref: "core§11.9.7.3.2"
                     },
 
-                    { details: "See Breadcrumb for usage.", xref: { document: "core", section: "11.9.7.3.3" } }
+                    { details: "See Breadcrumb for usage.", xref: "core§11.9.7.3.3" }
                 ]
             },
 
@@ -393,7 +393,7 @@ NetworkCommissioning.patch(
                     "the OperationalDataset, the operation shall be considered an addition, otherwise, it shall be " +
                     "considered an update.",
 
-                xref: { document: "core", section: "11.9.7.4" },
+                xref: "core§11.9.7.4",
 
                 children: [
                     {
@@ -402,10 +402,10 @@ NetworkCommissioning.patch(
                             "\n" +
                             "The encoding for the OperationalDataset field is defined in the Thread specification. The client " +
                             "shall pass the OperationalDataset as an opaque octet string.",
-                        xref: { document: "core", section: "11.9.7.4.1" }
+                        xref: "core§11.9.7.4.1"
                     },
 
-                    { details: "See Breadcrumb for usage.", xref: { document: "core", section: "11.9.7.4.2" } }
+                    { details: "See Breadcrumb for usage.", xref: "core§11.9.7.4.2" }
                 ]
             },
 
@@ -425,15 +425,15 @@ NetworkCommissioning.patch(
                     "index of the entry in the Networks attribute that was just removed, and a NetworkingStatus status " +
                     "field set to Success.",
 
-                xref: { document: "core", section: "11.9.7.6" },
+                xref: "core§11.9.7.6",
 
                 children: [
                     {
                         details: "This field shall contain the NetworkID for the entry to remove: the SSID for Wi-Fi and XPAN ID for " +
                             "Thread.",
-                        xref: { document: "core", section: "11.9.7.6.1" }
+                        xref: "core§11.9.7.6.1"
                     },
-                    { details: "See Breadcrumb for usage.", xref: { document: "core", section: "11.9.7.6.2" } }
+                    { details: "See Breadcrumb for usage.", xref: "core§11.9.7.6.2" }
                 ]
             },
 
@@ -449,7 +449,7 @@ NetworkCommissioning.patch(
                     "the NetworkID that was used in the command for which an invocation caused the response to be " +
                     "generated.",
 
-                xref: { document: "core", section: "11.9.7.7" },
+                xref: "core§11.9.7.7",
 
                 children: [
                     {
@@ -467,16 +467,16 @@ NetworkCommissioning.patch(
                             "\n" +
                             "  • UnknownError: An internal error occurred during the operation.",
 
-                        xref: { document: "core", section: "11.9.7.7.1" }
+                        xref: "core§11.9.7.7.1"
                     },
 
-                    { details: "See DebugText for usage.", xref: { document: "core", section: "11.9.7.7.2" } },
+                    { details: "See DebugText for usage.", xref: "core§11.9.7.7.2" },
 
                     {
                         details: "When the NetworkingStatus is Success, this field shall be present. It shall contain the 0-based " +
                             "index of the entry in the Networks attribute that was last added, updated or removed successfully by " +
                             "the associated request command.",
-                        xref: { document: "core", section: "11.9.7.7.3" }
+                        xref: "core§11.9.7.7.3"
                     }
                 ]
             },
@@ -560,15 +560,15 @@ NetworkCommissioning.patch(
                     "in determining the reason for a failure after reconnecting over a Commissioning channel, especially " +
                     "in non-concurrent commissioning situations.",
 
-                xref: { document: "core", section: "11.9.7.8" },
+                xref: "core§11.9.7.8",
 
                 children: [
                     {
                         details: "This field shall contain the NetworkID for the entry used to configure the connection: the SSID for " +
                             "Wi-Fi and XPAN ID for Thread.",
-                        xref: { document: "core", section: "11.9.7.8.1" }
+                        xref: "core§11.9.7.8.1"
                     },
-                    { details: "See Breadcrumb for usage.", xref: { document: "core", section: "11.9.7.8.2" } }
+                    { details: "See Breadcrumb for usage.", xref: "core§11.9.7.8.2" }
                 ]
             },
 
@@ -583,7 +583,7 @@ NetworkCommissioning.patch(
                     "  • Set the LastConnectErrorValue attribute value to the ErrorValue matching the response, including " +
                     "    setting it to null if the ErrorValue is not applicable.",
 
-                xref: { document: "core", section: "11.9.7.9" },
+                xref: "core§11.9.7.9",
 
                 children: [
                     {
@@ -607,10 +607,10 @@ NetworkCommissioning.patch(
                             "  • Association errors (see also description of errors in NetworkCommissioningStatusEnum): " +
                             "    AuthFailure, UnsupportedSecurity, OtherConnectionFailure, IPV6Failed, IPBindFailed",
 
-                        xref: { document: "core", section: "11.9.7.9.1" }
+                        xref: "core§11.9.7.9.1"
                     },
 
-                    { details: "See DebugText for usage.", xref: { document: "core", section: "11.9.7.9.2" } },
+                    { details: "See DebugText for usage.", xref: "core§11.9.7.9.2" },
 
                     {
                         details: "  • ErrorValue interpretation for Wi-Fi association errors:" +
@@ -633,7 +633,7 @@ NetworkCommissioning.patch(
                             "  • Otherwise, the ErrorValue field shall contain an implementation-dependent value which may be " +
                             "    used by a reader of the structure to record, report or diagnose the failure.",
 
-                        xref: { document: "core", section: "11.9.7.9.3" }
+                        xref: "core§11.9.7.9.3"
                     }
                 ]
             },
@@ -641,18 +641,18 @@ NetworkCommissioning.patch(
             {
                 details: "This command shall set the specific order of the network configuration selected by its NetworkID in " +
                     "the Networks attribute to match the position given by NetworkIndex.",
-                xref: { document: "core", section: "11.9.7.10" },
+                xref: "core§11.9.7.10",
 
                 children: [
                     {
                         details: "This field shall contain the NetworkID for the entry to reorder: the SSID for Wi-Fi and XPAN ID for " +
                             "Thread.",
-                        xref: { document: "core", section: "11.9.7.10.1" }
+                        xref: "core§11.9.7.10.1"
                     },
                     {
                         details: "This field shall contain the 0-based index of the new desired position of the entry in the Networks " +
                             "attribute.",
-                        xref: { document: "core", section: "11.9.7.10.2" }
+                        xref: "core§11.9.7.10.2"
                     },
 
                     {
@@ -705,7 +705,7 @@ NetworkCommissioning.patch(
                             "In the above outcome, BlueDolphin, Home-Guest and WillowTree moved \"up\" and FancyCat became the " +
                             "lowest priority network in the list.",
 
-                        xref: { document: "core", section: "11.9.7.10.3" }
+                        xref: "core§11.9.7.10.3"
                     }
                 ]
             },
@@ -713,7 +713,7 @@ NetworkCommissioning.patch(
             {
                 details: "WiFiSecurityBitmap encodes the supported Wi-Fi security types present in the Security field of the " +
                     "WiFiInterfaceScanResultStruct.",
-                xref: { document: "core", section: "11.9.5.1" },
+                xref: "core§11.9.5.1",
 
                 children: [
                     { description: "Supports unencrypted Wi-Fi" },
@@ -732,7 +732,7 @@ NetworkCommissioning.patch(
                     "\n" +
                     "The valid combinations of capabilities are restricted and dependent on Thread version.",
 
-                xref: { document: "core", section: "11.9.5.2" },
+                xref: "core§11.9.5.2",
 
                 children: [
                     { description: "Thread Border Router functionality is present" },
@@ -746,7 +746,7 @@ NetworkCommissioning.patch(
             {
                 details: "WiFiBandEnum encodes a supported Wi-Fi frequency band present in the WiFiBand field of the " +
                     "WiFiInterfaceScanResultStruct.",
-                xref: { document: "core", section: "11.9.5.3" },
+                xref: "core§11.9.5.3",
 
                 children: [
                     { description: "2.4GHz - 2.401GHz to2.495GHz(802.11b/g/n/ax)" },
@@ -759,7 +759,7 @@ NetworkCommissioning.patch(
             },
 
             {
-                xref: { document: "core", section: "11.9.5.4" },
+                xref: "core§11.9.5.4",
 
                 children: [
                     { description: "OK, no error" },
@@ -781,7 +781,7 @@ NetworkCommissioning.patch(
             {
                 details: "NetworkInfoStruct struct describes an existing network configuration, as provided in the Networks " +
                     "attribute.",
-                xref: { document: "core", section: "11.9.5.5" },
+                xref: "core§11.9.5.5",
 
                 children: [
                     {
@@ -810,21 +810,21 @@ NetworkCommissioning.patch(
                             "XPAN ID is a big-endian 64-bit unsigned number, represented on the first 8 octets of the octet " +
                             "string.",
 
-                        xref: { document: "core", section: "11.9.5.5.1" }
+                        xref: "core§11.9.5.5.1"
                     },
 
                     {
                         details: "This field shall indicate the connected status of the associated network, where \"connected\" means " +
                             "currently linked to the network technology (e.g. Associated for a Wi-Fi network, media connected for " +
                             "an Ethernet network).",
-                        xref: { document: "core", section: "11.9.5.5.2" }
+                        xref: "core§11.9.5.5.2"
                     }
                 ]
             },
 
             {
                 details: "WiFiInterfaceScanResultStruct represents a single Wi-Fi network scan result.",
-                xref: { document: "core", section: "11.9.5.6" },
+                xref: "core§11.9.5.6",
 
                 children: [
                     undefined,
@@ -834,18 +834,18 @@ NetworkCommissioning.patch(
                     {
                         details: "This field, if present, may be used to differentiate overlapping channel number values across " +
                             "different Wi-Fi frequency bands.",
-                        xref: { document: "core", section: "11.9.5.6.1" }
+                        xref: "core§11.9.5.6.1"
                     },
                     {
                         details: "This field, if present, shall denote the signal strength in dBm of the associated scan result.",
-                        xref: { document: "core", section: "11.9.5.6.2" }
+                        xref: "core§11.9.5.6.2"
                     }
                 ]
             },
 
             {
                 details: "ThreadInterfaceScanResultStruct represents a single Thread network scan result.",
-                xref: { document: "core", section: "11.9.5.7" },
+                xref: "core§11.9.5.7",
 
                 children: [
                     undefined,
@@ -855,7 +855,7 @@ NetworkCommissioning.patch(
                     undefined,
                     {
                         details: "ExtendedAddress stands for an IEEE 802.15.4 Extended Address.",
-                        xref: { document: "core", section: "11.9.5.7.1" }
+                        xref: "core§11.9.5.7.1"
                     }
                 ]
             }

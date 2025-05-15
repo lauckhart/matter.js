@@ -12,15 +12,15 @@ RvcOperationalState.patch({
     classification: "application", pics: "RVCOPSTATE",
     details: "This cluster is derived from the Operational State cluster and provides an interface for monitoring " +
         "the operational state of a robotic vacuum cleaner.",
-    xref: { document: "cluster", section: "7.4" },
+    xref: "cluster§7.4",
 
     children: [
         undefined,
-        { xref: { document: "cluster", section: "7.4.5" } },
-        { xref: { document: "cluster", section: "7.4.5" } },
-        { xref: { document: "cluster", section: "7.4.5" } },
-        { xref: { document: "cluster", section: "7.4.5" } },
-        { xref: { document: "cluster", section: "7.4.5" } },
+        { xref: "cluster§7.4.5" },
+        { xref: "cluster§7.4.5" },
+        { xref: "cluster§7.4.5" },
+        { xref: "cluster§7.4.5" },
+        { xref: "cluster§7.4.5" },
 
         {
             details: "On receipt of this command, the device shall start seeking the charging dock, if possible in the " +
@@ -41,7 +41,7 @@ RvcOperationalState.patch({
                 "  • The device shall respond with an OperationalCommandResponse command with an ErrorStateID of " +
                 "    NoError.",
 
-            xref: { document: "cluster", section: "7.4.5.1" }
+            xref: "cluster§7.4.5.1"
         },
 
         {
@@ -65,7 +65,7 @@ RvcOperationalState.patch({
                 "OperationalCommandResponse command with an ErrorStateID of CommandInvalidInState but take no further " +
                 "action.",
 
-            xref: { document: "cluster", section: "7.4.4.1" },
+            xref: "cluster§7.4.4.1",
 
             children: [
                 { description: "The device is stopped" },
@@ -81,7 +81,7 @@ RvcOperationalState.patch({
         {
             details: "The values defined herein are applicable to this derived cluster of Operational State only and are " +
                 "additional to the set of values defined in Operational State itself.",
-            xref: { document: "cluster", section: "7.4.4.2" },
+            xref: "cluster§7.4.4.2",
 
             children: [
                 { description: "The device is not in an error state" },

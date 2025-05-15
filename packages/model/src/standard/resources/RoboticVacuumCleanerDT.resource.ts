@@ -11,14 +11,14 @@ import { RoboticVacuumCleanerDt } from "#index.js";
 RoboticVacuumCleanerDt.patch({
     classification: "simple",
     details: "This defines conformance for the Robotic Vacuum Cleaner device type.",
-    xref: { document: "device", section: "12.1" },
+    xref: "device§12.1",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "12.1.4" } },
-        { xref: { document: "device", section: "12.1.4" } },
-        { xref: { document: "device", section: "12.1.4" } },
-        { xref: { document: "device", section: "12.1.4" } },
-        { xref: { document: "device", section: "12.1.4" } }
+        { xref: "device§12.1.4" },
+        { xref: "device§12.1.4" },
+        { xref: "device§12.1.4" },
+        { xref: "device§12.1.4" },
+        { xref: "device§12.1.4" }
     ]
 });

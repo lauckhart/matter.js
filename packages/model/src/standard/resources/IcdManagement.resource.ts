@@ -15,31 +15,31 @@ IcdManagement.patch({
         "\n" +
         "The cluster implements the requirements of the Check-In Protocol that enables the ICD Check-In use " +
         "case.",
-    xref: { document: "core", section: "9.17" },
+    xref: "core§9.17",
 
     children: [
         undefined,
 
         {
-            xref: { document: "core", section: "9.17.4" },
+            xref: "core§9.17.4",
 
             children: [
                 {
                     description: "CheckInProtocolSupport",
                     details: "When this feature is supported, the device shall support all the associated commands and attributes " +
                         "to properly support the Check-In Protocol.",
-                    xref: { document: "core", section: "9.17.4.1" }
+                    xref: "core§9.17.4.1"
                 },
 
                 {
                     description: "UserActiveModeTrigger",
                     details: "This feature is supported if and only if the device has a user active mode trigger.",
-                    xref: { document: "core", section: "9.17.4.2" }
+                    xref: "core§9.17.4.2"
                 },
                 {
                     description: "LongIdleTimeSupport",
                     details: "This feature is supported if and only the device is a Long Idle Time ICD.",
-                    xref: { document: "core", section: "9.17.4.3" }
+                    xref: "core§9.17.4.3"
                 },
 
                 {
@@ -47,7 +47,7 @@ IcdManagement.patch({
                     details: "This feature is supported if and only if the device can switch between SIT and LIT operating modes " +
                         "even if it has a valid registered client. See the dynamic SIT / LIT operating mode switching for " +
                         "more details.",
-                    xref: { document: "core", section: "9.17.4.4" }
+                    xref: "core§9.17.4.4"
                 }
             ]
         },
@@ -55,20 +55,20 @@ IcdManagement.patch({
         {
             details: "Indicates the maximum interval in seconds the server can stay in idle mode. The IdleModeDuration " +
                 "shall NOT be smaller than the ActiveModeDuration.",
-            xref: { document: "core", section: "9.17.6.1" }
+            xref: "core§9.17.6.1"
         },
 
         {
             details: "Indicates the minimum interval in milliseconds the server typically will stay in active mode after " +
                 "initial transition out of idle mode. The ActiveModeDuration does not include the " +
                 "ActiveModeThreshold.",
-            xref: { document: "core", section: "9.17.6.2" }
+            xref: "core§9.17.6.2"
         },
 
         {
             details: "Indicates the minimum amount of time in milliseconds the server typically will stay active after " +
                 "network activity when in active mode.",
-            xref: { document: "core", section: "9.17.6.3" }
+            xref: "core§9.17.6.3"
         },
 
         {
@@ -76,17 +76,14 @@ IcdManagement.patch({
                 "lost. The maximum number of entries that can be in the list shall be ClientsSupportedPerFabric for " +
                 "each fabric supported on the server, as indicated by the value of the SupportedFabrics attribute in " +
                 "the Operational Credentials cluster.",
-            xref: { document: "core", section: "9.17.6.4" }
+            xref: "core§9.17.6.4"
         },
 
-        {
-            details: "This attribute returns the value of the ICD Counter.",
-            xref: { document: "core", section: "9.17.6.5" }
-        },
+        { details: "This attribute returns the value of the ICD Counter.", xref: "core§9.17.6.5" },
         {
             details: "Indicates the maximum number of entries that the server is able to store for each fabric in the " +
                 "RegisteredClients attribute.",
-            xref: { document: "core", section: "9.17.6.6" }
+            xref: "core§9.17.6.6"
         },
 
         {
@@ -104,7 +101,7 @@ IcdManagement.patch({
                 "bitmap at the same time. However, a device shall NOT set more than one bit which has a dependency on " +
                 "the UserActiveModeTriggerInstruction attribute.",
 
-            xref: { document: "core", section: "9.17.6.7" }
+            xref: "core§9.17.6.7"
         },
 
         {
@@ -132,7 +129,7 @@ IcdManagement.patch({
                 "the UserActiveModeTriggerInstruction attribute, the string shall consist of exactly 6 hexadecimal " +
                 "digits using the ASCII characters 0-F and encoding the RGB color value as used in HTML encodings.",
 
-            xref: { document: "core", section: "9.17.6.8" }
+            xref: "core§9.17.6.8"
         },
 
         {
@@ -141,7 +138,7 @@ IcdManagement.patch({
                 "  • If the ICD is operating as a LIT ICD, OperatingMode shall be LIT." +
                 "\n" +
                 "  • If the ICD is operating as a SIT ICD, OperatingMode shall be SIT.",
-            xref: { document: "core", section: "9.17.6.9" }
+            xref: "core§9.17.6.9"
         },
 
         {
@@ -149,28 +146,25 @@ IcdManagement.patch({
                 "MaximumCheckInBackoff shall NOT be smaller than the IdleModeDuration." +
                 "\n" +
                 "If the MaximumCheckInBackoff is equal to the IdleModeDuration, it means the ICD does notback- off.",
-            xref: { document: "core", section: "9.17.6.10" }
+            xref: "core§9.17.6.10"
         },
 
         {
             details: "This command allows a client to register itself with the ICD to be notified when the device is " +
                 "available for communication.",
-            xref: { document: "core", section: "9.17.7.1" },
+            xref: "core§9.17.7.1",
 
             children: [
                 {
                     details: "This field shall provide the node ID to which a Check-In message will be sent if there are no active " +
                         "subscriptions matching MonitoredSubject.",
-                    xref: { document: "core", section: "9.17.7.1.1" }
+                    xref: "core§9.17.7.1.1"
                 },
-                {
-                    details: "This field shall provide the monitored subject ID.",
-                    xref: { document: "core", section: "9.17.7.1.2" }
-                },
+                { details: "This field shall provide the monitored subject ID.", xref: "core§9.17.7.1.2" },
                 {
                     details: "This field shall provide the shared secret between the client and the ICD to encrypt the Check-In " +
                         "message.",
-                    xref: { document: "core", section: "9.17.7.1.3" }
+                    xref: "core§9.17.7.1.3"
                 },
 
                 {
@@ -182,12 +176,12 @@ IcdManagement.patch({
                         "cluster. The verification key shall be ignored by the server if it is provided by a client with " +
                         "administrator permissions for the server cluster.",
 
-                    xref: { document: "core", section: "9.17.7.1.4" }
+                    xref: "core§9.17.7.1.4"
                 },
 
                 {
                     details: "This field shall provide the client type of the client registering.",
-                    xref: { document: "core", section: "9.17.7.1.5" }
+                    xref: "core§9.17.7.1.5"
                 }
             ]
         },
@@ -195,7 +189,7 @@ IcdManagement.patch({
         {
             details: "This command shall be sent by the ICD Management Cluster server in response to a successful " +
                 "RegisterClient command.",
-            xref: { document: "core", section: "9.17.7.2" }
+            xref: "core§9.17.7.2"
         },
 
         {
@@ -203,12 +197,12 @@ IcdManagement.patch({
                 "the network (e.g. running on a phone which is leaving the home) can (and should) remove its " +
                 "subscriptions and send this UnregisterClient command before leaving to prevent the burden on the ICD " +
                 "of an absent client.",
-            xref: { document: "core", section: "9.17.7.3" },
+            xref: "core§9.17.7.3",
 
             children: [
                 {
                     details: "This field shall provide the registered client node ID to remove from storage.",
-                    xref: { document: "core", section: "9.17.7.3.1" }
+                    xref: "core§9.17.7.3.1"
                 },
 
                 {
@@ -221,7 +215,7 @@ IcdManagement.patch({
                         "ignored by the server if it is provided by a client with administrator permissions for the server " +
                         "cluster.",
 
-                    xref: { document: "core", section: "9.17.7.3.2" }
+                    xref: "core§9.17.7.3.2"
                 }
             ]
         },
@@ -235,13 +229,13 @@ IcdManagement.patch({
                 "sequence of message exchanges during that period. The client may slightly overestimate the duration " +
                 "it wants the ICD to be active for, in order to account for network delays.",
 
-            xref: { document: "core", section: "9.17.7.4" }
+            xref: "core§9.17.7.4"
         },
 
         {
             details: "This message shall be sent by the ICD in response to the StayActiveRequest command and shall contain " +
                 "the computed duration (in milliseconds) that the ICD intends to stay active for.",
-            xref: { document: "core", section: "9.17.7.5" },
+            xref: "core§9.17.7.5",
 
             children: [{
                 details: "This field shall provide the actual duration that the ICD server can stay active from the time it " +
@@ -252,13 +246,13 @@ IcdManagement.patch({
                     "The minimum value of the PromisedActiveDuration field shall be equal to either 30000 milliseconds or " +
                     "StayActiveDuration (from the received StayActiveRequest command), whichever is smaller.",
 
-                xref: { document: "core", section: "9.17.7.5.1" }
+                xref: "core§9.17.7.5.1"
             }]
         },
 
         {
             details: "See the UserActiveModeTriggerHint table for requirements associated to each bit.",
-            xref: { document: "core", section: "9.17.5.1" },
+            xref: "core§9.17.5.1",
 
             children: [
                 { description: "Power Cycle to transition the device to ActiveMode" },
@@ -282,7 +276,7 @@ IcdManagement.patch({
         },
 
         {
-            xref: { document: "core", section: "9.17.5.1.1" },
+            xref: "core§9.17.5.1.1",
 
             children: [
                 { description: "The client is typically resident, always-on, fixed infrastructure in the home." },
@@ -293,7 +287,7 @@ IcdManagement.patch({
         },
 
         {
-            xref: { document: "core", section: "9.17.5.2" },
+            xref: "core§9.17.5.2",
             children: [
                 { description: "ICD is operating as a Short Idle Time ICD." },
                 { description: "ICD is operating as a Long Idle Time ICD." }
@@ -301,13 +295,13 @@ IcdManagement.patch({
         },
 
         {
-            xref: { document: "core", section: "9.17.5.3" },
+            xref: "core§9.17.5.3",
 
             children: [
                 {
                     details: "This field shall indicate the NodeID of the Node to which Check-In messages will be sent when the " +
                         "MonitoredSubject is not subscribed.",
-                    xref: { document: "core", section: "9.17.5.3.1" }
+                    xref: "core§9.17.5.3.1"
                 },
 
                 {
@@ -331,14 +325,14 @@ IcdManagement.patch({
                         "subscribers to the server on the entry’s associated fabric bears the CASE Authenticated TAG value " +
                         "0xAA12 and the version 0x0002 or higher within its NOC, then the entry matches.",
 
-                    xref: { document: "core", section: "9.17.5.3.2" }
+                    xref: "core§9.17.5.3.2"
                 },
 
                 undefined,
                 {
                     details: "This field shall indicate the client’s type to inform the ICD of the availability for communication " +
                         "of the client.",
-                    xref: { document: "core", section: "9.17.5.4" }
+                    xref: "core§9.17.5.4"
                 }
             ]
         }

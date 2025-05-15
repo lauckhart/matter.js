@@ -11,15 +11,15 @@ import { LaundryDryerDt } from "#index.js";
 LaundryDryerDt.patch({
     classification: "simple",
     details: "A Laundry Dryer represents a device that is capable of drying laundry items.",
-    xref: { document: "device", section: "13.6" },
+    xref: "device§13.6",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "13.6.4" } },
-        { xref: { document: "device", section: "13.6.4" } },
-        { xref: { document: "device", section: "13.6.4" } },
-        { xref: { document: "device", section: "13.6.4" } },
-        { xref: { document: "device", section: "13.6.4" } },
-        { xref: { document: "device", section: "13.6.4" } }
+        { xref: "device§13.6.4" },
+        { xref: "device§13.6.4" },
+        { xref: "device§13.6.4" },
+        { xref: "device§13.6.4" },
+        { xref: "device§13.6.4" },
+        { xref: "device§13.6.4" }
     ]
 });

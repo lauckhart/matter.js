@@ -11,7 +11,7 @@ import { ElectricalMeasurementNs } from "#index.js";
 ElectricalMeasurementNs.patch({
     details: "The tags contained in this namespace are restricted for use in the electrical measurement domain and " +
         "shall NOT be used in any other domain or context.",
-    xref: { document: "namespace", section: "12" },
+    xref: "namespace§12",
 
     children: [
         { description: "Indicates values measured for a DC load" },

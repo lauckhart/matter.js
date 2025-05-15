@@ -12,7 +12,7 @@ OperationalCredentials.patch({
     classification: "node", pics: "OPCREDS",
     details: "This cluster is used to add or remove Node Operational credentials on a Commissionee or Node, as " +
         "well as manage the associated Fabrics.",
-    xref: { document: "core", section: "11.18" },
+    xref: "core§11.18",
 
     children: [
         undefined,
@@ -27,7 +27,7 @@ OperationalCredentials.patch({
                 "\n" +
                 "The number of entries in this list shall match the number of entries in the Fabrics attribute.",
 
-            xref: { document: "core", section: "11.18.5.1" }
+            xref: "core§11.18.5.1"
         },
 
         {
@@ -38,13 +38,13 @@ OperationalCredentials.patch({
                 "\n" +
                 "The number of entries in this list shall match the number of entries in the NOCs attribute.",
 
-            xref: { document: "core", section: "11.18.5.2" }
+            xref: "core§11.18.5.2"
         },
 
         {
             details: "This attribute contains the number of Fabrics that are supported by the device. This value is fixed " +
                 "for a particular device.",
-            xref: { document: "core", section: "11.18.5.3" }
+            xref: "core§11.18.5.3"
         },
 
         {
@@ -57,7 +57,7 @@ OperationalCredentials.patch({
                 "\n" +
                 "Upon Factory Data Reset, this attribute shall be set to a default value of 0.",
 
-            xref: { document: "core", section: "11.18.5.4" }
+            xref: "core§11.18.5.4"
         },
 
         {
@@ -76,7 +76,7 @@ OperationalCredentials.patch({
                 "\n" +
                 "Upon Factory Data Reset, this attribute shall be set to a default value whereby the list is empty.",
 
-            xref: { document: "core", section: "11.18.5.5" }
+            xref: "core§11.18.5.5"
         },
 
         {
@@ -85,7 +85,7 @@ OperationalCredentials.patch({
                 "This attribute is useful to contextualize Fabric-Scoped entries obtained from response commands or " +
                 "attribute reads, since a given Fabric may be referenced by a different Fabric Index locally on a " +
                 "remote Node.",
-            xref: { document: "core", section: "11.18.5.6" }
+            xref: "core§11.18.5.6"
         },
 
         {
@@ -93,7 +93,7 @@ OperationalCredentials.patch({
                 "AttestationResponse Command. If the AttestationNonce that is provided in the command is malformed, a " +
                 "recipient shall fail the command with a Status Code of INVALID_COMMAND. The AttestationNonce field " +
                 "shall be used in the computation of the Attestation Information.",
-            xref: { document: "core", section: "11.18.6.1" }
+            xref: "core§11.18.6.1"
         },
 
         {
@@ -105,17 +105,17 @@ OperationalCredentials.patch({
                 "See Section F.2, “Device Attestation Response test vector” for an example computation of an " +
                 "AttestationResponse.",
 
-            xref: { document: "core", section: "11.18.6.2" },
+            xref: "core§11.18.6.2",
 
             children: [
                 {
                     details: "This field shall contain the octet string of the serialized attestation_elements_message.",
-                    xref: { document: "core", section: "11.18.6.2.1" }
+                    xref: "core§11.18.6.2.1"
                 },
                 {
                     details: "This field shall contain the octet string of the necessary attestation_signature as described in " +
                         "Section 11.18.4.7, “Attestation Information”.",
-                    xref: { document: "core", section: "11.18.6.2.2" }
+                    xref: "core§11.18.6.2.2"
                 }
             ]
         },
@@ -123,16 +123,16 @@ OperationalCredentials.patch({
         {
             details: "If the CertificateType is not a valid value per CertificateChainTypeEnum then the command shall fail " +
                 "with a Status Code of INVALID_COMMAND.",
-            xref: { document: "core", section: "11.18.6.3" }
+            xref: "core§11.18.6.3"
         },
 
         {
             details: "This command shall be generated in response to a CertificateChainRequest command.",
-            xref: { document: "core", section: "11.18.6.4" },
+            xref: "core§11.18.6.4",
             children: [{
                 details: "This field shall be the DER encoded certificate corresponding to the CertificateType field in the " +
                     "CertificateChainRequest command.",
-                xref: { document: "core", section: "11.18.6.4.1" }
+                xref: "core§11.18.6.4.1"
             }]
         },
 
@@ -164,7 +164,7 @@ OperationalCredentials.patch({
                 "check had been executed, then this command shall fail with a FAILURE status code sent back to the " +
                 "initiator.",
 
-            xref: { document: "core", section: "11.18.6.5" }
+            xref: "core§11.18.6.5"
         },
 
         {
@@ -176,17 +176,17 @@ OperationalCredentials.patch({
                 "See Section F.3, “Node Operational CSR Response test vector” for an example computation of a " +
                 "CSRResponse.",
 
-            xref: { document: "core", section: "11.18.6.6" },
+            xref: "core§11.18.6.6",
 
             children: [
                 {
                     details: "This field shall contain the octet string of the serialized nocsr_elements_message.",
-                    xref: { document: "core", section: "11.18.6.6.1" }
+                    xref: "core§11.18.6.6.1"
                 },
                 {
                     details: "This field shall contain the octet string of the necessary attestation_signature as described in " +
                         "Section 11.18.4.9, “NOCSR Information”.",
-                    xref: { document: "core", section: "11.18.6.6.2" }
+                    xref: "core§11.18.6.6.2"
                 }
             ]
         },
@@ -203,7 +203,7 @@ OperationalCredentials.patch({
                 "A Commissioner or Administrator SHOULD issue this command after performing the Attestation " +
                 "Procedure.",
 
-            xref: { document: "core", section: "11.18.6.8" },
+            xref: "core§11.18.6.8",
 
             children: [
                 undefined,
@@ -221,7 +221,7 @@ OperationalCredentials.patch({
                         "newly joined fabric as the accessing fabric and with the following argument fields (assuming " +
                         "KeySetWrite allowed a GroupKeySetID set to 0):",
 
-                    xref: { document: "core", section: "11.18.6.8.1" }
+                    xref: "core§11.18.6.8.1"
                 },
 
                 {
@@ -244,7 +244,7 @@ OperationalCredentials.patch({
                         "\"Administer Node over CASE\" Access Control Entry to finalize new Fabric configuration and " +
                         "subsequently be able to call the CommissioningComplete command.",
 
-                    xref: { document: "core", section: "11.18.6.8.2" }
+                    xref: "core§11.18.6.8.2"
                 },
 
                 {
@@ -340,7 +340,7 @@ OperationalCredentials.patch({
                         "Thereafter, the Node shall respond with an NOCResponse with a StatusCode of OK and a FabricIndex " +
                         "field matching the FabricIndex under which the new Node Operational Certificate (NOC) is scoped.",
 
-                    xref: { document: "core", section: "11.18.6.8.3" }
+                    xref: "core§11.18.6.8.3"
                 }
             ]
         },
@@ -403,7 +403,7 @@ OperationalCredentials.patch({
                 "Thereafter, the Node shall respond with an NOCResponse with a StatusCode of OK and a FabricIndex " +
                 "field matching the FabricIndex under which the updated NOC is scoped.",
 
-            xref: { document: "core", section: "11.18.6.9" }
+            xref: "core§11.18.6.9"
         },
 
         {
@@ -419,24 +419,24 @@ OperationalCredentials.patch({
                 "\n" +
                 "It provides status information about the success or failure of those commands.",
 
-            xref: { document: "core", section: "11.18.6.10" },
+            xref: "core§11.18.6.10",
 
             children: [
                 {
                     details: "This field shall contain an NOCStatus value representing the status of an operation involving a NOC.",
-                    xref: { document: "core", section: "11.18.6.10.1" }
+                    xref: "core§11.18.6.10.1"
                 },
                 {
                     details: "This field shall be present whenever StatusCode has a value of OK. If present, it shall contain the " +
                         "Fabric Index of the Fabric last added, removed or updated.",
-                    xref: { document: "core", section: "11.18.6.10.2" }
+                    xref: "core§11.18.6.10.2"
                 },
 
                 {
                     details: "This field may contain debugging textual information from the cluster implementation, which SHOULD " +
                         "NOT be presented to user interfaces in any way. Its purpose is to help developers in troubleshooting " +
                         "errors and the contents may go into logs or crash reports.",
-                    xref: { document: "core", section: "11.18.6.10.3" }
+                    xref: "core§11.18.6.10.3"
                 }
             ]
         },
@@ -455,7 +455,7 @@ OperationalCredentials.patch({
                 "used by Administrators to provide additional per-fabric context when operations such as RemoveFabric " +
                 "are considered or used.",
 
-            xref: { document: "core", section: "11.18.6.11" },
+            xref: "core§11.18.6.11",
 
             children: [{
                 details: "This field shall contain the label to set for the fabric associated with the current secure session." +
@@ -476,7 +476,7 @@ OperationalCredentials.patch({
                     "Fabrics Attribute as currently visible, even for an existing fabric currently in process of being " +
                     "updated.",
 
-                xref: { document: "core", section: "11.18.6.11.1" }
+                xref: "core§11.18.6.11.1"
             }]
         },
 
@@ -499,7 +499,7 @@ OperationalCredentials.patch({
                 "Domain’s party of the removal. Otherwise, users may only observe the removal of a Fabric association " +
                 "as persistently failing attempts to reach a Node operationally.",
 
-            xref: { document: "core", section: "11.18.6.12" },
+            xref: "core§11.18.6.12",
 
             children: [{
                 details: "This field shall contain the Fabric Index reference (see fabric-index) associated with the Fabric " +
@@ -545,7 +545,7 @@ OperationalCredentials.patch({
                     "     data that may underpin the current set of exchanges, the Node invoking the command SHOULD NOT " +
                     "     expect a response before terminating its secure session with the target.",
 
-                xref: { document: "core", section: "11.18.6.12.1" }
+                xref: "core§11.18.6.12.1"
             }]
         },
 
@@ -577,13 +577,13 @@ OperationalCredentials.patch({
                 "Note that the only method of removing a trusted root is by removing the Fabric that uses it as its " +
                 "root of trust using the RemoveFabric command.",
 
-            xref: { document: "core", section: "11.18.6.13" }
+            xref: "core§11.18.6.13"
         },
 
         {
             details: "This enumeration is used by the CertificateChainRequest command to convey which certificate from the " +
                 "device attestation certificate chain to transmit back to the client.",
-            xref: { document: "core", section: "11.18.4.2" },
+            xref: "core§11.18.4.2",
             children: [
                 { description: "Request the DER- encoded DAC certificate" },
                 { description: "Request the DER- encoded PAI certificate" }
@@ -593,7 +593,7 @@ OperationalCredentials.patch({
         {
             details: "This enumeration is used by the NOCResponse common response command to convey detailed outcome of " +
                 "several of this cluster’s operations.",
-            xref: { document: "core", section: "11.18.4.3" },
+            xref: "core§11.18.4.3",
 
             children: [
                 { description: "OK, no error" },
@@ -615,18 +615,18 @@ OperationalCredentials.patch({
                 "\n" +
                 "Note that the Trusted Root CA Certificate is not included in this structure. The roots are available " +
                 "in the TrustedRootCertificates attribute of the Node Operational Credentials cluster.",
-            xref: { document: "core", section: "11.18.4.4" },
+            xref: "core§11.18.4.4",
 
             children: [
                 {
                     details: "This field shall contain the NOC for the struct’s associated fabric, encoded using Matter " +
                         "Certificate Encoding.",
-                    xref: { document: "core", section: "11.18.4.4.1" }
+                    xref: "core§11.18.4.4.1"
                 },
                 {
                     details: "This field shall contain the ICAC or the struct’s associated fabric, encoded using Matter " +
                         "Certificate Encoding. If no ICAC is present in the chain, this field shall be set to null.",
-                    xref: { document: "core", section: "11.18.4.4.2" }
+                    xref: "core§11.18.4.4.2"
                 }
             ]
         },
@@ -634,7 +634,7 @@ OperationalCredentials.patch({
         {
             details: "This structure encodes a Fabric Reference for a fabric within which a given Node is currently " +
                 "commissioned.",
-            xref: { document: "core", section: "11.18.4.5" },
+            xref: "core§11.18.4.5",
 
             children: [
                 {
@@ -642,7 +642,7 @@ OperationalCredentials.patch({
                         "FabricIndex and its associated operational credential (see Section 6.4.5.3, “Trusted Root CA " +
                         "Certificates”). The format for the key shall be the same as that used in the ec-pub-key field of the " +
                         "Matter Certificate Encoding for the root in the operational certificate chain.",
-                    xref: { document: "core", section: "11.18.4.5.1" }
+                    xref: "core§11.18.4.5.1"
                 },
 
                 {
@@ -655,27 +655,27 @@ OperationalCredentials.patch({
                         "Clients shall consider the VendorID field value to be untrustworthy until the NOC chain associated " +
                         "with the fabric has passed the Vendor ID Validation Procedure against the associated RCAC.",
 
-                    xref: { document: "core", section: "11.18.4.5.2" }
+                    xref: "core§11.18.4.5.2"
                 },
 
                 {
                     details: "This field shall contain the FabricID allocated to the fabric referenced by FabricIndex. This field " +
                         "shall match the value found in the matter-fabric-id field from the operational certificate providing " +
                         "the operational identity under this Fabric.",
-                    xref: { document: "core", section: "11.18.4.5.3" }
+                    xref: "core§11.18.4.5.3"
                 },
 
                 {
                     details: "This field shall contain the NodeID in use within the fabric referenced by FabricIndex. This field " +
                         "shall match the value found in the matter-node-id field from the operational certificate providing " +
                         "this operational identity.",
-                    xref: { document: "core", section: "11.18.4.5.4" }
+                    xref: "core§11.18.4.5.4"
                 },
 
                 {
                     details: "This field shall contain a commissioner-set label for the fabric referenced by FabricIndex. This " +
                         "label is set by the UpdateFabricLabel command.",
-                    xref: { document: "core", section: "11.18.4.5.5" }
+                    xref: "core§11.18.4.5.5"
                 }
             ]
         }

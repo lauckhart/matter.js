@@ -13,12 +13,12 @@ PressureMeasurement.patch(
         classification: "application", pics: "PRS",
         details: "This cluster provides an interface to pressure measurement functionality, including configuration " +
             "and provision of notifications of pressure measurements.",
-        xref: { document: "cluster", section: "2.4" },
+        xref: "cluster§2.4",
 
         children: [
             undefined,
             {
-                xref: { document: "cluster", section: "2.4.4" },
+                xref: "cluster§2.4.4",
                 children: [{ description: "Extended", details: "Extended range and resolution" }]
             },
 
@@ -28,7 +28,7 @@ PressureMeasurement.patch(
                     "MeasuredValue = 10 x Pressure [kPa]" +
                     "\n" +
                     "The null value indicates that the value is not available.",
-                xref: { document: "cluster", section: "2.4.5.1" }
+                xref: "cluster§2.4.5.1"
             },
 
             {
@@ -36,7 +36,7 @@ PressureMeasurement.patch(
                     "details." +
                     "\n" +
                     "The null value indicates that the value is not available.",
-                xref: { document: "cluster", section: "2.4.5.2" }
+                xref: "cluster§2.4.5.2"
             },
 
             {
@@ -44,10 +44,10 @@ PressureMeasurement.patch(
                     "details." +
                     "\n" +
                     "The null value indicates that the value is not available.",
-                xref: { document: "cluster", section: "2.4.5.3" }
+                xref: "cluster§2.4.5.3"
             },
 
-            { details: "See Measured Value.", xref: { document: "cluster", section: "2.4.5.4" } },
+            { details: "See Measured Value.", xref: "cluster§2.4.5.4" },
 
             {
                 details: "Indicates the pressure in Pascals as follows:" +
@@ -55,18 +55,18 @@ PressureMeasurement.patch(
                     "ScaledValue = 10Scale x Pressure [Pa]" +
                     "\n" +
                     "The null value indicates that the value is not available.",
-                xref: { document: "cluster", section: "2.4.5.5" }
+                xref: "cluster§2.4.5.5"
             },
 
             {
                 details: "Indicates the minimum value of ScaledValue that can be measured. The null value indicates that the " +
                     "value is not available.",
-                xref: { document: "cluster", section: "2.4.5.6" }
+                xref: "cluster§2.4.5.6"
             },
             {
                 details: "Indicates the maximum value of ScaledValue that can be measured. The null value indicates that the " +
                     "value is not available.",
-                xref: { document: "cluster", section: "2.4.5.7" }
+                xref: "cluster§2.4.5.7"
             },
 
             {
@@ -75,12 +75,12 @@ PressureMeasurement.patch(
                     "Value. The true value is located in the range" +
                     "\n" +
                     "(ScaledValue – ScaledTolerance) to (ScaledValue + ScaledTolerance).",
-                xref: { document: "cluster", section: "2.4.5.8" }
+                xref: "cluster§2.4.5.8"
             },
 
             {
                 details: "Indicates the base 10 exponent used to obtain ScaledValue (see ScaledValue).",
-                xref: { document: "cluster", section: "2.4.5.9" }
+                xref: "cluster§2.4.5.9"
             }
         ]
     }

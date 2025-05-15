@@ -33,19 +33,19 @@ ModeBase.patch({
         "An anonymous mode shall NOT replace the meaning of a standard mode tag, when one exists, for the " +
         "cluster purpose.",
 
-    xref: { document: "cluster", section: "1.10" },
+    xref: "cluster§1.10",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "1.10.4" },
+            xref: "cluster§1.10.4",
 
             children: [{
                 description: "OnOff",
                 details: "This feature creates a dependency between an OnOff cluster instance and this cluster instance on the " +
                     "same endpoint. See OnMode for more information.",
-                xref: { document: "cluster", section: "1.10.4.1" }
+                xref: "cluster§1.10.4.1"
             }]
         },
 
@@ -57,7 +57,7 @@ ModeBase.patch({
                 "Each entry in this list shall have a unique value for the Mode field. Each entry in this list shall " +
                 "have a unique value for the Label field.",
 
-            xref: { document: "cluster", section: "1.10.6.1" }
+            xref: "cluster§1.10.6.1"
         },
 
         {
@@ -71,7 +71,7 @@ ModeBase.patch({
                 "progressing through a sequence of operations, on system time-outs or idle delays, or via " +
                 "interactions coming from a fabric other than the one which last executed a ChangeToMode.",
 
-            xref: { document: "cluster", section: "1.10.6.2" }
+            xref: "cluster§1.10.6.2"
         },
 
         {
@@ -89,7 +89,7 @@ ModeBase.patch({
                 "\n" +
                 "If this attribute is not implemented, or is set to the null value, it shall have no effect.",
 
-            xref: { document: "cluster", section: "1.10.6.3" }
+            xref: "cluster§1.10.6.3"
         },
 
         {
@@ -100,14 +100,14 @@ ModeBase.patch({
                 "The value of this field shall match the Mode field of one of the entries in the SupportedModes " +
                 "attribute.",
 
-            xref: { document: "cluster", section: "1.10.6.4" }
+            xref: "cluster§1.10.6.4"
         },
 
         {
             details: "This command is used to change device modes." +
                 "\n" +
                 "On receipt of this command the device shall respond with a ChangeToModeResponse command.",
-            xref: { document: "cluster", section: "1.10.7.1" },
+            xref: "cluster§1.10.7.1",
 
             children: [{
                 details: "If the NewMode field doesn’t match the Mode field of any entry of the SupportedModes list, the " +
@@ -133,7 +133,7 @@ ModeBase.patch({
                     "command shall have the Status field set to Success and the StatusText field may be supplied with a " +
                     "human readable string or include an empty string.",
 
-                xref: { document: "cluster", section: "1.10.7.1.1" }
+                xref: "cluster§1.10.7.1.1"
             }]
         },
 
@@ -141,13 +141,13 @@ ModeBase.patch({
             details: "This command is sent by the device on receipt of the ChangeToMode command. This command" +
                 "\n" +
                 "shall have the following data fields:",
-            xref: { document: "cluster", section: "1.10.7.2" },
-            children: [{ xref: { document: "cluster", section: "1.10.7.2.1" } }]
+            xref: "cluster§1.10.7.2",
+            children: [{ xref: "cluster§1.10.7.2.1" }]
         },
 
         {
             details: "A Mode Tag is meant to be interpreted by the client for the purpose the cluster serves.",
-            xref: { document: "cluster", section: "1.10.5.1" },
+            xref: "cluster§1.10.5.1",
 
             children: [
                 {
@@ -162,33 +162,30 @@ ModeBase.patch({
                         "both in a cluster whose purpose is to choose the amount of sugar, or in a cluster whose purpose is " +
                         "to choose the amount of salt.",
 
-                    xref: { document: "cluster", section: "1.10.5.1.1" }
+                    xref: "cluster§1.10.5.1.1"
                 },
 
                 {
                     details: "This field shall indicate the mode tag within a mode tag namespace which is either manufacturer " +
                         "specific or standard.",
-                    xref: { document: "cluster", section: "1.10.5.1.2" }
+                    xref: "cluster§1.10.5.1.2"
                 }
             ]
         },
 
         {
             details: "This is a struct representing a possible mode of the server.",
-            xref: { document: "cluster", section: "1.10.5.2" },
+            xref: "cluster§1.10.5.2",
 
             children: [
                 {
                     details: "This field shall indicate readable text that describes the mode option, so that a client can provide " +
                         "it to the user to indicate what this option means. This field is meant to be readable and " +
                         "understandable by the user.",
-                    xref: { document: "cluster", section: "1.10.5.2.1" }
+                    xref: "cluster§1.10.5.2.1"
                 },
 
-                {
-                    details: "This field is used to identify the mode option.",
-                    xref: { document: "cluster", section: "1.10.5.2.2" }
-                },
+                { details: "This field is used to identify the mode option.", xref: "cluster§1.10.5.2.2" },
 
                 {
                     details: "This field shall contain a list of tags that are associated with the mode option. This may be used " +
@@ -226,7 +223,7 @@ ModeBase.patch({
                         "  • A mode that includes both a generic Quick tag (defined here), and Vacuum and Mop tags, (defined " +
                         "    in the RVC Clean cluster that is a derivation of this cluster).",
 
-                    xref: { document: "cluster", section: "1.10.5.2.3" }
+                    xref: "cluster§1.10.5.2.3"
                 }
             ]
         },
@@ -235,35 +232,35 @@ ModeBase.patch({
             children: [
                 {
                     description: "Switching to the mode indicated by the NewMode field is allowed and possible. The CurrentMode attribute is set to the value of the NewMode field.",
-                    xref: { document: "cluster", section: "1.10.7.2.1.2" }
+                    xref: "cluster§1.10.7.2.1.2"
                 },
                 {
                     description: "The value of the NewMode field doesn’t match any entries in the SupportedModes attribute.",
-                    xref: { document: "cluster", section: "1.10.7.2.1.2" }
+                    xref: "cluster§1.10.7.2.1.2"
                 },
                 {
                     description: "Generic failure code, indicating that switching to the mode indicated by the NewMode field is not allowed or not possible.",
-                    xref: { document: "cluster", section: "1.10.7.2.1.2" }
+                    xref: "cluster§1.10.7.2.1.2"
                 },
                 {
                     description: "The received request cannot be handled due to the current mode of the device",
-                    xref: { document: "cluster", section: "1.10.7.2.1.2" }
+                    xref: "cluster§1.10.7.2.1.2"
                 }
             ]
         },
 
         {
             children: [
-                { xref: { document: "cluster", section: "1.10.8" } },
-                { xref: { document: "cluster", section: "1.10.8" } },
-                { xref: { document: "cluster", section: "1.10.8" } },
-                { xref: { document: "cluster", section: "1.10.8" } },
-                { xref: { document: "cluster", section: "1.10.8" } },
-                { xref: { document: "cluster", section: "1.10.8" } },
-                { xref: { document: "cluster", section: "1.10.8" } },
-                { xref: { document: "cluster", section: "1.10.8" } },
-                { xref: { document: "cluster", section: "1.10.8" } },
-                { xref: { document: "cluster", section: "1.10.8" } }
+                { xref: "cluster§1.10.8" },
+                { xref: "cluster§1.10.8" },
+                { xref: "cluster§1.10.8" },
+                { xref: "cluster§1.10.8" },
+                { xref: "cluster§1.10.8" },
+                { xref: "cluster§1.10.8" },
+                { xref: "cluster§1.10.8" },
+                { xref: "cluster§1.10.8" },
+                { xref: "cluster§1.10.8" },
+                { xref: "cluster§1.10.8" }
             ]
         }
     ]

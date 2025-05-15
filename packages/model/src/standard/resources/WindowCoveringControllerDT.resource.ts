@@ -11,13 +11,13 @@ import { WindowCoveringControllerDt } from "#index.js";
 WindowCoveringControllerDt.patch({
     classification: "simple",
     details: "A Window Covering Controller is a device that controls an automatic window covering.",
-    xref: { document: "device", section: "8.4" },
+    xref: "device§8.4",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "8.4.4" } },
-        { xref: { document: "device", section: "8.4.4" } },
-        { xref: { document: "device", section: "8.4.4" } },
-        { xref: { document: "device", section: "8.4.4" } }
+        { xref: "device§8.4.4" },
+        { xref: "device§8.4.4" },
+        { xref: "device§8.4.4" },
+        { xref: "device§8.4.4" }
     ]
 });

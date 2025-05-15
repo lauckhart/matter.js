@@ -8,8 +8,6 @@
 
 import { powerMW } from "#index.js";
 
-powerMW.patch({
-    description: "Power",
-    details: "This type represents power measured in milliwatts.",
-    xref: { document: "core", section: "7.19.2.12" }
-});
+powerMW.patch(
+    { description: "Power", details: "This type represents power measured in milliwatts.", xref: "core§7.19.2.12" }
+);

@@ -9,7 +9,7 @@
 import { MeasurementTypeEnum } from "#index.js";
 
 MeasurementTypeEnum.patch({
-    xref: { document: "cluster", section: "2.1.4.2" },
+    xref: "cluster§2.1.4.2",
 
     children: [
         undefined,

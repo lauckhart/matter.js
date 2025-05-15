@@ -14,23 +14,23 @@ AirQualitySensorDt.patch({
         "\n" +
         "An air quality sensor is a device designed to monitor and measure various parameters related to the " +
         "quality of ambient air in indoor or outdoor environments.",
-    xref: { document: "device", section: "7.10" },
+    xref: "device§7.10",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "7.10.4" } },
-        { xref: { document: "device", section: "7.10.4" } },
-        { xref: { document: "device", section: "7.10.4" } },
-        { xref: { document: "device", section: "7.10.4" } },
-        { xref: { document: "device", section: "7.10.4" } },
-        { xref: { document: "device", section: "7.10.4" } },
-        { xref: { document: "device", section: "7.10.4" } },
-        { xref: { document: "device", section: "7.10.4" } },
-        { xref: { document: "device", section: "7.10.4" } },
-        { xref: { document: "device", section: "7.10.4" } },
-        { xref: { document: "device", section: "7.10.4" } },
-        { xref: { document: "device", section: "7.10.4" } },
-        { xref: { document: "device", section: "7.10.4" } },
-        { xref: { document: "device", section: "7.10.4" } }
+        { xref: "device§7.10.4" },
+        { xref: "device§7.10.4" },
+        { xref: "device§7.10.4" },
+        { xref: "device§7.10.4" },
+        { xref: "device§7.10.4" },
+        { xref: "device§7.10.4" },
+        { xref: "device§7.10.4" },
+        { xref: "device§7.10.4" },
+        { xref: "device§7.10.4" },
+        { xref: "device§7.10.4" },
+        { xref: "device§7.10.4" },
+        { xref: "device§7.10.4" },
+        { xref: "device§7.10.4" },
+        { xref: "device§7.10.4" }
     ]
 });

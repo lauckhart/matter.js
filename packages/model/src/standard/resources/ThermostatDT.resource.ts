@@ -15,18 +15,18 @@ ThermostatDt.patch({
         "thermostat is capable of sending heating and/or cooling requirement notifications to a " +
         "heating/cooling unit (for example, an indoor air handler) or is capable of including a mechanism to " +
         "control a heating or cooling unit directly.",
-    xref: { document: "device", section: "9.1" },
+    xref: "device§9.1",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "9.1.4" } },
-        { xref: { document: "device", section: "9.1.4" } },
-        { xref: { document: "device", section: "9.1.4" } },
-        { xref: { document: "device", section: "9.1.4" } },
-        { xref: { document: "device", section: "9.1.4" } },
-        { xref: { document: "device", section: "9.1.4" } },
-        { xref: { document: "device", section: "9.1.4" } },
-        { xref: { document: "device", section: "9.1.4" } },
-        { xref: { document: "device", section: "9.1.4" } }
+        { xref: "device§9.1.4" },
+        { xref: "device§9.1.4" },
+        { xref: "device§9.1.4" },
+        { xref: "device§9.1.4" },
+        { xref: "device§9.1.4" },
+        { xref: "device§9.1.4" },
+        { xref: "device§9.1.4" },
+        { xref: "device§9.1.4" },
+        { xref: "device§9.1.4" }
     ]
 });

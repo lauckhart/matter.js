@@ -21,13 +21,13 @@ ContentControl.patch({
         "\n" +
         "NOTE Support for Content Control cluster is provisional.",
 
-    xref: { document: "cluster", section: "6.13" },
+    xref: "cluster§6.13",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "6.13.4" },
+            xref: "cluster§6.13.4",
 
             children: [
                 { description: "ScreenTime", details: "Supports managing screen time limits." },
@@ -60,7 +60,7 @@ ContentControl.patch({
         {
             details: "Indicates whether the Content Control feature implemented on a media device is turned off (FALSE) or " +
                 "turned on (TRUE).",
-            xref: { document: "cluster", section: "6.13.7.1" }
+            xref: "cluster§6.13.7.1"
         },
 
         {
@@ -76,7 +76,7 @@ ContentControl.patch({
                 "The ratings in this collection shall be in order from a rating for the youngest viewers to the one " +
                 "for the oldest viewers. Each rating in the list shall be unique.",
 
-            xref: { document: "cluster", section: "6.13.7.2" }
+            xref: "cluster§6.13.7.2"
         },
 
         {
@@ -92,7 +92,7 @@ ContentControl.patch({
                 "For example, if the feature does not control content within apps, then the device should make this " +
                 "clear to the user when the attribute changes.",
 
-            xref: { document: "cluster", section: "6.13.7.3" }
+            xref: "cluster§6.13.7.3"
         },
 
         {
@@ -107,7 +107,7 @@ ContentControl.patch({
                 "The ratings in this collection shall be in order from a rating for the youngest viewers to the one " +
                 "for the oldest viewers. Each rating in the list shall be unique.",
 
-            xref: { document: "cluster", section: "6.13.7.4" }
+            xref: "cluster§6.13.7.4"
         },
 
         {
@@ -122,13 +122,13 @@ ContentControl.patch({
                 "For example, if the feature does not control content within apps, then the device should make this " +
                 "clear to the user when the attribute changes.",
 
-            xref: { document: "cluster", section: "6.13.7.5" }
+            xref: "cluster§6.13.7.5"
         },
 
         {
             details: "Indicates the amount of time (in seconds) which the User is allowed to spend watching TV within one " +
                 "day when the Content Control feature is activated.",
-            xref: { document: "cluster", section: "6.13.7.6" }
+            xref: "cluster§6.13.7.6"
         },
 
         {
@@ -139,7 +139,7 @@ ContentControl.patch({
                 "This attribute shall be updated when the AddBonusTime command is received and processed successfully " +
                 "(with the correct PIN).",
 
-            xref: { document: "cluster", section: "6.13.7.7" }
+            xref: "cluster§6.13.7.7"
         },
 
         {
@@ -151,16 +151,16 @@ ContentControl.patch({
                 "For example, if the feature does not control content within apps, then the device should make this " +
                 "clear to the user when the attribute changes.",
 
-            xref: { document: "cluster", section: "6.13.7.8" }
+            xref: "cluster§6.13.7.8"
         },
 
         {
             details: "Indicates a set of channels that shall be blocked when the Content Control feature is activated.",
-            xref: { document: "cluster", section: "6.13.7.9" }
+            xref: "cluster§6.13.7.9"
         },
         {
             details: "Indicates a set of applications that shall be blocked when the Content Control feature is activated.",
-            xref: { document: "cluster", section: "6.13.7.10" }
+            xref: "cluster§6.13.7.10"
         },
 
         {
@@ -171,17 +171,14 @@ ContentControl.patch({
                 "EnteringBlockContentTimeWindow. There shall NOT be multiple entries in this attribute list for the " +
                 "same day of week.",
 
-            xref: { document: "cluster", section: "6.13.7.11" }
+            xref: "cluster§6.13.7.11"
         },
 
-        {
-            details: "This event shall be generated when the RemainingScreenTime equals 0.",
-            xref: { document: "cluster", section: "6.13.9.1" }
-        },
+        { details: "This event shall be generated when the RemainingScreenTime equals 0.", xref: "cluster§6.13.9.1" },
         {
             details: "This event shall be generated when entering a period of blocked content as configured in the " +
                 "BlockContentTimeWindow attribute.",
-            xref: { document: "cluster", section: "6.13.9.2" }
+            xref: "cluster§6.13.9.2"
         },
 
         {
@@ -201,17 +198,17 @@ ContentControl.patch({
                 "when performing configuration of the Content Control settings exposed by this cluster. The ResetPIN " +
                 "command can also be used to obtain the default PIN.",
 
-            xref: { document: "cluster", section: "6.13.8.1" },
+            xref: "cluster§6.13.8.1",
 
             children: [
                 {
                     details: "This field shall specify the original PIN. Once the UpdatePIN command is performed successfully, it " +
                         "shall be invalid.",
-                    xref: { document: "cluster", section: "6.13.8.1.1" }
+                    xref: "cluster§6.13.8.1.1"
                 },
                 {
                     details: "This field shall indicate a new PIN for the Content Control feature.",
-                    xref: { document: "cluster", section: "6.13.8.1.2" }
+                    xref: "cluster§6.13.8.1.2"
                 }
             ]
         },
@@ -221,15 +218,15 @@ ContentControl.patch({
                 "\n" +
                 "If this command is executed successfully, a ResetPINResponse command with a new PIN shall be " +
                 "returned.",
-            xref: { document: "cluster", section: "6.13.8.2" }
+            xref: "cluster§6.13.8.2"
         },
 
         {
             details: "This command shall be generated in response to a ResetPIN command.",
-            xref: { document: "cluster", section: "6.13.8.3" },
+            xref: "cluster§6.13.8.3",
             children: [{
                 details: "This field shall indicate a new PIN of the Content Control feature.",
-                xref: { document: "cluster", section: "6.13.8.3.1" }
+                xref: "cluster§6.13.8.3.1"
             }]
         },
 
@@ -237,14 +234,14 @@ ContentControl.patch({
             details: "The purpose of this command is to turn on the Content Control feature on a media device." +
                 "\n" +
                 "Upon receipt of the Enable command, the media device shall set the Enabled attribute to TRUE.",
-            xref: { document: "cluster", section: "6.13.8.4" }
+            xref: "cluster§6.13.8.4"
         },
 
         {
             details: "The purpose of this command is to turn off the Content Control feature on a media device." +
                 "\n" +
                 "On receipt of the Disable command, the media device shall set the Enabled attribute to FALSE.",
-            xref: { document: "cluster", section: "6.13.8.5" }
+            xref: "cluster§6.13.8.5"
         },
 
         {
@@ -268,7 +265,7 @@ ContentControl.patch({
                 "\n" +
                 "  • The client has provided a PINCode that matches the expected PIN value.",
 
-            xref: { document: "cluster", section: "6.13.8.6" },
+            xref: "cluster§6.13.8.6",
 
             children: [
                 {
@@ -279,13 +276,13 @@ ContentControl.patch({
                         "client with Operate permission is allowed to invoke this command only if the PIN passed in this " +
                         "command is equal to the current PIN value.",
 
-                    xref: { document: "cluster", section: "6.13.8.6.1" }
+                    xref: "cluster§6.13.8.6.1"
                 },
 
                 {
                     details: "This field shall indicate the amount of extra time (in seconds) to increase RemainingScreenTime. " +
                         "This field shall NOT exceed the remaining time of this day.",
-                    xref: { document: "cluster", section: "6.13.8.6.2" }
+                    xref: "cluster§6.13.8.6.2"
                 }
             ]
         },
@@ -295,11 +292,11 @@ ContentControl.patch({
                 "\n" +
                 "Upon receipt of the SetScreenDailyTime command, the media device shall set the ScreenDailyTime " +
                 "attribute to the ScreenTime value.",
-            xref: { document: "cluster", section: "6.13.8.7" },
+            xref: "cluster§6.13.8.7",
             children: [{
                 details: "This field shall indicate the time (in seconds) which the User is allowed to spend watching TV on " +
                     "this media device within one day.",
-                xref: { document: "cluster", section: "6.13.8.7.1" }
+                xref: "cluster§6.13.8.7.1"
             }]
         },
 
@@ -309,7 +306,7 @@ ContentControl.patch({
                 "\n" +
                 "Upon receipt of the BlockUnratedContent command, the media device shall set the BlockUnrated " +
                 "attribute to TRUE.",
-            xref: { document: "cluster", section: "6.13.8.8" }
+            xref: "cluster§6.13.8.8"
         },
 
         {
@@ -318,7 +315,7 @@ ContentControl.patch({
                 "\n" +
                 "Upon receipt of the UnblockUnratedContent command, the media device shall set the BlockUnrated " +
                 "attribute to FALSE.",
-            xref: { document: "cluster", section: "6.13.8.9" }
+            xref: "cluster§6.13.8.9"
         },
 
         {
@@ -327,11 +324,11 @@ ContentControl.patch({
                 "Upon receipt of the SetOnDemandRatingThreshold command, the media device shall check if the Rating " +
                 "field is one of values present in the OnDemandRatings attribute. If not, then a response with " +
                 "InvalidRating error status shall be returned.",
-            xref: { document: "cluster", section: "6.13.8.10" },
+            xref: "cluster§6.13.8.10",
             children: [{
                 details: "This field indicates a threshold rating for filtering on-demand content. This field shall be set to " +
                     "one of the values present in the OnDemandRatings attribute",
-                xref: { document: "cluster", section: "6.13.8.10.1" }
+                xref: "cluster§6.13.8.10.1"
             }]
         },
 
@@ -341,11 +338,11 @@ ContentControl.patch({
                 "Upon receipt of the SetScheduledContentRatingThreshold command, the media device shall check if the " +
                 "Rating field is one of values present in the ScheduledContentRatings attribute. If not, then a " +
                 "response with InvalidRating error status shall be returned.",
-            xref: { document: "cluster", section: "6.13.8.11" },
+            xref: "cluster§6.13.8.11",
             children: [{
                 details: "This field indicates a threshold rating for filtering scheduled content. This field shall be set to " +
                     "one of the values present in the ScheduledContentRatings attribute.",
-                xref: { document: "cluster", section: "6.13.8.11.1" }
+                xref: "cluster§6.13.8.11.1"
             }]
         },
 
@@ -365,13 +362,13 @@ ContentControl.patch({
                 "If all channels in Channel field already exist in the BlockChannelList attribute, then a response " +
                 "with ChannelAlreadyExist error Status shall be returned.",
 
-            xref: { document: "cluster", section: "6.13.8.12" },
+            xref: "cluster§6.13.8.12",
 
             children: [{
                 details: "This field indicates a set of channels that shall be blocked when the Content Control feature is " +
                     "activated. This field shall be set to values present in ChannelList attribute in the Channel " +
                     "cluster. The BlockChannelIndex field passed in this command shall be NULL.",
-                xref: { document: "cluster", section: "6.13.8.12.1" }
+                xref: "cluster§6.13.8.12.1"
             }]
         },
 
@@ -383,11 +380,11 @@ ContentControl.patch({
                 "or more channels indicated by ChannelIndexes passed in this command field are not present in the " +
                 "BlockChannelList attribute, then a response with ChannelNotExist error Status shall be returned.",
 
-            xref: { document: "cluster", section: "6.13.8.13" },
+            xref: "cluster§6.13.8.13",
             children: [{
                 details: "This field shall specify a set of indexes indicating Which channels shall be removed from the " +
                     "BlockChannelList attribute.",
-                xref: { document: "cluster", section: "6.13.8.13.1" }
+                xref: "cluster§6.13.8.13.1"
             }]
         },
 
@@ -407,11 +404,11 @@ ContentControl.patch({
                 "If all applications in Applications field are already present in BlockApplicationList attribute, " +
                 "then a response with ApplicationAlreadyExist error Status shall be returned.",
 
-            xref: { document: "cluster", section: "6.13.8.14" },
+            xref: "cluster§6.13.8.14",
             children: [{
                 details: "This field indicates a set of applications that shall be blocked when the Content Control feature is " +
                     "activated.",
-                xref: { document: "cluster", section: "6.13.8.14.1" }
+                xref: "cluster§6.13.8.14.1"
             }]
         },
 
@@ -423,11 +420,11 @@ ContentControl.patch({
                 "applications in Applications field which are not present in the BlockApplicationList attribute, then " +
                 "a response with ApplicationNotExist error Status shall be returned.",
 
-            xref: { document: "cluster", section: "6.13.8.15" },
+            xref: "cluster§6.13.8.15",
             children: [{
                 details: "This field indicates a set of applications which shall be removed from BlockApplicationList " +
                     "attribute.",
-                xref: { document: "cluster", section: "6.13.8.15.1" }
+                xref: "cluster§6.13.8.15.1"
             }]
         },
 
@@ -444,10 +441,10 @@ ContentControl.patch({
                 "If the TimeWindowIndex field is not NULL and presents in the BlockContentTimeWindow attribute, the " +
                 "media device shall replace the original time window with the new time window passed in this command.",
 
-            xref: { document: "cluster", section: "6.13.8.16" },
+            xref: "cluster§6.13.8.16",
             children: [{
                 details: "This field shall indicate a time window requested to set to the BlockContentTimeWindow attribute.",
-                xref: { document: "cluster", section: "6.13.8.16.1" }
+                xref: "cluster§6.13.8.16.1"
             }]
         },
 
@@ -461,16 +458,16 @@ ContentControl.patch({
                 "If one or more time window indexes passed in this command are not present in BlockContentTimeWindow " +
                 "attribute, then a response with TimeWindowNotExist error status shall be returned.",
 
-            xref: { document: "cluster", section: "6.13.8.17" },
+            xref: "cluster§6.13.8.17",
             children: [{
                 details: "This field shall specify a set of time window indexes indicating which time windows will be removed " +
                     "from the BlockContentTimeWindow attribute.",
-                xref: { document: "cluster", section: "6.13.8.17.1" }
+                xref: "cluster§6.13.8.17.1"
             }]
         },
 
         {
-            xref: { document: "cluster", section: "6.13.5.1" },
+            xref: "cluster§6.13.5.1",
 
             children: [
                 { description: "Sunday" },
@@ -484,31 +481,31 @@ ContentControl.patch({
         },
 
         {
-            xref: { document: "cluster", section: "6.13.5.2" },
+            xref: "cluster§6.13.5.2",
 
             children: [
                 {
                     details: "This field shall indicate the name of the rating level of the applied rating system. The applied " +
                         "rating system is dependent upon the region or country where the Node has been provisioned, and may " +
                         "vary from one country to another.",
-                    xref: { document: "cluster", section: "6.13.5.2.1" }
+                    xref: "cluster§6.13.5.2.1"
                 },
 
                 {
                     details: "This field shall specify a human readable (displayable) description for RatingName.",
-                    xref: { document: "cluster", section: "6.13.5.2.2" }
+                    xref: "cluster§6.13.5.2.2"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "6.13.5.3" },
+            xref: "cluster§6.13.5.3",
 
             children: [
                 {
                     details: "This field shall indicate a unique index value for a blocked channel. This value may be used to " +
                         "indicate one selected channel which will be removed from BlockChannelList attribute.",
-                    xref: { document: "cluster", section: "6.13.5.3.1" }
+                    xref: "cluster§6.13.5.3.1"
                 },
 
                 {
@@ -516,7 +513,7 @@ ContentControl.patch({
                         "channel number is expressed as a string, such as \"13.1\" or \"256\", the major number would be 13 or " +
                         "256, respectively. This field is required but shall be set to 0 for channels such as over-the-top " +
                         "channels that are not represented by a major or minor number.",
-                    xref: { document: "cluster", section: "6.13.5.3.2" }
+                    xref: "cluster§6.13.5.3.2"
                 },
 
                 {
@@ -524,19 +521,19 @@ ContentControl.patch({
                         "channel number is expressed as a string, such as \"13.1\" or \"256\", the minor number would be 1 or 0, " +
                         "respectively. This field is required but shall be set to 0 for channels such as over-the-top " +
                         "channels that are not represented by a major or minor number.",
-                    xref: { document: "cluster", section: "6.13.5.3.3" }
+                    xref: "cluster§6.13.5.3.3"
                 },
 
                 {
                     details: "This field shall indicate the unique identifier for a specific channel. This field is optional, but " +
                         "SHOULD be provided when MajorNumber and MinorNumber are not available.",
-                    xref: { document: "cluster", section: "6.13.5.3.4" }
+                    xref: "cluster§6.13.5.3.4"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "6.13.5.4" },
+            xref: "cluster§6.13.5.4",
 
             children: [
                 {
@@ -545,65 +542,53 @@ ContentControl.patch({
                         "\n" +
                         "Content App Platform providers will have their own catalog vendor ID (set to their own Vendor ID) " +
                         "and will assign an ApplicationID to each Content App.",
-                    xref: { document: "cluster", section: "6.13.5.4.1" }
+                    xref: "cluster§6.13.5.4.1"
                 },
 
                 {
                     details: "This field shall indicate the application identifier, expressed as a string, such as \"PruneVideo\" or " +
                         "\"Company X\". This field shall be unique within a catalog.",
-                    xref: { document: "cluster", section: "6.13.5.4.2" }
+                    xref: "cluster§6.13.5.4.2"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "6.13.5.5" },
+            xref: "cluster§6.13.5.5",
 
             children: [
                 {
                     details: "This field shall indicate a unique index of a specific time window. This value may be used to " +
                         "indicate a selected time window which will be removed from the BlockContentTimeWindow attribute.",
-                    xref: { document: "cluster", section: "6.13.5.5.1" }
+                    xref: "cluster§6.13.5.5.1"
                 },
-                {
-                    details: "This field shall indicate a day of week.",
-                    xref: { document: "cluster", section: "6.13.5.5.2" }
-                },
-                {
-                    details: "This field shall indicate one or more discrete time periods.",
-                    xref: { document: "cluster", section: "6.13.5.5.3" }
-                }
+                { details: "This field shall indicate a day of week.", xref: "cluster§6.13.5.5.2" },
+                { details: "This field shall indicate one or more discrete time periods.", xref: "cluster§6.13.5.5.3" }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "6.13.5.6" },
+            xref: "cluster§6.13.5.6",
 
             children: [
-                {
-                    details: "This field shall indicate the starting hour.",
-                    xref: { document: "cluster", section: "6.13.5.6.1" }
-                },
-                {
-                    details: "This field shall indicate the starting minute.",
-                    xref: { document: "cluster", section: "6.13.5.6.2" }
-                },
+                { details: "This field shall indicate the starting hour.", xref: "cluster§6.13.5.6.1" },
+                { details: "This field shall indicate the starting minute.", xref: "cluster§6.13.5.6.2" },
                 {
                     details: "This field shall indicate the ending hour. EndHour shall be equal to or greater than StartHour",
-                    xref: { document: "cluster", section: "6.13.5.6.3" }
+                    xref: "cluster§6.13.5.6.3"
                 },
 
                 {
                     details: "This field shall indicate the ending minute. If EndHour is equal to StartHour then EndMinute shall " +
                         "be greater than StartMinute. If the EndHour is equal to 23 and the EndMinute is equal to 59, all " +
                         "contents shall be blocked until 23:59:59.",
-                    xref: { document: "cluster", section: "6.13.5.6.4" }
+                    xref: "cluster§6.13.5.6.4"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "6.13.6.1" },
+            xref: "cluster§6.13.6.1",
 
             children: [
                 { description: "Provided PIN Code does not match the current PIN code." },

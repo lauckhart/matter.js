@@ -40,7 +40,7 @@ EcosystemInformation.patch({
         "For the purposes of the Ecosystem Information Cluster section, an instance of the Ecosystem " +
         "Information Cluster will be referred to as an \"instance\".",
 
-    xref: { document: "core", section: "9.18" },
+    xref: "core§9.18",
 
     children: [
         undefined,
@@ -51,7 +51,7 @@ EcosystemInformation.patch({
                 "another bridge.)" +
                 "\n" +
                 "An empty list indicates that the information is not available.",
-            xref: { document: "core", section: "9.18.5.1" }
+            xref: "core§9.18.5.1"
         },
 
         {
@@ -65,24 +65,24 @@ EcosystemInformation.patch({
                 "\n" +
                 "LocationDirectory entries shall be removed if there is no DeviceDirectory that references it.",
 
-            xref: { document: "core", section: "9.18.5.2" }
+            xref: "core§9.18.5.2"
         },
 
         {
-            xref: { document: "core", section: "9.18.4.1" },
+            xref: "core§9.18.4.1",
 
             children: [
                 {
                     details: "This field shall indicate the device’s name, which is provided externally if the user consents. (For " +
                         "example, provided by the user in an ecosystem specific interface.)",
-                    xref: { document: "core", section: "9.18.4.1.1" }
+                    xref: "core§9.18.4.1.1"
                 },
 
                 {
                     details: "This field shall be present and set if the DeviceName field is present." +
                         "\n" +
                         "This field shall indicate the timestamp of when the DeviceName was last modified.",
-                    xref: { document: "core", section: "9.18.4.1.2" }
+                    xref: "core§9.18.4.1.2"
                 },
 
                 {
@@ -90,7 +90,7 @@ EcosystemInformation.patch({
                         "\n" +
                         "This field shall be present and set to a valid endpoint if the device is accessible through the " +
                         "bridge.",
-                    xref: { document: "core", section: "9.18.4.1.3" }
+                    xref: "core§9.18.4.1.3"
                 },
 
                 {
@@ -99,7 +99,7 @@ EcosystemInformation.patch({
                         "another bridge, then the OriginalEndpoint field value would be the same on both bridges. This field " +
                         "shall be present and set to a valid endpoint on the original device if that device is a Matter " +
                         "device.",
-                    xref: { document: "core", section: "9.18.4.1.4" }
+                    xref: "core§9.18.4.1.4"
                 },
 
                 {
@@ -107,13 +107,13 @@ EcosystemInformation.patch({
                         "associated with this EcosystemDeviceStruct entry." +
                         "\n" +
                         "This field shall contain a list of valid device type ids.",
-                    xref: { document: "core", section: "9.18.4.1.5" }
+                    xref: "core§9.18.4.1.5"
                 },
 
                 {
                     details: "This field shall specify the EcosystemLocationStruct entries in the LocationDirectory attribute " +
                         "associated with this EcosystemDeviceStruct.",
-                    xref: { document: "core", section: "9.18.4.1.6" }
+                    xref: "core§9.18.4.1.6"
                 },
 
                 {
@@ -126,13 +126,13 @@ EcosystemInformation.patch({
                         "of the design. Since this is meant to be provided from user input, it is unlikely these signals " +
                         "would be happening at one time.",
 
-                    xref: { document: "core", section: "9.18.4.1.7" }
+                    xref: "core§9.18.4.1.7"
                 }
             ]
         },
 
         {
-            xref: { document: "core", section: "9.18.4.2" },
+            xref: "core§9.18.4.2",
 
             children: [
                 {
@@ -161,7 +161,7 @@ EcosystemInformation.patch({
                         "Ecosystem Information Cluster server instance changing and the UniqueLocationID on the remote server " +
                         "instance does not change.",
 
-                    xref: { document: "core", section: "9.18.4.2.1" }
+                    xref: "core§9.18.4.2.1"
                 },
 
                 {
@@ -172,12 +172,12 @@ EcosystemInformation.patch({
                         "\"Location\" in this context is typically used by the user’s grouping into rooms, areas or other " +
                         "logical groupings of how devices are used. So a device might be part of multiple such \"Locations\"s.",
 
-                    xref: { document: "core", section: "9.18.4.2.2" }
+                    xref: "core§9.18.4.2.2"
                 },
 
                 {
                     details: "This field shall indicate the timestamp of when the LocationDescriptor was last modified.",
-                    xref: { document: "core", section: "9.18.4.2.3" }
+                    xref: "core§9.18.4.2.3"
                 }
             ]
         }

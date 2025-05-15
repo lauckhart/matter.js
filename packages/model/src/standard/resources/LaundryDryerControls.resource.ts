@@ -12,7 +12,7 @@ LaundryDryerControls.patch({
     classification: "application", pics: "DRYERCTRL",
     details: "This cluster provides a way to access options associated with the operation of a laundry dryer " +
         "device type.",
-    xref: { document: "cluster", section: "8.9" },
+    xref: "cluster§8.9",
 
     children: [
         undefined,
@@ -22,7 +22,7 @@ LaundryDryerControls.patch({
                 "mode. The dryness level values are determined by the manufacturer. At least one dryness level value " +
                 "shall be provided in the SupportedDrynessLevels list. The list of dryness levels may change " +
                 "depending on the currently-selected Laundry Dryer mode.",
-            xref: { document: "cluster", section: "8.9.5.1" }
+            xref: "cluster§8.9.5.1"
         },
 
         {
@@ -35,7 +35,7 @@ LaundryDryerControls.patch({
                 "level, an INVALID_IN_STATE error shall be sent as the response. A value of null shall indicate that " +
                 "there will be no dryness level setting for the current mode.",
 
-            xref: { document: "cluster", section: "8.9.5.2" }
+            xref: "cluster§8.9.5.2"
         },
 
         {
@@ -44,7 +44,7 @@ LaundryDryerControls.patch({
                 "\n" +
                 "It is up to the device manufacturer to determine the mapping between the enum values and the " +
                 "corresponding temperature level.",
-            xref: { document: "cluster", section: "8.9.4.1" },
+            xref: "cluster§8.9.4.1",
 
             children: [
                 { description: "Provides a low dryness level for the selected mode" },

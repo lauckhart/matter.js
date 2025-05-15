@@ -30,5 +30,5 @@ ipv6Pre.patch({
         "\n" +
         "  • Allowed non-minimal encoding: Prefix 2001:0DB8:BB00::/40 → 7 octets → 2820010DB8BB00",
 
-    xref: { document: "core", section: "7.19.2.40" }
+    xref: "core§7.19.2.40"
 });

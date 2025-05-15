@@ -14,26 +14,20 @@ ContentAppDt.patch({
         "\n" +
         "A Content App is usually an application built by a Content Provider. A Casting Video Player with a " +
         "Content App Platform is able to launch Content Apps and represent these apps as separate endpoints.",
-    xref: { document: "device", section: "10.5" },
+    xref: "device§10.5",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "10.5.4" } },
-        { xref: { document: "device", section: "10.5.4" } },
-        { xref: { document: "device", section: "10.5.4" } },
-        { xref: { document: "device", section: "10.5.4" } },
-        { xref: { document: "device", section: "10.5.4" } },
-        { xref: { document: "device", section: "10.5.4" } },
-        { xref: { document: "device", section: "10.5.4" } },
-        { xref: { document: "device", section: "10.5.4" } },
-        { xref: { document: "device", section: "10.5.4" } },
-        { xref: { document: "device", section: "10.5.4" } },
-
-        {
-            children: [{
-                description: "The node is a client for ContentAppObservers.",
-                xref: { document: "device", section: "10.5.3" }
-            }]
-        }
+        { xref: "device§10.5.4" },
+        { xref: "device§10.5.4" },
+        { xref: "device§10.5.4" },
+        { xref: "device§10.5.4" },
+        { xref: "device§10.5.4" },
+        { xref: "device§10.5.4" },
+        { xref: "device§10.5.4" },
+        { xref: "device§10.5.4" },
+        { xref: "device§10.5.4" },
+        { xref: "device§10.5.4" },
+        { children: [{ description: "The node is a client for ContentAppObservers.", xref: "device§10.5.3" }] }
     ]
 });

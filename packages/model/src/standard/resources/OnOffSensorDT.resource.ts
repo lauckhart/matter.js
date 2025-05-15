@@ -12,16 +12,16 @@ OnOffSensorDt.patch({
     classification: "simple",
     details: "An On/Off Sensor is a measurement and sensing device that, when bound to a lighting device such as a " +
         "Dimmable Light, is capable of being used to switch the device on or off.",
-    xref: { document: "device", section: "7.8" },
+    xref: "device§7.8",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "7.8.4" } },
-        { xref: { document: "device", section: "7.8.4" } },
-        { xref: { document: "device", section: "7.8.4" } },
-        { xref: { document: "device", section: "7.8.4" } },
-        { xref: { document: "device", section: "7.8.4" } },
-        { xref: { document: "device", section: "7.8.4" } },
-        { xref: { document: "device", section: "7.8.4" } }
+        { xref: "device§7.8.4" },
+        { xref: "device§7.8.4" },
+        { xref: "device§7.8.4" },
+        { xref: "device§7.8.4" },
+        { xref: "device§7.8.4" },
+        { xref: "device§7.8.4" },
+        { xref: "device§7.8.4" }
     ]
 });

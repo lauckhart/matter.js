@@ -24,13 +24,13 @@ ColorControl.patch(
             "Lighting cluster. It is recommended that the level provided by this cluster be interpreted as " +
             "representing a proportion of the maximum intensity achievable at the current color.",
 
-        xref: { document: "cluster", section: "3.2" },
+        xref: "cluster§3.2",
 
         children: [
             undefined,
 
             {
-                xref: { document: "cluster", section: "3.2.4" },
+                xref: "cluster§3.2.4",
 
                 children: [
                     { description: "HueSaturation", details: "Supports color specification via hue/saturation." },
@@ -57,7 +57,7 @@ ColorControl.patch(
                     "\n" +
                     "  • At the end of the movement/transition.",
 
-                xref: { document: "cluster", section: "3.2.7.2" }
+                xref: "cluster§3.2.7.2"
             },
 
             {
@@ -77,7 +77,7 @@ ColorControl.patch(
                     "\n" +
                     "  • At the end of the movement/transition.",
 
-                xref: { document: "cluster", section: "3.2.7.3" }
+                xref: "cluster§3.2.7.3"
             },
 
             {
@@ -98,7 +98,7 @@ ColorControl.patch(
                     "As this attribute is not being reported during a regular countdown, clients SHOULD NOT rely on the " +
                     "reporting of this attribute in order to keep track of the remaining duration.",
 
-                xref: { document: "cluster", section: "3.2.7.4" }
+                xref: "cluster§3.2.7.4"
             },
 
             {
@@ -117,7 +117,7 @@ ColorControl.patch(
                     "\n" +
                     "  • At the end of the movement/transition.",
 
-                xref: { document: "cluster", section: "3.2.7.5" }
+                xref: "cluster§3.2.7.5"
             },
 
             {
@@ -136,17 +136,17 @@ ColorControl.patch(
                     "\n" +
                     "  • At the end of the movement/transition.",
 
-                xref: { document: "cluster", section: "3.2.7.6" }
+                xref: "cluster§3.2.7.6"
             },
 
             {
                 details: "Indicates what mechanism, if any, is in use for compensation for color/intensity drift over time.",
-                xref: { document: "cluster", section: "3.2.7.7" }
+                xref: "cluster§3.2.7.7"
             },
             {
                 details: "This attribute shall contain a textual indication of what mechanism, if any, is in use to compensate " +
                     "for color/intensity drift over time.",
-                xref: { document: "cluster", section: "3.2.7.8" }
+                xref: "cluster§3.2.7.8"
             },
 
             {
@@ -170,7 +170,7 @@ ColorControl.patch(
                     "\n" +
                     "If this attribute is implemented then the ColorMode attribute shall also be implemented.",
 
-                xref: { document: "cluster", section: "3.2.7.9" }
+                xref: "cluster§3.2.7.9"
             },
 
             {
@@ -178,7 +178,7 @@ ColorControl.patch(
                     "\n" +
                     "The value of the ColorMode attribute cannot be written directly - it is set upon reception of any " +
                     "command in section Commands to the appropriate mode for that command.",
-                xref: { document: "cluster", section: "3.2.7.10" }
+                xref: "cluster§3.2.7.10"
             },
 
             {
@@ -201,7 +201,7 @@ ColorControl.patch(
                     "\n" +
                     "  • The value of the ExecuteIfOff bit is 0.",
 
-                xref: { document: "cluster", section: "3.2.7.11" }
+                xref: "cluster§3.2.7.11"
             },
 
             {
@@ -213,7 +213,7 @@ ColorControl.patch(
                     "NumberOfPrimaries, without leaving gaps. Implementation of the Primary1Intensity attribute and " +
                     "subsequent intensity attributes is optional.",
 
-                xref: { document: "cluster", section: "3.2.7.24" }
+                xref: "cluster§3.2.7.24"
             },
 
             {
@@ -222,7 +222,7 @@ ColorControl.patch(
                     "\n" +
                     "The value of x shall be related to the Primary1X attribute by the relationship x = Primary1X / 65536 " +
                     "(Primary1X in the range 0 to 65279 inclusive)",
-                xref: { document: "cluster", section: "3.2.7.25" }
+                xref: "cluster§3.2.7.25"
             },
 
             {
@@ -231,7 +231,7 @@ ColorControl.patch(
                     "\n" +
                     "The value of y shall be related to the Primary1Y attribute by the relationship y = Primary1Y / 65536 " +
                     "(Primary1Y in the range 0 to 65279 inclusive)",
-                xref: { document: "cluster", section: "3.2.7.26" }
+                xref: "cluster§3.2.7.26"
             },
 
             {
@@ -248,24 +248,24 @@ ColorControl.patch(
                     "These attributes shall represent the capabilities of the 2nd, 3rd, 4th, 5th and 6th primaries, where " +
                     "present, in the same way as for the Primary1X, Primary1Y and Primary1Intensity attributes.",
 
-                xref: { document: "cluster", section: "3.2.7.27" }
+                xref: "cluster§3.2.7.27"
             },
 
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
 
             {
                 details: "Indicates the normalized chromaticity value x, as defined in the CIE xyY Color Space, of the current " +
@@ -273,7 +273,7 @@ ColorControl.patch(
                     "\n" +
                     "The value of x shall be related to the WhitePointX attribute by the relationship x = WhitePointX / " +
                     "65536 (WhitePointX in the range 0 to 65279 inclusive)",
-                xref: { document: "cluster", section: "3.2.7.29" }
+                xref: "cluster§3.2.7.29"
             },
 
             {
@@ -282,7 +282,7 @@ ColorControl.patch(
                     "\n" +
                     "The value of y shall be related to the WhitePointY attribute by the relationship y = WhitePointY / " +
                     "65536 (WhitePointY in the range 0 to 65279 inclusive)",
-                xref: { document: "cluster", section: "3.2.7.30" }
+                xref: "cluster§3.2.7.30"
             },
 
             {
@@ -291,7 +291,7 @@ ColorControl.patch(
                     "\n" +
                     "The value of x shall be related to the ColorPointRX attribute by the relationship x = ColorPointRX / " +
                     "65536 (ColorPointRX in the range 0 to 65279 inclusive)",
-                xref: { document: "cluster", section: "3.2.7.31" }
+                xref: "cluster§3.2.7.31"
             },
 
             {
@@ -300,7 +300,7 @@ ColorControl.patch(
                     "\n" +
                     "The value of y shall be related to the ColorPointRY attribute by the relationship y = ColorPointRY / " +
                     "65536 (ColorPointRY in the range 0 to 65279 inclusive)",
-                xref: { document: "cluster", section: "3.2.7.32" }
+                xref: "cluster§3.2.7.32"
             },
 
             {
@@ -319,15 +319,15 @@ ColorControl.patch(
                     "If any one of these red, green or blue color point attributes is implemented then they shall all be " +
                     "implemented.",
 
-                xref: { document: "cluster", section: "3.2.7.33" }
+                xref: "cluster§3.2.7.33"
             },
 
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
-            { xref: { document: "cluster", section: "3.2.7" } },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
+            { xref: "cluster§3.2.7" },
 
             {
                 details: "Indicates the non-equidistant steps along the CIE 1931 color triangle, and it provides 16-bits " +
@@ -346,7 +346,7 @@ ColorControl.patch(
                     "\n" +
                     "  • At the end of the movement/transition.",
 
-                xref: { document: "cluster", section: "3.2.7.12" }
+                xref: "cluster§3.2.7.12"
             },
 
             {
@@ -357,35 +357,35 @@ ColorControl.patch(
                     "the ColorMode attribute is changed, its new value shall be copied to the EnhancedColorMode " +
                     "attribute.",
 
-                xref: { document: "cluster", section: "3.2.7.13" }
+                xref: "cluster§3.2.7.13"
             },
 
             {
                 details: "Indicates the current active status of the color loop. If this attribute has the value 0, the color " +
                     "loop shall NOT be active. If this attribute has the value 1, the color loop shall be active.",
-                xref: { document: "cluster", section: "3.2.7.14" }
+                xref: "cluster§3.2.7.14"
             },
 
             {
                 details: "Indicates the current direction of the color loop. If this attribute has the value 0, the " +
                     "EnhancedCurrentHue attribute shall be decremented. If this attribute has the value 1, the " +
                     "EnhancedCurrentHue attribute shall be incremented.",
-                xref: { document: "cluster", section: "3.2.7.15" }
+                xref: "cluster§3.2.7.15"
             },
 
             {
                 details: "Indicates the number of seconds it shall take to perform a full color loop, i.e., to cycle all " +
                     "values of the EnhancedCurrentHue attribute (between 0 and 65534).",
-                xref: { document: "cluster", section: "3.2.7.16" }
+                xref: "cluster§3.2.7.16"
             },
             {
                 details: "Indicates the value of the EnhancedCurrentHue attribute from which the color loop shall be started.",
-                xref: { document: "cluster", section: "3.2.7.17" }
+                xref: "cluster§3.2.7.17"
             },
             {
                 details: "Indicates the value of the EnhancedCurrentHue attribute before the color loop was started. Once the " +
                     "color loop is complete, the EnhancedCurrentHue attribute shall be restored to this value.",
-                xref: { document: "cluster", section: "3.2.7.18" }
+                xref: "cluster§3.2.7.18"
             },
 
             {
@@ -393,7 +393,7 @@ ColorControl.patch(
                     "\n" +
                     "Bits 0-4 of the ColorCapabilities attribute shall have the same values as the corresponding bits of " +
                     "the FeatureMap attribute. All other bits in ColorCapabilities shall be 0.",
-                xref: { document: "cluster", section: "3.2.7.19" },
+                xref: "cluster§3.2.7.19",
 
                 children: [
                     { description: "Supports color specification via hue/saturation." },
@@ -409,7 +409,7 @@ ColorControl.patch(
                     "to the maximum color temperature in kelvins supported by the hardware." +
                     "\n" +
                     "ColorTempPhysicalMinMireds <= ColorTemperatureMireds.",
-                xref: { document: "cluster", section: "3.2.7.20" }
+                xref: "cluster§3.2.7.20"
             },
 
             {
@@ -417,7 +417,7 @@ ColorControl.patch(
                     "to the minimum color temperature in kelvins supported by the hardware." +
                     "\n" +
                     "ColorTemperatureMireds <= ColorTempPhysicalMaxMireds.",
-                xref: { document: "cluster", section: "3.2.7.21" }
+                xref: "cluster§3.2.7.21"
             },
 
             {
@@ -437,7 +437,7 @@ ColorControl.patch(
                     "\n" +
                     "in kelvins supported by the device.",
 
-                xref: { document: "cluster", section: "3.2.7.22" }
+                xref: "cluster§3.2.7.22"
             },
 
             {
@@ -445,57 +445,48 @@ ColorControl.patch(
                     "power and this value shall be reflected in the ColorTemperatureMireds attribute. In addition, the " +
                     "ColorMode and EnhancedColorMode attributes shall be set to 2 (ColorTemperatureMireds). The values of " +
                     "the StartUpColorTemperatureMireds attribute are listed in the table below,",
-                xref: { document: "cluster", section: "3.2.7.23" }
+                xref: "cluster§3.2.7.23"
             },
 
             {
-                xref: { document: "cluster", section: "3.2.8.4" },
+                xref: "cluster§3.2.8.4",
 
                 children: [
-                    {
-                        details: "This field shall indicate the hue to be moved to.",
-                        xref: { document: "cluster", section: "3.2.8.4.1" }
-                    },
-                    {
-                        details: "This field shall indicate the movement direction.",
-                        xref: { document: "cluster", section: "3.2.8.4.2" }
-                    },
+                    { details: "This field shall indicate the hue to be moved to.", xref: "cluster§3.2.8.4.1" },
+                    { details: "This field shall indicate the movement direction.", xref: "cluster§3.2.8.4.2" },
                     {
                         details: "This field shall indicate, in 1/10ths of a second, the time that shall be taken to move to the new " +
                             "hue.",
-                        xref: { document: "cluster", section: "3.2.8.4.3" }
+                        xref: "cluster§3.2.8.4.3"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "3.2.8.5" },
+                xref: "cluster§3.2.8.5",
 
                 children: [
-                    {
-                        details: "This field shall indicate the mode of movement.",
-                        xref: { document: "cluster", section: "3.2.8.5.1" }
-                    },
+                    { details: "This field shall indicate the mode of movement.", xref: "cluster§3.2.8.5.1" },
                     {
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the " +
                             "device’s hue of one unit.",
-                        xref: { document: "cluster", section: "3.2.8.5.2" }
+                        xref: "cluster§3.2.8.5.2"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "3.2.8.6" },
+                xref: "cluster§3.2.8.6",
 
                 children: [
                     {
                         details: "This field shall indicate the mode of the step to be performed.",
-                        xref: { document: "cluster", section: "3.2.8.6.1" }
+                        xref: "cluster§3.2.8.6.1"
                     },
                     {
                         details: "This field shall indicate the change to be added to (or subtracted from) the current value of the " +
                             "device’s hue.",
-                        xref: { document: "cluster", section: "3.2.8.6.2" }
+                        xref: "cluster§3.2.8.6.2"
                     },
 
                     {
@@ -508,41 +499,41 @@ ColorControl.patch(
                             "Here the TransitionTime data field is of data type uint8, where uint16 is more common for " +
                             "TransitionTime data fields in other clusters / commands.",
 
-                        xref: { document: "cluster", section: "3.2.8.6.3" }
+                        xref: "cluster§3.2.8.6.3"
                     }
                 ]
             },
 
-            { xref: { document: "cluster", section: "3.2.8.7" } },
+            { xref: "cluster§3.2.8.7" },
 
             {
-                xref: { document: "cluster", section: "3.2.8.8" },
+                xref: "cluster§3.2.8.8",
 
                 children: [
                     {
                         details: "This field shall indicate the mode of movement, as described in the MoveHue command.",
-                        xref: { document: "cluster", section: "3.2.8.8.1" }
+                        xref: "cluster§3.2.8.8.1"
                     },
                     {
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the " +
                             "device’s saturation of one unit.",
-                        xref: { document: "cluster", section: "3.2.8.8.2" }
+                        xref: "cluster§3.2.8.8.2"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "3.2.8.9" },
+                xref: "cluster§3.2.8.9",
 
                 children: [
                     {
                         details: "This field shall indicate the mode of the step to be performed, as described in the StepHue command.",
-                        xref: { document: "cluster", section: "3.2.8.9.1" }
+                        xref: "cluster§3.2.8.9.1"
                     },
                     {
                         details: "This field shall indicate the change to be added to (or subtracted from) the current value of the " +
                             "device’s saturation.",
-                        xref: { document: "cluster", section: "3.2.8.9.2" }
+                        xref: "cluster§3.2.8.9.2"
                     },
 
                     {
@@ -554,33 +545,33 @@ ColorControl.patch(
                             "Here the TransitionTime data field is of data type uint8, where uint16 is more common for " +
                             "TransitionTime data fields in other clusters / commands.",
 
-                        xref: { document: "cluster", section: "3.2.8.9.3" }
+                        xref: "cluster§3.2.8.9.3"
                     }
                 ]
             },
 
-            { xref: { document: "cluster", section: "3.2.8.10" } },
-            { xref: { document: "cluster", section: "3.2.8.11" } },
+            { xref: "cluster§3.2.8.10" },
+            { xref: "cluster§3.2.8.11" },
 
             {
-                xref: { document: "cluster", section: "3.2.8.12" },
+                xref: "cluster§3.2.8.12",
 
                 children: [
                     {
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the " +
                             "device’s CurrentX attribute of one unit.",
-                        xref: { document: "cluster", section: "3.2.8.12.1" }
+                        xref: "cluster§3.2.8.12.1"
                     },
                     {
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the " +
                             "device’s CurrentY attribute of one unit.",
-                        xref: { document: "cluster", section: "3.2.8.12.2" }
+                        xref: "cluster§3.2.8.12.2"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "3.2.8.13" },
+                xref: "cluster§3.2.8.13",
 
                 children: [
                     undefined,
@@ -588,47 +579,44 @@ ColorControl.patch(
                     {
                         details: "The field shall indicate, in 1/10ths of a second, the time that shall be taken to perform the color " +
                             "change.",
-                        xref: { document: "cluster", section: "3.2.8.13.2" }
+                        xref: "cluster§3.2.8.13.2"
                     }
                 ]
             },
 
-            { xref: { document: "cluster", section: "3.2.8.14" } },
+            { xref: "cluster§3.2.8.14" },
 
             {
                 details: "This command allows the light to be moved in a smooth continuous transition from their current hue " +
                     "to a target hue.",
-                xref: { document: "cluster", section: "3.2.8.15" },
+                xref: "cluster§3.2.8.15",
 
                 children: [
                     {
                         details: "This field shall indicate the target extended hue for the light.",
-                        xref: { document: "cluster", section: "3.2.8.15.1" }
+                        xref: "cluster§3.2.8.15.1"
                     },
-                    {
-                        details: "This field shall indicate the movement direction.",
-                        xref: { document: "cluster", section: "3.2.8.15.2" }
-                    },
+                    { details: "This field shall indicate the movement direction.", xref: "cluster§3.2.8.15.2" },
                     {
                         details: "This field shall indicate the transition time, as described in the MoveToHue command.",
-                        xref: { document: "cluster", section: "3.2.8.15.3" }
+                        xref: "cluster§3.2.8.15.3"
                     }
                 ]
             },
 
             {
                 details: "This command allows the light to start a continuous transition starting from their current hue.",
-                xref: { document: "cluster", section: "3.2.8.16" },
+                xref: "cluster§3.2.8.16",
 
                 children: [
                     {
                         details: "This field shall indicate the mode of movement, as described in the MoveHue command.",
-                        xref: { document: "cluster", section: "3.2.8.16.1" }
+                        xref: "cluster§3.2.8.16.1"
                     },
                     {
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the " +
                             "extended hue of a device by one unit.",
-                        xref: { document: "cluster", section: "3.2.8.16.2" }
+                        xref: "cluster§3.2.8.16.2"
                     }
                 ]
             },
@@ -636,17 +624,17 @@ ColorControl.patch(
             {
                 details: "This command allows the light to be moved in a stepped transition from their current hue, resulting " +
                     "in a linear transition through XY space.",
-                xref: { document: "cluster", section: "3.2.8.17" },
+                xref: "cluster§3.2.8.17",
 
                 children: [
                     {
                         details: "This field shall indicate the mode of the step to be performed, as described in the StepHue command.",
-                        xref: { document: "cluster", section: "3.2.8.17.1" }
+                        xref: "cluster§3.2.8.17.1"
                     },
                     {
                         details: "This field shall indicate the change to be added to (or subtracted from) the current value of the " +
                             "device’s enhanced hue.",
-                        xref: { document: "cluster", section: "3.2.8.17.2" }
+                        xref: "cluster§3.2.8.17.2"
                     },
 
                     {
@@ -659,7 +647,7 @@ ColorControl.patch(
                             "Here TransitionTime data field is of data type uint16, while the TransitionTime data field of the " +
                             "StepHue command is of data type uint8.",
 
-                        xref: { document: "cluster", section: "3.2.8.17.3" }
+                        xref: "cluster§3.2.8.17.3"
                     }
                 ]
             },
@@ -667,20 +655,20 @@ ColorControl.patch(
             {
                 details: "This command allows the light to be moved in a smooth continuous transition from their current hue " +
                     "to a target hue and from their current saturation to a target saturation.",
-                xref: { document: "cluster", section: "3.2.8.18" },
+                xref: "cluster§3.2.8.18",
 
                 children: [
                     {
                         details: "This field shall indicate the target extended hue for the light.",
-                        xref: { document: "cluster", section: "3.2.8.18.1" }
+                        xref: "cluster§3.2.8.18.1"
                     },
                     {
                         details: "This field shall indicate the saturation, as described in the MoveToHueAndSaturation command.",
-                        xref: { document: "cluster", section: "3.2.8.18.2" }
+                        xref: "cluster§3.2.8.18.2"
                     },
                     {
                         details: "This field shall indicate the transition time, as described in the MoveToHue command.",
-                        xref: { document: "cluster", section: "3.2.8.18.3" }
+                        xref: "cluster§3.2.8.18.3"
                     }
                 ]
             },
@@ -688,25 +676,25 @@ ColorControl.patch(
             {
                 details: "This command allows a color loop to be activated such that the color light cycles through its range " +
                     "of hues.",
-                xref: { document: "cluster", section: "3.2.8.19" },
+                xref: "cluster§3.2.8.19",
 
                 children: [
                     {
                         details: "This field shall indicate which color loop attributes to update (from the values supplied in the " +
                             "other fields, see field descriptions below) before the color loop is started.",
-                        xref: { document: "cluster", section: "3.2.8.19.1" }
+                        xref: "cluster§3.2.8.19.1"
                     },
                     {
                         details: "This field shall indicate the action to take for the color loop.",
-                        xref: { document: "cluster", section: "3.2.8.19.2" }
+                        xref: "cluster§3.2.8.19.2"
                     },
                     {
                         details: "This field shall indicate the direction for the color loop.",
-                        xref: { document: "cluster", section: "3.2.8.19.3" }
+                        xref: "cluster§3.2.8.19.3"
                     },
                     {
                         details: "This field shall indicate the number of seconds over which to perform a full color loop.",
-                        xref: { document: "cluster", section: "3.2.8.19.4" }
+                        xref: "cluster§3.2.8.19.4"
                     }
                 ]
             },
@@ -717,22 +705,22 @@ ColorControl.patch(
                     "NOTE This automatically provides symmetry to the Level Control cluster." +
                     "\n" +
                     "NOTE The StopMoveStep command has no effect on an active color loop.",
-                xref: { document: "cluster", section: "3.2.8.20" }
+                xref: "cluster§3.2.8.20"
             },
 
             {
                 details: "This command allows the color temperature of the light to be moved at a specified rate.",
-                xref: { document: "cluster", section: "3.2.8.21" },
+                xref: "cluster§3.2.8.21",
 
                 children: [
                     {
                         details: "This field shall indicate the mode of movement, as described in the MoveHue command.",
-                        xref: { document: "cluster", section: "3.2.8.21.1" }
+                        xref: "cluster§3.2.8.21.1"
                     },
                     {
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the color " +
                             "temperature of a device by one unit.",
-                        xref: { document: "cluster", section: "3.2.8.21.2" }
+                        xref: "cluster§3.2.8.21.2"
                     },
 
                     {
@@ -746,7 +734,7 @@ ColorControl.patch(
                             "the ColorTemperatureMinimumMireds field is set to 0, ColorTempPhysicalMinMireds shall be used as the " +
                             "lower bound for the ColorTemperatureMireds attribute.",
 
-                        xref: { document: "cluster", section: "3.2.8.21.3" }
+                        xref: "cluster§3.2.8.21.3"
                     },
 
                     {
@@ -760,31 +748,31 @@ ColorControl.patch(
                             "the ColorTemperatureMaximumMireds field is set to 0, ColorTempPhysicalMaxMireds shall be used as the " +
                             "upper bound for the ColorTemperatureMireds attribute.",
 
-                        xref: { document: "cluster", section: "3.2.8.21.4" }
+                        xref: "cluster§3.2.8.21.4"
                     }
                 ]
             },
 
             {
                 details: "This command allows the color temperature of the light to be stepped with a specified step size.",
-                xref: { document: "cluster", section: "3.2.8.22" },
+                xref: "cluster§3.2.8.22",
 
                 children: [
                     {
                         details: "This field shall indicate the mode of the step to be performed, as described in the StepHue command.",
-                        xref: { document: "cluster", section: "3.2.8.22.1" }
+                        xref: "cluster§3.2.8.22.1"
                     },
                     {
                         details: "This field shall indicate the change to be added to (or subtracted from) the current value of the " +
                             "device’s color temperature.",
-                        xref: { document: "cluster", section: "3.2.8.22.2" }
+                        xref: "cluster§3.2.8.22.2"
                     },
 
                     {
                         details: "This field shall indicate, in units of 1/10ths of a second, the time that shall be taken to perform " +
                             "the step. A step is a change to the device’s color temperature of a magnitude corresponding to the " +
                             "StepSize field.",
-                        xref: { document: "cluster", section: "3.2.8.22.3" }
+                        xref: "cluster§3.2.8.22.3"
                     },
 
                     {
@@ -798,7 +786,7 @@ ColorControl.patch(
                             "the ColorTemperatureMinimumMireds field is set to 0, ColorTempPhysicalMinMireds shall be used as the " +
                             "lower bound for the ColorTemperatureMireds attribute.",
 
-                        xref: { document: "cluster", section: "3.2.8.22.4" }
+                        xref: "cluster§3.2.8.22.4"
                     },
 
                     {
@@ -812,23 +800,23 @@ ColorControl.patch(
                             "the ColorTemperatureMaximumMireds field is set to 0, ColorTempPhysicalMaxMireds shall be used as the " +
                             "upper bound for the ColorTemperatureMireds attribute.",
 
-                        xref: { document: "cluster", section: "3.2.8.22.5" }
+                        xref: "cluster§3.2.8.22.5"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "3.2.6.2" },
+                xref: "cluster§3.2.6.2",
                 children: [{
                     description: "Dependency on On/Off cluster",
                     details: "This bit shall indicate if this cluster server instance has a dependency with the On/Off cluster.",
-                    xref: { document: "cluster", section: "3.2.6.2.1" }
+                    xref: "cluster§3.2.6.2.1"
                 }]
             },
 
             {
                 details: "This data type is derived from map8 and is used in the ColorLoopSet command.",
-                xref: { document: "cluster", section: "3.2.6.3" },
+                xref: "cluster§3.2.6.3",
 
                 children: [
                     {
@@ -841,7 +829,7 @@ ColorControl.patch(
                             "\n" +
                             "  • 1 = Device shall adhere to the Action field.",
 
-                        xref: { document: "cluster", section: "3.2.6.3.1" }
+                        xref: "cluster§3.2.6.3.1"
                     },
 
                     {
@@ -854,7 +842,7 @@ ColorControl.patch(
                             "\n" +
                             "  • 1 = Device shall update the ColorLoopDirection attribute with the value of the Direction field.",
 
-                        xref: { document: "cluster", section: "3.2.6.3.2" }
+                        xref: "cluster§3.2.6.3.2"
                     },
 
                     {
@@ -867,7 +855,7 @@ ColorControl.patch(
                             "  • 1 = Device shall update the value of the ColorLoopTime attribute with the value of the Time " +
                             "    field.",
 
-                        xref: { document: "cluster", section: "3.2.6.3.3" }
+                        xref: "cluster§3.2.6.3.3"
                     },
 
                     {
@@ -881,13 +869,13 @@ ColorControl.patch(
                             "  • 1 = Device shall update the value of the ColorLoopStartEnhancedHue attribute with the value of " +
                             "    the StartHue field.",
 
-                        xref: { document: "cluster", section: "3.2.6.3.4" }
+                        xref: "cluster§3.2.6.3.4"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "3.2.6.4" },
+                xref: "cluster§3.2.6.4",
 
                 children: [
                     { description: "There is no compensation." },
@@ -899,7 +887,7 @@ ColorControl.patch(
             },
 
             {
-                xref: { document: "cluster", section: "3.2.6.5" },
+                xref: "cluster§3.2.6.5",
                 children: [
                     { description: "The current hue and saturation attributes determine the color." },
                     { description: "The current X and Y attributes determine the color." },
@@ -908,7 +896,7 @@ ColorControl.patch(
             },
 
             {
-                xref: { document: "cluster", section: "3.2.6.6" },
+                xref: "cluster§3.2.6.6",
 
                 children: [
                     { description: "The current hue and saturation attributes determine the color." },
@@ -919,7 +907,7 @@ ColorControl.patch(
             },
 
             {
-                xref: { document: "cluster", section: "3.2.6.7" },
+                xref: "cluster§3.2.6.7",
 
                 children: [
                     { description: "Shortest distance" },
@@ -930,7 +918,7 @@ ColorControl.patch(
             },
 
             {
-                xref: { document: "cluster", section: "3.2.6.8" },
+                xref: "cluster§3.2.6.8",
                 children: [
                     { description: "Stop the movement" },
                     { description: "Move in an upwards direction" },
@@ -939,7 +927,7 @@ ColorControl.patch(
             },
 
             {
-                xref: { document: "cluster", section: "3.2.6.9" },
+                xref: "cluster§3.2.6.9",
                 children: [
                     { description: "Step in an upwards direction" },
                     { description: "Step in a downwards direction" }
@@ -947,7 +935,7 @@ ColorControl.patch(
             },
 
             {
-                xref: { document: "cluster", section: "3.2.6.10" },
+                xref: "cluster§3.2.6.10",
                 children: [
                     { description: "De-activate the color loop." },
                     { description: "Activate the color loop from the value in the ColorLoopStartEnhancedHue field." },
@@ -956,7 +944,7 @@ ColorControl.patch(
             },
 
             {
-                xref: { document: "cluster", section: "3.2.6.11" },
+                xref: "cluster§3.2.6.11",
                 children: [
                     { description: "Decrement the hue in the color loop." },
                     { description: "Increment the hue in the color loop." }

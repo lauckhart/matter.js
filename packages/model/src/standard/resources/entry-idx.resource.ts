@@ -8,8 +8,4 @@
 
 import { entryIdx } from "#index.js";
 
-entryIdx.patch({
-    description: "Entry Index",
-    details: "This is an index for a list data type.",
-    xref: { document: "core", section: "7.19.2.33" }
-});
+entryIdx.patch({ description: "Entry Index", details: "This is an index for a list data type.", xref: "core§7.19.2.33" });

@@ -19,10 +19,6 @@ HeatPumpDt.patch({
         "Note that the Water Heater device type can also be heated by a heat pump and has similar " +
         "requirements, but that cannot be used for space heating.",
 
-    xref: { document: "device", section: "14.5" },
-    children: [
-        undefined,
-        { xref: { document: "device", section: "14.5.6" } },
-        { xref: { document: "device", section: "14.5.6" } }
-    ]
+    xref: "device§14.5",
+    children: [undefined, { xref: "device§14.5.6" }, { xref: "device§14.5.6" }]
 });

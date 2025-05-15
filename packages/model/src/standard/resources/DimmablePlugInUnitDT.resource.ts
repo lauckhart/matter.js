@@ -14,15 +14,15 @@ DimmablePlugInUnitDt.patch({
         "and is capable of being switched on or off and have its level adjusted. The Dimmable Plug-in Unit is " +
         "typically used to control a conventional non-communicating light through its mains connection using " +
         "phase cutting.",
-    xref: { document: "device", section: "5.2" },
+    xref: "device§5.2",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "5.2.4" } },
-        { xref: { document: "device", section: "5.2.4" } },
-        { xref: { document: "device", section: "5.2.4" } },
-        { xref: { document: "device", section: "5.2.4" } },
-        { xref: { document: "device", section: "5.2.4" } },
-        { xref: { document: "device", section: "5.2.4" } }
+        { xref: "device§5.2.4" },
+        { xref: "device§5.2.4" },
+        { xref: "device§5.2.4" },
+        { xref: "device§5.2.4" },
+        { xref: "device§5.2.4" },
+        { xref: "device§5.2.4" }
     ]
 });

@@ -36,12 +36,12 @@ AdministratorCommissioning.patch({
         "\n" +
         "  • The attributes shall indicate the state of the node that is represented by the Bridged Node.",
 
-    xref: { document: "core", section: "11.19" },
+    xref: "core§11.19",
 
     children: [
         undefined,
         {
-            xref: { document: "core", section: "11.19.4" },
+            xref: "core§11.19.4",
             children: [{ description: "Basic", details: "Node supports Basic Commissioning Method." }]
         },
 
@@ -57,7 +57,7 @@ AdministratorCommissioning.patch({
                 "the OpenBasicCommissioningWindow command, and therefore this attribute shall be set to WindowNotOpen " +
                 "on initial commissioning.",
 
-            xref: { document: "core", section: "11.19.7.1" }
+            xref: "core§11.19.7.1"
         },
 
         {
@@ -70,7 +70,7 @@ AdministratorCommissioning.patch({
                 "\n" +
                 "When the WindowStatus attribute is set to WindowNotOpen, this attribute shall be set to null.",
 
-            xref: { document: "core", section: "11.19.7.2" }
+            xref: "core§11.19.7.2"
         },
 
         {
@@ -83,7 +83,7 @@ AdministratorCommissioning.patch({
                 "\n" +
                 "When the WindowStatus attribute is set to WindowNotOpen, this attribute shall be set to null.",
 
-            xref: { document: "core", section: "11.19.7.3" }
+            xref: "core§11.19.7.3"
         },
 
         {
@@ -119,7 +119,7 @@ AdministratorCommissioning.patch({
                 "\n" +
                 "In case of any other parameter error, this command shall fail with a status code of COMMAND_INVALID.",
 
-            xref: { document: "core", section: "11.19.8.1" },
+            xref: "core§11.19.8.1",
 
             children: [
                 {
@@ -128,7 +128,7 @@ AdministratorCommissioning.patch({
                         "Announcement Duration. The CommissioningTimeout applies only to cessation of any announcements and " +
                         "to accepting of new commissioning sessions; it does not apply to abortion of connections, i.e., a " +
                         "commissioning session SHOULD NOT abort prematurely upon expiration of this timeout.",
-                    xref: { document: "core", section: "11.19.8.1.1" }
+                    xref: "core§11.19.8.1.1"
                 },
 
                 {
@@ -140,7 +140,7 @@ AdministratorCommissioning.patch({
                         "deleted by the Node at the end of commissioning or expiration of the OpenCommissioningWindow " +
                         "command, and shall be deleted by the existing Administrator after sending it to the Node(s).",
 
-                    xref: { document: "core", section: "11.19.8.1.2" }
+                    xref: "core§11.19.8.1.2"
                 },
 
                 {
@@ -148,7 +148,7 @@ AdministratorCommissioning.patch({
                         "Commissioning Discriminator) for discovery by the new Administrator. The new Administrator can find " +
                         "and filter DNS-SD records by long discriminator to locate and initiate commissioning with the " +
                         "appropriate Node.",
-                    xref: { document: "core", section: "11.19.8.1.3" }
+                    xref: "core§11.19.8.1.3"
                 },
 
                 {
@@ -157,7 +157,7 @@ AdministratorCommissioning.patch({
                         "Administrator’s software as response to the PBKDFParamRequest during PASE negotiation. The permitted " +
                         "range of values shall match the range specified in Section 3.9, “Password-Based Key Derivation " +
                         "Function (PBKDF)”, within the definition of the Crypto_PBKDFParameterSet.",
-                    xref: { document: "core", section: "11.19.8.1.4" }
+                    xref: "core§11.19.8.1.4"
                 },
 
                 {
@@ -176,7 +176,7 @@ AdministratorCommissioning.patch({
                         "\n" +
                         "  • There is an armed fail-safe timer.",
 
-                    xref: { document: "core", section: "11.19.8.1.5" }
+                    xref: "core§11.19.8.1.5"
                 }
             ]
         },
@@ -201,7 +201,7 @@ AdministratorCommissioning.patch({
                 "CommissioningComplete command, see Section 5.5, “Commissioning Flows”. The new Administrator shall " +
                 "discover the Node on the IP network using DNS-based Service Discovery (DNS-SD) for commissioning.",
 
-            xref: { document: "core", section: "11.19.8.2" },
+            xref: "core§11.19.8.2",
 
             children: [{
                 details: "This field shall specify the time in seconds during which commissioning session establishment is " +
@@ -217,7 +217,7 @@ AdministratorCommissioning.patch({
                     "\n" +
                     "  • There is an armed fail-safe timer.",
 
-                xref: { document: "core", section: "11.19.8.2.1" }
+                xref: "core§11.19.8.2.1"
             }]
         },
 
@@ -236,11 +236,11 @@ AdministratorCommissioning.patch({
                 "\n" +
                 "in Section 11.10.7.2.2, “Behavior on expiry of Fail-Safe timer”.",
 
-            xref: { document: "core", section: "11.19.8.3" }
+            xref: "core§11.19.8.3"
         },
 
         {
-            xref: { document: "core", section: "11.19.5.1" },
+            xref: "core§11.19.5.1",
             children: [
                 { description: "Commissioning window not open" },
                 { description: "An Enhanced Commissioning Method window is open" },
@@ -249,7 +249,7 @@ AdministratorCommissioning.patch({
         },
 
         {
-            xref: { document: "core", section: "11.19.6.1" },
+            xref: "core§11.19.6.1",
             children: [
                 { description: "Could not be completed because another commissioning is in progress" },
                 { description: "Provided PAKE parameters were incorrectly formatted or otherwise invalid" },

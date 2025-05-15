@@ -13,20 +13,20 @@ EnergyPreference.patch({
     details: "This cluster provides an interface to specify preferences for how devices should consume energy." +
         "\n" +
         "NOTE Support for Energy Preference cluster is provisional.",
-    xref: { document: "cluster", section: "9.7" },
+    xref: "cluster§9.7",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "9.7.4" },
+            xref: "cluster§9.7.4",
 
             children: [
                 {
                     description: "EnergyBalance",
                     details: "This feature allows a user to select from a list of energy balances with associated descriptions of " +
                         "which strategies a device will use to target the specified balance.",
-                    xref: { document: "cluster", section: "9.7.4.1" }
+                    xref: "cluster§9.7.4.1"
                 },
 
                 {
@@ -34,7 +34,7 @@ EnergyPreference.patch({
                     details: "This feature allows the user to select a condition or set of conditions which will cause the device " +
                         "to switch to a mode using less power. For example, a device might provide a scale of durations that " +
                         "must elapse without user interaction before it goes to sleep.",
-                    xref: { document: "cluster", section: "9.7.4.2" }
+                    xref: "cluster§9.7.4.2"
                 }
             ]
         },
@@ -55,7 +55,7 @@ EnergyPreference.patch({
                 "The first BalanceStruct shall have a Step value of zero, and the last BalanceStruct shall have a " +
                 "Step value of 100.",
 
-            xref: { document: "cluster", section: "9.7.6.1" }
+            xref: "cluster§9.7.6.1"
         },
 
         {
@@ -79,7 +79,7 @@ EnergyPreference.patch({
                 "     the last element in EnergyPriorities, the new value of CurrentEnergyBalance shall be the index " +
                 "     of the last element in the updated value of EnergyBalances.",
 
-            xref: { document: "cluster", section: "9.7.6.2" }
+            xref: "cluster§9.7.6.2"
         },
 
         {
@@ -90,7 +90,7 @@ EnergyPreference.patch({
                 "If the value of EnergyPriorities changes after an update to represent a new balance between " +
                 "priorities, the value of the CurrentEnergyBalance attribute shall be set to its default.",
 
-            xref: { document: "cluster", section: "9.7.6.3" }
+            xref: "cluster§9.7.6.3"
         },
 
         {
@@ -99,7 +99,7 @@ EnergyPreference.patch({
                 "\n" +
                 "Each BalanceStruct shall have a Step field larger than the Step field on the previous BalanceStruct " +
                 "in the list.",
-            xref: { document: "cluster", section: "9.7.6.4" }
+            xref: "cluster§9.7.6.4"
         },
 
         {
@@ -114,30 +114,30 @@ EnergyPreference.patch({
                 "value of the LowPowerModeSensitivity attribute to the index which the manufacturer specifies most " +
                 "closely matches the previous value.",
 
-            xref: { document: "cluster", section: "9.7.6.5" }
+            xref: "cluster§9.7.6.5"
         },
 
         {
-            xref: { document: "cluster", section: "9.7.5.1" },
+            xref: "cluster§9.7.5.1",
 
             children: [
                 {
                     description: "User comfort",
                     details: "This value shall emphasize user comfort; e.g. local temperature for a thermostat.",
-                    xref: { document: "cluster", section: "9.7.5.1.1" }
+                    xref: "cluster§9.7.5.1.1"
                 },
 
                 {
                     description: "Speed of operation",
                     details: "This value shall emphasize how quickly a device accomplishes its targeted use; e.g. how quickly a " +
                         "robot vacuum completes a cleaning cycle.",
-                    xref: { document: "cluster", section: "9.7.5.1.2" }
+                    xref: "cluster§9.7.5.1.2"
                 },
 
                 {
                     description: "Amount of Energy consumed by the device",
                     details: "This value shall emphasize how much energy a device uses; e.g. electricity usage for a Pump.",
-                    xref: { document: "cluster", section: "9.7.5.1.3" }
+                    xref: "cluster§9.7.5.1.3"
                 },
                 { description: "Amount of water consumed by the device" }
             ]
@@ -145,17 +145,14 @@ EnergyPreference.patch({
 
         {
             details: "This represents a step along a scale of preferences.",
-            xref: { document: "cluster", section: "9.7.5.2" },
+            xref: "cluster§9.7.5.2",
 
             children: [
-                {
-                    details: "This field shall indicate the relative value of this step.",
-                    xref: { document: "cluster", section: "9.7.5.2.1" }
-                },
+                { details: "This field shall indicate the relative value of this step.", xref: "cluster§9.7.5.2.1" },
                 {
                     details: "This field shall indicate an optional string explaining which actions a device might take at the " +
                         "given step value.",
-                    xref: { document: "cluster", section: "9.7.5.2.2" }
+                    xref: "cluster§9.7.5.2.2"
                 }
             ]
         }

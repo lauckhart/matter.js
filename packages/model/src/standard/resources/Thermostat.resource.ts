@@ -52,13 +52,13 @@ Thermostat.patch(
             "\n" +
             "Figure 15. Example Usage of the Thermostat and Related Clusters\"",
 
-        xref: { document: "cluster", section: "4.3" },
+        xref: "cluster§4.3",
 
         children: [
             undefined,
 
             {
-                xref: { document: "cluster", section: "4.3.4" },
+                xref: "cluster§4.3.4",
 
                 children: [
                     { description: "Heating", details: "Thermostat is capable of managing a heating device" },
@@ -77,7 +77,7 @@ Thermostat.patch(
                             "report externally, for example due to the temperature control being done by a separate subsystem " +
                             "which does not offer a view into the currently measured temperature, but allows setpoints to be " +
                             "provided.",
-                        xref: { document: "cluster", section: "4.3.4.1" }
+                        xref: "cluster§4.3.4.1"
                     },
 
                     { description: "MatterScheduleConfiguration", details: "Supports enhanced schedules" },
@@ -99,17 +99,17 @@ Thermostat.patch(
                     "    LocalTemperatureCalibration. In that case, the LocalTemperature attribute shall always report " +
                     "    null.",
 
-                xref: { document: "cluster", section: "4.3.9.2" }
+                xref: "cluster§4.3.9.2"
             },
 
             {
                 details: "Indicates the outdoor temperature, as measured locally or remotely (over the network).",
-                xref: { document: "cluster", section: "4.3.9.3" }
+                xref: "cluster§4.3.9.3"
             },
             {
                 details: "Indicates whether the heated/cooled space is occupied or not, as measured locally or remotely (over " +
                     "the network).",
-                xref: { document: "cluster", section: "4.3.9.4" }
+                xref: "cluster§4.3.9.4"
             },
 
             {
@@ -117,18 +117,18 @@ Thermostat.patch(
                     "imposed by the manufacturer." +
                     "\n" +
                     "Refer to Setpoint Limits for constraints",
-                xref: { document: "cluster", section: "4.3.9.5" }
+                xref: "cluster§4.3.9.5"
             },
 
-            { xref: { document: "cluster", section: "4.3.9" } },
-            { xref: { document: "cluster", section: "4.3.9" } },
+            { xref: "cluster§4.3.9" },
+            { xref: "cluster§4.3.9" },
 
             {
                 details: "Indicates the absolute maximum level that the cooling setpoint may be set to. This is a limitation " +
                     "imposed by the manufacturer." +
                     "\n" +
                     "Refer to Setpoint Limits for constraints",
-                xref: { document: "cluster", section: "4.3.9.8" }
+                xref: "cluster§4.3.9.8"
             },
 
             {
@@ -136,7 +136,7 @@ Thermostat.patch(
                     "thermostat (if any), in percent. This value is 0 when the thermostat is in “off” or “heating” mode." +
                     "\n" +
                     "This attribute is reported regularly and may be used to control a cooling device.",
-                xref: { document: "cluster", section: "4.3.9.9" }
+                xref: "cluster§4.3.9.9"
             },
 
             {
@@ -144,7 +144,7 @@ Thermostat.patch(
                     "thermostat is in “off” or “cooling” mode." +
                     "\n" +
                     "This attribute is reported regularly and may be used to control a heating device.",
-                xref: { document: "cluster", section: "4.3.9.10" }
+                xref: "cluster§4.3.9.10"
             },
 
             {
@@ -153,7 +153,7 @@ Thermostat.patch(
                     "\n" +
                     "from the DIP switches. If these parameters are set via software, there shall be read/write access in " +
                     "order to provide remote programming capability.",
-                xref: { document: "cluster", section: "4.3.9.11" }
+                xref: "cluster§4.3.9.11"
             },
 
             {
@@ -174,7 +174,7 @@ Thermostat.patch(
                     "Prior to revision 8 of this cluster specification the value of this attribute was constrained to a " +
                     "range of -2.5°C to 2.5°C.",
 
-                xref: { document: "cluster", section: "4.3.9.12" }
+                xref: "cluster§4.3.9.12"
             },
 
             {
@@ -195,7 +195,7 @@ Thermostat.patch(
                     "server either does not support the OCC feature or the Occupied bit is set on the Occupancy " +
                     "attribute, the value of the ActivePresetHandle attribute shall be set to null.",
 
-                xref: { document: "cluster", section: "4.3.9.13" }
+                xref: "cluster§4.3.9.13"
             },
 
             {
@@ -217,7 +217,7 @@ Thermostat.patch(
                     "server either does not support the OCC feature or the Occupied bit is set on the Occupancy " +
                     "attribute, the value of the ActivePresetHandle attribute shall be set to null.",
 
-                xref: { document: "cluster", section: "4.3.9.14" }
+                xref: "cluster§4.3.9.14"
             },
 
             {
@@ -237,7 +237,7 @@ Thermostat.patch(
                     "the Occupied bit is not set on the Occupancy attribute, the value of the ActivePresetHandle " +
                     "attribute shall be set to null.",
 
-                xref: { document: "cluster", section: "4.3.9.15" }
+                xref: "cluster§4.3.9.15"
             },
 
             {
@@ -258,7 +258,7 @@ Thermostat.patch(
                     "the Occupied bit is not set on the Occupancy attribute, the value of the ActivePresetHandle " +
                     "attribute shall be set to null.",
 
-                xref: { document: "cluster", section: "4.3.9.16" }
+                xref: "cluster§4.3.9.16"
             },
 
             {
@@ -274,7 +274,7 @@ Thermostat.patch(
                     "a value which is not consistent with the constraints and cannot be resolved by modifying setpoints " +
                     "then a response with the status code CONSTRAINT_ERROR shall be returned.",
 
-                xref: { document: "cluster", section: "4.3.9.17" }
+                xref: "cluster§4.3.9.17"
             },
 
             {
@@ -286,7 +286,7 @@ Thermostat.patch(
                     "a value which is not consistent with the constraints and cannot be resolved by modifying setpoints " +
                     "then a response with the status code CONSTRAINT_ERROR shall be returned.",
 
-                xref: { document: "cluster", section: "4.3.9.18" }
+                xref: "cluster§4.3.9.18"
             },
 
             {
@@ -298,7 +298,7 @@ Thermostat.patch(
                     "a value which is not consistent with the constraints and cannot be resolved by modifying setpoints " +
                     "then a response with the status code CONSTRAINT_ERROR shall be returned.",
 
-                xref: { document: "cluster", section: "4.3.9.19" }
+                xref: "cluster§4.3.9.19"
             },
 
             {
@@ -310,7 +310,7 @@ Thermostat.patch(
                     "a value which is not consistent with the constraints and cannot be resolved by modifying setpoints " +
                     "then a response with the status code CONSTRAINT_ERROR shall be returned.",
 
-                xref: { document: "cluster", section: "4.3.9.20" }
+                xref: "cluster§4.3.9.20"
             },
 
             {
@@ -329,7 +329,7 @@ Thermostat.patch(
                     "For backwards compatibility, this attribute is optionally writeable. However any writes to this " +
                     "attribute shall be silently ignored.",
 
-                xref: { document: "cluster", section: "4.3.9.21" }
+                xref: "cluster§4.3.9.21"
             },
 
             {
@@ -342,7 +342,7 @@ Thermostat.patch(
                     "If the LocalTemperature RemoteSensing bit is written with a value of 1 when the LTNE feature is " +
                     "present, the write shall fail and the server shall report a CONSTRAINT_ERROR.",
 
-                xref: { document: "cluster", section: "4.3.9.22" }
+                xref: "cluster§4.3.9.22"
             },
 
             {
@@ -353,20 +353,20 @@ Thermostat.patch(
                     "value of this attribute shall remain unchanged. This behavior is in place for backwards " +
                     "compatibility with existing thermostats.",
 
-                xref: { document: "cluster", section: "4.3.9.23" }
+                xref: "cluster§4.3.9.23"
             },
 
             {
                 details: "Indicates the current operating mode of the thermostat. Its value shall be limited by the " +
                     "ControlSequenceOfOperation attribute.",
-                xref: { document: "cluster", section: "4.3.9.24" }
+                xref: "cluster§4.3.9.24"
             },
 
             {
                 details: "Indicates the running mode of the thermostat. This attribute uses the same values as SystemModeEnum " +
                     "but can only be Off, Cool or Heat. This attribute is intended to provide additional information when " +
                     "the thermostat’s system mode is in auto mode.",
-                xref: { document: "cluster", section: "4.3.9.26" }
+                xref: "cluster§4.3.9.26"
             },
 
             {
@@ -377,16 +377,16 @@ Thermostat.patch(
                     "scheduling by reading the attribute. Successful response means that the weekly scheduling is " +
                     "supported.",
 
-                xref: { document: "cluster", section: "4.3.9.27" }
+                xref: "cluster§4.3.9.27"
             },
 
             {
                 details: "Indicates how many weekly schedule transitions the thermostat is capable of handling.",
-                xref: { document: "cluster", section: "4.3.9.28" }
+                xref: "cluster§4.3.9.28"
             },
             {
                 details: "Indicates how many daily schedule transitions the thermostat is capable of handling.",
-                xref: { document: "cluster", section: "4.3.9.29" }
+                xref: "cluster§4.3.9.29"
             },
 
             {
@@ -407,7 +407,7 @@ Thermostat.patch(
                     "If this attribute is updated to SetpointHoldOff and the SetpointHoldExpiryTimestamp is supported, " +
                     "the server shall set the SetpointHoldExpiryTimestamp to null.",
 
-                xref: { document: "cluster", section: "4.3.9.30" }
+                xref: "cluster§4.3.9.30"
             },
 
             {
@@ -423,7 +423,7 @@ Thermostat.patch(
                     "If this attribute is set to null and the SetpointHoldExpiryTimestamp is supported, the server shall " +
                     "set the SetpointHoldExpiryTimestamp to null.",
 
-                xref: { document: "cluster", section: "4.3.9.31" }
+                xref: "cluster§4.3.9.31"
             },
 
             {
@@ -444,13 +444,13 @@ Thermostat.patch(
                     "Modifying the ScheduleActive bit does not clear or delete previous weekly schedule programming " +
                     "configurations.",
 
-                xref: { document: "cluster", section: "4.3.9.32" }
+                xref: "cluster§4.3.9.32"
             },
 
             {
                 details: "Indicates the current relay state of the heat, cool, and fan relays. Unimplemented outputs shall be " +
                     "treated as if they were Off.",
-                xref: { document: "cluster", section: "4.3.9.33" }
+                xref: "cluster§4.3.9.33"
             },
 
             {
@@ -462,7 +462,7 @@ Thermostat.patch(
                     "service provider). Because automation services may initiate frequent setpoint changes, this " +
                     "attribute clearly differentiates the source of setpoint changes made at the thermostat.",
 
-                xref: { document: "cluster", section: "4.3.9.34" }
+                xref: "cluster§4.3.9.34"
             },
 
             {
@@ -471,12 +471,12 @@ Thermostat.patch(
                     "attribute; devices implementing SetpointChangeAmount SHOULD also implement SetpointChangeSource." +
                     "\n" +
                     "The null value indicates that the previous setpoint was unknown.",
-                xref: { document: "cluster", section: "4.3.9.35" }
+                xref: "cluster§4.3.9.35"
             },
 
             {
                 details: "Indicates the time in UTC at which the SetpointChangeAmount attribute change was recorded.",
-                xref: { document: "cluster", section: "4.3.9.36" }
+                xref: "cluster§4.3.9.36"
             },
 
             {
@@ -501,7 +501,7 @@ Thermostat.patch(
                     "the Thermostat server shall set its OccupiedSetback value to OccupiedSetbackMin and shall send a " +
                     "Write Attribute Response command with a Status Code field enumeration of SUCCESS response.",
 
-                xref: { document: "cluster", section: "4.3.9.37" }
+                xref: "cluster§4.3.9.37"
             },
 
             {
@@ -509,7 +509,7 @@ Thermostat.patch(
                     "be configured by a user." +
                     "\n" +
                     "The null value indicates the attribute is unused.",
-                xref: { document: "cluster", section: "4.3.9.38" }
+                xref: "cluster§4.3.9.38"
             },
 
             {
@@ -517,7 +517,7 @@ Thermostat.patch(
                     "be configured by a user." +
                     "\n" +
                     "The null value indicates the attribute is unused.",
-                xref: { document: "cluster", section: "4.3.9.39" }
+                xref: "cluster§4.3.9.39"
             },
 
             {
@@ -543,7 +543,7 @@ Thermostat.patch(
                     "UnoccupiedSetbackMin and shall send a Write Attribute Response command with a Status Code field " +
                     "enumeration of SUCCESS response.",
 
-                xref: { document: "cluster", section: "4.3.9.40" }
+                xref: "cluster§4.3.9.40"
             },
 
             {
@@ -551,7 +551,7 @@ Thermostat.patch(
                     "be configured by a user." +
                     "\n" +
                     "The null value indicates the attribute is unused.",
-                xref: { document: "cluster", section: "4.3.9.41" }
+                xref: "cluster§4.3.9.41"
             },
 
             {
@@ -559,7 +559,7 @@ Thermostat.patch(
                     "be configured by a user." +
                     "\n" +
                     "The null value indicates the attribute is unused.",
-                xref: { document: "cluster", section: "4.3.9.42" }
+                xref: "cluster§4.3.9.42"
             },
 
             {
@@ -590,79 +590,64 @@ Thermostat.patch(
                     "heating when a setpoint is of a specified amount greater than the measured temperature. This allows " +
                     "the heated space to be quickly heated to the desired level set by the user.",
 
-                xref: { document: "cluster", section: "4.3.9.43" }
+                xref: "cluster§4.3.9.43"
             },
 
             {
                 details: "Indicates the type of Mini Split ACTypeEnum of Mini Split AC is defined depending on how Cooling and " +
                     "Heating condition is achieved by Mini Split AC.",
-                xref: { document: "cluster", section: "4.3.9.44" }
+                xref: "cluster§4.3.9.44"
             },
             {
                 details: "Indicates capacity of Mini Split AC in terms of the format defined by the ACCapacityFormat attribute",
-                xref: { document: "cluster", section: "4.3.9.45" }
+                xref: "cluster§4.3.9.45"
             },
-            {
-                details: "Indicates type of refrigerant used within the Mini Split AC.",
-                xref: { document: "cluster", section: "4.3.9.46" }
-            },
-            {
-                details: "Indicates the type of compressor used within the Mini Split AC.",
-                xref: { document: "cluster", section: "4.3.9.47" }
-            },
-            {
-                details: "Indicates the type of errors encountered within the Mini Split AC.",
-                xref: { document: "cluster", section: "4.3.9.48" }
-            },
-            {
-                details: "Indicates the position of Louver on the AC.",
-                xref: { document: "cluster", section: "4.3.9.49" }
-            },
+            { details: "Indicates type of refrigerant used within the Mini Split AC.", xref: "cluster§4.3.9.46" },
+            { details: "Indicates the type of compressor used within the Mini Split AC.", xref: "cluster§4.3.9.47" },
+            { details: "Indicates the type of errors encountered within the Mini Split AC.", xref: "cluster§4.3.9.48" },
+            { details: "Indicates the position of Louver on the AC.", xref: "cluster§4.3.9.49" },
             {
                 details: "Indicates the temperature of the AC coil, as measured locally or remotely (over the network).",
-                xref: { document: "cluster", section: "4.3.9.50" }
+                xref: "cluster§4.3.9.50"
             },
-            {
-                details: "Indicates the format for the ACCapacity attribute.",
-                xref: { document: "cluster", section: "4.3.9.51" }
-            },
+            { details: "Indicates the format for the ACCapacity attribute.", xref: "cluster§4.3.9.51" },
 
             {
                 details: "Indicates the supported PresetScenarioEnum values, limits on how many presets can be created for " +
                     "each PresetScenarioEnum, and whether or not a thermostat can transition automatically to a given " +
                     "scenario.",
-                xref: { document: "cluster", section: "4.3.9.52" }
+                xref: "cluster§4.3.9.52"
             },
 
             {
                 details: "Indicates the supported SystemMode values for Schedules, limits on how many schedules can be created " +
                     "for each SystemMode value, and whether or not a given SystemMode value supports transitions to " +
                     "Presets, target setpoints, or both.",
-                xref: { document: "cluster", section: "4.3.9.53" }
+                xref: "cluster§4.3.9.53"
             },
 
             {
                 details: "Indicates the maximum number of entries supported by the Presets attribute.",
-                xref: { document: "cluster", section: "4.3.9.54" }
+                xref: "cluster§4.3.9.54"
             },
             {
                 details: "Indicates the maximum number of entries supported by the Schedules attribute.",
-                xref: { document: "cluster", section: "4.3.9.55" }
+                xref: "cluster§4.3.9.55"
             },
             {
                 details: "Indicates the maximum number of transitions per Schedules attribute entry.",
-                xref: { document: "cluster", section: "4.3.9.56" }
+                xref: "cluster§4.3.9.56"
             },
-            { xref: { document: "cluster", section: "4.3.9" } },
+            { xref: "cluster§4.3.9" },
             {
                 details: "Indicates the PresetHandle of the active preset. If this attribute is null, then there is no active " +
                     "preset.",
-                xref: { document: "cluster", section: "4.3.9.58" }
+                xref: "cluster§4.3.9.58"
             },
             {
                 details: "Indicates the ScheduleHandle of the active schedule. A null value in this attribute indicates that " +
                     "there is no active schedule.",
-                xref: { document: "cluster", section: "4.3.9.59" }
+                xref: "cluster§4.3.9.59"
             },
 
             {
@@ -738,7 +723,7 @@ Thermostat.patch(
                     "\n" +
                     "  2. Otherwise, the attribute status shall be SUCCESS.",
 
-                xref: { document: "cluster", section: "4.3.9.60" }
+                xref: "cluster§4.3.9.60"
             },
 
             {
@@ -850,7 +835,7 @@ Thermostat.patch(
                     "\n" +
                     "  2. Otherwise, the attribute status shall be SUCCESS.",
 
-                xref: { document: "cluster", section: "4.3.9.61" }
+                xref: "cluster§4.3.9.61"
             },
 
             {
@@ -862,21 +847,21 @@ Thermostat.patch(
                     "set to null, this attribute shall be set to null indicating there is no hold on the Thermostat " +
                     "either with or without a duration.",
 
-                xref: { document: "cluster", section: "4.3.9.62" }
+                xref: "cluster§4.3.9.62"
             },
 
             {
-                xref: { document: "cluster", section: "4.3.10.1" },
+                xref: "cluster§4.3.10.1",
 
                 children: [
                     {
                         details: "The field shall specify which setpoints are to be adjusted.",
-                        xref: { document: "cluster", section: "4.3.10.1.1" }
+                        xref: "cluster§4.3.10.1.1"
                     },
                     {
                         details: "This field shall indicate the amount (possibly negative) that should be added to the setpoint(s), in " +
                             "steps of 0.1°C.",
-                        xref: { document: "cluster", section: "4.3.10.1.2" }
+                        xref: "cluster§4.3.10.1.2"
                     }
                 ]
             },
@@ -891,7 +876,7 @@ Thermostat.patch(
                     "one frame or contains more than 10 transitions, the schedule shall then be sent using multiple " +
                     "SetWeeklySchedule Commands.",
 
-                xref: { document: "cluster", section: "4.3.10.2" },
+                xref: "cluster§4.3.10.2",
 
                 children: [
                     {
@@ -899,7 +884,7 @@ Thermostat.patch(
                             "If a device supports more than 10 transitions in its schedule they can send this by sending more " +
                             "than 1 “Set Weekly Schedule” command, each containing the separate information that the device needs " +
                             "to set.",
-                        xref: { document: "cluster", section: "4.3.10.2.1" }
+                        xref: "cluster§4.3.10.2.1"
                     },
 
                     {
@@ -911,7 +896,7 @@ Thermostat.patch(
                             "Each setpoint transition will begin with the day of week for this transition. There can be up to 10 " +
                             "transitions for each command.",
 
-                        xref: { document: "cluster", section: "4.3.10.2.2" }
+                        xref: "cluster§4.3.10.2.2"
                     },
 
                     {
@@ -935,37 +920,37 @@ Thermostat.patch(
                             "Both bits must be respected, even if the HEAT or COOL feature is not supported, to ensure the " +
                             "command is decoded and handled correctly.",
 
-                        xref: { document: "cluster", section: "4.3.10.2.3" }
+                        xref: "cluster§4.3.10.2.3"
                     },
 
                     {
                         details: "This field shall contain the list of setpoint transitions used to update the specified daily " +
                             "schedules",
-                        xref: { document: "cluster", section: "4.3.10.2.4" }
+                        xref: "cluster§4.3.10.2.4"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "4.3.10.3" },
+                xref: "cluster§4.3.10.3",
 
                 children: [
                     {
                         details: "This field shall indicate the number of days the client would like to return the setpoint values for " +
                             "and could be any combination of single days or the entire week.",
-                        xref: { document: "cluster", section: "4.3.10.3.1" }
+                        xref: "cluster§4.3.10.3.1"
                     },
                     {
                         details: "This field shall indicate the mode the client would like to return the set point values for and " +
                             "could be any combination of heat only, cool only or heat & cool.",
-                        xref: { document: "cluster", section: "4.3.10.3.2" }
+                        xref: "cluster§4.3.10.3.2"
                     }
                 ]
             },
 
             {
                 details: "This command has the same payload format as the Set Weekly Schedule.",
-                xref: { document: "cluster", section: "4.3.10.4" }
+                xref: "cluster§4.3.10.4"
             },
 
             {
@@ -973,21 +958,21 @@ Thermostat.patch(
                     "\n" +
                     "Upon receipt, all transitions currently stored shall be cleared and a default response of SUCCESS " +
                     "shall be sent in response. There are no error responses to this command.",
-                xref: { document: "cluster", section: "4.3.10.5" }
+                xref: "cluster§4.3.10.5"
             },
 
             {
                 details: "This command is sent from the thermostat cluster server in response to the Get Relay Status Log. " +
                     "After the Relay Status Entry is sent over the air to the requesting client, the specific entry will " +
                     "be cleared from the thermostat internal log.",
-                xref: { document: "cluster", section: "4.3.10.7" },
+                xref: "cluster§4.3.10.7",
 
                 children: [
                     {
                         details: "This field shall indicate the sample time of the day, in minutes since midnight, when the relay " +
                             "status was captured for this associated log entry. For example, 6am will be represented by 360 " +
                             "minutes since midnight and 11:30pm will be represented by 1410 minutes since midnight.",
-                        xref: { document: "cluster", section: "4.3.10.7.1" }
+                        xref: "cluster§4.3.10.7.1"
                     },
 
                     {
@@ -995,41 +980,41 @@ Thermostat.patch(
                             "represents one relay used by the thermostat. If the bit is on, the associated relay is on and " +
                             "active. Each thermostat manufacturer can create its own mapping between the bitmap and the " +
                             "associated relay.",
-                        xref: { document: "cluster", section: "4.3.10.7.2" }
+                        xref: "cluster§4.3.10.7.2"
                     },
 
                     {
                         details: "This field shall indicate the LocalTemperature when the log is captured. The null value indicates " +
                             "that LocalTemperature was invalid or unavailable.",
-                        xref: { document: "cluster", section: "4.3.10.7.3" }
+                        xref: "cluster§4.3.10.7.3"
                     },
                     undefined,
                     {
                         details: "This field shall indicate the target setpoint temperature when the log is captured.",
-                        xref: { document: "cluster", section: "4.3.10.7.5" }
+                        xref: "cluster§4.3.10.7.5"
                     },
                     {
                         details: "This field shall indicate the number of unread entries within the thermostat internal log system.",
-                        xref: { document: "cluster", section: "4.3.10.7.6" }
+                        xref: "cluster§4.3.10.7.6"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "4.3.10.8" },
+                xref: "cluster§4.3.10.8",
                 children: [{
                     details: "This field shall specify the value of the ScheduleHandle field on the ScheduleStruct to be made " +
                         "active.",
-                    xref: { document: "cluster", section: "4.3.10.8.1" }
+                    xref: "cluster§4.3.10.8.1"
                 }]
             },
 
             {
-                xref: { document: "cluster", section: "4.3.10.9" },
+                xref: "cluster§4.3.10.9",
                 children: [{
                     details: "This field shall specify the value of the PresetHandle field on the PresetStruct to be made active. " +
                         "If the field is set to null, that indicates there should be no active preset.",
-                    xref: { document: "cluster", section: "4.3.10.9.1" }
+                    xref: "cluster§4.3.10.9.1"
                 }]
             },
 
@@ -1045,7 +1030,7 @@ Thermostat.patch(
                     "\n" +
                     "The full (non-null) range of -327.67°C to 327.67°C may be used.",
 
-                xref: { document: "cluster", section: "4.3.8.1" }
+                xref: "cluster§4.3.8.1"
             },
 
             {
@@ -1061,7 +1046,7 @@ Thermostat.patch(
                     "This type is employed where compactness of representation is important and where the resolution and " +
                     "range are still satisfactory.",
 
-                xref: { document: "cluster", section: "4.3.8.2" }
+                xref: "cluster§4.3.8.2"
             },
 
             {
@@ -1077,11 +1062,11 @@ Thermostat.patch(
                     "This type is employed where compactness of representation is important and where the resolution and " +
                     "range are still satisfactory.",
 
-                xref: { document: "cluster", section: "4.3.8.3" }
+                xref: "cluster§4.3.8.3"
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.4" },
+                xref: "cluster§4.3.8.4",
 
                 children: [
                     { description: "Compressor Failure or Refrigerant Leakage" },
@@ -1093,7 +1078,7 @@ Thermostat.patch(
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.5" },
+                xref: "cluster§4.3.8.5",
                 children: [
                     { description: "Initialization failure. The device failed to complete initialization at power-up." },
                     { description: "Hardware failure" },
@@ -1102,7 +1087,7 @@ Thermostat.patch(
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.6" },
+                xref: "cluster§4.3.8.6",
 
                 children: [
                     {
@@ -1118,7 +1103,7 @@ Thermostat.patch(
                             "\n" +
                             "  • 11 = Reserved",
 
-                        xref: { document: "cluster", section: "4.3.8.6.1" }
+                        xref: "cluster§4.3.8.6.1"
                     },
 
                     {
@@ -1134,7 +1119,7 @@ Thermostat.patch(
                             "\n" +
                             "  • 11 = Reserved",
 
-                        xref: { document: "cluster", section: "4.3.8.6.2" }
+                        xref: "cluster§4.3.8.6.2"
                     },
 
                     {
@@ -1144,7 +1129,7 @@ Thermostat.patch(
                             "  • 0 = Conventional" +
                             "\n" +
                             "  • 1 = Heat Pump",
-                        xref: { document: "cluster", section: "4.3.8.6.3" }
+                        xref: "cluster§4.3.8.6.3"
                     },
 
                     {
@@ -1154,24 +1139,24 @@ Thermostat.patch(
                             "  • 0 = Does not use fuel" +
                             "\n" +
                             "  • 1 = Uses fuel",
-                        xref: { document: "cluster", section: "4.3.8.6.4" }
+                        xref: "cluster§4.3.8.6.4"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.7" },
+                xref: "cluster§4.3.8.7",
 
                 children: [{
                     description: "Indicates the occupancy state",
                     details: "If this bit is set, it shall indicate the occupied state else if the bit if not set, it shall " +
                         "indicate the unoccupied state.",
-                    xref: { document: "cluster", section: "4.3.8.7.1" }
+                    xref: "cluster§4.3.8.7.1"
                 }]
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.8" },
+                xref: "cluster§4.3.8.8",
                 children: [
                     { description: "Preset may be automatically activated by the thermostat" },
                     { description: "Preset supports user- provided names" }
@@ -1179,7 +1164,7 @@ Thermostat.patch(
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.9" },
+                xref: "cluster§4.3.8.9",
 
                 children: [
                     {
@@ -1191,7 +1176,7 @@ Thermostat.patch(
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.10" },
+                xref: "cluster§4.3.8.10",
 
                 children: [
                     { description: "Heat Stage On" },
@@ -1205,21 +1190,21 @@ Thermostat.patch(
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.11" },
+                xref: "cluster§4.3.8.11",
 
                 children: [
                     { description: "Calculated Local Temperature is derived from a remote node" },
                     {
                         description: "OutdoorTemperature is derived from a remote node",
                         details: "This bit shall be supported if the OutdoorTemperature attribute is supported.",
-                        xref: { document: "cluster", section: "4.3.8.11.1" }
+                        xref: "cluster§4.3.8.11.1"
                     },
                     { description: "Occupancy is derived from a remote node" }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.12" },
+                xref: "cluster§4.3.8.12",
 
                 children: [
                     {
@@ -1227,7 +1212,7 @@ Thermostat.patch(
                         details: "This bit shall indicate that any ScheduleStruct with a SystemMode field whose value matches the " +
                             "SystemMode field on the encompassing ScheduleTypeStruct supports specifying presets on " +
                             "ScheduleTransitionStructs contained in its Transitions field.",
-                        xref: { document: "cluster", section: "4.3.8.12.1" }
+                        xref: "cluster§4.3.8.12.1"
                     },
 
                     {
@@ -1235,7 +1220,7 @@ Thermostat.patch(
                         details: "This bit shall indicate that any ScheduleStruct with a SystemMode field whose value matches the " +
                             "SystemMode field on the encompassing ScheduleTypeStruct supports specifying setpoints on " +
                             "ScheduleTransitionStructs contained in its Transitions field.",
-                        xref: { document: "cluster", section: "4.3.8.12.2" }
+                        xref: "cluster§4.3.8.12.2"
                     },
 
                     {
@@ -1243,7 +1228,7 @@ Thermostat.patch(
                         details: "This bit shall indicate that any ScheduleStruct with a SystemMode field whose value matches the " +
                             "SystemMode field on the encompassing ScheduleTypeStruct supports setting the value of the Name " +
                             "field.",
-                        xref: { document: "cluster", section: "4.3.8.12.3" }
+                        xref: "cluster§4.3.8.12.3"
                     },
 
                     {
@@ -1251,13 +1236,13 @@ Thermostat.patch(
                         details: "This bit shall indicate that any ScheduleStruct with a SystemMode field whose value matches the " +
                             "SystemMode field on the encompassing ScheduleTypeStruct supports setting its SystemMode field to " +
                             "Off.",
-                        xref: { document: "cluster", section: "4.3.8.12.4" }
+                        xref: "cluster§4.3.8.12.4"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.13" },
+                xref: "cluster§4.3.8.13",
 
                 children: [
                     { description: "Sunday" },
@@ -1272,16 +1257,13 @@ Thermostat.patch(
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.14" },
+                xref: "cluster§4.3.8.14",
                 children: [{ description: "Adjust Heat Setpoint" }, { description: "Adjust Cool Setpoint" }]
             },
-            {
-                xref: { document: "cluster", section: "4.3.8.15" },
-                children: [{ description: "British Thermal Unit per Hour" }]
-            },
+            { xref: "cluster§4.3.8.15", children: [{ description: "British Thermal Unit per Hour" }] },
 
             {
-                xref: { document: "cluster", section: "4.3.8.16" },
+                xref: "cluster§4.3.8.16",
 
                 children: [
                     { description: "Unknown compressor type" },
@@ -1292,7 +1274,7 @@ Thermostat.patch(
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.17" },
+                xref: "cluster§4.3.8.17",
 
                 children: [
                     { description: "Fully Closed" },
@@ -1304,7 +1286,7 @@ Thermostat.patch(
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.18" },
+                xref: "cluster§4.3.8.18",
 
                 children: [
                     { description: "Unknown Refrigerant Type" },
@@ -1315,7 +1297,7 @@ Thermostat.patch(
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.19" },
+                xref: "cluster§4.3.8.19",
 
                 children: [
                     { description: "Unknown AC Type" },
@@ -1327,7 +1309,7 @@ Thermostat.patch(
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.20" },
+                xref: "cluster§4.3.8.20",
                 children: [
                     { description: "Adjust Heat Setpoint" },
                     { description: "Adjust Cool Setpoint" },
@@ -1347,7 +1329,7 @@ Thermostat.patch(
                     "the whole building must be in the same mode, SHOULD report CoolingOnly or HeatingOnly based on the " +
                     "current capability.",
 
-                xref: { document: "cluster", section: "4.3.8.21" },
+                xref: "cluster§4.3.8.21",
 
                 children: [
                     { description: "Heat and Emergency are not possible" },
@@ -1360,58 +1342,58 @@ Thermostat.patch(
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.22" },
+                xref: "cluster§4.3.8.22",
 
                 children: [
                     {
                         description: "The thermostat-controlled area is occupied",
                         details: "This value shall indicate the preset for periods when the thermostat’s temperature-controlled area " +
                             "is occupied. It is intended for thermostats that can automatically determine occupancy.",
-                        xref: { document: "cluster", section: "4.3.8.22.2" }
+                        xref: "cluster§4.3.8.22.2"
                     },
 
                     {
                         description: "The thermostat-controlled area is unoccupied",
                         details: "This value shall indicate the preset for periods when the thermostat’s temperature-controlled area " +
                             "is unoccupied. It is intended for thermostats that can automatically determine occupancy.",
-                        xref: { document: "cluster", section: "4.3.8.22.3" }
+                        xref: "cluster§4.3.8.22.3"
                     },
 
                     {
                         description: "Users are likely to be sleeping",
                         details: "This value shall indicate the preset for periods when users are likely to be asleep.",
-                        xref: { document: "cluster", section: "4.3.8.22.4" }
+                        xref: "cluster§4.3.8.22.4"
                     },
                     {
                         description: "Users are likely to be waking up",
                         details: "This value shall indicate the preset for periods when users are likely to be waking up.",
-                        xref: { document: "cluster", section: "4.3.8.22.5" }
+                        xref: "cluster§4.3.8.22.5"
                     },
 
                     {
                         description: "Users are on vacation",
                         details: "This value shall indicate the preset for periods when users are on vacation, or otherwise out-of- " +
                             "home for extended periods of time.",
-                        xref: { document: "cluster", section: "4.3.8.22.6" }
+                        xref: "cluster§4.3.8.22.6"
                     },
 
                     {
                         description: "Users are likely to be going to sleep",
                         details: "This value shall indicate the preset for periods when users are likely to be going to sleep.",
-                        xref: { document: "cluster", section: "4.3.8.22.7" }
+                        xref: "cluster§4.3.8.22.7"
                     },
 
                     {
                         description: "Custom presets",
                         details: "This value shall indicate a free-form preset; when set, the Name field on PresetStruct shall NOT be " +
                             "null.",
-                        xref: { document: "cluster", section: "4.3.8.22.8" }
+                        xref: "cluster§4.3.8.22.8"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.23" },
+                xref: "cluster§4.3.8.23",
                 children: [
                     { description: "Manual, user-initiated setpoint change via the thermostat" },
                     { description: "Schedule/internal programming-initiated setpoint change" },
@@ -1419,11 +1401,11 @@ Thermostat.patch(
                 ]
             },
 
-            { xref: { document: "cluster", section: "4.3.8.24" } },
+            { xref: "cluster§4.3.8.24" },
 
             {
                 details: "Table 9. Interpretation of Heat, Cool and Auto SystemModeEnum Values",
-                xref: { document: "cluster", section: "4.3.8.25" },
+                xref: "cluster§4.3.8.25",
 
                 children: [
                     { description: "The Thermostat does not generate demand for Cooling or Heating" },
@@ -1436,7 +1418,7 @@ Thermostat.patch(
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.26" },
+                xref: "cluster§4.3.8.26",
                 children: [
                     { description: "The Thermostat does not generate demand for Cooling or Heating" },
                     { description: "Demand is only generated for Cooling" },
@@ -1445,7 +1427,7 @@ Thermostat.patch(
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.27" },
+                xref: "cluster§4.3.8.27",
                 children: [
                     { description: "Follow scheduling program" },
                     { description: "Maintain current setpoint, regardless of schedule transitions" }
@@ -1453,7 +1435,7 @@ Thermostat.patch(
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.28" },
+                xref: "cluster§4.3.8.28",
 
                 children: [
                     {
@@ -1464,12 +1446,12 @@ Thermostat.patch(
                             "attribute for the purpose of creating a new Preset. Refer to Presets for the creation of Preset " +
                             "handles.",
 
-                        xref: { document: "cluster", section: "4.3.8.28.1" }
+                        xref: "cluster§4.3.8.28.1"
                     },
 
                     {
                         details: "This field shall indicate the associated PresetScenarioEnum value for this preset.",
-                        xref: { document: "cluster", section: "4.3.8.28.2" }
+                        xref: "cluster§4.3.8.28.2"
                     },
 
                     {
@@ -1477,49 +1459,49 @@ Thermostat.patch(
                             "\n" +
                             "Within each subset of presets sharing the same PresetScenario field value, there shall NOT be any " +
                             "presets with the same value, including null as a value, in the Name field.",
-                        xref: { document: "cluster", section: "4.3.8.28.3" }
+                        xref: "cluster§4.3.8.28.3"
                     },
 
                     {
                         details: "This field shall indicate the cooling setpoint for the preset. Refer to Setpoint Limits for value " +
                             "constraints.",
-                        xref: { document: "cluster", section: "4.3.8.28.4" }
+                        xref: "cluster§4.3.8.28.4"
                     },
                     {
                         details: "This field shall indicate the heating setpoint for the preset. Refer to Setpoint Limits for value " +
                             "constraints.",
-                        xref: { document: "cluster", section: "4.3.8.28.5" }
+                        xref: "cluster§4.3.8.28.5"
                     },
                     {
                         details: "This field shall indicate whether the preset is marked as \"built-in\", meaning that it can be " +
                             "modified, but it cannot be deleted.",
-                        xref: { document: "cluster", section: "4.3.8.28.6" }
+                        xref: "cluster§4.3.8.28.6"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.29" },
+                xref: "cluster§4.3.8.29",
 
                 children: [
                     {
                         details: "This field shall specify a PresetScenarioEnum value supported by this thermostat.",
-                        xref: { document: "cluster", section: "4.3.8.29.1" }
+                        xref: "cluster§4.3.8.29.1"
                     },
                     {
                         details: "This field shall specify a limit for the number of presets for this PresetScenarioEnum.",
-                        xref: { document: "cluster", section: "4.3.8.29.2" }
+                        xref: "cluster§4.3.8.29.2"
                     },
                     {
                         details: "This field shall specify a bitmap of features for this PresetTypeStruct.",
-                        xref: { document: "cluster", section: "4.3.8.29.3" }
+                        xref: "cluster§4.3.8.29.3"
                     }
                 ]
             },
 
             {
                 details: "This represents a single transition in a Thermostat schedule",
-                xref: { document: "cluster", section: "4.3.8.30" },
+                xref: "cluster§4.3.8.30",
 
                 children: [
                     {
@@ -1527,22 +1509,22 @@ Thermostat.patch(
                             "time will be represented by a 16 bits unsigned integer to designate the minutes since midnight. For " +
                             "example, 6am will be represented by 360 minutes since midnight and 11:30pm will be represented by " +
                             "1410 minutes since midnight.",
-                        xref: { document: "cluster", section: "4.3.8.30.1" }
+                        xref: "cluster§4.3.8.30.1"
                     },
 
                     {
                         details: "This field shall represent the heat setpoint to be applied at this associated transition start time.",
-                        xref: { document: "cluster", section: "4.3.8.30.2" }
+                        xref: "cluster§4.3.8.30.2"
                     },
                     {
                         details: "This field shall represent the cool setpoint to be applied at this associated transition start time.",
-                        xref: { document: "cluster", section: "4.3.8.30.3" }
+                        xref: "cluster§4.3.8.30.3"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.31" },
+                xref: "cluster§4.3.8.31",
 
                 children: [
                     {
@@ -1553,21 +1535,18 @@ Thermostat.patch(
                             "attribute for the purpose of creating a new Schedule. Refer to Schedules for the creation of " +
                             "Schedule handles.",
 
-                        xref: { document: "cluster", section: "4.3.8.31.1" }
+                        xref: "cluster§4.3.8.31.1"
                     },
 
                     {
                         details: "This field shall specify the default thermostat system mode for transitions in this schedule. The " +
                             "only valid values for this field shall be Auto, Heat, and Cool.",
-                        xref: { document: "cluster", section: "4.3.8.31.2" }
+                        xref: "cluster§4.3.8.31.2"
                     },
-                    {
-                        details: "This field shall specify a name for the ScheduleStruct.",
-                        xref: { document: "cluster", section: "4.3.8.31.3" }
-                    },
+                    { details: "This field shall specify a name for the ScheduleStruct.", xref: "cluster§4.3.8.31.3" },
                     {
                         details: "This field shall indicate the default PresetHandle value for transitions in this schedule.",
-                        xref: { document: "cluster", section: "4.3.8.31.4" }
+                        xref: "cluster§4.3.8.31.4"
                     },
 
                     {
@@ -1598,13 +1577,13 @@ Thermostat.patch(
                             "shall be the ScheduleTransitionStruct with the largest TransitionTime field from the set of " +
                             "ScheduleTransitionStructs whose DayOfWeek field matches the current day of the week.",
 
-                        xref: { document: "cluster", section: "4.3.8.31.5" }
+                        xref: "cluster§4.3.8.31.5"
                     },
 
                     {
                         details: "This field shall indicate whether the schedule is marked as \"built-in\", meaning that it can be " +
                             "modified, but it cannot be deleted.",
-                        xref: { document: "cluster", section: "4.3.8.31.6" }
+                        xref: "cluster§4.3.8.31.6"
                     }
                 ]
             },
@@ -1668,13 +1647,13 @@ Thermostat.patch(
                     "  • The SystemMode field is provided and has the value Cool or Auto, or the SystemMode field on the " +
                     "    parent ScheduleStruct has the value Cool or Auto",
 
-                xref: { document: "cluster", section: "4.3.8.32" },
+                xref: "cluster§4.3.8.32",
 
                 children: [
                     {
                         details: "This field shall specify a bitmask of days of the week that the transition applies to. The Vacation " +
                             "bit shall NOT be set; vacation schedules shall be set via the vacation preset.",
-                        xref: { document: "cluster", section: "4.3.8.32.1" }
+                        xref: "cluster§4.3.8.32.1"
                     },
 
                     {
@@ -1682,13 +1661,13 @@ Thermostat.patch(
                             "within the day representing the wall clock, where 0 is 00:00:00, 1 is 00:01:00 and 1439 is 23:59:00." +
                             "\n" +
                             "Handling of transitions during the changeover of Daylight Saving Time is implementation-dependent.",
-                        xref: { document: "cluster", section: "4.3.8.32.2" }
+                        xref: "cluster§4.3.8.32.2"
                     },
 
                     {
                         details: "This field shall specify the preset used at the TransitionTime. If this field is provided, then the " +
                             "SystemMode, CoolingSetpoint and HeatingSetpoint fields shall NOT be provided.",
-                        xref: { document: "cluster", section: "4.3.8.32.3" }
+                        xref: "cluster§4.3.8.32.3"
                     },
 
                     {
@@ -1696,39 +1675,39 @@ Thermostat.patch(
                             "overriding the default for the schedule. The only valid values for this field shall be Auto, Heat, " +
                             "Cool and Off. This field shall only be included when the required system mode differs from the " +
                             "schedule’s default SystemMode.",
-                        xref: { document: "cluster", section: "4.3.8.32.4" }
+                        xref: "cluster§4.3.8.32.4"
                     },
 
                     {
                         details: "This field shall specify the cooling setpoint for the transition. If PresetHandle is set, this field " +
                             "shall NOT be included. Refer to Setpoint Limits for value constraints.",
-                        xref: { document: "cluster", section: "4.3.8.32.5" }
+                        xref: "cluster§4.3.8.32.5"
                     },
                     {
                         details: "This field shall specify the cooling setpoint for the transition. If PresetHandle is set, this field " +
                             "shall NOT be included. Refer to Setpoint Limits for value constraints.",
-                        xref: { document: "cluster", section: "4.3.8.32.6" }
+                        xref: "cluster§4.3.8.32.6"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "4.3.8.33" },
+                xref: "cluster§4.3.8.33",
 
                 children: [
                     {
                         details: "This field shall specify a SystemModeEnum supported by this thermostat for Schedules. The only valid " +
                             "values for this field shall be Auto, Heat, and Cool.",
-                        xref: { document: "cluster", section: "4.3.8.33.1" }
+                        xref: "cluster§4.3.8.33.1"
                     },
                     {
                         details: "This field shall specify a limit for the number of Schedules for this SystemMode.",
-                        xref: { document: "cluster", section: "4.3.8.33.2" }
+                        xref: "cluster§4.3.8.33.2"
                     },
                     {
                         details: "This field shall specify a bitmap of features for this schedule entry. At least one of " +
                             "SupportsPresets and SupportsSetpoints shall be set.",
-                        xref: { document: "cluster", section: "4.3.8.33.3" }
+                        xref: "cluster§4.3.8.33.3"
                     }
                 ]
             }

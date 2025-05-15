@@ -32,6 +32,6 @@ FixedLabel.patch({
         "be implemented using semantic tags Direction.Upward and Direction.Downward instead of (or in " +
         "addition to) the Fixed Label cluster.",
 
-    xref: { document: "core", section: "9.8" },
-    children: [undefined, { xref: { document: "core", section: "9.8.4" } }]
+    xref: "core§9.8",
+    children: [undefined, { xref: "core§9.8.4" }]
 });

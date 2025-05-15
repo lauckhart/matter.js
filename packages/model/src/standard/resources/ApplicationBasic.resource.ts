@@ -18,55 +18,52 @@ ApplicationBasic.patch({
         "App on a Video Player device. This cluster provides identification information about the Content App " +
         "such as vendor and product.",
 
-    xref: { document: "cluster", section: "6.3" },
+    xref: "cluster§6.3",
 
     children: [
         undefined,
         {
             details: "This attribute shall specify a human readable (displayable) name of the vendor for the Content App.",
-            xref: { document: "cluster", section: "6.3.5.1" }
+            xref: "cluster§6.3.5.1"
         },
         {
             details: "This attribute, if present, shall specify the Connectivity Standards Alliance assigned Vendor ID for " +
                 "the Content App.",
-            xref: { document: "cluster", section: "6.3.5.2" }
+            xref: "cluster§6.3.5.2"
         },
 
         {
             details: "This attribute shall specify a human readable (displayable) name of the Content App assigned by the " +
                 "vendor. For example, \"NPR On Demand\". The maximum length of the ApplicationName attribute is 256 " +
                 "bytes of UTF-8 characters.",
-            xref: { document: "cluster", section: "6.3.5.3" }
+            xref: "cluster§6.3.5.3"
         },
 
         {
             details: "This attribute, if present, shall specify a numeric ID assigned by the vendor to identify a specific " +
                 "Content App made by them. If the Content App is certified by the Connectivity Standards Alliance, " +
                 "then this would be the Product ID as specified by the vendor for the certification.",
-            xref: { document: "cluster", section: "6.3.5.4" }
+            xref: "cluster§6.3.5.4"
         },
 
         {
             details: "This attribute shall specify a Content App which consists of an Application ID using a specified " +
                 "catalog.",
-            xref: { document: "cluster", section: "6.3.5.5" }
+            xref: "cluster§6.3.5.5"
         },
         {
             details: "This attribute shall specify the current running status of the application.",
-            xref: { document: "cluster", section: "6.3.5.6" }
+            xref: "cluster§6.3.5.6"
         },
         {
             details: "This attribute shall specify a human readable (displayable) version of the Content App assigned by " +
                 "the vendor. The maximum length of the ApplicationVersion attribute is 32 bytes of UTF-8 characters.",
-            xref: { document: "cluster", section: "6.3.5.7" }
+            xref: "cluster§6.3.5.7"
         },
-        {
-            details: "This attribute is a list of vendor IDs. Each entry is a vendor-id.",
-            xref: { document: "cluster", section: "6.3.5.8" }
-        },
+        { details: "This attribute is a list of vendor IDs. Each entry is a vendor-id.", xref: "cluster§6.3.5.8" },
 
         {
-            xref: { document: "cluster", section: "6.3.4.1" },
+            xref: "cluster§6.3.4.1",
 
             children: [
                 { description: "Application is not running." },
@@ -78,7 +75,7 @@ ApplicationBasic.patch({
 
         {
             details: "This indicates a global identifier for an Application given a catalog.",
-            xref: { document: "cluster", section: "6.3.4.2" },
+            xref: "cluster§6.3.4.2",
 
             children: [
                 {
@@ -89,7 +86,7 @@ ApplicationBasic.patch({
                         "[MatterDevLib]) will have their own catalog vendor ID (set to their own Vendor ID) and will assign " +
                         "an ApplicationID to each Content App.",
 
-                    xref: { document: "cluster", section: "6.3.4.2.1" }
+                    xref: "cluster§6.3.4.2.1"
                 },
 
                 {
@@ -97,7 +94,7 @@ ApplicationBasic.patch({
                         "\"PruneVideo\" or \"Company X\". This field shall be unique within a catalog." +
                         "\n" +
                         "For the DIAL registry catalog, this value shall be the DIAL prefix.",
-                    xref: { document: "cluster", section: "6.3.4.2.2" }
+                    xref: "cluster§6.3.4.2.2"
                 }
             ]
         }

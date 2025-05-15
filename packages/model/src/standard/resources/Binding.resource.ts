@@ -43,37 +43,37 @@ Binding.patch({
         "Once a binding entry is created on the Binding cluster, the client endpoint may initiate " +
         "interactions to the binding target.",
 
-    xref: { document: "core", section: "9.6" },
+    xref: "core§9.6",
 
     children: [
         undefined,
-        { details: "Each entry shall represent a binding.", xref: { document: "core", section: "9.6.6.1" } },
+        { details: "Each entry shall represent a binding.", xref: "core§9.6.6.1" },
 
         {
-            xref: { document: "core", section: "9.6.5.1" },
+            xref: "core§9.6.5.1",
 
             children: [
                 {
                     details: "This field is the remote target node ID. If the Endpoint field is present, this field shall be " +
                         "present.",
-                    xref: { document: "core", section: "9.6.5.1.1" }
+                    xref: "core§9.6.5.1.1"
                 },
                 {
                     details: "This field is the target group ID that represents remote endpoints. If the Endpoint field is " +
                         "present, this field shall NOT be present.",
-                    xref: { document: "core", section: "9.6.5.1.2" }
+                    xref: "core§9.6.5.1.2"
                 },
                 {
                     details: "This field is the remote endpoint that the local endpoint is bound to. If the Group field is " +
                         "present, this field shall NOT be present.",
-                    xref: { document: "core", section: "9.6.5.1.3" }
+                    xref: "core§9.6.5.1.3"
                 },
 
                 {
                     details: "This field is the cluster ID (client & server) on the local and target endpoint(s). If this field is " +
                         "present, the client cluster shall also exist on this endpoint (with this Binding cluster). If this " +
                         "field is present, the target shall be this cluster on the target endpoint(s).",
-                    xref: { document: "core", section: "9.6.5.1.4" }
+                    xref: "core§9.6.5.1.4"
                 }
             ]
         }

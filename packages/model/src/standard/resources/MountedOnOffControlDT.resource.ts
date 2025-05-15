@@ -12,15 +12,15 @@ MountedOnOffControlDt.patch({
     classification: "simple",
     details: "A Mounted On/Off Control is a fixed device that provides power to another device that is plugged " +
         "into it, and is capable of switching that provided power on or off.",
-    xref: { document: "device", section: "5.3" },
+    xref: "device§5.3",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "5.3.4" } },
-        { xref: { document: "device", section: "5.3.4" } },
-        { xref: { document: "device", section: "5.3.4" } },
-        { xref: { document: "device", section: "5.3.4" } },
-        { xref: { document: "device", section: "5.3.4" } },
-        { xref: { document: "device", section: "5.3.4" } }
+        { xref: "device§5.3.4" },
+        { xref: "device§5.3.4" },
+        { xref: "device§5.3.4" },
+        { xref: "device§5.3.4" },
+        { xref: "device§5.3.4" },
+        { xref: "device§5.3.4" }
     ]
 });

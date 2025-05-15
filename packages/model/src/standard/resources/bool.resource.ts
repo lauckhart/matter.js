@@ -15,5 +15,5 @@ bool.patch({
         "  • FALSE shall be equivalent to the value 0 (zero)." +
         "\n" +
         "  • TRUE shall be equivalent to the value 1 (one).",
-    xref: { document: "core", section: "7.19.1.1" }
+    xref: "core§7.19.1.1"
 });

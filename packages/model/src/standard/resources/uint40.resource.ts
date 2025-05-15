@@ -8,4 +8,4 @@
 
 import { uint40 } from "#index.js";
 
-uint40.patch({ description: "Unsigned 40-bit integer", xref: { document: "core", section: "7.19.1" } });
+uint40.patch({ description: "Unsigned 40-bit integer", xref: "core§7.19.1" });

@@ -15,13 +15,13 @@ MediaPlayback.patch({
         "\n" +
         "This cluster server would be supported on Video Player devices or endpoints that provide media " +
         "playback, such as a Content App. This cluster provides an interface for controlling Media Playback.",
-    xref: { document: "cluster", section: "6.10" },
+    xref: "cluster§6.10",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "6.10.4" },
+            xref: "cluster§6.10.4",
 
             children: [
                 {
@@ -29,23 +29,23 @@ MediaPlayback.patch({
                     details: "This feature provides access to the time offset location within current playback media and allows " +
                         "for jumping to a specific location using time offsets. This enables clients to implement more " +
                         "advanced media seeking behavior in their user interface, for instance a \"seek bar\".",
-                    xref: { document: "cluster", section: "6.10.4.1" }
+                    xref: "cluster§6.10.4.1"
                 },
 
                 {
                     description: "VariableSpeed",
                     details: "This feature is for a device which supports variable speed playback on media that supports it.",
-                    xref: { document: "cluster", section: "6.10.4.2" }
+                    xref: "cluster§6.10.4.2"
                 },
                 {
                     description: "TextTracks",
                     details: "This feature is for a device or app that supports Text Tracks.",
-                    xref: { document: "cluster", section: "6.10.4.3" }
+                    xref: "cluster§6.10.4.3"
                 },
                 {
                     description: "AudioTracks",
                     details: "This feature is for a device or app that supports Audio Tracks.",
-                    xref: { document: "cluster", section: "6.10.4.4" }
+                    xref: "cluster§6.10.4.4"
                 },
 
                 {
@@ -58,7 +58,7 @@ MediaPlayback.patch({
                         "\n" +
                         "A cluster implementing AA shall implement AS.",
 
-                    xref: { document: "cluster", section: "6.10.4.5" }
+                    xref: "cluster§6.10.4.5"
                 }
             ]
         },
@@ -67,7 +67,7 @@ MediaPlayback.patch({
             details: "Indicates the current playback state of media." +
                 "\n" +
                 "During fast-forward, rewind, and other seek operations; this attribute shall be set to PLAYING.",
-            xref: { document: "cluster", section: "6.10.6.1" }
+            xref: "cluster§6.10.6.1"
         },
 
         {
@@ -75,7 +75,7 @@ MediaPlayback.patch({
                 "stream or television broadcast), or null when start time does not apply to the current media (for " +
                 "example, video-on-demand). This time is a UTC time. The client needs to handle conversion to local " +
                 "time, as required, taking in account time zone and possible local DST offset.",
-            xref: { document: "cluster", section: "6.10.6.2" }
+            xref: "cluster§6.10.6.2"
         },
 
         {
@@ -83,7 +83,7 @@ MediaPlayback.patch({
                 "\n" +
                 "or null when duration is not applicable (for example, in live streaming content with no known " +
                 "duration). This attribute shall never be 0.",
-            xref: { document: "cluster", section: "6.10.6.3" }
+            xref: "cluster§6.10.6.3"
         },
 
         {
@@ -104,7 +104,7 @@ MediaPlayback.patch({
                 "\n" +
                 "  • Updating of playback speed as a result of explicit request, or as a result of buffering events",
 
-            xref: { document: "cluster", section: "6.10.6.4" }
+            xref: "cluster§6.10.6.4"
         },
 
         {
@@ -138,7 +138,7 @@ MediaPlayback.patch({
                 "\n" +
                 "Following examples illustrate the PlaybackSpeed attribute values in various conditions.",
 
-            xref: { document: "cluster", section: "6.10.6.5" }
+            xref: "cluster§6.10.6.5"
         },
 
         {
@@ -149,88 +149,85 @@ MediaPlayback.patch({
                 "start of the media, truncating fractional milliseconds towards 0. A value of Nas when StartTime is " +
                 "not specified shall indicate that seeking forward is not allowed.",
 
-            xref: { document: "cluster", section: "6.10.6.7" }
+            xref: "cluster§6.10.6.7"
         },
 
         {
             details: "Indicates the earliest valid position to which a client may seek back, in milliseconds from start of " +
                 "the media. A value of Nas shall indicate that seeking backwards is not allowed.",
-            xref: { document: "cluster", section: "6.10.6.6" }
+            xref: "cluster§6.10.6.6"
         },
 
         {
             details: "ActiveTrack refers to the Audio track currently set and being used for the streaming media. A value " +
                 "of null shall indicate that no Audio Track corresponding to the current media is currently being " +
                 "played.",
-            xref: { document: "cluster", section: "6.10.6.8" }
+            xref: "cluster§6.10.6.8"
         },
 
         {
             details: "AvailableAudioTracks refers to the list of Audio tracks available for the current title being " +
                 "played. A value of null shall indicate that no Audio Tracks corresponding to the current media are " +
                 "selectable by the client.",
-            xref: { document: "cluster", section: "6.10.6.9" }
+            xref: "cluster§6.10.6.9"
         },
 
         {
             details: "ActiveTrack refers to the Text track currently set and being used for the streaming media. This can " +
                 "be nil. A value of null shall indicate that no Text Track corresponding to the current media is " +
                 "currently being displayed.",
-            xref: { document: "cluster", section: "6.10.6.10" }
+            xref: "cluster§6.10.6.10"
         },
 
         {
             details: "AvailableTextTracks refers to the list of Text tracks available for the current title being played. " +
                 "This can be an empty list. A value of null shall indicate that no Text Tracks corresponding to the " +
                 "current media are selectable by the client.",
-            xref: { document: "cluster", section: "6.10.6.11" }
+            xref: "cluster§6.10.6.11"
         },
 
         {
             details: "If supported, this event shall be generated when there is a change in any of the supported " +
                 "attributes of the Media Playback cluster.",
-            xref: { document: "cluster", section: "6.10.8.1" },
+            xref: "cluster§6.10.8.1",
 
             children: [
                 {
                     details: "This field shall indicate the updated playback state as defined by the CurrentState attribute, and " +
                         "has the same constraint as that attribute.",
-                    xref: { document: "cluster", section: "6.10.8.1.1" }
+                    xref: "cluster§6.10.8.1.1"
                 },
                 {
                     details: "This field shall indicate the updated start time as defined by the StartTime attribute, and has the " +
                         "same constraint as that attribute.",
-                    xref: { document: "cluster", section: "6.10.8.1.2" }
+                    xref: "cluster§6.10.8.1.2"
                 },
                 {
                     details: "This field shall indicate the updated duration as defined by the Duration attribute, and has the " +
                         "same constraint as that attribute.",
-                    xref: { document: "cluster", section: "6.10.8.1.3" }
+                    xref: "cluster§6.10.8.1.3"
                 },
                 {
                     details: "This field shall indicate the updated position of playback as defined by the SampledPosition " +
                         "attribute, and has the same constraint as that attribute.",
-                    xref: { document: "cluster", section: "6.10.8.1.4" }
+                    xref: "cluster§6.10.8.1.4"
                 },
                 {
                     details: "This field shall indicate the updated speed at which the current media is being played as defined by " +
                         "the PlaybackSpeed attribute, and has the same constraint as that attribute.",
-                    xref: { document: "cluster", section: "6.10.8.1.5" }
+                    xref: "cluster§6.10.8.1.5"
                 },
                 {
                     details: "This field shall indicate the updated start of the seek range end as defined by the SeekRangeEnd " +
                         "attribute, and has the same constraint as that attribute.",
-                    xref: { document: "cluster", section: "6.10.8.1.7" }
+                    xref: "cluster§6.10.8.1.7"
                 },
                 {
                     details: "This field shall indicate the updated start of the seek range start as defined by the SeekRangeStart " +
                         "attribute, and has the same constraint as that attribute.",
-                    xref: { document: "cluster", section: "6.10.8.1.6" }
+                    xref: "cluster§6.10.8.1.6"
                 },
-                {
-                    details: "This field shall indicate Optional app-specific data.",
-                    xref: { document: "cluster", section: "6.10.8.1.8" }
-                },
+                { details: "This field shall indicate Optional app-specific data.", xref: "cluster§6.10.8.1.8" },
 
                 {
                     details: "This field shall indicate whether audio is unmuted by the player due to a FF or REW command. This " +
@@ -241,7 +238,7 @@ MediaPlayback.patch({
                         "A value of true does not guarantee that audio can be heard by the user since the speaker may be " +
                         "muted, turned down to a low level and/or unplugged.",
 
-                    xref: { document: "cluster", section: "6.10.8.1.9" }
+                    xref: "cluster§6.10.8.1.9"
                 }
             ]
         },
@@ -249,30 +246,27 @@ MediaPlayback.patch({
         {
             details: "Upon receipt, this shall play media. If content is currently in a FastForward or Rewind state. Play " +
                 "shall return media to normal playback speed.",
-            xref: { document: "cluster", section: "6.10.7.1" }
+            xref: "cluster§6.10.7.1"
         },
-        {
-            details: "Upon receipt, this shall pause playback of the media.",
-            xref: { document: "cluster", section: "6.10.7.2" }
-        },
+        { details: "Upon receipt, this shall pause playback of the media.", xref: "cluster§6.10.7.2" },
         {
             details: "Upon receipt, this shall stop playback of the media. User-visible outcome is context-specific. This " +
                 "may navigate the user back to the location from where the media was originally launched.",
-            xref: { document: "cluster", section: "6.10.7.3" }
+            xref: "cluster§6.10.7.3"
         },
         {
             details: "Upon receipt, this shall Start Over with the current media playback item.",
-            xref: { document: "cluster", section: "6.10.7.4" }
+            xref: "cluster§6.10.7.4"
         },
         {
             details: "Upon receipt, this shall cause the handler to be invoked for \"Previous\". User experience is " +
                 "context-specific. This will often Go back to the previous media playback item.",
-            xref: { document: "cluster", section: "6.10.7.5" }
+            xref: "cluster§6.10.7.5"
         },
         {
             details: "Upon receipt, this shall cause the handler to be invoked for \"Next\". User experience is context- " +
                 "specific. This will often Go forward to the next media playback item.",
-            xref: { document: "cluster", section: "6.10.7.6" }
+            xref: "cluster§6.10.7.6"
         },
 
         {
@@ -288,14 +282,14 @@ MediaPlayback.patch({
                 "NOT_ALLOWED shall be returned. If the playback speed has reached the maximum supported speed for " +
                 "media playing backwards, the status of SPEED_OUT_OF_RANGE shall be returned.",
 
-            xref: { document: "cluster", section: "6.10.7.7" },
+            xref: "cluster§6.10.7.7",
 
             children: [{
                 details: "This field shall indicate whether audio should be unmuted by the player during rewind." +
                     "\n" +
                     "A value of true does not guarantee that audio can be heard by the user since the speaker may be " +
                     "muted, turned down to a low level and/or unplugged.",
-                xref: { document: "cluster", section: "6.10.7.7.1" }
+                xref: "cluster§6.10.7.7.1"
             }]
         },
 
@@ -313,20 +307,20 @@ MediaPlayback.patch({
                 "NOT_ALLOWED shall be returned. If the playback speed has reached the maximum supported speed for " +
                 "media playing forward, the status of SPEED_OUT_OF_RANGE shall be returned.",
 
-            xref: { document: "cluster", section: "6.10.7.8" },
+            xref: "cluster§6.10.7.8",
 
             children: [{
                 details: "This field shall indicate whether audio should be unmuted by the player during fast forward." +
                     "\n" +
                     "A value of true does not guarantee that audio can be heard by the user since the speaker may be " +
                     "muted, turned down to a low level and/or unplugged.",
-                xref: { document: "cluster", section: "6.10.7.8.1" }
+                xref: "cluster§6.10.7.8.1"
             }]
         },
 
         {
             details: "Upon receipt, this shall Skip forward in the media by the given number of milliseconds.",
-            xref: { document: "cluster", section: "6.10.7.9" },
+            xref: "cluster§6.10.7.9",
 
             children: [{
                 details: "This field shall indicate the duration of the time span to skip forward in the media, in " +
@@ -336,13 +330,13 @@ MediaPlayback.patch({
                     "client may seek forward to, the position should be set to that furthest valid position. If the " +
                     "SampledPosition attribute is supported it shall be updated on the cluster accordingly.",
 
-                xref: { document: "cluster", section: "6.10.7.9.1" }
+                xref: "cluster§6.10.7.9.1"
             }]
         },
 
         {
             details: "Upon receipt, this shall Skip backward in the media by the given number of milliseconds.",
-            xref: { document: "cluster", section: "6.10.7.10" },
+            xref: "cluster§6.10.7.10",
 
             children: [{
                 details: "This field shall indicate the duration of the time span to skip backward in the media, in " +
@@ -352,29 +346,26 @@ MediaPlayback.patch({
                     "may seek back to, the position should be set to that earliest valid position. If the SampledPosition " +
                     "attribute is supported it shall be updated on the cluster accordingly.",
 
-                xref: { document: "cluster", section: "6.10.7.10.1" }
+                xref: "cluster§6.10.7.10.1"
             }]
         },
 
         {
             details: "This command shall be generated in response to various Playback Commands.",
-            xref: { document: "cluster", section: "6.10.7.12" },
+            xref: "cluster§6.10.7.12",
 
             children: [
                 {
                     details: "This field shall indicate the status of the command which resulted in this response.",
-                    xref: { document: "cluster", section: "6.10.7.12.1" }
+                    xref: "cluster§6.10.7.12.1"
                 },
-                {
-                    details: "This field shall indicate Optional app-specific data.",
-                    xref: { document: "cluster", section: "6.10.7.12.2" }
-                }
+                { details: "This field shall indicate Optional app-specific data.", xref: "cluster§6.10.7.12.2" }
             ]
         },
 
         {
             details: "Upon receipt, this shall change the playback position in the media to the given position.",
-            xref: { document: "cluster", section: "6.10.7.11" },
+            xref: "cluster§6.10.7.11",
 
             children: [{
                 details: "This field shall indicate the position (in milliseconds) in the media to seek to. In case the " +
@@ -384,7 +375,7 @@ MediaPlayback.patch({
                     "forward to respectively, the status of SEEK_OUT_OF_RANGE shall be returned and no change shall be " +
                     "made to the position of the playback.",
 
-                xref: { document: "cluster", section: "6.10.7.11.1" }
+                xref: "cluster§6.10.7.11.1"
             }]
         },
 
@@ -393,20 +384,17 @@ MediaPlayback.patch({
                 "the Track catalog for the streaming media. If the TrackID does not exist in the Track catalog, OR " +
                 "does not correspond to the streaming media OR no media is being streamed at the time of receipt of " +
                 "this command, the server will return an error status of INVALID_ARGUMENT.",
-            xref: { document: "cluster", section: "6.10.7.13" },
+            xref: "cluster§6.10.7.13",
 
             children: [
-                {
-                    details: "This field shall indicate the Audio Track to activate.",
-                    xref: { document: "cluster", section: "6.10.7.13.1" }
-                },
+                { details: "This field shall indicate the Audio Track to activate.", xref: "cluster§6.10.7.13.1" },
 
                 {
                     details: "This value is the index field of the OutputInfoStruct from the OutputList attribute (from the " +
                         "AudioOutput cluster) and indicates which audio output the Audio Track should be played on. This " +
                         "field is absent for Text Tracks and only present for Audio Tracks. A value of null shall indicate " +
                         "that the server can choose the audio output(s) to play the Audio Track on.",
-                    xref: { document: "cluster", section: "6.10.7.13.2" }
+                    xref: "cluster§6.10.7.13.2"
                 }
             ]
         },
@@ -416,21 +404,18 @@ MediaPlayback.patch({
                 "Track catalog for the streaming media. If the TrackID does not exist in the Track catalog, OR does " +
                 "not correspond to the streaming media OR no media is being streamed at the time of receipt of this " +
                 "command, the server shall return an error status of INVALID_ARGUMENT.",
-            xref: { document: "cluster", section: "6.10.7.14" },
-            children: [{
-                details: "This field shall indicate the Text Track to activate.",
-                xref: { document: "cluster", section: "6.10.7.14.1" }
-            }]
+            xref: "cluster§6.10.7.14",
+            children: [{ details: "This field shall indicate the Text Track to activate.", xref: "cluster§6.10.7.14.1" }]
         },
 
         {
             details: "If a Text Track is active (i.e. being displayed), upon receipt of this command, the server shall " +
                 "stop displaying it.",
-            xref: { document: "cluster", section: "6.10.7.15" }
+            xref: "cluster§6.10.7.15"
         },
 
         {
-            xref: { document: "cluster", section: "6.10.5.1" },
+            xref: "cluster§6.10.5.1",
 
             children: [
                 { description: "Media is currently playing (includes FF and REW)" },
@@ -441,7 +426,7 @@ MediaPlayback.patch({
         },
 
         {
-            xref: { document: "cluster", section: "6.10.5.2" },
+            xref: "cluster§6.10.5.2",
 
             children: [
                 { description: "Succeeded" },
@@ -460,7 +445,7 @@ MediaPlayback.patch({
         },
 
         {
-            xref: { document: "cluster", section: "6.10.5.3" },
+            xref: "cluster§6.10.5.3",
 
             children: [
                 {
@@ -516,12 +501,12 @@ MediaPlayback.patch({
 
         {
             details: "This structure defines a playback position within a media stream being played.",
-            xref: { document: "cluster", section: "6.10.5.4" },
+            xref: "cluster§6.10.5.4",
 
             children: [
                 {
                     details: "This field shall indicate the time when the position was last updated.",
-                    xref: { document: "cluster", section: "6.10.5.4.1" }
+                    xref: "cluster§6.10.5.4.1"
                 },
 
                 {
@@ -534,50 +519,50 @@ MediaPlayback.patch({
                         "A value of null shall indicate that playback position is not applicable for the current state of the " +
                         "media playback (For example : Live media with no known duration and where seek is not supported).",
 
-                    xref: { document: "cluster", section: "6.10.5.4.2" }
+                    xref: "cluster§6.10.5.4.2"
                 }
             ]
         },
 
         {
             details: "This structure defines a uniquely identifiable Text Track or Audio Track.",
-            xref: { document: "cluster", section: "6.10.5.5" },
+            xref: "cluster§6.10.5.5",
 
             children: [
                 {
                     details: "This field shall indicate the Identifier for the Track which is unique within the Track catalog. The " +
                         "Track catalog contains all the Text/Audio tracks corresponding to the main media content.",
-                    xref: { document: "cluster", section: "6.10.5.5.1" }
+                    xref: "cluster§6.10.5.5.1"
                 },
                 {
                     details: "This field shall indicate the Attributes associated to the Track, like languageCode.",
-                    xref: { document: "cluster", section: "6.10.5.5.2" }
+                    xref: "cluster§6.10.5.5.2"
                 }
             ]
         },
 
         {
             details: "This structure includes the attributes associated with a Text/Audio Track",
-            xref: { document: "cluster", section: "6.10.5.6" },
+            xref: "cluster§6.10.5.6",
 
             children: [
                 {
                     details: "The value is a String containing one of the standard Tags for Identifying Languages RFC 5646, which " +
                         "identifies the primary language used in the Track.",
-                    xref: { document: "cluster", section: "6.10.5.6.1" }
+                    xref: "cluster§6.10.5.6.1"
                 },
 
                 {
                     details: "This is a list of enumerated CharacteristicEnum values that indicate a purpose, trait or feature " +
                         "associated with the Track. A value of null shall indicate that there are no Characteristics " +
                         "corresponding to the Track.",
-                    xref: { document: "cluster", section: "6.10.5.6.2" }
+                    xref: "cluster§6.10.5.6.2"
                 },
 
                 {
                     details: "The value is a String containing a user displayable name for the Track. A value of null shall " +
                         "indicate that there is no DisplayName corresponding to the Track.",
-                    xref: { document: "cluster", section: "6.10.5.6.3" }
+                    xref: "cluster§6.10.5.6.3"
                 }
             ]
         }

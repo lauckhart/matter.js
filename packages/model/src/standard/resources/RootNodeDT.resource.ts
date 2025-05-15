@@ -23,39 +23,39 @@ RootNodeDt.patch({
         "\n" +
         "  • Other device types with Node scope may be supported on the same endpoint as this device type.",
 
-    xref: { document: "device", section: "2.1" },
+    xref: "device§2.1",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
-        { xref: { document: "device", section: "2.1.5" } },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
+        { xref: "device§2.1.5" },
 
         {
             children: [
                 {
                     description: "The node only supports out-of-band-configured networking (e.g. rich user interface, manufacturer-specific means, custom commissioning flows, or future IP-compliant network technology not yet directly supported by NetworkCommissioning cluster).",
-                    xref: { document: "device", section: "2.1.3" }
+                    xref: "device§2.1.3"
                 },
                 {
                     description: "The node has at least one endpoint where some Device Type present on the endpoint has a Device Library element requirement table entry that sets this condition to true.",
-                    xref: { document: "device", section: "2.1.3" }
+                    xref: "device§2.1.3"
                 }
             ]
         }

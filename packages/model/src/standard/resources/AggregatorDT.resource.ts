@@ -21,13 +21,13 @@ AggregatorDt.patch({
         "When using this device type as a collection of bridged nodes, please see the \"Bridge\" section in the " +
         "System Model specification.",
 
-    xref: { document: "device", section: "11.2" },
+    xref: "device§11.2",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "11.2.4" } },
-        { xref: { document: "device", section: "11.2.4" } },
-        { xref: { document: "device", section: "11.2.4" } },
-        { children: [{ description: "See description below.", xref: { document: "device", section: "11.2.3" } }] }
+        { xref: "device§11.2.4" },
+        { xref: "device§11.2.4" },
+        { xref: "device§11.2.4" },
+        { children: [{ description: "See description below.", xref: "device§11.2.3" }] }
     ]
 });

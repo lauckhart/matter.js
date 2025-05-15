@@ -12,13 +12,13 @@ OccupancySensing.patch({
     classification: "application", pics: "OCC",
     details: "The server cluster provides an interface to occupancy sensing functionality based on one or more " +
         "sensing modalities, including configuration and provision of notifications of occupancy status.",
-    xref: { document: "cluster", section: "2.7" },
+    xref: "cluster§2.7",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "2.7.4" },
+            xref: "cluster§2.7.4",
 
             children: [
                 { description: "Other", details: "Supports sensing using a modality not listed in the other bits" },
@@ -40,11 +40,11 @@ OccupancySensing.patch({
             details: "Indicates the sensed (processed) status of occupancy. For compatibility reasons this is expressed as " +
                 "a bitmap where the status is indicated in bit 0: a value of 1 means occupied, and 0 means " +
                 "unoccupied, with the other bits set to 0; this can be considered equivalent to a boolean.",
-            xref: { document: "cluster", section: "2.7.6.1" }
+            xref: "cluster§2.7.6.1"
         },
 
-        { xref: { document: "cluster", section: "2.7.6" } },
-        { xref: { document: "cluster", section: "2.7.6" } },
+        { xref: "cluster§2.7.6" },
+        { xref: "cluster§2.7.6" },
 
         {
             details: "This attribute shall specify the time delay, in seconds, before the sensor changes to its unoccupied " +
@@ -73,78 +73,78 @@ OccupancySensing.patch({
                 "\n" +
                 "Figure 13. Processing of PIR signal towards Occupancy attribute using HoldTime",
 
-            xref: { document: "cluster", section: "2.7.6.3" }
+            xref: "cluster§2.7.6.3"
         },
 
         {
             details: "Indicates the server’s limits, and default value, for the HoldTime attribute.",
-            xref: { document: "cluster", section: "2.7.6.4" }
+            xref: "cluster§2.7.6.4"
         },
         {
             details: "This attribute shall specify the time delay, in seconds, before the PIR sensor changes to its " +
                 "unoccupied state after the last detection of occupancy in the sensed area.",
-            xref: { document: "cluster", section: "2.7.6.6" }
+            xref: "cluster§2.7.6.6"
         },
         {
             details: "This attribute shall specify the time delay, in seconds, before the PIR sensor changes to its " +
                 "occupied state after the first detection of occupancy in the sensed area.",
-            xref: { document: "cluster", section: "2.7.6.7" }
+            xref: "cluster§2.7.6.7"
         },
         {
             details: "This attribute shall specify the number of occupancy detection events that must occur in the period " +
                 "PIRUnoccupiedToOccupiedDelay, before the PIR sensor changes to its occupied state.",
-            xref: { document: "cluster", section: "2.7.6.8" }
+            xref: "cluster§2.7.6.8"
         },
         {
             details: "This attribute shall specify the time delay, in seconds, before the Ultrasonic sensor changes to its " +
                 "unoccupied state after the last detection of occupancy in the sensed area.",
-            xref: { document: "cluster", section: "2.7.6.9" }
+            xref: "cluster§2.7.6.9"
         },
         {
             details: "This attribute shall specify the time delay, in seconds, before the Ultrasonic sensor changes to its " +
                 "occupied state after the first detection of occupancy in the sensed area.",
-            xref: { document: "cluster", section: "2.7.6.10" }
+            xref: "cluster§2.7.6.10"
         },
         {
             details: "This attribute shall specify the number of occupancy detection events that must occur in the period " +
                 "UltrasonicUnoccupiedToOccupiedDelay, before the Ultrasonic sensor changes to its occupied state.",
-            xref: { document: "cluster", section: "2.7.6.11" }
+            xref: "cluster§2.7.6.11"
         },
         {
             details: "This attribute shall specify the time delay, in seconds, before the physical contact occupancy " +
                 "sensor changes to its unoccupied state after detecting the unoccupied event.",
-            xref: { document: "cluster", section: "2.7.6.12" }
+            xref: "cluster§2.7.6.12"
         },
         {
             details: "This attribute shall specify the time delay, in seconds, before the physical contact sensor changes " +
                 "to its occupied state after the first detection of the occupied event.",
-            xref: { document: "cluster", section: "2.7.6.13" }
+            xref: "cluster§2.7.6.13"
         },
 
         {
             details: "This attribute shall specify the number of occupancy detection events that must occur in the period " +
                 "PhysicalContactUnoccupiedToOccupiedDelay, before the PhysicalContact sensor changes to its occupied " +
                 "state.",
-            xref: { document: "cluster", section: "2.7.6.14" }
+            xref: "cluster§2.7.6.14"
         },
 
         {
             details: "If this event is supported, it shall be generated when the Occupancy attribute changes.",
-            xref: { document: "cluster", section: "2.7.7.1" },
+            xref: "cluster§2.7.7.1",
             children: [{
                 details: "This field shall indicate the new value of the Occupancy attribute.",
-                xref: { document: "cluster", section: "2.7.7.1.1" }
+                xref: "cluster§2.7.7.1.1"
             }]
         },
 
         {
-            xref: { document: "cluster", section: "2.7.5.1" },
+            xref: "cluster§2.7.5.1",
 
             children: [{
                 description: "Indicates the sensed occupancy state",
                 details: "If this bit is set, it shall indicate the occupied state else if the bit if not set, it shall " +
                     "indicate the unoccupied state.",
-                xref: { document: "cluster", section: "2.7.5.1.1" }
+                xref: "cluster§2.7.5.1.1"
             }]
         },
 
@@ -154,7 +154,7 @@ OccupancySensing.patch({
                 "This enum is as defined in ClusterRevision 4 and its definition shall NOT be extended; the feature " +
                 "flags provide the sensor modality (or modalities) for later cluster revisions. See Backward " +
                 "Compatibility section.",
-            xref: { document: "cluster", section: "2.7.5.2" },
+            xref: "cluster§2.7.5.2",
             children: [
                 { description: "Indicates a passive infrared sensor." },
                 { description: "Indicates a ultrasonic sensor." },
@@ -170,7 +170,7 @@ OccupancySensing.patch({
                 "extended; the feature flags provide the sensor modality (or modalities) for later cluster revisions. " +
                 "See Backward Compatibility section.",
 
-            xref: { document: "cluster", section: "2.7.5.3" },
+            xref: "cluster§2.7.5.3",
 
             children: [
                 { description: "Indicates a passive infrared sensor." },
@@ -182,25 +182,25 @@ OccupancySensing.patch({
 
         {
             details: "This structure provides information on the server’s supported values for the HoldTime attribute.",
-            xref: { document: "cluster", section: "2.7.5.4" },
+            xref: "cluster§2.7.5.4",
 
             children: [
                 {
                     details: "This field shall specify the minimum value of the server’s supported value for the HoldTime " +
                         "attribute, in seconds.",
-                    xref: { document: "cluster", section: "2.7.5.4.1" }
+                    xref: "cluster§2.7.5.4.1"
                 },
                 {
                     details: "This field shall specify the maximum value of the server’s supported value for the HoldTime " +
                         "attribute, in seconds.",
-                    xref: { document: "cluster", section: "2.7.5.4.2" }
+                    xref: "cluster§2.7.5.4.2"
                 },
 
                 {
                     details: "This field shall specify the (manufacturer-determined) default value of the server’s HoldTime " +
                         "attribute, in seconds. This is the value that a client who wants to reset the settings to a valid " +
                         "default SHOULD use.",
-                    xref: { document: "cluster", section: "2.7.5.4.3" }
+                    xref: "cluster§2.7.5.4.3"
                 }
             ]
         }

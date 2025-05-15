@@ -14,13 +14,13 @@ WiFiNetworkDiagnostics.patch({
         "that may be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
         "Wi-Fi Network Diagnostics Cluster attempts to centralize all metrics that are relevant to a " +
         "potential Wi-Fi radio running on a Node.",
-    xref: { document: "core", section: "11.15" },
+    xref: "core§11.15",
 
     children: [
         undefined,
 
         {
-            xref: { document: "core", section: "11.15.4" },
+            xref: "core§11.15.4",
 
             children: [
                 {
@@ -39,32 +39,32 @@ WiFiNetworkDiagnostics.patch({
         {
             details: "The BSSID attribute shall indicate the BSSID for which the Wi-Fi network the Node is currently " +
                 "connected.",
-            xref: { document: "core", section: "11.15.6.1" }
+            xref: "core§11.15.6.1"
         },
         {
             details: "The SecurityType attribute shall indicate the current type of Wi-Fi security used.",
-            xref: { document: "core", section: "11.15.6.2" }
+            xref: "core§11.15.6.2"
         },
         {
             details: "The WiFiVersion attribute shall indicate the current 802.11 standard version in use by the Node, per " +
                 "the table below.",
-            xref: { document: "core", section: "11.15.6.3" }
+            xref: "core§11.15.6.3"
         },
         {
             details: "The ChannelNumber attribute shall indicate the channel that Wi-Fi communication is currently " +
                 "operating on.",
-            xref: { document: "core", section: "11.15.6.4" }
+            xref: "core§11.15.6.4"
         },
         {
             details: "The RSSI attribute shall indicate the current RSSI of the Node’s Wi-Fi radio in dBm.",
-            xref: { document: "core", section: "11.15.6.5" }
+            xref: "core§11.15.6.5"
         },
 
         {
             details: "The BeaconLostCount attribute shall indicate the count of the number of missed beacons the Node has " +
                 "detected. If the Node does not have an ability to count beacons expected and not received, this " +
                 "value may remain set to zero.",
-            xref: { document: "core", section: "11.15.6.6" }
+            xref: "core§11.15.6.6"
         },
 
         {
@@ -72,52 +72,52 @@ WiFiNetworkDiagnostics.patch({
                 "number of expected beacons that could have been received during the interval since association " +
                 "SHOULD match the sum of BeaconRxCount and BeaconLostCount. If the Node does not have an ability to " +
                 "report count of beacons received, this value may remain set to zero.",
-            xref: { document: "core", section: "11.15.6.7" }
+            xref: "core§11.15.6.7"
         },
 
         {
             details: "The PacketMulticastRxCount attribute shall indicate the number of multicast packets received by the " +
                 "Node.",
-            xref: { document: "core", section: "11.15.6.8" }
+            xref: "core§11.15.6.8"
         },
         {
             details: "The PacketMulticastTxCount attribute shall indicate the number of multicast packets transmitted by " +
                 "the Node.",
-            xref: { document: "core", section: "11.15.6.9" }
+            xref: "core§11.15.6.9"
         },
         {
             details: "The PacketUnicastRxCount attribute shall indicate the number of unicast packets received by the " +
                 "Node.",
-            xref: { document: "core", section: "11.15.6.10" }
+            xref: "core§11.15.6.10"
         },
         {
             details: "The PacketUnicastTxCount attribute shall indicate the number of unicast packets transmitted by the " +
                 "Node.",
-            xref: { document: "core", section: "11.15.6.11" }
+            xref: "core§11.15.6.11"
         },
         {
             details: "The CurrentMaxRate attribute shall indicate the current maximum PHY rate of transfer of data in " +
                 "bits-per-second.",
-            xref: { document: "core", section: "11.15.6.12" }
+            xref: "core§11.15.6.12"
         },
 
         {
             details: "The OverrunCount attribute shall indicate the number of packets dropped either at ingress or egress, " +
                 "due to lack of buffer memory to retain all packets on the network interface. The OverrunCount " +
                 "attribute shall be reset to 0 upon a reboot of the Node.",
-            xref: { document: "core", section: "11.15.6.13" }
+            xref: "core§11.15.6.13"
         },
 
         {
             details: "The Disconnection Event shall indicate that a Node’s Wi-Fi connection has been disconnected as a " +
                 "result of de-authenticated or dis-association and indicates the reason.",
-            xref: { document: "core", section: "11.15.8.1" },
+            xref: "core§11.15.8.1",
 
             children: [{
                 details: "This field shall contain the Reason Code field value for the Disassociation or Deauthentication " +
                     "event that caused the disconnection and the value shall align with Table 9-49 \"Reason codes\" of IEEE " +
                     "802.11-2020.",
-                xref: { document: "core", section: "11.15.8.1.1" }
+                xref: "core§11.15.8.1.1"
             }]
         },
 
@@ -125,12 +125,12 @@ WiFiNetworkDiagnostics.patch({
             details: "The AssociationFailure event shall indicate that a Node has attempted to connect, or reconnect, to a " +
                 "Wi-Fi access point, but is unable to successfully associate or authenticate, after exhausting all " +
                 "internal retries of its supplicant.",
-            xref: { document: "core", section: "11.15.8.2" },
+            xref: "core§11.15.8.2",
 
             children: [
                 {
                     details: "The Status field shall be set to a value from the AssociationFailureCauseEnum.",
-                    xref: { document: "core", section: "11.15.8.2.1" }
+                    xref: "core§11.15.8.2.1"
                 },
 
                 {
@@ -146,7 +146,7 @@ WiFiNetworkDiagnostics.patch({
                         "\n" +
                         "Table 9-50 \"Status codes\" of IEEE 802.11-2020 contains a description of all values possible.",
 
-                    xref: { document: "core", section: "11.15.8.2.2" }
+                    xref: "core§11.15.8.2.2"
                 }
             ]
         },
@@ -155,7 +155,7 @@ WiFiNetworkDiagnostics.patch({
             details: "The ConnectionStatus Event shall indicate that a Node’s connection status to a Wi-Fi network has " +
                 "changed. Connected, in this context, shall mean that a Node acting as a Wi-Fi station is " +
                 "successfully associated to a Wi-Fi Access Point.",
-            xref: { document: "core", section: "11.15.8.3" }
+            xref: "core§11.15.8.3"
         },
 
         {
@@ -175,11 +175,11 @@ WiFiNetworkDiagnostics.patch({
                 "\n" +
                 "This command has no associated data.",
 
-            xref: { document: "core", section: "11.15.7.1" }
+            xref: "core§11.15.7.1"
         },
 
         {
-            xref: { document: "core", section: "11.15.5.1" },
+            xref: "core§11.15.5.1",
 
             children: [
                 { description: "Indicate the usage of an unspecified Wi-Fi security type" },
@@ -192,7 +192,7 @@ WiFiNetworkDiagnostics.patch({
         },
 
         {
-            xref: { document: "core", section: "11.15.5.2" },
+            xref: "core§11.15.5.2",
 
             children: [
                 {
@@ -220,7 +220,7 @@ WiFiNetworkDiagnostics.patch({
         },
 
         {
-            xref: { document: "core", section: "11.15.5.3" },
+            xref: "core§11.15.5.3",
 
             children: [
                 { description: "The reason for the failure is unknown." },
@@ -231,7 +231,7 @@ WiFiNetworkDiagnostics.patch({
         },
 
         {
-            xref: { document: "core", section: "11.15.5.4" },
+            xref: "core§11.15.5.4",
             children: [
                 { description: "Indicate the node is connected" },
                 { description: "Indicate the node is not connected" }

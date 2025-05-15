@@ -36,6 +36,6 @@ temperature.patch(
             "\n" +
             "0.01 resolution as expected by the ZCL format.",
 
-        xref: { document: "core", section: "7.19.2.11" }
+        xref: "core§7.19.2.11"
     }
 );

@@ -25,10 +25,6 @@ SpeakerDt.patch({
         "cluster) was made in order to treat volume in a fashion consistent with lighting which also uses " +
         "these clusters and has matching functional requirements.",
 
-    xref: { document: "device", section: "10.4" },
-    children: [
-        undefined,
-        { xref: { document: "device", section: "10.4.4" } },
-        { xref: { document: "device", section: "10.4.4" } }
-    ]
+    xref: "device§10.4",
+    children: [undefined, { xref: "device§10.4.4" }, { xref: "device§10.4.4" }]
 });

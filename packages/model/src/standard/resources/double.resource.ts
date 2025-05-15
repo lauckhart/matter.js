@@ -19,5 +19,5 @@ double.patch({
         "\n" +
         "See IEEE 754-2019 for more details on the representable values.",
 
-    xref: { document: "core", section: "7.19.1.6" }
+    xref: "core§7.19.1.6"
 });

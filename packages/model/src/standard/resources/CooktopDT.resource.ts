@@ -13,10 +13,6 @@ CooktopDt.patch({
     details: "A cooktop is a cooking surface that heats food either by transferring currents from an " +
         "electromagnetic field located below the glass surface directly to the magnetic induction cookware " +
         "placed above or through traditional gas or electric burners.",
-    xref: { document: "device", section: "13.8" },
-    children: [
-        undefined,
-        { xref: { document: "device", section: "13.8.5" } },
-        { xref: { document: "device", section: "13.8.5" } }
-    ]
+    xref: "device§13.8",
+    children: [undefined, { xref: "device§13.8.5" }, { xref: "device§13.8.5" }]
 });

@@ -15,16 +15,16 @@ ExtendedColorLightDt.patch({
         "as a Color Dimmer Switch or Control Bridge. The device supports adjustment of color by means of " +
         "hue/saturation, enhanced hue, color looping, XY coordinates, and color temperature. In addition, the " +
         "extended color light is also capable of being switched by means of a bound occupancy sensor.",
-    xref: { document: "device", section: "4.4" },
+    xref: "device§4.4",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "4.4.4" } },
-        { xref: { document: "device", section: "4.4.4" } },
-        { xref: { document: "device", section: "4.4.4" } },
-        { xref: { document: "device", section: "4.4.4" } },
-        { xref: { document: "device", section: "4.4.4" } },
-        { xref: { document: "device", section: "4.4.4" } },
-        { xref: { document: "device", section: "4.4.4" } }
+        { xref: "device§4.4.4" },
+        { xref: "device§4.4.4" },
+        { xref: "device§4.4.4" },
+        { xref: "device§4.4.4" },
+        { xref: "device§4.4.4" },
+        { xref: "device§4.4.4" },
+        { xref: "device§4.4.4" }
     ]
 });

@@ -11,13 +11,13 @@ import { FanControl } from "#index.js";
 FanControl.patch({
     classification: "application", pics: "FAN",
     details: "This cluster specifies an interface to control the speed of a fan.",
-    xref: { document: "cluster", section: "4.4" },
+    xref: "cluster§4.4",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "4.4.4" },
+            xref: "cluster§4.4.4",
 
             children: [
                 {
@@ -33,7 +33,7 @@ FanControl.patch({
                         "\n" +
                         "See Section 4.4.6.6.1 for more details.",
 
-                    xref: { document: "cluster", section: "4.4.4.1" }
+                    xref: "cluster§4.4.4.1"
                 },
 
                 { description: "Auto", details: "Automatic mode supported for fan speed" },
@@ -61,13 +61,10 @@ FanControl.patch({
                 "When the FanMode attribute is set to any given mode, the PercentCurrent and SpeedCurrent (if " +
                 "present) shall indicate the actual currently operating fan speed, unless otherwise specified below.",
 
-            xref: { document: "cluster", section: "4.4.6.1" }
+            xref: "cluster§4.4.6.1"
         },
 
-        {
-            details: "This attribute indicates the fan speed ranges that shall be supported.",
-            xref: { document: "cluster", section: "4.4.6.2" }
-        },
+        { details: "This attribute indicates the fan speed ranges that shall be supported.", xref: "cluster§4.4.6.2" },
 
         {
             details: "Indicates the speed setting for the fan. This attribute may be written by the client to indicate a " +
@@ -77,7 +74,7 @@ FanControl.patch({
                 "\n" +
                 "If this is successfully written to 0, the server shall set the FanMode attribute value to Off.",
 
-            xref: { document: "cluster", section: "4.4.6.3" }
+            xref: "cluster§4.4.6.3"
         },
 
         {
@@ -85,13 +82,13 @@ FanControl.patch({
                 "may be a temporary mismatch between the value of this attribute and the value of the PercentSetting " +
                 "attribute due to other system requirements that would not allow the fan to operate at the requested " +
                 "setting. See Section 4.4.6.3.1 for more details.",
-            xref: { document: "cluster", section: "4.4.6.4" }
+            xref: "cluster§4.4.6.4"
         },
 
         {
             details: "Indicates that the fan has one speed (value of 1) or the maximum speed, if the fan is capable of " +
                 "multiple speeds.",
-            xref: { document: "cluster", section: "4.4.6.5" }
+            xref: "cluster§4.4.6.5"
         },
 
         {
@@ -103,7 +100,7 @@ FanControl.patch({
                 "If this is successfully written to 0, the server shall set the FanMode attribute value to Off. " +
                 "Please see the Section 4.4.6.6.1 for details on other values.",
 
-            xref: { document: "cluster", section: "4.4.6.6" }
+            xref: "cluster§4.4.6.6"
         },
 
         {
@@ -111,12 +108,12 @@ FanControl.patch({
                 "may be a temporary mismatch between the value of this attribute and the value of the SpeedSetting " +
                 "attribute due to other system requirements that would not allow the fan to operate at the requested " +
                 "setting.",
-            xref: { document: "cluster", section: "4.4.6.7" }
+            xref: "cluster§4.4.6.7"
         },
 
         {
             details: "This attribute is a bitmap that indicates what rocking motions the server supports.",
-            xref: { document: "cluster", section: "4.4.6.8" }
+            xref: "cluster§4.4.6.8"
         },
 
         {
@@ -131,13 +128,13 @@ FanControl.patch({
                 "For example: If RockUpDown and RockRound are both set, but this combination is not possible, then " +
                 "only RockUpDown becomes active.",
 
-            xref: { document: "cluster", section: "4.4.6.9" }
+            xref: "cluster§4.4.6.9"
         },
 
         {
             details: "This attribute is a bitmap that indicates what wind modes the server supports. At least one wind " +
                 "mode bit shall be set.",
-            xref: { document: "cluster", section: "4.4.6.10" }
+            xref: "cluster§4.4.6.10"
         },
 
         {
@@ -152,14 +149,14 @@ FanControl.patch({
                 "For example: If Sleep Wind and Natural Wind are set, but this combination is not possible, then only " +
                 "Sleep Wind becomes active.",
 
-            xref: { document: "cluster", section: "4.4.6.11" }
+            xref: "cluster§4.4.6.11"
         },
 
         {
             details: "Indicates the current airflow direction of the fan. This attribute may be written by the client to " +
                 "indicate a new airflow direction for the fan. This attribute shall be set to one of the values in " +
                 "the AirflowDirectionEnum table.",
-            xref: { document: "cluster", section: "4.4.6.12" }
+            xref: "cluster§4.4.6.12"
         },
 
         {
@@ -170,26 +167,26 @@ FanControl.patch({
                 "\n" +
                 "This command supports these fields:",
 
-            xref: { document: "cluster", section: "4.4.7.1" },
+            xref: "cluster§4.4.7.1",
 
             children: [
                 {
                     details: "This field shall indicate whether the fan speed increases or decreases to the next step value.",
-                    xref: { document: "cluster", section: "4.4.7.1.1" }
+                    xref: "cluster§4.4.7.1.1"
                 },
                 {
                     details: "This field shall indicate if the fan speed wraps between highest and lowest step value.",
-                    xref: { document: "cluster", section: "4.4.7.1.2" }
+                    xref: "cluster§4.4.7.1.2"
                 },
                 {
                     details: "This field shall indicate that the fan being off (speed value 0) is included as a step value.",
-                    xref: { document: "cluster", section: "4.4.7.1.3" }
+                    xref: "cluster§4.4.7.1.3"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "4.4.5.1" },
+            xref: "cluster§4.4.5.1",
             children: [
                 { description: "Indicate rock left to right" },
                 { description: "Indicate rock up and down" },
@@ -198,12 +195,12 @@ FanControl.patch({
         },
 
         {
-            xref: { document: "cluster", section: "4.4.5.2" },
+            xref: "cluster§4.4.5.2",
             children: [{ description: "Indicate sleep wind" }, { description: "Indicate natural wind" }]
         },
 
         {
-            xref: { document: "cluster", section: "4.4.5.3" },
+            xref: "cluster§4.4.5.3",
             children: [
                 { description: "Step moves in increasing direction" },
                 { description: "Step moves in decreasing direction" }
@@ -211,7 +208,7 @@ FanControl.patch({
         },
 
         {
-            xref: { document: "cluster", section: "4.4.5.4" },
+            xref: "cluster§4.4.5.4",
             children: [
                 { description: "Airflow is in the forward direction" },
                 { description: "Airflow is in the reverse direction" }
@@ -219,7 +216,7 @@ FanControl.patch({
         },
 
         {
-            xref: { document: "cluster", section: "4.4.5.5" },
+            xref: "cluster§4.4.5.5",
 
             children: [
                 { description: "Fan is off" },
@@ -229,7 +226,7 @@ FanControl.patch({
                     details: "If the fan supports 2 or more speeds, the Low value shall be supported." +
                         "\n" +
                         "The Low value shall be supported if and only if the FanModeSequence attribute value is less than 4.",
-                    xref: { document: "cluster", section: "4.4.5.5.1" }
+                    xref: "cluster§4.4.5.5.1"
                 },
 
                 {
@@ -237,7 +234,7 @@ FanControl.patch({
                     details: "If the fan supports 3 or more speeds, the Medium value shall be supported." +
                         "\n" +
                         "The Medium value shall be supported if and only if the FanModeSequence attribute value is 0 or 2.",
-                    xref: { document: "cluster", section: "4.4.5.5.2" }
+                    xref: "cluster§4.4.5.5.2"
                 },
 
                 { description: "Fan using high speed" },
@@ -248,7 +245,7 @@ FanControl.patch({
         },
 
         {
-            xref: { document: "cluster", section: "4.4.5.6" },
+            xref: "cluster§4.4.5.6",
 
             children: [
                 { description: "Fan is capable of off, low, medium and high modes" },

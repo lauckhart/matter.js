@@ -14,7 +14,7 @@ RelativePositionNs.patch({
         "tags. For example, the position may be relative to a household item, such as a dining table, and the " +
         "user of these tags must indicate that. Note the difference with Chapter 9, Common Position Semantic " +
         "Tag Namespace, which contains tags indicating the position relative to the device.",
-    xref: { document: "namespace", section: "11" },
+    xref: "namespace§11",
     children: [
         undefined,
         { description: "Area in proximity to the point of reference" },

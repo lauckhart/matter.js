@@ -8,4 +8,4 @@
 
 import { int16 } from "#index.js";
 
-int16.patch({ description: "Signed 16-bit integer", xref: { document: "core", section: "7.19.1" } });
+int16.patch({ description: "Signed 16-bit integer", xref: "core§7.19.1" });

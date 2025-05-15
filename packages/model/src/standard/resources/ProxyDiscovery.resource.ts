@@ -13,7 +13,7 @@ ProxyDiscovery.patch({
     details: "This cluster contains commands needed to do proxy discovery as defined in the Section 9.15.7.3, " +
         "“Step 2: Proxy Discovery” and Section 9.15.7.4, “Step 3: Proxy Response” steps of the overall " +
         "Section 9.15.7, “Proxy Discovery & Assignment Flow”.",
-    xref: { document: "core", section: "9.15.12" },
+    xref: "core§9.15.12",
 
     children: [
         undefined,
@@ -21,22 +21,22 @@ ProxyDiscovery.patch({
         {
             details: "This command is used during proxy discovery, as specified in Section 9.15.7, “Proxy Discovery & " +
                 "Assignment Flow”.",
-            xref: { document: "core", section: "9.15.12.4.1" },
+            xref: "core§9.15.12.4.1",
 
             children: [
                 {
                     details: "This is the Node ID of the source for which a client seeks to find a Proxy.",
-                    xref: { document: "core", section: "9.15.12.4.1.1" }
+                    xref: "core§9.15.12.4.1.1"
                 },
                 {
                     details: "The number of attribute paths the client will have in the subscription request. This is a " +
                         "heuristic/hint to allow a Proxy to better ascertain whether it can support the ensuing subscription.",
-                    xref: { document: "core", section: "9.15.12.4.1.2" }
+                    xref: "core§9.15.12.4.1.2"
                 },
                 {
                     details: "The number of event paths the client will have in the subscription request. This is a heuristic/hint " +
                         "to allow a Proxy to better ascertain whether it can support the ensuing subscription.",
-                    xref: { document: "core", section: "9.15.12.4.1.3" }
+                    xref: "core§9.15.12.4.1.3"
                 }
             ]
         },
@@ -44,13 +44,13 @@ ProxyDiscovery.patch({
         {
             details: "This command is used during proxy discovery, as specified in Section 9.15.7, “Proxy Discovery & " +
                 "Assignment Flow”.",
-            xref: { document: "core", section: "9.15.12.4.2" },
+            xref: "core§9.15.12.4.2",
 
             children: [
                 {
                     details: "This is the Node ID of the source the proxy can proxy for. This shall match the node id in the " +
                         "corresponding Proxy Discover Request Command message.",
-                    xref: { document: "core", section: "9.15.12.4.2.1" }
+                    xref: "core§9.15.12.4.2.1"
                 },
 
                 {
@@ -62,14 +62,14 @@ ProxyDiscovery.patch({
                         "\n" +
                         "0 indicates that the proxy currently does not have a subscription to the source.",
 
-                    xref: { document: "core", section: "9.15.12.4.2.2" }
+                    xref: "core§9.15.12.4.2.2"
                 },
 
                 {
                     details: "A number indicating the number of Cluster Attribute Paths the proxy has space for support. This " +
                         "allows for an absolute comparison of different memory capacities of candidate proxies by the client " +
                         "in selecting the best possible candidate.",
-                    xref: { document: "core", section: "9.15.12.4.2.3" }
+                    xref: "core§9.15.12.4.2.3"
                 }
             ]
         }

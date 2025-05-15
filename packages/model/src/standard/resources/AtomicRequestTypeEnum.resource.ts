@@ -9,7 +9,7 @@
 import { AtomicRequestTypeEnum } from "#index.js";
 
 AtomicRequestTypeEnum.patch({
-    xref: { document: "core", section: "7.15.4" },
+    xref: "core§7.15.4",
     children: [
         { description: "Begin an atomic write" },
         { description: "Commit an atomic write" },

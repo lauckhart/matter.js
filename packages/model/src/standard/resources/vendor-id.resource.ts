@@ -13,5 +13,5 @@ vendorId.patch({
     details: "A Vendor ID." +
         "\n" +
         "Vendor IDs may be used as a prefix in a Manufacturer Extensible Identifier format.",
-    xref: { document: "core", section: "7.19.2.24" }
+    xref: "core§7.19.2.24"
 });

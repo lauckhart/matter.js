@@ -11,7 +11,7 @@ import { LocationNs } from "#index.js";
 LocationNs.patch({
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a location of a device (e.g. an outdoor temperature sensor).",
-    xref: { document: "namespace", section: "7" },
+    xref: "namespace§7",
 
     children: [
         { description: "Element is indoors or related to indoor equipment/conditions (e.g. the \"indoor\" temperature)." },

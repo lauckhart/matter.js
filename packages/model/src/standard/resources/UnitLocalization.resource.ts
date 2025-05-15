@@ -19,13 +19,13 @@ UnitLocalization.patch({
         "This cluster supports an interface to a Node. It provides attributes for determining and configuring " +
         "the units that a Node shall utilize when conveying values in communication to a user.",
 
-    xref: { document: "core", section: "11.5" },
+    xref: "core§11.5",
 
     children: [
         undefined,
 
         {
-            xref: { document: "core", section: "11.5.4" },
+            xref: "core§11.5.4",
             children: [{
                 description: "TemperatureUnit",
                 details: "The Node can be configured to use different units of temperature when conveying values to a user."
@@ -36,11 +36,11 @@ UnitLocalization.patch({
             details: "The TemperatureUnit attribute shall indicate the unit for the Node to use only when conveying " +
                 "temperature in communication to the user. If provided, this value shall take priority over any unit " +
                 "implied through the ActiveLocale Attribute.",
-            xref: { document: "core", section: "11.5.6.1" }
+            xref: "core§11.5.6.1"
         },
 
         {
-            xref: { document: "core", section: "11.5.5.1" },
+            xref: "core§11.5.5.1",
             children: [
                 { description: "Temperature conveyed in Fahrenheit" },
                 { description: "Temperature conveyed in Celsius" },

@@ -8,4 +8,4 @@
 
 import { map8 } from "#index.js";
 
-map8.patch({ description: "8-bit bitmap", xref: { document: "core", section: "7.19.1" } });
+map8.patch({ description: "8-bit bitmap", xref: "core§7.19.1" });

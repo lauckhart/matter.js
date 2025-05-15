@@ -21,5 +21,5 @@ ipv6Adr.patch({
         "\n" +
         "  • Address 2001:0DB8:1122:3344:5566:7788:99AA:BBCC → 20010DB8112233445566778899AABBCC",
 
-    xref: { document: "core", section: "7.19.2.39" }
+    xref: "core§7.19.2.39"
 });

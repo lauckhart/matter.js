@@ -12,14 +12,14 @@ OvenCavityOperationalState.patch({
     classification: "application", pics: "OVENOPSTATE",
     details: "This cluster is derived from the Operational State cluster and provides an interface for monitoring " +
         "the operational state of an oven.",
-    xref: { document: "cluster", section: "8.10" },
+    xref: "cluster§8.10",
 
     children: [
         undefined,
-        { xref: { document: "cluster", section: "8.10.5" } },
-        { xref: { document: "cluster", section: "8.10.5" } },
-        { xref: { document: "cluster", section: "8.10.5" } },
-        { xref: { document: "cluster", section: "8.10.5" } },
-        { xref: { document: "cluster", section: "8.10.5" } }
+        { xref: "cluster§8.10.5" },
+        { xref: "cluster§8.10.5" },
+        { xref: "cluster§8.10.5" },
+        { xref: "cluster§8.10.5" },
+        { xref: "cluster§8.10.5" }
     ]
 });

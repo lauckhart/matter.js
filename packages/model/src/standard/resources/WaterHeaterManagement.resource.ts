@@ -19,13 +19,13 @@ WaterHeaterManagement.patch(
             "Management cluster, it can help consumers save cost (e.g. using power at cheaper times or from local " +
             "solar PV generation).",
 
-        xref: { document: "cluster", section: "9.5" },
+        xref: "cluster§9.5",
 
         children: [
             undefined,
 
             {
-                xref: { document: "cluster", section: "9.5.4" },
+                xref: "cluster§9.5.4",
 
                 children: [
                     { description: "EnergyManagement", details: "Allows energy management control of the tank" },
@@ -39,19 +39,19 @@ WaterHeaterManagement.patch(
             {
                 details: "Indicates the heat sources that the water heater can call on for heating. If a bit is set then the " +
                     "water heater supports the corresponding heat source.",
-                xref: { document: "cluster", section: "9.5.7.1" }
+                xref: "cluster§9.5.7.1"
             },
             {
                 details: "Indicates if the water heater is heating water. If a bit is set then the corresponding heat source " +
                     "is active.",
-                xref: { document: "cluster", section: "9.5.7.2" }
+                xref: "cluster§9.5.7.2"
             },
 
             {
                 details: "Indicates the volume of water that the hot water tank can hold (in units of Litres). This allows an " +
                     "energy management system to estimate the required heating energy needed to reach the target " +
                     "temperature.",
-                xref: { document: "cluster", section: "9.5.7.3" }
+                xref: "cluster§9.5.7.3"
             },
 
             {
@@ -89,7 +89,7 @@ WaterHeaterManagement.patch(
                     "can be produce 3kWh of heat output for 1kWh of electrical energy input. The conversion between heat " +
                     "energy and electrical energy is outside the scope of this cluster.",
 
-                xref: { document: "cluster", section: "9.5.7.4" }
+                xref: "cluster§9.5.7.4"
             },
 
             {
@@ -120,7 +120,7 @@ WaterHeaterManagement.patch(
                     "\n" +
                     "TankPercentage = 50%",
 
-                xref: { document: "cluster", section: "9.5.7.5" }
+                xref: "cluster§9.5.7.5"
             },
 
             {
@@ -129,7 +129,7 @@ WaterHeaterManagement.patch(
                     "Active or Inactive." +
                     "\n" +
                     "See Boost and CancelBoost commands for more details.",
-                xref: { document: "cluster", section: "9.5.7.6" }
+                xref: "cluster§9.5.7.6"
             },
 
             {
@@ -137,24 +137,24 @@ WaterHeaterManagement.patch(
                     "\n" +
                     "The corresponding structure fields within the WaterHeaterBoostInfoStruct are copied from the Boost " +
                     "command.",
-                xref: { document: "cluster", section: "9.5.9.1" }
+                xref: "cluster§9.5.9.1"
             },
 
             {
                 details: "This event shall be generated whenever the BoostState transitions from Active to Inactive.",
-                xref: { document: "cluster", section: "9.5.9.2" }
+                xref: "cluster§9.5.9.2"
             },
             {
                 details: "Allows a client to request that the water heater is put into a Boost state.",
-                xref: { document: "cluster", section: "9.5.8.1" }
+                xref: "cluster§9.5.8.1"
             },
             {
                 details: "Allows a client to cancel an ongoing Boost operation. This command has no payload.",
-                xref: { document: "cluster", section: "9.5.8.2" }
+                xref: "cluster§9.5.8.2"
             },
 
             {
-                xref: { document: "cluster", section: "9.5.6.1" },
+                xref: "cluster§9.5.6.1",
 
                 children: [
                     { description: "Immersion Heating Element 1" },
@@ -166,7 +166,7 @@ WaterHeaterManagement.patch(
             },
 
             {
-                xref: { document: "cluster", section: "9.5.6.2" },
+                xref: "cluster§9.5.6.2",
                 children: [
                     { description: "Boost is not currently active" },
                     { description: "Boost is currently active" }
@@ -174,12 +174,12 @@ WaterHeaterManagement.patch(
             },
 
             {
-                xref: { document: "cluster", section: "9.5.6.3" },
+                xref: "cluster§9.5.6.3",
 
                 children: [
                     {
                         details: "This field shall indicate the time period, in seconds, for which the boost state is activated.",
-                        xref: { document: "cluster", section: "9.5.6.3.1" }
+                        xref: "cluster§9.5.6.3.1"
                     },
 
                     {
@@ -192,7 +192,7 @@ WaterHeaterManagement.patch(
                             "\n" +
                             "  • the TargetPercentage (if specified).",
 
-                        xref: { document: "cluster", section: "9.5.6.3.2" }
+                        xref: "cluster§9.5.6.3.2"
                     },
 
                     {
@@ -201,7 +201,7 @@ WaterHeaterManagement.patch(
                             "element)." +
                             "\n" +
                             "The choice of which heat sources are activated is manufacturer specific.",
-                        xref: { document: "cluster", section: "9.5.6.3.3" }
+                        xref: "cluster§9.5.6.3.3"
                     },
 
                     {
@@ -213,13 +213,13 @@ WaterHeaterManagement.patch(
                             "The value of this field shall be within the constraints of the MinHeatSetpointLimit and " +
                             "MaxHeatSetpointLimit attributes (inclusive), of the thermostat cluster.",
 
-                        xref: { document: "cluster", section: "9.5.6.3.4" }
+                        xref: "cluster§9.5.6.3.4"
                     },
 
                     {
                         details: "This field shall indicate the target percentage of hot water in the tank that the TankPercentage " +
                             "attribute must reach before the heating is switched off.",
-                        xref: { document: "cluster", section: "9.5.6.3.5" }
+                        xref: "cluster§9.5.6.3.5"
                     },
 
                     {
@@ -234,7 +234,7 @@ WaterHeaterManagement.patch(
                             "\n" +
                             "This field shall be less than or equal to the TargetPercentage field.",
 
-                        xref: { document: "cluster", section: "9.5.6.3.6" }
+                        xref: "cluster§9.5.6.3.6"
                     }
                 ]
             }

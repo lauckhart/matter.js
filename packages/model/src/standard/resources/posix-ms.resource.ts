@@ -14,5 +14,5 @@ posixMs.patch({
         "encoded as an unsigned 64-bit scalar value." +
         "\n" +
         "This type is employed for compatibility reasons.",
-    xref: { document: "core", section: "7.19.2.7" }
+    xref: "core§7.19.2.7"
 });

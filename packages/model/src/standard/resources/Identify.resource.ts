@@ -21,7 +21,7 @@ Identify.patch({
         "may both share the same cluster instance and therefore identification state (e.g. single LED on the " +
         "node).",
 
-    xref: { document: "cluster", section: "1.2" },
+    xref: "cluster§1.2",
 
     children: [
         undefined,
@@ -38,7 +38,7 @@ Identify.patch({
                 "If this attribute reaches or is set to the value 0 then the device shall terminate its " +
                 "identification state.",
 
-            xref: { document: "cluster", section: "1.2.5.1" }
+            xref: "cluster§1.2.5.1"
         },
 
         {
@@ -47,13 +47,10 @@ Identify.patch({
                 "This attribute shall contain one of the values defined in IdentifyTypeEnum. The value None shall NOT " +
                 "be used if the device is capable of presenting its identification state using one of the other " +
                 "methods defined in IdentifyTypeEnum.",
-            xref: { document: "cluster", section: "1.2.5.2" }
+            xref: "cluster§1.2.5.2"
         },
 
-        {
-            details: "This command starts or stops the receiving device identifying itself.",
-            xref: { document: "cluster", section: "1.2.6.1" }
-        },
+        { details: "This command starts or stops the receiving device identifying itself.", xref: "cluster§1.2.6.1" },
 
         {
             details: "This command allows the support of feedback to the user, such as a certain light effect. It is used " +
@@ -63,7 +60,7 @@ Identify.patch({
                 "feedback is useful but it is not the same as and does not replace the identify mechanism used during " +
                 "commissioning.",
 
-            xref: { document: "cluster", section: "1.2.6.2" },
+            xref: "cluster§1.2.6.2",
 
             children: [
                 {
@@ -74,20 +71,20 @@ Identify.patch({
                         "light effects in EffectIdentifierEnum, but they SHOULD indicate during testing how they handle each " +
                         "effect.",
 
-                    xref: { document: "cluster", section: "1.2.6.2.1" }
+                    xref: "cluster§1.2.6.2.1"
                 },
 
                 {
                     details: "This field shall indicate which variant of the effect, indicated in the EffectIdentifier field, " +
                         "SHOULD be triggered. If a device does not support the given variant, it shall use the default " +
                         "variant. This field shall contain one of the values in EffectVariantEnum.",
-                    xref: { document: "cluster", section: "1.2.6.2.2" }
+                    xref: "cluster§1.2.6.2.2"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "1.2.4.1" },
+            xref: "cluster§1.2.4.1",
 
             children: [
                 { description: "No presentation." },
@@ -102,7 +99,7 @@ Identify.patch({
         },
 
         {
-            xref: { document: "cluster", section: "1.2.4.2" },
+            xref: "cluster§1.2.4.2",
 
             children: [
                 { description: "e.g., Light is turned on/off once." },
@@ -118,9 +115,6 @@ Identify.patch({
             ]
         },
 
-        {
-            xref: { document: "cluster", section: "1.2.4.3" },
-            children: [{ description: "Indicates the default effect is used" }]
-        }
+        { xref: "cluster§1.2.4.3", children: [{ description: "Indicates the default effect is used" }] }
     ]
 });

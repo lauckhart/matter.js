@@ -13,7 +13,7 @@ priority.patch({
     details: "This is an enumeration of priority used to tag events and possibly other data. The data type does " +
         "not define any particular ordering among the values. Specific uses of the data type may assign " +
         "semantics to the values that imply an ordering relationship.",
-    xref: { document: "core", section: "7.19.2.17" },
+    xref: "core§7.19.2.17",
 
     children: [
         { description: "Information for engineering debugging/troubleshooting" },

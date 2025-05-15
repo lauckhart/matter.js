@@ -11,34 +11,34 @@ import { Messages } from "#index.js";
 Messages.patch({
     classification: "application", pics: "MESS",
     details: "This cluster provides an interface for passing messages to be presented by a device.",
-    xref: { document: "cluster", section: "1.16" },
+    xref: "cluster§1.16",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "1.16.4" },
+            xref: "cluster§1.16.4",
 
             children: [
                 {
                     description: "ReceivedConfirmation",
                     details: "This feature shall indicate that the device can get confirmation from a user that the message was " +
                         "received.",
-                    xref: { document: "cluster", section: "1.16.4.1" }
+                    xref: "cluster§1.16.4.1"
                 },
 
                 {
                     description: "ConfirmationResponse",
                     details: "This feature shall indicate that the device is capable of presenting a list of responses to the user " +
                         "and recording the user’s choice of response.",
-                    xref: { document: "cluster", section: "1.16.4.2" }
+                    xref: "cluster§1.16.4.2"
                 },
 
                 {
                     description: "ConfirmationReply",
                     details: "This feature shall indicate that the device is capable of collecting a free-form text response to a " +
                         "message.",
-                    xref: { document: "cluster", section: "1.16.4.3" }
+                    xref: "cluster§1.16.4.3"
                 },
 
                 {
@@ -46,7 +46,7 @@ Messages.patch({
                     details: "This feature shall indicate that the device is capable of requiring the user to authenticate before " +
                         "viewing a message; e.g. entering a PIN or password before viewing a message with billing " +
                         "information.",
-                    xref: { document: "cluster", section: "1.16.4.4" }
+                    xref: "cluster§1.16.4.4"
                 }
             ]
         },
@@ -57,7 +57,7 @@ Messages.patch({
                 "In addition to filtering based upon fabric, to preserve user privacy, the server may further limit " +
                 "the set of messages returned in a read request. At minimum, the server shall return to a client " +
                 "those messages that the client itself created/submitted.",
-            xref: { document: "cluster", section: "1.16.6.1" }
+            xref: "cluster§1.16.6.1"
         },
 
         {
@@ -66,46 +66,43 @@ Messages.patch({
                 "\n" +
                 "This list shall NOT be fabric-scoped; it shall contain MessageIDs for all Messages being presented, " +
                 "no matter what fabric the client that queued them is on.",
-            xref: { document: "cluster", section: "1.16.6.2" }
+            xref: "cluster§1.16.6.2"
         },
 
         {
             details: "This event shall be generated when a message is added to the messages attribute.",
-            xref: { document: "cluster", section: "1.16.8.1" },
-            children: [{
-                details: "This field shall indicate the MessageID for newly added message.",
-                xref: { document: "cluster", section: "1.16.8.1.1" }
-            }]
+            xref: "cluster§1.16.8.1",
+            children: [{ details: "This field shall indicate the MessageID for newly added message.", xref: "cluster§1.16.8.1.1" }]
         },
 
         {
             details: "This event shall be generated when the message is presented to the user.",
-            xref: { document: "cluster", section: "1.16.8.2" },
+            xref: "cluster§1.16.8.2",
             children: [{
                 details: "This field shall indicate the MessageID for the message being presented.",
-                xref: { document: "cluster", section: "1.16.8.2.1" }
+                xref: "cluster§1.16.8.2.1"
             }]
         },
 
         {
             details: "This event shall be generated when the message is confirmed by the user, or when the Duration of the " +
                 "message has elapsed without confirmation.",
-            xref: { document: "cluster", section: "1.16.8.3" },
+            xref: "cluster§1.16.8.3",
 
             children: [
                 {
                     details: "This field shall indicate the MessageID for the message being confirmed.",
-                    xref: { document: "cluster", section: "1.16.8.3.1" }
+                    xref: "cluster§1.16.8.3.1"
                 },
                 {
                     details: "This field shall indicate the MessageResponseID selected by the user. If there was no response " +
                         "before the Duration of the message has elapsed, this field shall be null.",
-                    xref: { document: "cluster", section: "1.16.8.3.2" }
+                    xref: "cluster§1.16.8.3.2"
                 },
                 {
                     details: "This field shall indicate a user-provided reply to the message. If there was no reply, or the " +
                         "message did not have the ReplyRequired bit set, this field shall be null.",
-                    xref: { document: "cluster", section: "1.16.8.3.3" }
+                    xref: "cluster§1.16.8.3.3"
                 }
             ]
         },
@@ -134,34 +131,34 @@ Messages.patch({
                 "The device SHOULD make it possible for the user to view which nodes have access to this cluster and " +
                 "to individually remove privileges for each node.",
 
-            xref: { document: "cluster", section: "1.16.7.1" },
+            xref: "cluster§1.16.7.1",
 
             children: [
                 {
                     details: "This field shall indicate a globally unique ID for this message. See MessageID.",
-                    xref: { document: "cluster", section: "1.16.7.1.1" }
+                    xref: "cluster§1.16.7.1.1"
                 },
                 {
                     details: "This field shall indicate the priority level for this message. See Priority.",
-                    xref: { document: "cluster", section: "1.16.7.1.2" }
+                    xref: "cluster§1.16.7.1.2"
                 },
                 {
                     details: "This field shall indicate control information related to the message. See MessageControl.",
-                    xref: { document: "cluster", section: "1.16.7.1.3" }
+                    xref: "cluster§1.16.7.1.3"
                 },
                 {
                     details: "This field shall indicate the time in UTC at which the message becomes available to be presented. A " +
                         "null value shall indicate \"now.\" See StartTime.",
-                    xref: { document: "cluster", section: "1.16.7.1.4" }
+                    xref: "cluster§1.16.7.1.4"
                 },
                 {
                     details: "This field shall indicate the amount of time, in milliseconds, after the StartTime during which the " +
                         "message is available to be presented. A null value shall indicate \"until changed\". See Duration.",
-                    xref: { document: "cluster", section: "1.16.7.1.5" }
+                    xref: "cluster§1.16.7.1.5"
                 },
                 {
                     details: "This field shall indicate a string containing the message to be presented. See MessageText.",
-                    xref: { document: "cluster", section: "1.16.7.1.6" }
+                    xref: "cluster§1.16.7.1.6"
                 },
 
                 {
@@ -173,13 +170,13 @@ Messages.patch({
                         "\n" +
                         "If the ResponseRequired bit is not set on the message, this list shall be ignored. See Responses.",
 
-                    xref: { document: "cluster", section: "1.16.7.1.7" }
+                    xref: "cluster§1.16.7.1.7"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "1.16.7.2" },
+            xref: "cluster§1.16.7.2",
 
             children: [{
                 details: "This field shall indicate the MessageIDs for the messages being cancelled." +
@@ -190,19 +187,19 @@ Messages.patch({
                     "Message IDs in this command that indicate messages that do not exist in Messages, or that are not " +
                     "scoped to the fabric of the sender, shall be ignored.",
 
-                xref: { document: "cluster", section: "1.16.7.2.1" }
+                xref: "cluster§1.16.7.2.1"
             }]
         },
 
         {
             details: "This data type is an octstr of fixed length 16, containing the binary encoding of a UUID as " +
                 "specified in RFC 4122.",
-            xref: { document: "cluster", section: "1.16.5.1" }
+            xref: "cluster§1.16.5.1"
         },
 
         {
             details: "This data type is derived from map16, and indicates control information related to a message.",
-            xref: { document: "cluster", section: "1.16.5.2" },
+            xref: "cluster§1.16.5.2",
 
             children: [
                 {
@@ -210,35 +207,35 @@ Messages.patch({
                     details: "This bit shall indicate that the message originator requests a confirmation of receipt by the user. " +
                         "If confirmation is required, the device SHOULD present the message until it is either confirmed by " +
                         "the user selecting a confirmation option, or the message expires.",
-                    xref: { document: "cluster", section: "1.16.5.2.1" }
+                    xref: "cluster§1.16.5.2.1"
                 },
 
                 {
                     description: "Message requires response from user",
                     details: "This bit shall indicate that a MessagePresented event SHOULD be generated based on the response of " +
                         "the user to the message.",
-                    xref: { document: "cluster", section: "1.16.5.2.2" }
+                    xref: "cluster§1.16.5.2.2"
                 },
 
                 {
                     description: "Message supports reply message from user",
                     details: "This bit shall indicate that a free-form user reply is to be included in the confirmation of " +
                         "receipt.",
-                    xref: { document: "cluster", section: "1.16.5.2.3" }
+                    xref: "cluster§1.16.5.2.3"
                 },
 
                 {
                     description: "Message has already been confirmed",
                     details: "This bit shall indicate the current confirmation state of a message, which is useful in the event " +
                         "that there are multiple Messages cluster client devices on a network.",
-                    xref: { document: "cluster", section: "1.16.5.2.4" }
+                    xref: "cluster§1.16.5.2.4"
                 },
 
                 {
                     description: "Message required PIN/password protection",
                     details: "This bit shall indicate that user authentication (e.g. by password or PIN) is required before " +
                         "viewing a message.",
-                    xref: { document: "cluster", section: "1.16.5.2.5" }
+                    xref: "cluster§1.16.5.2.5"
                 }
             ]
         },
@@ -246,7 +243,7 @@ Messages.patch({
         {
             details: "A display device may include this preference in the MessageComplete event as a hint to clients about " +
                 "how to handle future similar messages.",
-            xref: { document: "cluster", section: "1.16.5.3" },
+            xref: "cluster§1.16.5.3",
 
             children: [
                 { description: "Similar messages are allowed" },
@@ -260,7 +257,7 @@ Messages.patch({
         {
             details: "Priority SHOULD be used to decide which messages to show when the number of eligible messages is " +
                 "larger than the device’s capacity to present them.",
-            xref: { document: "cluster", section: "1.16.5.4" },
+            xref: "cluster§1.16.5.4",
 
             children: [
                 { description: "Message to be transferred with a low level of importance" },
@@ -272,34 +269,34 @@ Messages.patch({
 
         {
             details: "This represents a single message.",
-            xref: { document: "cluster", section: "1.16.5.5" },
+            xref: "cluster§1.16.5.5",
 
             children: [
                 {
                     details: "This field shall indicate a globally unique ID for this message.",
-                    xref: { document: "cluster", section: "1.16.5.5.1" }
+                    xref: "cluster§1.16.5.5.1"
                 },
                 {
                     details: "This field shall indicate the priority level for this message.",
-                    xref: { document: "cluster", section: "1.16.5.5.2" }
+                    xref: "cluster§1.16.5.5.2"
                 },
                 {
                     details: "This field shall indicate control information related to the message.",
-                    xref: { document: "cluster", section: "1.16.5.5.3" }
+                    xref: "cluster§1.16.5.5.3"
                 },
                 {
                     details: "This field shall indicate the time in UTC at which the message becomes available to be presented. A " +
                         "null value shall indicate \"now.\"",
-                    xref: { document: "cluster", section: "1.16.5.5.4" }
+                    xref: "cluster§1.16.5.5.4"
                 },
                 {
                     details: "This field shall indicate the amount of time, in milliseconds, after the StartTime during which the " +
                         "message is available to be presented. A null value shall indicate \"until changed\".",
-                    xref: { document: "cluster", section: "1.16.5.5.5" }
+                    xref: "cluster§1.16.5.5.5"
                 },
                 {
                     details: "This field shall indicate a string containing the message to be presented.",
-                    xref: { document: "cluster", section: "1.16.5.5.6" }
+                    xref: "cluster§1.16.5.5.6"
                 },
 
                 {
@@ -311,24 +308,24 @@ Messages.patch({
                         "\n" +
                         "If the ResponseRequired bit is not set on the message, this list shall be ignored.",
 
-                    xref: { document: "cluster", section: "1.16.5.5.7" }
+                    xref: "cluster§1.16.5.5.7"
                 }
             ]
         },
 
         {
             details: "This represents a possible response to a message.",
-            xref: { document: "cluster", section: "1.16.5.6" },
+            xref: "cluster§1.16.5.6",
 
             children: [
                 {
                     details: "This field shall indicate a unique unsigned 32-bit number identifier for this message response " +
                         "option.",
-                    xref: { document: "cluster", section: "1.16.5.6.1" }
+                    xref: "cluster§1.16.5.6.1"
                 },
                 {
                     details: "This field shall indicate the text for this option; e.g. \"Yes\", \"No\", etc.",
-                    xref: { document: "cluster", section: "1.16.5.6.2" }
+                    xref: "cluster§1.16.5.6.2"
                 }
             ]
         }

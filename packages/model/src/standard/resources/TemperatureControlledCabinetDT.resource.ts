@@ -15,26 +15,20 @@ TemperatureControlledCabinetDt.patch({
         "chilling or freezing food, for example as part of a refrigerator, freezer, wine chiller, or other " +
         "similar device. Equally, such a cabinet may be warming or heating food, for example as part of an " +
         "oven, range, or similar device.",
-    xref: { document: "device", section: "13.4" },
+    xref: "device§13.4",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "13.4.4" } },
-        { xref: { document: "device", section: "13.4.4" } },
-        { xref: { document: "device", section: "13.4.4" } },
-        { xref: { document: "device", section: "13.4.4" } },
-        { xref: { document: "device", section: "13.4.4" } },
+        { xref: "device§13.4.4" },
+        { xref: "device§13.4.4" },
+        { xref: "device§13.4.4" },
+        { xref: "device§13.4.4" },
+        { xref: "device§13.4.4" },
 
         {
             children: [
-                {
-                    description: "The device has cooling functionality.",
-                    xref: { document: "device", section: "13.4.3" }
-                },
-                {
-                    description: "The device has heating functionality.",
-                    xref: { document: "device", section: "13.4.3" }
-                }
+                { description: "The device has cooling functionality.", xref: "device§13.4.3" },
+                { description: "The device has heating functionality.", xref: "device§13.4.3" }
             ]
         }
     ]

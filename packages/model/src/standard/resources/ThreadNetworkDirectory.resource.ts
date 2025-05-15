@@ -13,7 +13,7 @@ ThreadNetworkDirectory.patch({
     details: "This cluster stores a list of Thread networks (including the credentials required to access each " +
         "network), as well as a designation of the user’s preferred network, to facilitate the sharing of " +
         "Thread networks across fabrics.",
-    xref: { document: "cluster", section: "10.4" },
+    xref: "cluster§10.4",
 
     children: [
         undefined,
@@ -39,7 +39,7 @@ ThreadNetworkDirectory.patch({
                 "\n" +
                 "On a factory reset this attribute shall be reset to null.",
 
-            xref: { document: "cluster", section: "10.4.5.1" }
+            xref: "cluster§10.4.5.1"
         },
 
         {
@@ -55,14 +55,14 @@ ThreadNetworkDirectory.patch({
                 "On a factory reset this list shall be cleared, and any Thread Operational datasets previously stored " +
                 "shall be removed from the Node.",
 
-            xref: { document: "cluster", section: "10.4.5.2" }
+            xref: "cluster§10.4.5.2"
         },
 
         {
             details: "Indicates the maximum number of entries that can be held in the ThreadNetworks list; it shall be at " +
                 "least 2 times the number of SupportedFabrics advertised in the Operational Credentials Cluster on " +
                 "the root endpoint of this node.",
-            xref: { document: "cluster", section: "10.4.5.3" }
+            xref: "cluster§10.4.5.3"
         },
 
         {
@@ -71,52 +71,52 @@ ThreadNetworkDirectory.patch({
                 "If there is an existing entry with the Extended PAN ID then the Thread Operational Dataset for that " +
                 "entry is replaced. As a result, changes to the network parameters (e.g. Channel, Network Name, PSKc, " +
                 "…) of an existing entry with a given Extended PAN ID can be made using this command.",
-            xref: { document: "cluster", section: "10.4.6.1" },
+            xref: "cluster§10.4.6.1",
 
             children: [{
                 details: "This field shall represent the Operational Dataset for the network, using the encoding defined in " +
                     "the Thread specification. It shall contain at least the following sub-TLVs: Active Timestamp, " +
                     "Channel, Channel Mask, Extended PAN ID, Network Key, Network Mesh-Local Prefix, Network Name, PAN " +
                     "ID, PSKc, and Security Policy.",
-                xref: { document: "cluster", section: "10.4.6.1.1" }
+                xref: "cluster§10.4.6.1.1"
             }]
         },
 
         {
             details: "Removes the network with the given Extended PAN ID from the ThreadNetworks attribute.",
-            xref: { document: "cluster", section: "10.4.6.2" }
+            xref: "cluster§10.4.6.2"
         },
         {
             details: "Retrieves the Thread Operational Dataset with the given Extended PAN ID.",
-            xref: { document: "cluster", section: "10.4.6.3" }
+            xref: "cluster§10.4.6.3"
         },
         {
             details: "Contains the Thread Operational Dataset for the Extended PAN specified in GetOperationalDataset.",
-            xref: { document: "cluster", section: "10.4.6.4" }
+            xref: "cluster§10.4.6.4"
         },
 
         {
             details: "Represents the data associated with a Thread Network.",
-            xref: { document: "cluster", section: "10.4.4.1" },
+            xref: "cluster§10.4.4.1",
 
             children: [
                 {
                     details: "This field shall indicate the Extended PAN ID from the OperationalDataset for the given Thread " +
                         "network.",
-                    xref: { document: "cluster", section: "10.4.4.1.1" }
+                    xref: "cluster§10.4.4.1.1"
                 },
                 {
                     details: "This field shall indicate the Network Name from the OperationalDataset for the given Thread network.",
-                    xref: { document: "cluster", section: "10.4.4.1.2" }
+                    xref: "cluster§10.4.4.1.2"
                 },
                 {
                     details: "This field shall indicate the Channel from the OperationalDataset for the given Thread network.",
-                    xref: { document: "cluster", section: "10.4.4.1.3" }
+                    xref: "cluster§10.4.4.1.3"
                 },
                 {
                     details: "This field shall indicate the Active Timestamp from the OperationalDataset for the given Thread " +
                         "network.",
-                    xref: { document: "cluster", section: "10.4.4.1.4" }
+                    xref: "cluster§10.4.4.1.4"
                 }
             ]
         }

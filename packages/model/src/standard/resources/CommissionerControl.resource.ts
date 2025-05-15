@@ -20,7 +20,7 @@ CommissionerControl.patch({
         "\n" +
         "Figure 103. Commissioner Control Cluster - General Flow",
 
-    xref: { document: "core", section: "11.26" },
+    xref: "core§11.26",
 
     children: [
         undefined,
@@ -31,7 +31,7 @@ CommissionerControl.patch({
                 "\n" +
                 "A client shall NOT send the RequestCommissioningApproval command if the intended node to be " +
                 "commissioned does not conform to any of the values specified in SupportedDeviceCategories.",
-            xref: { document: "core", section: "11.26.5.1" }
+            xref: "core§11.26.5.1"
         },
 
         {
@@ -51,7 +51,7 @@ CommissionerControl.patch({
                 "\n" +
                 "proval command.",
 
-            xref: { document: "core", section: "11.26.7.1" }
+            xref: "core§11.26.7.1"
         },
 
         {
@@ -76,7 +76,7 @@ CommissionerControl.patch({
                 "\n" +
                 "The parameters for RequestCommissioningApproval command are as follows:",
 
-            xref: { document: "core", section: "11.26.6.1" }
+            xref: "core§11.26.6.1"
         },
 
         {
@@ -102,7 +102,7 @@ CommissionerControl.patch({
                 "\n" +
                 "The parameters for CommissionNode command are as follows:",
 
-            xref: { document: "core", section: "11.26.6.5" }
+            xref: "core§11.26.6.5"
         },
 
         {
@@ -124,17 +124,17 @@ CommissionerControl.patch({
                 "\n" +
                 "The parameters for ReverseOpenCommissioningWindow command are as follows:",
 
-            xref: { document: "core", section: "11.26.6.8" }
+            xref: "core§11.26.6.8"
         },
 
         {
-            xref: { document: "core", section: "11.26.4.1" },
+            xref: "core§11.26.4.1",
 
             children: [{
                 description: "Aggregators which support Fabric Synchronization may be commissioned.",
                 details: "The FabricSynchronization bit shall be set to 1 if and only if the server supports commissioning " +
                     "nodes that support Fabric Synchronization.",
-                xref: { document: "core", section: "11.26.4.1.1" }
+                xref: "core§11.26.4.1.1"
             }]
         }
     ]

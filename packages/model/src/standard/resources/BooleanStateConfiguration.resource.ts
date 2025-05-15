@@ -13,13 +13,13 @@ BooleanStateConfiguration.patch(
         classification: "application", pics: "BOOLCFG",
         details: "This cluster is used to configure a boolean sensor, including optional state change alarm features " +
             "and configuration of the sensitivity level associated with the sensor.",
-        xref: { document: "cluster", section: "1.8" },
+        xref: "cluster§1.8",
 
         children: [
             undefined,
 
             {
-                xref: { document: "cluster", section: "1.8.4" },
+                xref: "cluster§1.8.4",
 
                 children: [
                     { description: "Visual", details: "Supports visual alarms" },
@@ -46,7 +46,7 @@ BooleanStateConfiguration.patch(
                             "applicable to and is intended to stop the physical alarming, e.g. emitting a sound or blinking a " +
                             "light; it does not impact alarm reporting in AlarmsActive.",
 
-                        xref: { document: "cluster", section: "1.8.4.1" }
+                        xref: "cluster§1.8.4.1"
                     },
 
                     { description: "SensitivityLevel", details: "Supports ability to set sensor sensitivity" }
@@ -58,7 +58,7 @@ BooleanStateConfiguration.patch(
                     "\n" +
                     "If a write interaction to this attribute contains an unsupported sensitivity value, a " +
                     "CONSTRAINT_ERROR status shall be returned.",
-                xref: { document: "cluster", section: "1.8.6.1" }
+                xref: "cluster§1.8.6.1"
             },
 
             {
@@ -71,12 +71,12 @@ BooleanStateConfiguration.patch(
                     "The number of supported sensitivity levels SHOULD represent unique sensitivity levels supported by " +
                     "the device.",
 
-                xref: { document: "cluster", section: "1.8.6.2" }
+                xref: "cluster§1.8.6.2"
             },
 
             {
                 details: "Indicates the default sensitivity level selected by the manufacturer.",
-                xref: { document: "cluster", section: "1.8.6.3" }
+                xref: "cluster§1.8.6.3"
             },
 
             {
@@ -91,7 +91,7 @@ BooleanStateConfiguration.patch(
                     "\n" +
                     "  • 1 = Active",
 
-                xref: { document: "cluster", section: "1.8.6.4" }
+                xref: "cluster§1.8.6.4"
             },
 
             {
@@ -106,7 +106,7 @@ BooleanStateConfiguration.patch(
                     "\n" +
                     "  • 1 = Suppressed",
 
-                xref: { document: "cluster", section: "1.8.6.5" }
+                xref: "cluster§1.8.6.5"
             },
 
             {
@@ -119,7 +119,7 @@ BooleanStateConfiguration.patch(
                     "\n" +
                     "  • 1 = Enabled",
 
-                xref: { document: "cluster", section: "1.8.6.6" }
+                xref: "cluster§1.8.6.6"
             },
 
             {
@@ -130,13 +130,10 @@ BooleanStateConfiguration.patch(
                     "\n" +
                     "  • 1 = Supported",
 
-                xref: { document: "cluster", section: "1.8.6.7" }
+                xref: "cluster§1.8.6.7"
             },
 
-            {
-                details: "Indicates any faults registered by the device.",
-                xref: { document: "cluster", section: "1.8.6.8" }
-            },
+            { details: "Indicates any faults registered by the device.", xref: "cluster§1.8.6.8" },
 
             {
                 details: "This event shall be generated after any bits in the AlarmsActive and/or AlarmsSuppressed attributes " +
@@ -147,57 +144,53 @@ BooleanStateConfiguration.patch(
                     "If several alarm modes change state at the same time, a single event combining multiple changes may " +
                     "be emitted instead of multiple events each representing a single change.",
 
-                xref: { document: "cluster", section: "1.8.8.1" },
+                xref: "cluster§1.8.8.1",
 
                 children: [
                     {
                         details: "This field shall indicate the state of active alarm modes, as indicated by the AlarmsActive " +
                             "attribute, at the time the event was generated.",
-                        xref: { document: "cluster", section: "1.8.8.1.1" }
+                        xref: "cluster§1.8.8.1.1"
                     },
                     {
                         details: "This field shall indicate the state of suppressed alarm modes, as indicated by the AlarmsSuppressed " +
                             "attribute, at the time the event was generated.",
-                        xref: { document: "cluster", section: "1.8.8.1.2" }
+                        xref: "cluster§1.8.8.1.2"
                     }
                 ]
             },
 
             {
                 details: "This event shall be generated when the device registers or clears a fault.",
-                xref: { document: "cluster", section: "1.8.8.2" },
+                xref: "cluster§1.8.8.2",
                 children: [{
                     details: "This field shall indicate the value of the SensorFault attribute, at the time this event is " +
                         "generated.",
-                    xref: { document: "cluster", section: "1.8.8.2.1" }
+                    xref: "cluster§1.8.8.2.1"
                 }]
             },
 
             {
-                xref: { document: "cluster", section: "1.8.7.1" },
-                children: [{
-                    details: "This field shall indicate the alarm modes to suppress.",
-                    xref: { document: "cluster", section: "1.8.7.1.1" }
-                }]
+                xref: "cluster§1.8.7.1",
+                children: [
+                    { details: "This field shall indicate the alarm modes to suppress.", xref: "cluster§1.8.7.1.1" }
+                ]
             },
 
             {
-                xref: { document: "cluster", section: "1.8.7.2" },
+                xref: "cluster§1.8.7.2",
                 children: [{
                     details: "This field shall indicate the alarm modes to either enable or disable depending on the bit status, " +
                         "as specified for the AlarmsEnabled attribute.",
-                    xref: { document: "cluster", section: "1.8.7.2.1" }
+                    xref: "cluster§1.8.7.2.1"
                 }]
             },
 
             {
-                xref: { document: "cluster", section: "1.8.5.1" },
+                xref: "cluster§1.8.5.1",
                 children: [{ description: "Visual alarming" }, { description: "Audible alarming" }]
             },
-            {
-                xref: { document: "cluster", section: "1.8.5.2" },
-                children: [{ description: "Unspecified fault detected" }]
-            }
+            { xref: "cluster§1.8.5.2", children: [{ description: "Unspecified fault detected" }] }
         ]
     }
 );

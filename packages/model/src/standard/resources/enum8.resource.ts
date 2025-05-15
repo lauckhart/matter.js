@@ -8,4 +8,4 @@
 
 import { enum8 } from "#index.js";
 
-enum8.patch({ description: "8-bit enumeration", xref: { document: "core", section: "7.19.2" } });
+enum8.patch({ description: "8-bit enumeration", xref: "core§7.19.2" });

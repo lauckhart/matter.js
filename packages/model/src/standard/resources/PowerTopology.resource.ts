@@ -12,13 +12,13 @@ PowerTopology.patch({
     classification: "application", pics: "PWRTL",
     details: "The Power Topology Cluster provides a mechanism for expressing how power is flowing between " +
         "endpoints.",
-    xref: { document: "core", section: "11.8" },
+    xref: "core§11.8",
 
     children: [
         undefined,
 
         {
-            xref: { document: "core", section: "11.8.4" },
+            xref: "core§11.8.4",
 
             children: [
                 {
@@ -40,14 +40,14 @@ PowerTopology.patch({
         {
             details: "Indicates the list of endpoints capable of providing power to and/or consuming power from the " +
                 "endpoint hosting this server.",
-            xref: { document: "core", section: "11.8.5.1" }
+            xref: "core§11.8.5.1"
         },
 
         {
             details: "Indicates the current list of endpoints currently providing or consuming power to or from the " +
                 "endpoint hosting this server. This list shall be a subset of the value of the AvailableEndpoints " +
                 "attribute.",
-            xref: { document: "core", section: "11.8.5.2" }
+            xref: "core§11.8.5.2"
         }
     ]
 });

@@ -11,7 +11,7 @@ import { OtaSoftwareUpdateProvider } from "#index.js";
 OtaSoftwareUpdateProvider.patch(
     {
         classification: "node", pics: "OTAP",
-        xref: { document: "core", section: "11.20.6" },
+        xref: "core§11.20.6",
 
         children: [
             undefined,
@@ -19,25 +19,25 @@ OtaSoftwareUpdateProvider.patch(
             {
                 details: "Upon receipt, this command shall trigger an attempt to find an updated Software Image by the OTA " +
                     "Provider to match the OTA Requestor’s constraints provided in the payload fields.",
-                xref: { document: "core", section: "11.20.6.5.1" },
+                xref: "core§11.20.6.5.1",
 
                 children: [
                     {
                         details: "The value shall be the Vendor ID applying to the OTA Requestor’s Node and shall match the value " +
                             "reported by the Basic Information Cluster VendorID attribute.",
-                        xref: { document: "core", section: "11.20.6.5.1.1" }
+                        xref: "core§11.20.6.5.1.1"
                     },
                     {
                         details: "The value shall be the Product ID applying to the OTA Requestor’s Node and shall match the value " +
                             "reported by the Basic Information Cluster ProductID attribute.",
-                        xref: { document: "core", section: "11.20.6.5.1.2" }
+                        xref: "core§11.20.6.5.1.2"
                     },
 
                     {
                         details: "The SoftwareVersion included in the request payload shall provide the value representing the current " +
                             "version running on the OTA Requestor invoking the command. This version shall be equal to the " +
                             "Software Version attribute of the Basic Information Cluster.",
-                        xref: { document: "core", section: "11.20.6.5.1.3" }
+                        xref: "core§11.20.6.5.1.3"
                     },
 
                     {
@@ -55,13 +55,13 @@ OtaSoftwareUpdateProvider.patch(
                             "See Section 11.20.3.2, “Querying the OTA Provider” and Section 11.20.3.5, “Transfer of OTA Software " +
                             "Update images” for more details about usage of this field.",
 
-                        xref: { document: "core", section: "11.20.6.5.1.4" }
+                        xref: "core§11.20.6.5.1.4"
                     },
 
                     {
                         details: "The value of this field, if present, shall contain the OTA Requestor’s hardware version, and shall " +
                             "be equal to the HardwareVersion attribute of the Basic Information Cluster.",
-                        xref: { document: "core", section: "11.20.6.5.1.5" }
+                        xref: "core§11.20.6.5.1.5"
                     },
 
                     {
@@ -69,7 +69,7 @@ OtaSoftwareUpdateProvider.patch(
                             "\n" +
                             "attribute for the OTA Requestor as configured. This may be used by the OTA Provider logic to allow " +
                             "per-region selection of the Software Image.",
-                        xref: { document: "core", section: "11.20.6.5.1.6" }
+                        xref: "core§11.20.6.5.1.6"
                     },
 
                     {
@@ -78,7 +78,7 @@ OtaSoftwareUpdateProvider.patch(
                             "\n" +
                             "See Section 11.20.3.4, “Obtaining user consent for updating software” for application details about " +
                             "usage.",
-                        xref: { document: "core", section: "11.20.6.5.1.7" }
+                        xref: "core§11.20.6.5.1.7"
                     },
 
                     {
@@ -112,13 +112,13 @@ OtaSoftwareUpdateProvider.patch(
                             "See Section 11.20.3.2, “Querying the OTA Provider” for full details about the OTA Software Update " +
                             "Query flow which makes use of this command.",
 
-                        xref: { document: "core", section: "11.20.6.5.1.8" }
+                        xref: "core§11.20.6.5.1.8"
                     }
                 ]
             },
 
             {
-                xref: { document: "core", section: "11.20.6.5.2" },
+                xref: "core§11.20.6.5.2",
 
                 children: [
                     {
@@ -126,7 +126,7 @@ OtaSoftwareUpdateProvider.patch(
                             "\n" +
                             "See Section 11.20.3.2, “Querying the OTA Provider” for details about the possible values for this " +
                             "field and their meaning.",
-                        xref: { document: "core", section: "11.20.6.5.2.1" }
+                        xref: "core§11.20.6.5.2.1"
                     },
 
                     {
@@ -140,7 +140,7 @@ OtaSoftwareUpdateProvider.patch(
                             "\n" +
                             "See Section 11.20.3.2, “Querying the OTA Provider” for details about the rules regarding this field.",
 
-                        xref: { document: "core", section: "11.20.6.5.2.2" }
+                        xref: "core§11.20.6.5.2.2"
                     },
 
                     {
@@ -242,7 +242,7 @@ OtaSoftwareUpdateProvider.patch(
                             "\n" +
                             "See Section 11.20.3.2, “Querying the OTA Provider” for additional details about the flow.",
 
-                        xref: { document: "core", section: "11.20.6.5.2.3" }
+                        xref: "core§11.20.6.5.2.3"
                     },
 
                     {
@@ -254,7 +254,7 @@ OtaSoftwareUpdateProvider.patch(
                             "See Section 11.20.3.2, “Querying the OTA Provider” for additional details about the flow and " +
                             "acceptable values.",
 
-                        xref: { document: "core", section: "11.20.6.5.2.4" }
+                        xref: "core§11.20.6.5.2.4"
                     },
 
                     {
@@ -266,7 +266,7 @@ OtaSoftwareUpdateProvider.patch(
                             "See Section 11.20.3.2, “Querying the OTA Provider” for additional details about the flow and " +
                             "acceptable values.",
 
-                        xref: { document: "core", section: "11.20.6.5.2.5" }
+                        xref: "core§11.20.6.5.2.5"
                     },
 
                     {
@@ -274,7 +274,7 @@ OtaSoftwareUpdateProvider.patch(
                             "\n" +
                             "See Section 11.20.3.6.1, “UpdateToken usage” for additional details about the generation and usage " +
                             "of UpdateToken.",
-                        xref: { document: "core", section: "11.20.6.5.2.6" }
+                        xref: "core§11.20.6.5.2.6"
                     },
 
                     {
@@ -286,7 +286,7 @@ OtaSoftwareUpdateProvider.patch(
                             "See Section 11.20.3.4, “Obtaining user consent for updating software” for application details about " +
                             "usage.",
 
-                        xref: { document: "core", section: "11.20.6.5.2.7" }
+                        xref: "core§11.20.6.5.2.7"
                     },
 
                     {
@@ -302,20 +302,20 @@ OtaSoftwareUpdateProvider.patch(
                             "be emitted by an OTA Provider with this additional knowledge if it has knowledge that the receiving " +
                             "OTA Requestor may be able to use it.",
 
-                        xref: { document: "core", section: "11.20.6.5.2.8" }
+                        xref: "core§11.20.6.5.2.8"
                     }
                 ]
             },
 
             {
-                xref: { document: "core", section: "11.20.6.5.3" },
+                xref: "core§11.20.6.5.3",
 
                 children: [
                     {
                         details: "This field shall contain the UpdateToken as specified in Section 11.20.3.6.1, “UpdateToken usage”. " +
                             "This field may be used by the OTA Provider to track minimal lifecycle state to allow finer-grained " +
                             "scheduling of the application of Software Images by OTA Requestors.",
-                        xref: { document: "core", section: "11.20.6.5.3.1" }
+                        xref: "core§11.20.6.5.3.1"
                     },
 
                     {
@@ -344,20 +344,20 @@ OtaSoftwareUpdateProvider.patch(
                             "\n" +
                             "See Section 11.20.3.6, “Applying a software update” for all error-handling information.",
 
-                        xref: { document: "core", section: "11.20.6.5.3.2" }
+                        xref: "core§11.20.6.5.3.2"
                     }
                 ]
             },
 
             {
-                xref: { document: "core", section: "11.20.6.5.4" },
+                xref: "core§11.20.6.5.4",
 
                 children: [
                     {
                         details: "The Action field shall express the action that the OTA Provider requests from the OTA Requestor. See " +
                             "Section 11.20.3.6, “Applying a software update” for a description of the Action values provided in " +
                             "response to an OTA Provider receiving an invocation of this command.",
-                        xref: { document: "core", section: "11.20.6.5.4.1" }
+                        xref: "core§11.20.6.5.4.1"
                     },
 
                     {
@@ -366,18 +366,18 @@ OtaSoftwareUpdateProvider.patch(
                             "\n" +
                             "If this field has a value higher than 86400 seconds (24 hours), then the OTA Requestor may assume a " +
                             "value of 86400, in order to reduce undue Software Image application delays.",
-                        xref: { document: "core", section: "11.20.6.5.4.2" }
+                        xref: "core§11.20.6.5.4.2"
                     }
                 ]
             },
 
             {
-                xref: { document: "core", section: "11.20.6.5.5" },
+                xref: "core§11.20.6.5.5",
 
                 children: [
                     {
                         details: "This field shall contain the UpdateToken as specified in Section 11.20.3.6.1, “UpdateToken usage”.",
-                        xref: { document: "core", section: "11.20.6.5.5.1" }
+                        xref: "core§11.20.6.5.5.1"
                     },
 
                     {
@@ -411,14 +411,14 @@ OtaSoftwareUpdateProvider.patch(
                             "On receiving this command, an OTA Provider may use the information to update its bookkeeping of " +
                             "cached Software Images, or use it for other similar administrative purposes.",
 
-                        xref: { document: "core", section: "11.20.6.5.5.2" }
+                        xref: "core§11.20.6.5.5.2"
                     }
                 ]
             },
 
             {
                 details: "See Section 11.20.3.2, “Querying the OTA Provider” for the semantics of these values.",
-                xref: { document: "core", section: "11.20.6.4.1" },
+                xref: "core§11.20.6.4.1",
 
                 children: [
                     { description: "Indicates that the OTA Provider has an update available." },
@@ -433,7 +433,7 @@ OtaSoftwareUpdateProvider.patch(
             {
                 details: "See Section 11.20.3.6, “Applying a software update” for the semantics of the values. This " +
                     "enumeration is used in the Action field of the ApplyUpdateResponse command. See (Action).",
-                xref: { document: "core", section: "11.20.6.4.2" },
+                xref: "core§11.20.6.4.2",
 
                 children: [
                     { description: "Apply the update." },
@@ -447,7 +447,7 @@ OtaSoftwareUpdateProvider.patch(
             {
                 details: "Note that only HTTP over TLS (HTTPS) is supported (see RFC 7230). Using HTTP without TLS shall NOT " +
                     "be supported, as there is no way to authenticate the involved participants.",
-                xref: { document: "core", section: "11.20.6.4.3" },
+                xref: "core§11.20.6.4.3",
 
                 children: [
                     { description: "Indicates support for synchronous BDX." },

@@ -8,8 +8,6 @@
 
 import { voltageMV } from "#index.js";
 
-voltageMV.patch({
-    description: "Voltage",
-    details: "This type represents voltage measured in millivolts.",
-    xref: { document: "core", section: "7.19.2.14" }
-});
+voltageMV.patch(
+    { description: "Voltage", details: "This type represents voltage measured in millivolts.", xref: "core§7.19.2.14" }
+);

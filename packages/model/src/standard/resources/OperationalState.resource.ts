@@ -31,7 +31,7 @@ OperationalState.patch({
         "\n" +
         "Additionally, this cluster provides events for monitoring the operational state of the device.",
 
-    xref: { document: "cluster", section: "1.14" },
+    xref: "cluster§1.14",
 
     children: [
         undefined,
@@ -45,7 +45,7 @@ OperationalState.patch({
                 "A null value indicates that the device does not present phases during its operation. When this " +
                 "attribute’s value is null, the CurrentPhase attribute shall also be set to null.",
 
-            xref: { document: "cluster", section: "1.14.5.1" }
+            xref: "cluster§1.14.5.1"
         },
 
         {
@@ -57,7 +57,7 @@ OperationalState.patch({
                 "\n" +
                 "Null if the PhaseList attribute is null or if the PhaseList attribute is an empty list.",
 
-            xref: { document: "cluster", section: "1.14.5.2" }
+            xref: "cluster§1.14.5.2"
         },
 
         {
@@ -90,7 +90,7 @@ OperationalState.patch({
                 "As this attribute is not being reported during a regular countdown, clients SHOULD NOT rely on the " +
                 "reporting of this attribute in order to keep track of the remaining duration.",
 
-            xref: { document: "cluster", section: "1.14.5.3" }
+            xref: "cluster§1.14.5.3"
         },
 
         {
@@ -103,13 +103,13 @@ OperationalState.patch({
                 "defined in the OperationalStateEnum. A device type requiring implementation of this cluster shall " +
                 "define the set of states that are applicable to that specific device type.",
 
-            xref: { document: "cluster", section: "1.14.5.4" }
+            xref: "cluster§1.14.5.4"
         },
 
         {
             details: "This attribute specifies the current operational state of a device. This shall be populated with a " +
                 "valid OperationalStateID from the set of values in the OperationalStateList Attribute.",
-            xref: { document: "cluster", section: "1.14.5.5" }
+            xref: "cluster§1.14.5.5"
         },
 
         {
@@ -118,7 +118,7 @@ OperationalState.patch({
                 "general requirements on the population of this attribute." +
                 "\n" +
                 "When there is no error detected, this shall have an ErrorStateID of NoError.",
-            xref: { document: "cluster", section: "1.14.5.6" }
+            xref: "cluster§1.14.5.6"
         },
 
         {
@@ -126,7 +126,7 @@ OperationalState.patch({
                 "event shall also set the OperationalState attribute to Error, indicating an error condition." +
                 "\n" +
                 "This event shall contain the following fields:",
-            xref: { document: "cluster", section: "1.14.7.1" }
+            xref: "cluster§1.14.7.1"
         },
 
         {
@@ -140,14 +140,14 @@ OperationalState.patch({
                 "\n" +
                 "This event shall contain the following fields:",
 
-            xref: { document: "cluster", section: "1.14.7.2" },
+            xref: "cluster§1.14.7.2",
 
             children: [
                 {
                     details: "This field provides an indication of the state at the end of the operation. This field shall have a " +
                         "value from the ErrorStateEnum set. A value of NoError indicates success, that is, no error has been " +
                         "detected.",
-                    xref: { document: "cluster", section: "1.14.7.2.1" }
+                    xref: "cluster§1.14.7.2.1"
                 },
 
                 {
@@ -158,14 +158,14 @@ OperationalState.patch({
                         "that can be conveyed by this attribute, in such instances, this attribute shall be populated with " +
                         "null.",
 
-                    xref: { document: "cluster", section: "1.14.7.2.2" }
+                    xref: "cluster§1.14.7.2.2"
                 },
 
                 {
                     details: "The total time spent in the paused state, in seconds. There may be cases whereby the total paused " +
                         "time exceeds the maximum value that can be conveyed by this attribute, in such instances, this " +
                         "attribute shall be populated with null.",
-                    xref: { document: "cluster", section: "1.14.7.2.3" }
+                    xref: "cluster§1.14.7.2.3"
                 }
             ]
         },
@@ -209,7 +209,7 @@ OperationalState.patch({
                 "\n" +
                 "### Table 3. Pause Compatibility",
 
-            xref: { document: "cluster", section: "1.14.6.1" }
+            xref: "cluster§1.14.6.1"
         },
 
         {
@@ -234,7 +234,7 @@ OperationalState.patch({
                 "  • The device shall respond with an OperationalCommandResponse command with an ErrorStateID of " +
                 "    NoError.",
 
-            xref: { document: "cluster", section: "1.14.6.2" }
+            xref: "cluster§1.14.6.2"
         },
 
         {
@@ -262,7 +262,7 @@ OperationalState.patch({
                 "  • The device shall respond with an OperationalCommandResponse command with an ErrorStateID of " +
                 "    NoError.",
 
-            xref: { document: "cluster", section: "1.14.6.3" }
+            xref: "cluster§1.14.6.3"
         },
 
         {
@@ -304,7 +304,7 @@ OperationalState.patch({
                 "  • The device shall respond with an OperationalCommandResponse command with an ErrorStateID of " +
                 "    NoError.",
 
-            xref: { document: "cluster", section: "1.14.6.4" }
+            xref: "cluster§1.14.6.4"
         },
 
         {
@@ -315,13 +315,13 @@ OperationalState.patch({
                 "\n" +
                 "This command shall be generated in response to any of the Start, Stop, Pause, or Resume commands.",
 
-            xref: { document: "cluster", section: "1.14.6.5" },
+            xref: "cluster§1.14.6.5",
 
             children: [{
                 details: "This shall indicate the success or otherwise of the attempted command invocation. On a successful " +
                     "invocation of the attempted command, the ErrorStateID shall be populated with NoError. Please see " +
                     "the individual command sections for additional specific requirements on population.",
-                xref: { document: "cluster", section: "1.14.6.5.1" }
+                xref: "cluster§1.14.6.5.1"
             }]
         },
 
@@ -344,7 +344,7 @@ OperationalState.patch({
                 "\n" +
                 "The following table defines the generally applicable states.",
 
-            xref: { document: "cluster", section: "1.14.4.1" },
+            xref: "cluster§1.14.4.1",
 
             children: [
                 { description: "The device is stopped" },
@@ -356,19 +356,19 @@ OperationalState.patch({
 
         {
             details: "The OperationalStateStruct is used to indicate a possible state of the device.",
-            xref: { document: "cluster", section: "1.14.4.2" },
+            xref: "cluster§1.14.4.2",
 
             children: [
                 {
                     details: "This shall be populated with a value from the OperationalStateEnum.",
-                    xref: { document: "cluster", section: "1.14.4.2.1" }
+                    xref: "cluster§1.14.4.2.1"
                 },
 
                 {
                     details: "This field shall be present if the OperationalStateID is from the set reserved for Manufacturer " +
                         "Specific States, otherwise it shall NOT be present. If present, this shall contain a human-readable " +
                         "description of the operational state.",
-                    xref: { document: "cluster", section: "1.14.4.2.2" }
+                    xref: "cluster§1.14.4.2.2"
                 }
             ]
         },
@@ -395,7 +395,7 @@ OperationalState.patch({
                 "The set of ErrorStateID field values defined in each of the generic or derived Operational State " +
                 "cluster specifications is called ErrorState.",
 
-            xref: { document: "cluster", section: "1.14.4.3" },
+            xref: "cluster§1.14.4.3",
 
             children: [
                 { description: "The device is not in an error state" },
@@ -406,12 +406,12 @@ OperationalState.patch({
         },
 
         {
-            xref: { document: "cluster", section: "1.14.4.4" },
+            xref: "cluster§1.14.4.4",
 
             children: [
                 {
                     details: "This shall be populated with a value from the ErrorStateEnum.",
-                    xref: { document: "cluster", section: "1.14.4.4.1" }
+                    xref: "cluster§1.14.4.4.1"
                 },
 
                 {
@@ -419,14 +419,14 @@ OperationalState.patch({
                         "Errors, otherwise it shall NOT be present. If present, this shall contain a human-readable " +
                         "description of the ErrorStateID; e.g. for a manufacturer specific ErrorStateID of \"0x80\" the " +
                         "ErrorStateLabel may contain \"My special error\".",
-                    xref: { document: "cluster", section: "1.14.4.4.2" }
+                    xref: "cluster§1.14.4.4.2"
                 },
 
                 {
                     details: "This shall be a human-readable string that provides details about the error condition. As an " +
                         "example, if the ErrorStateID indicates that the device is a Robotic Vacuum that is stuck, the " +
                         "ErrorStateDetails contains \"left wheel blocked\".",
-                    xref: { document: "cluster", section: "1.14.4.4.3" }
+                    xref: "cluster§1.14.4.4.3"
                 }
             ]
         }

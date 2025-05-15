@@ -11,7 +11,7 @@ import { ClosureNs } from "#index.js";
 ClosureNs.patch({
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a feature of a Closure, e.g. the button to activate opening a garage door.",
-    xref: { document: "namespace", section: "2" },
+    xref: "namespace§2",
     children: [
         { description: "Move toward open position" },
         { description: "Move toward closed position" },

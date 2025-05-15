@@ -14,7 +14,7 @@ JointFabricPki.patch({
         "fulfilling the role of Anchor CA." +
         "\n" +
         "NOTE Support for Joint Fabric PKI Cluster is provisional.",
-    xref: { document: "core", section: "11.25" },
+    xref: "core§11.25",
 
     children: [
         undefined,
@@ -24,35 +24,35 @@ JointFabricPki.patch({
                 "subsequently respond in the form of an ICACSRResponse command." +
                 "\n" +
                 "Check ICA Cross Signing for details about the generation and contents of the ICACSR.",
-            xref: { document: "core", section: "11.25.5.1" }
+            xref: "core§11.25.5.1"
         },
 
         {
             details: "This command shall be generated in response to the ICACSRRequest command. Check ICA Cross Signing " +
                 "for details about the generation and contents of ICAC.",
-            xref: { document: "core", section: "11.25.5.2" },
+            xref: "core§11.25.5.2",
 
             children: [
                 {
                     details: "This field shall contain an ICACSRRequestStatusEnum value representing the status of the Section " +
                         "11.25.5.1, “ICACSRRequest Command” operation.",
-                    xref: { document: "core", section: "11.25.5.2.1" }
+                    xref: "core§11.25.5.2.1"
                 },
                 {
                     details: "If present, it shall contain the NOC Issuer Certificate in PEM format.",
-                    xref: { document: "core", section: "11.25.5.2.2" }
+                    xref: "core§11.25.5.2.2"
                 }
             ]
         },
 
-        { xref: { document: "core", section: "11.25.5" } },
-        { xref: { document: "core", section: "11.25.5" } },
-        { xref: { document: "core", section: "11.25.5" } },
+        { xref: "core§11.25.5" },
+        { xref: "core§11.25.5" },
+        { xref: "core§11.25.5" },
 
         {
             details: "This enumeration is used by the ICACSRResponse command to convey the detailed outcome of this " +
                 "cluster’s ICACSRRequest command.",
-            xref: { document: "core", section: "11.25.4.1" },
+            xref: "core§11.25.4.1",
 
             children: [
                 { description: "No error" },
@@ -69,7 +69,7 @@ JointFabricPki.patch({
         {
             details: "This enumeration is used by the TransferAnchorResponse command to convey the detailed outcome of " +
                 "this cluster’s TransferAnchorRequest command.",
-            xref: { document: "core", section: "11.25.4.2" },
+            xref: "core§11.25.4.2",
             children: [
                 { description: "No error" },
                 { description: "Anchor Transfer was not started due to on- going Datastore operations" },

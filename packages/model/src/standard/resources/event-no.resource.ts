@@ -11,5 +11,5 @@ import { eventNo } from "#index.js";
 eventNo.patch({
     description: "Event Number",
     details: "An unsigned number that indicates an Event instance.",
-    xref: { document: "core", section: "7.19.2.35" }
+    xref: "core§7.19.2.35"
 });

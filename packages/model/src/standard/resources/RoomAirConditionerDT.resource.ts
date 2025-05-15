@@ -14,18 +14,18 @@ RoomAirConditionerDt.patch({
         "\n" +
         "A Room Air Conditioner is a device with the primary function of controlling the air temperature in a " +
         "single room.",
-    xref: { document: "device", section: "13.3" },
+    xref: "device§13.3",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "13.3.6" } },
-        { xref: { document: "device", section: "13.3.6" } },
-        { xref: { document: "device", section: "13.3.6" } },
-        { xref: { document: "device", section: "13.3.6" } },
-        { xref: { document: "device", section: "13.3.6" } },
-        { xref: { document: "device", section: "13.3.6" } },
-        { xref: { document: "device", section: "13.3.6" } },
-        { xref: { document: "device", section: "13.3.6" } },
-        { xref: { document: "device", section: "13.3.6" } }
+        { xref: "device§13.3.6" },
+        { xref: "device§13.3.6" },
+        { xref: "device§13.3.6" },
+        { xref: "device§13.3.6" },
+        { xref: "device§13.3.6" },
+        { xref: "device§13.3.6" },
+        { xref: "device§13.3.6" },
+        { xref: "device§13.3.6" },
+        { xref: "device§13.3.6" }
     ]
 });

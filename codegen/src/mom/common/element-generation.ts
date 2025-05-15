@@ -55,6 +55,6 @@ export function addDetailsAndCrossReferences(
 
     // Next row: Cross reference
     if (element.xref) {
-        target.atom("xref", serialize(element.xref));
+        target.atom("xref", serialize(element.xref.toString()));
     }
 }

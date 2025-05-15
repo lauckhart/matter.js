@@ -11,13 +11,13 @@ import { DoorLockControllerDt } from "#index.js";
 DoorLockControllerDt.patch({
     classification: "simple",
     details: "A Door Lock Controller is a device capable of controlling a door lock.",
-    xref: { document: "device", section: "8.2" },
+    xref: "device§8.2",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "8.2.4" } },
-        { xref: { document: "device", section: "8.2.4" } },
-        { xref: { document: "device", section: "8.2.4" } },
-        { xref: { document: "device", section: "8.2.4" } }
+        { xref: "device§8.2.4" },
+        { xref: "device§8.2.4" },
+        { xref: "device§8.2.4" },
+        { xref: "device§8.2.4" }
     ]
 });

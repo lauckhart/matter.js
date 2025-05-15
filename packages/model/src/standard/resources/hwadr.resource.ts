@@ -13,5 +13,5 @@ hwadr.patch({
     details: "The Hardware Address data type shall be either a 48-bit IEEE MAC Address or a 64-bit IEEE MAC " +
         "Address (e.g. EUI-64). The order of bytes is Big-Endian or display mode, where the first byte in the " +
         "string is the left most or highest order byte.",
-    xref: { document: "core", section: "7.19.2.41" }
+    xref: "core§7.19.2.41"
 });

@@ -21,13 +21,13 @@ TimeSynchronization.patch({
         "The Time Synchronization cluster may be present on the root node endpoint, and shall NOT be present " +
         "on any other Endpoint of any Node.",
 
-    xref: { document: "core", section: "11.17" },
+    xref: "core§11.17",
 
     children: [
         undefined,
 
         {
-            xref: { document: "core", section: "11.17.5" },
+            xref: "core§11.17.5",
 
             children: [
                 {
@@ -36,27 +36,27 @@ TimeSynchronization.patch({
                         "time (DST) offsets. If a server supports the TimeZone feature, it shall support the SetTimeZone and " +
                         "SetDSTOffset commands, and TimeZone and DSTOffset attributes, and shall expose the local time " +
                         "through the LocalTime attribute.",
-                    xref: { document: "core", section: "11.17.5.1" }
+                    xref: "core§11.17.5.1"
                 },
 
                 {
                     description: "NtpClient",
                     details: "Allows a node to use NTP/SNTP for time synchronization.",
-                    xref: { document: "core", section: "11.17.5.2" }
+                    xref: "core§11.17.5.2"
                 },
 
                 {
                     description: "NtpServer",
                     details: "Allows a Node to host an NTP server for the network so that other Nodes can achieve a high accuracy " +
                         "time synchronization within the network. See Section 11.17.15, “Acting as an NTP Server”.",
-                    xref: { document: "core", section: "11.17.5.3" }
+                    xref: "core§11.17.5.3"
                 },
 
                 {
                     description: "TimeSyncClient",
                     details: "This node also supports a time synchronization client and can connect to and read time from other " +
                         "nodes.",
-                    xref: { document: "core", section: "11.17.5.4" }
+                    xref: "core§11.17.5.4"
                 }
             ]
         },
@@ -67,7 +67,7 @@ TimeSynchronization.patch({
                 "\n" +
                 "If the node has not achieved time synchronization, this shall be null. This attribute may be set " +
                 "when a SetUTCTime is received.",
-            xref: { document: "core", section: "11.17.8.1" }
+            xref: "core§11.17.8.1"
         },
 
         {
@@ -76,7 +76,7 @@ TimeSynchronization.patch({
                 "\n" +
                 "This value shall be set to NoTimeGranularity if UTCTime is null and shall NOT be set to " +
                 "NoTimeGranularity if UTCTime is non-null.",
-            xref: { document: "core", section: "11.17.8.2" }
+            xref: "core§11.17.8.2"
         },
 
         {
@@ -91,7 +91,7 @@ TimeSynchronization.patch({
                 "This value shall be set to None if UTCTime is null and shall NOT be set to None if UTCTime is " +
                 "non-null.",
 
-            xref: { document: "core", section: "11.17.8.3" }
+            xref: "core§11.17.8.3"
         },
 
         {
@@ -99,7 +99,7 @@ TimeSynchronization.patch({
                 "See Section 11.17.13, “Time source prioritization”. This attribute reflects the last value set by an " +
                 "administrator using the SetTrustedTimeSource command. If the value is null, no trusted time source " +
                 "has yet been set.",
-            xref: { document: "core", section: "11.17.8.4" }
+            xref: "core§11.17.8.4"
         },
 
         {
@@ -113,7 +113,7 @@ TimeSynchronization.patch({
                 "in text format, as specified in RFC 5952. The address format shall follow the recommendations in " +
                 "Section 4 and shall NOT contain a port number.",
 
-            xref: { document: "core", section: "11.17.8.5" }
+            xref: "core§11.17.8.5"
         },
 
         {
@@ -146,7 +146,7 @@ TimeSynchronization.patch({
                 "time zone has been set, it may set this value to a list containing a single TimeZoneStruct with an " +
                 "offset of 0 (UTC) and a ValidAt time of 0.",
 
-            xref: { document: "core", section: "11.17.8.6" }
+            xref: "core§11.17.8.6"
         },
 
         {
@@ -165,7 +165,7 @@ TimeSynchronization.patch({
                 "If a time zone does not use DST, this shall be indicated by a single entry with a 0 offset and a " +
                 "null ValidUntil field.",
 
-            xref: { document: "core", section: "11.17.8.7" }
+            xref: "core§11.17.8.7"
         },
 
         {
@@ -177,39 +177,39 @@ TimeSynchronization.patch({
                 "If the node has not achieved time synchronization, this shall be null. If the node has an empty " +
                 "DSTOffset, this shall be null.",
 
-            xref: { document: "core", section: "11.17.8.8" }
+            xref: "core§11.17.8.8"
         },
 
         {
             details: "Indicates whether the node has access to a time zone database. Nodes with a time zone database may " +
                 "update their own DSTOffset attribute to add new entries and may push DSTOffset updates to other " +
                 "Nodes in the same time zone as required.",
-            xref: { document: "core", section: "11.17.8.9" }
+            xref: "core§11.17.8.9"
         },
 
         {
             details: "If the node is running an RFC 5905 NTPv4 compliant server on port 123, this value shall be True. If " +
                 "the node is not currently running an NTP server, this value shall be False.",
-            xref: { document: "core", section: "11.17.8.10" }
+            xref: "core§11.17.8.10"
         },
 
         {
             details: "Number of supported list entries in the TimeZone attribute. This attribute may take the value of 1 " +
                 "or 2, where the optional second list entry may be used to handle scheduled regulatory time zone " +
                 "changes.",
-            xref: { document: "core", section: "11.17.8.11" }
+            xref: "core§11.17.8.11"
         },
 
         {
             details: "Number of supported list entries in DSTOffset attribute. This value must be at least 1.",
-            xref: { document: "core", section: "11.17.8.12" }
+            xref: "core§11.17.8.12"
         },
 
         {
             details: "This attribute is true if the node supports resolving a domain name. DefaultNTP Address values for " +
                 "these nodes may include domain names. If this is False, the Address for a DefaultNTP shall be an " +
                 "IPv6 address.",
-            xref: { document: "core", section: "11.17.8.13" }
+            xref: "core§11.17.8.13"
         },
 
         {
@@ -224,33 +224,30 @@ TimeSynchronization.patch({
                 "\n" +
                 "There is no data for this event.",
 
-            xref: { document: "core", section: "11.17.10.1" }
+            xref: "core§11.17.10.1"
         },
 
         {
             details: "This event shall be generated when the node starts or stops applying a DST offset.",
-            xref: { document: "core", section: "11.17.10.2" },
+            xref: "core§11.17.10.2",
             children: [{
                 details: "Indicates whether the current DST offset is being applied (i.e, daylight savings time is applied, as " +
                     "opposed to standard time).",
-                xref: { document: "core", section: "11.17.10.2.1" }
+                xref: "core§11.17.10.2.1"
             }]
         },
 
         {
             details: "This event shall be generated when the node changes its time zone offset or name. It shall NOT be " +
                 "sent for DST changes that are not accompanied by a time zone change.",
-            xref: { document: "core", section: "11.17.10.3" },
+            xref: "core§11.17.10.3",
 
             children: [
-                {
-                    details: "Current time zone offset from UTC in seconds.",
-                    xref: { document: "core", section: "11.17.10.3.1" }
-                },
+                { details: "Current time zone offset from UTC in seconds.", xref: "core§11.17.10.3.1" },
                 {
                     details: "Current time zone name. This name SHOULD use the country/city format specified by the IANA Time Zone " +
                         "Database.",
-                    xref: { document: "core", section: "11.17.10.3.2" }
+                    xref: "core§11.17.10.3.2"
                 }
             ]
         },
@@ -259,7 +256,7 @@ TimeSynchronization.patch({
             details: "This event shall be generated if the node has not generated a TimeFailure event in the last hour, " +
                 "and the node is unable to get a time from any source. This event SHOULD NOT be generated more often " +
                 "than once per hour.",
-            xref: { document: "core", section: "11.17.10.4" }
+            xref: "core§11.17.10.4"
         },
 
         {
@@ -271,7 +268,7 @@ TimeSynchronization.patch({
                 "TrustedTimeSource is null or the specified peer cannot be reached. MissingTrustedTimeSource events " +
                 "corresponding to a time update SHOULD NOT be generated more often than once per hour.",
 
-            xref: { document: "core", section: "11.17.10.5" }
+            xref: "core§11.17.10.5"
         },
 
         {
@@ -293,20 +290,17 @@ TimeSynchronization.patch({
                 "SUCCESS. If it opts to not update its time, it shall fail the command with a cluster specific Status " +
                 "Code of TimeNotAccepted.",
 
-            xref: { document: "core", section: "11.17.9.1" },
+            xref: "core§11.17.9.1",
 
             children: [
-                {
-                    details: "This shall give the Client’s UTC Time.",
-                    xref: { document: "core", section: "11.17.9.1.1" }
-                },
+                { details: "This shall give the Client’s UTC Time.", xref: "core§11.17.9.1.1" },
                 {
                     details: "This shall give the Client’s Granularity, as described in Granularity.",
-                    xref: { document: "core", section: "11.17.9.1.2" }
+                    xref: "core§11.17.9.1.2"
                 },
                 {
                     details: "This shall give the Client’s TimeSource, as described in TimeSource.",
-                    xref: { document: "core", section: "11.17.9.1.3" }
+                    xref: "core§11.17.9.1.3"
                 }
             ]
         },
@@ -321,10 +315,10 @@ TimeSynchronization.patch({
                 "    Endpoint fields matching those in the TrustedTimeSource field and has its FabricIndex field set " +
                 "    to the command’s accessing fabric index.",
 
-            xref: { document: "core", section: "11.17.9.2" },
+            xref: "core§11.17.9.2",
             children: [{
                 details: "This field contains the Node ID and endpoint of a trusted time source on the accessing fabric.",
-                xref: { document: "core", section: "11.17.9.2.1" }
+                xref: "core§11.17.9.2.1"
             }]
         },
 
@@ -345,18 +339,18 @@ TimeSynchronization.patch({
                 "to an empty list. A DSTTableEmpty event shall be generated if the DSTOffset attribute is empty. A " +
                 "DSTStatus event shall be generated if the node was previously applying a DST offset.",
 
-            xref: { document: "core", section: "11.17.9.3" }
+            xref: "core§11.17.9.3"
         },
 
         {
             details: "This command shall be generated in response to a SetTimeZone command.",
-            xref: { document: "core", section: "11.17.9.4" },
+            xref: "core§11.17.9.4",
 
             children: [{
                 details: "If the node supports a time zone database with information for the time zone that will be applied, " +
                     "it may use this information to set the DSTOffset attribute. If the node is setting its own DSTOffset " +
                     "attribute, the DSTOffsetsRequired field shall be set to false, otherwise it shall be set to true.",
-                xref: { document: "core", section: "11.17.9.4.1" }
+                xref: "core§11.17.9.4.1"
             }]
         },
 
@@ -375,7 +369,7 @@ TimeSynchronization.patch({
                 "If the DSTOffset attribute change causes a corresponding change to the DST state, a DSTStatus event " +
                 "shall be generated. If the list is empty, the node shall generate a DSTTableEmpty event.",
 
-            xref: { document: "core", section: "11.17.9.5" }
+            xref: "core§11.17.9.5"
         },
 
         {
@@ -386,18 +380,18 @@ TimeSynchronization.patch({
                 "code of INVALID_COMMAND. Otherwise, the node shall set the DefaultNTP attribute to match the " +
                 "DefaultNTP provided in this command.",
 
-            xref: { document: "core", section: "11.17.9.6" },
+            xref: "core§11.17.9.6",
 
             children: [{
                 details: "This field contains the address of an NTP server than can be used as a fallback for time " +
                     "synchronization. The format of this field shall follow the requirements in the DefaultNTP attribute " +
                     "description.",
-                xref: { document: "core", section: "11.17.9.6.1" }
+                xref: "core§11.17.9.6.1"
             }]
         },
 
         {
-            xref: { document: "core", section: "11.17.6.1" },
+            xref: "core§11.17.6.1",
 
             children: [
                 {
@@ -419,7 +413,7 @@ TimeSynchronization.patch({
         },
 
         {
-            xref: { document: "core", section: "11.17.6.2" },
+            xref: "core§11.17.6.2",
 
             children: [
                 { description: "Node is not currently synchronized with a UTC Time source." },
@@ -452,7 +446,7 @@ TimeSynchronization.patch({
             details: "It indicates what the device knows about the contents of the IANA Time Zone Database. Partial " +
                 "support on a device may be used to omit historical data, less commonly used time zones, and/or time " +
                 "zones not related to the region a product is sold in.",
-            xref: { document: "core", section: "11.17.6.3" },
+            xref: "core§11.17.6.3",
             children: [
                 { description: "Node has a full list of the available time zones" },
                 { description: "Node has a partial list of the available time zones" },
@@ -461,94 +455,82 @@ TimeSynchronization.patch({
         },
 
         {
-            xref: { document: "core", section: "11.17.6.4" },
+            xref: "core§11.17.6.4",
 
             children: [
                 {
                     details: "The Fabric Index associated with the Fabric of the client which last set the value of the trusted " +
                         "time source node.",
-                    xref: { document: "core", section: "11.17.6.4.1" }
+                    xref: "core§11.17.6.4.1"
                 },
                 {
                     details: "Node ID of the trusted time source node on the Fabric associated with the entry.",
-                    xref: { document: "core", section: "11.17.6.4.2" }
+                    xref: "core§11.17.6.4.2"
                 },
                 {
                     details: "Endpoint on the trusted time source node that contains the Time Synchronization cluster server.",
-                    xref: { document: "core", section: "11.17.6.4.3" }
+                    xref: "core§11.17.6.4.3"
                 }
             ]
         },
 
         {
-            xref: { document: "core", section: "11.17.6.5" },
+            xref: "core§11.17.6.5",
 
             children: [
                 {
                     details: "Node ID of the trusted time source node on the Fabric of the issuer.",
-                    xref: { document: "core", section: "11.17.6.5.1" }
+                    xref: "core§11.17.6.5.1"
                 },
 
                 {
                     details: "Endpoint on the trusted time source node that contains the Time Synchronization cluster server. This " +
                         "is provided to avoid having to do discovery of the location of that endpoint by walking over all " +
                         "endpoints and checking their Descriptor Cluster.",
-                    xref: { document: "core", section: "11.17.6.5.2" }
+                    xref: "core§11.17.6.5.2"
                 }
             ]
         },
 
         {
-            xref: { document: "core", section: "11.17.6.6" },
+            xref: "core§11.17.6.6",
 
             children: [
-                {
-                    details: "The time zone offset from UTC in seconds.",
-                    xref: { document: "core", section: "11.17.6.6.1" }
-                },
-                {
-                    details: "The UTC time when the offset shall be applied.",
-                    xref: { document: "core", section: "11.17.6.6.2" }
-                },
+                { details: "The time zone offset from UTC in seconds.", xref: "core§11.17.6.6.1" },
+                { details: "The UTC time when the offset shall be applied.", xref: "core§11.17.6.6.2" },
 
                 {
                     details: "The time zone name SHOULD provide a human-readable time zone name and it SHOULD use the country/city " +
                         "format specified by the IANA Time Zone Database. The Name field may be used for display. If the node " +
                         "supports a TimeZoneDatabase it may use the Name field to set its own DST offsets if it has database " +
                         "information for the supplied time zone Name and the given Offset matches.",
-                    xref: { document: "core", section: "11.17.6.6.3" }
+                    xref: "core§11.17.6.6.3"
                 }
             ]
         },
 
         {
-            xref: { document: "core", section: "11.17.6.7" },
+            xref: "core§11.17.6.7",
 
             children: [
                 {
                     details: "The DST offset in seconds. Normally this is in the range of 0 to 3600 seconds (1 hour), but this " +
                         "field will accept any values in the int32 range to accommodate potential future legislation that " +
                         "does not fit with these assumptions.",
-                    xref: { document: "core", section: "11.17.6.7.1" }
+                    xref: "core§11.17.6.7.1"
                 },
 
-                {
-                    details: "The UTC time when the offset shall be applied.",
-                    xref: { document: "core", section: "11.17.6.7.2" }
-                },
+                { details: "The UTC time when the offset shall be applied.", xref: "core§11.17.6.7.2" },
 
                 {
                     details: "The UTC time when the offset shall stop being applied. Providing a null value here indicates a " +
                         "permanent DST change. If this value is non-null the value shall be larger than the ValidStarting " +
                         "time.",
-                    xref: { document: "core", section: "11.17.6.7.3" }
+                    xref: "core§11.17.6.7.3"
                 }
             ]
         },
 
-        {
-            xref: { document: "core", section: "11.17.7.1" },
-            children: [{ description: "Node rejected the attempt to set the UTC time" }]
-        }
+        { xref: "core§11.17.7.1", children: [{ description: "Node rejected the attempt to set the UTC time" }] }
     ]
 });

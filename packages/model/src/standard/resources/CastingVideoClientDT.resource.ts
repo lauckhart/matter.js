@@ -14,26 +14,26 @@ CastingVideoClientDt.patch({
         "\n" +
         "A Casting Video Client is a client that can launch content on a Casting Video Player, for example, a " +
         "Smart Speaker or a Content Provider phone app.",
-    xref: { document: "device", section: "10.6" },
+    xref: "device§10.6",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "10.6.4" } },
-        { xref: { document: "device", section: "10.6.4" } },
-        { xref: { document: "device", section: "10.6.4" } },
-        { xref: { document: "device", section: "10.6.4" } },
-        { xref: { document: "device", section: "10.6.4" } },
-        { xref: { document: "device", section: "10.6.4" } },
-        { xref: { document: "device", section: "10.6.4" } },
-        { xref: { document: "device", section: "10.6.4" } },
-        { xref: { document: "device", section: "10.6.4" } },
-        { xref: { document: "device", section: "10.6.4" } },
-        { xref: { document: "device", section: "10.6.4" } },
-        { xref: { document: "device", section: "10.6.4" } },
-        { xref: { document: "device", section: "10.6.4" } },
-        { xref: { document: "device", section: "10.6.4" } },
-        { xref: { document: "device", section: "10.6.4" } },
-        { xref: { document: "device", section: "10.6.4" } },
-        { xref: { document: "device", section: "10.6.4" } }
+        { xref: "device§10.6.4" },
+        { xref: "device§10.6.4" },
+        { xref: "device§10.6.4" },
+        { xref: "device§10.6.4" },
+        { xref: "device§10.6.4" },
+        { xref: "device§10.6.4" },
+        { xref: "device§10.6.4" },
+        { xref: "device§10.6.4" },
+        { xref: "device§10.6.4" },
+        { xref: "device§10.6.4" },
+        { xref: "device§10.6.4" },
+        { xref: "device§10.6.4" },
+        { xref: "device§10.6.4" },
+        { xref: "device§10.6.4" },
+        { xref: "device§10.6.4" },
+        { xref: "device§10.6.4" },
+        { xref: "device§10.6.4" }
     ]
 });

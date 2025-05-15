@@ -28,13 +28,13 @@ PumpConfigurationAndControl.patch(
             "\n" +
             "Figure 14. Typical Usage of Pump Configuration and Control Cluster",
 
-        xref: { document: "cluster", section: "4.2" },
+        xref: "cluster§4.2",
 
         children: [
             undefined,
 
             {
-                xref: { document: "cluster", section: "4.2.4" },
+                xref: "cluster§4.2.4",
 
                 children: [
                     { description: "ConstantPressure", details: "Supports operating in constant pressure mode" },
@@ -52,7 +52,7 @@ PumpConfigurationAndControl.patch(
                     "not apply to any specific control mode or operation mode." +
                     "\n" +
                     "Valid range is -3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). Null if the value is invalid.",
-                xref: { document: "cluster", section: "4.2.7.1" }
+                xref: "cluster§4.2.7.1"
             },
 
             {
@@ -60,7 +60,7 @@ PumpConfigurationAndControl.patch(
                     "not apply to any specific control mode or operation mode." +
                     "\n" +
                     "Valid range is 0 to 65,534 RPM (steps of 1 RPM). Null if the value is invalid.",
-                xref: { document: "cluster", section: "4.2.7.2" }
+                xref: "cluster§4.2.7.2"
             },
 
             {
@@ -68,7 +68,7 @@ PumpConfigurationAndControl.patch(
                     "apply to any specific control mode or operation mode." +
                     "\n" +
                     "Valid range is 0 m/h to 6,553.4 m/h (steps of 0.1 m/h). Null if the value is invalid.",
-                xref: { document: "cluster", section: "4.2.7.3" }
+                xref: "cluster§4.2.7.3"
             },
 
             {
@@ -76,7 +76,7 @@ PumpConfigurationAndControl.patch(
                     "ControlMode attribute set to ConstantPressure." +
                     "\n" +
                     "Valid range is –3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). Null if the value is invalid.",
-                xref: { document: "cluster", section: "4.2.7.4" }
+                xref: "cluster§4.2.7.4"
             },
 
             {
@@ -84,7 +84,7 @@ PumpConfigurationAndControl.patch(
                     "ControlMode attribute set to ConstantPressure." +
                     "\n" +
                     "Valid range is –3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). Null if the value is invalid.",
-                xref: { document: "cluster", section: "4.2.7.5" }
+                xref: "cluster§4.2.7.5"
             },
 
             {
@@ -92,7 +92,7 @@ PumpConfigurationAndControl.patch(
                     "with the ControlMode attribute set to ProportionalPressure." +
                     "\n" +
                     "Valid range is –3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). Null if the value is invalid.",
-                xref: { document: "cluster", section: "4.2.7.6" }
+                xref: "cluster§4.2.7.6"
             },
 
             {
@@ -100,7 +100,7 @@ PumpConfigurationAndControl.patch(
                     "with the ControlMode attribute set to ProportionalPressure." +
                     "\n" +
                     "Valid range is –3,276.7 kPa to 3,276.7 kPa (steps of 0.1 kPa). Null if the value is invalid.",
-                xref: { document: "cluster", section: "4.2.7.7" }
+                xref: "cluster§4.2.7.7"
             },
 
             {
@@ -109,7 +109,7 @@ PumpConfigurationAndControl.patch(
                     "trolMode attribute set to ConstantSpeed." +
                     "\n" +
                     "Valid range is 0 to 65,534 RPM (steps of 1 RPM). Null if the value is invalid.",
-                xref: { document: "cluster", section: "4.2.7.8" }
+                xref: "cluster§4.2.7.8"
             },
 
             {
@@ -117,7 +117,7 @@ PumpConfigurationAndControl.patch(
                     "ControlMode attribute set to ConstantSpeed." +
                     "\n" +
                     "Valid range is 0 to 65,534 RPM (steps of 1 RPM). Null if the value is invalid.",
-                xref: { document: "cluster", section: "4.2.7.9" }
+                xref: "cluster§4.2.7.9"
             },
 
             {
@@ -125,7 +125,7 @@ PumpConfigurationAndControl.patch(
                     "ControlMode attribute set to ConstantFlow." +
                     "\n" +
                     "Valid range is 0 m/h to 6,553.4 m/h (steps of 0.1 m/h). Null if the value is invalid.",
-                xref: { document: "cluster", section: "4.2.7.10" }
+                xref: "cluster§4.2.7.10"
             },
 
             {
@@ -133,7 +133,7 @@ PumpConfigurationAndControl.patch(
                     "ControlMode attribute set to ConstantFlow." +
                     "\n" +
                     "Valid range is 0 m/h to 6,553.4 m/h (steps of 0.1 m/h). Null if the value is invalid.",
-                xref: { document: "cluster", section: "4.2.7.11" }
+                xref: "cluster§4.2.7.11"
             },
 
             {
@@ -141,7 +141,7 @@ PumpConfigurationAndControl.patch(
                     "working with the ControlMode attribute set to ConstantTemperature." +
                     "\n" +
                     "Valid range is –273.15 °C to 327.67 °C (steps of 0.01 °C). Null if the value is invalid.",
-                xref: { document: "cluster", section: "4.2.7.12" }
+                xref: "cluster§4.2.7.12"
             },
 
             {
@@ -152,7 +152,7 @@ PumpConfigurationAndControl.patch(
                     "\n" +
                     "Valid range is –273.15 °C to 327.67 °C (steps of 0.01 °C). Null if the value is invalid.",
 
-                xref: { document: "cluster", section: "4.2.7.13" }
+                xref: "cluster§4.2.7.13"
             },
 
             {
@@ -160,7 +160,7 @@ PumpConfigurationAndControl.patch(
                     "Where a pump controller function is active, the corresponding bit shall be set to 1. Where a pump" +
                     "\n" +
                     "controller function is not active, the corresponding bit shall be set to 0.",
-                xref: { document: "cluster", section: "4.2.7.14" }
+                xref: "cluster§4.2.7.14"
             },
 
             {
@@ -177,7 +177,7 @@ PumpConfigurationAndControl.patch(
                     "See OperationMode and ControlMode attributes for a detailed description of the operation and control " +
                     "of the pump.",
 
-                xref: { document: "cluster", section: "4.2.7.15" }
+                xref: "cluster§4.2.7.15"
             },
 
             {
@@ -201,7 +201,7 @@ PumpConfigurationAndControl.patch(
                     "See OperationMode and ControlMode attributes for detailed a description of the operation and control " +
                     "of the pump.",
 
-                xref: { document: "cluster", section: "4.2.7.16" }
+                xref: "cluster§4.2.7.16"
             },
 
             {
@@ -214,7 +214,7 @@ PumpConfigurationAndControl.patch(
                     "Valid range is 0 % to 163.835% (0.005 % granularity). Although this attribute is a signed value, " +
                     "values of capacity less than zero have no physical meaning.",
 
-                xref: { document: "cluster", section: "4.2.7.17" }
+                xref: "cluster§4.2.7.17"
             },
 
             {
@@ -226,7 +226,7 @@ PumpConfigurationAndControl.patch(
                     "\n" +
                     "Valid range is 0 to 65,534 RPM.",
 
-                xref: { document: "cluster", section: "4.2.7.18" }
+                xref: "cluster§4.2.7.18"
             },
 
             {
@@ -240,7 +240,7 @@ PumpConfigurationAndControl.patch(
                     "\n" +
                     "Valid range is 0 to 16,777,214 hrs.",
 
-                xref: { document: "cluster", section: "4.2.7.19" }
+                xref: "cluster§4.2.7.19"
             },
 
             {
@@ -252,7 +252,7 @@ PumpConfigurationAndControl.patch(
                     "\n" +
                     "Valid range is 0 to 16,777,214 Watts.",
 
-                xref: { document: "cluster", section: "4.2.7.20" }
+                xref: "cluster§4.2.7.20"
             },
 
             {
@@ -267,7 +267,7 @@ PumpConfigurationAndControl.patch(
                     "\n" +
                     "Null if the value is unknown.",
 
-                xref: { document: "cluster", section: "4.2.7.21" }
+                xref: "cluster§4.2.7.21"
             },
 
             {
@@ -297,7 +297,7 @@ PumpConfigurationAndControl.patch(
                     "attribute with an unsupported operation mode value shall be ignored and a response containing the " +
                     "status of CONSTRAINT_ERROR shall be returned.",
 
-                xref: { document: "cluster", section: "4.2.7.22" }
+                xref: "cluster§4.2.7.22"
             },
 
             {
@@ -312,41 +312,41 @@ PumpConfigurationAndControl.patch(
                     "attribute with an unsupported control mode value shall be ignored and a response containing the " +
                     "status of CONSTRAINT_ERROR shall be returned.",
 
-                xref: { document: "cluster", section: "4.2.7.23" }
+                xref: "cluster§4.2.7.23"
             },
 
-            { xref: { document: "cluster", section: "4.2.7" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
-            { xref: { document: "cluster", section: "4.2.8" } },
+            { xref: "cluster§4.2.7" },
+            { xref: "cluster§4.2.8" },
+            { xref: "cluster§4.2.8" },
+            { xref: "cluster§4.2.8" },
+            { xref: "cluster§4.2.8" },
+            { xref: "cluster§4.2.8" },
+            { xref: "cluster§4.2.8" },
+            { xref: "cluster§4.2.8" },
+            { xref: "cluster§4.2.8" },
+            { xref: "cluster§4.2.8" },
+            { xref: "cluster§4.2.8" },
+            { xref: "cluster§4.2.8" },
+            { xref: "cluster§4.2.8" },
+            { xref: "cluster§4.2.8" },
+            { xref: "cluster§4.2.8" },
+            { xref: "cluster§4.2.8" },
+            { xref: "cluster§4.2.8" },
+            { xref: "cluster§4.2.8" },
 
             {
-                xref: { document: "cluster", section: "4.2.6.1" },
+                xref: "cluster§4.2.6.1",
 
                 children: [
                     {
                         description: "A fault related to the system or pump device is detected.",
                         details: "If this bit is set, it may correspond to an event in the range 2-16, see Events.",
-                        xref: { document: "cluster", section: "4.2.6.1.1" }
+                        xref: "cluster§4.2.6.1.1"
                     },
                     {
                         description: "A fault related to the supply to the pump is detected.",
                         details: "If this bit is set, it may correspond to an event in the range 0-1 or 13, see Events.",
-                        xref: { document: "cluster", section: "4.2.6.1.2" }
+                        xref: "cluster§4.2.6.1.2"
                     },
                     { description: "Setpoint is too low to achieve." },
                     { description: "Setpoint is too high to achieve." },
@@ -357,7 +357,7 @@ PumpConfigurationAndControl.patch(
                             "OperationMode shall generate a FAILURE error status until LocalOverride is cleared on the physical " +
                             "device. When LocalOverride is cleared, the device shall return to the operation mode set in " +
                             "OperationMode.",
-                        xref: { document: "cluster", section: "4.2.6.1.3" }
+                        xref: "cluster§4.2.6.1.3"
                     },
 
                     { description: "Pump is currently running" },
@@ -367,7 +367,7 @@ PumpConfigurationAndControl.patch(
                         details: "If this bit is set, EffectiveControlMode is ConstantPressure and the setpoint for the pump is " +
                             "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
                             "MaxMeasuredValue]).",
-                        xref: { document: "cluster", section: "4.2.6.1.4" }
+                        xref: "cluster§4.2.6.1.4"
                     },
 
                     {
@@ -375,7 +375,7 @@ PumpConfigurationAndControl.patch(
                         details: "If this bit is set, EffectiveControlMode is ConstantFlow, and the setpoint for the pump is " +
                             "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
                             "MaxMeasuredValue]).",
-                        xref: { document: "cluster", section: "4.2.6.1.5" }
+                        xref: "cluster§4.2.6.1.5"
                     },
 
                     {
@@ -383,20 +383,20 @@ PumpConfigurationAndControl.patch(
                         details: "If this bit is set, EffectiveControlMode is ConstantTemperature, and the setpoint for the pump is " +
                             "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
                             "MaxMeasuredValue])",
-                        xref: { document: "cluster", section: "4.2.6.1.6" }
+                        xref: "cluster§4.2.6.1.6"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "4.2.6.2" },
+                xref: "cluster§4.2.6.2",
 
                 children: [
                     {
                         description: "The pump is controlled by a setpoint, as defined by a connected remote sensor or by the ControlMode attribute.",
                         details: "If the pump is running in this operation mode the setpoint is an internal variable which may be " +
                             "controlled between 0% and 100%, e.g., by means of the Level Control cluster",
-                        xref: { document: "cluster", section: "4.2.6.2.1" }
+                        xref: "cluster§4.2.6.2.1"
                     },
 
                     {
@@ -410,14 +410,14 @@ PumpConfigurationAndControl.patch(
             },
 
             {
-                xref: { document: "cluster", section: "4.2.6.3" },
+                xref: "cluster§4.2.6.3",
 
                 children: [
                     {
                         description: "The pump is running at a constant speed.",
                         details: "The setpoint is interpreted as a percentage of the range derived from the [MinConstSpeed – " +
                             "MaxConstSpeed] attributes.",
-                        xref: { document: "cluster", section: "4.2.6.3.1" }
+                        xref: "cluster§4.2.6.3.1"
                     },
 
                     {
@@ -426,7 +426,7 @@ PumpConfigurationAndControl.patch(
                             "In case of the internal pressure sensor, this will be the range derived from the [MinConstPressure – " +
                             "MaxConstPressure] attributes. In case of a remote pressure sensor, this will be the range derived " +
                             "from the [MinMeasuredValue – MaxMeasuredValue] attributes of the remote pressure sensor.",
-                        xref: { document: "cluster", section: "4.2.6.3.2" }
+                        xref: "cluster§4.2.6.3.2"
                     },
 
                     {
@@ -435,7 +435,7 @@ PumpConfigurationAndControl.patch(
                             "\n" +
                             "CompPressure] attributes. The internal setpoint will be lowered (compensated) dependent on the flow " +
                             "in the pump (lower flow ⇒ lower internal setpoint).",
-                        xref: { document: "cluster", section: "4.2.6.3.3" }
+                        xref: "cluster§4.2.6.3.3"
                     },
 
                     {
@@ -444,7 +444,7 @@ PumpConfigurationAndControl.patch(
                             "In case of the internal flow sensor, this will be the range derived from the [MinConstFlow – " +
                             "MaxConstFlow] attributes. In case of a remote flow sensor, this will be the range derived from the " +
                             "[MinMeasuredValue – MaxMeasuredValue] attributes of the remote flow sensor.",
-                        xref: { document: "cluster", section: "4.2.6.3.4" }
+                        xref: "cluster§4.2.6.3.4"
                     },
 
                     {
@@ -453,7 +453,7 @@ PumpConfigurationAndControl.patch(
                             "In case of the internal temperature sensor, this will be the range derived from the [MinConstTemp – " +
                             "MaxConstTemp] attributes. In case of a remote temperature sensor, this will be the range derived " +
                             "from the [MinMeasuredValue – MaxMeasuredValue] attributes of the remote temperature sensor.",
-                        xref: { document: "cluster", section: "4.2.6.3.5" }
+                        xref: "cluster§4.2.6.3.5"
                     },
 
                     {
@@ -461,7 +461,7 @@ PumpConfigurationAndControl.patch(
                         details: "This behavior is manufacturer defined. The pump can be stopped by setting the setpoint of the level " +
                             "control cluster to 0, or by using the On/Off cluster. If the pump is started (at any setpoint), the " +
                             "speed of the pump is entirely determined by the pump.",
-                        xref: { document: "cluster", section: "4.2.6.3.6" }
+                        xref: "cluster§4.2.6.3.6"
                     }
                 ]
             }

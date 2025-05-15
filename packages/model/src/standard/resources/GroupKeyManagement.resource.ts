@@ -22,18 +22,18 @@ GroupKeyManagement.patch({
         "\n" +
         "scoped to an endpoint. Please see the System Model specification for more information on groups.",
 
-    xref: { document: "core", section: "11.2" },
+    xref: "core§11.2",
 
     children: [
         undefined,
         {
-            xref: { document: "core", section: "11.2.4" },
+            xref: "core§11.2.4",
             children: [{ description: "CacheAndSync", details: "The ability to support CacheAndSync security policy and MCSP." }]
         },
         {
             details: "This attribute is a list of GroupKeyMapStruct entries. Each entry associates a logical Group Id with " +
                 "a particular group key set.",
-            xref: { document: "core", section: "11.2.6.1" }
+            xref: "core§11.2.6.1"
         },
 
         {
@@ -47,7 +47,7 @@ GroupKeyManagement.patch({
                 "a RemoveGroup or RemoveAllGroups command causes the removal of a group mapping from its last mapped " +
                 "endpoint, the entire GroupTable entry for that given GroupId shall be removed.",
 
-            xref: { document: "core", section: "11.2.6.2" }
+            xref: "core§11.2.6.2"
         },
 
         {
@@ -55,14 +55,14 @@ GroupKeyManagement.patch({
                 "attribute shall be set to be no less than the required minimum supported groups as specified in " +
                 "Group Limits. The length of the GroupKeyMap and GroupTable list attributes shall NOT exceed the " +
                 "value of the MaxGroupsPerFabric attribute multiplied by the number of supported fabrics.",
-            xref: { document: "core", section: "11.2.6.3" }
+            xref: "core§11.2.6.3"
         },
 
         {
             details: "Indicates the maximum number of group key sets this node supports per fabric. The value of this " +
                 "attribute shall be set according to the minimum number of group key sets to support as specified in " +
                 "Group Limits.",
-            xref: { document: "core", section: "11.2.6.4" }
+            xref: "core§11.2.6.4"
         },
 
         {
@@ -134,7 +134,7 @@ GroupKeyManagement.patch({
                 "\n" +
                 "  • Otherwise, this status code shall be set to FAILURE.",
 
-            xref: { document: "core", section: "11.2.7.1" }
+            xref: "core§11.2.7.1"
         },
 
         {
@@ -150,14 +150,14 @@ GroupKeyManagement.patch({
                 "Otherwise, if the GroupKeySetID does not refer to a Group Key Set associated with the accessing " +
                 "fabric, then this command shall fail with a NOT_FOUND status code.",
 
-            xref: { document: "core", section: "11.2.7.2" }
+            xref: "core§11.2.7.2"
         },
 
         {
             details: "This command shall be generated in response to the KeySetRead command, if a valid Group Key Set was " +
                 "found. It shall contain the configuration of the requested Group Key Set, with the EpochKey0, " +
                 "EpochKey1 and EpochKey2 key contents replaced by null.",
-            xref: { document: "core", section: "11.2.7.3" }
+            xref: "core§11.2.7.3"
         },
 
         {
@@ -180,7 +180,7 @@ GroupKeyManagement.patch({
                 "This command shall send a SUCCESS status code back to the initiator on success, or NOT_FOUND if the " +
                 "GroupKeySetID requested did not exist.",
 
-            xref: { document: "core", section: "11.2.7.4" }
+            xref: "core§11.2.7.4"
         },
 
         {
@@ -193,25 +193,25 @@ GroupKeyManagement.patch({
                 "fabric and generate a KeySetReadAllIndicesResponse command containing the list of GroupKeySetID " +
                 "values from those structs.",
 
-            xref: { document: "core", section: "11.2.7.5" }
+            xref: "core§11.2.7.5"
         },
 
         {
             details: "This command shall be generated in response to KeySetReadAllIndices and it shall contain the list of " +
                 "GroupKeySetID for all Group Key Sets associated with the scoped Fabric.",
-            xref: { document: "core", section: "11.2.7.6" },
+            xref: "core§11.2.7.6",
 
             children: [{
                 details: "This field references the set of group keys that generate operational group keys for use with the " +
                     "accessing fabric." +
                     "\n" +
                     "Each entry in GroupKeySetIDs is a GroupKeySetID field.",
-                xref: { document: "core", section: "11.2.7.6.1" }
+                xref: "core§11.2.7.6.1"
             }]
         },
 
         {
-            xref: { document: "core", section: "11.2.5.1" },
+            xref: "core§11.2.5.1",
             children: [
                 { description: "Message counter synchronization using trust-first" },
                 { description: "Message counter synchronization using cache-and-sync" }
@@ -219,29 +219,29 @@ GroupKeyManagement.patch({
         },
 
         {
-            xref: { document: "core", section: "11.2.5.2" },
+            xref: "core§11.2.5.2",
 
             children: [
                 {
                     description: "Indicates filtering of multicast messages for a specific Group ID",
                     details: "The 16-bit Group Identifier of the Multicast Address shall be the Group ID of the group.",
-                    xref: { document: "core", section: "11.2.5.2.1" }
+                    xref: "core§11.2.5.2.1"
                 },
                 {
                     description: "Indicates not filtering of multicast messages",
                     details: "The 16-bit Group Identifier of the Multicast Address shall be 0xFFFF.",
-                    xref: { document: "core", section: "11.2.5.2.2" }
+                    xref: "core§11.2.5.2.2"
                 }
             ]
         },
 
         {
-            xref: { document: "core", section: "11.2.5.3" },
+            xref: "core§11.2.5.3",
 
             children: [
                 {
                     details: "This field uniquely identifies the group within the scope of the given Fabric.",
-                    xref: { document: "core", section: "11.2.5.3.1" }
+                    xref: "core§11.2.5.3.1"
                 },
 
                 {
@@ -249,19 +249,19 @@ GroupKeyManagement.patch({
                         "group, as specified in Section 4.17.3.5.1, “Group Key Set ID”." +
                         "\n" +
                         "A GroupKeyMapStruct shall NOT accept GroupKeySetID of 0, which is reserved for the IPK.",
-                    xref: { document: "core", section: "11.2.5.3.2" }
+                    xref: "core§11.2.5.3.2"
                 }
             ]
         },
 
         {
-            xref: { document: "core", section: "11.2.5.4" },
+            xref: "core§11.2.5.4",
 
             children: [
                 {
                     details: "This field shall provide the fabric-unique index for the associated group key set, as specified in " +
                         "Section 4.17.3.5.1, “Group Key Set ID”.",
-                    xref: { document: "core", section: "11.2.5.4.1" }
+                    xref: "core§11.2.5.4.1"
                 },
 
                 {
@@ -269,46 +269,46 @@ GroupKeyManagement.patch({
                         "\n" +
                         "When CacheAndSync is not supported in the FeatureMap of this cluster, any action attempting to set " +
                         "CacheAndSync in the GroupKeySecurityPolicy field shall fail with an INVALID_COMMAND error.",
-                    xref: { document: "core", section: "11.2.5.4.2" }
+                    xref: "core§11.2.5.4.2"
                 },
 
                 {
                     details: "This field, if not null, shall be the root credential used in the derivation of an operational group " +
                         "key for epoch slot 0 of the given group key set. If EpochKey0 is not null, EpochStartTime0 shall NOT " +
                         "be null.",
-                    xref: { document: "core", section: "11.2.5.4.3" }
+                    xref: "core§11.2.5.4.3"
                 },
 
                 {
                     details: "This field, if not null, shall define when EpochKey0 becomes valid as specified by Section 4.17.3, " +
                         "“Epoch Keys”. Units are absolute UTC time in microseconds encoded using the epoch-us representation.",
-                    xref: { document: "core", section: "11.2.5.4.4" }
+                    xref: "core§11.2.5.4.4"
                 },
 
                 {
                     details: "This field, if not null, shall be the root credential used in the derivation of an operational group " +
                         "key for epoch slot 1 of the given group key set. If EpochKey1 is not null, EpochStartTime1 shall NOT " +
                         "be null.",
-                    xref: { document: "core", section: "11.2.5.4.5" }
+                    xref: "core§11.2.5.4.5"
                 },
 
                 {
                     details: "This field, if not null, shall define when EpochKey1 becomes valid as specified by Section 4.17.3, " +
                         "“Epoch Keys”. Units are absolute UTC time in microseconds encoded using the epoch-us representation.",
-                    xref: { document: "core", section: "11.2.5.4.6" }
+                    xref: "core§11.2.5.4.6"
                 },
 
                 {
                     details: "This field, if not null, shall be the root credential used in the derivation of an operational group " +
                         "key for epoch slot 2 of the given group key set. If EpochKey2 is not null, EpochStartTime2 shall NOT " +
                         "be null.",
-                    xref: { document: "core", section: "11.2.5.4.7" }
+                    xref: "core§11.2.5.4.7"
                 },
 
                 {
                     details: "This field, if not null, shall define when EpochKey2 becomes valid as specified by Section 4.17.3, " +
                         "“Epoch Keys”. Units are absolute UTC time in microseconds encoded using the epoch-us representation.",
-                    xref: { document: "core", section: "11.2.5.4.8" }
+                    xref: "core§11.2.5.4.8"
                 },
 
                 {
@@ -326,28 +326,28 @@ GroupKeyManagement.patch({
                         "Support for GroupKeyMulticastPolicy is provisional. Correct default behavior is that implied by " +
                         "value PerGroupID.",
 
-                    xref: { document: "core", section: "11.2.5.4.9" }
+                    xref: "core§11.2.5.4.9"
                 }
             ]
         },
 
         {
-            xref: { document: "core", section: "11.2.5.5" },
+            xref: "core§11.2.5.5",
 
             children: [
                 {
                     details: "This field uniquely identifies the group within the scope of the given Fabric.",
-                    xref: { document: "core", section: "11.2.5.5.1" }
+                    xref: "core§11.2.5.5.1"
                 },
                 {
                     details: "This field provides the list of Endpoint IDs on the Node to which messages to this group shall be " +
                         "forwarded.",
-                    xref: { document: "core", section: "11.2.5.5.2" }
+                    xref: "core§11.2.5.5.2"
                 },
                 {
                     details: "This field provides a name for the group. This field shall contain the last GroupName written for a " +
                         "given GroupId on any Endpoint via the Groups cluster.",
-                    xref: { document: "core", section: "11.2.5.5.3" }
+                    xref: "core§11.2.5.5.3"
                 }
             ]
         }

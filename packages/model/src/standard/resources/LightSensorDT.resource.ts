@@ -12,10 +12,6 @@ LightSensorDt.patch({
     classification: "simple",
     details: "A Light Sensor device is a measurement and sensing device that is capable of measuring and reporting " +
         "the intensity of light (illuminance) to which the sensor is being subjected.",
-    xref: { document: "device", section: "7.2" },
-    children: [
-        undefined,
-        { xref: { document: "device", section: "7.2.4" } },
-        { xref: { document: "device", section: "7.2.4" } }
-    ]
+    xref: "device§7.2",
+    children: [undefined, { xref: "device§7.2.4" }, { xref: "device§7.2.4" }]
 });

@@ -31,7 +31,7 @@ export class CrossReference implements Specification.CrossReference {
             return xref;
         }
 
-        const key = xref.toString();
+        const key = typeof xref === "string" ? xref : `${xref.document}§${xref.section}`;
         const canonical = this.instances[key];
         if (canonical) {
             return canonical;

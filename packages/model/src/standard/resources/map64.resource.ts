@@ -8,4 +8,4 @@
 
 import { map64 } from "#index.js";
 
-map64.patch({ description: "64-bit bitmap", xref: { document: "core", section: "7.19.1" } });
+map64.patch({ description: "64-bit bitmap", xref: "core§7.19.1" });

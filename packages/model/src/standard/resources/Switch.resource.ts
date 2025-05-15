@@ -24,53 +24,53 @@ Switch.patch({
         "interactions, and can perform actions based on this, for example by sending commands to perform an " +
         "action such as controlling a light or a window shade.",
 
-    xref: { document: "cluster", section: "1.13" },
+    xref: "cluster§1.13",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "1.13.4" },
+            xref: "cluster§1.13.4",
 
             children: [
                 {
                     description: "LatchingSwitch",
                     details: "This feature flag is for a switch that maintains its position after being pressed (or turned).",
-                    xref: { document: "cluster", section: "1.13.4.1" }
+                    xref: "cluster§1.13.4.1"
                 },
 
                 {
                     description: "MomentarySwitch",
                     details: "This feature flag is for a switch that does not maintain its position after being pressed (or " +
                         "turned). After releasing, it goes back to its idle position.",
-                    xref: { document: "cluster", section: "1.13.4.2" }
+                    xref: "cluster§1.13.4.2"
                 },
 
                 {
                     description: "MomentarySwitchRelease",
                     details: "This feature flag is for a momentary switch that can distinguish and report release events.",
-                    xref: { document: "cluster", section: "1.13.4.3" }
+                    xref: "cluster§1.13.4.3"
                 },
 
                 {
                     description: "MomentarySwitchLongPress",
                     details: "This feature flag is for a momentary switch that can distinguish and report long presses from short " +
                         "presses.",
-                    xref: { document: "cluster", section: "1.13.4.4" }
+                    xref: "cluster§1.13.4.4"
                 },
 
                 {
                     description: "MomentarySwitchMultiPress",
                     details: "This feature flag is for a momentary switch that can distinguish and report double press and " +
                         "potentially multiple presses with more events, such as triple press, etc.",
-                    xref: { document: "cluster", section: "1.13.4.5" }
+                    xref: "cluster§1.13.4.5"
                 },
 
                 {
                     description: "ActionSwitch",
                     details: "This feature flag indicates simplified handling of events for multi-press-capable switches. See " +
                         "Multi Press Details.",
-                    xref: { document: "cluster", section: "1.13.4.6" }
+                    xref: "cluster§1.13.4.6"
                 }
             ]
         },
@@ -78,7 +78,7 @@ Switch.patch({
         {
             details: "Indicates the maximum number of positions the switch has. Any kind of switch has a minimum of 2 " +
                 "positions. Also see Multi Position Details for the case NumberOfPositions>2.",
-            xref: { document: "cluster", section: "1.13.5.1" }
+            xref: "cluster§1.13.5.1"
         },
 
         {
@@ -86,7 +86,7 @@ Switch.patch({
                 "\n" +
                 "CurrentPosition value 0 shall be assigned to the default position of the switch: for example the " +
                 "\"open\" state of a rocker switch, or the \"idle\" state of a push button switch.",
-            xref: { document: "cluster", section: "1.13.5.2" }
+            xref: "cluster§1.13.5.2"
         },
 
         {
@@ -113,25 +113,25 @@ Switch.patch({
                 "trigger special behavior such as factory reset for which generating events towards the client is not " +
                 "appropriate).",
 
-            xref: { document: "cluster", section: "1.13.5.3" }
+            xref: "cluster§1.13.5.3"
         },
 
         {
             details: "This event shall be generated, when the latching switch is moved to a new position. It may have been " +
                 "delayed by debouncing within the switch.",
-            xref: { document: "cluster", section: "1.13.6.1" },
+            xref: "cluster§1.13.6.1",
             children: [{
                 details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. after the move.",
-                xref: { document: "cluster", section: "1.13.6.1.1" }
+                xref: "cluster§1.13.6.1.1"
             }]
         },
 
         {
             details: "This event shall be generated, when the momentary switch starts to be pressed (after debouncing).",
-            xref: { document: "cluster", section: "1.13.6.2" },
+            xref: "cluster§1.13.6.2",
             children: [{
                 details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.",
-                xref: { document: "cluster", section: "1.13.6.2.1" }
+                xref: "cluster§1.13.6.2.1"
             }]
         },
 
@@ -169,10 +169,10 @@ Switch.patch({
                 "The rationale for this constraint is the ambiguity of interpretation of events when mixing long " +
                 "presses and multi-press events.",
 
-            xref: { document: "cluster", section: "1.13.6.3" },
+            xref: "cluster§1.13.6.3",
             children: [{
                 details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.",
-                xref: { document: "cluster", section: "1.13.6.3.1" }
+                xref: "cluster§1.13.6.3.1"
             }]
         },
 
@@ -194,11 +194,11 @@ Switch.patch({
                 "\n" +
                 "  • Also see Section 1.13.7, “Sequence of generated events”.",
 
-            xref: { document: "cluster", section: "1.13.6.4" },
+            xref: "cluster§1.13.6.4",
             children: [{
                 details: "This field shall indicate the previous value of the CurrentPosition attribute, i.e. just prior to " +
                     "release.",
-                xref: { document: "cluster", section: "1.13.6.4.1" }
+                xref: "cluster§1.13.6.4.1"
             }]
         },
 
@@ -207,11 +207,11 @@ Switch.patch({
                 "after having been pressed for a long time, i.e. this event shall be generated when the switch is " +
                 "released if a LongPress event has been generated since the previous InitialPress event. Also see " +
                 "Section 1.13.7, “Sequence of generated events”.",
-            xref: { document: "cluster", section: "1.13.6.5" },
+            xref: "cluster§1.13.6.5",
             children: [{
                 details: "This field shall indicate the previous value of the CurrentPosition attribute, i.e. just prior to " +
                     "release.",
-                xref: { document: "cluster", section: "1.13.6.5.1" }
+                xref: "cluster§1.13.6.5.1"
             }]
         },
 
@@ -221,12 +221,12 @@ Switch.patch({
                 "\n" +
                 "This event shall be generated to indicate how many times the momentary switch has been pressed in a " +
                 "multi-press sequence, during that sequence. See Multi Press Details below.",
-            xref: { document: "cluster", section: "1.13.6.6" },
+            xref: "cluster§1.13.6.6",
 
             children: [
                 {
                     details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.",
-                    xref: { document: "cluster", section: "1.13.6.6.1" }
+                    xref: "cluster§1.13.6.6.1"
                 },
 
                 {
@@ -238,7 +238,7 @@ Switch.patch({
                         "\n" +
                         "  • a value of N when the Nth press of a multi-press sequence has been detected.",
 
-                    xref: { document: "cluster", section: "1.13.6.6.2" }
+                    xref: "cluster§1.13.6.6.2"
                 }
             ]
         },
@@ -276,7 +276,7 @@ Switch.patch({
                 "TotalNumberOfPressesCounted field taken into account since for values from 1 to MultiPressMax, the " +
                 "user action that led to the event was different depending on the count.",
 
-            xref: { document: "cluster", section: "1.13.6.7" }
+            xref: "cluster§1.13.6.7"
         }
     ]
 });

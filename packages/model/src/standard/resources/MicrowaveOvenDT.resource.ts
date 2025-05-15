@@ -14,14 +14,14 @@ MicrowaveOvenDt.patch({
         "\n" +
         "A Microwave Oven is a device with the primary function of heating foods and beverages using a " +
         "magnetron.",
-    xref: { document: "device", section: "13.11" },
+    xref: "device§13.11",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "13.11.6" } },
-        { xref: { document: "device", section: "13.11.6" } },
-        { xref: { document: "device", section: "13.11.6" } },
-        { xref: { document: "device", section: "13.11.6" } },
-        { xref: { document: "device", section: "13.11.6" } }
+        { xref: "device§13.11.6" },
+        { xref: "device§13.11.6" },
+        { xref: "device§13.11.6" },
+        { xref: "device§13.11.6" },
+        { xref: "device§13.11.6" }
     ]
 });

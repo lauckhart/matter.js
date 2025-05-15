@@ -52,7 +52,7 @@ ContentAppObserver.patch({
         "Content App it does not recognize. A Content App SHOULD ignore the Data field values in responses " +
         "when the EncodingHint value is blank or not recognized.",
 
-    xref: { document: "cluster", section: "6.12" },
+    xref: "cluster§6.12",
 
     children: [
         undefined,
@@ -63,42 +63,39 @@ ContentAppObserver.patch({
                 "the Observer and use this to determine the Message encoding." +
                 "\n" +
                 "This command returns a ContentAppMessage Response.",
-            xref: { document: "cluster", section: "6.12.5.1" },
+            xref: "cluster§6.12.5.1",
 
             children: [
-                {
-                    details: "This field shall indicate content app-specific data.",
-                    xref: { document: "cluster", section: "6.12.5.1.1" }
-                },
+                { details: "This field shall indicate content app-specific data.", xref: "cluster§6.12.5.1.1" },
                 {
                     details: "This optional field shall indicate a content app-specific hint to the encoding of the data.",
-                    xref: { document: "cluster", section: "6.12.5.1.2" }
+                    xref: "cluster§6.12.5.1.2"
                 }
             ]
         },
 
         {
             details: "This command shall be generated in response to ContentAppMessage command.",
-            xref: { document: "cluster", section: "6.12.5.2" },
+            xref: "cluster§6.12.5.2",
 
             children: [
                 {
                     details: "This field shall indicate the status of the command which resulted in this response.",
-                    xref: { document: "cluster", section: "6.12.5.2.1" }
+                    xref: "cluster§6.12.5.2.1"
                 },
                 {
                     details: "This optional field shall indicate content app-specific data.",
-                    xref: { document: "cluster", section: "6.12.5.2.2" }
+                    xref: "cluster§6.12.5.2.2"
                 },
                 {
                     details: "This optional field shall indicate a content app-specific hint to the encoding of the data.",
-                    xref: { document: "cluster", section: "6.12.5.2.3" }
+                    xref: "cluster§6.12.5.2.3"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "6.12.4.1" },
+            xref: "cluster§6.12.4.1",
             children: [
                 { description: "Command succeeded" },
                 { description: "Data field in command was not understood by the Observer" }

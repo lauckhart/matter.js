@@ -10,7 +10,7 @@ import { OtaSoftwareUpdateRequestor } from "#index.js";
 
 OtaSoftwareUpdateRequestor.patch({
     classification: "node", pics: "OTAR",
-    xref: { document: "core", section: "11.20.7" },
+    xref: "core§11.20.7",
 
     children: [
         undefined,
@@ -26,7 +26,7 @@ OtaSoftwareUpdateRequestor.patch({
                 "Provider Locations obtained using the AnnounceOTAProvider command shall NOT overwrite values set in " +
                 "the DefaultOTAProviders attribute.",
 
-            xref: { document: "core", section: "11.20.7.5.1" }
+            xref: "core§11.20.7.5.1"
         },
 
         {
@@ -34,7 +34,7 @@ OtaSoftwareUpdateRequestor.patch({
                 "shall be set to False in case of any condition preventing update being possible, such as " +
                 "insufficient capacity of an internal battery. This field is merely informational for diagnostics " +
                 "purposes and shall NOT affect the responses provided by an OTA Provider to an OTA Requestor.",
-            xref: { document: "core", section: "11.20.7.5.2" }
+            xref: "core§11.20.7.5.2"
         },
 
         {
@@ -42,7 +42,7 @@ OtaSoftwareUpdateRequestor.patch({
                 "updates. See Section 11.20.7.4.2, “UpdateStateEnum Type” for possible values." +
                 "\n" +
                 "This field SHOULD be updated in a timely manner whenever OTA Requestor internal state updates.",
-            xref: { document: "core", section: "11.20.7.5.3" }
+            xref: "core§11.20.7.5.3"
         },
 
         {
@@ -57,35 +57,35 @@ OtaSoftwareUpdateRequestor.patch({
                 "This field may be updated infrequently. Some care SHOULD be taken by Nodes to avoid over- reporting " +
                 "progress when this attribute is part of a subscription.",
 
-            xref: { document: "core", section: "11.20.7.5.4" }
+            xref: "core§11.20.7.5.4"
         },
 
         {
             details: "This event shall be generated when a change of the UpdateState attribute occurs due to an OTA " +
                 "Requestor moving through the states necessary to query for updates.",
-            xref: { document: "core", section: "11.20.7.7.1" },
+            xref: "core§11.20.7.7.1",
 
             children: [
                 {
                     details: "This field shall be set to the state that preceded the transition causing this event to be " +
                         "generated, if such a state existed. If no previous state exists, the value shall be Unknown.",
-                    xref: { document: "core", section: "11.20.7.7.1.1" }
+                    xref: "core§11.20.7.7.1.1"
                 },
                 {
                     details: "This field shall be set to the state now in effect through the transition causing this event to be " +
                         "generated.",
-                    xref: { document: "core", section: "11.20.7.7.1.2" }
+                    xref: "core§11.20.7.7.1.2"
                 },
                 {
                     details: "This field shall be set to the reason why this event was generated.",
-                    xref: { document: "core", section: "11.20.7.7.1.3" }
+                    xref: "core§11.20.7.7.1.3"
                 },
 
                 {
                     details: "This field shall be set to the target SoftwareVersion which is the subject of the operation, " +
                         "whenever the NewState is Downloading, Applying or RollingBack. Otherwise TargetSoftwareVersion shall " +
                         "be null.",
-                    xref: { document: "core", section: "11.20.7.7.1.4" }
+                    xref: "core§11.20.7.7.1.4"
                 }
             ]
         },
@@ -94,13 +94,13 @@ OtaSoftwareUpdateRequestor.patch({
             details: "This event shall be generated whenever a new version starts executing after being applied due to a " +
                 "software update. This event SHOULD be generated even if a software update was done using means " +
                 "outside of this cluster.",
-            xref: { document: "core", section: "11.20.7.7.2" },
+            xref: "core§11.20.7.7.2",
 
             children: [
                 {
                     details: "This field shall be set to the same value as the one available in the Software Version attribute of " +
                         "the Basic Information Cluster for the newly executing version.",
-                    xref: { document: "core", section: "11.20.7.7.2.1" }
+                    xref: "core§11.20.7.7.2.1"
                 },
 
                 {
@@ -108,32 +108,32 @@ OtaSoftwareUpdateRequestor.patch({
                         "Basic Information Cluster. This can be used to detect a product updating its definition due to a " +
                         "large-scale functional update that may impact aspects of the product reflected in the DeviceModel " +
                         "schema of the Distributed Compliance Ledger.",
-                    xref: { document: "core", section: "11.20.7.7.2.2" }
+                    xref: "core§11.20.7.7.2.2"
                 }
             ]
         },
 
         {
             details: "This event shall be generated whenever an error occurs during OTA Requestor download operation.",
-            xref: { document: "core", section: "11.20.7.7.3" },
+            xref: "core§11.20.7.7.3",
 
             children: [
                 {
                     details: "This field shall be set to the value of the SoftwareVersion being downloaded, matching the " +
                         "SoftwareVersion field of the QueryImageResponse that caused the failing download to take place.",
-                    xref: { document: "core", section: "11.20.7.7.3.1" }
+                    xref: "core§11.20.7.7.3.1"
                 },
                 {
                     details: "This field shall be set to the number of bytes that have been downloaded during the failing transfer " +
                         "that caused this event to be generated.",
-                    xref: { document: "core", section: "11.20.7.7.3.2" }
+                    xref: "core§11.20.7.7.3.2"
                 },
 
                 {
                     details: "This field shall be set to the nearest integer percent value reflecting how far within the transfer " +
                         "the failure occurred during the failing transfer that caused this event to be generated, unless the " +
                         "total length of the transfer is unknown, in which case it shall be null.",
-                    xref: { document: "core", section: "11.20.7.7.3.3" }
+                    xref: "core§11.20.7.7.3.3"
                 },
 
                 {
@@ -141,7 +141,7 @@ OtaSoftwareUpdateRequestor.patch({
                         "temporal/functional proximity to the failure that caused this event to be generated. Otherwise, it " +
                         "shall be null. This event field may be used for debugging purposes and no uniform definition exists " +
                         "related to its meaning.",
-                    xref: { document: "core", section: "11.20.7.7.3.4" }
+                    xref: "core§11.20.7.7.3.4"
                 }
             ]
         },
@@ -152,22 +152,22 @@ OtaSoftwareUpdateRequestor.patch({
                 "This command shall be scoped to the accessing fabric." +
                 "\n" +
                 "If the accessing fabric index is 0, this command shall fail with an UNSUPPORTED_ACCESS status code.",
-            xref: { document: "core", section: "11.20.7.6.1" },
+            xref: "core§11.20.7.6.1",
 
             children: [
                 {
                     details: "This field shall contain the Node ID of a Node implementing the OTA Provider cluster server, on the " +
                         "accessing fabric.",
-                    xref: { document: "core", section: "11.20.7.6.1.1" }
+                    xref: "core§11.20.7.6.1.1"
                 },
                 {
                     details: "This field shall contain the assigned Vendor ID of the Node invoking this command, as it would " +
                         "appear in that Node’s Basic Information Cluster VendorID attribute.",
-                    xref: { document: "core", section: "11.20.7.6.1.2" }
+                    xref: "core§11.20.7.6.1.2"
                 },
                 {
                     details: "This field shall contain a value expressing the reason for the announcement.",
-                    xref: { document: "core", section: "11.20.7.6.1.3" }
+                    xref: "core§11.20.7.6.1.3"
                 },
 
                 {
@@ -180,7 +180,7 @@ OtaSoftwareUpdateRequestor.patch({
                         "This field SHOULD only be included if the sending OTA Provider has knowledge that some recipient can " +
                         "make use of it.",
 
-                    xref: { document: "core", section: "11.20.7.6.1.4" }
+                    xref: "core§11.20.7.6.1.4"
                 },
 
                 {
@@ -225,20 +225,20 @@ OtaSoftwareUpdateRequestor.patch({
                         "but can be useful in environments such as field trials or integration test environments to hint at " +
                         "additional capabilities which OTA Requestors may use in a particular Vendor-specific context.",
 
-                    xref: { document: "core", section: "11.20.7.6.1.5" }
+                    xref: "core§11.20.7.6.1.5"
                 }
             ]
         },
 
         {
-            xref: { document: "core", section: "11.20.7.4.1" },
+            xref: "core§11.20.7.4.1",
 
             children: [
                 {
                     description: "An OTA Provider is announcing its presence.",
                     details: "An OTA Provider is announcing its presence, but there is no implication that an OTA Requestor would " +
                         "have a new Software Image available if it queried immediately.",
-                    xref: { document: "core", section: "11.20.7.4.1.1" }
+                    xref: "core§11.20.7.4.1.1"
                 },
 
                 {
@@ -247,7 +247,7 @@ OtaSoftwareUpdateRequestor.patch({
                         "Image may be available. The details may only be obtained by executing a OTA Software Update Query " +
                         "procedure. A receiving OTA Requestor SHOULD only query the indicated OTA Provider at the " +
                         "ProviderLocation at its next upcoming OTA Provider query.",
-                    xref: { document: "core", section: "11.20.7.4.1.2" }
+                    xref: "core§11.20.7.4.1.2"
                 },
 
                 {
@@ -261,61 +261,61 @@ OtaSoftwareUpdateRequestor.patch({
                         "available, such as an important security update, or just after initial commissioning of a device, to " +
                         "assist OTA Requestors in more rapidly obtaining updated software.",
 
-                    xref: { document: "core", section: "11.20.7.4.1.3" }
+                    xref: "core§11.20.7.4.1.3"
                 }
             ]
         },
 
         {
-            xref: { document: "core", section: "11.20.7.4.2" },
+            xref: "core§11.20.7.4.2",
 
             children: [
                 {
                     description: "Current state is not yet determined.",
                     details: "This value shall indicate that the current state is not yet determined. Nodes SHOULD attempt a " +
                         "better state reporting.",
-                    xref: { document: "core", section: "11.20.7.4.2.1" }
+                    xref: "core§11.20.7.4.2.1"
                 },
 
                 {
                     description: "Indicate a Node not yet in the process of software update.",
                     details: "This value shall indicate a Node not yet in the process of software update, for example because it " +
                         "is awaiting the moment when a query will be made.",
-                    xref: { document: "core", section: "11.20.7.4.2.2" }
+                    xref: "core§11.20.7.4.2.2"
                 },
 
                 {
                     description: "Indicate a Node in the process of querying an OTA Provider.",
                     details: "This value shall indicate a Node in the process of querying an OTA Provider with QueryImage command, " +
                         "including during the process of awaiting a response to that command.",
-                    xref: { document: "core", section: "11.20.7.4.2.3" }
+                    xref: "core§11.20.7.4.2.3"
                 },
 
                 {
                     description: "Indicate a Node waiting after a Busy response.",
                     details: "This value shall indicate a Node waiting because it received a prior QueryImageResponse with a " +
                         "Status field indicating Busy.",
-                    xref: { document: "core", section: "11.20.7.4.2.4" }
+                    xref: "core§11.20.7.4.2.4"
                 },
 
                 {
                     description: "Indicate a Node currently in the process of downloading a software update.",
                     details: "This value shall indicate a Node currently in the process of downloading a software update.",
-                    xref: { document: "core", section: "11.20.7.4.2.5" }
+                    xref: "core§11.20.7.4.2.5"
                 },
 
                 {
                     description: "Indicate a Node currently in the process of verifying and applying a software update.",
                     details: "This value shall indicate a Node currently in the process of verifying and applying a software " +
                         "update.",
-                    xref: { document: "core", section: "11.20.7.4.2.6" }
+                    xref: "core§11.20.7.4.2.6"
                 },
 
                 {
                     description: "Indicate a Node waiting caused by AwaitNextAction response.",
                     details: "This value shall indicate a Node waiting because it received a prior ApplyUpdateResponse with an " +
                         "Action field set to AwaitNextAction.",
-                    xref: { document: "core", section: "11.20.7.4.2.7" }
+                    xref: "core§11.20.7.4.2.7"
                 },
 
                 {
@@ -324,7 +324,7 @@ OtaSoftwareUpdateRequestor.patch({
                         "version that was applied, but that could not remain in force, for reasons such as invalid data " +
                         "detected on boot, or significant runtime issues such as reboot loops. Eventually, the next state " +
                         "seen SHOULD be Unknown or Idle.",
-                    xref: { document: "core", section: "11.20.7.4.2.8" }
+                    xref: "core§11.20.7.4.2.8"
                 },
 
                 { description: "Indicate a Node is capable of user consent." }
@@ -332,50 +332,50 @@ OtaSoftwareUpdateRequestor.patch({
         },
 
         {
-            xref: { document: "core", section: "11.20.7.4.3" },
+            xref: "core§11.20.7.4.3",
 
             children: [
                 {
                     description: "The reason for a state change is unknown.",
                     details: "This value shall indicate that the reason for a state change is unknown.",
-                    xref: { document: "core", section: "11.20.7.4.3.1" }
+                    xref: "core§11.20.7.4.3.1"
                 },
                 {
                     description: "The reason for a state change is the success of a prior operation.",
                     details: "This value shall indicate that the reason for a state change is the success of a prior operation.",
-                    xref: { document: "core", section: "11.20.7.4.3.2" }
+                    xref: "core§11.20.7.4.3.2"
                 },
                 {
                     description: "The reason for a state change is the failure of a prior operation.",
                     details: "This value shall indicate that the reason for a state change is the failure of a prior operation.",
-                    xref: { document: "core", section: "11.20.7.4.3.3" }
+                    xref: "core§11.20.7.4.3.3"
                 },
 
                 {
                     description: "The reason for a state change is a time-out.",
                     details: "This value shall indicate that the reason for a state change is a time-out condition as determined " +
                         "by the OTA Requestor.",
-                    xref: { document: "core", section: "11.20.7.4.3.4" }
+                    xref: "core§11.20.7.4.3.4"
                 },
 
                 {
                     description: "The reason for a state change is a request by the OTA Provider to wait.",
                     details: "This value shall indicate that the reason for a state change is a request by the OTA Provider to " +
                         "await for a delay.",
-                    xref: { document: "core", section: "11.20.7.4.3.5" }
+                    xref: "core§11.20.7.4.3.5"
                 }
             ]
         },
 
         {
             details: "This structure encodes a fabric-scoped location of an OTA provider on a given fabric.",
-            xref: { document: "core", section: "11.20.7.4.4" },
+            xref: "core§11.20.7.4.4",
 
             children: [
                 {
                     details: "This field shall contain the Node ID of the OTA Provider to contact within the Fabric identified by " +
                         "the FabricIndex.",
-                    xref: { document: "core", section: "11.20.7.4.4.1" }
+                    xref: "core§11.20.7.4.4.1"
                 },
 
                 {
@@ -383,7 +383,7 @@ OtaSoftwareUpdateRequestor.patch({
                         "Update Provider cluster server on the ProviderNodeID. This is provided to avoid having to do " +
                         "discovery of the location of that endpoint by walking over all endpoints and checking their " +
                         "Descriptor Cluster.",
-                    xref: { document: "core", section: "11.20.7.4.4.2" }
+                    xref: "core§11.20.7.4.4.2"
                 }
             ]
         }

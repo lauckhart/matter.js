@@ -8,8 +8,4 @@
 
 import { fabricId } from "#index.js";
 
-fabricId.patch({
-    description: "Fabric ID",
-    details: "A value to identify a fabric.",
-    xref: { document: "core", section: "7.19.2.19" }
-});
+fabricId.patch({ description: "Fabric ID", details: "A value to identify a fabric.", xref: "core§7.19.2.19" });

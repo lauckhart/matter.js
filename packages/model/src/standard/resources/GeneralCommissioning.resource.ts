@@ -15,12 +15,12 @@ GeneralCommissioning.patch({
         "This cluster also represents responsibilities related to commissioning that don’t well fit other " +
         "commissioning clusters, like Section 11.9, “Network Commissioning Cluster”. It also hosts " +
         "functionalities those other clusters may depend on.",
-    xref: { document: "core", section: "11.10" },
+    xref: "core§11.10",
 
     children: [
         undefined,
         {
-            xref: { document: "core", section: "11.10.4" },
+            xref: "core§11.10.4",
             children: [{ description: "TermsAndConditions", details: "Supports Terms & Conditions acknowledgement" }]
         },
 
@@ -40,13 +40,13 @@ GeneralCommissioning.patch({
                 "the functioning of any cluster, other than being set as a side-effect of commands where this " +
                 "behavior is described.",
 
-            xref: { document: "core", section: "11.10.6.1" }
+            xref: "core§11.10.6.1"
         },
 
         {
             details: "This attribute shall describe critical parameters needed at the beginning of commissioning flow. See " +
                 "BasicCommissioningInfo for more information.",
-            xref: { document: "core", section: "11.10.6.2" }
+            xref: "core§11.10.6.2"
         },
 
         {
@@ -54,7 +54,7 @@ GeneralCommissioning.patch({
                 "\n" +
                 "Note that the country code is part of Basic Information Cluster and therefore NOT listed on the " +
                 "RegulatoryConfig attribute.",
-            xref: { document: "core", section: "11.10.6.3" }
+            xref: "core§11.10.6.3"
         },
 
         {
@@ -72,14 +72,14 @@ GeneralCommissioning.patch({
                 "This means devices always have a safe default value, and Commissioners which choose to implement " +
                 "smarter handling can.",
 
-            xref: { document: "core", section: "11.10.6.4" }
+            xref: "core§11.10.6.4"
         },
 
         {
             details: "Indicates whether this device supports \"concurrent connection flow\" commissioning mode (see Section " +
                 "5.5, “Commissioning Flows”). If false, the device only supports \"non-concurrent connection flow\" " +
                 "mode.",
-            xref: { document: "core", section: "11.10.6.5" }
+            xref: "core§11.10.6.5"
         },
 
         {
@@ -91,7 +91,7 @@ GeneralCommissioning.patch({
                 "that this attribute is set to a value which is greater than or equal to TCMinRequiredVersion before " +
                 "returning the user back to the originating Commissioner (see Enhanced Setup Flow).",
 
-            xref: { document: "core", section: "11.10.6.6" }
+            xref: "core§11.10.6.6"
         },
 
         {
@@ -102,7 +102,7 @@ GeneralCommissioning.patch({
                 "TCMinRequiredVersion, then the device shall update TCAcknowledgementsRequired to True so that an " +
                 "administrator can detect that a newer version of the texts needs to be presented to the user.",
 
-            xref: { document: "core", section: "11.10.6.7" }
+            xref: "core§11.10.6.7"
         },
 
         {
@@ -117,7 +117,7 @@ GeneralCommissioning.patch({
                 "updated with the latest responses. This may happen in response to updated terms that were presented " +
                 "to the user. On a factory reset this field shall be reset with all bits set to 0.",
 
-            xref: { document: "core", section: "11.10.6.8" }
+            xref: "core§11.10.6.8"
         },
 
         {
@@ -137,7 +137,7 @@ GeneralCommissioning.patch({
                 "that this attribute is set to False before returning the user back to the original Commissioner (see " +
                 "Enhanced Setup Flow).",
 
-            xref: { document: "core", section: "11.10.6.9" }
+            xref: "core§11.10.6.9"
         },
 
         {
@@ -146,7 +146,7 @@ GeneralCommissioning.patch({
                 "Terms and Conditions”." +
                 "\n" +
                 "A null value indicates that there is no pending deadline for updated TC acceptance.",
-            xref: { document: "core", section: "11.10.6.10" }
+            xref: "core§11.10.6.10"
         },
 
         {
@@ -276,21 +276,21 @@ GeneralCommissioning.patch({
                 "  10. Optionally: if no factory-reset resulted from the previous steps, it is recommended that the " +
                 "      Node rollback the state of all non fabric-scoped data present in the Fail-Safe context.",
 
-            xref: { document: "core", section: "11.10.7.2" }
+            xref: "core§11.10.7.2"
         },
 
         {
-            xref: { document: "core", section: "11.10.7.3" },
+            xref: "core§11.10.7.3",
 
             children: [
                 {
                     details: "This field shall contain the result of the operation, based on the behavior specified in the " +
                         "functional description of the ArmFailSafe command.",
-                    xref: { document: "core", section: "11.10.7.3.1" }
+                    xref: "core§11.10.7.3.1"
                 },
                 {
                     details: "See Section 11.10.7.1, “Common fields in General Commissioning cluster responses”.",
-                    xref: { document: "core", section: "11.10.7.3.2" }
+                    xref: "core§11.10.7.3.2"
                 }
             ]
         },
@@ -328,21 +328,21 @@ GeneralCommissioning.patch({
                 "command, when SetRegulatoryConfigResponse has the ErrorCode field set to OK. If the command fails, " +
                 "the Breadcrumb attribute shall be left unchanged.",
 
-            xref: { document: "core", section: "11.10.7.4" }
+            xref: "core§11.10.7.4"
         },
 
         {
-            xref: { document: "core", section: "11.10.7.5" },
+            xref: "core§11.10.7.5",
 
             children: [
                 {
                     details: "This field shall contain the result of the operation, based on the behavior specified in the " +
                         "functional description of the SetRegulatoryConfig command.",
-                    xref: { document: "core", section: "11.10.7.5.1" }
+                    xref: "core§11.10.7.5.1"
                 },
                 {
                     details: "See Section 11.10.7.1, “Common fields in General Commissioning cluster responses”.",
-                    xref: { document: "core", section: "11.10.7.5.2" }
+                    xref: "core§11.10.7.5.2"
                 }
             ]
         },
@@ -410,21 +410,21 @@ GeneralCommissioning.patch({
                 "expect any previously established PASE session to still be usable, due to the server having cleared " +
                 "such sessions.",
 
-            xref: { document: "core", section: "11.10.7.6" }
+            xref: "core§11.10.7.6"
         },
 
         {
-            xref: { document: "core", section: "11.10.7.7" },
+            xref: "core§11.10.7.7",
 
             children: [
                 {
                     details: "This field shall contain the result of the operation, based on the behavior specified in the " +
                         "functional description of the CommissioningComplete command.",
-                    xref: { document: "core", section: "11.10.7.7.1" }
+                    xref: "core§11.10.7.7.1"
                 },
                 {
                     details: "See Section 11.10.7.1, “Common fields in General Commissioning cluster responses”.",
-                    xref: { document: "core", section: "11.10.7.7.2" }
+                    xref: "core§11.10.7.7.2"
                 }
             ]
         },
@@ -432,13 +432,13 @@ GeneralCommissioning.patch({
         {
             details: "This command sets the user acknowledgements received in the Enhanced Setup Flow Terms & Conditions " +
                 "into the node.",
-            xref: { document: "core", section: "11.10.7.8" },
+            xref: "core§11.10.7.8",
 
             children: [
                 {
                     details: "This field shall contain the version of the Enhanced Setup Flow Terms & Conditions that were " +
                         "presented to the user.",
-                    xref: { document: "core", section: "11.10.7.8.1" }
+                    xref: "core§11.10.7.8.1"
                 },
 
                 {
@@ -466,24 +466,24 @@ GeneralCommissioning.patch({
                         "indicates that not all required terms were accepted by the user, then the ErrorCode of " +
                         "RequiredTCNotAccepted shall be returned and TCAcknowledgements shall remain unchanged.",
 
-                    xref: { document: "core", section: "11.10.7.8.2" }
+                    xref: "core§11.10.7.8.2"
                 }
             ]
         },
 
         {
             details: "This command is used to convey the result from SetTCAcknowledgements.",
-            xref: { document: "core", section: "11.10.7.9" },
+            xref: "core§11.10.7.9",
             children: [{
                 details: "This field shall contain the result of the operation, based on the behavior specified in the " +
                     "functional description of the SetTCAcknowledgements command.",
-                xref: { document: "core", section: "11.10.7.9.1" }
+                xref: "core§11.10.7.9.1"
             }]
         },
 
         {
             details: "This enumeration is used by several response commands in this cluster to indicate particular errors.",
-            xref: { document: "core", section: "11.10.5.1" },
+            xref: "core§11.10.5.1",
 
             children: [
                 { description: "No error" },
@@ -506,7 +506,7 @@ GeneralCommissioning.patch({
         {
             details: "This enumeration is used by the RegulatoryConfig and LocationCapability attributes to indicate " +
                 "possible radio usage.",
-            xref: { document: "core", section: "11.10.5.2" },
+            xref: "core§11.10.5.2",
             children: [
                 { description: "Indoor only" },
                 { description: "Outdoor only" },
@@ -516,7 +516,7 @@ GeneralCommissioning.patch({
 
         {
             details: "This structure provides some constant values that may be of use to all commissioners.",
-            xref: { document: "core", section: "11.10.5.3" },
+            xref: "core§11.10.5.3",
 
             children: [
                 {
@@ -525,7 +525,7 @@ GeneralCommissioning.patch({
                         "the Commissionee. This value, if used in the ArmFailSafe command’s ExpiryLengthSeconds field SHOULD " +
                         "allow a Commissioner to proceed with a nominal commissioning without having to-rearm the fail-safe, " +
                         "with some margin.",
-                    xref: { document: "core", section: "11.10.5.3.1" }
+                    xref: "core§11.10.5.3.1"
                 },
 
                 {
@@ -536,7 +536,7 @@ GeneralCommissioning.patch({
                         "additional guidelines, it is recommended that the value of this field be aligned with the initial " +
                         "Announcement Duration and default to 900 seconds.",
 
-                    xref: { document: "core", section: "11.10.5.3.2" }
+                    xref: "core§11.10.5.3.2"
                 }
             ]
         }

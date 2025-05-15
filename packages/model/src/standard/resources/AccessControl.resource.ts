@@ -21,19 +21,19 @@ AccessControl.patch(
             "The Access Control Cluster shall be present on the root node endpoint of each Node, and shall NOT be " +
             "present on any other Endpoint of any Node.",
 
-        xref: { document: "core", section: "9.10" },
+        xref: "core§9.10",
 
         children: [
             undefined,
 
             {
-                xref: { document: "core", section: "9.10.4" },
+                xref: "core§9.10.4",
 
                 children: [
                     {
                         description: "Extension",
                         details: "This feature indicates the device supports ACL Extension attribute.",
-                        xref: { document: "core", section: "9.10.4.1" }
+                        xref: "core§9.10.4.1"
                     },
 
                     {
@@ -108,7 +108,7 @@ AccessControl.patch(
                             "commissioning, administrators may determine the current restrictions of the ARL at any point, " +
                             "including during commissioning after joining the fabric.",
 
-                        xref: { document: "core", section: "9.10.4.2" }
+                        xref: "core§9.10.4.2"
                     }
                 ]
             },
@@ -125,7 +125,7 @@ AccessControl.patch(
                     "Access Control Privilege Granting algorithm to determine if a subject has privilege to interact with " +
                     "targets on the Node.",
 
-                xref: { document: "core", section: "9.10.6.3" }
+                xref: "core§9.10.6.3"
             },
 
             {
@@ -133,7 +133,7 @@ AccessControl.patch(
                     "related to fabric’s Access Control Entries." +
                     "\n" +
                     "The Access Control Extension list shall support a single extension entry per supported fabric.",
-                xref: { document: "core", section: "9.10.6.4" }
+                xref: "core§9.10.6.4"
             },
 
             {
@@ -145,7 +145,7 @@ AccessControl.patch(
                     "for a given implementation, it is recommended to only use the minimum value required and avoid " +
                     "reporting a higher value than the required minimum.",
 
-                xref: { document: "core", section: "9.10.6.5" }
+                xref: "core§9.10.6.5"
             },
 
             {
@@ -157,7 +157,7 @@ AccessControl.patch(
                     "for a given implementation, it is recommended to only use the minimum value required and avoid " +
                     "reporting a higher value than the required minimum.",
 
-                xref: { document: "core", section: "9.10.6.6" }
+                xref: "core§9.10.6.6"
             },
 
             {
@@ -169,7 +169,7 @@ AccessControl.patch(
                     "for a given implementation, it is recommended to only use the minimum value required and avoid " +
                     "reporting a higher value than the required minimum.",
 
-                xref: { document: "core", section: "9.10.6.7" }
+                xref: "core§9.10.6.7"
             },
 
             {
@@ -187,7 +187,7 @@ AccessControl.patch(
                     "See Section 9.10.4.2.1, “Managed Device Feature Usage Restrictions” for limitations on the use of " +
                     "access restrictions.",
 
-                xref: { document: "core", section: "9.10.6.8" }
+                xref: "core§9.10.6.8"
             },
 
             {
@@ -210,7 +210,7 @@ AccessControl.patch(
                     "See Section 9.10.4.2.1, “Managed Device Feature Usage Restrictions” for limitations on the use of " +
                     "access restrictions.",
 
-                xref: { document: "core", section: "9.10.6.9" }
+                xref: "core§9.10.6.9"
             },
 
             {
@@ -223,7 +223,7 @@ AccessControl.patch(
                     "\n" +
                     "  • Each removed entry shall generate an event with ChangeType Removed.",
 
-                xref: { document: "core", section: "9.10.9.1" },
+                xref: "core§9.10.9.1",
 
                 children: [
                     {
@@ -231,7 +231,7 @@ AccessControl.patch(
                             "\n" +
                             "Exactly one of AdminNodeID and AdminPasscodeID shall be set, depending on whether the change " +
                             "occurred via a CASE or PASE session; the other shall be null.",
-                        xref: { document: "core", section: "9.10.9.1.1" }
+                        xref: "core§9.10.9.1.1"
                     },
 
                     {
@@ -242,20 +242,17 @@ AccessControl.patch(
                             "Exactly one of AdminNodeID and AdminPasscodeID shall be set, depending on whether the change " +
                             "occurred via a CASE or PASE session; the other shall be null.",
 
-                        xref: { document: "core", section: "9.10.9.1.2" }
+                        xref: "core§9.10.9.1.2"
                     },
 
-                    {
-                        details: "The type of change as appropriate.",
-                        xref: { document: "core", section: "9.10.9.1.3" }
-                    },
+                    { details: "The type of change as appropriate.", xref: "core§9.10.9.1.3" },
 
                     {
                         details: "The latest value of the changed entry." +
                             "\n" +
                             "This field SHOULD be set if resources are adequate for it; otherwise it shall be set to NULL if " +
                             "resources are scarce.",
-                        xref: { document: "core", section: "9.10.9.1.4" }
+                        xref: "core§9.10.9.1.4"
                     }
                 ]
             },
@@ -270,7 +267,7 @@ AccessControl.patch(
                     "\n" +
                     "  • Each removed extension shall generate an event with ChangeType Removed.",
 
-                xref: { document: "core", section: "9.10.9.2" },
+                xref: "core§9.10.9.2",
 
                 children: [
                     {
@@ -278,7 +275,7 @@ AccessControl.patch(
                             "\n" +
                             "Exactly one of AdminNodeID and AdminPasscodeID shall be set, depending on whether the change " +
                             "occurred via a CASE or PASE session; the other shall be null.",
-                        xref: { document: "core", section: "9.10.9.2.1" }
+                        xref: "core§9.10.9.2.1"
                     },
 
                     {
@@ -289,20 +286,17 @@ AccessControl.patch(
                             "Exactly one of AdminNodeID and AdminPasscodeID shall be set, depending on whether the change " +
                             "occurred via a CASE or PASE session; the other shall be null.",
 
-                        xref: { document: "core", section: "9.10.9.2.2" }
+                        xref: "core§9.10.9.2.2"
                     },
 
-                    {
-                        details: "The type of change as appropriate.",
-                        xref: { document: "core", section: "9.10.9.2.3" }
-                    },
+                    { details: "The type of change as appropriate.", xref: "core§9.10.9.2.3" },
 
                     {
                         details: "The latest value of the changed extension." +
                             "\n" +
                             "This field SHOULD be set if resources are adequate for it; otherwise it shall be set to NULL if " +
                             "resources are scarce.",
-                        xref: { document: "core", section: "9.10.9.2.4" }
+                        xref: "core§9.10.9.2.4"
                     }
                 ]
             },
@@ -313,13 +307,13 @@ AccessControl.patch(
                     "successful receipt of the ReviewFabricRestrictions command, this event may include additional steps " +
                     "that the client may present to the user in order to help the user locate the user interface for the " +
                     "Managed Device feature.",
-                xref: { document: "core", section: "9.10.9.3" },
+                xref: "core§9.10.9.3",
 
                 children: [
                     {
                         details: "This field shall indicate the Token that can be used to correlate a ReviewFabricRestrictionsResponse " +
                             "with a FabricRestrictionReviewUpdate event.",
-                        xref: { document: "core", section: "9.10.9.3.1" }
+                        xref: "core§9.10.9.3.1"
                     },
 
                     {
@@ -332,7 +326,7 @@ AccessControl.patch(
                             "Examples include \"Please try again and immediately access device display for further instructions.\" " +
                             "or \"Please check email associated with your Acme account.\"",
 
-                        xref: { document: "core", section: "9.10.9.3.2" }
+                        xref: "core§9.10.9.3.2"
                     },
 
                     {
@@ -508,7 +502,7 @@ AccessControl.patch(
                             "\n" +
                             "    ◦ https://company.domain.example/matter/arl?vid=FFF1&pid=1234&MTop=_&MTza=79",
 
-                        xref: { document: "core", section: "9.10.9.3.3" }
+                        xref: "core§9.10.9.3.3"
                     }
                 ]
             },
@@ -531,27 +525,27 @@ AccessControl.patch(
                     "The ARL attribute may change at any time due to actions taken by the user, or the service associated " +
                     "with the device vendor.",
 
-                xref: { document: "core", section: "9.10.8.1" },
+                xref: "core§9.10.8.1",
                 children: [{
                     details: "When the ARL field is provided, it indicates the specific restrictions that are requested for " +
                         "review. An empty list represents a generic request for review of all restrictions.",
-                    xref: { document: "core", section: "9.10.8.1.1" }
+                    xref: "core§9.10.8.1.1"
                 }]
             },
 
             {
                 details: "Returns the review token for the request, which can be used to correlate with a " +
                     "FabricRestrictionReviewUpdate event.",
-                xref: { document: "core", section: "9.10.8.2" },
+                xref: "core§9.10.8.2",
                 children: [{
                     details: "This field shall specify a Token that can be used to correlate a ReviewFabricRestrictionsResponse " +
                         "with a FabricRestrictionReviewUpdate event.",
-                    xref: { document: "core", section: "9.10.8.2.1" }
+                    xref: "core§9.10.8.2.1"
                 }]
             },
 
             {
-                xref: { document: "core", section: "9.10.5.1" },
+                xref: "core§9.10.5.1",
                 children: [
                     { description: "Entry or extension was changed" },
                     { description: "Entry or extension was added" },
@@ -563,7 +557,7 @@ AccessControl.patch(
                 details: "Proxy View Value" +
                     "\n" +
                     "This value implicitly grants View privileges",
-                xref: { document: "core", section: "9.10.5.2" },
+                xref: "core§9.10.5.2",
 
                 children: [
                     { description: "Can read and observe all (except Access Control Cluster and as seen by a non-Proxy)" },
@@ -571,23 +565,23 @@ AccessControl.patch(
                     {
                         description: "View privileges, and can perform the primary function of this Node (except Access Control Cluster)",
                         details: "This value implicitly grants View privileges",
-                        xref: { document: "core", section: "9.10.5.2.1" }
+                        xref: "core§9.10.5.2.1"
                     },
                     {
                         description: "Operate privileges, and can modify persistent configuration of this Node (except Access Control Cluster)",
                         details: "This value implicitly grants Operate & View privileges",
-                        xref: { document: "core", section: "9.10.5.2.2" }
+                        xref: "core§9.10.5.2.2"
                     },
                     {
                         description: "Manage privileges, and can observe and modify the Access Control Cluster",
                         details: "This value implicitly grants Manage, Operate, Proxy View & View privileges",
-                        xref: { document: "core", section: "9.10.5.2.3" }
+                        xref: "core§9.10.5.2.3"
                     }
                 ]
             },
 
             {
-                xref: { document: "core", section: "9.10.5.3" },
+                xref: "core§9.10.5.3",
 
                 children: [
                     { description: "Clients on this fabric are currently forbidden from reading and writing an attribute" },
@@ -598,7 +592,7 @@ AccessControl.patch(
             },
 
             {
-                xref: { document: "core", section: "9.10.5.4" },
+                xref: "core§9.10.5.4",
                 children: [
                     { description: "Passcode authenticated session" },
                     { description: "Certificate authenticated session" },
@@ -606,10 +600,10 @@ AccessControl.patch(
                 ]
             },
 
-            { xref: { document: "core", section: "9.10.5.5" } },
+            { xref: "core§9.10.5.5" },
 
             {
-                xref: { document: "core", section: "9.10.5.6" },
+                xref: "core§9.10.5.6",
 
                 children: [
                     {
@@ -636,12 +630,12 @@ AccessControl.patch(
                             "Control Cluster itself. The Administer privilege shall NOT be used on Access Control Entries which " +
                             "use the Group auth mode.",
 
-                        xref: { document: "core", section: "9.10.5.6.1" }
+                        xref: "core§9.10.5.6.1"
                     },
 
                     {
                         details: "The AuthMode field shall specify the authentication mode required by this Access Control Entry.",
-                        xref: { document: "core", section: "9.10.5.6.2" }
+                        xref: "core§9.10.5.6.2"
                     },
 
                     {
@@ -679,7 +673,7 @@ AccessControl.patch(
                             "For Group authentication, the Group ID identifies the required group, as defined in the Group Key " +
                             "Management Cluster.",
 
-                        xref: { document: "core", section: "9.10.5.6.3" }
+                        xref: "core§9.10.5.6.3"
                     },
 
                     {
@@ -702,13 +696,13 @@ AccessControl.patch(
                             "An empty targets list indicates a wildcard: that is, this entry shall grant access to all cluster " +
                             "instances on all endpoints on this Node.",
 
-                        xref: { document: "core", section: "9.10.5.6.4" }
+                        xref: "core§9.10.5.6.4"
                     }
                 ]
             },
 
             {
-                xref: { document: "core", section: "9.10.5.7" },
+                xref: "core§9.10.5.7",
 
                 children: [{
                     details: "This field may be used by manufacturers to store arbitrary TLV-encoded data related to a fabric’s" +
@@ -722,19 +716,19 @@ AccessControl.patch(
                         "discretion. The content of each element is not specified, but may be coordinated among manufacturers " +
                         "at their discretion.",
 
-                    xref: { document: "core", section: "9.10.5.7.1" }
+                    xref: "core§9.10.5.7.1"
                 }]
             },
 
             {
                 details: "This structure describes an access restriction that would be applied to a specific data model " +
                     "element on a given endpoint/cluster pair (see AccessRestrictionEntryStruct).",
-                xref: { document: "core", section: "9.10.5.8" },
+                xref: "core§9.10.5.8",
 
                 children: [
                     {
                         details: "This field shall indicate the type of restriction, for example, AttributeAccessForbidden.",
-                        xref: { document: "core", section: "9.10.5.8.1" }
+                        xref: "core§9.10.5.8.1"
                     },
 
                     {
@@ -749,25 +743,25 @@ AccessControl.patch(
                             "associated with the Type under the associated endpoint and cluster for the containing " +
                             "AccessRestrictionEntryStruct).",
 
-                        xref: { document: "core", section: "9.10.5.8.2" }
+                        xref: "core§9.10.5.8.2"
                     }
                 ]
             },
 
             {
                 details: "This structure describes a current access restriction on the fabric.",
-                xref: { document: "core", section: "9.10.5.9" },
+                xref: "core§9.10.5.9",
 
                 children: [
                     {
                         details: "This field shall indicate the endpoint having associated access restrictions scoped to the " +
                             "associated fabric of the list containing the entry.",
-                        xref: { document: "core", section: "9.10.5.9.1" }
+                        xref: "core§9.10.5.9.1"
                     },
                     {
                         details: "This field shall indicate the cluster having associated access restrictions under the entry’s " +
                             "Endpoint, scoped to the associated fabric of the list containing the entry.",
-                        xref: { document: "core", section: "9.10.5.9.2" }
+                        xref: "core§9.10.5.9.2"
                     },
 
                     {
@@ -775,25 +769,25 @@ AccessControl.patch(
                             "scoped to the associated fabric of the list containing the entry." +
                             "\n" +
                             "This list shall NOT be empty.",
-                        xref: { document: "core", section: "9.10.5.9.3" }
+                        xref: "core§9.10.5.9.3"
                     }
                 ]
             },
 
             {
                 details: "This structure describes a current access restriction when there is no accessing fabric.",
-                xref: { document: "core", section: "9.10.5.10" },
+                xref: "core§9.10.5.10",
 
                 children: [
                     {
                         details: "This field shall indicate the endpoint having associated access restrictions scoped to the " +
                             "associated fabric of the list containing the entry.",
-                        xref: { document: "core", section: "9.10.5.10.1" }
+                        xref: "core§9.10.5.10.1"
                     },
                     {
                         details: "This field shall indicate the cluster having associated access restrictions under the entry’s " +
                             "Endpoint, scoped to the associated fabric of the list containing the entry.",
-                        xref: { document: "core", section: "9.10.5.10.2" }
+                        xref: "core§9.10.5.10.2"
                     },
 
                     {
@@ -801,7 +795,7 @@ AccessControl.patch(
                             "scoped to the associated fabric of the list containing the entry." +
                             "\n" +
                             "This list shall NOT be empty.",
-                        xref: { document: "core", section: "9.10.5.10.3" }
+                        xref: "core§9.10.5.10.3"
                     }
                 ]
             }

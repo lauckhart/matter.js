@@ -12,5 +12,5 @@ groupId.patch({
     description: "Group ID",
     details: "A 16-bit ID for a group scoped to a particular fabric as indicated by an accompanying fabric index " +
         "adjacent instantiation.",
-    xref: { document: "core", section: "7.19.2.22" }
+    xref: "core§7.19.2.22"
 });

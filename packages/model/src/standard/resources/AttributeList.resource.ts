@@ -1,0 +1,15 @@
+/**
+ * @license
+ * Copyright 2022-2025 Matter.js Authors
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*** THIS FILE IS GENERATED, DO NOT EDIT ***/
+
+import { AttributeList } from "#index.js";
+
+AttributeList.patch({
+    details: "Each instance of a cluster shall support this attribute. This attribute shall be a list of the " +
+        "attribute IDs of the attributes supported by the cluster instance.",
+    xref: "core§7.13.3"
+});

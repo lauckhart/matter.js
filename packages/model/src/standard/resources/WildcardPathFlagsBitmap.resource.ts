@@ -11,7 +11,7 @@ import { WildcardPathFlagsBitmap } from "#index.js";
 WildcardPathFlagsBitmap.patch({
     details: "The WildcardPathFlagsBitmap indicates flags that apply to the path, affecting wildcard expansion. " +
         "The following flags are defined:",
-    xref: { document: "core", section: "8.9.2.3" },
+    xref: "core§8.9.2.3",
 
     children: [
         { description: "Skip the Root Node endpoint (endpoint 0) during wildcard expansion." },

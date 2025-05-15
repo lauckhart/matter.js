@@ -85,5 +85,5 @@ list.patch({
         "  • For a read interaction on a list, with fabric-filtering disabled, the list shall be reported as " +
         "    a full list with all entries.",
 
-    xref: { document: "core", section: "7.19.1.8" }
+    xref: "core§7.19.1.8"
 });

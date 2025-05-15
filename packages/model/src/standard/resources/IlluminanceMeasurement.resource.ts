@@ -13,7 +13,7 @@ IlluminanceMeasurement.patch(
         classification: "application", pics: "ILL",
         details: "The Illuminance Measurement cluster provides an interface to illuminance measurement functionality, " +
             "including configuration and provision of notifications of illuminance measurements.",
-        xref: { document: "cluster", section: "2.2" },
+        xref: "cluster§2.2",
 
         children: [
             undefined,
@@ -34,28 +34,28 @@ IlluminanceMeasurement.patch(
                     "\n" +
                     "The MeasuredValue attribute is updated continuously as new measurements are made.",
 
-                xref: { document: "cluster", section: "2.2.5.1" }
+                xref: "cluster§2.2.5.1"
             },
 
             {
                 details: "Indicates the minimum value of MeasuredValue that can be measured. A value of null indicates that " +
                     "this attribute is not defined. See Measured Value for more details.",
-                xref: { document: "cluster", section: "2.2.5.2" }
+                xref: "cluster§2.2.5.2"
             },
             {
                 details: "Indicates the maximum value of MeasuredValue that can be measured. A value of null indicates that " +
                     "this attribute is not defined. See Measured Value for more details.",
-                xref: { document: "cluster", section: "2.2.5.3" }
+                xref: "cluster§2.2.5.3"
             },
-            { details: "See Measured Value.", xref: { document: "cluster", section: "2.2.5.4" } },
+            { details: "See Measured Value.", xref: "cluster§2.2.5.4" },
             {
                 details: "Indicates the electronic type of the light sensor. This attribute shall be set to one of the " +
                     "non-reserved values listed in LightSensorTypeEnum or null in case the sensor type is unknown.",
-                xref: { document: "cluster", section: "2.2.5.5" }
+                xref: "cluster§2.2.5.5"
             },
 
             {
-                xref: { document: "cluster", section: "2.2.4.1" },
+                xref: "cluster§2.2.4.1",
                 children: [
                     { description: "Indicates photodiode sensor type" },
                     { description: "Indicates CMOS sensor type" }

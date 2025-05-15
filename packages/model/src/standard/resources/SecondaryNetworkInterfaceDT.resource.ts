@@ -19,13 +19,13 @@ SecondaryNetworkInterfaceDt.patch({
         "interfaces are determined by the order of their endpoints, where interfaces with smaller endpoint " +
         "numbers are higher priority.",
 
-    xref: { document: "device", section: "2.8" },
+    xref: "device§2.8",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "2.8.3" } },
-        { xref: { document: "device", section: "2.8.3" } },
-        { xref: { document: "device", section: "2.8.3" } },
-        { xref: { document: "device", section: "2.8.3" } }
+        { xref: "device§2.8.3" },
+        { xref: "device§2.8.3" },
+        { xref: "device§2.8.3" },
+        { xref: "device§2.8.3" }
     ]
 });

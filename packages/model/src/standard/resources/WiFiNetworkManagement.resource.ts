@@ -14,7 +14,7 @@ WiFiNetworkManagement.patch({
         "Infrastructure Manager device type provides. Privileged nodes within the same fabric as a Network " +
         "Infrastructure Manager can use these interfaces to request information related to the Wi-Fi Network " +
         "such as SSID and Passphrase.",
-    xref: { document: "cluster", section: "10.2" },
+    xref: "cluster§10.2",
 
     children: [
         undefined,
@@ -32,7 +32,7 @@ WiFiNetworkManagement.patch({
                 "particular encoding. The most common encoding is UTF-8, however this is just a convention. Some " +
                 "configurations may use Latin-1 or other character sets.",
 
-            xref: { document: "cluster", section: "10.2.4.1" }
+            xref: "cluster§10.2.4.1"
         },
 
         {
@@ -55,7 +55,7 @@ WiFiNetworkManagement.patch({
                 "\n" +
                 "command.",
 
-            xref: { document: "cluster", section: "10.2.4.2" }
+            xref: "cluster§10.2.4.2"
         },
 
         {
@@ -70,12 +70,12 @@ WiFiNetworkManagement.patch({
                 "\n" +
                 "Otherwise a NetworkPassphraseResponse shall be generated.",
 
-            xref: { document: "cluster", section: "10.2.5.1" }
+            xref: "cluster§10.2.5.1"
         },
 
         {
             details: "This command shall be generated in response to a NetworkPassphraseRequest command.",
-            xref: { document: "cluster", section: "10.2.5.2" }
+            xref: "cluster§10.2.5.2"
         }
     ]
 });

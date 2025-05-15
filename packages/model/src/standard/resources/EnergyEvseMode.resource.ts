@@ -12,14 +12,11 @@ EnergyEvseMode.patch({
     classification: "application", pics: "EEVSEM",
     details: "This cluster is derived from the Mode Base cluster and defines additional mode tags and namespaced " +
         "enumerated values for EVSE devices.",
-    xref: { document: "cluster", section: "9.4" },
+    xref: "cluster§9.4",
 
     children: [
         undefined,
-        {
-            xref: { document: "cluster", section: "9.4.4" },
-            children: [{ description: "OnOff", details: "Dependency with the OnOff cluster" }]
-        },
+        { xref: "cluster§9.4.4", children: [{ description: "OnOff", details: "Dependency with the OnOff cluster" }] },
 
         {
             details: "At least one entry in the SupportedModes attribute shall include the Manual mode tag in the ModeTags " +
@@ -33,41 +30,41 @@ EnergyEvseMode.patch({
                 "Modes shall NOT have both the Manual tag and the TimeOfUse or SolarCharging tags defined in the " +
                 "SupportedModes attribute.",
 
-            xref: { document: "cluster", section: "9.4.6.1" }
+            xref: "cluster§9.4.6.1"
         },
 
-        { xref: { document: "cluster", section: "9.4.6" } },
-        { xref: { document: "cluster", section: "9.4.6" } },
-        { xref: { document: "cluster", section: "9.4.6" } },
+        { xref: "cluster§9.4.6" },
+        { xref: "cluster§9.4.6" },
+        { xref: "cluster§9.4.6" },
         {
             details: "The table below lists the changes relative to the Mode Base cluster for the fields of the " +
                 "ModeOptionStruct type. A blank field indicates no change.",
-            xref: { document: "cluster", section: "9.4.5.1" }
+            xref: "cluster§9.4.5.1"
         },
 
         {
             children: [
-                { xref: { document: "cluster", section: "9.4.7.1" } },
-                { xref: { document: "cluster", section: "9.4.7.1" } },
-                { xref: { document: "cluster", section: "9.4.7.1" } },
-                { xref: { document: "cluster", section: "9.4.7.1" } },
-                { xref: { document: "cluster", section: "9.4.7.1" } },
-                { xref: { document: "cluster", section: "9.4.7.1" } },
-                { xref: { document: "cluster", section: "9.4.7.1" } },
-                { xref: { document: "cluster", section: "9.4.7.1" } },
-                { xref: { document: "cluster", section: "9.4.7.1" } },
-                { xref: { document: "cluster", section: "9.4.7.1" } },
+                { xref: "cluster§9.4.7.1" },
+                { xref: "cluster§9.4.7.1" },
+                { xref: "cluster§9.4.7.1" },
+                { xref: "cluster§9.4.7.1" },
+                { xref: "cluster§9.4.7.1" },
+                { xref: "cluster§9.4.7.1" },
+                { xref: "cluster§9.4.7.1" },
+                { xref: "cluster§9.4.7.1" },
+                { xref: "cluster§9.4.7.1" },
+                { xref: "cluster§9.4.7.1" },
                 {
                     details: "While in modes with this tag, and once enabled with the EnableCharging command, the EVSE will permit " +
                         "charging based on demand from the EV.",
-                    xref: { document: "cluster", section: "9.4.7.1.1" }
+                    xref: "cluster§9.4.7.1.1"
                 },
 
                 {
                     details: "While in modes with this tag, and once enabled with the EnableCharging command, the EVSE will " +
                         "attempt to automatically start charging based on the user’s charging targets (for example, set based " +
                         "on a Time of Use tariff to charge at the cheapest times of the day).",
-                    xref: { document: "cluster", section: "9.4.7.1.2" }
+                    xref: "cluster§9.4.7.1.2"
                 },
 
                 {
@@ -75,7 +72,7 @@ EnergyEvseMode.patch({
                         "\n" +
                         "automatically start charging based on available excess solar PV generation, limiting the charging " +
                         "power to avoid importing energy from the grid.",
-                    xref: { document: "cluster", section: "9.4.7.1.3" }
+                    xref: "cluster§9.4.7.1.3"
                 },
 
                 {
@@ -89,7 +86,7 @@ EnergyEvseMode.patch({
                         "command by the Energy EVSE cluster, but once enabled, only modes with this tag enable the " +
                         "discharging to actually occur.",
 
-                    xref: { document: "cluster", section: "9.4.7.1.4" }
+                    xref: "cluster§9.4.7.1.4"
                 }
             ]
         }

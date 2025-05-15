@@ -13,13 +13,13 @@ ThreadBorderRouterManagement.patch({
     details: "This cluster provides an interface for managing a Thread Border Router and the Thread network that " +
         "it belongs to. Privileged nodes within the same fabric as a Thread Border Router can use these " +
         "interfaces to request and set credentials information to the Thread network.",
-    xref: { document: "cluster", section: "10.3" },
+    xref: "cluster§10.3",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "10.3.4" },
+            xref: "cluster§10.3.4",
 
             children: [{
                 description: "PanChange",
@@ -33,7 +33,7 @@ ThreadBorderRouterManagement.patch({
                     "change, e.g. when the Thread Border Router serves non-Matter devices that do not support PAN change " +
                     "for an implementation-specific reason.",
 
-                xref: { document: "cluster", section: "10.3.4.1" }
+                xref: "cluster§10.3.4.1"
             }]
         },
 
@@ -42,13 +42,13 @@ ThreadBorderRouterManagement.patch({
                 "MeshCOP (DNS-SD service name) as defined in the Thread specification, and has the following " +
                 "recommended format: <VendorName> <ProductName>._meshcop._udp. An example name would be ACME Border " +
                 "Router (74be)._meshcop._udp.",
-            xref: { document: "cluster", section: "10.3.5.1" }
+            xref: "cluster§10.3.5.1"
         },
 
         {
             details: "Indicates a 16-byte globally unique ID for a Thread Border Router device. This ID is " +
                 "manufacturer-specific, and it is created and managed by the border router’s implementation.",
-            xref: { document: "cluster", section: "10.3.5.2" }
+            xref: "cluster§10.3.5.2"
         },
 
         {
@@ -56,12 +56,12 @@ ThreadBorderRouterManagement.patch({
                 "\n" +
                 "The format shall match the value mapping defined in the \"Version TLV\" section of the Thread " +
                 "specification. For example, Thread 1.3.0 would have ThreadVersion set to 4.",
-            xref: { document: "cluster", section: "10.3.5.3" }
+            xref: "cluster§10.3.5.3"
         },
 
         {
             details: "Indicates whether the associated IEEE 802.15.4 Thread interface is enabled or disabled.",
-            xref: { document: "cluster", section: "10.3.5.4" }
+            xref: "cluster§10.3.5.4"
         },
 
         {
@@ -69,7 +69,7 @@ ThreadBorderRouterManagement.patch({
                 "value extracted from the Active Dataset value configured by the Thread Node to which the border " +
                 "router is connected. This attribute shall be updated when a new Active dataset is configured on the " +
                 "Thread network to which the border router is connected.",
-            xref: { document: "cluster", section: "10.3.5.5" }
+            xref: "cluster§10.3.5.5"
         },
 
         {
@@ -77,7 +77,7 @@ ThreadBorderRouterManagement.patch({
                 "timestamp value extracted from the Pending Dataset value configured by the Thread Node to which the " +
                 "border router is connected. This attribute shall be updated when a new Pending dataset is configured " +
                 "on the Thread network to which the border router is connected.",
-            xref: { document: "cluster", section: "10.3.5.6" }
+            xref: "cluster§10.3.5.6"
         },
 
         {
@@ -92,7 +92,7 @@ ThreadBorderRouterManagement.patch({
                 "\n" +
                 "Otherwise, this shall generate a DatasetResponse command.",
 
-            xref: { document: "cluster", section: "10.3.6.1" }
+            xref: "cluster§10.3.6.1"
         },
 
         {
@@ -107,12 +107,12 @@ ThreadBorderRouterManagement.patch({
                 "\n" +
                 "Otherwise, this shall generate a DatasetResponse command.",
 
-            xref: { document: "cluster", section: "10.3.6.2" }
+            xref: "cluster§10.3.6.2"
         },
 
         {
             details: "This command is sent in response to GetActiveDatasetRequest or GetPendingDatasetRequest command.",
-            xref: { document: "cluster", section: "10.3.6.3" },
+            xref: "cluster§10.3.6.3",
 
             children: [{
                 details: "If no dataset (active or pending as requested) is configured, this field shall be set to empty." +
@@ -120,26 +120,26 @@ ThreadBorderRouterManagement.patch({
                     "Otherwise, this field shall contain the active or pending dataset of the Thread network to which the " +
                     "Border Router is connected as an octet string containing the raw Thread TLV value of the dataset, as " +
                     "defined in the Thread specification.",
-                xref: { document: "cluster", section: "10.3.6.3.1" }
+                xref: "cluster§10.3.6.3.1"
             }]
         },
 
         {
             details: "This command shall be used to set the active Dataset of the Thread network to which the Border " +
                 "Router is connected, when there is no active dataset already.",
-            xref: { document: "cluster", section: "10.3.6.4" },
+            xref: "cluster§10.3.6.4",
 
             children: [
                 {
                     details: "This field shall contain the active dataset to set of the Thread network to configure in the Border " +
                         "Router as an octet string containing the raw Thread TLV value of the dataset, as defined in the " +
                         "Thread specification.",
-                    xref: { document: "cluster", section: "10.3.6.4.1" }
+                    xref: "cluster§10.3.6.4.1"
                 },
 
                 {
                     details: "See Breadcrumb Attribute section of General Commissioning Cluster in [MatterCore] for usage.",
-                    xref: { document: "cluster", section: "10.3.6.4.2" }
+                    xref: "cluster§10.3.6.4.2"
                 }
             ]
         },
@@ -162,7 +162,7 @@ ThreadBorderRouterManagement.patch({
                 "Border Router is connected, with the value given in the PendingDataset parameter. The Border Router " +
                 "will manage activation of the pending dataset as defined in the Thread specification.",
 
-            xref: { document: "cluster", section: "10.3.6.5" }
+            xref: "cluster§10.3.6.5"
         }
     ]
 });

@@ -11,5 +11,5 @@ import { dataVer } from "#index.js";
 dataVer.patch({
     description: "Data Version",
     details: "An unsigned number that indicates a Data Version Type.",
-    xref: { document: "core", section: "7.19.2.34" }
+    xref: "core§7.19.2.34"
 });

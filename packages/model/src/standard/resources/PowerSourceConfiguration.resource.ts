@@ -13,7 +13,7 @@ PowerSourceConfiguration.patch({
     details: "This cluster is used to describe the configuration and capabilities of a Device’s power system. It " +
         "provides an ordering overview as well as linking to the one or more endpoints each supporting a " +
         "Power Source cluster.",
-    xref: { document: "core", section: "11.6" },
+    xref: "core§11.6",
 
     children: [
         undefined,
@@ -29,7 +29,7 @@ PowerSourceConfiguration.patch({
                 "an entry with a lower order shall have a lower index than any entry with a higher order. Multiple " +
                 "entries may have the same order, there are no restrictions on their relative sorting.",
 
-            xref: { document: "core", section: "11.6.4.1" }
+            xref: "core§11.6.4.1"
         }
     ]
 });

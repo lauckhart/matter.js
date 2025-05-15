@@ -13,12 +13,6 @@ RefrigeratorDt.patch({
     details: "A refrigerator represents a device that contains one or more cabinets that are capable of chilling " +
         "or freezing food. Examples of consumer products that may make use of this device type include " +
         "refrigerators, freezers, and wine coolers.",
-    xref: { document: "device", section: "13.2" },
-
-    children: [
-        undefined,
-        { xref: { document: "device", section: "13.2.6" } },
-        { xref: { document: "device", section: "13.2.6" } },
-        { xref: { document: "device", section: "13.2.6" } }
-    ]
+    xref: "device§13.2",
+    children: [undefined, { xref: "device§13.2.6" }, { xref: "device§13.2.6" }, { xref: "device§13.2.6" }]
 });

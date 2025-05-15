@@ -12,13 +12,13 @@ FanDt.patch({
     classification: "simple",
     details: "A Fan device is typically standalone or mounted on a ceiling or wall and is used to circulate air in " +
         "a room.",
-    xref: { document: "device", section: "9.2" },
+    xref: "device§9.2",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "9.2.5" } },
-        { xref: { document: "device", section: "9.2.5" } },
-        { xref: { document: "device", section: "9.2.5" } },
-        { xref: { document: "device", section: "9.2.5" } }
+        { xref: "device§9.2.5" },
+        { xref: "device§9.2.5" },
+        { xref: "device§9.2.5" },
+        { xref: "device§9.2.5" }
     ]
 });

@@ -38,7 +38,7 @@ WakeOnLan.patch({
         "The cluster server for Wake on LAN or Wake on WLAN is implemented by a device that supports the Wake " +
         "on LAN/WLAN protocol, such as a TV, Set-top Box, or Smart Speaker.",
 
-    xref: { document: "cluster", section: "1.12" },
+    xref: "cluster§1.12",
 
     children: [
         undefined,
@@ -49,7 +49,7 @@ WakeOnLan.patch({
                 "\n" +
                 "Format of this attribute shall be an upper-case hex-encoded string representing the hex address, " +
                 "like 12345678ABCD.",
-            xref: { document: "cluster", section: "1.12.4.1" }
+            xref: "cluster§1.12.4.1"
         },
 
         {
@@ -62,7 +62,7 @@ WakeOnLan.patch({
                 "and will therefore choose not to include it or read it. The MAC Address can often be determined " +
                 "using ARP in IPv4 or NDP in IPv6.",
 
-            xref: { document: "cluster", section: "1.12.4.2" }
+            xref: "cluster§1.12.4.2"
         }
     ]
 });

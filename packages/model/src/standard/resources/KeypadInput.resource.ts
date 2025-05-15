@@ -28,13 +28,13 @@ KeypadInput.patch({
         "subset that is supported. Device may support additional codes beyond what is indicated in feature " +
         "flags.",
 
-    xref: { document: "cluster", section: "6.8" },
+    xref: "cluster§6.8",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "6.8.4" },
+            xref: "cluster§6.8.4",
 
             children: [
                 {
@@ -58,25 +58,19 @@ KeypadInput.patch({
                 "will consider the first key press to be a press and hold. When such a repeat KeyCode value is not " +
                 "received within 200 ms, then the endpoint will consider the last key press to be a release.",
 
-            xref: { document: "cluster", section: "6.8.6.1" },
-            children: [{
-                details: "This field shall indicate the key code to process.",
-                xref: { document: "cluster", section: "6.8.6.1.1" }
-            }]
+            xref: "cluster§6.8.6.1",
+            children: [{ details: "This field shall indicate the key code to process.", xref: "cluster§6.8.6.1.1" }]
         },
 
         {
             details: "This command shall be generated in response to a SendKey command. The data for this command shall be " +
                 "as follows:",
-            xref: { document: "cluster", section: "6.8.6.2" },
-            children: [{
-                details: "This field shall indicate the status of the request.",
-                xref: { document: "cluster", section: "6.8.6.2.1" }
-            }]
+            xref: "cluster§6.8.6.2",
+            children: [{ details: "This field shall indicate the status of the request.", xref: "cluster§6.8.6.2.1" }]
         },
 
         {
-            xref: { document: "cluster", section: "6.8.5.1" },
+            xref: "cluster§6.8.5.1",
             children: [
                 { description: "Succeeded" },
                 { description: "Key code is not supported." },
@@ -84,6 +78,6 @@ KeypadInput.patch({
             ]
         },
 
-        { xref: { document: "cluster", section: "6.8.5.2" } }
+        { xref: "cluster§6.8.5.2" }
     ]
 });

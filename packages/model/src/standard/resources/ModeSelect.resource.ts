@@ -33,19 +33,19 @@ ModeSelect.patch({
         "shall support the derived cluster purpose. An anonymous mode shall NOT replace the meaning of a " +
         "standard semantic tag, when one exists, for the cluster purpose.",
 
-    xref: { document: "cluster", section: "1.9" },
+    xref: "cluster§1.9",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "1.9.4" },
+            xref: "cluster§1.9.4",
 
             children: [{
                 description: "OnOff",
                 details: "This feature creates a dependency between an OnOff cluster instance and this cluster instance on the " +
                     "same endpoint. See OnMode for more information.",
-                xref: { document: "cluster", section: "1.9.4.1" }
+                xref: "cluster§1.9.4.1"
             }]
         },
 
@@ -57,7 +57,7 @@ ModeSelect.patch({
                 "have the description Milk and the second instance can have the description Sugar. This allows the " +
                 "user to tell the purpose of each of the instances.",
 
-            xref: { document: "cluster", section: "1.9.6.1" }
+            xref: "cluster§1.9.6.1"
         },
 
         {
@@ -66,14 +66,14 @@ ModeSelect.patch({
                 "null value indicates no standard namespace, and therefore, no standard semantic tags are provided in " +
                 "this cluster instance. Each standard namespace and corresponding values and value meanings shall be " +
                 "defined in another document.",
-            xref: { document: "cluster", section: "1.9.6.2" }
+            xref: "cluster§1.9.6.2"
         },
 
         {
             details: "This attribute is the list of supported modes that may be selected for the CurrentMode attribute. " +
                 "Each item in this list represents a unique mode as indicated by the Mode field of the " +
                 "ModeOptionStruct. Each entry in this list shall have a unique value for the Mode field.",
-            xref: { document: "cluster", section: "1.9.6.3" }
+            xref: "cluster§1.9.6.3"
         },
 
         {
@@ -82,7 +82,7 @@ ModeSelect.patch({
                 "The value of this field must match the Mode field of one of the entries in the SupportedModes" +
                 "\n" +
                 "attribute.",
-            xref: { document: "cluster", section: "1.9.6.4" }
+            xref: "cluster§1.9.6.4"
         },
 
         {
@@ -102,7 +102,7 @@ ModeSelect.patch({
                 "\n" +
                 "If this attribute is not implemented, or is set to the null value, it shall have no effect.",
 
-            xref: { document: "cluster", section: "1.9.6.5" }
+            xref: "cluster§1.9.6.5"
         },
 
         {
@@ -114,19 +114,19 @@ ModeSelect.patch({
                 "\n" +
                 "attribute.",
 
-            xref: { document: "cluster", section: "1.9.6.6" }
+            xref: "cluster§1.9.6.6"
         },
 
         {
             details: "On receipt of this command, if the NewMode field indicates a valid mode transition within the " +
                 "supported list, the server shall set the CurrentMode attribute to the NewMode value, otherwise, the " +
                 "server shall respond with an INVALID_COMMAND status response.",
-            xref: { document: "cluster", section: "1.9.7.1" }
+            xref: "cluster§1.9.7.1"
         },
 
         {
             details: "A Semantic Tag is meant to be interpreted by the client for the purpose the cluster serves.",
-            xref: { document: "cluster", section: "1.9.5.1" },
+            xref: "cluster§1.9.5.1",
 
             children: [
                 {
@@ -135,34 +135,34 @@ ModeSelect.patch({
                         "values. The same manufacturer code and semantic tag value in separate cluster instances are part of " +
                         "the same namespace and have the same meaning. For example: a manufacturer tag meaning \"pinch\", has " +
                         "the same meaning in a cluster whose purpose is to choose the amount of sugar, or amount of salt.",
-                    xref: { document: "cluster", section: "1.9.5.1.2" }
+                    xref: "cluster§1.9.5.1.2"
                 },
 
                 {
                     details: "This field shall indicate the semantic tag within a semantic tag namespace which is either " +
                         "manufacturer specific or standard. For semantic tags in a standard namespace, see Standard " +
                         "Namespace.",
-                    xref: { document: "cluster", section: "1.9.5.1.1" }
+                    xref: "cluster§1.9.5.1.1"
                 }
             ]
         },
 
         {
             details: "This is a struct representing a possible mode of the server.",
-            xref: { document: "cluster", section: "1.9.5.2" },
+            xref: "cluster§1.9.5.2",
 
             children: [
                 {
                     details: "This field is readable text that describes the mode option that can be used by a client to indicate " +
                         "to the user what this option means. This field is meant to be readable and understandable by the " +
                         "user.",
-                    xref: { document: "cluster", section: "1.9.5.2.1" }
+                    xref: "cluster§1.9.5.2.1"
                 },
 
                 {
                     details: "The Mode field is used to identify the mode option. The value shall be unique for every item in the " +
                         "SupportedModes attribute.",
-                    xref: { document: "cluster", section: "1.9.5.2.2" }
+                    xref: "cluster§1.9.5.2.2"
                 },
 
                 {
@@ -180,7 +180,7 @@ ModeSelect.patch({
                         "For example: A mode labeled \"100%\" can have both the HIGH (MS) and MAX (standard) semantic tag. " +
                         "Clients seeking the option for either HIGH or MAX will find the same option in this case.",
 
-                    xref: { document: "cluster", section: "1.9.5.2.3" }
+                    xref: "cluster§1.9.5.2.3"
                 }
             ]
         }

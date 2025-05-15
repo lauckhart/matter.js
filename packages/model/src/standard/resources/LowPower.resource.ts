@@ -27,13 +27,9 @@ LowPower.patch({
         "We have considered a “DisableLowPowerMode” command but have not added it due to suspected issues " +
         "with energy consumption regulations. This can be added in the future.",
 
-    xref: { document: "cluster", section: "1.11" },
-
+    xref: "cluster§1.11",
     children: [
         undefined,
-        {
-            details: "This command shall put the device into low power mode.",
-            xref: { document: "cluster", section: "1.11.4.1" }
-        }
+        { details: "This command shall put the device into low power mode.", xref: "cluster§1.11.4.1" }
     ]
 });

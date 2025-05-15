@@ -27,12 +27,6 @@ NetworkInfrastructureManagerDt.patch({
         "Section 15.2.5.1, “Access Control MNGD Conformance”). Consequently, Commissioners of this device " +
         "type should be aware of this feature and its use.",
 
-    xref: { document: "device", section: "15.2" },
-
-    children: [
-        undefined,
-        { xref: { document: "device", section: "15.2.4" } },
-        { xref: { document: "device", section: "15.2.4" } },
-        { xref: { document: "device", section: "15.2.4" } }
-    ]
+    xref: "device§15.2",
+    children: [undefined, { xref: "device§15.2.4" }, { xref: "device§15.2.4" }, { xref: "device§15.2.4" }]
 });

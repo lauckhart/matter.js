@@ -12,14 +12,14 @@ OnOffLightSwitchDt.patch({
     classification: "simple",
     details: "An On/Off Light Switch is a controller device that, when bound to a lighting device such as an " +
         "On/Off Light, is capable of being used to switch the device on or off.",
-    xref: { document: "device", section: "6.1" },
+    xref: "device§6.1",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "6.1.4" } },
-        { xref: { document: "device", section: "6.1.4" } },
-        { xref: { document: "device", section: "6.1.4" } },
-        { xref: { document: "device", section: "6.1.4" } },
-        { xref: { document: "device", section: "6.1.4" } }
+        { xref: "device§6.1.4" },
+        { xref: "device§6.1.4" },
+        { xref: "device§6.1.4" },
+        { xref: "device§6.1.4" },
+        { xref: "device§6.1.4" }
     ]
 });

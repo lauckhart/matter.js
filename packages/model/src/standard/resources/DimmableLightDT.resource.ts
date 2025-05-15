@@ -14,15 +14,15 @@ DimmableLightDt.patch({
         "of its light adjusted by means of a bound controller device such as a Dimmer Switch or a Color " +
         "Dimmer Switch. In addition, a Dimmable Light device is also capable of being switched by means of a " +
         "bound occupancy sensor or other device(s).",
-    xref: { document: "device", section: "4.2" },
+    xref: "device§4.2",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "4.2.4" } },
-        { xref: { document: "device", section: "4.2.4" } },
-        { xref: { document: "device", section: "4.2.4" } },
-        { xref: { document: "device", section: "4.2.4" } },
-        { xref: { document: "device", section: "4.2.4" } },
-        { xref: { document: "device", section: "4.2.4" } }
+        { xref: "device§4.2.4" },
+        { xref: "device§4.2.4" },
+        { xref: "device§4.2.4" },
+        { xref: "device§4.2.4" },
+        { xref: "device§4.2.4" },
+        { xref: "device§4.2.4" }
     ]
 });

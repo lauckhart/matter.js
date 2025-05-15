@@ -25,7 +25,7 @@ PositionNs.patch({
         "the item. Number words (e.g. \"one\", \"two\", etc.) shall NOT be used to describe the position of the " +
         "item. The first row/column shall use Label \"1\".",
 
-    xref: { document: "namespace", section: "9" },
+    xref: "namespace§9",
 
     children: [
         undefined,

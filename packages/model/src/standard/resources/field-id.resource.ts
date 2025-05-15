@@ -14,5 +14,5 @@ fieldId.patch({
         "\n" +
         "Field IDs shall be a Manufacturer Extensible Identifier. The specifics of its representation are " +
         "described in Data Model Types.",
-    xref: { document: "core", section: "7.19.2.28" }
+    xref: "core§7.19.2.28"
 });

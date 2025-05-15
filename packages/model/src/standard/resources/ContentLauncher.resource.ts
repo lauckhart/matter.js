@@ -27,13 +27,13 @@ ContentLauncher.patch(
             "having an Application Basic cluster), the Video Player device shall launch the application when a " +
             "client invokes the LaunchContent or LaunchURL commands.",
 
-        xref: { document: "cluster", section: "6.7" },
+        xref: "cluster§6.7",
 
         children: [
             undefined,
 
             {
-                xref: { document: "cluster", section: "6.7.4" },
+                xref: "cluster§6.7.4",
 
                 children: [
                     { description: "ContentSearch", details: "Device supports content search (non-app specific)" },
@@ -52,24 +52,21 @@ ContentLauncher.patch(
                 details: "This attribute shall provide a list of content types supported by the Video Player or Content App" +
                     "\n" +
                     "in the form of entries in the HTTP \"Accept\" request header.",
-                xref: { document: "cluster", section: "6.7.6.1" }
+                xref: "cluster§6.7.6.1"
             },
 
             {
                 details: "This attribute shall provide information about supported streaming protocols.",
-                xref: { document: "cluster", section: "6.7.6.2" }
+                xref: "cluster§6.7.6.2"
             },
 
             {
                 details: "Upon receipt, this shall launch the specified content with optional search criteria. This command " +
                     "returns a Launch Response.",
-                xref: { document: "cluster", section: "6.7.7.1" },
+                xref: "cluster§6.7.7.1",
 
                 children: [
-                    {
-                        details: "This field shall indicate the content to launch.",
-                        xref: { document: "cluster", section: "6.7.7.1.1" }
-                    },
+                    { details: "This field shall indicate the content to launch.", xref: "cluster§6.7.7.1.1" },
 
                     {
                         details: "This field shall indicate whether to automatically start playing content, where:" +
@@ -77,13 +74,10 @@ ContentLauncher.patch(
                             "  • TRUE means best match should start playing automatically." +
                             "\n" +
                             "  • FALSE means matches should be displayed on screen for user selection.",
-                        xref: { document: "cluster", section: "6.7.7.1.2" }
+                        xref: "cluster§6.7.7.1.2"
                     },
 
-                    {
-                        details: "This field, if present, shall indicate app-specific data.",
-                        xref: { document: "cluster", section: "6.7.7.1.3" }
-                    },
+                    { details: "This field, if present, shall indicate app-specific data.", xref: "cluster§6.7.7.1.3" },
 
                     {
                         details: "This field, if present, shall indicate the user’s preferred Text/AudioTracks and playbackPosition " +
@@ -96,7 +90,7 @@ ContentLauncher.patch(
                             "the server shall return the TextTrackNotAvailable and/or AudioTrackNotAvailable Status(es) in the " +
                             "LauncherResponse.",
 
-                        xref: { document: "cluster", section: "6.7.7.1.4" }
+                        xref: "cluster§6.7.7.1.4"
                     },
 
                     {
@@ -107,7 +101,7 @@ ContentLauncher.patch(
                             "series. TRUE means current activity context may be considered FALSE means current activity context " +
                             "shall NOT be considered",
 
-                        xref: { document: "cluster", section: "6.7.7.1.5" }
+                        xref: "cluster§6.7.7.1.5"
                     }
                 ]
             },
@@ -129,23 +123,23 @@ ContentLauncher.patch(
                     "\n" +
                     "This command returns a Launch Response.",
 
-                xref: { document: "cluster", section: "6.7.7.2" },
+                xref: "cluster§6.7.7.2",
 
                 children: [
                     {
                         details: "This field shall indicate the URL of content to launch. The syntax of this field shall follow the " +
                             "syntax as specified in RFC 1738 and shall use the https scheme.",
-                        xref: { document: "cluster", section: "6.7.7.2.1" }
+                        xref: "cluster§6.7.7.2.1"
                     },
                     {
                         details: "This field, if present, shall provide a string that may be used to describe the content being " +
                             "accessed at the given URL.",
-                        xref: { document: "cluster", section: "6.7.7.2.2" }
+                        xref: "cluster§6.7.7.2.2"
                     },
                     {
                         details: "This field, if present, shall indicate the branding information that may be displayed when playing " +
                             "back the given content.",
-                        xref: { document: "cluster", section: "6.7.7.2.3" }
+                        xref: "cluster§6.7.7.2.3"
                     },
 
                     {
@@ -159,29 +153,26 @@ ContentLauncher.patch(
                             "the server shall return the TextTrackNotAvailable and/or AudioTrackNotAvailable Status(es) in the " +
                             "LauncherResponse.",
 
-                        xref: { document: "cluster", section: "6.7.7.2.4" }
+                        xref: "cluster§6.7.7.2.4"
                     }
                 ]
             },
 
             {
                 details: "This command shall be generated in response to LaunchContent and LaunchURL commands.",
-                xref: { document: "cluster", section: "6.7.7.3" },
+                xref: "cluster§6.7.7.3",
 
                 children: [
                     {
                         details: "This field shall indicate the status of the command which resulted in this response.",
-                        xref: { document: "cluster", section: "6.7.7.3.1" }
+                        xref: "cluster§6.7.7.3.1"
                     },
-                    {
-                        details: "This field shall indicate Optional app-specific data.",
-                        xref: { document: "cluster", section: "6.7.7.3.2" }
-                    }
+                    { details: "This field shall indicate Optional app-specific data.", xref: "cluster§6.7.7.3.2" }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "6.7.5.1" },
+                xref: "cluster§6.7.5.1",
                 children: [
                     { description: "Device supports Dynamic Adaptive Streaming over HTTP (DASH)" },
                     { description: "Device supports HTTP Live Streaming (HLS)" }
@@ -189,7 +180,7 @@ ContentLauncher.patch(
             },
 
             {
-                xref: { document: "cluster", section: "6.7.5.2" },
+                xref: "cluster§6.7.5.2",
 
                 children: [
                     { description: "Command succeeded" },
@@ -201,7 +192,7 @@ ContentLauncher.patch(
             },
 
             {
-                xref: { document: "cluster", section: "6.7.5.3" },
+                xref: "cluster§6.7.5.3",
 
                 children: [
                     {
@@ -245,13 +236,13 @@ ContentLauncher.patch(
             },
 
             {
-                xref: { document: "cluster", section: "6.7.5.4" },
+                xref: "cluster§6.7.5.4",
 
                 children: [
                     {
                         description: "Dimensions defined in a number of Pixels",
                         details: "This value is used for dimensions defined in a number of Pixels.",
-                        xref: { document: "cluster", section: "6.7.5.4.1" }
+                        xref: "cluster§6.7.5.4.1"
                     },
 
                     {
@@ -261,75 +252,72 @@ ContentLauncher.patch(
                             "pixels, then the resulting value used would be 960 pixels (50.0% of 1920) for that dimension. " +
                             "Whenever a measurement uses this Metric type, the resulting values shall be rounded (\"floored\") " +
                             "towards 0 if the measurement requires an integer final value.",
-                        xref: { document: "cluster", section: "6.7.5.4.2" }
+                        xref: "cluster§6.7.5.4.2"
                     }
                 ]
             },
 
             {
                 details: "This object defines additional name=value pairs that can be used for identifying content.",
-                xref: { document: "cluster", section: "6.7.5.5" },
+                xref: "cluster§6.7.5.5",
 
                 children: [
                     {
                         details: "This field shall indicate the name of external id, ex. \"musicbrainz\".",
-                        xref: { document: "cluster", section: "6.7.5.5.1" }
+                        xref: "cluster§6.7.5.5.1"
                     },
                     {
                         details: "This field shall indicate the value for external id, ex. \"ST0000000666661\".",
-                        xref: { document: "cluster", section: "6.7.5.5.2" }
+                        xref: "cluster§6.7.5.5.2"
                     }
                 ]
             },
 
             {
                 details: "This object defines inputs to a search for content for display or playback.",
-                xref: { document: "cluster", section: "6.7.5.6" },
+                xref: "cluster§6.7.5.6",
 
                 children: [
-                    {
-                        details: "This field shall indicate the entity type.",
-                        xref: { document: "cluster", section: "6.7.5.6.1" }
-                    },
+                    { details: "This field shall indicate the entity type.", xref: "cluster§6.7.5.6.1" },
                     {
                         details: "This field shall indicate the entity value, which is a search string, ex. “Manchester by the Sea”.",
-                        xref: { document: "cluster", section: "6.7.5.6.2" }
+                        xref: "cluster§6.7.5.6.2"
                     },
                     {
                         details: "This field shall indicate the list of additional external content identifiers.",
-                        xref: { document: "cluster", section: "6.7.5.6.3" }
+                        xref: "cluster§6.7.5.6.3"
                     }
                 ]
             },
 
             {
                 details: "This object defines inputs to a search for content for display or playback.",
-                xref: { document: "cluster", section: "6.7.5.7" },
+                xref: "cluster§6.7.5.7",
 
                 children: [{
                     details: "This field shall indicate the list of parameters comprising the search. If multiple parameters are " +
                         "provided, the search parameters shall be joined with 'AND' logic. e.g. action movies with Tom Cruise " +
                         "will be represented as [{Actor: 'Tom Cruise'}, {Type: 'Movie'}, {Genre: 'Action'}]",
-                    xref: { document: "cluster", section: "6.7.5.7.1" }
+                    xref: "cluster§6.7.5.7.1"
                 }]
             },
 
             {
                 details: "This object defines dimension which can be used for defining Size of background images.",
-                xref: { document: "cluster", section: "6.7.5.8" },
+                xref: "cluster§6.7.5.8",
 
                 children: [
                     {
                         details: "This field shall indicate the width using the metric defined in Metric",
-                        xref: { document: "cluster", section: "6.7.5.8.1" }
+                        xref: "cluster§6.7.5.8.1"
                     },
                     {
                         details: "This field shall indicate the height using the metric defined in Metric",
-                        xref: { document: "cluster", section: "6.7.5.8.2" }
+                        xref: "cluster§6.7.5.8.2"
                     },
                     {
                         details: "This field shall indicate metric used for defining Height/Width.",
-                        xref: { document: "cluster", section: "6.7.5.8.3" }
+                        xref: "cluster§6.7.5.8.3"
                     }
                 ]
             },
@@ -337,14 +325,14 @@ ContentLauncher.patch(
             {
                 details: "This object defines style information which can be used by content providers to change the Media " +
                     "Player’s style related properties.",
-                xref: { document: "cluster", section: "6.7.5.9" },
+                xref: "cluster§6.7.5.9",
 
                 children: [
                     {
                         details: "This field shall indicate the URL of image used for Styling different Video Player sections like " +
                             "Logo, Watermark etc. The syntax of this field shall follow the syntax as specified in RFC 1738 and " +
                             "shall use the https scheme.",
-                        xref: { document: "cluster", section: "6.7.5.9.1" }
+                        xref: "cluster§6.7.5.9.1"
                     },
 
                     {
@@ -356,7 +344,7 @@ ContentLauncher.patch(
                             "\n" +
                             "  • #76DE1980 for R=0x76, G=0xDE, B=0x19, A=0x80",
 
-                        xref: { document: "cluster", section: "6.7.5.9.2" }
+                        xref: "cluster§6.7.5.9.2"
                     },
 
                     {
@@ -364,7 +352,7 @@ ContentLauncher.patch(
                             "like" +
                             "\n" +
                             "Logo, Watermark etc.",
-                        xref: { document: "cluster", section: "6.7.5.9.3" }
+                        xref: "cluster§6.7.5.9.3"
                     }
                 ]
             },
@@ -372,38 +360,38 @@ ContentLauncher.patch(
             {
                 details: "This object defines Branding Information which can be provided by the client in order to customize " +
                     "the skin of the Video Player during playback.",
-                xref: { document: "cluster", section: "6.7.5.10" },
+                xref: "cluster§6.7.5.10",
 
                 children: [
                     {
                         details: "This field shall indicate name of the provider for the given content.",
-                        xref: { document: "cluster", section: "6.7.5.10.1" }
+                        xref: "cluster§6.7.5.10.1"
                     },
 
                     {
                         details: "This field shall indicate background of the Video Player while content launch request is being " +
                             "processed by it. This background information may also be used by the Video Player when it is in idle " +
                             "state.",
-                        xref: { document: "cluster", section: "6.7.5.10.2" }
+                        xref: "cluster§6.7.5.10.2"
                     },
 
                     {
                         details: "This field shall indicate the logo shown when the Video Player is launching. This is also used when " +
                             "the Video Player is in the idle state and Splash field is not available.",
-                        xref: { document: "cluster", section: "6.7.5.10.3" }
+                        xref: "cluster§6.7.5.10.3"
                     },
                     {
                         details: "This field shall indicate the style of progress bar for media playback.",
-                        xref: { document: "cluster", section: "6.7.5.10.4" }
+                        xref: "cluster§6.7.5.10.4"
                     },
                     {
                         details: "This field shall indicate the screen shown when the Video Player is in an idle state. If this " +
                             "property is not populated, the Video Player shall default to logo or the provider name.",
-                        xref: { document: "cluster", section: "6.7.5.10.5" }
+                        xref: "cluster§6.7.5.10.5"
                     },
                     {
                         details: "This field shall indicate watermark shown when the media is playing.",
-                        xref: { document: "cluster", section: "6.7.5.10.6" }
+                        xref: "cluster§6.7.5.10.6"
                     }
                 ]
             },
@@ -411,7 +399,7 @@ ContentLauncher.patch(
             {
                 details: "PlaybackPreferencesStruct defines the preferences sent by the client to the receiver in the " +
                     "ContentLauncher LaunchURL or LaunchContent commands.",
-                xref: { document: "cluster", section: "6.7.5.11" },
+                xref: "cluster§6.7.5.11",
 
                 children: [
                     {
@@ -422,14 +410,14 @@ ContentLauncher.patch(
                             "state of the media playback. (For example : Live media with no known duration and where seek is not " +
                             "supported).",
 
-                        xref: { document: "cluster", section: "6.7.5.11.1" }
+                        xref: "cluster§6.7.5.11.1"
                     },
 
                     {
                         details: "This field shall indicate the user’s preferred Text Track. A value of null shall indicate that the " +
                             "user did not specify a preferred Text Track on the client. In such a case, the decision to display " +
                             "and select a Text Track is up to the server.",
-                        xref: { document: "cluster", section: "6.7.5.11.2" }
+                        xref: "cluster§6.7.5.11.2"
                     },
 
                     {
@@ -437,27 +425,27 @@ ContentLauncher.patch(
                             "multiple values, each AudioTrack must also specify a unique audioOutputIndex to play the track on. A " +
                             "value of null shall indicate that the user did not specify a preferred Audio Track on the client. In " +
                             "such a case, the decision to play and select an Audio Track is up to the server.",
-                        xref: { document: "cluster", section: "6.7.5.11.3" }
+                        xref: "cluster§6.7.5.11.3"
                     }
                 ]
             },
 
             {
                 details: "This structure defines Text/Audio Track preferences.",
-                xref: { document: "cluster", section: "6.7.5.12" },
+                xref: "cluster§6.7.5.12",
 
                 children: [
                     {
                         details: "This field shall contain one of the standard Tags for Identifying Languages RFC 5646, which " +
                             "identifies the primary language used in the Track.",
-                        xref: { document: "cluster", section: "6.7.5.12.1" }
+                        xref: "cluster§6.7.5.12.1"
                     },
 
                     {
                         details: "This field shall contain a list of enumerated CharacteristicEnum values that indicate a purpose, " +
                             "trait or feature associated with the Track. A value of null shall indicate that there are no " +
                             "Characteristics corresponding to the Track.",
-                        xref: { document: "cluster", section: "6.7.5.12.2" }
+                        xref: "cluster§6.7.5.12.2"
                     },
 
                     {
@@ -469,7 +457,7 @@ ContentLauncher.patch(
                             "If the track is an audio track, this field MUST be present. A value of null shall indicate that the " +
                             "server can choose the audio output(s) to play the Audio Track on.",
 
-                        xref: { document: "cluster", section: "6.7.5.12.3" }
+                        xref: "cluster§6.7.5.12.3"
                     }
                 ]
             }

@@ -28,27 +28,21 @@ BasicVideoPlayerDt.patch({
         "Video Player device endpoint composition, commissioning, feature representation in clusters, and UI " +
         "context.",
 
-    xref: { document: "device", section: "10.2" },
+    xref: "device§10.2",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "10.2.4" } },
-        { xref: { document: "device", section: "10.2.4" } },
-        { xref: { document: "device", section: "10.2.4" } },
-        { xref: { document: "device", section: "10.2.4" } },
-        { xref: { document: "device", section: "10.2.4" } },
-        { xref: { document: "device", section: "10.2.4" } },
-        { xref: { document: "device", section: "10.2.4" } },
-        { xref: { document: "device", section: "10.2.4" } },
-        { xref: { document: "device", section: "10.2.4" } },
-        { xref: { document: "device", section: "10.2.4" } },
-        { xref: { document: "device", section: "10.2.4" } },
-
-        {
-            children: [{
-                description: "The device has physical inputs for media.",
-                xref: { document: "device", section: "10.2.3" }
-            }]
-        }
+        { xref: "device§10.2.4" },
+        { xref: "device§10.2.4" },
+        { xref: "device§10.2.4" },
+        { xref: "device§10.2.4" },
+        { xref: "device§10.2.4" },
+        { xref: "device§10.2.4" },
+        { xref: "device§10.2.4" },
+        { xref: "device§10.2.4" },
+        { xref: "device§10.2.4" },
+        { xref: "device§10.2.4" },
+        { xref: "device§10.2.4" },
+        { children: [{ description: "The device has physical inputs for media.", xref: "device§10.2.3" }] }
     ]
 });

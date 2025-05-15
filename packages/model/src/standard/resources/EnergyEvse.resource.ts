@@ -45,13 +45,13 @@ EnergyEvse.patch(
             "network connections (e.g. a weak WiFi signal). It also allows for a charging profile to be pre- " +
             "configured, in case there is a temporary communications loss during a charging session.",
 
-        xref: { document: "cluster", section: "9.3" },
+        xref: "cluster§9.3",
 
         children: [
             undefined,
 
             {
-                xref: { document: "cluster", section: "9.3.4" },
+                xref: "cluster§9.3.4",
 
                 children: [
                     {
@@ -79,7 +79,7 @@ EnergyEvse.patch(
                             "\n" +
                             "See the Device Energy Management Cluster for more details.",
 
-                        xref: { document: "cluster", section: "9.3.4.1" }
+                        xref: "cluster§9.3.4.1"
                     },
 
                     {
@@ -95,7 +95,7 @@ EnergyEvse.patch(
                             "Note some EVSEs may use other undefined mechanisms to obtain vehicle State of Charge outside the " +
                             "scope of this cluster.",
 
-                        xref: { document: "cluster", section: "9.3.4.2" }
+                        xref: "cluster§9.3.4.2"
                     },
 
                     {
@@ -105,7 +105,7 @@ EnergyEvse.patch(
                             "vehicle (e.g. to give the owner an indicative cost of charging, or for work place charging)." +
                             "\n" +
                             "If the EVSE supports the Plug and Charge feature, it will only work if a compatible EV is connected.",
-                        xref: { document: "cluster", section: "9.3.4.3" }
+                        xref: "cluster§9.3.4.3"
                     },
 
                     {
@@ -119,7 +119,7 @@ EnergyEvse.patch(
                             "subscribed to by the EVSE Management cluster client. This client may use this to enable the EV to " +
                             "charge or discharge. The lookup and authorization of RIFD UID is outside the scope of this cluster.",
 
-                        xref: { document: "cluster", section: "9.3.4.4" }
+                        xref: "cluster§9.3.4.4"
                     },
 
                     {
@@ -134,7 +134,7 @@ EnergyEvse.patch(
                             "to/from the EV so as to minimise the energy flow from/to the grid as the demand in the home and the " +
                             "solar supply to the home both fluctuate.",
 
-                        xref: { document: "cluster", section: "9.3.4.5" }
+                        xref: "cluster§9.3.4.5"
                     }
                 ]
             },
@@ -155,12 +155,12 @@ EnergyEvse.patch(
                     "\n" +
                     "A null value shall indicate that the state cannot be determined.",
 
-                xref: { document: "cluster", section: "9.3.8.1" }
+                xref: "cluster§9.3.8.1"
             },
 
             {
                 details: "Indicates whether the EV is currently allowed to charge from or discharge to the EVSE.",
-                xref: { document: "cluster", section: "9.3.8.2" }
+                xref: "cluster§9.3.8.2"
             },
 
             {
@@ -169,7 +169,7 @@ EnergyEvse.patch(
                     "When the SupplyState attribute is DisabledError, the FaultState attribute will be one of the values " +
                     "listed in FaultStateEnum, except NoError. For all values of SupplyState other than DisabledError, " +
                     "the FaultState attribute shall be NoError.",
-                xref: { document: "cluster", section: "9.3.8.3" }
+                xref: "cluster§9.3.8.3"
             },
 
             {
@@ -183,7 +183,7 @@ EnergyEvse.patch(
                     "This attribute shall be persisted, for example a temporary power failure should not stop the vehicle " +
                     "from being charged.",
 
-                xref: { document: "cluster", section: "9.3.8.4" }
+                xref: "cluster§9.3.8.4"
             },
 
             {
@@ -197,21 +197,21 @@ EnergyEvse.patch(
                     "This attribute shall be persisted, for example a temporary power failure should not stop the vehicle " +
                     "from being discharged.",
 
-                xref: { document: "cluster", section: "9.3.8.5" }
+                xref: "cluster§9.3.8.5"
             },
 
             {
                 details: "Indicates the capacity that the circuit that the EVSE is connected to can provide. It is intended to " +
                     "allow implementation of a self-managed network of EVSEs. It is assumed that the device will allow " +
                     "the setting of such values by an installer.",
-                xref: { document: "cluster", section: "9.3.8.6" }
+                xref: "cluster§9.3.8.6"
             },
 
             {
                 details: "Indicates the minimum current that can be delivered by the EVSE to the EV." +
                     "\n" +
                     "The attribute can be set using the EnableCharging command.",
-                xref: { document: "cluster", section: "9.3.8.7" }
+                xref: "cluster§9.3.8.7"
             },
 
             {
@@ -234,7 +234,7 @@ EnergyEvse.patch(
                     "\n" +
                     "  • UserMaximumChargeCurrent attribute",
 
-                xref: { document: "cluster", section: "9.3.8.8" }
+                xref: "cluster§9.3.8.8"
             },
 
             {
@@ -249,7 +249,7 @@ EnergyEvse.patch(
                     "\n" +
                     "  • MaximumDischargeCurrent field in the EnableDischarging command",
 
-                xref: { document: "cluster", section: "9.3.8.9" }
+                xref: "cluster§9.3.8.9"
             },
 
             {
@@ -269,7 +269,7 @@ EnergyEvse.patch(
                     "shall be persisted across reboots to ensure it does not cause charging issues during temporary power " +
                     "failures.",
 
-                xref: { document: "cluster", section: "9.3.8.10" }
+                xref: "cluster§9.3.8.10"
             },
 
             {
@@ -283,7 +283,7 @@ EnergyEvse.patch(
                     "energy starting at 00:30, then the EVSE must compute a random delay between 0-599s and add this to " +
                     "its initial planned start time.",
 
-                xref: { document: "cluster", section: "9.3.8.11" }
+                xref: "cluster§9.3.8.11"
             },
 
             {
@@ -294,7 +294,7 @@ EnergyEvse.patch(
                     "Manual mode tag), or that the vehicle is not plugged in with the SupplyState indicating that " +
                     "charging is enabled.",
 
-                xref: { document: "cluster", section: "9.3.8.12" }
+                xref: "cluster§9.3.8.12"
             },
 
             {
@@ -305,7 +305,7 @@ EnergyEvse.patch(
                     "Manual mode tag), or that the vehicle is not plugged in with the SupplyState indicating that " +
                     "charging is enabled.",
 
-                xref: { document: "cluster", section: "9.3.8.13" }
+                xref: "cluster§9.3.8.13"
             },
 
             {
@@ -317,7 +317,7 @@ EnergyEvse.patch(
                     "charging is enabled, or that the next ChargingTargetStruct is using the TargetSoC value to charge " +
                     "the vehicle.",
 
-                xref: { document: "cluster", section: "9.3.8.14" }
+                xref: "cluster§9.3.8.14"
             },
 
             {
@@ -331,7 +331,7 @@ EnergyEvse.patch(
                     "\n" +
                     "If the SOC feature is not supported, only the values null and 100% are supported.",
 
-                xref: { document: "cluster", section: "9.3.8.15" }
+                xref: "cluster§9.3.8.15"
             },
 
             {
@@ -365,7 +365,7 @@ EnergyEvse.patch(
                     "\n" +
                     "= 29.82 Miles",
 
-                xref: { document: "cluster", section: "9.3.8.16" }
+                xref: "cluster§9.3.8.16"
             },
 
             {
@@ -373,12 +373,12 @@ EnergyEvse.patch(
                     "attribute is only available on EVSEs which can read the state of charge from the vehicle and that " +
                     "support the SOC feature. If the StateOfCharge cannot be read from the vehicle it shall be returned " +
                     "with a NULL value.",
-                xref: { document: "cluster", section: "9.3.8.17" }
+                xref: "cluster§9.3.8.17"
             },
 
             {
                 details: "Indicates the capacity of the EV battery in mWh. This value is always positive.",
-                xref: { document: "cluster", section: "9.3.8.18" }
+                xref: "cluster§9.3.8.18"
             },
 
             {
@@ -387,41 +387,41 @@ EnergyEvse.patch(
                     "\n" +
                     "The field may be based on the e-Mobility Account Identifier (EMAID). A null value shall indicate " +
                     "that this is unknown.",
-                xref: { document: "cluster", section: "9.3.8.19" }
+                xref: "cluster§9.3.8.19"
             },
 
-            { xref: { document: "cluster", section: "9.3.8" } },
-            { xref: { document: "cluster", section: "9.3.8" } },
-            { xref: { document: "cluster", section: "9.3.8" } },
-            { xref: { document: "cluster", section: "9.3.8" } },
+            { xref: "cluster§9.3.8" },
+            { xref: "cluster§9.3.8" },
+            { xref: "cluster§9.3.8" },
+            { xref: "cluster§9.3.8" },
 
             {
                 details: "This event shall be generated when the EV is plugged in.",
-                xref: { document: "cluster", section: "9.3.10.1" },
+                xref: "cluster§9.3.10.1",
                 children: [{
                     details: "This is the new session ID created after the vehicle is plugged in.",
-                    xref: { document: "cluster", section: "9.3.10.1.1" }
+                    xref: "cluster§9.3.10.1.1"
                 }]
             },
 
             {
                 details: "This event shall be generated when the EV is unplugged or not detected (having been previously " +
                     "plugged in). When the vehicle is unplugged then the session is ended.",
-                xref: { document: "cluster", section: "9.3.10.2" },
+                xref: "cluster§9.3.10.2",
 
                 children: [
                     {
                         details: "This field shall indicate the current value of the SessionID attribute.",
-                        xref: { document: "cluster", section: "9.3.10.2.1" }
+                        xref: "cluster§9.3.10.2.1"
                     },
                     {
                         details: "This field shall indicate the value of the State attribute prior to the EV not being detected.",
-                        xref: { document: "cluster", section: "9.3.10.2.2" }
+                        xref: "cluster§9.3.10.2.2"
                     },
                     {
                         details: "This field shall indicate the total duration of the session, from the start of the session when the " +
                             "EV was plugged in, until it was unplugged.",
-                        xref: { document: "cluster", section: "9.3.10.2.3" }
+                        xref: "cluster§9.3.10.2.3"
                     },
 
                     {
@@ -432,7 +432,7 @@ EnergyEvse.patch(
                             "the sum of energy transferred from the EVSE to the EV, and shall NOT be a net value of charging and " +
                             "discharging energy.",
 
-                        xref: { document: "cluster", section: "9.3.10.2.4" }
+                        xref: "cluster§9.3.10.2.4"
                     },
 
                     {
@@ -443,7 +443,7 @@ EnergyEvse.patch(
                             "include the sum of energy transferred from the EV to the EVSE, and shall NOT be a net value of " +
                             "charging and discharging energy.",
 
-                        xref: { document: "cluster", section: "9.3.10.2.5" }
+                        xref: "cluster§9.3.10.2.5"
                     }
                 ]
             },
@@ -452,16 +452,16 @@ EnergyEvse.patch(
                 details: "This event shall be generated whenever the EV starts charging or discharging, except when an EV has " +
                     "switched between charging and discharging under the control of the PowerAdjustment feature of the " +
                     "Device Energy Management cluster of the associated Device Energy Management device.",
-                xref: { document: "cluster", section: "9.3.10.3" },
+                xref: "cluster§9.3.10.3",
 
                 children: [
                     {
                         details: "This field shall indicate the value of the SessionID attribute at the time the event was generated.",
-                        xref: { document: "cluster", section: "9.3.10.3.1" }
+                        xref: "cluster§9.3.10.3.1"
                     },
                     {
                         details: "This field shall indicate the value of the State attribute at the time the event was generated.",
-                        xref: { document: "cluster", section: "9.3.10.3.2" }
+                        xref: "cluster§9.3.10.3.2"
                     },
 
                     {
@@ -472,7 +472,7 @@ EnergyEvse.patch(
                             "from the MaximumChargeCurrent attribute. A zero value indicates that the EV has not been enabled for " +
                             "charging.",
 
-                        xref: { document: "cluster", section: "9.3.10.3.3" }
+                        xref: "cluster§9.3.10.3.3"
                     },
 
                     {
@@ -483,7 +483,7 @@ EnergyEvse.patch(
                             "directly from the MaximumDischargeCurrent attribute. A zero value indicates that the EV has not been " +
                             "enabled for discharging.",
 
-                        xref: { document: "cluster", section: "9.3.10.3.4" }
+                        xref: "cluster§9.3.10.3.4"
                     }
                 ]
             },
@@ -492,31 +492,31 @@ EnergyEvse.patch(
                 details: "This event shall be generated whenever the EV stops charging or discharging, except when an EV has " +
                     "switched between charging and discharging under the control of the PowerAdjustment feature of the " +
                     "Device Energy Management cluster of the associated Device Energy Management device.",
-                xref: { document: "cluster", section: "9.3.10.4" },
+                xref: "cluster§9.3.10.4",
 
                 children: [
                     {
                         details: "This field shall indicate the value of the SessionID attribute prior to the energy transfer " +
                             "stopping.",
-                        xref: { document: "cluster", section: "9.3.10.4.1" }
+                        xref: "cluster§9.3.10.4.1"
                     },
                     {
                         details: "This field shall indicate the value of the State attribute prior to the energy transfer stopping.",
-                        xref: { document: "cluster", section: "9.3.10.4.2" }
+                        xref: "cluster§9.3.10.4.2"
                     },
                     {
                         details: "This field shall indicate the reason why the energy transferred stopped.",
-                        xref: { document: "cluster", section: "9.3.10.4.3" }
+                        xref: "cluster§9.3.10.4.3"
                     },
                     {
                         details: "This field shall indicate the amount of energy transferred from the EVSE to the EV since the " +
                             "previous EnergyTransferStarted event, in mWh.",
-                        xref: { document: "cluster", section: "9.3.10.4.4" }
+                        xref: "cluster§9.3.10.4.4"
                     },
                     {
                         details: "This field shall indicate the amount of energy transferred from the EV to the EVSE since the " +
                             "previous EnergyTransferStarted event, in mWh.",
-                        xref: { document: "cluster", section: "9.3.10.4.5" }
+                        xref: "cluster§9.3.10.4.5"
                     }
                 ]
             },
@@ -533,26 +533,26 @@ EnergyEvse.patch(
                     "cleared, the EVSE device shall set the FaultState attribute to NoError and the SupplyState attribute " +
                     "shall be set back to its previous state.",
 
-                xref: { document: "cluster", section: "9.3.10.5" },
+                xref: "cluster§9.3.10.5",
 
                 children: [
                     {
                         details: "This field shall indicate the value of the SessionID attribute prior to the Fault State being " +
                             "changed. A value of null indicates no sessions have occurred before the fault occurred.",
-                        xref: { document: "cluster", section: "9.3.10.5.1" }
+                        xref: "cluster§9.3.10.5.1"
                     },
                     {
                         details: "This field shall indicate the value of the State attribute prior to the Fault State being changed.",
-                        xref: { document: "cluster", section: "9.3.10.5.2" }
+                        xref: "cluster§9.3.10.5.2"
                     },
                     {
                         details: "This field shall indicate the value of the FaultState attribute prior to the Fault State being " +
                             "changed.",
-                        xref: { document: "cluster", section: "9.3.10.5.3" }
+                        xref: "cluster§9.3.10.5.3"
                     },
                     {
                         details: "This field shall indicate the current value of the FaultState attribute.",
-                        xref: { document: "cluster", section: "9.3.10.5.4" }
+                        xref: "cluster§9.3.10.5.4"
                     }
                 ]
             },
@@ -560,22 +560,16 @@ EnergyEvse.patch(
             {
                 details: "This event shall be generated when a RFID card has been read. This allows a controller to register " +
                     "the card ID and use this to authenticate and start the charging session.",
-                xref: { document: "cluster", section: "9.3.10.6" },
-                children: [{
-                    details: "The UID field (ISO 14443A UID) is either 4, 7 or 10 bytes.",
-                    xref: { document: "cluster", section: "9.3.10.6.1" }
-                }]
+                xref: "cluster§9.3.10.6",
+                children: [{ details: "The UID field (ISO 14443A UID) is either 4, 7 or 10 bytes.", xref: "cluster§9.3.10.6.1" }]
             },
 
-            {
-                details: "Allows a client to disable the EVSE from charging and discharging.",
-                xref: { document: "cluster", section: "9.3.9.1" }
-            },
+            { details: "Allows a client to disable the EVSE from charging and discharging.", xref: "cluster§9.3.9.1" },
 
             {
                 details: "This command allows a client to enable the EVSE to charge an EV, and to provide or update the " +
                     "maximum and minimum charge current.",
-                xref: { document: "cluster", section: "9.3.9.2" },
+                xref: "cluster§9.3.9.2",
 
                 children: [
                     {
@@ -583,7 +577,7 @@ EnergyEvse.patch(
                             "\n" +
                             "A value in the past in this field shall disable the EVSE charging whereas a null value shall enable " +
                             "it permanently.",
-                        xref: { document: "cluster", section: "9.3.9.2.1" }
+                        xref: "cluster§9.3.9.2.1"
                     },
 
                     {
@@ -592,7 +586,7 @@ EnergyEvse.patch(
                             "\n" +
                             "The value of the MinimumChargeCurrent attribute shall be set to the value of this field (see " +
                             "MinimumChargeCurrent attribute for further details).",
-                        xref: { document: "cluster", section: "9.3.9.2.2" }
+                        xref: "cluster§9.3.9.2.2"
                     },
 
                     {
@@ -604,7 +598,7 @@ EnergyEvse.patch(
                             "below then this value, and then later adjusted above this value, the resulting MaximumChargeCurrent " +
                             "attribute will be limited to this value.",
 
-                        xref: { document: "cluster", section: "9.3.9.2.3" }
+                        xref: "cluster§9.3.9.2.3"
                     }
                 ]
             },
@@ -612,7 +606,7 @@ EnergyEvse.patch(
             {
                 details: "Upon receipt, this shall allow a client to enable the discharge of an EV, and to provide or update " +
                     "the maximum discharge current.",
-                xref: { document: "cluster", section: "9.3.9.3" },
+                xref: "cluster§9.3.9.3",
 
                 children: [
                     {
@@ -620,56 +614,47 @@ EnergyEvse.patch(
                             "\n" +
                             "A value in the past in this field shall disable the EVSE discharging whereas a null value shall " +
                             "enable EVSE discharging permanently.",
-                        xref: { document: "cluster", section: "9.3.9.3.1" }
+                        xref: "cluster§9.3.9.3.1"
                     },
 
                     {
                         details: "This field shall indicate the maximum current that can be received by the EVSE from the EV. The EVSE " +
                             "current limit can be advertised to an EV in 0.6A steps. The value of the MaximumDischargeCurrent " +
                             "attribute shall be stored and persisted across reboots by the EVSE to the value of this field.",
-                        xref: { document: "cluster", section: "9.3.9.3.2" }
+                        xref: "cluster§9.3.9.3.2"
                     }
                 ]
             },
 
-            {
-                details: "Allows a client to put the EVSE into a self-diagnostics mode.",
-                xref: { document: "cluster", section: "9.3.9.4" }
-            },
+            { details: "Allows a client to put the EVSE into a self-diagnostics mode.", xref: "cluster§9.3.9.4" },
 
             {
                 details: "Allows a client to set the user specified charging targets.",
-                xref: { document: "cluster", section: "9.3.9.5" },
+                xref: "cluster§9.3.9.5",
 
                 children: [{
                     details: "This field shall indicate a list of up to 7 sets of daily charging targets together with their " +
                         "associated days of the week. Each of the days of the week may only be included in a single " +
                         "ChargingTargetSchedule within this list field.",
-                    xref: { document: "cluster", section: "9.3.9.5.1" }
+                    xref: "cluster§9.3.9.5.1"
                 }]
             },
 
-            {
-                details: "Allows a client to retrieve the current set of charging targets.",
-                xref: { document: "cluster", section: "9.3.9.6" }
-            },
-            {
-                details: "Allows a client to clear all stored charging targets.",
-                xref: { document: "cluster", section: "9.3.9.8" }
-            },
+            { details: "Allows a client to retrieve the current set of charging targets.", xref: "cluster§9.3.9.6" },
+            { details: "Allows a client to clear all stored charging targets.", xref: "cluster§9.3.9.8" },
 
             {
                 details: "The GetTargetsResponse is sent in response to the GetTargets Command.",
-                xref: { document: "cluster", section: "9.3.9.7" },
+                xref: "cluster§9.3.9.7",
                 children: [{
                     details: "This field shall indicate a list of up to 7 sets of daily charging targets together with their " +
                         "associated days of the week.",
-                    xref: { document: "cluster", section: "9.3.9.7.1" }
+                    xref: "cluster§9.3.9.7.1"
                 }]
             },
 
             {
-                xref: { document: "cluster", section: "9.3.7.1" },
+                xref: "cluster§9.3.7.1",
 
                 children: [
                     { description: "Sunday" },
@@ -683,7 +668,7 @@ EnergyEvse.patch(
             },
 
             {
-                xref: { document: "cluster", section: "9.3.7.2" },
+                xref: "cluster§9.3.7.2",
 
                 children: [
                     { description: "The EV is not plugged in." },
@@ -699,7 +684,7 @@ EnergyEvse.patch(
             },
 
             {
-                xref: { document: "cluster", section: "9.3.7.3" },
+                xref: "cluster§9.3.7.3",
 
                 children: [
                     { description: "The EV is not currently allowed to charge or discharge" },
@@ -716,7 +701,7 @@ EnergyEvse.patch(
             },
 
             {
-                xref: { document: "cluster", section: "9.3.7.4" },
+                xref: "cluster§9.3.7.4",
 
                 children: [
                     { description: "The EVSE is not in an error state." },
@@ -740,7 +725,7 @@ EnergyEvse.patch(
             },
 
             {
-                xref: { document: "cluster", section: "9.3.7.5" },
+                xref: "cluster§9.3.7.5",
                 children: [
                     { description: "The EV decided to stop" },
                     { description: "The EVSE decided to stop" },
@@ -763,7 +748,7 @@ EnergyEvse.patch(
                     "\n" +
                     "To compute the charging time: Charging StartTime = TargetTimeMinutesPastMidnight - ChargingTime",
 
-                xref: { document: "cluster", section: "9.3.7.6" },
+                xref: "cluster§9.3.7.6",
 
                 children: [
                     {
@@ -791,7 +776,7 @@ EnergyEvse.patch(
                             "expected that the EVSE may need to begin charging immediately, and may not be able to guarantee that " +
                             "the vehicle will be able to reach the target.",
 
-                        xref: { document: "cluster", section: "9.3.7.6.1" }
+                        xref: "cluster§9.3.7.6.1"
                     },
 
                     {
@@ -817,7 +802,7 @@ EnergyEvse.patch(
                             "\n" +
                             "and charge until the vehicle stops demanding a charge.",
 
-                        xref: { document: "cluster", section: "9.3.7.6.2" }
+                        xref: "cluster§9.3.7.6.2"
                     },
 
                     {
@@ -840,25 +825,25 @@ EnergyEvse.patch(
                             "value to the Battery Capacity of the vehicle, since the EV may also require energy for heating and " +
                             "cooling of the battery during charging, or for heating or cooling the cabin.",
 
-                        xref: { document: "cluster", section: "9.3.7.6.3" }
+                        xref: "cluster§9.3.7.6.3"
                     }
                 ]
             },
 
             {
                 details: "This represents a set of user specified charging targets for an EV for a set of specified days.",
-                xref: { document: "cluster", section: "9.3.7.7" },
+                xref: "cluster§9.3.7.7",
 
                 children: [
                     {
                         details: "This field shall indicate the days of the week that the charging targets SHOULD be associated to. " +
                             "This field is a bitmap and therefore the associated targets could be applied to multiple days.",
-                        xref: { document: "cluster", section: "9.3.7.8" }
+                        xref: "cluster§9.3.7.8"
                     },
                     {
                         details: "This field shall indicate a list of up to 10 charging targets for each of the associated days of the " +
                             "week.",
-                        xref: { document: "cluster", section: "9.3.7.9" }
+                        xref: "cluster§9.3.7.9"
                     }
                 ]
             }

@@ -12,17 +12,17 @@ DeviceEnergyManagementDt.patch({
     classification: "utility",
     details: "A Device Energy Management device provides reporting and optionally adjustment of the electrical " +
         "power planned on being consumed or produced by the device.",
-    xref: { document: "device", section: "2.7" },
+    xref: "device§2.7",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "2.7.4" } },
-        { xref: { document: "device", section: "2.7.4" } },
+        { xref: "device§2.7.4" },
+        { xref: "device§2.7.4" },
 
         {
             children: [{
                 description: "The DEM cluster on this endpoint accepts commands to adjust its energy operation.",
-                xref: { document: "device", section: "2.7.3" }
+                xref: "device§2.7.3"
             }]
         }
     ]

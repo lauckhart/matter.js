@@ -14,13 +14,13 @@ GeneralDiagnostics.patch({
         "standardized diagnostics metrics that may be used by a Node to assist a user or Administrator in " +
         "diagnosing potential problems. The General Diagnostics Cluster attempts to centralize all metrics " +
         "that are broadly relevant to the majority of Nodes.",
-    xref: { document: "core", section: "11.12" },
+    xref: "core§11.12",
 
     children: [
         undefined,
 
         {
-            xref: { document: "core", section: "11.12.4" },
+            xref: "core§11.12.4",
 
             children: [{
                 description: "DataModelTest",
@@ -29,14 +29,14 @@ GeneralDiagnostics.patch({
                     "\n" +
                     "This feature shall be supported if the MaxPathsPerInvoke attribute of the Basic Information Cluster " +
                     "has a value > 1.",
-                xref: { document: "core", section: "11.12.4.1" }
+                xref: "core§11.12.4.1"
             }]
         },
 
         {
             details: "The NetworkInterfaces attribute shall be a list of NetworkInterface structs. Each logical network " +
                 "interface on the Node shall be represented by a single entry within the NetworkInterfaces attribute.",
-            xref: { document: "core", section: "11.12.6.1" }
+            xref: "core§11.12.6.1"
         },
 
         {
@@ -44,7 +44,7 @@ GeneralDiagnostics.patch({
                 "rebooted. The RebootCount attribute SHOULD be incremented each time the Node reboots. The " +
                 "RebootCount attribute shall NOT be incremented when a Node wakes from a low-power or sleep state. " +
                 "The RebootCount attribute shall only be reset to 0 upon a factory reset of the Node.",
-            xref: { document: "core", section: "11.12.6.2" }
+            xref: "core§11.12.6.2"
         },
 
         {
@@ -53,7 +53,7 @@ GeneralDiagnostics.patch({
                 "time that a Node is in a low-power or sleep state. This attribute shall only be reset upon a device " +
                 "reboot. This attribute shall be based on the same System Time source as those used to fulfill any " +
                 "usage of the system-us and system-ms data types within the server.",
-            xref: { document: "core", section: "11.12.6.3" }
+            xref: "core§11.12.6.3"
         },
 
         {
@@ -61,12 +61,12 @@ GeneralDiagnostics.patch({
                 "time, in hours, that the Node has been operational. The TotalOperationalHours attribute SHOULD be " +
                 "incremented to account for the periods of time that a Node is in a low-power or sleep state. The " +
                 "TotalOperationalHours attribute shall only be reset upon a factory reset of the Node.",
-            xref: { document: "core", section: "11.12.6.4" }
+            xref: "core§11.12.6.4"
         },
 
         {
             details: "The BootReason attribute shall indicate the reason for the Node’s most recent boot.",
-            xref: { document: "core", section: "11.12.6.5" }
+            xref: "core§11.12.6.5"
         },
 
         {
@@ -80,7 +80,7 @@ GeneralDiagnostics.patch({
                 "significance. Clients interested in monitoring changes in active faults may subscribe to this " +
                 "attribute, or they may subscribe to HardwareFaultChange.",
 
-            xref: { document: "core", section: "11.12.6.6" }
+            xref: "core§11.12.6.6"
         },
 
         {
@@ -93,7 +93,7 @@ GeneralDiagnostics.patch({
                 "interested in monitoring changes in active faults may subscribe to this attribute, or they may " +
                 "subscribe to RadioFaultChange.",
 
-            xref: { document: "core", section: "11.12.6.7" }
+            xref: "core§11.12.6.7"
         },
 
         {
@@ -106,7 +106,7 @@ GeneralDiagnostics.patch({
                 "interested in monitoring changes in active faults may subscribe to this attribute, or they may " +
                 "subscribe to NetworkFaultChange.",
 
-            xref: { document: "core", section: "11.12.6.8" }
+            xref: "core§11.12.6.8"
         },
 
         {
@@ -117,25 +117,25 @@ GeneralDiagnostics.patch({
                 "inadvertently commissioned with test event trigger mode enabled, and take appropriate action (e.g. " +
                 "warn the user and/or offer to remove all fabrics on the Node).",
 
-            xref: { document: "core", section: "11.12.6.9" }
+            xref: "core§11.12.6.9"
         },
 
-        { xref: { document: "core", section: "11.12.6" } },
+        { xref: "core§11.12.6" },
 
         {
             details: "The HardwareFaultChange Event shall indicate a change in the set of hardware faults currently " +
                 "detected by the Node.",
-            xref: { document: "core", section: "11.12.8.1" },
+            xref: "core§11.12.8.1",
 
             children: [
                 {
                     details: "This field shall represent the set of faults currently detected, as per HardwareFaultEnum.",
-                    xref: { document: "core", section: "11.12.8.1.1" }
+                    xref: "core§11.12.8.1.1"
                 },
                 {
                     details: "This field shall represent the set of faults detected prior to this change event, as per " +
                         "HardwareFaultEnum.",
-                    xref: { document: "core", section: "11.12.8.1.2" }
+                    xref: "core§11.12.8.1.2"
                 }
             ]
         },
@@ -143,17 +143,17 @@ GeneralDiagnostics.patch({
         {
             details: "The RadioFaultChange Event shall indicate a change in the set of radio faults currently detected by " +
                 "the Node.",
-            xref: { document: "core", section: "11.12.8.2" },
+            xref: "core§11.12.8.2",
 
             children: [
                 {
                     details: "This field shall represent the set of faults currently detected, as per RadioFaultEnum.",
-                    xref: { document: "core", section: "11.12.8.2.1" }
+                    xref: "core§11.12.8.2.1"
                 },
                 {
                     details: "This field shall represent the set of faults detected prior to this change event, as per " +
                         "RadioFaultEnum.",
-                    xref: { document: "core", section: "11.12.8.2.2" }
+                    xref: "core§11.12.8.2.2"
                 }
             ]
         },
@@ -161,28 +161,27 @@ GeneralDiagnostics.patch({
         {
             details: "The NetworkFaultChange Event shall indicate a change in the set of network faults currently detected " +
                 "by the Node.",
-            xref: { document: "core", section: "11.12.8.3" },
+            xref: "core§11.12.8.3",
 
             children: [
                 {
                     details: "This field shall represent the set of faults currently detected, as per NetworkFaultEnum.",
-                    xref: { document: "core", section: "11.12.8.3.1" }
+                    xref: "core§11.12.8.3.1"
                 },
                 {
                     details: "This field shall represent the set of faults detected prior to this change event, as per " +
                         "NetworkFaultEnum.",
-                    xref: { document: "core", section: "11.12.8.3.2" }
+                    xref: "core§11.12.8.3.2"
                 }
             ]
         },
 
         {
             details: "The BootReason Event shall indicate the reason that caused the device to start-up.",
-            xref: { document: "core", section: "11.12.8.4" },
-            children: [{
-                details: "This field shall contain the reason for this BootReason event.",
-                xref: { document: "core", section: "11.12.8.4.1" }
-            }]
+            xref: "core§11.12.8.4",
+            children: [
+                { details: "This field shall contain the reason for this BootReason event.", xref: "core§11.12.8.4.1" }
+            ]
         },
 
         {
@@ -193,7 +192,7 @@ GeneralDiagnostics.patch({
                 "\n" +
                 "The fields for the TestEventTrigger command are as follows:",
 
-            xref: { document: "core", section: "11.12.7.1" },
+            xref: "core§11.12.7.1",
 
             children: [
                 {
@@ -212,7 +211,7 @@ GeneralDiagnostics.patch({
                         "response status of CONSTRAINT_ERROR if the EnableKey field does not match the a-priori value " +
                         "configured on the device.",
 
-                    xref: { document: "core", section: "11.12.7.1.1" }
+                    xref: "core§11.12.7.1.1"
                 },
 
                 {
@@ -238,7 +237,7 @@ GeneralDiagnostics.patch({
                         "the INVALID_COMMAND status, equivalent to the situation of receiving an unknown EventTrigger, for " +
                         "all possible EventTrigger values.",
 
-                    xref: { document: "core", section: "11.12.7.1.2" }
+                    xref: "core§11.12.7.1.2"
                 }
             ]
         },
@@ -251,7 +250,7 @@ GeneralDiagnostics.patch({
                 "\n" +
                 "Upon command invocation, the server shall respond with a TimeSnapshotResponse.",
 
-            xref: { document: "core", section: "11.12.7.2" }
+            xref: "core§11.12.7.2"
         },
 
         {
@@ -263,7 +262,7 @@ GeneralDiagnostics.patch({
                 "If the Time Synchronization cluster is supported by the node, the PosixTimeMs field shall NOT be " +
                 "null unless the UTCTime attribute in the Time Synchronization cluster is also null.",
 
-            xref: { document: "core", section: "11.12.7.3" },
+            xref: "core§11.12.7.3",
 
             children: [
                 {
@@ -272,7 +271,7 @@ GeneralDiagnostics.patch({
                         "\n" +
                         "The value shall be taken from the same clock which populates the Timestamp field in events when " +
                         "using System Time for the field.",
-                    xref: { document: "core", section: "11.12.7.3.1" }
+                    xref: "core§11.12.7.3.1"
                 },
 
                 {
@@ -284,7 +283,7 @@ GeneralDiagnostics.patch({
                         "\n" +
                         "  • The node’s Time Synchronization cluster instance’s UTCTime attribute is null.",
 
-                    xref: { document: "core", section: "11.12.7.3.2" }
+                    xref: "core§11.12.7.3.2"
                 }
             ]
         },
@@ -299,16 +298,16 @@ GeneralDiagnostics.patch({
                 "\n" +
                 "The fields for the PayloadTestRequest command are as follows:",
 
-            xref: { document: "core", section: "11.12.7.4" },
+            xref: "core§11.12.7.4",
 
             children: [
                 {
                     details: "This field shall have the same meaning and usage as the TestEventTrigger EnableKey field.",
-                    xref: { document: "core", section: "11.12.7.4.1" }
+                    xref: "core§11.12.7.4.1"
                 },
                 {
                     details: "This field shall indicate the value to use in every byte of the PayloadTestResponse’s Payload field.",
-                    xref: { document: "core", section: "11.12.7.4.2" }
+                    xref: "core§11.12.7.4.2"
                 },
 
                 {
@@ -337,22 +336,22 @@ GeneralDiagnostics.patch({
                         "to a content whose hexadecimal representation would be A5A5A5A5A5A5A5A5A5A5, and base64 " +
                         "representation would be paWlpaWlpaWlpQ==.",
 
-                    xref: { document: "core", section: "11.12.7.4.3" }
+                    xref: "core§11.12.7.4.3"
                 }
             ]
         },
 
         {
             details: "This command is sent by the server on receipt of the PayloadTestRequest command.",
-            xref: { document: "core", section: "11.12.7.5" },
+            xref: "core§11.12.7.5",
             children: [{
                 details: "This field shall contain the computed response of the PayloadTestRequest command.",
-                xref: { document: "core", section: "11.12.7.5.1" }
+                xref: "core§11.12.7.5.1"
             }]
         },
 
         {
-            xref: { document: "core", section: "11.12.5.1" },
+            xref: "core§11.12.5.1",
 
             children: [
                 { description: "The Node has encountered an unspecified fault." },
@@ -370,7 +369,7 @@ GeneralDiagnostics.patch({
         },
 
         {
-            xref: { document: "core", section: "11.12.5.2" },
+            xref: "core§11.12.5.2",
 
             children: [
                 { description: "The Node has encountered an unspecified radio fault." },
@@ -384,7 +383,7 @@ GeneralDiagnostics.patch({
         },
 
         {
-            xref: { document: "core", section: "11.12.5.3" },
+            xref: "core§11.12.5.3",
 
             children: [
                 { description: "The Node has encountered an unspecified fault." },
@@ -397,7 +396,7 @@ GeneralDiagnostics.patch({
         },
 
         {
-            xref: { document: "core", section: "11.12.5.4" },
+            xref: "core§11.12.5.4",
 
             children: [
                 { description: "Indicates an interface of an unspecified type." },
@@ -409,7 +408,7 @@ GeneralDiagnostics.patch({
         },
 
         {
-            xref: { document: "core", section: "11.12.5.5" },
+            xref: "core§11.12.5.5",
 
             children: [
                 {
@@ -429,32 +428,32 @@ GeneralDiagnostics.patch({
         {
             details: "This structure describes a network interface supported by the Node, as provided in the " +
                 "NetworkInterfaces attribute.",
-            xref: { document: "core", section: "11.12.5.6" },
+            xref: "core§11.12.5.6",
 
             children: [
                 {
                     details: "This field shall indicate a human-readable (displayable) name for the network interface, that is " +
                         "different from all other interfaces.",
-                    xref: { document: "core", section: "11.12.5.6.1" }
+                    xref: "core§11.12.5.6.1"
                 },
                 {
                     details: "This field shall indicate if the Node is currently advertising itself operationally on this network " +
                         "interface and is capable of successfully receiving incoming traffic from other Nodes.",
-                    xref: { document: "core", section: "11.12.5.6.2" }
+                    xref: "core§11.12.5.6.2"
                 },
 
                 {
                     details: "This field shall indicate whether the Node is currently able to reach off-premise services it uses " +
                         "by utilizing IPv4. The value shall be null if the Node does not use such services or does not know " +
                         "whether it can reach them.",
-                    xref: { document: "core", section: "11.12.5.6.3" }
+                    xref: "core§11.12.5.6.3"
                 },
 
                 {
                     details: "This field shall indicate whether the Node is currently able to reach off-premise services it uses " +
                         "by utilizing IPv6. The value shall be null if the Node does not use such services or does not know " +
                         "whether it can reach them.",
-                    xref: { document: "core", section: "11.12.5.6.4" }
+                    xref: "core§11.12.5.6.4"
                 },
 
                 {
@@ -463,13 +462,13 @@ GeneralDiagnostics.patch({
                         "interface and contain the current extended MAC address for a 802.15.4 interface. The byte order of " +
                         "the octstr shall be in wire byte order. For addresses values less than 64 bits, the first two bytes " +
                         "shall be zero.",
-                    xref: { document: "core", section: "11.12.5.6.5" }
+                    xref: "core§11.12.5.6.5"
                 },
 
                 {
                     details: "This field shall provide a list of the IPv4 addresses that are currently assigned to the network " +
                         "interface.",
-                    xref: { document: "core", section: "11.12.5.6.6" }
+                    xref: "core§11.12.5.6.6"
                 },
 
                 {
@@ -477,12 +476,12 @@ GeneralDiagnostics.patch({
                         "network interface. This list shall include the Node’s link-local address and SHOULD include any " +
                         "assigned GUA and ULA addresses. This list shall NOT include any multicast group addresses to which " +
                         "the Node is subscribed.",
-                    xref: { document: "core", section: "11.12.5.6.7" }
+                    xref: "core§11.12.5.6.7"
                 },
 
                 {
                     details: "This field shall indicate the type of the interface using the InterfaceTypeEnum.",
-                    xref: { document: "core", section: "11.12.5.6.8" }
+                    xref: "core§11.12.5.6.8"
                 }
             ]
         }

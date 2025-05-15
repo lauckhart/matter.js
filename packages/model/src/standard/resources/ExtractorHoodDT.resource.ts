@@ -30,13 +30,13 @@ ExtractorHoodDt.patch({
         "\n" +
         "  • Telescoping Extractors",
 
-    xref: { document: "device", section: "13.10" },
+    xref: "device§13.10",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "13.10.5" } },
-        { xref: { document: "device", section: "13.10.5" } },
-        { xref: { document: "device", section: "13.10.5" } },
-        { xref: { document: "device", section: "13.10.5" } }
+        { xref: "device§13.10.5" },
+        { xref: "device§13.10.5" },
+        { xref: "device§13.10.5" },
+        { xref: "device§13.10.5" }
     ]
 });

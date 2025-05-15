@@ -14,15 +14,15 @@ BridgedNodeDt.patch({
         "first\" endpoint that describes itself and any other endpoints that make up the Bridged Node. A " +
         "Bridged Node endpoint represents a device on a foreign network, but is not the root endpoint of the " +
         "bridge itself.",
-    xref: { document: "device", section: "2.5" },
+    xref: "device§2.5",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "2.5.5" } },
-        { xref: { document: "device", section: "2.5.5" } },
-        { xref: { document: "device", section: "2.5.5" } },
-        { xref: { document: "device", section: "2.5.5" } },
-        { xref: { document: "device", section: "2.5.5" } },
-        { children: [{ description: "See description below.", xref: { document: "device", section: "2.5.3" } }] }
+        { xref: "device§2.5.5" },
+        { xref: "device§2.5.5" },
+        { xref: "device§2.5.5" },
+        { xref: "device§2.5.5" },
+        { xref: "device§2.5.5" },
+        { children: [{ description: "See description below.", xref: "device§2.5.3" }] }
     ]
 });

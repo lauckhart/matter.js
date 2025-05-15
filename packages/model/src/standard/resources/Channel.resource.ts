@@ -24,13 +24,13 @@ Channel.patch({
         "\n" +
         "The cluster server for Channel is implemented by an endpoint that controls the current Channel.",
 
-    xref: { document: "cluster", section: "6.6" },
+    xref: "cluster§6.6",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "6.6.4" },
+            xref: "cluster§6.6.4",
 
             children: [
                 { description: "ChannelList", details: "Provides list of available channels." },
@@ -43,18 +43,15 @@ Channel.patch({
             ]
         },
 
-        {
-            details: "This attribute shall provide the list of supported channels.",
-            xref: { document: "cluster", section: "6.6.6.1" }
-        },
+        { details: "This attribute shall provide the list of supported channels.", xref: "cluster§6.6.6.1" },
         {
             details: "This attribute shall identify the channel lineup using external data sources.",
-            xref: { document: "cluster", section: "6.6.6.2" }
+            xref: "cluster§6.6.6.2"
         },
         {
             details: "This attribute shall contain the current channel. When supported but a channel is not currently " +
                 "tuned to (if a content application is in foreground), the value of the field shall be null.",
-            xref: { document: "cluster", section: "6.6.6.3" }
+            xref: "cluster§6.6.6.3"
         },
 
         {
@@ -67,43 +64,40 @@ Channel.patch({
                 "\n" +
                 "Upon success, the CurrentChannel attribute, if supported, shall be updated to reflect the change.",
 
-            xref: { document: "cluster", section: "6.6.7.1" },
+            xref: "cluster§6.6.7.1",
             children: [{
                 details: "This field shall contain a user-input string to match in order to identify the target channel.",
-                xref: { document: "cluster", section: "6.6.7.1.1" }
+                xref: "cluster§6.6.7.1.1"
             }]
         },
 
         {
             details: "This command shall be generated in response to a ChangeChannel command.",
-            xref: { document: "cluster", section: "6.6.7.2" },
+            xref: "cluster§6.6.7.2",
 
             children: [
                 {
                     details: "This field shall indicate the status of the command which resulted in this response.",
-                    xref: { document: "cluster", section: "6.6.7.2.1" }
+                    xref: "cluster§6.6.7.2.1"
                 },
-                {
-                    details: "This field shall indicate Optional app-specific data.",
-                    xref: { document: "cluster", section: "6.6.7.2.2" }
-                }
+                { details: "This field shall indicate Optional app-specific data.", xref: "cluster§6.6.7.2.2" }
             ]
         },
 
         {
             details: "Change the channel to the channel with the given Number in the ChannelList attribute.",
-            xref: { document: "cluster", section: "6.6.7.3" },
+            xref: "cluster§6.6.7.3",
 
             children: [
                 {
                     details: "This field shall indicate the channel major number value (ATSC format) to which the channel should " +
                         "change.",
-                    xref: { document: "cluster", section: "6.6.7.3.1" }
+                    xref: "cluster§6.6.7.3.1"
                 },
                 {
                     details: "This field shall indicate the channel minor number value (ATSC format) to which the channel should " +
                         "change.",
-                    xref: { document: "cluster", section: "6.6.7.3.2" }
+                    xref: "cluster§6.6.7.3.2"
                 }
             ]
         },
@@ -117,11 +111,11 @@ Channel.patch({
                 "and continue. For example, if the current channel is at index 0 and count value of -1 is given, then " +
                 "the current channel should change to the last channel.",
 
-            xref: { document: "cluster", section: "6.6.7.4" },
+            xref: "cluster§6.6.7.4",
             children: [{
                 details: "This field shall indicate the number of steps to increase (Count is positive) or decrease (Count is " +
                     "negative) the current channel.",
-                xref: { document: "cluster", section: "6.6.7.4.1" }
+                xref: "cluster§6.6.7.4.1"
             }]
         },
 
@@ -130,127 +124,115 @@ Channel.patch({
                 "schedule and program information from a content app. The command shall receive in response a " +
                 "ProgramGuideResponse. Standard error codes shall be used when arguments provided are not valid. For " +
                 "example, if StartTime is greater than EndTime, the status code INVALID_ACTION shall be returned.",
-            xref: { document: "cluster", section: "6.6.7.5" },
+            xref: "cluster§6.6.7.5",
 
             children: [
                 {
                     details: "This field shall indicate the beginning of the time window for which program guide entries are to be " +
                         "retrieved, as a UTC time. Entries with a start time on or after this value will be included in the " +
                         "results.",
-                    xref: { document: "cluster", section: "6.6.7.5.1" }
+                    xref: "cluster§6.6.7.5.1"
                 },
 
                 {
                     details: "This field shall indicate the end of the time window for which program guide entries are to be " +
                         "retrieved, as a UTC time. Entries with an end time on or before this value will be included in the " +
                         "results. This field can represent a past or future value but shall be greater than the StartTime.",
-                    xref: { document: "cluster", section: "6.6.7.5.2" }
+                    xref: "cluster§6.6.7.5.2"
                 },
 
                 {
                     details: "This field shall indicate the set of channels for which program guide entries should be fetched. By " +
                         "providing a list of channels in this field, the response will only include entries corresponding to " +
                         "the specified channels.",
-                    xref: { document: "cluster", section: "6.6.7.5.3" }
+                    xref: "cluster§6.6.7.5.3"
                 },
 
                 {
                     details: "This field shall indicate the pagination token used for managing pagination progression.",
-                    xref: { document: "cluster", section: "6.6.7.5.4" }
+                    xref: "cluster§6.6.7.5.4"
                 },
                 {
                     details: "This field shall indicate the flags of the programs for which entries should be fetched.",
-                    xref: { document: "cluster", section: "6.6.7.5.5" }
+                    xref: "cluster§6.6.7.5.5"
                 },
                 {
                     details: "This field shall indicate the list of additional external content identifiers.",
-                    xref: { document: "cluster", section: "6.6.7.5.6" }
+                    xref: "cluster§6.6.7.5.6"
                 },
-                {
-                    details: "This field shall indicate Optional app-specific data.",
-                    xref: { document: "cluster", section: "6.6.7.5.7" }
-                }
+                { details: "This field shall indicate Optional app-specific data.", xref: "cluster§6.6.7.5.7" }
             ]
         },
 
         {
             details: "This command is a response to the GetProgramGuide command.",
-            xref: { document: "cluster", section: "6.6.7.6" },
+            xref: "cluster§6.6.7.6",
 
             children: [
                 {
                     details: "This field shall indicate the necessary pagination attributes that define information for both the " +
                         "succeeding and preceding data pages.",
-                    xref: { document: "cluster", section: "6.6.7.6.1" }
+                    xref: "cluster§6.6.7.6.1"
                 },
-                {
-                    details: "This field shall indicate the list of programs.",
-                    xref: { document: "cluster", section: "6.6.7.6.2" }
-                }
+                { details: "This field shall indicate the list of programs.", xref: "cluster§6.6.7.6.2" }
             ]
         },
 
         {
             details: "Record a specific program or series when it goes live. This functionality enables DVR recording " +
                 "features.",
-            xref: { document: "cluster", section: "6.6.7.7" },
+            xref: "cluster§6.6.7.7",
 
             children: [
                 {
                     details: "This field shall indicate the program identifier for the program that should be recorded. This value " +
                         "is provided by the identifier field in ProgramStruct.",
-                    xref: { document: "cluster", section: "6.6.7.7.1" }
+                    xref: "cluster§6.6.7.7.1"
                 },
 
                 {
                     details: "This field shall indicate whether the whole series associated to the program should be recorded. For " +
                         "example, invoking record program on an episode with that flag set to true, the target should " +
                         "schedule record the whole series.",
-                    xref: { document: "cluster", section: "6.6.7.7.2" }
+                    xref: "cluster§6.6.7.7.2"
                 },
 
                 {
                     details: "This field, if present, shall indicate the list of additional external content identifiers.",
-                    xref: { document: "cluster", section: "6.6.7.7.3" }
+                    xref: "cluster§6.6.7.7.3"
                 },
-                {
-                    details: "This field, if present, shall indicate app-specific data.",
-                    xref: { document: "cluster", section: "6.6.7.7.4" }
-                }
+                { details: "This field, if present, shall indicate app-specific data.", xref: "cluster§6.6.7.7.4" }
             ]
         },
 
         {
             details: "Cancel recording for a specific program or series.",
-            xref: { document: "cluster", section: "6.6.7.8" },
+            xref: "cluster§6.6.7.8",
 
             children: [
                 {
                     details: "This field shall indicate the program identifier for the program that should be cancelled from " +
                         "recording. This value is provided by the identifier field in ProgramStruct.",
-                    xref: { document: "cluster", section: "6.6.7.8.1" }
+                    xref: "cluster§6.6.7.8.1"
                 },
 
                 {
                     details: "This field shall indicate whether the whole series associated to the program should be cancelled " +
                         "from recording. For example, invoking record program on an episode with that flag set to true, the " +
                         "target should schedule record the whole series.",
-                    xref: { document: "cluster", section: "6.6.7.8.2" }
+                    xref: "cluster§6.6.7.8.2"
                 },
 
                 {
                     details: "This field, if present, shall indicate the list of additional external content identifiers.",
-                    xref: { document: "cluster", section: "6.6.7.8.3" }
+                    xref: "cluster§6.6.7.8.3"
                 },
-                {
-                    details: "This field, if present, shall indicate app-specific data.",
-                    xref: { document: "cluster", section: "6.6.7.8.4" }
-                }
+                { details: "This field, if present, shall indicate app-specific data.", xref: "cluster§6.6.7.8.4" }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "6.6.5.1" },
+            xref: "cluster§6.6.5.1",
             children: [
                 { description: "The program is scheduled for recording." },
                 { description: "The program series is scheduled for recording." },
@@ -258,10 +240,10 @@ Channel.patch({
             ]
         },
 
-        { xref: { document: "cluster", section: "6.6.5.2" }, children: [{ description: "Multi System Operator" }] },
+        { xref: "cluster§6.6.5.2", children: [{ description: "Multi System Operator" }] },
 
         {
-            xref: { document: "cluster", section: "6.6.5.3" },
+            xref: "cluster§6.6.5.3",
             children: [
                 { description: "Command succeeded" },
                 { description: "More than one equal match for the ChannelInfoStruct passed in." },
@@ -270,7 +252,7 @@ Channel.patch({
         },
 
         {
-            xref: { document: "cluster", section: "6.6.5.4" },
+            xref: "cluster§6.6.5.4",
 
             children: [
                 { description: "The channel is sourced from a satellite provider." },
@@ -285,7 +267,7 @@ Channel.patch({
                 "\n" +
                 "While the major and minor numbers in the ChannelInfoStruct support use of ATSC channel format, a " +
                 "lineup may use other formats which can map into these numeric values.",
-            xref: { document: "cluster", section: "6.6.5.5" },
+            xref: "cluster§6.6.5.5",
 
             children: [
                 {
@@ -293,7 +275,7 @@ Channel.patch({
                         "channel number is expressed as a string, such as \"13.1\" or \"256\", the major number would be 13 or " +
                         "256, respectively. This field is required but shall be set to 0 for channels such as over-the-top " +
                         "channels that are not represented by a major or minor number.",
-                    xref: { document: "cluster", section: "6.6.5.5.1" }
+                    xref: "cluster§6.6.5.5.1"
                 },
 
                 {
@@ -301,33 +283,33 @@ Channel.patch({
                         "channel number is expressed as a string, such as \"13.1\" or \"256\", the minor number would be 1 or 0, " +
                         "respectively. This field is required but shall be set to 0 for channels such as over-the-top " +
                         "channels that are not represented by a major or minor number.",
-                    xref: { document: "cluster", section: "6.6.5.5.2" }
+                    xref: "cluster§6.6.5.5.2"
                 },
 
                 {
                     details: "This field shall indicate the marketing name for the channel, such as “The CW\" or \"Comedy Central\". " +
                         "This field is optional, but SHOULD be provided when known.",
-                    xref: { document: "cluster", section: "6.6.5.5.3" }
+                    xref: "cluster§6.6.5.5.3"
                 },
                 {
                     details: "This field shall indicate the call sign of the channel, such as \"PBS\". This field is optional, but " +
                         "SHOULD be provided when known.",
-                    xref: { document: "cluster", section: "6.6.5.5.4" }
+                    xref: "cluster§6.6.5.5.4"
                 },
                 {
                     details: "This field shall indicate the local affiliate call sign, such as \"KCTS\". This field is optional, but " +
                         "SHOULD be provided when known.",
-                    xref: { document: "cluster", section: "6.6.5.5.5" }
+                    xref: "cluster§6.6.5.5.5"
                 },
                 {
                     details: "This shall indicate the unique identifier for a specific channel. This field is optional, but SHOULD " +
                         "be provided when MajorNumber and MinorNumber are not available.",
-                    xref: { document: "cluster", section: "6.6.5.5.6" }
+                    xref: "cluster§6.6.5.5.6"
                 },
                 {
                     details: "This shall indicate the type or grouping of a specific channel. This field is optional, but SHOULD " +
                         "be provided when known.",
-                    xref: { document: "cluster", section: "6.6.5.5.7" }
+                    xref: "cluster§6.6.5.5.7"
                 }
             ]
         },
@@ -335,79 +317,79 @@ Channel.patch({
         {
             details: "The Lineup Info allows references to external lineup sources like Gracenote. The combination of " +
                 "OperatorName, LineupName, and PostalCode MUST uniquely identify a lineup.",
-            xref: { document: "cluster", section: "6.6.5.6" },
+            xref: "cluster§6.6.5.6",
 
             children: [
                 {
                     details: "This field shall indicate the name of the operator, for example “Comcast”.",
-                    xref: { document: "cluster", section: "6.6.5.6.1" }
+                    xref: "cluster§6.6.5.6.1"
                 },
                 {
                     details: "This field shall indicate the name of the provider lineup, for example \"Comcast King County\". This " +
                         "field is optional, but SHOULD be provided when known.",
-                    xref: { document: "cluster", section: "6.6.5.6.2" }
+                    xref: "cluster§6.6.5.6.2"
                 },
                 {
                     details: "This field shall indicate the postal code (zip code) for the location of the device, such as " +
                         "\"98052\". This field is optional, but SHOULD be provided when known.",
-                    xref: { document: "cluster", section: "6.6.5.6.3" }
+                    xref: "cluster§6.6.5.6.3"
                 },
                 {
                     details: "This field shall indicate the type of lineup. This field is optional, but SHOULD be provided when " +
                         "known.",
-                    xref: { document: "cluster", section: "6.6.5.6.4" }
+                    xref: "cluster§6.6.5.6.4"
                 }
             ]
         },
 
         {
             details: "This indicates a program within an electronic program guide (EPG).",
-            xref: { document: "cluster", section: "6.6.5.7" },
+            xref: "cluster§6.6.5.7",
 
             children: [
                 {
                     details: "This field shall indicate a unique identifier for a program within an electronic program guide list. " +
                         "The identifier shall be unique across multiple channels.",
-                    xref: { document: "cluster", section: "6.6.5.7.1" }
+                    xref: "cluster§6.6.5.7.1"
                 },
                 {
                     details: "This field shall indicate the channel associated to the program.",
-                    xref: { document: "cluster", section: "6.6.5.7.2" }
+                    xref: "cluster§6.6.5.7.2"
                 },
                 {
                     details: "This field shall indicate an epoch time in seconds indicating the start time of a program, as a UTC " +
                         "time. This field can represent a past or future value.",
-                    xref: { document: "cluster", section: "6.6.5.7.3" }
+                    xref: "cluster§6.6.5.7.3"
                 },
                 {
                     details: "This field shall indicate an epoch time in seconds indicating the end time of a program, as a UTC " +
                         "time. This field can represent a past or future value but shall be greater than the StartTime.",
-                    xref: { document: "cluster", section: "6.6.5.7.4" }
+                    xref: "cluster§6.6.5.7.4"
                 },
                 {
                     details: "This field shall indicate the title or name for the specific program. For example, “MCIS: Los " +
                         "Angeles”.",
-                    xref: { document: "cluster", section: "6.6.5.7.5" }
+                    xref: "cluster§6.6.5.7.5"
                 },
 
                 {
                     details: "This field shall indicate the subtitle for the specific program. For example, “Maybe Today\" which is " +
                         "an episode name for “MCIS: Los Angeles”. This field is optional but shall be provided if applicable " +
                         "and known.",
-                    xref: { document: "cluster", section: "6.6.5.7.6" }
+                    xref: "cluster§6.6.5.7.6"
                 },
 
                 {
                     details: "This field shall indicate the brief description for the specific program. For example, a description " +
                         "of an episode. This field is optional but shall be provided if known.",
-                    xref: { document: "cluster", section: "6.6.5.7.7" }
+                    xref: "cluster§6.6.5.7.7"
                 },
 
                 {
                     details: "This field shall indicate the audio language for the specific program. The value is a string " +
                         "containing one of the standard Tags for Identifying Languages RFC 5646. This field is optional but " +
                         "shall be provided if known.",
-                    xref: { document: "cluster", section: "6.6.5.7.8" }
+                    xref: "cluster§6.6.5.7.8"
                 },
 
                 {
@@ -416,129 +398,123 @@ Channel.patch({
                         "broadcast. For example, in the United States “TV-PG” may contain material that parents can find not " +
                         "suitable for younger children but can be accepted in general for older children. This field is " +
                         "optional but shall be provided if known.",
-                    xref: { document: "cluster", section: "6.6.5.7.9" }
+                    xref: "cluster§6.6.5.7.9"
                 },
 
                 {
                     details: "This field shall represent a URL of a thumbnail that clients can use to render an image for the " +
                         "program. The syntax of this field shall follow the syntax as specified in RFC 1738 and shall use the " +
                         "https scheme.",
-                    xref: { document: "cluster", section: "6.6.5.7.10" }
+                    xref: "cluster§6.6.5.7.10"
                 },
 
                 {
                     details: "This field shall represent a URL of a poster that clients can use to render an image for the program " +
                         "on the detail view. The syntax of this field shall follow the syntax as specified in RFC 1738 and " +
                         "shall use the https scheme.",
-                    xref: { document: "cluster", section: "6.6.5.7.11" }
+                    xref: "cluster§6.6.5.7.11"
                 },
 
                 {
                     details: "This field shall represent the DVB-I URL associated to the program. The syntax of this field shall " +
                         "follow the syntax as specified in RFC 1738 and shall use the https scheme.",
-                    xref: { document: "cluster", section: "6.6.5.7.12" }
+                    xref: "cluster§6.6.5.7.12"
                 },
 
                 {
                     details: "This field shall be a string, in ISO 8601 format, representing the date on which the program was " +
                         "released. This field is optional but when provided, the year shall be provided as part of the " +
                         "string.",
-                    xref: { document: "cluster", section: "6.6.5.7.13" }
+                    xref: "cluster§6.6.5.7.13"
                 },
 
                 {
                     details: "This field shall represent a string providing additional information on the parental guidance. This " +
                         "field is optional.",
-                    xref: { document: "cluster", section: "6.6.5.7.14" }
+                    xref: "cluster§6.6.5.7.14"
                 },
                 {
                     details: "This field shall represent the recording status of the program. This field is required if the " +
                         "RecordProgram feature is set.",
-                    xref: { document: "cluster", section: "6.6.5.7.15" }
+                    xref: "cluster§6.6.5.7.15"
                 },
 
                 {
                     details: "This field shall represent the information of a series such as season and episode number. This field " +
                         "is optional but SHOULD be provided if the program represents a series and this information is " +
                         "available.",
-                    xref: { document: "cluster", section: "6.6.5.7.16" }
+                    xref: "cluster§6.6.5.7.16"
                 },
 
                 {
                     details: "This field shall represent the category of a particular program. This field is optional but shall be " +
                         "provided if known.",
-                    xref: { document: "cluster", section: "6.6.5.7.17" }
+                    xref: "cluster§6.6.5.7.17"
                 },
                 {
                     details: "This field shall represent a list of the cast or the crew on the program. A single cast member may " +
                         "have more than one role. This field is optional but shall be provided if known.",
-                    xref: { document: "cluster", section: "6.6.5.7.18" }
+                    xref: "cluster§6.6.5.7.18"
                 },
                 {
                     details: "This field shall indicate the list of additional external content identifiers.",
-                    xref: { document: "cluster", section: "6.6.5.7.19" }
+                    xref: "cluster§6.6.5.7.19"
                 }
             ]
         },
 
         {
             details: "This object defines the category associated to a program.",
-            xref: { document: "cluster", section: "6.6.5.8" },
+            xref: "cluster§6.6.5.8",
 
             children: [
                 {
                     details: "This field shall represent the category or genre of the program. Ex. News.",
-                    xref: { document: "cluster", section: "6.6.5.8.1" }
+                    xref: "cluster§6.6.5.8.1"
                 },
                 {
                     details: "This field shall represent the sub-category or sub-genre of the program. Ex. Local.",
-                    xref: { document: "cluster", section: "6.6.5.8.2" }
+                    xref: "cluster§6.6.5.8.2"
                 }
             ]
         },
 
         {
             details: "This object provides the episode information related to a program.",
-            xref: { document: "cluster", section: "6.6.5.9" },
+            xref: "cluster§6.6.5.9",
 
             children: [
                 {
                     details: "This field shall represent the season of the series associated to the program.",
-                    xref: { document: "cluster", section: "6.6.5.9.1" }
+                    xref: "cluster§6.6.5.9.1"
                 },
-                {
-                    details: "This field shall represent the episode of the program.",
-                    xref: { document: "cluster", section: "6.6.5.9.2" }
-                }
+                { details: "This field shall represent the episode of the program.", xref: "cluster§6.6.5.9.2" }
             ]
         },
 
         {
             details: "This object provides the cast information related to a program.",
-            xref: { document: "cluster", section: "6.6.5.10" },
+            xref: "cluster§6.6.5.10",
 
             children: [
-                {
-                    details: "This field shall represent the name of the cast member.",
-                    xref: { document: "cluster", section: "6.6.5.10.1" }
-                },
+                { details: "This field shall represent the name of the cast member.", xref: "cluster§6.6.5.10.1" },
                 {
                     details: "This field shall represent the role of the cast member. Ex. Actor, Director.",
-                    xref: { document: "cluster", section: "6.6.5.10.2" }
+                    xref: "cluster§6.6.5.10.2"
                 }
             ]
         },
 
         {
             details: "This object defines the pagination structure.",
-            xref: { document: "cluster", section: "6.6.5.11" },
+            xref: "cluster§6.6.5.11",
 
             children: [
                 {
                     details: "This field shall indicate the maximum number of entries that should be retrieved from the program " +
                         "guide in a single response. It allows clients to specify the size of the paginated result set based " +
                         "on their needs.",
-                    xref: { document: "cluster", section: "6.6.5.11.1" }
+                    xref: "cluster§6.6.5.11.1"
                 },
 
                 {
@@ -547,7 +523,7 @@ Channel.patch({
                         "corresponds directly to the data following the specified cursor. In a Offset-based pagination " +
                         "system, the field, along with limit, indicate the offset from which entries in the program guide " +
                         "will be retrieved.",
-                    xref: { document: "cluster", section: "6.6.5.11.2" }
+                    xref: "cluster§6.6.5.11.2"
                 },
 
                 {
@@ -556,25 +532,25 @@ Channel.patch({
                         "corresponds directly to the data preceding the specified cursor. In a Offset-based pagination " +
                         "system, the field, along with limit, indicate the offset from which entries in the program guide " +
                         "will be retrieved.",
-                    xref: { document: "cluster", section: "6.6.5.11.3" }
+                    xref: "cluster§6.6.5.11.3"
                 }
             ]
         },
 
         {
             details: "This object defines the paging structure that includes the previous and next pagination tokens.",
-            xref: { document: "cluster", section: "6.6.5.12" },
+            xref: "cluster§6.6.5.12",
 
             children: [
                 {
                     details: "This field shall indicate the token to retrieve the preceding page. Absence of this field denotes " +
                         "the response as the initial page.",
-                    xref: { document: "cluster", section: "6.6.5.12.1" }
+                    xref: "cluster§6.6.5.12.1"
                 },
                 {
                     details: "This field shall indicate the token to retrieve the next page. Absence of this field denotes the " +
                         "response as the last page.",
-                    xref: { document: "cluster", section: "6.6.5.12.2" }
+                    xref: "cluster§6.6.5.12.2"
                 }
             ]
         }

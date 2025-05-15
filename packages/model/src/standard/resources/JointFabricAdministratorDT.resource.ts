@@ -18,10 +18,6 @@ JointFabricAdministratorDt.patch({
         "Commissioning Method to be commissioned onto the Joint Fabric. Once commissioned, a client may " +
         "access the capabilities of the Joint Fabric Administrator.",
 
-    xref: { document: "device", section: "2.9" },
-    children: [
-        undefined,
-        { xref: { document: "device", section: "2.9.4" } },
-        { xref: { document: "device", section: "2.9.4" } }
-    ]
+    xref: "device§2.9",
+    children: [undefined, { xref: "device§2.9.4" }, { xref: "device§2.9.4" }]
 });

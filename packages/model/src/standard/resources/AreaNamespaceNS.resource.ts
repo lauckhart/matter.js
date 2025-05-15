@@ -11,7 +11,7 @@ import { AreaNamespaceNs } from "#index.js";
 AreaNamespaceNs.patch({
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with an indoor or outdoor area of a home.",
-    xref: { document: "namespace", section: "13" },
+    xref: "namespace§13",
 
     children: [
         undefined,

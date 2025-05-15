@@ -21,21 +21,18 @@ AudioOutput.patch({
         "\n" +
         "The cluster server for Audio Output is implemented by a device that has configurable audio output.",
 
-    xref: { document: "cluster", section: "6.5" },
+    xref: "cluster§6.5",
 
     children: [
         undefined,
         {
-            xref: { document: "cluster", section: "6.5.4" },
+            xref: "cluster§6.5.4",
             children: [{ description: "NameUpdates", details: "Supports updates to output names" }]
         },
-        {
-            details: "This attribute provides the list of outputs supported by the device.",
-            xref: { document: "cluster", section: "6.5.6.1" }
-        },
+        { details: "This attribute provides the list of outputs supported by the device.", xref: "cluster§6.5.6.1" },
         {
             details: "This attribute contains the value of the index field of the currently selected OutputInfoStruct.",
-            xref: { document: "cluster", section: "6.5.6.2" }
+            xref: "cluster§6.5.6.2"
         },
 
         {
@@ -46,11 +43,11 @@ AudioOutput.patch({
                 "Speaker endpoint on the same node may cause HDMI volume up/down commands to be sent to the given " +
                 "HDMI output.",
 
-            xref: { document: "cluster", section: "6.5.7.1" },
+            xref: "cluster§6.5.7.1",
             children: [{
                 details: "This shall indicate the index field of the OutputInfoStruct from the OutputList attribute in which " +
                     "to change to.",
-                xref: { document: "cluster", section: "6.5.7.1.1" }
+                xref: "cluster§6.5.7.1.1"
             }]
         },
 
@@ -59,32 +56,29 @@ AudioOutput.patch({
                 "\n" +
                 "Updates to the output name shall appear in the device’s settings menus. Name updates may " +
                 "automatically be sent to the actual device to which the output connects.",
-            xref: { document: "cluster", section: "6.5.7.2" }
+            xref: "cluster§6.5.7.2"
         },
 
         {
             details: "The type of output, expressed as an enum, with the following values:",
-            xref: { document: "cluster", section: "6.5.5.1" },
+            xref: "cluster§6.5.5.1",
             children: [{ description: "HDMI" }]
         },
 
         {
             details: "This contains information about an output.",
-            xref: { document: "cluster", section: "6.5.5.2" },
+            xref: "cluster§6.5.5.2",
 
             children: [
                 {
                     details: "This field shall indicate the unique index into the list of outputs.",
-                    xref: { document: "cluster", section: "6.5.5.2.1" }
+                    xref: "cluster§6.5.5.2.1"
                 },
-                {
-                    details: "This field shall indicate the type of output.",
-                    xref: { document: "cluster", section: "6.5.5.2.2" }
-                },
+                { details: "This field shall indicate the type of output.", xref: "cluster§6.5.5.2.2" },
                 {
                     details: "The device defined and user editable output name, such as “Soundbar”, “Speakers”. This field may be " +
                         "blank, but SHOULD be provided when known.",
-                    xref: { document: "cluster", section: "6.5.5.2.3" }
+                    xref: "cluster§6.5.5.2.3"
                 }
             ]
         }

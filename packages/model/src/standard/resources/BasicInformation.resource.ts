@@ -13,7 +13,7 @@ BasicInformation.patch({
     details: "This cluster provides attributes and events for determining basic information about Nodes, which " +
         "supports both Commissioning and operational determination of Node characteristics, such as Vendor " +
         "ID, Product ID and serial number, which apply to the whole Node.",
-    xref: { document: "core", section: "11.1" },
+    xref: "core§11.1",
 
     children: [
         undefined,
@@ -22,28 +22,28 @@ BasicInformation.patch({
             details: "This attribute shall be set to the revision number of the Data Model against which the Node is " +
                 "certified. The value of this attribute shall be one of the valid values listed in Section 7.1.1, " +
                 "“Revision History”.",
-            xref: { document: "core", section: "11.1.5.1" }
+            xref: "core§11.1.5.1"
         },
 
         {
             details: "This attribute shall specify a human readable (displayable) name of the vendor for the Node.",
-            xref: { document: "core", section: "11.1.5.2" }
+            xref: "core§11.1.5.2"
         },
-        { details: "This attribute shall specify the Vendor ID.", xref: { document: "core", section: "11.1.5.3" } },
+        { details: "This attribute shall specify the Vendor ID.", xref: "core§11.1.5.3" },
         {
             details: "This attribute shall specify a human readable (displayable) name of the model for the Node such as " +
                 "the model number (or other identifier) assigned by the vendor.",
-            xref: { document: "core", section: "11.1.5.4" }
+            xref: "core§11.1.5.4"
         },
         {
             details: "This attribute shall specify the Product ID assigned by the vendor that is unique to the specific " +
                 "product of the Node.",
-            xref: { document: "core", section: "11.1.5.5" }
+            xref: "core§11.1.5.5"
         },
         {
             details: "Indicates a user defined name for the Node. This attribute SHOULD be set during initial " +
                 "commissioning and may be updated by further reconfigurations.",
-            xref: { document: "core", section: "11.1.5.6" }
+            xref: "core§11.1.5.6"
         },
 
         {
@@ -58,20 +58,20 @@ BasicInformation.patch({
                 "agnostic manner as determined by the vendor, avoiding region-specific assumptions as much as is " +
                 "practical. The special value XX shall indicate that region-agnostic mode is used.",
 
-            xref: { document: "core", section: "11.1.5.7" }
+            xref: "core§11.1.5.7"
         },
 
         {
             details: "This attribute shall specify the version number of the hardware of the Node. The meaning of its " +
                 "value, and the versioning scheme, are vendor defined.",
-            xref: { document: "core", section: "11.1.5.8" }
+            xref: "core§11.1.5.8"
         },
 
         {
             details: "This attribute shall specify the version number of the hardware of the Node. The meaning of its " +
                 "value, and the versioning scheme, are vendor defined. The HardwareVersionString attribute shall be " +
                 "used to provide a more user-friendly value than that represented by the HardwareVersion attribute.",
-            xref: { document: "core", section: "11.1.5.9" }
+            xref: "core§11.1.5.9"
         },
 
         {
@@ -82,7 +82,7 @@ BasicInformation.patch({
                 "perspective of software updates (see Section 11.20.3.3, “Availability of Software Images”). Nodes " +
                 "may query this field to determine the currently running version of software on another given Node.",
 
-            xref: { document: "core", section: "11.1.5.10" }
+            xref: "core§11.1.5.10"
         },
 
         {
@@ -94,7 +94,7 @@ BasicInformation.patch({
                 "\n" +
                 "Examples of version strings include \"1.0\", \"1.2.3456\", \"1.2-2\", \"1.0b123\", \"1.2_3\".",
 
-            xref: { document: "core", section: "11.1.5.11" }
+            xref: "core§11.1.5.11"
         },
 
         {
@@ -103,7 +103,7 @@ BasicInformation.patch({
                 "i.e., YYYYMMDD, e.g., 20060814. The final 8 characters may include country, factory, line, shift or " +
                 "other related information at the option of the vendor. The format of this information is vendor " +
                 "defined.",
-            xref: { document: "core", section: "11.1.5.12" }
+            xref: "core§11.1.5.12"
         },
 
         {
@@ -114,7 +114,7 @@ BasicInformation.patch({
                 "different packaging (with different PartNumbers) for different regions; also different colors of a " +
                 "product might share the ProductID but may have a different PartNumber.",
 
-            xref: { document: "core", section: "11.1.5.13" }
+            xref: "core§11.1.5.13"
         },
 
         {
@@ -122,7 +122,7 @@ BasicInformation.patch({
                 "to a maintained web page available for the lifetime of the product. The syntax of this attribute " +
                 "shall follow the syntax as specified in RFC 1738 and shall use the https scheme. The maximum length " +
                 "of this attribute is 256 ASCII characters.",
-            xref: { document: "core", section: "11.1.5.14" }
+            xref: "core§11.1.5.14"
         },
 
         {
@@ -130,12 +130,12 @@ BasicInformation.patch({
                 "ProductLabel attribute may be used to provide a more user-friendly value than that represented by " +
                 "the ProductName attribute. The ProductLabel attribute SHOULD NOT include the name of the vendor as " +
                 "defined within the VendorName attribute.",
-            xref: { document: "core", section: "11.1.5.15" }
+            xref: "core§11.1.5.15"
         },
 
         {
             details: "This attribute shall specify a human readable (displayable) serial number.",
-            xref: { document: "core", section: "11.1.5.16" }
+            xref: "core§11.1.5.16"
         },
 
         {
@@ -143,7 +143,7 @@ BasicInformation.patch({
                 "True the Node shall disable the ability to configure the Node through an on-Node user interface. The " +
                 "value of the LocalConfigDisabled attribute shall NOT in any way modify, disable, or otherwise affect " +
                 "the user’s ability to trigger a factory reset on the Node.",
-            xref: { document: "core", section: "11.1.5.17" }
+            xref: "core§11.1.5.17"
         },
 
         {
@@ -152,7 +152,7 @@ BasicInformation.patch({
                 "\n" +
                 "Its main use case is in the derived Bridged Device Basic Information cluster where it is used to " +
                 "indicate whether the bridged device is reachable by the bridge over the non-native network.",
-            xref: { document: "core", section: "11.1.5.18" }
+            xref: "core§11.1.5.18"
         },
 
         {
@@ -182,7 +182,7 @@ BasicInformation.patch({
                 "This UniqueID attribute shall NOT be the same as the Persistent Unique ID which is used in the " +
                 "Rotating Device Identifier mechanism.",
 
-            xref: { document: "core", section: "11.1.5.19" }
+            xref: "core§11.1.5.19"
         },
 
         {
@@ -200,13 +200,13 @@ BasicInformation.patch({
                 "\n" +
                 "forever unchanging values and SHOULD NOT cache this value permanently at Commissioning time.",
 
-            xref: { document: "core", section: "11.1.5.20" }
+            xref: "core§11.1.5.20"
         },
 
         {
             details: "This attribute shall provide information about the appearance of the product, which could be useful " +
                 "to a user trying to locate or identify the node.",
-            xref: { document: "core", section: "11.1.5.21" }
+            xref: "core§11.1.5.21"
         },
 
         {
@@ -244,7 +244,7 @@ BasicInformation.patch({
                 "Comparison of SpecificationVersion shall always include the total value over 32 bits, without " +
                 "masking reserved parts.",
 
-            xref: { document: "core", section: "11.1.5.22" }
+            xref: "core§11.1.5.22"
         },
 
         {
@@ -257,17 +257,17 @@ BasicInformation.patch({
                 "If the MaxPathsPerInvoke attribute is absent or zero, such as in Basic Information cluster revisions " +
                 "prior to Revision 3, clients shall assume a value of 1.",
 
-            xref: { document: "core", section: "11.1.5.23" }
+            xref: "core§11.1.5.23"
         },
 
         {
             details: "The StartUp event shall be generated by a Node as soon as reasonable after completing a boot or " +
                 "reboot process. The StartUp event SHOULD be the first Data Model event recorded by the Node after it " +
                 "completes a boot or reboot process.",
-            xref: { document: "core", section: "11.1.6.1" },
+            xref: "core§11.1.6.1",
             children: [{
                 details: "This field shall be set to the same value as the one available in the SoftwareVersion attribute.",
-                xref: { document: "core", section: "11.1.6.1.1" }
+                xref: "core§11.1.6.1.1"
             }]
         },
 
@@ -277,7 +277,7 @@ BasicInformation.patch({
                 "recorded by the Node. This event SHOULD be delivered urgently to current subscribers on a best- " +
                 "effort basis. Any subsequent incoming interactions to the Node may be dropped until the completion " +
                 "of a future boot or reboot process.",
-            xref: { document: "core", section: "11.1.6.2" }
+            xref: "core§11.1.6.2"
         },
 
         {
@@ -291,10 +291,10 @@ BasicInformation.patch({
                 "fabric by removing related bindings, access control list entries and other data referencing the " +
                 "leaving Node.",
 
-            xref: { document: "core", section: "11.1.6.3" },
+            xref: "core§11.1.6.3",
             children: [{
                 details: "This field shall contain the local Fabric Index of the fabric which the node is about to leave.",
-                xref: { document: "core", section: "11.1.6.3.1" }
+                xref: "core§11.1.6.3.1"
             }]
         },
 
@@ -304,16 +304,16 @@ BasicInformation.patch({
                 "This event (when supported) shall be generated when there is a change in the Reachable attribute." +
                 "\n" +
                 "Its main use case is in the derived Bridged Device Basic Information cluster.",
-            xref: { document: "core", section: "11.1.6.4" },
+            xref: "core§11.1.6.4",
             children: [{
                 details: "This field shall indicate the value of the Reachable attribute after it was changed.",
-                xref: { document: "core", section: "11.1.6.4.1" }
+                xref: "core§11.1.6.4.1"
             }]
         },
 
         {
             details: "The data type of ProductFinishEnum is derived from enum8.",
-            xref: { document: "core", section: "11.1.4.1" },
+            xref: "core§11.1.4.1",
 
             children: [
                 { description: "Product has some other finish not listed below." },
@@ -327,7 +327,7 @@ BasicInformation.patch({
 
         {
             details: "The data type of ColorEnum is derived from enum8.",
-            xref: { document: "core", section: "11.1.4.2" },
+            xref: "core§11.1.4.2",
 
             children: [
                 { description: "Approximately RGB #000000." },
@@ -356,17 +356,14 @@ BasicInformation.patch({
 
         {
             details: "This structure provides a description of the product’s appearance.",
-            xref: { document: "core", section: "11.1.4.3" },
+            xref: "core§11.1.4.3",
 
             children: [
-                {
-                    details: "This field shall indicate the visible finish of the product.",
-                    xref: { document: "core", section: "11.1.4.3.1" }
-                },
+                { details: "This field shall indicate the visible finish of the product.", xref: "core§11.1.4.3.1" },
                 {
                     details: "This field indicates the representative color of the visible parts of the product. If the product " +
                         "has no representative color, the field shall be null.",
-                    xref: { document: "core", section: "11.1.4.3.2" }
+                    xref: "core§11.1.4.3.2"
                 }
             ]
         },
@@ -374,7 +371,7 @@ BasicInformation.patch({
         {
             details: "This structure provides constant values related to overall global capabilities of this Node, that " +
                 "are not cluster-specific.",
-            xref: { document: "core", section: "11.1.4.4" },
+            xref: "core§11.1.4.4",
 
             children: [
                 {
@@ -383,7 +380,7 @@ BasicInformation.patch({
                         "\n" +
                         "This value shall NOT be smaller than the required minimum indicated in Section 4.14.2.8, “Minimal " +
                         "Number of CASE Sessions”.",
-                    xref: { document: "core", section: "11.1.4.4.1" }
+                    xref: "core§11.1.4.4.1"
                 },
 
                 {
@@ -392,7 +389,7 @@ BasicInformation.patch({
                         "\n" +
                         "This value shall NOT be smaller than the required minimum indicated in Section 8.5.1, “Subscribe " +
                         "Transaction”.",
-                    xref: { document: "core", section: "11.1.4.4.2" }
+                    xref: "core§11.1.4.4.2"
                 }
             ]
         }

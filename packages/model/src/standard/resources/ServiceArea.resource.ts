@@ -26,20 +26,20 @@ ServiceArea.patch({
         "The area semantic data is a combination of semantic tags, indicating one or more of the following: " +
         "the building floor, area type, landmark, and relative position.",
 
-    xref: { document: "cluster", section: "1.17" },
+    xref: "cluster§1.17",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "1.17.4" },
+            xref: "cluster§1.17.4",
 
             children: [
                 {
                     description: "SelectWhileRunning",
                     details: "This feature indicates whether this device allows changing the selected areas, by using the " +
                         "SelectAreas command, while operating.",
-                    xref: { document: "cluster", section: "1.17.4.1" }
+                    xref: "cluster§1.17.4.1"
                 },
 
                 { description: "ProgressReporting", details: "The device implements the progress reporting feature" },
@@ -92,7 +92,7 @@ ServiceArea.patch({
                 "\n" +
                 "  • AreaID=3, LocationName=\"hallway\", MapID=2",
 
-            xref: { document: "cluster", section: "1.17.6.1" }
+            xref: "cluster§1.17.6.1"
         },
 
         {
@@ -143,7 +143,7 @@ ServiceArea.patch({
                 "The SupportedMaps attribute list changes mentioned above SHOULD NOT be allowed while the device is " +
                 "operating, to reduce the impact on the clients, and the potential confusion for the users.",
 
-            xref: { document: "cluster", section: "1.17.6.2" }
+            xref: "cluster§1.17.6.2"
         },
 
         {
@@ -161,7 +161,7 @@ ServiceArea.patch({
                 "\n" +
                 "  • each entry in this list shall have a unique value",
 
-            xref: { document: "cluster", section: "1.17.6.3" }
+            xref: "cluster§1.17.6.3"
         },
 
         {
@@ -189,7 +189,7 @@ ServiceArea.patch({
                 "If not null, the value of this attribute shall match the AreaID field of an entry on the " +
                 "SupportedAreas attribute’s list.",
 
-            xref: { document: "cluster", section: "1.17.6.4" }
+            xref: "cluster§1.17.6.4"
         },
 
         {
@@ -221,7 +221,7 @@ ServiceArea.patch({
                 "If the device is capable of pausing its operation, this attribute may be set to null, to indicate " +
                 "that completion time is unknown, or increment the value while being in the paused state.",
 
-            xref: { document: "cluster", section: "1.17.6.5" }
+            xref: "cluster§1.17.6.5"
         },
 
         {
@@ -264,14 +264,14 @@ ServiceArea.patch({
                 "the Progress attribute, and indicate which areas have been successfully serviced (marked as " +
                 "completed).",
 
-            xref: { document: "cluster", section: "1.17.6.6" }
+            xref: "cluster§1.17.6.6"
         },
 
         {
             details: "This command is used to select a set of device areas, where the device is to operate." +
                 "\n" +
                 "On receipt of this command the device shall respond with a SelectAreasResponse command.",
-            xref: { document: "cluster", section: "1.17.7.1" },
+            xref: "cluster§1.17.7.1",
 
             children: [{
                 details: "This field indicates which areas the device is to operate at." +
@@ -281,13 +281,13 @@ ServiceArea.patch({
                     "the field shall be a list of unique values that match the AreaID field of entries on the " +
                     "SupportedAreas list.",
 
-                xref: { document: "cluster", section: "1.17.7.1.1" }
+                xref: "cluster§1.17.7.1.1"
             }]
         },
 
         {
             details: "This command is sent by the device on receipt of the SelectAreas command.",
-            xref: { document: "cluster", section: "1.17.7.2" },
+            xref: "cluster§1.17.7.2",
 
             children: [{
                 details: "If the Status field is set to Success or UnsupportedArea, the server may use a non-empty string for " +
@@ -300,7 +300,7 @@ ServiceArea.patch({
                     "the Status field is set to InvalidInMode, the StatusText field SHOULD indicate why the request is " +
                     "not allowed, given the current mode of the device, which may involve other clusters.",
 
-                xref: { document: "cluster", section: "1.17.7.2.1" }
+                xref: "cluster§1.17.7.2.1"
             }]
         },
 
@@ -313,19 +313,19 @@ ServiceArea.patch({
                 "\n" +
                 "On receipt of this command the device shall respond with a SkipAreaResponse command.",
 
-            xref: { document: "cluster", section: "1.17.7.3" },
+            xref: "cluster§1.17.7.3",
 
             children: [{
                 details: "The SkippedArea field indicates the area to be skipped." +
                     "\n" +
                     "The SkippedArea field shall match an entry in the SupportedAreas list.",
-                xref: { document: "cluster", section: "1.17.7.3.1" }
+                xref: "cluster§1.17.7.3.1"
             }]
         },
 
         {
             details: "This command is sent by the device on receipt of the SkipArea command.",
-            xref: { document: "cluster", section: "1.17.7.4" },
+            xref: "cluster§1.17.7.4",
 
             children: [{
                 details: "If the Status field is set to Success or InvalidAreaList, the server may use a non-empty string for " +
@@ -337,13 +337,13 @@ ServiceArea.patch({
                     "the Status field is set to InvalidInMode, the StatusText field SHOULD indicate why the request is " +
                     "not allowed, given the current mode of the device, which may involve other clusters.",
 
-                xref: { document: "cluster", section: "1.17.7.4.1" }
+                xref: "cluster§1.17.7.4.1"
             }]
         },
 
         {
             details: "The data from this structure indicates a landmark and position relative to the landmark.",
-            xref: { document: "cluster", section: "1.17.5.1" },
+            xref: "cluster§1.17.5.1",
 
             children: [
                 {
@@ -351,7 +351,7 @@ ServiceArea.patch({
                         "\n" +
                         "This field shall be the ID of a landmark semantic tag, located within the Common Landmark Namespace. " +
                         "For example, this tag may indicate that the area refers to an area next to a table.",
-                    xref: { document: "cluster", section: "1.17.5.1.1" }
+                    xref: "cluster§1.17.5.1.1"
                 },
 
                 {
@@ -367,7 +367,7 @@ ServiceArea.patch({
                         "by the LandmarkTag field. For example, this tag, in conjunction with the LandmarkTag field, may " +
                         "indicate that the area refers to a zone under a table.",
 
-                    xref: { document: "cluster", section: "1.17.5.1.2" }
+                    xref: "cluster§1.17.5.1.2"
                 }
             ]
         },
@@ -407,7 +407,7 @@ ServiceArea.patch({
                 "\n" +
                 "  • LandmarkInfo field",
 
-            xref: { document: "cluster", section: "1.17.5.2" },
+            xref: "cluster§1.17.5.2",
 
             children: [
                 {
@@ -423,7 +423,7 @@ ServiceArea.patch({
                         "    \"Under\" position semantic tag. With such an area indication, the client can request the device " +
                         "    to operate in (or service) the area located under the table.",
 
-                    xref: { document: "cluster", section: "1.17.5.2.1" }
+                    xref: "cluster§1.17.5.2.1"
                 },
 
                 {
@@ -436,37 +436,31 @@ ServiceArea.patch({
                         "rather than to the entire room or floor where the landmark is located, if those are indicated by the " +
                         "LocationInfo field.",
 
-                    xref: { document: "cluster", section: "1.17.5.2.2" }
+                    xref: "cluster§1.17.5.2.2"
                 }
             ]
         },
 
         {
             details: "This is a struct representing a map.",
-            xref: { document: "cluster", section: "1.17.5.3" },
+            xref: "cluster§1.17.5.3",
 
             children: [
-                {
-                    details: "This field shall represent the map’s identifier.",
-                    xref: { document: "cluster", section: "1.17.5.3.1" }
-                },
+                { details: "This field shall represent the map’s identifier.", xref: "cluster§1.17.5.3.1" },
                 {
                     details: "This field shall represent a human understandable map description. For example: \"Main Floor\", or " +
                         "\"Second Level\".",
-                    xref: { document: "cluster", section: "1.17.5.3.2" }
+                    xref: "cluster§1.17.5.3.2"
                 }
             ]
         },
 
         {
             details: "This is a struct representing an area known to the server.",
-            xref: { document: "cluster", section: "1.17.5.4" },
+            xref: "cluster§1.17.5.4",
 
             children: [
-                {
-                    details: "This field shall represent the identifier of the area.",
-                    xref: { document: "cluster", section: "1.17.5.4.1" }
-                },
+                { details: "This field shall represent the identifier of the area.", xref: "cluster§1.17.5.4.1" },
 
                 {
                     details: "This field shall indicate the map identifier which the area is associated with. A value of null " +
@@ -476,7 +470,7 @@ ServiceArea.patch({
                         "the SupportedMaps attribute’s list. If the SupportedMaps attribute is empty, this field shall be " +
                         "null.",
 
-                    xref: { document: "cluster", section: "1.17.5.4.2" }
+                    xref: "cluster§1.17.5.4.2"
                 },
 
                 {
@@ -490,25 +484,25 @@ ServiceArea.patch({
                         "If any entries on the SupportedAreas attribute’s list have the AreaInfo field missing the semantic " +
                         "data, the client may remind the user to assign the respective data.",
 
-                    xref: { document: "cluster", section: "1.17.5.4.3" }
+                    xref: "cluster§1.17.5.4.3"
                 }
             ]
         },
 
         {
             details: "This is a struct indicating the progress.",
-            xref: { document: "cluster", section: "1.17.5.5" },
+            xref: "cluster§1.17.5.5",
 
             children: [
                 {
                     details: "This field shall indicate the identifier of the area, and the identifier shall be an entry in the " +
                         "SupportedAreas attribute’s list.",
-                    xref: { document: "cluster", section: "1.17.5.5.1" }
+                    xref: "cluster§1.17.5.5.1"
                 },
                 {
                     details: "This field shall indicate the operational status of the device regarding the area indicated by the " +
                         "AreaID field.",
-                    xref: { document: "cluster", section: "1.17.5.5.2" }
+                    xref: "cluster§1.17.5.5.2"
                 },
 
                 {
@@ -523,7 +517,7 @@ ServiceArea.patch({
                         "\n" +
                         "Null if the Status field is not set to Completed or Skipped.",
 
-                    xref: { document: "cluster", section: "1.17.5.5.3" }
+                    xref: "cluster§1.17.5.5.3"
                 },
 
                 {
@@ -539,14 +533,14 @@ ServiceArea.patch({
                         "field, except when repopulating the entire instance, to avoid excessive reporting of the Progress " +
                         "attribute changes.",
 
-                    xref: { document: "cluster", section: "1.17.5.5.4" }
+                    xref: "cluster§1.17.5.5.4"
                 }
             ]
         },
 
         {
             details: "The following table defines the status values.",
-            xref: { document: "cluster", section: "1.17.5.6" },
+            xref: "cluster§1.17.5.6",
 
             children: [
                 {
@@ -561,7 +555,7 @@ ServiceArea.patch({
         },
 
         {
-            xref: { document: "cluster", section: "1.17.5.6.1" },
+            xref: "cluster§1.17.5.6.1",
 
             children: [
                 {
@@ -578,7 +572,7 @@ ServiceArea.patch({
         },
 
         {
-            xref: { document: "cluster", section: "1.17.5.6.2" },
+            xref: "cluster§1.17.5.6.2",
 
             children: [
                 {

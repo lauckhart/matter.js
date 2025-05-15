@@ -11,13 +11,13 @@ import { ValveConfigurationAndControl } from "#index.js";
 ValveConfigurationAndControl.patch({
     classification: "application", pics: "VALCC",
     details: "This cluster is used to configure a valve.",
-    xref: { document: "cluster", section: "4.6" },
+    xref: "cluster§4.6",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "4.6.4" },
+            xref: "cluster§4.6.4",
 
             children: [
                 {
@@ -26,14 +26,14 @@ ValveConfigurationAndControl.patch({
                         "duration and auto close time." +
                         "\n" +
                         "This feature shall NOT be supported unless the device supports the Time Synchronization cluster.",
-                    xref: { document: "cluster", section: "4.6.4.1" }
+                    xref: "cluster§4.6.4.1"
                 },
 
                 {
                     description: "Level",
                     details: "This feature shall indicate that the valve is capable of being adjusted to a specific position, as a " +
                         "percentage, of its full range of motion.",
-                    xref: { document: "cluster", section: "4.6.4.2" }
+                    xref: "cluster§4.6.4.2"
                 }
             ]
         },
@@ -44,7 +44,7 @@ ValveConfigurationAndControl.patch({
                 "\n" +
                 "A value of null shall indicate the duration is not set, meaning that the valve will remain open " +
                 "until closed by the user or some other automation.",
-            xref: { document: "cluster", section: "4.6.7.1" }
+            xref: "cluster§4.6.7.1"
         },
 
         {
@@ -53,7 +53,7 @@ ValveConfigurationAndControl.patch({
                 "\n" +
                 "A value of null shall indicate the duration is not set, meaning that the valve will remain open " +
                 "until closed by the user or some other automation.",
-            xref: { document: "cluster", section: "4.6.7.2" }
+            xref: "cluster§4.6.7.2"
         },
 
         {
@@ -75,7 +75,7 @@ ValveConfigurationAndControl.patch({
                 "modifying the current UTC time of the device, the value of this attribute shall be adjusted to match " +
                 "the new UTC time plus the value of the RemainingDuration attribute.",
 
-            xref: { document: "cluster", section: "4.6.7.3" }
+            xref: "cluster§4.6.7.3"
         },
 
         {
@@ -105,14 +105,14 @@ ValveConfigurationAndControl.patch({
                 "closed position. The behavior of transitioning to the closed position shall match the behavior " +
                 "described in the Close command.",
 
-            xref: { document: "cluster", section: "4.6.7.4" }
+            xref: "cluster§4.6.7.4"
         },
 
         {
             details: "Indicates the current state of the valve." +
                 "\n" +
                 "A value of null shall indicate that the current state is not known.",
-            xref: { document: "cluster", section: "4.6.7.5" }
+            xref: "cluster§4.6.7.5"
         },
 
         {
@@ -120,7 +120,7 @@ ValveConfigurationAndControl.patch({
                 "\n" +
                 "A value of null shall indicate that no target position is set, since the change in state is either " +
                 "done or failed.",
-            xref: { document: "cluster", section: "4.6.7.6" }
+            xref: "cluster§4.6.7.6"
         },
 
         {
@@ -133,7 +133,7 @@ ValveConfigurationAndControl.patch({
                 "\n" +
                 "A value of null shall indicate that the current state is not known.",
 
-            xref: { document: "cluster", section: "4.6.7.7" }
+            xref: "cluster§4.6.7.7"
         },
 
         {
@@ -144,7 +144,7 @@ ValveConfigurationAndControl.patch({
                 "A value of null shall indicate that no target position is set, since the change of level is either " +
                 "done or failed.",
 
-            xref: { document: "cluster", section: "4.6.7.8" }
+            xref: "cluster§4.6.7.8"
         },
 
         {
@@ -158,13 +158,10 @@ ValveConfigurationAndControl.patch({
                 "resulting value is not 0, the requested DefaultOpenLevel value is considered an unsupported value " +
                 "and a CONSTRAINT_ERROR status shall be returned.",
 
-            xref: { document: "cluster", section: "4.6.7.9" }
+            xref: "cluster§4.6.7.9"
         },
 
-        {
-            details: "Indicates any faults registered by the valve.",
-            xref: { document: "cluster", section: "4.6.7.10" }
-        },
+        { details: "Indicates any faults registered by the valve.", xref: "cluster§4.6.7.10" },
 
         {
             details: "Indicates the step size the valve can support." +
@@ -175,40 +172,33 @@ ValveConfigurationAndControl.patch({
                 "\n" +
                 "The values of 0 and 100 shall always be supported, regardless of the value of this attribute.",
 
-            xref: { document: "cluster", section: "4.6.7.11" }
+            xref: "cluster§4.6.7.11"
         },
 
         {
             details: "This event shall be generated when the valve state changed. For level changes, after the end of " +
                 "movement, for state changes when the new state has been reached.",
-            xref: { document: "cluster", section: "4.6.9.1" },
-
+            xref: "cluster§4.6.9.1",
             children: [
-                {
-                    details: "This field shall indicate the new state of the valve.",
-                    xref: { document: "cluster", section: "4.6.9.1.1" }
-                },
-                {
-                    details: "This field shall indicate the new level of the valve.",
-                    xref: { document: "cluster", section: "4.6.9.1.2" }
-                }
+                { details: "This field shall indicate the new state of the valve.", xref: "cluster§4.6.9.1.1" },
+                { details: "This field shall indicate the new level of the valve.", xref: "cluster§4.6.9.1.2" }
             ]
         },
 
         {
             details: "This event shall be generated when the valve registers or clears a fault, e.g. not being able to " +
                 "transition to the requested target level or state.",
-            xref: { document: "cluster", section: "4.6.9.2" },
+            xref: "cluster§4.6.9.2",
             children: [{
                 details: "This field shall indicate the value of the ValveFault attribute, at the time this event is " +
                     "generated.",
-                xref: { document: "cluster", section: "4.6.9.2.1" }
+                xref: "cluster§4.6.9.2.1"
             }]
         },
 
         {
             details: "This command is used to set the valve to its open position.",
-            xref: { document: "cluster", section: "4.6.8.1" },
+            xref: "cluster§4.6.8.1",
 
             children: [
                 {
@@ -217,23 +207,20 @@ ValveConfigurationAndControl.patch({
                         "\n" +
                         "A value of null shall indicate the duration is not set, meaning that the valve will remain open " +
                         "until closed by the user or some other automation.",
-                    xref: { document: "cluster", section: "4.6.8.1.1" }
+                    xref: "cluster§4.6.8.1.1"
                 },
 
                 {
                     details: "This field shall indicate the target level used for this specific Open command.",
-                    xref: { document: "cluster", section: "4.6.8.1.2" }
+                    xref: "cluster§4.6.8.1.2"
                 }
             ]
         },
 
-        {
-            details: "This command is used to set the valve to its closed position.",
-            xref: { document: "cluster", section: "4.6.8.2" }
-        },
+        { details: "This command is used to set the valve to its closed position.", xref: "cluster§4.6.8.2" },
 
         {
-            xref: { document: "cluster", section: "4.6.5.1" },
+            xref: "cluster§4.6.5.1",
 
             children: [
                 { description: "Unspecified fault detected" },
@@ -246,7 +233,7 @@ ValveConfigurationAndControl.patch({
         },
 
         {
-            xref: { document: "cluster", section: "4.6.5.2" },
+            xref: "cluster§4.6.5.2",
             children: [
                 { description: "Valve is in closed position" },
                 { description: "Valve is in open position" },
@@ -255,7 +242,7 @@ ValveConfigurationAndControl.patch({
         },
 
         {
-            xref: { document: "cluster", section: "4.6.6.1" },
+            xref: "cluster§4.6.6.1",
             children: [{ description: "The requested action could not be performed due to a fault on the valve." }]
         }
     ]

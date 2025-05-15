@@ -30,5 +30,5 @@ string.patch({
         "specification. Implementations of this version of the specification shall NOT produce character " +
         "strings containing INFORMATION SEPARATOR 1.",
 
-    xref: { document: "core", section: "7.19.2.36" }
+    xref: "core§7.19.2.36"
 });

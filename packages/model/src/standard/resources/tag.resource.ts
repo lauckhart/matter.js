@@ -11,5 +11,5 @@ import { tag } from "#index.js";
 tag.patch({
     description: "Tag",
     details: "The Tag type shall identify a semantic tag located within a namespace.",
-    xref: { document: "core", section: "7.19.2.44" }
+    xref: "core§7.19.2.44"
 });

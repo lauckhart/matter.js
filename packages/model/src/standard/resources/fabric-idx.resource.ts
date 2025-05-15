@@ -15,5 +15,5 @@ fabricIdx.patch({
         "  • the accessing fabric index of an interaction" +
         "\n" +
         "  • the FabricIndex global field in fabric-scoped data",
-    xref: { document: "core", section: "7.19.2.20" }
+    xref: "core§7.19.2.20"
 });

@@ -1,0 +1,15 @@
+/**
+ * @license
+ * Copyright 2022-2025 Matter.js Authors
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*** THIS FILE IS GENERATED, DO NOT EDIT ***/
+
+import { NumberNs } from "#index.js";
+
+NumberNs.patch({
+    details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
+        "association with a certain numeric feature of a device (e.g. a numeric input button).",
+    xref: "namespace§8"
+});

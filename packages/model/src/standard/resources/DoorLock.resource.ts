@@ -16,13 +16,13 @@ DoorLock.patch(
             "of mandatory attributes and functions and a list of optional features." +
             "\n" +
             "Figure 16. Typical Usage of the Door Lock Cluster",
-        xref: { document: "cluster", section: "5.2" },
+        xref: "cluster§5.2",
 
         children: [
             undefined,
 
             {
-                xref: { document: "cluster", section: "5.2.4" },
+                xref: "cluster§5.2.4",
 
                 children: [
                     {
@@ -35,7 +35,7 @@ DoorLock.patch(
                             "UserStatus and Schedules are all associated with a User index and not directly with a PIN index. A " +
                             "User index may have several credentials associated with it.",
 
-                        xref: { document: "cluster", section: "5.2.4.1" }
+                        xref: "cluster§5.2.4.1"
                     },
 
                     {
@@ -48,7 +48,7 @@ DoorLock.patch(
                             "UserStatus and Schedules are all associated with a User index and not directly with a RFID index. A " +
                             "User Index may have several credentials associated with it.",
 
-                        xref: { document: "cluster", section: "5.2.4.2" }
+                        xref: "cluster§5.2.4.2"
                     },
 
                     {
@@ -63,7 +63,7 @@ DoorLock.patch(
                             "UserStatus and Schedules are all associated with a User index and not directly with a Finger index. " +
                             "A User Index may have several credentials associated with it.",
 
-                        xref: { document: "cluster", section: "5.2.4.3" }
+                        xref: "cluster§5.2.4.3"
                     },
 
                     {
@@ -79,14 +79,14 @@ DoorLock.patch(
                             "Support for WeekDayAccessSchedules requires that the lock has the capability of keeping track of " +
                             "local time.",
 
-                        xref: { document: "cluster", section: "5.2.4.4" }
+                        xref: "cluster§5.2.4.4"
                     },
 
                     {
                         description: "DoorPositionSensor",
                         details: "If this feature is supported this indicates that the lock has the ability to determine the position " +
                             "of the door which is separate from the state of the lock.",
-                        xref: { document: "cluster", section: "5.2.4.5" }
+                        xref: "cluster§5.2.4.5"
                     },
 
                     {
@@ -101,7 +101,7 @@ DoorLock.patch(
                             "A lock may support multiple credential types so if the User feature is supported the UserType, " +
                             "UserStatus and Schedules are all associated with a User and not directly with a credential.",
 
-                        xref: { document: "cluster", section: "5.2.4.6" }
+                        xref: "cluster§5.2.4.6"
                     },
 
                     {
@@ -111,7 +111,7 @@ DoorLock.patch(
                             "lock/unlock command. Currently the cluster only supports providing the PIN credential to the " +
                             "lock/unlock commands. If this feature is supported then the PIN Credential feature shall also be " +
                             "supported.",
-                        xref: { document: "cluster", section: "5.2.4.7" }
+                        xref: "cluster§5.2.4.7"
                     },
 
                     {
@@ -119,7 +119,7 @@ DoorLock.patch(
                         details: "If the User Feature is supported then a lock employs a User database. A User within the User " +
                             "database is used to associate credentials and schedules to single user record within the lock. This " +
                             "also means the UserType and UserStatus fields are associated with a User and not a credential.",
-                        xref: { document: "cluster", section: "5.2.4.8" }
+                        xref: "cluster§5.2.4.8"
                     },
 
                     {
@@ -133,7 +133,7 @@ DoorLock.patch(
                             "Support for YearDayAccessSchedules requires that the lock has the capability of keeping track of " +
                             "local time.",
 
-                        xref: { document: "cluster", section: "5.2.4.9" }
+                        xref: "cluster§5.2.4.9"
                     },
 
                     {
@@ -143,7 +143,7 @@ DoorLock.patch(
                             "\n" +
                             "Support for HolidaySchedules requires that the lock has the capability of keeping track of local " +
                             "time.",
-                        xref: { document: "cluster", section: "5.2.4.10" }
+                        xref: "cluster§5.2.4.10"
                     },
 
                     {
@@ -153,21 +153,21 @@ DoorLock.patch(
                             "by retracting the bolt and briefly pulling the latch. While the latch is pulled, the lock state " +
                             "changes to Unlatched. Locks without unbolting support don’t differentiate between unbolting and " +
                             "unlocking and perform the same operation for both commands.",
-                        xref: { document: "cluster", section: "5.2.4.11" }
+                        xref: "cluster§5.2.4.11"
                     },
 
                     {
                         description: "AliroProvisioning",
                         details: "Locks that support this feature implement the Aliro specification as defined in [Aliro] and support " +
                             "Matter as a method for provisioning Aliro credentials.",
-                        xref: { document: "cluster", section: "5.2.4.12" }
+                        xref: "cluster§5.2.4.12"
                     },
 
                     {
                         description: "AliroBleuwb",
                         details: "Locks that support this feature implement the Bluetooth LE + UWB Access Control Flow as defined in " +
                             "[Aliro].",
-                        xref: { document: "cluster", section: "5.2.4.13" }
+                        xref: "cluster§5.2.4.13"
                     }
                 ]
             },
@@ -181,92 +181,80 @@ DoorLock.patch(
                     "between Locked and Unlocked so it is only partially secured. For example, a deadbolt could be " +
                     "partially extended and not in a dead latched state.",
 
-                xref: { document: "cluster", section: "5.2.9.1" }
+                xref: "cluster§5.2.9.1"
             },
 
-            {
-                details: "Indicates the type of door lock as defined in LockTypeEnum.",
-                xref: { document: "cluster", section: "5.2.9.2" }
-            },
+            { details: "Indicates the type of door lock as defined in LockTypeEnum.", xref: "cluster§5.2.9.2" },
             {
                 details: "Indicates if the lock is currently able to (Enabled) or not able to (Disabled) process remote Lock, " +
                     "Unlock, or Unlock with Timeout commands.",
-                xref: { document: "cluster", section: "5.2.9.3" }
+                xref: "cluster§5.2.9.3"
             },
 
             {
                 details: "Indicates the current door state as defined in DoorStateEnum." +
                     "\n" +
                     "Null only if an internal error prevents the retrieval of the current door state.",
-                xref: { document: "cluster", section: "5.2.9.4" }
+                xref: "cluster§5.2.9.4"
             },
 
             {
                 details: "This attribute shall hold the number of door open events that have occurred since it was last " +
                     "zeroed.",
-                xref: { document: "cluster", section: "5.2.9.5" }
+                xref: "cluster§5.2.9.5"
             },
             {
                 details: "This attribute shall hold the number of door closed events that have occurred since it was last " +
                     "zeroed.",
-                xref: { document: "cluster", section: "5.2.9.6" }
+                xref: "cluster§5.2.9.6"
             },
             {
                 details: "This attribute shall hold the number of minutes the door has been open since the last time it " +
                     "transitioned from closed to open.",
-                xref: { document: "cluster", section: "5.2.9.7" }
+                xref: "cluster§5.2.9.7"
             },
-            {
-                details: "Indicates the number of total users supported by the lock.",
-                xref: { document: "cluster", section: "5.2.9.8" }
-            },
-            {
-                details: "Indicates the number of PIN users supported.",
-                xref: { document: "cluster", section: "5.2.9.9" }
-            },
-            {
-                details: "Indicates the number of RFID users supported.",
-                xref: { document: "cluster", section: "5.2.9.10" }
-            },
+            { details: "Indicates the number of total users supported by the lock.", xref: "cluster§5.2.9.8" },
+            { details: "Indicates the number of PIN users supported.", xref: "cluster§5.2.9.9" },
+            { details: "Indicates the number of RFID users supported.", xref: "cluster§5.2.9.10" },
             {
                 details: "Indicates the number of configurable week day schedule supported per user.",
-                xref: { document: "cluster", section: "5.2.9.11" }
+                xref: "cluster§5.2.9.11"
             },
             {
                 details: "Indicates the number of configurable year day schedule supported per user.",
-                xref: { document: "cluster", section: "5.2.9.12" }
+                xref: "cluster§5.2.9.12"
             },
             {
                 details: "Indicates the number of holiday schedules supported for the entire door lock device.",
-                xref: { document: "cluster", section: "5.2.9.13" }
+                xref: "cluster§5.2.9.13"
             },
             {
                 details: "Indicates the maximum length in bytes of a PIN Code on this device.",
-                xref: { document: "cluster", section: "5.2.9.14" }
+                xref: "cluster§5.2.9.14"
             },
             {
                 details: "Indicates the minimum length in bytes of a PIN Code on this device.",
-                xref: { document: "cluster", section: "5.2.9.15" }
+                xref: "cluster§5.2.9.15"
             },
 
             {
                 details: "Indicates the maximum length in bytes of a RFID Code on this device. The value depends on the RFID " +
                     "code range specified by the manufacturer, if media anti-collision identifiers (UID) are used as RFID " +
                     "code, a value of 20 (equals 10 Byte ISO 14443A UID) is recommended.",
-                xref: { document: "cluster", section: "5.2.9.16" }
+                xref: "cluster§5.2.9.16"
             },
 
             {
                 details: "Indicates the minimum length in bytes of a RFID Code on this device. The value depends on the RFID " +
                     "code range specified by the manufacturer, if media anti-collision identifiers (UID) are used as RFID " +
                     "code, a value of 8 (equals 4 Byte ISO 14443A UID) is recommended.",
-                xref: { document: "cluster", section: "5.2.9.17" }
+                xref: "cluster§5.2.9.17"
             },
 
             {
                 details: "This attribute shall contain a bitmap with the bits set for the values of CredentialRuleEnum " +
                     "supported on this device.",
-                xref: { document: "cluster", section: "5.2.9.18" }
+                xref: "cluster§5.2.9.18"
             },
 
             {
@@ -280,40 +268,40 @@ DoorLock.patch(
                     "NumberOfRFIDUsersSupported is set to 3, it will not be possible to actually assign 10 credentials " +
                     "for a user because maximum number of credentials in the database is 8.",
 
-                xref: { document: "cluster", section: "5.2.9.19" }
+                xref: "cluster§5.2.9.19"
             },
 
             {
                 details: "Indicates the language for the on-screen or audible user interface using a 2- byte language code " +
                     "from ISO-639-1.",
-                xref: { document: "cluster", section: "5.2.9.20" }
+                xref: "cluster§5.2.9.20"
             },
             {
                 details: "Indicates the settings for the LED support, as defined by LEDSettingEnum.",
-                xref: { document: "cluster", section: "5.2.9.21" }
+                xref: "cluster§5.2.9.21"
             },
 
             {
                 details: "Indicates the number of seconds to wait after unlocking a lock before it automatically locks again. " +
                     "0=disabled. If set, unlock operations from any source will be timed. For one time unlock with " +
                     "timeout use the specific command.",
-                xref: { document: "cluster", section: "5.2.9.22" }
+                xref: "cluster§5.2.9.22"
             },
 
             {
                 details: "Indicates the sound volume on a door lock as defined by SoundVolumeEnum.",
-                xref: { document: "cluster", section: "5.2.9.23" }
+                xref: "cluster§5.2.9.23"
             },
             {
                 details: "Indicates the current operating mode of the lock as defined in OperatingModeEnum.",
-                xref: { document: "cluster", section: "5.2.9.24" }
+                xref: "cluster§5.2.9.24"
             },
 
             {
                 details: "This attribute shall contain a bitmap with all operating bits of the OperatingMode attribute " +
                     "supported by the lock. All operating modes NOT supported by a lock shall be set to one. The value of " +
                     "the OperatingMode enumeration defines the related bit to be set.",
-                xref: { document: "cluster", section: "5.2.9.25" }
+                xref: "cluster§5.2.9.25"
             },
 
             {
@@ -335,7 +323,7 @@ DoorLock.patch(
                     "the current Sound Volume is High Volume. Therefore, if the client wants to query/modify the current " +
                     "Sound Volume setting on the server, the client SHOULD read/write to the Sound Volume attribute.",
 
-                xref: { document: "cluster", section: "5.2.9.26" }
+                xref: "cluster§5.2.9.26"
             },
 
             {
@@ -344,23 +332,23 @@ DoorLock.patch(
                     "on the door lock for all features. If it is set to FALSE then local programming is disabled on the " +
                     "door lock for those features whose bit is set to 0 in the LocalProgrammingFeatures attribute. Local " +
                     "programming shall be enabled by default.",
-                xref: { document: "cluster", section: "5.2.9.27" }
+                xref: "cluster§5.2.9.27"
             },
 
             {
                 details: "This attribute shall enable/disable the ability to lock the door lock with a single touch on the " +
                     "door lock.",
-                xref: { document: "cluster", section: "5.2.9.28" }
+                xref: "cluster§5.2.9.28"
             },
             {
                 details: "This attribute shall enable/disable an inside LED that allows the user to see at a glance if the " +
                     "door is locked.",
-                xref: { document: "cluster", section: "5.2.9.29" }
+                xref: "cluster§5.2.9.29"
             },
             {
                 details: "This attribute shall enable/disable a button inside the door that is used to put the lock into " +
                     "privacy mode. When the lock is in privacy mode it cannot be manipulated from the outside.",
-                xref: { document: "cluster", section: "5.2.9.30" }
+                xref: "cluster§5.2.9.30"
             },
 
             {
@@ -373,7 +361,7 @@ DoorLock.patch(
                     "The features that can be disabled from local programming are defined in " +
                     "LocalProgrammingFeaturesBitmap.",
 
-                xref: { document: "cluster", section: "5.2.9.31" }
+                xref: "cluster§5.2.9.31"
             },
 
             {
@@ -388,7 +376,7 @@ DoorLock.patch(
                     "internal logic, environmental events, or other reasons. The lock shall reset the counter if a valid " +
                     "credential is presented.",
 
-                xref: { document: "cluster", section: "5.2.9.32" }
+                xref: "cluster§5.2.9.32"
             },
 
             {
@@ -396,7 +384,7 @@ DoorLock.patch(
                     "1-255 seconds. Device can shut down to lock user out for specified amount of time. (Makes it " +
                     "difficult to try and guess a PIN for the device.) If the attribute accepts writes and an attempt to " +
                     "write the attribute to 0 is made, the device shall respond with CONSTRAINT_ERROR.",
-                xref: { document: "cluster", section: "5.2.9.33" }
+                xref: "cluster§5.2.9.33"
             },
 
             {
@@ -411,23 +399,23 @@ DoorLock.patch(
                     "True, 0x04 0x31 0x32 0x33 0x34 shall be used in the PIN field in any door lock cluster message " +
                     "payload. If the attribute value is False, 0x04 0xFF 0xFF 0xFF 0xFF shall be used.",
 
-                xref: { document: "cluster", section: "5.2.9.34" }
+                xref: "cluster§5.2.9.34"
             },
 
             {
                 details: "Indicates if the door lock requires an optional PIN. If this attribute is set to True, the door lock " +
                     "server requires that an optional PINs be included in the payload of remote lock operation events " +
                     "like Lock, Unlock, Unlock with Timeout and Toggle in order to function.",
-                xref: { document: "cluster", section: "5.2.9.35" }
+                xref: "cluster§5.2.9.35"
             },
 
-            { xref: { document: "cluster", section: "5.2.9" } },
+            { xref: "cluster§5.2.9" },
 
             {
                 details: "Indicates the number of minutes a PIN, RFID, Fingerprint, or other credential associated with a user " +
                     "of type ExpiringUser shall remain valid after its first use before expiring. When the credential " +
                     "expires the UserStatus for the corresponding user record shall be set to OccupiedDisabled.",
-                xref: { document: "cluster", section: "5.2.9.36" }
+                xref: "cluster§5.2.9.36"
             },
 
             {
@@ -438,7 +426,7 @@ DoorLock.patch(
                     "\n" +
                     "This mask DOES NOT apply to the Events mechanism of this cluster.",
 
-                xref: { document: "cluster", section: "5.2.9.37" }
+                xref: "cluster§5.2.9.37"
             },
 
             {
@@ -447,44 +435,41 @@ DoorLock.patch(
                     "1." +
                     "\n" +
                     "Null if no Reader key pair has been configured on the lock. See SetAliroReaderConfig.",
-                xref: { document: "cluster", section: "5.2.9.38" }
+                xref: "cluster§5.2.9.38"
             },
 
             {
                 details: "Indicates the reader_group_identifier as defined in [Aliro]." +
                     "\n" +
                     "Null if no reader_group_identifier has been configured on the lock. See SetAliroReaderConfig.",
-                xref: { document: "cluster", section: "5.2.9.39" }
+                xref: "cluster§5.2.9.39"
             },
 
-            {
-                details: "Indicates the reader_group_sub_identifier as defined in [Aliro].",
-                xref: { document: "cluster", section: "5.2.9.40" }
-            },
+            { details: "Indicates the reader_group_sub_identifier as defined in [Aliro].", xref: "cluster§5.2.9.40" },
             {
                 details: "Indicates the list of protocol versions supported for expedited transactions as defined in [Aliro].",
-                xref: { document: "cluster", section: "5.2.9.41" }
+                xref: "cluster§5.2.9.41"
             },
 
             {
                 details: "Indicates the Group Resolving Key as defined in [Aliro]." +
                     "\n" +
                     "Null if no group resolving key has been configured on the lock. See SetAliroReaderConfig.",
-                xref: { document: "cluster", section: "5.2.9.42" }
+                xref: "cluster§5.2.9.42"
             },
 
             {
                 details: "Indicates the list of protocol versions supported for the Bluetooth LE + UWB Access Control Flow as " +
                     "defined in [Aliro].",
-                xref: { document: "cluster", section: "5.2.9.43" }
+                xref: "cluster§5.2.9.43"
             },
             {
                 details: "Indicates the version of the Bluetooth LE advertisement as defined in [Aliro].",
-                xref: { document: "cluster", section: "5.2.9.44" }
+                xref: "cluster§5.2.9.44"
             },
             {
                 details: "Indicates the maximum number of AliroCredentialIssuerKey credentials that can be stored on the lock.",
-                xref: { document: "cluster", section: "5.2.9.45" }
+                xref: "cluster§5.2.9.45"
             },
 
             {
@@ -500,25 +485,25 @@ DoorLock.patch(
                     "NumberOfAliroEndpointKeysSupported and also add a credential of type AliroNonEvictableEndpointKey at " +
                     "the same index, and both credentials would exist on the server.",
 
-                xref: { document: "cluster", section: "5.2.9.46" }
+                xref: "cluster§5.2.9.46"
             },
 
             {
                 details: "The door lock server provides several alarms which can be sent when there is a critical state on the " +
                     "door lock. The alarms available for the door lock server are listed in AlarmCodeEnum.",
-                xref: { document: "cluster", section: "5.2.11.1" },
+                xref: "cluster§5.2.11.1",
                 children: [{
                     details: "This field shall indicate the alarm code of the event that has happened.",
-                    xref: { document: "cluster", section: "5.2.11.1.1" }
+                    xref: "cluster§5.2.11.1.1"
                 }]
             },
 
             {
                 details: "The door lock server sends out a DoorStateChange event when the door lock door state changes.",
-                xref: { document: "cluster", section: "5.2.11.2" },
+                xref: "cluster§5.2.11.2",
                 children: [{
                     details: "This field shall indicate the new door state for this door event.",
-                    xref: { document: "cluster", section: "5.2.11.2.1" }
+                    xref: "cluster§5.2.11.2.1"
                 }]
             },
 
@@ -551,16 +536,16 @@ DoorLock.patch(
                     "\n" +
                     "from the inside.",
 
-                xref: { document: "cluster", section: "5.2.11.3" },
+                xref: "cluster§5.2.11.3",
 
                 children: [
                     {
                         details: "This field shall indicate the type of the lock operation that was performed.",
-                        xref: { document: "cluster", section: "5.2.11.3.1" }
+                        xref: "cluster§5.2.11.3.1"
                     },
                     {
                         details: "This field shall indicate the source of the lock operation that was performed.",
-                        xref: { document: "cluster", section: "5.2.11.3.2" }
+                        xref: "cluster§5.2.11.3.2"
                     },
 
                     {
@@ -568,27 +553,27 @@ DoorLock.patch(
                             "there is no user index that can be determined for the given operation source. This shall NOT be null " +
                             "if a user index can be determined. In particular, this shall NOT be null if the operation was " +
                             "associated with a valid credential.",
-                        xref: { document: "cluster", section: "5.2.11.3.3" }
+                        xref: "cluster§5.2.11.3.3"
                     },
 
                     {
                         details: "This field shall indicate the fabric index of the fabric that performed the lock operation. This " +
                             "shall be null if there is no fabric that can be determined for the given operation source. This " +
                             "shall NOT be null if the operation source is \"Remote\".",
-                        xref: { document: "cluster", section: "5.2.11.3.4" }
+                        xref: "cluster§5.2.11.3.4"
                     },
 
                     {
                         details: "This field shall indicate the Node ID of the node that performed the lock operation. This shall be " +
                             "null if there is no Node associated with the given operation source. This shall NOT be null if the " +
                             "operation source is \"Remote\".",
-                        xref: { document: "cluster", section: "5.2.11.3.5" }
+                        xref: "cluster§5.2.11.3.5"
                     },
 
                     {
                         details: "This field shall indicate the list of credentials used in performing the lock operation. This shall " +
                             "be null if no credentials were involved.",
-                        xref: { document: "cluster", section: "5.2.11.3.6" }
+                        xref: "cluster§5.2.11.3.6"
                     }
                 ]
             },
@@ -596,45 +581,45 @@ DoorLock.patch(
             {
                 details: "The door lock server sends out a LockOperationError event when a lock operation fails for various " +
                     "reasons.",
-                xref: { document: "cluster", section: "5.2.11.4" },
+                xref: "cluster§5.2.11.4",
 
                 children: [
                     {
                         details: "This field shall indicate the type of the lock operation that was performed.",
-                        xref: { document: "cluster", section: "5.2.11.4.1" }
+                        xref: "cluster§5.2.11.4.1"
                     },
                     {
                         details: "This field shall indicate the source of the lock operation that was performed.",
-                        xref: { document: "cluster", section: "5.2.11.4.2" }
+                        xref: "cluster§5.2.11.4.2"
                     },
                     {
                         details: "This field shall indicate the lock operation error triggered when the operation was performed.",
-                        xref: { document: "cluster", section: "5.2.11.4.3" }
+                        xref: "cluster§5.2.11.4.3"
                     },
                     {
                         details: "This field shall indicate the lock UserIndex who performed the lock operation. This shall be null if " +
                             "there is no user id that can be determined for the given operation source.",
-                        xref: { document: "cluster", section: "5.2.11.4.4" }
+                        xref: "cluster§5.2.11.4.4"
                     },
 
                     {
                         details: "This field shall indicate the fabric index of the fabric that performed the lock operation. This " +
                             "shall be null if there is no fabric that can be determined for the given operation source. This " +
                             "shall NOT be null if the operation source is \"Remote\".",
-                        xref: { document: "cluster", section: "5.2.11.4.5" }
+                        xref: "cluster§5.2.11.4.5"
                     },
 
                     {
                         details: "This field shall indicate the Node ID of the node that performed the lock operation. This shall be " +
                             "null if there is no Node associated with the given operation source. This shall NOT be null if the " +
                             "operation source is \"Remote\".",
-                        xref: { document: "cluster", section: "5.2.11.4.6" }
+                        xref: "cluster§5.2.11.4.6"
                     },
 
                     {
                         details: "This field shall indicate the list of credentials used in performing the lock operation. This shall " +
                             "be null if no credentials were involved.",
-                        xref: { document: "cluster", section: "5.2.11.4.7" }
+                        xref: "cluster§5.2.11.4.7"
                     }
                 ]
             },
@@ -642,41 +627,41 @@ DoorLock.patch(
             {
                 details: "The door lock server sends out a LockUserChange event when a lock user, schedule, or credential " +
                     "change has occurred.",
-                xref: { document: "cluster", section: "5.2.11.5" },
+                xref: "cluster§5.2.11.5",
 
                 children: [
                     {
                         details: "This field shall indicate the lock data type that was changed.",
-                        xref: { document: "cluster", section: "5.2.11.5.1" }
+                        xref: "cluster§5.2.11.5.1"
                     },
                     {
                         details: "This field shall indicate the data operation performed on the lock data type changed.",
-                        xref: { document: "cluster", section: "5.2.11.5.2" }
+                        xref: "cluster§5.2.11.5.2"
                     },
                     {
                         details: "This field shall indicate the source of the user data change.",
-                        xref: { document: "cluster", section: "5.2.11.5.3" }
+                        xref: "cluster§5.2.11.5.3"
                     },
 
                     {
                         details: "This field shall indicate the lock UserIndex associated with the change (if any). This shall be null " +
                             "if there is no specific user associated with the data operation. This shall be 0xFFFE if all users " +
                             "are affected (e.g. Clear Users).",
-                        xref: { document: "cluster", section: "5.2.11.5.4" }
+                        xref: "cluster§5.2.11.5.4"
                     },
 
                     {
                         details: "This field shall indicate the fabric index of the fabric that performed the change (if any). This " +
                             "shall be null if there is no fabric that can be determined to have caused the change. This shall NOT " +
                             "be null if the operation source is \"Remote\".",
-                        xref: { document: "cluster", section: "5.2.11.5.5" }
+                        xref: "cluster§5.2.11.5.5"
                     },
 
                     {
                         details: "This field shall indicate the Node ID that performed the change (if any). The Node ID of the node " +
                             "that performed the change. This shall be null if there was no Node involved in the change. This " +
                             "shall NOT be null if the operation source is \"Remote\".",
-                        xref: { document: "cluster", section: "5.2.11.5.6" }
+                        xref: "cluster§5.2.11.5.6"
                     },
 
                     {
@@ -685,7 +670,7 @@ DoorLock.patch(
                             "not correspond to a list that can be indexed into (e.g. ProgrammingUser). This shall be 0xFFFE if " +
                             "all indices are affected (e.g. ClearPINCode, ClearRFIDCode, ClearWeekDaySchedule, " +
                             "ClearYearDaySchedule, etc.).",
-                        xref: { document: "cluster", section: "5.2.11.5.7" }
+                        xref: "cluster§5.2.11.5.7"
                     }
                 ]
             },
@@ -694,7 +679,7 @@ DoorLock.patch(
                 details: "This command causes the lock device to lock the door. This command includes an optional code for the " +
                     "lock. The door lock may require a PIN depending on the value of the RequirePINForRemoteOperation " +
                     "attribute.",
-                xref: { document: "cluster", section: "5.2.10.1" },
+                xref: "cluster§5.2.10.1",
 
                 children: [{
                     details: "If the RequirePINforRemoteOperation attribute is True then PINCode field shall be provided and the " +
@@ -707,7 +692,7 @@ DoorLock.patch(
                         "UserCodeTemporaryDisableTime will be triggered if the WrongCodeEntryLimit is exceeded. The lock " +
                         "shall ignore any attempts to lock/unlock the door until the UserCodeTemporaryDisableTime expires.",
 
-                    xref: { document: "cluster", section: "5.2.10.1.1" }
+                    xref: "cluster§5.2.10.1.1"
                 }]
             },
 
@@ -721,11 +706,11 @@ DoorLock.patch(
                     "If the attribute AutoRelockTime is supported the lock will transition to the locked state when the " +
                     "auto relock time has expired.",
 
-                xref: { document: "cluster", section: "5.2.10.2" },
-                children: [{ details: "See PINCode field.", xref: { document: "cluster", section: "5.2.10.2.1" } }]
+                xref: "cluster§5.2.10.2",
+                children: [{ details: "See PINCode field.", xref: "cluster§5.2.10.2.1" }]
             },
 
-            { xref: { document: "cluster", section: "5.2.10" } },
+            { xref: "cluster§5.2.10" },
 
             {
                 details: "This command causes the lock device to unlock the door with a timeout parameter. After the time in " +
@@ -733,15 +718,15 @@ DoorLock.patch(
                     "timeout parameter is only temporary for this message transition and overrides the default relock " +
                     "time as specified in the AutoRelockTime attribute. If the door lock device is not capable of or does " +
                     "not want to support temporary Relock Timeout, it SHOULD NOT support this optional command.",
-                xref: { document: "cluster", section: "5.2.10.3" },
+                xref: "cluster§5.2.10.3",
 
                 children: [
                     {
                         details: "This field shall indicate the timeout in seconds to wait before relocking the door lock. This value " +
                             "is independent of the AutoRelockTime attribute value.",
-                        xref: { document: "cluster", section: "5.2.10.3.1" }
+                        xref: "cluster§5.2.10.3.1"
                     },
-                    { details: "See PINCode field.", xref: { document: "cluster", section: "5.2.10.3.2" } }
+                    { details: "See PINCode field.", xref: "cluster§5.2.10.3.2" }
                 ]
             },
 
@@ -750,29 +735,29 @@ DoorLock.patch(
                     "\n" +
                     "Return status is a global status code or a cluster-specific status code from the Status Codes table " +
                     "and shall be one of the following values:",
-                xref: { document: "cluster", section: "5.2.10.4" },
+                xref: "cluster§5.2.10.4",
 
                 children: [
                     {
                         details: "This field shall indicate the user ID. The value of the UserID field shall be between 0 and the " +
                             "value of the NumberOfPINUsersSupported attribute.",
-                        xref: { document: "cluster", section: "5.2.10.4.1" }
+                        xref: "cluster§5.2.10.4.1"
                     },
                     {
                         details: "This field shall indicate the user status. Only the values 1 (Occupied/Enabled) and 3 " +
                             "(Occupied/Disabled) are allowed for UserStatus.",
-                        xref: { document: "cluster", section: "5.2.10.4.2" }
+                        xref: "cluster§5.2.10.4.2"
                     }
                 ]
             },
 
             {
                 details: "Retrieve a PIN Code.",
-                xref: { document: "cluster", section: "5.2.10.5" },
+                xref: "cluster§5.2.10.5",
                 children: [{
                     details: "This field shall indicate the user ID. The value of the UserID field shall be between 0 and the " +
                         "value of the NumberOfPINUsersSupported attribute.",
-                    xref: { document: "cluster", section: "5.2.10.5.1" }
+                    xref: "cluster§5.2.10.5.1"
                 }]
             },
 
@@ -789,7 +774,7 @@ DoorLock.patch(
                     "shall be equal to CONSTRAINT_ERROR when User_ID is less than the max number of users supported, and " +
                     "NOT_FOUND if greater than or equal to the max number of users supported.",
 
-                xref: { document: "cluster", section: "5.2.10.6" }
+                xref: "cluster§5.2.10.6"
             },
 
             {
@@ -798,11 +783,11 @@ DoorLock.patch(
                     "For each PIN Code cleared whose user doesn’t have a RFID Code or other credential type, then " +
                     "corresponding user record’s UserStatus value shall be set to Available, and UserType value shall be " +
                     "set to UnrestrictedUser and all schedules shall be cleared.",
-                xref: { document: "cluster", section: "5.2.10.7" },
+                xref: "cluster§5.2.10.7",
                 children: [{
                     details: "This field shall specify a valid PIN code slot index or 0xFFFE to indicate all PIN code slots shall " +
                         "be cleared.",
-                    xref: { document: "cluster", section: "5.2.10.7.1" }
+                    xref: "cluster§5.2.10.7.1"
                 }]
             },
 
@@ -814,49 +799,49 @@ DoorLock.patch(
                     "On the server, the clear all PIN codes command SHOULD have the same effect as the ClearPINCode " +
                     "command with respect to the setting of user status, user type and schedules.",
 
-                xref: { document: "cluster", section: "5.2.10.8" }
+                xref: "cluster§5.2.10.8"
             },
 
             {
                 details: "Set the status of a user ID.",
-                xref: { document: "cluster", section: "5.2.10.9" },
+                xref: "cluster§5.2.10.9",
 
                 children: [
                     {
                         details: "This field shall indicate the user ID. The value of the UserID field shall be between 0 and the " +
                             "value of the NumberOfPINUsersSupported attribute.",
-                        xref: { document: "cluster", section: "5.2.10.9.1" }
+                        xref: "cluster§5.2.10.9.1"
                     },
                     {
                         details: "UserStatus value of Available is not allowed. In order to clear a user id, the ClearUser Command " +
                             "shall be used. For user status value please refer to UserStatusEnum.",
-                        xref: { document: "cluster", section: "5.2.10.9.2" }
+                        xref: "cluster§5.2.10.9.2"
                     }
                 ]
             },
 
             {
                 details: "Get the status of a user.",
-                xref: { document: "cluster", section: "5.2.10.10" },
+                xref: "cluster§5.2.10.10",
                 children: [{
                     details: "This field shall indicate the user ID. The value of the UserID field shall be between 0 and the " +
                         "value of the NumberOfPINUsersSupported attribute.",
-                    xref: { document: "cluster", section: "5.2.10.10.1" }
+                    xref: "cluster§5.2.10.10.1"
                 }]
             },
 
             {
                 details: "Returns the user status for the specified user ID.",
-                xref: { document: "cluster", section: "5.2.10.11" },
+                xref: "cluster§5.2.10.11",
 
                 children: [
                     {
                         details: "This field shall indicate the user ID provided in the request.",
-                        xref: { document: "cluster", section: "5.2.10.11.1" }
+                        xref: "cluster§5.2.10.11.1"
                     },
                     {
                         details: "This field shall indicate the current status of the requested user ID.",
-                        xref: { document: "cluster", section: "5.2.10.11.2" }
+                        xref: "cluster§5.2.10.11.2"
                     }
                 ]
             },
@@ -869,33 +854,30 @@ DoorLock.patch(
                     "\n" +
                     "Return status shall be one of the following values:",
 
-                xref: { document: "cluster", section: "5.2.10.12" },
+                xref: "cluster§5.2.10.12",
 
                 children: [
                     {
                         details: "This field shall indicate the index of the Week Day schedule.",
-                        xref: { document: "cluster", section: "5.2.10.12.1" }
+                        xref: "cluster§5.2.10.12.1"
                     },
-                    {
-                        details: "This field shall indicate the user ID.",
-                        xref: { document: "cluster", section: "5.2.10.12.2" }
-                    },
+                    { details: "This field shall indicate the user ID.", xref: "cluster§5.2.10.12.2" },
                     {
                         details: "This field shall indicate which week days the schedule is active.",
-                        xref: { document: "cluster", section: "5.2.10.12.3" }
+                        xref: "cluster§5.2.10.12.3"
                     },
                     {
                         details: "This field shall indicate the starting hour for the Week Day schedule.",
-                        xref: { document: "cluster", section: "5.2.10.12.4" }
+                        xref: "cluster§5.2.10.12.4"
                     },
                     {
                         details: "This field shall indicate the starting minute for the Week Day schedule.",
-                        xref: { document: "cluster", section: "5.2.10.12.5" }
+                        xref: "cluster§5.2.10.12.5"
                     },
                     {
                         details: "This field shall indicate the ending hour for the Week Day schedule. EndHour shall be equal to or " +
                             "greater than StartHour.",
-                        xref: { document: "cluster", section: "5.2.10.12.6" }
+                        xref: "cluster§5.2.10.12.6"
                     },
 
                     {
@@ -904,29 +886,23 @@ DoorLock.patch(
                             "\n" +
                             "If the EndHour is equal to 23 and the EndMinute is equal to 59 the Lock shall grant access to the " +
                             "user up until 23:59:59.",
-                        xref: { document: "cluster", section: "5.2.10.12.7" }
+                        xref: "cluster§5.2.10.12.7"
                     }
                 ]
             },
 
-            {
-                details: "Retrieve the specific weekly schedule for the specific user.",
-                xref: { document: "cluster", section: "5.2.10.13" }
-            },
+            { details: "Retrieve the specific weekly schedule for the specific user.", xref: "cluster§5.2.10.13" },
 
             {
                 details: "Returns the weekly repeating schedule data for the specified schedule index.",
-                xref: { document: "cluster", section: "5.2.10.14" },
+                xref: "cluster§5.2.10.14",
 
                 children: [
                     {
                         details: "This field shall indicate the index of the Week Day schedule.",
-                        xref: { document: "cluster", section: "5.2.10.14.1" }
+                        xref: "cluster§5.2.10.14.1"
                     },
-                    {
-                        details: "This field shall indicate the user ID.",
-                        xref: { document: "cluster", section: "5.2.10.14.2" }
-                    },
+                    { details: "This field shall indicate the user ID.", xref: "cluster§5.2.10.14.2" },
 
                     {
                         details: "Status shall be one of the following values:" +
@@ -943,27 +919,27 @@ DoorLock.patch(
                             "If this field is SUCCESS, the optional fields for this command shall be present. For other (error) " +
                             "status values, only the fields up to the status field shall be present.",
 
-                        xref: { document: "cluster", section: "5.2.10.14.3" }
+                        xref: "cluster§5.2.10.14.3"
                     },
 
                     undefined,
                     {
                         details: "This field shall indicate the starting hour for the Week Day schedule.",
-                        xref: { document: "cluster", section: "5.2.10.14.4" }
+                        xref: "cluster§5.2.10.14.4"
                     },
                     {
                         details: "This field shall indicate the starting minute for the Week Day schedule.",
-                        xref: { document: "cluster", section: "5.2.10.14.5" }
+                        xref: "cluster§5.2.10.14.5"
                     },
                     {
                         details: "This field shall indicate the ending hour for the Week Day schedule. EndHour shall be equal to or " +
                             "greater than StartHour.",
-                        xref: { document: "cluster", section: "5.2.10.14.6" }
+                        xref: "cluster§5.2.10.14.6"
                     },
                     {
                         details: "This field shall indicate the ending minute for the Week Day schedule. If EndHour is equal to " +
                             "StartHour then EndMinute shall be greater than StartMinute.",
-                        xref: { document: "cluster", section: "5.2.10.14.7" }
+                        xref: "cluster§5.2.10.14.7"
                     }
                 ]
             },
@@ -972,18 +948,15 @@ DoorLock.patch(
                 details: "Clear the specific weekly schedule or all weekly schedules for the specific user." +
                     "\n" +
                     "Return status shall be one of the following values:",
-                xref: { document: "cluster", section: "5.2.10.15" },
+                xref: "cluster§5.2.10.15",
 
                 children: [
                     {
                         details: "This field shall indicate the Week Day schedule index to clear or 0xFE to clear all Week Day " +
                             "schedules for the specified user.",
-                        xref: { document: "cluster", section: "5.2.10.15.1" }
+                        xref: "cluster§5.2.10.15.1"
                     },
-                    {
-                        details: "This field shall indicate the user ID.",
-                        xref: { document: "cluster", section: "5.2.10.15.2" }
-                    }
+                    { details: "This field shall indicate the user ID.", xref: "cluster§5.2.10.15.2" }
                 ]
             },
 
@@ -995,50 +968,44 @@ DoorLock.patch(
                     "\n" +
                     "Return status shall be one of the following values:",
 
-                xref: { document: "cluster", section: "5.2.10.16" },
+                xref: "cluster§5.2.10.16",
 
                 children: [
                     {
                         details: "This field shall indicate the index of the Year Day schedule.",
-                        xref: { document: "cluster", section: "5.2.10.16.1" }
+                        xref: "cluster§5.2.10.16.1"
                     },
-                    {
-                        details: "This field shall indicate the user ID.",
-                        xref: { document: "cluster", section: "5.2.10.16.2" }
-                    },
+                    { details: "This field shall indicate the user ID.", xref: "cluster§5.2.10.16.2" },
                     {
                         details: "This field shall indicate the starting time for the Year Day schedule in Epoch Time in Seconds with " +
                             "local time offset based on the local timezone and DST offset on the day represented by the value.",
-                        xref: { document: "cluster", section: "5.2.10.16.3" }
+                        xref: "cluster§5.2.10.16.3"
                     },
 
                     {
                         details: "This field shall indicate the ending time for the Year Day schedule in Epoch Time in Seconds with " +
                             "local time offset based on the local timezone and DST offset on the day represented by the value. " +
                             "LocalEndTime shall be greater than LocalStartTime.",
-                        xref: { document: "cluster", section: "5.2.10.16.4" }
+                        xref: "cluster§5.2.10.16.4"
                     }
                 ]
             },
 
             {
                 details: "Retrieve the specific year day schedule for the specific schedule and user indexes.",
-                xref: { document: "cluster", section: "5.2.10.17" }
+                xref: "cluster§5.2.10.17"
             },
 
             {
                 details: "Returns the year day schedule data for the specified schedule and user indexes.",
-                xref: { document: "cluster", section: "5.2.10.18" },
+                xref: "cluster§5.2.10.18",
 
                 children: [
                     {
                         details: "This field shall indicate the index of the Year Day schedule.",
-                        xref: { document: "cluster", section: "5.2.10.18.1" }
+                        xref: "cluster§5.2.10.18.1"
                     },
-                    {
-                        details: "This field shall indicate the user ID.",
-                        xref: { document: "cluster", section: "5.2.10.18.2" }
-                    },
+                    { details: "This field shall indicate the user ID.", xref: "cluster§5.2.10.18.2" },
 
                     {
                         details: "Status shall be one of the following values:" +
@@ -1055,14 +1022,14 @@ DoorLock.patch(
                             "If this field is SUCCESS, the optional fields for this command shall be present. For other (error) " +
                             "status values, only the fields up to the status field shall be present.",
 
-                        xref: { document: "cluster", section: "5.2.10.18.3" }
+                        xref: "cluster§5.2.10.18.3"
                     },
 
                     {
                         details: "This field shall indicate the starting time for the Year Day schedule in Epoch Time in Seconds with " +
                             "local time offset based on the local timezone and DST offset on the day represented by the value. " +
                             "This shall be null if the schedule is not set for the YearDayIndex and UserIndex provided.",
-                        xref: { document: "cluster", section: "5.2.10.18.4" }
+                        xref: "cluster§5.2.10.18.4"
                     },
 
                     {
@@ -1070,7 +1037,7 @@ DoorLock.patch(
                             "local time offset based on the local timezone and DST offset on the day represented by the value. " +
                             "LocalEndTime shall be greater than LocalStartTime. This shall be null if the schedule is not set for " +
                             "the YearDayIndex and UserIndex provided.",
-                        xref: { document: "cluster", section: "5.2.10.18.5" }
+                        xref: "cluster§5.2.10.18.5"
                     }
                 ]
             },
@@ -1079,18 +1046,15 @@ DoorLock.patch(
                 details: "Clears the specific year day schedule or all year day schedules for the specific user." +
                     "\n" +
                     "Return status shall be one of the following values:",
-                xref: { document: "cluster", section: "5.2.10.19" },
+                xref: "cluster§5.2.10.19",
 
                 children: [
                     {
                         details: "This field shall indicate the Year Day schedule index to clear or 0xFE to clear all Year Day " +
                             "schedules for the specified user.",
-                        xref: { document: "cluster", section: "5.2.10.19.1" }
+                        xref: "cluster§5.2.10.19.1"
                     },
-                    {
-                        details: "This field shall indicate the user ID.",
-                        xref: { document: "cluster", section: "5.2.10.19.2" }
-                    }
+                    { details: "This field shall indicate the user ID.", xref: "cluster§5.2.10.19.2" }
                 ]
             },
 
@@ -1099,48 +1063,45 @@ DoorLock.patch(
                     "Operating Mode." +
                     "\n" +
                     "Return status shall be one of the following values:",
-                xref: { document: "cluster", section: "5.2.10.20" },
+                xref: "cluster§5.2.10.20",
 
                 children: [
                     {
                         details: "This field shall indicate the index of the Holiday schedule.",
-                        xref: { document: "cluster", section: "5.2.10.20.1" }
+                        xref: "cluster§5.2.10.20.1"
                     },
 
                     {
                         details: "This field shall indicate the starting time for the Holiday Day schedule in Epoch Time in Seconds " +
                             "with local time offset based on the local timezone and DST offset on the day represented by the " +
                             "value.",
-                        xref: { document: "cluster", section: "5.2.10.20.2" }
+                        xref: "cluster§5.2.10.20.2"
                     },
 
                     {
                         details: "This field shall indicate the ending time for the Holiday Day schedule in Epoch Time in Seconds with " +
                             "local time offset based on the local timezone and DST offset on the day represented by the value. " +
                             "LocalEndTime shall be greater than LocalStartTime.",
-                        xref: { document: "cluster", section: "5.2.10.20.3" }
+                        xref: "cluster§5.2.10.20.3"
                     },
 
                     {
                         details: "This field shall indicate the operating mode to use during this Holiday schedule start/end time.",
-                        xref: { document: "cluster", section: "5.2.10.20.4" }
+                        xref: "cluster§5.2.10.20.4"
                     }
                 ]
             },
 
-            {
-                details: "Get the holiday schedule for the specified index.",
-                xref: { document: "cluster", section: "5.2.10.21" }
-            },
+            { details: "Get the holiday schedule for the specified index.", xref: "cluster§5.2.10.21" },
 
             {
                 details: "Returns the Holiday Schedule Entry for the specified Holiday ID.",
-                xref: { document: "cluster", section: "5.2.10.22" },
+                xref: "cluster§5.2.10.22",
 
                 children: [
                     {
                         details: "This field shall indicate the index of the Holiday schedule.",
-                        xref: { document: "cluster", section: "5.2.10.22.1" }
+                        xref: "cluster§5.2.10.22.1"
                     },
 
                     {
@@ -1158,14 +1119,14 @@ DoorLock.patch(
                             "If this field is SUCCESS, the optional fields for this command shall be present. For other (error) " +
                             "status values, only the fields up to the status field shall be present.",
 
-                        xref: { document: "cluster", section: "5.2.10.22.2" }
+                        xref: "cluster§5.2.10.22.2"
                     },
 
                     {
                         details: "This field shall indicate the starting time for the Holiday schedule in Epoch Time in Seconds with " +
                             "local time offset based on the local timezone and DST offset on the day represented by the value. " +
                             "This shall be null if the schedule is not set for the HolidayIndex provided.",
-                        xref: { document: "cluster", section: "5.2.10.22.3" }
+                        xref: "cluster§5.2.10.22.3"
                     },
 
                     {
@@ -1173,24 +1134,24 @@ DoorLock.patch(
                             "local time offset based on the local timezone and DST offset on the day represented by the value. " +
                             "LocalEndTime shall be greater than LocalStartTime. This shall be null if the schedule is not set for " +
                             "the HolidayIndex provided.",
-                        xref: { document: "cluster", section: "5.2.10.22.4" }
+                        xref: "cluster§5.2.10.22.4"
                     },
 
                     {
                         details: "This field shall indicate the operating mode to use during this Holiday schedule start/end time. " +
                             "This shall be null if the schedule is not set for the HolidayIndex provided.",
-                        xref: { document: "cluster", section: "5.2.10.22.5" }
+                        xref: "cluster§5.2.10.22.5"
                     }
                 ]
             },
 
             {
                 details: "Clears the holiday schedule or all holiday schedules.",
-                xref: { document: "cluster", section: "5.2.10.23" },
+                xref: "cluster§5.2.10.23",
                 children: [{
                     details: "This field shall indicate the Holiday schedule index to clear or 0xFE to clear all Holiday " +
                         "schedules.",
-                    xref: { document: "cluster", section: "5.2.10.23.1" }
+                    xref: "cluster§5.2.10.23.1"
                 }]
             },
 
@@ -1200,28 +1161,18 @@ DoorLock.patch(
                     "For user type value please refer to User Type Value." +
                     "\n" +
                     "Return status shall be one of the following values:",
-                xref: { document: "cluster", section: "5.2.10.24" },
-
+                xref: "cluster§5.2.10.24",
                 children: [
-                    {
-                        details: "This field shall indicate the user ID.",
-                        xref: { document: "cluster", section: "5.2.10.24.1" }
-                    },
-                    {
-                        details: "This field shall indicate the user type.",
-                        xref: { document: "cluster", section: "5.2.10.24.2" }
-                    }
+                    { details: "This field shall indicate the user ID.", xref: "cluster§5.2.10.24.1" },
+                    { details: "This field shall indicate the user type.", xref: "cluster§5.2.10.24.2" }
                 ]
             },
 
-            {
-                details: "Retrieve the user type for a specific user.",
-                xref: { document: "cluster", section: "5.2.10.25" }
-            },
+            { details: "Retrieve the user type for a specific user.", xref: "cluster§5.2.10.25" },
             {
                 details: "Returns the user type for the specified user ID. If the requested User ID is invalid, send Default " +
                     "Response with an error status equal to FAILURE.",
-                xref: { document: "cluster", section: "5.2.10.26" }
+                xref: "cluster§5.2.10.26"
             },
 
             {
@@ -1229,7 +1180,7 @@ DoorLock.patch(
                     "\n" +
                     "Return status is a global status code or a cluster-specific status code from the Status Codes table " +
                     "and shall be one of the following values:",
-                xref: { document: "cluster", section: "5.2.10.27" },
+                xref: "cluster§5.2.10.27",
 
                 children: [
                     {
@@ -1237,7 +1188,7 @@ DoorLock.patch(
                             "\n" +
                             "The value of the UserID field shall be between 0 and the value of the NumberOfRFIDUsersSupported " +
                             "attribute.",
-                        xref: { document: "cluster", section: "5.2.10.27.1" }
+                        xref: "cluster§5.2.10.27.1"
                     },
 
                     {
@@ -1245,26 +1196,23 @@ DoorLock.patch(
                             "“Set PIN” while not all are supported." +
                             "\n" +
                             "Only the values 1 (Occupied/Enabled) and 3 (Occupied/Disabled) are allowed for UserStatus.",
-                        xref: { document: "cluster", section: "5.2.10.27.2" }
+                        xref: "cluster§5.2.10.27.2"
                     },
 
-                    {
-                        details: "The values are the same as used for SetPINCode command.",
-                        xref: { document: "cluster", section: "5.2.10.27.3" }
-                    }
+                    { details: "The values are the same as used for SetPINCode command.", xref: "cluster§5.2.10.27.3" }
                 ]
             },
 
             {
                 details: "Retrieve an RFID code.",
-                xref: { document: "cluster", section: "5.2.10.28" },
+                xref: "cluster§5.2.10.28",
 
                 children: [{
                     details: "This field shall indicate the user ID." +
                         "\n" +
                         "The value of the UserID field shall be between 0 and the value of the NumberOfRFIDUsersSupported " +
                         "attribute.",
-                    xref: { document: "cluster", section: "5.2.10.28.1" }
+                    xref: "cluster§5.2.10.28.1"
                 }]
             },
 
@@ -1281,7 +1229,7 @@ DoorLock.patch(
                     "be equal to CONSTRAINT_ERROR when User_ID is less than the max number of users supported, and " +
                     "NOT_FOUND if greater than or equal to the max number of users supported.",
 
-                xref: { document: "cluster", section: "5.2.10.29" }
+                xref: "cluster§5.2.10.29"
             },
 
             {
@@ -1290,11 +1238,11 @@ DoorLock.patch(
                     "For each RFID Code cleared whose user doesn’t have a PIN Code or other credential type, then the " +
                     "corresponding user record’s UserStatus value shall be set to Available, and UserType value shall be " +
                     "set to UnrestrictedUser and all schedules shall be cleared.",
-                xref: { document: "cluster", section: "5.2.10.30" },
+                xref: "cluster§5.2.10.30",
                 children: [{
                     details: "This field shall indicate a valid RFID code slot index or 0xFFFE to indicate all RFID code slots " +
                         "shall be cleared.",
-                    xref: { document: "cluster", section: "5.2.10.30.1" }
+                    xref: "cluster§5.2.10.30.1"
                 }]
             },
 
@@ -1302,7 +1250,7 @@ DoorLock.patch(
                 details: "Clear out all RFIDs on the lock. If you clear all RFID codes and this user didn’t have a PIN code, " +
                     "the user status has to be set to \"0 Available\", the user type has to be set to the default value, " +
                     "and all schedules which are supported have to be set to the default values.",
-                xref: { document: "cluster", section: "5.2.10.31" }
+                xref: "cluster§5.2.10.31"
             },
 
             {
@@ -1324,17 +1272,11 @@ DoorLock.patch(
                     "  • INVALID_COMMAND, if one or more fields violate constraints or are invalid or if OperationType is " +
                     "    Modify and UserIndex points to an available slot.",
 
-                xref: { document: "cluster", section: "5.2.10.32" },
+                xref: "cluster§5.2.10.32",
 
                 children: [
-                    {
-                        details: "This field shall indicate the type of operation.",
-                        xref: { document: "cluster", section: "5.2.10.32.1" }
-                    },
-                    {
-                        details: "This field shall indicate the user ID.",
-                        xref: { document: "cluster", section: "5.2.10.32.2" }
-                    },
+                    { details: "This field shall indicate the type of operation.", xref: "cluster§5.2.10.32.1" },
+                    { details: "This field shall indicate the user ID.", xref: "cluster§5.2.10.32.2" },
 
                     {
                         details: "This field shall contain a string to use as a human readable identifier for the user. If UserName is " +
@@ -1348,7 +1290,7 @@ DoorLock.patch(
                             "\n" +
                             "If UserName is not null, the UserName in the user record shall be set to the provided value.",
 
-                        xref: { document: "cluster", section: "5.2.10.32.3" }
+                        xref: "cluster§5.2.10.32.3"
                     },
 
                     {
@@ -1365,7 +1307,7 @@ DoorLock.patch(
                             "\n" +
                             "If UserUniqueID is not null, the UserUniqueID in the user record shall be set to the provided value.",
 
-                        xref: { document: "cluster", section: "5.2.10.32.4" }
+                        xref: "cluster§5.2.10.32.4"
                     },
 
                     {
@@ -1380,7 +1322,7 @@ DoorLock.patch(
                             "\n" +
                             "If UserStatus is not null, the UserStatus in the user record shall be set to the provided value.",
 
-                        xref: { document: "cluster", section: "5.2.10.32.5" }
+                        xref: "cluster§5.2.10.32.5"
                     },
 
                     {
@@ -1395,7 +1337,7 @@ DoorLock.patch(
                             "\n" +
                             "If UserType is not null, the UserType in the user record shall be set to the provided value.",
 
-                        xref: { document: "cluster", section: "5.2.10.32.6" }
+                        xref: "cluster§5.2.10.32.6"
                     },
 
                     {
@@ -1415,7 +1357,7 @@ DoorLock.patch(
                             "If CredentialRule is not null, the CredentialRule in the user record shall be set to the provided " +
                             "value.",
 
-                        xref: { document: "cluster", section: "5.2.10.32.7" }
+                        xref: "cluster§5.2.10.32.7"
                     }
                 ]
             },
@@ -1428,7 +1370,7 @@ DoorLock.patch(
                     "COMMAND, etc.) as needed otherwise the GetUserResponse Command shall be sent implying a status of " +
                     "SUCCESS.",
 
-                xref: { document: "cluster", section: "5.2.10.33" }
+                xref: "cluster§5.2.10.33"
             },
 
             {
@@ -1437,33 +1379,30 @@ DoorLock.patch(
                     "If the requested UserIndex is valid and the UserStatus is Available for the requested UserIndex then " +
                     "UserName, UserUniqueID, UserStatus, UserType, CredentialRule, Credentials, CreatorFabricIndex, and " +
                     "LastModifiedFabricIndex shall all be null in the response.",
-                xref: { document: "cluster", section: "5.2.10.34" },
+                xref: "cluster§5.2.10.34",
 
                 children: [
-                    {
-                        details: "This field shall indicate the user ID.",
-                        xref: { document: "cluster", section: "5.2.10.34.1" }
-                    },
+                    { details: "This field shall indicate the user ID.", xref: "cluster§5.2.10.34.1" },
                     {
                         details: "This field shall contain a string to use as a human readable identifier for the user.",
-                        xref: { document: "cluster", section: "5.2.10.34.2" }
+                        xref: "cluster§5.2.10.34.2"
                     },
-                    { details: "See UserUniqueID field.", xref: { document: "cluster", section: "5.2.10.34.3" } },
+                    { details: "See UserUniqueID field.", xref: "cluster§5.2.10.34.3" },
                     {
                         details: "This field shall indicate the UserStatus assigned to the user when created or modified.",
-                        xref: { document: "cluster", section: "5.2.10.34.4" }
+                        xref: "cluster§5.2.10.34.4"
                     },
                     {
                         details: "This field shall indicate the UserType assigned to this user when created or modified.",
-                        xref: { document: "cluster", section: "5.2.10.34.5" }
+                        xref: "cluster§5.2.10.34.5"
                     },
                     {
                         details: "This field shall indicate the CredentialRule set for this user.",
-                        xref: { document: "cluster", section: "5.2.10.34.6" }
+                        xref: "cluster§5.2.10.34.6"
                     },
                     {
                         details: "This field shall contain a list of credentials for this user.",
-                        xref: { document: "cluster", section: "5.2.10.34.7" }
+                        xref: "cluster§5.2.10.34.7"
                     },
 
                     {
@@ -1471,7 +1410,7 @@ DoorLock.patch(
                             "UserStatus is set to Available or when the creator fabric cannot be determined (for example, when " +
                             "user was created outside the Interaction Model) and shall NOT be null otherwise. This value shall be " +
                             "set to 0 if the original creator fabric was deleted.",
-                        xref: { document: "cluster", section: "5.2.10.34.8" }
+                        xref: "cluster§5.2.10.34.8"
                     },
 
                     {
@@ -1479,7 +1418,7 @@ DoorLock.patch(
                             "null if UserStatus is set to Available or when the modifier fabric cannot be determined (for " +
                             "example, when user was modified outside the Interaction Model) and shall NOT be null otherwise. This " +
                             "value shall be set to 0 if the last modifier fabric was deleted.",
-                        xref: { document: "cluster", section: "5.2.10.34.9" }
+                        xref: "cluster§5.2.10.34.9"
                     },
 
                     {
@@ -1487,7 +1426,7 @@ DoorLock.patch(
                             "identifying occupied user slots in the database. This shall NOT be null if there is at least one " +
                             "occupied entry after the requested UserIndex in the User database and shall be null if there are no " +
                             "more occupied entries.",
-                        xref: { document: "cluster", section: "5.2.10.34.10" }
+                        xref: "cluster§5.2.10.34.10"
                     }
                 ]
             },
@@ -1502,10 +1441,10 @@ DoorLock.patch(
                     "A LockUserChange event with the provided UserIndex shall be generated after successfully clearing " +
                     "users.",
 
-                xref: { document: "cluster", section: "5.2.10.35" },
+                xref: "cluster§5.2.10.35",
                 children: [{
                     details: "This field shall specify a valid User index or 0xFFFE to indicate all user slots shall be cleared.",
-                    xref: { document: "cluster", section: "5.2.10.35.1" }
+                    xref: "cluster§5.2.10.35.1"
                 }]
             },
 
@@ -1514,17 +1453,17 @@ DoorLock.patch(
                     "ProgrammingUser." +
                     "\n" +
                     "Fields used for different use cases:",
-                xref: { document: "cluster", section: "5.2.10.36" },
+                xref: "cluster§5.2.10.36",
 
                 children: [
                     {
                         details: "This field shall indicate the set credential operation type requested.",
-                        xref: { document: "cluster", section: "5.2.10.36.1" }
+                        xref: "cluster§5.2.10.36.1"
                     },
                     {
                         details: "This field shall contain a credential structure that contains the CredentialTypeEnum and the " +
                             "credential index (if applicable or 0 if not) to set.",
-                        xref: { document: "cluster", section: "5.2.10.36.2" }
+                        xref: "cluster§5.2.10.36.2"
                     },
 
                     {
@@ -1532,35 +1471,35 @@ DoorLock.patch(
                             "length of the credential data shall conform to the limits of the CredentialType specified in the " +
                             "Credential structure otherwise an INVALID_COMMAND status shall be returned in the " +
                             "SetCredentialResponse command.",
-                        xref: { document: "cluster", section: "5.2.10.36.3" }
+                        xref: "cluster§5.2.10.36.3"
                     },
 
                     {
                         details: "This field shall indicate the user index to the user record that corresponds to the credential being " +
                             "added or modified. This shall be null if OperationType is add and a new credential and user is being " +
                             "added at the same time.",
-                        xref: { document: "cluster", section: "5.2.10.36.4" }
+                        xref: "cluster§5.2.10.36.4"
                     },
 
                     {
                         details: "This field shall indicate the user status to use in the new user record if a new user is being " +
                             "created. This shall be null if OperationType is Modify. This may be null when adding a new " +
                             "credential and user.",
-                        xref: { document: "cluster", section: "5.2.10.36.5" }
+                        xref: "cluster§5.2.10.36.5"
                     },
 
                     {
                         details: "This field shall indicate the user type to use in the new user record if a new user is being " +
                             "created. This shall be null if OperationType is Modify. This may be null when adding a new " +
                             "credential and user.",
-                        xref: { document: "cluster", section: "5.2.10.36.6" }
+                        xref: "cluster§5.2.10.36.6"
                     }
                 ]
             },
 
             {
                 details: "Returns the status for setting the specified credential.",
-                xref: { document: "cluster", section: "5.2.10.37" },
+                xref: "cluster§5.2.10.37",
 
                 children: [
                     {
@@ -1596,7 +1535,7 @@ DoorLock.patch(
                             "\n" +
                             "  • INVALID_COMMAND, if OperationType is Modify and UserIndex points to an available slot.",
 
-                        xref: { document: "cluster", section: "5.2.10.37.1" }
+                        xref: "cluster§5.2.10.37.1"
                     },
 
                     {
@@ -1605,7 +1544,7 @@ DoorLock.patch(
                             "Modify; if the OperationType was Add and a new User was created this shall NOT be null and shall " +
                             "provide the UserIndex created. If the OperationType was Add and an existing User was associated with " +
                             "the new credential then this shall be null.",
-                        xref: { document: "cluster", section: "5.2.10.37.2" }
+                        xref: "cluster§5.2.10.37.2"
                     },
 
                     {
@@ -1616,7 +1555,7 @@ DoorLock.patch(
                             "NextCredentialIndex reported shall NOT exceed the maximum number of credentials for a particular " +
                             "credential type.",
 
-                        xref: { document: "cluster", section: "5.2.10.37.3" }
+                        xref: "cluster§5.2.10.37.3"
                     }
                 ]
             },
@@ -1627,23 +1566,23 @@ DoorLock.patch(
                     "An InvokeResponse command shall be sent with an appropriate error (e.g. FAILURE, INVALID_COMMAND, " +
                     "etc.) as needed otherwise the GetCredentialStatusResponse command shall be sent implying a status of " +
                     "SUCCESS.",
-                xref: { document: "cluster", section: "5.2.10.38" },
+                xref: "cluster§5.2.10.38",
                 children: [{
                     details: "This field shall contain a credential structure that contains the CredentialTypeEnum and the " +
                         "credential index (if applicable or 0 if not) to retrieve the status for.",
-                    xref: { document: "cluster", section: "5.2.10.38.1" }
+                    xref: "cluster§5.2.10.38.1"
                 }]
             },
 
             {
                 details: "Returns the status for the specified credential.",
-                xref: { document: "cluster", section: "5.2.10.39" },
+                xref: "cluster§5.2.10.39",
 
                 children: [
                     {
                         details: "This field shall indicate if the requested credential type and index exists and is populated for the " +
                             "requested user index.",
-                        xref: { document: "cluster", section: "5.2.10.39.1" }
+                        xref: "cluster§5.2.10.39.1"
                     },
 
                     {
@@ -1651,7 +1590,7 @@ DoorLock.patch(
                             "If CredentialType requested was ProgrammingPIN then UserIndex shall be null; otherwise, UserIndex " +
                             "shall be null if CredentialExists is set to False and shall NOT be null if CredentialExists is set " +
                             "to True.",
-                        xref: { document: "cluster", section: "5.2.10.39.2" }
+                        xref: "cluster§5.2.10.39.2"
                     },
 
                     {
@@ -1659,7 +1598,7 @@ DoorLock.patch(
                             "CredentialExists is set to False or when the creator fabric cannot be determined (for example, when " +
                             "credential was created outside the Interaction Model) and shall NOT be null otherwise. This value " +
                             "shall be set to 0 if the original creator fabric was deleted.",
-                        xref: { document: "cluster", section: "5.2.10.39.3" }
+                        xref: "cluster§5.2.10.39.3"
                     },
 
                     {
@@ -1667,7 +1606,7 @@ DoorLock.patch(
                             "be null if CredentialExists is set to False or when the modifier fabric cannot be determined (for " +
                             "example, when credential was modified outside the Interaction Model) and shall NOT be null " +
                             "otherwise. This value shall be set to 0 if the last modifier fabric was deleted.",
-                        xref: { document: "cluster", section: "5.2.10.39.4" }
+                        xref: "cluster§5.2.10.39.4"
                     },
 
                     {
@@ -1679,7 +1618,7 @@ DoorLock.patch(
                             "database and shall be null if there are no more occupied entries. The NextCredentialIndex reported " +
                             "shall NOT exceed the maximum number of credentials for a particular credential type.",
 
-                        xref: { document: "cluster", section: "5.2.10.39.5" }
+                        xref: "cluster§5.2.10.39.5"
                     },
 
                     {
@@ -1698,7 +1637,7 @@ DoorLock.patch(
                             "Since the Aliro credentials are public keys, there is no security risk in allowing them to be read. " +
                             "Possession of the credential octet string does not allow operating the lock.",
 
-                        xref: { document: "cluster", section: "5.2.10.39.6" }
+                        xref: "cluster§5.2.10.39.6"
                     }
                 ]
             },
@@ -1715,13 +1654,13 @@ DoorLock.patch(
                     "\n" +
                     "Return status shall be one of the following values:",
 
-                xref: { document: "cluster", section: "5.2.10.40" },
+                xref: "cluster§5.2.10.40",
 
                 children: [{
                     details: "This field shall contain a credential structure that contains the CredentialTypeEnum and the " +
                         "credential index (0xFFFE for all credentials or 0 if not applicable) to clear. This shall be null if " +
                         "clearing all credential types otherwise it shall NOT be null.",
-                    xref: { document: "cluster", section: "5.2.10.40.1" }
+                    xref: "cluster§5.2.10.40.1"
                 }]
             },
 
@@ -1735,31 +1674,31 @@ DoorLock.patch(
                     "If the attribute AutoRelockTime is supported, the lock will transition to the locked state when the " +
                     "auto relock time has expired.",
 
-                xref: { document: "cluster", section: "5.2.10.41" },
-                children: [{ details: "See PINCode field.", xref: { document: "cluster", section: "5.2.10.41.1" } }]
+                xref: "cluster§5.2.10.41",
+                children: [{ details: "See PINCode field.", xref: "cluster§5.2.10.41.1" }]
             },
 
             {
                 details: "This command allows communicating an Aliro Reader configuration, as defined in [Aliro], to the lock.",
-                xref: { document: "cluster", section: "5.2.10.42" },
+                xref: "cluster§5.2.10.42",
 
                 children: [
                     {
                         details: "This field shall indicate the signing key component of the Reader’s key pair.",
-                        xref: { document: "cluster", section: "5.2.10.42.1" }
+                        xref: "cluster§5.2.10.42.1"
                     },
                     {
                         details: "This field shall indicate the verification key component of the Reader’s key pair. This shall be an " +
                             "uncompressed elliptic curve public key as defined in section 2.3.3 of SEC 1.",
-                        xref: { document: "cluster", section: "5.2.10.42.2" }
+                        xref: "cluster§5.2.10.42.2"
                     },
                     {
                         details: "This field shall indicate the reader group identifier for the lock.",
-                        xref: { document: "cluster", section: "5.2.10.42.3" }
+                        xref: "cluster§5.2.10.42.3"
                     },
                     {
                         details: "This field shall indicate the group resolving key for the lock.",
-                        xref: { document: "cluster", section: "5.2.10.42.4" }
+                        xref: "cluster§5.2.10.42.4"
                     }
                 ]
             },
@@ -1774,12 +1713,12 @@ DoorLock.patch(
                     "verification key to interact with the lock. This effect is not restricted to a single fabric or " +
                     "otherwise scoped in any way.",
 
-                xref: { document: "cluster", section: "5.2.10.43" }
+                xref: "cluster§5.2.10.43"
             },
 
             {
                 details: "This bitmap shall indicate the days of the week the Week Day schedule applies for.",
-                xref: { document: "cluster", section: "5.2.6.1" },
+                xref: "cluster§5.2.6.1",
 
                 children: [
                     { description: "Schedule is applied on Sunday" },
@@ -1793,7 +1732,7 @@ DoorLock.patch(
             },
 
             {
-                xref: { document: "cluster", section: "5.2.6.2" },
+                xref: "cluster§5.2.6.2",
                 children: [
                     { description: "Only one credential is required for lock operation" },
                     { description: "Any two credentials are required for lock operation" },
@@ -1803,7 +1742,7 @@ DoorLock.patch(
 
             {
                 description: "For the OperatingModesBitmap, a bit SET indicates that the operating mode IS NOT supported. A bit CLEAR indicates that the operating mode IS supported. This is the inverse of most bitmaps in this specification, and it is RECOMMENDED that clients carefully take this into consideration.",
-                xref: { document: "cluster", section: "5.2.6.3" },
+                xref: "cluster§5.2.6.3",
 
                 children: [
                     { description: "Normal operation mode is NOT supported" },
@@ -1816,7 +1755,7 @@ DoorLock.patch(
             },
 
             {
-                xref: { document: "cluster", section: "5.2.6.4" },
+                xref: "cluster§5.2.6.4",
 
                 children: [
                     {
@@ -1826,7 +1765,7 @@ DoorLock.patch(
                             "  • 0 = Local programming is disabled" +
                             "\n" +
                             "  • 1 = Local programming is enabled",
-                        xref: { document: "cluster", section: "5.2.6.4.1" }
+                        xref: "cluster§5.2.6.4.1"
                     },
 
                     {
@@ -1836,7 +1775,7 @@ DoorLock.patch(
                             "  • 0 = Keypad interface is disabled" +
                             "\n" +
                             "  • 1 = Keypad interface is enabled",
-                        xref: { document: "cluster", section: "5.2.6.4.2" }
+                        xref: "cluster§5.2.6.4.2"
                     },
 
                     {
@@ -1846,7 +1785,7 @@ DoorLock.patch(
                             "  • 0 = Remote interface is disabled" +
                             "\n" +
                             "  • 1 = Remote interface is enabled",
-                        xref: { document: "cluster", section: "5.2.6.4.3" }
+                        xref: "cluster§5.2.6.4.3"
                     },
 
                     {
@@ -1856,7 +1795,7 @@ DoorLock.patch(
                             "  • 0 = Sound volume value is 0 (Silent)" +
                             "\n" +
                             "  • 1 = Sound volume value is equal to something other than 0",
-                        xref: { document: "cluster", section: "5.2.6.4.4" }
+                        xref: "cluster§5.2.6.4.4"
                     },
 
                     {
@@ -1866,7 +1805,7 @@ DoorLock.patch(
                             "  • 0 = Auto relock time value is 0" +
                             "\n" +
                             "  • 1 = Auto relock time value is equal to something other than 0",
-                        xref: { document: "cluster", section: "5.2.6.4.5" }
+                        xref: "cluster§5.2.6.4.5"
                     },
 
                     {
@@ -1876,13 +1815,13 @@ DoorLock.patch(
                             "  • 0 = LED settings value is 0 (NoLEDSignal)" +
                             "\n" +
                             "  • 1 = LED settings value is equal to something other than 0",
-                        xref: { document: "cluster", section: "5.2.6.4.6" }
+                        xref: "cluster§5.2.6.4.6"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "5.2.6.5" },
+                xref: "cluster§5.2.6.5",
 
                 children: [
                     {
@@ -1892,7 +1831,7 @@ DoorLock.patch(
                             "  • 0 = This ability is disabled" +
                             "\n" +
                             "  • 1 = This ability is enabled",
-                        xref: { document: "cluster", section: "5.2.6.5.1" }
+                        xref: "cluster§5.2.6.5.1"
                     },
 
                     {
@@ -1902,7 +1841,7 @@ DoorLock.patch(
                             "  • 0 = This ability is disabled" +
                             "\n" +
                             "  • 1 = This ability is enabled",
-                        xref: { document: "cluster", section: "5.2.6.5.2" }
+                        xref: "cluster§5.2.6.5.2"
                     },
 
                     {
@@ -1912,7 +1851,7 @@ DoorLock.patch(
                             "  • 0 = This ability is disabled" +
                             "\n" +
                             "  • 1 = This ability is enabled",
-                        xref: { document: "cluster", section: "5.2.6.5.3" }
+                        xref: "cluster§5.2.6.5.3"
                     },
 
                     {
@@ -1922,13 +1861,13 @@ DoorLock.patch(
                             "  • 0 = This ability is disabled" +
                             "\n" +
                             "  • 1 = This ability is enabled",
-                        xref: { document: "cluster", section: "5.2.6.5.4" }
+                        xref: "cluster§5.2.6.5.4"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "5.2.6.6" },
+                xref: "cluster§5.2.6.6",
 
                 children: [
                     { description: "Locking Mechanism Jammed" },
@@ -1942,7 +1881,7 @@ DoorLock.patch(
 
             {
                 details: "This enumeration shall indicate the alarm type.",
-                xref: { document: "cluster", section: "5.2.6.7" },
+                xref: "cluster§5.2.6.7",
 
                 children: [
                     { description: "Locking Mechanism Jammed" },
@@ -1958,7 +1897,7 @@ DoorLock.patch(
 
             {
                 details: "This enumeration shall indicate the credential rule that can be applied to a particular user.",
-                xref: { document: "cluster", section: "5.2.6.8" },
+                xref: "cluster§5.2.6.8",
                 children: [
                     { description: "Only one credential is required for lock operation" },
                     { description: "Any two credentials are required for lock operation" },
@@ -1968,7 +1907,7 @@ DoorLock.patch(
 
             {
                 details: "This enumeration shall indicate the credential type.",
-                xref: { document: "cluster", section: "5.2.6.9" },
+                xref: "cluster§5.2.6.9",
 
                 children: [
                     { description: "Programming PIN code credential type" },
@@ -2017,28 +1956,28 @@ DoorLock.patch(
                             "credential was created, the credential associated with the changes in the LockOperation events shall " +
                             "be the AliroCredentialIssuerKey credential used for the step-up.",
 
-                        xref: { document: "cluster", section: "5.2.6.9.1" }
+                        xref: "cluster§5.2.6.9.1"
                     },
 
                     {
                         description: "An Endpoint public key as defined in [Aliro] which can be evicted if space is needed for another endpoint key",
                         details: "Credentials of this type shall be 65-byte uncompressed elliptic curve public keys as defined in " +
                             "section 2.3.3 of SEC 1.",
-                        xref: { document: "cluster", section: "5.2.6.9.2" }
+                        xref: "cluster§5.2.6.9.2"
                     },
 
                     {
                         description: "An Endpoint public key as defined in [Aliro] which cannot be evicted if space is needed for another endpoint key",
                         details: "Credentials of this type shall be 65-byte uncompressed elliptic curve public keys as defined in " +
                             "section 2.3.3 of SEC 1.",
-                        xref: { document: "cluster", section: "5.2.6.9.3" }
+                        xref: "cluster§5.2.6.9.3"
                     }
                 ]
             },
 
             {
                 details: "This enumeration shall indicate the data operation performed.",
-                xref: { document: "cluster", section: "5.2.6.10" },
+                xref: "cluster§5.2.6.10",
                 children: [
                     { description: "Data is being added or was added" },
                     { description: "Data is being cleared or was cleared" },
@@ -2048,7 +1987,7 @@ DoorLock.patch(
 
             {
                 details: "This enumeration shall indicate the current door state.",
-                xref: { document: "cluster", section: "5.2.6.11" },
+                xref: "cluster§5.2.6.11",
 
                 children: [
                     { description: "Door state is open" },
@@ -2062,7 +2001,7 @@ DoorLock.patch(
 
             {
                 details: "This enumeration shall indicate the data type that is being or has changed.",
-                xref: { document: "cluster", section: "5.2.6.12" },
+                xref: "cluster§5.2.6.12",
 
                 children: [
                     { description: "Unspecified or manufacturer specific lock user data added, cleared, or modified." },
@@ -2088,7 +2027,7 @@ DoorLock.patch(
 
             {
                 details: "This enumeration shall indicate the type of Lock operation performed.",
-                xref: { document: "cluster", section: "5.2.6.13" },
+                xref: "cluster§5.2.6.13",
 
                 children: [
                     { description: "Lock operation" },
@@ -2101,7 +2040,7 @@ DoorLock.patch(
 
             {
                 details: "This enumeration shall indicate the error cause of the Lock/Unlock operation performed.",
-                xref: { document: "cluster", section: "5.2.6.14" },
+                xref: "cluster§5.2.6.14",
 
                 children: [
                     { description: "Lock/unlock error caused by unknown or unspecified source" },
@@ -2129,43 +2068,40 @@ DoorLock.patch(
                     "those commands. The door lock shall NOT disable the radio or otherwise unbind or leave the network. " +
                     "It shall still respond to all other commands and requests.",
 
-                xref: { document: "cluster", section: "5.2.6.15" },
+                xref: "cluster§5.2.6.15",
 
                 children: [
-                    {
-                        details: "The lock operates normally. All interfaces are enabled.",
-                        xref: { document: "cluster", section: "5.2.6.15.1" }
-                    },
+                    { details: "The lock operates normally. All interfaces are enabled.", xref: "cluster§5.2.6.15.1" },
                     {
                         details: "Only remote interaction is enabled. The keypad shall only be operable by the master user.",
-                        xref: { document: "cluster", section: "5.2.6.15.2" }
+                        xref: "cluster§5.2.6.15.2"
                     },
 
                     {
                         details: "This mode is only possible if the door is locked. Manual unlocking changes the mode to Normal " +
                             "operating mode. All external interaction with the door lock is disabled. This mode is intended to be " +
                             "used so that users, presumably inside the property, will have control over the entrance.",
-                        xref: { document: "cluster", section: "5.2.6.15.3" }
+                        xref: "cluster§5.2.6.15.3"
                     },
 
                     {
                         details: "This mode only disables remote interaction with the lock. This does not apply to any remote " +
                             "proprietary means of communication. It specifically applies to the Lock, Unlock, Toggle, and Unlock " +
                             "with Timeout Commands.",
-                        xref: { document: "cluster", section: "5.2.6.15.4" }
+                        xref: "cluster§5.2.6.15.4"
                     },
 
                     {
                         details: "The lock is open or can be opened or closed at will without the use of a Keypad or other means of " +
                             "user validation (e.g. a lock for a business during work hours).",
-                        xref: { document: "cluster", section: "5.2.6.15.5" }
+                        xref: "cluster§5.2.6.15.5"
                     }
                 ]
             },
 
             {
                 details: "This enumeration shall indicate the source of the Lock/Unlock or user change operation performed.",
-                xref: { document: "cluster", section: "5.2.6.16" },
+                xref: "cluster§5.2.6.16",
 
                 children: [
                     { description: "Lock/unlock operation came from unspecified source" },
@@ -2186,7 +2122,7 @@ DoorLock.patch(
 
             {
                 details: "This enumeration shall indicate what the status is for a specific user ID.",
-                xref: { document: "cluster", section: "5.2.6.17" },
+                xref: "cluster§5.2.6.17",
                 children: [
                     { description: "The user ID is available" },
                     { description: "The user ID is occupied and enabled" },
@@ -2196,14 +2132,14 @@ DoorLock.patch(
 
             {
                 details: "This enumeration shall indicate what the type is for a specific user ID.",
-                xref: { document: "cluster", section: "5.2.6.18" },
+                xref: "cluster§5.2.6.18",
 
                 children: [
                     {
                         description: "The user ID type is unrestricted",
                         details: "This value shall indicate the user has access 24/7 provided proper PIN or RFID is supplied (e.g., " +
                             "owner).",
-                        xref: { document: "cluster", section: "5.2.6.18.1" }
+                        xref: "cluster§5.2.6.18.1"
                     },
 
                     {
@@ -2220,7 +2156,7 @@ DoorLock.patch(
                             "    time falls within at least one of the YearDaySchedules. If current time is not known, user " +
                             "    access shall NOT be granted.",
 
-                        xref: { document: "cluster", section: "5.2.6.18.2" }
+                        xref: "cluster§5.2.6.18.2"
                     },
 
                     {
@@ -2237,7 +2173,7 @@ DoorLock.patch(
                             "    time falls within at least one of the WeekDaySchedules. If current time is not known, user " +
                             "    access shall NOT be granted.",
 
-                        xref: { document: "cluster", section: "5.2.6.18.3" }
+                        xref: "cluster§5.2.6.18.3"
                     },
 
                     {
@@ -2246,7 +2182,7 @@ DoorLock.patch(
                             "user can manage the users and user schedules. In all other respects this user matches the " +
                             "unrestricted (default) user. ProgrammingUser is the only user that can disable the user interface " +
                             "(keypad, remote, etc…).",
-                        xref: { document: "cluster", section: "5.2.6.18.4" }
+                        xref: "cluster§5.2.6.18.4"
                     },
 
                     {
@@ -2254,7 +2190,7 @@ DoorLock.patch(
                         details: "This value shall indicate the user is recognized by the lock but does not have the ability to open " +
                             "the lock. This user will only cause the lock to generate the appropriate event notification to any " +
                             "bound devices.",
-                        xref: { document: "cluster", section: "5.2.6.18.5" }
+                        xref: "cluster§5.2.6.18.5"
                     },
 
                     {
@@ -2262,14 +2198,14 @@ DoorLock.patch(
                         details: "This value shall indicate the user has the ability to open lock but a ForcedUser LockOperationType " +
                             "and ForcedUser silent alarm will be emitted to allow a notified Node to alert emergency services or " +
                             "contacts on the user account when used.",
-                        xref: { document: "cluster", section: "5.2.6.18.6" }
+                        xref: "cluster§5.2.6.18.6"
                     },
 
                     {
                         description: "The user ID type is disposable",
                         details: "This value shall indicate the user has the ability to open lock once after which the lock shall " +
                             "change the corresponding user record UserStatus value to OccupiedDisabled automatically.",
-                        xref: { document: "cluster", section: "5.2.6.18.7" }
+                        xref: "cluster§5.2.6.18.7"
                     },
 
                     {
@@ -2279,7 +2215,7 @@ DoorLock.patch(
                             "ExpiringUserTimeout minutes the corresponding user record UserStatus value shall be set to " +
                             "OccupiedDisabled automatically by the lock. The lock shall persist the timeout across reboots such " +
                             "that the ExpiringUserTimeout is honored.",
-                        xref: { document: "cluster", section: "5.2.6.18.8" }
+                        xref: "cluster§5.2.6.18.8"
                     },
 
                     {
@@ -2300,7 +2236,7 @@ DoorLock.patch(
                             "    shall be granted if and only if the current time falls within at least one of the " +
                             "    WeekDaySchedules AND the current time falls within at least one of the YearDaySchedules.",
 
-                        xref: { document: "cluster", section: "5.2.6.18.9" }
+                        xref: "cluster§5.2.6.18.9"
                     },
 
                     {
@@ -2309,13 +2245,13 @@ DoorLock.patch(
                             "only. This type of user might be useful for regular delivery services or voice assistant unlocking " +
                             "operations to prevent a PIN code credential created for them from being used at the keypad. The PIN " +
                             "code credential would only be provided over-the-air for the lock/unlock commands.",
-                        xref: { document: "cluster", section: "5.2.6.18.10" }
+                        xref: "cluster§5.2.6.18.10"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "5.2.6.19" },
+                xref: "cluster§5.2.6.19",
 
                 children: [
                     { description: "Lock state is not fully locked" },
@@ -2326,7 +2262,7 @@ DoorLock.patch(
             },
 
             {
-                xref: { document: "cluster", section: "5.2.6.20" },
+                xref: "cluster§5.2.6.20",
 
                 children: [
                     { description: "Physical lock type is dead bolt" },
@@ -2345,7 +2281,7 @@ DoorLock.patch(
             },
 
             {
-                xref: { document: "cluster", section: "5.2.6.21" },
+                xref: "cluster§5.2.6.21",
                 children: [
                     { description: "Never use LED for signalization" },
                     { description: "Use LED signalization except for access allowed events" },
@@ -2354,7 +2290,7 @@ DoorLock.patch(
             },
 
             {
-                xref: { document: "cluster", section: "5.2.6.22" },
+                xref: "cluster§5.2.6.22",
 
                 children: [
                     { description: "Silent Mode" },
@@ -2365,7 +2301,7 @@ DoorLock.patch(
             },
 
             {
-                xref: { document: "cluster", section: "5.2.6.23" },
+                xref: "cluster§5.2.6.23",
                 children: [
                     { description: "Event type is operation" },
                     { description: "Event type is programming" },
@@ -2376,12 +2312,12 @@ DoorLock.patch(
             {
                 details: "This struct shall indicate the credential types and their corresponding indices (if any) for the " +
                     "event or user record.",
-                xref: { document: "cluster", section: "5.2.6.24" },
+                xref: "cluster§5.2.6.24",
 
                 children: [
                     {
                         details: "This field shall indicate the credential field used to authorize the lock operation.",
-                        xref: { document: "cluster", section: "5.2.6.24.1" }
+                        xref: "cluster§5.2.6.24.1"
                     },
 
                     {
@@ -2389,13 +2325,13 @@ DoorLock.patch(
                             "in the list of credentials identified by CredentialType (e.g. PIN, RFID, etc.). This field shall be " +
                             "set to 0 if CredentialType is ProgrammingPIN or does not correspond to a list that can be indexed " +
                             "into.",
-                        xref: { document: "cluster", section: "5.2.6.24.2" }
+                        xref: "cluster§5.2.6.24.2"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "5.2.7.1" },
+                xref: "cluster§5.2.7.1",
                 children: [
                     { description: "Entry would cause a duplicate credential/ID." },
                     { description: "Entry would replace an occupied slot." }

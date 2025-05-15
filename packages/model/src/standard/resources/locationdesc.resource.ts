@@ -11,7 +11,7 @@ import { locationdesc } from "#index.js";
 locationdesc.patch({
     description: "Location Descriptor",
     details: "This data type shall be represented by the following structure:",
-    xref: { document: "core", section: "7.19.2.45" },
+    xref: "core§7.19.2.45",
 
     children: [
         {
@@ -20,7 +20,7 @@ locationdesc.patch({
                 "If the location name is not user provided, the logic that generates it (clients, devices etc.) " +
                 "SHOULD utilize synthesized user-friendly, understandable, names for the location, rather than opaque " +
                 "values such as \"private\" or \"2fe7c241-a50a-4863-896e-c5878da5ed68\".",
-            xref: { document: "core", section: "7.19.2.45.1" }
+            xref: "core§7.19.2.45.1"
         },
 
         {
@@ -52,7 +52,7 @@ locationdesc.patch({
                 "Handling complex level situations, such as half levels (side split houses), or the levels from an " +
                 "apartment building, is up to the client and/or user.",
 
-            xref: { document: "core", section: "7.19.2.45.2" }
+            xref: "core§7.19.2.45.2"
         },
 
         {
@@ -66,7 +66,7 @@ locationdesc.patch({
                 "This field only indicates the type of the area. Multiple areas of the same type, such as bedrooms, " +
                 "may exist in a user’s home.",
 
-            xref: { document: "core", section: "7.19.2.45.3" }
+            xref: "core§7.19.2.45.3"
         }
     ]
 });

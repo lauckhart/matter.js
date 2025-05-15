@@ -14,15 +14,15 @@ AirPurifierDt.patch({
         "\n" +
         "It is a device that has a fan to control the air speed while it is operating. Optionally, it can " +
         "report on the condition of its filters.",
-    xref: { document: "device", section: "9.3" },
+    xref: "device§9.3",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "9.3.5" } },
-        { xref: { document: "device", section: "9.3.5" } },
-        { xref: { document: "device", section: "9.3.5" } },
-        { xref: { document: "device", section: "9.3.5" } },
-        { xref: { document: "device", section: "9.3.5" } },
-        { xref: { document: "device", section: "9.3.5" } }
+        { xref: "device§9.3.5" },
+        { xref: "device§9.3.5" },
+        { xref: "device§9.3.5" },
+        { xref: "device§9.3.5" },
+        { xref: "device§9.3.5" },
+        { xref: "device§9.3.5" }
     ]
 });

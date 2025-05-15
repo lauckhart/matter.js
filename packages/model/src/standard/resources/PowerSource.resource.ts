@@ -14,13 +14,13 @@ PowerSource.patch({
         "provides power to one or more endpoints on a node. In case the node has multiple power sources, each " +
         "shall be described by its own cluster instance. Each instance of this cluster may be associated with " +
         "one or more endpoints or the entire node.",
-    xref: { document: "core", section: "11.7" },
+    xref: "core§11.7",
 
     children: [
         undefined,
 
         {
-            xref: { document: "core", section: "11.7.4" },
+            xref: "core§11.7.4",
 
             children: [
                 { description: "Wired", details: "A wired power source" },
@@ -33,7 +33,7 @@ PowerSource.patch({
         {
             details: "Indicates the participation of this power source in providing power to the Node as specified in " +
                 "PowerSourceStatusEnum.",
-            xref: { document: "core", section: "11.7.7.1" }
+            xref: "core§11.7.7.1"
         },
 
         {
@@ -44,14 +44,14 @@ PowerSource.patch({
                 "Note, Order is read-only and therefore NOT intended to allow clients control over power source " +
                 "selection.",
 
-            xref: { document: "core", section: "11.7.7.2" }
+            xref: "core§11.7.7.2"
         },
 
         {
             details: "This attribute shall provide a user-facing description of this source, used to distinguish it from " +
                 "other power sources, e.g. \"DC Power\", \"Primary Battery\" or \"Battery back-up\". This attribute shall " +
                 "NOT be used to convey information such as battery form factor, or chemistry.",
-            xref: { document: "core", section: "11.7.7.3" }
+            xref: "core§11.7.7.3"
         },
 
         {
@@ -59,7 +59,7 @@ PowerSource.patch({
                 "(millivolts). A value of NULL shall indicate the Node is currently unable to assess the value. If " +
                 "the wired source is not connected, but the Node is still able to assess a value, then the assessed " +
                 "value may be reported.",
-            xref: { document: "core", section: "11.7.7.4" }
+            xref: "core§11.7.7.4"
         },
 
         {
@@ -67,13 +67,13 @@ PowerSource.patch({
                 "A value of NULL shall indicate the Node is currently unable to assess the value. If the wired source " +
                 "is not connected, but the Node is still able to assess a value, then the assessed value may be " +
                 "reported.",
-            xref: { document: "core", section: "11.7.7.5" }
+            xref: "core§11.7.7.5"
         },
 
         {
             details: "Indicates the type of current the Node expects to be provided by the hard- wired source as specified " +
                 "in WiredCurrentTypeEnum.",
-            xref: { document: "core", section: "11.7.7.6" }
+            xref: "core§11.7.7.6"
         },
 
         {
@@ -81,22 +81,22 @@ PowerSource.patch({
                 "(milliamps). A value of NULL shall indicate the Node is currently unable to assess the value. If the " +
                 "wired source is not connected, but the Node is still able to assess a value, then the assessed value " +
                 "may be reported.",
-            xref: { document: "core", section: "11.7.7.7" }
+            xref: "core§11.7.7.7"
         },
 
         {
             details: "Indicates the nominal voltage, printed as part of the Node’s regulatory compliance label in mV " +
                 "(millivolts), expected to be provided by the hard-wired source.",
-            xref: { document: "core", section: "11.7.7.8" }
+            xref: "core§11.7.7.8"
         },
         {
             details: "Indicates the maximum current, printed as part of the Node’s regulatory compliance label in mA " +
                 "(milliamps), expected to be provided by the hard-wired source.",
-            xref: { document: "core", section: "11.7.7.9" }
+            xref: "core§11.7.7.9"
         },
         {
             details: "Indicates if the Node detects that the hard-wired power source is properly connected.",
-            xref: { document: "core", section: "11.7.7.10" }
+            xref: "core§11.7.7.10"
         },
 
         {
@@ -109,13 +109,13 @@ PowerSource.patch({
                 "faults. The order of this list SHOULD have no significance. Clients interested in monitoring changes " +
                 "in active faults may subscribe to this attribute, or they may subscribe to WiredFaultChange.",
 
-            xref: { document: "core", section: "11.7.7.11" }
+            xref: "core§11.7.7.11"
         },
 
         {
             details: "Indicates the currently measured output voltage of the battery in mV (millivolts). A value of NULL " +
                 "shall indicate the Node is currently unable to assess the value.",
-            xref: { document: "core", section: "11.7.7.12" }
+            xref: "core§11.7.7.12"
         },
 
         {
@@ -132,7 +132,7 @@ PowerSource.patch({
                 "\n" +
                 "Since reporting consumes power, devices SHOULD be careful not to over-report.",
 
-            xref: { document: "core", section: "11.7.7.13" }
+            xref: "core§11.7.7.13"
         },
 
         {
@@ -147,29 +147,29 @@ PowerSource.patch({
                 "\n" +
                 "Since reporting consumes power, devices SHOULD be careful not to over-report.",
 
-            xref: { document: "core", section: "11.7.7.14" }
+            xref: "core§11.7.7.14"
         },
 
         {
             details: "Indicates a coarse ranking of the charge level of the battery, used to indicate when intervention is " +
                 "required as specified in BatChargeLevelEnum.",
-            xref: { document: "core", section: "11.7.7.15" }
+            xref: "core§11.7.7.15"
         },
 
         {
             details: "Indicates if the battery needs to be replaced. Replacement may be simple routine maintenance, such " +
                 "as with a single use, non-rechargeable cell. Replacement, however, may also indicate end of life, or " +
                 "serious fault with a rechargeable or even non-replaceable cell.",
-            xref: { document: "core", section: "11.7.7.16" }
+            xref: "core§11.7.7.16"
         },
 
         {
             details: "Indicates the replaceability of the battery as specified in BatReplaceabilityEnum.",
-            xref: { document: "core", section: "11.7.7.17" }
+            xref: "core§11.7.7.17"
         },
         {
             details: "Indicates whether the Node detects that the batteries are properly installed.",
-            xref: { document: "core", section: "11.7.7.18" }
+            xref: "core§11.7.7.18"
         },
 
         {
@@ -184,48 +184,48 @@ PowerSource.patch({
                 "\n" +
                 "FaultChange.",
 
-            xref: { document: "core", section: "11.7.7.19" }
+            xref: "core§11.7.7.19"
         },
 
         {
             details: "This attribute shall provide a user-facing description of this battery, which SHOULD contain " +
                 "information required to identify a replacement, such as form factor, chemistry or preferred " +
                 "manufacturer.",
-            xref: { document: "core", section: "11.7.7.20" }
+            xref: "core§11.7.7.20"
         },
 
         {
             details: "Indicates the ID of the common or colloquial designation of the battery, as specified in " +
                 "BatCommonDesignationEnum.",
-            xref: { document: "core", section: "11.7.7.21" }
+            xref: "core§11.7.7.21"
         },
         {
             details: "Indicates the string representing the ANSI designation for the battery as specified in ANSI C18.",
-            xref: { document: "core", section: "11.7.7.22" }
+            xref: "core§11.7.7.22"
         },
         {
             details: "Indicates the string representing the IEC designation for the battery as specified in IEC 60086.",
-            xref: { document: "core", section: "11.7.7.23" }
+            xref: "core§11.7.7.23"
         },
         {
             details: "Indicates the ID of the preferred chemistry of the battery source as specified in " +
                 "BatApprovedChemistryEnum.",
-            xref: { document: "core", section: "11.7.7.24" }
+            xref: "core§11.7.7.24"
         },
         {
             details: "Indicates the preferred minimum charge capacity rating in mAh of individual, user- or " +
                 "factory-serviceable battery cells or packs in the battery source.",
-            xref: { document: "core", section: "11.7.7.25" }
+            xref: "core§11.7.7.25"
         },
         {
             details: "Indicates the quantity of individual, user- or factory-serviceable battery cells or packs in the " +
                 "battery source.",
-            xref: { document: "core", section: "11.7.7.26" }
+            xref: "core§11.7.7.26"
         },
         {
             details: "Indicates the current state of the battery source with respect to charging as specified in " +
                 "BatChargeStateEnum.",
-            xref: { document: "core", section: "11.7.7.27" }
+            xref: "core§11.7.7.27"
         },
 
         {
@@ -240,17 +240,17 @@ PowerSource.patch({
                 "\n" +
                 "Since reporting consumes power, devices SHOULD be careful not to over-report.",
 
-            xref: { document: "core", section: "11.7.7.28" }
+            xref: "core§11.7.7.28"
         },
 
         {
             details: "Indicates whether the Node can remain operational while the battery source is charging.",
-            xref: { document: "core", section: "11.7.7.29" }
+            xref: "core§11.7.7.29"
         },
         {
             details: "Indicates assessed current in mA (milliamps) presently supplied to charge the battery source. A " +
                 "value of NULL shall indicate the Node is currently unable to assess the value.",
-            xref: { document: "core", section: "11.7.7.30" }
+            xref: "core§11.7.7.30"
         },
 
         {
@@ -264,7 +264,7 @@ PowerSource.patch({
                 "in monitoring changes in active faults may subscribe to this attribute, or they may subscribe to the " +
                 "BatFaultChange event.",
 
-            xref: { document: "core", section: "11.7.7.31" }
+            xref: "core§11.7.7.31"
         },
 
         {
@@ -297,24 +297,24 @@ PowerSource.patch({
                 "cluster instance associated with the battery backup would list the endpoints that have a battery " +
                 "backup.",
 
-            xref: { document: "core", section: "11.7.7.32" }
+            xref: "core§11.7.7.32"
         },
 
         {
             details: "The WiredFaultChange Event shall be generated when the set of wired faults currently detected by the " +
                 "Node on this wired power source changes. This event shall correspond to a change in value of " +
                 "ActiveWiredFaults.",
-            xref: { document: "core", section: "11.7.8.1" },
+            xref: "core§11.7.8.1",
 
             children: [
                 {
                     details: "This field shall represent the set of faults currently detected, as per ActiveWiredFaults.",
-                    xref: { document: "core", section: "11.7.8.1.1" }
+                    xref: "core§11.7.8.1.1"
                 },
                 {
                     details: "This field shall represent the set of faults detected prior to this change event, as per " +
                         "ActiveWiredFaults.",
-                    xref: { document: "core", section: "11.7.8.1.2" }
+                    xref: "core§11.7.8.1.2"
                 }
             ]
         },
@@ -323,17 +323,17 @@ PowerSource.patch({
             details: "The BatFaultChange Event shall be generated when the set of battery faults currently detected by the " +
                 "Node on this battery power source changes. This event shall correspond to a change in value of " +
                 "ActiveBatFaults.",
-            xref: { document: "core", section: "11.7.8.2" },
+            xref: "core§11.7.8.2",
 
             children: [
                 {
                     details: "This field shall represent the set of faults currently detected, as per ActiveBatFaults.",
-                    xref: { document: "core", section: "11.7.8.2.1" }
+                    xref: "core§11.7.8.2.1"
                 },
                 {
                     details: "This field shall represent the set of faults detected prior to this change event, as per " +
                         "ActiveBatFaults.",
-                    xref: { document: "core", section: "11.7.8.2.2" }
+                    xref: "core§11.7.8.2.2"
                 }
             ]
         },
@@ -342,23 +342,23 @@ PowerSource.patch({
             details: "The BatChargeFaultChange Event shall be generated when the set of charge faults currently detected " +
                 "by the Node on this battery power source changes. This event shall correspond to a change in value " +
                 "of ActiveBatChargeFaults.",
-            xref: { document: "core", section: "11.7.8.3" },
+            xref: "core§11.7.8.3",
 
             children: [
                 {
                     details: "This field shall represent the set of faults currently detected, as per ActiveBatChargeFaults.",
-                    xref: { document: "core", section: "11.7.8.3.1" }
+                    xref: "core§11.7.8.3.1"
                 },
                 {
                     details: "This field shall represent the set of faults detected prior to this change event, as per " +
                         "ActiveBatChargeFaults.",
-                    xref: { document: "core", section: "11.7.8.3.2" }
+                    xref: "core§11.7.8.3.2"
                 }
             ]
         },
 
         {
-            xref: { document: "core", section: "11.7.6.1" },
+            xref: "core§11.7.6.1",
 
             children: [
                 { description: "The Node detects an unspecified fault on this wired power source." },
@@ -372,7 +372,7 @@ PowerSource.patch({
         },
 
         {
-            xref: { document: "core", section: "11.7.6.2" },
+            xref: "core§11.7.6.2",
 
             children: [
                 { description: "The Node detects an unspecified fault on this battery power source." },
@@ -386,7 +386,7 @@ PowerSource.patch({
         },
 
         {
-            xref: { document: "core", section: "11.7.6.3" },
+            xref: "core§11.7.6.3",
 
             children: [
                 { description: "The Node detects an unspecified fault on this battery source." },
@@ -408,7 +408,7 @@ PowerSource.patch({
         },
 
         {
-            xref: { document: "core", section: "11.7.6.4" },
+            xref: "core§11.7.6.4",
 
             children: [
                 { description: "Indicate the source status is not specified" },
@@ -419,12 +419,12 @@ PowerSource.patch({
         },
 
         {
-            xref: { document: "core", section: "11.7.6.5" },
+            xref: "core§11.7.6.5",
             children: [{ description: "Indicates AC current" }, { description: "Indicates DC current" }]
         },
 
         {
-            xref: { document: "core", section: "11.7.6.6" },
+            xref: "core§11.7.6.6",
             children: [
                 { description: "Charge level is nominal" },
                 { description: "Charge level is low, intervention may soon be required." },
@@ -433,7 +433,7 @@ PowerSource.patch({
         },
 
         {
-            xref: { document: "core", section: "11.7.6.7" },
+            xref: "core§11.7.6.7",
 
             children: [
                 { description: "The replaceability is unspecified or unknown." },
@@ -444,7 +444,7 @@ PowerSource.patch({
         },
 
         {
-            xref: { document: "core", section: "11.7.6.8" },
+            xref: "core§11.7.6.8",
 
             children: [
                 { description: "Common type is unknown or unspecified" },
@@ -532,7 +532,7 @@ PowerSource.patch({
         },
 
         {
-            xref: { document: "core", section: "11.7.6.9" },
+            xref: "core§11.7.6.9",
 
             children: [
                 { description: "Cell chemistry is unspecified or unknown" },
@@ -572,7 +572,7 @@ PowerSource.patch({
         },
 
         {
-            xref: { document: "core", section: "11.7.6.10" },
+            xref: "core§11.7.6.10",
 
             children: [
                 { description: "Unable to determine the charging state" },

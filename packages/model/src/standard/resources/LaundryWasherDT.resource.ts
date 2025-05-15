@@ -14,15 +14,15 @@ LaundryWasherDt.patch({
         "washer product may utilize this device type." +
         "\n" +
         "A Laundry Washer shall be composed of at least one endpoint with the Laundry Washer device type.",
-    xref: { document: "device", section: "13.1" },
+    xref: "device§13.1",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "13.1.4" } },
-        { xref: { document: "device", section: "13.1.4" } },
-        { xref: { document: "device", section: "13.1.4" } },
-        { xref: { document: "device", section: "13.1.4" } },
-        { xref: { document: "device", section: "13.1.4" } },
-        { xref: { document: "device", section: "13.1.4" } }
+        { xref: "device§13.1.4" },
+        { xref: "device§13.1.4" },
+        { xref: "device§13.1.4" },
+        { xref: "device§13.1.4" },
+        { xref: "device§13.1.4" },
+        { xref: "device§13.1.4" }
     ]
 });

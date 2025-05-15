@@ -14,24 +14,24 @@ BallastConfiguration.patch(
         details: "This cluster is used for configuring a lighting ballast." +
             "\n" +
             "NOTE Support for Ballast Configuration cluster is provisional.",
-        xref: { document: "cluster", section: "3.3" },
+        xref: "cluster§3.3",
 
         children: [
             undefined,
             {
                 details: "This attribute shall specify the minimum light output the ballast can achieve according to the " +
                     "dimming light curve (see Dimming Curve).",
-                xref: { document: "cluster", section: "3.3.6.1" }
+                xref: "cluster§3.3.6.1"
             },
             {
                 details: "This attribute shall specify the maximum light output the ballast can achieve according to the " +
                     "dimming light curve (see Dimming Curve).",
-                xref: { document: "cluster", section: "3.3.6.2" }
+                xref: "cluster§3.3.6.2"
             },
             {
                 details: "This attribute shall specify the status of various aspects of the ballast or the connected lights, " +
                     "see BallastStatusBitmap.",
-                xref: { document: "cluster", section: "3.3.6.3" }
+                xref: "cluster§3.3.6.3"
             },
 
             {
@@ -44,7 +44,7 @@ BallastConfiguration.patch(
                     "not met, a response shall be returned with status code set to CONSTRAINT_ERROR, and the level shall " +
                     "NOT be set.",
 
-                xref: { document: "cluster", section: "3.3.6.4" }
+                xref: "cluster§3.3.6.4"
             },
 
             {
@@ -58,18 +58,18 @@ BallastConfiguration.patch(
                     "are not met, a response shall be returned with status code set to CONSTRAINT_ERROR, and the level " +
                     "shall NOT be set.",
 
-                xref: { document: "cluster", section: "3.3.6.5" }
+                xref: "cluster§3.3.6.5"
             },
 
-            { xref: { document: "cluster", section: "3.3.6" } },
-            { xref: { document: "cluster", section: "3.3.6" } },
+            { xref: "cluster§3.3.6" },
+            { xref: "cluster§3.3.6" },
 
             {
                 details: "This attribute shall specify the ballast factor, as a percentage, of the ballast/lamp combination, " +
                     "prior to any adjustment." +
                     "\n" +
                     "A value of null indicates in invalid value.",
-                xref: { document: "cluster", section: "3.3.6.6" }
+                xref: "cluster§3.3.6.6"
             },
 
             {
@@ -86,28 +86,28 @@ BallastConfiguration.patch(
                     "CONSTRAINT_ERROR, and the level shall NOT be changed. The value of null indicates that ballast " +
                     "factor scaling is not in use.",
 
-                xref: { document: "cluster", section: "3.3.6.7" }
+                xref: "cluster§3.3.6.7"
             },
 
             {
                 details: "This attribute shall specify the number of lamps connected to this ballast. (Note 1: this number " +
                     "does not take into account whether lamps are actually in their sockets or not).",
-                xref: { document: "cluster", section: "3.3.6.8" }
+                xref: "cluster§3.3.6.8"
             },
             {
                 details: "This attribute shall specify the type of lamps (including their wattage) connected to the ballast.",
-                xref: { document: "cluster", section: "3.3.6.9" }
+                xref: "cluster§3.3.6.9"
             },
             {
                 details: "This attribute shall specify the name of the manufacturer of the currently connected lamps.",
-                xref: { document: "cluster", section: "3.3.6.10" }
+                xref: "cluster§3.3.6.10"
             },
 
             {
                 details: "This attribute shall specify the number of hours of use the lamps are rated for by the manufacturer." +
                     "\n" +
                     "A value of null indicates an invalid or unknown time.",
-                xref: { document: "cluster", section: "3.3.6.11" }
+                xref: "cluster§3.3.6.11"
             },
 
             {
@@ -120,7 +120,7 @@ BallastConfiguration.patch(
                     "\n" +
                     "A value of null indicates an invalid or unknown time.",
 
-                xref: { document: "cluster", section: "3.3.6.12" }
+                xref: "cluster§3.3.6.12"
             },
 
             {
@@ -128,7 +128,7 @@ BallastConfiguration.patch(
                     "each bit position means that its associated attribute is able to generate an alarm." +
                     "\n" +
                     "NOTE All alarms are also logged in the alarm table – see Alarms cluster.",
-                xref: { document: "cluster", section: "3.3.6.13" }
+                xref: "cluster§3.3.6.13"
             },
 
             {
@@ -142,11 +142,11 @@ BallastConfiguration.patch(
                     "\n" +
                     "If this attribute has the value of null, then this alarm shall NOT be generated.",
 
-                xref: { document: "cluster", section: "3.3.6.14" }
+                xref: "cluster§3.3.6.14"
             },
 
             {
-                xref: { document: "cluster", section: "3.3.5.1" },
+                xref: "cluster§3.3.5.1",
 
                 children: [
                     {
@@ -156,7 +156,7 @@ BallastConfiguration.patch(
                             "  • 0 = The ballast is fully operational" +
                             "\n" +
                             "  • 1 = The ballast is not fully operational",
-                        xref: { document: "cluster", section: "3.3.5.1.1" }
+                        xref: "cluster§3.3.5.1.1"
                     },
 
                     {
@@ -166,17 +166,17 @@ BallastConfiguration.patch(
                             "  • 0 = All lamps are operational" +
                             "\n" +
                             "  • 1 = One or more lamp is not in its socket or is faulty",
-                        xref: { document: "cluster", section: "3.3.5.1.2" }
+                        xref: "cluster§3.3.5.1.2"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "3.3.5.2" },
+                xref: "cluster§3.3.5.2",
                 children: [{
                     description: "State of LampBurnHours alarm generation",
                     details: "This bit shall indicate that the LampBurnHours attribute may generate an alarm.",
-                    xref: { document: "cluster", section: "3.3.5.2.1" }
+                    xref: "cluster§3.3.5.2.1"
                 }]
             }
         ]

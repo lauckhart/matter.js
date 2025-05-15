@@ -14,23 +14,23 @@ VideoRemoteControlDt.patch({
         "\n" +
         "A Video Remote Control is a client that can control a Video Player, for example, a traditional " +
         "universal remote control.",
-    xref: { document: "device", section: "10.7" },
+    xref: "device§10.7",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "10.7.4" } },
-        { xref: { document: "device", section: "10.7.4" } },
-        { xref: { document: "device", section: "10.7.4" } },
-        { xref: { document: "device", section: "10.7.4" } },
-        { xref: { document: "device", section: "10.7.4" } },
-        { xref: { document: "device", section: "10.7.4" } },
-        { xref: { document: "device", section: "10.7.4" } },
-        { xref: { document: "device", section: "10.7.4" } },
-        { xref: { document: "device", section: "10.7.4" } },
-        { xref: { document: "device", section: "10.7.4" } },
-        { xref: { document: "device", section: "10.7.4" } },
-        { xref: { document: "device", section: "10.7.4" } },
-        { xref: { document: "device", section: "10.7.4" } },
-        { xref: { document: "device", section: "10.7.4" } }
+        { xref: "device§10.7.4" },
+        { xref: "device§10.7.4" },
+        { xref: "device§10.7.4" },
+        { xref: "device§10.7.4" },
+        { xref: "device§10.7.4" },
+        { xref: "device§10.7.4" },
+        { xref: "device§10.7.4" },
+        { xref: "device§10.7.4" },
+        { xref: "device§10.7.4" },
+        { xref: "device§10.7.4" },
+        { xref: "device§10.7.4" },
+        { xref: "device§10.7.4" },
+        { xref: "device§10.7.4" },
+        { xref: "device§10.7.4" }
     ]
 });

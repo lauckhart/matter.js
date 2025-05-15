@@ -12,13 +12,13 @@ TemperatureMeasurement.patch({
     classification: "application", pics: "TMP",
     details: "This cluster provides an interface to temperature measurement functionality, including configuration " +
         "and provision of notifications of temperature measurements.",
-    xref: { document: "cluster", section: "2.3" },
+    xref: "cluster§2.3",
 
     children: [
         undefined,
         {
             details: "Indicates the measured temperature. The null value indicates that the temperature is unknown.",
-            xref: { document: "cluster", section: "2.3.4.1" }
+            xref: "cluster§2.3.4.1"
         },
 
         {
@@ -26,7 +26,7 @@ TemperatureMeasurement.patch({
                 "for more details." +
                 "\n" +
                 "The null value indicates that the value is not available.",
-            xref: { document: "cluster", section: "2.3.4.2" }
+            xref: "cluster§2.3.4.2"
         },
 
         {
@@ -34,9 +34,9 @@ TemperatureMeasurement.patch({
                 "Measured Value for more details." +
                 "\n" +
                 "The null value indicates that the value is not available.",
-            xref: { document: "cluster", section: "2.3.4.3" }
+            xref: "cluster§2.3.4.3"
         },
 
-        { details: "See Measured Value.", xref: { document: "cluster", section: "2.3.4.4" } }
+        { details: "See Measured Value.", xref: "cluster§2.3.4.4" }
     ]
 });

@@ -28,17 +28,17 @@ Groups.patch({
         "Note that configuration of group addresses for outgoing commands is achieved using the Message Layer " +
         "mechanisms where the Group Table is not involved. Hence this cluster does not play a part in that.",
 
-    xref: { document: "cluster", section: "1.3" },
+    xref: "cluster§1.3",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "1.3.4" },
+            xref: "cluster§1.3.4",
             children: [{
                 description: "GroupNames",
                 details: "The Group Names feature indicates the ability to store a name for a group when a group is added.",
-                xref: { document: "cluster", section: "1.3.4.1" }
+                xref: "cluster§1.3.4.1"
             }]
         },
 
@@ -46,19 +46,19 @@ Groups.patch({
             details: "This attribute provides legacy, read-only access to whether the Group Names feature is supported. " +
                 "The most significant bit, bit 7 (GroupNames), shall be equal to bit 0 of the FeatureMap attribute " +
                 "(GN Feature). All other bits shall be 0.",
-            xref: { document: "cluster", section: "1.3.6.1" }
+            xref: "cluster§1.3.6.1"
         },
 
         {
             details: "The AddGroup command allows a client to add group membership in a particular group for the server " +
                 "endpoint.",
-            xref: { document: "cluster", section: "1.3.7.1" },
+            xref: "cluster§1.3.7.1",
 
             children: [
                 {
                     details: "This field shall be used to identify the group and any associated key material to which the server " +
                         "endpoint is to be added.",
-                    xref: { document: "cluster", section: "1.3.7.1.1" }
+                    xref: "cluster§1.3.7.1.1"
                 },
 
                 {
@@ -66,7 +66,7 @@ Groups.patch({
                         "group, the GroupName field shall be set to the empty string." +
                         "\n" +
                         "Support of group names is optional and is indicated by the FeatureMap and NameSupport attribute.",
-                    xref: { document: "cluster", section: "1.3.7.1.2" }
+                    xref: "cluster§1.3.7.1.2"
                 }
             ]
         },
@@ -74,22 +74,22 @@ Groups.patch({
         {
             details: "The ViewGroup command allows a client to request that the server responds with a ViewGroupResponse " +
                 "command containing the name string for a particular group.",
-            xref: { document: "cluster", section: "1.3.7.2" }
+            xref: "cluster§1.3.7.2"
         },
         {
             details: "The GetGroupMembership command allows a client to inquire about the group membership of the server " +
                 "endpoint, in a number of ways.",
-            xref: { document: "cluster", section: "1.3.7.3" }
+            xref: "cluster§1.3.7.3"
         },
         {
             details: "The RemoveGroup command allows a client to request that the server removes the membership for the " +
                 "server endpoint, if any, in a particular group.",
-            xref: { document: "cluster", section: "1.3.7.4" }
+            xref: "cluster§1.3.7.4"
         },
         {
             details: "The RemoveAllGroups command allows a client to direct the server to remove all group associations " +
                 "for the server endpoint.",
-            xref: { document: "cluster", section: "1.3.7.5" }
+            xref: "cluster§1.3.7.5"
         },
 
         {
@@ -103,13 +103,13 @@ Groups.patch({
                 "This command might be used to assist configuring group membership in the absence of a commissioning " +
                 "tool.",
 
-            xref: { document: "cluster", section: "1.3.7.6" },
+            xref: "cluster§1.3.7.6",
 
             children: [
                 {
                     details: "This field shall be used to identify the group and any associated key material to which the server " +
                         "endpoint is to be added.",
-                    xref: { document: "cluster", section: "1.3.7.6.1" }
+                    xref: "cluster§1.3.7.6.1"
                 },
 
                 {
@@ -118,23 +118,23 @@ Groups.patch({
                         "group, the GroupName field shall be set to the empty string." +
                         "\n" +
                         "Support of group names is optional and is indicated by the FeatureMap and NameSupport attribute.",
-                    xref: { document: "cluster", section: "1.3.7.6.2" }
+                    xref: "cluster§1.3.7.6.2"
                 }
             ]
         },
 
         {
             details: "The AddGroupResponse is sent by the Groups cluster server in response to an AddGroup command.",
-            xref: { document: "cluster", section: "1.3.7.7" },
+            xref: "cluster§1.3.7.7",
 
             children: [
                 {
                     details: "This field is set according to the Effect on Receipt section of the AddGroup command.",
-                    xref: { document: "cluster", section: "1.3.7.7.1" }
+                    xref: "cluster§1.3.7.7.1"
                 },
                 {
                     details: "This field is set to the GroupID field of the received AddGroup command.",
-                    xref: { document: "cluster", section: "1.3.7.7.2" }
+                    xref: "cluster§1.3.7.7.2"
                 }
             ]
         },
@@ -142,21 +142,21 @@ Groups.patch({
         {
             details: "The ViewGroupResponse command is sent by the Groups cluster server in response to a ViewGroup " +
                 "command.",
-            xref: { document: "cluster", section: "1.3.7.8" },
+            xref: "cluster§1.3.7.8",
 
             children: [
                 {
                     details: "This field is according to the Effect on Receipt section of the ViewGroup command.",
-                    xref: { document: "cluster", section: "1.3.7.8.1" }
+                    xref: "cluster§1.3.7.8.1"
                 },
                 {
                     details: "This field is set to the GroupID field of the received ViewGroup command.",
-                    xref: { document: "cluster", section: "1.3.7.8.2" }
+                    xref: "cluster§1.3.7.8.2"
                 },
                 {
                     details: "If the status is SUCCESS, and group names are supported, this field is set to the group name " +
                         "associated with that group in the Group Table; otherwise it is set to the empty string.",
-                    xref: { document: "cluster", section: "1.3.7.8.3" }
+                    xref: "cluster§1.3.7.8.3"
                 }
             ]
         },
@@ -164,7 +164,7 @@ Groups.patch({
         {
             details: "The GetGroupMembershipResponse command is sent by the Groups cluster server in response to a " +
                 "GetGroupMembership command.",
-            xref: { document: "cluster", section: "1.3.7.9" },
+            xref: "cluster§1.3.7.9",
 
             children: [
                 {
@@ -179,7 +179,7 @@ Groups.patch({
                         "\n" +
                         "  • null - It is unknown if any further groups may be added.",
 
-                    xref: { document: "cluster", section: "1.3.7.9.1" }
+                    xref: "cluster§1.3.7.9.1"
                 },
 
                 {
@@ -193,7 +193,7 @@ Groups.patch({
                         "Zigbee: If the total number of groups will cause the maximum payload length of a frame to be " +
                         "exceeded, then the GroupList field shall contain only as many groups as will fit.",
 
-                    xref: { document: "cluster", section: "1.3.7.9.2" }
+                    xref: "cluster§1.3.7.9.2"
                 }
             ]
         },
@@ -201,23 +201,20 @@ Groups.patch({
         {
             details: "The RemoveGroupResponse command is generated by the server in response to the receipt of a " +
                 "RemoveGroup command.",
-            xref: { document: "cluster", section: "1.3.7.10" },
+            xref: "cluster§1.3.7.10",
 
             children: [
                 {
                     details: "This field is according to the Effect on Receipt section of the RemoveGroup command.",
-                    xref: { document: "cluster", section: "1.3.7.10.1" }
+                    xref: "cluster§1.3.7.10.1"
                 },
                 {
                     details: "This field is set to the GroupID field of the received RemoveGroup command.",
-                    xref: { document: "cluster", section: "1.3.7.10.2" }
+                    xref: "cluster§1.3.7.10.2"
                 }
             ]
         },
 
-        {
-            xref: { document: "cluster", section: "1.3.5.1" },
-            children: [{ description: "The ability to store a name for a group." }]
-        }
+        { xref: "cluster§1.3.5.1", children: [{ description: "The ability to store a name for a group." }] }
     ]
 });

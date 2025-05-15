@@ -12,13 +12,13 @@ DishwasherAlarm.patch({
     classification: "application", pics: "DISHALM",
     details: "This cluster is a derived cluster of the Alarm Base cluster and provides the alarm definition " +
         "related to dishwasher devices.",
-    xref: { document: "cluster", section: "8.4" },
+    xref: "cluster§8.4",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "8.4.4.1" },
+            xref: "cluster§8.4.4.1",
 
             children: [
                 { description: "Water inflow is abnormal" },

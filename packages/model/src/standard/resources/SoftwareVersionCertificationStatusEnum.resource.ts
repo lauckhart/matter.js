@@ -11,7 +11,7 @@ import { SoftwareVersionCertificationStatusEnum } from "#index.js";
 SoftwareVersionCertificationStatusEnum.patch({
     details: "The values 0 through 2 shall correspond to the values 0 through 2 used in certification_type in the " +
         "Certification Declaration.",
-    xref: { document: "core", section: "11.23.8.2" },
+    xref: "core§11.23.8.2",
 
     children: [
         { description: "used for development and test purposes (These will typically not be placed in DCL)" },

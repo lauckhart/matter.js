@@ -60,13 +60,13 @@ DeviceEnergyManagement.patch(
             "Different markets may follow different approaches, but the UK [PAS1878] and [EUCodeOfConduct] give " +
             "examples of how ESAs may be mandated to support these features in the future.",
 
-        xref: { document: "cluster", section: "9.2" },
+        xref: "cluster§9.2",
 
         children: [
             undefined,
 
             {
-                xref: { document: "cluster", section: "9.2.4" },
+                xref: "cluster§9.2.4",
 
                 children: [
                     {
@@ -87,7 +87,7 @@ DeviceEnergyManagement.patch(
                             "use this feature to control the discharging (and re-charging) of the vehicle if the EVSE and vehicle " +
                             "support the V2X feature of the EVSE cluster of the associated EVSE device.",
 
-                        xref: { document: "cluster", section: "9.2.4.1" }
+                        xref: "cluster§9.2.4.1"
                     },
 
                     {
@@ -132,7 +132,7 @@ DeviceEnergyManagement.patch(
                             "The ESA indicates its power adjustment range and its nominal power consumption as part of its " +
                             "Forecast.",
 
-                        xref: { document: "cluster", section: "9.2.4.2" }
+                        xref: "cluster§9.2.4.2"
                     },
 
                     {
@@ -151,7 +151,7 @@ DeviceEnergyManagement.patch(
                             "Once the EMS has built a model of the state vs observed power consumption, it may request a forecast " +
                             "adjustment for particular times of the day, encouraging the ESA to use power at alternative times.",
 
-                        xref: { document: "cluster", section: "9.2.4.3" }
+                        xref: "cluster§9.2.4.3"
                     },
 
                     {
@@ -176,7 +176,7 @@ DeviceEnergyManagement.patch(
                             "It does this by sending a StartTimeAdjustRequest to the washing machine to request delaying the " +
                             "start of the washing cycle.",
 
-                        xref: { document: "cluster", section: "9.2.4.4" }
+                        xref: "cluster§9.2.4.4"
                     },
 
                     {
@@ -202,7 +202,7 @@ DeviceEnergyManagement.patch(
                             "the forecast power usage for a period to allow other home loads to finish before resuming the " +
                             "washing cycle.",
 
-                        xref: { document: "cluster", section: "9.2.4.5" }
+                        xref: "cluster§9.2.4.5"
                     },
 
                     {
@@ -233,7 +233,7 @@ DeviceEnergyManagement.patch(
                             "run at a lower power consumption (within the solar excess power) which requires the heat pump to run " +
                             "for a longer duration to achieve its required energy demand.",
 
-                        xref: { document: "cluster", section: "9.2.4.6" }
+                        xref: "cluster§9.2.4.6"
                     },
 
                     {
@@ -262,7 +262,7 @@ DeviceEnergyManagement.patch(
                             "NominalPower consumption during the constraint period, which may require it to decrease its charge " +
                             "rate outside the constraint period to achieve its required energy demand.",
 
-                        xref: { document: "cluster", section: "9.2.4.7" }
+                        xref: "cluster§9.2.4.7"
                     }
                 ]
             },
@@ -281,7 +281,7 @@ DeviceEnergyManagement.patch(
                     "about typical best use of energy. For example, an EVSE may not always have an EV plugged in, so " +
                     "knowing the type of ESA that is being controlled can allow advanced energy management strategies.",
 
-                xref: { document: "cluster", section: "9.2.8.1" }
+                xref: "cluster§9.2.8.1"
             },
 
             {
@@ -303,7 +303,7 @@ DeviceEnergyManagement.patch(
                     "\n" +
                     "Example:",
 
-                xref: { document: "cluster", section: "9.2.8.2" }
+                xref: "cluster§9.2.8.2"
             },
 
             {
@@ -317,7 +317,7 @@ DeviceEnergyManagement.patch(
                     "mode, for example to avoid the EMS accidentally starting or stopping the appliance when it is being " +
                     "serviced or tested.",
 
-                xref: { document: "cluster", section: "9.2.8.3" }
+                xref: "cluster§9.2.8.3"
             },
 
             {
@@ -330,7 +330,7 @@ DeviceEnergyManagement.patch(
                     "loads in the home, the AbsMinPower will be a negative number representing the maximum power that the " +
                     "ESA can discharge its internal battery.",
 
-                xref: { document: "cluster", section: "9.2.8.4" }
+                xref: "cluster§9.2.8.4"
             },
 
             {
@@ -344,7 +344,7 @@ DeviceEnergyManagement.patch(
                     "can discharge the battery at a maximum power of 3000W, would have a AbsMinPower: -3000, AbsMaxPower: " +
                     "2000W.",
 
-                xref: { document: "cluster", section: "9.2.8.5" }
+                xref: "cluster§9.2.8.5"
             },
 
             {
@@ -362,7 +362,7 @@ DeviceEnergyManagement.patch(
                     "\n" +
                     "  • When it changes from null to any other value and vice versa.",
 
-                xref: { document: "cluster", section: "9.2.8.6" }
+                xref: "cluster§9.2.8.6"
             },
 
             {
@@ -386,7 +386,7 @@ DeviceEnergyManagement.patch(
                     "  • As a result of a change in the opt-out status which in turn may cause the ESA to recalculate its " +
                     "    forecast.",
 
-                xref: { document: "cluster", section: "9.2.8.7" }
+                xref: "cluster§9.2.8.7"
             },
 
             {
@@ -422,27 +422,27 @@ DeviceEnergyManagement.patch(
                     "If the ESA is in the LocalOptOut, GridOptOut, or NoOptOut states, the device is still permitted to " +
                     "optimize its own energy usage, for example, using tariff information it may obtain.",
 
-                xref: { document: "cluster", section: "9.2.8.8" }
+                xref: "cluster§9.2.8.8"
             },
 
             {
                 details: "This event shall be generated when the Power Adjustment session is started.",
-                xref: { document: "cluster", section: "9.2.10.1" }
+                xref: "cluster§9.2.10.1"
             },
 
             {
                 details: "This event shall be generated when the Power Adjustment session ends.",
-                xref: { document: "cluster", section: "9.2.10.2" },
+                xref: "cluster§9.2.10.2",
 
                 children: [
                     {
                         details: "This field shall indicate the reason why the power adjustment session ended.",
-                        xref: { document: "cluster", section: "9.2.10.2.1" }
+                        xref: "cluster§9.2.10.2.1"
                     },
                     {
                         details: "This field shall indicate the number of seconds that the power adjustment session lasted before " +
                             "ending.",
-                        xref: { document: "cluster", section: "9.2.10.2.2" }
+                        xref: "cluster§9.2.10.2.2"
                     },
 
                     {
@@ -451,29 +451,25 @@ DeviceEnergyManagement.patch(
                             "For example, if the ESA was on and was adjusted to be switched off, then this shall be 0 mWh. If " +
                             "this was a battery inverter that was requested to discharge it would have a negative EnergyUse " +
                             "value. If this was a normal load that was turned on, then it will have positive value.",
-                        xref: { document: "cluster", section: "9.2.10.2.3" }
+                        xref: "cluster§9.2.10.2.3"
                     }
                 ]
             },
 
             {
                 details: "This event shall be generated when the ESA enters the Paused state. There is no data for this event.",
-                xref: { document: "cluster", section: "9.2.10.3" }
+                xref: "cluster§9.2.10.3"
             },
-
             {
                 details: "This event shall be generated when the ESA leaves the Paused state and resumes operation.",
-                xref: { document: "cluster", section: "9.2.10.4" },
-                children: [{
-                    details: "This field shall indicate the reason why the pause ended.",
-                    xref: { document: "cluster", section: "9.2.10.4.1" }
-                }]
+                xref: "cluster§9.2.10.4",
+                children: [{ details: "This field shall indicate the reason why the pause ended.", xref: "cluster§9.2.10.4.1" }]
             },
 
             {
                 details: "Allows a client to request an adjustment in the power consumption of an ESA for a specified " +
                     "duration.",
-                xref: { document: "cluster", section: "9.2.9.1" },
+                xref: "cluster§9.2.9.1",
 
                 children: [
                     {
@@ -481,7 +477,7 @@ DeviceEnergyManagement.patch(
                             "\n" +
                             "This value shall be between the MinPower and MaxPower fields of the PowerAdjustStruct in the " +
                             "PowerAdjustmentCapability attribute.",
-                        xref: { document: "cluster", section: "9.2.9.1.1" }
+                        xref: "cluster§9.2.9.1.1"
                     },
 
                     {
@@ -489,25 +485,25 @@ DeviceEnergyManagement.patch(
                             "\n" +
                             "This value shall be between the MinDuration and MaxDuration fields of the PowerAdjustStruct in the " +
                             "PowerAdjustmentCapability attribute.",
-                        xref: { document: "cluster", section: "9.2.9.1.2" }
+                        xref: "cluster§9.2.9.1.2"
                     },
 
                     {
                         details: "This field shall indicate the cause of the request from the EMS.",
-                        xref: { document: "cluster", section: "9.2.9.1.3" }
+                        xref: "cluster§9.2.9.1.3"
                     }
                 ]
             },
 
             {
                 details: "Allows a client to cancel an ongoing PowerAdjustmentRequest operation.",
-                xref: { document: "cluster", section: "9.2.9.2" }
+                xref: "cluster§9.2.9.2"
             },
 
             {
                 details: "Allows a client to adjust the start time of a Forecast sequence that has not yet started operation " +
                     "(i.e. where the current Forecast StartTime is in the future).",
-                xref: { document: "cluster", section: "9.2.9.3" },
+                xref: "cluster§9.2.9.3",
 
                 children: [
                     {
@@ -521,64 +517,64 @@ DeviceEnergyManagement.patch(
                             "be computed from the RequestedStartTime and the Forecast sequence duration, shall be before the " +
                             "LatestEndTime.",
 
-                        xref: { document: "cluster", section: "9.2.9.3.1" }
+                        xref: "cluster§9.2.9.3.1"
                     },
 
                     {
                         details: "This field shall indicate the cause of the request from the EMS.",
-                        xref: { document: "cluster", section: "9.2.9.3.2" }
+                        xref: "cluster§9.2.9.3.2"
                     }
                 ]
             },
 
             {
                 details: "Allows a client to temporarily pause an operation and reduce the ESAs energy demand.",
-                xref: { document: "cluster", section: "9.2.9.4" },
+                xref: "cluster§9.2.9.4",
 
                 children: [
                     {
                         details: "This field shall indicate the duration that the ESA shall be paused for. This value shall be between " +
                             "the MinPauseDuration and MaxPauseDuration indicated in the ActiveSlotNumber index in the Slots list " +
                             "in the Forecast.",
-                        xref: { document: "cluster", section: "9.2.9.4.1" }
+                        xref: "cluster§9.2.9.4.1"
                     },
 
                     {
                         details: "This field shall indicate the cause of the request from the EMS.",
-                        xref: { document: "cluster", section: "9.2.9.4.2" }
+                        xref: "cluster§9.2.9.4.2"
                     }
                 ]
             },
 
             {
                 details: "Allows a client to cancel the PauseRequest command and enable earlier resumption of operation.",
-                xref: { document: "cluster", section: "9.2.9.5" }
+                xref: "cluster§9.2.9.5"
             },
 
             {
                 details: "Allows a client to modify a Forecast within the limits allowed by the ESA.",
-                xref: { document: "cluster", section: "9.2.9.6" },
+                xref: "cluster§9.2.9.6",
 
                 children: [
                     {
                         details: "This field shall indicate the ForecastID that is to be modified.",
-                        xref: { document: "cluster", section: "9.2.9.6.1" }
+                        xref: "cluster§9.2.9.6.1"
                     },
                     {
                         details: "This field shall contain a list of SlotAdjustment parameters that should be modified in the " +
                             "corresponding Forecast with matching ForecastID.",
-                        xref: { document: "cluster", section: "9.2.9.6.2" }
+                        xref: "cluster§9.2.9.6.2"
                     },
                     {
                         details: "This field shall indicate the cause of the request from the EMS.",
-                        xref: { document: "cluster", section: "9.2.9.6.3" }
+                        xref: "cluster§9.2.9.6.3"
                     }
                 ]
             },
 
             {
                 details: "Allows a client to ask the ESA to recompute its Forecast based on power and time constraints.",
-                xref: { document: "cluster", section: "9.2.9.7" },
+                xref: "cluster§9.2.9.7",
 
                 children: [
                     {
@@ -597,12 +593,12 @@ DeviceEnergyManagement.patch(
                             "\n" +
                             "trol field as follows:",
 
-                        xref: { document: "cluster", section: "9.2.9.7.1" }
+                        xref: "cluster§9.2.9.7.1"
                     },
 
                     {
                         details: "This field shall indicate the cause of the request from the EMS.",
-                        xref: { document: "cluster", section: "9.2.9.7.2" }
+                        xref: "cluster§9.2.9.7.2"
                     }
                 ]
             },
@@ -610,22 +606,22 @@ DeviceEnergyManagement.patch(
             {
                 details: "Allows a client to request cancellation of a previous adjustment request in a " +
                     "StartTimeAdjustRequest, ModifyForecastRequest or RequestConstraintBasedForecast command.",
-                xref: { document: "cluster", section: "9.2.9.8" }
+                xref: "cluster§9.2.9.8"
             },
 
             {
-                xref: { document: "cluster", section: "9.2.7.1" },
+                xref: "cluster§9.2.7.1",
 
                 children: [
                     {
                         description: "Financial cost",
                         details: "This value shall indicate that the cost is related to the financial cost to provide the energy.",
-                        xref: { document: "cluster", section: "9.2.7.1.1" }
+                        xref: "cluster§9.2.7.1.1"
                     },
                     {
                         description: "Grid CO2e grams cost",
                         details: "This value shall indicate that the cost is related to greenhouse gas emissions (in grams of CO2e).",
-                        xref: { document: "cluster", section: "9.2.7.1.2" }
+                        xref: "cluster§9.2.7.1.2"
                     },
 
                     {
@@ -635,7 +631,7 @@ DeviceEnergyManagement.patch(
                             "comfortable knowing that their EV is charged earlier in the day in case there is a sudden need to " +
                             "depart and drive to the hospital. Or the consumer may feel inconvenienced by the fact that they need " +
                             "to wait for the washing machine to finish its load so that they can use it again.",
-                        xref: { document: "cluster", section: "9.2.7.1.3" }
+                        xref: "cluster§9.2.7.1.3"
                     },
 
                     {
@@ -644,13 +640,13 @@ DeviceEnergyManagement.patch(
                             "its setpoint. Some consumers may be more sensitive to being too hot or too cold." +
                             "\n" +
                             "This is expressed in degrees Celsius.",
-                        xref: { document: "cluster", section: "9.2.7.1.4" }
+                        xref: "cluster§9.2.7.1.4"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "9.2.7.2" },
+                xref: "cluster§9.2.7.2",
 
                 children: [
                     { description: "EV Supply Equipment" },
@@ -672,7 +668,7 @@ DeviceEnergyManagement.patch(
             },
 
             {
-                xref: { document: "cluster", section: "9.2.7.3" },
+                xref: "cluster§9.2.7.3",
 
                 children: [
                     { description: "The ESA is not available to the EMS (e.g. start- up, maintenance mode)" },
@@ -684,7 +680,7 @@ DeviceEnergyManagement.patch(
             },
 
             {
-                xref: { document: "cluster", section: "9.2.7.4" },
+                xref: "cluster§9.2.7.4",
 
                 children: [
                     { description: "The user has not opted out of either local or grid optimizations" },
@@ -695,7 +691,7 @@ DeviceEnergyManagement.patch(
             },
 
             {
-                xref: { document: "cluster", section: "9.2.7.5" },
+                xref: "cluster§9.2.7.5",
 
                 children: [
                     { description: "The ESA completed the power adjustment as requested" },
@@ -707,7 +703,7 @@ DeviceEnergyManagement.patch(
             },
 
             {
-                xref: { document: "cluster", section: "9.2.7.6" },
+                xref: "cluster§9.2.7.6",
                 children: [
                     { description: "The adjustment is to optimize the local energy usage" },
                     { description: "The adjustment is to optimize the grid energy usage" }
@@ -715,7 +711,7 @@ DeviceEnergyManagement.patch(
             },
 
             {
-                xref: { document: "cluster", section: "9.2.7.7" },
+                xref: "cluster§9.2.7.7",
                 children: [
                     { description: "The update was due to internal ESA device optimization" },
                     { description: "The update was due to local EMS optimization" },
@@ -724,7 +720,7 @@ DeviceEnergyManagement.patch(
             },
 
             {
-                xref: { document: "cluster", section: "9.2.7.8" },
+                xref: "cluster§9.2.7.8",
                 children: [
                     { description: "There is no Power Adjustment active" },
                     { description: "There is PowerAdjustment active due to local EMS optimization" },
@@ -735,12 +731,12 @@ DeviceEnergyManagement.patch(
             {
                 details: "This indicates a generic mechanism for expressing cost to run an appliance, in terms of financial, " +
                     "GHG emissions, comfort value etc.",
-                xref: { document: "cluster", section: "9.2.7.9" },
+                xref: "cluster§9.2.7.9",
 
                 children: [
                     {
                         details: "This field shall indicate the type of cost being represented (see CostTypeEnum).",
-                        xref: { document: "cluster", section: "9.2.7.9.1" }
+                        xref: "cluster§9.2.7.9.1"
                     },
 
                     {
@@ -749,13 +745,13 @@ DeviceEnergyManagement.patch(
                             "\n" +
                             "For example, if the Value was -302 and DecimalPoints was 2, then this would represent a benefit of " +
                             "3.02.",
-                        xref: { document: "cluster", section: "9.2.7.9.2" }
+                        xref: "cluster§9.2.7.9.2"
                     },
 
                     {
                         details: "This field shall indicate the number of digits to the right of the decimal point in the Value field. " +
                             "For example, if the Value was 102 and DecimalPoints was 2, then this would represent a cost of 1.02.",
-                        xref: { document: "cluster", section: "9.2.7.9.3" }
+                        xref: "cluster§9.2.7.9.3"
                     },
 
                     {
@@ -763,13 +759,13 @@ DeviceEnergyManagement.patch(
                             "the values defined by [ISO 4217]." +
                             "\n" +
                             "This is an optional field. It shall be included if CostType is Financial.",
-                        xref: { document: "cluster", section: "9.2.7.9.4" }
+                        xref: "cluster§9.2.7.9.4"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "9.2.7.10" },
+                xref: "cluster§9.2.7.10",
 
                 children: [
                     {
@@ -777,7 +773,7 @@ DeviceEnergyManagement.patch(
                             "\n" +
                             "Note that this is a signed value. Negative values indicate power flows out of the node (e.g. " +
                             "discharging a battery).",
-                        xref: { document: "cluster", section: "9.2.7.10.1" }
+                        xref: "cluster§9.2.7.10.1"
                     },
 
                     {
@@ -798,14 +794,14 @@ DeviceEnergyManagement.patch(
                             "2000W. Here power is flowing into the node when charging. As such the MinPower becomes 0W and " +
                             "MaxPower becomes 2000W.",
 
-                        xref: { document: "cluster", section: "9.2.7.10.2" }
+                        xref: "cluster§9.2.7.10.2"
                     },
 
                     {
                         details: "This field shall indicate the minimum duration, in seconds, that a controller may invoke an ESA " +
                             "power adjustment. Manufacturers may use this to as an anti-cycling capability to avoid controllers " +
                             "from rapidly making power adjustments.",
-                        xref: { document: "cluster", section: "9.2.7.10.3" }
+                        xref: "cluster§9.2.7.10.3"
                     },
 
                     {
@@ -813,13 +809,13 @@ DeviceEnergyManagement.patch(
                             "power adjustment. Manufacturers may use this to protect the user experience, to avoid over heating " +
                             "of the ESA, ensuring that there is sufficient headroom to use or store energy in the ESA or for any " +
                             "other reason.",
-                        xref: { document: "cluster", section: "9.2.7.10.4" }
+                        xref: "cluster§9.2.7.10.4"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "9.2.7.11" },
+                xref: "cluster§9.2.7.11",
 
                 children: [{
                     details: "This field shall indicate how the ESA can be adjusted at the current time." +
@@ -837,7 +833,7 @@ DeviceEnergyManagement.patch(
                         "\n" +
                         "In this example the list of PowerAdjustStructs allows multiple scenarios to be offered as follows:",
 
-                    xref: { document: "cluster", section: "9.2.7.12" }
+                    xref: "cluster§9.2.7.12"
                 }]
             },
 
@@ -850,7 +846,7 @@ DeviceEnergyManagement.patch(
                     "\n" +
                     "feature and instead report its internal state.",
 
-                xref: { document: "cluster", section: "9.2.7.13" },
+                xref: "cluster§9.2.7.13",
 
                 children: [
                     {
@@ -863,26 +859,26 @@ DeviceEnergyManagement.patch(
                             "\n" +
                             "The value of ForecastID is allowed to wrap.",
 
-                        xref: { document: "cluster", section: "9.2.7.13.1" }
+                        xref: "cluster§9.2.7.13.1"
                     },
 
                     {
                         details: "This field shall indicate which element of the Slots list is currently active in the Forecast " +
                             "sequence. A null value indicates that the sequence has not yet started.",
-                        xref: { document: "cluster", section: "9.2.7.13.2" }
+                        xref: "cluster§9.2.7.13.2"
                     },
                     {
                         details: "This field shall indicate the planned start time, in UTC, for the entire Forecast.",
-                        xref: { document: "cluster", section: "9.2.7.13.3" }
+                        xref: "cluster§9.2.7.13.3"
                     },
                     {
                         details: "This field shall indicate the planned end time, in UTC, for the entire Forecast.",
-                        xref: { document: "cluster", section: "9.2.7.13.4" }
+                        xref: "cluster§9.2.7.13.4"
                     },
                     {
                         details: "This field shall indicate the earliest start time, in UTC, that the entire Forecast can be shifted " +
                             "to. A null value indicates that it can be started immediately.",
-                        xref: { document: "cluster", section: "9.2.7.13.5" }
+                        xref: "cluster§9.2.7.13.5"
                     },
 
                     {
@@ -890,49 +886,49 @@ DeviceEnergyManagement.patch(
                             "\n" +
                             "e.g. for an EVSE charging session, this may indicate the departure time for the vehicle, by which " +
                             "time the charging session must end.",
-                        xref: { document: "cluster", section: "9.2.7.13.6" }
+                        xref: "cluster§9.2.7.13.6"
                     },
 
                     {
                         details: "This field shall indicate that some part of the Forecast can be paused. It aims to allow a client to " +
                             "read this flag and if it is false, then none of the slots contain SlotIsPausable set to true. This " +
                             "can save a client from having to check each slot in the list.",
-                        xref: { document: "cluster", section: "9.2.7.13.7" }
+                        xref: "cluster§9.2.7.13.7"
                     },
 
                     {
                         details: "This field shall contain a list of SlotStructs." +
                             "\n" +
                             "It shall contain at least 1 entry, and a maximum of 10.",
-                        xref: { document: "cluster", section: "9.2.7.13.8" }
+                        xref: "cluster§9.2.7.13.8"
                     },
 
                     {
                         details: "This field shall contain the reason the current Forecast was generated.",
-                        xref: { document: "cluster", section: "9.2.7.13.9" }
+                        xref: "cluster§9.2.7.13.9"
                     }
                 ]
             },
 
             {
                 details: "This indicates a specific stage of an ESA’s operation.",
-                xref: { document: "cluster", section: "9.2.7.14" },
+                xref: "cluster§9.2.7.14",
 
                 children: [
                     {
                         details: "This field shall indicate the minimum time (in seconds) that the appliance expects to be in this " +
                             "slot for.",
-                        xref: { document: "cluster", section: "9.2.7.14.1" }
+                        xref: "cluster§9.2.7.14.1"
                     },
                     {
                         details: "This field shall indicate the maximum time (in seconds) that the appliance expects to be in this " +
                             "slot for.",
-                        xref: { document: "cluster", section: "9.2.7.14.2" }
+                        xref: "cluster§9.2.7.14.2"
                     },
                     {
                         details: "This field shall indicate the expected time (in seconds) that the appliance expects to be in this " +
                             "slot for.",
-                        xref: { document: "cluster", section: "9.2.7.14.3" }
+                        xref: "cluster§9.2.7.14.3"
                     },
 
                     {
@@ -945,7 +941,7 @@ DeviceEnergyManagement.patch(
                             "\n" +
                             "When the Forecast attribute is read, then this value shall be the most recent value.",
 
-                        xref: { document: "cluster", section: "9.2.7.14.4" }
+                        xref: "cluster§9.2.7.14.4"
                     },
 
                     {
@@ -961,24 +957,24 @@ DeviceEnergyManagement.patch(
                             "\n" +
                             "When the Forecast attribute is read, then this value shall be the most recent value.",
 
-                        xref: { document: "cluster", section: "9.2.7.14.5" }
+                        xref: "cluster§9.2.7.14.5"
                     },
 
                     {
                         details: "This field shall indicate whether this slot can be paused.",
-                        xref: { document: "cluster", section: "9.2.7.14.6" }
+                        xref: "cluster§9.2.7.14.6"
                     },
 
                     {
                         details: "This field shall indicate the shortest period that the slot can be paused for. This can be set to " +
                             "avoid controllers trying to pause ESAs for short periods and then resuming operation in a cyclic " +
                             "fashion which may damage or cause excess energy to be consumed with restarting of an operation.",
-                        xref: { document: "cluster", section: "9.2.7.14.7" }
+                        xref: "cluster§9.2.7.14.7"
                     },
 
                     {
                         details: "This field shall indicate the longest period that the slot can be paused for.",
-                        xref: { document: "cluster", section: "9.2.7.14.8" }
+                        xref: "cluster§9.2.7.14.8"
                     },
 
                     {
@@ -1002,14 +998,14 @@ DeviceEnergyManagement.patch(
                             "potentially ask it to modify its timing via one of the adjustment request commands, or adjust other " +
                             "ESAs power to compensate.",
 
-                        xref: { document: "cluster", section: "9.2.7.14.9" }
+                        xref: "cluster§9.2.7.14.9"
                     },
 
                     {
                         details: "This field shall indicate the expected power that the appliance will use during this slot. It may be " +
                             "considered the average value over the slot, and some variation from this would be expected (for " +
                             "example, as it is ramping up).",
-                        xref: { document: "cluster", section: "9.2.7.14.10" }
+                        xref: "cluster§9.2.7.14.10"
                     },
 
                     {
@@ -1017,7 +1013,7 @@ DeviceEnergyManagement.patch(
                             "during a ramp up it may be 0W)." +
                             "\n" +
                             "Some appliances (e.g. battery inverters which can charge and discharge) may have a negative power.",
-                        xref: { document: "cluster", section: "9.2.7.14.11" }
+                        xref: "cluster§9.2.7.14.11"
                     },
 
                     {
@@ -1025,7 +1021,7 @@ DeviceEnergyManagement.patch(
                             "(e.g. during a ramp up it may be 0W). This field ignores the effects of short-lived inrush currents." +
                             "\n" +
                             "Some appliances (e.g. battery inverters which can charge and discharge) may have a negative power.",
-                        xref: { document: "cluster", section: "9.2.7.14.12" }
+                        xref: "cluster§9.2.7.14.12"
                     },
 
                     {
@@ -1033,7 +1029,7 @@ DeviceEnergyManagement.patch(
                             "this slot." +
                             "\n" +
                             "Some appliances (e.g. battery inverters which can charge and discharge) may have a negative energy.",
-                        xref: { document: "cluster", section: "9.2.7.14.13" }
+                        xref: "cluster§9.2.7.14.13"
                     },
 
                     {
@@ -1058,7 +1054,7 @@ DeviceEnergyManagement.patch(
                             "server) it may omit this field. This is treated as extra meta data that an EMS may use to optimize a " +
                             "system.",
 
-                        xref: { document: "cluster", section: "9.2.7.14.14" }
+                        xref: "cluster§9.2.7.14.14"
                     },
 
                     {
@@ -1069,7 +1065,7 @@ DeviceEnergyManagement.patch(
                             "allows an ESA to indicate it could be switched on to charge, but this would be the minimum power " +
                             "limit it can be set to.",
 
-                        xref: { document: "cluster", section: "9.2.7.14.15" }
+                        xref: "cluster§9.2.7.14.15"
                     },
 
                     {
@@ -1080,7 +1076,7 @@ DeviceEnergyManagement.patch(
                             "allows an ESA to indicate it could be switched on to charge, but this would be the maximum power " +
                             "limit it can be set to.",
 
-                        xref: { document: "cluster", section: "9.2.7.14.16" }
+                        xref: "cluster§9.2.7.14.16"
                     },
 
                     {
@@ -1093,7 +1089,7 @@ DeviceEnergyManagement.patch(
                             "\n" +
                             "For example, a heat pump compressor may have a minimum cycle time of order a few minutes.",
 
-                        xref: { document: "cluster", section: "9.2.7.14.17" }
+                        xref: "cluster§9.2.7.14.17"
                     },
 
                     {
@@ -1106,20 +1102,20 @@ DeviceEnergyManagement.patch(
                             "case of a battery inverter which can be discharged, it may equally indicate the maximum time the " +
                             "battery could be discharged for (at the MaxPowerAdjustment power level).",
 
-                        xref: { document: "cluster", section: "9.2.7.14.18" }
+                        xref: "cluster§9.2.7.14.18"
                     }
                 ]
             },
 
             {
-                xref: { document: "cluster", section: "9.2.7.15" },
+                xref: "cluster§9.2.7.15",
 
                 children: [
                     {
                         details: "This field shall indicate the index into the Slots list within the Forecast that is to be modified. " +
                             "It shall be less than the actual length of the Slots list (implicitly it must be in the range 0 to 9 " +
                             "based on the maximum length of the Slots list constraint).",
-                        xref: { document: "cluster", section: "9.2.7.15.1" }
+                        xref: "cluster§9.2.7.15.1"
                     },
 
                     {
@@ -1128,14 +1124,14 @@ DeviceEnergyManagement.patch(
                             "\n" +
                             "This is a signed value and can be used to indicate charging or discharging. If the ESA does NOT " +
                             "support PFR this value shall be ignored by the ESA.",
-                        xref: { document: "cluster", section: "9.2.7.15.2" }
+                        xref: "cluster§9.2.7.15.2"
                     },
 
                     {
                         details: "This field shall indicate the new requested duration, in seconds, that the ESA shall extend or " +
                             "shorten the slot duration to. It MUST be between the MinDurationAdjustment and MaxDurationAdjustment " +
                             "for the slot as advertised by the ESA.",
-                        xref: { document: "cluster", section: "9.2.7.15.3" }
+                        xref: "cluster§9.2.7.15.3"
                     }
                 ]
             },
@@ -1144,7 +1140,7 @@ DeviceEnergyManagement.patch(
                 details: "The ConstraintsStruct allows a client to inform an ESA about a constraint period (such as a grid " +
                     "event, or perhaps excess solar PV). The format allows the client to suggest that the ESA can either " +
                     "turn up its energy consumption, or turn down its energy consumption during this period.",
-                xref: { document: "cluster", section: "9.2.7.16" },
+                xref: "cluster§9.2.7.16",
 
                 children: [
                     {
@@ -1152,12 +1148,12 @@ DeviceEnergyManagement.patch(
                             "compute a new Forecast." +
                             "\n" +
                             "This value is in UTC and MUST be in the future.",
-                        xref: { document: "cluster", section: "9.2.7.16.1" }
+                        xref: "cluster§9.2.7.16.1"
                     },
 
                     {
                         details: "This field shall indicate the duration of the constraint in seconds.",
-                        xref: { document: "cluster", section: "9.2.7.16.2" }
+                        xref: "cluster§9.2.7.16.2"
                     },
 
                     {
@@ -1166,7 +1162,7 @@ DeviceEnergyManagement.patch(
                             "the ESA if it supports PFR." +
                             "\n" +
                             "This is a signed value and can be used to indicate charging or discharging.",
-                        xref: { document: "cluster", section: "9.2.7.16.3" }
+                        xref: "cluster§9.2.7.16.3"
                     },
 
                     {
@@ -1174,7 +1170,7 @@ DeviceEnergyManagement.patch(
                             "constraint period." +
                             "\n" +
                             "This is a signed value and can be used to indicate charging or discharging.",
-                        xref: { document: "cluster", section: "9.2.7.16.4" }
+                        xref: "cluster§9.2.7.16.4"
                     },
 
                     {
@@ -1187,7 +1183,7 @@ DeviceEnergyManagement.patch(
                             "\n" +
                             "Note that the mapping between values and operation is manufacturer specific.",
 
-                        xref: { document: "cluster", section: "9.2.7.16.5" }
+                        xref: "cluster§9.2.7.16.5"
                     }
                 ]
             }

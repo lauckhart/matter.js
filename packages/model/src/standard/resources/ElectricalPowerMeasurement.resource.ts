@@ -12,42 +12,42 @@ ElectricalPowerMeasurement.patch({
     classification: "application", pics: "EPM",
     details: "This cluster provides a mechanism for querying data about electrical power as measured by the " +
         "server.",
-    xref: { document: "cluster", section: "2.13" },
+    xref: "cluster§2.13",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "2.13.4" },
+            xref: "cluster§2.13.4",
 
             children: [
                 {
                     description: "DirectCurrent",
                     details: "This feature indicates the cluster can measure a direct current.",
-                    xref: { document: "cluster", section: "2.13.4.1" }
+                    xref: "cluster§2.13.4.1"
                 },
                 {
                     description: "AlternatingCurrent",
                     details: "This feature indicates the cluster can measure an alternating current.",
-                    xref: { document: "cluster", section: "2.13.4.2" }
+                    xref: "cluster§2.13.4.2"
                 },
 
                 {
                     description: "PolyphasePower",
                     details: "This feature indicates the cluster represents the collective measurements for a Polyphase power " +
                         "supply.",
-                    xref: { document: "cluster", section: "2.13.4.3" }
+                    xref: "cluster§2.13.4.3"
                 },
 
                 {
                     description: "Harmonics",
                     details: "This feature indicates the cluster can measure the harmonics of an alternating current.",
-                    xref: { document: "cluster", section: "2.13.4.4" }
+                    xref: "cluster§2.13.4.4"
                 },
                 {
                     description: "PowerQuality",
                     details: "This feature indicates the cluster can measure the harmonic phases of an alternating current.",
-                    xref: { document: "cluster", section: "2.13.4.5" }
+                    xref: "cluster§2.13.4.5"
                 }
             ]
         },
@@ -55,18 +55,18 @@ ElectricalPowerMeasurement.patch({
         {
             details: "This shall indicate the current mode of the server. For some servers, such as an EV, this may change " +
                 "depending on the mode of charging or discharging.",
-            xref: { document: "cluster", section: "2.13.6.1" }
+            xref: "cluster§2.13.6.1"
         },
         {
             details: "This shall indicate the maximum number of measurement types the server is capable of reporting.",
-            xref: { document: "cluster", section: "2.13.6.2" }
+            xref: "cluster§2.13.6.2"
         },
 
         {
             details: "This shall indicate a list of accuracy specifications for the measurement types supported by the " +
                 "server. There shall be an entry for ActivePower, as well as any other measurement types implemented " +
                 "by this server.",
-            xref: { document: "cluster", section: "2.13.6.3" }
+            xref: "cluster§2.13.6.3"
         },
 
         {
@@ -83,7 +83,7 @@ ElectricalPowerMeasurement.patch({
                 "The server may delay marking this attribute ready for report for longer periods if needed, however " +
                 "the server shall NOT delay marking this attribute as ready for report for longer than 60 seconds.",
 
-            xref: { document: "cluster", section: "2.13.6.4" }
+            xref: "cluster§2.13.6.4"
         },
 
         {
@@ -100,7 +100,7 @@ ElectricalPowerMeasurement.patch({
                 "\n" +
                 "If the voltage cannot be measured, a value of null shall be returned.",
 
-            xref: { document: "cluster", section: "2.13.6.5" }
+            xref: "cluster§2.13.6.5"
         },
 
         {
@@ -120,7 +120,7 @@ ElectricalPowerMeasurement.patch({
                 "\n" +
                 "If the current cannot be measured, a value of null shall be returned.",
 
-            xref: { document: "cluster", section: "2.13.6.6" }
+            xref: "cluster§2.13.6.6"
         },
 
         {
@@ -140,7 +140,7 @@ ElectricalPowerMeasurement.patch({
                 "\n" +
                 "If the current cannot be measured, a value of null shall be returned.",
 
-            xref: { document: "cluster", section: "2.13.6.7" }
+            xref: "cluster§2.13.6.7"
         },
 
         {
@@ -158,7 +158,7 @@ ElectricalPowerMeasurement.patch({
                 "\n" +
                 "If the active or reactive currents cannot be measured, a value of null shall be returned.",
 
-            xref: { document: "cluster", section: "2.13.6.8" }
+            xref: "cluster§2.13.6.8"
         },
 
         {
@@ -179,7 +179,7 @@ ElectricalPowerMeasurement.patch({
                 "If the Polyphase Power feature is set, this value represents the combined active power imported or " +
                 "exported.",
 
-            xref: { document: "cluster", section: "2.13.6.9" }
+            xref: "cluster§2.13.6.9"
         },
 
         {
@@ -200,7 +200,7 @@ ElectricalPowerMeasurement.patch({
                 "If the Polyphase Power feature is supported, this value represents the combined reactive power " +
                 "imported or exported.",
 
-            xref: { document: "cluster", section: "2.13.6.10" }
+            xref: "cluster§2.13.6.10"
         },
 
         {
@@ -219,7 +219,7 @@ ElectricalPowerMeasurement.patch({
                 "\n" +
                 "If the apparent power cannot be measured, a value of null shall be returned.",
 
-            xref: { document: "cluster", section: "2.13.6.11" }
+            xref: "cluster§2.13.6.11"
         },
 
         {
@@ -236,7 +236,7 @@ ElectricalPowerMeasurement.patch({
                 "\n" +
                 "If the RMS voltage cannot be measured, a value of null shall be returned.",
 
-            xref: { document: "cluster", section: "2.13.6.12" }
+            xref: "cluster§2.13.6.12"
         },
 
         {
@@ -256,7 +256,7 @@ ElectricalPowerMeasurement.patch({
                 "\n" +
                 "If the RMS current cannot be measured, a value of null shall be returned.",
 
-            xref: { document: "cluster", section: "2.13.6.13" }
+            xref: "cluster§2.13.6.13"
         },
 
         {
@@ -275,7 +275,7 @@ ElectricalPowerMeasurement.patch({
                 "\n" +
                 "If the RMS power cannot be measured, a value of null shall be returned.",
 
-            xref: { document: "cluster", section: "2.13.6.14" }
+            xref: "cluster§2.13.6.14"
         },
 
         {
@@ -292,7 +292,7 @@ ElectricalPowerMeasurement.patch({
                 "\n" +
                 "If the frequency cannot be measured, a value of null shall be returned.",
 
-            xref: { document: "cluster", section: "2.13.6.15" }
+            xref: "cluster§2.13.6.15"
         },
 
         {
@@ -308,7 +308,7 @@ ElectricalPowerMeasurement.patch({
                 "The server may delay marking this attribute ready for report for longer periods if needed, however " +
                 "the server shall NOT delay marking this attribute as ready for report for longer than 60 seconds.",
 
-            xref: { document: "cluster", section: "2.13.6.16" }
+            xref: "cluster§2.13.6.16"
         },
 
         {
@@ -326,7 +326,7 @@ ElectricalPowerMeasurement.patch({
                 "The server may delay marking this attribute ready for report for longer periods if needed, however " +
                 "the server shall NOT delay marking this attribute as ready for report for longer than 60 seconds.",
 
-            xref: { document: "cluster", section: "2.13.6.17" }
+            xref: "cluster§2.13.6.17"
         },
 
         {
@@ -341,7 +341,7 @@ ElectricalPowerMeasurement.patch({
                 "The server may delay marking this attribute ready for report for longer periods if needed, however " +
                 "the server shall NOT delay marking this attribute as ready for report for longer than 60 seconds.",
 
-            xref: { document: "cluster", section: "2.13.6.18" }
+            xref: "cluster§2.13.6.18"
         },
 
         {
@@ -362,22 +362,22 @@ ElectricalPowerMeasurement.patch({
                 "The server may delay marking this attribute ready for report for longer periods if needed, however " +
                 "the server shall NOT delay marking this attribute as ready for report for longer than 60 seconds.",
 
-            xref: { document: "cluster", section: "2.13.6.19" }
+            xref: "cluster§2.13.6.19"
         },
 
         {
             details: "If supported, this event shall be generated at the end of a measurement period. The start and end " +
                 "times for measurement periods shall be determined by the server, and may represent overlapping " +
                 "periods.",
-            xref: { document: "cluster", section: "2.13.7.1" },
+            xref: "cluster§2.13.7.1",
             children: [{
                 details: "This shall indicate the value of the Ranges attribute at the time of event generation.",
-                xref: { document: "cluster", section: "2.13.7.1.1" }
+                xref: "cluster§2.13.7.1.1"
             }]
         },
 
         {
-            xref: { document: "cluster", section: "2.13.5.1" },
+            xref: "cluster§2.13.5.1",
             children: [
                 undefined,
                 { description: "Direct current" },
@@ -397,26 +397,26 @@ ElectricalPowerMeasurement.patch({
                 "indicate how many seconds had passed since boot for a given timestamp; this allows for client-side " +
                 "resolution of UTC time for previous reports that only included systime.",
 
-            xref: { document: "cluster", section: "2.13.5.2" },
+            xref: "cluster§2.13.5.2",
 
             children: [
                 {
                     details: "This field shall be the type of measurement for the range provided.",
-                    xref: { document: "cluster", section: "2.13.5.2.1" }
+                    xref: "cluster§2.13.5.2.1"
                 },
 
                 {
                     details: "This field shall be the smallest measured value for the associated measurement over either the " +
                         "period between StartTimestamp and EndTimestamp, or the period between StartSystime and EndSystime, " +
                         "or both.",
-                    xref: { document: "cluster", section: "2.13.5.2.2" }
+                    xref: "cluster§2.13.5.2.2"
                 },
 
                 {
                     details: "This field shall be the largest measured value for the associated measurement over the period " +
                         "between either StartTimestamp and EndTimestamp or the period between StartSystime and EndSystime, or " +
                         "both.",
-                    xref: { document: "cluster", section: "2.13.5.2.3" }
+                    xref: "cluster§2.13.5.2.3"
                 },
 
                 {
@@ -424,7 +424,7 @@ ElectricalPowerMeasurement.patch({
                         "\n" +
                         "If the server had not yet determined the time in UTC at or before the beginning of the measurement " +
                         "period, or does not have the capability of determining the time in UTC, this field shall be omitted.",
-                    xref: { document: "cluster", section: "2.13.5.2.4" }
+                    xref: "cluster§2.13.5.2.4"
                 },
 
                 {
@@ -432,7 +432,7 @@ ElectricalPowerMeasurement.patch({
                         "\n" +
                         "If the server had not yet determined the time in UTC at or before the beginning of the measurement " +
                         "period, or does not have the capability of determining the time in UTC, this field shall be omitted.",
-                    xref: { document: "cluster", section: "2.13.5.2.5" }
+                    xref: "cluster§2.13.5.2.5"
                 },
 
                 {
@@ -440,14 +440,14 @@ ElectricalPowerMeasurement.patch({
                         "\n" +
                         "This field shall be greater than or equal to the value of the StartTimestamp field. This field shall " +
                         "be less than or equal to the value of the EndTimestamp field.",
-                    xref: { document: "cluster", section: "2.13.5.2.6" }
+                    xref: "cluster§2.13.5.2.6"
                 },
 
                 {
                     details: "This field shall be the most recent timestamp in UTC of the value in the Max field. This field shall " +
                         "be greater than or equal to the value of the StartTimestamp field. This field shall be less than or " +
                         "equal to the value of the EndTimestamp field.",
-                    xref: { document: "cluster", section: "2.13.5.2.7" }
+                    xref: "cluster§2.13.5.2.7"
                 },
 
                 {
@@ -455,7 +455,7 @@ ElectricalPowerMeasurement.patch({
                         "\n" +
                         "If the server had determined the time in UTC at or before the start of the measurement period, this " +
                         "field may be omitted along with the EndSystime, MinSystime, and MaxSystime fields.",
-                    xref: { document: "cluster", section: "2.13.5.2.8" }
+                    xref: "cluster§2.13.5.2.8"
                 },
 
                 {
@@ -463,7 +463,7 @@ ElectricalPowerMeasurement.patch({
                         "\n" +
                         "If the server had determined the time in UTC at the end of the measurement period, this field may be " +
                         "omitted along with the StartSystime field, MinSystime, and MaxSystime fields.",
-                    xref: { document: "cluster", section: "2.13.5.2.9" }
+                    xref: "cluster§2.13.5.2.9"
                 },
 
                 {
@@ -471,7 +471,7 @@ ElectricalPowerMeasurement.patch({
                         "field shall be greater than or equal to the value of the StartSystime field." +
                         "\n" +
                         "This field shall be less than or equal to the value of the EndSystime field.",
-                    xref: { document: "cluster", section: "2.13.5.2.10" }
+                    xref: "cluster§2.13.5.2.10"
                 },
 
                 {
@@ -479,19 +479,19 @@ ElectricalPowerMeasurement.patch({
                         "be greater than or equal to the value of the StartSystime field." +
                         "\n" +
                         "This field shall be less than or equal to the value of the EndSystime field.",
-                    xref: { document: "cluster", section: "2.13.5.2.11" }
+                    xref: "cluster§2.13.5.2.11"
                 }
             ]
         },
 
         {
-            xref: { document: "cluster", section: "2.13.5.3" },
+            xref: "cluster§2.13.5.3",
 
             children: [
                 {
                     details: "This field shall be the order of the harmonic being measured. Typically this is an odd number, but " +
                         "servers may choose to report even harmonics.",
-                    xref: { document: "cluster", section: "2.13.5.3.1" }
+                    xref: "cluster§2.13.5.3.1"
                 },
 
                 {
@@ -508,7 +508,7 @@ ElectricalPowerMeasurement.patch({
                         "\n" +
                         "If this measurement is not currently available, a value of null shall be returned.",
 
-                    xref: { document: "cluster", section: "2.13.5.3.2" }
+                    xref: "cluster§2.13.5.3.2"
                 }
             ]
         }

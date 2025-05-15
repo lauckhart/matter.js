@@ -8,4 +8,4 @@
 
 import { map32 } from "#index.js";
 
-map32.patch({ description: "32-bit bitmap", xref: { document: "core", section: "7.19.1" } });
+map32.patch({ description: "32-bit bitmap", xref: "core§7.19.1" });

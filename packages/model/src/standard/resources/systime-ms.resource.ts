@@ -14,5 +14,5 @@ systimeMs.patch({
         "since boot." +
         "\n" +
         "This type is employed for compatibility reasons.",
-    xref: { document: "core", section: "7.19.2.9" }
+    xref: "core§7.19.2.9"
 });

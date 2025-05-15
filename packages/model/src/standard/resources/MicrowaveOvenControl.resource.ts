@@ -15,13 +15,13 @@ MicrowaveOvenControl.patch({
         "This cluster has dependencies with the Operational State and Microwave Oven Mode clusters. The " +
         "Operational State cluster and the Microwave Oven Mode clusters, or derivatives of those clusters " +
         "shall appear on the same endpoint as this cluster.",
-    xref: { document: "cluster", section: "8.13" },
+    xref: "cluster§8.13",
 
     children: [
         undefined,
 
         {
-            xref: { document: "cluster", section: "8.13.4" },
+            xref: "cluster§8.13.4",
 
             children: [
                 { description: "PowerAsNumber", details: "Power is specified as a unitless number or a percentage" },
@@ -38,12 +38,12 @@ MicrowaveOvenControl.patch({
                 "\n" +
                 "This attribute shall remain unchanged during the operation of the oven unless the value is changed " +
                 "via a command or out-of-band action.",
-            xref: { document: "cluster", section: "8.13.5.1" }
+            xref: "cluster§8.13.5.1"
         },
 
         {
             details: "Indicates the maximum value to which the CookTime attribute can be set.",
-            xref: { document: "cluster", section: "8.13.5.2" }
+            xref: "cluster§8.13.5.2"
         },
 
         {
@@ -64,16 +64,16 @@ MicrowaveOvenControl.patch({
                 "\n" +
                 "  • The value of this attribute shall be such that (PowerSetting - MinPower) % PowerStep == 0",
 
-            xref: { document: "cluster", section: "8.13.5.3" }
+            xref: "cluster§8.13.5.3"
         },
 
         {
             details: "Indicates the minimum value to which the PowerSetting attribute that can be set on the server.",
-            xref: { document: "cluster", section: "8.13.5.4" }
+            xref: "cluster§8.13.5.4"
         },
         {
             details: "Indicates the maximum value to which the PowerSetting attribute that can be set on the server.",
-            xref: { document: "cluster", section: "8.13.5.5" }
+            xref: "cluster§8.13.5.5"
         },
 
         {
@@ -85,19 +85,16 @@ MicrowaveOvenControl.patch({
                 "For example, if MinPower is 1, MaxPower is 10, and PowerSetting can be set to any integer between " +
                 "MinPower and MaxPower, PowerStep would be set to 1.",
 
-            xref: { document: "cluster", section: "8.13.5.6" }
+            xref: "cluster§8.13.5.6"
         },
 
-        {
-            details: "Indicates the list of power levels (in W) supported by the server.",
-            xref: { document: "cluster", section: "8.13.5.7" }
-        },
+        { details: "Indicates the list of power levels (in W) supported by the server.", xref: "cluster§8.13.5.7" },
 
         {
             details: "Indicates the index into the list of SupportedWatts of the currently selected power setting." +
                 "\n" +
                 "The index shall be a valid index into the SupportedWatts list.",
-            xref: { document: "cluster", section: "8.13.5.8" }
+            xref: "cluster§8.13.5.8"
         },
 
         {
@@ -105,13 +102,13 @@ MicrowaveOvenControl.patch({
                 "\n" +
                 "Supporting this attribute can assist clients in suggesting cooking settings for various foods and " +
                 "beverages.",
-            xref: { document: "cluster", section: "8.13.5.9" }
+            xref: "cluster§8.13.5.9"
         },
 
         {
             details: "This command is used to set the cooking parameters associated with the operation of the device. This " +
                 "command supports the following fields:",
-            xref: { document: "cluster", section: "8.13.6.2" },
+            xref: "cluster§8.13.6.2",
 
             children: [
                 {
@@ -122,7 +119,7 @@ MicrowaveOvenControl.patch({
                         "If this field is missing, the CurrentMode attribute shall be set to a mode having the Normal mode " +
                         "tag.",
 
-                    xref: { document: "cluster", section: "8.13.6.2.1" }
+                    xref: "cluster§8.13.6.2.1"
                 },
 
                 {
@@ -130,7 +127,7 @@ MicrowaveOvenControl.patch({
                         "this field shall be subject to the constraints of the CookTime attribute of this cluster." +
                         "\n" +
                         "If this field is missing, the CookTime attribute shall be set to 30 seconds by the server.",
-                    xref: { document: "cluster", section: "8.13.6.2.2" }
+                    xref: "cluster§8.13.6.2.2"
                 },
 
                 {
@@ -143,7 +140,7 @@ MicrowaveOvenControl.patch({
                         "supported by the server, otherwise it shall be set to MaxPower if the MaxPower attribute is " +
                         "supported by the server.",
 
-                    xref: { document: "cluster", section: "8.13.6.2.3" }
+                    xref: "cluster§8.13.6.2.3"
                 },
 
                 {
@@ -155,13 +152,13 @@ MicrowaveOvenControl.patch({
                         "If this field is missing, the SelectedWattIndex attribute shall be set by the server to the index " +
                         "associated with the highest Watt setting for the selected CookMode.",
 
-                    xref: { document: "cluster", section: "8.13.6.2.4" }
+                    xref: "cluster§8.13.6.2.4"
                 },
 
                 {
                     details: "This field shall indicate whether or not oven operation shall be started when the command is " +
                         "received.",
-                    xref: { document: "cluster", section: "8.13.6.2.5" }
+                    xref: "cluster§8.13.6.2.5"
                 }
             ]
         },
@@ -169,10 +166,10 @@ MicrowaveOvenControl.patch({
         {
             details: "This command is used to add more time to the CookTime attribute of the server. This command supports " +
                 "these fields:",
-            xref: { document: "cluster", section: "8.13.6.3" },
+            xref: "cluster§8.13.6.3",
             children: [{
                 details: "This field shall indicate the number of seconds to be added to the CookTime attribute.",
-                xref: { document: "cluster", section: "8.13.6.3.1" }
+                xref: "cluster§8.13.6.3.1"
             }]
         }
     ]

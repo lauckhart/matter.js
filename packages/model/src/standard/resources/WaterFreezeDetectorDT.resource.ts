@@ -11,12 +11,6 @@ import { WaterFreezeDetectorDt } from "#index.js";
 WaterFreezeDetectorDt.patch({
     classification: "simple",
     details: "This defines conformance to the Water Freeze Detector device type.",
-    xref: { document: "device", section: "7.11" },
-
-    children: [
-        undefined,
-        { xref: { document: "device", section: "7.11.4" } },
-        { xref: { document: "device", section: "7.11.4" } },
-        { xref: { document: "device", section: "7.11.4" } }
-    ]
+    xref: "device§7.11",
+    children: [undefined, { xref: "device§7.11.4" }, { xref: "device§7.11.4" }, { xref: "device§7.11.4" }]
 });

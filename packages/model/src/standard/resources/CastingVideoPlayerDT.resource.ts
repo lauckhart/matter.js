@@ -26,35 +26,32 @@ CastingVideoPlayerDt.patch({
         "Video Player device endpoint composition, commissioning, feature representation in clusters, and UI " +
         "context.",
 
-    xref: { document: "device", section: "10.3" },
+    xref: "device§10.3",
 
     children: [
         undefined,
-        { xref: { document: "device", section: "10.3.4" } },
-        { xref: { document: "device", section: "10.3.4" } },
-        { xref: { document: "device", section: "10.3.4" } },
-        { xref: { document: "device", section: "10.3.4" } },
-        { xref: { document: "device", section: "10.3.4" } },
-        { xref: { document: "device", section: "10.3.4" } },
-        { xref: { document: "device", section: "10.3.4" } },
-        { xref: { document: "device", section: "10.3.4" } },
-        { xref: { document: "device", section: "10.3.4" } },
-        { xref: { document: "device", section: "10.3.4" } },
-        { xref: { document: "device", section: "10.3.4" } },
-        { xref: { document: "device", section: "10.3.4" } },
-        { xref: { document: "device", section: "10.3.4" } },
-        { xref: { document: "device", section: "10.3.4" } },
+        { xref: "device§10.3.4" },
+        { xref: "device§10.3.4" },
+        { xref: "device§10.3.4" },
+        { xref: "device§10.3.4" },
+        { xref: "device§10.3.4" },
+        { xref: "device§10.3.4" },
+        { xref: "device§10.3.4" },
+        { xref: "device§10.3.4" },
+        { xref: "device§10.3.4" },
+        { xref: "device§10.3.4" },
+        { xref: "device§10.3.4" },
+        { xref: "device§10.3.4" },
+        { xref: "device§10.3.4" },
+        { xref: "device§10.3.4" },
 
         {
             children: [
                 {
                     description: "The device includes a Content App Platform. A Content App is usually an application built by a Content Provider. A Casting Video Player with a Content App Platform is able to launch Content Apps and represent these apps as separate endpoints.",
-                    xref: { document: "device", section: "10.3.3" }
+                    xref: "device§10.3.3"
                 },
-                {
-                    description: "The device has physical inputs for media.",
-                    xref: { document: "device", section: "10.3.3" }
-                }
+                { description: "The device has physical inputs for media.", xref: "device§10.3.3" }
             ]
         }
     ]

@@ -37,7 +37,7 @@ AccountLogin.patch({
         "the Video Player device, may implement the cluster server for this cluster to simplify account login " +
         "for its users.",
 
-    xref: { document: "cluster", section: "6.2" },
+    xref: "cluster§6.2",
 
     children: [
         undefined,
@@ -46,11 +46,11 @@ AccountLogin.patch({
             details: "This event can be used by the Content App to indicate that the current user has logged out. In " +
                 "response to this event, the Fabric Admin shall remove access to this Content App by the specified " +
                 "Node. If no Node is provided, then the Fabric Admin shall remove access to all non-Admin Nodes.",
-            xref: { document: "cluster", section: "6.2.5.1" },
+            xref: "cluster§6.2.5.1",
             children: [{
                 details: "This field shall provide the Node ID corresponding to the user account that has logged out, if that " +
                     "Node ID is available. If it is NOT available, this field shall NOT be present in the event.",
-                xref: { document: "cluster", section: "6.2.5.1.1" }
+                xref: "cluster§6.2.5.1.1"
             }]
         },
 
@@ -102,11 +102,11 @@ AccountLogin.patch({
                 "A Content App that supports this command shall ensure that the Temporary Account Identifier used by " +
                 "its clients is not valid for more than 10 minutes.",
 
-            xref: { document: "cluster", section: "6.2.4.1" },
+            xref: "cluster§6.2.4.1",
             children: [{
                 details: "This field shall specify the client’s Temporary Account Identifier. The length of this field shall " +
                     "be at least 16 characters to protect the account holder against password guessing attacks.",
-                xref: { document: "cluster", section: "6.2.4.1.1" }
+                xref: "cluster§6.2.4.1.1"
             }]
         },
 
@@ -114,7 +114,7 @@ AccountLogin.patch({
             details: "This message is sent in response to the GetSetupPIN command, and contains the Setup PIN code, or " +
                 "null when the account identified in the request does not match the active account of the running " +
                 "Content App.",
-            xref: { document: "cluster", section: "6.2.4.2" },
+            xref: "cluster§6.2.4.2",
 
             children: [{
                 details: "This field shall provide the setup PIN code as a text string at least 8 characters in length or " +
@@ -125,7 +125,7 @@ AccountLogin.patch({
                     "Newer cluster clients should be aware that AccountLogin cluster version 1 specified an 11 digit " +
                     "minimum length.",
 
-                xref: { document: "cluster", section: "6.2.4.2.1" }
+                xref: "cluster§6.2.4.2.1"
             }]
         },
 
@@ -170,12 +170,12 @@ AccountLogin.patch({
                 "that supports this command shall ensure that the Temporary Account Identifier used by its clients is " +
                 "not valid for more than 10 minutes.",
 
-            xref: { document: "cluster", section: "6.2.4.3" },
+            xref: "cluster§6.2.4.3",
 
             children: [
                 {
                     details: "This field shall specify the client’s temporary account identifier.",
-                    xref: { document: "cluster", section: "6.2.4.3.1" }
+                    xref: "cluster§6.2.4.3.1"
                 },
 
                 {
@@ -186,13 +186,13 @@ AccountLogin.patch({
                         "Newer cluster clients should be aware that AccountLogin cluster version 1 specified an 11 digit " +
                         "minimum length.",
 
-                    xref: { document: "cluster", section: "6.2.4.3.2" }
+                    xref: "cluster§6.2.4.3.2"
                 },
 
                 {
                     details: "This optional field shall provide the Node ID of the Client. This field can be used by the Content " +
                         "App to keep track of Nodes which currently have access to it.",
-                    xref: { document: "cluster", section: "6.2.4.3.3" }
+                    xref: "cluster§6.2.4.3.3"
                 }
             ]
         },
@@ -200,13 +200,13 @@ AccountLogin.patch({
         {
             details: "The purpose of this command is to instruct the Content App to clear the current user account. This " +
                 "command SHOULD be used by clients of a Content App to indicate the end of a user session.",
-            xref: { document: "cluster", section: "6.2.4.4" },
+            xref: "cluster§6.2.4.4",
 
             children: [{
                 details: "This optional field shall provide the Node ID of the Client. This field can be used by the Content" +
                     "\n" +
                     "App to keep track of Nodes which currently have access to it.",
-                xref: { document: "cluster", section: "6.2.4.4.1" }
+                xref: "cluster§6.2.4.4.1"
             }]
         }
     ]
