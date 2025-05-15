@@ -5,8 +5,9 @@
  */
 
 import { Model, Resources } from "#model";
-import { TsFile } from "#util/TsFile.js";
+import { Block, TsFile } from "#util/TsFile.js";
 import { serialize } from "@matter/general";
+import { CrossReference } from "../../../../packages/model/src/models/CrossReference.js";
 import { addDetailsAndCrossReferences, addProperties } from "./element-generation.js";
 
 export function generateResource(target: TsFile, element: Model, identifierName: string): boolean {
@@ -16,7 +17,13 @@ export function generateResource(target: TsFile, element: Model, identifierName:
     }
 
     target.addImport("#index.js", identifierName);
-    const expr = target.expressions(`${identifierName}.patch({`, "})");
+    const expr = target.expressions(`${identifierName}.patch(`, ")");
+
+    addResource(expr, element, patch);
+}
+
+function addResource(target: Block, element: Model, patch: ResourcePatch) {
+    const expr = target.expressions("{", "}");
 
     if (patch.resources) {
         addProperties(expr, patch.resources as Record<string, unknown>);
@@ -25,6 +32,12 @@ export function generateResource(target: TsFile, element: Model, identifierName:
     addDetailsAndCrossReferences(expr, element);
 
     if (patch.children) {
+        const children = expr.expressions("[", "]");
+        for (const child of patch.children) {
+            if (child) {
+                addResource(children);
+            }
+        }
         expr.value(patch.children, "children: ");
     }
 
@@ -32,6 +45,8 @@ export function generateResource(target: TsFile, element: Model, identifierName:
 }
 
 interface ResourcePatch {
+    details?: string;
+    xref?: CrossReference;
     resources?: Resources;
     children?: ResourcePatch[];
 }
@@ -68,6 +83,18 @@ function generateResourcePatch(element: Model): ResourcePatch | undefined {
             patch.children = children as ResourcePatch[];
         } else {
             patch = { children: children as ResourcePatch[] };
+        }
+    }
+
+    for (const name of ["details", "xref"] as const) {
+        if (!element[name]) {
+            continue;
+        }
+
+        if (patch) {
+            (patch as Record<string, any>)[name] = element[name];
+        } else {
+            patch = { [name]: element[name] };
         }
     }
 
