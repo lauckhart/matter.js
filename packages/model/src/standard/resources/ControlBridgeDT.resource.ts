@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ControlBridgeDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ControlBridgeDt.patch({
+Resource.add({
+    name: "ControlBridge", tag: "deviceType",
     classification: "simple",
     details: "A Control Bridge is a controller device that, when bound to a lighting device such as an Extended " +
         "Color Light, is capable of being used to switch the device on or off, adjust the intensity of the " +
@@ -17,15 +18,14 @@ ControlBridgeDt.patch({
     xref: "device§6.4",
 
     children: [
-        undefined,
-        { xref: "device§6.4.4" },
-        { xref: "device§6.4.4" },
-        { xref: "device§6.4.4" },
-        { xref: "device§6.4.4" },
-        { xref: "device§6.4.4" },
-        { xref: "device§6.4.4" },
-        { xref: "device§6.4.4" },
-        { xref: "device§6.4.4" },
-        { xref: "device§6.4.4" }
+        { discriminator: "M", name: "Identify", tag: "requirement", xref: "device§6.4.4" },
+        { discriminator: "M", name: "Identify", tag: "requirement", xref: "device§6.4.4" },
+        { name: "Groups", tag: "requirement", xref: "device§6.4.4" },
+        { name: "ScenesManagement", tag: "requirement", xref: "device§6.4.4" },
+        { name: "OnOff", tag: "requirement", xref: "device§6.4.4" },
+        { name: "LevelControl", tag: "requirement", xref: "device§6.4.4" },
+        { name: "ColorControl", tag: "requirement", xref: "device§6.4.4" },
+        { name: "IlluminanceMeasurement", tag: "requirement", xref: "device§6.4.4" },
+        { name: "OccupancySensing", tag: "requirement", xref: "device§6.4.4" }
     ]
 });

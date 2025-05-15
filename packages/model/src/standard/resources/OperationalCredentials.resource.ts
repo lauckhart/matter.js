@@ -6,18 +6,19 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { OperationalCredentials } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-OperationalCredentials.patch({
+Resource.add({
+    name: "OperationalCredentials", tag: "cluster",
     classification: "node", pics: "OPCREDS",
     details: "This cluster is used to add or remove Node Operational credentials on a Commissionee or Node, as " +
         "well as manage the associated Fabrics.",
     xref: "core§11.18",
 
     children: [
-        undefined,
-
         {
+            name: "Nocs", tag: "attribute",
+
             details: "This attribute contains all NOCs applicable to this Node, encoded as a read-only list of NOCStruct." +
                 "\n" +
                 "Operational Certificates shall be added through the AddNOC command, and shall be removed through the " +
@@ -31,6 +32,8 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "Fabrics", tag: "attribute",
+
             details: "This attribute describes all fabrics to which this Node is commissioned, encoded as a read-only list " +
                 "of FabricDescriptorStruct. This information may be computed directly from the NOCs attribute." +
                 "\n" +
@@ -42,12 +45,15 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "SupportedFabrics", tag: "attribute",
             details: "This attribute contains the number of Fabrics that are supported by the device. This value is fixed " +
                 "for a particular device.",
             xref: "core§11.18.5.3"
         },
 
         {
+            name: "CommissionedFabrics", tag: "attribute",
+
             details: "This attribute contains the number of Fabrics to which the device is currently commissioned. This " +
                 "attribute shall be equal to the following:" +
                 "\n" +
@@ -61,6 +67,8 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "TrustedRootCertificates", tag: "attribute",
+
             details: "This attribute shall contain a read-only list of Trusted Root CA Certificates (RCAC) installed on " +
                 "the Node, as octet strings containing their Matter Certificate Encoding representation." +
                 "\n" +
@@ -80,6 +88,7 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "CurrentFabricIndex", tag: "attribute",
             details: "This attribute shall contain accessing fabric index." +
                 "\n" +
                 "This attribute is useful to contextualize Fabric-Scoped entries obtained from response commands or " +
@@ -89,6 +98,7 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "AttestationRequest", tag: "command",
             details: "This command shall be generated to request the Attestation Information, in the form of an " +
                 "AttestationResponse Command. If the AttestationNonce that is provided in the command is malformed, a " +
                 "recipient shall fail the command with a Status Code of INVALID_COMMAND. The AttestationNonce field " +
@@ -97,6 +107,8 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "AttestationResponse", tag: "command",
+
             details: "This command shall be generated in response to an Attestation Request command." +
                 "\n" +
                 "See Section 11.18.4.7, “Attestation Information” for details about the generation of the fields " +
@@ -109,10 +121,13 @@ OperationalCredentials.patch({
 
             children: [
                 {
+                    name: "AttestationElements", tag: "field",
                     details: "This field shall contain the octet string of the serialized attestation_elements_message.",
                     xref: "core§11.18.6.2.1"
                 },
+
                 {
+                    name: "AttestationSignature", tag: "field",
                     details: "This field shall contain the octet string of the necessary attestation_signature as described in " +
                         "Section 11.18.4.7, “Attestation Information”.",
                     xref: "core§11.18.6.2.2"
@@ -121,15 +136,19 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "CertificateChainRequest", tag: "command",
             details: "If the CertificateType is not a valid value per CertificateChainTypeEnum then the command shall fail " +
                 "with a Status Code of INVALID_COMMAND.",
             xref: "core§11.18.6.3"
         },
 
         {
+            name: "CertificateChainResponse", tag: "command",
             details: "This command shall be generated in response to a CertificateChainRequest command.",
             xref: "core§11.18.6.4",
+
             children: [{
+                name: "Certificate", tag: "field",
                 details: "This field shall be the DER encoded certificate corresponding to the CertificateType field in the " +
                     "CertificateChainRequest command.",
                 xref: "core§11.18.6.4.1"
@@ -137,6 +156,8 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "CsrRequest", tag: "command",
+
             details: "This command shall be generated to execute the Node Operational CSR Procedure and subsequently " +
                 "return the NOCSR Information, in the form of a CSRResponse Command." +
                 "\n" +
@@ -168,6 +189,8 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "CsrResponse", tag: "command",
+
             details: "This command shall be generated in response to a CSRRequest Command." +
                 "\n" +
                 "See Section 11.18.4.9, “NOCSR Information” for details about the generation of the fields within " +
@@ -180,10 +203,13 @@ OperationalCredentials.patch({
 
             children: [
                 {
+                    name: "NocsrElements", tag: "field",
                     details: "This field shall contain the octet string of the serialized nocsr_elements_message.",
                     xref: "core§11.18.6.6.1"
                 },
+
                 {
+                    name: "AttestationSignature", tag: "field",
                     details: "This field shall contain the octet string of the necessary attestation_signature as described in " +
                         "Section 11.18.4.9, “NOCSR Information”.",
                     xref: "core§11.18.6.6.2"
@@ -192,6 +218,8 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "AddNoc", tag: "command",
+
             details: "This command shall add a new NOC chain to the device and commission a new Fabric association upon " +
                 "successful validation of all arguments and preconditions." +
                 "\n" +
@@ -206,10 +234,9 @@ OperationalCredentials.patch({
             xref: "core§11.18.6.8",
 
             children: [
-                undefined,
-                undefined,
-
                 {
+                    name: "IpkValue", tag: "field",
+
                     details: "This field shall contain the value of the Epoch Key for the Identity Protection Key (IPK) to set for " +
                         "the Fabric which is to be added. This is needed to bootstrap a necessary configuration value for " +
                         "subsequent CASE to succeed. See Section 4.14.2.6.1, “Identity Protection Key (IPK)” for details." +
@@ -225,6 +252,8 @@ OperationalCredentials.patch({
                 },
 
                 {
+                    name: "CaseAdminSubject", tag: "field",
+
                     details: "If the AddNOC command succeeds according to the semantics of the following subsections, then the " +
                         "Access Control SubjectID shall be used to atomically add an Access Control Entry enabling that " +
                         "Subject to subsequently administer the Node whose operational identity is being added by this " +
@@ -248,6 +277,8 @@ OperationalCredentials.patch({
                 },
 
                 {
+                    name: "AdminVendorId", tag: "field",
+
                     details: "This field shall be set to the Vendor ID of the entity issuing the AddNOC command. This value shall " +
                         "NOT be one of the reserved Vendor ID values defined in Table 1, “Vendor ID Allocations”." +
                         "\n" +
@@ -346,6 +377,8 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "UpdateNoc", tag: "command",
+
             details: "This command shall replace the NOC and optional associated ICAC (if present) scoped under the " +
                 "accessing fabric upon successful validation of all arguments and preconditions. The new value shall " +
                 "immediately be reflected in the NOCs list attribute." +
@@ -407,6 +440,8 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "NocResponse", tag: "command",
+
             details: "This command shall be generated in response to the following commands:" +
                 "\n" +
                 "  • AddNOC" +
@@ -423,16 +458,20 @@ OperationalCredentials.patch({
 
             children: [
                 {
+                    name: "StatusCode", tag: "field",
                     details: "This field shall contain an NOCStatus value representing the status of an operation involving a NOC.",
                     xref: "core§11.18.6.10.1"
                 },
+
                 {
+                    name: "FabricIndex", tag: "field",
                     details: "This field shall be present whenever StatusCode has a value of OK. If present, it shall contain the " +
                         "Fabric Index of the Fabric last added, removed or updated.",
                     xref: "core§11.18.6.10.2"
                 },
 
                 {
+                    name: "DebugText", tag: "field",
                     details: "This field may contain debugging textual information from the cluster implementation, which SHOULD " +
                         "NOT be presented to user interfaces in any way. Its purpose is to help developers in troubleshooting " +
                         "errors and the contents may go into logs or crash reports.",
@@ -442,6 +481,8 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "UpdateFabricLabel", tag: "command",
+
             details: "This command shall be used by an Administrator to set the user-visible Label field for a given " +
                 "Fabric, as reflected by entries in the Fabrics attribute. An Administrator shall use this command to " +
                 "set the Label to a string (possibly selected by the user themselves) that the user can recognize and " +
@@ -458,6 +499,8 @@ OperationalCredentials.patch({
             xref: "core§11.18.6.11",
 
             children: [{
+                name: "Label", tag: "field",
+
                 details: "This field shall contain the label to set for the fabric associated with the current secure session." +
                     "\n" +
                     "Effect on Receipt" +
@@ -481,6 +524,8 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "RemoveFabric", tag: "command",
+
             details: "This command is used by Administrators to remove a given Fabric and delete all associated " +
                 "fabric-scoped data." +
                 "\n" +
@@ -502,6 +547,8 @@ OperationalCredentials.patch({
             xref: "core§11.18.6.12",
 
             children: [{
+                name: "FabricIndex", tag: "field",
+
                 details: "This field shall contain the Fabric Index reference (see fabric-index) associated with the Fabric " +
                     "which is to be removed from the device." +
                     "\n" +
@@ -550,6 +597,8 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "AddTrustedRootCertificate", tag: "command",
+
             details: "This command shall add a Trusted Root CA Certificate, provided as its Matter Certificate Encoding " +
                 "representation, to the TrustedRootCertificates Attribute list and shall ensure the next AddNOC " +
                 "command executed uses the provided certificate as its root of trust." +
@@ -581,35 +630,53 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "CertificateChainTypeEnum", tag: "datatype",
             details: "This enumeration is used by the CertificateChainRequest command to convey which certificate from the " +
                 "device attestation certificate chain to transmit back to the client.",
             xref: "core§11.18.4.2",
             children: [
-                { description: "Request the DER- encoded DAC certificate" },
-                { description: "Request the DER- encoded PAI certificate" }
+                { name: "DacCertificate", tag: "field", description: "Request the DER- encoded DAC certificate" },
+                { name: "PaiCertificate", tag: "field", description: "Request the DER- encoded PAI certificate" }
             ]
         },
 
         {
+            name: "NodeOperationalCertStatusEnum", tag: "datatype",
             details: "This enumeration is used by the NOCResponse common response command to convey detailed outcome of " +
                 "several of this cluster’s operations.",
             xref: "core§11.18.4.3",
 
             children: [
-                { description: "OK, no error" },
-                { description: "Public Key in the NOC does not match the public key in the NOCSR" },
-                { description: "The Node Operational ID in the NOC is not formatted correctly." },
-                { description: "Any other validation error in NOC chain" },
-                { description: "No record of prior CSR for which this NOC could match" },
-                { description: "NOCs table full, cannot add another one" },
-                { description: "Invalid CaseAdminSubject field for an AddNOC command." },
-                { description: "Trying to AddNOC instead of UpdateNOC against an existing Fabric." },
-                { description: "Label already exists on another Fabric." },
-                { description: "FabricIndex argument is invalid." }
+                { name: "Ok", tag: "field", description: "OK, no error" },
+                {
+                    name: "InvalidPublicKey", tag: "field",
+                    description: "Public Key in the NOC does not match the public key in the NOCSR"
+                },
+                {
+                    name: "InvalidNodeOpId", tag: "field",
+                    description: "The Node Operational ID in the NOC is not formatted correctly."
+                },
+                { name: "InvalidNoc", tag: "field", description: "Any other validation error in NOC chain" },
+                {
+                    name: "MissingCsr", tag: "field",
+                    description: "No record of prior CSR for which this NOC could match"
+                },
+                { name: "TableFull", tag: "field", description: "NOCs table full, cannot add another one" },
+                {
+                    name: "InvalidAdminSubject", tag: "field",
+                    description: "Invalid CaseAdminSubject field for an AddNOC command."
+                },
+                {
+                    name: "FabricConflict", tag: "field",
+                    description: "Trying to AddNOC instead of UpdateNOC against an existing Fabric."
+                },
+                { name: "LabelConflict", tag: "field", description: "Label already exists on another Fabric." },
+                { name: "InvalidFabricIndex", tag: "field", description: "FabricIndex argument is invalid." }
             ]
         },
 
         {
+            name: "NOCStruct", tag: "datatype",
             details: "This encodes a fabric sensitive NOC chain, underpinning a commissioned Operational Identity for a " +
                 "given Node." +
                 "\n" +
@@ -619,11 +686,14 @@ OperationalCredentials.patch({
 
             children: [
                 {
+                    name: "Noc", tag: "field",
                     details: "This field shall contain the NOC for the struct’s associated fabric, encoded using Matter " +
                         "Certificate Encoding.",
                     xref: "core§11.18.4.4.1"
                 },
+
                 {
+                    name: "Icac", tag: "field",
                     details: "This field shall contain the ICAC or the struct’s associated fabric, encoded using Matter " +
                         "Certificate Encoding. If no ICAC is present in the chain, this field shall be set to null.",
                     xref: "core§11.18.4.4.2"
@@ -632,12 +702,14 @@ OperationalCredentials.patch({
         },
 
         {
+            name: "FabricDescriptorStruct", tag: "datatype",
             details: "This structure encodes a Fabric Reference for a fabric within which a given Node is currently " +
                 "commissioned.",
             xref: "core§11.18.4.5",
 
             children: [
                 {
+                    name: "RootPublicKey", tag: "field",
                     details: "This field shall contain the public key for the trusted root that scopes the fabric referenced by " +
                         "FabricIndex and its associated operational credential (see Section 6.4.5.3, “Trusted Root CA " +
                         "Certificates”). The format for the key shall be the same as that used in the ec-pub-key field of the " +
@@ -646,6 +718,8 @@ OperationalCredentials.patch({
                 },
 
                 {
+                    name: "VendorId", tag: "field",
+
                     details: "This field shall contain the value of AdminVendorID provided in the AddNOC command that led to the " +
                         "creation of this FabricDescriptorStruct. The set of allowed values is defined in AdminVendorID." +
                         "\n" +
@@ -659,6 +733,7 @@ OperationalCredentials.patch({
                 },
 
                 {
+                    name: "FabricId", tag: "field",
                     details: "This field shall contain the FabricID allocated to the fabric referenced by FabricIndex. This field " +
                         "shall match the value found in the matter-fabric-id field from the operational certificate providing " +
                         "the operational identity under this Fabric.",
@@ -666,6 +741,7 @@ OperationalCredentials.patch({
                 },
 
                 {
+                    name: "NodeId", tag: "field",
                     details: "This field shall contain the NodeID in use within the fabric referenced by FabricIndex. This field " +
                         "shall match the value found in the matter-node-id field from the operational certificate providing " +
                         "this operational identity.",
@@ -673,6 +749,7 @@ OperationalCredentials.patch({
                 },
 
                 {
+                    name: "Label", tag: "field",
                     details: "This field shall contain a commissioner-set label for the fabric referenced by FabricIndex. This " +
                         "label is set by the UpdateFabricLabel command.",
                     xref: "core§11.18.4.5.5"

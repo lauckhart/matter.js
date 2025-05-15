@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { int8 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-int8.patch({ description: "Signed 8-bit integer", xref: "core§7.19.1" });
+Resource.add({ name: "int8", tag: "datatype", description: "Signed 8-bit integer", xref: "core§7.19.1" });

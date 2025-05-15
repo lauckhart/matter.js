@@ -21,10 +21,10 @@ export const ElectricalEnergyMeasurement = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "IMPE", conformance: "O.a+", constraint: "0", description: "ImportedEnergy" }),
-        Field({ name: "EXPE", conformance: "O.a+", constraint: "1", description: "ExportedEnergy" }),
-        Field({ name: "CUME", conformance: "O.b+", constraint: "2", description: "CumulativeEnergy" }),
-        Field({ name: "PERE", conformance: "O.b+", constraint: "3", description: "PeriodicEnergy" })
+        Field({ name: "IMPE", conformance: "O.a+", constraint: "0", longName: "ImportedEnergy" }),
+        Field({ name: "EXPE", conformance: "O.a+", constraint: "1", longName: "ExportedEnergy" }),
+        Field({ name: "CUME", conformance: "O.b+", constraint: "2", longName: "CumulativeEnergy" }),
+        Field({ name: "PERE", conformance: "O.b+", constraint: "3", longName: "PeriodicEnergy" })
     ),
 
     Attribute(

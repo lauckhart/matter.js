@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { vendorId } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-vendorId.patch({
+Resource.add({
+    name: "vendor-id", tag: "datatype",
     description: "Vendor ID",
     details: "A Vendor ID." +
         "\n" +

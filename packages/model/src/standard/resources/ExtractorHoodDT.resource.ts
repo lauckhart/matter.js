@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ExtractorHoodDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ExtractorHoodDt.patch({
+Resource.add({
+    name: "ExtractorHood", tag: "deviceType",
     classification: "simple",
 
     details: "An Extractor Hood is a device that is generally installed above a cooking surface in residential " +
@@ -33,10 +34,9 @@ ExtractorHoodDt.patch({
     xref: "device§13.10",
 
     children: [
-        undefined,
-        { xref: "device§13.10.5" },
-        { xref: "device§13.10.5" },
-        { xref: "device§13.10.5" },
-        { xref: "device§13.10.5" }
+        { name: "Identify", tag: "requirement", xref: "device§13.10.5" },
+        { name: "HepaFilterMonitoring", tag: "requirement", xref: "device§13.10.5" },
+        { name: "ActivatedCarbonFilterMonitoring", tag: "requirement", xref: "device§13.10.5" },
+        { name: "FanControl", tag: "requirement", xref: "device§13.10.5" }
     ]
 });

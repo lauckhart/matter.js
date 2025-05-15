@@ -6,17 +6,18 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { tod } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-tod.patch({
+Resource.add({
+    name: "tod", tag: "datatype",
     description: "Time of day",
     details: "Represents time without a date component.",
     xref: "core§7.19.2.3",
 
     children: [
-        { description: "Hour of the current day." },
-        { description: "Minute of the current hour." },
-        { description: "Second of the current minute." },
-        { description: "Hundredth of the current second." }
+        { name: "hours", tag: "field", description: "Hour of the current day." },
+        { name: "minutes", tag: "field", description: "Minute of the current hour." },
+        { name: "seconds", tag: "field", description: "Second of the current minute." },
+        { name: "hundredths", tag: "field", description: "Hundredth of the current second." }
     ]
 });

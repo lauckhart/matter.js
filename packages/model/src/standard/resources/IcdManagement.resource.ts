@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { IcdManagement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-IcdManagement.patch({
+Resource.add({
+    name: "IcdManagement", tag: "cluster",
     classification: "node", pics: "ICDM",
     details: "ICD Management Cluster enables configuration of the ICD’s behavior and ensuring that listed clients " +
         "can be notified when an intermittently connected device, ICD, is available for communication." +
@@ -18,32 +19,31 @@ IcdManagement.patch({
     xref: "core§9.17",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "core§9.17.4",
 
             children: [
                 {
-                    description: "CheckInProtocolSupport",
+                    name: "CIP", tag: "field",
                     details: "When this feature is supported, the device shall support all the associated commands and attributes " +
                         "to properly support the Check-In Protocol.",
                     xref: "core§9.17.4.1"
                 },
 
                 {
-                    description: "UserActiveModeTrigger",
+                    name: "UAT", tag: "field",
                     details: "This feature is supported if and only if the device has a user active mode trigger.",
                     xref: "core§9.17.4.2"
                 },
                 {
-                    description: "LongIdleTimeSupport",
+                    name: "LITS", tag: "field",
                     details: "This feature is supported if and only the device is a Long Idle Time ICD.",
                     xref: "core§9.17.4.3"
                 },
 
                 {
-                    description: "DynamicSitLitSupport",
+                    name: "DSLS", tag: "field",
                     details: "This feature is supported if and only if the device can switch between SIT and LIT operating modes " +
                         "even if it has a valid registered client. See the dynamic SIT / LIT operating mode switching for " +
                         "more details.",
@@ -53,12 +53,14 @@ IcdManagement.patch({
         },
 
         {
+            name: "IdleModeDuration", tag: "attribute",
             details: "Indicates the maximum interval in seconds the server can stay in idle mode. The IdleModeDuration " +
                 "shall NOT be smaller than the ActiveModeDuration.",
             xref: "core§9.17.6.1"
         },
 
         {
+            name: "ActiveModeDuration", tag: "attribute",
             details: "Indicates the minimum interval in milliseconds the server typically will stay in active mode after " +
                 "initial transition out of idle mode. The ActiveModeDuration does not include the " +
                 "ActiveModeThreshold.",
@@ -66,12 +68,14 @@ IcdManagement.patch({
         },
 
         {
+            name: "ActiveModeThreshold", tag: "attribute",
             details: "Indicates the minimum amount of time in milliseconds the server typically will stay active after " +
                 "network activity when in active mode.",
             xref: "core§9.17.6.3"
         },
 
         {
+            name: "RegisteredClients", tag: "attribute",
             details: "This attribute shall contain all clients registered to receive notification if their subscription is " +
                 "lost. The maximum number of entries that can be in the list shall be ClientsSupportedPerFabric for " +
                 "each fabric supported on the server, as indicated by the value of the SupportedFabrics attribute in " +
@@ -79,14 +83,22 @@ IcdManagement.patch({
             xref: "core§9.17.6.4"
         },
 
-        { details: "This attribute returns the value of the ICD Counter.", xref: "core§9.17.6.5" },
         {
+            name: "IcdCounter", tag: "attribute",
+            details: "This attribute returns the value of the ICD Counter.",
+            xref: "core§9.17.6.5"
+        },
+
+        {
+            name: "ClientsSupportedPerFabric", tag: "attribute",
             details: "Indicates the maximum number of entries that the server is able to store for each fabric in the " +
                 "RegisteredClients attribute.",
             xref: "core§9.17.6.6"
         },
 
         {
+            name: "UserActiveModeTriggerHint", tag: "attribute",
+
             details: "Indicates which user action(s) will trigger the ICD to switch to Active mode. If the attribute " +
                 "indicates support for a trigger that is dependent on the UserActiveModeTriggerInstruction in the " +
                 "UserActiveModeTriggerHint table, the UserActiveModeTriggerInstruction attribute shall be implemented " +
@@ -105,6 +117,8 @@ IcdManagement.patch({
         },
 
         {
+            name: "UserActiveModeTriggerInstruction", tag: "attribute",
+
             details: "The meaning of the attribute is dependent upon the UserActiveModeTriggerHint attribute value, and " +
                 "the conformance is in indicated in the \"dependency\" column in UserActiveModeTriggerHint table. The " +
                 "UserActiveModeTriggerInstruction attribute may give additional information on how to transition the " +
@@ -133,6 +147,7 @@ IcdManagement.patch({
         },
 
         {
+            name: "OperatingMode", tag: "attribute",
             details: "Indicates the operating mode of the ICD as specified in the OperatingModeEnum." +
                 "\n" +
                 "  • If the ICD is operating as a LIT ICD, OperatingMode shall be LIT." +
@@ -142,6 +157,7 @@ IcdManagement.patch({
         },
 
         {
+            name: "MaximumCheckInBackoff", tag: "attribute",
             details: "Indicates the maximum time in seconds between two Check-In messages when back-off is active. The " +
                 "MaximumCheckInBackoff shall NOT be smaller than the IdleModeDuration." +
                 "\n" +
@@ -150,24 +166,35 @@ IcdManagement.patch({
         },
 
         {
+            name: "RegisterClient", tag: "command",
             details: "This command allows a client to register itself with the ICD to be notified when the device is " +
                 "available for communication.",
             xref: "core§9.17.7.1",
 
             children: [
                 {
+                    name: "CheckInNodeId", tag: "field",
                     details: "This field shall provide the node ID to which a Check-In message will be sent if there are no active " +
                         "subscriptions matching MonitoredSubject.",
                     xref: "core§9.17.7.1.1"
                 },
-                { details: "This field shall provide the monitored subject ID.", xref: "core§9.17.7.1.2" },
+
                 {
+                    name: "MonitoredSubject", tag: "field",
+                    details: "This field shall provide the monitored subject ID.",
+                    xref: "core§9.17.7.1.2"
+                },
+
+                {
+                    name: "Key", tag: "field",
                     details: "This field shall provide the shared secret between the client and the ICD to encrypt the Check-In " +
                         "message.",
                     xref: "core§9.17.7.1.3"
                 },
 
                 {
+                    name: "VerificationKey", tag: "field",
+
                     details: "This field shall provide the verification key. The verification key represents the key already " +
                         "stored on the server. The verification key provided in this field shall be used by the server to " +
                         "guarantee that a client with manage permissions can only modify entries that contain a Key equal to " +
@@ -180,6 +207,7 @@ IcdManagement.patch({
                 },
 
                 {
+                    name: "ClientType", tag: "field",
                     details: "This field shall provide the client type of the client registering.",
                     xref: "core§9.17.7.1.5"
                 }
@@ -187,12 +215,14 @@ IcdManagement.patch({
         },
 
         {
+            name: "RegisterClientResponse", tag: "command",
             details: "This command shall be sent by the ICD Management Cluster server in response to a successful " +
                 "RegisterClient command.",
             xref: "core§9.17.7.2"
         },
 
         {
+            name: "UnregisterClient", tag: "command",
             details: "This command allows a client to unregister itself with the ICD. Example: a client that is leaving " +
                 "the network (e.g. running on a phone which is leaving the home) can (and should) remove its " +
                 "subscriptions and send this UnregisterClient command before leaving to prevent the burden on the ICD " +
@@ -201,11 +231,14 @@ IcdManagement.patch({
 
             children: [
                 {
+                    name: "CheckInNodeId", tag: "field",
                     details: "This field shall provide the registered client node ID to remove from storage.",
                     xref: "core§9.17.7.3.1"
                 },
 
                 {
+                    name: "VerificationKey", tag: "field",
+
                     details: "This field shall provide the verification key associated with the CheckInNodeID to remove from " +
                         "storage. The verification key represents the key already stored on the server. The verification key " +
                         "provided in this field shall be used by the server to guarantee that a client with manage " +
@@ -221,6 +254,8 @@ IcdManagement.patch({
         },
 
         {
+            name: "StayActiveRequest", tag: "command",
+
             details: "This command allows a client to request that the server stays in active mode for at least a given " +
                 "time duration (in milliseconds) from when this command is received." +
                 "\n" +
@@ -233,11 +268,14 @@ IcdManagement.patch({
         },
 
         {
+            name: "StayActiveResponse", tag: "command",
             details: "This message shall be sent by the ICD in response to the StayActiveRequest command and shall contain " +
                 "the computed duration (in milliseconds) that the ICD intends to stay active for.",
             xref: "core§9.17.7.5",
 
             children: [{
+                name: "PromisedActiveDuration", tag: "field",
+
                 details: "This field shall provide the actual duration that the ICD server can stay active from the time it " +
                     "receives the StayActiveRequest command." +
                     "\n" +
@@ -251,60 +289,119 @@ IcdManagement.patch({
         },
 
         {
+            name: "UserActiveModeTriggerBitmap", tag: "datatype",
             details: "See the UserActiveModeTriggerHint table for requirements associated to each bit.",
             xref: "core§9.17.5.1",
 
             children: [
-                { description: "Power Cycle to transition the device to ActiveMode" },
-                { description: "Settings menu on the device informs how to transition the device to ActiveMode" },
-                { description: "Custom Instruction on how to transition the device to ActiveMode" },
-                { description: "Device Manual informs how to transition the device to ActiveMode" },
-                { description: "Actuate Sensor to transition the device to ActiveMode" },
-                { description: "Actuate Sensor for N seconds to transition the device to ActiveMode" },
-                { description: "Actuate Sensor N times to transition the device to ActiveMode" },
-                { description: "Actuate Sensor until light blinks to transition the device to ActiveMode" },
-                { description: "Press Reset Button to transition the device to ActiveMode" },
-                { description: "Press Reset Button until light blinks to transition the device to ActiveMode" },
-                { description: "Press Reset Button for N seconds to transition the device to ActiveMode" },
-                { description: "Press Reset Button N times to transition the device to ActiveMode" },
-                { description: "Press Setup Button to transition the device to ActiveMode" },
-                { description: "Press Setup Button for N seconds to transition the device to ActiveMode" },
-                { description: "Press Setup Button until light blinks to transition the device to ActiveMode" },
-                { description: "Press Setup Button N times to transition the device to ActiveMode" },
-                { description: "Press the N Button to transition the device to ActiveMode" }
+                { name: "PowerCycle", tag: "field", description: "Power Cycle to transition the device to ActiveMode" },
+                {
+                    name: "SettingsMenu", tag: "field",
+                    description: "Settings menu on the device informs how to transition the device to ActiveMode"
+                },
+                {
+                    name: "CustomInstruction", tag: "field",
+                    description: "Custom Instruction on how to transition the device to ActiveMode"
+                },
+                {
+                    name: "DeviceManual", tag: "field",
+                    description: "Device Manual informs how to transition the device to ActiveMode"
+                },
+                {
+                    name: "ActuateSensor", tag: "field",
+                    description: "Actuate Sensor to transition the device to ActiveMode"
+                },
+                {
+                    name: "ActuateSensorSeconds", tag: "field",
+                    description: "Actuate Sensor for N seconds to transition the device to ActiveMode"
+                },
+                {
+                    name: "ActuateSensorTimes", tag: "field",
+                    description: "Actuate Sensor N times to transition the device to ActiveMode"
+                },
+                {
+                    name: "ActuateSensorLightsBlink", tag: "field",
+                    description: "Actuate Sensor until light blinks to transition the device to ActiveMode"
+                },
+                {
+                    name: "ResetButton", tag: "field",
+                    description: "Press Reset Button to transition the device to ActiveMode"
+                },
+                {
+                    name: "ResetButtonLightsBlink", tag: "field",
+                    description: "Press Reset Button until light blinks to transition the device to ActiveMode"
+                },
+                {
+                    name: "ResetButtonSeconds", tag: "field",
+                    description: "Press Reset Button for N seconds to transition the device to ActiveMode"
+                },
+                {
+                    name: "ResetButtonTimes", tag: "field",
+                    description: "Press Reset Button N times to transition the device to ActiveMode"
+                },
+                {
+                    name: "SetupButton", tag: "field",
+                    description: "Press Setup Button to transition the device to ActiveMode"
+                },
+                {
+                    name: "SetupButtonSeconds", tag: "field",
+                    description: "Press Setup Button for N seconds to transition the device to ActiveMode"
+                },
+                {
+                    name: "SetupButtonLightsBlink", tag: "field",
+                    description: "Press Setup Button until light blinks to transition the device to ActiveMode"
+                },
+                {
+                    name: "SetupButtonTimes", tag: "field",
+                    description: "Press Setup Button N times to transition the device to ActiveMode"
+                },
+                {
+                    name: "AppDefinedButton", tag: "field",
+                    description: "Press the N Button to transition the device to ActiveMode"
+                }
             ]
         },
 
         {
+            name: "ClientTypeEnum", tag: "datatype",
             xref: "core§9.17.5.1.1",
 
             children: [
-                { description: "The client is typically resident, always-on, fixed infrastructure in the home." },
                 {
+                    name: "Permanent", tag: "field",
+                    description: "The client is typically resident, always-on, fixed infrastructure in the home."
+                },
+                {
+                    name: "Ephemeral", tag: "field",
                     description: "The client is mobile or non-resident or not always-on and may not always be available in the home."
                 }
             ]
         },
 
         {
+            name: "OperatingModeEnum", tag: "datatype",
             xref: "core§9.17.5.2",
             children: [
-                { description: "ICD is operating as a Short Idle Time ICD." },
-                { description: "ICD is operating as a Long Idle Time ICD." }
+                { name: "Sit", tag: "field", description: "ICD is operating as a Short Idle Time ICD." },
+                { name: "Lit", tag: "field", description: "ICD is operating as a Long Idle Time ICD." }
             ]
         },
 
         {
+            name: "MonitoringRegistrationStruct", tag: "datatype",
             xref: "core§9.17.5.3",
 
             children: [
                 {
+                    name: "CheckInNodeId", tag: "field",
                     details: "This field shall indicate the NodeID of the Node to which Check-In messages will be sent when the " +
                         "MonitoredSubject is not subscribed.",
                     xref: "core§9.17.5.3.1"
                 },
 
                 {
+                    name: "MonitoredSubject", tag: "field",
+
                     details: "This field shall indicate the monitored Subject ID. This field shall be used to determine if a " +
                         "particular client has an active subscription for the given entry. The MonitoredSubject, when it is a " +
                         "NodeID, may be the same as the CheckInNodeID. The MonitoredSubject gives the registering client the " +
@@ -328,8 +425,8 @@ IcdManagement.patch({
                     xref: "core§9.17.5.3.2"
                 },
 
-                undefined,
                 {
+                    name: "ClientType", tag: "field",
                     details: "This field shall indicate the client’s type to inform the ICD of the availability for communication " +
                         "of the client.",
                     xref: "core§9.17.5.4"

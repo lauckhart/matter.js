@@ -6,23 +6,25 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { PressureMeasurement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-PressureMeasurement.patch(
+Resource.add(
     {
+        name: "PressureMeasurement", tag: "cluster",
         classification: "application", pics: "PRS",
         details: "This cluster provides an interface to pressure measurement functionality, including configuration " +
             "and provision of notifications of pressure measurements.",
         xref: "cluster§2.4",
 
         children: [
-            undefined,
             {
+                name: "FeatureMap", tag: "attribute",
                 xref: "cluster§2.4.4",
-                children: [{ description: "Extended", details: "Extended range and resolution" }]
+                children: [{ name: "EXT", tag: "field", details: "Extended range and resolution" }]
             },
 
             {
+                name: "MeasuredValue", tag: "attribute",
                 details: "Indicates the pressure in kPa as follows:" +
                     "\n" +
                     "MeasuredValue = 10 x Pressure [kPa]" +
@@ -32,6 +34,7 @@ PressureMeasurement.patch(
             },
 
             {
+                name: "MinMeasuredValue", tag: "attribute",
                 details: "Indicates the minimum value of MeasuredValue that can be measured. See Measured Value for more " +
                     "details." +
                     "\n" +
@@ -40,6 +43,7 @@ PressureMeasurement.patch(
             },
 
             {
+                name: "MaxMeasuredValue", tag: "attribute",
                 details: "Indicates the maximum value of MeasuredValue that can be measured. See Measured Value for more " +
                     "details." +
                     "\n" +
@@ -47,9 +51,10 @@ PressureMeasurement.patch(
                 xref: "cluster§2.4.5.3"
             },
 
-            { details: "See Measured Value.", xref: "cluster§2.4.5.4" },
+            { name: "Tolerance", tag: "attribute", details: "See Measured Value.", xref: "cluster§2.4.5.4" },
 
             {
+                name: "ScaledValue", tag: "attribute",
                 details: "Indicates the pressure in Pascals as follows:" +
                     "\n" +
                     "ScaledValue = 10Scale x Pressure [Pa]" +
@@ -59,17 +64,21 @@ PressureMeasurement.patch(
             },
 
             {
+                name: "MinScaledValue", tag: "attribute",
                 details: "Indicates the minimum value of ScaledValue that can be measured. The null value indicates that the " +
                     "value is not available.",
                 xref: "cluster§2.4.5.6"
             },
+
             {
+                name: "MaxScaledValue", tag: "attribute",
                 details: "Indicates the maximum value of ScaledValue that can be measured. The null value indicates that the " +
                     "value is not available.",
                 xref: "cluster§2.4.5.7"
             },
 
             {
+                name: "ScaledTolerance", tag: "attribute",
                 details: "Indicates the magnitude of the possible error that is associated with Scaled" +
                     "\n" +
                     "Value. The true value is located in the range" +
@@ -79,6 +88,7 @@ PressureMeasurement.patch(
             },
 
             {
+                name: "Scale", tag: "attribute",
                 details: "Indicates the base 10 exponent used to obtain ScaledValue (see ScaledValue).",
                 xref: "cluster§2.4.5.9"
             }

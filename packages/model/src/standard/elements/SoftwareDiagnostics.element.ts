@@ -21,7 +21,7 @@ export const SoftwareDiagnostics = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "WTRMRK", constraint: "0", description: "Watermarks" })
+        Field({ name: "WTRMRK", constraint: "0", longName: "Watermarks" })
     ),
     Attribute(
         { id: 0x0, name: "ThreadMetrics", type: "list", access: "R V", conformance: "O", constraint: "max 64" },

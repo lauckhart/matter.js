@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ContentControl } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ContentControl.patch({
+Resource.add({
+    name: "ContentControl", tag: "cluster",
     classification: "application", pics: "CONCON",
 
     details: "This cluster is used for managing the content control (including \"parental control\") settings on a" +
@@ -24,33 +25,29 @@ ContentControl.patch({
     xref: "cluster§6.13",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "cluster§6.13.4",
 
             children: [
-                { description: "ScreenTime", details: "Supports managing screen time limits." },
+                { name: "ST", tag: "field", details: "Supports managing screen time limits." },
                 {
-                    description: "PinManagement",
+                    name: "PM", tag: "field",
                     details: "Supports managing a PIN code which is used for restricting access to configuration of this feature."
                 },
-                { description: "BlockUnrated", details: "Supports managing content controls for unrated content." },
+                { name: "BU", tag: "field", details: "Supports managing content controls for unrated content." },
                 {
-                    description: "OnDemandContentRating",
+                    name: "OCR", tag: "field",
                     details: "Supports managing content controls based upon rating threshold for on demand content."
                 },
                 {
-                    description: "ScheduledContentRating",
+                    name: "SCR", tag: "field",
                     details: "Supports managing content controls based upon rating threshold for scheduled content."
                 },
-                { description: "BlockChannels", details: "Supports managing a set of channels that are prohibited." },
+                { name: "BC", tag: "field", details: "Supports managing a set of channels that are prohibited." },
+                { name: "BA", tag: "field", details: "Supports managing a set of applications that are prohibited." },
                 {
-                    description: "BlockApplications",
-                    details: "Supports managing a set of applications that are prohibited."
-                },
-                {
-                    description: "BlockContentTimeWindow",
+                    name: "BTW", tag: "field",
                     details: "Supports managing content controls based upon setting time window in which all contents and " +
                         "applications SHALL be blocked."
                 }
@@ -58,12 +55,15 @@ ContentControl.patch({
         },
 
         {
+            name: "Enabled", tag: "attribute",
             details: "Indicates whether the Content Control feature implemented on a media device is turned off (FALSE) or " +
                 "turned on (TRUE).",
             xref: "cluster§6.13.7.1"
         },
 
         {
+            name: "OnDemandRatings", tag: "attribute",
+
             details: "This attribute shall provide the collection of ratings that are currently valid for this media " +
                 "device. The items should honor the metadata of the on-demand content (e.g. Movie) rating system for " +
                 "one country or region where the media device has been provisioned. For example, for the MPAA system, " +
@@ -80,6 +80,8 @@ ContentControl.patch({
         },
 
         {
+            name: "OnDemandRatingThreshold", tag: "attribute",
+
             details: "Indicates a threshold rating as a content filter which is compared with the rating for on-demand " +
                 "content. For example, if the on-demand content rating is greater than or equal to " +
                 "OnDemandRatingThreshold, for a rating system that is ordered from lower viewer age to higher viewer " +
@@ -96,6 +98,8 @@ ContentControl.patch({
         },
 
         {
+            name: "ScheduledContentRatings", tag: "attribute",
+
             details: "Indicates a collection of ratings which ScheduledContentRatingThreshold can be set to. The items " +
                 "should honor metadata of the scheduled content rating system for the country or region where the " +
                 "media device has been provisioned." +
@@ -111,6 +115,8 @@ ContentControl.patch({
         },
 
         {
+            name: "ScheduledContentRatingThreshold", tag: "attribute",
+
             details: "Indicates a threshold rating as a content filter which is used to compare with the rating for " +
                 "scheduled content. For example, if the scheduled content rating is greater than or equal to " +
                 "ScheduledContentRatingThreshold for a rating system that is ordered from lower viewer age to higher " +
@@ -126,12 +132,15 @@ ContentControl.patch({
         },
 
         {
+            name: "ScreenDailyTime", tag: "attribute",
             details: "Indicates the amount of time (in seconds) which the User is allowed to spend watching TV within one " +
                 "day when the Content Control feature is activated.",
             xref: "cluster§6.13.7.6"
         },
 
         {
+            name: "RemainingScreenTime", tag: "attribute",
+
             details: "Indicates the remaining screen time (in seconds) which the User is allowed to spend watching TV for " +
                 "the current day when the Content Control feature is activated. When this value equals 0, the media " +
                 "device shall terminate the playback of content." +
@@ -143,6 +152,8 @@ ContentControl.patch({
         },
 
         {
+            name: "BlockUnrated", tag: "attribute",
+
             details: "Indicates whether the playback of unrated content is allowed when the Content Control feature is " +
                 "activated. If this attribute equals FALSE, then playback of unrated content shall be permitted. " +
                 "Otherwise, the media device shall prevent the playback of unrated content." +
@@ -155,15 +166,19 @@ ContentControl.patch({
         },
 
         {
+            name: "BlockChannelList", tag: "attribute",
             details: "Indicates a set of channels that shall be blocked when the Content Control feature is activated.",
             xref: "cluster§6.13.7.9"
         },
         {
+            name: "BlockApplicationList", tag: "attribute",
             details: "Indicates a set of applications that shall be blocked when the Content Control feature is activated.",
             xref: "cluster§6.13.7.10"
         },
 
         {
+            name: "BlockContentTimeWindow", tag: "attribute",
+
             details: "Indicates a set of periods during which the playback of content on media device shall be blocked " +
                 "when the Content Control feature is activated. The media device shall reject any request to play " +
                 "content during one period of this attribute. If it is entering any one period of this attribute, the " +
@@ -174,14 +189,22 @@ ContentControl.patch({
             xref: "cluster§6.13.7.11"
         },
 
-        { details: "This event shall be generated when the RemainingScreenTime equals 0.", xref: "cluster§6.13.9.1" },
         {
+            name: "RemainingScreenTimeExpired", tag: "event",
+            details: "This event shall be generated when the RemainingScreenTime equals 0.",
+            xref: "cluster§6.13.9.1"
+        },
+
+        {
+            name: "EnteringBlockContentTimeWindow", tag: "event",
             details: "This event shall be generated when entering a period of blocked content as configured in the " +
                 "BlockContentTimeWindow attribute.",
             xref: "cluster§6.13.9.2"
         },
 
         {
+            name: "UpdatePin", tag: "command",
+
             details: "The purpose of this command is to update the PIN used for protecting configuration of the content " +
                 "control settings. Upon success, the old PIN shall no longer work." +
                 "\n" +
@@ -202,11 +225,14 @@ ContentControl.patch({
 
             children: [
                 {
+                    name: "OldPin", tag: "field",
                     details: "This field shall specify the original PIN. Once the UpdatePIN command is performed successfully, it " +
                         "shall be invalid.",
                     xref: "cluster§6.13.8.1.1"
                 },
+
                 {
+                    name: "NewPin", tag: "field",
                     details: "This field shall indicate a new PIN for the Content Control feature.",
                     xref: "cluster§6.13.8.1.2"
                 }
@@ -214,6 +240,7 @@ ContentControl.patch({
         },
 
         {
+            name: "ResetPin", tag: "command",
             details: "The purpose of this command is to reset the PIN." +
                 "\n" +
                 "If this command is executed successfully, a ResetPINResponse command with a new PIN shall be " +
@@ -222,15 +249,18 @@ ContentControl.patch({
         },
 
         {
+            name: "ResetPinResponse", tag: "command",
             details: "This command shall be generated in response to a ResetPIN command.",
             xref: "cluster§6.13.8.3",
             children: [{
+                name: "PinCode", tag: "field",
                 details: "This field shall indicate a new PIN of the Content Control feature.",
                 xref: "cluster§6.13.8.3.1"
             }]
         },
 
         {
+            name: "Enable", tag: "command",
             details: "The purpose of this command is to turn on the Content Control feature on a media device." +
                 "\n" +
                 "Upon receipt of the Enable command, the media device shall set the Enabled attribute to TRUE.",
@@ -238,6 +268,7 @@ ContentControl.patch({
         },
 
         {
+            name: "Disable", tag: "command",
             details: "The purpose of this command is to turn off the Content Control feature on a media device." +
                 "\n" +
                 "On receipt of the Disable command, the media device shall set the Enabled attribute to FALSE.",
@@ -245,6 +276,8 @@ ContentControl.patch({
         },
 
         {
+            name: "AddBonusTime", tag: "command",
+
             details: "The purpose of this command is to add the extra screen time for the user." +
                 "\n" +
                 "If a client with Operate privilege invokes this command, the media device shall check whether the " +
@@ -269,6 +302,8 @@ ContentControl.patch({
 
             children: [
                 {
+                    name: "PinCode", tag: "field",
+
                     details: "This field shall indicate the PIN." +
                         "\n" +
                         "This field shall be optional for clients with Manage or greater privilege but shall be mandatory for " +
@@ -280,6 +315,7 @@ ContentControl.patch({
                 },
 
                 {
+                    name: "BonusTime", tag: "field",
                     details: "This field shall indicate the amount of extra time (in seconds) to increase RemainingScreenTime. " +
                         "This field shall NOT exceed the remaining time of this day.",
                     xref: "cluster§6.13.8.6.2"
@@ -288,12 +324,15 @@ ContentControl.patch({
         },
 
         {
+            name: "SetScreenDailyTime", tag: "command",
             details: "The purpose of this command is to set the ScreenDailyTime attribute." +
                 "\n" +
                 "Upon receipt of the SetScreenDailyTime command, the media device shall set the ScreenDailyTime " +
                 "attribute to the ScreenTime value.",
             xref: "cluster§6.13.8.7",
+
             children: [{
+                name: "ScreenTime", tag: "field",
                 details: "This field shall indicate the time (in seconds) which the User is allowed to spend watching TV on " +
                     "this media device within one day.",
                 xref: "cluster§6.13.8.7.1"
@@ -301,6 +340,7 @@ ContentControl.patch({
         },
 
         {
+            name: "BlockUnratedContent", tag: "command",
             details: "The purpose of this command is to specify whether programs with no Content rating must be blocked by " +
                 "this media device." +
                 "\n" +
@@ -310,6 +350,7 @@ ContentControl.patch({
         },
 
         {
+            name: "UnblockUnratedContent", tag: "command",
             details: "The purpose of this command is to specify whether programs with no Content rating must be blocked by " +
                 "this media device." +
                 "\n" +
@@ -319,13 +360,16 @@ ContentControl.patch({
         },
 
         {
+            name: "SetOnDemandRatingThreshold", tag: "command",
             details: "The purpose of this command is to set the OnDemandRatingThreshold attribute." +
                 "\n" +
                 "Upon receipt of the SetOnDemandRatingThreshold command, the media device shall check if the Rating " +
                 "field is one of values present in the OnDemandRatings attribute. If not, then a response with " +
                 "InvalidRating error status shall be returned.",
             xref: "cluster§6.13.8.10",
+
             children: [{
+                name: "Rating", tag: "field",
                 details: "This field indicates a threshold rating for filtering on-demand content. This field shall be set to " +
                     "one of the values present in the OnDemandRatings attribute",
                 xref: "cluster§6.13.8.10.1"
@@ -333,13 +377,16 @@ ContentControl.patch({
         },
 
         {
+            name: "SetScheduledContentRatingThreshold", tag: "command",
             details: "The purpose of this command is to set ScheduledContentRatingThreshold attribute." +
                 "\n" +
                 "Upon receipt of the SetScheduledContentRatingThreshold command, the media device shall check if the " +
                 "Rating field is one of values present in the ScheduledContentRatings attribute. If not, then a " +
                 "response with InvalidRating error status shall be returned.",
             xref: "cluster§6.13.8.11",
+
             children: [{
+                name: "Rating", tag: "field",
                 details: "This field indicates a threshold rating for filtering scheduled content. This field shall be set to " +
                     "one of the values present in the ScheduledContentRatings attribute.",
                 xref: "cluster§6.13.8.11.1"
@@ -347,6 +394,8 @@ ContentControl.patch({
         },
 
         {
+            name: "AddBlockChannels", tag: "command",
+
             details: "The purpose of this command is to set BlockChannelList attribute." +
                 "\n" +
                 "Upon receipt of the AddBlockChannels command, the media device shall check if the channels" +
@@ -365,6 +414,7 @@ ContentControl.patch({
             xref: "cluster§6.13.8.12",
 
             children: [{
+                name: "Channels", tag: "field",
                 details: "This field indicates a set of channels that shall be blocked when the Content Control feature is " +
                     "activated. This field shall be set to values present in ChannelList attribute in the Channel " +
                     "cluster. The BlockChannelIndex field passed in this command shall be NULL.",
@@ -373,6 +423,8 @@ ContentControl.patch({
         },
 
         {
+            name: "RemoveBlockChannels", tag: "command",
+
             details: "The purpose of this command is to remove channels from the BlockChannelList attribute." +
                 "\n" +
                 "Upon receipt of the RemoveBlockChannels command, the media device shall check if the channels " +
@@ -381,7 +433,9 @@ ContentControl.patch({
                 "BlockChannelList attribute, then a response with ChannelNotExist error Status shall be returned.",
 
             xref: "cluster§6.13.8.13",
+
             children: [{
+                name: "ChannelIndexes", tag: "field",
                 details: "This field shall specify a set of indexes indicating Which channels shall be removed from the " +
                     "BlockChannelList attribute.",
                 xref: "cluster§6.13.8.13.1"
@@ -389,6 +443,8 @@ ContentControl.patch({
         },
 
         {
+            name: "AddBlockApplications", tag: "command",
+
             details: "The purpose of this command is to set applications to the BlockApplicationList attribute." +
                 "\n" +
                 "Upon receipt of the AddBlockApplications command, the media device shall check if the Applications " +
@@ -405,7 +461,9 @@ ContentControl.patch({
                 "then a response with ApplicationAlreadyExist error Status shall be returned.",
 
             xref: "cluster§6.13.8.14",
+
             children: [{
+                name: "Applications", tag: "field",
                 details: "This field indicates a set of applications that shall be blocked when the Content Control feature is " +
                     "activated.",
                 xref: "cluster§6.13.8.14.1"
@@ -413,6 +471,8 @@ ContentControl.patch({
         },
 
         {
+            name: "RemoveBlockApplications", tag: "command",
+
             details: "The purpose of this command is to remove applications from the BlockApplicationList attribute." +
                 "\n" +
                 "Upon receipt of the RemoveBlockApplications command, the media device shall check if the " +
@@ -421,7 +481,9 @@ ContentControl.patch({
                 "a response with ApplicationNotExist error Status shall be returned.",
 
             xref: "cluster§6.13.8.15",
+
             children: [{
+                name: "Applications", tag: "field",
                 details: "This field indicates a set of applications which shall be removed from BlockApplicationList " +
                     "attribute.",
                 xref: "cluster§6.13.8.15.1"
@@ -429,6 +491,8 @@ ContentControl.patch({
         },
 
         {
+            name: "SetBlockContentTimeWindow", tag: "command",
+
             details: "The purpose of this command is to set the BlockContentTimeWindow attribute." +
                 "\n" +
                 "Upon receipt of the SetBlockContentTimeWindow command, the media device shall check if the " +
@@ -443,12 +507,15 @@ ContentControl.patch({
 
             xref: "cluster§6.13.8.16",
             children: [{
+                name: "TimeWindow", tag: "field",
                 details: "This field shall indicate a time window requested to set to the BlockContentTimeWindow attribute.",
                 xref: "cluster§6.13.8.16.1"
             }]
         },
 
         {
+            name: "RemoveBlockContentTimeWindow", tag: "command",
+
             details: "The purpose of this command is to remove the selected time windows from the BlockContentTimeWindow " +
                 "attribute." +
                 "\n" +
@@ -459,7 +526,9 @@ ContentControl.patch({
                 "attribute, then a response with TimeWindowNotExist error status shall be returned.",
 
             xref: "cluster§6.13.8.17",
+
             children: [{
+                name: "TimeWindowIndexes", tag: "field",
                 details: "This field shall specify a set of time window indexes indicating which time windows will be removed " +
                     "from the BlockContentTimeWindow attribute.",
                 xref: "cluster§6.13.8.17.1"
@@ -467,24 +536,27 @@ ContentControl.patch({
         },
 
         {
+            name: "DayOfWeekBitmap", tag: "datatype",
             xref: "cluster§6.13.5.1",
 
             children: [
-                { description: "Sunday" },
-                { description: "Monday" },
-                { description: "Tuesday" },
-                { description: "Wednesday" },
-                { description: "Thursday" },
-                { description: "Friday" },
-                { description: "Saturday" }
+                { name: "Sunday", tag: "field", description: "Sunday" },
+                { name: "Monday", tag: "field", description: "Monday" },
+                { name: "Tuesday", tag: "field", description: "Tuesday" },
+                { name: "Wednesday", tag: "field", description: "Wednesday" },
+                { name: "Thursday", tag: "field", description: "Thursday" },
+                { name: "Friday", tag: "field", description: "Friday" },
+                { name: "Saturday", tag: "field", description: "Saturday" }
             ]
         },
 
         {
+            name: "RatingNameStruct", tag: "datatype",
             xref: "cluster§6.13.5.2",
 
             children: [
                 {
+                    name: "RatingName", tag: "field",
                     details: "This field shall indicate the name of the rating level of the applied rating system. The applied " +
                         "rating system is dependent upon the region or country where the Node has been provisioned, and may " +
                         "vary from one country to another.",
@@ -492,6 +564,7 @@ ContentControl.patch({
                 },
 
                 {
+                    name: "RatingNameDesc", tag: "field",
                     details: "This field shall specify a human readable (displayable) description for RatingName.",
                     xref: "cluster§6.13.5.2.2"
                 }
@@ -499,16 +572,19 @@ ContentControl.patch({
         },
 
         {
+            name: "BlockChannelStruct", tag: "datatype",
             xref: "cluster§6.13.5.3",
 
             children: [
                 {
+                    name: "BlockChannelIndex", tag: "field",
                     details: "This field shall indicate a unique index value for a blocked channel. This value may be used to " +
                         "indicate one selected channel which will be removed from BlockChannelList attribute.",
                     xref: "cluster§6.13.5.3.1"
                 },
 
                 {
+                    name: "MajorNumber", tag: "field",
                     details: "This field shall indicate the channel major number value (for example, using ATSC format). When the " +
                         "channel number is expressed as a string, such as \"13.1\" or \"256\", the major number would be 13 or " +
                         "256, respectively. This field is required but shall be set to 0 for channels such as over-the-top " +
@@ -517,6 +593,7 @@ ContentControl.patch({
                 },
 
                 {
+                    name: "MinorNumber", tag: "field",
                     details: "This field shall indicate the channel minor number value (for example, using ATSC format). When the " +
                         "channel number is expressed as a string, such as \"13.1\" or \"256\", the minor number would be 1 or 0, " +
                         "respectively. This field is required but shall be set to 0 for channels such as over-the-top " +
@@ -525,6 +602,7 @@ ContentControl.patch({
                 },
 
                 {
+                    name: "Identifier", tag: "field",
                     details: "This field shall indicate the unique identifier for a specific channel. This field is optional, but " +
                         "SHOULD be provided when MajorNumber and MinorNumber are not available.",
                     xref: "cluster§6.13.5.3.4"
@@ -533,10 +611,12 @@ ContentControl.patch({
         },
 
         {
+            name: "AppInfoStruct", tag: "datatype",
             xref: "cluster§6.13.5.4",
 
             children: [
                 {
+                    name: "CatalogVendorId", tag: "field",
                     details: "This field shall indicate the CSA-issued vendor ID for the catalog. The DIAL registry shall use " +
                         "value 0x0000." +
                         "\n" +
@@ -546,6 +626,7 @@ ContentControl.patch({
                 },
 
                 {
+                    name: "ApplicationId", tag: "field",
                     details: "This field shall indicate the application identifier, expressed as a string, such as \"PruneVideo\" or " +
                         "\"Company X\". This field shall be unique within a catalog.",
                     xref: "cluster§6.13.5.4.2"
@@ -554,31 +635,53 @@ ContentControl.patch({
         },
 
         {
+            name: "TimeWindowStruct", tag: "datatype",
             xref: "cluster§6.13.5.5",
 
             children: [
                 {
+                    name: "TimeWindowIndex", tag: "field",
                     details: "This field shall indicate a unique index of a specific time window. This value may be used to " +
                         "indicate a selected time window which will be removed from the BlockContentTimeWindow attribute.",
                     xref: "cluster§6.13.5.5.1"
                 },
-                { details: "This field shall indicate a day of week.", xref: "cluster§6.13.5.5.2" },
-                { details: "This field shall indicate one or more discrete time periods.", xref: "cluster§6.13.5.5.3" }
+
+                {
+                    name: "DayOfWeek", tag: "field",
+                    details: "This field shall indicate a day of week.",
+                    xref: "cluster§6.13.5.5.2"
+                },
+                {
+                    name: "TimePeriod", tag: "field",
+                    details: "This field shall indicate one or more discrete time periods.",
+                    xref: "cluster§6.13.5.5.3"
+                }
             ]
         },
 
         {
+            name: "TimePeriodStruct", tag: "datatype",
             xref: "cluster§6.13.5.6",
 
             children: [
-                { details: "This field shall indicate the starting hour.", xref: "cluster§6.13.5.6.1" },
-                { details: "This field shall indicate the starting minute.", xref: "cluster§6.13.5.6.2" },
                 {
+                    name: "StartHour", tag: "field",
+                    details: "This field shall indicate the starting hour.",
+                    xref: "cluster§6.13.5.6.1"
+                },
+                {
+                    name: "StartMinute", tag: "field",
+                    details: "This field shall indicate the starting minute.",
+                    xref: "cluster§6.13.5.6.2"
+                },
+                {
+                    name: "EndHour", tag: "field",
                     details: "This field shall indicate the ending hour. EndHour shall be equal to or greater than StartHour",
                     xref: "cluster§6.13.5.6.3"
                 },
 
                 {
+                    name: "EndMinute", tag: "field",
                     details: "This field shall indicate the ending minute. If EndHour is equal to StartHour then EndMinute shall " +
                         "be greater than StartMinute. If the EndHour is equal to 23 and the EndMinute is equal to 59, all " +
                         "contents shall be blocked until 23:59:59.",
@@ -588,19 +691,44 @@ ContentControl.patch({
         },
 
         {
+            name: "StatusCodeEnum", tag: "datatype",
             xref: "cluster§6.13.6.1",
 
             children: [
-                { description: "Provided PIN Code does not match the current PIN code." },
-                { description: "Provided Rating is out of scope of the corresponding Rating list." },
-                { description: "Provided Channel(s) is invalid." },
-                { description: "Provided Channel(s) already exists." },
-                { description: "Provided Channel(s) doesn’t exist in BlockChannelList attribute." },
-                { description: "Provided Application(s) is not identified." },
-                { description: "Provided Application(s) already exists." },
-                { description: "Provided Application(s) doesn’t exist in BlockApplicationList attribute." },
-                { description: "Provided time Window already exists in BlockContentTimeWindow attribute." },
-                { description: "Provided time window doesn’t exist in BlockContentTimeWindow attribute." }
+                {
+                    name: "InvalidPinCode", tag: "field",
+                    description: "Provided PIN Code does not match the current PIN code."
+                },
+                {
+                    name: "InvalidRating", tag: "field",
+                    description: "Provided Rating is out of scope of the corresponding Rating list."
+                },
+                { name: "InvalidChannel", tag: "field", description: "Provided Channel(s) is invalid." },
+                { name: "ChannelAlreadyExist", tag: "field", description: "Provided Channel(s) already exists." },
+                {
+                    name: "ChannelNotExist", tag: "field",
+                    description: "Provided Channel(s) doesn’t exist in BlockChannelList attribute."
+                },
+                {
+                    name: "UnidentifiableApplication", tag: "field",
+                    description: "Provided Application(s) is not identified."
+                },
+                {
+                    name: "ApplicationAlreadyExist", tag: "field",
+                    description: "Provided Application(s) already exists."
+                },
+                {
+                    name: "ApplicationNotExist", tag: "field",
+                    description: "Provided Application(s) doesn’t exist in BlockApplicationList attribute."
+                },
+                {
+                    name: "TimeWindowAlreadyExist", tag: "field",
+                    description: "Provided time Window already exists in BlockContentTimeWindow attribute."
+                },
+                {
+                    name: "TimeWindowNotExist", tag: "field",
+                    description: "Provided time window doesn’t exist in BlockContentTimeWindow attribute."
+                }
             ]
         }
     ]

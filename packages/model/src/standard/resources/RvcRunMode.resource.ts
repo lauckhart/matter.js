@@ -6,19 +6,25 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { RvcRunMode } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-RvcRunMode.patch({
+Resource.add({
+    name: "RvcRunMode", tag: "cluster",
     classification: "application", pics: "RVCRUNM",
     details: "This cluster is derived from the Mode Base cluster and defines additional mode tags and namespaced " +
         "enumerated values for the running modes of robotic vacuum cleaner devices.",
     xref: "cluster§7.2",
 
     children: [
-        undefined,
-        { xref: "cluster§7.2.4", children: [{ description: "OnOff", details: "Dependency with the OnOff cluster" }] },
+        {
+            name: "FeatureMap", tag: "attribute",
+            xref: "cluster§7.2.4",
+            children: [{ name: "DEPONOFF", tag: "field", details: "Dependency with the OnOff cluster" }]
+        },
 
         {
+            name: "SupportedModes", tag: "attribute",
+
             details: "At least one entry in the SupportedModes attribute shall include the Idle mode tag in the ModeTags " +
                 "field." +
                 "\n" +
@@ -31,42 +37,49 @@ RvcRunMode.patch({
             xref: "cluster§7.2.6.1"
         },
 
-        { xref: "cluster§7.2.6" },
-        { xref: "cluster§7.2.6" },
-        { xref: "cluster§7.2.6" },
+        { name: "CurrentMode", tag: "attribute", xref: "cluster§7.2.6" },
+        { name: "StartUpMode", tag: "attribute", xref: "cluster§7.2.6" },
+        { name: "OnMode", tag: "attribute", xref: "cluster§7.2.6" },
+
         {
+            name: "ModeOptionStruct", tag: "datatype",
             details: "The table below lists the changes relative to the Mode Base cluster for the fields of the " +
                 "ModeOptionStruct type. A blank field indicates no change.",
             xref: "cluster§7.2.5.1"
         },
 
         {
+            name: "ModeChangeStatus", tag: "datatype",
+
             children: [
-                { xref: "cluster§7.2.7.1" },
-                { xref: "cluster§7.2.7.1" },
-                { xref: "cluster§7.2.7.1" },
-                { xref: "cluster§7.2.7.1" },
-                { xref: "cluster§7.2.7.1" },
-                { xref: "cluster§7.2.7.1" },
-                { xref: "cluster§7.2.7.1" },
-                { xref: "cluster§7.2.7.1" }
+                { name: "Stuck", tag: "field", xref: "cluster§7.2.7.1" },
+                { name: "DustBinMissing", tag: "field", xref: "cluster§7.2.7.1" },
+                { name: "DustBinFull", tag: "field", xref: "cluster§7.2.7.1" },
+                { name: "WaterTankEmpty", tag: "field", xref: "cluster§7.2.7.1" },
+                { name: "WaterTankMissing", tag: "field", xref: "cluster§7.2.7.1" },
+                { name: "WaterTankLidOpen", tag: "field", xref: "cluster§7.2.7.1" },
+                { name: "MopCleaningPadMissing", tag: "field", xref: "cluster§7.2.7.1" },
+                { name: "BatteryLow", tag: "field", xref: "cluster§7.2.7.1" }
             ]
         },
 
         {
+            name: "ModeTag", tag: "datatype",
+
             children: [
-                { xref: "cluster§7.2.7.2" },
-                { xref: "cluster§7.2.7.2" },
-                { xref: "cluster§7.2.7.2" },
-                { xref: "cluster§7.2.7.2" },
-                { xref: "cluster§7.2.7.2" },
-                { xref: "cluster§7.2.7.2" },
-                { xref: "cluster§7.2.7.2" },
-                { xref: "cluster§7.2.7.2" },
-                { xref: "cluster§7.2.7.2" },
-                { xref: "cluster§7.2.7.2" },
+                { name: "Auto", tag: "field", xref: "cluster§7.2.7.2" },
+                { name: "Quick", tag: "field", xref: "cluster§7.2.7.2" },
+                { name: "Quiet", tag: "field", xref: "cluster§7.2.7.2" },
+                { name: "LowNoise", tag: "field", xref: "cluster§7.2.7.2" },
+                { name: "LowEnergy", tag: "field", xref: "cluster§7.2.7.2" },
+                { name: "Vacation", tag: "field", xref: "cluster§7.2.7.2" },
+                { name: "Min", tag: "field", xref: "cluster§7.2.7.2" },
+                { name: "Max", tag: "field", xref: "cluster§7.2.7.2" },
+                { name: "Night", tag: "field", xref: "cluster§7.2.7.2" },
+                { name: "Day", tag: "field", xref: "cluster§7.2.7.2" },
 
                 {
+                    name: "Idle", tag: "field",
                     details: "The device is not performing any of the main operations of the other modes. However, auxiliary " +
                         "actions, such as seeking the charger or charging, may occur." +
                         "\n" +
@@ -76,6 +89,7 @@ RvcRunMode.patch({
                 },
 
                 {
+                    name: "Cleaning", tag: "field",
                     details: "The device was asked to clean so it may be actively running, or paused due to an error, due to a " +
                         "pause command, or for recharging etc. If currently paused and the device can resume it will continue " +
                         "to clean.",
@@ -83,6 +97,8 @@ RvcRunMode.patch({
                 },
 
                 {
+                    name: "Mapping", tag: "field",
+
                     details: "The device was asked to create a map of the space it is located in, so it may be actively running, " +
                         "or paused due to an error, due to a pause command, or for recharging etc. If currently paused and " +
                         "the device can resume, it will continue to map." +

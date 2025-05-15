@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BasicInformation } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-BasicInformation.patch({
+Resource.add({
+    name: "BasicInformation", tag: "cluster",
     classification: "node", pics: "BINFO",
     details: "This cluster provides attributes and events for determining basic information about Nodes, which " +
         "supports both Commissioning and operational determination of Node characteristics, such as Vendor " +
@@ -16,9 +17,8 @@ BasicInformation.patch({
     xref: "core§11.1",
 
     children: [
-        undefined,
-
         {
+            name: "DataModelRevision", tag: "attribute",
             details: "This attribute shall be set to the revision number of the Data Model against which the Node is " +
                 "certified. The value of this attribute shall be one of the valid values listed in Section 7.1.1, " +
                 "“Revision History”.",
@@ -26,27 +26,40 @@ BasicInformation.patch({
         },
 
         {
+            name: "VendorName", tag: "attribute",
             details: "This attribute shall specify a human readable (displayable) name of the vendor for the Node.",
             xref: "core§11.1.5.2"
         },
-        { details: "This attribute shall specify the Vendor ID.", xref: "core§11.1.5.3" },
         {
+            name: "VendorId", tag: "attribute",
+            details: "This attribute shall specify the Vendor ID.",
+            xref: "core§11.1.5.3"
+        },
+
+        {
+            name: "ProductName", tag: "attribute",
             details: "This attribute shall specify a human readable (displayable) name of the model for the Node such as " +
                 "the model number (or other identifier) assigned by the vendor.",
             xref: "core§11.1.5.4"
         },
+
         {
+            name: "ProductId", tag: "attribute",
             details: "This attribute shall specify the Product ID assigned by the vendor that is unique to the specific " +
                 "product of the Node.",
             xref: "core§11.1.5.5"
         },
+
         {
+            name: "NodeLabel", tag: "attribute",
             details: "Indicates a user defined name for the Node. This attribute SHOULD be set during initial " +
                 "commissioning and may be updated by further reconfigurations.",
             xref: "core§11.1.5.6"
         },
 
         {
+            name: "Location", tag: "attribute",
+
             details: "This attribute shall be an ISO 3166-1 alpha-2 code to represent the country, dependent territory, or " +
                 "special area of geographic interest in which the Node is located at the time of the attribute being " +
                 "set. This attribute shall be set during initial commissioning (unless already set) and may be " +
@@ -62,12 +75,14 @@ BasicInformation.patch({
         },
 
         {
+            name: "HardwareVersion", tag: "attribute",
             details: "This attribute shall specify the version number of the hardware of the Node. The meaning of its " +
                 "value, and the versioning scheme, are vendor defined.",
             xref: "core§11.1.5.8"
         },
 
         {
+            name: "HardwareVersionString", tag: "attribute",
             details: "This attribute shall specify the version number of the hardware of the Node. The meaning of its " +
                 "value, and the versioning scheme, are vendor defined. The HardwareVersionString attribute shall be " +
                 "used to provide a more user-friendly value than that represented by the HardwareVersion attribute.",
@@ -75,6 +90,8 @@ BasicInformation.patch({
         },
 
         {
+            name: "SoftwareVersion", tag: "attribute",
+
             details: "This attribute shall contain the current version number for the software running on this Node." +
                 "\n" +
                 "The version number can be compared using a total ordering to determine if a version is logically " +
@@ -86,6 +103,8 @@ BasicInformation.patch({
         },
 
         {
+            name: "SoftwareVersionString", tag: "attribute",
+
             details: "This attribute shall contain a current human-readable representation for the software running on the " +
                 "Node. This version information may be conveyed to users. The maximum length of the " +
                 "SoftwareVersionString attribute is 64 bytes of UTF-8 characters. The contents SHOULD only use simple " +
@@ -98,6 +117,7 @@ BasicInformation.patch({
         },
 
         {
+            name: "ManufacturingDate", tag: "attribute",
             details: "This attribute shall specify the date that the Node was manufactured. The first 8 characters shall " +
                 "specify the date of manufacture of the Node in international date notation according to ISO 8601, " +
                 "i.e., YYYYMMDD, e.g., 20060814. The final 8 characters may include country, factory, line, shift or " +
@@ -107,6 +127,8 @@ BasicInformation.patch({
         },
 
         {
+            name: "PartNumber", tag: "attribute",
+
             details: "This attribute shall specify a human-readable (displayable) vendor assigned part number for the Node " +
                 "whose meaning and numbering scheme is vendor defined." +
                 "\n" +
@@ -118,6 +140,7 @@ BasicInformation.patch({
         },
 
         {
+            name: "ProductUrl", tag: "attribute",
             details: "This attribute shall specify a link to a product specific web page. The specified URL SHOULD resolve " +
                 "to a maintained web page available for the lifetime of the product. The syntax of this attribute " +
                 "shall follow the syntax as specified in RFC 1738 and shall use the https scheme. The maximum length " +
@@ -126,6 +149,7 @@ BasicInformation.patch({
         },
 
         {
+            name: "ProductLabel", tag: "attribute",
             details: "This attribute shall specify a vendor specific human readable (displayable) product label. The " +
                 "ProductLabel attribute may be used to provide a more user-friendly value than that represented by " +
                 "the ProductName attribute. The ProductLabel attribute SHOULD NOT include the name of the vendor as " +
@@ -134,11 +158,13 @@ BasicInformation.patch({
         },
 
         {
+            name: "SerialNumber", tag: "attribute",
             details: "This attribute shall specify a human readable (displayable) serial number.",
             xref: "core§11.1.5.16"
         },
 
         {
+            name: "LocalConfigDisabled", tag: "attribute",
             details: "This attribute shall allow a local Node configuration to be disabled. When this attribute is set to " +
                 "True the Node shall disable the ability to configure the Node through an on-Node user interface. The " +
                 "value of the LocalConfigDisabled attribute shall NOT in any way modify, disable, or otherwise affect " +
@@ -147,6 +173,7 @@ BasicInformation.patch({
         },
 
         {
+            name: "Reachable", tag: "attribute",
             details: "This attribute (when used) shall indicate whether the Node can be reached. For a native Node this is " +
                 "implicitly True (and its use is optional)." +
                 "\n" +
@@ -156,6 +183,8 @@ BasicInformation.patch({
         },
 
         {
+            name: "UniqueId", tag: "attribute",
+
             details: "Indicates a unique identifier for the device, which is constructed in a manufacturer specific " +
                 "manner." +
                 "\n" +
@@ -186,6 +215,8 @@ BasicInformation.patch({
         },
 
         {
+            name: "CapabilityMinima", tag: "attribute",
+
             details: "This attribute shall provide the minimum guaranteed value for some system-wide resource capabilities " +
                 "that are not otherwise cluster-specific and do not appear elsewhere. This attribute may be used by " +
                 "clients to optimize communication with Nodes by allowing them to use more than the strict minimum " +
@@ -204,12 +235,15 @@ BasicInformation.patch({
         },
 
         {
+            name: "ProductAppearance", tag: "attribute",
             details: "This attribute shall provide information about the appearance of the product, which could be useful " +
                 "to a user trying to locate or identify the node.",
             xref: "core§11.1.5.21"
         },
 
         {
+            name: "SpecificationVersion", tag: "attribute",
+
             details: "This attribute shall contain the current version number for the specification version this Node was " +
                 "certified against. The version number can be compared using a total ordering to determine if a " +
                 "version is logically newer than another one. A larger value of SpecificationVersion is newer than a " +
@@ -248,6 +282,8 @@ BasicInformation.patch({
         },
 
         {
+            name: "MaxPathsPerInvoke", tag: "attribute",
+
             details: "Indicates the maximum number of elements in a single InvokeRequests list (see Section 8.8.2, “Invoke " +
                 "Request Action”) that the Node is able to process. Note that since this attribute may change over " +
                 "time, both increasing and decreasing, as software versions change for a given Node, clients SHOULD " +
@@ -261,17 +297,20 @@ BasicInformation.patch({
         },
 
         {
+            name: "StartUp", tag: "event",
             details: "The StartUp event shall be generated by a Node as soon as reasonable after completing a boot or " +
                 "reboot process. The StartUp event SHOULD be the first Data Model event recorded by the Node after it " +
                 "completes a boot or reboot process.",
             xref: "core§11.1.6.1",
             children: [{
+                name: "SoftwareVersion", tag: "field",
                 details: "This field shall be set to the same value as the one available in the SoftwareVersion attribute.",
                 xref: "core§11.1.6.1.1"
             }]
         },
 
         {
+            name: "ShutDown", tag: "event",
             details: "The ShutDown event SHOULD be generated by a Node prior to any orderly shutdown sequence on a " +
                 "best-effort basis. When a ShutDown event is generated, it SHOULD be the last Data Model event " +
                 "recorded by the Node. This event SHOULD be delivered urgently to current subscribers on a best- " +
@@ -281,6 +320,8 @@ BasicInformation.patch({
         },
 
         {
+            name: "Leave", tag: "event",
+
             details: "The Leave event SHOULD be generated by a Node prior to permanently leaving a given Fabric, such as " +
                 "when the RemoveFabric command is invoked for a given fabric, or triggered by factory reset or some " +
                 "other manufacturer specific action to disable or reset the operational data in the Node. When a " +
@@ -293,12 +334,14 @@ BasicInformation.patch({
 
             xref: "core§11.1.6.3",
             children: [{
+                name: "FabricIndex", tag: "field",
                 details: "This field shall contain the local Fabric Index of the fabric which the node is about to leave.",
                 xref: "core§11.1.6.3.1"
             }]
         },
 
         {
+            name: "ReachableChanged", tag: "event",
             details: "This event shall be supported if and only if the Reachable attribute is supported." +
                 "\n" +
                 "This event (when supported) shall be generated when there is a change in the Reachable attribute." +
@@ -306,61 +349,71 @@ BasicInformation.patch({
                 "Its main use case is in the derived Bridged Device Basic Information cluster.",
             xref: "core§11.1.6.4",
             children: [{
+                name: "ReachableNewValue", tag: "field",
                 details: "This field shall indicate the value of the Reachable attribute after it was changed.",
                 xref: "core§11.1.6.4.1"
             }]
         },
 
         {
+            name: "ProductFinishEnum", tag: "datatype",
             details: "The data type of ProductFinishEnum is derived from enum8.",
             xref: "core§11.1.4.1",
 
             children: [
-                { description: "Product has some other finish not listed below." },
-                { description: "Product has a matte finish." },
-                { description: "Product has a satin finish." },
-                { description: "Product has a polished or shiny finish." },
-                { description: "Product has a rugged finish." },
-                { description: "Product has a fabric finish." }
+                { name: "Other", tag: "field", description: "Product has some other finish not listed below." },
+                { name: "Matte", tag: "field", description: "Product has a matte finish." },
+                { name: "Satin", tag: "field", description: "Product has a satin finish." },
+                { name: "Polished", tag: "field", description: "Product has a polished or shiny finish." },
+                { name: "Rugged", tag: "field", description: "Product has a rugged finish." },
+                { name: "Fabric", tag: "field", description: "Product has a fabric finish." }
             ]
         },
 
         {
+            name: "ColorEnum", tag: "datatype",
             details: "The data type of ColorEnum is derived from enum8.",
             xref: "core§11.1.4.2",
 
             children: [
-                { description: "Approximately RGB #000000." },
-                { description: "Approximately RGB #000080." },
-                { description: "Approximately RGB #008000." },
-                { description: "Approximately RGB #008080." },
-                { description: "Approximately RGB #800080." },
-                { description: "Approximately RGB #800080." },
-                { description: "Approximately RGB #808000." },
-                { description: "Approximately RGB #808080." },
-                { description: "Approximately RGB #0000FF." },
-                { description: "Approximately RGB #00FF00." },
-                { description: "Approximately RGB #00FFFF." },
-                { description: "Approximately RGB #FF0000." },
-                { description: "Approximately RGB #FF00FF." },
-                { description: "Approximately RGB #FFFF00." },
-                { description: "Approximately RGB #FFFFFF." },
-                { description: "Typical hardware \"Nickel\" color." },
-                { description: "Typical hardware \"Chrome\" color." },
-                { description: "Typical hardware \"Brass\" color." },
-                { description: "Typical hardware \"Copper\" color." },
-                { description: "Typical hardware \"Silver\" color." },
-                { description: "Typical hardware \"Gold\" color." }
+                { name: "Black", tag: "field", description: "Approximately RGB #000000." },
+                { name: "Navy", tag: "field", description: "Approximately RGB #000080." },
+                { name: "Green", tag: "field", description: "Approximately RGB #008000." },
+                { name: "Teal", tag: "field", description: "Approximately RGB #008080." },
+                { name: "Maroon", tag: "field", description: "Approximately RGB #800080." },
+                { name: "Purple", tag: "field", description: "Approximately RGB #800080." },
+                { name: "Olive", tag: "field", description: "Approximately RGB #808000." },
+                { name: "Gray", tag: "field", description: "Approximately RGB #808080." },
+                { name: "Blue", tag: "field", description: "Approximately RGB #0000FF." },
+                { name: "Lime", tag: "field", description: "Approximately RGB #00FF00." },
+                { name: "Aqua", tag: "field", description: "Approximately RGB #00FFFF." },
+                { name: "Red", tag: "field", description: "Approximately RGB #FF0000." },
+                { name: "Fuchsia", tag: "field", description: "Approximately RGB #FF00FF." },
+                { name: "Yellow", tag: "field", description: "Approximately RGB #FFFF00." },
+                { name: "White", tag: "field", description: "Approximately RGB #FFFFFF." },
+                { name: "Nickel", tag: "field", description: "Typical hardware \"Nickel\" color." },
+                { name: "Chrome", tag: "field", description: "Typical hardware \"Chrome\" color." },
+                { name: "Brass", tag: "field", description: "Typical hardware \"Brass\" color." },
+                { name: "Copper", tag: "field", description: "Typical hardware \"Copper\" color." },
+                { name: "Silver", tag: "field", description: "Typical hardware \"Silver\" color." },
+                { name: "Gold", tag: "field", description: "Typical hardware \"Gold\" color." }
             ]
         },
 
         {
+            name: "ProductAppearanceStruct", tag: "datatype",
             details: "This structure provides a description of the product’s appearance.",
             xref: "core§11.1.4.3",
 
             children: [
-                { details: "This field shall indicate the visible finish of the product.", xref: "core§11.1.4.3.1" },
                 {
+                    name: "Finish", tag: "field",
+                    details: "This field shall indicate the visible finish of the product.",
+                    xref: "core§11.1.4.3.1"
+                },
+
+                {
+                    name: "PrimaryColor", tag: "field",
                     details: "This field indicates the representative color of the visible parts of the product. If the product " +
                         "has no representative color, the field shall be null.",
                     xref: "core§11.1.4.3.2"
@@ -369,12 +422,14 @@ BasicInformation.patch({
         },
 
         {
+            name: "CapabilityMinimaStruct", tag: "datatype",
             details: "This structure provides constant values related to overall global capabilities of this Node, that " +
                 "are not cluster-specific.",
             xref: "core§11.1.4.4",
 
             children: [
                 {
+                    name: "CaseSessionsPerFabric", tag: "field",
                     details: "This field shall indicate the actual minimum number of concurrent CASE sessions that are supported " +
                         "per fabric." +
                         "\n" +
@@ -384,6 +439,7 @@ BasicInformation.patch({
                 },
 
                 {
+                    name: "SubscriptionsPerFabric", tag: "field",
                     details: "This field shall indicate the actual minimum number of concurrent subscriptions supported per " +
                         "fabric." +
                         "\n" +

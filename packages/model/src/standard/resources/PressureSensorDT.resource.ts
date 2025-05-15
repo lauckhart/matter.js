@@ -6,11 +6,15 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { PressureSensorDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-PressureSensorDt.patch({
+Resource.add({
+    name: "PressureSensor", tag: "deviceType",
     classification: "simple",
     details: "A Pressure Sensor device measures and reports the pressure of a fluid.",
     xref: "device§7.5",
-    children: [undefined, { xref: "device§7.5.4" }, { xref: "device§7.5.4" }]
+    children: [
+        { name: "PressureMeasurement", tag: "requirement", xref: "device§7.5.4" },
+        { name: "Identify", tag: "requirement", xref: "device§7.5.4" }
+    ]
 });

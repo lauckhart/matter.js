@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { MountedDimmableLoadControlDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-MountedDimmableLoadControlDt.patch({
+Resource.add({
+    name: "MountedDimmableLoadControl", tag: "deviceType",
     classification: "simple",
     details: "A Mounted Dimmable Load Control is a fixed device that provides power to another device that is " +
         "plugged into it, and is capable of being switched on or off and have its level adjusted. The Mounted " +
@@ -17,12 +18,11 @@ MountedDimmableLoadControlDt.patch({
     xref: "device§5.4",
 
     children: [
-        undefined,
-        { xref: "device§5.4.4" },
-        { xref: "device§5.4.4" },
-        { xref: "device§5.4.4" },
-        { xref: "device§5.4.4" },
-        { xref: "device§5.4.4" },
-        { xref: "device§5.4.4" }
+        { name: "Identify", tag: "requirement", xref: "device§5.4.4" },
+        { name: "Groups", tag: "requirement", xref: "device§5.4.4" },
+        { name: "ScenesManagement", tag: "requirement", xref: "device§5.4.4" },
+        { name: "OnOff", tag: "requirement", xref: "device§5.4.4" },
+        { name: "LevelControl", tag: "requirement", xref: "device§5.4.4" },
+        { name: "OccupancySensing", tag: "requirement", xref: "device§5.4.4" }
     ]
 });

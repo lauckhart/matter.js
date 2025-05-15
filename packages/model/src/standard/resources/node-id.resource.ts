@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { nodeId } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-nodeId.patch({
+Resource.add({
+    name: "node-id", tag: "datatype",
     description: "Node ID",
     details: "A 64-bit ID for a node scoped and unique to a particular fabric as indicated by an accompanying " +
         "fabric-index adjacent instantiation.",

@@ -41,7 +41,7 @@ export class CrossReference implements Specification.CrossReference {
     }
 
     [inspect](_depth: any, options: any, inspect: any) {
-        return inspect(this.toString(), options);
+        return inspect ? inspect(this.toString(), options) : this.toString();
     }
 }
 

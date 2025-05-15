@@ -6,10 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { temperature } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-temperature.patch(
+Resource.add(
     {
+        name: "temperature", tag: "datatype",
         description: "Temperature",
 
         details: "This type represents a temperature on the Celsius scale with a resolution of 0.01°C." +

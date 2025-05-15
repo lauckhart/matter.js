@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ScenesManagement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ScenesManagement.patch({
+Resource.add({
+    name: "ScenesManagement", tag: "cluster",
     classification: "application", pics: "S",
 
     details: "The Scenes Management cluster provides attributes and commands for setting up and recalling scenes. " +
@@ -25,18 +26,19 @@ ScenesManagement.patch({
     xref: "cluster§1.4",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "cluster§1.4.4",
             children: [{
-                description: "SceneNames",
+                name: "SN", tag: "field",
                 details: "This feature indicates the ability to store a name for a scene when a scene is added.",
                 xref: "cluster§1.4.4.1"
             }]
         },
 
         {
+            name: "LastConfiguredBy", tag: "attribute",
+
             details: "Indicates the Node ID of the node that last configured the Scene Table." +
                 "\n" +
                 "The null value indicates that the server has not been configured, or that the identifier of the node " +
@@ -48,6 +50,7 @@ ScenesManagement.patch({
         },
 
         {
+            name: "SceneTableSize", tag: "attribute",
             details: "Indicates the number of entries in the Scene Table on this endpoint. This is the total across all " +
                 "fabrics; note that a single fabric cannot use all those entries (see Handling of fabric- scoping). " +
                 "The minimum size of this table, (i.e., the minimum number of scenes to support across all fabrics " +
@@ -57,6 +60,7 @@ ScenesManagement.patch({
         },
 
         {
+            name: "FabricSceneInfo", tag: "attribute",
             details: "Indicates a list of fabric scoped information about scenes on this endpoint." +
                 "\n" +
                 "The number of list entries for this attribute shall NOT exceed the number of supported fabrics by " +
@@ -65,6 +69,7 @@ ScenesManagement.patch({
         },
 
         {
+            name: "AddScene", tag: "command",
             details: "It is not mandatory for an extension field set to be included in the command for every cluster on " +
                 "that endpoint that has a defined extension field set. Extension field sets may be omitted, including " +
                 "the case of no extension field sets at all.",
@@ -72,35 +77,50 @@ ScenesManagement.patch({
 
             children: [
                 {
+                    name: "GroupId", tag: "field",
                     details: "This field shall indicate the group identifier in the Group Table.",
                     xref: "cluster§1.4.9.2.1"
                 },
                 {
+                    name: "SceneId", tag: "field",
                     details: "This field shall indicate the scene identifier in the Scene Table.",
                     xref: "cluster§1.4.9.2.2"
                 },
                 {
+                    name: "TransitionTime", tag: "field",
                     details: "This field shall indicate the transition time of the scene, measured in milliseconds.",
                     xref: "cluster§1.4.9.2.3"
                 },
-                { details: "This field shall indicate the name of the scene.", xref: "cluster§1.4.9.2.4" },
-                { details: "This field shall contains the list of extension fields.", xref: "cluster§1.4.9.2.5" }
+                {
+                    name: "SceneName", tag: "field",
+                    details: "This field shall indicate the name of the scene.",
+                    xref: "cluster§1.4.9.2.4"
+                },
+                {
+                    name: "ExtensionFieldSetStructs", tag: "field",
+                    details: "This field shall contains the list of extension fields.",
+                    xref: "cluster§1.4.9.2.5"
+                }
             ]
         },
 
         {
+            name: "AddSceneResponse", tag: "command",
             xref: "cluster§1.4.9.3",
 
             children: [
                 {
+                    name: "Status", tag: "field",
                     details: "This field shall be set according to the Effect on Receipt section for AddScene command.",
                     xref: "cluster§1.4.9.3.1"
                 },
                 {
+                    name: "GroupId", tag: "field",
                     details: "The GroupID field shall be set to the corresponding field of the received AddScene command.",
                     xref: "cluster§1.4.9.3.2"
                 },
                 {
+                    name: "SceneId", tag: "field",
                     details: "The SceneID field shall be set to the corresponding field of the received AddScene command.",
                     xref: "cluster§1.4.9.3.3"
                 }
@@ -108,14 +128,17 @@ ScenesManagement.patch({
         },
 
         {
+            name: "ViewScene", tag: "command",
             xref: "cluster§1.4.9.4",
 
             children: [
                 {
+                    name: "GroupId", tag: "field",
                     details: "This field shall indicate the group identifier in the Group Table.",
                     xref: "cluster§1.4.9.4.1"
                 },
                 {
+                    name: "SceneId", tag: "field",
                     details: "This field shall indicate the scene identifier in the Scene Table.",
                     xref: "cluster§1.4.9.4.2"
                 }
@@ -123,32 +146,42 @@ ScenesManagement.patch({
         },
 
         {
+            name: "ViewSceneResponse", tag: "command",
             xref: "cluster§1.4.9.5",
 
             children: [
                 {
+                    name: "Status", tag: "field",
                     details: "This field shall be set according to the Effect on Receipt section for ViewScene command.",
                     xref: "cluster§1.4.9.5.1"
                 },
                 {
+                    name: "GroupId", tag: "field",
                     details: "The GroupID field shall be set to the corresponding field of the received ViewScene command.",
                     xref: "cluster§1.4.9.5.2"
                 },
                 {
+                    name: "SceneId", tag: "field",
                     details: "The SceneID field shall be set to the corresponding field of the received ViewScene command.",
                     xref: "cluster§1.4.9.5.3"
                 },
+
                 {
+                    name: "TransitionTime", tag: "field",
                     details: "If the status is SUCCESS, this field shall be copied from the corresponding field in the Scene Table " +
                         "entry, otherwise it shall be omitted.",
                     xref: "cluster§1.4.9.5.4"
                 },
+
                 {
+                    name: "SceneName", tag: "field",
                     details: "If the status is SUCCESS, this field shall be copied from the corresponding field in the Scene Table " +
                         "entry, otherwise it shall be omitted.",
                     xref: "cluster§1.4.9.5.5"
                 },
+
                 {
+                    name: "ExtensionFieldSetStructs", tag: "field",
                     details: "If the status is SUCCESS, this field shall be copied from the corresponding field in the Scene Table " +
                         "entry, otherwise it shall be omitted.",
                     xref: "cluster§1.4.9.5.6"
@@ -157,14 +190,17 @@ ScenesManagement.patch({
         },
 
         {
+            name: "RemoveScene", tag: "command",
             xref: "cluster§1.4.9.6",
 
             children: [
                 {
+                    name: "GroupId", tag: "field",
                     details: "This field shall indicate the group identifier in the Group Table.",
                     xref: "cluster§1.4.9.6.1"
                 },
                 {
+                    name: "SceneId", tag: "field",
                     details: "This field shall indicate the scene identifier in the Scene Table.",
                     xref: "cluster§1.4.9.6.2"
                 }
@@ -172,18 +208,22 @@ ScenesManagement.patch({
         },
 
         {
+            name: "RemoveSceneResponse", tag: "command",
             xref: "cluster§1.4.9.7",
 
             children: [
                 {
+                    name: "Status", tag: "field",
                     details: "This field shall be set according to the Effect on Receipt section for RemoveScene command.",
                     xref: "cluster§1.4.9.7.1"
                 },
                 {
+                    name: "GroupId", tag: "field",
                     details: "The GroupID field shall be set to the corresponding field of the received RemoveScene command.",
                     xref: "cluster§1.4.9.7.2"
                 },
                 {
+                    name: "SceneId", tag: "field",
                     details: "The SceneID field shall be set to the corresponding field of the received RemoveScene command.",
                     xref: "cluster§1.4.9.7.3"
                 }
@@ -191,22 +231,27 @@ ScenesManagement.patch({
         },
 
         {
+            name: "RemoveAllScenes", tag: "command",
             xref: "cluster§1.4.9.8",
             children: [{
+                name: "GroupId", tag: "field",
                 details: "This field shall indicate the group identifier in the Group Table.",
                 xref: "cluster§1.4.9.8.1"
             }]
         },
 
         {
+            name: "RemoveAllScenesResponse", tag: "command",
             xref: "cluster§1.4.9.9",
 
             children: [
                 {
+                    name: "Status", tag: "field",
                     details: "This field shall be set according to the Effect on Receipt section for RemoveAllScenes command.",
                     xref: "cluster§1.4.9.9.1"
                 },
                 {
+                    name: "GroupId", tag: "field",
                     details: "The GroupID field shall be set to the corresponding field of the received RemoveAllScenes command.",
                     xref: "cluster§1.4.9.9.2"
                 }
@@ -214,14 +259,17 @@ ScenesManagement.patch({
         },
 
         {
+            name: "StoreScene", tag: "command",
             xref: "cluster§1.4.9.10",
 
             children: [
                 {
+                    name: "GroupId", tag: "field",
                     details: "This field shall indicate the group identifier in the Group Table.",
                     xref: "cluster§1.4.9.10.1"
                 },
                 {
+                    name: "SceneId", tag: "field",
                     details: "This field shall indicate the scene identifier in the Scene Table.",
                     xref: "cluster§1.4.9.10.2"
                 }
@@ -229,18 +277,22 @@ ScenesManagement.patch({
         },
 
         {
+            name: "StoreSceneResponse", tag: "command",
             xref: "cluster§1.4.9.11",
 
             children: [
                 {
+                    name: "Status", tag: "field",
                     details: "This field shall be set according to the Effect on Receipt section for StoreScene command.",
                     xref: "cluster§1.4.9.11.1"
                 },
                 {
+                    name: "GroupId", tag: "field",
                     details: "The GroupID field shall be set to the corresponding field of the received StoreScene command.",
                     xref: "cluster§1.4.9.11.2"
                 },
                 {
+                    name: "SceneId", tag: "field",
                     details: "The SceneID field shall be set to the corresponding field of the received StoreScene command.",
                     xref: "cluster§1.4.9.11.3"
                 }
@@ -248,18 +300,22 @@ ScenesManagement.patch({
         },
 
         {
+            name: "RecallScene", tag: "command",
             xref: "cluster§1.4.9.12",
 
             children: [
                 {
+                    name: "GroupId", tag: "field",
                     details: "This field shall indicate the group identifier in the Group Table.",
                     xref: "cluster§1.4.9.12.1"
                 },
                 {
+                    name: "SceneId", tag: "field",
                     details: "This field shall indicate the scene identifier in the Scene Table.",
                     xref: "cluster§1.4.9.12.2"
                 },
                 {
+                    name: "TransitionTime", tag: "field",
                     details: "This field shall indicate the transition time of the scene, measured in milliseconds.",
                     xref: "cluster§1.4.9.12.3"
                 }
@@ -267,25 +323,31 @@ ScenesManagement.patch({
         },
 
         {
+            name: "GetSceneMembership", tag: "command",
             details: "This command can be used to get the used scene identifiers within a certain group, for the endpoint " +
                 "that implements this cluster.",
             xref: "cluster§1.4.9.13",
             children: [{
+                name: "GroupId", tag: "field",
                 details: "This field shall indicate the group identifier in the Group Table.",
                 xref: "cluster§1.4.9.13.1"
             }]
         },
 
         {
+            name: "GetSceneMembershipResponse", tag: "command",
             xref: "cluster§1.4.9.14",
 
             children: [
                 {
+                    name: "Status", tag: "field",
                     details: "This field shall be set according to the Effect on Receipt section for GetSceneMembership command.",
                     xref: "cluster§1.4.9.14.1"
                 },
 
                 {
+                    name: "Capacity", tag: "field",
+
                     details: "This field shall contain the remaining capacity of the Scene Table of the server (for all groups for " +
                         "the accessing fabric). The following values apply:" +
                         "\n" +
@@ -301,10 +363,13 @@ ScenesManagement.patch({
                 },
 
                 {
+                    name: "GroupId", tag: "field",
                     details: "This field shall be set to the corresponding field of the received GetSceneMembership command.",
                     xref: "cluster§1.4.9.14.3"
                 },
+
                 {
+                    name: "SceneList", tag: "field",
                     details: "If the status is not SUCCESS then this field shall be omitted, else this field shall contain the " +
                         "identifiers of all the scenes in the Scene Table with the corresponding Group ID.",
                     xref: "cluster§1.4.9.14.4"
@@ -313,12 +378,14 @@ ScenesManagement.patch({
         },
 
         {
+            name: "CopyScene", tag: "command",
             details: "This command allows a client to efficiently copy scenes from one group/scene identifier pair to " +
                 "another group/scene identifier pair.",
             xref: "cluster§1.4.9.15",
 
             children: [
                 {
+                    name: "Mode", tag: "field",
                     details: "This field shall contain the information of how the scene copy is to proceed." +
                         "\n" +
                         "The CopyAllScenes bit of the Mode indicates whether all scenes are to be copied. If this value is " +
@@ -328,6 +395,7 @@ ScenesManagement.patch({
                 },
 
                 {
+                    name: "GroupIdentifierFrom", tag: "field",
                     details: "This field shall indicate the identifier of the group from which the scene is to be copied. Together " +
                         "with the SceneIdentifierFrom field, this field uniquely identifies the scene to copy from the Scene " +
                         "Table.",
@@ -335,6 +403,7 @@ ScenesManagement.patch({
                 },
 
                 {
+                    name: "SceneIdentifierFrom", tag: "field",
                     details: "This field shall indicate the identifier of the scene from which the scene is to be copied. Together " +
                         "with the GroupIdentifierFrom field, this field uniquely identifies the scene to copy from the Scene " +
                         "Table.",
@@ -342,6 +411,7 @@ ScenesManagement.patch({
                 },
 
                 {
+                    name: "GroupIdentifierTo", tag: "field",
                     details: "This field shall indicate the identifier of the group to which the scene is to be copied. Together " +
                         "with the SceneIdentifierTo field, this field uniquely identifies the scene to copy to the Scene " +
                         "Table.",
@@ -349,6 +419,7 @@ ScenesManagement.patch({
                 },
 
                 {
+                    name: "SceneIdentifierTo", tag: "field",
                     details: "This field shall indicate the identifier of the scene to which the scene is to be copied. Together " +
                         "with the GroupIdentifierTo field, this field uniquely identifies the scene to copy to the Scene " +
                         "Table.",
@@ -358,19 +429,25 @@ ScenesManagement.patch({
         },
 
         {
+            name: "CopySceneResponse", tag: "command",
             xref: "cluster§1.4.9.16",
 
             children: [
                 {
+                    name: "Status", tag: "field",
                     details: "This field shall be set according to the Effect on Receipt section for the CopyScene command.",
                     xref: "cluster§1.4.9.16.1"
                 },
+
                 {
+                    name: "GroupIdentifierFrom", tag: "field",
                     details: "This field shall be set to the same values as in the corresponding fields of the received CopyScene " +
                         "command.",
                     xref: "cluster§1.4.9.16.2"
                 },
+
                 {
+                    name: "SceneIdentifierFrom", tag: "field",
                     details: "This field shall be set to the same values as in the corresponding fields of the received CopyScene " +
                         "command.",
                     xref: "cluster§1.4.9.16.3"
@@ -378,13 +455,19 @@ ScenesManagement.patch({
             ]
         },
 
-        { xref: "cluster§1.4.7.1", children: [{ description: "Copy all scenes in the scene table" }] },
+        {
+            name: "CopyModeBitmap", tag: "datatype",
+            xref: "cluster§1.4.7.1",
+            children: [{ name: "CopyAllScenes", tag: "field", description: "Copy all scenes in the scene table" }]
+        },
 
         {
+            name: "SceneInfoStruct", tag: "datatype",
             xref: "cluster§1.4.7.2",
 
             children: [
                 {
+                    name: "SceneCount", tag: "field",
                     details: "This field shall indicate the number of scenes currently used in the server’s Scene Table on the " +
                         "endpoint where the Scenes Management cluster appears." +
                         "\n" +
@@ -393,17 +476,22 @@ ScenesManagement.patch({
                 },
 
                 {
+                    name: "CurrentScene", tag: "field",
                     details: "This field shall indicate the scene identifier of the scene last invoked on the associated fabric. " +
                         "If no scene has been invoked, the value of this field shall be 0xFF, the undefined scene identifier.",
                     xref: "cluster§1.4.7.2.2"
                 },
+
                 {
+                    name: "CurrentGroup", tag: "field",
                     details: "This field shall indicate the group identifier of the scene last invoked on the associated fabric, " +
                         "or 0 if the scene last invoked is not associated with a group.",
                     xref: "cluster§1.4.7.2.3"
                 },
 
                 {
+                    name: "SceneValid", tag: "field",
+
                     details: "This field shall indicate whether the state of the server corresponds to that associated with the " +
                         "CurrentScene and CurrentGroup fields of the SceneInfoStruct they belong to. TRUE indicates that " +
                         "these fields are valid, FALSE indicates that they are not valid." +
@@ -422,6 +510,7 @@ ScenesManagement.patch({
                 },
 
                 {
+                    name: "RemainingCapacity", tag: "field",
                     details: "This field shall indicate the remaining capacity of the Scene Table on this endpoint for the " +
                         "accessing fabric. Note that this value may change between reads, even if no entries are added or " +
                         "deleted on the accessing fabric, due to other clients associated with other fabrics adding or " +
@@ -432,10 +521,13 @@ ScenesManagement.patch({
         },
 
         {
+            name: "AttributeValuePairStruct", tag: "datatype",
             details: "This data type indicates a combination of an identifier and the value of an attribute.",
             xref: "cluster§1.4.7.3",
 
             children: [{
+                name: "AttributeId", tag: "field",
+
                 details: "This field shall be present for all instances in a given ExtensionFieldSetStruct." +
                     "\n" +
                     "Which Value* field is used shall be determined based on the data type of the attribute indicated by " +
@@ -515,17 +607,20 @@ ScenesManagement.patch({
         },
 
         {
+            name: "ExtensionFieldSetStruct", tag: "datatype",
             details: "This data type indicates for a given cluster a set of attributes and their values.",
             xref: "cluster§1.4.7.4",
 
             children: [
                 {
+                    name: "ClusterId", tag: "field",
                     details: "This field shall indicate the cluster-id of the cluster whose attributes are in the " +
                         "AttributeValueList field.",
                     xref: "cluster§1.4.7.4.1"
                 },
 
                 {
+                    name: "AttributeValueList", tag: "field",
                     details: "This field shall indicate a set of attributes and their values which are stored as part of a scene." +
                         "\n" +
                         "Attributes which do not have the Scenes (\"S\") designation in the Quality column of their cluster " +
@@ -536,6 +631,8 @@ ScenesManagement.patch({
         },
 
         {
+            name: "LogicalSceneTable", tag: "datatype",
+
             details: "The Scene Table is used to store information for each scene capable of being invoked on the server. " +
                 "Each scene is defined for a particular group. The Scene Table is defined here as a conceptual " +
                 "illustration to assist in understanding the underlying data to be stored when scenes are defined. " +
@@ -550,16 +647,20 @@ ScenesManagement.patch({
 
             children: [
                 {
+                    name: "SceneGroupId", tag: "field",
                     details: "This field is the group identifier for which this scene applies, or 0 if the scene is not associated " +
                         "with a group.",
                     xref: "cluster§1.4.7.5.1"
                 },
+
                 {
+                    name: "SceneId", tag: "field",
                     details: "This field is unique within this group, which is used to identify this scene.",
                     xref: "cluster§1.4.7.5.2"
                 },
 
                 {
+                    name: "SceneName", tag: "field",
                     details: "The field is the name of the scene." +
                         "\n" +
                         "If scene names are not supported, any commands that write a scene name shall simply discard the " +
@@ -568,12 +669,14 @@ ScenesManagement.patch({
                 },
 
                 {
+                    name: "SceneTransitionTime", tag: "field",
                     details: "This field is the amount of time, in milliseconds, it will take for a cluster to change from its " +
                         "current state to the requested state.",
                     xref: "cluster§1.4.7.5.4"
                 },
 
                 {
+                    name: "ExtensionFields", tag: "field",
                     details: "See the Scene Table Extensions subsections of individual clusters. A Scene Table Extension shall " +
                         "only use attributes with the Scene quality. Each ExtensionFieldSetStruct holds a set of values of " +
                         "these attributes for a cluster implemented on the same endpoint where the Scene (\"S\") designation " +

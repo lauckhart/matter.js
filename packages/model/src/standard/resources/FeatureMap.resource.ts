@@ -6,9 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { FeatureMap } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-FeatureMap.patch({
+Resource.add({
+    name: "FeatureMap", tag: "attribute",
+
     details: "Each instance of a cluster shall support this attribute." +
         "\n" +
         "The FeatureMap attribute shall indicate whether the server supports zero or more optional cluster " +

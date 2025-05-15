@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { uint64 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-uint64.patch({ description: "Unsigned 64-bit integer", xref: "core§7.19.1" });
+Resource.add({ name: "uint64", tag: "datatype", description: "Unsigned 64-bit integer", xref: "core§7.19.1" });

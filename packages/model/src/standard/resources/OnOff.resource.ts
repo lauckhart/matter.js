@@ -6,22 +6,22 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { OnOff } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-OnOff.patch({
+Resource.add({
+    name: "OnOff", tag: "cluster",
     classification: "application", pics: "OO",
     details: "Attributes and commands for turning devices on and off.",
     xref: "cluster§1.5",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "cluster§1.5.4",
 
             children: [
                 {
-                    description: "Lighting",
+                    name: "LT", tag: "field",
 
                     details: "This cluster is used for a lighting application." +
                         "\n" +
@@ -36,7 +36,7 @@ OnOff.patch({
                 },
 
                 {
-                    description: "DeadFrontBehavior",
+                    name: "DF", tag: "field",
 
                     details: "When this feature is supported, the device exposing this server cluster exhibits \"dead front\" " +
                         "behavior when the \"OnOff\" attribute is FALSE (Off). This \"dead front\" behavior includes:" +
@@ -74,7 +74,7 @@ OnOff.patch({
                 },
 
                 {
-                    description: "OffOnly",
+                    name: "OFFONLY", tag: "field",
 
                     details: "When this feature is supported, the Off command shall be supported and the On and Toggle commands " +
                         "shall NOT be supported." +
@@ -89,12 +89,15 @@ OnOff.patch({
         },
 
         {
+            name: "OnOff", tag: "attribute",
             details: "This attribute indicates whether the device type implemented on the endpoint is turned off or turned " +
                 "on, in these cases the value of the OnOff attribute equals FALSE, or TRUE respectively.",
             xref: "cluster§1.5.6.2"
         },
 
         {
+            name: "GlobalSceneControl", tag: "attribute",
+
             details: "In order to support the use case where the user gets back the last setting of a set of devices (e.g. " +
                 "level settings for lights), a global scene is introduced which is stored when the devices are turned " +
                 "off and recalled when the devices are turned on. The global scene is defined as the scene that is " +
@@ -114,6 +117,7 @@ OnOff.patch({
         },
 
         {
+            name: "OnTime", tag: "attribute",
             details: "This attribute specifies the length of time (in 1/10ths second) that the On state shall be " +
                 "maintained before automatically transitioning to the Off state when using the OnWithTimedOff " +
                 "command. This attribute can be written at any time, but writing a value only has effect when in the " +
@@ -122,6 +126,8 @@ OnOff.patch({
         },
 
         {
+            name: "OffWaitTime", tag: "attribute",
+
             details: "This attribute specifies the length of time (in 1/10ths second) that the Off state shall be guarded " +
                 "to prevent another OnWithTimedOff command turning the server back to its On state (e.g., when " +
                 "leaving a room, the lights are turned off but an occupancy sensor detects the leaving person and " +
@@ -133,6 +139,8 @@ OnOff.patch({
         },
 
         {
+            name: "StartUpOnOff", tag: "attribute",
+
             details: "This attribute shall define the desired startup behavior of a device when it is supplied with power " +
                 "and this state shall be reflected in the OnOff attribute. If the value is null, the OnOff attribute " +
                 "is set to its previous value. Otherwise, the behavior is defined in the table defining " +
@@ -144,22 +152,25 @@ OnOff.patch({
             xref: "cluster§1.5.6.6"
         },
 
-        { xref: "cluster§1.5.7.1" },
-        { xref: "cluster§1.5.7.2" },
-        { xref: "cluster§1.5.7.3" },
+        { name: "Off", tag: "command", xref: "cluster§1.5.7.1" },
+        { name: "On", tag: "command", xref: "cluster§1.5.7.2" },
+        { name: "Toggle", tag: "command", xref: "cluster§1.5.7.3" },
 
         {
+            name: "OffWithEffect", tag: "command",
             details: "The OffWithEffect command allows devices to be turned off using enhanced ways of fading.",
             xref: "cluster§1.5.7.4",
 
             children: [
                 {
+                    name: "EffectIdentifier", tag: "field",
                     details: "This field specifies the fading effect to use when turning the device off. This field shall contain " +
                         "one of the non-reserved values listed in EffectIdentifierEnum.",
                     xref: "cluster§1.5.7.4.1"
                 },
 
                 {
+                    name: "EffectVariant", tag: "field",
                     details: "This field is used to indicate which variant of the effect, indicated in the EffectIdentifier field, " +
                         "SHOULD be triggered. If the server does not support the given variant, it shall use the default " +
                         "variant. This field is dependent on the value of the EffectIdentifier field and shall contain one of " +
@@ -171,11 +182,13 @@ OnOff.patch({
         },
 
         {
+            name: "OnWithRecallGlobalScene", tag: "command",
             details: "This command allows the recall of the settings when the device was turned off.",
             xref: "cluster§1.5.7.5"
         },
 
         {
+            name: "OnWithTimedOff", tag: "command",
             details: "This command allows devices to be turned on for a specific duration with a guarded off duration so " +
                 "that SHOULD the device be subsequently turned off, further OnWithTimedOff commands, received during " +
                 "this time, are prevented from turning the devices back on. Further OnWithTimedOff commands received " +
@@ -184,14 +197,17 @@ OnOff.patch({
 
             children: [
                 {
+                    name: "OnOffControl", tag: "field",
                     details: "This field contains information on how the server is to be operated.",
                     xref: "cluster§1.5.7.6.1"
                 },
                 {
+                    name: "OnTime", tag: "field",
                     details: "This field is used to adjust the value of the OnTime attribute.",
                     xref: "cluster§1.5.7.6.2"
                 },
                 {
+                    name: "OffWaitTime", tag: "field",
                     details: "This field is used to adjust the value of the OffWaitTime attribute.",
                     xref: "cluster§1.5.7.6.3"
                 }
@@ -199,33 +215,55 @@ OnOff.patch({
         },
 
         {
+            name: "OnOffControlBitmap", tag: "datatype",
             xref: "cluster§1.5.5.1",
-            children: [{ description: "Indicates a command is only accepted when in On state." }]
+            children: [{
+                name: "AcceptOnlyWhenOn", tag: "field",
+                description: "Indicates a command is only accepted when in On state."
+            }]
         },
 
         {
+            name: "StartUpOnOffEnum", tag: "datatype",
             xref: "cluster§1.5.5.2",
 
             children: [
-                { description: "Set the OnOff attribute to FALSE" },
-                { description: "Set the OnOff attribute to TRUE" },
+                { name: "Off", tag: "field", description: "Set the OnOff attribute to FALSE" },
+                { name: "On", tag: "field", description: "Set the OnOff attribute to TRUE" },
                 {
+                    name: "Toggle", tag: "field",
                     description: "If the previous value of the OnOff attribute is equal to FALSE, set the OnOff attribute to TRUE. If the previous value of the OnOff attribute is equal to TRUE, set the OnOff attribute to FALSE (toggle)."
                 }
             ]
         },
 
-        { xref: "cluster§1.5.5.3", children: [{ description: "Delayed All Off" }, { description: "Dying Light" }] },
-
         {
-            xref: "cluster§1.5.5.4",
+            name: "EffectIdentifierEnum", tag: "datatype",
+            xref: "cluster§1.5.5.3",
             children: [
-                { description: "Fade to off in 0.8 seconds" },
-                { description: "No fade" },
-                { description: "50% dim down in 0.8 seconds then fade to off in 12 seconds" }
+                { name: "DelayedAllOff", tag: "field", description: "Delayed All Off" },
+                { name: "DyingLight", tag: "field", description: "Dying Light" }
             ]
         },
 
-        { xref: "cluster§1.5.5.5", children: [{ description: "20% dim up in 0.5s then fade to off in 1 second" }] }
+        {
+            name: "DelayedAllOffEffectVariantEnum", tag: "datatype",
+            xref: "cluster§1.5.5.4",
+
+            children: [
+                { name: "DelayedOffFastFade", tag: "field", description: "Fade to off in 0.8 seconds" },
+                { name: "NoFade", tag: "field", description: "No fade" },
+                {
+                    name: "DelayedOffSlowFade", tag: "field",
+                    description: "50% dim down in 0.8 seconds then fade to off in 12 seconds"
+                }
+            ]
+        },
+
+        {
+            name: "DyingLightEffectVariantEnum", tag: "datatype",
+            xref: "cluster§1.5.5.5",
+            children: [{ name: "DyingLightFadeOff", tag: "field", description: "20% dim up in 0.5s then fade to off in 1 second" }]
+        }
     ]
 });

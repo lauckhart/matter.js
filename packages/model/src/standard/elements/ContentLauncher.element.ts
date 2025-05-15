@@ -21,11 +21,11 @@ export const ContentLauncher = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "CS", constraint: "0", description: "ContentSearch" }),
-        Field({ name: "UP", constraint: "1", description: "UrlPlayback" }),
-        Field({ name: "AS", constraint: "2", description: "AdvancedSeek" }),
-        Field({ name: "TT", constraint: "3", description: "TextTracks" }),
-        Field({ name: "AT", constraint: "4", description: "AudioTracks" })
+        Field({ name: "CS", constraint: "0", longName: "ContentSearch" }),
+        Field({ name: "UP", constraint: "1", longName: "UrlPlayback" }),
+        Field({ name: "AS", constraint: "2", longName: "AdvancedSeek" }),
+        Field({ name: "TT", constraint: "3", longName: "TextTracks" }),
+        Field({ name: "AT", constraint: "4", longName: "AudioTracks" })
     ),
 
     Attribute(

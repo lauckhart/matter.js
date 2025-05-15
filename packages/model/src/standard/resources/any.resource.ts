@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { any } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-any.patch({
+Resource.add({
+    name: "any", tag: "datatype",
     description: "A datatype that may represent any value.",
     details: "We use this type in places where the Matter specification allows for values of any type."
 });

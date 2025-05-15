@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Descriptor } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-Descriptor.patch({
+Resource.add({
+    name: "Descriptor", tag: "cluster",
     classification: "endpoint", pics: "DESC",
 
     details: "NOTE" +
@@ -28,13 +29,12 @@ Descriptor.patch({
     xref: "core§9.5",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "core§9.5.4",
 
             children: [{
-                description: "TagList",
+                name: "TAGLIST", tag: "field",
                 details: "See the Disambiguation section in the System Model spec for conformance requirements for this " +
                     "feature and the corresponding attribute.",
                 xref: "core§9.5.4.1"
@@ -42,6 +42,8 @@ Descriptor.patch({
         },
 
         {
+            name: "DeviceTypeList", tag: "attribute",
+
             details: "This is a list of device types and corresponding revisions declaring endpoint conformance (see " +
                 "DeviceTypeStruct). At least one device type entry shall be present." +
                 "\n" +
@@ -53,15 +55,18 @@ Descriptor.patch({
         },
 
         {
+            name: "ServerList", tag: "attribute",
             details: "This attribute shall list each cluster ID for the server clusters present on the endpoint instance.",
             xref: "core§9.5.6.2"
         },
         {
+            name: "ClientList", tag: "attribute",
             details: "This attribute shall list each cluster ID for the client clusters present on the endpoint instance.",
             xref: "core§9.5.6.3"
         },
 
         {
+            name: "PartsList", tag: "attribute",
             details: "This attribute indicates composition of the device type instance. Device type instance composition " +
                 "shall include the endpoints in this list." +
                 "\n" +
@@ -70,6 +75,8 @@ Descriptor.patch({
         },
 
         {
+            name: "TagList", tag: "attribute",
+
             details: "This attribute shall be used to disambiguate sibling endpoints in certain situations, as defined in " +
                 "the Disambiguation section in the System Model specification. An example of such a situation might " +
                 "be a device with two buttons, with this attribute being used to indicate which of the two endpoints " +
@@ -94,17 +101,21 @@ Descriptor.patch({
         },
 
         {
+            name: "DeviceTypeStruct", tag: "datatype",
             details: "The device type and revision define endpoint conformance to a release of a device type definition. " +
                 "See the Data Model specification for more information.",
             xref: "core§9.5.5.1",
 
             children: [
                 {
+                    name: "DeviceType", tag: "field",
                     details: "This shall indicate the device type definition. The endpoint shall conform to the device type " +
                         "definition and cluster specifications required by the device type.",
                     xref: "core§9.5.5.1.1"
                 },
+
                 {
+                    name: "Revision", tag: "field",
                     details: "This is the implemented revision of the device type definition. The endpoint shall conform to this " +
                         "revision of the device type.",
                     xref: "core§9.5.5.1.2"

@@ -6,11 +6,16 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { WindowCoveringDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-WindowCoveringDt.patch({
+Resource.add({
+    name: "WindowCovering", tag: "deviceType",
     classification: "simple",
     details: "This defines conformance to the Window Covering device type.",
     xref: "device§8.3",
-    children: [undefined, { xref: "device§8.3.4" }, { xref: "device§8.3.4" }, { xref: "device§8.3.4" }]
+    children: [
+        { name: "Identify", tag: "requirement", xref: "device§8.3.4" },
+        { name: "Groups", tag: "requirement", xref: "device§8.3.4" },
+        { name: "WindowCovering", tag: "requirement", xref: "device§8.3.4" }
+    ]
 });

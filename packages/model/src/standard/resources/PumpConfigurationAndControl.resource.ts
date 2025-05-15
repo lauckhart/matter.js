@@ -6,10 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { PumpConfigurationAndControl } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-PumpConfigurationAndControl.patch(
+Resource.add(
     {
+        name: "PumpConfigurationAndControl", tag: "cluster",
         classification: "application", pics: "PCC",
 
         details: "The Pump Configuration and Control cluster provides an interface for the setup and control of pump " +
@@ -31,23 +32,23 @@ PumpConfigurationAndControl.patch(
         xref: "cluster§4.2",
 
         children: [
-            undefined,
-
             {
+                name: "FeatureMap", tag: "attribute",
                 xref: "cluster§4.2.4",
 
                 children: [
-                    { description: "ConstantPressure", details: "Supports operating in constant pressure mode" },
-                    { description: "CompensatedPressure", details: "Supports operating in compensated pressure mode" },
-                    { description: "ConstantFlow", details: "Supports operating in constant flow mode" },
-                    { description: "ConstantSpeed", details: "Supports operating in constant speed mode" },
-                    { description: "ConstantTemperature", details: "Supports operating in constant temperature mode" },
-                    { description: "Automatic", details: "Supports operating in automatic mode" },
-                    { description: "LocalOperation", details: "Supports operating using local settings" }
+                    { name: "PRSCONST", tag: "field", details: "Supports operating in constant pressure mode" },
+                    { name: "PRSCOMP", tag: "field", details: "Supports operating in compensated pressure mode" },
+                    { name: "FLW", tag: "field", details: "Supports operating in constant flow mode" },
+                    { name: "SPD", tag: "field", details: "Supports operating in constant speed mode" },
+                    { name: "TEMP", tag: "field", details: "Supports operating in constant temperature mode" },
+                    { name: "AUTO", tag: "field", details: "Supports operating in automatic mode" },
+                    { name: "LOCAL", tag: "field", details: "Supports operating using local settings" }
                 ]
             },
 
             {
+                name: "MaxPressure", tag: "attribute",
                 details: "This attribute specifies the maximum pressure the pump can achieve. It is a physical limit, and does " +
                     "not apply to any specific control mode or operation mode." +
                     "\n" +
@@ -56,6 +57,7 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "MaxSpeed", tag: "attribute",
                 details: "This attribute specifies the maximum speed the pump can achieve. It is a physical limit, and does " +
                     "not apply to any specific control mode or operation mode." +
                     "\n" +
@@ -64,6 +66,7 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "MaxFlow", tag: "attribute",
                 details: "This attribute specifies the maximum flow the pump can achieve. It is a physical limit, and does not " +
                     "apply to any specific control mode or operation mode." +
                     "\n" +
@@ -72,6 +75,7 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "MinConstPressure", tag: "attribute",
                 details: "This attribute specifies the minimum pressure the pump can achieve when it is working with the " +
                     "ControlMode attribute set to ConstantPressure." +
                     "\n" +
@@ -80,6 +84,7 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "MaxConstPressure", tag: "attribute",
                 details: "This attribute specifies the maximum pressure the pump can achieve when it is working with the " +
                     "ControlMode attribute set to ConstantPressure." +
                     "\n" +
@@ -88,6 +93,7 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "MinCompPressure", tag: "attribute",
                 details: "This attribute specifies the minimum compensated pressure the pump can achieve when it is working " +
                     "with the ControlMode attribute set to ProportionalPressure." +
                     "\n" +
@@ -96,6 +102,7 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "MaxCompPressure", tag: "attribute",
                 details: "This attribute specifies the maximum compensated pressure the pump can achieve when it is working " +
                     "with the ControlMode attribute set to ProportionalPressure." +
                     "\n" +
@@ -104,6 +111,7 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "MinConstSpeed", tag: "attribute",
                 details: "This attribute specifies the minimum speed the pump can achieve when it is working with the Con" +
                     "\n" +
                     "trolMode attribute set to ConstantSpeed." +
@@ -113,6 +121,7 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "MaxConstSpeed", tag: "attribute",
                 details: "This attribute specifies the maximum speed the pump can achieve when it is working with the " +
                     "ControlMode attribute set to ConstantSpeed." +
                     "\n" +
@@ -121,6 +130,7 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "MinConstFlow", tag: "attribute",
                 details: "This attribute specifies the minimum flow the pump can achieve when it is working with the " +
                     "ControlMode attribute set to ConstantFlow." +
                     "\n" +
@@ -129,6 +139,7 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "MaxConstFlow", tag: "attribute",
                 details: "This attribute specifies the maximum flow the pump can achieve when it is working with the " +
                     "ControlMode attribute set to ConstantFlow." +
                     "\n" +
@@ -137,6 +148,7 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "MinConstTemp", tag: "attribute",
                 details: "This attribute specifies the minimum temperature the pump can maintain in the system when it is " +
                     "working with the ControlMode attribute set to ConstantTemperature." +
                     "\n" +
@@ -145,6 +157,8 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "MaxConstTemp", tag: "attribute",
+
                 details: "This attribute specifies the maximum temperature the pump can maintain in the system when it is " +
                     "working with the ControlMode attribute set to ConstantTemperature." +
                     "\n" +
@@ -156,6 +170,7 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "PumpStatus", tag: "attribute",
                 details: "This attribute specifies the activity status of the pump functions as listed in PumpStatusBitmap. " +
                     "Where a pump controller function is active, the corresponding bit shall be set to 1. Where a pump" +
                     "\n" +
@@ -164,6 +179,8 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "EffectiveOperationMode", tag: "attribute",
+
                 details: "This attribute specifies current effective operation mode of the pump as defined in " +
                     "OperationModeEnum." +
                     "\n" +
@@ -181,6 +198,8 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "EffectiveControlMode", tag: "attribute",
+
                 details: "This attribute specifies the current effective control mode of the pump as defined in " +
                     "ControlModeEnum." +
                     "\n" +
@@ -205,6 +224,8 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "Capacity", tag: "attribute",
+
                 details: "This attribute specifies the actual capacity of the pump as a percentage of the effective maximum " +
                     "setpoint value. It is updated dynamically as the speed of the pump changes." +
                     "\n" +
@@ -218,6 +239,8 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "Speed", tag: "attribute",
+
                 details: "This attribute specifies the actual speed of the pump measured in RPM. It is updated dynamically as " +
                     "the speed of the pump changes." +
                     "\n" +
@@ -230,6 +253,8 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "LifetimeRunningHours", tag: "attribute",
+
                 details: "This attribute specifies the accumulated number of hours that the pump has been powered and the " +
                     "motor has been running. It is updated dynamically as it increases. It is preserved over power cycles " +
                     "of the pump. If LifeTimeRunningHours rises above maximum value it “rolls over” and starts at 0 " +
@@ -244,6 +269,8 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "Power", tag: "attribute",
+
                 details: "This attribute specifies the actual power consumption of the pump in Watts. The value of this " +
                     "attribute is updated dynamically as the power consumption of the pump changes." +
                     "\n" +
@@ -256,6 +283,8 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "LifetimeEnergyConsumed", tag: "attribute",
+
                 details: "This attribute specifies the accumulated energy consumption of the pump through the entire lifetime " +
                     "of the pump in kWh. The value of the LifetimeEnergyConsumed attribute is updated dynamically as the " +
                     "energy consumption of the pump increases. If LifetimeEnergyConsumed rises above maximum value it " +
@@ -271,6 +300,8 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "OperationMode", tag: "attribute",
+
                 details: "This attribute specifies the operation mode of the pump as defined in OperationModeEnum." +
                     "\n" +
                     "The actual operating mode of the pump is a result of the setting of the attributes OperationMode, " +
@@ -301,6 +332,8 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "ControlMode", tag: "attribute",
+
                 details: "This attribute specifies the control mode of the pump as defined in ControlModeEnum." +
                     "\n" +
                     "See the OperationMode attribute for a detailed description of the operation and control of the pump." +
@@ -315,43 +348,49 @@ PumpConfigurationAndControl.patch(
                 xref: "cluster§4.2.7.23"
             },
 
-            { xref: "cluster§4.2.7" },
-            { xref: "cluster§4.2.8" },
-            { xref: "cluster§4.2.8" },
-            { xref: "cluster§4.2.8" },
-            { xref: "cluster§4.2.8" },
-            { xref: "cluster§4.2.8" },
-            { xref: "cluster§4.2.8" },
-            { xref: "cluster§4.2.8" },
-            { xref: "cluster§4.2.8" },
-            { xref: "cluster§4.2.8" },
-            { xref: "cluster§4.2.8" },
-            { xref: "cluster§4.2.8" },
-            { xref: "cluster§4.2.8" },
-            { xref: "cluster§4.2.8" },
-            { xref: "cluster§4.2.8" },
-            { xref: "cluster§4.2.8" },
-            { xref: "cluster§4.2.8" },
-            { xref: "cluster§4.2.8" },
+            { name: "AlarmMask", tag: "attribute", xref: "cluster§4.2.7" },
+            { name: "SupplyVoltageLow", tag: "event", xref: "cluster§4.2.8" },
+            { name: "SupplyVoltageHigh", tag: "event", xref: "cluster§4.2.8" },
+            { name: "PowerMissingPhase", tag: "event", xref: "cluster§4.2.8" },
+            { name: "SystemPressureLow", tag: "event", xref: "cluster§4.2.8" },
+            { name: "SystemPressureHigh", tag: "event", xref: "cluster§4.2.8" },
+            { name: "DryRunning", tag: "event", xref: "cluster§4.2.8" },
+            { name: "MotorTemperatureHigh", tag: "event", xref: "cluster§4.2.8" },
+            { name: "PumpMotorFatalFailure", tag: "event", xref: "cluster§4.2.8" },
+            { name: "ElectronicTemperatureHigh", tag: "event", xref: "cluster§4.2.8" },
+            { name: "PumpBlocked", tag: "event", xref: "cluster§4.2.8" },
+            { name: "SensorFailure", tag: "event", xref: "cluster§4.2.8" },
+            { name: "ElectronicNonFatalFailure", tag: "event", xref: "cluster§4.2.8" },
+            { name: "ElectronicFatalFailure", tag: "event", xref: "cluster§4.2.8" },
+            { name: "GeneralFault", tag: "event", xref: "cluster§4.2.8" },
+            { name: "Leakage", tag: "event", xref: "cluster§4.2.8" },
+            { name: "AirDetection", tag: "event", xref: "cluster§4.2.8" },
+            { name: "TurbineOperation", tag: "event", xref: "cluster§4.2.8" },
 
             {
+                name: "PumpStatusBitmap", tag: "datatype",
                 xref: "cluster§4.2.6.1",
 
                 children: [
                     {
+                        name: "DeviceFault", tag: "field",
                         description: "A fault related to the system or pump device is detected.",
                         details: "If this bit is set, it may correspond to an event in the range 2-16, see Events.",
                         xref: "cluster§4.2.6.1.1"
                     },
+
                     {
+                        name: "SupplyFault", tag: "field",
                         description: "A fault related to the supply to the pump is detected.",
                         details: "If this bit is set, it may correspond to an event in the range 0-1 or 13, see Events.",
                         xref: "cluster§4.2.6.1.2"
                     },
-                    { description: "Setpoint is too low to achieve." },
-                    { description: "Setpoint is too high to achieve." },
+
+                    { name: "SpeedLow", tag: "field", description: "Setpoint is too low to achieve." },
+                    { name: "SpeedHigh", tag: "field", description: "Setpoint is too high to achieve." },
 
                     {
+                        name: "LocalOverride", tag: "field",
                         description: "Device control is overridden by hardware, such as an external STOP button or via a local HMI.",
                         details: "While this bit is set, the EffectiveOperationMode is adjusted to Local. Any request changing " +
                             "OperationMode shall generate a FAILURE error status until LocalOverride is cleared on the physical " +
@@ -360,9 +399,10 @@ PumpConfigurationAndControl.patch(
                         xref: "cluster§4.2.6.1.3"
                     },
 
-                    { description: "Pump is currently running" },
+                    { name: "Running", tag: "field", description: "Pump is currently running" },
 
                     {
+                        name: "RemotePressure", tag: "field",
                         description: "A remote pressure sensor is used as the sensor for the regulation of the pump.",
                         details: "If this bit is set, EffectiveControlMode is ConstantPressure and the setpoint for the pump is " +
                             "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
@@ -371,6 +411,7 @@ PumpConfigurationAndControl.patch(
                     },
 
                     {
+                        name: "RemoteFlow", tag: "field",
                         description: "A remote flow sensor is used as the sensor for the regulation of the pump.",
                         details: "If this bit is set, EffectiveControlMode is ConstantFlow, and the setpoint for the pump is " +
                             "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
@@ -379,6 +420,7 @@ PumpConfigurationAndControl.patch(
                     },
 
                     {
+                        name: "RemoteTemperature", tag: "field",
                         description: "A remote temperature sensor is used as the sensor for the regulation of the pump.",
                         details: "If this bit is set, EffectiveControlMode is ConstantTemperature, and the setpoint for the pump is " +
                             "interpreted as a percentage of the range of the remote sensor ([MinMeasuredValue – " +
@@ -389,10 +431,12 @@ PumpConfigurationAndControl.patch(
             },
 
             {
+                name: "OperationModeEnum", tag: "datatype",
                 xref: "cluster§4.2.6.2",
 
                 children: [
                     {
+                        name: "Normal", tag: "field",
                         description: "The pump is controlled by a setpoint, as defined by a connected remote sensor or by the ControlMode attribute.",
                         details: "If the pump is running in this operation mode the setpoint is an internal variable which may be " +
                             "controlled between 0% and 100%, e.g., by means of the Level Control cluster",
@@ -400,20 +444,27 @@ PumpConfigurationAndControl.patch(
                     },
 
                     {
+                        name: "Minimum", tag: "field",
                         description: "This value sets the pump to run at the minimum possible speed it can without being stopped."
                     },
-                    { description: "This value sets the pump to run at its maximum possible speed." },
                     {
+                        name: "Maximum", tag: "field",
+                        description: "This value sets the pump to run at its maximum possible speed."
+                    },
+                    {
+                        name: "Local", tag: "field",
                         description: "This value sets the pump to run with the local settings of the pump, regardless of what these are."
                     }
                 ]
             },
 
             {
+                name: "ControlModeEnum", tag: "datatype",
                 xref: "cluster§4.2.6.3",
 
                 children: [
                     {
+                        name: "ConstantSpeed", tag: "field",
                         description: "The pump is running at a constant speed.",
                         details: "The setpoint is interpreted as a percentage of the range derived from the [MinConstSpeed – " +
                             "MaxConstSpeed] attributes.",
@@ -421,6 +472,7 @@ PumpConfigurationAndControl.patch(
                     },
 
                     {
+                        name: "ConstantPressure", tag: "field",
                         description: "The pump will regulate its speed to maintain a constant differential pressure over its flanges.",
                         details: "The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. " +
                             "In case of the internal pressure sensor, this will be the range derived from the [MinConstPressure – " +
@@ -430,6 +482,7 @@ PumpConfigurationAndControl.patch(
                     },
 
                     {
+                        name: "ProportionalPressure", tag: "field",
                         description: "The pump will regulate its speed to maintain a constant differential pressure over its flanges.",
                         details: "The setpoint is interpreted as a percentage of the range derived of the [MinCompPressure – Max" +
                             "\n" +
@@ -439,6 +492,7 @@ PumpConfigurationAndControl.patch(
                     },
 
                     {
+                        name: "ConstantFlow", tag: "field",
                         description: "The pump will regulate its speed to maintain a constant flow through the pump.",
                         details: "The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. " +
                             "In case of the internal flow sensor, this will be the range derived from the [MinConstFlow – " +
@@ -448,6 +502,7 @@ PumpConfigurationAndControl.patch(
                     },
 
                     {
+                        name: "ConstantTemperature", tag: "field",
                         description: "The pump will regulate its speed to maintain a constant temperature.",
                         details: "The setpoint is interpreted as a percentage of the range of the sensor used for this control mode. " +
                             "In case of the internal temperature sensor, this will be the range derived from the [MinConstTemp – " +
@@ -457,6 +512,7 @@ PumpConfigurationAndControl.patch(
                     },
 
                     {
+                        name: "Automatic", tag: "field",
                         description: "The operation of the pump is automatically optimized to provide the most suitable performance with respect to comfort and energy savings.",
                         details: "This behavior is manufacturer defined. The pump can be stopped by setting the setpoint of the level " +
                             "control cluster to 0, or by using the On/Off cluster. If the pump is started (at any setpoint), the " +

@@ -6,12 +6,17 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { OccupancySensorDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-OccupancySensorDt.patch({
+Resource.add({
+    name: "OccupancySensor", tag: "deviceType",
     classification: "simple",
     details: "An Occupancy Sensor is a measurement and sensing device that is capable of measuring and reporting " +
         "the occupancy state in a designated area.",
     xref: "device§7.3",
-    children: [undefined, { xref: "device§7.3.4" }, { xref: "device§7.3.4" }, { xref: "device§7.3.4" }]
+    children: [
+        { name: "Identify", tag: "requirement", xref: "device§7.3.4" },
+        { name: "BooleanStateConfiguration", tag: "requirement", xref: "device§7.3.4" },
+        { name: "OccupancySensing", tag: "requirement", xref: "device§7.3.4" }
+    ]
 });

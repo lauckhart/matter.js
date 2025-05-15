@@ -6,12 +6,16 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { OtaProviderDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-OtaProviderDt.patch({
+Resource.add({
+    name: "OtaProvider", tag: "deviceType",
     classification: "utility",
     details: "An OTA Provider is a node that is capable of providing an OTA software update to other nodes on the " +
         "same fabric.",
     xref: "device§2.4",
-    children: [undefined, { xref: "device§2.4.3" }, { xref: "device§2.4.3" }]
+    children: [
+        { name: "OtaSoftwareUpdateRequestor", tag: "requirement", xref: "device§2.4.3" },
+        { name: "OtaSoftwareUpdateProvider", tag: "requirement", xref: "device§2.4.3" }
+    ]
 });

@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { AttributeList } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-AttributeList.patch({
+Resource.add({
+    name: "AttributeList", tag: "attribute",
     details: "Each instance of a cluster shall support this attribute. This attribute shall be a list of the " +
         "attribute IDs of the attributes supported by the cluster instance.",
     xref: "core§7.13.3"

@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { uint8 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-uint8.patch({ description: "Unsigned 8-bit integer", xref: "core§7.19.1" });
+Resource.add({ name: "uint8", tag: "datatype", description: "Unsigned 8-bit integer", xref: "core§7.19.1" });

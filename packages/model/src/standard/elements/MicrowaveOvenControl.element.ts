@@ -20,9 +20,9 @@ export const MicrowaveOvenControl = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "PWRNUM", conformance: "O.a", constraint: "0", description: "PowerAsNumber" }),
-        Field({ name: "WATTS", conformance: "P, O.a", constraint: "1", description: "PowerInWatts" }),
-        Field({ name: "PWRLMTS", conformance: "[PWRNUM]", constraint: "2", description: "PowerNumberLimits" })
+        Field({ name: "PWRNUM", conformance: "O.a", constraint: "0", longName: "PowerAsNumber" }),
+        Field({ name: "WATTS", conformance: "P, O.a", constraint: "1", longName: "PowerInWatts" }),
+        Field({ name: "PWRLMTS", conformance: "[PWRNUM]", constraint: "2", longName: "PowerNumberLimits" })
     ),
 
     Attribute({

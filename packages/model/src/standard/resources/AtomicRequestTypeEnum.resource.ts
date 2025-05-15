@@ -6,13 +6,18 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { AtomicRequestTypeEnum } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-AtomicRequestTypeEnum.patch({
+Resource.add({
+    name: "AtomicRequestTypeEnum", tag: "datatype",
     xref: "core§7.15.4",
+
     children: [
-        { description: "Begin an atomic write" },
-        { description: "Commit an atomic write" },
-        { description: "Rollback an atomic write, discarding any pending changes" }
+        { name: "BeginWrite", tag: "field", description: "Begin an atomic write" },
+        { name: "CommitWrite", tag: "field", description: "Commit an atomic write" },
+        {
+            name: "RollbackWrite", tag: "field",
+            description: "Rollback an atomic write, discarding any pending changes"
+        }
     ]
 });

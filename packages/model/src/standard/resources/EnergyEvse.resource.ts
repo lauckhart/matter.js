@@ -6,10 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { EnergyEvse } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-EnergyEvse.patch(
+Resource.add(
     {
+        name: "EnergyEvse", tag: "cluster",
         classification: "application", pics: "EEVSE",
 
         details: "Electric Vehicle Supply Equipment (EVSE) is equipment used to charge an Electric Vehicle (EV) or " +
@@ -48,14 +49,13 @@ EnergyEvse.patch(
         xref: "cluster§9.3",
 
         children: [
-            undefined,
-
             {
+                name: "FeatureMap", tag: "attribute",
                 xref: "cluster§9.3.4",
 
                 children: [
                     {
-                        description: "ChargingPreferences",
+                        name: "PREF", tag: "field",
 
                         details: "Since some EVSEs cannot obtain the SoC from the vehicle, some EV charging solutions allow the " +
                             "consumer to specify a daily charging target (for adding energy to the EV’s battery). This feature " +
@@ -83,7 +83,7 @@ EnergyEvse.patch(
                     },
 
                     {
-                        description: "SoCReporting",
+                        name: "SOC", tag: "field",
 
                         details: "Vehicles and EVSEs which support ISO 15118 may allow the vehicle to report its battery size and " +
                             "state of charge. If the EVSE supports PLC it may have a vehicle connected which optionally supports " +
@@ -99,7 +99,7 @@ EnergyEvse.patch(
                     },
 
                     {
-                        description: "PlugAndCharge",
+                        name: "PNC", tag: "field",
                         details: "If the EVSE supports PLC, it may be able to support the Plug and Charge feature. e.g. this may allow " +
                             "the vehicle ID to be obtained which may allow an energy management system to track energy usage per " +
                             "vehicle (e.g. to give the owner an indicative cost of charging, or for work place charging)." +
@@ -109,7 +109,7 @@ EnergyEvse.patch(
                     },
 
                     {
-                        description: "Rfid",
+                        name: "RFID", tag: "field",
 
                         details: "If the EVSE is fitted with an RFID reader, it may be possible to obtain the User or Vehicle ID from " +
                             "an RFID card. This may be used to record a charging session against a specific charging account, and " +
@@ -123,6 +123,7 @@ EnergyEvse.patch(
                     },
 
                     {
+                        name: "V2X", tag: "field",
                         description: "V2X",
 
                         details: "If the EVSE can support bi-directional charging, it may be possible to request that the vehicle can " +
@@ -140,6 +141,8 @@ EnergyEvse.patch(
             },
 
             {
+                name: "State", tag: "attribute",
+
                 details: "Indicates the current status of the EVSE. This higher-level status is partly derived from the " +
                     "signaling protocol as communicated between the EVSE and the vehicle through the pilot signal." +
                     "\n" +
@@ -159,11 +162,13 @@ EnergyEvse.patch(
             },
 
             {
+                name: "SupplyState", tag: "attribute",
                 details: "Indicates whether the EV is currently allowed to charge from or discharge to the EVSE.",
                 xref: "cluster§9.3.8.2"
             },
 
             {
+                name: "FaultState", tag: "attribute",
                 details: "Indicates the type of fault detected by the EVSE (internally or as detected in the pilot signal)." +
                     "\n" +
                     "When the SupplyState attribute is DisabledError, the FaultState attribute will be one of the values " +
@@ -173,6 +178,8 @@ EnergyEvse.patch(
             },
 
             {
+                name: "ChargingEnabledUntil", tag: "attribute",
+
                 details: "Indicates the time, in UTC, that the EVSE will automatically stop current flow to the EV." +
                     "\n" +
                     "A null value indicates the EVSE is always enabled for charging." +
@@ -187,6 +194,8 @@ EnergyEvse.patch(
             },
 
             {
+                name: "DischargingEnabledUntil", tag: "attribute",
+
                 details: "Indicates the time, in UTC, that the EVSE will automatically stop current flow from the EV." +
                     "\n" +
                     "A null value indicates the EVSE is always enabled for discharging." +
@@ -201,6 +210,7 @@ EnergyEvse.patch(
             },
 
             {
+                name: "CircuitCapacity", tag: "attribute",
                 details: "Indicates the capacity that the circuit that the EVSE is connected to can provide. It is intended to " +
                     "allow implementation of a self-managed network of EVSEs. It is assumed that the device will allow " +
                     "the setting of such values by an installer.",
@@ -208,6 +218,7 @@ EnergyEvse.patch(
             },
 
             {
+                name: "MinimumChargeCurrent", tag: "attribute",
                 details: "Indicates the minimum current that can be delivered by the EVSE to the EV." +
                     "\n" +
                     "The attribute can be set using the EnableCharging command.",
@@ -215,6 +226,8 @@ EnergyEvse.patch(
             },
 
             {
+                name: "MaximumChargeCurrent", tag: "attribute",
+
                 details: "Indicates the maximum current that can be delivered by the EVSE to the EV." +
                     "\n" +
                     "This shall represent the actual maximum current offered to the EV at any time. Note that the EV can " +
@@ -238,6 +251,8 @@ EnergyEvse.patch(
             },
 
             {
+                name: "MaximumDischargeCurrent", tag: "attribute",
+
                 details: "Indicates the maximum current that can be received by the EVSE from the EV. This attribute can be " +
                     "set using the EnableDischarging command." +
                     "\n" +
@@ -253,6 +268,8 @@ EnergyEvse.patch(
             },
 
             {
+                name: "UserMaximumChargeCurrent", tag: "attribute",
+
                 details: "Indicates a maximum current that can set by the consumer (e.g. via an app) as a preference to " +
                     "further reduce the charging rate. This may be desirable if the home owner has a solar PV or battery " +
                     "storage system which may only be able to deliver a limited amount of power. The consumer can " +
@@ -273,6 +290,8 @@ EnergyEvse.patch(
             },
 
             {
+                name: "RandomizationDelayWindow", tag: "attribute",
+
                 details: "Indicates the size of a random window over which the EVSE will randomize the start of a charging " +
                     "session. This value is in seconds." +
                     "\n" +
@@ -287,6 +306,8 @@ EnergyEvse.patch(
             },
 
             {
+                name: "NextChargeStartTime", tag: "attribute",
+
                 details: "Indicates the time, in UTC, when the EVSE plans to start the next scheduled charge based on the " +
                     "charging preferences." +
                     "\n" +
@@ -298,6 +319,8 @@ EnergyEvse.patch(
             },
 
             {
+                name: "NextChargeTargetTime", tag: "attribute",
+
                 details: "Indicates the time, in UTC, when the EVSE SHOULD complete the next scheduled charge based on the " +
                     "charging preferences." +
                     "\n" +
@@ -309,6 +332,8 @@ EnergyEvse.patch(
             },
 
             {
+                name: "NextChargeRequiredEnergy", tag: "attribute",
+
                 details: "Indicates the amount of energy that the EVSE is going to attempt to add to the vehicle in the next " +
                     "charging target." +
                     "\n" +
@@ -321,6 +346,8 @@ EnergyEvse.patch(
             },
 
             {
+                name: "NextChargeTargetSoC", tag: "attribute",
+
                 details: "Indicates the target SoC the EVSE is going to attempt to reach when the vehicle is next charged." +
                     "\n" +
                     "A null value indicates that there is no scheduled charging" +
@@ -335,6 +362,8 @@ EnergyEvse.patch(
             },
 
             {
+                name: "ApproximateEvEfficiency", tag: "attribute",
+
                 details: "Indicates the vehicle efficiency rating for a connected vehicle." +
                     "\n" +
                     "This can be used to help indicate to the user approximately how many miles or km of range will be " +
@@ -369,6 +398,7 @@ EnergyEvse.patch(
             },
 
             {
+                name: "StateOfCharge", tag: "attribute",
                 details: "Indicates the state of charge of the EV battery in steps of 1%. The values are in the 0-100%. This " +
                     "attribute is only available on EVSEs which can read the state of charge from the vehicle and that " +
                     "support the SOC feature. If the StateOfCharge cannot be read from the vehicle it shall be returned " +
@@ -377,11 +407,13 @@ EnergyEvse.patch(
             },
 
             {
+                name: "BatteryCapacity", tag: "attribute",
                 details: "Indicates the capacity of the EV battery in mWh. This value is always positive.",
                 xref: "cluster§9.3.8.18"
             },
 
             {
+                name: "VehicleId", tag: "attribute",
                 details: "Indicates the vehicle ID read by the EVSE via ISO-15118 using the PNC feature, if the EVSE supports " +
                     "this capability." +
                     "\n" +
@@ -390,41 +422,50 @@ EnergyEvse.patch(
                 xref: "cluster§9.3.8.19"
             },
 
-            { xref: "cluster§9.3.8" },
-            { xref: "cluster§9.3.8" },
-            { xref: "cluster§9.3.8" },
-            { xref: "cluster§9.3.8" },
+            { name: "SessionId", tag: "attribute", xref: "cluster§9.3.8" },
+            { name: "SessionDuration", tag: "attribute", xref: "cluster§9.3.8" },
+            { name: "SessionEnergyCharged", tag: "attribute", xref: "cluster§9.3.8" },
+            { name: "SessionEnergyDischarged", tag: "attribute", xref: "cluster§9.3.8" },
 
             {
+                name: "EvConnected", tag: "event",
                 details: "This event shall be generated when the EV is plugged in.",
                 xref: "cluster§9.3.10.1",
                 children: [{
+                    name: "SessionId", tag: "field",
                     details: "This is the new session ID created after the vehicle is plugged in.",
                     xref: "cluster§9.3.10.1.1"
                 }]
             },
 
             {
+                name: "EvNotDetected", tag: "event",
                 details: "This event shall be generated when the EV is unplugged or not detected (having been previously " +
                     "plugged in). When the vehicle is unplugged then the session is ended.",
                 xref: "cluster§9.3.10.2",
 
                 children: [
                     {
+                        name: "SessionId", tag: "field",
                         details: "This field shall indicate the current value of the SessionID attribute.",
                         xref: "cluster§9.3.10.2.1"
                     },
                     {
+                        name: "State", tag: "field",
                         details: "This field shall indicate the value of the State attribute prior to the EV not being detected.",
                         xref: "cluster§9.3.10.2.2"
                     },
+
                     {
+                        name: "SessionDuration", tag: "field",
                         details: "This field shall indicate the total duration of the session, from the start of the session when the " +
                             "EV was plugged in, until it was unplugged.",
                         xref: "cluster§9.3.10.2.3"
                     },
 
                     {
+                        name: "SessionEnergyCharged", tag: "field",
+
                         details: "This field shall indicate the total amount of energy transferred from the EVSE to the EV during the " +
                             "session." +
                             "\n" +
@@ -436,6 +477,8 @@ EnergyEvse.patch(
                     },
 
                     {
+                        name: "SessionEnergyDischarged", tag: "field",
+
                         details: "This field shall indicate the total amount of energy transferred from the EV to the EVSE during the " +
                             "session." +
                             "\n" +
@@ -449,6 +492,7 @@ EnergyEvse.patch(
             },
 
             {
+                name: "EnergyTransferStarted", tag: "event",
                 details: "This event shall be generated whenever the EV starts charging or discharging, except when an EV has " +
                     "switched between charging and discharging under the control of the PowerAdjustment feature of the " +
                     "Device Energy Management cluster of the associated Device Energy Management device.",
@@ -456,15 +500,19 @@ EnergyEvse.patch(
 
                 children: [
                     {
+                        name: "SessionId", tag: "field",
                         details: "This field shall indicate the value of the SessionID attribute at the time the event was generated.",
                         xref: "cluster§9.3.10.3.1"
                     },
                     {
+                        name: "State", tag: "field",
                         details: "This field shall indicate the value of the State attribute at the time the event was generated.",
                         xref: "cluster§9.3.10.3.2"
                     },
 
                     {
+                        name: "MaximumCurrent", tag: "field",
+
                         details: "This field shall indicate the value of the maximum charging current at the time the event was " +
                             "generated." +
                             "\n" +
@@ -476,6 +524,8 @@ EnergyEvse.patch(
                     },
 
                     {
+                        name: "MaximumDischargeCurrent", tag: "field",
+
                         details: "This field shall indicate the value of the maximum discharging current at the time the event was " +
                             "generated." +
                             "\n" +
@@ -489,6 +539,7 @@ EnergyEvse.patch(
             },
 
             {
+                name: "EnergyTransferStopped", tag: "event",
                 details: "This event shall be generated whenever the EV stops charging or discharging, except when an EV has " +
                     "switched between charging and discharging under the control of the PowerAdjustment feature of the " +
                     "Device Energy Management cluster of the associated Device Energy Management device.",
@@ -496,24 +547,32 @@ EnergyEvse.patch(
 
                 children: [
                     {
+                        name: "SessionId", tag: "field",
                         details: "This field shall indicate the value of the SessionID attribute prior to the energy transfer " +
                             "stopping.",
                         xref: "cluster§9.3.10.4.1"
                     },
+
                     {
+                        name: "State", tag: "field",
                         details: "This field shall indicate the value of the State attribute prior to the energy transfer stopping.",
                         xref: "cluster§9.3.10.4.2"
                     },
                     {
+                        name: "Reason", tag: "field",
                         details: "This field shall indicate the reason why the energy transferred stopped.",
                         xref: "cluster§9.3.10.4.3"
                     },
+
                     {
+                        name: "EnergyTransferred", tag: "field",
                         details: "This field shall indicate the amount of energy transferred from the EVSE to the EV since the " +
                             "previous EnergyTransferStarted event, in mWh.",
                         xref: "cluster§9.3.10.4.4"
                     },
+
                     {
+                        name: "EnergyDischarged", tag: "field",
                         details: "This field shall indicate the amount of energy transferred from the EV to the EVSE since the " +
                             "previous EnergyTransferStarted event, in mWh.",
                         xref: "cluster§9.3.10.4.5"
@@ -522,6 +581,8 @@ EnergyEvse.patch(
             },
 
             {
+                name: "Fault", tag: "event",
+
                 details: "If the EVSE detects a fault it shall generate a Fault Event. The SupplyState attribute shall be set " +
                     "to DisabledError and the type of fault detected by the EVSE shall be stored in the FaultState " +
                     "attribute." +
@@ -537,20 +598,27 @@ EnergyEvse.patch(
 
                 children: [
                     {
+                        name: "SessionId", tag: "field",
                         details: "This field shall indicate the value of the SessionID attribute prior to the Fault State being " +
                             "changed. A value of null indicates no sessions have occurred before the fault occurred.",
                         xref: "cluster§9.3.10.5.1"
                     },
+
                     {
+                        name: "State", tag: "field",
                         details: "This field shall indicate the value of the State attribute prior to the Fault State being changed.",
                         xref: "cluster§9.3.10.5.2"
                     },
+
                     {
+                        name: "FaultStatePreviousState", tag: "field",
                         details: "This field shall indicate the value of the FaultState attribute prior to the Fault State being " +
                             "changed.",
                         xref: "cluster§9.3.10.5.3"
                     },
+
                     {
+                        name: "FaultStateCurrentState", tag: "field",
                         details: "This field shall indicate the current value of the FaultState attribute.",
                         xref: "cluster§9.3.10.5.4"
                     }
@@ -558,21 +626,32 @@ EnergyEvse.patch(
             },
 
             {
+                name: "Rfid", tag: "event",
                 details: "This event shall be generated when a RFID card has been read. This allows a controller to register " +
                     "the card ID and use this to authenticate and start the charging session.",
                 xref: "cluster§9.3.10.6",
-                children: [{ details: "The UID field (ISO 14443A UID) is either 4, 7 or 10 bytes.", xref: "cluster§9.3.10.6.1" }]
+                children: [{
+                    name: "Uid", tag: "field",
+                    details: "The UID field (ISO 14443A UID) is either 4, 7 or 10 bytes.",
+                    xref: "cluster§9.3.10.6.1"
+                }]
             },
 
-            { details: "Allows a client to disable the EVSE from charging and discharging.", xref: "cluster§9.3.9.1" },
+            {
+                name: "Disable", tag: "command",
+                details: "Allows a client to disable the EVSE from charging and discharging.",
+                xref: "cluster§9.3.9.1"
+            },
 
             {
+                name: "EnableCharging", tag: "command",
                 details: "This command allows a client to enable the EVSE to charge an EV, and to provide or update the " +
                     "maximum and minimum charge current.",
                 xref: "cluster§9.3.9.2",
 
                 children: [
                     {
+                        name: "ChargingEnabledUntil", tag: "field",
                         details: "This field shall indicate the expiry time, in UTC, when charging will be automatically disabled." +
                             "\n" +
                             "A value in the past in this field shall disable the EVSE charging whereas a null value shall enable " +
@@ -581,6 +660,7 @@ EnergyEvse.patch(
                     },
 
                     {
+                        name: "MinimumChargeCurrent", tag: "field",
                         details: "This field shall indicate the minimum current that can be delivered by the EVSE to the EV in trickle " +
                             "mode. The EVSE current limit can be advertised to an EV in 0.6A steps." +
                             "\n" +
@@ -590,6 +670,8 @@ EnergyEvse.patch(
                     },
 
                     {
+                        name: "MaximumChargeCurrent", tag: "field",
+
                         details: "This field shall indicate the maximum current that can be delivered by the EVSE to the EV. The EVSE " +
                             "current limit can be advertised to an EV in 0.6A steps." +
                             "\n" +
@@ -604,12 +686,14 @@ EnergyEvse.patch(
             },
 
             {
+                name: "EnableDischarging", tag: "command",
                 details: "Upon receipt, this shall allow a client to enable the discharge of an EV, and to provide or update " +
                     "the maximum discharge current.",
                 xref: "cluster§9.3.9.3",
 
                 children: [
                     {
+                        name: "DischargingEnabledUntil", tag: "field",
                         details: "This field shall indicate the expiry time, in UTC, when discharging will be automatically disabled." +
                             "\n" +
                             "A value in the past in this field shall disable the EVSE discharging whereas a null value shall " +
@@ -618,6 +702,7 @@ EnergyEvse.patch(
                     },
 
                     {
+                        name: "MaximumDischargeCurrent", tag: "field",
                         details: "This field shall indicate the maximum current that can be received by the EVSE from the EV. The EVSE " +
                             "current limit can be advertised to an EV in 0.6A steps. The value of the MaximumDischargeCurrent " +
                             "attribute shall be stored and persisted across reboots by the EVSE to the value of this field.",
@@ -626,13 +711,19 @@ EnergyEvse.patch(
                 ]
             },
 
-            { details: "Allows a client to put the EVSE into a self-diagnostics mode.", xref: "cluster§9.3.9.4" },
+            {
+                name: "StartDiagnostics", tag: "command",
+                details: "Allows a client to put the EVSE into a self-diagnostics mode.",
+                xref: "cluster§9.3.9.4"
+            },
 
             {
+                name: "SetTargets", tag: "command",
                 details: "Allows a client to set the user specified charging targets.",
                 xref: "cluster§9.3.9.5",
 
                 children: [{
+                    name: "ChargingTargetSchedules", tag: "field",
                     details: "This field shall indicate a list of up to 7 sets of daily charging targets together with their " +
                         "associated days of the week. Each of the days of the week may only be included in a single " +
                         "ChargingTargetSchedule within this list field.",
@@ -640,13 +731,24 @@ EnergyEvse.patch(
                 }]
             },
 
-            { details: "Allows a client to retrieve the current set of charging targets.", xref: "cluster§9.3.9.6" },
-            { details: "Allows a client to clear all stored charging targets.", xref: "cluster§9.3.9.8" },
+            {
+                name: "GetTargets", tag: "command",
+                details: "Allows a client to retrieve the current set of charging targets.",
+                xref: "cluster§9.3.9.6"
+            },
+            {
+                name: "ClearTargets", tag: "command",
+                details: "Allows a client to clear all stored charging targets.",
+                xref: "cluster§9.3.9.8"
+            },
 
             {
+                name: "GetTargetsResponse", tag: "command",
                 details: "The GetTargetsResponse is sent in response to the GetTargets Command.",
                 xref: "cluster§9.3.9.7",
+
                 children: [{
+                    name: "ChargingTargetSchedules", tag: "field",
                     details: "This field shall indicate a list of up to 7 sets of daily charging targets together with their " +
                         "associated days of the week.",
                     xref: "cluster§9.3.9.7.1"
@@ -654,86 +756,147 @@ EnergyEvse.patch(
             },
 
             {
+                name: "TargetDayOfWeekBitmap", tag: "datatype",
                 xref: "cluster§9.3.7.1",
 
                 children: [
-                    { description: "Sunday" },
-                    { description: "Monday" },
-                    { description: "Tuesday" },
-                    { description: "Wednesday" },
-                    { description: "Thursday" },
-                    { description: "Friday" },
-                    { description: "Saturday" }
+                    { name: "Sunday", tag: "field", description: "Sunday" },
+                    { name: "Monday", tag: "field", description: "Monday" },
+                    { name: "Tuesday", tag: "field", description: "Tuesday" },
+                    { name: "Wednesday", tag: "field", description: "Wednesday" },
+                    { name: "Thursday", tag: "field", description: "Thursday" },
+                    { name: "Friday", tag: "field", description: "Friday" },
+                    { name: "Saturday", tag: "field", description: "Saturday" }
                 ]
             },
 
             {
+                name: "StateEnum", tag: "datatype",
                 xref: "cluster§9.3.7.2",
 
                 children: [
-                    { description: "The EV is not plugged in." },
-                    { description: "The EV is plugged in, but not demanding current." },
+                    { name: "NotPluggedIn", tag: "field", description: "The EV is not plugged in." },
                     {
+                        name: "PluggedInNoDemand", tag: "field",
+                        description: "The EV is plugged in, but not demanding current."
+                    },
+                    {
+                        name: "PluggedInDemand", tag: "field",
                         description: "The EV is plugged in and is demanding current, but EVSE is not allowing current to flow."
                     },
-                    { description: "The EV is plugged in, charging is in progress, and current is flowing" },
-                    { description: "The EV is plugged in, discharging is in progress, and current is flowing" },
-                    { description: "The EVSE is transitioning from any plugged- in state to NotPluggedIn" },
-                    { description: "There is a fault (see FaultState attribute)" }
+                    {
+                        name: "PluggedInCharging", tag: "field",
+                        description: "The EV is plugged in, charging is in progress, and current is flowing"
+                    },
+                    {
+                        name: "PluggedInDischarging", tag: "field",
+                        description: "The EV is plugged in, discharging is in progress, and current is flowing"
+                    },
+                    {
+                        name: "SessionEnding", tag: "field",
+                        description: "The EVSE is transitioning from any plugged- in state to NotPluggedIn"
+                    },
+                    { name: "Fault", tag: "field", description: "There is a fault (see FaultState attribute)" }
                 ]
             },
 
             {
+                name: "SupplyStateEnum", tag: "datatype",
                 xref: "cluster§9.3.7.3",
 
                 children: [
-                    { description: "The EV is not currently allowed to charge or discharge" },
-                    { description: "The EV is currently allowed to charge" },
-                    { description: "The EV is currently allowed to discharge" },
                     {
+                        name: "Disabled", tag: "field",
+                        description: "The EV is not currently allowed to charge or discharge"
+                    },
+                    { name: "ChargingEnabled", tag: "field", description: "The EV is currently allowed to charge" },
+                    {
+                        name: "DischargingEnabled", tag: "field",
+                        description: "The EV is currently allowed to discharge"
+                    },
+                    {
+                        name: "DisabledError", tag: "field",
                         description: "The EV is not currently allowed to charge or discharge due to an error. The error must be cleared before operation can continue."
                     },
                     {
+                        name: "DisabledDiagnostics", tag: "field",
                         description: "The EV is not currently allowed to charge or discharge due to self- diagnostics mode."
                     },
-                    { description: "The EV is currently allowed to charge and discharge" }
+                    {
+                        name: "Enabled", tag: "field",
+                        description: "The EV is currently allowed to charge and discharge"
+                    }
                 ]
             },
 
             {
+                name: "FaultStateEnum", tag: "datatype",
                 xref: "cluster§9.3.7.4",
 
                 children: [
-                    { description: "The EVSE is not in an error state." },
-                    { description: "The EVSE is unable to obtain electrical measurements." },
-                    { description: "The EVSE input voltage level is too high." },
-                    { description: "The EVSE input voltage level is too low." },
-                    { description: "The EVSE detected charging current higher than allowed by charger." },
-                    { description: "The EVSE detected voltage on charging pins when the contactor is open." },
-                    { description: "The EVSE detected absence of voltage after enabling contactor." },
-                    { description: "The EVSE has an unbalanced current supply." },
-                    { description: "The EVSE has detected a loss in power." },
-                    { description: "The EVSE has detected another power quality issue (e.g. phase imbalance)." },
-                    { description: "The EVSE pilot signal amplitude short circuited to ground." },
-                    { description: "The emergency stop button was pressed." },
-                    { description: "The EVSE detected that the cable has been disconnected." },
-                    { description: "The EVSE could not determine proper power supply level." },
-                    { description: "The EVSE detected Live and Neutral are swapped." },
-                    { description: "The EVSE internal temperature is too high." },
-                    { description: "Any other reason." }
+                    { name: "NoError", tag: "field", description: "The EVSE is not in an error state." },
+                    {
+                        name: "MeterFailure", tag: "field",
+                        description: "The EVSE is unable to obtain electrical measurements."
+                    },
+                    { name: "OverVoltage", tag: "field", description: "The EVSE input voltage level is too high." },
+                    { name: "UnderVoltage", tag: "field", description: "The EVSE input voltage level is too low." },
+                    {
+                        name: "OverCurrent", tag: "field",
+                        description: "The EVSE detected charging current higher than allowed by charger."
+                    },
+                    {
+                        name: "ContactWetFailure", tag: "field",
+                        description: "The EVSE detected voltage on charging pins when the contactor is open."
+                    },
+                    {
+                        name: "ContactDryFailure", tag: "field",
+                        description: "The EVSE detected absence of voltage after enabling contactor."
+                    },
+                    { name: "GroundFault", tag: "field", description: "The EVSE has an unbalanced current supply." },
+                    { name: "PowerLoss", tag: "field", description: "The EVSE has detected a loss in power." },
+                    {
+                        name: "PowerQuality", tag: "field",
+                        description: "The EVSE has detected another power quality issue (e.g. phase imbalance)."
+                    },
+                    {
+                        name: "PilotShortCircuit", tag: "field",
+                        description: "The EVSE pilot signal amplitude short circuited to ground."
+                    },
+                    { name: "EmergencyStop", tag: "field", description: "The emergency stop button was pressed." },
+                    {
+                        name: "EvDisconnected", tag: "field",
+                        description: "The EVSE detected that the cable has been disconnected."
+                    },
+                    {
+                        name: "WrongPowerSupply", tag: "field",
+                        description: "The EVSE could not determine proper power supply level."
+                    },
+                    {
+                        name: "LiveNeutralSwap", tag: "field",
+                        description: "The EVSE detected Live and Neutral are swapped."
+                    },
+                    {
+                        name: "OverTemperature", tag: "field",
+                        description: "The EVSE internal temperature is too high."
+                    },
+                    { name: "Other", tag: "field", description: "Any other reason." }
                 ]
             },
 
             {
+                name: "EnergyTransferStoppedReasonEnum", tag: "datatype",
                 xref: "cluster§9.3.7.5",
                 children: [
-                    { description: "The EV decided to stop" },
-                    { description: "The EVSE decided to stop" },
-                    { description: "An other unknown reason" }
+                    { name: "EvStopped", tag: "field", description: "The EV decided to stop" },
+                    { name: "EvseStopped", tag: "field", description: "The EVSE decided to stop" },
+                    { name: "Other", tag: "field", description: "An other unknown reason" }
                 ]
             },
 
             {
+                name: "ChargingTargetStruct", tag: "datatype",
+
                 details: "This represents a single user specified charging target for an EV." +
                     "\n" +
                     "An EVSE or EMS system optimizer may use this information to take the Time of Use Tariff, grid carbon " +
@@ -752,6 +915,8 @@ EnergyEvse.patch(
 
                 children: [
                     {
+                        name: "TargetTimeMinutesPastMidnight", tag: "field",
+
                         details: "This field shall indicate the desired charging completion time of the associated day. The time will " +
                             "be represented by a 16 bits unsigned integer to designate the minutes since midnight. For example, " +
                             "6am will be represented by 360 minutes since midnight and 11:30pm will be represented by 1410 " +
@@ -780,6 +945,8 @@ EnergyEvse.patch(
                     },
 
                     {
+                        name: "TargetSoC", tag: "field",
+
                         details: "This field represents the target SoC that the vehicle should be charged to before the " +
                             "TargetTimeMinutesPastMidnight." +
                             "\n" +
@@ -806,6 +973,8 @@ EnergyEvse.patch(
                     },
 
                     {
+                        name: "AddedEnergy", tag: "field",
+
                         details: "This field represents the amount of energy that the user would like to have added to the vehicle " +
                             "before the TargetTimeMinutesPastMidnight." +
                             "\n" +
@@ -831,16 +1000,20 @@ EnergyEvse.patch(
             },
 
             {
+                name: "ChargingTargetScheduleStruct", tag: "datatype",
                 details: "This represents a set of user specified charging targets for an EV for a set of specified days.",
                 xref: "cluster§9.3.7.7",
 
                 children: [
                     {
+                        name: "DayOfWeekForSequence", tag: "field",
                         details: "This field shall indicate the days of the week that the charging targets SHOULD be associated to. " +
                             "This field is a bitmap and therefore the associated targets could be applied to multiple days.",
                         xref: "cluster§9.3.7.8"
                     },
+
                     {
+                        name: "ChargingTargets", tag: "field",
                         details: "This field shall indicate a list of up to 10 charging targets for each of the associated days of the " +
                             "week.",
                         xref: "cluster§9.3.7.9"

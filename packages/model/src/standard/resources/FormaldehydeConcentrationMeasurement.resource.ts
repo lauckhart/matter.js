@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { FormaldehydeConcentrationMeasurement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-FormaldehydeConcentrationMeasurement.patch({ pics: "FLDCONC" });
+Resource.add({ name: "FormaldehydeConcentrationMeasurement", tag: "cluster", pics: "FLDCONC" });

@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { uint24 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-uint24.patch({ description: "Unsigned 24-bit integer", xref: "core§7.19.1" });
+Resource.add({ name: "uint24", tag: "datatype", description: "Unsigned 24-bit integer", xref: "core§7.19.1" });

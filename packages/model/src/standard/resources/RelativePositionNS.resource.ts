@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { RelativePositionNs } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-RelativePositionNs.patch({
+Resource.add({
+    name: "RelativePosition", tag: "semanticNamespace",
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a position relative to some reference, which must be specified by the user of these " +
         "tags. For example, the position may be relative to a household item, such as a dining table, and the " +
@@ -16,8 +17,7 @@ RelativePositionNs.patch({
         "Tag Namespace, which contains tags indicating the position relative to the device.",
     xref: "namespace§11",
     children: [
-        undefined,
-        { description: "Area in proximity to the point of reference" },
-        { description: "The area surrounding the point the reference" }
+        { name: "Next To", tag: "semanticTag", description: "Area in proximity to the point of reference" },
+        { name: "Around", tag: "semanticTag", description: "The area surrounding the point the reference" }
     ]
 });

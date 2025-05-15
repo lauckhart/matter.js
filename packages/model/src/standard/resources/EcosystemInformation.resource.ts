@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { EcosystemInformation } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-EcosystemInformation.patch({
+Resource.add({
+    name: "EcosystemInformation", tag: "cluster",
     classification: "endpoint", pics: "ECOINFO",
 
     details: "The Ecosystem Information Cluster provides extended device information for all the logical devices " +
@@ -43,9 +44,8 @@ EcosystemInformation.patch({
     xref: "core§9.18",
 
     children: [
-        undefined,
-
         {
+            name: "DeviceDirectory", tag: "attribute",
             details: "This attribute shall contain the list of logical devices represented by a Bridged Node. Most of the " +
                 "time this will contain a single entry, but may grow with more complex device compositions (e.g. " +
                 "another bridge.)" +
@@ -55,6 +55,8 @@ EcosystemInformation.patch({
         },
 
         {
+            name: "LocationDirectory", tag: "attribute",
+
             details: "This attribute shall contain the list of rooms, areas and groups associated with the DeviceDirectory " +
                 "entries, and shall NOT contain locations which are dynamically generated and removed by an " +
                 "ecosystem. (E.g. a location that is generated and removed based on the user being home is not " +
@@ -69,16 +71,19 @@ EcosystemInformation.patch({
         },
 
         {
+            name: "EcosystemDeviceStruct", tag: "datatype",
             xref: "core§9.18.4.1",
 
             children: [
                 {
+                    name: "DeviceName", tag: "field",
                     details: "This field shall indicate the device’s name, which is provided externally if the user consents. (For " +
                         "example, provided by the user in an ecosystem specific interface.)",
                     xref: "core§9.18.4.1.1"
                 },
 
                 {
+                    name: "DeviceNameLastEdit", tag: "field",
                     details: "This field shall be present and set if the DeviceName field is present." +
                         "\n" +
                         "This field shall indicate the timestamp of when the DeviceName was last modified.",
@@ -86,6 +91,7 @@ EcosystemInformation.patch({
                 },
 
                 {
+                    name: "BridgedEndpoint", tag: "field",
                     details: "This field shall indicate the endpoint this EcosystemDeviceStruct is associated with on this Bridge." +
                         "\n" +
                         "This field shall be present and set to a valid endpoint if the device is accessible through the " +
@@ -94,6 +100,7 @@ EcosystemInformation.patch({
                 },
 
                 {
+                    name: "OriginalEndpoint", tag: "field",
                     details: "This field shall indicate the endpoint this EcosystemDeviceStruct is associated with on the original " +
                         "device represented by this bridge’s Bridged Node. If this bridge is receiving the device from " +
                         "another bridge, then the OriginalEndpoint field value would be the same on both bridges. This field " +
@@ -103,6 +110,7 @@ EcosystemInformation.patch({
                 },
 
                 {
+                    name: "DeviceTypes", tag: "field",
                     details: "This field shall indicate all of the DeviceTypes within the DeviceTypeList in the Descriptor Cluster " +
                         "associated with this EcosystemDeviceStruct entry." +
                         "\n" +
@@ -111,12 +119,15 @@ EcosystemInformation.patch({
                 },
 
                 {
+                    name: "UniqueLocationIDs", tag: "field",
                     details: "This field shall specify the EcosystemLocationStruct entries in the LocationDirectory attribute " +
                         "associated with this EcosystemDeviceStruct.",
                     xref: "core§9.18.4.1.6"
                 },
 
                 {
+                    name: "UniqueLocationIDsLastEdit", tag: "field",
+
                     details: "This field shall indicate the timestamp of when the UniqueLocationIDs was last modified." +
                         "\n" +
                         "NOTE" +
@@ -132,10 +143,13 @@ EcosystemInformation.patch({
         },
 
         {
+            name: "EcosystemLocationStruct", tag: "datatype",
             xref: "core§9.18.4.2",
 
             children: [
                 {
+                    name: "UniqueLocationId", tag: "field",
+
                     details: "This field shall indicate a unique identifier for a specific Ecosystem Information Cluster server " +
                         "instance representing the location independent of its LocationDescriptor field." +
                         "\n" +
@@ -165,6 +179,8 @@ EcosystemInformation.patch({
                 },
 
                 {
+                    name: "LocationDescriptor", tag: "field",
+
                     details: "This field shall indicate the location (e.g. living room, driveway) and associated metadata that is " +
                         "provided externally if the user consents. (For example, provided by the user in an ecosystem " +
                         "specific interface.)" +
@@ -176,6 +192,7 @@ EcosystemInformation.patch({
                 },
 
                 {
+                    name: "LocationDescriptorLastEdit", tag: "field",
                     details: "This field shall indicate the timestamp of when the LocationDescriptor was last modified.",
                     xref: "core§9.18.4.2.3"
                 }

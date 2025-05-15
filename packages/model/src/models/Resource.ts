@@ -12,7 +12,12 @@ import { CrossReference } from "./CrossReference.js";
 import type { Model } from "./Model.js";
 
 /**
- * Model information that is currently not required for operational purposes.
+ * Model specification details.
+ *
+ * Model resources are a parallel data model that is not required for operational purposes.  If loaded, the model
+ * provides additional metadata about elements.
+ *
+ * You can load resources for the standard data model using `import "@matter/model/resources"`.
  */
 export class Resource {
     errors?: DefinitionError[];
@@ -28,7 +33,7 @@ export class Resource {
     xref?: Specification.CrossReference;
     details?: string;
 
-    constructor(resources?: Resources.Definition) {
+    constructor(resources?: Resource.Definition) {
         if (!resources) {
             return;
         }
@@ -52,8 +57,14 @@ export class Resource {
  * discrimination, conformance.  Models that do not have their own resource definition installed will search this
  * pool to fulfill resource properties.
  */
-export class Resources {
-    #cache?: WeakMap<Model, IndexNode | null>;
+export class ResourceBundle {
+    /**
+     * Resource location is relatively expensive because it searches parent hierarchy.  So we cache nodes here.
+     *
+     * If new resources are added, which is uncommon, we clear the cache.
+     */
+    #cache?: WeakMap<Model, IndexNode | false>;
+
     #index: IndexNode = {
         resource: undefined,
         children: undefined,
@@ -62,26 +73,31 @@ export class Resources {
 
     get(model: Model) {
         const cached = this.#cache?.get(model);
-        if (cached !== undefined) {
+        if (cached === false) {
+            return;
+        }
+        if (cached) {
             return cached?.resource;
         }
 
         const node = this.#findNode(model);
 
         if (!this.#cache) {
-            this.#cache = new WeakMap<Model, IndexNode | null>();
+            this.#cache = new WeakMap();
         }
-        this.#cache.set(model, node ?? null);
+        this.#cache.set(model, node ?? false);
 
         return node?.resource;
     }
 
-    add(resource: Resources.Named) {
+    add(resource: Resource.Named) {
         this.#addNode(resource, this.#index);
+
+        // Clear cache as resources have changed
         this.#cache = undefined;
     }
 
-    #addNode(item: Resources.Named, owner: IndexNode) {
+    #addNode(item: Resource.Named, owner: IndexNode) {
         const key = `${item.tag}:${item.name}`;
 
         let node = owner.children?.get(key);
@@ -122,6 +138,7 @@ export class Resources {
     }
 
     #findNode(model: Model): IndexNode | undefined {
+        console.log("!!!", model.name);
         let parent;
 
         if (!model.parent || model.parent === model.root) {
@@ -130,12 +147,16 @@ export class Resources {
             parent = this.#findNode(model.parent);
         }
 
+        console.log("FOUND PARENT WITH:", parent?.children?.keys());
+
         if (!parent) {
             return;
         }
 
         const key = `${model.tag}:${model.name}`;
         const node = parent.children?.get(key);
+
+        console.log(node);
 
         if (!node) {
             return;
@@ -147,9 +168,11 @@ export class Resources {
                 return node.discriminated?.get(conformance.toString());
             }
         }
+
+        return node;
     }
 
-    static readonly default = new Resources();
+    static readonly default = new ResourceBundle();
 }
 
 interface IndexNode {
@@ -158,9 +181,9 @@ interface IndexNode {
     children?: Map<string, IndexNode>;
 }
 
-export namespace Resources {
+export namespace Resource {
     export interface Named extends Definition {
-        tag: ElementTag;
+        tag: `${ElementTag}`;
         name: string;
         discriminator?: string;
         children?: Named[];
@@ -169,6 +192,6 @@ export namespace Resources {
     export type Definition = Omit<Resource, "xref"> & { xref?: CrossReference.Definition };
 
     export function add(named: Named) {
-        Resources.default.add(named);
+        ResourceBundle.default.add(named);
     }
 }

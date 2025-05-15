@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ModeBase } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ModeBase.patch({
+Resource.add({
+    name: "ModeBase", tag: "cluster",
     classification: "application", pics: "MODB",
 
     details: "This cluster provides an interface for controlling a characteristic of a device that can be set to " +
@@ -36,13 +37,12 @@ ModeBase.patch({
     xref: "cluster§1.10",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "cluster§1.10.4",
 
             children: [{
-                description: "OnOff",
+                name: "DEPONOFF", tag: "field",
                 details: "This feature creates a dependency between an OnOff cluster instance and this cluster instance on the " +
                     "same endpoint. See OnMode for more information.",
                 xref: "cluster§1.10.4.1"
@@ -50,6 +50,8 @@ ModeBase.patch({
         },
 
         {
+            name: "SupportedModes", tag: "attribute",
+
             details: "This attribute shall contain the list of supported modes that may be selected for the CurrentMode " +
                 "attribute. Each item in this list represents a unique mode as indicated by the Mode field of the " +
                 "ModeOptionStruct." +
@@ -61,6 +63,8 @@ ModeBase.patch({
         },
 
         {
+            name: "CurrentMode", tag: "attribute",
+
             details: "Indicates the current mode of the server." +
                 "\n" +
                 "The value of this field shall match the Mode field of one of the entries in the SupportedModes " +
@@ -75,6 +79,8 @@ ModeBase.patch({
         },
 
         {
+            name: "StartUpMode", tag: "attribute",
+
             details: "Indicates the desired startup mode for the server when it is supplied with power." +
                 "\n" +
                 "If this attribute is not null, the CurrentMode attribute shall be set to the StartUpMode value, when " +
@@ -93,6 +99,8 @@ ModeBase.patch({
         },
 
         {
+            name: "OnMode", tag: "attribute",
+
             details: "Indicates whether the value of CurrentMode depends on the state of the On/Off cluster on the same " +
                 "endpoint. If this attribute is not present or is set to null, there is no dependency, otherwise the " +
                 "CurrentMode attribute shall depend on the OnOff attribute in the On/Off cluster" +
@@ -104,12 +112,15 @@ ModeBase.patch({
         },
 
         {
+            name: "ChangeToMode", tag: "command",
             details: "This command is used to change device modes." +
                 "\n" +
                 "On receipt of this command the device shall respond with a ChangeToModeResponse command.",
             xref: "cluster§1.10.7.1",
 
             children: [{
+                name: "NewMode", tag: "field",
+
                 details: "If the NewMode field doesn’t match the Mode field of any entry of the SupportedModes list, the " +
                     "ChangeToModeResponse command’s Status field shall indicate UnsupportedMode and the StatusText field " +
                     "shall be included and may be used to indicate the issue, with a human readable string, or include an " +
@@ -138,19 +149,23 @@ ModeBase.patch({
         },
 
         {
+            name: "ChangeToModeResponse", tag: "command",
             details: "This command is sent by the device on receipt of the ChangeToMode command. This command" +
                 "\n" +
                 "shall have the following data fields:",
             xref: "cluster§1.10.7.2",
-            children: [{ xref: "cluster§1.10.7.2.1" }]
+            children: [{ name: "Status", tag: "field", xref: "cluster§1.10.7.2.1" }]
         },
 
         {
+            name: "ModeTagStruct", tag: "datatype",
             details: "A Mode Tag is meant to be interpreted by the client for the purpose the cluster serves.",
             xref: "cluster§1.10.5.1",
 
             children: [
                 {
+                    name: "MfgCode", tag: "field",
+
                     details: "If the MfgCode field exists, the Value field shall be in the manufacturer-specific value range (see " +
                         "Section 1.10.8, “Mode Namespace”)." +
                         "\n" +
@@ -166,6 +181,7 @@ ModeBase.patch({
                 },
 
                 {
+                    name: "Value", tag: "field",
                     details: "This field shall indicate the mode tag within a mode tag namespace which is either manufacturer " +
                         "specific or standard.",
                     xref: "cluster§1.10.5.1.2"
@@ -174,20 +190,28 @@ ModeBase.patch({
         },
 
         {
+            name: "ModeOptionStruct", tag: "datatype",
             details: "This is a struct representing a possible mode of the server.",
             xref: "cluster§1.10.5.2",
 
             children: [
                 {
+                    name: "Label", tag: "field",
                     details: "This field shall indicate readable text that describes the mode option, so that a client can provide " +
                         "it to the user to indicate what this option means. This field is meant to be readable and " +
                         "understandable by the user.",
                     xref: "cluster§1.10.5.2.1"
                 },
 
-                { details: "This field is used to identify the mode option.", xref: "cluster§1.10.5.2.2" },
+                {
+                    name: "Mode", tag: "field",
+                    details: "This field is used to identify the mode option.",
+                    xref: "cluster§1.10.5.2.2"
+                },
 
                 {
+                    name: "ModeTags", tag: "field",
+
                     details: "This field shall contain a list of tags that are associated with the mode option. This may be used " +
                         "by clients to determine the full or the partial semantics of a certain mode, depending on which tags " +
                         "they understand, using standard definitions and/or manufacturer specific namespace definitions." +
@@ -229,20 +253,26 @@ ModeBase.patch({
         },
 
         {
+            name: "ModeChangeStatus", tag: "datatype",
+
             children: [
                 {
+                    name: "Success", tag: "field",
                     description: "Switching to the mode indicated by the NewMode field is allowed and possible. The CurrentMode attribute is set to the value of the NewMode field.",
                     xref: "cluster§1.10.7.2.1.2"
                 },
                 {
+                    name: "UnsupportedMode", tag: "field",
                     description: "The value of the NewMode field doesn’t match any entries in the SupportedModes attribute.",
                     xref: "cluster§1.10.7.2.1.2"
                 },
                 {
+                    name: "GenericFailure", tag: "field",
                     description: "Generic failure code, indicating that switching to the mode indicated by the NewMode field is not allowed or not possible.",
                     xref: "cluster§1.10.7.2.1.2"
                 },
                 {
+                    name: "InvalidInMode", tag: "field",
                     description: "The received request cannot be handled due to the current mode of the device",
                     xref: "cluster§1.10.7.2.1.2"
                 }
@@ -250,17 +280,19 @@ ModeBase.patch({
         },
 
         {
+            name: "ModeTag", tag: "datatype",
+
             children: [
-                { xref: "cluster§1.10.8" },
-                { xref: "cluster§1.10.8" },
-                { xref: "cluster§1.10.8" },
-                { xref: "cluster§1.10.8" },
-                { xref: "cluster§1.10.8" },
-                { xref: "cluster§1.10.8" },
-                { xref: "cluster§1.10.8" },
-                { xref: "cluster§1.10.8" },
-                { xref: "cluster§1.10.8" },
-                { xref: "cluster§1.10.8" }
+                { name: "Auto", tag: "field", xref: "cluster§1.10.8" },
+                { name: "Quick", tag: "field", xref: "cluster§1.10.8" },
+                { name: "Quiet", tag: "field", xref: "cluster§1.10.8" },
+                { name: "LowNoise", tag: "field", xref: "cluster§1.10.8" },
+                { name: "LowEnergy", tag: "field", xref: "cluster§1.10.8" },
+                { name: "Vacation", tag: "field", xref: "cluster§1.10.8" },
+                { name: "Min", tag: "field", xref: "cluster§1.10.8" },
+                { name: "Max", tag: "field", xref: "cluster§1.10.8" },
+                { name: "Night", tag: "field", xref: "cluster§1.10.8" },
+                { name: "Day", tag: "field", xref: "cluster§1.10.8" }
             ]
         }
     ]

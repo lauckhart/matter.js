@@ -6,6 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { energyMWh } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-energyMWh.patch({ description: "Energy", details: "This type represents energy measured in milliwatt-hours.", xref: "core§7.19.2.15" });
+Resource.add({
+    name: "energy-mWh", tag: "datatype",
+    description: "Energy",
+    details: "This type represents energy measured in milliwatt-hours.",
+    xref: "core§7.19.2.15"
+});

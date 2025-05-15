@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { int40 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-int40.patch({ description: "Signed 40-bit integer", xref: "core§7.19.1" });
+Resource.add({ name: "int40", tag: "datatype", description: "Signed 40-bit integer", xref: "core§7.19.1" });

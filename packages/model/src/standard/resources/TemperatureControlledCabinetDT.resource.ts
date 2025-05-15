@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { TemperatureControlledCabinetDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-TemperatureControlledCabinetDt.patch({
+Resource.add({
+    name: "TemperatureControlledCabinet", tag: "deviceType",
     classification: "simple",
     details: "A Temperature Controlled Cabinet only exists composed as part of another device type. It represents " +
         "a single cabinet that is capable of having its temperature controlled. Such a cabinet may be " +
@@ -18,17 +19,26 @@ TemperatureControlledCabinetDt.patch({
     xref: "device§13.4",
 
     children: [
-        undefined,
-        { xref: "device§13.4.4" },
-        { xref: "device§13.4.4" },
-        { xref: "device§13.4.4" },
-        { xref: "device§13.4.4" },
-        { xref: "device§13.4.4" },
+        { name: "TemperatureControl", tag: "requirement", xref: "device§13.4.4" },
+        { name: "TemperatureMeasurement", tag: "requirement", xref: "device§13.4.4" },
+        { name: "RefrigeratorAndTemperatureControlledCabinetMode", tag: "requirement", xref: "device§13.4.4" },
+        { name: "OvenMode", tag: "requirement", xref: "device§13.4.4" },
+        { name: "OvenCavityOperationalState", tag: "requirement", xref: "device§13.4.4" },
 
         {
+            name: "conditions", tag: "field",
+
             children: [
-                { description: "The device has cooling functionality.", xref: "device§13.4.3" },
-                { description: "The device has heating functionality.", xref: "device§13.4.3" }
+                {
+                    name: "Cooler", tag: "field",
+                    description: "The device has cooling functionality.",
+                    xref: "device§13.4.3"
+                },
+                {
+                    name: "Heater", tag: "field",
+                    description: "The device has heating functionality.",
+                    xref: "device§13.4.3"
+                }
             ]
         }
     ]

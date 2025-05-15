@@ -21,15 +21,15 @@ export const Thermostat = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "HEAT", conformance: "AUTO, O.a+", constraint: "0", description: "Heating" }),
-        Field({ name: "COOL", conformance: "AUTO, O.a+", constraint: "1", description: "Cooling" }),
-        Field({ name: "OCC", conformance: "O", constraint: "2", description: "Occupancy" }),
-        Field({ name: "SCH", conformance: "O", constraint: "3", description: "ScheduleConfiguration" }),
-        Field({ name: "SB", conformance: "O", constraint: "4", description: "Setback" }),
-        Field({ name: "AUTO", conformance: "O", constraint: "5", description: "AutoMode" }),
-        Field({ name: "LTNE", conformance: "O", constraint: "6", description: "LocalTemperatureNotExposed" }),
-        Field({ name: "MSCH", conformance: "O", constraint: "7", description: "MatterScheduleConfiguration" }),
-        Field({ name: "PRES", conformance: "O", constraint: "8", description: "Presets" })
+        Field({ name: "HEAT", conformance: "AUTO, O.a+", constraint: "0", longName: "Heating" }),
+        Field({ name: "COOL", conformance: "AUTO, O.a+", constraint: "1", longName: "Cooling" }),
+        Field({ name: "OCC", conformance: "O", constraint: "2", longName: "Occupancy" }),
+        Field({ name: "SCH", conformance: "O", constraint: "3", longName: "ScheduleConfiguration" }),
+        Field({ name: "SB", conformance: "O", constraint: "4", longName: "Setback" }),
+        Field({ name: "AUTO", conformance: "O", constraint: "5", longName: "AutoMode" }),
+        Field({ name: "LTNE", conformance: "O", constraint: "6", longName: "LocalTemperatureNotExposed" }),
+        Field({ name: "MSCH", conformance: "O", constraint: "7", longName: "MatterScheduleConfiguration" }),
+        Field({ name: "PRES", conformance: "O", constraint: "8", longName: "Presets" })
     ),
 
     Attribute({

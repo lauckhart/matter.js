@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DishwasherDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-DishwasherDt.patch({
+Resource.add({
+    name: "Dishwasher", tag: "deviceType",
     classification: "simple",
     details: "A dishwasher is a device that is generally installed in residential homes and is capable of washing " +
         "dishes, cutlery, and other items associate with food preparation and consumption. The device can be " +
@@ -16,12 +17,11 @@ DishwasherDt.patch({
     xref: "device§13.5",
 
     children: [
-        undefined,
-        { xref: "device§13.5.4" },
-        { xref: "device§13.5.4" },
-        { xref: "device§13.5.4" },
-        { xref: "device§13.5.4" },
-        { xref: "device§13.5.4" },
-        { xref: "device§13.5.4" }
+        { name: "Identify", tag: "requirement", xref: "device§13.5.4" },
+        { name: "OnOff", tag: "requirement", xref: "device§13.5.4" },
+        { name: "TemperatureControl", tag: "requirement", xref: "device§13.5.4" },
+        { name: "DishwasherMode", tag: "requirement", xref: "device§13.5.4" },
+        { name: "DishwasherAlarm", tag: "requirement", xref: "device§13.5.4" },
+        { name: "OperationalState", tag: "requirement", xref: "device§13.5.4" }
     ]
 });

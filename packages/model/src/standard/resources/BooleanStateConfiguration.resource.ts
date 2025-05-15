@@ -6,27 +6,27 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BooleanStateConfiguration } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-BooleanStateConfiguration.patch(
+Resource.add(
     {
+        name: "BooleanStateConfiguration", tag: "cluster",
         classification: "application", pics: "BOOLCFG",
         details: "This cluster is used to configure a boolean sensor, including optional state change alarm features " +
             "and configuration of the sensitivity level associated with the sensor.",
         xref: "cluster§1.8",
 
         children: [
-            undefined,
-
             {
+                name: "FeatureMap", tag: "attribute",
                 xref: "cluster§1.8.4",
 
                 children: [
-                    { description: "Visual", details: "Supports visual alarms" },
-                    { description: "Audible", details: "Supports audible alarms" },
+                    { name: "VIS", tag: "field", details: "Supports visual alarms" },
+                    { name: "AUD", tag: "field", details: "Supports audible alarms" },
 
                     {
-                        description: "AlarmSuppress",
+                        name: "SPRS", tag: "field",
 
                         details: "This feature shall indicate that the device is able to suppress the supported alarm modes, when the " +
                             "user acknowledges the alarm. This is intended to stop visual and/or audible alarms, when the user " +
@@ -49,11 +49,12 @@ BooleanStateConfiguration.patch(
                         xref: "cluster§1.8.4.1"
                     },
 
-                    { description: "SensitivityLevel", details: "Supports ability to set sensor sensitivity" }
+                    { name: "SENSLVL", tag: "field", details: "Supports ability to set sensor sensitivity" }
                 ]
             },
 
             {
+                name: "CurrentSensitivityLevel", tag: "attribute",
                 details: "Indicates the currently selected sensitivity level." +
                     "\n" +
                     "If a write interaction to this attribute contains an unsupported sensitivity value, a " +
@@ -62,6 +63,8 @@ BooleanStateConfiguration.patch(
             },
 
             {
+                name: "SupportedSensitivityLevels", tag: "attribute",
+
                 details: "Indicates the number of supported sensitivity levels by the device." +
                     "\n" +
                     "These supported sensitivity levels shall be ordered by sensitivity, where a value of 0 shall be " +
@@ -75,11 +78,14 @@ BooleanStateConfiguration.patch(
             },
 
             {
+                name: "DefaultSensitivityLevel", tag: "attribute",
                 details: "Indicates the default sensitivity level selected by the manufacturer.",
                 xref: "cluster§1.8.6.3"
             },
 
             {
+                name: "AlarmsActive", tag: "attribute",
+
                 details: "Indicates which specific alarm modes on the server are currently active. When the sensor is no " +
                     "longer triggered, this attribute shall be set to the inactive state, by setting the bit to 0, for " +
                     "all supported alarm modes." +
@@ -95,6 +101,8 @@ BooleanStateConfiguration.patch(
             },
 
             {
+                name: "AlarmsSuppressed", tag: "attribute",
+
                 details: "Indicates which specific alarm modes on the server are currently suppressed. When the sensor is no " +
                     "longer triggered, this attribute shall be set to the unsuppressed state, by setting the bit to 0, " +
                     "for all supported alarm modes." +
@@ -110,6 +118,8 @@ BooleanStateConfiguration.patch(
             },
 
             {
+                name: "AlarmsEnabled", tag: "attribute",
+
                 details: "Indicates the alarm modes that will be emitted if the sensor is triggered. If an alarm mode is not " +
                     "supported, the bit indicating this alarm mode shall always be 0." +
                     "\n" +
@@ -123,6 +133,8 @@ BooleanStateConfiguration.patch(
             },
 
             {
+                name: "AlarmsSupported", tag: "attribute",
+
                 details: "Indicates the alarms supported by the sensor. A bit shall indicate whether the alarm mode is " +
                     "supported:" +
                     "\n" +
@@ -133,9 +145,15 @@ BooleanStateConfiguration.patch(
                 xref: "cluster§1.8.6.7"
             },
 
-            { details: "Indicates any faults registered by the device.", xref: "cluster§1.8.6.8" },
+            {
+                name: "SensorFault", tag: "attribute",
+                details: "Indicates any faults registered by the device.",
+                xref: "cluster§1.8.6.8"
+            },
 
             {
+                name: "AlarmsStateChanged", tag: "event",
+
                 details: "This event shall be generated after any bits in the AlarmsActive and/or AlarmsSuppressed attributes " +
                     "change. This may occur in situations such as when internal processing by the server determines that " +
                     "an alarm mode becomes active or inactive, or when the SuppressAlarm or EnableDisableAlarm commands " +
@@ -148,11 +166,14 @@ BooleanStateConfiguration.patch(
 
                 children: [
                     {
+                        name: "AlarmsActive", tag: "field",
                         details: "This field shall indicate the state of active alarm modes, as indicated by the AlarmsActive " +
                             "attribute, at the time the event was generated.",
                         xref: "cluster§1.8.8.1.1"
                     },
+
                     {
+                        name: "AlarmsSuppressed", tag: "field",
                         details: "This field shall indicate the state of suppressed alarm modes, as indicated by the AlarmsSuppressed " +
                             "attribute, at the time the event was generated.",
                         xref: "cluster§1.8.8.1.2"
@@ -161,9 +182,12 @@ BooleanStateConfiguration.patch(
             },
 
             {
+                name: "SensorFault", tag: "event",
                 details: "This event shall be generated when the device registers or clears a fault.",
                 xref: "cluster§1.8.8.2",
+
                 children: [{
+                    name: "SensorFault", tag: "field",
                     details: "This field shall indicate the value of the SensorFault attribute, at the time this event is " +
                         "generated.",
                     xref: "cluster§1.8.8.2.1"
@@ -171,15 +195,21 @@ BooleanStateConfiguration.patch(
             },
 
             {
+                name: "SuppressAlarm", tag: "command",
                 xref: "cluster§1.8.7.1",
-                children: [
-                    { details: "This field shall indicate the alarm modes to suppress.", xref: "cluster§1.8.7.1.1" }
-                ]
+                children: [{
+                    name: "AlarmsToSuppress", tag: "field",
+                    details: "This field shall indicate the alarm modes to suppress.",
+                    xref: "cluster§1.8.7.1.1"
+                }]
             },
 
             {
+                name: "EnableDisableAlarm", tag: "command",
                 xref: "cluster§1.8.7.2",
+
                 children: [{
+                    name: "AlarmsToEnableDisable", tag: "field",
                     details: "This field shall indicate the alarm modes to either enable or disable depending on the bit status, " +
                         "as specified for the AlarmsEnabled attribute.",
                     xref: "cluster§1.8.7.2.1"
@@ -187,10 +217,19 @@ BooleanStateConfiguration.patch(
             },
 
             {
+                name: "AlarmModeBitmap", tag: "datatype",
                 xref: "cluster§1.8.5.1",
-                children: [{ description: "Visual alarming" }, { description: "Audible alarming" }]
+                children: [
+                    { name: "Visual", tag: "field", description: "Visual alarming" },
+                    { name: "Audible", tag: "field", description: "Audible alarming" }
+                ]
             },
-            { xref: "cluster§1.8.5.2", children: [{ description: "Unspecified fault detected" }] }
+
+            {
+                name: "SensorFaultBitmap", tag: "datatype",
+                xref: "cluster§1.8.5.2",
+                children: [{ name: "GeneralFault", tag: "field", description: "Unspecified fault detected" }]
+            }
         ]
     }
 );

@@ -6,34 +6,34 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ElectricalEnergyMeasurement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ElectricalEnergyMeasurement.patch({
+Resource.add({
+    name: "ElectricalEnergyMeasurement", tag: "cluster",
     classification: "application", pics: "EEM",
     details: "This cluster provides a mechanism for querying data about the electrical energy imported or provided " +
         "by the server.",
     xref: "cluster§2.12",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "cluster§2.12.4",
 
             children: [
                 {
-                    description: "ImportedEnergy",
+                    name: "IMPE", tag: "field",
                     details: "The feature indicates the server is capable of measuring how much energy is imported by the server.",
                     xref: "cluster§2.12.4.1"
                 },
                 {
-                    description: "ExportedEnergy",
+                    name: "EXPE", tag: "field",
                     details: "The feature indicates the server is capable of measuring how much energy is exported by the server.",
                     xref: "cluster§2.12.4.2"
                 },
 
                 {
-                    description: "CumulativeEnergy",
+                    name: "CUME", tag: "field",
                     details: "The feature indicates the server is capable of measuring how much energy has been imported or " +
                         "exported by the server over the device’s lifetime. This measurement may start from when a device’s " +
                         "firmware is updated to include this feature, when a device’s firmware is updated to correct " +
@@ -42,7 +42,7 @@ ElectricalEnergyMeasurement.patch({
                 },
 
                 {
-                    description: "PeriodicEnergy",
+                    name: "PERE", tag: "field",
                     details: "The feature indicates the server is capable of measuring how much energy has been imported or " +
                         "exported by the server during a certain period of time. The start and end times for measurement " +
                         "periods shall be determined by the server, and may represent overlapping periods.",
@@ -52,12 +52,15 @@ ElectricalEnergyMeasurement.patch({
         },
 
         {
+            name: "Accuracy", tag: "attribute",
             details: "Indicates the accuracy of energy measurement by this server. The value of the MeasurementType field " +
                 "on this MeasurementAccuracyStruct shall be ElectricalEnergy.",
             xref: "cluster§2.12.6.1"
         },
 
         {
+            name: "CumulativeEnergyImported", tag: "attribute",
+
             details: "Indicates the most recent measurement of cumulative energy imported by the server over the lifetime " +
                 "of the device, and the timestamp of when the measurement was recorded." +
                 "\n" +
@@ -76,6 +79,8 @@ ElectricalEnergyMeasurement.patch({
         },
 
         {
+            name: "CumulativeEnergyExported", tag: "attribute",
+
             details: "Indicates the most recent measurement of cumulative energy exported by the server over the lifetime " +
                 "of the device, and the timestamp of when the measurement was recorded." +
                 "\n" +
@@ -94,6 +99,8 @@ ElectricalEnergyMeasurement.patch({
         },
 
         {
+            name: "PeriodicEnergyImported", tag: "attribute",
+
             details: "Indicates the most recent measurement of energy imported by the server and the period during which " +
                 "it was measured." +
                 "\n" +
@@ -112,6 +119,8 @@ ElectricalEnergyMeasurement.patch({
         },
 
         {
+            name: "PeriodicEnergyExported", tag: "attribute",
+
             details: "Indicates the most recent measurement of energy exported by the server and the period during which " +
                 "it was measured." +
                 "\n" +
@@ -129,9 +138,14 @@ ElectricalEnergyMeasurement.patch({
             xref: "cluster§2.12.6.5"
         },
 
-        { details: "Indicates when cumulative measurements were most recently zero.", xref: "cluster§2.12.6.6" },
+        {
+            name: "CumulativeEnergyReset", tag: "attribute",
+            details: "Indicates when cumulative measurements were most recently zero.",
+            xref: "cluster§2.12.6.6"
+        },
 
         {
+            name: "CumulativeEnergyMeasured", tag: "event",
             details: "This event shall be generated when the server takes a snapshot of the cumulative energy imported by " +
                 "the server, exported from the server, or both, but not more frequently than the rate mentioned in " +
                 "the description above of the related attribute.",
@@ -139,11 +153,14 @@ ElectricalEnergyMeasurement.patch({
 
             children: [
                 {
+                    name: "EnergyImported", tag: "field",
                     details: "This field shall be the value of CumulativeEnergyImported attribute at the timestamp indicated in " +
                         "its EndTimestamp field, EndSystime field, or both.",
                     xref: "cluster§2.12.7.1.1"
                 },
+
                 {
+                    name: "EnergyExported", tag: "field",
                     details: "This field shall be the value of CumulativeEnergyExported attribute at the timestamp indicated in " +
                         "its EndTimestamp field, EndSystime field, or both.",
                     xref: "cluster§2.12.7.1.2"
@@ -152,17 +169,21 @@ ElectricalEnergyMeasurement.patch({
         },
 
         {
+            name: "PeriodicEnergyMeasured", tag: "event",
             details: "This event shall be generated when the server reaches the end of a reporting period for imported " +
                 "energy, exported energy, or both.",
             xref: "cluster§2.12.7.2",
 
             children: [
                 {
+                    name: "EnergyImported", tag: "field",
                     details: "This field shall be the value of PeriodicEnergyImported attribute at the timestamp indicated in its " +
                         "EndTimestamp field, EndSystime field, or both.",
                     xref: "cluster§2.12.7.2.1"
                 },
+
                 {
+                    name: "EnergyExported", tag: "field",
                     details: "This field shall be the value of PeriodicEnergyExported attribute at the timestamp indicated in its " +
                         "EndTimestamp field, EndSystime field, or both.",
                     xref: "cluster§2.12.7.2.2"
@@ -171,6 +192,8 @@ ElectricalEnergyMeasurement.patch({
         },
 
         {
+            name: "EnergyMeasurementStruct", tag: "datatype",
+
             details: "This struct shall indicate the amount of energy measured during a given measurement period." +
                 "\n" +
                 "A server which does not have the ability to determine the time in UTC, or has not yet done so, shall " +
@@ -185,6 +208,8 @@ ElectricalEnergyMeasurement.patch({
 
             children: [
                 {
+                    name: "Energy", tag: "field",
+
                     details: "This field shall be the reported energy." +
                         "\n" +
                         "If the EnergyMeasurementStruct represents cumulative energy, then this shall represent the " +
@@ -199,6 +224,8 @@ ElectricalEnergyMeasurement.patch({
                 },
 
                 {
+                    name: "StartTimestamp", tag: "field",
+
                     details: "This field shall indicate the timestamp in UTC of the beginning of the period during which the value " +
                         "of the Energy field was measured." +
                         "\n" +
@@ -215,6 +242,8 @@ ElectricalEnergyMeasurement.patch({
                 },
 
                 {
+                    name: "EndTimestamp", tag: "field",
+
                     details: "This field shall indicate the timestamp in UTC of the end of the period during which the value of " +
                         "the Energy field was measured." +
                         "\n" +
@@ -228,6 +257,8 @@ ElectricalEnergyMeasurement.patch({
                 },
 
                 {
+                    name: "StartSystime", tag: "field",
+
                     details: "This field shall indicate the time elapsed since boot at the beginning of the period during which " +
                         "the value of the Energy field was measured." +
                         "\n" +
@@ -245,6 +276,8 @@ ElectricalEnergyMeasurement.patch({
                 },
 
                 {
+                    name: "EndSystime", tag: "field",
+
                     details: "This field shall indicate the time elapsed since boot at the end of the period during which the " +
                         "value of the Energy field was measured." +
                         "\n" +
@@ -261,12 +294,15 @@ ElectricalEnergyMeasurement.patch({
         },
 
         {
+            name: "CumulativeEnergyResetStruct", tag: "datatype",
             details: "This struct shall represent the times at which cumulative measurements were last zero, either due to " +
                 "initialization of the device, or an internal reset of the cumulative value.",
             xref: "cluster§2.12.5.2",
 
             children: [
                 {
+                    name: "ImportedResetTimestamp", tag: "field",
+
                     details: "This field shall indicate the timestamp in UTC when the value of the Energy field on the " +
                         "CumulativeEnergyImported attribute was most recently zero." +
                         "\n" +
@@ -284,6 +320,8 @@ ElectricalEnergyMeasurement.patch({
                 },
 
                 {
+                    name: "ExportedResetTimestamp", tag: "field",
+
                     details: "This field shall indicate the timestamp in UTC when the value of the Energy field on the " +
                         "CumulativeEnergyExported attribute was most recently zero." +
                         "\n" +
@@ -301,6 +339,8 @@ ElectricalEnergyMeasurement.patch({
                 },
 
                 {
+                    name: "ImportedResetSystime", tag: "field",
+
                     details: "This field shall indicate the time elapsed since boot when the value of the Energy field on the " +
                         "CumulativeEnergyImported attribute was most recently zero." +
                         "\n" +
@@ -317,6 +357,8 @@ ElectricalEnergyMeasurement.patch({
                 },
 
                 {
+                    name: "ExportedResetSystime", tag: "field",
+
                     details: "This field shall indicate the time elapsed since boot when the value of the Energy field on the " +
                         "CumulativeEnergyExported attribute was most recently zero." +
                         "\n" +

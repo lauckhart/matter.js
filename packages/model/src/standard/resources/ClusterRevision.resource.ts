@@ -6,9 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ClusterRevision } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ClusterRevision.patch({
+Resource.add({
+    name: "ClusterRevision", tag: "attribute",
+
     details: "The ClusterRevision attribute indicates the revision of the server cluster specification supported " +
         "by the cluster instance. An implementation of a cluster specification before the ClusterRevision " +
         "attribute was added shall have an assumed cluster revision of 0 (zero). For a new cluster " +

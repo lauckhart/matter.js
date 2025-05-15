@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { devtypeId } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-devtypeId.patch({
+Resource.add({
+    name: "devtype-id", tag: "datatype",
     description: "Device Type ID",
     details: "An identifier that indicates conformance to a device type." +
         "\n" +

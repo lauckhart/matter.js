@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { fabricIdx } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-fabricIdx.patch({
+Resource.add({
+    name: "fabric-idx", tag: "datatype",
     description: "Fabric Index",
     details: "This is an index that maps to a particular fabric on the node, see Fabric-Index. It is used for:" +
         "\n" +

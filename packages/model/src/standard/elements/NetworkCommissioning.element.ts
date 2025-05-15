@@ -21,9 +21,9 @@ export const NetworkCommissioning = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "WI", conformance: "O.a", constraint: "0", description: "WiFiNetworkInterface" }),
-        Field({ name: "TH", conformance: "O.a", constraint: "1", description: "ThreadNetworkInterface" }),
-        Field({ name: "ET", conformance: "O.a", constraint: "2", description: "EthernetNetworkInterface" })
+        Field({ name: "WI", conformance: "O.a", constraint: "0", longName: "WiFiNetworkInterface" }),
+        Field({ name: "TH", conformance: "O.a", constraint: "1", longName: "ThreadNetworkInterface" }),
+        Field({ name: "ET", conformance: "O.a", constraint: "2", longName: "EthernetNetworkInterface" })
     ),
 
     Attribute({ id: 0x0, name: "MaxNetworks", type: "uint8", access: "R A", conformance: "M", constraint: "min 1", quality: "F" }),

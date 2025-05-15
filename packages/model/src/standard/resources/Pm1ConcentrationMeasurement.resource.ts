@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Pm1ConcentrationMeasurement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-Pm1ConcentrationMeasurement.patch({ pics: "PMHCONC" });
+Resource.add({ name: "Pm1ConcentrationMeasurement", tag: "cluster", pics: "PMHCONC" });

@@ -6,10 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ColorControl } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ColorControl.patch(
+Resource.add(
     {
+        name: "ColorControl", tag: "cluster",
         classification: "application", pics: "CC",
 
         details: "This cluster provides an interface for changing the color of a light. Color is specified according " +
@@ -27,21 +28,22 @@ ColorControl.patch(
         xref: "cluster§3.2",
 
         children: [
-            undefined,
-
             {
+                name: "FeatureMap", tag: "attribute",
                 xref: "cluster§3.2.4",
 
                 children: [
-                    { description: "HueSaturation", details: "Supports color specification via hue/saturation." },
-                    { description: "EnhancedHue", details: "Enhanced hue is supported." },
-                    { description: "ColorLoop", details: "Color loop is supported." },
-                    { description: "Xy", details: "Supports color specification via XY." },
-                    { description: "ColorTemperature", details: "Supports specification of color temperature." }
+                    { name: "HS", tag: "field", details: "Supports color specification via hue/saturation." },
+                    { name: "EHUE", tag: "field", details: "Enhanced hue is supported." },
+                    { name: "CL", tag: "field", details: "Color loop is supported." },
+                    { name: "XY", tag: "field", details: "Supports color specification via XY." },
+                    { name: "CT", tag: "field", details: "Supports specification of color temperature." }
                 ]
             },
 
             {
+                name: "CurrentHue", tag: "attribute",
+
                 details: "The CurrentHue attribute contains the current hue value of the light. It is updated as fast as " +
                     "practical during commands that change the hue." +
                     "\n" +
@@ -61,6 +63,8 @@ ColorControl.patch(
             },
 
             {
+                name: "CurrentSaturation", tag: "attribute",
+
                 details: "Indicates the current saturation value of the light. It is updated as fast as practical during " +
                     "commands that change the saturation." +
                     "\n" +
@@ -81,6 +85,8 @@ ColorControl.patch(
             },
 
             {
+                name: "RemainingTime", tag: "attribute",
+
                 details: "Indicates the time remaining, in 1/10ths of a second, until transitions due to the currently active " +
                     "command will be complete." +
                     "\n" +
@@ -102,6 +108,8 @@ ColorControl.patch(
             },
 
             {
+                name: "CurrentX", tag: "attribute",
+
                 details: "Indicates the current value of the normalized chromaticity value x, as defined in the CIE xyY Color " +
                     "Space. It is updated as fast as practical during commands that change the color." +
                     "\n" +
@@ -121,6 +129,8 @@ ColorControl.patch(
             },
 
             {
+                name: "CurrentY", tag: "attribute",
+
                 details: "Indicates the current value of the normalized chromaticity value y, as defined in the CIE xyY Color " +
                     "Space. It is updated as fast as practical during commands that change the color." +
                     "\n" +
@@ -140,16 +150,21 @@ ColorControl.patch(
             },
 
             {
+                name: "DriftCompensation", tag: "attribute",
                 details: "Indicates what mechanism, if any, is in use for compensation for color/intensity drift over time.",
                 xref: "cluster§3.2.7.7"
             },
+
             {
+                name: "CompensationText", tag: "attribute",
                 details: "This attribute shall contain a textual indication of what mechanism, if any, is in use to compensate " +
                     "for color/intensity drift over time.",
                 xref: "cluster§3.2.7.8"
             },
 
             {
+                name: "ColorTemperatureMireds", tag: "attribute",
+
                 details: "Indicates a scaled inverse of the current value of the color temperature. The unit of " +
                     "ColorTemperatureMireds is the mired (micro reciprocal degree), a.k.a. mirek (micro reciprocal " +
                     "kelvin). It is updated as fast as practical during commands that change the color." +
@@ -174,6 +189,7 @@ ColorControl.patch(
             },
 
             {
+                name: "ColorMode", tag: "attribute",
                 details: "Indicates which attributes are currently determining the color of the device." +
                     "\n" +
                     "The value of the ColorMode attribute cannot be written directly - it is set upon reception of any " +
@@ -182,6 +198,8 @@ ColorControl.patch(
             },
 
             {
+                name: "Options", tag: "attribute",
+
                 details: "Indicates a bitmap that determines the default behavior of some cluster commands. Each command that " +
                     "is dependent on the Options attribute shall first construct a temporary Options bitmap that is in " +
                     "effect during the command processing. The temporary Options bitmap has the same format and meaning " +
@@ -205,6 +223,8 @@ ColorControl.patch(
             },
 
             {
+                name: "NumberOfPrimaries", tag: "attribute",
+
                 details: "Indicates the number of color primaries implemented on this device. A value of null shall indicate " +
                     "that the number of primaries is unknown." +
                     "\n" +
@@ -217,6 +237,7 @@ ColorControl.patch(
             },
 
             {
+                name: "Primary1X", tag: "attribute",
                 details: "Indicates the normalized chromaticity value x for this primary, as defined in the CIE xyY Color " +
                     "Space." +
                     "\n" +
@@ -226,6 +247,7 @@ ColorControl.patch(
             },
 
             {
+                name: "Primary1Y", tag: "attribute",
                 details: "Indicates the normalized chromaticity value y for this primary, as defined in the CIE xyY Color " +
                     "Space." +
                     "\n" +
@@ -235,6 +257,8 @@ ColorControl.patch(
             },
 
             {
+                name: "Primary1Intensity", tag: "attribute",
+
                 details: "Indicates a representation of the maximum intensity of this primary as defined in the Dimming Light " +
                     "Curve in the Ballast Configuration cluster (see Ballast Configuration Cluster), normalized such that " +
                     "the primary with the highest maximum intensity contains the value 254." +
@@ -251,23 +275,24 @@ ColorControl.patch(
                 xref: "cluster§3.2.7.27"
             },
 
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
+            { name: "Primary2X", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "Primary2Y", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "Primary2Intensity", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "Primary3X", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "Primary3Y", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "Primary3Intensity", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "Primary4X", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "Primary4Y", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "Primary4Intensity", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "Primary5X", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "Primary5Y", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "Primary5Intensity", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "Primary6X", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "Primary6Y", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "Primary6Intensity", tag: "attribute", xref: "cluster§3.2.7" },
 
             {
+                name: "WhitePointX", tag: "attribute",
                 details: "Indicates the normalized chromaticity value x, as defined in the CIE xyY Color Space, of the current " +
                     "white point of the device." +
                     "\n" +
@@ -277,6 +302,7 @@ ColorControl.patch(
             },
 
             {
+                name: "WhitePointY", tag: "attribute",
                 details: "Indicates the normalized chromaticity value y, as defined in the CIE xyY Color Space, of the current " +
                     "white point of the device." +
                     "\n" +
@@ -286,6 +312,7 @@ ColorControl.patch(
             },
 
             {
+                name: "ColorPointRx", tag: "attribute",
                 details: "Indicates the normalized chromaticity value x, as defined in the CIE xyY Color Space, of the red " +
                     "color point of the device." +
                     "\n" +
@@ -295,6 +322,7 @@ ColorControl.patch(
             },
 
             {
+                name: "ColorPointRy", tag: "attribute",
                 details: "Indicates the normalized chromaticity value y, as defined in the CIE xyY Color Space, of the red " +
                     "color point of the device." +
                     "\n" +
@@ -304,6 +332,8 @@ ColorControl.patch(
             },
 
             {
+                name: "ColorPointRIntensity", tag: "attribute",
+
                 details: "Indicates a representation of the relative intensity of the red color point as defined in the " +
                     "Dimming Light Curve in the Ballast Configuration cluster (see Ballast Configuration Cluster), " +
                     "normalized such that the color point with the highest relative intensity contains the value 254." +
@@ -322,14 +352,16 @@ ColorControl.patch(
                 xref: "cluster§3.2.7.33"
             },
 
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
-            { xref: "cluster§3.2.7" },
+            { name: "ColorPointGx", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "ColorPointGy", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "ColorPointGIntensity", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "ColorPointBx", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "ColorPointBy", tag: "attribute", xref: "cluster§3.2.7" },
+            { name: "ColorPointBIntensity", tag: "attribute", xref: "cluster§3.2.7" },
 
             {
+                name: "EnhancedCurrentHue", tag: "attribute",
+
                 details: "Indicates the non-equidistant steps along the CIE 1931 color triangle, and it provides 16-bits " +
                     "precision." +
                     "\n" +
@@ -350,6 +382,8 @@ ColorControl.patch(
             },
 
             {
+                name: "EnhancedColorMode", tag: "attribute",
+
                 details: "Indicates which attributes are currently determining the color of the device." +
                     "\n" +
                     "To provide compatibility with clients not supporting EHUE, the original ColorMode attribute shall " +
@@ -361,12 +395,14 @@ ColorControl.patch(
             },
 
             {
+                name: "ColorLoopActive", tag: "attribute",
                 details: "Indicates the current active status of the color loop. If this attribute has the value 0, the color " +
                     "loop shall NOT be active. If this attribute has the value 1, the color loop shall be active.",
                 xref: "cluster§3.2.7.14"
             },
 
             {
+                name: "ColorLoopDirection", tag: "attribute",
                 details: "Indicates the current direction of the color loop. If this attribute has the value 0, the " +
                     "EnhancedCurrentHue attribute shall be decremented. If this attribute has the value 1, the " +
                     "EnhancedCurrentHue attribute shall be incremented.",
@@ -374,21 +410,27 @@ ColorControl.patch(
             },
 
             {
+                name: "ColorLoopTime", tag: "attribute",
                 details: "Indicates the number of seconds it shall take to perform a full color loop, i.e., to cycle all " +
                     "values of the EnhancedCurrentHue attribute (between 0 and 65534).",
                 xref: "cluster§3.2.7.16"
             },
+
             {
+                name: "ColorLoopStartEnhancedHue", tag: "attribute",
                 details: "Indicates the value of the EnhancedCurrentHue attribute from which the color loop shall be started.",
                 xref: "cluster§3.2.7.17"
             },
+
             {
+                name: "ColorLoopStoredEnhancedHue", tag: "attribute",
                 details: "Indicates the value of the EnhancedCurrentHue attribute before the color loop was started. Once the " +
                     "color loop is complete, the EnhancedCurrentHue attribute shall be restored to this value.",
                 xref: "cluster§3.2.7.18"
             },
 
             {
+                name: "ColorCapabilities", tag: "attribute",
                 details: "Indicates the color control capabilities of the device." +
                     "\n" +
                     "Bits 0-4 of the ColorCapabilities attribute shall have the same values as the corresponding bits of " +
@@ -396,15 +438,22 @@ ColorControl.patch(
                 xref: "cluster§3.2.7.19",
 
                 children: [
-                    { description: "Supports color specification via hue/saturation." },
-                    { description: "Enhanced hue is supported." },
-                    { description: "Color loop is supported." },
-                    { description: "Supports color specification via XY." },
-                    { description: "Supports color specification via color temperature." }
+                    {
+                        name: "HueSaturation", tag: "field",
+                        description: "Supports color specification via hue/saturation."
+                    },
+                    { name: "EnhancedHue", tag: "field", description: "Enhanced hue is supported." },
+                    { name: "ColorLoop", tag: "field", description: "Color loop is supported." },
+                    { name: "XY", tag: "field", description: "Supports color specification via XY." },
+                    {
+                        name: "ColorTemperature", tag: "field",
+                        description: "Supports color specification via color temperature."
+                    }
                 ]
             },
 
             {
+                name: "ColorTempPhysicalMinMireds", tag: "attribute",
                 details: "Indicates the minimum mired value supported by the hardware. ColorTempPhysicalMinMireds corresponds " +
                     "to the maximum color temperature in kelvins supported by the hardware." +
                     "\n" +
@@ -413,6 +462,7 @@ ColorControl.patch(
             },
 
             {
+                name: "ColorTempPhysicalMaxMireds", tag: "attribute",
                 details: "Indicates the maximum mired value supported by the hardware. ColorTempPhysicalMaxMireds corresponds " +
                     "to the minimum color temperature in kelvins supported by the hardware." +
                     "\n" +
@@ -421,6 +471,8 @@ ColorControl.patch(
             },
 
             {
+                name: "CoupleColorTempToLevelMinMireds", tag: "attribute",
+
                 details: "Indicates a lower bound on the value of the ColorTemperatureMireds attribute for the purposes of " +
                     "coupling the ColorTemperatureMireds attribute to the CurrentLevel attribute when the " +
                     "CoupleColorTempToLevel bit of the Options attribute of the Level Control cluster is equal to 1. When " +
@@ -441,6 +493,7 @@ ColorControl.patch(
             },
 
             {
+                name: "StartUpColorTemperatureMireds", tag: "attribute",
                 details: "Indicates the desired startup color temperature value the light shall use when it is supplied with " +
                     "power and this value shall be reflected in the ColorTemperatureMireds attribute. In addition, the " +
                     "ColorMode and EnhancedColorMode attributes shall be set to 2 (ColorTemperatureMireds). The values of " +
@@ -449,12 +502,23 @@ ColorControl.patch(
             },
 
             {
+                name: "MoveToHue", tag: "command",
                 xref: "cluster§3.2.8.4",
 
                 children: [
-                    { details: "This field shall indicate the hue to be moved to.", xref: "cluster§3.2.8.4.1" },
-                    { details: "This field shall indicate the movement direction.", xref: "cluster§3.2.8.4.2" },
                     {
+                        name: "Hue", tag: "field",
+                        details: "This field shall indicate the hue to be moved to.",
+                        xref: "cluster§3.2.8.4.1"
+                    },
+                    {
+                        name: "Direction", tag: "field",
+                        details: "This field shall indicate the movement direction.",
+                        xref: "cluster§3.2.8.4.2"
+                    },
+
+                    {
+                        name: "TransitionTime", tag: "field",
                         details: "This field shall indicate, in 1/10ths of a second, the time that shall be taken to move to the new " +
                             "hue.",
                         xref: "cluster§3.2.8.4.3"
@@ -463,11 +527,18 @@ ColorControl.patch(
             },
 
             {
+                name: "MoveHue", tag: "command",
                 xref: "cluster§3.2.8.5",
 
                 children: [
-                    { details: "This field shall indicate the mode of movement.", xref: "cluster§3.2.8.5.1" },
                     {
+                        name: "MoveMode", tag: "field",
+                        details: "This field shall indicate the mode of movement.",
+                        xref: "cluster§3.2.8.5.1"
+                    },
+
+                    {
+                        name: "Rate", tag: "field",
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the " +
                             "device’s hue of one unit.",
                         xref: "cluster§3.2.8.5.2"
@@ -476,20 +547,26 @@ ColorControl.patch(
             },
 
             {
+                name: "StepHue", tag: "command",
                 xref: "cluster§3.2.8.6",
 
                 children: [
                     {
+                        name: "StepMode", tag: "field",
                         details: "This field shall indicate the mode of the step to be performed.",
                         xref: "cluster§3.2.8.6.1"
                     },
+
                     {
+                        name: "StepSize", tag: "field",
                         details: "This field shall indicate the change to be added to (or subtracted from) the current value of the " +
                             "device’s hue.",
                         xref: "cluster§3.2.8.6.2"
                     },
 
                     {
+                        name: "TransitionTime", tag: "field",
+
                         details: "This field shall indicate, in 1/10ths of a second, the time that shall be taken to perform the step." +
                             "\n" +
                             "A step is a change in the device’s hue of Step size units." +
@@ -504,17 +581,21 @@ ColorControl.patch(
                 ]
             },
 
-            { xref: "cluster§3.2.8.7" },
+            { name: "MoveToSaturation", tag: "command", xref: "cluster§3.2.8.7" },
 
             {
+                name: "MoveSaturation", tag: "command",
                 xref: "cluster§3.2.8.8",
 
                 children: [
                     {
+                        name: "MoveMode", tag: "field",
                         details: "This field shall indicate the mode of movement, as described in the MoveHue command.",
                         xref: "cluster§3.2.8.8.1"
                     },
+
                     {
+                        name: "Rate", tag: "field",
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the " +
                             "device’s saturation of one unit.",
                         xref: "cluster§3.2.8.8.2"
@@ -523,20 +604,26 @@ ColorControl.patch(
             },
 
             {
+                name: "StepSaturation", tag: "command",
                 xref: "cluster§3.2.8.9",
 
                 children: [
                     {
+                        name: "StepMode", tag: "field",
                         details: "This field shall indicate the mode of the step to be performed, as described in the StepHue command.",
                         xref: "cluster§3.2.8.9.1"
                     },
+
                     {
+                        name: "StepSize", tag: "field",
                         details: "This field shall indicate the change to be added to (or subtracted from) the current value of the " +
                             "device’s saturation.",
                         xref: "cluster§3.2.8.9.2"
                     },
 
                     {
+                        name: "TransitionTime", tag: "field",
+
                         details: "This field shall indicate, in 1/10ths of a second, the time that shall be taken to perform the step. " +
                             "A step is a change in the device’s saturation of Step size units." +
                             "\n" +
@@ -550,19 +637,23 @@ ColorControl.patch(
                 ]
             },
 
-            { xref: "cluster§3.2.8.10" },
-            { xref: "cluster§3.2.8.11" },
+            { name: "MoveToHueAndSaturation", tag: "command", xref: "cluster§3.2.8.10" },
+            { name: "MoveToColor", tag: "command", xref: "cluster§3.2.8.11" },
 
             {
+                name: "MoveColor", tag: "command",
                 xref: "cluster§3.2.8.12",
 
                 children: [
                     {
+                        name: "RateX", tag: "field",
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the " +
                             "device’s CurrentX attribute of one unit.",
                         xref: "cluster§3.2.8.12.1"
                     },
+
                     {
+                        name: "RateY", tag: "field",
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the " +
                             "device’s CurrentY attribute of one unit.",
                         xref: "cluster§3.2.8.12.2"
@@ -571,33 +662,38 @@ ColorControl.patch(
             },
 
             {
+                name: "StepColor", tag: "command",
                 xref: "cluster§3.2.8.13",
 
-                children: [
-                    undefined,
-                    undefined,
-                    {
-                        details: "The field shall indicate, in 1/10ths of a second, the time that shall be taken to perform the color " +
-                            "change.",
-                        xref: "cluster§3.2.8.13.2"
-                    }
-                ]
+                children: [{
+                    name: "TransitionTime", tag: "field",
+                    details: "The field shall indicate, in 1/10ths of a second, the time that shall be taken to perform the color " +
+                        "change.",
+                    xref: "cluster§3.2.8.13.2"
+                }]
             },
 
-            { xref: "cluster§3.2.8.14" },
+            { name: "MoveToColorTemperature", tag: "command", xref: "cluster§3.2.8.14" },
 
             {
+                name: "EnhancedMoveToHue", tag: "command",
                 details: "This command allows the light to be moved in a smooth continuous transition from their current hue " +
                     "to a target hue.",
                 xref: "cluster§3.2.8.15",
 
                 children: [
                     {
+                        name: "EnhancedHue", tag: "field",
                         details: "This field shall indicate the target extended hue for the light.",
                         xref: "cluster§3.2.8.15.1"
                     },
-                    { details: "This field shall indicate the movement direction.", xref: "cluster§3.2.8.15.2" },
                     {
+                        name: "Direction", tag: "field",
+                        details: "This field shall indicate the movement direction.",
+                        xref: "cluster§3.2.8.15.2"
+                    },
+                    {
+                        name: "TransitionTime", tag: "field",
                         details: "This field shall indicate the transition time, as described in the MoveToHue command.",
                         xref: "cluster§3.2.8.15.3"
                     }
@@ -605,15 +701,19 @@ ColorControl.patch(
             },
 
             {
+                name: "EnhancedMoveHue", tag: "command",
                 details: "This command allows the light to start a continuous transition starting from their current hue.",
                 xref: "cluster§3.2.8.16",
 
                 children: [
                     {
+                        name: "MoveMode", tag: "field",
                         details: "This field shall indicate the mode of movement, as described in the MoveHue command.",
                         xref: "cluster§3.2.8.16.1"
                     },
+
                     {
+                        name: "Rate", tag: "field",
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the " +
                             "extended hue of a device by one unit.",
                         xref: "cluster§3.2.8.16.2"
@@ -622,22 +722,28 @@ ColorControl.patch(
             },
 
             {
+                name: "EnhancedStepHue", tag: "command",
                 details: "This command allows the light to be moved in a stepped transition from their current hue, resulting " +
                     "in a linear transition through XY space.",
                 xref: "cluster§3.2.8.17",
 
                 children: [
                     {
+                        name: "StepMode", tag: "field",
                         details: "This field shall indicate the mode of the step to be performed, as described in the StepHue command.",
                         xref: "cluster§3.2.8.17.1"
                     },
+
                     {
+                        name: "StepSize", tag: "field",
                         details: "This field shall indicate the change to be added to (or subtracted from) the current value of the " +
                             "device’s enhanced hue.",
                         xref: "cluster§3.2.8.17.2"
                     },
 
                     {
+                        name: "TransitionTime", tag: "field",
+
                         details: "The field shall indicate, in units of 1/10ths of a second, the time that shall be taken to perform " +
                             "the step. A step is a change to the device’s enhanced hue of a magnitude corresponding to the " +
                             "StepSize field." +
@@ -653,20 +759,24 @@ ColorControl.patch(
             },
 
             {
+                name: "EnhancedMoveToHueAndSaturation", tag: "command",
                 details: "This command allows the light to be moved in a smooth continuous transition from their current hue " +
                     "to a target hue and from their current saturation to a target saturation.",
                 xref: "cluster§3.2.8.18",
 
                 children: [
                     {
+                        name: "EnhancedHue", tag: "field",
                         details: "This field shall indicate the target extended hue for the light.",
                         xref: "cluster§3.2.8.18.1"
                     },
                     {
+                        name: "Saturation", tag: "field",
                         details: "This field shall indicate the saturation, as described in the MoveToHueAndSaturation command.",
                         xref: "cluster§3.2.8.18.2"
                     },
                     {
+                        name: "TransitionTime", tag: "field",
                         details: "This field shall indicate the transition time, as described in the MoveToHue command.",
                         xref: "cluster§3.2.8.18.3"
                     }
@@ -674,25 +784,31 @@ ColorControl.patch(
             },
 
             {
+                name: "ColorLoopSet", tag: "command",
                 details: "This command allows a color loop to be activated such that the color light cycles through its range " +
                     "of hues.",
                 xref: "cluster§3.2.8.19",
 
                 children: [
                     {
+                        name: "UpdateFlags", tag: "field",
                         details: "This field shall indicate which color loop attributes to update (from the values supplied in the " +
                             "other fields, see field descriptions below) before the color loop is started.",
                         xref: "cluster§3.2.8.19.1"
                     },
+
                     {
+                        name: "Action", tag: "field",
                         details: "This field shall indicate the action to take for the color loop.",
                         xref: "cluster§3.2.8.19.2"
                     },
                     {
+                        name: "Direction", tag: "field",
                         details: "This field shall indicate the direction for the color loop.",
                         xref: "cluster§3.2.8.19.3"
                     },
                     {
+                        name: "Time", tag: "field",
                         details: "This field shall indicate the number of seconds over which to perform a full color loop.",
                         xref: "cluster§3.2.8.19.4"
                     }
@@ -700,6 +816,7 @@ ColorControl.patch(
             },
 
             {
+                name: "StopMoveStep", tag: "command",
                 details: "This command is provided to allow MoveTo and Step commands to be stopped." +
                     "\n" +
                     "NOTE This automatically provides symmetry to the Level Control cluster." +
@@ -709,21 +826,27 @@ ColorControl.patch(
             },
 
             {
+                name: "MoveColorTemperature", tag: "command",
                 details: "This command allows the color temperature of the light to be moved at a specified rate.",
                 xref: "cluster§3.2.8.21",
 
                 children: [
                     {
+                        name: "MoveMode", tag: "field",
                         details: "This field shall indicate the mode of movement, as described in the MoveHue command.",
                         xref: "cluster§3.2.8.21.1"
                     },
+
                     {
+                        name: "Rate", tag: "field",
                         details: "This field shall indicate the rate of movement in steps per second. A step is a change in the color " +
                             "temperature of a device by one unit.",
                         xref: "cluster§3.2.8.21.2"
                     },
 
                     {
+                        name: "ColorTemperatureMinimumMireds", tag: "field",
+
                         details: "This field shall indicate a lower bound on the ColorTemperatureMireds attribute (≡ an upper bound on " +
                             "the color temperature in kelvins) for the current move operation" +
                             "\n" +
@@ -738,6 +861,8 @@ ColorControl.patch(
                     },
 
                     {
+                        name: "ColorTemperatureMaximumMireds", tag: "field",
+
                         details: "This field shall indicate an upper bound on the ColorTemperatureMireds attribute (≡ a lower bound on " +
                             "the color temperature in kelvins) for the current move operation" +
                             "\n" +
@@ -754,21 +879,26 @@ ColorControl.patch(
             },
 
             {
+                name: "StepColorTemperature", tag: "command",
                 details: "This command allows the color temperature of the light to be stepped with a specified step size.",
                 xref: "cluster§3.2.8.22",
 
                 children: [
                     {
+                        name: "StepMode", tag: "field",
                         details: "This field shall indicate the mode of the step to be performed, as described in the StepHue command.",
                         xref: "cluster§3.2.8.22.1"
                     },
+
                     {
+                        name: "StepSize", tag: "field",
                         details: "This field shall indicate the change to be added to (or subtracted from) the current value of the " +
                             "device’s color temperature.",
                         xref: "cluster§3.2.8.22.2"
                     },
 
                     {
+                        name: "TransitionTime", tag: "field",
                         details: "This field shall indicate, in units of 1/10ths of a second, the time that shall be taken to perform " +
                             "the step. A step is a change to the device’s color temperature of a magnitude corresponding to the " +
                             "StepSize field.",
@@ -776,6 +906,8 @@ ColorControl.patch(
                     },
 
                     {
+                        name: "ColorTemperatureMinimumMireds", tag: "field",
+
                         details: "This field shall indicate a lower bound on the ColorTemperatureMireds attribute (≡ an upper bound on " +
                             "the color temperature in kelvins) for the current step operation" +
                             "\n" +
@@ -790,6 +922,8 @@ ColorControl.patch(
                     },
 
                     {
+                        name: "ColorTemperatureMaximumMireds", tag: "field",
+
                         details: "This field shall indicate an upper bound on the ColorTemperatureMireds attribute (≡ a lower bound on " +
                             "the color temperature in kelvins) for the current step operation" +
                             "\n" +
@@ -806,8 +940,11 @@ ColorControl.patch(
             },
 
             {
+                name: "OptionsBitmap", tag: "datatype",
                 xref: "cluster§3.2.6.2",
+
                 children: [{
+                    name: "ExecuteIfOff", tag: "field",
                     description: "Dependency on On/Off cluster",
                     details: "This bit shall indicate if this cluster server instance has a dependency with the On/Off cluster.",
                     xref: "cluster§3.2.6.2.1"
@@ -815,11 +952,13 @@ ColorControl.patch(
             },
 
             {
+                name: "UpdateFlagsBitmap", tag: "datatype",
                 details: "This data type is derived from map8 and is used in the ColorLoopSet command.",
                 xref: "cluster§3.2.6.3",
 
                 children: [
                     {
+                        name: "UpdateAction", tag: "field",
                         description: "Device adheres to the associated action field.",
 
                         details: "This bit shall indicate whether the server adheres to the Action field in order to process the " +
@@ -833,6 +972,7 @@ ColorControl.patch(
                     },
 
                     {
+                        name: "UpdateDirection", tag: "field",
                         description: "Device updates the associated direction attribute.",
 
                         details: "This bit shall indicate whether the device updates the ColorLoopDirection attribute with the " +
@@ -846,6 +986,7 @@ ColorControl.patch(
                     },
 
                     {
+                        name: "UpdateTime", tag: "field",
                         description: "Device updates the associated time attribute.",
 
                         details: "This bit shall indicate whether the device updates the ColorLoopTime attribute with the Time field." +
@@ -859,6 +1000,7 @@ ColorControl.patch(
                     },
 
                     {
+                        name: "UpdateStartHue", tag: "field",
                         description: "Device updates the associated start hue attribute.",
 
                         details: "This bit shall indicate whether the device updates the ColorLoopStartEnhancedHue attribute with the " +
@@ -875,79 +1017,128 @@ ColorControl.patch(
             },
 
             {
+                name: "DriftCompensationEnum", tag: "datatype",
                 xref: "cluster§3.2.6.4",
 
                 children: [
-                    { description: "There is no compensation." },
-                    { description: "The compensation is based on other or unknown mechanism." },
-                    { description: "The compensation is based on temperature monitoring." },
-                    { description: "The compensation is based on optical luminance monitoring and feedback." },
-                    { description: "The compensation is based on optical color monitoring and feedback." }
+                    { name: "None", tag: "field", description: "There is no compensation." },
+                    {
+                        name: "OtherOrUnknown", tag: "field",
+                        description: "The compensation is based on other or unknown mechanism."
+                    },
+                    {
+                        name: "TemperatureMonitoring", tag: "field",
+                        description: "The compensation is based on temperature monitoring."
+                    },
+                    {
+                        name: "OpticalLuminanceMonitoringAndFeedback", tag: "field",
+                        description: "The compensation is based on optical luminance monitoring and feedback."
+                    },
+                    {
+                        name: "OpticalColorMonitoringAndFeedback", tag: "field",
+                        description: "The compensation is based on optical color monitoring and feedback."
+                    }
                 ]
             },
 
             {
+                name: "ColorModeEnum", tag: "datatype",
                 xref: "cluster§3.2.6.5",
+
                 children: [
-                    { description: "The current hue and saturation attributes determine the color." },
-                    { description: "The current X and Y attributes determine the color." },
-                    { description: "The color temperature attribute determines the color." }
+                    {
+                        name: "CurrentHueAndCurrentSaturation", tag: "field",
+                        description: "The current hue and saturation attributes determine the color."
+                    },
+                    {
+                        name: "CurrentXAndCurrentY", tag: "field",
+                        description: "The current X and Y attributes determine the color."
+                    },
+                    {
+                        name: "ColorTemperatureMireds", tag: "field",
+                        description: "The color temperature attribute determines the color."
+                    }
                 ]
             },
 
             {
+                name: "EnhancedColorModeEnum", tag: "datatype",
                 xref: "cluster§3.2.6.6",
 
                 children: [
-                    { description: "The current hue and saturation attributes determine the color." },
-                    { description: "The current X and Y attributes determine the color." },
-                    { description: "The color temperature attribute determines the color." },
-                    { description: "The enhanced current hue and saturation attributes determine the color." }
+                    {
+                        name: "CurrentHueAndCurrentSaturation", tag: "field",
+                        description: "The current hue and saturation attributes determine the color."
+                    },
+                    {
+                        name: "CurrentXAndCurrentY", tag: "field",
+                        description: "The current X and Y attributes determine the color."
+                    },
+                    {
+                        name: "ColorTemperatureMireds", tag: "field",
+                        description: "The color temperature attribute determines the color."
+                    },
+                    {
+                        name: "EnhancedCurrentHueAndCurrentSaturation", tag: "field",
+                        description: "The enhanced current hue and saturation attributes determine the color."
+                    }
                 ]
             },
 
             {
+                name: "DirectionEnum", tag: "datatype",
                 xref: "cluster§3.2.6.7",
 
                 children: [
-                    { description: "Shortest distance" },
-                    { description: "Longest distance" },
-                    { description: "Up" },
-                    { description: "Down" }
+                    { name: "Shortest", tag: "field", description: "Shortest distance" },
+                    { name: "Longest", tag: "field", description: "Longest distance" },
+                    { name: "Up", tag: "field", description: "Up" },
+                    { name: "Down", tag: "field", description: "Down" }
                 ]
             },
 
             {
+                name: "MoveModeEnum", tag: "datatype",
                 xref: "cluster§3.2.6.8",
                 children: [
-                    { description: "Stop the movement" },
-                    { description: "Move in an upwards direction" },
-                    { description: "Move in a downwards direction" }
+                    { name: "Stop", tag: "field", description: "Stop the movement" },
+                    { name: "Up", tag: "field", description: "Move in an upwards direction" },
+                    { name: "Down", tag: "field", description: "Move in a downwards direction" }
                 ]
             },
 
             {
+                name: "StepModeEnum", tag: "datatype",
                 xref: "cluster§3.2.6.9",
                 children: [
-                    { description: "Step in an upwards direction" },
-                    { description: "Step in a downwards direction" }
+                    { name: "Up", tag: "field", description: "Step in an upwards direction" },
+                    { name: "Down", tag: "field", description: "Step in a downwards direction" }
                 ]
             },
 
             {
+                name: "ColorLoopActionEnum", tag: "datatype",
                 xref: "cluster§3.2.6.10",
+
                 children: [
-                    { description: "De-activate the color loop." },
-                    { description: "Activate the color loop from the value in the ColorLoopStartEnhancedHue field." },
-                    { description: "Activate the color loop from the value of the EnhancedCurrentHue attribute." }
+                    { name: "Deactivate", tag: "field", description: "De-activate the color loop." },
+                    {
+                        name: "ActivateFromColorLoopStartEnhancedHue", tag: "field",
+                        description: "Activate the color loop from the value in the ColorLoopStartEnhancedHue field."
+                    },
+                    {
+                        name: "ActivateFromEnhancedCurrentHue", tag: "field",
+                        description: "Activate the color loop from the value of the EnhancedCurrentHue attribute."
+                    }
                 ]
             },
 
             {
+                name: "ColorLoopDirectionEnum", tag: "datatype",
                 xref: "cluster§3.2.6.11",
                 children: [
-                    { description: "Decrement the hue in the color loop." },
-                    { description: "Increment the hue in the color loop." }
+                    { name: "Decrement", tag: "field", description: "Decrement the hue in the color loop." },
+                    { name: "Increment", tag: "field", description: "Increment the hue in the color loop." }
                 ]
             }
         ]

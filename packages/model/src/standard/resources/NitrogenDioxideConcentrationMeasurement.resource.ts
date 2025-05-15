@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { NitrogenDioxideConcentrationMeasurement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-NitrogenDioxideConcentrationMeasurement.patch({ pics: "NDOCONC" });
+Resource.add({ name: "NitrogenDioxideConcentrationMeasurement", tag: "cluster", pics: "NDOCONC" });

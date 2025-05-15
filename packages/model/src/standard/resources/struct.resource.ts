@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { struct } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-struct.patch({
+Resource.add({
+    name: "struct", tag: "datatype",
     description: "Struct",
 
     details: "A struct is a sequence of fields of any data type. Individual fields are identified by a field ID of " +

@@ -19,7 +19,7 @@ export const Descriptor = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "TAGLIST", conformance: "desc", constraint: "0", description: "TagList" })
+        Field({ name: "TAGLIST", conformance: "desc", constraint: "0", longName: "TagList" })
     ),
 
     Attribute(

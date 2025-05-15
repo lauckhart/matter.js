@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { subjectId } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-subjectId.patch({
+Resource.add({
+    name: "subject-id", tag: "datatype",
     description: "A subject granted privileges to interact with a node.",
     details: "The Matter specifications do not define this formally as a global but the core specification " +
         "references it (as subject-id or SubjectID) from a number of different clusters."

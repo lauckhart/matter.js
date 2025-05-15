@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { UnitLocalization } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-UnitLocalization.patch({
+Resource.add({
+    name: "UnitLocalization", tag: "cluster",
     classification: "node", pics: "LUNIT",
 
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
@@ -22,17 +23,17 @@ UnitLocalization.patch({
     xref: "core§11.5",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "core§11.5.4",
             children: [{
-                description: "TemperatureUnit",
+                name: "TEMP", tag: "field",
                 details: "The Node can be configured to use different units of temperature when conveying values to a user."
             }]
         },
 
         {
+            name: "TemperatureUnit", tag: "attribute",
             details: "The TemperatureUnit attribute shall indicate the unit for the Node to use only when conveying " +
                 "temperature in communication to the user. If provided, this value shall take priority over any unit " +
                 "implied through the ActiveLocale Attribute.",
@@ -40,11 +41,12 @@ UnitLocalization.patch({
         },
 
         {
+            name: "TempUnitEnum", tag: "datatype",
             xref: "core§11.5.5.1",
             children: [
-                { description: "Temperature conveyed in Fahrenheit" },
-                { description: "Temperature conveyed in Celsius" },
-                { description: "Temperature conveyed in Kelvin" }
+                { name: "Fahrenheit", tag: "field", description: "Temperature conveyed in Fahrenheit" },
+                { name: "Celsius", tag: "field", description: "Temperature conveyed in Celsius" },
+                { name: "Kelvin", tag: "field", description: "Temperature conveyed in Kelvin" }
             ]
         }
     ]

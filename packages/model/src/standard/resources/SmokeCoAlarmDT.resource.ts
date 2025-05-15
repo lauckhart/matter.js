@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { SmokeCoAlarmDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-SmokeCoAlarmDt.patch({
+Resource.add({
+    name: "SmokeCoAlarm", tag: "deviceType",
     classification: "simple",
 
     details: "A Smoke CO Alarm device is capable of sensing smoke, carbon monoxide or both. It is capable of " +
@@ -26,12 +27,11 @@ SmokeCoAlarmDt.patch({
     xref: "device§7.9",
 
     children: [
-        undefined,
-        { xref: "device§7.9.5" },
-        { xref: "device§7.9.5" },
-        { xref: "device§7.9.5" },
-        { xref: "device§7.9.5" },
-        { xref: "device§7.9.5" },
-        { xref: "device§7.9.5" }
+        { name: "Identify", tag: "requirement", xref: "device§7.9.5" },
+        { name: "Groups", tag: "requirement", xref: "device§7.9.5" },
+        { name: "SmokeCoAlarm", tag: "requirement", xref: "device§7.9.5" },
+        { name: "RelativeHumidityMeasurement", tag: "requirement", xref: "device§7.9.5" },
+        { name: "TemperatureMeasurement", tag: "requirement", xref: "device§7.9.5" },
+        { name: "CarbonMonoxideConcentrationMeasurement", tag: "requirement", xref: "device§7.9.5" }
     ]
 });

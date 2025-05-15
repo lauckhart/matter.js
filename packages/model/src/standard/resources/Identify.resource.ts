@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Identify } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-Identify.patch({
+Resource.add({
+    name: "Identify", tag: "cluster",
     classification: "endpoint", pics: "I",
 
     details: "This cluster supports an endpoint identification state (e.g., flashing a light), that indicates to " +
@@ -24,9 +25,9 @@ Identify.patch({
     xref: "cluster§1.2",
 
     children: [
-        undefined,
-
         {
+            name: "IdentifyTime", tag: "attribute",
+
             details: "Indicates the remaining length of time, in seconds, that the endpoint will continue to identify " +
                 "itself." +
                 "\n" +
@@ -42,6 +43,7 @@ Identify.patch({
         },
 
         {
+            name: "IdentifyType", tag: "attribute",
             details: "Indicates how the identification state is presented to the user." +
                 "\n" +
                 "This attribute shall contain one of the values defined in IdentifyTypeEnum. The value None shall NOT " +
@@ -50,9 +52,15 @@ Identify.patch({
             xref: "cluster§1.2.5.2"
         },
 
-        { details: "This command starts or stops the receiving device identifying itself.", xref: "cluster§1.2.6.1" },
+        {
+            name: "Identify", tag: "command",
+            details: "This command starts or stops the receiving device identifying itself.",
+            xref: "cluster§1.2.6.1"
+        },
 
         {
+            name: "TriggerEffect", tag: "command",
+
             details: "This command allows the support of feedback to the user, such as a certain light effect. It is used " +
                 "to allow an implementation to provide visual feedback to the user under certain circumstances such " +
                 "as a color light turning green when it has successfully connected to a network. The use of this " +
@@ -64,6 +72,8 @@ Identify.patch({
 
             children: [
                 {
+                    name: "EffectIdentifier", tag: "field",
+
                     details: "This field shall indicate the identify effect to use and shall contain one of the non-reserved " +
                         "values in EffectIdentifierEnum." +
                         "\n" +
@@ -75,6 +85,7 @@ Identify.patch({
                 },
 
                 {
+                    name: "EffectVariant", tag: "field",
                     details: "This field shall indicate which variant of the effect, indicated in the EffectIdentifier field, " +
                         "SHOULD be triggered. If a device does not support the given variant, it shall use the default " +
                         "variant. This field shall contain one of the values in EffectVariantEnum.",
@@ -84,37 +95,51 @@ Identify.patch({
         },
 
         {
+            name: "IdentifyTypeEnum", tag: "datatype",
             xref: "cluster§1.2.4.1",
 
             children: [
-                { description: "No presentation." },
-                { description: "Light output of a lighting product." },
-                { description: "Typically a small LED." },
-                undefined,
-                { description: "Presentation will be visible on display screen." },
+                { name: "None", tag: "field", description: "No presentation." },
+                { name: "LightOutput", tag: "field", description: "Light output of a lighting product." },
+                { name: "VisibleIndicator", tag: "field", description: "Typically a small LED." },
+                { name: "Display", tag: "field", description: "Presentation will be visible on display screen." },
                 {
+                    name: "Actuator", tag: "field",
                     description: "Presentation will be conveyed by actuator functionality such as through a window blind operation or in- wall relay."
                 }
             ]
         },
 
         {
+            name: "EffectIdentifierEnum", tag: "datatype",
             xref: "cluster§1.2.4.2",
 
             children: [
-                { description: "e.g., Light is turned on/off once." },
-                { description: "e.g., Light is turned on/off over 1 second and repeated 15 times." },
-                { description: "e.g., Colored light turns green for 1 second; non-colored light flashes twice." },
+                { name: "Blink", tag: "field", description: "e.g., Light is turned on/off once." },
                 {
+                    name: "Breathe", tag: "field",
+                    description: "e.g., Light is turned on/off over 1 second and repeated 15 times."
+                },
+                {
+                    name: "Okay", tag: "field",
+                    description: "e.g., Colored light turns green for 1 second; non-colored light flashes twice."
+                },
+                {
+                    name: "ChannelChange", tag: "field",
                     description: "e.g., Colored light turns orange for 8 seconds; non-colored light switches to the maximum brightness for 0.5s and then minimum brightness for 7.5s."
                 },
                 {
+                    name: "FinishEffect", tag: "field",
                     description: "Complete the current effect sequence before terminating. e.g., if in the middle of a breathe effect (as above), first complete the current 1s breathe effect and then terminate the effect."
                 },
-                { description: "Terminate the effect as soon as possible." }
+                { name: "StopEffect", tag: "field", description: "Terminate the effect as soon as possible." }
             ]
         },
 
-        { xref: "cluster§1.2.4.3", children: [{ description: "Indicates the default effect is used" }] }
+        {
+            name: "EffectVariantEnum", tag: "datatype",
+            xref: "cluster§1.2.4.3",
+            children: [{ name: "Default", tag: "field", description: "Indicates the default effect is used" }]
+        }
     ]
 });

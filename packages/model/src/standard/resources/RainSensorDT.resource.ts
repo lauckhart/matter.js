@@ -6,11 +6,16 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { RainSensorDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-RainSensorDt.patch({
+Resource.add({
+    name: "RainSensor", tag: "deviceType",
     classification: "simple",
     details: "This defines conformance to the Rain Sensor device type.",
     xref: "device§7.13",
-    children: [undefined, { xref: "device§7.13.4" }, { xref: "device§7.13.4" }, { xref: "device§7.13.4" }]
+    children: [
+        { name: "Identify", tag: "requirement", xref: "device§7.13.4" },
+        { name: "BooleanState", tag: "requirement", xref: "device§7.13.4" },
+        { name: "BooleanStateConfiguration", tag: "requirement", xref: "device§7.13.4" }
+    ]
 });

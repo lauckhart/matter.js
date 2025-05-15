@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { KeypadInput } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-KeypadInput.patch({
+Resource.add({
+    name: "KeypadInput", tag: "cluster",
     classification: "application", pics: "KEYPADINPUT",
 
     details: "This cluster provides an interface for key code based input and control on a device like a Video " +
@@ -31,22 +32,19 @@ KeypadInput.patch({
     xref: "cluster§6.8",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "cluster§6.8.4",
-
             children: [
-                {
-                    description: "NavigationKeyCodes",
-                    details: "Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU"
-                },
-                { description: "LocationKeys", details: "Supports CEC keys 0x0A (Settings) and 0x09 (Home)" },
-                { description: "NumberKeys", details: "Supports numeric input 0..9" }
+                { name: "NV", tag: "field", details: "Supports UP, DOWN, LEFT, RIGHT, SELECT, BACK, EXIT, MENU" },
+                { name: "LK", tag: "field", details: "Supports CEC keys 0x0A (Settings) and 0x09 (Home)" },
+                { name: "NK", tag: "field", details: "Supports numeric input 0..9" }
             ]
         },
 
         {
+            name: "SendKey", tag: "command",
+
             details: "Upon receipt, this shall process a keycode as input to the media endpoint." +
                 "\n" +
                 "If a device has multiple media endpoints implementing this cluster, such as a casting video player " +
@@ -59,25 +57,39 @@ KeypadInput.patch({
                 "received within 200 ms, then the endpoint will consider the last key press to be a release.",
 
             xref: "cluster§6.8.6.1",
-            children: [{ details: "This field shall indicate the key code to process.", xref: "cluster§6.8.6.1.1" }]
+            children: [{
+                name: "KeyCode", tag: "field",
+                details: "This field shall indicate the key code to process.",
+                xref: "cluster§6.8.6.1.1"
+            }]
         },
 
         {
+            name: "SendKeyResponse", tag: "command",
             details: "This command shall be generated in response to a SendKey command. The data for this command shall be " +
                 "as follows:",
             xref: "cluster§6.8.6.2",
-            children: [{ details: "This field shall indicate the status of the request.", xref: "cluster§6.8.6.2.1" }]
+            children: [{
+                name: "Status", tag: "field",
+                details: "This field shall indicate the status of the request.",
+                xref: "cluster§6.8.6.2.1"
+            }]
         },
 
         {
+            name: "StatusEnum", tag: "datatype",
             xref: "cluster§6.8.5.1",
+
             children: [
-                { description: "Succeeded" },
-                { description: "Key code is not supported." },
-                { description: "Requested key code is invalid in the context of the responder’s current state." }
+                { name: "Success", tag: "field", description: "Succeeded" },
+                { name: "UnsupportedKey", tag: "field", description: "Key code is not supported." },
+                {
+                    name: "InvalidKeyInCurrentState", tag: "field",
+                    description: "Requested key code is invalid in the context of the responder’s current state."
+                }
             ]
         },
 
-        { xref: "cluster§6.8.5.2" }
+        { name: "CecKeyCodeEnum", tag: "datatype", xref: "cluster§6.8.5.2" }
     ]
 });

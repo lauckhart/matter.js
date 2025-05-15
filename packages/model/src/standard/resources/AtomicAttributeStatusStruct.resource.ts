@@ -6,17 +6,23 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { AtomicAttributeStatusStruct } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-AtomicAttributeStatusStruct.patch({
+Resource.add({
+    name: "AtomicAttributeStatusStruct", tag: "datatype",
     details: "This struct indicates the status of an attribute during an atomic write.",
     xref: "core§7.15.5",
 
     children: [
         {
+            name: "AttributeId", tag: "field",
             details: "This field shall indicate the ID of the attribute with the associated StatusCode.",
             xref: "core§7.15.5.1"
         },
-        { details: "This field shall indicate the atomic status of an attribute.", xref: "core§7.15.5.2" }
+        {
+            name: "StatusCode", tag: "field",
+            details: "This field shall indicate the atomic status of an attribute.",
+            xref: "core§7.15.5.2"
+        }
     ]
 });

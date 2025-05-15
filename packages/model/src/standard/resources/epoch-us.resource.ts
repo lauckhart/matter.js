@@ -6,10 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { epochUs } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-epochUs.patch(
+Resource.add(
     {
+        name: "epoch-us", tag: "datatype",
         description: "Epoch Time in microseconds",
 
         details: "This type represents an offset, in microseconds, from 0 hours, 0 minutes, 0 seconds, on the 1st of " +

@@ -6,11 +6,15 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { GenericSwitchDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-GenericSwitchDt.patch({
+Resource.add({
+    name: "GenericSwitch", tag: "deviceType",
     classification: "simple",
     details: "This defines conformance for the Generic Switch device type.",
     xref: "device§6.6",
-    children: [undefined, { xref: "device§6.6.4" }, { xref: "device§6.6.4" }]
+    children: [
+        { name: "Identify", tag: "requirement", xref: "device§6.6.4" },
+        { name: "Switch", tag: "requirement", xref: "device§6.6.4" }
+    ]
 });

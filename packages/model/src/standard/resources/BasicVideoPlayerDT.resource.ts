@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { BasicVideoPlayerDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-BasicVideoPlayerDt.patch({
+Resource.add({
+    name: "BasicVideoPlayer", tag: "deviceType",
     classification: "simple",
 
     details: "This defines conformance to the Basic Video Player device type." +
@@ -31,18 +32,25 @@ BasicVideoPlayerDt.patch({
     xref: "device§10.2",
 
     children: [
-        undefined,
-        { xref: "device§10.2.4" },
-        { xref: "device§10.2.4" },
-        { xref: "device§10.2.4" },
-        { xref: "device§10.2.4" },
-        { xref: "device§10.2.4" },
-        { xref: "device§10.2.4" },
-        { xref: "device§10.2.4" },
-        { xref: "device§10.2.4" },
-        { xref: "device§10.2.4" },
-        { xref: "device§10.2.4" },
-        { xref: "device§10.2.4" },
-        { children: [{ description: "The device has physical inputs for media.", xref: "device§10.2.3" }] }
+        { name: "OnOff", tag: "requirement", xref: "device§10.2.4" },
+        { name: "WakeOnLan", tag: "requirement", xref: "device§10.2.4" },
+        { name: "Channel", tag: "requirement", xref: "device§10.2.4" },
+        { name: "TargetNavigator", tag: "requirement", xref: "device§10.2.4" },
+        { name: "MediaPlayback", tag: "requirement", xref: "device§10.2.4" },
+        { name: "MediaInput", tag: "requirement", xref: "device§10.2.4" },
+        { name: "LowPower", tag: "requirement", xref: "device§10.2.4" },
+        { name: "KeypadInput", tag: "requirement", xref: "device§10.2.4" },
+        { name: "AudioOutput", tag: "requirement", xref: "device§10.2.4" },
+        { name: "ContentControl", tag: "requirement", xref: "device§10.2.4" },
+        { name: "Messages", tag: "requirement", xref: "device§10.2.4" },
+
+        {
+            name: "conditions", tag: "field",
+            children: [{
+                name: "PhysicalInputs", tag: "field",
+                description: "The device has physical inputs for media.",
+                xref: "device§10.2.3"
+            }]
+        }
     ]
 });

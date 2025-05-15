@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { list } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-list.patch({
+Resource.add({
+    name: "list", tag: "datatype",
     description: "List",
 
     details: "A list is defined as a collection of entries of the same data type, with a finite count from 0 to " +

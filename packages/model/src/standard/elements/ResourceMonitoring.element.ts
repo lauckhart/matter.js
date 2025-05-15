@@ -21,9 +21,9 @@ export const ResourceMonitoring = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "CON", conformance: "O", constraint: "0", description: "Condition" }),
-        Field({ name: "WRN", conformance: "O", constraint: "1", description: "Warning" }),
-        Field({ name: "REP", conformance: "O", constraint: "2", description: "ReplacementProductList" })
+        Field({ name: "CON", conformance: "O", constraint: "0", longName: "Condition" }),
+        Field({ name: "WRN", conformance: "O", constraint: "1", longName: "Warning" }),
+        Field({ name: "REP", conformance: "O", constraint: "2", longName: "ReplacementProductList" })
     ),
 
     Attribute({ id: 0x0, name: "Condition", type: "percent", access: "R V", conformance: "CON" }),

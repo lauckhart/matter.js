@@ -6,19 +6,20 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { FlowMeasurement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-FlowMeasurement.patch(
+Resource.add(
     {
+        name: "FlowMeasurement", tag: "cluster",
         classification: "application", pics: "FLW",
         details: "This cluster provides an interface to flow measurement functionality, including configuration and " +
             "provision of notifications of flow measurements.",
         xref: "cluster§2.5",
 
         children: [
-            undefined,
-
             {
+                name: "MeasuredValue", tag: "attribute",
+
                 details: "Indicates the flow in m/h as follows:" +
                     "\n" +
                     "MeasuredValue = 10 x Flow" +
@@ -30,6 +31,7 @@ FlowMeasurement.patch(
             },
 
             {
+                name: "MinMeasuredValue", tag: "attribute",
                 details: "Indicates the minimum value of MeasuredValue that can be measured. See Measured Value for more " +
                     "details." +
                     "\n" +
@@ -38,6 +40,7 @@ FlowMeasurement.patch(
             },
 
             {
+                name: "MaxMeasuredValue", tag: "attribute",
                 details: "Indicates the maximum value of MeasuredValue that can be measured. See" +
                     "\n" +
                     "Measured Value for more details." +
@@ -46,7 +49,7 @@ FlowMeasurement.patch(
                 xref: "cluster§2.5.4.3"
             },
 
-            { details: "See Measured Value.", xref: "cluster§2.5.4.4" }
+            { name: "Tolerance", tag: "attribute", details: "See Measured Value.", xref: "cluster§2.5.4.4" }
         ]
     }
 );

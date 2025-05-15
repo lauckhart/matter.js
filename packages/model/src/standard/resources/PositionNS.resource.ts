@@ -6,9 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { PositionNs } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-PositionNs.patch({
+Resource.add({
+    name: "Position", tag: "semanticNamespace",
+
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a position relative to the device (e.g. the temperature sensor in the top drawer of " +
         "a refrigerator, or location of the buttons on a multi-button switch device). Note the difference " +
@@ -26,14 +28,8 @@ PositionNs.patch({
         "item. The first row/column shall use Label \"1\".",
 
     xref: "namespace§9",
-
     children: [
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        { description: "Numeric value provided in Label field" },
-        { description: "Numeric value provided in Label field" }
+        { name: "Row", tag: "semanticTag", description: "Numeric value provided in Label field" },
+        { name: "Column", tag: "semanticTag", description: "Numeric value provided in Label field" }
     ]
 });

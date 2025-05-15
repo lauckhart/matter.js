@@ -6,11 +6,15 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { OtaRequestorDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-OtaRequestorDt.patch({
+Resource.add({
+    name: "OtaRequestor", tag: "deviceType",
     classification: "utility",
     details: "An OTA Requestor is a device that is capable of receiving an OTA software update.",
     xref: "device§2.3",
-    children: [undefined, { xref: "device§2.3.3" }, { xref: "device§2.3.3" }]
+    children: [
+        { name: "OtaSoftwareUpdateRequestor", tag: "requirement", xref: "device§2.3.3" },
+        { name: "OtaSoftwareUpdateProvider", tag: "requirement", xref: "device§2.3.3" }
+    ]
 });

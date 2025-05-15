@@ -6,26 +6,30 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ThermostatUserInterfaceConfiguration } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ThermostatUserInterfaceConfiguration.patch({
+Resource.add({
+    name: "ThermostatUserInterfaceConfiguration", tag: "cluster",
     classification: "application", pics: "TSUIC",
     details: "This cluster provides an interface to allow configuration of the user interface for a thermostat, or " +
         "a thermostat controller device, that supports a keypad and LCD screen.",
     xref: "cluster§4.5",
 
     children: [
-        undefined,
         {
+            name: "TemperatureDisplayMode", tag: "attribute",
             details: "Indicates the units of the temperature displayed on the thermostat screen.",
             xref: "cluster§4.5.6.1"
         },
         {
+            name: "KeypadLockout", tag: "attribute",
             details: "Indicates the level of functionality that is available to the user via the keypad.",
             xref: "cluster§4.5.6.2"
         },
 
         {
+            name: "ScheduleProgrammingVisibility", tag: "attribute",
+
             details: "This attribute is used to hide the weekly schedule programming functionality or menu on a thermostat " +
                 "from a user to prevent local user programming of the weekly schedule. The schedule programming may " +
                 "still be performed via a remote interface, and the thermostat may operate in schedule programming " +
@@ -39,32 +43,42 @@ ThermostatUserInterfaceConfiguration.patch({
         },
 
         {
+            name: "TemperatureDisplayModeEnum", tag: "datatype",
             xref: "cluster§4.5.5.1",
             children: [
-                { description: "Temperature displayed in °C" },
-                { description: "Temperature displayed in °F" }
+                { name: "Celsius", tag: "field", description: "Temperature displayed in °C" },
+                { name: "Fahrenheit", tag: "field", description: "Temperature displayed in °F" }
             ]
         },
 
         {
+            name: "KeypadLockoutEnum", tag: "datatype",
             details: "The interpretation of the various levels is device-dependent.",
             xref: "cluster§4.5.5.2",
 
             children: [
-                { description: "All functionality available to the user" },
-                { description: "Level 1 reduced functionality" },
-                { description: "Level 2 reduced functionality" },
-                { description: "Level 3 reduced functionality" },
-                { description: "Level 4 reduced functionality" },
-                { description: "Least functionality available to the user" }
+                { name: "NoLockout", tag: "field", description: "All functionality available to the user" },
+                { name: "Lockout1", tag: "field", description: "Level 1 reduced functionality" },
+                { name: "Lockout2", tag: "field", description: "Level 2 reduced functionality" },
+                { name: "Lockout3", tag: "field", description: "Level 3 reduced functionality" },
+                { name: "Lockout4", tag: "field", description: "Level 4 reduced functionality" },
+                { name: "Lockout5", tag: "field", description: "Least functionality available to the user" }
             ]
         },
 
         {
+            name: "ScheduleProgrammingVisibilityEnum", tag: "datatype",
             xref: "cluster§4.5.5.3",
+
             children: [
-                { description: "Local schedule programming functionality is enabled at the thermostat" },
-                { description: "Local schedule programming functionality is disabled at the thermostat" }
+                {
+                    name: "ScheduleProgrammingPermitted", tag: "field",
+                    description: "Local schedule programming functionality is enabled at the thermostat"
+                },
+                {
+                    name: "ScheduleProgrammingDenied", tag: "field",
+                    description: "Local schedule programming functionality is disabled at the thermostat"
+                }
             ]
         }
     ]

@@ -6,8 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { voltageMV } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-voltageMV.patch(
-    { description: "Voltage", details: "This type represents voltage measured in millivolts.", xref: "core§7.19.2.14" }
-);
+Resource.add({
+    name: "voltage-mV", tag: "datatype",
+    description: "Voltage",
+    details: "This type represents voltage measured in millivolts.",
+    xref: "core§7.19.2.14"
+});

@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { RefrigeratorNs } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-RefrigeratorNs.patch({
+Resource.add({
+    name: "Refrigerator", tag: "semanticNamespace",
     details: "The tags contained in this namespace are restricted for use in the refrigerator domain and shall NOT " +
         "be used in any other domain or context.",
     xref: "namespace§16"

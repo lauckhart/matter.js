@@ -20,9 +20,9 @@ export const TemperatureControl = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "TN", conformance: "O.a", constraint: "0", description: "TemperatureNumber" }),
-        Field({ name: "TL", conformance: "O.a", constraint: "1", description: "TemperatureLevel" }),
-        Field({ name: "STEP", conformance: "[TN]", constraint: "2", description: "TemperatureStep" })
+        Field({ name: "TN", conformance: "O.a", constraint: "0", longName: "TemperatureNumber" }),
+        Field({ name: "TL", conformance: "O.a", constraint: "1", longName: "TemperatureLevel" }),
+        Field({ name: "STEP", conformance: "[TN]", constraint: "2", longName: "TemperatureStep" })
     ),
 
     Attribute({

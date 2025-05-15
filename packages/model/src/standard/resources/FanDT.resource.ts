@@ -6,19 +6,19 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { FanDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-FanDt.patch({
+Resource.add({
+    name: "Fan", tag: "deviceType",
     classification: "simple",
     details: "A Fan device is typically standalone or mounted on a ceiling or wall and is used to circulate air in " +
         "a room.",
     xref: "device§9.2",
 
     children: [
-        undefined,
-        { xref: "device§9.2.5" },
-        { xref: "device§9.2.5" },
-        { xref: "device§9.2.5" },
-        { xref: "device§9.2.5" }
+        { name: "Identify", tag: "requirement", xref: "device§9.2.5" },
+        { name: "Groups", tag: "requirement", xref: "device§9.2.5" },
+        { name: "OnOff", tag: "requirement", xref: "device§9.2.5" },
+        { name: "FanControl", tag: "requirement", xref: "device§9.2.5" }
     ]
 });

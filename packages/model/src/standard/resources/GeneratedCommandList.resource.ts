@@ -6,9 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { GeneratedCommandList } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-GeneratedCommandList.patch({
+Resource.add({
+    name: "GeneratedCommandList", tag: "attribute",
+
     details: "This attribute is a list of server generated commands. A server generated command is a server to " +
         "client command." +
         "\n" +

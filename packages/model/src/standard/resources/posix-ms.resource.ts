@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { posixMs } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-posixMs.patch({
+Resource.add({
+    name: "posix-ms", tag: "datatype",
     description: "POSIX Time in milliseconds",
     details: "This type represents an offset, in milliseconds, from the UNIX epoch (1970-01-01 00:00:00 UTC), " +
         "encoded as an unsigned 64-bit scalar value." +

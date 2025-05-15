@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { attribId } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-attribId.patch({
+Resource.add({
+    name: "attrib-id", tag: "datatype",
     description: "Attribute ID",
     details: "An identifier that indicates an attribute defined in a cluster specification." +
         "\n" +

@@ -21,14 +21,14 @@ export const OccupancySensing = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "OTHER", conformance: "O.a+", constraint: "0", description: "Other" }),
-        Field({ name: "PIR", conformance: "O.a+", constraint: "1", description: "PassiveInfrared" }),
-        Field({ name: "US", conformance: "O.a+", constraint: "2", description: "Ultrasonic" }),
-        Field({ name: "PHY", conformance: "O.a+", constraint: "3", description: "PhysicalContact" }),
-        Field({ name: "AIR", conformance: "O.a+", constraint: "4", description: "ActiveInfrared" }),
-        Field({ name: "RAD", conformance: "O.a+", constraint: "5", description: "Radar" }),
-        Field({ name: "RFS", conformance: "O.a+", constraint: "6", description: "RfSensing" }),
-        Field({ name: "VIS", conformance: "O.a+", constraint: "7", description: "Vision" })
+        Field({ name: "OTHER", conformance: "O.a+", constraint: "0", longName: "Other" }),
+        Field({ name: "PIR", conformance: "O.a+", constraint: "1", longName: "PassiveInfrared" }),
+        Field({ name: "US", conformance: "O.a+", constraint: "2", longName: "Ultrasonic" }),
+        Field({ name: "PHY", conformance: "O.a+", constraint: "3", longName: "PhysicalContact" }),
+        Field({ name: "AIR", conformance: "O.a+", constraint: "4", longName: "ActiveInfrared" }),
+        Field({ name: "RAD", conformance: "O.a+", constraint: "5", longName: "Radar" }),
+        Field({ name: "RFS", conformance: "O.a+", constraint: "6", longName: "RfSensing" }),
+        Field({ name: "VIS", conformance: "O.a+", constraint: "7", longName: "Vision" })
     ),
 
     Attribute({

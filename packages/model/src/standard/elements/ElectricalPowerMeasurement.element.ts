@@ -21,11 +21,11 @@ export const ElectricalPowerMeasurement = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "DIRC", conformance: "O.a+", constraint: "0", description: "DirectCurrent" }),
-        Field({ name: "ALTC", conformance: "O.a+", constraint: "1", description: "AlternatingCurrent" }),
-        Field({ name: "POLY", conformance: "[ALTC]", constraint: "2", description: "PolyphasePower" }),
-        Field({ name: "HARM", conformance: "[ALTC]", constraint: "3", description: "Harmonics" }),
-        Field({ name: "PWRQ", conformance: "[ALTC]", constraint: "4", description: "PowerQuality" })
+        Field({ name: "DIRC", conformance: "O.a+", constraint: "0", longName: "DirectCurrent" }),
+        Field({ name: "ALTC", conformance: "O.a+", constraint: "1", longName: "AlternatingCurrent" }),
+        Field({ name: "POLY", conformance: "[ALTC]", constraint: "2", longName: "PolyphasePower" }),
+        Field({ name: "HARM", conformance: "[ALTC]", constraint: "3", longName: "Harmonics" }),
+        Field({ name: "PWRQ", conformance: "[ALTC]", constraint: "4", longName: "PowerQuality" })
     ),
 
     Attribute({ id: 0x0, name: "PowerMode", type: "PowerModeEnum", access: "R V", conformance: "M" }),

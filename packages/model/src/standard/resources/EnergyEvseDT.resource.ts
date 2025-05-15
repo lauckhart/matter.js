@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { EnergyEvseDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-EnergyEvseDt.patch({
+Resource.add({
+    name: "EnergyEvse", tag: "deviceType",
     classification: "simple",
     details: "An EVSE (Electric Vehicle Supply Equipment) is a device that allows an EV (Electric Vehicle) to be " +
         "connected to the mains electricity supply to allow it to be charged (or discharged in case of " +
@@ -16,10 +17,9 @@ EnergyEvseDt.patch({
     xref: "device§14.1",
 
     children: [
-        undefined,
-        { xref: "device§14.1.6" },
-        { xref: "device§14.1.6" },
-        { xref: "device§14.1.6" },
-        { xref: "device§14.1.6" }
+        { name: "Identify", tag: "requirement", xref: "device§14.1.6" },
+        { name: "EnergyEvse", tag: "requirement", xref: "device§14.1.6" },
+        { name: "EnergyEvseMode", tag: "requirement", xref: "device§14.1.6" },
+        { name: "TemperatureMeasurement", tag: "requirement", xref: "device§14.1.6" }
     ]
 });

@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { TotalVolatileOrganicCompoundsConcentrationMeasurement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-TotalVolatileOrganicCompoundsConcentrationMeasurement.patch({ pics: "TVOCCONC" });
+Resource.add({ name: "TotalVolatileOrganicCompoundsConcentrationMeasurement", tag: "cluster", pics: "TVOCCONC" });

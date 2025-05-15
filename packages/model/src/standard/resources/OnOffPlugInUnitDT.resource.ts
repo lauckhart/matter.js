@@ -6,21 +6,21 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { OnOffPlugInUnitDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-OnOffPlugInUnitDt.patch({
+Resource.add({
+    name: "OnOffPlugInUnit", tag: "deviceType",
     classification: "simple",
     details: "An On/Off Plug-in Unit is a device that provides power to another device that is plugged into it, " +
         "and is capable of switching that provided power on or off.",
     xref: "device§5.1",
 
     children: [
-        undefined,
-        { xref: "device§5.1.4" },
-        { xref: "device§5.1.4" },
-        { xref: "device§5.1.4" },
-        { xref: "device§5.1.4" },
-        { xref: "device§5.1.4" },
-        { xref: "device§5.1.4" }
+        { name: "Identify", tag: "requirement", xref: "device§5.1.4" },
+        { name: "Groups", tag: "requirement", xref: "device§5.1.4" },
+        { name: "ScenesManagement", tag: "requirement", xref: "device§5.1.4" },
+        { name: "OnOff", tag: "requirement", xref: "device§5.1.4" },
+        { name: "LevelControl", tag: "requirement", xref: "device§5.1.4" },
+        { name: "OccupancySensing", tag: "requirement", xref: "device§5.1.4" }
     ]
 });

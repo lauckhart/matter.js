@@ -21,8 +21,8 @@ export const WiFiNetworkDiagnostics = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "PKTCNT", constraint: "0", description: "PacketCounts" }),
-        Field({ name: "ERRCNT", constraint: "1", description: "ErrorCounts" })
+        Field({ name: "PKTCNT", constraint: "0", longName: "PacketCounts" }),
+        Field({ name: "ERRCNT", constraint: "1", longName: "ErrorCounts" })
     ),
     Attribute({
         id: 0x0, name: "Bssid", type: "octstr",
@@ -94,10 +94,26 @@ export const WiFiNetworkDiagnostics = Cluster(
 
     Datatype(
         { name: "WiFiVersionEnum", type: "enum8" },
-        Field({ id: 0x0, name: "A", conformance: "M" }),
-        Field({ id: 0x1, name: "B", conformance: "M" }),
-        Field({ id: 0x2, name: "G", conformance: "M" }),
-        Field({ id: 0x3, name: "N", conformance: "M" }),
+        Field({
+            id: 0x0, name: "A",
+            conformance: "M",
+            longName: "Indicate the network interface is currently using 802.11a against the wireless access point."
+        }),
+        Field({
+            id: 0x1, name: "B",
+            conformance: "M",
+            longName: "Indicate the network interface is currently using 802.11b against the wireless access point."
+        }),
+        Field({
+            id: 0x2, name: "G",
+            conformance: "M",
+            longName: "Indicate the network interface is currently using 802.11g against the wireless access point."
+        }),
+        Field({
+            id: 0x3, name: "N",
+            conformance: "M",
+            longName: "Indicate the network interface is currently using 802.11n against the wireless access point."
+        }),
         Field({ id: 0x4, name: "Ac", conformance: "M" }),
         Field({ id: 0x5, name: "Ax", conformance: "M" }),
         Field({ id: 0x6, name: "Ah", conformance: "M" })

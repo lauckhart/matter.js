@@ -6,47 +6,53 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { OccupancySensing } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-OccupancySensing.patch({
+Resource.add({
+    name: "OccupancySensing", tag: "cluster",
     classification: "application", pics: "OCC",
     details: "The server cluster provides an interface to occupancy sensing functionality based on one or more " +
         "sensing modalities, including configuration and provision of notifications of occupancy status.",
     xref: "cluster§2.7",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "cluster§2.7.4",
 
             children: [
-                { description: "Other", details: "Supports sensing using a modality not listed in the other bits" },
-                { description: "PassiveInfrared", details: "Supports sensing using PIR (Passive InfraRed)" },
-                { description: "Ultrasonic", details: "Supports sensing using UltraSound" },
-                { description: "PhysicalContact", details: "Supports sensing using a physical contact" },
                 {
-                    description: "ActiveInfrared",
+                    name: "OTHER", tag: "field",
+                    details: "Supports sensing using a modality not listed in the other bits"
+                },
+                { name: "PIR", tag: "field", details: "Supports sensing using PIR (Passive InfraRed)" },
+                { name: "US", tag: "field", details: "Supports sensing using UltraSound" },
+                { name: "PHY", tag: "field", details: "Supports sensing using a physical contact" },
+                {
+                    name: "AIR", tag: "field",
                     details: "Supports sensing using Active InfraRed measurement (e.g. time-of- flight or transflective/reflective " +
                         "IR sensing)"
                 },
-                { description: "Radar", details: "Supports sensing using radar waves (microwave)" },
-                { description: "RfSensing", details: "Supports sensing based on RF signal analysis" },
-                { description: "Vision", details: "Supports sensing based on analyzing images" }
+                { name: "RAD", tag: "field", details: "Supports sensing using radar waves (microwave)" },
+                { name: "RFS", tag: "field", details: "Supports sensing based on RF signal analysis" },
+                { name: "VIS", tag: "field", details: "Supports sensing based on analyzing images" }
             ]
         },
 
         {
+            name: "Occupancy", tag: "attribute",
             details: "Indicates the sensed (processed) status of occupancy. For compatibility reasons this is expressed as " +
                 "a bitmap where the status is indicated in bit 0: a value of 1 means occupied, and 0 means " +
                 "unoccupied, with the other bits set to 0; this can be considered equivalent to a boolean.",
             xref: "cluster§2.7.6.1"
         },
 
-        { xref: "cluster§2.7.6" },
-        { xref: "cluster§2.7.6" },
+        { name: "OccupancySensorType", tag: "attribute", xref: "cluster§2.7.6" },
+        { name: "OccupancySensorTypeBitmap", tag: "attribute", xref: "cluster§2.7.6" },
 
         {
+            name: "HoldTime", tag: "attribute",
+
             details: "This attribute shall specify the time delay, in seconds, before the sensor changes to its unoccupied " +
                 "state after the last detection of occupancy in the sensed area. This is equivalent to the legacy " +
                 "*OccupiedToUnoccupiedDelay attributes." +
@@ -77,51 +83,69 @@ OccupancySensing.patch({
         },
 
         {
+            name: "HoldTimeLimits", tag: "attribute",
             details: "Indicates the server’s limits, and default value, for the HoldTime attribute.",
             xref: "cluster§2.7.6.4"
         },
+
         {
+            name: "PirOccupiedToUnoccupiedDelay", tag: "attribute",
             details: "This attribute shall specify the time delay, in seconds, before the PIR sensor changes to its " +
                 "unoccupied state after the last detection of occupancy in the sensed area.",
             xref: "cluster§2.7.6.6"
         },
+
         {
+            name: "PirUnoccupiedToOccupiedDelay", tag: "attribute",
             details: "This attribute shall specify the time delay, in seconds, before the PIR sensor changes to its " +
                 "occupied state after the first detection of occupancy in the sensed area.",
             xref: "cluster§2.7.6.7"
         },
+
         {
+            name: "PirUnoccupiedToOccupiedThreshold", tag: "attribute",
             details: "This attribute shall specify the number of occupancy detection events that must occur in the period " +
                 "PIRUnoccupiedToOccupiedDelay, before the PIR sensor changes to its occupied state.",
             xref: "cluster§2.7.6.8"
         },
+
         {
+            name: "UltrasonicOccupiedToUnoccupiedDelay", tag: "attribute",
             details: "This attribute shall specify the time delay, in seconds, before the Ultrasonic sensor changes to its " +
                 "unoccupied state after the last detection of occupancy in the sensed area.",
             xref: "cluster§2.7.6.9"
         },
+
         {
+            name: "UltrasonicUnoccupiedToOccupiedDelay", tag: "attribute",
             details: "This attribute shall specify the time delay, in seconds, before the Ultrasonic sensor changes to its " +
                 "occupied state after the first detection of occupancy in the sensed area.",
             xref: "cluster§2.7.6.10"
         },
+
         {
+            name: "UltrasonicUnoccupiedToOccupiedThreshold", tag: "attribute",
             details: "This attribute shall specify the number of occupancy detection events that must occur in the period " +
                 "UltrasonicUnoccupiedToOccupiedDelay, before the Ultrasonic sensor changes to its occupied state.",
             xref: "cluster§2.7.6.11"
         },
+
         {
+            name: "PhysicalContactOccupiedToUnoccupiedDelay", tag: "attribute",
             details: "This attribute shall specify the time delay, in seconds, before the physical contact occupancy " +
                 "sensor changes to its unoccupied state after detecting the unoccupied event.",
             xref: "cluster§2.7.6.12"
         },
+
         {
+            name: "PhysicalContactUnoccupiedToOccupiedDelay", tag: "attribute",
             details: "This attribute shall specify the time delay, in seconds, before the physical contact sensor changes " +
                 "to its occupied state after the first detection of the occupied event.",
             xref: "cluster§2.7.6.13"
         },
 
         {
+            name: "PhysicalContactUnoccupiedToOccupiedThreshold", tag: "attribute",
             details: "This attribute shall specify the number of occupancy detection events that must occur in the period " +
                 "PhysicalContactUnoccupiedToOccupiedDelay, before the PhysicalContact sensor changes to its occupied " +
                 "state.",
@@ -129,18 +153,22 @@ OccupancySensing.patch({
         },
 
         {
+            name: "OccupancyChanged", tag: "event",
             details: "If this event is supported, it shall be generated when the Occupancy attribute changes.",
             xref: "cluster§2.7.7.1",
             children: [{
+                name: "Occupancy", tag: "field",
                 details: "This field shall indicate the new value of the Occupancy attribute.",
                 xref: "cluster§2.7.7.1.1"
             }]
         },
 
         {
+            name: "OccupancyBitmap", tag: "datatype",
             xref: "cluster§2.7.5.1",
 
             children: [{
+                name: "Occupied", tag: "field",
                 description: "Indicates the sensed occupancy state",
                 details: "If this bit is set, it shall indicate the occupied state else if the bit if not set, it shall " +
                     "indicate the unoccupied state.",
@@ -149,6 +177,7 @@ OccupancySensing.patch({
         },
 
         {
+            name: "OccupancySensorTypeBitmap", tag: "datatype",
             details: "NOTE" +
                 "\n" +
                 "This enum is as defined in ClusterRevision 4 and its definition shall NOT be extended; the feature " +
@@ -156,13 +185,15 @@ OccupancySensing.patch({
                 "Compatibility section.",
             xref: "cluster§2.7.5.2",
             children: [
-                { description: "Indicates a passive infrared sensor." },
-                { description: "Indicates a ultrasonic sensor." },
-                { description: "Indicates a physical contact sensor." }
+                { name: "Pir", tag: "field", description: "Indicates a passive infrared sensor." },
+                { name: "Ultrasonic", tag: "field", description: "Indicates a ultrasonic sensor." },
+                { name: "PhysicalContact", tag: "field", description: "Indicates a physical contact sensor." }
             ]
         },
 
         {
+            name: "OccupancySensorTypeEnum", tag: "datatype",
+
             details: "NOTE" +
                 "\n" +
                 "This enum is as defined in ClusterRevision 4 and its definition shall NOT be" +
@@ -173,30 +204,38 @@ OccupancySensing.patch({
             xref: "cluster§2.7.5.3",
 
             children: [
-                { description: "Indicates a passive infrared sensor." },
-                { description: "Indicates a ultrasonic sensor." },
-                { description: "Indicates a passive infrared and ultrasonic sensor." },
-                { description: "Indicates a physical contact sensor." }
+                { name: "Pir", tag: "field", description: "Indicates a passive infrared sensor." },
+                { name: "Ultrasonic", tag: "field", description: "Indicates a ultrasonic sensor." },
+                {
+                    name: "PirAndUltrasonic", tag: "field",
+                    description: "Indicates a passive infrared and ultrasonic sensor."
+                },
+                { name: "PhysicalContact", tag: "field", description: "Indicates a physical contact sensor." }
             ]
         },
 
         {
+            name: "HoldTimeLimitsStruct", tag: "datatype",
             details: "This structure provides information on the server’s supported values for the HoldTime attribute.",
             xref: "cluster§2.7.5.4",
 
             children: [
                 {
+                    name: "HoldTimeMin", tag: "field",
                     details: "This field shall specify the minimum value of the server’s supported value for the HoldTime " +
                         "attribute, in seconds.",
                     xref: "cluster§2.7.5.4.1"
                 },
+
                 {
+                    name: "HoldTimeMax", tag: "field",
                     details: "This field shall specify the maximum value of the server’s supported value for the HoldTime " +
                         "attribute, in seconds.",
                     xref: "cluster§2.7.5.4.2"
                 },
 
                 {
+                    name: "HoldTimeDefault", tag: "field",
                     details: "This field shall specify the (manufacturer-determined) default value of the server’s HoldTime " +
                         "attribute, in seconds. This is the value that a client who wants to reset the settings to a valid " +
                         "default SHOULD use.",

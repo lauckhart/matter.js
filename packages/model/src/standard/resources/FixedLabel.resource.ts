@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { FixedLabel } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-FixedLabel.patch({
+Resource.add({
+    name: "FixedLabel", tag: "cluster",
     classification: "endpoint", pics: "FLABEL",
 
     details: "This cluster is derived from the Label cluster and provides a feature for the device to tag an " +
@@ -33,5 +34,5 @@ FixedLabel.patch({
         "addition to) the Fixed Label cluster.",
 
     xref: "core§9.8",
-    children: [undefined, { xref: "core§9.8.4" }]
+    children: [{ name: "LabelList", tag: "attribute", xref: "core§9.8.4" }]
 });

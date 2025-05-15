@@ -6,15 +6,18 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { semtag } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-semtag.patch({
+Resource.add({
+    name: "semtag", tag: "datatype",
     description: "Semantic Tag",
     details: "This data type shall be represented by the following structure:",
     xref: "core§7.19.2.42",
 
     children: [
         {
+            name: "MfgCode", tag: "field",
+
             details: "If the MfgCode field is not null, it shall be the Vendor ID of the manufacturer who has defined a " +
                 "certain namespace and the NamespaceID field shall be the ID of a namespace defined by the " +
                 "manufacturer identified in the MfgCode field." +
@@ -30,6 +33,7 @@ semtag.patch({
         },
 
         {
+            name: "NamespaceId", tag: "field",
             details: "The NamespaceID field shall identify a namespace." +
                 "\n" +
                 "The common and device-specific semantic tag namespaces are listed in StandardNamespaces.",
@@ -37,6 +41,7 @@ semtag.patch({
         },
 
         {
+            name: "Tag", tag: "field",
             details: "The Tag field shall be the ID of a semantic tag located within the namespace indicated by " +
                 "NamespaceID." +
                 "\n" +
@@ -46,6 +51,8 @@ semtag.patch({
         },
 
         {
+            name: "Label", tag: "field",
+
             details: "The Label field, if present, shall contain human-readable text suitable for display on a client. The " +
                 "content of the Label field is defined by the manufacturer." +
                 "\n" +

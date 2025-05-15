@@ -22,11 +22,11 @@ export const MediaPlayback = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "AS", constraint: "0", description: "AdvancedSeek" }),
-        Field({ name: "VS", constraint: "1", description: "VariableSpeed" }),
-        Field({ name: "TT", constraint: "2", description: "TextTracks" }),
-        Field({ name: "AT", constraint: "3", description: "AudioTracks" }),
-        Field({ name: "AA", constraint: "4", description: "AudioAdvance" })
+        Field({ name: "AS", constraint: "0", longName: "AdvancedSeek" }),
+        Field({ name: "VS", constraint: "1", longName: "VariableSpeed" }),
+        Field({ name: "TT", constraint: "2", longName: "TextTracks" }),
+        Field({ name: "AT", constraint: "3", longName: "AudioTracks" }),
+        Field({ name: "AA", constraint: "4", longName: "AudioAdvance" })
     ),
 
     Attribute({ id: 0x0, name: "CurrentState", type: "PlaybackStateEnum", access: "R V", conformance: "M", constraint: "desc" }),

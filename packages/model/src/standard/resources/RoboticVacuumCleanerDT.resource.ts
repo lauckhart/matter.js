@@ -6,19 +6,19 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { RoboticVacuumCleanerDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-RoboticVacuumCleanerDt.patch({
+Resource.add({
+    name: "RoboticVacuumCleaner", tag: "deviceType",
     classification: "simple",
     details: "This defines conformance for the Robotic Vacuum Cleaner device type.",
     xref: "device§12.1",
 
     children: [
-        undefined,
-        { xref: "device§12.1.4" },
-        { xref: "device§12.1.4" },
-        { xref: "device§12.1.4" },
-        { xref: "device§12.1.4" },
-        { xref: "device§12.1.4" }
+        { name: "Identify", tag: "requirement", xref: "device§12.1.4" },
+        { name: "RvcRunMode", tag: "requirement", xref: "device§12.1.4" },
+        { name: "RvcCleanMode", tag: "requirement", xref: "device§12.1.4" },
+        { name: "RvcOperationalState", tag: "requirement", xref: "device§12.1.4" },
+        { name: "ServiceArea", tag: "requirement", xref: "device§12.1.4" }
     ]
 });

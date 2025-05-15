@@ -22,11 +22,11 @@ export const EnergyEvse = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "PREF", conformance: "M", constraint: "0", description: "ChargingPreferences" }),
-        Field({ name: "SOC", conformance: "P, O", constraint: "1", description: "SoCReporting" }),
-        Field({ name: "PNC", conformance: "P, O", constraint: "2", description: "PlugAndCharge" }),
-        Field({ name: "RFID", conformance: "O", constraint: "3", description: "Rfid" }),
-        Field({ name: "V2X", conformance: "P, O", constraint: "4", description: "V2X" })
+        Field({ name: "PREF", conformance: "M", constraint: "0", longName: "ChargingPreferences" }),
+        Field({ name: "SOC", conformance: "P, O", constraint: "1", longName: "SoCReporting" }),
+        Field({ name: "PNC", conformance: "P, O", constraint: "2", longName: "PlugAndCharge" }),
+        Field({ name: "RFID", conformance: "O", constraint: "3", longName: "Rfid" }),
+        Field({ name: "V2X", conformance: "P, O", constraint: "4" })
     ),
 
     Attribute({ id: 0x0, name: "State", type: "StateEnum", access: "R V", conformance: "M", quality: "X" }),

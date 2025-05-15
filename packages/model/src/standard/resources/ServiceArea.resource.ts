@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ServiceArea } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ServiceArea.patch({
+Resource.add({
+    name: "ServiceArea", tag: "cluster",
     classification: "application", pics: "SEAR",
 
     details: "This cluster provides an interface for controlling the areas where a device should operate, for " +
@@ -29,25 +30,26 @@ ServiceArea.patch({
     xref: "cluster§1.17",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "cluster§1.17.4",
 
             children: [
                 {
-                    description: "SelectWhileRunning",
+                    name: "SELRUN", tag: "field",
                     details: "This feature indicates whether this device allows changing the selected areas, by using the " +
                         "SelectAreas command, while operating.",
                     xref: "cluster§1.17.4.1"
                 },
 
-                { description: "ProgressReporting", details: "The device implements the progress reporting feature" },
-                { description: "Maps", details: "The device has map support" }
+                { name: "PROG", tag: "field", details: "The device implements the progress reporting feature" },
+                { name: "MAPS", tag: "field", details: "The device has map support" }
             ]
         },
 
         {
+            name: "SupportedAreas", tag: "attribute",
+
             details: "This attribute shall contain the list of areas that can be included in the SelectedAreas attribute’s " +
                 "list. Each item in this list represents a unique area, as indicated by the AreaID field of " +
                 "AreaStruct." +
@@ -96,6 +98,8 @@ ServiceArea.patch({
         },
 
         {
+            name: "SupportedMaps", tag: "attribute",
+
             details: "This attribute shall contain the list of supported maps." +
                 "\n" +
                 "A map is a full or a partial representation of a home, known to the device. For example:" +
@@ -147,6 +151,8 @@ ServiceArea.patch({
         },
 
         {
+            name: "SelectedAreas", tag: "attribute",
+
             details: "Indicates the set of areas where the device SHOULD attempt to operate." +
                 "\n" +
                 "The mobile devices may travel without operating across any areas while attempting to reach the areas " +
@@ -165,6 +171,8 @@ ServiceArea.patch({
         },
 
         {
+            name: "CurrentArea", tag: "attribute",
+
             details: "If the device is mobile, this attribute shall indicate the area where the device is currently " +
                 "located, regardless of whether it is operating or not, such as while traveling between areas." +
                 "\n" +
@@ -193,6 +201,8 @@ ServiceArea.patch({
         },
 
         {
+            name: "EstimatedEndTime", tag: "attribute",
+
             details: "Indicates the estimated Epoch time for completing operating at the area indicated by the CurrentArea " +
                 "attribute, in seconds." +
                 "\n" +
@@ -225,6 +235,8 @@ ServiceArea.patch({
         },
 
         {
+            name: "Progress", tag: "attribute",
+
             details: "Indicates the operating status at one or more areas. Each entry in this list shall have a unique " +
                 "value for the AreaID field." +
                 "\n" +
@@ -268,12 +280,15 @@ ServiceArea.patch({
         },
 
         {
+            name: "SelectAreas", tag: "command",
             details: "This command is used to select a set of device areas, where the device is to operate." +
                 "\n" +
                 "On receipt of this command the device shall respond with a SelectAreasResponse command.",
             xref: "cluster§1.17.7.1",
 
             children: [{
+                name: "NewAreas", tag: "field",
+
                 details: "This field indicates which areas the device is to operate at." +
                     "\n" +
                     "If this field is empty, that indicates that the device is to operate without being constrained to " +
@@ -286,10 +301,13 @@ ServiceArea.patch({
         },
 
         {
+            name: "SelectAreasResponse", tag: "command",
             details: "This command is sent by the device on receipt of the SelectAreas command.",
             xref: "cluster§1.17.7.2",
 
             children: [{
+                name: "Status", tag: "field",
+
                 details: "If the Status field is set to Success or UnsupportedArea, the server may use a non-empty string for " +
                     "the StatusText field to provide additional information. For example, if Status is set to Unsupport" +
                     "\n" +
@@ -305,6 +323,8 @@ ServiceArea.patch({
         },
 
         {
+            name: "SkipArea", tag: "command",
+
             details: "This command is used to skip the given area, and to attempt operating at other areas on the " +
                 "SupportedAreas attribute list." +
                 "\n" +
@@ -316,6 +336,7 @@ ServiceArea.patch({
             xref: "cluster§1.17.7.3",
 
             children: [{
+                name: "SkippedArea", tag: "field",
                 details: "The SkippedArea field indicates the area to be skipped." +
                     "\n" +
                     "The SkippedArea field shall match an entry in the SupportedAreas list.",
@@ -324,10 +345,13 @@ ServiceArea.patch({
         },
 
         {
+            name: "SkipAreaResponse", tag: "command",
             details: "This command is sent by the device on receipt of the SkipArea command.",
             xref: "cluster§1.17.7.4",
 
             children: [{
+                name: "Status", tag: "field",
+
                 details: "If the Status field is set to Success or InvalidAreaList, the server may use a non-empty string for " +
                     "the StatusText field to provide additional information. For example, if Status is set to " +
                     "InvalidAreaList, the server may use StatusText to indicate why this list is invalid." +
@@ -342,11 +366,13 @@ ServiceArea.patch({
         },
 
         {
+            name: "LandmarkInfoStruct", tag: "datatype",
             details: "The data from this structure indicates a landmark and position relative to the landmark.",
             xref: "cluster§1.17.5.1",
 
             children: [
                 {
+                    name: "LandmarkTag", tag: "field",
                     details: "This field shall indicate that the area is associated with a landmark." +
                         "\n" +
                         "This field shall be the ID of a landmark semantic tag, located within the Common Landmark Namespace. " +
@@ -355,6 +381,8 @@ ServiceArea.patch({
                 },
 
                 {
+                    name: "RelativePositionTag", tag: "field",
+
                     details: "This field shall identify the position of the area relative to a landmark. This is a static " +
                         "description of a zone known to the server, and this field never reflects the device’s own proximity " +
                         "or position relative to the landmark, but that of the zone." +
@@ -373,6 +401,8 @@ ServiceArea.patch({
         },
 
         {
+            name: "AreaInfoStruct", tag: "datatype",
+
             details: "The data from this structure indicates the name and/or semantic data describing an area, as detailed " +
                 "below." +
                 "\n" +
@@ -411,6 +441,8 @@ ServiceArea.patch({
 
             children: [
                 {
+                    name: "LocationInfo", tag: "field",
+
                     details: "This field shall indicate the name of the area, floor number and/or area type. A few examples are " +
                         "provided below." +
                         "\n" +
@@ -427,6 +459,8 @@ ServiceArea.patch({
                 },
 
                 {
+                    name: "LandmarkInfo", tag: "field",
+
                     details: "This field shall indicate an association with a landmark. A value of null indicates that the " +
                         "information is not available or known. For example, this may indicate that the area refers to a zone " +
                         "next to a table." +
@@ -442,12 +476,19 @@ ServiceArea.patch({
         },
 
         {
+            name: "MapStruct", tag: "datatype",
             details: "This is a struct representing a map.",
             xref: "cluster§1.17.5.3",
 
             children: [
-                { details: "This field shall represent the map’s identifier.", xref: "cluster§1.17.5.3.1" },
                 {
+                    name: "MapId", tag: "field",
+                    details: "This field shall represent the map’s identifier.",
+                    xref: "cluster§1.17.5.3.1"
+                },
+
+                {
+                    name: "Name", tag: "field",
                     details: "This field shall represent a human understandable map description. For example: \"Main Floor\", or " +
                         "\"Second Level\".",
                     xref: "cluster§1.17.5.3.2"
@@ -456,13 +497,20 @@ ServiceArea.patch({
         },
 
         {
+            name: "AreaStruct", tag: "datatype",
             details: "This is a struct representing an area known to the server.",
             xref: "cluster§1.17.5.4",
 
             children: [
-                { details: "This field shall represent the identifier of the area.", xref: "cluster§1.17.5.4.1" },
+                {
+                    name: "AreaId", tag: "field",
+                    details: "This field shall represent the identifier of the area.",
+                    xref: "cluster§1.17.5.4.1"
+                },
 
                 {
+                    name: "MapId", tag: "field",
+
                     details: "This field shall indicate the map identifier which the area is associated with. A value of null " +
                         "indicates that the area is not associated with a map." +
                         "\n" +
@@ -474,6 +522,8 @@ ServiceArea.patch({
                 },
 
                 {
+                    name: "AreaInfo", tag: "field",
+
                     details: "This field shall contain data describing the area." +
                         "\n" +
                         "This SHOULD be used by clients to determine the name and/or the full, or the partial, semantics of a " +
@@ -490,22 +540,28 @@ ServiceArea.patch({
         },
 
         {
+            name: "ProgressStruct", tag: "datatype",
             details: "This is a struct indicating the progress.",
             xref: "cluster§1.17.5.5",
 
             children: [
                 {
+                    name: "AreaId", tag: "field",
                     details: "This field shall indicate the identifier of the area, and the identifier shall be an entry in the " +
                         "SupportedAreas attribute’s list.",
                     xref: "cluster§1.17.5.5.1"
                 },
+
                 {
+                    name: "Status", tag: "field",
                     details: "This field shall indicate the operational status of the device regarding the area indicated by the " +
                         "AreaID field.",
                     xref: "cluster§1.17.5.5.2"
                 },
 
                 {
+                    name: "TotalOperationalTime", tag: "field",
+
                     details: "This field shall indicate the total operational time, in seconds, from when the device started to " +
                         "operate at the area indicated by the AreaID field, until the operation finished, due to completion " +
                         "or due to skipping, including any time spent while paused." +
@@ -521,6 +577,8 @@ ServiceArea.patch({
                 },
 
                 {
+                    name: "EstimatedTime", tag: "field",
+
                     details: "This field shall indicate the estimated time for the operation, in seconds, from when the device " +
                         "will start operating at the area indicated by the AreaID field, until the operation completes, " +
                         "excluding any time spent while not operating in the area." +
@@ -539,50 +597,69 @@ ServiceArea.patch({
         },
 
         {
+            name: "OperationalStatusEnum", tag: "datatype",
             details: "The following table defines the status values.",
             xref: "cluster§1.17.5.6",
 
             children: [
                 {
+                    name: "Pending", tag: "field",
                     description: "The device has not yet started operating at the given area, or has not finished operating at that area but it is not currently operating at the area"
                 },
-                { description: "The device is currently operating at the given area" },
+                { name: "Operating", tag: "field", description: "The device is currently operating at the given area" },
                 {
+                    name: "Skipped", tag: "field",
                     description: "The device has skipped the given area, before or during operating at it, due to a SkipArea command, due an out of band command (e.g. from the vendor’s application), due to a vendor specific reason, such as a time limit used by the device, or due the device ending operating unsuccessfully"
                 },
-                { description: "The device has completed operating at the given area" }
+                {
+                    name: "Completed", tag: "field",
+                    description: "The device has completed operating at the given area"
+                }
             ]
         },
 
         {
+            name: "SelectAreasStatus", tag: "datatype",
             xref: "cluster§1.17.5.6.1",
 
             children: [
                 {
+                    name: "Success", tag: "field",
                     description: "Attempting to operate in the areas identified by the entries of the NewAreas field is allowed and possible. The SelectedAreas attribute is set to the value of the NewAreas field."
                 },
                 {
+                    name: "UnsupportedArea", tag: "field",
                     description: "The value of at least one of the entries of the NewAreas field doesn’t match any entries in the SupportedAreas attribute."
                 },
-                { description: "The received request cannot be handled due to the current mode of the device." },
                 {
+                    name: "InvalidInMode", tag: "field",
+                    description: "The received request cannot be handled due to the current mode of the device."
+                },
+                {
+                    name: "InvalidSet", tag: "field",
                     description: "The set of values is invalid. For example, areas on different floors, that a robot knows it can’t reach on its own."
                 }
             ]
         },
 
         {
+            name: "SkipAreaStatus", tag: "datatype",
             xref: "cluster§1.17.5.6.2",
 
             children: [
                 {
+                    name: "Success", tag: "field",
                     description: "Skipping the area is allowed and possible, or the device was operating at the last available area and has stopped."
                 },
-                { description: "The SelectedAreas attribute is empty." },
+                { name: "InvalidAreaList", tag: "field", description: "The SelectedAreas attribute is empty." },
                 {
+                    name: "InvalidInMode", tag: "field",
                     description: "The received request cannot be handled due to the current mode of the device. For example, the CurrentArea attribute is null or the device is not operating."
                 },
-                { description: "The SkippedArea field doesn’t match an entry in the SupportedAreas list." }
+                {
+                    name: "InvalidSkippedArea", tag: "field",
+                    description: "The SkippedArea field doesn’t match an entry in the SupportedAreas list."
+                }
             ]
         }
     ]

@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { WakeOnLan } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-WakeOnLan.patch({
+Resource.add({
+    name: "WakeOnLan", tag: "cluster",
     classification: "application", pics: "WAKEONLAN",
 
     details: "This cluster provides an interface for managing low power mode on a device that supports the Wake On " +
@@ -41,9 +42,8 @@ WakeOnLan.patch({
     xref: "cluster§1.12",
 
     children: [
-        undefined,
-
         {
+            name: "MacAddress", tag: "attribute",
             details: "Indicates the current MAC address of the device. Only 48-bit MAC Addresses shall be used for this " +
                 "attribute as required by the Wake on LAN protocol." +
                 "\n" +
@@ -53,6 +53,8 @@ WakeOnLan.patch({
         },
 
         {
+            name: "LinkLocalAddress", tag: "attribute",
+
             details: "Indicates the current link-local address of the device. Only 128-bit IPv6 link- local addresses " +
                 "shall be used for this attribute." +
                 "\n" +

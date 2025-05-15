@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { systimeMs } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-systimeMs.patch({
+Resource.add({
+    name: "systime-ms", tag: "datatype",
     description: "System Time in milliseconds",
     details: "System time in milliseconds is an unsigned 64-bit value representing the number of milliseconds " +
         "since boot." +

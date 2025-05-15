@@ -6,19 +6,25 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { EnergyEvseMode } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-EnergyEvseMode.patch({
+Resource.add({
+    name: "EnergyEvseMode", tag: "cluster",
     classification: "application", pics: "EEVSEM",
     details: "This cluster is derived from the Mode Base cluster and defines additional mode tags and namespaced " +
         "enumerated values for EVSE devices.",
     xref: "cluster§9.4",
 
     children: [
-        undefined,
-        { xref: "cluster§9.4.4", children: [{ description: "OnOff", details: "Dependency with the OnOff cluster" }] },
+        {
+            name: "FeatureMap", tag: "attribute",
+            xref: "cluster§9.4.4",
+            children: [{ name: "DEPONOFF", tag: "field", details: "Dependency with the OnOff cluster" }]
+        },
 
         {
+            name: "SupportedModes", tag: "attribute",
+
             details: "At least one entry in the SupportedModes attribute shall include the Manual mode tag in the ModeTags " +
                 "field list." +
                 "\n" +
@@ -33,34 +39,41 @@ EnergyEvseMode.patch({
             xref: "cluster§9.4.6.1"
         },
 
-        { xref: "cluster§9.4.6" },
-        { xref: "cluster§9.4.6" },
-        { xref: "cluster§9.4.6" },
+        { name: "CurrentMode", tag: "attribute", xref: "cluster§9.4.6" },
+        { name: "StartUpMode", tag: "attribute", xref: "cluster§9.4.6" },
+        { name: "OnMode", tag: "attribute", xref: "cluster§9.4.6" },
+
         {
+            name: "ModeOptionStruct", tag: "datatype",
             details: "The table below lists the changes relative to the Mode Base cluster for the fields of the " +
                 "ModeOptionStruct type. A blank field indicates no change.",
             xref: "cluster§9.4.5.1"
         },
 
         {
+            name: "ModeTag", tag: "datatype",
+
             children: [
-                { xref: "cluster§9.4.7.1" },
-                { xref: "cluster§9.4.7.1" },
-                { xref: "cluster§9.4.7.1" },
-                { xref: "cluster§9.4.7.1" },
-                { xref: "cluster§9.4.7.1" },
-                { xref: "cluster§9.4.7.1" },
-                { xref: "cluster§9.4.7.1" },
-                { xref: "cluster§9.4.7.1" },
-                { xref: "cluster§9.4.7.1" },
-                { xref: "cluster§9.4.7.1" },
+                { name: "Auto", tag: "field", xref: "cluster§9.4.7.1" },
+                { name: "Quick", tag: "field", xref: "cluster§9.4.7.1" },
+                { name: "Quiet", tag: "field", xref: "cluster§9.4.7.1" },
+                { name: "LowNoise", tag: "field", xref: "cluster§9.4.7.1" },
+                { name: "LowEnergy", tag: "field", xref: "cluster§9.4.7.1" },
+                { name: "Vacation", tag: "field", xref: "cluster§9.4.7.1" },
+                { name: "Min", tag: "field", xref: "cluster§9.4.7.1" },
+                { name: "Max", tag: "field", xref: "cluster§9.4.7.1" },
+                { name: "Night", tag: "field", xref: "cluster§9.4.7.1" },
+                { name: "Day", tag: "field", xref: "cluster§9.4.7.1" },
+
                 {
+                    name: "Manual", tag: "field",
                     details: "While in modes with this tag, and once enabled with the EnableCharging command, the EVSE will permit " +
                         "charging based on demand from the EV.",
                     xref: "cluster§9.4.7.1.1"
                 },
 
                 {
+                    name: "TimeOfUse", tag: "field",
                     details: "While in modes with this tag, and once enabled with the EnableCharging command, the EVSE will " +
                         "attempt to automatically start charging based on the user’s charging targets (for example, set based " +
                         "on a Time of Use tariff to charge at the cheapest times of the day).",
@@ -68,6 +81,7 @@ EnergyEvseMode.patch({
                 },
 
                 {
+                    name: "SolarCharging", tag: "field",
                     details: "While in modes with this tag, and once enabled with the EnableCharging, the EVSE will attempt to" +
                         "\n" +
                         "automatically start charging based on available excess solar PV generation, limiting the charging " +
@@ -76,6 +90,8 @@ EnergyEvseMode.patch({
                 },
 
                 {
+                    name: "V2X", tag: "field",
+
                     details: "While in modes with this tag, and once enabled with the EnableDischarging command, the EVSE will " +
                         "permit discharging based on the current charge state of the EV, and its control from an associated " +
                         "Device Energy Management cluster." +

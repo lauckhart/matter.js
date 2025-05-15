@@ -6,12 +6,16 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { LightSensorDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-LightSensorDt.patch({
+Resource.add({
+    name: "LightSensor", tag: "deviceType",
     classification: "simple",
     details: "A Light Sensor device is a measurement and sensing device that is capable of measuring and reporting " +
         "the intensity of light (illuminance) to which the sensor is being subjected.",
     xref: "device§7.2",
-    children: [undefined, { xref: "device§7.2.4" }, { xref: "device§7.2.4" }]
+    children: [
+        { name: "Identify", tag: "requirement", xref: "device§7.2.4" },
+        { name: "IlluminanceMeasurement", tag: "requirement", xref: "device§7.2.4" }
+    ]
 });

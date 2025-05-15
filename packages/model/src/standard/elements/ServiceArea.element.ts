@@ -21,9 +21,9 @@ export const ServiceArea = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "SELRUN", constraint: "0", description: "SelectWhileRunning" }),
-        Field({ name: "PROG", constraint: "1", description: "ProgressReporting" }),
-        Field({ name: "MAPS", constraint: "2", description: "Maps" })
+        Field({ name: "SELRUN", constraint: "0", longName: "SelectWhileRunning" }),
+        Field({ name: "PROG", constraint: "1", longName: "ProgressReporting" }),
+        Field({ name: "MAPS", constraint: "2", longName: "Maps" })
     ),
 
     Attribute(

@@ -6,31 +6,43 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { PowerSourceNs } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-PowerSourceNs.patch({
+Resource.add({
+    name: "PowerSource", tag: "semanticNamespace",
     details: "The tags contained in this namespace are restricted for use in the power source domain and shall NOT " +
         "be used in any other domain or context.",
     xref: "namespace§15",
 
     children: [
-        { description: "The Power Source cluster is related to power provided from an unknown source" },
         {
+            name: "Unknown", tag: "semanticTag",
+            description: "The Power Source cluster is related to power provided from an unknown source"
+        },
+
+        {
+            name: "Grid", tag: "semanticTag",
             description: "The Power Source cluster is related to power provided from the electrical grid",
             details: "Power Source clusters with this tag shall implement the WIRED feature.",
             xref: "namespace§15.1"
         },
+
         {
+            name: "Solar", tag: "semanticTag",
             description: "The Power Source cluster is related to power provided from a solar panel array",
             details: "Power Source clusters with this tag shall implement the WIRED feature.",
             xref: "namespace§15.2"
         },
+
         {
+            name: "Battery", tag: "semanticTag",
             description: "The Power Source cluster is related to power provided from a battery",
             details: "Power Source clusters with this tag shall implement the BAT feature.",
             xref: "namespace§15.3"
         },
+
         {
+            name: "EV", tag: "semanticTag",
             description: "The Power Source cluster is related to power provided from an electric vehicle",
             details: "Power Source clusters with this tag shall implement the BAT feature.",
             xref: "namespace§15.4"

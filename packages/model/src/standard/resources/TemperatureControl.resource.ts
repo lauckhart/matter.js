@@ -6,10 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { TemperatureControl } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-TemperatureControl.patch(
+Resource.add(
     {
+        name: "TemperatureControl", tag: "cluster",
         classification: "application", pics: "TCTL",
 
         details: "This cluster provides an interface to the setpoint temperature on devices such as washers, " +
@@ -27,14 +28,13 @@ TemperatureControl.patch(
         xref: "cluster§8.2",
 
         children: [
-            undefined,
-
             {
+                name: "FeatureMap", tag: "attribute",
                 xref: "cluster§8.2.4",
 
                 children: [
                     {
-                        description: "TemperatureNumber",
+                        name: "TN", tag: "field",
                         details: "For devices that use an actual temperature value for the temperature setpoint, such as some water " +
                             "heaters, the feature TN shall be used. Note that this cluster provides and supports temperatures in " +
                             "degrees Celsius via the temperature data type.",
@@ -42,14 +42,14 @@ TemperatureControl.patch(
                     },
 
                     {
-                        description: "TemperatureLevel",
+                        name: "TL", tag: "field",
                         details: "For devices that use vendor-specific temperature levels for the temperature setpoint, such as some " +
                             "washers, the feature TL shall be used.",
                         xref: "cluster§8.2.4.2"
                     },
 
                     {
-                        description: "TemperatureStep",
+                        name: "STEP", tag: "field",
                         details: "For devices that support discrete temperature setpoints that are larger than the temperature " +
                             "resolution imposed via the temperature data type, the Step feature may be used.",
                         xref: "cluster§8.2.4.3"
@@ -57,13 +57,19 @@ TemperatureControl.patch(
                 ]
             },
 
-            { details: "Indicates the desired Temperature Setpoint on the device.", xref: "cluster§8.2.5.1" },
             {
+                name: "TemperatureSetpoint", tag: "attribute",
+                details: "Indicates the desired Temperature Setpoint on the device.",
+                xref: "cluster§8.2.5.1"
+            },
+            {
+                name: "MinTemperature", tag: "attribute",
                 details: "Indicates the minimum temperature to which the TemperatureSetpoint attribute may be set.",
                 xref: "cluster§8.2.5.2"
             },
 
             {
+                name: "MaxTemperature", tag: "attribute",
                 details: "Indicates the maximum temperature to which the TemperatureSetpoint attribute may be set." +
                     "\n" +
                     "If the Step attribute is supported, this attribute shall be such that MaxTemperature = " +
@@ -73,6 +79,8 @@ TemperatureControl.patch(
             },
 
             {
+                name: "Step", tag: "attribute",
+
                 details: "Indicates the discrete value by which the TemperatureSetpoint attribute can be changed via the " +
                     "SetTemperature command." +
                     "\n" +
@@ -84,6 +92,7 @@ TemperatureControl.patch(
             },
 
             {
+                name: "SelectedTemperatureLevel", tag: "attribute",
                 details: "Indicates the currently selected temperature level setting of the server. This attribute shall be " +
                     "the positional index of the list item in the SupportedTemperatureLevels list that represents the " +
                     "currently selected temperature level setting of the server.",
@@ -91,6 +100,8 @@ TemperatureControl.patch(
             },
 
             {
+                name: "SupportedTemperatureLevels", tag: "attribute",
+
                 details: "Indicates the list of supported temperature level settings that may be selected via the " +
                     "TargetTemperatureLevel field in the SetTemperature command. Each string is readable text that " +
                     "describes each temperature level setting in a way that can be easily understood by humans. For " +
@@ -105,10 +116,12 @@ TemperatureControl.patch(
             },
 
             {
+                name: "SetTemperature", tag: "command",
                 xref: "cluster§8.2.6.1",
 
                 children: [
                     {
+                        name: "TargetTemperature", tag: "field",
                         details: "This field shall specify the desired temperature setpoint that the server is to be set to." +
                             "\n" +
                             "The TargetTemperature shall be from MinTemperature to MaxTemperature inclusive. If the Step " +
@@ -118,6 +131,7 @@ TemperatureControl.patch(
                     },
 
                     {
+                        name: "TargetTemperatureLevel", tag: "field",
                         details: "This field shall specify the index of the list item in the SupportedTemperatureLevels list that " +
                             "represents the desired temperature level setting of the server. The value of this field shall be " +
                             "between 0 and the length of the SupportedTemperatureLevels list -1.",

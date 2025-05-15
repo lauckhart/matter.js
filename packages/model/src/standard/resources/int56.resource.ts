@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { int56 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-int56.patch({ description: "Signed 56-bit integer", xref: "core§7.19.1" });
+Resource.add({ name: "int56", tag: "datatype", description: "Signed 56-bit integer", xref: "core§7.19.1" });

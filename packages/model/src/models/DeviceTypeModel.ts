@@ -37,10 +37,17 @@ export class DeviceTypeModel extends Model<DeviceTypeElement, DeviceTypeModel.Ch
 
     constructor(definition: Model.Definition<DeviceTypeModel>, ...children: Model.ChildDefinition<DeviceTypeModel>[]) {
         super(definition, ...children);
-        this.classification = definition.classification as DeviceClassification;
+
+        if (!(definition instanceof Model)) {
+            this.classification = definition.classification as DeviceClassification;
+        }
     }
 
     override toElement(omitResources = false, extra?: Record<string, unknown>) {
+        if (omitResources) {
+            return super.toElement(omitResources, extra);
+        }
+
         return super.toElement(omitResources, {
             classification: this.classification,
             ...extra,

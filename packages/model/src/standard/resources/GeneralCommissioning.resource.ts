@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { GeneralCommissioning } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-GeneralCommissioning.patch({
+Resource.add({
+    name: "GeneralCommissioning", tag: "cluster",
     classification: "node", pics: "CGEN",
     details: "This cluster is used to manage basic commissioning lifecycle." +
         "\n" +
@@ -18,13 +19,15 @@ GeneralCommissioning.patch({
     xref: "core§11.10",
 
     children: [
-        undefined,
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "core§11.10.4",
-            children: [{ description: "TermsAndConditions", details: "Supports Terms & Conditions acknowledgement" }]
+            children: [{ name: "TC", tag: "field", details: "Supports Terms & Conditions acknowledgement" }]
         },
 
         {
+            name: "Breadcrumb", tag: "attribute",
+
             details: "This attribute allows for the storage of a client-provided small payload which Administrators and " +
                 "Commissioners may write and then subsequently read, to keep track of their own progress. This may be " +
                 "used by the Commissioner to avoid repeating already-executed actions upon re-establishing a " +
@@ -44,12 +47,14 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "BasicCommissioningInfo", tag: "attribute",
             details: "This attribute shall describe critical parameters needed at the beginning of commissioning flow. See " +
                 "BasicCommissioningInfo for more information.",
             xref: "core§11.10.6.2"
         },
 
         {
+            name: "RegulatoryConfig", tag: "attribute",
             details: "Indicates the regulatory configuration for the product." +
                 "\n" +
                 "Note that the country code is part of Basic Information Cluster and therefore NOT listed on the " +
@@ -58,6 +63,8 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "LocationCapability", tag: "attribute",
+
             details: "LocationCapability is statically set by the manufacturer and indicates if this Node needs to be told " +
                 "an exact RegulatoryLocation. For example a Node which is \"Indoor Only\" would not be certified for " +
                 "outdoor use at all, and thus there is no need for a commissioner to set or ask the user about " +
@@ -76,6 +83,7 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "SupportsConcurrentConnection", tag: "attribute",
             details: "Indicates whether this device supports \"concurrent connection flow\" commissioning mode (see Section " +
                 "5.5, “Commissioning Flows”). If false, the device only supports \"non-concurrent connection flow\" " +
                 "mode.",
@@ -83,6 +91,8 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "TcAcceptedVersion", tag: "attribute",
+
             details: "Indicates the last version of the T&Cs for which the device received user acknowledgements. On " +
                 "factory reset this field shall be reset to 0." +
                 "\n" +
@@ -95,6 +105,8 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "TcMinRequiredVersion", tag: "attribute",
+
             details: "Indicates the minimum version of the texts presented by the Enhanced Setup Flow that need to be " +
                 "accepted by the user for this device. This attribute may change as the result of an OTA update." +
                 "\n" +
@@ -106,6 +118,8 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "TcAcknowledgements", tag: "attribute",
+
             details: "Indicates the user’s response to the presented terms. Each bit position corresponds to a user " +
                 "response for the associated index of matching text, such that bit 0 (bit value 1) is for text index " +
                 "0. Bit 15 (bit value 0x8000) is for text index 15. A bit value of 1 indicates acceptance and a value " +
@@ -121,6 +135,8 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "TcAcknowledgementsRequired", tag: "attribute",
+
             details: "Indicates whether SetTCAcknowledgements is currently required to be called with the inclusion of " +
                 "mandatory terms accepted." +
                 "\n" +
@@ -141,6 +157,7 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "TcUpdateDeadline", tag: "attribute",
             details: "Indicates the System Time in seconds when any functionality limitations will begin due to a lack of " +
                 "acceptance of updated Terms and Conditions, as described in Section 5.7.4.5, “Presenting Updated " +
                 "Terms and Conditions”." +
@@ -150,6 +167,8 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "ArmFailSafe", tag: "command",
+
             details: "Success or failure of this command shall be communicated by the ArmFailSafeResponse command, unless " +
                 "some data model validations caused a failure status code to be issued during the processing of the " +
                 "command." +
@@ -280,15 +299,19 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "ArmFailSafeResponse", tag: "command",
             xref: "core§11.10.7.3",
 
             children: [
                 {
+                    name: "ErrorCode", tag: "field",
                     details: "This field shall contain the result of the operation, based on the behavior specified in the " +
                         "functional description of the ArmFailSafe command.",
                     xref: "core§11.10.7.3.1"
                 },
+
                 {
+                    name: "DebugText", tag: "field",
                     details: "See Section 11.10.7.1, “Common fields in General Commissioning cluster responses”.",
                     xref: "core§11.10.7.3.2"
                 }
@@ -296,6 +319,8 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "SetRegulatoryConfig", tag: "command",
+
             details: "This shall add or update the regulatory configuration in the RegulatoryConfig Attribute to the value " +
                 "provided in the NewRegulatoryConfig field." +
                 "\n" +
@@ -332,15 +357,19 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "SetRegulatoryConfigResponse", tag: "command",
             xref: "core§11.10.7.5",
 
             children: [
                 {
+                    name: "ErrorCode", tag: "field",
                     details: "This field shall contain the result of the operation, based on the behavior specified in the " +
                         "functional description of the SetRegulatoryConfig command.",
                     xref: "core§11.10.7.5.1"
                 },
+
                 {
+                    name: "DebugText", tag: "field",
                     details: "See Section 11.10.7.1, “Common fields in General Commissioning cluster responses”.",
                     xref: "core§11.10.7.5.2"
                 }
@@ -348,6 +377,8 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "CommissioningComplete", tag: "command",
+
             details: "This command has no data." +
                 "\n" +
                 "Success or failure of this command shall be communicated by the CommissioningCompleteResponse " +
@@ -414,15 +445,19 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "CommissioningCompleteResponse", tag: "command",
             xref: "core§11.10.7.7",
 
             children: [
                 {
+                    name: "ErrorCode", tag: "field",
                     details: "This field shall contain the result of the operation, based on the behavior specified in the " +
                         "functional description of the CommissioningComplete command.",
                     xref: "core§11.10.7.7.1"
                 },
+
                 {
+                    name: "DebugText", tag: "field",
                     details: "See Section 11.10.7.1, “Common fields in General Commissioning cluster responses”.",
                     xref: "core§11.10.7.7.2"
                 }
@@ -430,18 +465,22 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "SetTcAcknowledgements", tag: "command",
             details: "This command sets the user acknowledgements received in the Enhanced Setup Flow Terms & Conditions " +
                 "into the node.",
             xref: "core§11.10.7.8",
 
             children: [
                 {
+                    name: "TcVersion", tag: "field",
                     details: "This field shall contain the version of the Enhanced Setup Flow Terms & Conditions that were " +
                         "presented to the user.",
                     xref: "core§11.10.7.8.1"
                 },
 
                 {
+                    name: "TcUserResponse", tag: "field",
+
                     details: "This field shall contain the user responses to the Enhanced Setup Flow Terms & Conditions as a map " +
                         "where each bit set in the bitmap corresponds to an accepted term in the file located at " +
                         "EnhancedSetupFlowTCUrl." +
@@ -472,9 +511,12 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "SetTcAcknowledgementsResponse", tag: "command",
             details: "This command is used to convey the result from SetTCAcknowledgements.",
             xref: "core§11.10.7.9",
+
             children: [{
+                name: "ErrorCode", tag: "field",
                 details: "This field shall contain the result of the operation, based on the behavior specified in the " +
                     "functional description of the SetTCAcknowledgements command.",
                 xref: "core§11.10.7.9.1"
@@ -482,44 +524,63 @@ GeneralCommissioning.patch({
         },
 
         {
+            name: "CommissioningErrorEnum", tag: "datatype",
             details: "This enumeration is used by several response commands in this cluster to indicate particular errors.",
             xref: "core§11.10.5.1",
 
             children: [
-                { description: "No error" },
+                { name: "Ok", tag: "field", description: "No error" },
                 {
+                    name: "ValueOutsideRange", tag: "field",
                     description: "Attempting to set regulatory configuration to a region or indoor/outdoor mode for which the server does not have proper configuration."
                 },
-                { description: "Executed CommissioningComplete outside CASE session." },
-                { description: "Executed CommissioningComplete when there was no active Fail-Safe context." },
                 {
+                    name: "InvalidAuthentication", tag: "field",
+                    description: "Executed CommissioningComplete outside CASE session."
+                },
+                {
+                    name: "NoFailSafe", tag: "field",
+                    description: "Executed CommissioningComplete when there was no active Fail-Safe context."
+                },
+                {
+                    name: "BusyWithOtherAdmin", tag: "field",
                     description: "Attempting to arm fail- safe or execute CommissioningComplete from a fabric different than the one associated with the current fail- safe context."
                 },
-                { description: "One or more required TC features from the Enhanced Setup Flow were not accepted." },
-                { description: "No acknowledgements from the user for the TC features were received." },
                 {
+                    name: "RequiredTcNotAccepted", tag: "field",
+                    description: "One or more required TC features from the Enhanced Setup Flow were not accepted."
+                },
+                {
+                    name: "TcAcknowledgementsNotReceived", tag: "field",
+                    description: "No acknowledgements from the user for the TC features were received."
+                },
+                {
+                    name: "TcMinVersionNotMet", tag: "field",
                     description: "The version of the TC features acknowledged by the user did not meet the minimum required version."
                 }
             ]
         },
 
         {
+            name: "RegulatoryLocationTypeEnum", tag: "datatype",
             details: "This enumeration is used by the RegulatoryConfig and LocationCapability attributes to indicate " +
                 "possible radio usage.",
             xref: "core§11.10.5.2",
             children: [
-                { description: "Indoor only" },
-                { description: "Outdoor only" },
-                { description: "Indoor/Outdoor" }
+                { name: "Indoor", tag: "field", description: "Indoor only" },
+                { name: "Outdoor", tag: "field", description: "Outdoor only" },
+                { name: "IndoorOutdoor", tag: "field", description: "Indoor/Outdoor" }
             ]
         },
 
         {
+            name: "BasicCommissioningInfo", tag: "datatype",
             details: "This structure provides some constant values that may be of use to all commissioners.",
             xref: "core§11.10.5.3",
 
             children: [
                 {
+                    name: "FailSafeExpiryLengthSeconds", tag: "field",
                     details: "This field shall contain a conservative initial duration (in seconds) to set in the FailSafe for the " +
                         "commissioning flow to complete successfully. This may vary depending on the speed or sleepiness of " +
                         "the Commissionee. This value, if used in the ArmFailSafe command’s ExpiryLengthSeconds field SHOULD " +
@@ -529,6 +590,8 @@ GeneralCommissioning.patch({
                 },
 
                 {
+                    name: "MaxCumulativeFailsafeSeconds", tag: "field",
+
                     details: "This field shall contain a conservative value in seconds denoting the maximum total duration for " +
                         "which a fail safe timer can be re-armed. See Section 11.10.7.2.1, “Fail Safe Context”." +
                         "\n" +

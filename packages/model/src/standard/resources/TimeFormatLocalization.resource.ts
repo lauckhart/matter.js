@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { TimeFormatLocalization } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-TimeFormatLocalization.patch({
+Resource.add({
+    name: "TimeFormatLocalization", tag: "cluster",
     classification: "node", pics: "LTIME",
 
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
@@ -22,17 +23,18 @@ TimeFormatLocalization.patch({
     xref: "core§11.4",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "core§11.4.4",
             children: [{
-                description: "CalendarFormat",
+                name: "CALFMT", tag: "field",
                 details: "The Node can be configured to use different calendar formats when conveying values to a user."
             }]
         },
 
         {
+            name: "HourFormat", tag: "attribute",
+
             details: "Indicates the format that the Node is currently configured to use when conveying the hour unit of " +
                 "time." +
                 "\n" +
@@ -46,6 +48,8 @@ TimeFormatLocalization.patch({
         },
 
         {
+            name: "ActiveCalendarType", tag: "attribute",
+
             details: "Indicates the calendar format that the Node is currently configured to use when conveying dates." +
                 "\n" +
                 "If not UseActiveLocale, this value shall take priority over any unit implied through the " +
@@ -58,6 +62,7 @@ TimeFormatLocalization.patch({
         },
 
         {
+            name: "SupportedCalendarTypes", tag: "attribute",
             details: "Indicates a list of CalendarTypeEnum values that are supported by the Node. The list shall NOT " +
                 "contain any duplicate entries. The ordering of items within the list SHOULD NOT express any meaning. " +
                 "The maximum length of the SupportedCalendarTypes list shall be equivalent to the number of " +
@@ -66,31 +71,33 @@ TimeFormatLocalization.patch({
         },
 
         {
+            name: "HourFormatEnum", tag: "datatype",
             xref: "core§11.4.5.1",
             children: [
-                { description: "Time conveyed with a 12-hour clock" },
-                { description: "Time conveyed with a 24-hour clock" },
-                { description: "Use active locale clock" }
+                { name: "12Hr", tag: "field", description: "Time conveyed with a 12-hour clock" },
+                { name: "24Hr", tag: "field", description: "Time conveyed with a 24-hour clock" },
+                { name: "UseActiveLocale", tag: "field", description: "Use active locale clock" }
             ]
         },
 
         {
+            name: "CalendarTypeEnum", tag: "datatype",
             xref: "core§11.4.5.2",
 
             children: [
-                { description: "Dates conveyed using the Buddhist calendar" },
-                { description: "Dates conveyed using the Chinese calendar" },
-                { description: "Dates conveyed using the Coptic calendar" },
-                { description: "Dates conveyed using the Ethiopian calendar" },
-                { description: "Dates conveyed using the Gregorian calendar" },
-                { description: "Dates conveyed using the Hebrew calendar" },
-                { description: "Dates conveyed using the Indian calendar" },
-                { description: "Dates conveyed using the Islamic calendar" },
-                { description: "Dates conveyed using the Japanese calendar" },
-                { description: "Dates conveyed using the Korean calendar" },
-                { description: "Dates conveyed using the Persian calendar" },
-                { description: "Dates conveyed using the Taiwanese calendar" },
-                { description: "calendar implied from active locale" }
+                { name: "Buddhist", tag: "field", description: "Dates conveyed using the Buddhist calendar" },
+                { name: "Chinese", tag: "field", description: "Dates conveyed using the Chinese calendar" },
+                { name: "Coptic", tag: "field", description: "Dates conveyed using the Coptic calendar" },
+                { name: "Ethiopian", tag: "field", description: "Dates conveyed using the Ethiopian calendar" },
+                { name: "Gregorian", tag: "field", description: "Dates conveyed using the Gregorian calendar" },
+                { name: "Hebrew", tag: "field", description: "Dates conveyed using the Hebrew calendar" },
+                { name: "Indian", tag: "field", description: "Dates conveyed using the Indian calendar" },
+                { name: "Islamic", tag: "field", description: "Dates conveyed using the Islamic calendar" },
+                { name: "Japanese", tag: "field", description: "Dates conveyed using the Japanese calendar" },
+                { name: "Korean", tag: "field", description: "Dates conveyed using the Korean calendar" },
+                { name: "Persian", tag: "field", description: "Dates conveyed using the Persian calendar" },
+                { name: "Taiwanese", tag: "field", description: "Dates conveyed using the Taiwanese calendar" },
+                { name: "UseActiveLocale", tag: "field", description: "calendar implied from active locale" }
             ]
         }
     ]

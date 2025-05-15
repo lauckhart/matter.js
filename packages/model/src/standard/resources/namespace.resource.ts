@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { namespace } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-namespace.patch({
+Resource.add({
+    name: "namespace", tag: "datatype",
     description: "Namespace",
     details: "The Namespace type identifies the namespace used for a semantic tag.",
     xref: "core§7.19.2.43"

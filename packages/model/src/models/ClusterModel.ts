@@ -55,11 +55,11 @@ export class ClusterModel extends ScopeModel<ClusterElement, ClusterModel.Child>
         return this.scope.membersOf(this, { tags: [ElementTag.Datatype] }) as DatatypeModel[];
     }
 
-    get classification() {
+    get classification(): ClusterElement.Classification | undefined {
         return this.resource?.classification as ClusterElement.Classification | undefined;
     }
 
-    set classification(classification: ClusterElement.Classification | undefined) {
+    set classification(classification: `${ClusterElement.Classification}` | undefined) {
         if (classification || this.hasLocalResource) {
             this.localResource.classification = classification;
         }
@@ -164,8 +164,10 @@ export class ClusterModel extends ScopeModel<ClusterElement, ClusterModel.Child>
         super(definition, ...children);
 
         this.#quality = Quality.create(definition.quality);
-        this.pics = definition.pics;
-        this.classification = definition.classification as ClusterElement.Classification;
+        if (!(definition instanceof Model)) {
+            this.pics = definition.pics;
+            this.classification = definition.classification as ClusterElement.Classification;
+        }
     }
 
     override toElement(omitResources = false, extra?: Record<string, unknown>) {

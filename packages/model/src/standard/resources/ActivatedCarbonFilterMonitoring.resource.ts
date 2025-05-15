@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ActivatedCarbonFilterMonitoring } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ActivatedCarbonFilterMonitoring.patch({ pics: "ACFREMON" });
+Resource.add({ name: "ActivatedCarbonFilterMonitoring", tag: "cluster", pics: "ACFREMON" });

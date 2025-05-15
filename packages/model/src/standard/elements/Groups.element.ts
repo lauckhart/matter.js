@@ -20,7 +20,7 @@ export const Groups = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 4 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "GN", constraint: "0", default: 1, description: "GroupNames" })
+        Field({ name: "GN", constraint: "0", default: 1, longName: "GroupNames" })
     ),
 
     Attribute(

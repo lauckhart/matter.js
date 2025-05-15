@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { WaterTankLevelMonitoring } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-WaterTankLevelMonitoring.patch({ pics: "WTLREPMON" });
+Resource.add({ name: "WaterTankLevelMonitoring", tag: "cluster", pics: "WTLREPMON" });

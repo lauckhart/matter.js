@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { SoftwareDiagnostics } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-SoftwareDiagnostics.patch({
+Resource.add({
+    name: "SoftwareDiagnostics", tag: "cluster",
     classification: "node", pics: "DGSW",
     details: "The Software Diagnostics Cluster provides a means to acquire standardized diagnostics metrics that " +
         "may be used by a Node to assist a user or Administrator in diagnosing potential problems. The " +
@@ -17,33 +18,38 @@ SoftwareDiagnostics.patch({
     xref: "core§11.13",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "core§11.13.4",
             children: [{
-                description: "Watermarks",
+                name: "WTRMRK", tag: "field",
                 details: "Node makes available the metrics for high watermark related to memory consumption."
             }]
         },
 
         {
+            name: "ThreadMetrics", tag: "attribute",
             details: "The ThreadMetrics attribute shall be a list of ThreadMetricsStruct structs. Each active thread on " +
                 "the Node shall be represented by a single entry within the ThreadMetrics attribute.",
             xref: "core§11.13.6.1"
         },
+
         {
+            name: "CurrentHeapFree", tag: "attribute",
             details: "The CurrentHeapFree attribute shall indicate the current amount of heap memory, in bytes, that are " +
                 "free for allocation. The effective amount may be smaller due to heap fragmentation or other reasons.",
             xref: "core§11.13.6.2"
         },
+
         {
+            name: "CurrentHeapUsed", tag: "attribute",
             details: "The CurrentHeapUsed attribute shall indicate the current amount of heap memory, in bytes, that is " +
                 "being used.",
             xref: "core§11.13.6.3"
         },
 
         {
+            name: "CurrentHeapHighWatermark", tag: "attribute",
             details: "The CurrentHeapHighWatermark attribute shall indicate the maximum amount of heap memory, in bytes, " +
                 "that has been used by the Node. This value shall only be reset upon a Node reboot or upon receiving " +
                 "of the ResetWatermarks command.",
@@ -51,22 +57,27 @@ SoftwareDiagnostics.patch({
         },
 
         {
+            name: "SoftwareFault", tag: "event",
             details: "The SoftwareFault Event shall be generated when a software fault takes place on the Node.",
             xref: "core§11.13.8.1",
 
             children: [
                 {
+                    name: "Id", tag: "field",
                     details: "The ID field shall be set to the ID of the software thread in which the last software fault " +
                         "occurred.",
                     xref: "core§11.13.8.1.1"
                 },
+
                 {
+                    name: "Name", tag: "field",
                     details: "The Name field shall be set to a manufacturer-specified name or prefix of the software thread in " +
                         "which the last software fault occurred.",
                     xref: "core§11.13.8.1.2"
                 },
 
                 {
+                    name: "FaultRecording", tag: "field",
                     details: "The FaultRecording field shall be a manufacturer-specified payload intended to convey information to " +
                         "assist in further diagnosing or debugging a software fault. The FaultRecording field may be used to " +
                         "convey information such as, but not limited to, thread backtraces or register contents.",
@@ -76,6 +87,8 @@ SoftwareDiagnostics.patch({
         },
 
         {
+            name: "ResetWatermarks", tag: "command",
+
             details: "Receipt of this command shall reset the following values which track high and lower watermarks:" +
                 "\n" +
                 "  • The StackFreeMinimum field of the ThreadMetrics attribute" +
@@ -97,26 +110,33 @@ SoftwareDiagnostics.patch({
         },
 
         {
+            name: "ThreadMetricsStruct", tag: "datatype",
             xref: "core§11.13.5.1",
 
             children: [
                 {
+                    name: "Id", tag: "field",
                     details: "The Id field shall be a server-assigned per-thread unique ID that is constant for the duration of " +
                         "the thread. Efforts SHOULD be made to avoid reusing ID values when possible.",
                     xref: "core§11.13.5.1.1"
                 },
+
                 {
+                    name: "Name", tag: "field",
                     details: "The Name field shall be set to a vendor defined name or prefix of the software thread that is static " +
                         "for the duration of the thread.",
                     xref: "core§11.13.5.1.2"
                 },
+
                 {
+                    name: "StackFreeCurrent", tag: "field",
                     details: "The StackFreeCurrent field shall indicate the current amount of stack memory, in bytes, that are not " +
                         "being utilized on the respective thread.",
                     xref: "core§11.13.5.1.3"
                 },
 
                 {
+                    name: "StackFreeMinimum", tag: "field",
                     details: "The StackFreeMinimum field shall indicate the minimum amount of stack memory, in bytes, that has " +
                         "been available at any point between the current time and this attribute being reset or initialized " +
                         "on the respective thread. This value shall only be reset upon a Node reboot or upon receiving of the " +
@@ -125,6 +145,7 @@ SoftwareDiagnostics.patch({
                 },
 
                 {
+                    name: "StackSize", tag: "field",
                     details: "The StackSize field shall indicate the amount of stack memory, in bytes, that has been allocated for " +
                         "use by the respective thread.",
                     xref: "core§11.13.5.1.5"

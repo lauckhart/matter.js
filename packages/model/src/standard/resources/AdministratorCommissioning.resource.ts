@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { AdministratorCommissioning } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-AdministratorCommissioning.patch({
+Resource.add({
+    name: "AdministratorCommissioning", tag: "cluster",
     classification: "node", pics: "CADMIN",
 
     details: "This cluster is used to trigger a Node to allow a new Administrator to commission it. It defines " +
@@ -39,13 +40,15 @@ AdministratorCommissioning.patch({
     xref: "core§11.19",
 
     children: [
-        undefined,
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "core§11.19.4",
-            children: [{ description: "Basic", details: "Node supports Basic Commissioning Method." }]
+            children: [{ name: "BC", tag: "field", details: "Node supports Basic Commissioning Method." }]
         },
 
         {
+            name: "WindowStatus", tag: "attribute",
+
             details: "Indicates whether a new Commissioning window has been opened by an Administrator, using either the " +
                 "OpenCommissioningWindow command or the OpenBasicCommissioningWindow command." +
                 "\n" +
@@ -61,6 +64,8 @@ AdministratorCommissioning.patch({
         },
 
         {
+            name: "AdminFabricIndex", tag: "attribute",
+
             details: "When the WindowStatus attribute is not set to WindowNotOpen, this attribute shall indicate the " +
                 "FabricIndex associated with the Fabric scoping of the Administrator that opened the window. This may " +
                 "be used to cross-reference in the Fabrics attribute of the Node Operational Credentials cluster." +
@@ -74,6 +79,8 @@ AdministratorCommissioning.patch({
         },
 
         {
+            name: "AdminVendorId", tag: "attribute",
+
             details: "When the WindowStatus attribute is not set to WindowNotOpen, this attribute shall indicate the " +
                 "Vendor ID associated with the Fabric scoping of the Administrator that opened the window. This field " +
                 "shall match the VendorID field of the Fabrics attribute list entry associated with the Administrator " +
@@ -87,6 +94,8 @@ AdministratorCommissioning.patch({
         },
 
         {
+            name: "OpenCommissioningWindow", tag: "command",
+
             details: "This command is used by a current Administrator to instruct a Node to go into commissioning mode. " +
                 "The Enhanced Commissioning Method specifies a window of time during which an already commissioned " +
                 "Node accepts PASE sessions. The current Administrator MUST specify a timeout value for the duration " +
@@ -123,6 +132,7 @@ AdministratorCommissioning.patch({
 
             children: [
                 {
+                    name: "CommissioningTimeout", tag: "field",
                     details: "This field shall specify the time in seconds during which commissioning session establishment is " +
                         "allowed by the Node. This timeout value shall follow guidance as specified in the initial " +
                         "Announcement Duration. The CommissioningTimeout applies only to cessation of any announcements and " +
@@ -132,6 +142,8 @@ AdministratorCommissioning.patch({
                 },
 
                 {
+                    name: "PakePasscodeVerifier", tag: "field",
+
                     details: "This field shall specify an ephemeral PAKE passcode verifier (see Section 3.10, " +
                         "“Password-Authenticated Key Exchange (PAKE)”) computed by the existing Administrator to be used for " +
                         "this commissioning. The field is concatenation of two values (w0 || L) shall be " +
@@ -144,6 +156,7 @@ AdministratorCommissioning.patch({
                 },
 
                 {
+                    name: "Discriminator", tag: "field",
                     details: "This field shall be used by the Node as the long discriminator for DNS-SD advertisement (see " +
                         "Commissioning Discriminator) for discovery by the new Administrator. The new Administrator can find " +
                         "and filter DNS-SD records by long discriminator to locate and initiate commissioning with the " +
@@ -152,6 +165,7 @@ AdministratorCommissioning.patch({
                 },
 
                 {
+                    name: "Iterations", tag: "field",
                     details: "This field shall be used by the Node as the PAKE iteration count associated with the ephemeral PAKE " +
                         "passcode verifier to be used for this commissioning, which shall be sent by the Node to the new " +
                         "Administrator’s software as response to the PBKDFParamRequest during PASE negotiation. The permitted " +
@@ -161,6 +175,8 @@ AdministratorCommissioning.patch({
                 },
 
                 {
+                    name: "Salt", tag: "field",
+
                     details: "This field shall be used by the Node as the PAKE Salt associated with the ephemeral PAKE passcode " +
                         "verifier to be used for this commissioning, which shall be sent by the Node to the new " +
                         "Administrator’s software as response to the PBKDFParamRequest during PASE negotiation. The " +
@@ -182,6 +198,8 @@ AdministratorCommissioning.patch({
         },
 
         {
+            name: "OpenBasicCommissioningWindow", tag: "command",
+
             details: "This command may be used by a current Administrator to instruct a Node to go into commissioning " +
                 "mode, if the node supports the Basic Commissioning Method. The Basic Commissioning Method specifies " +
                 "a window of time during which an already commissioned Node accepts PASE sessions. The current " +
@@ -204,6 +222,8 @@ AdministratorCommissioning.patch({
             xref: "core§11.19.8.2",
 
             children: [{
+                name: "CommissioningTimeout", tag: "field",
+
                 details: "This field shall specify the time in seconds during which commissioning session establishment is " +
                     "allowed by the Node. This timeout shall follow guidance as specified in the initial Announcement " +
                     "Duration." +
@@ -222,6 +242,8 @@ AdministratorCommissioning.patch({
         },
 
         {
+            name: "RevokeCommissioning", tag: "command",
+
             details: "This command is used by a current Administrator to instruct a Node to revoke any active " +
                 "OpenCommissioningWindow or OpenBasicCommissioningWindow command. This is an idempotent command and " +
                 "the Node shall (for ECM) delete the temporary PAKEPasscodeVerifier and associated data, and stop " +
@@ -240,20 +262,33 @@ AdministratorCommissioning.patch({
         },
 
         {
+            name: "CommissioningWindowStatusEnum", tag: "datatype",
             xref: "core§11.19.5.1",
+
             children: [
-                { description: "Commissioning window not open" },
-                { description: "An Enhanced Commissioning Method window is open" },
-                { description: "A Basic Commissioning Method window is open" }
+                { name: "WindowNotOpen", tag: "field", description: "Commissioning window not open" },
+                {
+                    name: "EnhancedWindowOpen", tag: "field",
+                    description: "An Enhanced Commissioning Method window is open"
+                },
+                { name: "BasicWindowOpen", tag: "field", description: "A Basic Commissioning Method window is open" }
             ]
         },
 
         {
+            name: "StatusCodeEnum", tag: "datatype",
             xref: "core§11.19.6.1",
+
             children: [
-                { description: "Could not be completed because another commissioning is in progress" },
-                { description: "Provided PAKE parameters were incorrectly formatted or otherwise invalid" },
-                { description: "No commissioning window was currently open" }
+                {
+                    name: "Busy", tag: "field",
+                    description: "Could not be completed because another commissioning is in progress"
+                },
+                {
+                    name: "PakeParameterError", tag: "field",
+                    description: "Provided PAKE parameters were incorrectly formatted or otherwise invalid"
+                },
+                { name: "WindowNotOpen", tag: "field", description: "No commissioning window was currently open" }
             ]
         }
     ]

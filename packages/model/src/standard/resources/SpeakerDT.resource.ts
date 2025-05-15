@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { SpeakerDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-SpeakerDt.patch({
+Resource.add({
+    name: "Speaker", tag: "deviceType",
     classification: "simple",
 
     details: "This defines conformance to the Speaker device type. This feature controls the speaker volume of the " +
@@ -26,5 +27,8 @@ SpeakerDt.patch({
         "these clusters and has matching functional requirements.",
 
     xref: "device§10.4",
-    children: [undefined, { xref: "device§10.4.4" }, { xref: "device§10.4.4" }]
+    children: [
+        { name: "OnOff", tag: "requirement", xref: "device§10.4.4" },
+        { name: "LevelControl", tag: "requirement", xref: "device§10.4.4" }
+    ]
 });

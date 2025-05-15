@@ -6,10 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DeviceEnergyManagement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-DeviceEnergyManagement.patch(
+Resource.add(
     {
+        name: "DeviceEnergyManagement", tag: "cluster",
         classification: "application", pics: "DEM",
 
         details: "This cluster allows a client to manage the power draw of a device. An example of such a client could" +
@@ -63,14 +64,13 @@ DeviceEnergyManagement.patch(
         xref: "cluster§9.2",
 
         children: [
-            undefined,
-
             {
+                name: "FeatureMap", tag: "attribute",
                 xref: "cluster§9.2.4",
 
                 children: [
                     {
-                        description: "PowerAdjustment",
+                        name: "PA", tag: "field",
 
                         details: "For Energy Smart Appliances (ESA) the definition of being 'smart' mandates that they can report " +
                             "their current power adjustment capability and have an EMS request a temporary adjustment. This may " +
@@ -91,7 +91,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
-                        description: "PowerForecastReporting",
+                        name: "PFR", tag: "field",
 
                         details: "For Energy Smart Appliances (ESA) the definition of being 'smart' implies that they can report their " +
                             "indicative forecast power demands or generation, to a greater or lesser extent. For some ESAs this " +
@@ -136,7 +136,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
-                        description: "StateForecastReporting",
+                        name: "SFR", tag: "field",
 
                         details: "Some ESAs do not know their actual power consumption, but do know the state of operation. Like the " +
                             "PowerForecastingReporting feature, this uses the same slot structure mechanism to indicate a change " +
@@ -155,7 +155,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
-                        description: "StartTimeAdjustment",
+                        name: "STA", tag: "field",
 
                         details: "ESAs which support the Start Time Adjustment feature, allow an EMS to recommend a change to the " +
                             "start time of the energy transfer that the ESA has previously suggested it would use." +
@@ -180,7 +180,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
-                        description: "Pausable",
+                        name: "PAU", tag: "field",
 
                         details: "ESAs which support the Pausable feature, allow an EMS to recommend a pause in the middle of a" +
                             "\n" +
@@ -206,7 +206,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
-                        description: "ForecastAdjustment",
+                        name: "FA", tag: "field",
 
                         details: "ESAs which support the Forecast adjustment feature, allow an EMS to recommend a change to the start, " +
                             "duration and/or power level limits of the steps of the power profile that the ESA has previously " +
@@ -237,7 +237,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
-                        description: "ConstraintBasedAdjustment",
+                        name: "CON", tag: "field",
 
                         details: "ESAs which support the Constraint-Based Adjustment feature allow an EMS to inform the ESA of periods " +
                             "during which power usage should be modified (for example when the EMS has been made aware that the " +
@@ -268,6 +268,8 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "EsaType", tag: "attribute",
+
                 details: "Indicates the type of ESA." +
                     "\n" +
                     "This attribute enables an EMS to understand some of the basic properties about how the energy may be " +
@@ -285,6 +287,8 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "EsaCanGenerate", tag: "attribute",
+
                 details: "Indicates whether the ESA is classed as a generator or load. This allows an EMS to understand " +
                     "whether the power values reported by the ESA need to have their sign inverted when dealing with " +
                     "forecasts and adjustments." +
@@ -307,6 +311,8 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "EsaState", tag: "attribute",
+
                 details: "Indicates the current state of the ESA." +
                     "\n" +
                     "If the ESA is in the Offline or Fault state it cannot be controlled by an EMS, and may not be able " +
@@ -321,6 +327,8 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "AbsMinPower", tag: "attribute",
+
                 details: "Indicates the minimum electrical power that the ESA can consume when switched on. This does not " +
                     "include when in power save or standby modes." +
                     "\n" +
@@ -334,6 +342,8 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "AbsMaxPower", tag: "attribute",
+
                 details: "Indicates the maximum electrical power that the ESA can consume when switched on." +
                     "\n" +
                     "Note that for Generator ESAs that can charge a battery by importing power into the node (such as a " +
@@ -348,6 +358,8 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "PowerAdjustmentCapability", tag: "attribute",
+
                 details: "Indicates how the ESA can be adjusted at the current time, and the state of any active adjustment." +
                     "\n" +
                     "A null value indicates that no power adjustment is currently possible, and nor is any adjustment " +
@@ -366,6 +378,8 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "Forecast", tag: "attribute",
+
                 details: "This attribute allows an ESA to share its intended forecast with a client (such as an Energy " +
                     "Management System)." +
                     "\n" +
@@ -390,6 +404,8 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "OptOutState", tag: "attribute",
+
                 details: "Indicates the current Opt-Out state of the ESA. The ESA may have a local user interface to allow the " +
                     "user to control this OptOutState. An EMS may subscribe to the OptOutState to get notified about " +
                     "changes in operational state." +
@@ -426,26 +442,32 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "PowerAdjustStart", tag: "event",
                 details: "This event shall be generated when the Power Adjustment session is started.",
                 xref: "cluster§9.2.10.1"
             },
 
             {
+                name: "PowerAdjustEnd", tag: "event",
                 details: "This event shall be generated when the Power Adjustment session ends.",
                 xref: "cluster§9.2.10.2",
 
                 children: [
                     {
+                        name: "Cause", tag: "field",
                         details: "This field shall indicate the reason why the power adjustment session ended.",
                         xref: "cluster§9.2.10.2.1"
                     },
+
                     {
+                        name: "Duration", tag: "field",
                         details: "This field shall indicate the number of seconds that the power adjustment session lasted before " +
                             "ending.",
                         xref: "cluster§9.2.10.2.2"
                     },
 
                     {
+                        name: "EnergyUse", tag: "field",
                         details: "This field shall indicate the approximate energy used by the ESA during the session." +
                             "\n" +
                             "For example, if the ESA was on and was adjusted to be switched off, then this shall be 0 mWh. If " +
@@ -457,22 +479,31 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "Paused", tag: "event",
                 details: "This event shall be generated when the ESA enters the Paused state. There is no data for this event.",
                 xref: "cluster§9.2.10.3"
             },
+
             {
+                name: "Resumed", tag: "event",
                 details: "This event shall be generated when the ESA leaves the Paused state and resumes operation.",
                 xref: "cluster§9.2.10.4",
-                children: [{ details: "This field shall indicate the reason why the pause ended.", xref: "cluster§9.2.10.4.1" }]
+                children: [{
+                    name: "Cause", tag: "field",
+                    details: "This field shall indicate the reason why the pause ended.",
+                    xref: "cluster§9.2.10.4.1"
+                }]
             },
 
             {
+                name: "PowerAdjustRequest", tag: "command",
                 details: "Allows a client to request an adjustment in the power consumption of an ESA for a specified " +
                     "duration.",
                 xref: "cluster§9.2.9.1",
 
                 children: [
                     {
+                        name: "Power", tag: "field",
                         details: "This field shall indicate the power that the ESA shall use during the adjustment period." +
                             "\n" +
                             "This value shall be between the MinPower and MaxPower fields of the PowerAdjustStruct in the " +
@@ -481,6 +512,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "Duration", tag: "field",
                         details: "This field shall indicate the duration that the ESA shall maintain the requested power for." +
                             "\n" +
                             "This value shall be between the MinDuration and MaxDuration fields of the PowerAdjustStruct in the " +
@@ -489,6 +521,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "Cause", tag: "field",
                         details: "This field shall indicate the cause of the request from the EMS.",
                         xref: "cluster§9.2.9.1.3"
                     }
@@ -496,17 +529,21 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "CancelPowerAdjustRequest", tag: "command",
                 details: "Allows a client to cancel an ongoing PowerAdjustmentRequest operation.",
                 xref: "cluster§9.2.9.2"
             },
 
             {
+                name: "StartTimeAdjustRequest", tag: "command",
                 details: "Allows a client to adjust the start time of a Forecast sequence that has not yet started operation " +
                     "(i.e. where the current Forecast StartTime is in the future).",
                 xref: "cluster§9.2.9.3",
 
                 children: [
                     {
+                        name: "RequestedStartTime", tag: "field",
+
                         details: "This field shall indicate the requested start time, in UTC, that the client would like the appliance " +
                             "to shift its Forecast to. This value MUST be in the future." +
                             "\n" +
@@ -521,6 +558,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "Cause", tag: "field",
                         details: "This field shall indicate the cause of the request from the EMS.",
                         xref: "cluster§9.2.9.3.2"
                     }
@@ -528,11 +566,13 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "PauseRequest", tag: "command",
                 details: "Allows a client to temporarily pause an operation and reduce the ESAs energy demand.",
                 xref: "cluster§9.2.9.4",
 
                 children: [
                     {
+                        name: "Duration", tag: "field",
                         details: "This field shall indicate the duration that the ESA shall be paused for. This value shall be between " +
                             "the MinPauseDuration and MaxPauseDuration indicated in the ActiveSlotNumber index in the Slots list " +
                             "in the Forecast.",
@@ -540,6 +580,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "Cause", tag: "field",
                         details: "This field shall indicate the cause of the request from the EMS.",
                         xref: "cluster§9.2.9.4.2"
                     }
@@ -547,25 +588,32 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "ResumeRequest", tag: "command",
                 details: "Allows a client to cancel the PauseRequest command and enable earlier resumption of operation.",
                 xref: "cluster§9.2.9.5"
             },
 
             {
+                name: "ModifyForecastRequest", tag: "command",
                 details: "Allows a client to modify a Forecast within the limits allowed by the ESA.",
                 xref: "cluster§9.2.9.6",
 
                 children: [
                     {
+                        name: "ForecastId", tag: "field",
                         details: "This field shall indicate the ForecastID that is to be modified.",
                         xref: "cluster§9.2.9.6.1"
                     },
+
                     {
+                        name: "SlotAdjustments", tag: "field",
                         details: "This field shall contain a list of SlotAdjustment parameters that should be modified in the " +
                             "corresponding Forecast with matching ForecastID.",
                         xref: "cluster§9.2.9.6.2"
                     },
+
                     {
+                        name: "Cause", tag: "field",
                         details: "This field shall indicate the cause of the request from the EMS.",
                         xref: "cluster§9.2.9.6.3"
                     }
@@ -573,11 +621,14 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "RequestConstraintBasedForecast", tag: "command",
                 details: "Allows a client to ask the ESA to recompute its Forecast based on power and time constraints.",
                 xref: "cluster§9.2.9.7",
 
                 children: [
                     {
+                        name: "Constraints", tag: "field",
+
                         details: "This field shall indicate the series of turn up or turn down power requests that the ESA is being " +
                             "asked to constrain its operation within. These requests shall be in the future, shall be in " +
                             "chronological order, starting with the earliest start time, and shall NOT overlap in time." +
@@ -597,6 +648,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "Cause", tag: "field",
                         details: "This field shall indicate the cause of the request from the EMS.",
                         xref: "cluster§9.2.9.7.2"
                     }
@@ -604,27 +656,33 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "CancelRequest", tag: "command",
                 details: "Allows a client to request cancellation of a previous adjustment request in a " +
                     "StartTimeAdjustRequest, ModifyForecastRequest or RequestConstraintBasedForecast command.",
                 xref: "cluster§9.2.9.8"
             },
 
             {
+                name: "CostTypeEnum", tag: "datatype",
                 xref: "cluster§9.2.7.1",
 
                 children: [
                     {
+                        name: "Financial", tag: "field",
                         description: "Financial cost",
                         details: "This value shall indicate that the cost is related to the financial cost to provide the energy.",
                         xref: "cluster§9.2.7.1.1"
                     },
+
                     {
+                        name: "GhgEmissions", tag: "field",
                         description: "Grid CO2e grams cost",
                         details: "This value shall indicate that the cost is related to greenhouse gas emissions (in grams of CO2e).",
                         xref: "cluster§9.2.7.1.2"
                     },
 
                     {
+                        name: "Comfort", tag: "field",
                         description: "Consumer comfort impact cost",
                         details: "This value shall indicate that the cost is related to some abstract sense of comfort expressed by " +
                             "the consumer; a higher value indicates more discomfort. For example, a consumer may be more " +
@@ -635,6 +693,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "Temperature", tag: "field",
                         description: "Temperature impact cost",
                         details: "This value shall indicate that the cost is related to the temperature of the home or water being at " +
                             "its setpoint. Some consumers may be more sensitive to being too hot or too cold." +
@@ -646,100 +705,167 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "ESATypeEnum", tag: "datatype",
                 xref: "cluster§9.2.7.2",
 
                 children: [
-                    { description: "EV Supply Equipment" },
-                    { description: "Space heating appliance" },
-                    { description: "Water heating appliance" },
-                    { description: "Space cooling appliance" },
-                    { description: "Space heating and cooling appliance" },
-                    { description: "Battery Electric Storage System" },
-                    { description: "Solar PV inverter" },
-                    { description: "Fridge / Freezer" },
-                    { description: "Washing Machine" },
-                    { description: "Dishwasher" },
-                    { description: "Cooking appliance" },
-                    { description: "Home water pump (e.g. drinking well)" },
-                    { description: "Irrigation water pump" },
-                    { description: "Pool pump" },
-                    { description: "Other appliance type" }
+                    { name: "Evse", tag: "field", description: "EV Supply Equipment" },
+                    { name: "SpaceHeating", tag: "field", description: "Space heating appliance" },
+                    { name: "WaterHeating", tag: "field", description: "Water heating appliance" },
+                    { name: "SpaceCooling", tag: "field", description: "Space cooling appliance" },
+                    { name: "SpaceHeatingCooling", tag: "field", description: "Space heating and cooling appliance" },
+                    { name: "BatteryStorage", tag: "field", description: "Battery Electric Storage System" },
+                    { name: "SolarPv", tag: "field", description: "Solar PV inverter" },
+                    { name: "FridgeFreezer", tag: "field", description: "Fridge / Freezer" },
+                    { name: "WashingMachine", tag: "field", description: "Washing Machine" },
+                    { name: "Dishwasher", tag: "field", description: "Dishwasher" },
+                    { name: "Cooking", tag: "field", description: "Cooking appliance" },
+                    { name: "HomeWaterPump", tag: "field", description: "Home water pump (e.g. drinking well)" },
+                    { name: "IrrigationWaterPump", tag: "field", description: "Irrigation water pump" },
+                    { name: "PoolPump", tag: "field", description: "Pool pump" },
+                    { name: "Other", tag: "field", description: "Other appliance type" }
                 ]
             },
 
             {
+                name: "ESAStateEnum", tag: "datatype",
                 xref: "cluster§9.2.7.3",
 
                 children: [
-                    { description: "The ESA is not available to the EMS (e.g. start- up, maintenance mode)" },
-                    { description: "The ESA is working normally and can be controlled by the EMS" },
-                    { description: "The ESA has developed a fault and cannot provide service" },
-                    { description: "The ESA is in the middle of a power adjustment event" },
-                    { description: "The ESA is currently paused by a client using the PauseRequest command" }
+                    {
+                        name: "Offline", tag: "field",
+                        description: "The ESA is not available to the EMS (e.g. start- up, maintenance mode)"
+                    },
+                    {
+                        name: "Online", tag: "field",
+                        description: "The ESA is working normally and can be controlled by the EMS"
+                    },
+                    {
+                        name: "Fault", tag: "field",
+                        description: "The ESA has developed a fault and cannot provide service"
+                    },
+                    {
+                        name: "PowerAdjustActive", tag: "field",
+                        description: "The ESA is in the middle of a power adjustment event"
+                    },
+                    {
+                        name: "Paused", tag: "field",
+                        description: "The ESA is currently paused by a client using the PauseRequest command"
+                    }
                 ]
             },
 
             {
+                name: "OptOutStateEnum", tag: "datatype",
                 xref: "cluster§9.2.7.4",
 
                 children: [
-                    { description: "The user has not opted out of either local or grid optimizations" },
-                    { description: "The user has opted out of local EMS optimizations only" },
-                    { description: "The user has opted out of grid EMS optimizations only" },
-                    { description: "The user has opted out of all external optimizations" }
+                    {
+                        name: "NoOptOut", tag: "field",
+                        description: "The user has not opted out of either local or grid optimizations"
+                    },
+                    {
+                        name: "LocalOptOut", tag: "field",
+                        description: "The user has opted out of local EMS optimizations only"
+                    },
+                    {
+                        name: "GridOptOut", tag: "field",
+                        description: "The user has opted out of grid EMS optimizations only"
+                    },
+                    {
+                        name: "OptOut", tag: "field",
+                        description: "The user has opted out of all external optimizations"
+                    }
                 ]
             },
 
             {
+                name: "CauseEnum", tag: "datatype",
                 xref: "cluster§9.2.7.5",
 
                 children: [
-                    { description: "The ESA completed the power adjustment as requested" },
-                    { description: "The ESA was set to offline" },
-                    { description: "The ESA has developed a fault could not complete the adjustment" },
-                    { description: "The user has disabled the ESA’s flexibility capability" },
-                    { description: "The adjustment was cancelled by a client" }
+                    {
+                        name: "NormalCompletion", tag: "field",
+                        description: "The ESA completed the power adjustment as requested"
+                    },
+                    { name: "Offline", tag: "field", description: "The ESA was set to offline" },
+                    {
+                        name: "Fault", tag: "field",
+                        description: "The ESA has developed a fault could not complete the adjustment"
+                    },
+                    {
+                        name: "UserOptOut", tag: "field",
+                        description: "The user has disabled the ESA’s flexibility capability"
+                    },
+                    { name: "Cancelled", tag: "field", description: "The adjustment was cancelled by a client" }
                 ]
             },
 
             {
+                name: "AdjustmentCauseEnum", tag: "datatype",
                 xref: "cluster§9.2.7.6",
+
                 children: [
-                    { description: "The adjustment is to optimize the local energy usage" },
-                    { description: "The adjustment is to optimize the grid energy usage" }
+                    {
+                        name: "LocalOptimization", tag: "field",
+                        description: "The adjustment is to optimize the local energy usage"
+                    },
+                    {
+                        name: "GridOptimization", tag: "field",
+                        description: "The adjustment is to optimize the grid energy usage"
+                    }
                 ]
             },
 
             {
+                name: "ForecastUpdateReasonEnum", tag: "datatype",
                 xref: "cluster§9.2.7.7",
+
                 children: [
-                    { description: "The update was due to internal ESA device optimization" },
-                    { description: "The update was due to local EMS optimization" },
-                    { description: "The update was due to grid optimization" }
+                    {
+                        name: "InternalOptimization", tag: "field",
+                        description: "The update was due to internal ESA device optimization"
+                    },
+                    {
+                        name: "LocalOptimization", tag: "field",
+                        description: "The update was due to local EMS optimization"
+                    },
+                    { name: "GridOptimization", tag: "field", description: "The update was due to grid optimization" }
                 ]
             },
 
             {
+                name: "PowerAdjustReasonEnum", tag: "datatype",
                 xref: "cluster§9.2.7.8",
+
                 children: [
-                    { description: "There is no Power Adjustment active" },
-                    { description: "There is PowerAdjustment active due to local EMS optimization" },
-                    { description: "There is PowerAdjustment active due to local EMS optimization" }
+                    { name: "NoAdjustment", tag: "field", description: "There is no Power Adjustment active" },
+                    {
+                        name: "LocalOptimizationAdjustment", tag: "field",
+                        description: "There is PowerAdjustment active due to local EMS optimization"
+                    },
+                    {
+                        name: "GridOptimizationAdjustment", tag: "field",
+                        description: "There is PowerAdjustment active due to local EMS optimization"
+                    }
                 ]
             },
 
             {
+                name: "CostStruct", tag: "datatype",
                 details: "This indicates a generic mechanism for expressing cost to run an appliance, in terms of financial, " +
                     "GHG emissions, comfort value etc.",
                 xref: "cluster§9.2.7.9",
 
                 children: [
                     {
+                        name: "CostType", tag: "field",
                         details: "This field shall indicate the type of cost being represented (see CostTypeEnum).",
                         xref: "cluster§9.2.7.9.1"
                     },
 
                     {
+                        name: "Value", tag: "field",
                         details: "This field shall indicate the value of the cost. This may be negative (indicating that it is not a " +
                             "cost, but a free benefit)." +
                             "\n" +
@@ -749,12 +875,14 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "DecimalPoints", tag: "field",
                         details: "This field shall indicate the number of digits to the right of the decimal point in the Value field. " +
                             "For example, if the Value was 102 and DecimalPoints was 2, then this would represent a cost of 1.02.",
                         xref: "cluster§9.2.7.9.3"
                     },
 
                     {
+                        name: "Currency", tag: "field",
                         details: "Indicates the currency for the value in the Value field. The value of the currency field shall match " +
                             "the values defined by [ISO 4217]." +
                             "\n" +
@@ -765,10 +893,12 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "PowerAdjustStruct", tag: "datatype",
                 xref: "cluster§9.2.7.10",
 
                 children: [
                     {
+                        name: "MinPower", tag: "field",
                         details: "This field shall indicate the minimum power that the ESA can have its power adjusted to." +
                             "\n" +
                             "Note that this is a signed value. Negative values indicate power flows out of the node (e.g. " +
@@ -777,6 +907,8 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "MaxPower", tag: "field",
+
                         details: "This field shall indicate the maximum power that the ESA can have its power adjusted to." +
                             "\n" +
                             "Note that this is a signed value. Negative values indicate power flows out of the node (e.g. " +
@@ -798,6 +930,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "MinDuration", tag: "field",
                         details: "This field shall indicate the minimum duration, in seconds, that a controller may invoke an ESA " +
                             "power adjustment. Manufacturers may use this to as an anti-cycling capability to avoid controllers " +
                             "from rapidly making power adjustments.",
@@ -805,6 +938,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "MaxDuration", tag: "field",
                         details: "This field shall indicate the maximum duration, in seconds, that a controller may invoke an ESA " +
                             "power adjustment. Manufacturers may use this to protect the user experience, to avoid over heating " +
                             "of the ESA, ensuring that there is sufficient headroom to use or store energy in the ESA or for any " +
@@ -815,9 +949,12 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "PowerAdjustCapabilityStruct", tag: "datatype",
                 xref: "cluster§9.2.7.11",
 
                 children: [{
+                    name: "PowerAdjustCapability", tag: "field",
+
                     details: "This field shall indicate how the ESA can be adjusted at the current time." +
                         "\n" +
                         "For example, a battery storage inverter may need to regulate its internal temperature, or the " +
@@ -838,6 +975,8 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "ForecastStruct", tag: "datatype",
+
                 details: "This indicates a list of 'slots' describing the overall timing of the ESA’s planned energy and power " +
                     "use, with different power and energy demands per slot. For example, slots might be used to describe " +
                     "the distinct stages of a washing machine cycle." +
@@ -850,6 +989,8 @@ DeviceEnergyManagement.patch(
 
                 children: [
                     {
+                        name: "ForecastId", tag: "field",
+
                         details: "This field shall indicate the sequence number for the current forecast. If the ESA updates a " +
                             "forecast, it shall monotonically increase this value." +
                             "\n" +
@@ -863,25 +1004,32 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "ActiveSlotNumber", tag: "field",
                         details: "This field shall indicate which element of the Slots list is currently active in the Forecast " +
                             "sequence. A null value indicates that the sequence has not yet started.",
                         xref: "cluster§9.2.7.13.2"
                     },
+
                     {
+                        name: "StartTime", tag: "field",
                         details: "This field shall indicate the planned start time, in UTC, for the entire Forecast.",
                         xref: "cluster§9.2.7.13.3"
                     },
                     {
+                        name: "EndTime", tag: "field",
                         details: "This field shall indicate the planned end time, in UTC, for the entire Forecast.",
                         xref: "cluster§9.2.7.13.4"
                     },
+
                     {
+                        name: "EarliestStartTime", tag: "field",
                         details: "This field shall indicate the earliest start time, in UTC, that the entire Forecast can be shifted " +
                             "to. A null value indicates that it can be started immediately.",
                         xref: "cluster§9.2.7.13.5"
                     },
 
                     {
+                        name: "LatestEndTime", tag: "field",
                         details: "This field shall indicate the latest end time, in UTC, for the entire Forecast." +
                             "\n" +
                             "e.g. for an EVSE charging session, this may indicate the departure time for the vehicle, by which " +
@@ -890,6 +1038,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "IsPausable", tag: "field",
                         details: "This field shall indicate that some part of the Forecast can be paused. It aims to allow a client to " +
                             "read this flag and if it is false, then none of the slots contain SlotIsPausable set to true. This " +
                             "can save a client from having to check each slot in the list.",
@@ -897,6 +1046,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "Slots", tag: "field",
                         details: "This field shall contain a list of SlotStructs." +
                             "\n" +
                             "It shall contain at least 1 entry, and a maximum of 10.",
@@ -904,6 +1054,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "ForecastUpdateReason", tag: "field",
                         details: "This field shall contain the reason the current Forecast was generated.",
                         xref: "cluster§9.2.7.13.9"
                     }
@@ -911,27 +1062,35 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "SlotStruct", tag: "datatype",
                 details: "This indicates a specific stage of an ESA’s operation.",
                 xref: "cluster§9.2.7.14",
 
                 children: [
                     {
+                        name: "MinDuration", tag: "field",
                         details: "This field shall indicate the minimum time (in seconds) that the appliance expects to be in this " +
                             "slot for.",
                         xref: "cluster§9.2.7.14.1"
                     },
+
                     {
+                        name: "MaxDuration", tag: "field",
                         details: "This field shall indicate the maximum time (in seconds) that the appliance expects to be in this " +
                             "slot for.",
                         xref: "cluster§9.2.7.14.2"
                     },
+
                     {
+                        name: "DefaultDuration", tag: "field",
                         details: "This field shall indicate the expected time (in seconds) that the appliance expects to be in this " +
                             "slot for.",
                         xref: "cluster§9.2.7.14.3"
                     },
 
                     {
+                        name: "ElapsedSlotTime", tag: "field",
+
                         details: "This field shall indicate the time (in seconds) that has already elapsed whilst in this slot. If the " +
                             "slot has not yet been started, then it shall be 0. Once the slot has been completed, then this " +
                             "reflects how much time was spent in this slot." +
@@ -945,6 +1104,8 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "RemainingSlotTime", tag: "field",
+
                         details: "This field shall indicate the time (in seconds) that is estimated to be remaining." +
                             "\n" +
                             "Note that it may not align to the DefaultDuration - ElapsedSlotTime since an appliance may have " +
@@ -961,11 +1122,13 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "SlotIsPausable", tag: "field",
                         details: "This field shall indicate whether this slot can be paused.",
                         xref: "cluster§9.2.7.14.6"
                     },
 
                     {
+                        name: "MinPauseDuration", tag: "field",
                         details: "This field shall indicate the shortest period that the slot can be paused for. This can be set to " +
                             "avoid controllers trying to pause ESAs for short periods and then resuming operation in a cyclic " +
                             "fashion which may damage or cause excess energy to be consumed with restarting of an operation.",
@@ -973,11 +1136,14 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "MaxPauseDuration", tag: "field",
                         details: "This field shall indicate the longest period that the slot can be paused for.",
                         xref: "cluster§9.2.7.14.8"
                     },
 
                     {
+                        name: "ManufacturerEsaState", tag: "field",
+
                         details: "This field shall indicate a manufacturer defined value indicating the state of the ESA." +
                             "\n" +
                             "This may be used by an observing EMS which also has access to the metering data to ascertain the " +
@@ -1002,6 +1168,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "NominalPower", tag: "field",
                         details: "This field shall indicate the expected power that the appliance will use during this slot. It may be " +
                             "considered the average value over the slot, and some variation from this would be expected (for " +
                             "example, as it is ramping up).",
@@ -1009,6 +1176,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "MinPower", tag: "field",
                         details: "This field shall indicate the lowest power that the appliance expects to use during this slot. (e.g. " +
                             "during a ramp up it may be 0W)." +
                             "\n" +
@@ -1017,6 +1185,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "MaxPower", tag: "field",
                         details: "This field shall indicate the maximum power that the appliance expects to use during this slot. " +
                             "(e.g. during a ramp up it may be 0W). This field ignores the effects of short-lived inrush currents." +
                             "\n" +
@@ -1025,6 +1194,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "NominalEnergy", tag: "field",
                         details: "This field shall indicate the expected energy that the appliance expects to use or produce during " +
                             "this slot." +
                             "\n" +
@@ -1033,6 +1203,8 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "Costs", tag: "field",
+
                         details: "This field shall indicate the current estimated cost for operating." +
                             "\n" +
                             "For example, if the device has access to an Energy pricing server it may be able to use the tariff " +
@@ -1058,6 +1230,8 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "MinPowerAdjustment", tag: "field",
+
                         details: "This field shall indicate the minimum power that the appliance can be requested to use." +
                             "\n" +
                             "For example, some EVSEs cannot be switched on to charge below 6A which may equate to ~1.3kW in EU " +
@@ -1069,6 +1243,8 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "MaxPowerAdjustment", tag: "field",
+
                         details: "This field shall indicate the maximum power that the appliance can be requested to use." +
                             "\n" +
                             "For example, an EVSE may be limited by its electrical supply to 32A which would be ~7.6kW in EU " +
@@ -1080,6 +1256,8 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "MinDurationAdjustment", tag: "field",
+
                         details: "This field shall indicate the minimum time, in seconds, that the slot can be requested to shortened " +
                             "to." +
                             "\n" +
@@ -1093,6 +1271,8 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "MaxDurationAdjustment", tag: "field",
+
                         details: "This field shall indicate the maximum time, in seconds, that the slot can be requested to extended " +
                             "to." +
                             "\n" +
@@ -1108,10 +1288,12 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "SlotAdjustmentStruct", tag: "datatype",
                 xref: "cluster§9.2.7.15",
 
                 children: [
                     {
+                        name: "SlotIndex", tag: "field",
                         details: "This field shall indicate the index into the Slots list within the Forecast that is to be modified. " +
                             "It shall be less than the actual length of the Slots list (implicitly it must be in the range 0 to 9 " +
                             "based on the maximum length of the Slots list constraint).",
@@ -1119,6 +1301,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "NominalPower", tag: "field",
                         details: "This field shall indicate the new requested power that the ESA shall operate at. It MUST be between " +
                             "the AbsMinPower and AbsMaxPower attributes as advertised by the ESA if it supports PFR." +
                             "\n" +
@@ -1128,6 +1311,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "Duration", tag: "field",
                         details: "This field shall indicate the new requested duration, in seconds, that the ESA shall extend or " +
                             "shorten the slot duration to. It MUST be between the MinDurationAdjustment and MaxDurationAdjustment " +
                             "for the slot as advertised by the ESA.",
@@ -1137,6 +1321,7 @@ DeviceEnergyManagement.patch(
             },
 
             {
+                name: "ConstraintsStruct", tag: "datatype",
                 details: "The ConstraintsStruct allows a client to inform an ESA about a constraint period (such as a grid " +
                     "event, or perhaps excess solar PV). The format allows the client to suggest that the ESA can either " +
                     "turn up its energy consumption, or turn down its energy consumption during this period.",
@@ -1144,6 +1329,7 @@ DeviceEnergyManagement.patch(
 
                 children: [
                     {
+                        name: "StartTime", tag: "field",
                         details: "This field shall indicate the start time of the constraint period that the client wishes the ESA to " +
                             "compute a new Forecast." +
                             "\n" +
@@ -1152,11 +1338,13 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "Duration", tag: "field",
                         details: "This field shall indicate the duration of the constraint in seconds.",
                         xref: "cluster§9.2.7.16.2"
                     },
 
                     {
+                        name: "NominalPower", tag: "field",
                         details: "This field shall indicate the nominal power that client wishes the ESA to operate at during the " +
                             "constrained period. It MUST be between the AbsMinPower and AbsMaxPower attributes as advertised by " +
                             "the ESA if it supports PFR." +
@@ -1166,6 +1354,7 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "MaximumEnergy", tag: "field",
                         details: "This field shall indicate the maximum energy that can be transferred to or from the ESA during the " +
                             "constraint period." +
                             "\n" +
@@ -1174,6 +1363,8 @@ DeviceEnergyManagement.patch(
                     },
 
                     {
+                        name: "LoadControl", tag: "field",
+
                         details: "This field shall indicate the turn up or turn down nature that the grid wants as the outcome by the " +
                             "ESA during the constraint period." +
                             "\n" +

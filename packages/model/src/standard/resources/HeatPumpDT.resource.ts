@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { HeatPumpDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-HeatPumpDt.patch({
+Resource.add({
+    name: "HeatPump", tag: "deviceType",
     classification: "simple",
 
     details: "A Heat Pump device is a device that uses electrical energy to heat either spaces or water tanks " +
@@ -20,5 +21,8 @@ HeatPumpDt.patch({
         "requirements, but that cannot be used for space heating.",
 
     xref: "device§14.5",
-    children: [undefined, { xref: "device§14.5.6" }, { xref: "device§14.5.6" }]
+    children: [
+        { name: "Identify", tag: "requirement", xref: "device§14.5.6" },
+        { name: "Thermostat", tag: "requirement", xref: "device§14.5.6" }
+    ]
 });

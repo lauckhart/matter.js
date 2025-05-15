@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Model, Resources, ValueModel } from "#model";
+import { Model, Resource, ValueModel } from "#model";
 import { Block, TsFile } from "#util/TsFile.js";
 import { addDetailsAndCrossReferences, addProperties } from "./element-generation.js";
 
@@ -14,15 +14,15 @@ export function generateResource(target: TsFile, element: Model): boolean {
         return false;
     }
 
-    target.addImport("!model/model/Resources.js", "Resources");
-    const expr = target.expressions(`Resources.add(`, ")");
+    target.addImport("#models/Resource.js", "Resource");
+    const expr = target.expressions(`Resource.add(`, ")");
 
     addResource(expr, patch);
 
     return true;
 }
 
-function addResource(target: Block, definition: Resources.Named) {
+function addResource(target: Block, definition: Resource.Named) {
     const expr = target.expressions("{", "}");
 
     const props = { ...definition } as Record<string, unknown>;
@@ -51,7 +51,7 @@ function addResource(target: Block, definition: Resources.Named) {
     }
 
     if (hasProps) {
-        delete props.description;
+        delete props.details;
         delete props.xref;
 
         addProperties(expr, props);
@@ -72,13 +72,13 @@ function addResource(target: Block, definition: Resources.Named) {
     return true;
 }
 
-function generateResourceDefinition(element: Model): Resources.Named | undefined {
+function generateResourceDefinition(element: Model): Resource.Named | undefined {
     const resources = element.hasLocalResource ? element.resource : undefined;
     const children = element.hasChildren
-        ? (element.children.map(generateResourceDefinition).filter(c => c) as Resources.Named[])
+        ? (element.children.map(generateResourceDefinition).filter(c => c) as Resource.Named[])
         : undefined;
 
-    let definition: Resources.Named | undefined;
+    let definition: Resource.Named | undefined;
     if (resources) {
         const entries = Object.entries(resources).filter(
             ([k, v]) => v !== undefined && k !== "asOf" && k !== "until" && k !== "matchTo" && k !== "errors",

@@ -20,7 +20,7 @@ export const BridgedDeviceBasicInformation = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 4 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "BIS", conformance: "O", constraint: "20", description: "BridgedIcdSupport" })
+        Field({ name: "BIS", conformance: "O", constraint: "20", longName: "BridgedIcdSupport" })
     ),
     Attribute({ id: 0x0, name: "DataModelRevision", conformance: "X" }),
     Attribute({ id: 0x1, name: "VendorName", conformance: "O" }),

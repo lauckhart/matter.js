@@ -6,18 +6,18 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { WaterValveDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-WaterValveDt.patch({
+Resource.add({
+    name: "WaterValve", tag: "deviceType",
     classification: "simple",
     details: "This defines conformance to the Water Valve device type.",
     xref: "device§5.6",
 
     children: [
-        undefined,
-        { xref: "device§5.6.4" },
-        { xref: "device§5.6.4" },
-        { xref: "device§5.6.4" },
-        { xref: "device§5.6.4" }
+        { name: "Identify", tag: "requirement", xref: "device§5.6.4" },
+        { name: "ValveConfigurationAndControl", tag: "requirement", xref: "device§5.6.4" },
+        { discriminator: "O", name: "FlowMeasurement", tag: "requirement", xref: "device§5.6.4" },
+        { discriminator: "O", name: "FlowMeasurement", tag: "requirement", xref: "device§5.6.4" }
     ]
 });

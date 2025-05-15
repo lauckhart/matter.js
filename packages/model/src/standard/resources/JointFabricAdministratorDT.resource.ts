@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { JointFabricAdministratorDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-JointFabricAdministratorDt.patch({
+Resource.add({
+    name: "JointFabricAdministrator", tag: "deviceType",
     classification: "utility",
 
     details: "A Joint Fabric Administrator device provides capabilities to manage the Joint Fabric Datastore and " +
@@ -19,5 +20,8 @@ JointFabricAdministratorDt.patch({
         "access the capabilities of the Joint Fabric Administrator.",
 
     xref: "device§2.9",
-    children: [undefined, { xref: "device§2.9.4" }, { xref: "device§2.9.4" }]
+    children: [
+        { name: "JointFabricDatastore", tag: "requirement", xref: "device§2.9.4" },
+        { name: "JointFabricPki", tag: "requirement", xref: "device§2.9.4" }
+    ]
 });

@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { uint48 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-uint48.patch({ description: "Unsigned 48-bit integer", xref: "core§7.19.1" });
+Resource.add({ name: "uint48", tag: "datatype", description: "Unsigned 48-bit integer", xref: "core§7.19.1" });

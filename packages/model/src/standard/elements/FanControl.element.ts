@@ -21,12 +21,12 @@ export const FanControl = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "SPD", constraint: "0", description: "MultiSpeed" }),
-        Field({ name: "AUT", constraint: "1", description: "Auto" }),
-        Field({ name: "RCK", constraint: "2", description: "Rocking" }),
-        Field({ name: "WND", constraint: "3", description: "Wind" }),
-        Field({ name: "STEP", constraint: "4", description: "Step" }),
-        Field({ name: "DIR", constraint: "5", description: "AirflowDirection" })
+        Field({ name: "SPD", constraint: "0", longName: "MultiSpeed" }),
+        Field({ name: "AUT", constraint: "1", longName: "Auto" }),
+        Field({ name: "RCK", constraint: "2", longName: "Rocking" }),
+        Field({ name: "WND", constraint: "3", longName: "Wind" }),
+        Field({ name: "STEP", constraint: "4", longName: "Step" }),
+        Field({ name: "DIR", constraint: "5", longName: "AirflowDirection" })
     ),
 
     Attribute(

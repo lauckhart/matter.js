@@ -6,11 +6,15 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { HumiditySensorDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-HumiditySensorDt.patch({
+Resource.add({
+    name: "HumiditySensor", tag: "deviceType",
     classification: "simple",
     details: "A humidity sensor (in most cases a Relative humidity sensor) reports humidity measurements.",
     xref: "device§7.7",
-    children: [undefined, { xref: "device§7.7.4" }, { xref: "device§7.7.4" }]
+    children: [
+        { name: "Identify", tag: "requirement", xref: "device§7.7.4" },
+        { name: "RelativeHumidityMeasurement", tag: "requirement", xref: "device§7.7.4" }
+    ]
 });

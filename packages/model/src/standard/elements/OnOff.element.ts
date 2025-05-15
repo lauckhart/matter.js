@@ -21,9 +21,9 @@ export const OnOff = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "LT", conformance: "[!OFFONLY]", constraint: "0", description: "Lighting" }),
-        Field({ name: "DF", conformance: "[!OFFONLY]", constraint: "1", description: "DeadFrontBehavior" }),
-        Field({ name: "OFFONLY", conformance: "[!LT | DF]", constraint: "2", description: "OffOnly" })
+        Field({ name: "LT", conformance: "[!OFFONLY]", constraint: "0", longName: "Lighting" }),
+        Field({ name: "DF", conformance: "[!OFFONLY]", constraint: "1", longName: "DeadFrontBehavior" }),
+        Field({ name: "OFFONLY", conformance: "[!LT | DF]", constraint: "2", longName: "OffOnly" })
     ),
 
     Attribute({ id: 0x0, name: "OnOff", type: "bool", access: "R V", conformance: "M", default: false, quality: "N S" }),

@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { eventNo } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-eventNo.patch({
+Resource.add({
+    name: "event-no", tag: "datatype",
     description: "Event Number",
     details: "An unsigned number that indicates an Event instance.",
     xref: "core§7.19.2.35"

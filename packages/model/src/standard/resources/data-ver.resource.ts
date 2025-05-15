@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { dataVer } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-dataVer.patch({
+Resource.add({
+    name: "data-ver", tag: "datatype",
     description: "Data Version",
     details: "An unsigned number that indicates a Data Version Type.",
     xref: "core§7.19.2.34"

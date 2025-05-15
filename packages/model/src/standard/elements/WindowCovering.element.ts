@@ -21,11 +21,11 @@ export const WindowCovering = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "LF", conformance: "O.a+", constraint: "0", description: "Lift" }),
-        Field({ name: "TL", conformance: "O.a+", constraint: "1", description: "Tilt" }),
-        Field({ name: "PA_LF", conformance: "[LF]", constraint: "2", description: "PositionAwareLift" }),
-        Field({ name: "ABS", conformance: "O", constraint: "3", description: "AbsolutePosition" }),
-        Field({ name: "PA_TL", conformance: "[TL]", constraint: "4", description: "PositionAwareTilt" })
+        Field({ name: "LF", conformance: "O.a+", constraint: "0", longName: "Lift" }),
+        Field({ name: "TL", conformance: "O.a+", constraint: "1", longName: "Tilt" }),
+        Field({ name: "PA_LF", conformance: "[LF]", constraint: "2", longName: "PositionAwareLift" }),
+        Field({ name: "ABS", conformance: "O", constraint: "3", longName: "AbsolutePosition" }),
+        Field({ name: "PA_TL", conformance: "[TL]", constraint: "4", longName: "PositionAwareTilt" })
     ),
 
     Attribute({

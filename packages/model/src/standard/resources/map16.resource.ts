@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { map16 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-map16.patch({ description: "16-bit bitmap", xref: "core§7.19.1" });
+Resource.add({ name: "map16", tag: "datatype", description: "16-bit bitmap", xref: "core§7.19.1" });

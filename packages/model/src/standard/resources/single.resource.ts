@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { single } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-single.patch({ description: "Single precision", xref: "core§7.19.1" });
+Resource.add({ name: "single", tag: "datatype", description: "Single precision", xref: "core§7.19.1" });

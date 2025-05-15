@@ -6,30 +6,30 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { LaundryWasherControls } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-LaundryWasherControls.patch({
+Resource.add({
+    name: "LaundryWasherControls", tag: "cluster",
     classification: "application", pics: "WASHERCTRL",
     details: "This cluster provides a way to access options associated with the operation of a laundry washer " +
         "device type.",
     xref: "cluster§8.6",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "cluster§8.6.4",
 
             children: [
                 {
-                    description: "Spin",
+                    name: "SPIN", tag: "field",
                     details: "This feature indicates multiple spin speeds are supported in at least one supported mode. Note that " +
                         "some modes may not support multiple spin speeds even if this feature is supported.",
                     xref: "cluster§8.6.4.1"
                 },
 
                 {
-                    description: "Rinse",
+                    name: "RINSE", tag: "field",
                     details: "This feature indicates multiple rinse cycles are supported in at least one supported mode. Note that " +
                         "some modes may not support selection of the number of rinse cycles even if this feature is " +
                         "supported.",
@@ -39,6 +39,7 @@ LaundryWasherControls.patch({
         },
 
         {
+            name: "SpinSpeeds", tag: "attribute",
             details: "Indicates the list of spin speeds available to the appliance in the currently selected mode. The " +
                 "spin speed values are determined by the manufacturer. At least one spin speed value shall be " +
                 "provided in the SpinSpeeds list. The list of spin speeds may change depending on the currently " +
@@ -48,6 +49,8 @@ LaundryWasherControls.patch({
         },
 
         {
+            name: "SpinSpeedCurrent", tag: "attribute",
+
             details: "Indicates the currently selected spin speed. It is the index into the SpinSpeeds list of the " +
                 "selected spin speed, as such, this attribute can be an integer between 0 and the number of entries " +
                 "in SpinSpeeds - 1. If a value is received that is outside of the defined constraints, a " +
@@ -60,6 +63,8 @@ LaundryWasherControls.patch({
         },
 
         {
+            name: "NumberOfRinses", tag: "attribute",
+
             details: "Indicates how many times a rinse cycle shall be performed on a device for the current mode of " +
                 "operation. A value of None shall indicate that no rinse cycle will be performed. This value may be " +
                 "set by the client to adjust the number of rinses that are performed for" +
@@ -71,6 +76,7 @@ LaundryWasherControls.patch({
         },
 
         {
+            name: "SupportedRinses", tag: "attribute",
             details: "Indicates the amount of rinses allowed for a specific mode. Each entry shall indicate a " +
                 "NumberOfRinsesEnum value that is possible in the selected mode on the device. The value of this " +
                 "attribute may change at runtime based on the currently selected mode. Each entry shall be distinct.",
@@ -78,16 +84,21 @@ LaundryWasherControls.patch({
         },
 
         {
+            name: "NumberOfRinsesEnum", tag: "datatype",
             details: "The NumberOfRinsesEnum provides a representation of the number of rinses that will be performed for " +
                 "a selected mode. NumberOfRinsesEnum is derived from enum8. It is up to the device manufacturer to " +
                 "determine the mapping between the enum values and the corresponding numbers of rinses.",
             xref: "cluster§8.6.5.1",
 
             children: [
-                { description: "This laundry washer mode does not perform rinse cycles" },
-                { description: "This laundry washer mode performs normal rinse cycles determined by the manufacturer" },
-                { description: "This laundry washer mode performs an extra rinse cycle" },
+                { name: "None", tag: "field", description: "This laundry washer mode does not perform rinse cycles" },
                 {
+                    name: "Normal", tag: "field",
+                    description: "This laundry washer mode performs normal rinse cycles determined by the manufacturer"
+                },
+                { name: "Extra", tag: "field", description: "This laundry washer mode performs an extra rinse cycle" },
+                {
+                    name: "Max", tag: "field",
                     description: "This laundry washer mode performs the maximum number of rinse cycles determined by the manufacturer"
                 }
             ]

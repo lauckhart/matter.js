@@ -6,24 +6,24 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { PumpControllerDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-PumpControllerDt.patch({
+Resource.add({
+    name: "PumpController", tag: "deviceType",
     classification: "simple",
     details: "A Pump Controller device is capable of configuring and controlling a Pump device.",
     xref: "device§6.5",
 
     children: [
-        undefined,
-        { xref: "device§6.5.3" },
-        { xref: "device§6.5.3" },
-        { xref: "device§6.5.3" },
-        { xref: "device§6.5.3" },
-        { xref: "device§6.5.3" },
-        { xref: "device§6.5.3" },
-        { xref: "device§6.5.3" },
-        { xref: "device§6.5.3" },
-        { xref: "device§6.5.3" },
-        { xref: "device§6.5.3" }
+        { name: "OnOff", tag: "requirement", xref: "device§6.5.3" },
+        { name: "PumpConfigurationAndControl", tag: "requirement", xref: "device§6.5.3" },
+        { discriminator: "M", name: "Identify", tag: "requirement", xref: "device§6.5.3" },
+        { discriminator: "O", name: "Identify", tag: "requirement", xref: "device§6.5.3" },
+        { name: "Groups", tag: "requirement", xref: "device§6.5.3" },
+        { name: "LevelControl", tag: "requirement", xref: "device§6.5.3" },
+        { name: "ScenesManagement", tag: "requirement", xref: "device§6.5.3" },
+        { name: "TemperatureMeasurement", tag: "requirement", xref: "device§6.5.3" },
+        { name: "PressureMeasurement", tag: "requirement", xref: "device§6.5.3" },
+        { name: "FlowMeasurement", tag: "requirement", xref: "device§6.5.3" }
     ]
 });

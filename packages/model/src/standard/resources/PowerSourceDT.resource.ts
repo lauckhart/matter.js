@@ -6,6 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { PowerSourceDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-PowerSourceDt.patch({ classification: "utility", xref: "device§2.2", children: [undefined, { xref: "device§2.2.3" }] });
+Resource.add({
+    name: "PowerSource", tag: "deviceType",
+    classification: "utility",
+    xref: "device§2.2",
+    children: [{ name: "PowerSource", tag: "requirement", xref: "device§2.2.3" }]
+});

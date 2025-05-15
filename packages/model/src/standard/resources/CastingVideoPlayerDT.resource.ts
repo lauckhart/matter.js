@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { CastingVideoPlayerDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-CastingVideoPlayerDt.patch({
+Resource.add({
+    name: "CastingVideoPlayer", tag: "deviceType",
     classification: "simple",
 
     details: "This defines conformance to the Casting Video Player device type." +
@@ -29,29 +30,35 @@ CastingVideoPlayerDt.patch({
     xref: "device§10.3",
 
     children: [
-        undefined,
-        { xref: "device§10.3.4" },
-        { xref: "device§10.3.4" },
-        { xref: "device§10.3.4" },
-        { xref: "device§10.3.4" },
-        { xref: "device§10.3.4" },
-        { xref: "device§10.3.4" },
-        { xref: "device§10.3.4" },
-        { xref: "device§10.3.4" },
-        { xref: "device§10.3.4" },
-        { xref: "device§10.3.4" },
-        { xref: "device§10.3.4" },
-        { xref: "device§10.3.4" },
-        { xref: "device§10.3.4" },
-        { xref: "device§10.3.4" },
+        { name: "OnOff", tag: "requirement", xref: "device§10.3.4" },
+        { name: "WakeOnLan", tag: "requirement", xref: "device§10.3.4" },
+        { name: "Channel", tag: "requirement", xref: "device§10.3.4" },
+        { name: "TargetNavigator", tag: "requirement", xref: "device§10.3.4" },
+        { name: "MediaPlayback", tag: "requirement", xref: "device§10.3.4" },
+        { name: "MediaInput", tag: "requirement", xref: "device§10.3.4" },
+        { name: "LowPower", tag: "requirement", xref: "device§10.3.4" },
+        { name: "KeypadInput", tag: "requirement", xref: "device§10.3.4" },
+        { name: "ContentLauncher", tag: "requirement", xref: "device§10.3.4" },
+        { name: "AudioOutput", tag: "requirement", xref: "device§10.3.4" },
+        { name: "ApplicationLauncher", tag: "requirement", xref: "device§10.3.4" },
+        { name: "AccountLogin", tag: "requirement", xref: "device§10.3.4" },
+        { name: "ContentControl", tag: "requirement", xref: "device§10.3.4" },
+        { name: "Messages", tag: "requirement", xref: "device§10.3.4" },
 
         {
+            name: "conditions", tag: "field",
+
             children: [
                 {
+                    name: "ContentAppPlatform", tag: "field",
                     description: "The device includes a Content App Platform. A Content App is usually an application built by a Content Provider. A Casting Video Player with a Content App Platform is able to launch Content Apps and represent these apps as separate endpoints.",
                     xref: "device§10.3.3"
                 },
-                { description: "The device has physical inputs for media.", xref: "device§10.3.3" }
+                {
+                    name: "PhysicalInputs", tag: "field",
+                    description: "The device has physical inputs for media.",
+                    xref: "device§10.3.3"
+                }
             ]
         }
     ]

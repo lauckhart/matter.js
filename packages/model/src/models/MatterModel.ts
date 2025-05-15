@@ -17,7 +17,7 @@ import { FabricModel } from "./FabricModel.js";
 import { FieldModel } from "./FieldModel.js";
 import { Globals } from "./Globals.js";
 import { Model } from "./Model.js";
-import { Resources } from "./Resources.js";
+import { ResourceBundle } from "./Resource.js";
 import { ScopeModel } from "./ScopeModel.js";
 import { SemanticNamespaceModel } from "./SemanticNamespaceModel.js";
 
@@ -28,7 +28,7 @@ export class MatterModel extends ScopeModel<MatterElement, MatterModel.Child> im
     override tag: MatterElement.Tag = MatterElement.Tag;
     revision?: Specification.Revision;
     #permanentDatatypes?: Record<string, Model>;
-    #resources?: Resources;
+    #resources?: ResourceBundle;
 
     /**
      * The default instance of the canonical MatterModel (also exported directly simply as "Matter").
@@ -130,10 +130,10 @@ export class MatterModel extends ScopeModel<MatterElement, MatterModel.Child> im
      * The resource pool for the node.
      */
     get resources() {
-        return this.#resources ?? Resources.default;
+        return this.#resources ?? ResourceBundle.default;
     }
 
-    set resources(resources: Resources | undefined) {
+    set resources(resources: ResourceBundle | undefined) {
         this.#resources = resources;
     }
 
@@ -152,7 +152,9 @@ export class MatterModel extends ScopeModel<MatterElement, MatterModel.Child> im
             ...children,
         );
 
-        this.revision = definition?.revision;
+        if (!(definition instanceof Model)) {
+            this.revision = definition?.revision;
+        }
     }
 
     override toElement(omitResources = false, extra?: Record<string, unknown>) {

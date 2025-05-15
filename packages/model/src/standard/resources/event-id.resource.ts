@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { eventId } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-eventId.patch({
+Resource.add({
+    name: "event-id", tag: "datatype",
     description: "Event ID",
     details: "An identifier that indicates an Event defined in a cluster specification." +
         "\n" +

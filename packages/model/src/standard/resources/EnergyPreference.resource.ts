@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { EnergyPreference } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-EnergyPreference.patch({
+Resource.add({
+    name: "EnergyPreference", tag: "cluster",
     classification: "application", pics: "EPREF",
     details: "This cluster provides an interface to specify preferences for how devices should consume energy." +
         "\n" +
@@ -16,21 +17,20 @@ EnergyPreference.patch({
     xref: "cluster§9.7",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "cluster§9.7.4",
 
             children: [
                 {
-                    description: "EnergyBalance",
+                    name: "BALA", tag: "field",
                     details: "This feature allows a user to select from a list of energy balances with associated descriptions of " +
                         "which strategies a device will use to target the specified balance.",
                     xref: "cluster§9.7.4.1"
                 },
 
                 {
-                    description: "LowPowerModeSensitivity",
+                    name: "LPMS", tag: "field",
                     details: "This feature allows the user to select a condition or set of conditions which will cause the device " +
                         "to switch to a mode using less power. For example, a device might provide a scale of durations that " +
                         "must elapse without user interaction before it goes to sleep.",
@@ -40,6 +40,8 @@ EnergyPreference.patch({
         },
 
         {
+            name: "EnergyBalances", tag: "attribute",
+
             details: "Indicates a list of BalanceStructs, each representing a step along a linear scale of relative " +
                 "priorities. A Step field with a value of zero shall indicate that the device SHOULD entirely favor " +
                 "the priority specified by the first element in EnergyPriorities; whereas a Step field with a value " +
@@ -59,6 +61,8 @@ EnergyPreference.patch({
         },
 
         {
+            name: "CurrentEnergyBalance", tag: "attribute",
+
             details: "Indicates the current preference of the user for balancing different priorities during device use. " +
                 "The value of this attribute is the index, 0-based, into the EnergyBalances attribute for the " +
                 "currently selected balance." +
@@ -83,6 +87,8 @@ EnergyPreference.patch({
         },
 
         {
+            name: "EnergyPriorities", tag: "attribute",
+
             details: "Indicates two extremes for interpreting the values in the EnergyBalances attribute. These two " +
                 "priorities shall be in opposition to each other; e.g. Comfort vs. Efficiency or Speed vs. " +
                 "WaterConsumption." +
@@ -94,6 +100,7 @@ EnergyPreference.patch({
         },
 
         {
+            name: "LowPowerModeSensitivities", tag: "attribute",
             details: "Indicates a list of BalanceStructs, each representing a condition or set of conditions for the " +
                 "device to enter a low power mode. This shall contain at least two BalanceStructs." +
                 "\n" +
@@ -103,6 +110,8 @@ EnergyPreference.patch({
         },
 
         {
+            name: "CurrentLowPowerModeSensitivity", tag: "attribute",
+
             details: "Indicates the current preference of the user for determining when the device should enter a low " +
                 "power mode. The value of this attribute is the index, 0-based, into the LowPowerModeSensitivities " +
                 "attribute for the currently selected preference." +
@@ -118,16 +127,19 @@ EnergyPreference.patch({
         },
 
         {
+            name: "EnergyPriorityEnum", tag: "datatype",
             xref: "cluster§9.7.5.1",
 
             children: [
                 {
+                    name: "Comfort", tag: "field",
                     description: "User comfort",
                     details: "This value shall emphasize user comfort; e.g. local temperature for a thermostat.",
                     xref: "cluster§9.7.5.1.1"
                 },
 
                 {
+                    name: "Speed", tag: "field",
                     description: "Speed of operation",
                     details: "This value shall emphasize how quickly a device accomplishes its targeted use; e.g. how quickly a " +
                         "robot vacuum completes a cleaning cycle.",
@@ -135,21 +147,30 @@ EnergyPreference.patch({
                 },
 
                 {
+                    name: "Efficiency", tag: "field",
                     description: "Amount of Energy consumed by the device",
                     details: "This value shall emphasize how much energy a device uses; e.g. electricity usage for a Pump.",
                     xref: "cluster§9.7.5.1.3"
                 },
-                { description: "Amount of water consumed by the device" }
+
+                { name: "WaterConsumption", tag: "field", description: "Amount of water consumed by the device" }
             ]
         },
 
         {
+            name: "BalanceStruct", tag: "datatype",
             details: "This represents a step along a scale of preferences.",
             xref: "cluster§9.7.5.2",
 
             children: [
-                { details: "This field shall indicate the relative value of this step.", xref: "cluster§9.7.5.2.1" },
                 {
+                    name: "Step", tag: "field",
+                    details: "This field shall indicate the relative value of this step.",
+                    xref: "cluster§9.7.5.2.1"
+                },
+
+                {
+                    name: "Label", tag: "field",
                     details: "This field shall indicate an optional string explaining which actions a device might take at the " +
                         "given step value.",
                     xref: "cluster§9.7.5.2.2"

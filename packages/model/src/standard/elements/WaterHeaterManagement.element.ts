@@ -21,8 +21,8 @@ export const WaterHeaterManagement = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "EM", conformance: "O", constraint: "0", description: "EnergyManagement" }),
-        Field({ name: "TP", conformance: "O", constraint: "1", description: "TankPercent" })
+        Field({ name: "EM", conformance: "O", constraint: "0", longName: "EnergyManagement" }),
+        Field({ name: "TP", conformance: "O", constraint: "1", longName: "TankPercent" })
     ),
     Attribute({
         id: 0x0, name: "HeaterTypes", type: "WaterHeaterHeatSourceBitmap",

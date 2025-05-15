@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { bool } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-bool.patch({
+Resource.add({
+    name: "bool", tag: "datatype",
     description: "Boolean",
     details: "The Boolean type represents a logical value, either FALSE or TRUE." +
         "\n" +

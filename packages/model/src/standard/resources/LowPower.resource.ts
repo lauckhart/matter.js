@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { LowPower } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-LowPower.patch({
+Resource.add({
+    name: "LowPower", tag: "cluster",
     classification: "application", pics: "LOWPOWER",
 
     details: "This cluster provides an interface for managing low power mode on a device." +
@@ -28,8 +29,9 @@ LowPower.patch({
         "with energy consumption regulations. This can be added in the future.",
 
     xref: "cluster§1.11",
-    children: [
-        undefined,
-        { details: "This command shall put the device into low power mode.", xref: "cluster§1.11.4.1" }
-    ]
+    children: [{
+        name: "Sleep", tag: "command",
+        details: "This command shall put the device into low power mode.",
+        xref: "cluster§1.11.4.1"
+    }]
 });

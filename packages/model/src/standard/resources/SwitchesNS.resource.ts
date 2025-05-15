@@ -6,9 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { SwitchesNs } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-SwitchesNs.patch({
+Resource.add({
+    name: "Switches", tag: "semanticNamespace",
+
     details: "The tags contained in this namespace are restricted for use in the switches domain and shall NOT be " +
         "used in any other domain or context. They are intended to indicate the function of a button on a " +
         "switch device to allow a client to make an optimized user interface which matches the actual device " +
@@ -21,16 +23,13 @@ SwitchesNs.patch({
     xref: "namespace§18",
 
     children: [
-        undefined,
-        undefined,
-        undefined,
-        { description: "e.g. dim up (light)" },
-        { description: "e.g. dim down (light)" },
-        { description: "e.g. select next scene" },
-        { description: "e.g. select previous scene" },
-        undefined,
+        { name: "Up", tag: "semanticTag", description: "e.g. dim up (light)" },
+        { name: "Down", tag: "semanticTag", description: "e.g. dim down (light)" },
+        { name: "Next", tag: "semanticTag", description: "e.g. select next scene" },
+        { name: "Previous", tag: "semanticTag", description: "e.g. select previous scene" },
 
         {
+            name: "Custom", tag: "semanticTag",
             description: "Textual description provided in Label field",
             details: "When this value is used, the Label field in the same Semantic Tag structure shall be filled with a " +
                 "textual description of the function indicated on the button, such as a label or icon printed on the " +

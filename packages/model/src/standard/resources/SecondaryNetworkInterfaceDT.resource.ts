@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { SecondaryNetworkInterfaceDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-SecondaryNetworkInterfaceDt.patch({
+Resource.add({
+    name: "SecondaryNetworkInterface", tag: "deviceType",
     classification: "utility",
 
     details: "A Secondary Network Interface device provides an additional network interface supported by the Node, " +
@@ -22,10 +23,9 @@ SecondaryNetworkInterfaceDt.patch({
     xref: "device§2.8",
 
     children: [
-        undefined,
-        { xref: "device§2.8.3" },
-        { xref: "device§2.8.3" },
-        { xref: "device§2.8.3" },
-        { xref: "device§2.8.3" }
+        { name: "NetworkCommissioning", tag: "requirement", xref: "device§2.8.3" },
+        { name: "EthernetNetworkDiagnostics", tag: "requirement", xref: "device§2.8.3" },
+        { name: "WiFiNetworkDiagnostics", tag: "requirement", xref: "device§2.8.3" },
+        { name: "ThreadNetworkDiagnostics", tag: "requirement", xref: "device§2.8.3" }
     ]
 });

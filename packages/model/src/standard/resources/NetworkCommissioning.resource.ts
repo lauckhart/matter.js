@@ -6,10 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { NetworkCommissioning } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-NetworkCommissioning.patch(
+Resource.add(
     {
+        name: "NetworkCommissioning", tag: "cluster",
         classification: "node", pics: "CNET",
 
         details: "Network commissioning is part of the overall Node commissioning. The main goal of Network " +
@@ -29,18 +30,18 @@ NetworkCommissioning.patch(
         xref: "core§11.9",
 
         children: [
-            undefined,
-
             {
+                name: "FeatureMap", tag: "attribute",
                 xref: "core§11.9.4",
                 children: [
-                    { description: "WiFiNetworkInterface", details: "Wi-Fi related features" },
-                    { description: "ThreadNetworkInterface", details: "Thread related features" },
-                    { description: "EthernetNetworkInterface", details: "Ethernet related features" }
+                    { name: "WI", tag: "field", details: "Wi-Fi related features" },
+                    { name: "TH", tag: "field", details: "Thread related features" },
+                    { name: "ET", tag: "field", details: "Ethernet related features" }
                 ]
             },
 
             {
+                name: "MaxNetworks", tag: "attribute",
                 details: "This shall indicate the maximum number of network configuration entries that can be added, based on " +
                     "available device resources. The length of the Networks attribute shall be less than or equal to this " +
                     "value.",
@@ -48,6 +49,8 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "Networks", tag: "attribute",
+
                 details: "Indicates the network configurations that are usable on the network interface represented by this " +
                     "cluster server instance." +
                     "\n" +
@@ -68,6 +71,7 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "ScanMaxTimeSeconds", tag: "attribute",
                 details: "Indicates the maximum duration taken, in seconds, by the network interface on this cluster server " +
                     "instance to provide scan results." +
                     "\n" +
@@ -76,6 +80,8 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "ConnectMaxTimeSeconds", tag: "attribute",
+
                 details: "Indicates the maximum duration taken, in seconds, by the network interface on this cluster server " +
                     "instance to report a successful or failed network connection indication. This maximum time shall " +
                     "account for all operations needed until a successful network connection is" +
@@ -87,6 +93,8 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "InterfaceEnabled", tag: "attribute",
+
                 details: "Indicates whether the associated network interface is enabled or not. By default all network " +
                     "interfaces SHOULD be enabled during initial commissioning (InterfaceEnabled set to true)." +
                     "\n" +
@@ -107,6 +115,8 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "LastNetworkingStatus", tag: "attribute",
+
                 details: "Indicates the status of the last attempt either scan or connect to an operational network, using " +
                     "this interface, whether by invocation of the ConnectNetwork command or by autonomous connection " +
                     "after loss of connectivity or during initial establishment. If no such attempt was made, or no " +
@@ -119,6 +129,8 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "LastNetworkId", tag: "attribute",
+
                 details: "Indicates the NetworkID used in the last attempt to connect to an operational network, using this " +
                     "interface, whether by invocation of the ConnectNetwork command or by autonomous connection after " +
                     "loss of connectivity or during initial establishment. If no such attempt was made, or no network " +
@@ -135,6 +147,8 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "LastConnectErrorValue", tag: "attribute",
+
                 details: "Indicates the ErrorValue used in the last failed attempt to connect to an operational network, using " +
                     "this interface, whether by invocation of the ConnectNetwork command or by autonomous connection " +
                     "after loss of connectivity or during initial establishment. If no such attempt was made, or no " +
@@ -150,12 +164,15 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "SupportedWiFiBands", tag: "attribute",
                 details: "Indicates all the frequency bands supported by the Wi-Fi interface configured by the cluster " +
                     "instance.",
                 xref: "core§11.9.6.9"
             },
 
             {
+                name: "SupportedThreadFeatures", tag: "attribute",
+
                 details: "Indicates all of the Thread features supported by the Thread interface configured by the cluster " +
                     "instance." +
                     "\n" +
@@ -168,6 +185,7 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "ThreadVersion", tag: "attribute",
                 details: "Indicates the Thread version supported by the Thread interface configured by the cluster instance." +
                     "\n" +
                     "The format shall match the value mapping found in the \"Version TLV\" section of Thread specification. " +
@@ -176,6 +194,8 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "ScanNetworks", tag: "command",
+
                 details: "This command shall scan on the Cluster instance’s associated network interface for either of:" +
                     "\n" +
                     "  • All available networks (non-directed scanning)" +
@@ -221,6 +241,7 @@ NetworkCommissioning.patch(
 
                 children: [
                     {
+                        name: "Ssid", tag: "field",
                         details: "This field, if present, shall contain the SSID for a directed scan of that particular Wi-Fi SSID. " +
                             "Otherwise, if the field is absent, or if it is null, this shall indicate scanning of all BSSID in " +
                             "range. This field shall be ignored for ScanNetworks invocations on non-Wi-Fi server instances.",
@@ -228,6 +249,7 @@ NetworkCommissioning.patch(
                     },
 
                     {
+                        name: "Breadcrumb", tag: "field",
                         details: "The Breadcrumb field, if present, shall be used to atomically set the Breadcrumb attribute in the " +
                             "General Commissioning cluster on success of the associated command. If the command fails, the " +
                             "Breadcrumb attribute in the General Commissioning cluster shall be left unchanged.",
@@ -237,6 +259,8 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "ScanNetworksResponse", tag: "command",
+
                 details: "This command shall contain the status of the last ScanNetworks command, and the associated scan " +
                     "results if the operation was successful." +
                     "\n" +
@@ -249,6 +273,8 @@ NetworkCommissioning.patch(
 
                 children: [
                     {
+                        name: "NetworkingStatus", tag: "field",
+
                         details: "The NetworkingStatus field shall indicate the status of the last scan operation, taking one of these " +
                             "values:" +
                             "\n" +
@@ -268,6 +294,7 @@ NetworkCommissioning.patch(
                     },
 
                     {
+                        name: "DebugText", tag: "field",
                         details: "This field, if present and non-empty, may contain error information which may be communicated to the " +
                             "user in case the NetworkingStatus was not Success. Its purpose is to help developers in " +
                             "troubleshooting errors and may go into logs or crash reports.",
@@ -275,6 +302,8 @@ NetworkCommissioning.patch(
                     },
 
                     {
+                        name: "WiFiScanResults", tag: "field",
+
                         details: "If NetworkingStatus was Success, this field shall contain the Wi-Fi network scan results. The list " +
                             "may be empty if none were found in range on the bands supported by the interface, or if directed " +
                             "scanning had been used and the desired SSID was not found in range." +
@@ -292,6 +321,8 @@ NetworkCommissioning.patch(
                     },
 
                     {
+                        name: "ThreadScanResults", tag: "field",
+
                         details: "If NetworkingStatus was Success, this field shall contain the Thread network scan results. The list " +
                             "may be empty if none were found in range on the bands supported by the interface." +
                             "\n" +
@@ -310,6 +341,8 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "AddOrUpdateWiFiNetwork", tag: "command",
+
                 details: "This command shall be used to add or modify Wi-Fi network configurations." +
                     "\n" +
                     "If this command is received without an armed fail-safe context (see ArmFailSafe), then this command " +
@@ -328,12 +361,15 @@ NetworkCommissioning.patch(
 
                 children: [
                     {
+                        name: "Ssid", tag: "field",
                         details: "This field shall contain the SSID to which to attempt connection. Specific BSSID selection is not " +
                             "supported by this cluster.",
                         xref: "core§11.9.7.3.1"
                     },
 
                     {
+                        name: "Credentials", tag: "field",
+
                         details: "Credentials is the passphrase or PSK for the network (if any is needed)." +
                             "\n" +
                             "Security type, cipher and credential format (passphrase or PSK) shall be contextually auto- selected " +
@@ -373,11 +409,13 @@ NetworkCommissioning.patch(
                         xref: "core§11.9.7.3.2"
                     },
 
-                    { details: "See Breadcrumb for usage.", xref: "core§11.9.7.3.3" }
+                    { name: "Breadcrumb", tag: "field", details: "See Breadcrumb for usage.", xref: "core§11.9.7.3.3" }
                 ]
             },
 
             {
+                name: "AddOrUpdateThreadNetwork", tag: "command",
+
                 details: "This command shall be used to add or modify Thread network configurations." +
                     "\n" +
                     "If this command is received without an armed fail-safe context (see ArmFailSafe), then this command " +
@@ -397,6 +435,7 @@ NetworkCommissioning.patch(
 
                 children: [
                     {
+                        name: "OperationalDataset", tag: "field",
                         details: "The OperationalDataset field shall contain the Thread Network Parameters, including channel, PAN ID, " +
                             "and Extended PAN ID." +
                             "\n" +
@@ -405,11 +444,13 @@ NetworkCommissioning.patch(
                         xref: "core§11.9.7.4.1"
                     },
 
-                    { details: "See Breadcrumb for usage.", xref: "core§11.9.7.4.2" }
+                    { name: "Breadcrumb", tag: "field", details: "See Breadcrumb for usage.", xref: "core§11.9.7.4.2" }
                 ]
             },
 
             {
+                name: "RemoveNetwork", tag: "command",
+
                 details: "This command shall remove the network configuration from the Cluster if there was already a network " +
                     "configuration with the same NetworkID. The relative order of the entries in the Networks" +
                     "\n" +
@@ -429,15 +470,19 @@ NetworkCommissioning.patch(
 
                 children: [
                     {
+                        name: "NetworkId", tag: "field",
                         details: "This field shall contain the NetworkID for the entry to remove: the SSID for Wi-Fi and XPAN ID for " +
                             "Thread.",
                         xref: "core§11.9.7.6.1"
                     },
-                    { details: "See Breadcrumb for usage.", xref: "core§11.9.7.6.2" }
+
+                    { name: "Breadcrumb", tag: "field", details: "See Breadcrumb for usage.", xref: "core§11.9.7.6.2" }
                 ]
             },
 
             {
+                name: "NetworkConfigResponse", tag: "command",
+
                 details: "This response command relates status information for some commands which require it as their " +
                     "response command. See each individual cluster server command for the situations that may cause a " +
                     "NetworkingStatus different than Success." +
@@ -453,6 +498,8 @@ NetworkCommissioning.patch(
 
                 children: [
                     {
+                        name: "NetworkingStatus", tag: "field",
+
                         details: "The NetworkingStatus field shall indicate the status of the last operation attempting to modify the " +
                             "Networks attribute configuration, taking one of these values:" +
                             "\n" +
@@ -470,9 +517,10 @@ NetworkCommissioning.patch(
                         xref: "core§11.9.7.7.1"
                     },
 
-                    { details: "See DebugText for usage.", xref: "core§11.9.7.7.2" },
+                    { name: "DebugText", tag: "field", details: "See DebugText for usage.", xref: "core§11.9.7.7.2" },
 
                     {
+                        name: "NetworkIndex", tag: "field",
                         details: "When the NetworkingStatus is Success, this field shall be present. It shall contain the 0-based " +
                             "index of the entry in the Networks attribute that was last added, updated or removed successfully by " +
                             "the associated request command.",
@@ -482,6 +530,8 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "ConnectNetwork", tag: "command",
+
                 details: "This command shall attempt to connect to a network whose configuration was previously added by " +
                     "either the AddOrUpdateWiFiNetwork or AddOrUpdateThreadNetwork commands. Network is identified by its " +
                     "NetworkID." +
@@ -564,15 +614,19 @@ NetworkCommissioning.patch(
 
                 children: [
                     {
+                        name: "NetworkId", tag: "field",
                         details: "This field shall contain the NetworkID for the entry used to configure the connection: the SSID for " +
                             "Wi-Fi and XPAN ID for Thread.",
                         xref: "core§11.9.7.8.1"
                     },
-                    { details: "See Breadcrumb for usage.", xref: "core§11.9.7.8.2" }
+
+                    { name: "Breadcrumb", tag: "field", details: "See Breadcrumb for usage.", xref: "core§11.9.7.8.2" }
                 ]
             },
 
             {
+                name: "ConnectNetworkResponse", tag: "command",
+
                 details: "Before generating a ConnectNetworkResponse, the server shall:" +
                     "\n" +
                     "  • Set the LastNetworkingStatus attribute value to the NetworkingStatus matching the response." +
@@ -587,6 +641,8 @@ NetworkCommissioning.patch(
 
                 children: [
                     {
+                        name: "NetworkingStatus", tag: "field",
+
                         details: "The NetworkingStatus field shall indicate the status of the last connection attempt, taking one of " +
                             "these values:" +
                             "\n" +
@@ -610,9 +666,11 @@ NetworkCommissioning.patch(
                         xref: "core§11.9.7.9.1"
                     },
 
-                    { details: "See DebugText for usage.", xref: "core§11.9.7.9.2" },
+                    { name: "DebugText", tag: "field", details: "See DebugText for usage.", xref: "core§11.9.7.9.2" },
 
                     {
+                        name: "ErrorValue", tag: "field",
+
                         details: "  • ErrorValue interpretation for Wi-Fi association errors:" +
                             "\n" +
                             "    ◦ On any association failure during enabling of a network, the ErrorValue field shall be set to " +
@@ -639,23 +697,29 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "ReorderNetwork", tag: "command",
                 details: "This command shall set the specific order of the network configuration selected by its NetworkID in " +
                     "the Networks attribute to match the position given by NetworkIndex.",
                 xref: "core§11.9.7.10",
 
                 children: [
                     {
+                        name: "NetworkId", tag: "field",
                         details: "This field shall contain the NetworkID for the entry to reorder: the SSID for Wi-Fi and XPAN ID for " +
                             "Thread.",
                         xref: "core§11.9.7.10.1"
                     },
+
                     {
+                        name: "NetworkIndex", tag: "field",
                         details: "This field shall contain the 0-based index of the new desired position of the entry in the Networks " +
                             "attribute.",
                         xref: "core§11.9.7.10.2"
                     },
 
                     {
+                        name: "Breadcrumb", tag: "field",
+
                         details: "See Breadcrumb for usage." +
                             "\n" +
                             "Effect when received" +
@@ -711,20 +775,23 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "WiFiSecurityBitmap", tag: "datatype",
                 details: "WiFiSecurityBitmap encodes the supported Wi-Fi security types present in the Security field of the " +
                     "WiFiInterfaceScanResultStruct.",
                 xref: "core§11.9.5.1",
 
                 children: [
-                    { description: "Supports unencrypted Wi-Fi" },
-                    { description: "Supports Wi-Fi using WEP security" },
-                    { description: "Supports Wi-Fi using WPA-Personal security" },
-                    { description: "Supports Wi-Fi using WPA2-Personal security" },
-                    { description: "Supports Wi-Fi using WPA3-Personal security" }
+                    { name: "Unencrypted", tag: "field", description: "Supports unencrypted Wi-Fi" },
+                    { name: "Wep", tag: "field", description: "Supports Wi-Fi using WEP security" },
+                    { name: "WpaPersonal", tag: "field", description: "Supports Wi-Fi using WPA-Personal security" },
+                    { name: "Wpa2Personal", tag: "field", description: "Supports Wi-Fi using WPA2-Personal security" },
+                    { name: "Wpa3Personal", tag: "field", description: "Supports Wi-Fi using WPA3-Personal security" }
                 ]
             },
 
             {
+                name: "ThreadCapabilitiesBitmap", tag: "datatype",
+
                 details: "The ThreadCapabilitiesBitmap encodes the supported Thread features and capabilities of a Thread- " +
                     "enabled network interface." +
                     "\n" +
@@ -735,56 +802,91 @@ NetworkCommissioning.patch(
                 xref: "core§11.9.5.2",
 
                 children: [
-                    { description: "Thread Border Router functionality is present" },
-                    { description: "Router mode is supported (interface could be in router or REED mode)" },
-                    { description: "Sleepy end-device mode is supported" },
-                    { description: "Device is a full Thread device (opposite of Minimal Thread Device)" },
-                    { description: "Synchronized sleepy end-device mode is supported" }
+                    {
+                        name: "IsBorderRouterCapable", tag: "field",
+                        description: "Thread Border Router functionality is present"
+                    },
+                    {
+                        name: "IsRouterCapable", tag: "field",
+                        description: "Router mode is supported (interface could be in router or REED mode)"
+                    },
+                    {
+                        name: "IsSleepyEndDeviceCapable", tag: "field",
+                        description: "Sleepy end-device mode is supported"
+                    },
+                    {
+                        name: "IsFullThreadDevice", tag: "field",
+                        description: "Device is a full Thread device (opposite of Minimal Thread Device)"
+                    },
+                    {
+                        name: "IsSynchronizedSleepyEndDeviceCapable", tag: "field",
+                        description: "Synchronized sleepy end-device mode is supported"
+                    }
                 ]
             },
 
             {
+                name: "WiFiBandEnum", tag: "datatype",
                 details: "WiFiBandEnum encodes a supported Wi-Fi frequency band present in the WiFiBand field of the " +
                     "WiFiInterfaceScanResultStruct.",
                 xref: "core§11.9.5.3",
 
                 children: [
-                    { description: "2.4GHz - 2.401GHz to2.495GHz(802.11b/g/n/ax)" },
-                    { description: "3.65GHz - 3.655GHz to3.695GHz (802.11y)" },
-                    { description: "5GHz - 5.150GHz to5.895GHz(802.11a/n/ac/ax)" },
-                    { description: "6GHz - 5.925GHz to7.125GHz (802.11ax / Wi-Fi 6E)" },
-                    { description: "60GHz - 57.24GHz to70.20GHz (802.11ad/ay)" },
-                    { description: "Sub-1GHz - 755MHz to 931MHz (802.11ah)" }
+                    { name: "2G4", tag: "field", description: "2.4GHz - 2.401GHz to2.495GHz(802.11b/g/n/ax)" },
+                    { name: "3G65", tag: "field", description: "3.65GHz - 3.655GHz to3.695GHz (802.11y)" },
+                    { name: "5G", tag: "field", description: "5GHz - 5.150GHz to5.895GHz(802.11a/n/ac/ax)" },
+                    { name: "6G", tag: "field", description: "6GHz - 5.925GHz to7.125GHz (802.11ax / Wi-Fi 6E)" },
+                    { name: "60G", tag: "field", description: "60GHz - 57.24GHz to70.20GHz (802.11ad/ay)" },
+                    { name: "1G", tag: "field", description: "Sub-1GHz - 755MHz to 931MHz (802.11ah)" }
                 ]
             },
 
             {
+                name: "NetworkCommissioningStatusEnum", tag: "datatype",
                 xref: "core§11.9.5.4",
 
                 children: [
-                    { description: "OK, no error" },
-                    { description: "Value Outside Range" },
-                    { description: "A collection would exceed its size limit" },
-                    { description: "The NetworkID is not among the collection of added networks" },
-                    { description: "The NetworkID is already among the collection of added networks" },
-                    { description: "Cannot find AP: SSID Not found" },
-                    { description: "Cannot find AP: Mismatch on band/channels/regulatory domain/ 2.4GHz vs 5GHz" },
-                    { description: "Cannot associate due to authentication failure" },
-                    { description: "Cannot associate due to unsupported security mode" },
-                    { description: "Other association failure" },
-                    { description: "Failure to generate an IPv6 address" },
-                    { description: "Failure to bind Wi-Fi <-> IP interfaces" },
-                    { description: "Unknown error" }
+                    { name: "Success", tag: "field", description: "OK, no error" },
+                    { name: "OutOfRange", tag: "field", description: "Value Outside Range" },
+                    { name: "BoundsExceeded", tag: "field", description: "A collection would exceed its size limit" },
+                    {
+                        name: "NetworkIdNotFound", tag: "field",
+                        description: "The NetworkID is not among the collection of added networks"
+                    },
+                    {
+                        name: "DuplicateNetworkId", tag: "field",
+                        description: "The NetworkID is already among the collection of added networks"
+                    },
+                    { name: "NetworkNotFound", tag: "field", description: "Cannot find AP: SSID Not found" },
+                    {
+                        name: "RegulatoryError", tag: "field",
+                        description: "Cannot find AP: Mismatch on band/channels/regulatory domain/ 2.4GHz vs 5GHz"
+                    },
+                    {
+                        name: "AuthFailure", tag: "field",
+                        description: "Cannot associate due to authentication failure"
+                    },
+                    {
+                        name: "UnsupportedSecurity", tag: "field",
+                        description: "Cannot associate due to unsupported security mode"
+                    },
+                    { name: "OtherConnectionFailure", tag: "field", description: "Other association failure" },
+                    { name: "Ipv6Failed", tag: "field", description: "Failure to generate an IPv6 address" },
+                    { name: "IpBindFailed", tag: "field", description: "Failure to bind Wi-Fi <-> IP interfaces" },
+                    { name: "UnknownError", tag: "field", description: "Unknown error" }
                 ]
             },
 
             {
+                name: "NetworkInfoStruct", tag: "datatype",
                 details: "NetworkInfoStruct struct describes an existing network configuration, as provided in the Networks " +
                     "attribute.",
                 xref: "core§11.9.5.5",
 
                 children: [
                     {
+                        name: "NetworkId", tag: "field",
+
                         details: "Every network is uniquely identified (for purposes of commissioning) by a NetworkID mapping to the " +
                             "following technology-specific properties:" +
                             "\n" +
@@ -814,6 +916,7 @@ NetworkCommissioning.patch(
                     },
 
                     {
+                        name: "Connected", tag: "field",
                         details: "This field shall indicate the connected status of the associated network, where \"connected\" means " +
                             "currently linked to the network technology (e.g. Associated for a Wi-Fi network, media connected for " +
                             "an Ethernet network).",
@@ -823,20 +926,20 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "WiFiInterfaceScanResultStruct", tag: "datatype",
                 details: "WiFiInterfaceScanResultStruct represents a single Wi-Fi network scan result.",
                 xref: "core§11.9.5.6",
 
                 children: [
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
                     {
+                        name: "WiFiBand", tag: "field",
                         details: "This field, if present, may be used to differentiate overlapping channel number values across " +
                             "different Wi-Fi frequency bands.",
                         xref: "core§11.9.5.6.1"
                     },
+
                     {
+                        name: "Rssi", tag: "field",
                         details: "This field, if present, shall denote the signal strength in dBm of the associated scan result.",
                         xref: "core§11.9.5.6.2"
                     }
@@ -844,20 +947,14 @@ NetworkCommissioning.patch(
             },
 
             {
+                name: "ThreadInterfaceScanResultStruct", tag: "datatype",
                 details: "ThreadInterfaceScanResultStruct represents a single Thread network scan result.",
                 xref: "core§11.9.5.7",
-
-                children: [
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    {
-                        details: "ExtendedAddress stands for an IEEE 802.15.4 Extended Address.",
-                        xref: "core§11.9.5.7.1"
-                    }
-                ]
+                children: [{
+                    name: "ExtendedAddress", tag: "field",
+                    details: "ExtendedAddress stands for an IEEE 802.15.4 Extended Address.",
+                    xref: "core§11.9.5.7.1"
+                }]
             }
         ]
     }

@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { int64 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-int64.patch({ description: "Signed 64-bit integer", xref: "core§7.19.1" });
+Resource.add({ name: "int64", tag: "datatype", description: "Signed 64-bit integer", xref: "core§7.19.1" });

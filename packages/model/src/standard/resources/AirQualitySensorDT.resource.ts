@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { AirQualitySensorDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-AirQualitySensorDt.patch({
+Resource.add({
+    name: "AirQualitySensor", tag: "deviceType",
     classification: "simple",
     details: "This defines conformance for the Air Quality Sensor device type." +
         "\n" +
@@ -17,20 +18,19 @@ AirQualitySensorDt.patch({
     xref: "device§7.10",
 
     children: [
-        undefined,
-        { xref: "device§7.10.4" },
-        { xref: "device§7.10.4" },
-        { xref: "device§7.10.4" },
-        { xref: "device§7.10.4" },
-        { xref: "device§7.10.4" },
-        { xref: "device§7.10.4" },
-        { xref: "device§7.10.4" },
-        { xref: "device§7.10.4" },
-        { xref: "device§7.10.4" },
-        { xref: "device§7.10.4" },
-        { xref: "device§7.10.4" },
-        { xref: "device§7.10.4" },
-        { xref: "device§7.10.4" },
-        { xref: "device§7.10.4" }
+        { name: "Identify", tag: "requirement", xref: "device§7.10.4" },
+        { name: "AirQuality", tag: "requirement", xref: "device§7.10.4" },
+        { name: "TemperatureMeasurement", tag: "requirement", xref: "device§7.10.4" },
+        { name: "RelativeHumidityMeasurement", tag: "requirement", xref: "device§7.10.4" },
+        { name: "CarbonMonoxideConcentrationMeasurement", tag: "requirement", xref: "device§7.10.4" },
+        { name: "CarbonDioxideConcentrationMeasurement", tag: "requirement", xref: "device§7.10.4" },
+        { name: "NitrogenDioxideConcentrationMeasurement", tag: "requirement", xref: "device§7.10.4" },
+        { name: "OzoneConcentrationMeasurement", tag: "requirement", xref: "device§7.10.4" },
+        { name: "FormaldehydeConcentrationMeasurement", tag: "requirement", xref: "device§7.10.4" },
+        { name: "Pm1ConcentrationMeasurement", tag: "requirement", xref: "device§7.10.4" },
+        { name: "Pm25ConcentrationMeasurement", tag: "requirement", xref: "device§7.10.4" },
+        { name: "Pm10ConcentrationMeasurement", tag: "requirement", xref: "device§7.10.4" },
+        { name: "RadonConcentrationMeasurement", tag: "requirement", xref: "device§7.10.4" },
+        { name: "TotalVolatileOrganicCompoundsConcentrationMeasurement", tag: "requirement", xref: "device§7.10.4" }
     ]
 });

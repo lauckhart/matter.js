@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { int32 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-int32.patch({ description: "Signed 32-bit integer", xref: "core§7.19.1" });
+Resource.add({ name: "int32", tag: "datatype", description: "Signed 32-bit integer", xref: "core§7.19.1" });

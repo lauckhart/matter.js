@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DimmablePlugInUnitDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-DimmablePlugInUnitDt.patch({
+Resource.add({
+    name: "DimmablePlugInUnit", tag: "deviceType",
     classification: "simple",
     details: "A Dimmable Plug-In Unit is a device that provides power to another device that is plugged into it, " +
         "and is capable of being switched on or off and have its level adjusted. The Dimmable Plug-in Unit is " +
@@ -17,12 +18,11 @@ DimmablePlugInUnitDt.patch({
     xref: "device§5.2",
 
     children: [
-        undefined,
-        { xref: "device§5.2.4" },
-        { xref: "device§5.2.4" },
-        { xref: "device§5.2.4" },
-        { xref: "device§5.2.4" },
-        { xref: "device§5.2.4" },
-        { xref: "device§5.2.4" }
+        { name: "Identify", tag: "requirement", xref: "device§5.2.4" },
+        { name: "Groups", tag: "requirement", xref: "device§5.2.4" },
+        { name: "ScenesManagement", tag: "requirement", xref: "device§5.2.4" },
+        { name: "OnOff", tag: "requirement", xref: "device§5.2.4" },
+        { name: "LevelControl", tag: "requirement", xref: "device§5.2.4" },
+        { name: "OccupancySensing", tag: "requirement", xref: "device§5.2.4" }
     ]
 });

@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { endpointNo } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-endpointNo.patch({
+Resource.add({
+    name: "endpoint-no", tag: "datatype",
     description: "Endpoint Number",
     details: "An unsigned number that indicates an instance of a device type. Endpoint numbers shall NOT be " +
         "0xFFFF, to allow all endpoint number values to be expressible in nullable endpoint-no fields.",

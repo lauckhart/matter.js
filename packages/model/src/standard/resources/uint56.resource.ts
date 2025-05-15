@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { uint56 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-uint56.patch({ description: "Unsigned 56-bit integer", xref: "core§7.19.1" });
+Resource.add({ name: "uint56", tag: "datatype", description: "Unsigned 56-bit integer", xref: "core§7.19.1" });

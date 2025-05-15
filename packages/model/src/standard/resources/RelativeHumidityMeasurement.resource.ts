@@ -6,10 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { RelativeHumidityMeasurement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-RelativeHumidityMeasurement.patch(
+Resource.add(
     {
+        name: "RelativeHumidityMeasurement", tag: "cluster",
         classification: "application", pics: "RH",
         details: "This is a base cluster. The server cluster provides an interface to water content measurement " +
             "functionality. The measurement is reportable and may be configured for reporting. Water content " +
@@ -17,9 +18,9 @@ RelativeHumidityMeasurement.patch(
         xref: "cluster§2.6",
 
         children: [
-            undefined,
-
             {
+                name: "MeasuredValue", tag: "attribute",
+
                 details: "MeasuredValue represents the water content in % as follows:" +
                     "\n" +
                     "MeasuredValue = 100 x water content" +
@@ -38,16 +39,20 @@ RelativeHumidityMeasurement.patch(
             },
 
             {
+                name: "MinMeasuredValue", tag: "attribute",
                 details: "The MinMeasuredValue attribute indicates the minimum value of MeasuredValue that can be measured. " +
                     "The null value means this attribute is not defined. See Measured Value for more details.",
                 xref: "cluster§2.6.4.2"
             },
+
             {
+                name: "MaxMeasuredValue", tag: "attribute",
                 details: "The MaxMeasuredValue attribute indicates the maximum value of MeasuredValue that can be measured. " +
                     "The null value means this attribute is not defined. See Measured Value for more details.",
                 xref: "cluster§2.6.4.3"
             },
-            { details: "See Measured Value.", xref: "cluster§2.6.4.4" }
+
+            { name: "Tolerance", tag: "attribute", details: "See Measured Value.", xref: "cluster§2.6.4.4" }
         ]
     }
 );

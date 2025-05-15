@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ipv6Pre } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ipv6Pre.patch({
+Resource.add({
+    name: "ipv6pre", tag: "datatype",
     description: "IPv6 Prefix",
 
     details: "The IPv6 prefix data type is derived from an octet string. The octets shall be encoded" +

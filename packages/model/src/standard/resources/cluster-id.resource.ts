@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { clusterId } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-clusterId.patch({
+Resource.add({
+    name: "cluster-id", tag: "datatype",
     description: "Cluster ID",
     details: "An identifier that indicates conformance to a cluster specification." +
         "\n" +

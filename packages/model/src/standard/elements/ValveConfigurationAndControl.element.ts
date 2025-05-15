@@ -21,8 +21,8 @@ export const ValveConfigurationAndControl = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "TS", conformance: "desc", constraint: "0", description: "TimeSync" }),
-        Field({ name: "LVL", conformance: "O", constraint: "1", description: "Level" })
+        Field({ name: "TS", conformance: "desc", constraint: "0", longName: "TimeSync" }),
+        Field({ name: "LVL", conformance: "O", constraint: "1", longName: "Level" })
     ),
     Attribute({
         id: 0x0, name: "OpenDuration", type: "elapsed-s",

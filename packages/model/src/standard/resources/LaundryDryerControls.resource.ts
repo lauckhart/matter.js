@@ -6,18 +6,18 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { LaundryDryerControls } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-LaundryDryerControls.patch({
+Resource.add({
+    name: "LaundryDryerControls", tag: "cluster",
     classification: "application", pics: "DRYERCTRL",
     details: "This cluster provides a way to access options associated with the operation of a laundry dryer " +
         "device type.",
     xref: "cluster§8.9",
 
     children: [
-        undefined,
-
         {
+            name: "SupportedDrynessLevels", tag: "attribute",
             details: "Indicates the list of supported dryness levels available to the appliance in the currently selected " +
                 "mode. The dryness level values are determined by the manufacturer. At least one dryness level value " +
                 "shall be provided in the SupportedDrynessLevels list. The list of dryness levels may change " +
@@ -26,6 +26,8 @@ LaundryDryerControls.patch({
         },
 
         {
+            name: "SelectedDrynessLevel", tag: "attribute",
+
             details: "Indicates the currently-selected dryness level and it shall be the index into the " +
                 "SupportedDrynessLevels list of the selected dryness level." +
                 "\n" +
@@ -39,6 +41,7 @@ LaundryDryerControls.patch({
         },
 
         {
+            name: "DrynessLevelEnum", tag: "datatype",
             details: "This enum provides a representation of the level of dryness that will be used while drying in a " +
                 "selected mode." +
                 "\n" +
@@ -47,10 +50,13 @@ LaundryDryerControls.patch({
             xref: "cluster§8.9.4.1",
 
             children: [
-                { description: "Provides a low dryness level for the selected mode" },
-                { description: "Provides the normal level of dryness for the selected mode" },
-                { description: "Provides an extra dryness level for the selected mode" },
-                { description: "Provides the max dryness level for the selected mode" }
+                { name: "Low", tag: "field", description: "Provides a low dryness level for the selected mode" },
+                {
+                    name: "Normal", tag: "field",
+                    description: "Provides the normal level of dryness for the selected mode"
+                },
+                { name: "Extra", tag: "field", description: "Provides an extra dryness level for the selected mode" },
+                { name: "Max", tag: "field", description: "Provides the max dryness level for the selected mode" }
             ]
         }
     ]

@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Pm25ConcentrationMeasurement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-Pm25ConcentrationMeasurement.patch({ pics: "PMICONC" });
+Resource.add({ name: "Pm25ConcentrationMeasurement", tag: "cluster", pics: "PMICONC" });

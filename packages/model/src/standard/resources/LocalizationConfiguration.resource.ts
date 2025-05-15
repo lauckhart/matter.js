@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { LocalizationConfiguration } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-LocalizationConfiguration.patch({
+Resource.add({
+    name: "LocalizationConfiguration", tag: "cluster",
     classification: "node", pics: "LCFG",
 
     details: "Nodes should be expected to be deployed to any and all regions of the world. These global regions " +
@@ -22,9 +23,9 @@ LocalizationConfiguration.patch({
     xref: "core§11.3",
 
     children: [
-        undefined,
-
         {
+            name: "ActiveLocale", tag: "attribute",
+
             details: "The ActiveLocale attribute shall represent the locale that the Node is currently configured to use " +
                 "when conveying information. The ActiveLocale attribute shall be a Language Tag as defined by BCP47. " +
                 "The ActiveLocale attribute shall have a default value assigned by the Vendor and shall be a value " +
@@ -37,6 +38,7 @@ LocalizationConfiguration.patch({
         },
 
         {
+            name: "SupportedLocales", tag: "attribute",
             details: "The SupportedLocales attribute shall represent a list of locale strings that are valid values for " +
                 "the ActiveLocale attribute. The list shall NOT contain any duplicate entries. The ordering of items " +
                 "within the list SHOULD NOT express any meaning.",

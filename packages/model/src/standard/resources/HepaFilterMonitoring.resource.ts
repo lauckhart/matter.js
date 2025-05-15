@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { HepaFilterMonitoring } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-HepaFilterMonitoring.patch({ pics: "HEPAFREMON" });
+Resource.add({ name: "HepaFilterMonitoring", tag: "cluster", pics: "HEPAFREMON" });

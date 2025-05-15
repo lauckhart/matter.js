@@ -22,14 +22,14 @@ export const ContentControl = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "ST", constraint: "0", description: "ScreenTime" }),
-        Field({ name: "PM", constraint: "1", description: "PinManagement" }),
-        Field({ name: "BU", constraint: "2", description: "BlockUnrated" }),
-        Field({ name: "OCR", constraint: "3", description: "OnDemandContentRating" }),
-        Field({ name: "SCR", constraint: "4", description: "ScheduledContentRating" }),
-        Field({ name: "BC", constraint: "5", description: "BlockChannels" }),
-        Field({ name: "BA", constraint: "6", description: "BlockApplications" }),
-        Field({ name: "BTW", constraint: "7", description: "BlockContentTimeWindow" })
+        Field({ name: "ST", constraint: "0", longName: "ScreenTime" }),
+        Field({ name: "PM", constraint: "1", longName: "PinManagement" }),
+        Field({ name: "BU", constraint: "2", longName: "BlockUnrated" }),
+        Field({ name: "OCR", constraint: "3", longName: "OnDemandContentRating" }),
+        Field({ name: "SCR", constraint: "4", longName: "ScheduledContentRating" }),
+        Field({ name: "BC", constraint: "5", longName: "BlockChannels" }),
+        Field({ name: "BA", constraint: "6", longName: "BlockApplications" }),
+        Field({ name: "BTW", constraint: "7", longName: "BlockContentTimeWindow" })
     ),
 
     Attribute({ id: 0x0, name: "Enabled", type: "bool", access: "R V", conformance: "M" }),

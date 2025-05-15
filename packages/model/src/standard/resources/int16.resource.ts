@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { int16 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-int16.patch({ description: "Signed 16-bit integer", xref: "core§7.19.1" });
+Resource.add({ name: "int16", tag: "datatype", description: "Signed 16-bit integer", xref: "core§7.19.1" });

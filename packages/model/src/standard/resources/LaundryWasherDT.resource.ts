@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { LaundryWasherDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-LaundryWasherDt.patch({
+Resource.add({
+    name: "LaundryWasher", tag: "deviceType",
     classification: "simple",
     details: "A Laundry Washer represents a device that is capable of laundering consumer items. Any laundry " +
         "washer product may utilize this device type." +
@@ -17,12 +18,11 @@ LaundryWasherDt.patch({
     xref: "device§13.1",
 
     children: [
-        undefined,
-        { xref: "device§13.1.4" },
-        { xref: "device§13.1.4" },
-        { xref: "device§13.1.4" },
-        { xref: "device§13.1.4" },
-        { xref: "device§13.1.4" },
-        { xref: "device§13.1.4" }
+        { name: "Identify", tag: "requirement", xref: "device§13.1.4" },
+        { name: "LaundryWasherMode", tag: "requirement", xref: "device§13.1.4" },
+        { name: "OnOff", tag: "requirement", xref: "device§13.1.4" },
+        { name: "LaundryWasherControls", tag: "requirement", xref: "device§13.1.4" },
+        { name: "TemperatureControl", tag: "requirement", xref: "device§13.1.4" },
+        { name: "OperationalState", tag: "requirement", xref: "device§13.1.4" }
     ]
 });

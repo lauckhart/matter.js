@@ -21,11 +21,11 @@ export const ColorControl = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "HS", conformance: "EHUE, O", constraint: "0", description: "HueSaturation" }),
-        Field({ name: "EHUE", conformance: "CL, O", constraint: "1", description: "EnhancedHue" }),
-        Field({ name: "CL", conformance: "O", constraint: "2", description: "ColorLoop" }),
-        Field({ name: "XY", conformance: "O", constraint: "3", description: "Xy" }),
-        Field({ name: "CT", conformance: "O", constraint: "4", description: "ColorTemperature" })
+        Field({ name: "HS", conformance: "EHUE, O", constraint: "0", longName: "HueSaturation" }),
+        Field({ name: "EHUE", conformance: "CL, O", constraint: "1", longName: "EnhancedHue" }),
+        Field({ name: "CL", conformance: "O", constraint: "2", longName: "ColorLoop" }),
+        Field({ name: "XY", conformance: "O", constraint: "3", longName: "Xy" }),
+        Field({ name: "CT", conformance: "O", constraint: "4", longName: "ColorTemperature" })
     ),
 
     Attribute({

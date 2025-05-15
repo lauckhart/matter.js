@@ -9,9 +9,8 @@ import { DefinitionError, ElementTag, Metatype, Specification } from "../common/
 import { AnyElement, BaseElement } from "../elements/index.js";
 import { ModelTraversal } from "../logic/ModelTraversal.js";
 import { Children, InternalChildren } from "./Children.js";
-import { CrossReference } from "./CrossReference.js";
 import type { MatterModel } from "./MatterModel.js";
-import { Resource, Resources } from "./Resources.js";
+import { Resource, ResourceBundle } from "./Resource.js";
 
 const inspect = Symbol.for("nodejs.util.inspect.custom");
 
@@ -569,23 +568,23 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
         this.operationalBase = definition.operationalBase;
         this.operationalShadow = definition.operationalShadow;
 
-        if ("resource" in definition) {
-            this.resource = definition.resource;
-        } else if (
-            "description" in definition ||
-            "xref" in definition ||
-            "details" in definition ||
-            "xref" in definition ||
-            "errors" in definition ||
-            "asOf" in definition ||
-            "until" in definition ||
-            "matchTo" in definition
-        ) {
-            this.resource = new Resource(definition);
-        }
-
-        if (this.xref) {
-            this.xref = CrossReference.get(this.xref);
+        if (isClone) {
+            if (definition.hasLocalResource) {
+                this.resource = definition.resource;
+            }
+        } else {
+            if (
+                "description" in definition ||
+                "xref" in definition ||
+                "details" in definition ||
+                "xref" in definition ||
+                "errors" in definition ||
+                "asOf" in definition ||
+                "until" in definition ||
+                "matchTo" in definition
+            ) {
+                this.resource = new Resource(definition);
+            }
         }
 
         if (isClone) {
@@ -628,7 +627,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
     }
 
     get resource() {
-        return this.#resource || (this.#root?.resources || Resources.default).get(this);
+        return this.#resource || (this.#root?.resources || ResourceBundle.default).get(this);
     }
 
     set resource(resource: Resource | undefined) {
@@ -640,7 +639,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
     }
 
     get description() {
-        return this.#resource?.description;
+        return this.resource?.description;
     }
 
     set description(description: string | undefined) {
@@ -648,7 +647,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
     }
 
     get details() {
-        return this.#resource?.details;
+        return this.resource?.details;
     }
 
     set details(details: string | undefined) {
@@ -656,7 +655,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
     }
 
     get xref() {
-        return this.#resource?.xref;
+        return this.resource?.xref;
     }
 
     set xref(xref: Specification.CrossReference | undefined) {
@@ -664,7 +663,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
     }
 
     get errors() {
-        return this.#resource?.errors;
+        return this.resource?.errors;
     }
 
     set errors(errors: DefinitionError[] | undefined) {
@@ -672,7 +671,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
     }
 
     get asOf() {
-        return this.#resource?.asOf;
+        return this.resource?.asOf;
     }
 
     set asOf(asOf: Specification.Revision | undefined) {
@@ -680,7 +679,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
     }
 
     get until() {
-        return this.#resource?.until;
+        return this.resource?.until;
     }
 
     set until(until: Specification.Revision | undefined) {
@@ -688,7 +687,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
     }
 
     get matchTo() {
-        return this.#resource?.matchTo;
+        return this.resource?.matchTo;
     }
 
     set matchTo(matchTo: { id?: string | number; name?: string } | undefined) {
@@ -696,7 +695,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
     }
 
     get localResource() {
-        return this.#resource ?? (this.resource = new Resource());
+        return this.resource ?? (this.resource = new Resource());
     }
 
     get hasLocalResource() {

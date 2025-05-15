@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { AggregatorDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-AggregatorDt.patch({
+Resource.add({
+    name: "Aggregator", tag: "deviceType",
     classification: "simple",
 
     details: "This device type aggregates endpoints as a collection. Clusters on the endpoint indicating this " +
@@ -24,10 +25,17 @@ AggregatorDt.patch({
     xref: "device§11.2",
 
     children: [
-        undefined,
-        { xref: "device§11.2.4" },
-        { xref: "device§11.2.4" },
-        { xref: "device§11.2.4" },
-        { children: [{ description: "See description below.", xref: "device§11.2.3" }] }
+        { name: "Actions", tag: "requirement", xref: "device§11.2.4" },
+        { name: "Identify", tag: "requirement", xref: "device§11.2.4" },
+        { name: "CommissionerControl", tag: "requirement", xref: "device§11.2.4" },
+
+        {
+            name: "conditions", tag: "field",
+            children: [{
+                name: "FabricSynchronization", tag: "field",
+                description: "See description below.",
+                xref: "device§11.2.3"
+            }]
+        }
     ]
 });

@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { tag } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-tag.patch({
+Resource.add({
+    name: "tag", tag: "datatype",
     description: "Tag",
     details: "The Tag type shall identify a semantic tag located within a namespace.",
     xref: "core§7.19.2.44"

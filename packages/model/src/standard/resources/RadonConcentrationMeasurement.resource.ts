@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { RadonConcentrationMeasurement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-RadonConcentrationMeasurement.patch({ pics: "RNCONC" });
+Resource.add({ name: "RadonConcentrationMeasurement", tag: "cluster", pics: "RNCONC" });

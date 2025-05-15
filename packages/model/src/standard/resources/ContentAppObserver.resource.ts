@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ContentAppObserver } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ContentAppObserver.patch({
+Resource.add({
+    name: "ContentAppObserver", tag: "cluster",
     classification: "application", pics: "APPOBSERVER",
 
     details: "This cluster provides an interface for sending targeted commands to an Observer of a Content App on " +
@@ -55,9 +56,8 @@ ContentAppObserver.patch({
     xref: "cluster§6.12",
 
     children: [
-        undefined,
-
         {
+            name: "ContentAppMessage", tag: "command",
             details: "Upon receipt, the data field may be parsed and interpreted. Message encoding is specific to the " +
                 "Content App. A Content App may when possible read attributes from the Basic Information Cluster on " +
                 "the Observer and use this to determine the Message encoding." +
@@ -66,8 +66,13 @@ ContentAppObserver.patch({
             xref: "cluster§6.12.5.1",
 
             children: [
-                { details: "This field shall indicate content app-specific data.", xref: "cluster§6.12.5.1.1" },
                 {
+                    name: "Data", tag: "field",
+                    details: "This field shall indicate content app-specific data.",
+                    xref: "cluster§6.12.5.1.1"
+                },
+                {
+                    name: "EncodingHint", tag: "field",
                     details: "This optional field shall indicate a content app-specific hint to the encoding of the data.",
                     xref: "cluster§6.12.5.1.2"
                 }
@@ -75,19 +80,23 @@ ContentAppObserver.patch({
         },
 
         {
+            name: "ContentAppMessageResponse", tag: "command",
             details: "This command shall be generated in response to ContentAppMessage command.",
             xref: "cluster§6.12.5.2",
 
             children: [
                 {
+                    name: "Status", tag: "field",
                     details: "This field shall indicate the status of the command which resulted in this response.",
                     xref: "cluster§6.12.5.2.1"
                 },
                 {
+                    name: "Data", tag: "field",
                     details: "This optional field shall indicate content app-specific data.",
                     xref: "cluster§6.12.5.2.2"
                 },
                 {
+                    name: "EncodingHint", tag: "field",
                     details: "This optional field shall indicate a content app-specific hint to the encoding of the data.",
                     xref: "cluster§6.12.5.2.3"
                 }
@@ -95,10 +104,15 @@ ContentAppObserver.patch({
         },
 
         {
+            name: "StatusEnum", tag: "datatype",
             xref: "cluster§6.12.4.1",
+
             children: [
-                { description: "Command succeeded" },
-                { description: "Data field in command was not understood by the Observer" }
+                { name: "Success", tag: "field", description: "Command succeeded" },
+                {
+                    name: "UnexpectedData", tag: "field",
+                    description: "Data field in command was not understood by the Observer"
+                }
             ]
         }
     ]

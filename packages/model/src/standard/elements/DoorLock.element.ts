@@ -22,19 +22,19 @@ export const DoorLock = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "PIN", conformance: "O", constraint: "0", description: "PinCredential" }),
-        Field({ name: "RID", conformance: "O", constraint: "1", description: "RfidCredential" }),
-        Field({ name: "FGP", conformance: "P, O", constraint: "2", description: "FingerCredentials" }),
-        Field({ name: "WDSCH", conformance: "O", constraint: "4", description: "WeekDayAccessSchedules" }),
-        Field({ name: "DPS", conformance: "O", constraint: "5", description: "DoorPositionSensor" }),
-        Field({ name: "FACE", conformance: "P, O", constraint: "6", description: "FaceCredentials" }),
-        Field({ name: "COTA", conformance: "O", constraint: "7", description: "CredentialOverTheAirAccess" }),
-        Field({ name: "USR", conformance: "ALIRO, [PIN | RID | FGP | FACE]", constraint: "8", description: "User" }),
-        Field({ name: "YDSCH", conformance: "O", constraint: "10", description: "YearDayAccessSchedules" }),
-        Field({ name: "HDSCH", conformance: "O", constraint: "11", description: "HolidaySchedules" }),
-        Field({ name: "UBOLT", conformance: "O", constraint: "12", description: "Unbolting" }),
-        Field({ name: "ALIRO", conformance: "O", constraint: "13", description: "AliroProvisioning" }),
-        Field({ name: "ALBU", conformance: "[ALIRO]", constraint: "14", description: "AliroBleuwb" })
+        Field({ name: "PIN", conformance: "O", constraint: "0", longName: "PinCredential" }),
+        Field({ name: "RID", conformance: "O", constraint: "1", longName: "RfidCredential" }),
+        Field({ name: "FGP", conformance: "P, O", constraint: "2", longName: "FingerCredentials" }),
+        Field({ name: "WDSCH", conformance: "O", constraint: "4", longName: "WeekDayAccessSchedules" }),
+        Field({ name: "DPS", conformance: "O", constraint: "5", longName: "DoorPositionSensor" }),
+        Field({ name: "FACE", conformance: "P, O", constraint: "6", longName: "FaceCredentials" }),
+        Field({ name: "COTA", conformance: "O", constraint: "7", longName: "CredentialOverTheAirAccess" }),
+        Field({ name: "USR", conformance: "ALIRO, [PIN | RID | FGP | FACE]", constraint: "8", longName: "User" }),
+        Field({ name: "YDSCH", conformance: "O", constraint: "10", longName: "YearDayAccessSchedules" }),
+        Field({ name: "HDSCH", conformance: "O", constraint: "11", longName: "HolidaySchedules" }),
+        Field({ name: "UBOLT", conformance: "O", constraint: "12", longName: "Unbolting" }),
+        Field({ name: "ALIRO", conformance: "O", constraint: "13", longName: "AliroProvisioning" }),
+        Field({ name: "ALBU", conformance: "[ALIRO]", constraint: "14", longName: "AliroBleuwb" })
     ),
 
     Attribute({

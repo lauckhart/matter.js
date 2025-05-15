@@ -19,7 +19,7 @@ export const WaterHeaterMode = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "DEPONOFF", conformance: "X", constraint: "0", description: "OnOff" })
+        Field({ name: "DEPONOFF", conformance: "X", constraint: "0", longName: "OnOff" })
     ),
     Attribute({ id: 0x0, name: "SupportedModes" }),
     Attribute({ id: 0x1, name: "CurrentMode" }),

@@ -22,17 +22,17 @@ export const DeviceEnergyManagement = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "PA", conformance: "O", constraint: "0", description: "PowerAdjustment" }),
+        Field({ name: "PA", conformance: "O", constraint: "0", longName: "PowerAdjustment" }),
         Field({
             name: "PFR",
             conformance: "[!PA].a, STA | PAU | FA | CON, O", constraint: "1",
-            description: "PowerForecastReporting"
+            longName: "PowerForecastReporting"
         }),
-        Field({ name: "SFR", conformance: "[!PA].a", constraint: "2", description: "StateForecastReporting" }),
-        Field({ name: "STA", conformance: "O", constraint: "3", description: "StartTimeAdjustment" }),
-        Field({ name: "PAU", conformance: "O", constraint: "4", description: "Pausable" }),
-        Field({ name: "FA", conformance: "O", constraint: "5", description: "ForecastAdjustment" }),
-        Field({ name: "CON", conformance: "O", constraint: "6", description: "ConstraintBasedAdjustment" })
+        Field({ name: "SFR", conformance: "[!PA].a", constraint: "2", longName: "StateForecastReporting" }),
+        Field({ name: "STA", conformance: "O", constraint: "3", longName: "StartTimeAdjustment" }),
+        Field({ name: "PAU", conformance: "O", constraint: "4", longName: "Pausable" }),
+        Field({ name: "FA", conformance: "O", constraint: "5", longName: "ForecastAdjustment" }),
+        Field({ name: "CON", conformance: "O", constraint: "6", longName: "ConstraintBasedAdjustment" })
     ),
 
     Attribute(

@@ -6,11 +6,15 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { TemperatureSensorDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-TemperatureSensorDt.patch({
+Resource.add({
+    name: "TemperatureSensor", tag: "deviceType",
     classification: "simple",
     details: "A Temperature Sensor device reports measurements of temperature.",
     xref: "device§7.4",
-    children: [undefined, { xref: "device§7.4.4" }, { xref: "device§7.4.4" }]
+    children: [
+        { name: "TemperatureMeasurement", tag: "requirement", xref: "device§7.4.4" },
+        { name: "Identify", tag: "requirement", xref: "device§7.4.4" }
+    ]
 });

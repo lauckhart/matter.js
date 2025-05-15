@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { LaundryNs } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-LaundryNs.patch({
+Resource.add({
+    name: "Laundry", tag: "semanticNamespace",
     details: "The tags contained in this namespace are restricted for use in the laundry domain and shall NOT be " +
         "used in any other domain or context.",
     xref: "namespace§14"

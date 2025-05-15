@@ -21,10 +21,10 @@ export const IcdManagement = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "CIP", conformance: "LITS, O", constraint: "0", description: "CheckInProtocolSupport" }),
-        Field({ name: "UAT", conformance: "LITS, O", constraint: "1", description: "UserActiveModeTrigger" }),
-        Field({ name: "LITS", conformance: "O", constraint: "2", description: "LongIdleTimeSupport" }),
-        Field({ name: "DSLS", conformance: "[LITS]", constraint: "3", description: "DynamicSitLitSupport" })
+        Field({ name: "CIP", conformance: "LITS, O", constraint: "0", longName: "CheckInProtocolSupport" }),
+        Field({ name: "UAT", conformance: "LITS, O", constraint: "1", longName: "UserActiveModeTrigger" }),
+        Field({ name: "LITS", conformance: "O", constraint: "2", longName: "LongIdleTimeSupport" }),
+        Field({ name: "DSLS", conformance: "[LITS]", constraint: "3", longName: "DynamicSitLitSupport" })
     ),
 
     Attribute({

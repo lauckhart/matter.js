@@ -6,11 +6,16 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ContactSensorDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ContactSensorDt.patch({
+Resource.add({
+    name: "ContactSensor", tag: "deviceType",
     classification: "simple",
     details: "This defines conformance to the Contact Sensor device type.",
     xref: "device§7.1",
-    children: [undefined, { xref: "device§7.1.4" }, { xref: "device§7.1.4" }, { xref: "device§7.1.4" }]
+    children: [
+        { name: "Identify", tag: "requirement", xref: "device§7.1.4" },
+        { name: "BooleanState", tag: "requirement", xref: "device§7.1.4" },
+        { name: "BooleanStateConfiguration", tag: "requirement", xref: "device§7.1.4" }
+    ]
 });

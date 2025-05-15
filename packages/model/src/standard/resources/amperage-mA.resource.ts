@@ -6,6 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { amperageMA } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-amperageMA.patch({ description: "Amperage", details: "This type represents amperage measured in milliamps.", xref: "core§7.19.2.13" });
+Resource.add({
+    name: "amperage-mA", tag: "datatype",
+    description: "Amperage",
+    details: "This type represents amperage measured in milliamps.",
+    xref: "core§7.19.2.13"
+});

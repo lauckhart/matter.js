@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { transId } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-transId.patch({
+Resource.add({
+    name: "trans-id", tag: "datatype",
     description: "Transaction ID",
     details: "An identifier for a transaction as defined in the Interaction Model specification, see Transaction " +
         "ID.",

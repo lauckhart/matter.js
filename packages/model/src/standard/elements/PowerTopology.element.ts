@@ -19,10 +19,10 @@ export const PowerTopology = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "NODE", conformance: "O.a", constraint: "0", description: "NodeTopology" }),
-        Field({ name: "TREE", conformance: "O.a", constraint: "1", description: "TreeTopology" }),
-        Field({ name: "SET", conformance: "O.a", constraint: "2", description: "SetTopology" }),
-        Field({ name: "DYPF", conformance: "[SET]", constraint: "3", description: "DynamicPowerFlow" })
+        Field({ name: "NODE", conformance: "O.a", constraint: "0", longName: "NodeTopology" }),
+        Field({ name: "TREE", conformance: "O.a", constraint: "1", longName: "TreeTopology" }),
+        Field({ name: "SET", conformance: "O.a", constraint: "2", longName: "SetTopology" }),
+        Field({ name: "DYPF", conformance: "[SET]", constraint: "3", longName: "DynamicPowerFlow" })
     ),
 
     Attribute(

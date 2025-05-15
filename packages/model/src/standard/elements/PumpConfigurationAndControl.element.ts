@@ -21,13 +21,13 @@ export const PumpConfigurationAndControl = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "PRSCONST", conformance: "O.a+", constraint: "0", description: "ConstantPressure" }),
-        Field({ name: "PRSCOMP", conformance: "O.a+", constraint: "1", description: "CompensatedPressure" }),
-        Field({ name: "FLW", conformance: "O.a+", constraint: "2", description: "ConstantFlow" }),
-        Field({ name: "SPD", conformance: "O.a+", constraint: "3", description: "ConstantSpeed" }),
-        Field({ name: "TEMP", conformance: "O.a+", constraint: "4", description: "ConstantTemperature" }),
-        Field({ name: "AUTO", conformance: "O", constraint: "5", description: "Automatic" }),
-        Field({ name: "LOCAL", conformance: "O", constraint: "6", description: "LocalOperation" })
+        Field({ name: "PRSCONST", conformance: "O.a+", constraint: "0", longName: "ConstantPressure" }),
+        Field({ name: "PRSCOMP", conformance: "O.a+", constraint: "1", longName: "CompensatedPressure" }),
+        Field({ name: "FLW", conformance: "O.a+", constraint: "2", longName: "ConstantFlow" }),
+        Field({ name: "SPD", conformance: "O.a+", constraint: "3", longName: "ConstantSpeed" }),
+        Field({ name: "TEMP", conformance: "O.a+", constraint: "4", longName: "ConstantTemperature" }),
+        Field({ name: "AUTO", conformance: "O", constraint: "5", longName: "Automatic" }),
+        Field({ name: "LOCAL", conformance: "O", constraint: "6", longName: "LocalOperation" })
     ),
 
     Attribute(

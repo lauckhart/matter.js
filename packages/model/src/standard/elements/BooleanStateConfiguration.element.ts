@@ -22,10 +22,10 @@ export const BooleanStateConfiguration = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "VIS", conformance: "O", constraint: "0", description: "Visual" }),
-        Field({ name: "AUD", conformance: "O", constraint: "1", description: "Audible" }),
-        Field({ name: "SPRS", conformance: "[VIS | AUD]", constraint: "2", description: "AlarmSuppress" }),
-        Field({ name: "SENSLVL", conformance: "O", constraint: "3", description: "SensitivityLevel" })
+        Field({ name: "VIS", conformance: "O", constraint: "0", longName: "Visual" }),
+        Field({ name: "AUD", conformance: "O", constraint: "1", longName: "Audible" }),
+        Field({ name: "SPRS", conformance: "[VIS | AUD]", constraint: "2", longName: "AlarmSuppress" }),
+        Field({ name: "SENSLVL", conformance: "O", constraint: "3", longName: "SensitivityLevel" })
     ),
 
     Attribute({

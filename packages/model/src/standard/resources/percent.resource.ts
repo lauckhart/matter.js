@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { percent } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-percent.patch({ description: "Percentage units 1%", xref: "core§7.19.2" });
+Resource.add({ name: "percent", tag: "datatype", description: "Percentage units 1%", xref: "core§7.19.2" });

@@ -6,13 +6,14 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { SolarPowerDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-SolarPowerDt.patch({
+Resource.add({
+    name: "SolarPower", tag: "deviceType",
     classification: "simple",
     details: "A Solar Power device is a device that allows a solar panel array, which can optionally be comprised " +
         "of a set parallel strings of solar panels, and its associated controller and, if appropriate, " +
         "inverter, to be monitored and controlled by an Energy Management System.",
     xref: "device§14.3",
-    children: [undefined, { xref: "device§14.3.6" }]
+    children: [{ name: "Identify", tag: "requirement", xref: "device§14.3.6" }]
 });

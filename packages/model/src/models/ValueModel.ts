@@ -73,6 +73,10 @@ export abstract class ValueModel<T extends ValueElement = ValueElement>
         return new ModelTraversal().findAspect(this, "quality", Quality) ?? this.#quality;
     }
 
+    get fields() {
+        return Scope(this).membersOf(this, { tags: [ElementTag.Field] }) as FieldModel[];
+    }
+
     /**
      * Metatype is only present on global types with specific semantic meaning. This model is significant because it
      * gives us information about how to manipulate the data.  This accessor retrieves this model.

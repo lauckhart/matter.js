@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ipadr } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ipadr.patch({ description: "IP Address", xref: "core§7.19.2" });
+Resource.add({ name: "ipadr", tag: "datatype", description: "IP Address", xref: "core§7.19.2" });

@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { MicrowaveOvenControl } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-MicrowaveOvenControl.patch({
+Resource.add({
+    name: "MicrowaveOvenControl", tag: "cluster",
     classification: "application", pics: "MWOCTRL",
     details: "This cluster defines the requirements for the Microwave Oven Control cluster." +
         "\n" +
@@ -18,22 +19,22 @@ MicrowaveOvenControl.patch({
     xref: "cluster§8.13",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "cluster§8.13.4",
 
             children: [
-                { description: "PowerAsNumber", details: "Power is specified as a unitless number or a percentage" },
-                { description: "PowerInWatts", details: "Power is specified in Watts" },
+                { name: "PWRNUM", tag: "field", details: "Power is specified as a unitless number or a percentage" },
+                { name: "WATTS", tag: "field", details: "Power is specified in Watts" },
                 {
-                    description: "PowerNumberLimits",
+                    name: "PWRLMTS", tag: "field",
                     details: "Supports the limit attributes used with the PWRNUM feature"
                 }
             ]
         },
 
         {
+            name: "CookTime", tag: "attribute",
             details: "Indicates the total cook time associated with the operation of the device." +
                 "\n" +
                 "This attribute shall remain unchanged during the operation of the oven unless the value is changed " +
@@ -42,11 +43,14 @@ MicrowaveOvenControl.patch({
         },
 
         {
+            name: "MaxCookTime", tag: "attribute",
             details: "Indicates the maximum value to which the CookTime attribute can be set.",
             xref: "cluster§8.13.5.2"
         },
 
         {
+            name: "PowerSetting", tag: "attribute",
+
             details: "Indicates the power level associated with the operation of the device. If the MinPower, MaxPower, " +
                 "and PowerStep attributes are not supported:" +
                 "\n" +
@@ -68,15 +72,19 @@ MicrowaveOvenControl.patch({
         },
 
         {
+            name: "MinPower", tag: "attribute",
             details: "Indicates the minimum value to which the PowerSetting attribute that can be set on the server.",
             xref: "cluster§8.13.5.4"
         },
         {
+            name: "MaxPower", tag: "attribute",
             details: "Indicates the maximum value to which the PowerSetting attribute that can be set on the server.",
             xref: "cluster§8.13.5.5"
         },
 
         {
+            name: "PowerStep", tag: "attribute",
+
             details: "Indicates the increment of power that can be set on the server. The value of this attribute shall be " +
                 "between 1 and MaxPower inclusive." +
                 "\n" +
@@ -88,9 +96,14 @@ MicrowaveOvenControl.patch({
             xref: "cluster§8.13.5.6"
         },
 
-        { details: "Indicates the list of power levels (in W) supported by the server.", xref: "cluster§8.13.5.7" },
+        {
+            name: "SupportedWatts", tag: "attribute",
+            details: "Indicates the list of power levels (in W) supported by the server.",
+            xref: "cluster§8.13.5.7"
+        },
 
         {
+            name: "SelectedWattIndex", tag: "attribute",
             details: "Indicates the index into the list of SupportedWatts of the currently selected power setting." +
                 "\n" +
                 "The index shall be a valid index into the SupportedWatts list.",
@@ -98,6 +111,7 @@ MicrowaveOvenControl.patch({
         },
 
         {
+            name: "WattRating", tag: "attribute",
             details: "Indicates the rating, in Watts, of the microwave power of the oven." +
                 "\n" +
                 "Supporting this attribute can assist clients in suggesting cooking settings for various foods and " +
@@ -106,12 +120,15 @@ MicrowaveOvenControl.patch({
         },
 
         {
+            name: "SetCookingParameters", tag: "command",
             details: "This command is used to set the cooking parameters associated with the operation of the device. This " +
                 "command supports the following fields:",
             xref: "cluster§8.13.6.2",
 
             children: [
                 {
+                    name: "CookMode", tag: "field",
+
                     details: "This field shall indicate the value to which the CurrentMode attribute of the Microwave Oven Mode " +
                         "cluster should be set. The value of this field shall be one from the list of SupportedModes from the " +
                         "Microwave Oven Mode cluster." +
@@ -123,6 +140,7 @@ MicrowaveOvenControl.patch({
                 },
 
                 {
+                    name: "CookTime", tag: "field",
                     details: "This field shall indicate the CookTime associated with the operation of the device. The value of " +
                         "this field shall be subject to the constraints of the CookTime attribute of this cluster." +
                         "\n" +
@@ -131,6 +149,8 @@ MicrowaveOvenControl.patch({
                 },
 
                 {
+                    name: "PowerSetting", tag: "field",
+
                     details: "This field shall indicate the PowerSetting associated with the operation of the device. The value of " +
                         "this field shall be subject to the constraints of the PowerSetting attribute of this cluster. If the " +
                         "PowerSetting field does not conform to the constraints of the PowerSetting attribute, the server " +
@@ -144,6 +164,8 @@ MicrowaveOvenControl.patch({
                 },
 
                 {
+                    name: "WattSettingIndex", tag: "field",
+
                     details: "This field shall indicate the value to which the SelectedWattIndex attribute is set. If the value of " +
                         "this field is greater than or equal to the length of the SupportedWatts attribute list, the server " +
                         "shall return a CONSTRAINT_ERROR status and the value of the SelectedWattIndex attribute shall be " +
@@ -156,6 +178,7 @@ MicrowaveOvenControl.patch({
                 },
 
                 {
+                    name: "StartAfterSetting", tag: "field",
                     details: "This field shall indicate whether or not oven operation shall be started when the command is " +
                         "received.",
                     xref: "cluster§8.13.6.2.5"
@@ -164,10 +187,12 @@ MicrowaveOvenControl.patch({
         },
 
         {
+            name: "AddMoreTime", tag: "command",
             details: "This command is used to add more time to the CookTime attribute of the server. This command supports " +
                 "these fields:",
             xref: "cluster§8.13.6.3",
             children: [{
+                name: "TimeToAdd", tag: "field",
                 details: "This field shall indicate the number of seconds to be added to the CookTime attribute.",
                 xref: "cluster§8.13.6.3.1"
             }]

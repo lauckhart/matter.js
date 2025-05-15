@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { MeasurementAccuracyStruct } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-MeasurementAccuracyStruct.patch({
+Resource.add({
+    name: "MeasurementAccuracyStruct", tag: "datatype",
     details: "This struct represents the set of accuracy ranges for a given measurement, the maximum and minimum " +
         "values for the measurement, and whether the measurement is directly measured or just estimated from " +
         "other information.",
@@ -16,18 +17,21 @@ MeasurementAccuracyStruct.patch({
 
     children: [
         {
+            name: "MeasurementType", tag: "field",
             details: "This field shall indicate the type of measurement for the accuracy provided.",
             xref: "cluster§2.1.4.4.1"
         },
+
         {
+            name: "Measured", tag: "field",
             details: "This field shall indicate whether the associated measurement was directly measured. If this field is " +
                 "not set to true, then the associated measurement was estimated.",
             xref: "cluster§2.1.4.4.2"
         },
-        undefined,
-        undefined,
 
         {
+            name: "AccuracyRanges", tag: "field",
+
             details: "This field shall indicate a list of measurement ranges and their associated accuracies." +
                 "\n" +
                 "The value of the RangeMin field on the first MeasurementAccuracyRangeStruct in this list shall be " +

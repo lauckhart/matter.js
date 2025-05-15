@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { string } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-string.patch({
+Resource.add({
+    name: "string", tag: "datatype",
     description: "Character String",
 
     details: "The character string data type is derived from an octet string. The octets shall be characters with " +

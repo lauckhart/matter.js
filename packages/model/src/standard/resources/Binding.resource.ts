@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Binding } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-Binding.patch({
+Resource.add({
+    name: "Binding", tag: "cluster",
     classification: "endpoint", pics: "BIND",
 
     details: "NOTE" +
@@ -46,30 +47,36 @@ Binding.patch({
     xref: "core§9.6",
 
     children: [
-        undefined,
-        { details: "Each entry shall represent a binding.", xref: "core§9.6.6.1" },
+        { name: "Binding", tag: "attribute", details: "Each entry shall represent a binding.", xref: "core§9.6.6.1" },
 
         {
+            name: "TargetStruct", tag: "datatype",
             xref: "core§9.6.5.1",
 
             children: [
                 {
+                    name: "Node", tag: "field",
                     details: "This field is the remote target node ID. If the Endpoint field is present, this field shall be " +
                         "present.",
                     xref: "core§9.6.5.1.1"
                 },
+
                 {
+                    name: "Group", tag: "field",
                     details: "This field is the target group ID that represents remote endpoints. If the Endpoint field is " +
                         "present, this field shall NOT be present.",
                     xref: "core§9.6.5.1.2"
                 },
+
                 {
+                    name: "Endpoint", tag: "field",
                     details: "This field is the remote endpoint that the local endpoint is bound to. If the Group field is " +
                         "present, this field shall NOT be present.",
                     xref: "core§9.6.5.1.3"
                 },
 
                 {
+                    name: "Cluster", tag: "field",
                     details: "This field is the cluster ID (client & server) on the local and target endpoint(s). If this field is " +
                         "present, the client cluster shall also exist on this endpoint (with this Binding cluster). If this " +
                         "field is present, the target shall be this cluster on the target endpoint(s).",

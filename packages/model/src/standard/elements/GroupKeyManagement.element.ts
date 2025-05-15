@@ -20,7 +20,7 @@ export const GroupKeyManagement = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "CS", conformance: "P", constraint: "0", description: "CacheAndSync" })
+        Field({ name: "CS", conformance: "P", constraint: "0", longName: "CacheAndSync" })
     ),
 
     Attribute(

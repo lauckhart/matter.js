@@ -6,21 +6,21 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { MountedOnOffControlDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-MountedOnOffControlDt.patch({
+Resource.add({
+    name: "MountedOnOffControl", tag: "deviceType",
     classification: "simple",
     details: "A Mounted On/Off Control is a fixed device that provides power to another device that is plugged " +
         "into it, and is capable of switching that provided power on or off.",
     xref: "device§5.3",
 
     children: [
-        undefined,
-        { xref: "device§5.3.4" },
-        { xref: "device§5.3.4" },
-        { xref: "device§5.3.4" },
-        { xref: "device§5.3.4" },
-        { xref: "device§5.3.4" },
-        { xref: "device§5.3.4" }
+        { name: "Identify", tag: "requirement", xref: "device§5.3.4" },
+        { name: "Groups", tag: "requirement", xref: "device§5.3.4" },
+        { name: "ScenesManagement", tag: "requirement", xref: "device§5.3.4" },
+        { name: "OnOff", tag: "requirement", xref: "device§5.3.4" },
+        { name: "LevelControl", tag: "requirement", xref: "device§5.3.4" },
+        { name: "OccupancySensing", tag: "requirement", xref: "device§5.3.4" }
     ]
 });

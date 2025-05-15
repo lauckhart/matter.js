@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { NetworkInfrastructureManagerDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-NetworkInfrastructureManagerDt.patch({
+Resource.add({
+    name: "NetworkInfrastructureManager", tag: "deviceType",
     classification: "simple",
 
     details: "A Network Infrastructure Manager provides interfaces that allow for the management of the Wi-Fi, " +
@@ -28,5 +29,9 @@ NetworkInfrastructureManagerDt.patch({
         "type should be aware of this feature and its use.",
 
     xref: "device§15.2",
-    children: [undefined, { xref: "device§15.2.4" }, { xref: "device§15.2.4" }, { xref: "device§15.2.4" }]
+    children: [
+        { name: "WiFiNetworkManagement", tag: "requirement", xref: "device§15.2.4" },
+        { name: "ThreadBorderRouterManagement", tag: "requirement", xref: "device§15.2.4" },
+        { name: "ThreadNetworkDirectory", tag: "requirement", xref: "device§15.2.4" }
+    ]
 });

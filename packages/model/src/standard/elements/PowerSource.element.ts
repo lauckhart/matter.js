@@ -21,10 +21,10 @@ export const PowerSource = Cluster(
 
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "WIRED", conformance: "O.a", constraint: "0", description: "Wired" }),
-        Field({ name: "BAT", conformance: "O.a", constraint: "1", description: "Battery" }),
-        Field({ name: "RECHG", conformance: "[BAT]", constraint: "2", description: "Rechargeable" }),
-        Field({ name: "REPLC", conformance: "[BAT]", constraint: "3", description: "Replaceable" })
+        Field({ name: "WIRED", conformance: "O.a", constraint: "0", longName: "Wired" }),
+        Field({ name: "BAT", conformance: "O.a", constraint: "1", longName: "Battery" }),
+        Field({ name: "RECHG", conformance: "[BAT]", constraint: "2", longName: "Rechargeable" }),
+        Field({ name: "REPLC", conformance: "[BAT]", constraint: "3", longName: "Replaceable" })
     ),
 
     Attribute(
@@ -230,17 +230,17 @@ export const PowerSource = Cluster(
         Field({ id: 0x0, name: "Unspecified", conformance: "M" }),
         Field({ id: 0x1, name: "Aaa", conformance: "M" }),
         Field({ id: 0x2, name: "Aa", conformance: "M" }),
-        Field({ id: 0x3, name: "C", conformance: "M" }),
-        Field({ id: 0x4, name: "D", conformance: "M" }),
+        Field({ id: 0x3, name: "C", conformance: "M", longName: "Common type is as specified" }),
+        Field({ id: 0x4, name: "D", conformance: "M", longName: "Common type is as specified" }),
         Field({ id: 0x5, name: "4V5", conformance: "M" }),
         Field({ id: 0x6, name: "6V0", conformance: "M" }),
         Field({ id: 0x7, name: "9V0", conformance: "M" }),
         Field({ id: 0x8, name: "12Aa", conformance: "M" }),
         Field({ id: 0x9, name: "Aaaa", conformance: "M" }),
-        Field({ id: 0xa, name: "A", conformance: "M" }),
-        Field({ id: 0xb, name: "B", conformance: "M" }),
-        Field({ id: 0xc, name: "F", conformance: "M" }),
-        Field({ id: 0xd, name: "N", conformance: "M" }),
+        Field({ id: 0xa, name: "A", conformance: "M", longName: "Common type is as specified" }),
+        Field({ id: 0xb, name: "B", conformance: "M", longName: "Common type is as specified" }),
+        Field({ id: 0xc, name: "F", conformance: "M", longName: "Common type is as specified" }),
+        Field({ id: 0xd, name: "N", conformance: "M", longName: "Common type is as specified" }),
         Field({ id: 0xe, name: "No6", conformance: "M" }),
         Field({ id: 0xf, name: "SubC", conformance: "M" }),
         Field({ id: 0x10, name: "A23", conformance: "M" }),
@@ -255,7 +255,7 @@ export const PowerSource = Cluster(
         Field({ id: 0x19, name: "30V0", conformance: "M" }),
         Field({ id: 0x1a, name: "45V0", conformance: "M" }),
         Field({ id: 0x1b, name: "67V5", conformance: "M" }),
-        Field({ id: 0x1c, name: "J", conformance: "M" }),
+        Field({ id: 0x1c, name: "J", conformance: "M", longName: "Common type is as specified" }),
         Field({ id: 0x1d, name: "Cr123A", conformance: "M" }),
         Field({ id: 0x1e, name: "Cr2", conformance: "M" }),
         Field({ id: 0x1f, name: "2Cr5", conformance: "M" }),

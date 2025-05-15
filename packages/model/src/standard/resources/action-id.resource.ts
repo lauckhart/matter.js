@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { actionId } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-actionId.patch({
+Resource.add({
+    name: "action-id", tag: "datatype",
     description: "Action ID",
     details: "An identifier that indicates an action as defined in the Interaction Model specification.",
     xref: "core§7.19.2.31"

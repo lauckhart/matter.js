@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { Switch } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-Switch.patch({
+Resource.add({
+    name: "Switch", tag: "cluster",
     classification: "application", pics: "SWTCH",
 
     details: "This cluster exposes interactions with a switch device, for the purpose of using those interactions " +
@@ -27,47 +28,46 @@ Switch.patch({
     xref: "cluster§1.13",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "cluster§1.13.4",
 
             children: [
                 {
-                    description: "LatchingSwitch",
+                    name: "LS", tag: "field",
                     details: "This feature flag is for a switch that maintains its position after being pressed (or turned).",
                     xref: "cluster§1.13.4.1"
                 },
 
                 {
-                    description: "MomentarySwitch",
+                    name: "MS", tag: "field",
                     details: "This feature flag is for a switch that does not maintain its position after being pressed (or " +
                         "turned). After releasing, it goes back to its idle position.",
                     xref: "cluster§1.13.4.2"
                 },
 
                 {
-                    description: "MomentarySwitchRelease",
+                    name: "MSR", tag: "field",
                     details: "This feature flag is for a momentary switch that can distinguish and report release events.",
                     xref: "cluster§1.13.4.3"
                 },
 
                 {
-                    description: "MomentarySwitchLongPress",
+                    name: "MSL", tag: "field",
                     details: "This feature flag is for a momentary switch that can distinguish and report long presses from short " +
                         "presses.",
                     xref: "cluster§1.13.4.4"
                 },
 
                 {
-                    description: "MomentarySwitchMultiPress",
+                    name: "MSM", tag: "field",
                     details: "This feature flag is for a momentary switch that can distinguish and report double press and " +
                         "potentially multiple presses with more events, such as triple press, etc.",
                     xref: "cluster§1.13.4.5"
                 },
 
                 {
-                    description: "ActionSwitch",
+                    name: "AS", tag: "field",
                     details: "This feature flag indicates simplified handling of events for multi-press-capable switches. See " +
                         "Multi Press Details.",
                     xref: "cluster§1.13.4.6"
@@ -76,12 +76,14 @@ Switch.patch({
         },
 
         {
+            name: "NumberOfPositions", tag: "attribute",
             details: "Indicates the maximum number of positions the switch has. Any kind of switch has a minimum of 2 " +
                 "positions. Also see Multi Position Details for the case NumberOfPositions>2.",
             xref: "cluster§1.13.5.1"
         },
 
         {
+            name: "CurrentPosition", tag: "attribute",
             details: "Indicates the position of the switch. The valid range is zero to NumberOfPositions - 1." +
                 "\n" +
                 "CurrentPosition value 0 shall be assigned to the default position of the switch: for example the " +
@@ -90,6 +92,8 @@ Switch.patch({
         },
 
         {
+            name: "MultiPressMax", tag: "attribute",
+
             details: "Indicates how many consecutive presses can be detected and reported by a momentary switch which " +
                 "supports multi-press (MSM feature flag set)." +
                 "\n" +
@@ -117,25 +121,31 @@ Switch.patch({
         },
 
         {
+            name: "SwitchLatched", tag: "event",
             details: "This event shall be generated, when the latching switch is moved to a new position. It may have been " +
                 "delayed by debouncing within the switch.",
             xref: "cluster§1.13.6.1",
             children: [{
+                name: "NewPosition", tag: "field",
                 details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. after the move.",
                 xref: "cluster§1.13.6.1.1"
             }]
         },
 
         {
+            name: "InitialPress", tag: "event",
             details: "This event shall be generated, when the momentary switch starts to be pressed (after debouncing).",
             xref: "cluster§1.13.6.2",
             children: [{
+                name: "NewPosition", tag: "field",
                 details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.",
                 xref: "cluster§1.13.6.2.1"
             }]
         },
 
         {
+            name: "LongPress", tag: "event",
+
             details: "This event shall be generated when the momentary switch has been pressed for a \"long\" time. The time " +
                 "interval constituting a \"long\" time is manufacturer-determined, since it depends on the switch " +
                 "physics." +
@@ -171,12 +181,15 @@ Switch.patch({
 
             xref: "cluster§1.13.6.3",
             children: [{
+                name: "NewPosition", tag: "field",
                 details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.",
                 xref: "cluster§1.13.6.3.1"
             }]
         },
 
         {
+            name: "ShortRelease", tag: "event",
+
             details: "If the server has the Action Switch (AS) feature flag set, this event shall NOT be generated at all, " +
                 "since setting the Action Switch feature flag forbids the Momentary Switch ShortRelease (MSR) feature " +
                 "flag from being set. Otherwise, the following paragraphs describe the situations where this event is " +
@@ -195,7 +208,9 @@ Switch.patch({
                 "  • Also see Section 1.13.7, “Sequence of generated events”.",
 
             xref: "cluster§1.13.6.4",
+
             children: [{
+                name: "PreviousPosition", tag: "field",
                 details: "This field shall indicate the previous value of the CurrentPosition attribute, i.e. just prior to " +
                     "release.",
                 xref: "cluster§1.13.6.4.1"
@@ -203,12 +218,15 @@ Switch.patch({
         },
 
         {
+            name: "LongRelease", tag: "event",
             details: "This event shall be generated, when the momentary switch has been released (after debouncing) and " +
                 "after having been pressed for a long time, i.e. this event shall be generated when the switch is " +
                 "released if a LongPress event has been generated since the previous InitialPress event. Also see " +
                 "Section 1.13.7, “Sequence of generated events”.",
             xref: "cluster§1.13.6.5",
+
             children: [{
+                name: "PreviousPosition", tag: "field",
                 details: "This field shall indicate the previous value of the CurrentPosition attribute, i.e. just prior to " +
                     "release.",
                 xref: "cluster§1.13.6.5.1"
@@ -216,6 +234,7 @@ Switch.patch({
         },
 
         {
+            name: "MultiPressOngoing", tag: "event",
             details: "If the server has the Action Switch (AS) feature flag set, this event shall NOT be generated at all. " +
                 "Otherwise, the following paragraphs describe the situations where this event is generated." +
                 "\n" +
@@ -225,11 +244,14 @@ Switch.patch({
 
             children: [
                 {
+                    name: "NewPosition", tag: "field",
                     details: "This field shall indicate the new value of the CurrentPosition attribute, i.e. while pressed.",
                     xref: "cluster§1.13.6.6.1"
                 },
 
                 {
+                    name: "CurrentNumberOfPressesCounted", tag: "field",
+
                     details: "This field shall contain:" +
                         "\n" +
                         "  • a value of 2 when the second press of a multi-press sequence has been detected," +
@@ -244,6 +266,8 @@ Switch.patch({
         },
 
         {
+            name: "MultiPressComplete", tag: "event",
+
             details: "This event shall be generated to indicate how many times the momentary switch has been pressed in a " +
                 "multi-press sequence, after it has been detected that the sequence has ended. See Multi Press " +
                 "Details." +

@@ -6,6 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { fabricId } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-fabricId.patch({ description: "Fabric ID", details: "A value to identify a fabric.", xref: "core§7.19.2.19" });
+Resource.add({
+    name: "fabric-id", tag: "datatype",
+    description: "Fabric ID",
+    details: "A value to identify a fabric.",
+    xref: "core§7.19.2.19"
+});

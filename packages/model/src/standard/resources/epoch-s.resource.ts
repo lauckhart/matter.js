@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { epochS } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-epochS.patch({
+Resource.add({
+    name: "epoch-s", tag: "datatype",
     description: "Epoch Time in seconds",
 
     details: "This type has the same semantics as Epoch Time in Microseconds, except that:" +

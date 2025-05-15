@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { LandmarkNamespaceNs } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-LandmarkNamespaceNs.patch({
+Resource.add({
+    name: "LandmarkNamespace", tag: "semanticNamespace",
     details: "The tags contained in this namespace may be used in any domain or context, to indicate an " +
         "association with a home landmark.",
     xref: "namespace§10"

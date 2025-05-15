@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { LevelControl } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-LevelControl.patch({
+Resource.add({
+    name: "LevelControl", tag: "cluster",
     classification: "application", pics: "LVL",
     details: "This cluster provides an interface for controlling a characteristic of a device that can be set to a " +
         "level, for example the brightness of a light, the degree of closure of a door, or the power output " +
@@ -16,16 +17,15 @@ LevelControl.patch({
     xref: "cluster§1.6",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "cluster§1.6.4",
 
             children: [
-                { description: "OnOff", details: "Dependency with the On/Off cluster" },
+                { name: "OO", tag: "field", details: "Dependency with the On/Off cluster" },
 
                 {
-                    description: "Lighting",
+                    name: "LT", tag: "field",
 
                     details: "This feature supports an interface for controlling the level of a light source. For the CurrentLevel " +
                         "attribute:" +
@@ -42,7 +42,7 @@ LevelControl.patch({
                 },
 
                 {
-                    description: "Frequency",
+                    name: "FQ", tag: "field",
                     details: "NOTE The Frequency feature is provisional.",
                     xref: "cluster§1.6.4.3"
                 }
@@ -50,6 +50,8 @@ LevelControl.patch({
         },
 
         {
+            name: "CurrentLevel", tag: "attribute",
+
             details: "Indicates the current level of this device. The meaning of 'level' is device dependent." +
                 "\n" +
                 "Changes to this attribute shall only be marked as reportable in the following cases:" +
@@ -64,6 +66,8 @@ LevelControl.patch({
         },
 
         {
+            name: "RemainingTime", tag: "attribute",
+
             details: "Indicates the time remaining until the current command is complete - it is specified in 1/10ths of a " +
                 "second." +
                 "\n" +
@@ -85,19 +89,24 @@ LevelControl.patch({
         },
 
         {
+            discriminator: "[LT]", name: "MinLevel", tag: "attribute",
             details: "Indicates the minimum value of CurrentLevel that is capable of being assigned.",
             xref: "cluster§1.6.6.4"
         },
         {
+            discriminator: "[!LT]", name: "MinLevel", tag: "attribute",
             details: "Indicates the minimum value of CurrentLevel that is capable of being assigned.",
             xref: "cluster§1.6.6.4"
         },
         {
+            name: "MaxLevel", tag: "attribute",
             details: "Indicates the maximum value of CurrentLevel that is capable of being assigned.",
             xref: "cluster§1.6.6.5"
         },
 
         {
+            name: "CurrentFrequency", tag: "attribute",
+
             details: "Indicates the frequency at which the device is at CurrentLevel. A CurrentFrequency of 0 is unknown." +
                 "\n" +
                 "Changes to this attribute shall only be marked as reportable in the following cases:" +
@@ -112,17 +121,22 @@ LevelControl.patch({
         },
 
         {
+            name: "MinFrequency", tag: "attribute",
             details: "Indicates the minimum value of CurrentFrequency that is capable of being assigned. MinFrequency " +
                 "shall be less than or equal to MaxFrequency. A value of 0 indicates undefined.",
             xref: "cluster§1.6.6.7"
         },
+
         {
+            name: "MaxFrequency", tag: "attribute",
             details: "Indicates the maximum value of CurrentFrequency that is capable of being assigned. MaxFrequency " +
                 "shall be greater than or equal to MinFrequency. A value of 0 indicates undefined.",
             xref: "cluster§1.6.6.8"
         },
 
         {
+            name: "OnOffTransitionTime", tag: "attribute",
+
             details: "Indicates the time taken to move to or from the target level when On or Off commands are received by " +
                 "an On/Off cluster on the same endpoint. It is specified in 1/10ths of a second." +
                 "\n" +
@@ -134,6 +148,8 @@ LevelControl.patch({
         },
 
         {
+            name: "OnLevel", tag: "attribute",
+
             details: "Indicates the value that the CurrentLevel attribute is set to when the OnOff attribute of an On/Off " +
                 "cluster on the same endpoint is set to TRUE, as a result of processing an On/Off cluster command. If " +
                 "the OnLevel attribute is not implemented, or is set to the null value, it has no effect. For more " +
@@ -146,6 +162,7 @@ LevelControl.patch({
         },
 
         {
+            name: "OnTransitionTime", tag: "attribute",
             details: "Indicates the time taken to move the current level from the minimum level to the maximum level when " +
                 "an On command is received by an On/Off cluster on the same endpoint. It is specified in 1/10ths of a " +
                 "second. If this attribute is not implemented, or contains a null value, the OnOffTransitionTime " +
@@ -154,6 +171,7 @@ LevelControl.patch({
         },
 
         {
+            name: "OffTransitionTime", tag: "attribute",
             details: "Indicates the time taken to move the current level from the maximum level to the minimum level when " +
                 "an Off command is received by an On/Off cluster on the same endpoint. It is specified in 1/10ths of " +
                 "a second. If this attribute is not implemented, or contains a null value, the OnOffTransitionTime " +
@@ -162,12 +180,15 @@ LevelControl.patch({
         },
 
         {
+            name: "DefaultMoveRate", tag: "attribute",
             details: "Indicates the movement rate, in units per second, when a Move command is received with a null value " +
                 "Rate parameter.",
             xref: "cluster§1.6.6.14"
         },
 
         {
+            name: "Options", tag: "attribute",
+
             details: "Indicates the selected options of the device." +
                 "\n" +
                 "The Options attribute is a bitmap that determines the default behavior of some cluster commands. " +
@@ -193,6 +214,8 @@ LevelControl.patch({
         },
 
         {
+            name: "StartUpCurrentLevel", tag: "attribute",
+
             details: "Indicates the desired startup level for a device when it is supplied with power and this level shall " +
                 "be reflected in the CurrentLevel attribute. The values of the StartUpCurrentLevel attribute are " +
                 "listed below:" +
@@ -203,18 +226,22 @@ LevelControl.patch({
             xref: "cluster§1.6.6.15"
         },
 
-        { xref: "cluster§1.6.7.1" },
+        { name: "MoveToLevel", tag: "command", xref: "cluster§1.6.7.1" },
 
         {
+            name: "Move", tag: "command",
             xref: "cluster§1.6.7.2",
 
             children: [
                 {
+                    name: "MoveMode", tag: "field",
                     details: "This field shall be one of the non-reserved values in MoveModeEnum.",
                     xref: "cluster§1.6.7.2.1"
                 },
 
                 {
+                    name: "Rate", tag: "field",
+
                     details: "This field shall indicate the rate of movement in units per second. The actual rate of movement " +
                         "SHOULD be as close to this rate as the device is able. If the Rate field is null, then the value of " +
                         "the DefaultMoveRate attribute shall be used if that attribute is supported and its value is not " +
@@ -230,16 +257,24 @@ LevelControl.patch({
         },
 
         {
+            name: "Step", tag: "command",
             xref: "cluster§1.6.7.3",
 
             children: [
                 {
+                    name: "StepMode", tag: "field",
                     details: "This field shall be one of the non-reserved values in StepModeEnum.",
                     xref: "cluster§1.6.7.3.1"
                 },
-                { details: "This field shall indicate the change to CurrentLevel.", xref: "cluster§1.6.7.3.2" },
+                {
+                    name: "StepSize", tag: "field",
+                    details: "This field shall indicate the change to CurrentLevel.",
+                    xref: "cluster§1.6.7.3.2"
+                },
 
                 {
+                    name: "TransitionTime", tag: "field",
+
                     details: "This field shall indicate the time that shall be taken to perform the step, in tenths of a second. A " +
                         "step is a change in the CurrentLevel of StepSize units. The actual time taken SHOULD be as close to" +
                         "\n" +
@@ -253,23 +288,27 @@ LevelControl.patch({
             ]
         },
 
-        { xref: "cluster§1.6.7.4" },
-        { xref: "cluster§1.6.7" },
-        { xref: "cluster§1.6.7" },
-        { xref: "cluster§1.6.7" },
-        { xref: "cluster§1.6.7" },
-        { xref: "cluster§1.6.7.5" },
+        { name: "Stop", tag: "command", xref: "cluster§1.6.7.4" },
+        { name: "MoveToLevelWithOnOff", tag: "command", xref: "cluster§1.6.7" },
+        { name: "MoveWithOnOff", tag: "command", xref: "cluster§1.6.7" },
+        { name: "StepWithOnOff", tag: "command", xref: "cluster§1.6.7" },
+        { name: "StopWithOnOff", tag: "command", xref: "cluster§1.6.7" },
+        { name: "MoveToClosestFrequency", tag: "command", xref: "cluster§1.6.7.5" },
 
         {
+            name: "OptionsBitmap", tag: "datatype",
             xref: "cluster§1.6.5.1",
 
             children: [
                 {
+                    name: "ExecuteIfOff", tag: "field",
                     description: "Dependency on On/Off cluster",
                     details: "This bit indicates if this cluster has a dependency with the On/Off cluster.",
                     xref: "cluster§1.6.5.1.1"
                 },
+
                 {
+                    name: "CoupleColorTempToLevel", tag: "field",
                     description: "Dependency on Color Control cluster",
                     details: "This bit indicates if this cluster has a dependency with the Color Control cluster.",
                     xref: "cluster§1.6.5.1.2"
@@ -278,9 +317,21 @@ LevelControl.patch({
         },
 
         {
+            name: "MoveModeEnum", tag: "datatype",
             xref: "cluster§1.6.5.2",
-            children: [{ description: "Increase the level" }, { description: "Decrease the level" }]
+            children: [
+                { name: "Up", tag: "field", description: "Increase the level" },
+                { name: "Down", tag: "field", description: "Decrease the level" }
+            ]
         },
-        { xref: "cluster§1.6.5.3", children: [{ description: "Step upwards" }, { description: "Step downwards" }] }
+
+        {
+            name: "StepModeEnum", tag: "datatype",
+            xref: "cluster§1.6.5.3",
+            children: [
+                { name: "Up", tag: "field", description: "Step upwards" },
+                { name: "Down", tag: "field", description: "Step downwards" }
+            ]
+        }
     ]
 });

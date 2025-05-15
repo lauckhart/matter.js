@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { groupId } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-groupId.patch({
+Resource.add({
+    name: "group-id", tag: "datatype",
     description: "Group ID",
     details: "A 16-bit ID for a group scoped to a particular fabric as indicated by an accompanying fabric index " +
         "adjacent instantiation.",

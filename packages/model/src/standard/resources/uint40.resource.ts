@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { uint40 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-uint40.patch({ description: "Unsigned 40-bit integer", xref: "core§7.19.1" });
+Resource.add({ name: "uint40", tag: "datatype", description: "Unsigned 40-bit integer", xref: "core§7.19.1" });

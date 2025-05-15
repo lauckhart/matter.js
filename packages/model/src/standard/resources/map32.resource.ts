@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { map32 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-map32.patch({ description: "32-bit bitmap", xref: "core§7.19.1" });
+Resource.add({ name: "map32", tag: "datatype", description: "32-bit bitmap", xref: "core§7.19.1" });

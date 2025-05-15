@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { OperationalState } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-OperationalState.patch({
+Resource.add({
+    name: "OperationalState", tag: "cluster",
     classification: "application", pics: "OPSTATE",
 
     details: "This cluster supports remotely monitoring and, where supported, changing the operational state of " +
@@ -34,9 +35,9 @@ OperationalState.patch({
     xref: "cluster§1.14",
 
     children: [
-        undefined,
-
         {
+            name: "PhaseList", tag: "attribute",
+
             details: "Indicates a list of names of different phases that the device can go through for the selected " +
                 "function or mode. The list may not be in sequence order. For example in a washing machine this could " +
                 "include items such as \"pre-soak\", \"rinse\", and \"spin\". These phases are manufacturer specific and " +
@@ -49,6 +50,8 @@ OperationalState.patch({
         },
 
         {
+            name: "CurrentPhase", tag: "attribute",
+
             details: "This attribute represents the current phase of operation being performed by the server. This shall " +
                 "be the positional index representing the value from the set provided in the PhaseList Attribute," +
                 "\n" +
@@ -61,6 +64,8 @@ OperationalState.patch({
         },
 
         {
+            name: "CountdownTime", tag: "attribute",
+
             details: "Indicates the estimated time left before the operation is completed, in seconds." +
                 "\n" +
                 "A value of 0 (zero) means that the operation has completed." +
@@ -94,6 +99,8 @@ OperationalState.patch({
         },
 
         {
+            name: "OperationalStateList", tag: "attribute",
+
             details: "This attribute describes the set of possible operational states that the device exposes. An " +
                 "operational state is a fundamental device state such as Running or Error. Details of the phase of a " +
                 "device when, for example, in a state of Running are provided by the CurrentPhase attribute." +
@@ -107,12 +114,14 @@ OperationalState.patch({
         },
 
         {
+            name: "OperationalState", tag: "attribute",
             details: "This attribute specifies the current operational state of a device. This shall be populated with a " +
                 "valid OperationalStateID from the set of values in the OperationalStateList Attribute.",
             xref: "cluster§1.14.5.5"
         },
 
         {
+            name: "OperationalError", tag: "attribute",
             details: "This attribute shall specify the details of any current error condition being experienced on the " +
                 "device when the OperationalState attribute is populated with Error. Please see ErrorStateStruct for " +
                 "general requirements on the population of this attribute." +
@@ -122,6 +131,7 @@ OperationalState.patch({
         },
 
         {
+            name: "OperationalError", tag: "event",
             details: "This event is generated when a reportable error condition is detected. A device that generates this " +
                 "event shall also set the OperationalState attribute to Error, indicating an error condition." +
                 "\n" +
@@ -130,6 +140,8 @@ OperationalState.patch({
         },
 
         {
+            name: "OperationCompletion", tag: "event",
+
             details: "This event SHOULD be generated when the overall operation ends, successfully or otherwise. For " +
                 "example, the completion of a cleaning operation in a Robot Vacuum Cleaner, or the completion of a " +
                 "wash cycle in a Washing Machine." +
@@ -144,6 +156,7 @@ OperationalState.patch({
 
             children: [
                 {
+                    name: "CompletionErrorCode", tag: "field",
                     details: "This field provides an indication of the state at the end of the operation. This field shall have a " +
                         "value from the ErrorStateEnum set. A value of NoError indicates success, that is, no error has been " +
                         "detected.",
@@ -151,6 +164,8 @@ OperationalState.patch({
                 },
 
                 {
+                    name: "TotalOperationalTime", tag: "field",
+
                     details: "The total operational time, in seconds, from when the operation was started via an initial Start " +
                         "command or autonomous/manual starting action, until the operation completed. This includes any time" +
                         "\n" +
@@ -162,6 +177,7 @@ OperationalState.patch({
                 },
 
                 {
+                    name: "PausedTime", tag: "field",
                     details: "The total time spent in the paused state, in seconds. There may be cases whereby the total paused " +
                         "time exceeds the maximum value that can be conveyed by this attribute, in such instances, this " +
                         "attribute shall be populated with null.",
@@ -171,6 +187,8 @@ OperationalState.patch({
         },
 
         {
+            name: "Pause", tag: "command",
+
             details: "This command shall be supported if the device supports remotely pausing the operation. If this " +
                 "command is supported, the Resume command shall also be supported." +
                 "\n" +
@@ -213,6 +231,8 @@ OperationalState.patch({
         },
 
         {
+            name: "Stop", tag: "command",
+
             details: "This command shall be supported if the device supports remotely stopping the operation." +
                 "\n" +
                 "On receipt of this command, the device shall stop its operation if it is at a position where it is " +
@@ -238,6 +258,8 @@ OperationalState.patch({
         },
 
         {
+            name: "Start", tag: "command",
+
             details: "This command shall be supported if the device supports remotely starting the operation. If this " +
                 "command is supported, the 'Stop command shall also be supported." +
                 "\n" +
@@ -266,6 +288,8 @@ OperationalState.patch({
         },
 
         {
+            name: "Resume", tag: "command",
+
             details: "This command shall be supported if the device supports remotely resuming the operation. If this " +
                 "command is supported, the Pause command shall also be supported." +
                 "\n" +
@@ -308,6 +332,8 @@ OperationalState.patch({
         },
 
         {
+            name: "OperationalCommandResponse", tag: "command",
+
             details: "This command shall be supported by an implementation if any of the other commands defined by this " +
                 "cluster are supported (i.e. listed in the AcceptedCommandList global attribute). This command shall " +
                 "also be supported by an implementation of a derived cluster as a response to any commands that may " +
@@ -318,6 +344,7 @@ OperationalState.patch({
             xref: "cluster§1.14.6.5",
 
             children: [{
+                name: "CommandResponseState", tag: "field",
                 details: "This shall indicate the success or otherwise of the attempted command invocation. On a successful " +
                     "invocation of the attempted command, the ErrorStateID shall be populated with NoError. Please see " +
                     "the individual command sections for additional specific requirements on population.",
@@ -326,6 +353,8 @@ OperationalState.patch({
         },
 
         {
+            name: "OperationalStateEnum", tag: "datatype",
+
             details: "This type defines the set of known operational state values, and is derived from enum8. The " +
                 "following table defines the applicable ranges for values that are defined within this type. All " +
                 "values that are undefined shall be treated as reserved. As shown by the table, states that may be " +
@@ -347,24 +376,27 @@ OperationalState.patch({
             xref: "cluster§1.14.4.1",
 
             children: [
-                { description: "The device is stopped" },
-                { description: "The device is operating" },
-                { description: "The device is paused during an operation" },
-                { description: "The device is in an error state" }
+                { name: "Stopped", tag: "field", description: "The device is stopped" },
+                { name: "Running", tag: "field", description: "The device is operating" },
+                { name: "Paused", tag: "field", description: "The device is paused during an operation" },
+                { name: "Error", tag: "field", description: "The device is in an error state" }
             ]
         },
 
         {
+            name: "OperationalStateStruct", tag: "datatype",
             details: "The OperationalStateStruct is used to indicate a possible state of the device.",
             xref: "cluster§1.14.4.2",
 
             children: [
                 {
+                    name: "OperationalStateId", tag: "field",
                     details: "This shall be populated with a value from the OperationalStateEnum.",
                     xref: "cluster§1.14.4.2.1"
                 },
 
                 {
+                    name: "OperationalStateLabel", tag: "field",
                     details: "This field shall be present if the OperationalStateID is from the set reserved for Manufacturer " +
                         "Specific States, otherwise it shall NOT be present. If present, this shall contain a human-readable " +
                         "description of the operational state.",
@@ -374,6 +406,8 @@ OperationalState.patch({
         },
 
         {
+            name: "ErrorStateEnum", tag: "datatype",
+
             details: "This type defines the set of known operational error values, and is derived from enum8. The " +
                 "following table defines the applicable ranges for values that are defined within this type. All " +
                 "values that are undefined shall be treated as reserved. As shown by the table, errors that may be " +
@@ -398,23 +432,35 @@ OperationalState.patch({
             xref: "cluster§1.14.4.3",
 
             children: [
-                { description: "The device is not in an error state" },
-                { description: "The device is unable to start or resume operation" },
-                { description: "The device was unable to complete the current operation" },
-                { description: "The device cannot process the command in its current state" }
+                { name: "NoError", tag: "field", description: "The device is not in an error state" },
+                {
+                    name: "UnableToStartOrResume", tag: "field",
+                    description: "The device is unable to start or resume operation"
+                },
+                {
+                    name: "UnableToCompleteOperation", tag: "field",
+                    description: "The device was unable to complete the current operation"
+                },
+                {
+                    name: "CommandInvalidInState", tag: "field",
+                    description: "The device cannot process the command in its current state"
+                }
             ]
         },
 
         {
+            name: "ErrorStateStruct", tag: "datatype",
             xref: "cluster§1.14.4.4",
 
             children: [
                 {
+                    name: "ErrorStateID", tag: "field",
                     details: "This shall be populated with a value from the ErrorStateEnum.",
                     xref: "cluster§1.14.4.4.1"
                 },
 
                 {
+                    name: "ErrorStateLabel", tag: "field",
                     details: "This field shall be present if the ErrorStateID is from the set reserved for Manufacturer Specific " +
                         "Errors, otherwise it shall NOT be present. If present, this shall contain a human-readable " +
                         "description of the ErrorStateID; e.g. for a manufacturer specific ErrorStateID of \"0x80\" the " +
@@ -423,6 +469,7 @@ OperationalState.patch({
                 },
 
                 {
+                    name: "ErrorStateDetails", tag: "field",
                     details: "This shall be a human-readable string that provides details about the error condition. As an " +
                         "example, if the ErrorStateID indicates that the device is a Robotic Vacuum that is stuck, the " +
                         "ErrorStateDetails contains \"left wheel blocked\".",

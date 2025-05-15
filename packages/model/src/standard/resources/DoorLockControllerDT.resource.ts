@@ -6,18 +6,18 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { DoorLockControllerDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-DoorLockControllerDt.patch({
+Resource.add({
+    name: "DoorLockController", tag: "deviceType",
     classification: "simple",
     details: "A Door Lock Controller is a device capable of controlling a door lock.",
     xref: "device§8.2",
 
     children: [
-        undefined,
-        { xref: "device§8.2.4" },
-        { xref: "device§8.2.4" },
-        { xref: "device§8.2.4" },
-        { xref: "device§8.2.4" }
+        { name: "Groups", tag: "requirement", xref: "device§8.2.4" },
+        { name: "ScenesManagement", tag: "requirement", xref: "device§8.2.4" },
+        { name: "TimeSynchronization", tag: "requirement", xref: "device§8.2.4" },
+        { name: "DoorLock", tag: "requirement", xref: "device§8.2.4" }
     ]
 });

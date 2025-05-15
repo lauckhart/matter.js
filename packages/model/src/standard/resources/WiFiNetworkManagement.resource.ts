@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { WiFiNetworkManagement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-WiFiNetworkManagement.patch({
+Resource.add({
+    name: "WiFiNetworkManagement", tag: "cluster",
     classification: "application", pics: "WIFINM",
     details: "This cluster provides an interface for getting information about the Wi-Fi network that a Network " +
         "Infrastructure Manager device type provides. Privileged nodes within the same fabric as a Network " +
@@ -17,9 +18,9 @@ WiFiNetworkManagement.patch({
     xref: "cluster§10.2",
 
     children: [
-        undefined,
-
         {
+            name: "Ssid", tag: "attribute",
+
             details: "Indicates the SSID of the primary Wi-Fi network provided by this device." +
                 "\n" +
                 "A value of null shall indicate that no primary Wi-Fi network is available (e.g. because the Wi-Fi " +
@@ -36,6 +37,8 @@ WiFiNetworkManagement.patch({
         },
 
         {
+            name: "PassphraseSurrogate", tag: "attribute",
+
             details: "This attribute shall contain an arbitrary numeric value; this value shall increase whenever the " +
                 "passphrase or PSK associated with the primary Wi-Fi network provided by this device changes." +
                 "\n" +
@@ -59,6 +62,8 @@ WiFiNetworkManagement.patch({
         },
 
         {
+            name: "NetworkPassphraseRequest", tag: "command",
+
             details: "This command is used to request the current WPA-Personal passphrase or PSK associated with the Wi-Fi " +
                 "network provided by this device." +
                 "\n" +
@@ -74,6 +79,7 @@ WiFiNetworkManagement.patch({
         },
 
         {
+            name: "NetworkPassphraseResponse", tag: "command",
             details: "This command shall be generated in response to a NetworkPassphraseRequest command.",
             xref: "cluster§10.2.5.2"
         }

@@ -6,11 +6,16 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { WaterLeakDetectorDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-WaterLeakDetectorDt.patch({
+Resource.add({
+    name: "WaterLeakDetector", tag: "deviceType",
     classification: "simple",
     details: "This defines conformance to the Water Leak Detector device type.",
     xref: "device§7.12",
-    children: [undefined, { xref: "device§7.12.4" }, { xref: "device§7.12.4" }, { xref: "device§7.12.4" }]
+    children: [
+        { name: "Identify", tag: "requirement", xref: "device§7.12.4" },
+        { name: "BooleanState", tag: "requirement", xref: "device§7.12.4" },
+        { name: "BooleanStateConfiguration", tag: "requirement", xref: "device§7.12.4" }
+    ]
 });

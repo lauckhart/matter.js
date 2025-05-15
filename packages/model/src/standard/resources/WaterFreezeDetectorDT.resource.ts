@@ -6,11 +6,16 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { WaterFreezeDetectorDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-WaterFreezeDetectorDt.patch({
+Resource.add({
+    name: "WaterFreezeDetector", tag: "deviceType",
     classification: "simple",
     details: "This defines conformance to the Water Freeze Detector device type.",
     xref: "device§7.11",
-    children: [undefined, { xref: "device§7.11.4" }, { xref: "device§7.11.4" }, { xref: "device§7.11.4" }]
+    children: [
+        { name: "Identify", tag: "requirement", xref: "device§7.11.4" },
+        { name: "BooleanState", tag: "requirement", xref: "device§7.11.4" },
+        { name: "BooleanStateConfiguration", tag: "requirement", xref: "device§7.11.4" }
+    ]
 });

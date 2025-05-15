@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { AirPurifierDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-AirPurifierDt.patch({
+Resource.add({
+    name: "AirPurifier", tag: "deviceType",
     classification: "simple",
     details: "An Air Purifier is a standalone device that is designed to clean the air in a room." +
         "\n" +
@@ -17,12 +18,11 @@ AirPurifierDt.patch({
     xref: "device§9.3",
 
     children: [
-        undefined,
-        { xref: "device§9.3.5" },
-        { xref: "device§9.3.5" },
-        { xref: "device§9.3.5" },
-        { xref: "device§9.3.5" },
-        { xref: "device§9.3.5" },
-        { xref: "device§9.3.5" }
+        { name: "Identify", tag: "requirement", xref: "device§9.3.5" },
+        { name: "Groups", tag: "requirement", xref: "device§9.3.5" },
+        { name: "OnOff", tag: "requirement", xref: "device§9.3.5" },
+        { name: "FanControl", tag: "requirement", xref: "device§9.3.5" },
+        { name: "HepaFilterMonitoring", tag: "requirement", xref: "device§9.3.5" },
+        { name: "ActivatedCarbonFilterMonitoring", tag: "requirement", xref: "device§9.3.5" }
     ]
 });

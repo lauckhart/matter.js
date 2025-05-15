@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { RoomAirConditionerDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-RoomAirConditionerDt.patch({
+Resource.add({
+    name: "RoomAirConditioner", tag: "deviceType",
     classification: "simple",
     details: "This defines conformance to the Room Air Conditioner device type." +
         "\n" +
@@ -17,15 +18,14 @@ RoomAirConditionerDt.patch({
     xref: "device§13.3",
 
     children: [
-        undefined,
-        { xref: "device§13.3.6" },
-        { xref: "device§13.3.6" },
-        { xref: "device§13.3.6" },
-        { xref: "device§13.3.6" },
-        { xref: "device§13.3.6" },
-        { xref: "device§13.3.6" },
-        { xref: "device§13.3.6" },
-        { xref: "device§13.3.6" },
-        { xref: "device§13.3.6" }
+        { name: "Identify", tag: "requirement", xref: "device§13.3.6" },
+        { name: "Groups", tag: "requirement", xref: "device§13.3.6" },
+        { name: "ScenesManagement", tag: "requirement", xref: "device§13.3.6" },
+        { name: "OnOff", tag: "requirement", xref: "device§13.3.6" },
+        { name: "Thermostat", tag: "requirement", xref: "device§13.3.6" },
+        { name: "FanControl", tag: "requirement", xref: "device§13.3.6" },
+        { name: "ThermostatUserInterfaceConfiguration", tag: "requirement", xref: "device§13.3.6" },
+        { name: "TemperatureMeasurement", tag: "requirement", xref: "device§13.3.6" },
+        { name: "RelativeHumidityMeasurement", tag: "requirement", xref: "device§13.3.6" }
     ]
 });

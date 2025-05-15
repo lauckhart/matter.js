@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { OzoneConcentrationMeasurement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-OzoneConcentrationMeasurement.patch({ pics: "OZCONC" });
+Resource.add({ name: "OzoneConcentrationMeasurement", tag: "cluster", pics: "OZCONC" });

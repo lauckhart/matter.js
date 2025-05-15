@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ipv4Adr } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ipv4Adr.patch({
+Resource.add({
+    name: "ipv4adr", tag: "datatype",
     description: "IPv4 Address",
 
     details: "The IPv4 address data type is derived from an octet string. The octets shall correspond to the four " +

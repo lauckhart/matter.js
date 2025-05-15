@@ -6,8 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { powerMW } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-powerMW.patch(
-    { description: "Power", details: "This type represents power measured in milliwatts.", xref: "core§7.19.2.12" }
-);
+Resource.add({
+    name: "power-mW", tag: "datatype",
+    description: "Power",
+    details: "This type represents power measured in milliwatts.",
+    xref: "core§7.19.2.12"
+});

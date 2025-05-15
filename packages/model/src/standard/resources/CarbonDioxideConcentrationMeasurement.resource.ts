@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { CarbonDioxideConcentrationMeasurement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-CarbonDioxideConcentrationMeasurement.patch({ pics: "CDOCONC" });
+Resource.add({ name: "CarbonDioxideConcentrationMeasurement", tag: "cluster", pics: "CDOCONC" });

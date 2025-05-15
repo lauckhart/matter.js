@@ -20,7 +20,7 @@ export const GeneralCommissioning = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "TC", conformance: "P", constraint: "0", description: "TermsAndConditions" })
+        Field({ name: "TC", conformance: "P", constraint: "0", longName: "TermsAndConditions" })
     ),
     Attribute({ id: 0x0, name: "Breadcrumb", type: "uint64", access: "RW VA", conformance: "M", default: 0 }),
     Attribute({

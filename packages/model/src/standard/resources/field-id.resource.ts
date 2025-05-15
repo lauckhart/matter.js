@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { fieldId } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-fieldId.patch({
+Resource.add({
+    name: "field-id", tag: "datatype",
     description: "Field ID",
     details: "An identifier that indicates a field defined in a struct." +
         "\n" +

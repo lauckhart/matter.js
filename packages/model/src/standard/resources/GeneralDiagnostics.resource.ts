@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { GeneralDiagnostics } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-GeneralDiagnostics.patch({
+Resource.add({
+    name: "GeneralDiagnostics", tag: "cluster",
     classification: "node", pics: "DGGEN",
     details: "The General Diagnostics Cluster, along with other diagnostics clusters, provide a means to acquire " +
         "standardized diagnostics metrics that may be used by a Node to assist a user or Administrator in " +
@@ -17,13 +18,12 @@ GeneralDiagnostics.patch({
     xref: "core§11.12",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "core§11.12.4",
 
             children: [{
-                description: "DataModelTest",
+                name: "DMTEST", tag: "field",
                 details: "This feature indicates support for extended Data Model testing commands, which are required in some " +
                     "situations." +
                     "\n" +
@@ -34,12 +34,14 @@ GeneralDiagnostics.patch({
         },
 
         {
+            name: "NetworkInterfaces", tag: "attribute",
             details: "The NetworkInterfaces attribute shall be a list of NetworkInterface structs. Each logical network " +
                 "interface on the Node shall be represented by a single entry within the NetworkInterfaces attribute.",
             xref: "core§11.12.6.1"
         },
 
         {
+            name: "RebootCount", tag: "attribute",
             details: "The RebootCount attribute shall indicate a best-effort count of the number of times the Node has " +
                 "rebooted. The RebootCount attribute SHOULD be incremented each time the Node reboots. The " +
                 "RebootCount attribute shall NOT be incremented when a Node wakes from a low-power or sleep state. " +
@@ -48,6 +50,7 @@ GeneralDiagnostics.patch({
         },
 
         {
+            name: "UpTime", tag: "attribute",
             details: "The UpTime attribute shall indicate a best-effort assessment of the length of time, in seconds, " +
                 "since the Node’s last reboot. This attribute SHOULD be incremented to account for the periods of " +
                 "time that a Node is in a low-power or sleep state. This attribute shall only be reset upon a device " +
@@ -57,6 +60,7 @@ GeneralDiagnostics.patch({
         },
 
         {
+            name: "TotalOperationalHours", tag: "attribute",
             details: "The TotalOperationalHours attribute shall indicate a best-effort attempt at tracking the length of " +
                 "time, in hours, that the Node has been operational. The TotalOperationalHours attribute SHOULD be " +
                 "incremented to account for the periods of time that a Node is in a low-power or sleep state. The " +
@@ -65,11 +69,14 @@ GeneralDiagnostics.patch({
         },
 
         {
+            name: "BootReason", tag: "attribute",
             details: "The BootReason attribute shall indicate the reason for the Node’s most recent boot.",
             xref: "core§11.12.6.5"
         },
 
         {
+            name: "ActiveHardwareFaults", tag: "attribute",
+
             details: "The ActiveHardwareFaults attribute shall indicate the set of faults currently detected by the Node. " +
                 "When the Node detects a fault has been raised, the appropriate HardwareFaultEnum value shall be " +
                 "added to this list. This list shall NOT contain more than one instance of a specific " +
@@ -84,6 +91,8 @@ GeneralDiagnostics.patch({
         },
 
         {
+            name: "ActiveRadioFaults", tag: "attribute",
+
             details: "The ActiveRadioFaults attribute shall indicate the set of faults currently detected by the Node. " +
                 "When the Node detects a fault has been raised, the appropriate RadioFaultEnum value shall be added " +
                 "to this list. This list shall NOT contain more than one instance of a specific RadioFaultEnum value. " +
@@ -97,6 +106,8 @@ GeneralDiagnostics.patch({
         },
 
         {
+            name: "ActiveNetworkFaults", tag: "attribute",
+
             details: "The ActiveNetworkFaults attribute shall indicate the set of faults currently detected by the Node. " +
                 "When the Node detects a fault has been raised, the appropriate NetworkFaultEnum value shall be added " +
                 "to this list. This list shall NOT contain more than one instance of a specific NetworkFaultEnum " +
@@ -110,6 +121,8 @@ GeneralDiagnostics.patch({
         },
 
         {
+            name: "TestEventTriggersEnabled", tag: "attribute",
+
             details: "The TestEventTriggersEnabled attribute shall indicate whether the Node has any TestEventTrigger " +
                 "configured. When this attribute is true, the Node has been configured with one or more test event " +
                 "triggers by virtue of the internally programmed EnableKey value (see TestEventTrigger) being set to " +
@@ -120,19 +133,23 @@ GeneralDiagnostics.patch({
             xref: "core§11.12.6.9"
         },
 
-        { xref: "core§11.12.6" },
+        { name: "DoNotUse", tag: "attribute", xref: "core§11.12.6" },
 
         {
+            name: "HardwareFaultChange", tag: "event",
             details: "The HardwareFaultChange Event shall indicate a change in the set of hardware faults currently " +
                 "detected by the Node.",
             xref: "core§11.12.8.1",
 
             children: [
                 {
+                    name: "Current", tag: "field",
                     details: "This field shall represent the set of faults currently detected, as per HardwareFaultEnum.",
                     xref: "core§11.12.8.1.1"
                 },
+
                 {
+                    name: "Previous", tag: "field",
                     details: "This field shall represent the set of faults detected prior to this change event, as per " +
                         "HardwareFaultEnum.",
                     xref: "core§11.12.8.1.2"
@@ -141,16 +158,20 @@ GeneralDiagnostics.patch({
         },
 
         {
+            name: "RadioFaultChange", tag: "event",
             details: "The RadioFaultChange Event shall indicate a change in the set of radio faults currently detected by " +
                 "the Node.",
             xref: "core§11.12.8.2",
 
             children: [
                 {
+                    name: "Current", tag: "field",
                     details: "This field shall represent the set of faults currently detected, as per RadioFaultEnum.",
                     xref: "core§11.12.8.2.1"
                 },
+
                 {
+                    name: "Previous", tag: "field",
                     details: "This field shall represent the set of faults detected prior to this change event, as per " +
                         "RadioFaultEnum.",
                     xref: "core§11.12.8.2.2"
@@ -159,16 +180,20 @@ GeneralDiagnostics.patch({
         },
 
         {
+            name: "NetworkFaultChange", tag: "event",
             details: "The NetworkFaultChange Event shall indicate a change in the set of network faults currently detected " +
                 "by the Node.",
             xref: "core§11.12.8.3",
 
             children: [
                 {
+                    name: "Current", tag: "field",
                     details: "This field shall represent the set of faults currently detected, as per NetworkFaultEnum.",
                     xref: "core§11.12.8.3.1"
                 },
+
                 {
+                    name: "Previous", tag: "field",
                     details: "This field shall represent the set of faults detected prior to this change event, as per " +
                         "NetworkFaultEnum.",
                     xref: "core§11.12.8.3.2"
@@ -177,14 +202,19 @@ GeneralDiagnostics.patch({
         },
 
         {
+            name: "BootReason", tag: "event",
             details: "The BootReason Event shall indicate the reason that caused the device to start-up.",
             xref: "core§11.12.8.4",
-            children: [
-                { details: "This field shall contain the reason for this BootReason event.", xref: "core§11.12.8.4.1" }
-            ]
+            children: [{
+                name: "BootReason", tag: "field",
+                details: "This field shall contain the reason for this BootReason event.",
+                xref: "core§11.12.8.4.1"
+            }]
         },
 
         {
+            name: "TestEventTrigger", tag: "command",
+
             details: "This command shall be supported to provide a means for certification tests to trigger some test- " +
                 "plan-specific events, necessary to assist in automation of device interactions for some " +
                 "certification test cases. This command shall NOT cause any changes to the state of the device that " +
@@ -196,6 +226,8 @@ GeneralDiagnostics.patch({
 
             children: [
                 {
+                    name: "EnableKey", tag: "field",
+
                     details: "The EnableKey is a 128 bit value provided by the client in this command, which needs to match a " +
                         "value chosen by the manufacturer and configured on the server using manufacturer-specific means, " +
                         "such as pre-provisioning. The value of all zeroes is reserved to indicate that no EnableKey is set. " +
@@ -215,6 +247,8 @@ GeneralDiagnostics.patch({
                 },
 
                 {
+                    name: "EventTrigger", tag: "field",
+
                     details: "This field shall indicate the test or test mode which the client wants to trigger." +
                         "\n" +
                         "The expected side-effects of EventTrigger values are out of scope of this specification and will be " +
@@ -243,6 +277,8 @@ GeneralDiagnostics.patch({
         },
 
         {
+            name: "TimeSnapshot", tag: "command",
+
             details: "This command may be used by a client to obtain a correlated view of both System Time, and, if " +
                 "currently synchronized and supported, \"wall clock time\" of the server. This can help clients " +
                 "establish time correlation between their concept of time and the server’s concept of time. This is " +
@@ -254,6 +290,8 @@ GeneralDiagnostics.patch({
         },
 
         {
+            name: "TimeSnapshotResponse", tag: "command",
+
             details: "This command shall be generated in response to a TimeSnapshot command." +
                 "\n" +
                 "When generating this response, all fields shall be gathered as close together in time as possible, " +
@@ -266,6 +304,7 @@ GeneralDiagnostics.patch({
 
             children: [
                 {
+                    name: "SystemTimeMs", tag: "field",
                     details: "This shall indicate the current System Time in milliseconds (type system-ms), with the value taken " +
                         "at the time of processing of the TimeSnapshot command that generated this response." +
                         "\n" +
@@ -275,6 +314,8 @@ GeneralDiagnostics.patch({
                 },
 
                 {
+                    name: "PosixTimeMs", tag: "field",
+
                     details: "This shall indicate the current time in POSIX Time in milliseconds, with the value taken from the " +
                         "same source that could populate the Timestamp field of events. This value shall only be null when " +
                         "any the following are true:" +
@@ -289,6 +330,8 @@ GeneralDiagnostics.patch({
         },
 
         {
+            name: "PayloadTestRequest", tag: "command",
+
             details: "This command provides a means for certification tests or manufacturer’s internal tests to validate " +
                 "particular command handling and encoding constraints by generating a response of a given size." +
                 "\n" +
@@ -302,15 +345,19 @@ GeneralDiagnostics.patch({
 
             children: [
                 {
+                    name: "EnableKey", tag: "field",
                     details: "This field shall have the same meaning and usage as the TestEventTrigger EnableKey field.",
                     xref: "core§11.12.7.4.1"
                 },
                 {
+                    name: "Value", tag: "field",
                     details: "This field shall indicate the value to use in every byte of the PayloadTestResponse’s Payload field.",
                     xref: "core§11.12.7.4.2"
                 },
 
                 {
+                    name: "Count", tag: "field",
+
                     details: "This field shall indicate the number of times to repeat the Value in the PayloadTestResponse’s " +
                         "Payload field." +
                         "\n" +
@@ -342,107 +389,188 @@ GeneralDiagnostics.patch({
         },
 
         {
+            name: "PayloadTestResponse", tag: "command",
             details: "This command is sent by the server on receipt of the PayloadTestRequest command.",
             xref: "core§11.12.7.5",
             children: [{
+                name: "Payload", tag: "field",
                 details: "This field shall contain the computed response of the PayloadTestRequest command.",
                 xref: "core§11.12.7.5.1"
             }]
         },
 
         {
+            name: "HardwareFaultEnum", tag: "datatype",
             xref: "core§11.12.5.1",
 
             children: [
-                { description: "The Node has encountered an unspecified fault." },
-                { description: "The Node has encountered a fault with at least one of its radios." },
-                { description: "The Node has encountered a fault with at least one of its sensors." },
-                { description: "The Node has encountered an over-temperature fault that is resettable." },
-                { description: "The Node has encountered an over-temperature fault that is not resettable." },
-                { description: "The Node has encountered a fault with at least one of its power sources." },
-                { description: "The Node has encountered a fault with at least one of its visual displays." },
-                { description: "The Node has encountered a fault with at least one of its audio outputs." },
-                { description: "The Node has encountered a fault with at least one of its user interfaces." },
-                { description: "The Node has encountered a fault with its non-volatile memory." },
-                { description: "The Node has encountered disallowed physical tampering." }
+                { name: "Unspecified", tag: "field", description: "The Node has encountered an unspecified fault." },
+                {
+                    name: "Radio", tag: "field",
+                    description: "The Node has encountered a fault with at least one of its radios."
+                },
+                {
+                    name: "Sensor", tag: "field",
+                    description: "The Node has encountered a fault with at least one of its sensors."
+                },
+                {
+                    name: "ResettableOverTemp", tag: "field",
+                    description: "The Node has encountered an over-temperature fault that is resettable."
+                },
+                {
+                    name: "NonResettableOverTemp", tag: "field",
+                    description: "The Node has encountered an over-temperature fault that is not resettable."
+                },
+                {
+                    name: "PowerSource", tag: "field",
+                    description: "The Node has encountered a fault with at least one of its power sources."
+                },
+                {
+                    name: "VisualDisplayFault", tag: "field",
+                    description: "The Node has encountered a fault with at least one of its visual displays."
+                },
+                {
+                    name: "AudioOutputFault", tag: "field",
+                    description: "The Node has encountered a fault with at least one of its audio outputs."
+                },
+                {
+                    name: "UserInterfaceFault", tag: "field",
+                    description: "The Node has encountered a fault with at least one of its user interfaces."
+                },
+                {
+                    name: "NonVolatileMemoryError", tag: "field",
+                    description: "The Node has encountered a fault with its non-volatile memory."
+                },
+                {
+                    name: "TamperDetected", tag: "field",
+                    description: "The Node has encountered disallowed physical tampering."
+                }
             ]
         },
 
         {
+            name: "RadioFaultEnum", tag: "datatype",
             xref: "core§11.12.5.2",
 
             children: [
-                { description: "The Node has encountered an unspecified radio fault." },
-                { description: "The Node has encountered a fault with its Wi-Fi radio." },
-                { description: "The Node has encountered a fault with its cellular radio." },
-                { description: "The Node has encountered a fault with its802.15.4 radio." },
-                { description: "The Node has encountered a fault with its NFC radio." },
-                { description: "The Node has encountered a fault with its BLE radio." },
-                { description: "The Node has encountered a fault with its Ethernet controller." }
+                {
+                    name: "Unspecified", tag: "field",
+                    description: "The Node has encountered an unspecified radio fault."
+                },
+                {
+                    name: "WiFiFault", tag: "field",
+                    description: "The Node has encountered a fault with its Wi-Fi radio."
+                },
+                {
+                    name: "CellularFault", tag: "field",
+                    description: "The Node has encountered a fault with its cellular radio."
+                },
+                {
+                    name: "ThreadFault", tag: "field",
+                    description: "The Node has encountered a fault with its802.15.4 radio."
+                },
+                { name: "NfcFault", tag: "field", description: "The Node has encountered a fault with its NFC radio." },
+                { name: "BleFault", tag: "field", description: "The Node has encountered a fault with its BLE radio." },
+                {
+                    name: "EthernetFault", tag: "field",
+                    description: "The Node has encountered a fault with its Ethernet controller."
+                }
             ]
         },
 
         {
+            name: "NetworkFaultEnum", tag: "datatype",
             xref: "core§11.12.5.3",
 
             children: [
-                { description: "The Node has encountered an unspecified fault." },
-                { description: "The Node has encountered a network fault as a result of a hardware failure." },
-                { description: "The Node has encountered a network fault as a result of a jammed network." },
+                { name: "Unspecified", tag: "field", description: "The Node has encountered an unspecified fault." },
                 {
+                    name: "HardwareFailure", tag: "field",
+                    description: "The Node has encountered a network fault as a result of a hardware failure."
+                },
+                {
+                    name: "NetworkJammed", tag: "field",
+                    description: "The Node has encountered a network fault as a result of a jammed network."
+                },
+                {
+                    name: "ConnectionFailed", tag: "field",
                     description: "The Node has encountered a network fault as a result of a failure to establish a connection."
                 }
             ]
         },
 
         {
+            name: "InterfaceTypeEnum", tag: "datatype",
             xref: "core§11.12.5.4",
 
             children: [
-                { description: "Indicates an interface of an unspecified type." },
-                { description: "Indicates a Wi-Fi interface." },
-                { description: "Indicates a Ethernet interface." },
-                { description: "Indicates a Cellular interface." },
-                { description: "Indicates a Thread interface." }
+                { name: "Unspecified", tag: "field", description: "Indicates an interface of an unspecified type." },
+                { name: "WiFi", tag: "field", description: "Indicates a Wi-Fi interface." },
+                { name: "Ethernet", tag: "field", description: "Indicates a Ethernet interface." },
+                { name: "Cellular", tag: "field", description: "Indicates a Cellular interface." },
+                { name: "Thread", tag: "field", description: "Indicates a Thread interface." }
             ]
         },
 
         {
+            name: "BootReasonEnum", tag: "datatype",
             xref: "core§11.12.5.5",
 
             children: [
                 {
+                    name: "Unspecified", tag: "field",
                     description: "The Node is unable to identify the Power-On reason as one of the other provided enumeration values."
                 },
                 {
+                    name: "PowerOnReboot", tag: "field",
                     description: "The Node has booted as the result of physical interaction with the device resulting in a reboot."
                 },
-                { description: "The Node has rebooted as the result of a brown-out of the Node’s power supply." },
-                { description: "The Node has rebooted as the result of a software watchdog timer." },
-                { description: "The Node has rebooted as the result of a hardware watchdog timer." },
-                { description: "The Node has rebooted as the result of a completed software update." },
-                { description: "The Node has rebooted as the result of a software initiated reboot." }
+                {
+                    name: "BrownOutReset", tag: "field",
+                    description: "The Node has rebooted as the result of a brown-out of the Node’s power supply."
+                },
+                {
+                    name: "SoftwareWatchdogReset", tag: "field",
+                    description: "The Node has rebooted as the result of a software watchdog timer."
+                },
+                {
+                    name: "HardwareWatchdogReset", tag: "field",
+                    description: "The Node has rebooted as the result of a hardware watchdog timer."
+                },
+                {
+                    name: "SoftwareUpdateCompleted", tag: "field",
+                    description: "The Node has rebooted as the result of a completed software update."
+                },
+                {
+                    name: "SoftwareReset", tag: "field",
+                    description: "The Node has rebooted as the result of a software initiated reboot."
+                }
             ]
         },
 
         {
+            name: "NetworkInterface", tag: "datatype",
             details: "This structure describes a network interface supported by the Node, as provided in the " +
                 "NetworkInterfaces attribute.",
             xref: "core§11.12.5.6",
 
             children: [
                 {
+                    name: "Name", tag: "field",
                     details: "This field shall indicate a human-readable (displayable) name for the network interface, that is " +
                         "different from all other interfaces.",
                     xref: "core§11.12.5.6.1"
                 },
+
                 {
+                    name: "IsOperational", tag: "field",
                     details: "This field shall indicate if the Node is currently advertising itself operationally on this network " +
                         "interface and is capable of successfully receiving incoming traffic from other Nodes.",
                     xref: "core§11.12.5.6.2"
                 },
 
                 {
+                    name: "OffPremiseServicesReachableIPv4", tag: "field",
                     details: "This field shall indicate whether the Node is currently able to reach off-premise services it uses " +
                         "by utilizing IPv4. The value shall be null if the Node does not use such services or does not know " +
                         "whether it can reach them.",
@@ -450,6 +578,7 @@ GeneralDiagnostics.patch({
                 },
 
                 {
+                    name: "OffPremiseServicesReachableIPv6", tag: "field",
                     details: "This field shall indicate whether the Node is currently able to reach off-premise services it uses " +
                         "by utilizing IPv6. The value shall be null if the Node does not use such services or does not know " +
                         "whether it can reach them.",
@@ -457,6 +586,7 @@ GeneralDiagnostics.patch({
                 },
 
                 {
+                    name: "HardwareAddress", tag: "field",
                     details: "This field shall contain the current link-layer address for a 802.3 or IEEE 802.11-2020 network" +
                         "\n" +
                         "interface and contain the current extended MAC address for a 802.15.4 interface. The byte order of " +
@@ -466,12 +596,14 @@ GeneralDiagnostics.patch({
                 },
 
                 {
+                    name: "IPv4Addresses", tag: "field",
                     details: "This field shall provide a list of the IPv4 addresses that are currently assigned to the network " +
                         "interface.",
                     xref: "core§11.12.5.6.6"
                 },
 
                 {
+                    name: "IPv6Addresses", tag: "field",
                     details: "This field shall provide a list of the unicast IPv6 addresses that are currently assigned to the " +
                         "network interface. This list shall include the Node’s link-local address and SHOULD include any " +
                         "assigned GUA and ULA addresses. This list shall NOT include any multicast group addresses to which " +
@@ -480,6 +612,7 @@ GeneralDiagnostics.patch({
                 },
 
                 {
+                    name: "Type", tag: "field",
                     details: "This field shall indicate the type of the interface using the InterfaceTypeEnum.",
                     xref: "core§11.12.5.6.8"
                 }

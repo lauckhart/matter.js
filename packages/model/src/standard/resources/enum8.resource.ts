@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { enum8 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-enum8.patch({ description: "8-bit enumeration", xref: "core§7.19.2" });
+Resource.add({ name: "enum8", tag: "datatype", description: "8-bit enumeration", xref: "core§7.19.2" });

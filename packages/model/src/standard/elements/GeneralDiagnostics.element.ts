@@ -21,7 +21,7 @@ export const GeneralDiagnostics = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "DMTEST", conformance: "desc", constraint: "0", description: "DataModelTest" })
+        Field({ name: "DMTEST", conformance: "desc", constraint: "0", longName: "DataModelTest" })
     ),
     Attribute(
         { id: 0x0, name: "NetworkInterfaces", type: "list", access: "R V", conformance: "M", constraint: "max 8" },

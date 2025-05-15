@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ApplicationBasic } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ApplicationBasic.patch({
+Resource.add({
+    name: "ApplicationBasic", tag: "cluster",
     classification: "application", pics: "APBSC",
 
     details: "This cluster provides information about a Content App running on a Video Player device which is " +
@@ -21,18 +22,21 @@ ApplicationBasic.patch({
     xref: "cluster§6.3",
 
     children: [
-        undefined,
         {
+            name: "VendorName", tag: "attribute",
             details: "This attribute shall specify a human readable (displayable) name of the vendor for the Content App.",
             xref: "cluster§6.3.5.1"
         },
+
         {
+            name: "VendorId", tag: "attribute",
             details: "This attribute, if present, shall specify the Connectivity Standards Alliance assigned Vendor ID for " +
                 "the Content App.",
             xref: "cluster§6.3.5.2"
         },
 
         {
+            name: "ApplicationName", tag: "attribute",
             details: "This attribute shall specify a human readable (displayable) name of the Content App assigned by the " +
                 "vendor. For example, \"NPR On Demand\". The maximum length of the ApplicationName attribute is 256 " +
                 "bytes of UTF-8 characters.",
@@ -40,6 +44,7 @@ ApplicationBasic.patch({
         },
 
         {
+            name: "ProductId", tag: "attribute",
             details: "This attribute, if present, shall specify a numeric ID assigned by the vendor to identify a specific " +
                 "Content App made by them. If the Content App is certified by the Connectivity Standards Alliance, " +
                 "then this would be the Product ID as specified by the vendor for the certification.",
@@ -47,38 +52,61 @@ ApplicationBasic.patch({
         },
 
         {
+            name: "Application", tag: "attribute",
             details: "This attribute shall specify a Content App which consists of an Application ID using a specified " +
                 "catalog.",
             xref: "cluster§6.3.5.5"
         },
+
         {
+            name: "Status", tag: "attribute",
             details: "This attribute shall specify the current running status of the application.",
             xref: "cluster§6.3.5.6"
         },
+
         {
+            name: "ApplicationVersion", tag: "attribute",
             details: "This attribute shall specify a human readable (displayable) version of the Content App assigned by " +
                 "the vendor. The maximum length of the ApplicationVersion attribute is 32 bytes of UTF-8 characters.",
             xref: "cluster§6.3.5.7"
         },
-        { details: "This attribute is a list of vendor IDs. Each entry is a vendor-id.", xref: "cluster§6.3.5.8" },
 
         {
+            name: "AllowedVendorList", tag: "attribute",
+            details: "This attribute is a list of vendor IDs. Each entry is a vendor-id.",
+            xref: "cluster§6.3.5.8"
+        },
+
+        {
+            name: "ApplicationStatusEnum", tag: "datatype",
             xref: "cluster§6.3.4.1",
 
             children: [
-                { description: "Application is not running." },
-                { description: "Application is running, is visible to the user, and is the active target for input." },
-                { description: "Application is running but not visible to the user." },
-                { description: "Application is running and visible, but is not the active target for input." }
+                { name: "Stopped", tag: "field", description: "Application is not running." },
+                {
+                    name: "ActiveVisibleFocus", tag: "field",
+                    description: "Application is running, is visible to the user, and is the active target for input."
+                },
+                {
+                    name: "ActiveHidden", tag: "field",
+                    description: "Application is running but not visible to the user."
+                },
+                {
+                    name: "ActiveVisibleNotFocus", tag: "field",
+                    description: "Application is running and visible, but is not the active target for input."
+                }
             ]
         },
 
         {
+            name: "ApplicationStruct", tag: "datatype",
             details: "This indicates a global identifier for an Application given a catalog.",
             xref: "cluster§6.3.4.2",
 
             children: [
                 {
+                    name: "CatalogVendorId", tag: "field",
+
                     details: "This field shall indicate the Connectivity Standards Alliance issued vendor ID for the catalog. The " +
                         "DIAL registry shall use value 0x0000." +
                         "\n" +
@@ -90,6 +118,7 @@ ApplicationBasic.patch({
                 },
 
                 {
+                    name: "ApplicationId", tag: "field",
                     details: "This field shall indicate the application identifier, expressed as a string, such as \"123456-5433\", " +
                         "\"PruneVideo\" or \"Company X\". This field shall be unique within a catalog." +
                         "\n" +

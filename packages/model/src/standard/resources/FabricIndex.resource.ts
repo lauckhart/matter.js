@@ -6,9 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { FabricIndex } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-FabricIndex.patch({
+Resource.add({
+    name: "FabricIndex", tag: "field",
+
     details: "This field shall be present for fabric-scoped data. This field does not have to be defined " +
         "explicitly in the field table for fabric-scoped data." +
         "\n" +

@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { enum16 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-enum16.patch({ description: "16-bit enumeration", xref: "core§7.19.2" });
+Resource.add({ name: "enum16", tag: "datatype", description: "16-bit enumeration", xref: "core§7.19.2" });

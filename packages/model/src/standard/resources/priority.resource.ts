@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { priority } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-priority.patch({
+Resource.add({
+    name: "priority", tag: "datatype",
     description: "Priority",
     details: "This is an enumeration of priority used to tag events and possibly other data. The data type does " +
         "not define any particular ordering among the values. Specific uses of the data type may assign " +
@@ -16,11 +17,13 @@ priority.patch({
     xref: "core§7.19.2.17",
 
     children: [
-        { description: "Information for engineering debugging/troubleshooting" },
+        { name: "Debug", tag: "field", description: "Information for engineering debugging/troubleshooting" },
         {
+            name: "Info", tag: "field",
             description: "Information that either drives customer facing features or provides insights into device functions that are used to drive analytics use cases"
         },
         {
+            name: "Critical", tag: "field",
             description: "Information or notification that impacts safety, a critical function, or ongoing reliable operation of the node or application supported on an endpoint."
         }
     ]

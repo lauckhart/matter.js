@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { int24 } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-int24.patch({ description: "Signed 24-bit integer", xref: "core§7.19.1" });
+Resource.add({ name: "int24", tag: "datatype", description: "Signed 24-bit integer", xref: "core§7.19.1" });

@@ -6,22 +6,22 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { FanControl } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-FanControl.patch({
+Resource.add({
+    name: "FanControl", tag: "cluster",
     classification: "application", pics: "FAN",
     details: "This cluster specifies an interface to control the speed of a fan.",
     xref: "cluster§4.4",
 
     children: [
-        undefined,
-
         {
+            name: "FeatureMap", tag: "attribute",
             xref: "cluster§4.4.4",
 
             children: [
                 {
-                    description: "MultiSpeed",
+                    name: "SPD", tag: "field",
 
                     details: "Legacy Fan Control cluster revision 0-1 defined 3 speeds (low, medium and high) plus automatic speed " +
                         "control but left it up to the implementer to decide what was supported. Therefore, it is assumed " +
@@ -36,15 +36,17 @@ FanControl.patch({
                     xref: "cluster§4.4.4.1"
                 },
 
-                { description: "Auto", details: "Automatic mode supported for fan speed" },
-                { description: "Rocking", details: "Rocking movement supported" },
-                { description: "Wind", details: "Wind emulation supported" },
-                { description: "Step", details: "Step command supported" },
-                { description: "AirflowDirection", details: "Airflow Direction attribute is supported" }
+                { name: "AUT", tag: "field", details: "Automatic mode supported for fan speed" },
+                { name: "RCK", tag: "field", details: "Rocking movement supported" },
+                { name: "WND", tag: "field", details: "Wind emulation supported" },
+                { name: "STEP", tag: "field", details: "Step command supported" },
+                { name: "DIR", tag: "field", details: "Airflow Direction attribute is supported" }
             ]
         },
 
         {
+            name: "FanMode", tag: "attribute",
+
             details: "Indicates the current speed mode of the fan. This attribute may be written by the client to request " +
                 "a different fan mode. A server shall return INVALID_IN_STATE to indicate that the fan is not in a " +
                 "state where the FanMode can be changed to the requested value. A server may have FanMode values that " +
@@ -64,9 +66,15 @@ FanControl.patch({
             xref: "cluster§4.4.6.1"
         },
 
-        { details: "This attribute indicates the fan speed ranges that shall be supported.", xref: "cluster§4.4.6.2" },
+        {
+            name: "FanModeSequence", tag: "attribute",
+            details: "This attribute indicates the fan speed ranges that shall be supported.",
+            xref: "cluster§4.4.6.2"
+        },
 
         {
+            name: "PercentSetting", tag: "attribute",
+
             details: "Indicates the speed setting for the fan. This attribute may be written by the client to indicate a " +
                 "new fan speed. If the client writes null to this attribute, the attribute value shall NOT change. A " +
                 "server shall return INVALID_IN_STATE to indicate that the fan is not in a state where the " +
@@ -78,6 +86,7 @@ FanControl.patch({
         },
 
         {
+            name: "PercentCurrent", tag: "attribute",
             details: "Indicates the actual currently operating fan speed, or zero to indicate that the fan is off. There " +
                 "may be a temporary mismatch between the value of this attribute and the value of the PercentSetting " +
                 "attribute due to other system requirements that would not allow the fan to operate at the requested " +
@@ -86,12 +95,15 @@ FanControl.patch({
         },
 
         {
+            name: "SpeedMax", tag: "attribute",
             details: "Indicates that the fan has one speed (value of 1) or the maximum speed, if the fan is capable of " +
                 "multiple speeds.",
             xref: "cluster§4.4.6.5"
         },
 
         {
+            name: "SpeedSetting", tag: "attribute",
+
             details: "Indicates the speed setting for the fan. This attribute may be written by the client to indicate a " +
                 "new fan speed. If the client writes null to this attribute, the attribute value shall NOT change. A " +
                 "server shall return INVALID_IN_STATE to indicate that the fan is not in a state where the " +
@@ -104,6 +116,7 @@ FanControl.patch({
         },
 
         {
+            name: "SpeedCurrent", tag: "attribute",
             details: "Indicates the actual currently operating fan speed, or zero to indicate that the fan is off. There " +
                 "may be a temporary mismatch between the value of this attribute and the value of the SpeedSetting " +
                 "attribute due to other system requirements that would not allow the fan to operate at the requested " +
@@ -112,11 +125,14 @@ FanControl.patch({
         },
 
         {
+            name: "RockSupport", tag: "attribute",
             details: "This attribute is a bitmap that indicates what rocking motions the server supports.",
             xref: "cluster§4.4.6.8"
         },
 
         {
+            name: "RockSetting", tag: "attribute",
+
             details: "This attribute is a bitmap that indicates the current active fan rocking motion settings. Each bit " +
                 "shall only be set to 1, if the corresponding bit in the RockSupport attribute is set to 1, otherwise " +
                 "a status code of CONSTRAINT_ERROR shall be returned." +
@@ -132,12 +148,15 @@ FanControl.patch({
         },
 
         {
+            name: "WindSupport", tag: "attribute",
             details: "This attribute is a bitmap that indicates what wind modes the server supports. At least one wind " +
                 "mode bit shall be set.",
             xref: "cluster§4.4.6.10"
         },
 
         {
+            name: "WindSetting", tag: "attribute",
+
             details: "This attribute is a bitmap that indicates the current active fan wind feature settings. Each bit " +
                 "shall only be set to 1, if the corresponding bit in the WindSupport attribute is set to 1, otherwise " +
                 "a status code of CONSTRAINT_ERROR shall be returned." +
@@ -153,6 +172,7 @@ FanControl.patch({
         },
 
         {
+            name: "AirflowDirection", tag: "attribute",
             details: "Indicates the current airflow direction of the fan. This attribute may be written by the client to " +
                 "indicate a new airflow direction for the fan. This attribute shall be set to one of the values in " +
                 "the AirflowDirectionEnum table.",
@@ -160,6 +180,8 @@ FanControl.patch({
         },
 
         {
+            name: "Step", tag: "command",
+
             details: "This command speeds up or slows down the fan, in steps, without the client having to know the fan " +
                 "speed. This command supports, for example, a user operated wall switch, where the user provides the " +
                 "feedback or control to stop sending this command when the proper speed is reached. The step speed " +
@@ -171,14 +193,17 @@ FanControl.patch({
 
             children: [
                 {
+                    name: "Direction", tag: "field",
                     details: "This field shall indicate whether the fan speed increases or decreases to the next step value.",
                     xref: "cluster§4.4.7.1.1"
                 },
                 {
+                    name: "Wrap", tag: "field",
                     details: "This field shall indicate if the fan speed wraps between highest and lowest step value.",
                     xref: "cluster§4.4.7.1.2"
                 },
                 {
+                    name: "LowestOff", tag: "field",
                     details: "This field shall indicate that the fan being off (speed value 0) is included as a step value.",
                     xref: "cluster§4.4.7.1.3"
                 }
@@ -186,42 +211,51 @@ FanControl.patch({
         },
 
         {
+            name: "RockBitmap", tag: "datatype",
             xref: "cluster§4.4.5.1",
             children: [
-                { description: "Indicate rock left to right" },
-                { description: "Indicate rock up and down" },
-                { description: "Indicate rock around" }
+                { name: "RockLeftRight", tag: "field", description: "Indicate rock left to right" },
+                { name: "RockUpDown", tag: "field", description: "Indicate rock up and down" },
+                { name: "RockRound", tag: "field", description: "Indicate rock around" }
             ]
         },
 
         {
+            name: "WindBitmap", tag: "datatype",
             xref: "cluster§4.4.5.2",
-            children: [{ description: "Indicate sleep wind" }, { description: "Indicate natural wind" }]
+            children: [
+                { name: "SleepWind", tag: "field", description: "Indicate sleep wind" },
+                { name: "NaturalWind", tag: "field", description: "Indicate natural wind" }
+            ]
         },
 
         {
+            name: "StepDirectionEnum", tag: "datatype",
             xref: "cluster§4.4.5.3",
             children: [
-                { description: "Step moves in increasing direction" },
-                { description: "Step moves in decreasing direction" }
+                { name: "Increase", tag: "field", description: "Step moves in increasing direction" },
+                { name: "Decrease", tag: "field", description: "Step moves in decreasing direction" }
             ]
         },
 
         {
+            name: "AirflowDirectionEnum", tag: "datatype",
             xref: "cluster§4.4.5.4",
             children: [
-                { description: "Airflow is in the forward direction" },
-                { description: "Airflow is in the reverse direction" }
+                { name: "Forward", tag: "field", description: "Airflow is in the forward direction" },
+                { name: "Reverse", tag: "field", description: "Airflow is in the reverse direction" }
             ]
         },
 
         {
+            name: "FanModeEnum", tag: "datatype",
             xref: "cluster§4.4.5.5",
 
             children: [
-                { description: "Fan is off" },
+                { name: "Off", tag: "field", description: "Fan is off" },
 
                 {
+                    name: "Low", tag: "field",
                     description: "Fan using low speed",
                     details: "If the fan supports 2 or more speeds, the Low value shall be supported." +
                         "\n" +
@@ -230,6 +264,7 @@ FanControl.patch({
                 },
 
                 {
+                    name: "Medium", tag: "field",
                     description: "Fan using medium speed",
                     details: "If the fan supports 3 or more speeds, the Medium value shall be supported." +
                         "\n" +
@@ -237,23 +272,32 @@ FanControl.patch({
                     xref: "cluster§4.4.5.5.2"
                 },
 
-                { description: "Fan using high speed" },
-                undefined,
-                { description: "Fan is using auto mode" },
-                { description: "Fan is using smart mode" }
+                { name: "High", tag: "field", description: "Fan using high speed" },
+                { name: "Auto", tag: "field", description: "Fan is using auto mode" },
+                { name: "Smart", tag: "field", description: "Fan is using smart mode" }
             ]
         },
 
         {
+            name: "FanModeSequenceEnum", tag: "datatype",
             xref: "cluster§4.4.5.6",
 
             children: [
-                { description: "Fan is capable of off, low, medium and high modes" },
-                { description: "Fan is capable of off, low and high modes" },
-                { description: "Fan is capable of off, low, medium, high and auto modes" },
-                { description: "Fan is capable of off, low, high and auto modes" },
-                { description: "Fan is capable of off, high and auto modes" },
-                { description: "Fan is capable of off and high modes" }
+                {
+                    name: "OffLowMedHigh", tag: "field",
+                    description: "Fan is capable of off, low, medium and high modes"
+                },
+                { name: "OffLowHigh", tag: "field", description: "Fan is capable of off, low and high modes" },
+                {
+                    name: "OffLowMedHighAuto", tag: "field",
+                    description: "Fan is capable of off, low, medium, high and auto modes"
+                },
+                {
+                    name: "OffLowHighAuto", tag: "field",
+                    description: "Fan is capable of off, low, high and auto modes"
+                },
+                { name: "OffHighAuto", tag: "field", description: "Fan is capable of off, high and auto modes" },
+                { name: "OffHigh", tag: "field", description: "Fan is capable of off and high modes" }
             ]
         }
     ]

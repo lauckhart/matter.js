@@ -6,22 +6,24 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { TemperatureMeasurement } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-TemperatureMeasurement.patch({
+Resource.add({
+    name: "TemperatureMeasurement", tag: "cluster",
     classification: "application", pics: "TMP",
     details: "This cluster provides an interface to temperature measurement functionality, including configuration " +
         "and provision of notifications of temperature measurements.",
     xref: "cluster§2.3",
 
     children: [
-        undefined,
         {
+            name: "MeasuredValue", tag: "attribute",
             details: "Indicates the measured temperature. The null value indicates that the temperature is unknown.",
             xref: "cluster§2.3.4.1"
         },
 
         {
+            name: "MinMeasuredValue", tag: "attribute",
             details: "Indicates the minimum value of MeasuredValue that is capable of being measured. See Measured Value " +
                 "for more details." +
                 "\n" +
@@ -30,6 +32,7 @@ TemperatureMeasurement.patch({
         },
 
         {
+            name: "MaxMeasuredValue", tag: "attribute",
             details: "This attribute indicates the maximum value of MeasuredValue that is capable of being measured. See " +
                 "Measured Value for more details." +
                 "\n" +
@@ -37,6 +40,6 @@ TemperatureMeasurement.patch({
             xref: "cluster§2.3.4.3"
         },
 
-        { details: "See Measured Value.", xref: "cluster§2.3.4.4" }
+        { name: "Tolerance", tag: "attribute", details: "See Measured Value.", xref: "cluster§2.3.4.4" }
     ]
 });

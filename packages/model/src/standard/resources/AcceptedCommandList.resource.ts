@@ -6,9 +6,11 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { AcceptedCommandList } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-AcceptedCommandList.patch({
+Resource.add({
+    name: "AcceptedCommandList", tag: "attribute",
+
     details: "This attribute is a list of client generated commands which are supported by this cluster server " +
         "instance." +
         "\n" +

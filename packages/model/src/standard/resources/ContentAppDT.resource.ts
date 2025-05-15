@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ContentAppDt } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ContentAppDt.patch({
+Resource.add({
+    name: "ContentApp", tag: "deviceType",
     classification: "simple",
     details: "This defines conformance to the Content App device type." +
         "\n" +
@@ -17,17 +18,24 @@ ContentAppDt.patch({
     xref: "device§10.5",
 
     children: [
-        undefined,
-        { xref: "device§10.5.4" },
-        { xref: "device§10.5.4" },
-        { xref: "device§10.5.4" },
-        { xref: "device§10.5.4" },
-        { xref: "device§10.5.4" },
-        { xref: "device§10.5.4" },
-        { xref: "device§10.5.4" },
-        { xref: "device§10.5.4" },
-        { xref: "device§10.5.4" },
-        { xref: "device§10.5.4" },
-        { children: [{ description: "The node is a client for ContentAppObservers.", xref: "device§10.5.3" }] }
+        { name: "Binding", tag: "requirement", xref: "device§10.5.4" },
+        { name: "Channel", tag: "requirement", xref: "device§10.5.4" },
+        { name: "TargetNavigator", tag: "requirement", xref: "device§10.5.4" },
+        { name: "MediaPlayback", tag: "requirement", xref: "device§10.5.4" },
+        { name: "KeypadInput", tag: "requirement", xref: "device§10.5.4" },
+        { name: "ContentLauncher", tag: "requirement", xref: "device§10.5.4" },
+        { name: "ApplicationLauncher", tag: "requirement", xref: "device§10.5.4" },
+        { name: "ApplicationBasic", tag: "requirement", xref: "device§10.5.4" },
+        { name: "AccountLogin", tag: "requirement", xref: "device§10.5.4" },
+        { name: "ContentAppObserver", tag: "requirement", xref: "device§10.5.4" },
+
+        {
+            name: "conditions", tag: "field",
+            children: [{
+                name: "ObserverClient", tag: "field",
+                description: "The node is a client for ContentAppObservers.",
+                xref: "device§10.5.3"
+            }]
+        }
     ]
 });

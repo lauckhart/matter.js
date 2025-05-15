@@ -20,7 +20,7 @@ export const ScenesManagement = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 1 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "SN", conformance: "O", constraint: "0", description: "SceneNames" })
+        Field({ name: "SN", conformance: "O", constraint: "0", longName: "SceneNames" })
     ),
     Attribute({
         id: 0x0, name: "LastConfiguredBy", type: "node-id",

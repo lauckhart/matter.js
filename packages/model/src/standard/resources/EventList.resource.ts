@@ -6,6 +6,6 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { EventList } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-EventList.patch({ xref: "core§7.13" });
+Resource.add({ name: "EventList", tag: "attribute", xref: "core§7.13" });

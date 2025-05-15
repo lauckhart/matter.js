@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { ipv6Adr } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-ipv6Adr.patch({
+Resource.add({
+    name: "ipv6adr", tag: "datatype",
     description: "IPv6 Address",
 
     details: "The IPv6 address data type is derived from an octet string. The octets shall correspond to the full " +

@@ -6,9 +6,10 @@
 
 /*** THIS FILE IS GENERATED, DO NOT EDIT ***/
 
-import { commandId } from "#index.js";
+import { Resource } from "#models/Resource.js";
 
-commandId.patch({
+Resource.add({
+    name: "command-id", tag: "datatype",
     description: "Command ID",
     details: "An identifier that indicates a command defined in a cluster specification." +
         "\n" +
