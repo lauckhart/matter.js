@@ -27,6 +27,8 @@ export function generateResource(target: TsFile, element: Model, identifierName:
         expr.value(patch.children, "children: ");
     }
 
+    console.log("*** 8< ***\n\n\n", target.toString());
+
     return true;
 }
 
@@ -42,11 +44,16 @@ function generateResourcePatch(element: Model): ResourcePatch | undefined {
     let patch: ResourcePatch | undefined;
     if (resources) {
         const entries = Object.entries(resources).filter(
-            ([k]) => k !== "asOf" && k !== "until" && k !== "matchTo" && k !== "details" && k !== "xref",
+            ([k, v]) =>
+                v !== undefined && k !== "asOf" && k !== "until" && k !== "matchTo" && k !== "details" && k !== "xref",
         );
         if (entries.length) {
             patch = Object.fromEntries(entries);
         }
+    }
+
+    while (children.length && children[children.length - 1] === undefined) {
+        children.length = children.length - 1;
     }
 
     if (children?.some(c => c)) {
