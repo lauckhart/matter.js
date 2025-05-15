@@ -441,7 +441,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
             } as unknown as E;
         }
 
-        return {
+        const result = {
             tag: this.tag,
             type: this.type,
             isSeed: this.isSeed,
@@ -449,7 +449,11 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
             name: this.#name,
             ...this.resources,
             ...extra,
-        } as unknown as E;
+        };
+
+        delete result.errors;
+
+        return result as unknown as E;
     }
 
     /**
@@ -789,7 +793,7 @@ export namespace Model {
      * A patch to a model tree.
      */
     export type Patch<T extends BaseElement> = Omit<Partial<T>, "children" | "tag"> & {
-        children?: Patch<Exclude<T["children"], undefined>[number]>;
+        children?: (Patch<Exclude<T["children"], undefined>[number]> | undefined)[];
     };
 
     export type Properties<T extends BaseElement.Properties = BaseElement.Properties> = T & {

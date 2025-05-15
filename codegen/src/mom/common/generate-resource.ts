@@ -6,6 +6,7 @@
 
 import { Model, Resources } from "#model";
 import { TsFile } from "#util/TsFile.js";
+import { serialize } from "@matter/general";
 import { addDetailsAndCrossReferences, addProperties } from "./element-generation.js";
 
 export function generateResource(target: TsFile, element: Model, identifierName: string): boolean {
@@ -15,7 +16,7 @@ export function generateResource(target: TsFile, element: Model, identifierName:
     }
 
     target.addImport("!elements/models.js", identifierName);
-    const expr = target.expressions(`${identifierName}.patch(`, ")");
+    const expr = target.expressions(`${identifierName}.patch({`, "})");
 
     if (patch.resources) {
         addProperties(expr, patch.resources as Record<string, unknown>);
@@ -26,8 +27,6 @@ export function generateResource(target: TsFile, element: Model, identifierName:
     if (patch.children) {
         expr.value(patch.children, "children: ");
     }
-
-    console.log("*** 8< ***\n\n\n", target.toString());
 
     return true;
 }
@@ -45,21 +44,30 @@ function generateResourcePatch(element: Model): ResourcePatch | undefined {
     if (resources) {
         const entries = Object.entries(resources).filter(
             ([k, v]) =>
-                v !== undefined && k !== "asOf" && k !== "until" && k !== "matchTo" && k !== "details" && k !== "xref",
+                v !== undefined &&
+                k !== "asOf" &&
+                k !== "until" &&
+                k !== "matchTo" &&
+                k !== "details" &&
+                k !== "xref" &&
+                k !== "errors",
         );
         if (entries.length) {
             patch = Object.fromEntries(entries);
         }
     }
 
-    while (children.length && children[children.length - 1] === undefined) {
-        children.length = children.length - 1;
-    }
-
     if (children?.some(c => c)) {
-        children = children.map(c => c ?? {});
+        while (children.length && children[children.length - 1] === undefined) {
+            children.length = children.length - 1;
+        }
+
+        children = children.map(child => child ?? serialize.asIs("undefined"));
+
         if (patch) {
             patch.children = children as ResourcePatch[];
+        } else {
+            patch = { children: children as ResourcePatch[] };
         }
     }
 

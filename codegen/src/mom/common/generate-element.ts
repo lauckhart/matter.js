@@ -29,18 +29,34 @@ export function generateElement({
     const expr = target.expressions(`${prefix}${factory}(`, `)${suffix}`);
     const head = expr.expressions("{", "}");
 
-    const fields = element.toElement(operational) as { [name: string]: any };
+    const fields = Object.fromEntries(
+        Object.entries(element.toElement(operational)).filter(([k, v]) => {
+            switch (k) {
+                // We handle these separately
+                case "id":
+                case "name":
+                case "type":
+                case "tag":
+                case "children":
+                case "xref":
+                case "details":
+                    return false;
 
-    delete fields.tag;
-    delete fields.xref;
-    delete fields.children;
-    delete fields.details;
-    delete fields.resources;
+                // We either unroll these into individual fields or serialize separately
+                case "resources":
+                    return false;
 
-    // These are for codegen only
-    delete fields.matchTo;
-    delete fields.asOf;
-    delete fields.until;
+                // These are (currently) only used by codegen
+                case "matchTo":
+                case "asOf":
+                case "until":
+                    return false;
+
+                default:
+                    return v !== undefined && v !== "";
+            }
+        }),
+    );
 
     // First, name/ID/type
     const row1: Record<string, unknown> = { name: element.name };
