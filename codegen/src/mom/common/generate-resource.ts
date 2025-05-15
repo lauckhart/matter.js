@@ -14,7 +14,7 @@ export function generateResource(target: TsFile, element: Model): boolean {
         return false;
     }
 
-    target.addImport("!model/model/Resources", "Resources");
+    target.addImport("!model/model/Resources.js", "Resources");
     const expr = target.expressions(`Resources.add(`, ")");
 
     addResource(expr, patch);

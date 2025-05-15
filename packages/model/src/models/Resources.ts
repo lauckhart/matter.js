@@ -15,9 +15,6 @@ import type { Model } from "./Model.js";
  * Model information that is currently not required for operational purposes.
  */
 export class Resource {
-    tag?: string;
-    name?: string;
-    discriminator?: string;
     errors?: DefinitionError[];
     asOf?: Specification.Revision;
     until?: Specification.Revision;
@@ -36,9 +33,6 @@ export class Resource {
             return;
         }
 
-        this.tag = resources.tag;
-        this.name = resources.name;
-        this.discriminator = resources.discriminator;
         this.description = resources.description;
         this.details = resources.details;
         this.xref = resources.xref ? CrossReference.get(resources.xref) : undefined;
@@ -53,6 +47,10 @@ export class Resource {
 
 /**
  * A pool of loaded resources.
+ *
+ * Resources are indexed logically via a (tag, name) tuple in the context of the parent and if necessary for
+ * discrimination, conformance.  Models that do not have their own resource definition installed will search this
+ * pool to fulfill resource properties.
  */
 export class Resources {
     #cache?: WeakMap<Model, IndexNode | null>;
