@@ -21,8 +21,8 @@ export const AccessControl = Cluster(
     Attribute({ id: 0xfffd, name: "ClusterRevision", type: "ClusterRevision", default: 2 }),
     Attribute(
         { id: 0xfffc, name: "FeatureMap", type: "FeatureMap" },
-        Field({ name: "EXTS", conformance: "O", constraint: "0", description: "Extension" }),
-        Field({ name: "MNGD", conformance: "desc", constraint: "1", description: "ManagedDevice" })
+        Field({ name: "EXTS", conformance: "O", constraint: "0", longName: "Extension" }),
+        Field({ name: "MNGD", conformance: "desc", constraint: "1", longName: "ManagedDevice" })
     ),
     Attribute(
         { id: 0x0, name: "Acl", type: "list", access: "RW F A", conformance: "M", constraint: "desc" },

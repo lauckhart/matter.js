@@ -24,14 +24,14 @@ export class DeviceTypeModel extends Model<DeviceTypeElement, DeviceTypeModel.Ch
     }
 
     get classification() {
-        return this.hasResources
-            ? (this.resources.classification as DeviceClassification)
+        return this.hasLocalResource
+            ? (this.localResource.classification as DeviceClassification)
             : DeviceClassification.Simple;
     }
 
     set classification(classification: DeviceClassification) {
-        if (classification || this.hasResources) {
-            this.resources.classification = classification;
+        if (classification || this.hasLocalResource) {
+            this.localResource.classification = classification;
         }
     }
 

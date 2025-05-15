@@ -56,24 +56,22 @@ export class ClusterModel extends ScopeModel<ClusterElement, ClusterModel.Child>
     }
 
     get classification() {
-        return this.hasResources
-            ? (this.resources.classification as ClusterElement.Classification | undefined)
-            : undefined;
+        return this.resource?.classification as ClusterElement.Classification | undefined;
     }
 
     set classification(classification: ClusterElement.Classification | undefined) {
-        if (classification || this.hasResources) {
-            this.resources.classification = classification;
+        if (classification || this.hasLocalResource) {
+            this.localResource.classification = classification;
         }
     }
 
     get pics() {
-        return this.hasResources ? this.resources.pics : undefined;
+        return this.hasLocalResource ? this.localResource.pics : undefined;
     }
 
     set pics(pics: string | undefined) {
-        if (pics || this.hasResources) {
-            this.resources.pics = pics;
+        if (pics || this.hasLocalResource) {
+            this.localResource.pics = pics;
         }
     }
 
@@ -130,7 +128,7 @@ export class ClusterModel extends ScopeModel<ClusterElement, ClusterModel.Child>
         }
 
         for (const feature of featureMap.children) {
-            const desc = feature.description && camelize(feature.description);
+            const desc = feature.longName && camelize(feature.longName);
             if (desc !== undefined && featureSet.has(desc)) {
                 feature.default = true;
                 featureSet.delete(desc);

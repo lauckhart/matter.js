@@ -11,7 +11,7 @@ import { ModelTraversal } from "../logic/ModelTraversal.js";
 import { Children, InternalChildren } from "./Children.js";
 import { CrossReference } from "./CrossReference.js";
 import type { MatterModel } from "./MatterModel.js";
-import { Resources } from "./Resources.js";
+import { Resource, Resources } from "./Resources.js";
 
 const inspect = Symbol.for("nodejs.util.inspect.custom");
 
@@ -33,7 +33,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
     #id: E["id"];
     #name: string;
     #frozen?: boolean;
-    #resources?: Resources;
+    #resource?: Resource;
 
     /**
      * Indicates that an element defines a datatype.
@@ -457,7 +457,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
             isSeed: this.isSeed,
             id: this.#id,
             name: this.#name,
-            ...this.resources,
+            ...this.resource,
             ...extra,
         };
 
@@ -586,8 +586,8 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
         this.operationalBase = definition.operationalBase;
         this.operationalShadow = definition.operationalShadow;
 
-        if ("resources" in definition) {
-            this.resources = definition.resources;
+        if ("resource" in definition) {
+            this.resource = definition.resource;
         } else if (
             "description" in definition ||
             "xref" in definition ||
@@ -598,7 +598,7 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
             "until" in definition ||
             "matchTo" in definition
         ) {
-            this.resources = new Resources(definition);
+            this.resource = new Resource(definition);
         }
 
         if (this.xref) {
@@ -644,90 +644,80 @@ export abstract class Model<E extends BaseElement = BaseElement, C extends Model
         return `${this.tag}${this.type ? `<${this.type}>` : ""}#${this.path}`;
     }
 
-    get resources(): Resources {
-        return this.#resources || (this.#resources = {});
+    get resource() {
+        return this.#resource || (this.#root?.resources || Resources.default).get(this);
     }
 
-    set resources(resources: Resources | undefined) {
-        if (resources instanceof Resources) {
-            this.#resources = resources;
+    set resource(resource: Resource | undefined) {
+        if (resource instanceof Resource) {
+            this.#resource = resource;
         } else {
-            this.#resources = new Resources(resources);
+            this.#resource = new Resource(resource);
         }
     }
 
     get description() {
-        return this.#resources?.description;
+        return this.#resource?.description;
     }
 
     set description(description: string | undefined) {
-        if (description !== undefined || this.#resources) {
-            this.resources.description = description;
-        }
+        this.localResource.description = description;
     }
 
     get details() {
-        return this.#resources?.details;
+        return this.#resource?.details;
     }
 
     set details(details: string | undefined) {
-        if (details !== undefined || this.#resources) {
-            this.resources.details = details;
-        }
+        this.localResource.details = details;
     }
 
     get xref() {
-        return this.#resources?.xref;
+        return this.#resource?.xref;
     }
 
     set xref(xref: Specification.CrossReference | undefined) {
-        if (xref || this.#resources) {
-            this.resources.xref = xref;
-        }
+        this.localResource.xref = xref;
     }
 
     get errors() {
-        return this.#resources?.errors;
+        return this.#resource?.errors;
     }
 
     set errors(errors: DefinitionError[] | undefined) {
-        if (errors || this.#resources) {
-            this.resources.errors = errors;
-        }
+        this.localResource.errors = errors;
     }
 
     get asOf() {
-        return this.#resources?.asOf;
+        return this.#resource?.asOf;
     }
 
     set asOf(asOf: Specification.Revision | undefined) {
-        if (asOf || this.#resources) {
-            this.resources.asOf = asOf;
-        }
+        this.localResource.asOf = asOf;
     }
 
     get until() {
-        return this.#resources?.until;
+        return this.#resource?.until;
     }
 
     set until(until: Specification.Revision | undefined) {
-        if (until || this.#resources) {
-            this.resources.until = until;
-        }
+        this.localResource.until = until;
     }
 
     get matchTo() {
-        return this.#resources?.matchTo;
+        return this.#resource?.matchTo;
     }
 
     set matchTo(matchTo: { id?: string | number; name?: string } | undefined) {
-        if (matchTo || this.#resources) {
-            this.resources.matchTo = matchTo;
-        }
+        this.localResource.matchTo = matchTo;
     }
 
-    get hasResources() {
-        return !!this.#resources;
+    get localResource() {
+        return this.#resource ?? (this.resource = new Resource());
+    }
+
+    get hasLocalResource() {
+        return !!this.#resource;
     }
 
     [inspect](_depth: any, options: any, inspect: any) {

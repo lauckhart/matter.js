@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Model, Resources } from "#model";
+import { Model, Resource } from "#model";
 import { Block, TsFile } from "#util/TsFile.js";
 import { addDetailsAndCrossReferences, addProperties } from "./element-generation.js";
 
@@ -49,12 +49,12 @@ function addResource(target: Block, patch: ResourcePatch) {
 }
 
 interface ResourcePatch {
-    resources?: Resources;
+    resources?: Resource;
     children?: ResourcePatch[];
 }
 
 function generateResourcePatch(element: Model): ResourcePatch | undefined {
-    const resources = element.hasResources ? element.resources : undefined;
+    const resources = element.hasLocalResource ? element.resource : undefined;
     const children = element.hasChildren ? element.children.map(generateResourcePatch) : undefined;
 
     let patch: ResourcePatch | undefined;

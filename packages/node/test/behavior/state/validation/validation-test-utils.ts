@@ -34,10 +34,10 @@ export function Features(definition: { [code: string]: string }): AttributeModel
     const result = FeatureMap.clone();
 
     result.children = Object.entries(definition).map(
-        ([name, description], index) =>
+        ([name, longName], index) =>
             new FieldModel({
                 name,
-                description,
+                longName,
                 constraint: index,
             }),
     );

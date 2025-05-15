@@ -235,12 +235,8 @@ function translateMetadata(definition: ClusterReference, children: Array<Cluster
         const records = translateTable("feature", definition.features, {
             constraint: Alias(Integer, "bit", "id"),
             conformance: Optional(ConformanceCode),
+            longName: Optional(Alias(Identifier, "feature", "name")),
             details: Optional(Alias(Str, "description", "summary")),
-
-            // Must define after details which uses description column
-            description: Optional(Alias(Identifier, "feature", "name")),
-
-            // Must define after description which uses name column
             name: Alias(UpperIdentifier, "code", "feature"),
 
             // We let Model handle translation to the proper type

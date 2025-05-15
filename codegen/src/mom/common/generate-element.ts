@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ElementTag, Model } from "#model";
+import { Model } from "#model";
 import { Block } from "../../util/TsFile.js";
 import { camelize, serialize } from "../../util/string.js";
 import { addDetailsAndCrossReferences, addProperties } from "./element-generation.js";
@@ -57,16 +57,6 @@ export function generateElement({
             }
         }),
     );
-
-    // Special case for features - description is actually operational
-    if (
-        element.tag === ElementTag.Field &&
-        element.description !== undefined &&
-        element.parent?.tag === ElementTag.Attribute &&
-        element.parent?.name === "FeatureMap"
-    ) {
-        fields.description = element.description;
-    }
 
     // First, name/ID/type
     const row1: Record<string, unknown> = { name: element.name };
