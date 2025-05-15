@@ -7,7 +7,7 @@
 import { Model } from "#model";
 import { Block } from "../../util/TsFile.js";
 import { camelize, serialize } from "../../util/string.js";
-import { addDetailsAndCrossReferences } from "./generate-resource.js";
+import { addDetailsAndCrossReferences, addProperties } from "./element-generation.js";
 
 export function generateElement({
     target,
@@ -37,45 +37,25 @@ export function generateElement({
     delete fields.details;
     delete fields.resources;
 
-    // First, tag/ID/name/type
-    const properties = Array<string>(`name: ${serialize(element.name)}`);
-    if (element.id !== undefined) {
-        const idStr = element.id < 0 ? `${element.id}` : `0x${element.id.toString(16)}`;
-        properties.push(`id: ${idStr}`);
-    }
-    delete fields.id;
+    // These are for codegen only
+    delete fields.matchTo;
+    delete fields.asOf;
+    delete fields.until;
+
+    // First, name/ID/type
+    const row1: Record<string, unknown> = { name: element.name };
     delete fields.name;
+    if (element.id !== undefined) {
+        const idStr = element.id < 0 ? element : serialize.asIs(`0x${element.id.toString(16)}`);
+        row1.id = idStr;
+        delete fields.id;
+    }
     if (fields.type) {
-        properties.push(`type: ${serialize((element as any).type)}`);
+        row1.type = (element as any).type;
         delete fields.type;
     }
 
-    // This is for codegen only
-    delete fields.matchTo;
-
-    // Next: Other fields
-    properties.push(
-        ...Object.entries(fields)
-            .sort((a, b) => a[0].toLowerCase().localeCompare(b[0].toLowerCase()))
-            .map(([k, v]) => `${k}: ${serialize(v)}`),
-    );
-
-    // Segment properties into rows
-    let row = Array<string>();
-    let length = 0;
-    for (const property of properties) {
-        length += property.length + (length ? 2 : 0);
-        if (row.length && length >= 100) {
-            head.atom(row.join(", "));
-            row = [property];
-            length = property.length;
-        } else {
-            row.push(property);
-        }
-    }
-    if (row.length) {
-        head.atom(row.join(", "));
-    }
+    addProperties(head, row1, fields);
 
     // Details and cross-references
     if (!operational) {
